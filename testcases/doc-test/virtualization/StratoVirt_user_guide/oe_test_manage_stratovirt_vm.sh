@@ -22,17 +22,13 @@ source common/common_stratovirt.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     pre_env
+    create_stratovirt_vm &
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    create_stratovirt_vm &
-    SLEEP_WAIT 20
-    grep -iE "root@StratoVirt" testlog
-    CHECK_RESULT $? 0 0 'Failed to create and start a stratovirt VM'
     expect <<-EOF
-        log_file testlog1
         spawn ncat -U /tmp/stratovirt.socket
         expect "*QMP*"
         send "{ \"execute\": \"query-status\" }\\n"
@@ -46,9 +42,9 @@ function run_test() {
         send "{\"execute\":\"cont\"}\\n"
         expect "*RESUME*"
         send "{\"execute\":\"quit\"}\\n"
+        expect "*SHUTDOWN*"
     expect eof   
 EOF
-    grep "SHUTDOWN" testlog1
     CHECK_RESULT $? 0 0 'Failed to quit the stratovirt VM'
     LOG_INFO "End to run test."
 }
@@ -56,7 +52,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    rm -f vmlinux.bin "$openeulerversion"-stratovirt-"${NODE1_FRAME}".img testlog* /tmp/stratovirt.socket /tmp/tmp*
+    rm -f vmlinux.bin "$openeulerversion"-stratovirt-"${NODE1_FRAME}".img /tmp/stratovirt.socket /tmp/tmp*
     LOG_INFO "End to restore the test environment."
 }
 

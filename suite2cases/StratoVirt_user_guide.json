@@ -7,10 +7,12 @@
             "machine type": "physical"
         },
         {
-            "name": "oe_test_manage_stratovirt_vm"
+            "name": "oe_test_manage_stratovirt_vm",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_manage_stratovirt_vm_resources"
+            "name": "oe_test_manage_stratovirt_vm_resources",
+            "machine type": "physical"
         }
     ]
 }
