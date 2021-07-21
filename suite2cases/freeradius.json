@@ -1,0 +1,124 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/freeradius",
+    "cases": [
+        {
+            "name": "oe_test_freeradius_freeradius_raddebugAndCheckrad",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius_radiusd",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius_radiusdAndRadmin",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radclient",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radclient2",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_rad_counter",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radcryptAndRadeapclient",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radeapclient",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radlast",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radlastAndRadsniff",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radsniff",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radsniff2",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radsqlrelay",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radtestAndRadwho",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radwho",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_radzap",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        },
+        {
+            "name": "oe_test_freeradius_freeradius-utils_rlm_ippool_toolAndSmbencrypt",
+            "machine": {
+                "type": "kvm",
+                "num": 1
+            }
+        }
+    ]
+}
