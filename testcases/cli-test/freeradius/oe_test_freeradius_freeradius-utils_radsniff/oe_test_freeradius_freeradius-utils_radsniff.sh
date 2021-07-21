@@ -22,6 +22,8 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius freeradius-utils"
+    systemctl start radiusd
+    SLEEP_WAIT 1
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,8 +31,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    systemctl start radiusd
-    SLEEP_WAIT 1
     radsniff -e received -I ../common/test.pcap | grep "Access-Accept"
     CHECK_RESULT $? 0 0 "radsniff -e execution failed."
     radsniff -f udp -I ../common/test.pcap | grep "Access-Accept"
@@ -52,7 +52,6 @@ function run_test() {
     [ "$(cat /tmp/radsniff.pid)" -eq "$(pgrep -f "radsniff -P" | grep -v grep)" ]
     CHECK_RESULT $? 0 0 "radsniff -P execution failed."
     kill -9 $(cat /tmp/radsniff.pid)
-    systemctl stop radiusd
 
     LOG_INFO "End to run test."
 }
@@ -60,6 +59,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    systemctl stop radiusd
     DNF_REMOVE
     rm -rf /etc/raddb
     rm -rf /var/log/radius

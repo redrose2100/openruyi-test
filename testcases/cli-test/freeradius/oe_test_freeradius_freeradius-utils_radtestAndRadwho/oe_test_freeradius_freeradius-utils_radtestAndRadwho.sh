@@ -22,13 +22,6 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius freeradius-utils"
-
-    LOG_INFO "End to prepare the test environment."
-}
-
-function run_test() {
-    LOG_INFO "Start to run test."
-
     echo "steve  Cleartext-Password := \"testing\"
        Service-Type = Framed-User,
        Framed-Protocol = PPP,
@@ -41,6 +34,13 @@ function run_test() {
     " >>/etc/raddb/users
     systemctl start radiusd
     SLEEP_WAIT 2
+
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+
     radtest -d /etc/raddb/ steve testing localhost 0 testing123 | grep "Access-Accept"
     CHECK_RESULT $? 0 0 "radtest -d execution failed."
     radtest -t pap steve testing localhost 0 testing123 | grep "Access-Accept"

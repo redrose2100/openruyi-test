@@ -22,6 +22,10 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius freeradius-utils"
+    ln -s /etc/raddb/mods-available/ippool /etc/raddb/mods-enabled/ippool
+    sed -i '/main_pool/a main_pool' /etc/raddb/sites-enabled/default
+    systemctl start radiusd
+    SLEEP_WAIT 1
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,10 +33,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ln -s /etc/raddb/mods-available/ippool /etc/raddb/mods-enabled/ippool
-    sed -i '/main_pool/a main_pool' /etc/raddb/sites-enabled/default
-    systemctl start radiusd
-    SLEEP_WAIT 1
     rlm_ippool_tool -n /etc/raddb/db.ippool /etc/raddb/db.ipindex 192.0.2.131 127.0.0.1 0 | grep Allocated
     CHECK_RESULT $? 0 0 "rlm_ippool_tool -n execution failed."
     rlm_ippool_tool -a /etc/raddb/db.ippool /etc/raddb/db.ipindex | grep "192.0.2.131"

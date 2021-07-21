@@ -22,6 +22,8 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius freeradius-utils"
+    systemctl start radiusd
+    SLEEP_WAIT 1
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,8 +31,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    systemctl start radiusd
-    SLEEP_WAIT 1
     echo "Message-Authenticator = 0x00" | radclient -4 127.0.0.1 status testing123 | grep "Received Access-Accept"
     CHECK_RESULT $? 0 0 "radclient -4 execution failed."
     echo "Message-Authenticator = 0x00" | radclient -6 [::1] status testing123 | grep "Received Access-Accept"
@@ -50,7 +50,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "radclient -h execution failed."
     echo "Message-Authenticator = 0x00" | radclient -n 30 127.0.0.1 status testing123 | grep "Received Access-Accept"
     CHECK_RESULT $? 0 0 "radclient -n execution failed."
-    systemctl stop radiusd
 
     LOG_INFO "End to run test."
 }
@@ -58,6 +57,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    systemctl stop radiusd
     DNF_REMOVE
     rm -rf /etc/raddb
     rm -rf /var/log/radius

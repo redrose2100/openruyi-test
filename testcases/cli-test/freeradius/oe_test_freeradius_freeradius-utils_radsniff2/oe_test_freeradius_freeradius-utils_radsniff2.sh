@@ -22,6 +22,8 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius freeradius-utils"
+    systemctl start radiusd
+    SLEEP_WAIT 1
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,8 +31,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    systemctl start radiusd
-    SLEEP_WAIT 1
     [ -z "$(radsniff -q -I ../common/test.pcap)" ]
     CHECK_RESULT $? 0 0 "radsniff -q execution failed."
     [ -z $(radsniff -I ../common/test.pcap -r 'Message-Authenticator = 0x00') ]
@@ -52,7 +52,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "radsniff -W execution failed."
     radsniff -T 100 -I ../common/test.pcap | grep "Access-Accept"
     CHECK_RESULT $? 0 0 "radsniff -T execution failed."
-    systemctl stop radiusd
 
     LOG_INFO "End to run test."
 }
@@ -60,6 +59,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    systemctl stop radiusd
     DNF_REMOVE
     rm -rf /etc/raddb
     rm -rf /var/log/radius

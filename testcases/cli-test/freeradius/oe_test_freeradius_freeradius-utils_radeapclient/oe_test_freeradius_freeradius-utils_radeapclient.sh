@@ -22,6 +22,8 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius freeradius-utils net-tools"
+    systemctl start radiusd
+    SLEEP_WAIT 1
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,8 +31,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    systemctl start radiusd
-    SLEEP_WAIT 1
     echo "Message-Authenticator = 0x00" | radeapclient -p 30 127.0.0.1 status testing123 | grep "Main loop: done"
     CHECK_RESULT $? 0 0 "radeapclient -p execution failed."
     a=$(echo "Message-Authenticator = 0x00" | radeapclient -q 127.0.0.1 status testing123)
@@ -51,7 +51,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "radeapclient -v execution failed."
     echo "Message-Authenticator = 0x00" | radeapclient -x 127.0.0.1 status testing123 | grep "Message-Authenticator"
     CHECK_RESULT $? 0 0 "radeapclient -x execution failed."
-    systemctl stop radiusd
 
     LOG_INFO "End to run test."
 }
@@ -59,6 +58,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    systemctl stop radiusd
     DNF_REMOVE
     rm -rf /etc/raddb
     rm -rf /var/log/radius

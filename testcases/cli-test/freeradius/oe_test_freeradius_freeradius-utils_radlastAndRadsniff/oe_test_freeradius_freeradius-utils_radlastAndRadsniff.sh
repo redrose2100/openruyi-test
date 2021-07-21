@@ -22,6 +22,10 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius freeradius-utils net-tools"
+    cp /var/log/wtmp /var/log/radius/radwtmp
+    if [ ! -e /var/log/radius/radwtmp ]; then
+        exit 1
+    fi
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,7 +33,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    cp /var/log/wtmp /var/log/radius/radwtmp
     [ $(radlast | grep -c "oot") -gt $(radlast -t "00:00" | grep -c "oot") ]
     CHECK_RESULT $? 0 0 "radlast -t execution failed."
     radlast -x | grep -e "runlevel" -e "shutdown"
@@ -51,7 +54,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "radsniff -d execution failed."
     radsniff -D /usr/share/freeradius -I ../common/test.pcap | grep "Access-Accept"
     CHECK_RESULT $? 0 0 "radsniff -D execution failed."
-    systemctl stop radiusd
 
     LOG_INFO "End to run test."
 }
@@ -59,6 +61,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    systemctl stop radiusd
     DNF_REMOVE
     rm -rf /etc/raddb
     rm -rf /var/log/radius

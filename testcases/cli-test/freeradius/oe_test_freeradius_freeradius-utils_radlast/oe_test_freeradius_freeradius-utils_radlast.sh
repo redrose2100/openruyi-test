@@ -22,6 +22,10 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius freeradius-utils"
+    cp /var/log/wtmp /var/log/radius/radwtmp
+    if [ ! -e /var/log/radius/radwtmp ]; then
+        exit 1
+    fi
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,7 +33,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    cp /var/log/wtmp /var/log/radius/radwtmp
     radtimes=3
     a=$(radlast -${radtimes} | grep -c "oot")
     [ "$radtimes" -eq "$a" ]

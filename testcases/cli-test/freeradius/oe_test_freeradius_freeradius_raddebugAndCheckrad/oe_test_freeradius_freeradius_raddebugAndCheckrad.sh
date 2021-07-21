@@ -22,6 +22,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius"
+    ln -s /etc/raddb/sites-available/control-socket /etc/raddb/sites-enabled/control-socket
+    sed -i '/mode = rw/a mode = rw' /etc/raddb/sites-enabled/control-socket
+    sed -i '1i "test" Cleartext-Password := "pass123"' /etc/raddb/users
+    systemctl start radiusd
+    SLEEP_WAIT 1
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,11 +34,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ln -s /etc/raddb/sites-available/control-socket /etc/raddb/sites-enabled/control-socket
-    sed -i '/mode = rw/a mode = rw' /etc/raddb/sites-enabled/control-socket
-    sed -i '1i "test" Cleartext-Password := "pass123"' /etc/raddb/users
-    systemctl start radiusd
-    SLEEP_WAIT 1
     raddebug -c "&Framed-IP-Address == 127.0.0.1" &
     SLEEP_WAIT 1
     ps -ef | grep "tail -f /var/log/radius" | grep -v grep
@@ -102,7 +102,6 @@ function run_test() {
     stat=$?
     [ "$stat" -eq 0 ] || [ "$stat" -eq 1 ]
     CHECK_RESULT $? 0 0 "checkrad execution failed."
-    systemctl stop radiusd
 
     LOG_INFO "End to run test."
 }
@@ -110,6 +109,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    systemctl stop radiusd
     DNF_REMOVE
     rm -rf /etc/raddb
     rm -rf /var/log/radius

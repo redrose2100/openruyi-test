@@ -38,6 +38,8 @@ function run_test() {
     radzap -D /usr/share/freeradius -N 127.0.0.1 127.0.0.1 testing123 | grep "Accounting-Response"
     CHECK_RESULT $? 0 0 "radzap -D -N execution failed."
     touch /var/log/radius/radutmp
+    [ -e /var/log/radius/radutmp ]
+    CHECK_RESULT $? 0 0 "touch radutmp failed."
     radzap -P 0 127.0.0.1 testing123 2>&1 | grep send
     CHECK_RESULT $? 0 0 "radzap -P execution failed."
     radzap -u steve 127.0.0.1 testing123 2>&1 | grep send

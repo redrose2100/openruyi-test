@@ -22,6 +22,9 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius freeradius-utils"
+    ln -s /etc/raddb/mods-available/counter /etc/raddb/mods-enabled/counter
+    systemctl start radiusd
+    SLEEP_WAIT 2
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,9 +32,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ln -s /etc/raddb/mods-available/counter /etc/raddb/mods-enabled/counter
-    systemctl start radiusd
-    SLEEP_WAIT 2
     rad_counter --file /etc/raddb/db.daily --user test
     CHECK_RESULT $? 0 0 "rad_counter --user execution failed."
     rad_counter --file /etc/raddb/db.daily --match ^te
@@ -46,7 +46,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "rad_counter --minutes execution failed."
     rad_counter --file /etc/raddb/db.daily --seconds 1
     CHECK_RESULT $? 0 0 "rad_counter --seconds execution failed."
-    systemctl stop radiusd
 
     LOG_INFO "End to run test."
 }
@@ -54,6 +53,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    systemctl stop radiusd
     DNF_REMOVE
     rm -rf /etc/raddb
     rm -rf /var/log/radius

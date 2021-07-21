@@ -22,6 +22,10 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius freeradius-utils"
+    touch /var/log/radius/radutmp
+    if [ ! -e /var/log/radius/radutmp ]; then
+        exit 1
+    fi
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,7 +33,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    touch /var/log/radius/radutmp
     radwho -i | grep "Name"
     CHECK_RESULT $? 0 0 "radwho -i execution failed."
     [ -z "$(radwho -n | grep "Name")" ]
