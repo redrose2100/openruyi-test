@@ -13,27 +13,34 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   set password length
 #####################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
 
+    useradd test
+
+    LOG_INFO "Finish preparing the test environment."
+}
 function run_test()
 {
     LOG_INFO "Start to run test."
-    useradd test
-    CHECK_RESULT $? 0 0 "add failed"
-    echo "1111111111222222222233333333334444444444qqqqqqqqqqwwwwwwwwwweeeeeeeeeerrrrrrrrrr5555555555tttttttttt@@@@@@@@@@..........00000000009898989898989800000" | passwd --stdin test
+
+    echo "1111111111222222222233333333334444444444qqqqqqqqqqwwwwwwwwwweeeeeeeeeerrrrrrrrrr5555555555tttttttttt@@@@@@@@@@999999999900000000009898989898989800000" | passwd --stdin test
     CHECK_RESULT $? 0 0 "failed"
+
     LOG_INFO "End to run test."
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
+
     userdel -rf test
+    
     LOG_INFO "End to restore the test environment."
 }
 
