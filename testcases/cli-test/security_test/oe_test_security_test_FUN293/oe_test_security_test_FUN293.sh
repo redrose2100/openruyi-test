@@ -13,19 +13,22 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   store password with ciphertext
 #####################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    useradd test
+    LOG_INFO "Finish preparing the test environment."
+}
+
 function run_test()
 {
     LOG_INFO "Start to run test."
-    useradd test
-    CHECK_RESULT $? 0 0 "add failed"
     echo "huawei666" | passwd --stdin test
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "set success"
     cat /etc/shadow |grep -e 'test:$6'
     CHECK_RESULT $? 0 0 "grep failed"
     LOG_INFO "End to run test."
