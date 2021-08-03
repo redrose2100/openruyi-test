@@ -13,30 +13,39 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   Only root can specify a user name
 #####################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    
+    useradd test
+
+    LOG_INFO "Finish preparing the test environment."
+}
+
 function run_test()
 {
     LOG_INFO "Start to run test."
-    useradd test
-    CHECK_RESULT $? 0 0 "add failed"
+
     echo "huawei666" | passwd --stdin test
     CHECK_RESULT $? 0 0 "set failed"
     su test -c "passwd root" 2>&1 | grep "Only root can specify a user name"
     CHECK_RESULT $? 0 0 "change failed"
     su test -c "(echo "huawei666";echo "openEuler12$";echo "openEuler12$" )|passwd"
-    CHECK_RESULT $? 0 0 "chang num failed"
+    CHECK_RESULT $? 0 0 "change num failed"
+
     LOG_INFO "End to run test."
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
+
     userdel -rf test
+
     LOG_INFO "End to restore the test environment."
 }
 
