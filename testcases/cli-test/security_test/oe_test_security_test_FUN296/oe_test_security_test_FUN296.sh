@@ -13,39 +13,44 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   user identification
 #####################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+
 set passwd huawei666
 set wrongpasswd huawei777
+
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+
     useradd test
     echo "huawei666" | passwd --stdin test
-    DNF_INSTALL "expect"
+    
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test()
 {
     LOG_INFO "Start to run test."
+
     expect <<EOF
     spawn ssh test@localhost
     expect "*assword:" { send "huawei777\\r" }
     expect "*assword:" { send "huawei666\\r" }
     expect eof
 EOF
-    sleep 10
+    
     LOG_INFO "End to run test."
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
+
     userdel -rf test
+    
     LOG_INFO "End to restore the test environment."
 }
 
