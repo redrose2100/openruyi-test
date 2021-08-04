@@ -13,7 +13,6 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   iproute
 #####################################
 
@@ -22,8 +21,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test()
 {
     LOG_INFO "Start to run test."
-    ip -s -h link
-    CHECK_RESULT $?
+    
+    ip -s -h link | grep -e "link"
+    CHECK_RESULT $? 0 0 "show failed"
+    
     LOG_INFO "End to run test."
 }
 main "$@"
