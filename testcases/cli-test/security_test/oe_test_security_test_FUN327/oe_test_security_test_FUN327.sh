@@ -13,7 +13,6 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   set max log file rotate
 #####################################
 
@@ -21,15 +20,18 @@ source ../common/comlib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
+    
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "/etc/audit/auditd.conf"
     sed -i 's/num_logs = 5/num_logs = 2/g' "/etc/audit/auditd.conf"
     rm -rf /var/log/audit/audit.log*
     service auditd restart 
+    
     LOG_INFO "End to prepare the environment"
 }
 function run_test()
 {
     LOG_INFO "Start to run test."
+    
     old_size=$(du -ks /var/log/audit/ | awk '{print $1}')
     old_num=$(find /var/log/audit -name "audit.log*" | wc -l)
     for ((i=0;i<10;i++));do
@@ -61,15 +63,18 @@ function run_test()
 	    	CHECK_RESULT 1 0 0 "third error"
 	    }
     done
+    
     LOG_INFO "End to run test."
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
+    
     sed -i 's/max_log_file = 1/max_log_file = 8/g' "/etc/audit/auditd.conf"
     sed -i 's/num_logs = 2/num_logs = 5/g' "/etc/audit/auditd.conf"
     service auditd restart
+    
     LOG_INFO "End to restore the test environment."
 }
 
