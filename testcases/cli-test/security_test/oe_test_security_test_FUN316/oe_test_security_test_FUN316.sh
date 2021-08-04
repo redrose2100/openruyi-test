@@ -13,7 +13,6 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   correctness of file permissions
 #####################################
 
@@ -22,15 +21,18 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    
     umask 0022
     useradd tester1
     useradd tester2 
+    
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test()
 {
     LOG_INFO "Start to run test."
+    
     su - tester1 -c "touch test1.txt"
     CHECK_RESULT $? 0 0 "touch failed"
     su - tester1 -c "ls -l" | grep -e "-rw-r--r--"
@@ -41,14 +43,17 @@ function run_test()
     CHECK_RESULT $? 0 0 "write failed"
     cat /home/tester1/test.txt |grep -e "I LOVE YOU"
     CHECK_RESULT $? 0 0 "grep failed"
+    
     LOG_INFO "End to run test."
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
+    
     userdel -rf tester1
     userdel -rf tester2
+    
     LOG_INFO "End to restore the test environment."
 }
 
