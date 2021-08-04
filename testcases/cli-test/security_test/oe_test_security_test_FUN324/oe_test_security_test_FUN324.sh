@@ -13,7 +13,6 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   demsg
 #####################################
 
@@ -22,10 +21,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test()
 {
     LOG_INFO "Start to run test."
-    dmesg
-    CHECK_RESULT $? 0 0 "failed"
+    
     dmesg |grep -e "start"
     CHECK_RESULT $? 0 0
+    
     LOG_INFO "End to run test."
 }
 
