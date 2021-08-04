@@ -22,12 +22,14 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL alsa-utils
+    rm -rf /etc/alsa/state-daemon.conf
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_oneshot alsa-restore.service 'inactive (dead)'
+    test_execution alsa-restore.service
+    test_reload alsa-restore.service
     LOG_INFO "Finish test!"
 }
 
