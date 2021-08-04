@@ -13,7 +13,7 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-08-04 09:39:43
 #@License   	:   Mulan PSL v2
-#@Desc      	:   Take the test ls command as an example
+#@Desc      	:   inject time fault
 #####################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
