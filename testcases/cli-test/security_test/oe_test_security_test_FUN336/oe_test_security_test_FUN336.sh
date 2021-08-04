@@ -13,7 +13,6 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   Take the test ls command as an example
 #####################################
 
@@ -22,8 +21,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test()
 {
     LOG_INFO "Start to run test."
+    
     SSH_CMD "pwd" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "ssh failed"
+    
     LOG_INFO "End to run test."
 }
 
