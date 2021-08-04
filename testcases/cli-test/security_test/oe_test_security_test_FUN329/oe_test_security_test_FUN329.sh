@@ -13,7 +13,6 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   kernel firewall
 #####################################
 
@@ -22,18 +21,18 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test()
 {
     LOG_INFO "Start to run test."
+    
     systemctl start iptables
     CHECK_RESULT $? 0 0 "start failed"
     systemctl start iptables |grep active
-    CHECK_RESULR $?
+    CHECK_RESULR $? 0 0 "not active"
     systemctl stop iptables
-    CHECK_RESULR $?
+    CHECK_RESULR $? 0 0 "stop failed"
     systemctl start iptables |grep inactive
-    CHECK_RESULR $?
-    systemctl restart iptables
-    CHECK_RESULR $?
-    systemctl start iptables |grep active
-    CHECK_RESULR $?
+    CHECK_RESULR $? 0 0 "still active"
+    systemctl restart iptables |grep active
+    CHECK_RESULR $? 0 0 "restart failed"
+    
     LOG_INFO "End to run test."
 }
 
