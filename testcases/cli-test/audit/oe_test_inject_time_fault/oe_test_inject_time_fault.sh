@@ -28,9 +28,6 @@ function log_dump() {
             new_num=$(find /var/log/audit -name "audit.log*" | wc -l)
             if [ $(("$new_num" - "$old_num")) -ge 1 ]; then
                 break
-            else
-                ((tmp_result++))
-                break
             fi
         }
         test "$i" -eq 9 && {
