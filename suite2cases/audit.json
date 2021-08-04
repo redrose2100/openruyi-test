@@ -71,7 +71,7 @@
             "name": "oe_test_audit_available_disk_space"
         },
         {
-            "name":"oe_test_inject_time_fault"
+            "name": "oe_test_inject_time_fault"
         }
     ]
 }
