@@ -22,13 +22,22 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test()
 {
     LOG_INFO "Start to run test."
-    who
-    CHECK_RESULT $? 0 0 "who failed" 
-    cd /usr/
-    CHECK_RESULT $? 0 0 "cd failed"
-    who
-    CHECK_RESULT $? 0 0 "who failed"
+    
+    useradd user
+    
     LOG_INFO "End to run test."
 }
+
+function run_test()
+{
+    LOG_INFO "Start to run test."
+    who
+    CHECK_RESULT $? 0 0 "root who failed"
+    su - user -c "who"
+    CHECK_RESULT $? 0 0 "user who failed"
+    
+    LOG_INFO "End to run test."
+}
+
 
 main "$@"
