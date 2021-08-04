@@ -13,7 +13,6 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   Take the test ls command as an example
 #####################################
 
@@ -22,12 +21,14 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test()
 {
     LOG_INFO "Start to run test."
+    
     iptables -A INPUT -p tcp -s 172.168.128.23 --dport 22 -j DROP
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "add failed"
     iptables -D INPUT 1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "delete failed"
     iptables -F
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "clean failed"
+    
     LOG_INFO "End to run test."
 }
 
