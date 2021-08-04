@@ -16,10 +16,9 @@
 #@Desc      	:   inject time fault
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
 source ../common/comlib.sh
 
-log_dump() {
+function log_dump() {
     old_size=$(du -ks /var/log/audit/ | awk '{print $1}')
     old_num=$(find /var/log/audit -name "audit.log*" | wc -l)
     for ((i = 0; i < 10; i++)); do
