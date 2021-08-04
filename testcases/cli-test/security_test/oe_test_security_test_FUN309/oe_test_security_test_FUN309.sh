@@ -13,7 +13,6 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   ACL
 #####################################
 
@@ -22,14 +21,17 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    
     useradd acl_user
     echo "123" > acl_file && chmod o-r acl_file
+    
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test()
 {
     LOG_INFO "Start to run test."
+    
     getfacl -a acl_file 
     CHECK_RESULT $? 0 0 "show failed"
     ls -l  acl_file |grep `getfacl -a acl_file |grep -e "::" | awk -F ':' '{print $3}' |sed ':a;N;s/\n//;t a;'`
@@ -54,14 +56,17 @@ function run_test()
     CHECK_RESULT $? 0 0 "grep failed"
     su - acl_user -c "cat acl_file" |grep -e "123"
     CHECK_RESULT $? 0 0 "cat failed"
+    
     LOG_INFO "End to run test."
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
+    
     userdel -rf acl_user
     rm -rf acl_file 
+    
     LOG_INFO "End to restore the test environment."
 }
 
