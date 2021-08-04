@@ -13,31 +13,40 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   validity of file execution permission
 #####################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test()
+{
+    LOG_INFO "Start to prepare the test environment."
+    
+    touch /tmp/test.txt
+
+    LOG_INFO "End to prepare the test environment."
+}
 function run_test()
 {
     LOG_INFO "Start to run test."
-    touch /tmp/test.txt
-    CHECK_RESULT $? 0 0 "touch failed"
+    
     chmod 700 /tmp/test.txt
     CHECK_RESULT $? 0 0 "chmod failed"
     useradd tester
     CHECK_RESULT $? 0 0 "add failed"
     su - tester -c "cat /tmp/test.txt" 
     CHECK_RESULT $? 1 0
+
     LOG_INFO "End to run test."
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
+    
     rm -rf /tmp/test.txt
     userdel -rf tester
+    
     LOG_INFO "End to restore the test environment."
 }
 
