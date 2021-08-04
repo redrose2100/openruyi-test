@@ -13,7 +13,6 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   restrict ssh login
 #####################################
 
@@ -22,18 +21,22 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test()
 {
     LOG_INFO "Start to run test."
+    
     sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config 
     CHECK_RESULT $? 0 0 "change failed"
-    systemctl restart sshd |grep -e "Failed to restart ssh.service"
+    systemctl restart sshd  |grep -e "Failed to restart ssh.service"
     CHECK_RESULT $? 1 0
+    
     LOG_INFO "End to run test."
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
+    
     sed -i "s/PermitRootLogin no/PermitRootLogin yes/g" /etc/ssh/sshd_config
     systemctl restart sshd
+   
     LOG_INFO "End to restore the test environment."
 }
 
