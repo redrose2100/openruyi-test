@@ -13,7 +13,6 @@
 #@Contact   	:   1557927445@qq.com
 #@Date      	:   2021-05-19 09:39:43
 #@License   	:   Mulan PSL v2
-#@Version   	:   1.0
 #@Desc      	:   record login information
 #####################################
 
@@ -31,9 +30,9 @@ function run_test()
 function run_test()
 {
     LOG_INFO "Start to run test."
-    who
+    who | grep -e "root     tty1"
     CHECK_RESULT $? 0 0 "root who failed"
-    su - user -c "who"
+    su - user -c "who" | grep -e "root     tty1"
     CHECK_RESULT $? 0 0 "user who failed"
     
     LOG_INFO "End to run test."

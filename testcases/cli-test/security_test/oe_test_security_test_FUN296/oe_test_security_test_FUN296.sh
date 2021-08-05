@@ -33,12 +33,14 @@ function run_test()
     LOG_INFO "Start to run test."
 
     expect <<EOF
+    log_file testlog
     spawn ssh test@localhost
     expect "*assword:" { send "huawei777\\r" }
     expect "*assword:" { send "huawei666\\r" }
     expect eof
 EOF
-    
+    grep -e "successful" testlog    
+    CHECK_RESULT $? 0 0 "grep failed"
     LOG_INFO "End to run test."
 }
 
@@ -47,7 +49,8 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
 
     userdel -rf test
-    
+    rm -rf testlog
+
     LOG_INFO "End to restore the test environment."
 }
 

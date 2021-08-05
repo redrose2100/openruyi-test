@@ -22,6 +22,7 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
     
+    a=$(umask)
     umask 0022
     useradd tester1
     useradd tester2 
@@ -53,6 +54,7 @@ function post_test()
     
     userdel -rf tester1
     userdel -rf tester2
+    umask $a
     
     LOG_INFO "End to restore the test environment."
 }

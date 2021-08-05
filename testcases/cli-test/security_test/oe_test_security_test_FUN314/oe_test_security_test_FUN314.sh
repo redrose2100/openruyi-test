@@ -22,6 +22,7 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
     
+    a=$(umask)
     umask 0022
     
     LOG_INFO "End to prepare the test environment."
@@ -47,7 +48,7 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
     
     rm -rf file1
-    umask 0022
+    umask $a
     
     LOG_INFO "End to restore the test environment."
 }
