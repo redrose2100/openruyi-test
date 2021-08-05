@@ -22,7 +22,7 @@ function run_test()
 {
     LOG_INFO "Start to run test."
     
-    iptables -A INPUT -p tcp -s 172.168.128.23 --dport 22 -j DROP
+    iptables -A INPUT -p tcp -s ${NODE1_IPV4} --dport 22 -j DROP
     CHECK_RESULT $? 0 0 "add failed"
     iptables -D INPUT 1
     CHECK_RESULT $? 0 0 "delete failed"
