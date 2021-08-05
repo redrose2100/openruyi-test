@@ -23,7 +23,7 @@ function run_test()
     LOG_INFO "Start to run test."
     
     dmesg |grep -e "start"
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "start failed"
     
     LOG_INFO "End to run test."
 }
