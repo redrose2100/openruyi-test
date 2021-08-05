@@ -18,13 +18,12 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-function run_test()
-{
-    LOG_INFO "Start to run test."
-    
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+
     useradd user
-    
-    LOG_INFO "End to run test."
+
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test()
@@ -36,6 +35,14 @@ function run_test()
     CHECK_RESULT $? 0 0 "user who failed"
     
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+
+    userdel -rf user
+
+    LOG_INFO "End to restore the test environment."
 }
 
 
