@@ -35,7 +35,7 @@ function run_test()
     useradd tester
     CHECK_RESULT $? 0 0 "add failed"
     su - tester -c "cat /tmp/test.txt" 
-    CHECK_RESULT $? 1 0
+    CHECK_RESULT $? 1 0 "cat failed"
 
     LOG_INFO "End to run test."
 }
