@@ -34,7 +34,8 @@ function run_test()
     
     getfacl -a acl_file 
     CHECK_RESULT $? 0 0 "show failed"
-    ls -l  acl_file | grep `getfacl -a acl_file | grep -e "::" | awk -F ':' '{print $3}' |sed ':a;N;s/\n//;t a;'`
+    a=$(getfacl -a acl_file | grep -e "::" | awk -F ':' '{print $3}' |sed ':a;N;s/\n//;t a;')
+    ls -l  acl_file | grep $a
     CHECK_RESULT $? 0 0 "grep failed"
     setfacl -m u:acl_user:r acl_file
     CHECK_RESULT $? 0 0 "set failed"
