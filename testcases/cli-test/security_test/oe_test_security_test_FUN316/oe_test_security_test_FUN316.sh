@@ -41,7 +41,7 @@ function run_test()
     CHECK_RESULT $? 1 0 "success"
     echo "I LOVE YOU" >> /home/tester1/test.txt
     CHECK_RESULT $? 0 0 "write failed"
-    cat /home/tester1/test.txt |grep -e "I LOVE YOU"
+    grep -e "I LOVE YOU"  /home/tester1/test.txt
     CHECK_RESULT $? 0 0 "grep failed"
     
     LOG_INFO "End to run test."
