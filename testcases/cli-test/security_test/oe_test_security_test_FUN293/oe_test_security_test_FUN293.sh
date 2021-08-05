@@ -20,24 +20,30 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    
     useradd test
+    
     LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test()
 {
     LOG_INFO "Start to run test."
+    
     echo "huawei666" | passwd --stdin test
     CHECK_RESULT $? 0 0 "set success"
-    cat /etc/shadow |grep -e 'test:$6'
+    grep -e 'test:$6' /etc/shadow
     CHECK_RESULT $? 0 0 "grep failed"
+    
     LOG_INFO "End to run test."
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
+    
     userdel -rf test
+    
     LOG_INFO "End to restore the test environment."
 }
 
