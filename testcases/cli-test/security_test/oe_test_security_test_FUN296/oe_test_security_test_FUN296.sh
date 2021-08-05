@@ -18,9 +18,6 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-set passwd huawei666
-set wrongpasswd huawei777
-
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
