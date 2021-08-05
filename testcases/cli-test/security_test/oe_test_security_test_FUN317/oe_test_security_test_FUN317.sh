@@ -41,7 +41,7 @@ function run_test()
     CHECK_RESULT $? 1 0 "success"
     echo "I LOVE YOU" >> /home/tester1/test.txt
     CHECK_RESULT $? 0 0 "write failed"
-    cat /home/tester1/test.txt |grep -e "I LOVE YOU"
+    cat /home/tester1/test.txt | grep -e "I LOVE YOU"
     CHECK_RESULT $? 0 0 "grep failed"
     su - tester2 -c "echo \"blinux ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers"
     CHECK_RESULT $? 1 0 "success"
