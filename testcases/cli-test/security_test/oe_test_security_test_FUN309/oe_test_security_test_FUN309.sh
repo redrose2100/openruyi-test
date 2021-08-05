@@ -34,11 +34,11 @@ function run_test()
     
     getfacl -a acl_file 
     CHECK_RESULT $? 0 0 "show failed"
-    ls -l  acl_file |grep `getfacl -a acl_file |grep -e "::" | awk -F ':' '{print $3}' |sed ':a;N;s/\n//;t a;'`
+    ls -l  acl_file | grep `getfacl -a acl_file | grep -e "::" | awk -F ':' '{print $3}' |sed ':a;N;s/\n//;t a;'`
     CHECK_RESULT $? 0 0 "grep failed"
     setfacl -m u:acl_user:r acl_file
     CHECK_RESULT $? 0 0 "set failed"
-    getfacl -a acl_file |grep -e "user:acl_user:r--"
+    getfacl -a acl_file | grep -e "user:acl_user:r--"
     CHECK_RESULT $? 0 0 "grep new user failed"
     mv acl_file /home/acl_user
     CHECK_RESULT $? 0 0 "mv failed"
@@ -48,13 +48,13 @@ function run_test()
     CHECK_RESULT $? 0 0 "setb failed"
     getfacl /home/acl_user/acl_file | grep -e "user:acl_user:r--"
     CHECK_RESULT $? 1 0 "grep group failed"
-    su - acl_user -c "cat acl_file" |grep -e "123"
+    su - acl_user -c "cat acl_file" | grep -e "123"
     CHECK_RESULT $? 1 0 "visit failed"
     setfacl -m g:acl_user:rx /home/acl_user/acl_file
     CHECK_RESULT $? 0 0 "set home failed"
     getfacl /home/acl_user/acl_file | grep -e "group:acl_user:r-x"
     CHECK_RESULT $? 0 0 "grep failed"
-    su - acl_user -c "cat acl_file" |grep -e "123"
+    su - acl_user -c "cat acl_file" | grep -e "123"
     CHECK_RESULT $? 0 0 "cat failed"
     
     LOG_INFO "End to run test."
