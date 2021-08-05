@@ -37,7 +37,7 @@ function run_test()
     CHECK_RESULT $? 0 0 "change failed"
     touch file1
     CHECK_RESULT $? 0 0 "touch failed"
-    ls -l |grep -e "-rw-rw-r--"
+    ls -l | grep -e "-rw-rw-r--"
     CHECK_RESULT $? 0 0 "grep second failed"
     LOG_INFO "End to run test."
 }
