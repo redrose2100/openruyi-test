@@ -24,8 +24,8 @@ function run_test()
     
     sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config 
     CHECK_RESULT $? 0 0 "change failed"
-    systemctl restart sshd  |grep -e "Failed to restart ssh.service"
-    CHECK_RESULT $? 1 0
+    systemctl restart sshd  | grep -e "Failed to restart ssh.service"
+    CHECK_RESULT $? 1 0 "grep failed"
     
     LOG_INFO "End to run test."
 }
