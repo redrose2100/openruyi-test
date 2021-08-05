@@ -18,6 +18,19 @@
 
 source ../common/comlib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+
+    sed -i 's/max_log_file = 8/max_log_file = 1/g' "${AUDIT_PATH}"
+    rm -rf /var/log/audit/audit.log*
+    service auditd restart
+    date_add=$(date -d "+1 year" +'%m/%d/%Y %H:%M:%S')
+    clock --set --date="${date_add}"
+    clock --hctosys
+
+    LOG_INFO "End to prepare the test environment."
+}
+
 function log_dump() {
     old_size=$(du -ks /var/log/audit/ | awk '{print $1}')
     old_num=$(find /var/log/audit -name "audit.log*" | wc -l)
@@ -39,14 +52,7 @@ function log_dump() {
 function run_test() {
     LOG_INFO "Start to run test."
     
-    sed -i 's/max_log_file = 8/max_log_file = 1/g' "${AUDIT_PATH}"
-    rm -rf /var/log/audit/audit.log*
-    service auditd restart
-    date_add=$(date -d "+1 year" +'%m/%d/%Y %H:%M:%S')
-    clock --set --date="${date_add}"
-    clock --hctosys
     search_log test
-    CHECK_RESULT $? 0 0 "search failed"
     log_dump
     date_less=$(date -d "-2 year " +'%m/%d/%Y %H:%M:%S')
     clock --set --date="${date_less}"
