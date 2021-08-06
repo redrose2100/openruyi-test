@@ -42,12 +42,12 @@ function run_test()
         if [ $(("$new_num" - "$old_num")) -ge 1 ]; then
             break
         else
-            CHECK_RESULT 1 0 0 "first error"
+            CHECK_RESULT 1 0 0 "num error"
             break
         fi
     }
     test "$i" -eq 9 &&{
-        CHECK_RESULT 1 0 0 "second error"
+        CHECK_RESULT 1 0 0 "new audit log error"
     }
     done
 
@@ -60,7 +60,7 @@ function run_test()
 	    	break
 	    }  
    	    test "$i" -eq 9 &&{
-	    	CHECK_RESULT 1 0 0 "third error"
+	    	CHECK_RESULT 1 0 0 "not same file error"
 	    }
     done
     
