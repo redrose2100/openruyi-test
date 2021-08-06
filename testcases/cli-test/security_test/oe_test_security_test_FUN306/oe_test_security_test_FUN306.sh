@@ -18,12 +18,18 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+
+    sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config 
+
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test()
 {
     LOG_INFO "Start to run test."
     
-    sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config 
-    CHECK_RESULT $? 0 0 "change failed"
     systemctl restart sshd  | grep -e "Failed to restart ssh.service"
     CHECK_RESULT $? 1 0 "grep failed"
     
