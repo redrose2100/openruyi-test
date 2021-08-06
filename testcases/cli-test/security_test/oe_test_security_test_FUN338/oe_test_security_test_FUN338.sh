@@ -33,7 +33,7 @@ function run_test()
     
     systemctl start strongswan
     CHECK_RESULT $? 0 0 "start failed"
-    systemctl status strongswan |grep active
+    systemctl status strongswan | grep active
     CHECK_RESULT $? 0 0 "grep active failed"
     
     LOG_INFO "End to run test."
