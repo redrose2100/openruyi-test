@@ -28,12 +28,12 @@ function run_test()
     CHECK_RESULT $? 0 0 "delete failed"
     auditctl -a always,exit -S execve -k command
     CHECK_RESULT $? 0 0 "add failed"
-    auditctl -l |grep -e "-a always,exit -S execve -F key=command"
+    auditctl -l | grep -e "-a always,exit -S execve -F key=command"
     CHECK_RESULT $? 0 0 "grep rule failed"
     starttime=$(date +%T)
     mkdir test
     endtime=$(date +%T)
-    ausearch -ts "${starttime}" -te "${endtime}" -k command |grep mkdir
+    ausearch -ts "${starttime}" -te "${endtime}" -k command | grep mkdir
     CHECK_RESULT $? 0 0 "ausearch failed"
     aureport -u -i --summary 
     CHECK_RESULT $? 0 0 "aureport failed"
