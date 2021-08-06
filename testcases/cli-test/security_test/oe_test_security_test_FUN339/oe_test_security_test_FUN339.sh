@@ -24,15 +24,15 @@ function run_test()
     
     systemctl start iptables
     CHECK_RESULT $? 0 0 "start failed"
-    systemctl status iptables |grep active
+    systemctl status iptables | grep active
     CHECK_RESULT $? 0 0 "grep start failed"
     systemctl stop iptables
     CHECK_RESULT $? 0 0 "stop failed"
-    systemctl status iptables |grep inactive
+    systemctl status iptables | grep inactive
     CHECK_RESULT $? 0 0 "grep stop failed"
     systemctl restart iptables
     CHECK_RESULT $? 0 0 "start failed"
-    systemctl status iptables |grep active
+    systemctl status iptables | grep active
     CHECK_RESULT $? 0 0 "grep start failed"
     
     LOG_INFO "End to run test."
