@@ -25,6 +25,7 @@ function pre_test()
     umask 0022
     useradd tester1
     useradd tester2
+    cp /etc/sudoers /etc/sudoers1
     
     LOG_INFO "End to prepare the test environment."
 }
@@ -41,11 +42,11 @@ function run_test()
     CHECK_RESULT $? 1 0 "success"
     echo "I LOVE YOU" >> /home/tester1/test.txt
     CHECK_RESULT $? 0 0 "write failed"
-    cat /home/tester1/test.txt | grep -e "I LOVE YOU"
+    grep -e "I LOVE YOU" /home/tester1/test.txt
     CHECK_RESULT $? 0 0 "grep failed"
     su - tester2 -c "echo \"blinux ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers"
     CHECK_RESULT $? 1 0 "success"
-    echo "blinux ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    echo "blinux ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers 
     CHECK_RESULT $? 0 0 "echo failed"
     
     LOG_INFO "End to run test."
@@ -57,7 +58,9 @@ function post_test()
     
     userdel -rf tester1
     userdel -rf tester2
-    sed -i '$d' /etc/sudoers
+    rm -rf /etc/sudoers
+    cp /etc/sudoers1 /etc/sudoers
+    rm -rf /etc/sudoers1
     
     LOG_INFO "End to restore the test environment."
 }
