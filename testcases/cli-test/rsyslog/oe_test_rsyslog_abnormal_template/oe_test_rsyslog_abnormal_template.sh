@@ -43,13 +43,12 @@ EOF
     local7.*  @@${NODE1_IPV4};test-template
 EOF
     SSH_SCP client.conf ${NODE2_USER}@${NODE2_IPV4}:/etc/rsyslog.d/client.conf "${NODE2_PASSWORD}"
-    CHECK_RESULT $?
     SSH_CMD "
     systemctl restart rsyslog
-    logger -p local7.err \"tcptesttemplate\"
+    logger -p local7.err "tcptesttemplate"
     " ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     CHECK_RESULT $?
-    SLEEP_WAIT 5
+    SLEEP_WAIT 20
     grep "Framing Error in received TCP message from peer" /var/log/messages
     CHECK_RESULT $?
     LOG_INFO "End to run test."
@@ -58,10 +57,9 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     rm -rf /etc/rsyslog.d/server.conf test.conf
     systemctl restart rsyslog
-    systemctl start iptables
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

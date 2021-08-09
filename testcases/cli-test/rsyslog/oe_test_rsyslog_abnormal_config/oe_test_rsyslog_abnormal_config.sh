@@ -13,7 +13,7 @@
 # @Contact   :   wangshan@163.com
 # @Date      :   2020-08-03
 # @License   :   Mulan PSL v2
-# @Desc      :   The configuration of rsyslog,-N1
+# @Desc      :   -N1 command
 # ############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
