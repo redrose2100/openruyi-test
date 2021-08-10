@@ -22,7 +22,6 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "${AUDIT_PATH}"
-    rm -rf /var/log/audit/audit.log*
     service auditd restart
     date_add=$(date -d "+1 year" +'%m/%d/%Y %H:%M:%S')
     clock --set --date="${date_add}"
