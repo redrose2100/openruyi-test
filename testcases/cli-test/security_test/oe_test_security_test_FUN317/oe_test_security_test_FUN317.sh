@@ -22,6 +22,7 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
     
+    a=$(umask)
     umask 0022
     useradd tester1
     useradd tester2
@@ -61,6 +62,7 @@ function post_test()
     rm -rf /etc/sudoers
     cp /etc/sudoers1 /etc/sudoers
     rm -rf /etc/sudoers1
+    umask $a
     
     LOG_INFO "End to restore the test environment."
 }
