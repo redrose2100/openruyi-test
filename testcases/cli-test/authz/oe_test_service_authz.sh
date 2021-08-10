@@ -30,7 +30,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     test_restart ${service}
-    test_reload ${service}
+    test_enabled ${service}
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v "accept unix /run/isulad/plugins/authz-broker.sock"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload ${service}
