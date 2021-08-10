@@ -71,6 +71,7 @@ function post_test() {
     clock --set --date="${date_add}"
     clock --hctosys
     sed -i 's/max_log_file = 1/max_log_file = 8/g' "${AUDIT_PATH}"
+    rm -rf /var/log/audit/audit.log*
     service auditd restart
 
     LOG_INFO "End to restore the test environment."
