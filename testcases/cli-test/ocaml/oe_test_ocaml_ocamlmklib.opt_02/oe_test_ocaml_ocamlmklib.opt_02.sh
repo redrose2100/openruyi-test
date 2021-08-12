@@ -52,7 +52,7 @@ function run_test() {
     CHECK_RESULT $?
     strings dlla.so | grep "/tmp"
     CHECK_RESULT $?
-    ocamlmklib.opt -help grep "ocamlmklib" 2>&1
+    ocamlmklib.opt -help 2>&1 | grep "ocamlmklib"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
