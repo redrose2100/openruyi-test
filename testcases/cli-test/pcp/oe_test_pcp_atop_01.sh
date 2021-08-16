@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    /usr/libexec/pcp/bin/pcp-atop -V | grep 'version'
+    /usr/libexec/pcp/bin/pcp-atop -V | grep "$pcp_version"
     CHECK_RESULT $?
     nohup /usr/libexec/pcp/bin/pcp-atop -aRfFGl1xgnC -L 80 >atop_a 2>&1 &
     SLEEP_WAIT 7 
