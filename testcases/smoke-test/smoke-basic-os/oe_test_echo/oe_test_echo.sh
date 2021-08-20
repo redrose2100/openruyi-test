@@ -27,28 +27,30 @@ function pre_test(){
 }
 function do_test() {
     LOG_INFO "Start test"
-#文本打印
+    LOG_INFO "The text printing"
     echo "hello world"
     CHECK_RESULT $?
-#echo新建文本文件
-    echo "hello,this is test:第一句" > /tmp/test1
-    cat /tmp/test1 |grep "第一句"
+
+    LOG_INFO "Create a text file and write text"
+    echo "hello,this is first" > /tmp/test1
+    grep "first" /tmp/test1
     CHECK_RESULT $?
 
-#echo追加空文本文件
+    LOG_INFO "Write the text"
     touch /tmp/test2
-    echo "my name is lilei" /tmp/test2
-    cat /tmp/test2 |grep "lilei"
+    echo "my name is lilei" > /tmp/test2
+    grep "lilei" /tmp/test2
     CHECK_RESULT $?
-#echo非空文件追加
-    echo  "这是第二句" >> /tmp/test1
-    cat /tmp/test1 |grep "这是第二句"
+
+    LOG_INFO "Append text"
+    echo  "this is second" >> /tmp/test1
+    grep "second"  /tmp/test1
     CHECK_RESULT $?
     LOG_INFO "Finish test"
 }
 
 function post_test(){
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "Start environment cleanup."
     rm -rf /tmp/test*
     LOG_INFO "Finish environment cleanup!"
 }
