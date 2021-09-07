@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   wangpeng
 # @Contact   :   wangpengb@uniontech.com
-# @Date      :   2021-09*07
+# @Date      :   2021-09-07
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-chattr
 # ############################################
