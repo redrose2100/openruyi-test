@@ -29,23 +29,23 @@ function do_test() {
     LOG_INFO "Start test"
     LOG_INFO "The text printing"
     echo "hello world"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "if can not print "hello world",execute failed"
 
     LOG_INFO "Create a text file and write text"
     echo "hello,this is first" > /tmp/test1
     grep "first" /tmp/test1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "if can not grep 'first',excute failed"
 
     LOG_INFO "Write the text"
     touch /tmp/test2
     echo "my name is lilei" > /tmp/test2
     grep "lilei" /tmp/test2
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "if can not grep 'lilei',excute failed"
 
     LOG_INFO "Append text"
     echo  "this is second" >> /tmp/test1
     grep "second"  /tmp/test1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "if can not grep 'second',excute failed"
     LOG_INFO "Finish test"
 }
 
