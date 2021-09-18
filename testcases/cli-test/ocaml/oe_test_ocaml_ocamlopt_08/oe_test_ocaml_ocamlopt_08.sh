@@ -60,7 +60,7 @@ function run_test() {
     CHECK_RESULT $?
     ocamlopt -version example.ml | grep $ocaml_version
     CHECK_RESULT $?
-    ocamlopt -verbose a.c 2>&1 | grep "gcc" 
+    ocamlopt -verbose a.c 2>&1 | grep "gcc"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
@@ -68,7 +68,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf ./a* ./example* ./hello* ./lazy* ./lazytest* result
+    rm -rf ./a* ./example* ./hello* ./lazy* ./lazytest*
     LOG_INFO "End to restore the test environment."
 }
 
