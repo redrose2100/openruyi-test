@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hdparm -h fail"
     hdparm -a /dev/"$dev" | grep -i /dev/"$dev"
     CHECK_RESULT $? 0 0 "hdparm -a system fail"
-    if [ hdparm -I /dev/"$dev" | grep -i "32BIT" ]; then
+    if hdparm -I /dev/"$dev" | grep -i "32BIT"; then
       hdparm -c /dev/"$dev" | grep -i "IO_support"
       CHECK_RESULT $? 0 0 "hdparm -c system fail"
     fi
@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hdparm -V system fail"
     hdparm -r /dev/"$dev" | grep -i "readonly"
     CHECK_RESULT $? 0 0 "hdparm -r system fail"
-    if [ hdparm -I /dev/"$dev" | grep -i "ATA\|STAT" ]; then
+    if hdparm -I /dev/"$dev" | grep -i "ATA\|STAT"; then
         hdparm -m /dev/"$dev" | grep -i "multcount"
         CHECK_RESULT $? 0 0 "hdparm -m system fail"
         hdparm -I /dev/"$dev" | grep -i "Capabilities"
