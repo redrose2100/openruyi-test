@@ -1,0 +1,89 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/ntfs-3g",
+    "cases": [
+        {
+            "name": "oe_test_ntfscat"
+        },
+        {
+            "name": "oe_test_ntfscp"
+        },
+        {
+            "name": "oe_test_mkntfs"
+        },
+        {
+            "name": "oe_test_mkfs.ntfs"
+        },
+        {
+            "name": "oe_test_ntfsclone_01"
+        },
+        {
+            "name": "oe_test_ntfsclone_02"
+        },
+        {
+            "name": "oe_test_ntfslabel"
+        },
+        {
+            "name": "oe_test_ntfsfix"
+        },
+        {
+            "name": "oe_test_ntfsinfo"
+        },
+        {
+            "name": "oe_test_ntfsls"
+        },
+        {
+            "name": "oe_test_ntfscmp"
+        },
+        {
+            "name": "oe_test_ntfswipe_01"
+        },
+        {
+            "name": "oe_test_ntfswipe_02"
+        },
+        {
+            "name": "oe_test_ntfsresize"
+        },
+        {
+            "name": "oe_test_ntfscluster"
+        },
+        {
+            "name": "oe_test_ntfsmove"
+        },
+        {
+            "name": "oe_test_ntfssecaudit"
+        },
+        {
+            "name": "oe_test_ntfs-3g.probe"
+        },
+        {
+            "name": "oe_test_ntfstruncate"
+        },
+        {
+            "name": "oe_test_ntfsundelete_01"
+        },
+        {
+            "name": "oe_test_ntfsundelete_02"
+        },
+        {
+            "name": "oe_test_ntfs-3g_01"
+        },
+        {
+            "name": "oe_test_ntfs-3g_02"
+        },
+        {
+            "name": "oe_test_ntfs-3g_03"
+        },
+        {
+            "name": "oe_test_lowntfs-3g_01"
+        },
+        {
+            "name": "oe_test_lowntfs-3g_02"
+        },
+        {
+            "name": "oe_test_lowntfs-3g_03"
+        },
+        {
+            "name": "oe_test_ntfsfallocate"
+        }
+    ]
+}
