@@ -53,8 +53,6 @@ function run_test() {
     CHECK_RESULT $?
     ocamloptp -config a.c | grep -E "version|ocamlc" -A 55
     CHECK_RESULT $?
-    ocamloptp -annot example.ml
-    rm -rf a.out
     LOG_INFO "End to run test."
 }
 
