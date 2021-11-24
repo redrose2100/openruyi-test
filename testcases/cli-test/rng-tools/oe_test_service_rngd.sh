@@ -28,24 +28,18 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    systemctl restart "${service}"
-    CHECK_RESULT $? 0 0 "${service} restart failed"
-    systemctl stop "${service}"
-    CHECK_RESULT $? 0 0 "${service} stop failed"
-    systemctl start "${service}"
-    CHECK_RESULT $? 0 0 "${service} start failed"
-    systemctl status "${service}" | grep "Active" | grep "active (running)"
-    CHECK_RESULT $? 0 0 "${service} start failed"
-    symlink_file=$(systemctl enable "${service}" 2>&1 | awk '{print $3}')
-    find ${symlink_file}
-    CHECK_RESULT $? 0 0 "${service} enable failed"
-    systemctl disable "${service}"
-    find ${symlink_file}
-    CHECK_RESULT $? 0 1 "${service} disable failed"
+    test_restart "${service}"
+    test_enabled "${service}"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v "Hardware RNG Device"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
-    test_reload rngd.service
+    test_reload "${service}" 
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    systemctl stop "${service}"
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
