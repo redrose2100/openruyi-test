@@ -26,13 +26,13 @@ function run_test() {
     file --help
     CHECK_RESULT $? 0 0 "file --help display error"
 
-    file /etc/passwd
+    file /etc/passwd | grep "/etc/passwd: ASCII text"
     CHECK_RESULT $? 0 0 "file /etc/passwd display error"
 
-    file -b /etc/passwd
+    file -b /etc/passwd | grep "ASCII text"
     CHECK_RESULT $? 0 0 "file -b /etc/passwd display error"
 
-    file -i /etc/passwd
+    file -i /etc/passwd  | grep "/etc/passwd: text/plain; charset=us-ascii"
     CHECK_RESULT $? 0 0 "file -i /etc/passwd display error"
 
 }
