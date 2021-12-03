@@ -20,7 +20,6 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test(){
     LOG_INFO "Start environment preparation"
     ls /tmp/test1 && rm -rf /tmp/test1
-    ls /tmp/test2 && rm -rf /tmp/test2
     LOG_INFO "End of enviornment preparation"
 }
 function do_test() {
