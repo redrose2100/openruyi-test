@@ -14,7 +14,7 @@
 # @Contact   :   1820463064@qq.com
 # @Date      :   2020/10/23
 # @License   :   Mulan PSL v2
-# @Desc      :   Test mcstransd.service restart
+# @Desc      :   Test mcstrans.service restart
 # #############################################
 
 source "../common/common_lib.sh"

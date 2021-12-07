@@ -24,7 +24,6 @@ function pre_test() {
     DNF_INSTALL ntp
     service=ntpd.service
     log_time=$(date '+%Y-%m-%d %T')
-    test_restart "${service}"
     LOG_INFO "End of environmental preparation!"
 }
 

@@ -21,9 +21,9 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    if [ "$(uname -i)" == aarch64 ]; then
+    if [ "${NODE1_FRAME}" == aarch64 ]; then
         LOG_INFO "The environment does not support testing"
-        return 0
+        exit 0
     else
         DNF_INSTALL mcelog
     fi
@@ -32,18 +32,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test "$(uname -i)" == x86_64 && (
     test_execution mcelog.service
-    test_reload mcelog.service )
+    test_reload mcelog.service
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    if [ "$(uname -i)" == x86_64 ]; then
-        systemctl stop mcelog.service
-        DNF_REMOVE
-    fi
+    systemctl stop mcelog.service
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -22,17 +22,32 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL ntp
+    echo "server 127.127.1.0 iburst prefer maxpoll 4 minpoll 4" >> /etc/ntp.conf
+    sed -i "s/restrict default nomodify notrap nopeer noepeer noquery/#restrict default nomodify notrap nopeer noepeer noquery/" \
+/etc/ntp.conf
+    sed -i 's/0.openEuler.pool.ntp.org/localhost/' /etc/ntp/step-tickers
+    sed -i 's\/usr/sbin/ntpdate -s -b\/usr/sbin/ntpdate -s -b -d\' /usr/libexec/ntpdate-wrapper
+    systemctl start ntpd.service
+    SLEEP_WAIT 5
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_oneshot ntpdate.service 'inactive (dead)'
+    test_execution ntpdate.service
+    test_reload ntpdate.service
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    systemctl stop ntpdate.service
+    systemctl stop ntpd.service
+    sed -i "/server 127.127.1.0 iburst prefer maxpoll 4 minpoll 4/d" /etc/ntp.conf
+    sed -i "s/#restrict default nomodify notrap nopeer noepeer noquery/restrict default nomodify notrap nopeer noepeer noquery/" \
+    sed -i 's/localhost/0.openEuler.pool.ntp.org/' /etc/ntp/step-tickers
+/etc/ntp.conf
+    sed -i 's\/usr/sbin/ntpdate -s -b -d\/usr/sbin/ntpdate -s -b\' /usr/libexec/ntpdate-wrapper
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
