@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_prometheus"
+        },
+        {
+            "name": "oe_test_prometheus_cli"
         }
     ]
 }
