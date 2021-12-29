@@ -36,9 +36,9 @@ function usage() {
     printf "Usage:  \n
     -c: configuration environment of test framework\n
     -a: execute all use cases\n
-    -f：designated test suite\n
-    -r：designated test case\n
-    -x：the shell script is executed in debug mode\n
+    -f: designated test suite\n
+    -r: designated test case\n
+    -x: the shell script is executed in debug mode\n
     \n
     Example: 
         run all cases:
