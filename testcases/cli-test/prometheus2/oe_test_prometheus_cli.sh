@@ -9,6 +9,24 @@ function pre_test() {
 }
 
 function run_test() {
+
+    function kill_process() {
+        if kill -9 "$(ps aux | pgrep "prometheus")" >/dev/null 2>&1; then
+            LOG_INFO "Succeed to terminate prometheus."
+        else
+            LOG_INFO "Failed to terminate prometheus."
+            exit 127
+        fi
+    }
+
+    function wait_for_ready() {
+        LOG_INFO "Waiting for prometheus is ready."
+        while ! grep "Server is ready to receive web requests." ./log; do
+            echo 'wait for server' >/dev/null
+        done
+        LOG_INFO "Prometheus is ready."
+    }
+
     LOG_INFO "Start testing..."
 
     if ! IS_FREE_PORT 9090; then
@@ -28,27 +46,25 @@ function run_test() {
     LOG_INFO "Finish to check flag: --help"
 
     LOG_INFO "Start to check flag: --config.file"
-    touch ./log
     LOG_INFO "Start prometheus with sepecific config file."
-    prometheus --config.file="test.yml" >./log 2>&1 &
-    LOG_INFO "Waiting for prometheus is ready."
-
-    while ! grep "Server is ready to receive web requests." ./log; do
-        echo 'wait for server' >/dev/null
-    done
-    LOG_INFO "Prometheus is ready."
+    touch ./log
+    prometheus --config.file="prometheus.yml" >./log 2>&1 &
+    wait_for_ready
     current_job_name="$(curl -s 'http://localhost:9090/config' | grep 'job_name' | awk '{print $3}')"
     echo current job name is $current_job_name
     [[ "${current_job_name}" = "test_prometheus_cli" ]]
     CHECK_RESULT $? 0 0 "Failed to use specific config file."
     LOG_INFO "Finish to check flag: --config.file"
+    kill_process
 
-    if kill -9 "$(ps aux | pgrep "prometheus")" >/dev/null 2>&1; then
-        LOG_INFO "Succeed to terminate prometheus."
-    else
-        LOG_INFO "Failed to terminate prometheus."
-    fi
-
+    LOG_INFO "Start to check flag: --web.listen-address"
+    touch ./log
+    free_port="$(GET_FREE_PORT localhost)"
+    prometheus --web.listen-address="0.0.0.0:$free_port" >./log 2>&1 &
+    wait_for_ready
+    curl -s "http://localhost:$free_port" | grep 'Found'
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.listen-address'
+    kill_process
     LOG_INFO "Finish test!"
 }
 
