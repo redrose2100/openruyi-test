@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2020. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   huyahui
 # @Contact   :   huyahui8@163.com
-# @Date      :   2020/7/17
+# @Date      :   2021/12/31
 # @License   :   Mulan PSL v2
 # @Desc      :   Set ACL rules to add write permissions to a user
 # #############################################
@@ -35,9 +35,9 @@ ${NODE1_PASSWORD}
 EOF
     touch /tmp/my_pwd
     ls -l /tmp/my_pwd | grep '\-rw\-r\-\-r\-\-.'
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Check file default umask failed"
     setfacl -m u:example:w /tmp/my_pwd
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to add a user permission for 'example'"
     getfacl /tmp/my_pwd >tmp_log
     echo '# file: tmp/my_pwd
 # owner: root
@@ -49,11 +49,11 @@ mask::rw-
 other::r--
 ' >diff_file
     diff tmp_log diff_file
-    CHECK_RESULT $?
+    CHECK_RESULT  $? 0 0 "Comparison between tmp_log and diff_file failed"
     ls -l /tmp/my_pwd | grep '\-rw\-rw\-r\-\-+'
-    CHECK_RESULT $?
+    CHECK_RESULT  $? 0 0 "Check file umask failed"
     su - example -c 'echo test>/tmp/my_pwd'
-    CHECK_RESULT $?
+    CHECK_RESULT  $? 0 0 "Switching to 'example' failed to execute echo command"
     LOG_INFO "Finish testcase execution."
 }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2020. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   huyahui
 # @Contact   :   huyahui8@163.com
-# @Date      :   2020/7/17
+# @Date      :   2021/12/31
 # @License   :   Mulan PSL v2
 # @Desc      :   Modify the mask rules to remove user read permissions
 # #############################################
@@ -43,13 +43,13 @@ EOF
     chmod 700 /home/test1
     su - example1 -c 'setfacl -m u:example2:r  /home/test1'
     su - example2 -c 'cat  /home/test1|grep test'
-    CHECK_RESULT $?
+    CHECK_RESULT  $? 0 0 "Failed to switch 'example2' user to view files"
     setfacl -m m::--- /home/test1
-    CHECK_RESULT $?
+    CHECK_RESULT  $? 0 0 "Failed to set ACL"
     getfacl /home/test1 | grep 'effective:\-\-\-'
-    CHECK_RESULT $?
+    CHECK_RESULT  $? 0 0 "Failed to get ACL"
     su - example2 -c 'cat  /home/test1|grep test'
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "Failed to switch 'example2' user to view files"
     LOG_INFO "Finish testcase execution."
 }
 

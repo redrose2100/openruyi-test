@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2020. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   huyahui
 # @Contact   :   huyahui8@163.com
-# @Date      :   2020/7/17
+# @Date      :   2021/12/31
 # @License   :   Mulan PSL v2
 # @Desc      :   View ACL rules for newly created files
 # #############################################
@@ -38,7 +38,7 @@ group::r--
 other::r--
 ' >diff_file
     diff tmp_log diff_file
-    CHECK_RESULT $?
+    CHECK_RESULT  $? 0 0 "Comparison between tmp_log and diff_file failed"
     LOG_INFO "Finish testcase execution."
 }
 

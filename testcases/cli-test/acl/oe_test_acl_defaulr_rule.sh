@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2020. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   huyahui
 # @Contact   :   huyahui8@163.com
-# @Date      :   2020/7/17
+# @Date      :   2021/12/31
 # @License   :   Mulan PSL v2
 # @Desc      :   Directory defaulr ACL rules
 # #############################################
@@ -49,7 +49,7 @@ default:other::r-x
 ' >diff_dir_log
     getfacl /home/test >tmp_dir
     diff diff_dir_log tmp_dir
-    CHECK_RESULT $?
+    CHECK_RESULT  $? 0 0 "Comparison between diff_file_log and tmp_file failed"
     touch /home/test/file
     echo '# file: home/test/file
 # owner: root
@@ -62,7 +62,7 @@ other::r--
 ' >diff_file_log
     getfacl /home/test/file >tmp_file
     diff diff_file_log tmp_file
-    CHECK_RESULT $?
+    CHECK_RESULT  $? 0 0 "Comparison between diff_file_log and tmp_file failed"
     LOG_INFO "Finish testcase execution."
 }
 
