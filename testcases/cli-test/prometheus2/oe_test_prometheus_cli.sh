@@ -65,6 +65,16 @@ function run_test() {
     curl -s "http://localhost:$free_port" | grep 'Found'
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.listen-address'
     kill_process
+
+    LOG_INFO "Start to check flag: --web.external-url=oe_test_prometheus"
+    touch ./log
+    ex_url='oe_test_prometheus'
+    prometheus --web.external-url="${ex_url}" >./log 2>&1 &
+    wait_for_ready
+    curl -s 'localhost:9090' | grep "${ex_url}\|Found"
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.external-url'
+    kill_process
+
     LOG_INFO "Finish test!"
 }
 
