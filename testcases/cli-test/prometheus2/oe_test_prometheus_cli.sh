@@ -75,6 +75,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.external-url'
     kill_process
 
+    LOG_INFO "Start to check flag: --web.route-prefix"
+    touch ./log
+    prefix='hi_prometheus'
+    prometheus --web.route-prefix="${prefix}" >./log 2>&1 &
+    wait_for_ready
+    curl -s 'localhost:9090' | grep "${prefix}\|Found"
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.route-prefix'
+    kill_process
+
     LOG_INFO "Finish test!"
 }
 
