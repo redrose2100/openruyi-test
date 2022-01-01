@@ -66,22 +66,28 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.listen-address'
     kill_process
 
-    LOG_INFO "Start to check flag: --web.external-url=oe_test_prometheus"
+    LOG_INFO "Start to check flag: --web.external-url"
     touch ./log
-    ex_url='oe_test_prometheus'
-    prometheus --web.external-url="${ex_url}" >./log 2>&1 &
+    prometheus --web.external-url="the_external_url" >./log 2>&1 &
     wait_for_ready
-    curl -s 'localhost:9090' | grep "${ex_url}\|Found"
+    curl -s 'localhost:9090' | grep '<a href="/the_external_url">Found</a>.'
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.external-url'
     kill_process
 
     LOG_INFO "Start to check flag: --web.route-prefix"
     touch ./log
-    prefix='hi_prometheus'
-    prometheus --web.route-prefix="${prefix}" >./log 2>&1 &
+    prometheus --web.route-prefix="the_prefix" >./log 2>&1 &
     wait_for_ready
-    curl -s 'localhost:9090' | grep "${prefix}\|Found"
+    curl -s 'localhost:9090' | grep '<a href="/the_prefix">Found</a>.'
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.route-prefix'
+    kill_process
+
+    LOG_INFO "Start to check flag: --web.page-title"
+    touch ./log
+    prometheus --web.page-title="the title" >./log 2>&1 &
+    wait_for_ready
+    curl -s 'localhost:9090/config' | grep '<title>the title</title>'
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.page-title'
     kill_process
 
     LOG_INFO "Finish test!"
