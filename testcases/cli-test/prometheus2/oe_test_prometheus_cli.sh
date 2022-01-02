@@ -20,9 +20,9 @@ function run_test() {
     }
 
     function wait_for_ready() {
-        LOG_INFO "Waiting for prometheus is ready."
+        LOG_INFO "Waiting for Prometheus to beready."
         while ! grep "Server is ready to receive web requests." ./log; do
-            echo 'wait for server' >/dev/null
+            sleep 1s
         done
         LOG_INFO "Prometheus is ready."
     }
