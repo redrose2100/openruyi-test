@@ -11,11 +11,11 @@ function pre_test() {
 function run_test() {
 
     function kill_process() {
-        if kill -9 "$(ps aux | pgrep "prometheus")" >/dev/null 2>&1; then
-            LOG_INFO "Succeed to terminate prometheus."
-        else
+        kill -9 "$(pgrep -x 'prometheus')" >/dev/null
+        if pgrep -x "prometheus" >/dev/null; then
             LOG_INFO "Failed to terminate prometheus."
-            exit 127
+        else
+            LOG_INFO "Succeed to terminate prometheus."
         fi
     }
 
