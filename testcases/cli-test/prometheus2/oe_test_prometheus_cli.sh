@@ -20,7 +20,7 @@ function run_test() {
     }
 
     function wait_for_ready() {
-        LOG_INFO "Waiting for Prometheus to beready."
+        LOG_INFO "Waiting for Prometheus to be ready."
         while ! grep "Server is ready to receive web requests." ./log; do
             sleep 1s
         done
@@ -28,6 +28,11 @@ function run_test() {
     }
 
     LOG_INFO "Start testing..."
+
+    if pgrep -x "prometheus" >/dev/null; then
+        LOG_WARN "Prometheus is already running!"
+        LOG_WARN "Please terminate it for continue."
+    fi
 
     if ! IS_FREE_PORT 9090; then
         LOG_WARN "prometheus default bind port 9090 is not available!"
