@@ -79,8 +79,14 @@ function run_test() {
     start_process --web.enable-lifecycle
     wait_for_ready
     curl -s -X POST 'http://localhost:9090/-/quit'
-    pgrep 'prometheus'
-    CHECK_RESULT 1 0 'Failed to use flag: --web.enable-lifecycle'
+    CHECK_RESULT "$(pgrep 'prometheus')" 1 0 'Failed to use flag: --web.enable-lifecycle'
+    clear_env
+
+    LOG_INFO "Start to check flag: --web.enable-admin-api"
+    start_process --web.enable-admin-api
+    wait_for_ready
+    curl -s -X POST 'http://localhost:9090/api/v1/admin/tsdb/snapshot' | grep '"status":"success"'
+    CHECK_RESULT $? 0 0 'Failed to use flag:  --web.enable-admin-api'
     clear_env
 
     LOG_INFO "Start to check flag: --web.page-title"
