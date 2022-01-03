@@ -70,6 +70,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.route-prefix'
     clear_env
 
+    LOG_INFO "Start to check flag:  --web.user-assets"
+    start_process --web.user-assets=./
+    CHECK_RESULT $? 0 0 'Failed to use flag:  --web.user-assets'
+    clear_env
+
     LOG_INFO "Start to check flag: --web.page-title"
     start_process --web.page-title="the title"
     wait_for_ready
