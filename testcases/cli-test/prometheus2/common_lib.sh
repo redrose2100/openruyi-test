@@ -12,7 +12,7 @@ function is_running() {
 
 function clear_env() {
     if is_running; then
-        LOG_INFO "Prometheus is already running."
+        LOG_INFO "Prometheus is running."
         LOG_INFO "Start to terminate it."
         kill_process
     fi
@@ -28,7 +28,7 @@ function clear_env() {
 
 function kill_process() {
     if is_running; then
-        kill -9 "$(pgrep -x 'prometheus')" >/dev/null
+        result="$(kill -9 "$(pgrep -x 'prometheus')")"
         if pgrep -x "prometheus" >/dev/null; then
             LOG_WARN "Failed to terminate prometheus."
         else
