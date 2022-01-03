@@ -49,4 +49,8 @@ function clear_env() {
     if [ -f "./log" ]; then
         rm -rf ./log
     fi
+
+    if [ -d "./the_data" ]; then
+        rm -rf ./the_data
+    fi
 }
