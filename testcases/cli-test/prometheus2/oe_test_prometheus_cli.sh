@@ -111,6 +111,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.cors.origin'
     clear_env
 
+    LOG_INFO "Start to check flag: --storage.tsdb.path"
+    start_process --storage.tsdb.path="./the_data/"
+    wait_for_ready
+    CHECK_RESULT "$(ls ./the_data | grep -cE 'chunks_head|lock|queries.active|wal')" 4 0 'Failed to use flag: --storage.tsdb.path'
+    clear_env
+
     LOG_INFO "Finish test!"
 }
 
