@@ -41,7 +41,7 @@ function run_test() {
     LOG_INFO "Start to check flag: --web.listen-address"
     free_port="$(GET_FREE_PORT localhost)"
     prometheus --web.listen-address="0.0.0.0:$free_port" >./log 2>&1 &
-    wait_for_ready $free_port
+    wait_for_ready "$free_port"
     curl -s "http://localhost:$free_port" | grep 'Found'
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.listen-address'
     clear_env
@@ -49,21 +49,21 @@ function run_test() {
     LOG_INFO "Start to check flag: --web.external-url"
     prometheus --web.external-url="the_external_url" >./log 2>&1 &
     wait_for_ready
-    curl -s 'localhost:9090' | grep '<a href="/the_external_url">Found</a>.'
+    curl -s 'http://localhost:9090' | grep '<a href="/the_external_url">Found</a>.'
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.external-url'
     clear_env
 
     LOG_INFO "Start to check flag: --web.route-prefix"
     prometheus --web.route-prefix="the_prefix" >./log 2>&1 &
     wait_for_ready
-    curl -s 'localhost:9090' | grep '<a href="/the_prefix">Found</a>.'
+    curl -s 'http://localhost:9090' | grep '<a href="/the_prefix">Found</a>.'
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.route-prefix'
     clear_env
 
     LOG_INFO "Start to check flag: --web.page-title"
     prometheus --web.page-title="the title" >./log 2>&1 &
     wait_for_ready
-    curl -s 'localhost:9090/config' | grep '<title>the title</title>'
+    curl -s 'http://localhost:9090/config' | grep '<title>the title</title>'
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.page-title'
     clear_env
 
