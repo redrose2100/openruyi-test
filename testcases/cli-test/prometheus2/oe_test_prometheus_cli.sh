@@ -70,9 +70,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.route-prefix'
     clear_env
 
-    LOG_INFO "Start to check flag:  --web.user-assets"
+    LOG_INFO "Start to check flag: --web.user-assets"
     start_process --web.user-assets=./
-    CHECK_RESULT $? 0 0 'Failed to use flag:  --web.user-assets'
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.user-assets'
     clear_env
 
     LOG_INFO "Start to check flag: --web.enable-lifecycle"
@@ -87,6 +87,11 @@ function run_test() {
     wait_for_ready
     curl -s -X POST 'http://localhost:9090/api/v1/admin/tsdb/snapshot' | grep '"status":"success"'
     CHECK_RESULT $? 0 0 'Failed to use flag:  --web.enable-admin-api'
+    clear_env
+
+    LOG_INFO "Start to check flag: --web.console.templates"
+    start_process --web.console.templates=./
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.console.templates'
     clear_env
 
     LOG_INFO "Start to check flag: --web.page-title"
