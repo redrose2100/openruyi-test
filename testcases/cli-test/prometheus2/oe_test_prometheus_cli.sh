@@ -31,7 +31,7 @@ function run_test() {
 
     LOG_INFO "Start to check flag: --config.file"
     LOG_INFO "Start prometheus with sepecific config file."
-    prometheus --config.file="prometheus.yml" >./log 2>&1 &
+    start_process --config.file="prometheus.yml"
     wait_for_ready
     curl -s "localhost:9090/config" | grep 'job_name: test_prometheus_cli'
     CHECK_RESULT $? 0 0 "Failed to use specific config file."
@@ -40,28 +40,38 @@ function run_test() {
 
     LOG_INFO "Start to check flag: --web.listen-address"
     free_port="$(GET_FREE_PORT localhost)"
-    prometheus --web.listen-address="0.0.0.0:$free_port" >./log 2>&1 &
+    start_process --web.listen-address="0.0.0.0:$free_port"
     wait_for_ready "$free_port"
     curl -s "http://localhost:$free_port" | grep 'Found'
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.listen-address'
     clear_env
 
+    LOG_INFO "Start to check flag: --web.read-timeout=5m"
+    start_process --web.read-timeout=5m
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.read-timeout=5m'
+    clear_env
+
+    LOG_INFO "Start to check flag: --web.max-connections=512"
+    start_process --web.max-connections=512
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.max-connections=512'
+    clear_env
+
     LOG_INFO "Start to check flag: --web.external-url"
-    prometheus --web.external-url="the_external_url" >./log 2>&1 &
+    start_process --web.external-url="the_external_url"
     wait_for_ready
     curl -s 'http://localhost:9090' | grep '<a href="/the_external_url">Found</a>.'
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.external-url'
     clear_env
 
     LOG_INFO "Start to check flag: --web.route-prefix"
-    prometheus --web.route-prefix="the_prefix" >./log 2>&1 &
+    start_process --web.route-prefix="the_prefix"
     wait_for_ready
     curl -s 'http://localhost:9090' | grep '<a href="/the_prefix">Found</a>.'
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.route-prefix'
     clear_env
 
     LOG_INFO "Start to check flag: --web.page-title"
-    prometheus --web.page-title="the title" >./log 2>&1 &
+    start_process --web.page-title="the title"
     wait_for_ready
     curl -s 'http://localhost:9090/config' | grep '<title>the title</title>'
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.page-title'
