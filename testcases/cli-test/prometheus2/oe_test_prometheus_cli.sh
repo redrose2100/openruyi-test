@@ -94,6 +94,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.console.templates'
     clear_env
 
+    LOG_INFO "Start to check flag:  --web.console.libraries"
+    start_process --web.console.libraries=./
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.console.libraries'
+    clear_env
+
     LOG_INFO "Start to check flag: --web.page-title"
     start_process --web.page-title="the title"
     wait_for_ready
