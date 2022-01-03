@@ -106,6 +106,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.page-title'
     clear_env
 
+    LOG_INFO "Start to check flag: --web.cors.origin"
+    start_process --web.cors.origin=".*"
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.cors.origin'
+    clear_env
+
     LOG_INFO "Finish test!"
 }
 
