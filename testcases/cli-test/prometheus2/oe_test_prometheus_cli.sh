@@ -75,6 +75,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag:  --web.user-assets'
     clear_env
 
+    LOG_INFO "Start to check flag: --web.enable-lifecycle"
+    start_process --web.enable-lifecycle
+    wait_for_ready
+    curl -s -X POST 'http://localhost:9090/-/quit'
+    pgrep 'prometheus'
+    CHECK_RESULT 1 0 'Failed to use flag: --web.enable-lifecycle'
+    clear_env
+
     LOG_INFO "Start to check flag: --web.page-title"
     start_process --web.page-title="the title"
     wait_for_ready
