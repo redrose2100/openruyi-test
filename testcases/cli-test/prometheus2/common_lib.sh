@@ -26,7 +26,7 @@ function wait_for_ready() {
 
 function kill_process() {
     if is_running; then
-        (kill -9 "$(pgrep -x 'prometheus')")
+        kill -9 "$(pgrep -x 'prometheus')"
         if pgrep -x "prometheus" >/dev/null; then
             LOG_WARN "Failed to terminate prometheus."
         else
