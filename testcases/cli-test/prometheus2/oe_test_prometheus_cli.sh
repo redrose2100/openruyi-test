@@ -122,6 +122,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.retention'
     clear_env
 
+    LOG_INFO "Start to check flag: --storage.tsdb.retention.time"
+    start_process --storage.tsdb.retention.time=1m
+    CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.retention.time'
+    clear_env
+
     LOG_INFO "Finish test!"
 }
 
