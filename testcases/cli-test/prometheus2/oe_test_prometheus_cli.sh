@@ -132,6 +132,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.retention.size'
     clear_env
 
+    LOG_INFO "Start to check flag: --storage.tsdb.no-lockfile"
+    start_process --storage.tsdb.no-lockfile
+    wait_for_ready
+    CHECK_RESULT "$(ls ./data | grep -cE 'lock')" 0 0 'Failed to use flag: --storage.tsdb.no-lockfile'
+    clear_env
+
     LOG_INFO "Finish test!"
 }
 
