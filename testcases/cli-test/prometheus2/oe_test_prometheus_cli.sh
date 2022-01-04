@@ -138,6 +138,16 @@ function run_test() {
     CHECK_RESULT "$(ls ./data | grep -cE 'lock')" 0 0 'Failed to use flag: --storage.tsdb.no-lockfile'
     clear_env
 
+    LOG_INFO "Start to check flag: --storage.tsdb.allow-overlapping-blocks"
+    start_process --storage.tsdb.allow-overlapping-blocks
+    CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.allow-overlapping-blocks'
+    clear_env
+
+    LOG_INFO "Start to check flag: --storage.tsdb.wal-compression"
+    start_process --storage.tsdb.wal-compression
+    CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.wal-compression'
+    clear_env
+
     LOG_INFO "Finish test!"
 }
 
