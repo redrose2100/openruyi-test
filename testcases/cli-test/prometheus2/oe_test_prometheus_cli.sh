@@ -46,14 +46,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --web.listen-address'
     clear_env
 
-    LOG_INFO "Start to check flag: --web.read-timeout=5m"
+    LOG_INFO "Start to check flag: --web.read-timeout"
     start_process --web.read-timeout=5m
-    CHECK_RESULT $? 0 0 'Failed to use flag: --web.read-timeout=5m'
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.read-timeout'
     clear_env
 
-    LOG_INFO "Start to check flag: --web.max-connections=512"
-    start_process --web.max-connections=512
-    CHECK_RESULT $? 0 0 'Failed to use flag: --web.max-connections=512'
+    LOG_INFO "Start to check flag: --web.max-connections"
+    start_process --web.max-connections=100
+    CHECK_RESULT $? 0 0 'Failed to use flag: --web.max-connections'
     clear_env
 
     LOG_INFO "Start to check flag: --web.external-url"
@@ -173,13 +173,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --rules.alert.for-outage-tolerance'
     clear_env
 
-    LOG_INFO "Start to check flag: --rules.alert.for-grace-period=10m"
-    start_process --rules.alert.for-grace-period=10m
-    CHECK_RESULT $? 0 0 'Failed to use flag: --rules.alert.for-grace-period=10m'
+    LOG_INFO "Start to check flag: --rules.alert.for-grace-period"
+    start_process --rules.alert.for-grace-period=5m
+    CHECK_RESULT $? 0 0 'Failed to use flag: --rules.alert.for-grace-period'
     clear_env
 
     LOG_INFO "Start to check flag: --rules.alert.resend-delay"
-    start_process --rules.alert.resend-delay=5
+    start_process --rules.alert.resend-delay=5m
     CHECK_RESULT $? 0 0 'Failed to use flag: --rules.alert.resend-delay'
     clear_env
 
