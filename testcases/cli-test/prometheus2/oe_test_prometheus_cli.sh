@@ -158,6 +158,66 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --storage.remote.read-sample-limit'
     clear_env
 
+    LOG_INFO "Start to check flag: --storage.remote.read-concurrent-limit"
+    start_process --storage.remote.read-concurrent-limit=5
+    CHECK_RESULT $? 0 0 'Failed to use flag: --storage.remote.read-concurrent-limit'
+    clear_env
+
+    LOG_INFO "Start to check flag: --storage.remote.read-max-bytes-in-frame"
+    start_process --storage.remote.read-max-bytes-in-frame=100
+    CHECK_RESULT $? 0 0 'Failed to use flag: --storage.remote.read-max-bytes-in-frame'
+    clear_env
+
+    LOG_INFO "Start to check flag: --rules.alert.for-outage-tolerance"
+    start_process --rules.alert.for-outage-tolerance=1h
+    CHECK_RESULT $? 0 0 'Failed to use flag: --rules.alert.for-outage-tolerance'
+    clear_env
+
+    LOG_INFO "Start to check flag: --rules.alert.for-outage-tolerance"
+    start_process --rules.alert.for-outage-tolerance=1h
+    CHECK_RESULT $? 0 0 'Failed to use flag: --rules.alert.for-outage-tolerance'
+    clear_env
+
+    LOG_INFO "Start to check flag: --rules.alert.for-grace-period=10m"
+    start_process --rules.alert.for-grace-period=10m
+    CHECK_RESULT $? 0 0 'Failed to use flag: --rules.alert.for-grace-period=10m'
+    clear_env
+
+    LOG_INFO "Start to check flag: --rules.alert.resend-delay"
+    start_process --rules.alert.resend-delay=5
+    CHECK_RESULT $? 0 0 'Failed to use flag: --rules.alert.resend-delay'
+    clear_env
+
+    LOG_INFO "Start to check flag: --alertmanager.notification-queue-capacity"
+    start_process --alertmanager.notification-queue-capacity=100
+    CHECK_RESULT $? 0 0 'Failed to use flag: --alertmanager.notification-queue-capacity'
+    clear_env
+
+    LOG_INFO "Start to check flag: --alertmanager.timeout"
+    start_process --alertmanager.timeout=5s
+    CHECK_RESULT $? 0 0 'Failed to use flag: --alertmanager.timeout'
+    clear_env
+
+    LOG_INFO "Start to check flag: --query.lookback-delta"
+    start_process --query.lookback-delta=2m
+    CHECK_RESULT $? 0 0 'Failed to use flag: --query.lookback-delta'
+    clear_env
+
+    LOG_INFO "Start to check flag: --query.timeout"
+    start_process --query.timeout=2m
+    CHECK_RESULT $? 0 0 'Failed to use flag: --query.timeout'
+    clear_env
+
+    LOG_INFO "Start to check flag: --query.max-concurrency"
+    start_process --query.max-concurrency=10
+    CHECK_RESULT $? 0 0 'Failed to use flag: --query.max-concurrency'
+    clear_env
+
+    LOG_INFO "Start to check flag: --query.max-samples"
+    start_process --query.max-samples=100
+    CHECK_RESULT $? 0 0 'Failed to use flag: --query.max-samples'
+    clear_env
+
     LOG_INFO "Finish test!"
 }
 
