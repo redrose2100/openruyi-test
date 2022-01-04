@@ -153,6 +153,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --storage.remote.flush-deadline'
     clear_env
 
+    LOG_INFO "Start to check flag: --storage.remote.read-sample-limit"
+    start_process --storage.remote.read-sample-limit=5
+    CHECK_RESULT $? 0 0 'Failed to use flag: --storage.remote.read-sample-limit'
+    clear_env
+
     LOG_INFO "Finish test!"
 }
 
