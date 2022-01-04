@@ -12,7 +12,7 @@ function pre_test() {
 function run_test() {
 
     LOG_INFO "Start testing..."
-
+:
     if ! IS_FREE_PORT 9090; then
         LOG_WARN "prometheus default bind port 9090 is not available!"
         LOG_WARN "Please free the port 9090 for prometheus."
