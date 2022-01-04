@@ -143,14 +143,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.allow-overlapping-blocks'
     clear_env
 
-<<<<<<< HEAD
     LOG_INFO "Start to check flag: --storage.tsdb.wal-compression"
     start_process --storage.tsdb.wal-compression
     CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.wal-compression'
     clear_env
 
-=======
->>>>>>> 709085f9e51ddf0c38450662d93d34ddf4e7ee66
     LOG_INFO "Finish test!"
 }
 
