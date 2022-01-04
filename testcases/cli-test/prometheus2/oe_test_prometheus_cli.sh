@@ -117,6 +117,11 @@ function run_test() {
     CHECK_RESULT "$(ls ./the_data | grep -cE 'chunks_head|lock|queries.active|wal')" 4 0 'Failed to use flag: --storage.tsdb.path'
     clear_env
 
+    LOG_INFO "Start to check flag: --storage.tsdb.retention"
+    start_process --storage.tsdb.retention=1m
+    CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.retention'
+    clear_env
+
     LOG_INFO "Finish test!"
 }
 
