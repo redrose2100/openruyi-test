@@ -173,11 +173,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --rules.alert.for-outage-tolerance'
     clear_env
 
-    LOG_INFO "Start to check flag: --rules.alert.for-outage-tolerance"
-    start_process --rules.alert.for-outage-tolerance=1h
-    CHECK_RESULT $? 0 0 'Failed to use flag: --rules.alert.for-outage-tolerance'
-    clear_env
-
     LOG_INFO "Start to check flag: --rules.alert.for-grace-period=10m"
     start_process --rules.alert.for-grace-period=10m
     CHECK_RESULT $? 0 0 'Failed to use flag: --rules.alert.for-grace-period=10m'
