@@ -148,6 +148,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.wal-compression'
     clear_env
 
+    LOG_INFO "Start to check flag: --storage.remote.flush-deadline"
+    start_process --storage.remote.flush-deadline=1m
+    CHECK_RESULT $? 0 0 'Failed to use flag: --storage.remote.flush-deadline'
+    clear_env
+
     LOG_INFO "Finish test!"
 }
 
