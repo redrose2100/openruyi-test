@@ -213,6 +213,21 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --query.max-samples'
     clear_env
 
+    LOG_INFO "Start to check flag: --log.level"
+    start_process --log.level=debug
+    wait_for_ready
+    grep 'debug' ./log
+    CHECK_RESULT $? 0 0 'Failed to use flag: --log.level'
+    clear_env
+
+    LOG_INFO "Start to check flag: --log.format"
+    start_process --log.format=json
+    wait_for_ready
+    grep '"level":"info","msg":"Server is ready to receive web requests."' ./log
+    CHECK_RESULT $? 0 0 'Failed to use flag: --log.format'
+    clear_env
+
+
     LOG_INFO "Finish test!"
 }
 
