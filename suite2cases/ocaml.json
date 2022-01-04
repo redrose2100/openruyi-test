@@ -271,7 +271,7 @@
         {
             "name": "oe_test_ocaml_ocamlopt.opt_08"
         },
-        {
+	{
             "name": "oe_test_ocaml_ocamloptp_01"
         },
         {
@@ -301,7 +301,7 @@
         {
             "name": "oe_test_ocaml_ocamloptp.byte_05"
         },
-        {
+	{
             "name": "oe_test_ocaml_ocamloptp.opt_01"
         },
         {

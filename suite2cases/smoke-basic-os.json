@@ -173,6 +173,9 @@
         },
         {
             "name": "oe_test_mv_002"
+        },
+        {
+            "name": "oe_test_uname"
         }
     ]
 }
