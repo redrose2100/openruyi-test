@@ -1,0 +1,4 @@
+---
+BUNDLE_CACHE_ALL: "false"
+BUNDLE_BIN: "bin"
+BUNDLE_SHEBANG: "shebang"
