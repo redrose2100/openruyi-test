@@ -76,48 +76,63 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed querying alerts."
 
     LOG_INFO "Start querying targets metadata."
-    curl -s 'http://192.168.58.152:9090/api/v1/targets/metadata' | grep 'success'
+    curl -s 'http://localhost:9090/api/v1/targets/metadata' | grep 'success'
     CHECK_RESULT $? 0 0 "Failed querying targets metadata."
 
     LOG_INFO "Start querying metric metadata."
-    curl -s 'http://192.168.58.152:9090/api/v1/metadata' | grep 'success'
+    curl -s 'http://localhost:9090/api/v1/metadata' | grep 'success'
     CHECK_RESULT $? 0 0 "Failed querying metric metadata."
 
     LOG_INFO "Start querying alertmanagers."
-    curl -s 'http://192.168.58.152:9090/api/v1/alertmanagers' | grep 'success'
+    curl -s 'http://localhost:9090/api/v1/alertmanagers' | grep 'success'
     CHECK_RESULT $? 0 0 "Failed querying alertmanagers."
 
     LOG_INFO "Start to check status."
     LOG_INFO "Start querying config."
-    curl -s 'http://192.168.58.152:9090/api/v1/status/config' | grep 'success'
+    curl -s 'http://localhost:9090/api/v1/status/config' | grep 'success'
     CHECK_RESULT $? 0 0 "Failed querying config."
 
     LOG_INFO "Start querying flags."
-    curl -s 'http://192.168.58.152:9090/api/v1/status/flags' | grep 'success'
+    curl -s 'http://localhost:9090/api/v1/status/flags' | grep 'success'
     CHECK_RESULT $? 0 0 "Failed querying flags"
 
     LOG_INFO "Start querying runtimeinfo."
-    curl -s 'http://192.168.58.152:9090/api/v1/status/runtimeinfo' | grep 'success'
+    curl -s 'http://localhost:9090/api/v1/status/runtimeinfo' | grep 'success'
     CHECK_RESULT $? 0 0 "Failed querying runtimeinfo"
 
     LOG_INFO "Start querying buildinfo."
-    curl -s 'http://192.168.58.152:9090/api/v1/status/buildinfo' | grep 'success'
+    curl -s 'http://localhost:9090/api/v1/status/buildinfo' | grep 'success'
     CHECK_RESULT $? 0 0 "Failed querying buildinfo"
 
     LOG_INFO "Start querying tsdb."
-    curl -s 'http://192.168.58.152:9090/api/v1/status/tsdb' | grep 'success'
+    curl -s 'http://localhost:9090/api/v1/status/tsdb' | grep 'success'
     CHECK_RESULT $? 0 0 "Failed querying tsdb"
 
     clear_env
 
+    start_process --web.enable-admin-api
+    LOG_INFO "Start to check TSDB Admin APIs."
+    LOG_INFO "Start to querying snapshot."
+    curl -s -X POST 'http://localhost:9090/api/v1/admin/tsdb/snapshot' 
+    CHECK_RESULT $? 0 0 "Failed querying snapshot"
+
+    LOG_INFO "Start to delete series."
+    curl -sg -XPOST 'http://localhost:9090/api/v1/admin/tsdb/delete_series?match[]=up'
+    CHECK_RESULT $? 0 0 "Failed to delete series."
+
+    clean_tombstones
+    LOG_INFO "Start to clean tombstones."
+    curl -sg -X POST 'http://localhost:9090/api/v1/admin/tsdb/clean_tombstones'
+    CHECK_RESULT $? 0 0 "Failed to clean tombstones."
+    clear_env
 
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
     clear_env
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
