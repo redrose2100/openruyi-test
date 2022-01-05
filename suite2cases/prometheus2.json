@@ -8,7 +8,7 @@
             "name": "oe_test_prometheus_cli"
         },
         {
-            "name": "oe_test_prometheus_http_api"
+            "name": "oe_test_prometheus_querying_http_api"
         }
     ]
 }
