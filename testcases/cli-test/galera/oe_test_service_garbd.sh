@@ -17,7 +17,7 @@
 # @Desc      :   Test garbd.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "./common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -67,8 +67,8 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_restart ${service}
     test_enabled ${service}
-    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" \
-    | grep -v "access file(./gvwstate.dat) failed(No such file or directory)"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" |
+        grep -v "access file(./gvwstate.dat) failed(No such file or directory)"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload ${service}
     LOG_INFO "Finish test!"

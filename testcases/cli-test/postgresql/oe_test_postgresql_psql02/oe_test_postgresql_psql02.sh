@@ -36,7 +36,12 @@ function run_test() {
     CHECK_RESULT $?
     su - postgres -c "psql -q -c \"select * from pg_roles;\"" | grep "rolname"
     CHECK_RESULT $?
-    su - postgres -c "psql -s -c \"select * from pg_roles;\"" | grep "rolname"
+    expect <<-END
+    spawn su - postgres -c "psql -s -c \"select * from pg_roles;\"" | grep "rolname"
+    expect "*Single*"
+    send "\n"
+    expect eof
+END
     CHECK_RESULT $?
     su - postgres -c "psql -S -c \"select * from pg_roles;\"" | grep "rolname"
     CHECK_RESULT $?
