@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   shangyingjie
 # @Contact   :   yingjie@isrc.iscas.ac.cn
-# @Date      :   #TODO:time
+# @Date      :   2022/1/5 
 # @License   :   Mulan PSL v2
 # @Desc      :   Test prometheus HTTP API
 # #############################################
@@ -35,28 +35,19 @@ function run_test() {
         exit 126
     fi
 
-    LOG_INFO "Start prometheus."
     start_process --config.file="prometheus.yml"
     wait_for_ready
-    LOG_INFO "Start to check management api."
-    LOG_INFO "Start to check api: health."
     curl -s 'http://localhost:9090/-/healthy' | grep 'Prometheus is Healthy.'
     CHECK_RESULT $? 0 0 "Failed use api: health."
-
-    LOG_INFO "Start to check api: readiness."
     curl -s 'http://localhost:9090/-/ready' | grep 'Prometheus is Ready.'
     CHECK_RESULT $? 0 0 "Failed use api: readiness."
     clear_env
-
     start_process --web.enable-lifecycle
     wait_for_ready
-    LOG_INFO "Start to check api: reload ."
     curl -s -X POST 'http://localhost:9090/-/reload'
     CHECK_RESULT $? 0 0 'Failed to use api: reload'
-    LOG_INFO "Start to check api: quit."
     curl -s -X POST 'http://localhost:9090/-/quit'
     CHECK_RESULT $? 0 0 'Failed to use api: quit'
-    clear_env
     LOG_INFO "Finish test!"
 }
 
