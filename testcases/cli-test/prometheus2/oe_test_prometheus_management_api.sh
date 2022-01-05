@@ -14,7 +14,7 @@
 # @Contact   :   yingjie@isrc.iscas.ac.cn
 # @Date      :   2022/1/5 
 # @License   :   Mulan PSL v2
-# @Desc      :   Test prometheus HTTP API
+# @Desc      :   Test prometheus management API
 # #############################################
 
 source "./common_lib.sh"
