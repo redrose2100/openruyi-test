@@ -34,17 +34,18 @@ function run_test() {
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
     journalctl -u pkgship -n 20 | grep "\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
 query_ip_addr"
-    ACT_SERVICE stop
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when set query_ip_addr=''."
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep '\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
 query_ip_addr'"
     CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when set query_ip_addr=''."
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
 
     sed -i '/query_ip_addr/d' ${SYS_CONF_PATH}/package.ini
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
     journalctl -u pkgship -n 20 | grep "\[ERROR\] CAN NOT find config name 'query_port' or 'query_ip_addr' in: /etc/pkgship/package.ini"
-    ACT_SERVICE stop
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when delete query_ip_addr."
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] CAN NOT find config name 'query_port' or 'query_ip_addr' in: /etc/pkgship/package.ini,
     Please check the file.\""
     CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when delete query_ip_addr."
@@ -55,6 +56,7 @@ query_ip_addr'"
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
     rm -f ${SYS_CONF_PATH}/package.ini
     mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
     REVERT_ENV
@@ -63,3 +65,4 @@ function post_test() {
 }
 
 main $@
+

@@ -30,21 +30,22 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    # Set log_level as empty
     MODIFY_INI log_level ""
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
     journalctl -u pkgship -n 20 | grep "\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
     log_level"
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when set log_level=''."
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
     log_level\""
     CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when set log_level=''."
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
 
-    # Delete log_level
     sed -i '/log_level/d' ${SYS_CONF_PATH}/package.ini
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
     journalctl -u pkgship -n 20 | grep "\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters: log_level"
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when delete log_level."
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
     log_level\""
     CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when delete log_level."
@@ -55,6 +56,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
     rm -f ${SYS_CONF_PATH}/package.ini
     mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
     REVERT_ENV

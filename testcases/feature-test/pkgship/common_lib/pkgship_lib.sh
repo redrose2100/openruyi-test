@@ -29,40 +29,13 @@ export ES_CONF_PATH=/etc/elasticsearch
 function MODIFY_CONF() {
     # $1:modified parameter config
     # $2:modified parameter value
-    sed -i "s#$(cat ${SYS_CONF_PATH}/conf.yaml | grep $1)#  $1: $2#g" ${SYS_CONF_PATH}/conf.yaml
-}
-
-function ADD_CONF() {
-    # Add a new db config on file
-    file=$1
-    dbNameNew=$2
-    src_db_file_new=$3
-    bin_db_file_new=$4
-    priorityNew=$5
-    echo "- dbName: $dbNameNew" >>$file
-    echo "  src_db_file: $src_db_file_new" >>$file
-    echo "  bin_db_file: $bin_db_file_new" >>$file
-    echo "  priority: $priorityNew" >>$file
+    sed -i "s#$(grep $1 ${SYS_CONF_PATH}/conf.yaml)#  $1: $2#g" ${SYS_CONF_PATH}/conf.yaml
 }
 
 function INIT_CONF() {
-    # $1: file path
     conf_file=$1
-    initDB=$(cat $conf_file | grep dbname |cut -d ' ' -f 3)
-    existDB=$(pkgship dbs)
-    for var in $initDB; do
-        if [[ $existDB =~ $var ]]; then 
-            continue
-        else
-            mv ${SYS_CONF_PATH}/conf.yaml ${SYS_CONF_PATH}/conf.yaml.bak
-            cp -p $conf_file ${SYS_CONF_PATH}/conf.yaml
-            chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/conf.yaml
-            pkgship init >/dev/null
-            rm -f ${SYS_CONF_PATH}/conf.yaml
-            mv ${SYS_CONF_PATH}/conf.yaml.bak ${SYS_CONF_PATH}/conf.yaml
-            return 0
-        fi
-    done
+    chown pkgshipuser:pkgshipuser $conf_file
+    pkgship init -filepath $conf_file >/dev/null
 }
 
 function MODIFY_INI() {
@@ -78,13 +51,13 @@ function ACT_SERVICE() {
     cur_system=$(cat /proc/1/cgroup)
     cur_user=$(whoami)
 
-    ps -ef | egrep "elasticsearch" | grep -v grep > /dev/null
+    ps -ef | egrep "elasticsearch" | grep -v grep >/dev/null
     [[ $? -eq 1 ]] && {
         bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh elasticsearch
         sleep 2
     }
 
-    ps -ef | egrep "redis" | grep -v grep > /dev/null
+    ps -ef | egrep "redis" | grep -v grep >/dev/null
     [[ $? -eq 1 ]] && {
         bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh redis
         sleep 2
@@ -93,6 +66,8 @@ function ACT_SERVICE() {
     if [[ $cur_system =~ "docker" ]]; then
         if [[ $action == "start" ]]; then
             pkgshipd start
+        elif [[ $action == "restart" ]]; then
+            pkgshipd restart
         else
             pkgshipd stop
         fi
@@ -102,6 +77,12 @@ function ACT_SERVICE() {
                 systemctl start pkgship
             else
                 pkgshipd start
+            fi
+        elif [[ $action == "restart" ]]; then
+            if [[ $cur_user == "root" ]]; then
+                systemctl restart pkgship
+            else
+                pkgshipd restart
             fi
         else
             if [[ $cur_user == "root" ]]; then
@@ -115,30 +96,18 @@ function ACT_SERVICE() {
     sleep 2
 }
 
-function CHECK_INIT() {
-    # CHeck if init db success: 1. Check cmd display; 2. Check db msg
-    # $1: pkgship init cmd display
-    # $2: db namef
-    result=$1
-    dbName=$2
-    echo "$result" | grep "Database initialize success" >/dev/null
-    CHECK_RESULT $? 0 0 "Database initialize failed."
-    pkgship list $dbName | grep $dbName >/dev/null
-    CHECK_RESULT $? 0 0 "Query list after initialize failed."
-}
-
 function CHECK_LOCAL_REPO() {
     if [[ -e ${SYS_CONF_PATH}/repo ]]; then
         return 0
     else
         mkdir ${SYS_CONF_PATH}/repo
-        openEuler_src_repo=${SYS_CONF_PATH}/repo/openEuler-20.09/src/repodata
-        openEuler_bin_repo=${SYS_CONF_PATH}/repo/openEuler-20.09/bin/repodata
+        openEuler_src_repo=${SYS_CONF_PATH}/repo/openEuler-20.03/src/repodata
+        openEuler_bin_repo=${SYS_CONF_PATH}/repo/openEuler-20.03/bin/repodata
         mkdir -p $openEuler_src_repo
         mkdir -p $openEuler_bin_repo
-        wget "https://repo.openeuler.org/openEuler-20.09/source/repodata/096675d54ce5d62929f3879c4e8422bb41274e9b5c98f792167af4fb44609a04-primary.sqlite.bz2" -O $openEuler_src_repo/openEuler-20.09-src-primary.sqlite.bz2 --no-check-certificate >/dev/null
-        wget "https://repo.openeuler.org/openEuler-20.09/everything/aarch64/repodata/132d4db0712a476f4378740963b678b600b0294f0616715cdec08ba1e3a80e21-primary.sqlite.bz2" -O $openEuler_bin_repo/openEuler-20.09-bin-primary.sqlite.bz2 --no-check-certificate >/dev/null
-        wget "https://repo.openeuler.org/openEuler-20.09/everything/aarch64/repodata/c3ad2aa9d0dfc0557b08bfbd60b13bf314f9889f3363ddeb6d52e4944ffe677f-filelists.sqlite.bz2" -O $openEuler_bin_repo/openEuler-20.09-bin-filelists.sqlite.bz2 --no-check-certificate>/dev/null
+        wget "https://repo.openeuler.org/openEuler-20.03-LTS/source/repodata/c4a181f9986fc40bf068b601c828876789110236d9652ac0c49e3eae3a20e8e0-primary.sqlite.bz2" -O $openEuler_src_repo/openEuler-20.03-src-primary.sqlite.bz2 --no-check-certificate >/dev/null
+        wget "https://repo.openeuler.org/openEuler-20.03-LTS/everything/aarch64/repodata/ec190462f84dca9a3efde8dd960a8b76504488b76172dcade988fb7990783f49-primary.sqlite.bz2" -O $openEuler_bin_repo/openEuler-20.03-bin-primary.sqlite.bz2 --no-check-certificate >/dev/null
+        wget "https://repo.openeuler.org/openEuler-20.03-LTS/everything/aarch64/repodata/50808141995a36c2c8d805bb1c8afed8bc7891b5b4edf077fc007cf7b05c0f94-filelists.sqlite.bz2" -O $openEuler_bin_repo/openEuler-20.03-bin-filelists.sqlite.bz2 --no-check-certificate >/dev/null
 
         fedora_src_repo=${SYS_CONF_PATH}/repo/fedora/src/repodata
         fedora_bin_repo=${SYS_CONF_PATH}/repo/fedora/bin/repodata
@@ -150,6 +119,7 @@ function CHECK_LOCAL_REPO() {
 
         cp -r ../../common_lib/repo/data1 ${SYS_CONF_PATH}/repo
     fi
+
 }
 
 function CHECK_YUM() {
@@ -164,18 +134,19 @@ function CHECK_YUM() {
 }
 
 function INSTALL_ENV() {
-    DNF_INSTALL "pkgship-2.1.0-8.oe1 wget net-tools diffutils bc"
+    DNF_INSTALL "pkgship wget net-tools diffutils bc"
     bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh redis
     bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh elasticsearch
 }
 
 function REVERT_ENV() {
     ACT_SERVICE stop
-    rm -f ${YUM_PATH}/pkgship_yum.repo
-    for i in $(ps -ef |  egrep "pkgship|uwsgi|elasticsearch|redis" | grep -Ev "bash|grep" | awk '{print $2}'); do
-        kill -9 $i 
+    rm -f ${YUM_PATH}/pkgship_yum.repo ${YUM_PATH}/pkgship_elasticsearch.repo ${LOG_PATH}/pkgship/*
+    dnf clean all
+    dnf makecache
+    for i in $(ps -ef | egrep "pkgship|uwsgi|elasticsearch|redis" | grep -Ev "bash|grep" | awk '{print $2}'); do
+        kill -9 $i
     done
-
     DNF_REMOVE
     dnf remove elasticsearch redis -y
 }
@@ -215,7 +186,6 @@ function QUERY_BUILDDEP() {
     else
         pkgship builddep $pkgName -dbs $dbName -level $level
     fi
-    
 }
 
 function QUERY_SELFDEPEND() {
@@ -241,7 +211,8 @@ function GET_RANDOM_PKGNAME() {
     # Get all pkg name
     sqlite3 ../../common_lib/sqlite/$sqliteName "select name from packages;" &>pkg_list.txt
     # Get count
-    count=$(wc -l pkg_list.txt | awk '{print $1}')
+
+    count=$(cat pkg_list.txt | wc -l)
     # Get a randome in 1~count
     random=$((RANDOM % count + 1))
 
@@ -279,7 +250,7 @@ function CONCURRENCY_THREAD() {
 
     # wait
     end_time=$(date +%s)
-    exec_time=$(expr $(($end_time-$start_time)))
+    exec_time=$(expr $(($end_time - $start_time)))
     echo "Exectue $concurrency_num cmd for times: ""$exec_time"
 
     # Close
@@ -287,8 +258,27 @@ function CONCURRENCY_THREAD() {
     exec 3<&-
 }
 
+function INSTALL_STRESS() {
+    wget -P /opt/ https://fossies.org/linux/privat/old/stress-1.0.4.tar.gz
+    cd /opt/
+    tar -zxvf stress-1.0.4.tar.gz
+    cd stress-1.0.4
+    ./configure
+    make >/dev/null
+    make checke >/dev/null
+    make installe >/dev/null
+    cd -
+}
+
+function CLEAN_STRESS() {
+    cd /opt/stress-1.0.4
+    make cleane >/dev/null
+    cd -
+    rm -rf /opt/stress-1.0.4.tar.gz /opt/stress-1.0.4
+}
+
 function CPU_STRESS() {
-    stress --timeout 120s --cpu $(($(cat /proc/cpuinfo | grep "processor" | wc -l)-2))  &
+    stress --timeout 120s --cpu $(($(grep "processor" /proc/cpuinfo | wc -l) - 2)) &
 }
 
 function MEM_STRESS() {
@@ -300,13 +290,13 @@ function GET_DNF_BUILDDEPLIST() {
     query_level=${2-"1"}
     repo="openEuler-Source"
     type="builddep"
-    dep=() 
+    dep=()
     dep=$(GET_SINGLEDEP $pkg $repo $type)
     dnf builddep $pkg --disablerepo=fedora-Binary --installroot=/home --releasever=1 --assumeno >dnf_builddep_result
     count=1
     [[ $query_level == $count ]] && {
         for ele in ${dep[@]}; do
-            find=$(cat dnf_builddep_result | grep $ele)
+            find=$(grep $ele dnf_builddep_result)
             [[ $find =~ $ele ]] && {
                 echo $ele
             }
@@ -320,14 +310,14 @@ function GET_DNF_BUILDDEPLIST() {
     len=${#dep[@]}
     for data1 in ${dep[@]}; do
         level=$(GET_SINGLEDEP $data1 $repo $type)
-        dep=(${dep[@]} ${level[@]})   
-        count=$(($count+1)) 
+        dep=(${dep[@]} ${level[@]})
+        count=$(($count + 1))
         [[ $query_level == $count ]] && {
             break
         }
     done
     for ele in ${dep[@]}; do
-        find=$(cat dnf_builddep_result | grep $ele)
+        find=$(grep $ele dnf_builddep_result)
         [[ $find =~ $ele ]] && {
             echo $ele
         }
@@ -339,9 +329,9 @@ function GET_SINGLEDEP() {
     pkg=$1
     repo=$2
     type=$3
-    if [[ $type == "installdep" ]]; then 
+    if [[ $type == "installdep" ]]; then
         level=$(dnf deplist $pkg --repo=$repo | grep provider | cut -d ':' -f 2 | cut -d '-' -f 1 | sort | uniq)
-    else 
+    else
         level=$(dnf deplist $pkg --repo=$repo | grep dependency | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq)
     fi
 
@@ -352,7 +342,7 @@ function GET_SINGLEDEP() {
         return 1
     fi
 }
- 
+
 function GET_INSTALLDEP() {
     pkgname=$1
     filename=$2
@@ -369,14 +359,13 @@ function GET_INSTALLDEP() {
 function GET_DNF_REPOQUERY() {
     pkg=$1
     repo=${2-"openEuler-Binary"}
-    dnf repoquery --whatrequires=$pkg --repo=$repo | cut -d ':' -f 1 >./dnf_repoquery 
-    [[ -f ./expect_repoquery ]]&&{
+    dnf repoquery --whatrequires=$pkg --repo=$repo | cut -d ':' -f 1 >./dnf_repoquery
+    [[ -f ./expect_repoquery ]] && {
         rm -f ./expect_repoquery
     }
-    
+
     touch ./expect_repoquery
-    cat ./dnf_repoquery | while read line
-    do
+    cat ./dnf_repoquery | while read line; do
         echo ${line%-*} >>./expect_repoquery
     done
     SLEEP_WAIT 2
@@ -385,18 +374,17 @@ function GET_DNF_REPOQUERY() {
 function COMPARE_DNF() {
     expect=$1
     actual=$2
-    cat $actual | grep -Ev "^$=|[#;]">./actual_grep_deal
-    cat $expect | grep -Ev "^$=|[#;]" >./expect_grep_deal
-
-    cat ./actual_grep_deal | while read line
-    do
-        cat ./expect_grep_deal | grep "$line" >/dev/null
+    grep -Ev "^$=|[#;]" $expect >./expect_grep_deal
+    grep -Ev "^$=|[#;]" $actual >./actual_grep_deal
+    while read line; do
+        id=$(echo $line | cut -d"^" -f1)
+        grep -q "$id" ./expect_grep_deal
         [[ $? == 1 ]] && {
             printf 1
             rm -rf ./actual_grep_deal ./expect_grep_deal
             return 0
         }
-    done
+    done <actual_grep_deal
     rm -rf ./actual_grep_deal ./expect_grep_deal
     printf 0
 }
@@ -430,10 +418,9 @@ function COMPARE_BUILD_PKG() {
         QUERY_BUILDDEP $pkgname $dbname 1 >expect
     fi
     cat expect | grep $dbname | grep -v $dbname | awk '{print $1}' | sort | uniq >expect_cmp
-    cat ${compare_dir}/${dbname}.csv | grep "^$pkgname->" | cut -d ',' -f 1 >actual
+    grep "^$pkgname->" ${compare_dir}/${dbname}.csv | cut -d ',' -f 1 >actual
     CHECK_RESULT $? 0 0 "Get data in ${dbname} failed."
-    cat actual | while read line
-    do
+    cat actual | while read line; do
         grep -q "$line" ${compare_dir}/compare.csv
         [[ $? == 1 ]] && {
             CHECK_RESULT 1 0 0 "Check package $dbname in compare.csv failed."
@@ -450,9 +437,10 @@ function COMPARE_BUILD_PKG() {
 path=$(pwd)
 if [[ $path =~ "install_service" ]]; then
     return 0
-else 
+else
     INSTALL_ENV
 fi
 
 CHECK_YUM
 CHECK_LOCAL_REPO
+

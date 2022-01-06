@@ -34,13 +34,16 @@ function run_test() {
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
     journalctl -u pkgship -n 20 | grep "\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters"
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when set buffer-size=''."
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters\""
     CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when set buffer-size=''."
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
 
     sed -i '/buffer-size/d' ${SYS_CONF_PATH}/package.ini
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
     journalctl -u pkgship -n 20 | grep "\[ERROR\] CAN NOT find config name buffer-size in: /etc/pkgship/package.ini, Please check the file"
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when delete buffer-size"
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep '\[ERROR\]'"
     CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when delete log_pbuffer-sizeath"
     
@@ -50,6 +53,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
     rm -f ${SYS_CONF_PATH}/package.ini
     mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
     REVERT_ENV

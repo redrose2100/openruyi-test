@@ -30,13 +30,12 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    # Set init_conf_path=
     MODIFY_INI init_conf_path ""
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
     journalctl -u pkgship -n 20 | grep "\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
     init_conf_path"
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when set init_conf_path=''."
-    systemctl stop pkgship
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep '\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
     init_conf_path'"
     CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when set init_conf_path=''."
@@ -47,6 +46,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
     rm -f ${SYS_CONF_PATH}/package.ini
     mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
     REVERT_ENV

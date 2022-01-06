@@ -23,8 +23,8 @@ function pre_test() {
 
     mv ${SYS_CONF_PATH}/package.ini ${SYS_CONF_PATH}/package.ini.bak
     cp -p ./package.ini ${SYS_CONF_PATH}/package.ini
-    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/package.ini
-    chown pkgshipuser:pkgshipuser conf.txt
+    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/package.ini conf.txt
+    ACT_SERVICE
 
     LOG_INFO "Finish to prepare the test environment."
 }
@@ -32,13 +32,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ACT_SERVICE
     pkgship init -filepath conf.txt >/dev/null
-    SLEEP_WAIT 5
     pkgship dbs | grep "\['openeuler-2009', 'fedora'\]"
     CHECK_RESULT $? 0 0 "database init failed."
-    
-    ACT_SERVICE stop
 
     LOG_INFO "End to run test."
 }

@@ -33,17 +33,18 @@ function run_test() {
     MODIFY_INI temporary_directory ""
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." >/dev/null &&
     journalctl -u pkgship -n 20 | grep "\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters" >/dev/null
-    ACT_SERVICE stop
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when set temporary_directory=''."
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
     temporary_directory\" >/dev/null"
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when set temporary_directory=''."
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
 
     sed -i '/temporary_directory/d' ${SYS_CONF_PATH}/package.ini
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." >/dev/null &&
     journalctl -u pkgship -n 20 | grep "\[ERROR\] The parameter 'temporary_directory' does not exist or has no value in the configuration file '/etc/pkgship/package.ini'" >/dev/null
-    ACT_SERVICE stop
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when set temporary_directory=''."
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] The parameter 'temporary_directory' does not exist or has no value in the configuration file '/etc/pkgship/package.ini'\" >/dev/null"
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when set temporary_directory=''."
     
@@ -53,6 +54,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
     rm -f ${SYS_CONF_PATH}/package.ini
     mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
     REVERT_ENV
@@ -61,3 +63,4 @@ function post_test() {
 }
 
 main $@
+

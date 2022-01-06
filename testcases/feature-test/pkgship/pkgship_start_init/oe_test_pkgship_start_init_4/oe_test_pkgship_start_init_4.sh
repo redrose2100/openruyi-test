@@ -25,8 +25,8 @@ function pre_test() {
     cp -p ./package.ini ${SYS_CONF_PATH}/package.ini
     mv ${SYS_CONF_PATH}/conf.yaml ${SYS_CONF_PATH}/conf.yaml.bak
     cp -p ../../common_lib/openEuler.yaml ${SYS_CONF_PATH}/conf.yaml
-    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/package.ini
-    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/conf.yaml
+    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/package.ini ${SYS_CONF_PATH}/conf.yaml
+    ACT_SERVICE
 
     LOG_INFO "Finish to prepare the test environment."
 }
@@ -34,16 +34,13 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ACT_SERVICE
     pkgship init >/dev/null
     pkgship dbs | grep "openeuler-lts"
     CHECK_RESULT $? 0 0 "database init failed."
-
-    pkgship init -filepath
-    cat ${LOG_PATH}/pkgship/log_info.log | grep ERROR >/dev/null
+    pkgship init -filepath testfile
+    pkgship init -filepath /etc/pkgship/package.ini
+    grep ERROR ${LOG_PATH}/pkgship/log_info.log >/dev/null
     CHECK_RESULT $? 0 0 "The log doesn't show ERROR msg."
-
-    ACT_SERVICE stop
 
     LOG_INFO "End to run test."
 }

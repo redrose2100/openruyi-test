@@ -23,8 +23,9 @@ function pre_test() {
 
     mv ${SYS_CONF_PATH}/package.ini ${SYS_CONF_PATH}/package.ini.bak
     cp -p ./package.ini ${SYS_CONF_PATH}/package.ini
-    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/package.ini
-    chown pkgshipuser:pkgshipuser conf.html
+    cp -p ./conf.html ../../conf.html
+    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/package.ini conf.html ../../conf.html
+    ACT_SERVICE
 
     LOG_INFO "Finish to prepare the test environment."
 }
@@ -32,36 +33,25 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ACT_SERVICE
-    
     pkgship init -filepath conf.html >/dev/null
-    SLEEP_WAIT 2
     pkgship dbs | grep openeuler >/dev/null
     CHECK_RESULT $? 0 0 "openeuler init failed."
-
     pkgship init -filepath ./conf.html >/dev/null
-    SLEEP_WAIT 2
     pkgship dbs | grep openeuler >/dev/null
     CHECK_RESULT $? 0 0 "openeuler init failed."
-    
-    cp -p ./conf.html ../../conf.html
     pkgship init -filepath ../../conf.html >/dev/null
-    SLEEP_WAIT 2
     pkgship dbs | grep openeuler >/dev/null
     CHECK_RESULT $? 0 0 "openeuler init failed."
-
-    cat ${LOG_PATH}/log_info.log | grep "INFO"
+    grep "INFO" ${LOG_PATH}/pkgship/log_info.log
     CHECK_RESULT $? 1 0 "The log contains INFO."
 
-    ACT_SERVICE stop
-    
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -f /home/pkgshipuser/log/uwsgi.html ../../conf.html ${SYS_CONF_PATH}/package.ini
+    rm -f /home/pkgshipuser/log/uwsgi.html ../../conf.html ${SYS_CONF_PATH}/package.ini 
     mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
     REVERT_ENV
 
