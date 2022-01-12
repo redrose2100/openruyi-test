@@ -30,8 +30,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    pkgship -v | grep "Version:2.1.0
-Release:4.oe1"
+    pkgship -v | grep "Version"
     CHECK_RESULT $? 0 0 "Check version of pkgship failed."
 
     LOG_INFO "End to run test."

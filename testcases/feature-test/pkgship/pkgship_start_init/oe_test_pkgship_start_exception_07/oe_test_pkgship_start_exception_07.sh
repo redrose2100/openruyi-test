@@ -34,8 +34,8 @@ function run_test() {
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code."  &&
     journalctl -u pkgship -n 20 | grep "\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
     remote_host" >/dev/null
-    ACT_SERVICE stop
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when set remote_host=''."
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
     remote_host\" >/dev/null"
     CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when set remote_host=''."
@@ -46,6 +46,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
     rm -f ${SYS_CONF_PATH}/package.ini
     mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
     REVERT_ENV
@@ -54,3 +55,4 @@ function post_test() {
 }
 
 main $@
+

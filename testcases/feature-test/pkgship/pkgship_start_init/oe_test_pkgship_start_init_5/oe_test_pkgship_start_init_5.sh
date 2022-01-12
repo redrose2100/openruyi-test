@@ -24,11 +24,10 @@ function pre_test() {
     mv ${SYS_CONF_PATH}/package.ini ${SYS_CONF_PATH}/package.ini.bak
     mv ${SYS_CONF_PATH}/conf.yaml ${SYS_CONF_PATH}/conf.yaml.bak
     cp -p ./package.ini ${SYS_CONF_PATH}/package.ini
-    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/package.ini
     cp -p ./log_info.log ${LOG_PATH}/pkgship/log_info.log
-    chown pkgshipuser:pkgshipuser ${LOG_PATH}/pkgship/log_info.log
     cp -p ../../common_lib/openEuler.yaml ${SYS_CONF_PATH}/conf.yaml
-    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/package.ini
+    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/package.ini ${SYS_CONF_PATH}/conf.yaml ${LOG_PATH}/pkgship/log_info.log
+    ACT_SERVICE
 
     LOG_INFO "Finish to prepare the test environment."
 }
@@ -36,24 +35,19 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ACT_SERVICE
     pkgship init >/dev/null
-    SLEEP_WAIT 5
     pkgship dbs | grep "openeuler-lts"
     CHECK_RESULT $? 0 0 "database init failed."
-
     cat ${LOG_PATH}/pkgship/log_info.log | grep "log test" >/dev/null
     CHECK_RESULT $? 0 0 "Old log is replaced."
 
-    ACT_SERVICE STOP
-    
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -f ${SYS_CONF_PATH}/conf.yaml ${SYS_CONF_PATH}/package.ini
+    rm -f ${SYS_CONF_PATH}/conf.yaml ${SYS_CONF_PATH}/package.ini /home/pkgshipuser/uwsgi.log
     mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
     mv ${SYS_CONF_PATH}/conf.yaml.bak ${SYS_CONF_PATH}/conf.yaml
     REVERT_ENV

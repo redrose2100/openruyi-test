@@ -25,6 +25,7 @@ function pre_test() {
     cp -p ${SYS_CONF_PATH}/conf.yaml ${SYS_CONF_PATH}/conf.bak
     cp -p ../../common_lib/openEuler.yaml ${SYS_CONF_PATH}/conf.yaml
     chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/conf.yaml
+    para=('file:///etc/pkgship/repo/openEuler_20.09/bin' 'https://sssssss' 'https://mirrors.huaweicloud.com/openeuler/openEuler-20.03-LTS/everything/')
     
     LOG_INFO "End to prepare the test environment."
 }
@@ -36,7 +37,6 @@ function run_test() {
     pkgship init 2>&1 | grep "expected string or bytes-like object" >/dev/null
     CHECK_RESULT $? 0 0 "Init unexpectly or mesg error when set src_db_file=''."
 
-    para=('file:///etc/pkgship/repo/openEuler_20.09/bin' 'https://sssssss' 'https://mirrors.huaweicloud.com/openeuler/openEuler-20.03-LTS/everything/')
     for i in $(seq 0 $((${#para[@]} - 1))); do
         MODIFY_CONF src_db_file ${para[$i]}
         pkgship init 2>&1 | grep "initialize failed" >/dev/null
@@ -47,12 +47,10 @@ function run_test() {
     pkgship init 2>&1 | grep "src_db_file" | grep "has an incorrect value" >/dev/null
     CHECK_RESULT $? 0 0 "Init unexpectly or mesg error when set src_db_file=${SYS_CONF_PATH}/package.ini."
 
-    # Set src_db_file conf as upper
     sed -i "s#src_db_file#SRC_DB_FILE#g" ${SYS_CONF_PATH}/conf.yaml
     pkgship init 2>&1 | grep "src_db_file" | grep "has an incorrect value" >/dev/null
     CHECK_RESULT $? 0 0 "Init unexpectly or mesg error when set SRC_DB_FILE."
 
-    # Delete src_db_file
     sed -i '/src_db_file/d' ${SYS_CONF_PATH}/conf.yaml
     pkgship init 2>&1 | grep "src_db_file" | grep "has an incorrect value" >/dev/null
     CHECK_RESULT $? 0 0 "Init unexpectly or mesg error when delete src_db_file."
@@ -71,3 +69,4 @@ function post_test() {
 }
 
 main $@
+

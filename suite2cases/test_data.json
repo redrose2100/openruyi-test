@@ -1,0 +1,36 @@
+{
+    "path": "${OET_PATH}/testcases/feature-test/pkgship/pkgship_start_init",
+    "cases": [
+        {
+            "name": "oe_test_pkgship_start_exception_16"
+        },
+        {
+            "name": "oe_test_pkgship_start_exception_17"
+        },
+        {
+            "name": "oe_test_pkgship_start_exception_18"
+        },
+        {
+            "name": "oe_test_pkgship_start_exception_19"
+        },
+	{
+		"name": "oe_test_pkgship_start_exception_20"
+	},
+	{
+		"name": "oe_test_pkgship_start_exception_21"
+	},
+	{
+		"name": "oe_test_pkgship_start_exception_22"
+	},
+	{
+		"name": "oe_test_pkgship_start_exception_23"
+	},
+	{
+		"name": "oe_test_pkgship_start_exception_24"
+	},
+	{
+		"name": "oe_test_pkgship_start_exception_25"
+	}
+
+    ]
+}

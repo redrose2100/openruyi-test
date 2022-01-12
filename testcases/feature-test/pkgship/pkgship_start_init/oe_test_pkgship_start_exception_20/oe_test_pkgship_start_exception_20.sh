@@ -23,39 +23,44 @@ function pre_test() {
 
     cp -p ${SYS_CONF_PATH}/package.ini ${SYS_CONF_PATH}/package.ini.bak
     ACT_SERVICE stop
-    
+
     LOG_INFO "End to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    MODIFY_INI daemonize ""
+    MODIFY_INI database_port ""
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
-    journalctl -u pkgship -n 20 | grep "\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
-    daemonize"
-    CHECK_RESULT $? 0 0 "Check start by systemctl failed when set daemonize=''."
-    su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters\""
-    CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when set daemonize=''."
+        journalctl -u pkgship -n 20 | grep "\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:" &&
+        journalctl -u pkgship -n 20 | grep "database_port"
+    CHECK_RESULT $? 0 0 "Check start by systemctl failed when set database_port=''."
+    ACT_SERVICE stop
+    su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:\""
+    CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when set database_port=''."
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
 
-    sed -i '/daemonize/d' ${SYS_CONF_PATH}/package.ini
+    sed -i '/database_port/d' ${SYS_CONF_PATH}/package.ini
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
-    journalctl -u pkgship -n 20 | grep "\[ERROR\] The parameter 'daemonize' does not exist or has no value in the configuration file '/etc/pkgship/package.ini'"
-    CHECK_RESULT $? 0 0 "Check start by systemctl failed when delete daemonize."
-    su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] The parameter 'daemonize' does not exist or has no value in the configuration file '/etc/pkgship/package.ini'\""
-    CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when delete daemonize."
-    
+        journalctl -u pkgship -n 20 | grep "\[ERROR\] Can not find config name 'database_host' or 'database_port' in: /etc/pkgship/package.ini"
+    CHECK_RESULT $? 0 0 "Check start by systemctl failed when delete database_port"
+    ACT_SERVICE stop
+    su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] Can not find config name 'database_host' or 'database_port' in: /etc/pkgship/package.ini\""
+    CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when delete database_port"
+
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
     rm -f ${SYS_CONF_PATH}/package.ini
     mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
     REVERT_ENV
-    
+
     LOG_INFO "End to restore the test environment."
 }
 
 main $@
+
