@@ -62,7 +62,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    DNF_REMOVE python3-lesscpy
+    DNF_REMOVE
     rm -rf less_zl
     LOG_INFO "Finish environment cleanup."
 }
