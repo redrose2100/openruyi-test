@@ -1,8 +1,32 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/lsyncd",
-    "cases": [
-        {
-            "name": "oe_test_service_lsyncd"
-        }
-    ]
+	"path": "$OET_PATH/testcases/cli-test/lsyncd",
+	"cases": [
+		{
+			"name": "oe_test_service_lsyncd"
+		},
+		{
+			"name": "oe_test_rsync_lsyncd"
+		},
+		{
+			"name": "oe_test_direct_lsyncd"
+		},
+		{
+			"name": "oe_test_rsyncssh_lsyncd"
+		},
+		{
+			"name": "oe_test_nodaemon_lsyncd"
+		},
+		{
+			"name": "oe_test_log_lsyncd"
+		},
+		{
+			"name": "oe_test_delay_lsyncd"
+		},
+		{
+			"name": "oe_test_insist_lsyncd"
+		},
+		{
+			"name": "oe_test_pid_lsyncd"
+		}
+	]
 }

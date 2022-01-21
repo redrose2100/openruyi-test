@@ -1,0 +1,72 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more detaitest -f.
+
+# #############################################
+# @Author    :   zhaorunqi
+# @Contact   :   runqi@isrc.iscas.ac.cn
+# @Date      :   2022/1/15
+# @License   :   Mulan PSL v2
+# @Desc      :   Test lsyncd -rsync
+# #############################################
+
+source "../common/common_lib.sh"
+
+function pre_test() {
+  LOG_INFO "Start to prepare the test environment."
+  DNF_INSTALL lsyncd
+  mkdir /var/source_dir
+  mkdir /var/target_dir
+  cat >> /etc/lsyncd.conf << EOF
+settings {
+  logfile = "/var/log/lsyncd/lsyncd.log",
+	statusFile = "/var/log/lsyncd/lsyncd.status"
+}
+sync {
+	default.rsync,
+	source = "/var/source_dir/",
+	target = "/var/target_dir/",
+	delete = true,
+	delay = 0,
+	exclude={
+	  ".txt"
+	},
+	rsync = {
+	binary = "/usr/bin/rsync",
+	archive = true,
+  compress = true,
+  verbose = true,
+	owner = true,
+  perms = true,
+  _extra = {"--bwlimit=2000"},
+  }
+}
+EOF
+  echo "This is to test the rsync function of lsyncd" >>/var/source_dir/test.lua
+  LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+  LOG_INFO "Start to run test."
+  /usr/bin/lsyncd /etc/lsyncd.conf
+  SLEEP_WAIT 5
+  CHECK_RESULT "$(cat /var/target_dir/test.lua)" "This is to test the rsync function of lsyncd"
+  LOG_INFO "End to run test."
+}
+function post_test() {
+  LOG_INFO "Start to restore the test environment."
+  DNF_REMOVE lsyncd
+  rm -rf /var/source_dir
+  rm -rf /var/target_dir
+  rm -rf /etc/lsyncd.conf
+  LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
