@@ -19,42 +19,37 @@
 
 source "../common/common_lib.sh"
 
-function config_params() {
-  LOG_INFO "Start to config params of the case."
-  mkdir $OET_PATH/testcases/cli-test/lsyncd/source_dir
-  mkdir $OET_PATH/testcases/cli-test/lsyncd/target_dir
-  mkdir /var/log/lsyncd
-  mkdir /etc/lsyncd
-  echo "settings {
-  logfile = "\"/var/log/lsyncd/lsyncd.log"\",
-	statusFile = "\"/var/log/lsyncd/lsyncd.status"\"
+function pre_test() {
+  LOG_INFO "Start to prepare the test environment."
+  DNF_INSTALL lsyncd
+  mkdir /var/source_dir
+  mkdir /var/target_dir
+  cat >> /etc/lsyncd.conf << EOF
+settings {
+  logfile = "/var/log/lsyncd/lsyncd.log",
+	statusFile = "/var/log/lsyncd/lsyncd.status"
 }
 sync {
 	default.rsync,
-	source = "\"$OET_PATH/testcases/cli-test/lsyncd/source_dir/"\",
-	target = "\"$OET_PATH/testcases/cli-test/lsyncd/target_dir/"\",
+	source = "/var/source_dir/",
+	target = "/var/target_dir/",
 	delete = true,
 	delay = 0,
 	exclude={
-	  "\".txt"\"
+	  ".txt"
 	},
 	rsync = {
-	binary = "\"/usr/bin/rsync"\",
+	binary = "/usr/bin/rsync",
 	archive = true,
   compress = true,
   verbose = true,
 	owner = true,
   perms = true,
-  _extra = {"\"--bwlimit=2000"\"},
+  _extra = {"--bwlimit=2000"},
   }
-}" >>/etc/lsyncd.conf
-  echo "This is a test for rsync" >>$OET_PATH/testcases/cli-test/lsyncd/source_dir/test.lua
-  LOG_INFO "End to config params of the case."
 }
-
-function pre_test() {
-  LOG_INFO "Start to prepare the test environment."
-  DNF_INSTALL lsyncd
+EOF
+  echo "This is to test the rsync function of lsyncd" >>/var/source_dir/test.lua
   LOG_INFO "End to prepare the test environment."
 }
 
@@ -62,16 +57,14 @@ function run_test() {
   LOG_INFO "Start to run test."
   /usr/bin/lsyncd /etc/lsyncd.conf
   SLEEP_WAIT 5
-  CHECK_RESULT "$(ls -l $OET_PATH/testcases/cli-test/lsyncd/target_dir/ |grep '^-' | wc -l)" 1
+  CHECK_RESULT "$(cat /var/target_dir/test.lua)" "This is to test the rsync function of lsyncd"
   LOG_INFO "End to run test."
 }
 function post_test() {
   LOG_INFO "Start to restore the test environment."
   DNF_REMOVE lsyncd
-  rm -rf $OET_PATH/testcases/cli-test/lsyncd/source_dir
-  rm -rf $OET_PATH/testcases/cli-test/lsyncd/target_dir
-  rm -rf /var/log/lsyncd
-  rm -rf /etc/lsyncd
+  rm -rf /var/source_dir
+  rm -rf /var/target_dir
   rm -rf /etc/lsyncd.conf
   LOG_INFO "End to restore the test environment."
 }
