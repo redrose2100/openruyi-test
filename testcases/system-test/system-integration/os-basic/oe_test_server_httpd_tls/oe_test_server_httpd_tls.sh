@@ -28,7 +28,7 @@ function run_test() {
 	LOG_INFO "Start to run test."
 	systemctl enable httpd
 	systemctl start httpd
-        SLEEP_WAIT 1
+        SLEEP_WAIT 
 	systemctl status httpd | grep running
 	CHECK_RESULT $?
 	sed -i "s/#SSLProtocol all -SSLv3/SSLProtocol -all +TLSv1.3/g" /etc/httpd/conf.d/ssl.conf
@@ -40,15 +40,13 @@ function run_test() {
 
 EOF
 	CHECK_RESULT $?
-	sed -i "s/SSLProtocol -all +TLSv1.3/#SSLProtocol all -SSLv3/g" /etc/httpd/conf.d/ssl.conf
-	CHECK_RESULT $?
 	LOG_INFO "End to run test."
 }
 
 function post_test() {
 	LOG_INFO "Start to restore the test environment."
-	systemctl reload httpd
-	systemctl stop httpd
+	sed -i "s/SSLProtocol -all +TLSv1.3/#SSLProtocol all -SSLv3/g" /etc/httpd/conf.d/ssl.conf
+	systemctl restart httpd
 	DNF_REMOVE
 	LOG_INFO "End to restore the test environment."
 }

@@ -47,7 +47,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf myptest
+    rm -rf mytest
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

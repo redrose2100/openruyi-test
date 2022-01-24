@@ -1,0 +1,12 @@
+spawn lvcreate --type raid1 -m 1 -n test --nosync -L 50MB opentest
+  Rounding up size to full physical extent 52.00 MiB
+  WARNING: New raid1 won't be synchronised. Don't read what you didn't write!
+  Logical volume "test" created.
+spawn lvcreate --type raid1 -m 1 -n test --nosync -L 50MB opentest
+  Volume group "opentest" not found.
+  Cannot process volume group opentest
+spawn lvcreate --type raid1 -m 1 -n test --nosync -L 50MB opentest
+  Rounding up size to full physical extent 52.00 MiB
+  WARNING: New raid1 won't be synchronised. Don't read what you didn't write!
+  Logical volume "test" created.
+y

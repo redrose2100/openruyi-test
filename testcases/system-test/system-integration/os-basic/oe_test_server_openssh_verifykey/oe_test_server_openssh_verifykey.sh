@@ -33,6 +33,7 @@ function run_test() {
 	CHECK_RESULT $?
 	systemctl reload sshd
 	CHECK_RESULT $?
+
 	SSH_CMD "ls" ${NODE1_IPV4} ${NODE1_PASSWORD} ${NODE1_USER}
 	CHECK_RESULT $? 0 1
 	LOG_INFO "End to run test."

@@ -21,14 +21,23 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function run_test() {
 	LOG_INFO "Start to run test."
+	#Actual use of memory
 	ps -eo 'rsz,pid,comm,args,pcpu' | sort -nrk1
 	CHECK_RESULT $?
+
+	#process cpu usage
 	ps -eo 'pcpu,pid,comm,args' | sort -rk1
 	CHECK_RESULT $?
+
+	#process memory usage
 	ps -eo 'pmem,pid,comm,args' | sort -rk1
 	CHECK_RESULT $?
+
+	#process state
 	ps -eo 'stat,pid,comm,args,pcpu'
 	CHECK_RESULT $?
+
+	#shared memory
 	ipcs -m
 	CHECK_RESULT $?
 	LOG_INFO "End to run test."

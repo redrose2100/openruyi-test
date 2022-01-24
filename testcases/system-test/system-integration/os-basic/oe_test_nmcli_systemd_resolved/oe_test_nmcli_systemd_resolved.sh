@@ -21,7 +21,6 @@ source ../common/net_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL net-tools
-    cp -r /etc/NetworkManager/NetworkManager.conf /etc/NetworkManager/NetworkManager.conf_bak
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -29,10 +28,12 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl --now enable systemd-resolved
     CHECK_RESULT $?
+    cp -r /etc/NetworkManager/NetworkManager.conf /etc/NetworkManager/NetworkManager.conf_bak
     sed -i /main]/a\dns=systemd-resolved /etc/NetworkManager/NetworkManager.conf
     CHECK_RESULT $?
     systemctl reload NetworkManager
     CHECK_RESULT $?
+    cat /etc/resolv.conf
     netstat -tulpn | grep "127.0.0.53:53"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
@@ -40,7 +41,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f /etc/NetworkManager/NetworkManager.conf
+    rm -r /etc/NetworkManager/NetworkManager.conf
     mv /etc/NetworkManager/NetworkManager.conf_bak /etc/NetworkManager/NetworkManager.conf
     systemctl reload NetworkManager
     LOG_INFO "End to restore the test environment."

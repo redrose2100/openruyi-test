@@ -42,7 +42,6 @@ function post_test() {
     if [ ${flag_http} -ne 1 ]; then
         firewall-cmd --remove-service=http
     fi
-    systemctl stop firewalld
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

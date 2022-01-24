@@ -27,6 +27,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     systemctl start httpd
+    SLEEP_WAIT 5
     systemctl status httpd | grep running
     CHECK_RESULT $?
     mv /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf_bak
@@ -35,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 1
     mv /etc/httpd/conf/httpd.conf_bak /etc/httpd/conf/httpd.conf
     systemctl restart httpd.service
-    SLEEP_WAIT 1
+    SLEEP_WAIT 5
     systemctl status httpd | grep running
     CHECK_RESULT $?
     LOG_INFO "End to run test."
@@ -43,7 +44,6 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    systemctl stop httpd
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
