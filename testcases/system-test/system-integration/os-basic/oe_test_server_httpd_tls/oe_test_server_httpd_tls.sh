@@ -28,7 +28,7 @@ function run_test() {
 	LOG_INFO "Start to run test."
 	systemctl enable httpd
 	systemctl start httpd
-        SLEEP_WAIT 1
+        SLEEP_WAIT 
 	systemctl status httpd | grep running
 	CHECK_RESULT $?
 	sed -i "s/#SSLProtocol all -SSLv3/SSLProtocol -all +TLSv1.3/g" /etc/httpd/conf.d/ssl.conf
