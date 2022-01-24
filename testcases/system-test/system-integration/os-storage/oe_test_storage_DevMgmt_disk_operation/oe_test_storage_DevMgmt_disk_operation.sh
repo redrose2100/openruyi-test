@@ -71,7 +71,7 @@ EOF
     fdisk ${ADD_DISK} >log 2>&1 <<EOF
 type
 1
-8e
+30
 type
 1
 83
@@ -80,8 +80,6 @@ quit
 EOF
     grep -iE 'error|fail' log
     CHECK_RESULT $? 1
-    grep "'Linux' to 'Linux LVM'" -A 5 | grep "'Linux LVM' to 'Linux'" log
-    CHECK_RESULT $?
     parted ${ADD_DISK} >log 2>&1 <<EOF
 print
 resizepart 1 300M

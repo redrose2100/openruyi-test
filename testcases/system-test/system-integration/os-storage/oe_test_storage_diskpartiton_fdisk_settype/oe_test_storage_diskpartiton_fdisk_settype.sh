@@ -16,6 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Use fdisk to set the partition type
 # ############################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
 source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
@@ -45,7 +47,7 @@ function post_test() {
     SLEEP_WAIT 2
     echo -e "m\np\nd\n1\nd\nw\n" | fdisk /dev/${local_disk}
     SLEEP_WAIT 2
-    rm -rf log*
+    rm -rf log1 log2
     LOG_INFO "Finish environment cleanup."
 }
 
