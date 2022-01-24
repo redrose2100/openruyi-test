@@ -32,7 +32,7 @@ function run_test() {
     CHECK_RESULT $?
     nmcli con reload
     CHECK_RESULT $?
-    test -f /etc/sysconfig/network-scripts/ifcfg-${test_eth}
+    ls /etc/sysconfig/network-scripts | grep ifcfg-${test_eth}
     CHECK_RESULT $?
 
     sed -i 's/dhcp/static/g' /etc/sysconfig/network-scripts/ifcfg-${test_eth}

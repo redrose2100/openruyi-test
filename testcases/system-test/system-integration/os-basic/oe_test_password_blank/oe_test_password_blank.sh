@@ -20,7 +20,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    grep "testuser:" /etc/passwd && userdel -rf testuser
+    grep "testuser:" /etc/passwd || userdel -rf testuser
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -36,7 +36,7 @@ function run_test() {
     send "\n"
     expect eof
 EOF
-    grep -i "No password supplied" -A 3 testlog | grep "Authentication token manipulation error"
+    grep -i "No password supplied" -A 3 testlog | grep -i "Authentication token manipulation error"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

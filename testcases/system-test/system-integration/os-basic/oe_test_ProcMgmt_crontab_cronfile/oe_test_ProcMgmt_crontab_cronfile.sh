@@ -47,7 +47,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     date -s "$current_time 1 minute"
     crontab -r
-    rm -rf /tmp/test.txt ~/globus.cron
+    rm -rf /tmp/test.txt
+    rm -rf ~/globus.cron
     LOG_INFO "End to restore the test environment."
 }
 

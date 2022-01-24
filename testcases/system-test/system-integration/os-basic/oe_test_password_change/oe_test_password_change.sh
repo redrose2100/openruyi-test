@@ -21,12 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     grep "testuser:" /etc/passwd && userdel -rf testuser
-    useradd testuser
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+    useradd testuser
     echo testuser:${NODE1_PASSWORD} | chpasswd
     CHECK_RESULT $?
     echo test >/home/testfile

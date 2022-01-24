@@ -19,25 +19,25 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL powertop
-    LOG_INFO "End to prepare the test environment."
+	LOG_INFO "Start to prepare the test environment."
+	DNF_INSTALL powertop
+	LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
-    powertop --html=htmlfile.html
-    CHECK_RESULT $?
-    grep powertop htmlfile.html
-    CHECK_RESULT $?
-    LOG_INFO "End to run test."
+	LOG_INFO "Start to run test."
+	powertop --html=htmlfile.html
+	CHECK_RESULT $?
+	grep powertop htmlfile.html
+	CHECK_RESULT $?
+	LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    rm -rf htmlfile.html
-    DNF_REMOVE
-    LOG_INFO "End to restore the test environment."
+	LOG_INFO "Start to restore the test environment."
+	rm -rf htmlfile.html
+	DNF_REMOVE
+	LOG_INFO "End to restore the test environment."
 }
 
 main $@

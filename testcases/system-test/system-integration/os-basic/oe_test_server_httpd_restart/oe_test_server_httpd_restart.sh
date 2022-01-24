@@ -29,6 +29,7 @@ function run_test() {
     for count_httpd in $(seq 1 10); do
         systemctl enable httpd
         systemctl start httpd
+	SLEEP_WAIT 10
         systemctl status httpd | grep running
         CHECK_RESULT $?
         systemctl stop httpd
@@ -38,7 +39,7 @@ function run_test() {
         systemctl is-enabled httpd | grep disable
         CHECK_RESULT $?
         systemctl restart httpd
-        SLEEP_WAIT 2
+        SLEEP_WAIT 10
         systemctl status httpd | grep running
         CHECK_RESULT $?
     done
@@ -47,7 +48,6 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    systemctl stop httpd
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

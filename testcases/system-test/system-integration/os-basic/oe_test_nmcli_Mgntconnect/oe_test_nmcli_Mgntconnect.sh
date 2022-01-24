@@ -57,7 +57,9 @@ quit
 EOF
     grep -c "nmcli>" log | grep 3
     CHECK_RESULT $?
-    CHECK_RESULT $(nmcli con show | grep -c ${con_name}) 1
+    num=$(nmcli con show | grep -c ${con_name})
+    test $num -eq 1
+    CHECK_RESULT $?
     num_nmcli=$(nmcli con show ${con_name} | grep -c connection)
     test $num_nmcli -gt 10
     CHECK_RESULT $?

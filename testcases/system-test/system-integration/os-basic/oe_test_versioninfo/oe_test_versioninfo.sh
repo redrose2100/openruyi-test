@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   doraemon2020
 # @Contact   :   xcl_job@163.com
-# @Date      :   2020-04-29
+# @Date      :   2020-04-28
 # @License   :   Mulan PSL v2
 # @Desc      :   Query system version info test
 # ############################################

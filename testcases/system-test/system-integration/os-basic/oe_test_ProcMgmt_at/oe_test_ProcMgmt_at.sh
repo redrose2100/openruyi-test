@@ -58,7 +58,7 @@ function post_test() {
     done
     date -s "$time 1 minute"
     rm -rf /tmp/test
-    DNF_REMOVE 
+    DNF_REMOVE at
     LOG_INFO "End to restore the test environment."
 }
 

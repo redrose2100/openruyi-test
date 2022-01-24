@@ -16,6 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Use partedshell to view the partition table
 # ############################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
 source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"

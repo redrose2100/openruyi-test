@@ -28,7 +28,7 @@ function run_test() {
 dns=none" >/etc/NetworkManager/conf.d/90-dns-none.conf
     rm /etc/resolv.conf
     systemctl reload NetworkManager
-    test -f /etc/resolv.conf
+    cat /etc/resolv.conf
     CHECK_RESULT $? 0 1
     rm /etc/NetworkManager/conf.d/90-dns-none.conf
     systemctl reload NetworkManager

@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Enable periodic block discard
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+
 function check_free_disk() {
     num_disk=$1
     disks=$(python3 ${OET_PATH}/libs/locallibs/get_test_device.py --node 1 --device disk)

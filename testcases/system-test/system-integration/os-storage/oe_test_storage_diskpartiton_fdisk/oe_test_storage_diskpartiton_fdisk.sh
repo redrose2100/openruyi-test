@@ -16,6 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Create partition-fdisk
 # ############################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
 source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
@@ -31,6 +33,7 @@ function run_test() {
     CHECK_RESULT $?
     grep ${local_disk}1 log
     CHECK_RESULT $?
+    SLEEP_WAIT 2
     LOG_INFO "End of testcase execution!"
 }
 
