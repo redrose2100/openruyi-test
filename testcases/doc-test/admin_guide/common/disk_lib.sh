@@ -22,5 +22,5 @@ function check_free_disk() {
     disk_list=($disks)
     local_disk=${disk_list[0]}
     local_disk1=${disk_list[1]}
-    local_disk2=${disk_list[1]}
+    local_disk2=${disk_list[2]}
 }
