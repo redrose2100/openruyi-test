@@ -18,34 +18,34 @@
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
-	LOG_INFO "Start environment preparation."
-	DNF_INSTALL "httpd"
-	LOG_INFO "Environmental preparation is over."
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "httpd"
+    LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
-	LOG_INFO "Start executing testcase."
-	systemctl enable httpd
-	systemctl start httpd
-	SLEEP_WAIT 6
-	sed -i "s/#LoadModule asis_module modules\/mod_asis.so/LoadModule asis_module modules\/mod_asis.so/g" /etc/httpd/conf.modules.d/00-optional.conf
-	systemctl restart httpd
-	CHECK_RESULT $?
-	httpd -M | grep asis
-	CHECK_RESULT $?
-	DNF_INSTALL mod_ssl
-	systemctl restart httpd
-	CHECK_RESULT $?
-	httpd -M | grep ssl
-	CHECK_RESULT $?
-	LOG_INFO "End of testcase execution."
+    LOG_INFO "Start executing testcase."
+    systemctl enable httpd
+    systemctl start httpd
+    SLEEP_WAIT 6
+    sed -i "s/#LoadModule asis_module modules\/mod_asis.so/LoadModule asis_module modules\/mod_asis.so/g" /etc/httpd/conf.modules.d/00-optional.conf
+    systemctl restart httpd
+    CHECK_RESULT $?
+    httpd -M | grep asis
+    CHECK_RESULT $?
+    DNF_INSTALL mod_ssl
+    systemctl restart httpd
+    CHECK_RESULT $?
+    httpd -M | grep ssl
+    CHECK_RESULT $?
+    LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
-	LOG_INFO "start environment cleanup."
-	sed -i "s/#LoadModule asis_module modules\/mod_asis.so/LoadModule asis_module modules\/mod_asis.so/g" /etc/httpd/conf.modules.d/00-optional.conf
-	DNF_REMOVE
-	LOG_INFO "Finish environment cleanup."
+    LOG_INFO "start environment cleanup."
+    sed -i "s/#LoadModule asis_module modules\/mod_asis.so/LoadModule asis_module modules\/mod_asis.so/g" /etc/httpd/conf.modules.d/00-optional.conf
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup."
 }
 
 main $@

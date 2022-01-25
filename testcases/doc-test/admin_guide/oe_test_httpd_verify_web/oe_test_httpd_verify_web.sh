@@ -18,32 +18,32 @@
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
-	LOG_INFO "Start environment preparation."
-	DNF_INSTALL "httpd net-tools firewalld"
-	systemctl start httpd
-	systemctl start firewalld
-	LOG_INFO "Environmental preparation is over."
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "httpd net-tools firewalld"
+    systemctl start httpd
+    systemctl start firewalld
+    LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
-	LOG_INFO "Start executing testcase."
-	ifconfig
-	CHECK_RESULT $?
-	firewall-cmd --add-service=http --permanent | grep success
-	CHECK_RESULT $?
-	firewall-cmd --reload | grep success
-	CHECK_RESULT $?
-	python3 -m http.server 8080 &
-	SSH_CMD "curl http://${NODE1_IPV4}" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-	CHECK_RESULT $?
-	LOG_INFO "End of testcase execution."
+    LOG_INFO "Start executing testcase."
+    ifconfig
+    CHECK_RESULT $?
+    firewall-cmd --add-service=http --permanent | grep success
+    CHECK_RESULT $?
+    firewall-cmd --reload | grep success
+    CHECK_RESULT $?
+    python3 -m http.server 8080 &
+    SSH_CMD "curl http://${NODE1_IPV4}" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    CHECK_RESULT $?
+    LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
-	LOG_INFO "start environment cleanup."
-	kill -9 $(pgrep -f http.server)
-	DNF_REMOVE
-	LOG_INFO "Finish environment cleanup."
+    LOG_INFO "start environment cleanup."
+    kill -9 $(pgrep -f http.server)
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup."
 }
 
 main $@
