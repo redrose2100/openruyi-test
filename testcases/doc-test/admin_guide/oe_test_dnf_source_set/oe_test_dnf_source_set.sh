@@ -18,6 +18,7 @@
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
+<<<<<<< HEAD
     LOG_INFO "Start executing testcase."
     reponame=$(dnf repolist | grep "repo id" -A 1 | grep -v "repo id" | awk '{print$1}')
     dnf config-manager --set-disable "${reponame}"
@@ -27,6 +28,17 @@ function run_test() {
     CHECK_RESULT $?
     CHECK_RESULT $(grep ${reponame} -A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}') 0
     LOG_INFO "End of testcase execution."
+=======
+	LOG_INFO "Start executing testcase."
+	reponame=$(dnf repolist | grep "repo id" -A 1 | grep -v "repo id" | awk '{print$1}')
+	dnf config-manager --set-disable "${reponame}"
+	CHECK_RESULT $?
+	CHECK_RESULT $(grep ${reponame} -A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}') 0
+	dnf config-manager --set-enable "${reponame}"
+	CHECK_RESULT $?
+	CHECK_RESULT $(grep ${reponame} -A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}') 0
+	LOG_INFO "End of testcase execution."
+>>>>>>> e96e9f34beeb0c825cece9395736397db12b496e
 }
 
 main $@

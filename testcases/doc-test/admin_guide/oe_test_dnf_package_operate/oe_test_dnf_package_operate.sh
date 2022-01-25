@@ -19,6 +19,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
+<<<<<<< HEAD
     LOG_INFO "Start executing testcase."
     DNF_INSTALL httpd
     LOG_INFO "End of testcase execution."
@@ -48,6 +49,43 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup."
+=======
+	LOG_INFO "Start executing testcase."
+	DNF_INSTALL httpd
+	LOG_INFO "End of testcase execution."
+}
+
+function run_test() {
+	LOG_INFO "Start executing testcase."
+	dnf search httpd | grep httpd
+	CHECK_RESULT $?
+
+	dnf list all >/dev/null
+	CHECK_RESULT $?
+
+	dnf info httpd | grep httpd | grep -i Name
+	CHECK_RESULT $?
+
+	dnf download httpd
+	CHECK_RESULT $?
+	find httpd-*
+	CHECK_RESULT $?
+	rm -rf httpd-*
+
+	dnf remove httpd -y
+	CHECK_RESULT $?
+
+	dnf download --resolve httpd
+	CHECK_RESULT $?
+	LOG_INFO "End of testcase execution."
+}
+
+function post_test() {
+	LOG_INFO "start environment cleanup."
+	#rm -rf $(ls | grep -v test)
+	DNF_REMOVE
+	LOG_INFO "Finish environment cleanup."
+>>>>>>> e96e9f34beeb0c825cece9395736397db12b496e
 }
 
 main $@
