@@ -30,6 +30,6 @@ expect {
         expect "Maria*" { send "delete from testtable where id=\'01\';\r"}
         expect "Maria*" { send "select * from testtable;\r"}
         expect "Maria*" { send "exit\r"}
-                 }
         }
+}
 expect eof
