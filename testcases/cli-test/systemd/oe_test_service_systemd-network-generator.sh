@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_oneshot "${service}"
+    test_oneshot "${service}" 'inactive (dead)'
     LOG_INFO "Finish test!"
 }
 
