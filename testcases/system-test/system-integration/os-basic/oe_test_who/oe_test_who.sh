@@ -17,6 +17,7 @@
 # @Desc      :   Command test-who -b/-s
 # ############################################
 
+
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
