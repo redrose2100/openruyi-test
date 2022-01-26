@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -58,8 +58,8 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i 's\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl --no-mlockall\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl\g' /usr/lib/systemd/system/ovs-vswitchd.service
     systemctl daemon-reload
-    service ovs-vswitchd.service reload
-    service ovs-vswitchd.service stop
+    service "${service}" reload
+    service "${service}" stop
     DNF_REMOVE
     if [ ${flag} = 'true' ]; then
         setenforce 1
