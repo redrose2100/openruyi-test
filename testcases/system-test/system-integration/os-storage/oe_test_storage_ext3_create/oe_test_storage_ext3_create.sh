@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Create an ext3 file system
 # ############################################
+
 source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"

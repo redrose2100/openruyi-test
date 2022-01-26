@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Using parted shell to resize partition
 # ############################################
+
 source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
@@ -49,4 +50,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
