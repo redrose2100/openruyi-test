@@ -3,6 +3,7 @@
     "machine type":"kvm",
     "add network interface":2,
     "add disk":[2,2,2],
+    "machine num":2,
     "cases":[
         {
             "name":"oe_test_who"
@@ -17,13 +18,15 @@
             "name":"oe_test_timedatectl"
         },
         {
-            "name":"oe_test_system_monitor_reboot"
+            "name":"oe_test_system_monitor_reboot",
+            "machine num":2
         },
         {
             "name":"oe_test_system_monitor_process"
         },
         {
-            "name":"oe_test_system_monitor_login"
+            "name":"oe_test_system_monitor_login",
+            "machine num":2
         },
         {
             "name":"oe_test_system_log_view"
@@ -47,13 +50,16 @@
             "name":"oe_test_system_log_basic"
         },
         {
-            "name":"oe_test_server_vsftpd_transfer"
+            "name":"oe_test_server_vsftpd_transfer",
+            "machine num":2
+            
         },
         {
             "name":"oe_test_server_vsftpd_restart"
         },
         {
-            "name":"oe_test_server_vsftpd_NKdelay"
+            "name":"oe_test_server_vsftpd_NKdelay",
+            "machine num":2
         },
         {
             "name":"oe_test_server_squid_proxy"
@@ -77,7 +83,8 @@
             "name":"oe_test_server_openssh_restart"
         },
         {
-            "name":"oe_test_server_openssh_key"
+            "name":"oe_test_server_openssh_key",
+            "machine num":2
         },
         {
             "name":"oe_test_server_mysql"
@@ -101,7 +108,8 @@
             "name":"oe_test_server_mariadb_copy"
         },
         {
-            "name":"oe_test_server_mariadb_compatibilty"
+            "name":"oe_test_server_mariadb_compatibilty",
+            "machine num":2
         },
         {
             "name":"oe_test_server_mariadb_backuptable"
@@ -131,7 +139,8 @@
             "name":"oe_test_server_git_install"
         },
         {
-            "name":"oe_test_reboot"
+            "name":"oe_test_reboot",
+            "machine num":2
         },
         {
             "name":"oe_test_power_powertop_startup"
