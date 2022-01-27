@@ -31,6 +31,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -v"
     tidy -version | grep 'HTML Tidy for Linux version' | grep '[[:digit:]]*'
     CHECK_RESULT $? 0 0 "Failed to use option: -version" 
+    tidy -h | grep -F 'tidy [options...] [file...] [options...] [file...]'
+    CHECK_RESULT $? 0 0 "Failed to use option: -h"
+    tidy -help | grep -F 'tidy [options...] [file...] [options...] [file...]'
+    CHECK_RESULT $? 0 0 "Failed to use option: -help"
+    tidy -? | grep -F 'tidy [options...] [file...] [options...] [file...]'
+    CHECK_RESULT $? 0 0 "Failed to use option: -?"
     LOG_INFO "Finish test!"
 } 
 
