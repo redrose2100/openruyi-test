@@ -41,13 +41,13 @@ function run_test() {
     echo '<h1>hello' | tidy -output ./tidied.html
     cat ./tidied.html | grep -F '<h1>hello</h1>'
     CHECK_RESULT $? 0 0 "Failed to use option: -output"
-    echo 'output-file: tidied' > ./config
-    echo '<h1>hello' | tidy -config ./config
+    echo 'output-file: tidied' >./tidyrc 
+    echo '<h1>hello' | tidy -config ./tidyrc 
     cat ./tidied.html | grep -F '<h1>hello</h1>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: output-file"
     # 使用指定的配置文件
-    echo 'add-meta-charset: yes' > ./tidy.config
-    echo '<h1>hello' | tidy -config ./tidy.config | grep -F '<meta charset="utf-8">'
+    echo 'add-meta-charset: yes' > ./tidyrc
+    echo '<h1>hello' | tidy -config ./tidyrc | grep -F '<meta charset="utf-8">'
     CHECK_RESULT $? 0 0 "Failed to use option: -config"
     # 将错误和警告写入指定文件
     echo '<h1>hello' | tidy -f ./errors_and_warnings
@@ -65,13 +65,14 @@ function run_test() {
     tidy -modify ./sample.html
     cat ./sample.html | grep -F '<h1>hello</h1>'
     CHECK_RESULT $? 0 0 "Failed to use option: -modify"
-    echo 'write-back: yes' > ./config
+    echo 'write-back: yes' >./tidyrc 
     echo '<h1>hello' > sample.html
-    tidy -config ./config sample.html
+    tidy -config ./tidyrc sample.html
     cat ./sample.html | grep -F '<h1>hello</h1>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: write-back"
 
 
+    # Processing directives 部分
 
 
     # Miscellaneous 部分
@@ -99,12 +100,12 @@ function run_test() {
     tidy -export-default-config | grep 'add-meta-charset' | grep 'no'
     CHECK_RESULT $? 0 0 "Failed to use option: -export-default-config"
     # 自定义的配置
-    echo 'add-meta-charset: yes' > ./config
+    echo 'add-meta-charset: yes' > ./tidyrc
     # 展示当前的配置
-    tidy -config ./config -show-config | grep 'add-meta-charset' | grep 'yes'
+    tidy -config ./tidyrc -show-config | grep 'add-meta-charset' | grep 'yes'
     CHECK_RESULT $? 0 0 "Failed to use option: -show-config"
     # 以配置文件的格式展示当前的配置
-    tidy -config ./config -export-config | grep 'add-meta-charset' | grep 'yes'
+    tidy -config ./tidyrc -export-config | grep 'add-meta-charset' | grep 'yes'
     CHECK_RESULT $? 0 0 "Failed to use option: -export-config"
     # 让 tidy 使用中文进行交互
     echo '<h1>你好</h1>' | tidy -language zh-cn 2>&1 | grep 'Info: 文档内容看起来像 HTML5'
