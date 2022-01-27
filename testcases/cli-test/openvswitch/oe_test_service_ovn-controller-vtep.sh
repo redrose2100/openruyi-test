@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -29,9 +29,7 @@ function pre_test() {
         setenforce 0
         flag=true
     fi
-    if ! grep 'openvswitch_ovn' /etc/passwd; then
-        useradd openvswitch_ovn
-    fi
+    userdel -rf openvswitch_ovn; useradd openvswitch_ovn
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -39,47 +37,56 @@ function run_test() {
     LOG_INFO "Start testing..."
     su - openvswitch_ovn <<EOF
     expect <<-END
+        set timeout 30
+        log_file /tmp/testlog1
         spawn service ${service} restart 
         expect "Password:"
         send "${NODE1_PASSWORD}\n"
         expect eof
 END
 EOF
-    CHECK_RESULT $? 0 0 "${service} restart failed"
+    grep -iE "fail|error" /tmp/testlog1
+    CHECK_RESULT $? 1 0 "${service} restart failed"
     su - openvswitch_ovn <<EOF
     expect <<-END
+        set timeout 30
+        log_file /tmp/testlog2
         spawn service ${service} stop
         expect "Password:"
         send "${NODE1_PASSWORD}\n"
         expect eof
 END
 EOF
-    CHECK_RESULT $? 0 0 "${service} stop failed"
+    grep -iE "fail|error" /tmp/testlog2
+    CHECK_RESULT $? 1 0 "${service} stop failed"
     SLEEP_WAIT 10
     su - openvswitch_ovn <<EOF
     expect <<-END
+        set timeout 30
+        log_file /tmp/testlog3
         spawn service ${service} start
         expect "Password:"
         send "${NODE1_PASSWORD}\n"
         expect eof
 END
 EOF
-    CHECK_RESULT $? 0 0 "${service} start failed"
-    su - openvswitch_ovn -c "service ${service} status" | grep "Active" | grep "active (running)"
+    grep -iE "fail|error" /tmp/testlog3
+    CHECK_RESULT $? 1 0 "${service} start failed"
+    su - openvswitch_ovn -c "service ${service} status" | grep "Active: active (running)"
     CHECK_RESULT $? 0 0 "${service} start failed"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v -i "[FAILED]"
     CHECK_RESULT $? 1 0 "There is an error message for the log of ${service}"
-EOF
-    reload_result=$( su - openvswitch_ovn <<EOF
+    su - openvswitch_ovn <<EOF
     expect <<-END
+        set timeout 30
+        log_file /tmp/testlog4
         spawn service ${service} reload
         expect "Password:"
         send "${NODE1_PASSWORD}\n"
         expect eof
 END
 EOF
-)
-    echo $reload_result | grep "Job type reload is not applicable for unit ${service}"
+    grep "Job type reload is not applicable for unit ${service}" /tmp/testlog4
     CHECK_RESULT $? 0 0 "${service} reload failed"
     LOG_INFO "Finish test!"
 }
@@ -98,6 +105,7 @@ EOF
     if [ ${flag} = 'true' ]; then
         setenforce 1
     fi
+    rm -rf /tmp/testlog*
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }

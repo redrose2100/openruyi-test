@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -33,7 +33,7 @@ function pre_test() {
 }
 
 function run_test() {
- LOG_INFO "Start testing..."
+    LOG_INFO "Start testing..."
     service "${service}" restart
     CHECK_RESULT $? 0 0 "${service} restart failed"
     service "${service}" stop
