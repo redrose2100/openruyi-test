@@ -16,10 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Create an ext3 file system
 # ############################################
+
 source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    local_disk=$(check_free_disk 1)
+    check_free_disk
+    local_disk="${local_disk1}"
     mkfs.ext4 -F $local_disk
     SLEEP_WAIT 3
     LOG_INFO "Loading data is complete!"

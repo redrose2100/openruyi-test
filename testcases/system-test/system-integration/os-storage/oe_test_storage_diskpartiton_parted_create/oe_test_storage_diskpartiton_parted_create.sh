@@ -19,7 +19,8 @@
 source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    local_disk=$(check_free_disk 1)
+    check_free_disk 
+    local_disk="${local_disk}"
     mkfs.ext4 -F /dev/${local_disk}
     LOG_INFO "Loading data is complete!"
 }

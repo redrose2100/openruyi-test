@@ -19,10 +19,10 @@
 source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    disk_list=($(check_free_disk 3))
-    DISK1="${disk_list[0]}"
-    DISK2="${disk_list[1]}"
-    DISK3="${disk_list[2]}"
+    check_free_disk
+    DISK1="${local_disk}"
+    DISK2="${local_disk1}"
+    DISK3="${local_disk2}"
     LOG_INFO "Loading data is complete!"
 }
 

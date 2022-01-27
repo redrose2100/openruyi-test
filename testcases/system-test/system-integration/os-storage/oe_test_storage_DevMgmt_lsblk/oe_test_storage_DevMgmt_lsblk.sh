@@ -19,9 +19,9 @@
 source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    disk_list=($(check_free_disk 2))
-    local_disk_a=${disk_list[0]}
-    local_disk=${disk_list[1]}
+    check_free_disk
+    local_disk_a="${local_disk}"
+    local_disk="${local_disk1}"
     DISK_A="/dev/${local_disk_a}"
     ADD_DISK="/dev/${local_disk}"
     new_uuid=12d59867-ff81-40d8-a7e7-45e971d31255
@@ -55,14 +55,14 @@ function run_test() {
     mkfs.xfs -f "${ADD_DISK}"
     CHECK_RESULT $?
 
-    disk_uuid=$(lsblk --fs /dev/mapper/openeuler-swap | grep "openeuler-swap" | awk '{print$4}')
-    swapoff /dev/mapper/openeuler-swap
-    swaplabel -U ${new_uuid} -L new-label /dev/mapper/openeuler-swap
+    disk_uuid=$(lsblk --fs /dev/mapper/openeuler_openeuler-swap | grep "openeuler-swap" | awk '{print$4}')
+    swapoff /dev/mapper/openeuler_openeuler-swap
+    swaplabel -U ${new_uuid} -L new-label /dev/mapper/openeuler_openeuler-swap
     SLEEP_WAIT 2
-    modify_uuid=$(lsblk --fs /dev/mapper/openeuler-swap | grep "openeuler-swap" | awk '{print$5}')
+    modify_uuid=$(lsblk --fs /dev/mapper/openeuler_openeuler-swap | grep "openeuler-swap" | awk '{print$5}')
     [ ${modify_uuid}X == ${new_uuid}X ]
     CHECK_RESULT $?
-    swaplabel -U ${disk_uuid} -L '' /dev/mapper/openeuler-swap
+    swaplabel -U ${disk_uuid} -L '' /dev/mapper/openeuler_openeuler-swap
     CHECK_RESULT $?
     swapon -a
     LOG_INFO "End of testcase execution."
