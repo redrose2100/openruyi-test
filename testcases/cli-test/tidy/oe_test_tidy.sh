@@ -73,6 +73,18 @@ function run_test() {
 
 
     # Processing directives 部分
+    # 缩进代码：-indent, -i (indent: auto)
+    # 缩进代码后，<h1> 标签的左侧被插入了一个空格
+    echo '<h1>hello' | tidy -o ./sample.html
+    tidy -i ./sample.html | grep -F ' <h1>hello</h1>'
+    CHECK_RESULT $? 0 0 "Failed to use option: -i"
+    echo '<h1>hello' | tidy -o ./sample.html
+    tidy -indent ./sample.html | grep -F ' <h1>hello</h1>'
+    CHECK_RESULT $? 0 0 "Failed to use option: -indent"
+    echo 'indent: auto' >./tidyrc
+    echo '<h1>hello' | tidy -o ./sample.html
+    tidy -config ./tidyrc ./sample.html | grep -F ' <h1>hello</h1>'
+    CHECK_RESULT $? 0 0 "Failed to use option in configuration: indent"
 
 
     # Miscellaneous 部分
