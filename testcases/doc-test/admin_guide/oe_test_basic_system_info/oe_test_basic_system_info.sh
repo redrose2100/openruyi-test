@@ -27,10 +27,13 @@ function run_test() {
     CHECK_RESULT $?
     OS_VERSION_bak=${OS_VERSION} | awk '{print$1}'
     CHECK_RESULT $?
-    grep 'VERSION_ID="$OS_VERSION_bak"' /etc/os-release
+    grep VERSION_ID="${OS_VERSION_bak}" /etc/os-release
     CHECK_RESULT $?
-    grep 'PRETTY_NAME="openEuler $OS_VERSION"' /etc/os-release
+    grep PRETTY_NAME="\"openEuler ${OS_VERSION}"\" /etc/os-release
     CHECK_RESULT $?
+    #grep 'PRETTY_NAME="openEuler $OS_VERSION"' /etc/os-release
+
+    #CHECK_RESULT $?
     grep 'ANSI_COLOR="0;31"' /etc/os-release
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"

@@ -29,10 +29,10 @@ EOF
 function run_test() {
     LOG_INFO "Start executing testcase!"
     echo test >/home/tmp
-    su test26 -c "mkdir -p /home/tmp26"
+    su test26 -c "mkdir -p /tmp/tmp26"
     CHECK_RESULT $?
     expect -c"
-        spawn scp /home/tmp test26@${NODE1_IPV4}:/home/tmp6
+        spawn scp /home/tmp test26@${NODE1_IPV4}:/tmp/tmp26
         expect {
                 \"*)?\"  {
                         send \"yes\r\"
@@ -44,15 +44,15 @@ function run_test() {
                 }
 }
 "
-    su test26 -c "ls /home/tmp26/tmp"
+    su test26 -c "ls /tmp/tmp26/tmp"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    userdel -r tmp26
-    rm -rf /home/tmp
+    userdel -r test26
+    rm -rf /tmp/tmp26 /home/tmp
     LOG_INFO "Finish environment cleanup."
 }
 
