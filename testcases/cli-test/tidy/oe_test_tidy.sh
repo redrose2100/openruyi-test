@@ -31,12 +31,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -v"
     tidy -version | grep 'HTML Tidy for Linux version' | grep '[[:digit:]]*'
     CHECK_RESULT $? 0 0 "Failed to use option: -version" 
+    # grep -F，只匹配固定字符串，不使用正则表达式
     tidy -h | grep -F 'tidy [options...] [file...] [options...] [file...]'
     CHECK_RESULT $? 0 0 "Failed to use option: -h"
     tidy -help | grep -F 'tidy [options...] [file...] [options...] [file...]'
     CHECK_RESULT $? 0 0 "Failed to use option: -help"
     tidy -? | grep -F 'tidy [options...] [file...] [options...] [file...]'
     CHECK_RESULT $? 0 0 "Failed to use option: -?"
+    tidy -help-config | grep 'HTML Tidy Configuration Settings'
+    CHECK_RESULT $? 0 0 "Failed to use option: -help-config"
+    tidy -help-env | grep 'Tidy can configure its option values from multiple sources'
+    CHECK_RESULT $? 0 0 "Failed to use option: -help-env"
     LOG_INFO "Finish test!"
 } 
 
