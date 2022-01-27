@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -41,7 +41,7 @@ function run_test() {
     service "${service}" start
     CHECK_RESULT $? 0 0 "${service} start failed"
     SLEEP_WAIT 3
-    service "${service}" status | grep "Active" | grep "active (exited)"
+    service "${service}" status | grep "Active: active (exited)"
     CHECK_RESULT $? 0 0 "${service} start failed"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
