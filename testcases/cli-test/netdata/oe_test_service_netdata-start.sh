@@ -20,12 +20,12 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
-    LOG_INFO "Start to run test."
+    LOG_INFO "Start to run testcase:oe_test_service_netdata-start."
     netdata
     CHECK_RESULT $?
     lsof -i :19999|grep -v "COMMAND" | awk '{print $1}'
     CHECK_RESULT $?
-    LOG_INFO "End to run test."
+    LOG_INFO "End to run testcase:oe_test_service_netdata-start."
 }
 
 function post_test() {
