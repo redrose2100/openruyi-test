@@ -15,6 +15,59 @@
         },
         {
             "name": "oe_test_service_dnf-makecache"
+        },
+
+
+        {
+            "name": "oe_test_dnf_alias"
+        },
+        {
+            "name": "oe_test_dnf_all-repos"
+        },
+        {
+            "name": "oe_test_dnf_assumeno"
+        },
+        {
+            "name": "oe_test_dnf_automatic"
+        },
+        {
+            "name": "oe_test_dnf_autoremvove"
+        },
+        {
+            "name": "oe_test_dnf_best"
+        },
+        {
+            "name": "oe_test_dnf_cacheonly"
+        },
+        {
+            "name": "oe_test_dnf_check"
+        },
+        {
+            "name": "oe_test_dnf_check-update"
+        },
+        {
+            "name": "oe_test_dnf_clean"
+        },
+        {
+            "name": "oe_test_dnf_different-packages"
+        },
+        {
+            "name": "oe_test_dnf_distro-sync"
+        },
+        {
+            "name": "oe_test_dnf_dnf-3"
+        },
+        {
+            "name": "oe_test_dnf_downloaddir"
+        },
+        {
+            "name": "oe_test_dnf_downloadonly"
+        },
+        {
+            "name": "oe_test_dnf_enabled"
+        },
+        {
+            "name": "oe_test_dnf_enablerepo"
         }
     ]
 }
