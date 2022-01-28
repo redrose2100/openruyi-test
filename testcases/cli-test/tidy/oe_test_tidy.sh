@@ -102,6 +102,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -wrap"
     echo 'wrap: 30' > ./tidyrc
     echo 'Tidy is a console application for macOS, Linux, Windows, UNIX, and more. It corrects and cleans up HTML and XML documents by fixing markup errors and upgrading legacy code to modern standards.' | tidy -f /dev/null -config ./tidyrc | grep -A 1 'Tidy' | grep 'application'
+    # 标签大写
     # -u, -upper, uppercase-tags
     echo '' | tidy -f /dev/null -u | grep '<HTML>'
     CHECK_RESULT $? 0 0 "Failed to use option: -u"
@@ -110,6 +111,25 @@ function run_test() {
     echo 'uppercase-tags: yes' > ./tidyrc
     echo '' | tidy -f /dev/null -config ./tidyrc | grep '<HTML>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: uppercase-tags"
+    # 清理已弃用的标签
+    # -c, -clean, clean
+    echo '<center>hello</center>' | tidy -f /dev/null -c | grep 'text-align: center'
+    CHECK_RESULT $? 0 0 "Failed to use option: -c"
+    echo '<center>hello</center>' | tidy -f /dev/null -clean | grep 'text-align: center'
+    CHECK_RESULT $? 0 0 "Failed to use option: -clean"
+    echo 'clean: yes' > ./tidyrc
+    echo '<center>hello</center>' | tidy -f /dev/null -config ./tidyrc | grep 'text-align: center'
+    CHECK_RESULT $? 0 0 "Failed to use option in configuration: clean"
+    # strip out smart quotes and em dashes, etc.
+    # -b, -bare, bare
+    echo '—' | tidy -f /dev/null -b | grep '-'
+    CHECK_RESULT $? 0 0 "Failed to use option: -b"
+    echo '—' | tidy -f /dev/null -bare | grep '-'
+    CHECK_RESULT $? 0 0 "Failed to use option: -bare"
+    echo 'bare: yes' > ./tidyrc
+    echo '—' | tidy -f /dev/null -config ./tidyrc | grep '-'
+    CHECK_RESULT $? 0 0 "Failed to use option in configuration: bare"
+
 
     # Miscellaneous 部分
     tidy -v | grep 'HTML Tidy for Linux version' | grep '[[:digit:]]*'
