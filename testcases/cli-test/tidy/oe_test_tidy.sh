@@ -176,11 +176,20 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: quiet"
     # 在输出中省略标签： <html>, <head>, <body>, </p>, </li>, </dt>, </dd>, </option>, </tr>, </td>, and </th>.
     # -omit, omit-optional-tags
+    # 测试输出结果中是否不存在 <html> 标签，若不存在，则 grep 匹配不到，故 CHECK_RESULT $? 1 0
     echo '' | tidy -omit | grep '<html>'
     CHECK_RESULT $? 1 0 "Failed to use option: -omit"
     echo 'omit-optional-tags: yes' > ./tidyrc
     echo '' | tidy -config ./tidyrc | grep '<html>'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: omit-optional-tags"
+
+    # 指定输入的内容是格式良好的 XML
+    # -xml, input-xml
+    echo '<note><body>hello</body></note>' | tidy -xml | grep 'No warnings or errors were found.'
+    CHECK_RESULT $? 0 0 "Failed to use option: -xml"
+    echo 'input-xml: yes' > ./tidyrc
+    echo '<note><body>hello</body></note>' | tidy -config ./tidyrc | grep 'No warnings or errors were found.'
+    CHECK_RESULT $? 0 0 "Failed to use option in configuration: input-xml"
 
 
 
