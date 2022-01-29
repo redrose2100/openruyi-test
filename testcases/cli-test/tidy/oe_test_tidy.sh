@@ -145,6 +145,13 @@ function run_test() {
     tidied_char_num=$(echo "${source_code}" | tidy -f /dev/null -config ./tidyrc | wc -m)
     [[ $tidied_char_num -lt $gdoc_char_num ]]
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: gdoc"
+    echo '' | tidy -e | grep '<html>'
+    CHECK_RESULT $? 1 0 "Failed to use option: -e"
+    echo '' | tidy -errors | grep '<html>'
+    CHECK_RESULT $? 1 0 "Failed to use option: -errors"
+    echo 'markup: no' > ./tidyrc
+    echo '' | tidy -config ./tidyrc | grep '<html>'
+    CHECK_RESULT $? 1 0 "Failed to use option in configuration: markup"
 
 
     # Miscellaneous 部分
