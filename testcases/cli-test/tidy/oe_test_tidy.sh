@@ -182,16 +182,23 @@ function run_test() {
     echo 'omit-optional-tags: yes' > ./tidyrc
     echo '' | tidy -config ./tidyrc | grep '<html>'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: omit-optional-tags"
-
     # 指定输入的内容是格式良好的 XML
     # -xml, input-xml
-    echo '<note><body>hello</body></note>' | tidy -xml | grep 'No warnings or errors were found.'
+    echo '<note><body>hello</body></note>' | tidy -xml 2>&1 | grep 'No warnings or errors were found.'
     CHECK_RESULT $? 0 0 "Failed to use option: -xml"
     echo 'input-xml: yes' > ./tidyrc
-    echo '<note><body>hello</body></note>' | tidy -config ./tidyrc | grep 'No warnings or errors were found.'
+    echo '<note><body>hello</body></note>' | tidy -config ./tidyrc 2>&1 | grep 'No warnings or errors were found.'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: input-xml"
-
-
+    # 输出为 XML
+    # -asxml, -asxhtml (output-xhtml: yes)
+    # 让 tidy 将标签格式化为大写，XML 标准中严格规定元素名必须为小写，则最后的结果为小写
+    echo '<p>hello</p>' | tidy -upper -asxml | grep '<p>hello</p>'
+    CHECK_RESULT $? 0 0 "Failed to use option: -asxml"
+    echo '<p>hello</p>' | tidy -upper -asxhtml | grep '<p>hello</p>'
+    CHECK_RESULT $? 0 0 "Failed to use option: -asxhtml"
+    echo 'output-xhtml: yes' > ./tidyrc
+    echo '<p>hello</p>' | tidy -upper -config ./tidyrc | grep '<p>hello</p>'
+    CHECK_RESULT $? 0 0 "Failed to use option: output-xhtml"
 
 
     # Miscellaneous 部分
