@@ -199,6 +199,10 @@ function run_test() {
     echo 'output-xhtml: yes' > ./tidyrc
     echo '<p>hello</p>' | tidy -upper -config ./tidyrc | grep '<p>hello</p>'
     CHECK_RESULT $? 0 0 "Failed to use option: output-xhtml"
+    # 将 XHTML 转换为 HTML
+    # -ashtml, output-html
+    # 此功能疑似有问题
+    # https://github.com/htacg/tidy-html5/issues/767
 
 
     # Miscellaneous 部分
