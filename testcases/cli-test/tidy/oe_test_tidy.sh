@@ -203,6 +203,15 @@ function run_test() {
     # -ashtml, output-html
     # 此功能疑似有问题
     # https://github.com/htacg/tidy-html5/issues/767
+    # 可访问性
+    # -access, accessibility-check
+    # 在等级一中，有一项是对图片是否包含 alt 信息的检查
+    echo '<img src="1.jpg"/>' | tidy -access 1 2>&1 | grep "<img> missing 'alt' text"
+    CHECK_RESULT $? 0 0 "Failed to use option: -access"
+    echo 'accessibility-check: 1' > ./tidyrc
+    echo '<img src="1.jpg"/>' | tidy -config ./tidyrc 2>&1 | grep "<img> missing 'alt' text"
+    CHECK_RESULT $? 0 0 "Failed to use option in configuration: accessibility-check"
+
 
 
     # Miscellaneous 部分
