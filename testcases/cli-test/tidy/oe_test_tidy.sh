@@ -174,6 +174,13 @@ function run_test() {
     echo 'quiet: yes' > ./tidyrc
     echo '' | tidy -config ./tidyrc | grep 'Info'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: quiet"
+    # 在输出中省略标签： <html>, <head>, <body>, </p>, </li>, </dt>, </dd>, </option>, </tr>, </td>, and </th>.
+    # -omit, omit-optional-tags
+    echo '' | tidy -omit | grep '<html>'
+    CHECK_RESULT $? 1 0 "Failed to use option: -omit"
+    echo 'omit-optional-tags: yes' > ./tidyrc
+    echo '' | tidy -config ./tidyrc | grep '<html>'
+    CHECK_RESULT $? 1 0 "Failed to use option in configuration: omit-optional-tags"
 
 
 
