@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -35,12 +35,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "${service} stop failed"
     service "${service}" start
     CHECK_RESULT $? 0 0 "${service} start failed"
-    service "${service}" status | grep "Active" | grep "active (running)"
+    service "${service}" status | grep "Active: active (running)"
     CHECK_RESULT $? 0 0 "${service} start failed"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
-    CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
+    CHECK_RESULT $? 1 0 "There is an error message for the log of ${service}"
     service "${service}" start
-    sed -i 's\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl --no-mlockall\g' /usr/lib/systemd/system/ovsdb-server.service
+    sed -i 's\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl --no-mlockall\g' /usr/lib/systemd/system/${service}
     systemctl daemon-reload
     service "${service}" reload
     CHECK_RESULT $? 0 0 "${service} reload failed"
@@ -51,7 +51,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    sed -i 's\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl --no-mlockall\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl\g' /usr/lib/systemd/system/ovsdb-server.service
+    sed -i 's\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl --no-mlockall\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl\g' /usr/lib/systemd/system/${service}
     systemctl daemon-reload
     service "${service}" reload
     service "${service}" stop
