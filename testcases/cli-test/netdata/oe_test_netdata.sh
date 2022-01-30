@@ -74,7 +74,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE netdata
+    DNF_REMOVE 
     rm -rf /root/test/
     LOG_INFO "End to restore the test environment." 
 }
