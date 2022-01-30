@@ -214,12 +214,24 @@ function run_test() {
 
 
     # Character encodings 部分
+    # This option specifies the character encoding Tidy uses for both the input and output.
+    # For latin1, characters above 255 will be written as entities.
+    # For utf8, Tidy assumes that both input and output are encoded as UTF-8.
+    # You can use iso2022 for files encoded using the ISO-2022 family of encodings e.g. ISO-2022-JP.
+    # For mac and win1252, Tidy will accept vendor specific character values, but will use entities for all characters whose value >127.
+    # For unsupported encodings, use an external utility to convert to and from UTF-8.
     # 不转换为实体输出
+    # For raw, Tidy will output values above 127 without translating them into entities.
     # -raw
     # 不使用 -raw 时，tidy 会直接输出相应的符号
     echo '&yen;' | tidy -raw | grep '¥'
     CHECK_RESULT $? 1 0 "Failed to use option: -raw"
-
+    # 使用 ISO-8859-1 进行输入，用 US-ASCII 输出
+    # For ascii Tidy will accept Latin-1 (ISO-8859-1) character values, but will use entities for all characters whose value >127.
+    # -ascii
+    # 对于码点大于 127 的字符，以实体形式输出
+    echo '&yen;' | tidy -ascii | grep 'yen'
+    CHECK_RESULT $? 0 0 "Failed to use option: -ascii"
 
 
     # Miscellaneous 部分
