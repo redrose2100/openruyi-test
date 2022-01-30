@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -22,16 +22,21 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL netdata
-    mkdir /root/test
-    touch /root/test/test.txt  
+    touch test.txt  
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run testcase:oe_test_netdata."
-    netdata
+    service netdata start
     CHECK_RESULT $? 0 0 "Failed : start"
-    netdata -v 2>&1 | grep "netdata v1.16.0"
+    service netdata restart
+    CHECK_RESULT $? 0 0 "Failed : restart"
+    service netdata stop
+    CHECK_RESULT $? 0 0 "Failed : stop"
+    service netdata status | grep "failed"
+    CHECK_RESULT $? 0 0 "Failed : status"
+    netdata -v 2>&1 | grep "netdata*"
     CHECK_RESULT $? 0 0 "Failed option: -v"
     netdata -c /etc/netdata/netdata.conf 2>&1
     CHECK_RESULT $? 0 0 "Failed option: -c filename"
@@ -39,7 +44,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: -d"
     netdata -h 2>&1 | grep "SYNOPSIS"
     CHECK_RESULT $? 0 0 "Failed option: -h"
-    netdata -P /root/test/test.txt 2>&1
+    addr=`pwd`
+    name="/test.txt"
+    netdata -P /netdata/mugen/testcases/cli-test/netdata/test.txt 2>&1
     CHECK_RESULT $? 0 0 "Failed option: -P"
     ip=`ifconfig ens33 | grep 'inet' | awk '{print $2}' | head -1`
     netdata -i $ip 2>&1
@@ -52,7 +59,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: -u"
     netdata -s /  2>&1
     CHECK_RESULT $? 0 0 "Failed option: -s"
-    netdata -V 2>&1 | grep "netdata v1.16.0"
+    netdata -V 2>&1 | grep "netdata*"
     CHECK_RESULT $? 0 0 "Failed option: -V"
     netdata -W stacksize=10 2>&1
     CHECK_RESULT $? 0 0 "Failed option: -W stacksize=N"
@@ -75,7 +82,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE 
-    rm -rf /root/test/
+    rm  test.txt
     LOG_INFO "End to restore the test environment." 
 }
 
