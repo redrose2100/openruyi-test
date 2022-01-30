@@ -211,6 +211,9 @@ function run_test() {
     echo 'accessibility-check: 1' > ./tidyrc
     echo '<img src="1.jpg"/>' | tidy -config ./tidyrc 2>&1 | grep "<img> missing 'alt' text"
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: accessibility-check"
+
+
+    # Character encodings 部分
     # 不转换为实体输出
     # -raw
     # 不使用 -raw 时，tidy 会直接输出相应的符号
