@@ -22,6 +22,7 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL tidy
+    DNF_INSTALL uchardet
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -45,7 +46,6 @@ function run_test() {
     # -latin1
     # 将 ISO-8859-1 作为输入和输出编码
     # 使用 uchardet 对输出结果的编码格式进行检查,ISO-8859-1 会被检出 WINDOWS-1252 的结果
-    echo '&#167;' | tidy -latin1 | grep '&sect;'
     echo '½' | iconv -f UTF-8 -t ISO-8859-1 | tidy -f /dev/null -latin1 | grep '<body>' -A 1 --text | uchardet | grep 'WINDOWS-1252'
     CHECK_RESULT $? 0 0 "Failed to use option: -latin1"
     # -iso2022
@@ -61,81 +61,44 @@ function run_test() {
     #  用 MacRoman 作为输入编码, US-ASCII 作为输出编码
     echo '¶' | iconv -t MAC-CENTRALEUROPE | tidy -mac | grep '&para;'
     CHECK_RESULT $? 0 0 "Failed to use option: -mac"
-    #TODO: check below
-
-
     # -win1252
     # 用 Windows-1252 作为输入编码, US-ASCII 作为输出编码
-    echo 'œ' | tidy -win1252 | grep '&Aring;&OpenCurlyDoubleQuote;'
+    echo '§' | iconv -f UTF-8 -t WINDOWS-1252 | tidy -win1252 | grep '<body>' -A 1 | grep '&sect;'
     CHECK_RESULT $? 0 0 "Failed to use option: -win1252"
     # -ibm858
     # 用 IBM-858 作为输入编码, US-ASCII 作为输出编码
-    echo '&#180;' | tidy -ibm858 | grep '&DiacriticalAcute;'
+    echo '║' | iconv -f UTF-8 -t IBM858 | tidy -ibm858 | grep '<body>' -A 1 | grep '&boxV;'
     CHECK_RESULT $? 0 0 "Failed to use option: -ibm858"
 
     # -utf16le
-    # 用 UTF-16 作为输入和输出编码
-    echo 'Ѕ' | tidy -utf16le | grep --text 'Ѕ'
+    # 用 UTF-16LE 作为输入和输出编码
+    echo 'Σ' | iconv -f UTF-8 -t UTF-16LE | tidy -utf16le -o ./tidied.html
+    encguess ./tidied.html | grep 'UTF-16LE'
     CHECK_RESULT $? 0 0 "Failed to use option: -utf16le"
 
 
-    #   -utf16be
-    #          use UTF-16BE for both input and output
+    # -utf16be
+    # 用 UTF-16BE 作为输入和输出编码
+    echo 'Σ' | iconv -f UTF-8 -t UTF-16BE | tidy -utf16be -o ./tidied.html
+    encguess ./tidied.html | grep 'UTF-16BE'
+    CHECK_RESULT $? 0 0 "Failed to use option: -utf16be"
 
-    #   -utf16 use UTF-16 for both input and output
+    # -utf16 
+    # 用 UTF-16 作为输入和输出编码
+    echo 'Σ' | iconv -f UTF-8 -t UTF-16 | tidy -utf16 -o ./tidied.html
+    encguess ./tidied.html | grep 'UTF-16'
+    CHECK_RESULT $? 0 0 "Failed to use option: -utf16"
 
-    #   -big5  use Big5 for both input and output
+    # -big5 
+    # 用 BIG-5 作为输入和输出编码
+    # 使用 uchardet 检出结果为 WINDOWS-1252
+    echo '好' | iconv -f UTF-8 -t BIG-5 | tidy -big5 | uchardet | grep 'WINDOWS-1252'
+    CHECK_RESULT $? 0 0 "Failed to use option: -big5"
 
-    #   -shiftjis
-    #          use Shift_JIS for both input and output
-
-
-    # Miscellaneous 部分
-    # -v, --version
-    tidy -v | grep 'HTML Tidy for Linux version' | grep '[[:digit:]]*'
-    CHECK_RESULT $? 0 0 "Failed to use option: -v"
-    tidy -version | grep 'HTML Tidy for Linux version' | grep '[[:digit:]]*'
-    CHECK_RESULT $? 0 0 "Failed to use option: -version" 
-
-    # -h, -help, -help-config
-    tidy -h | grep -F 'tidy [options...] [file...] [options...] [file...]'
-    CHECK_RESULT $? 0 0 "Failed to use option: -h"
-    tidy -help | grep -F 'tidy [options...] [file...] [options...] [file...]'
-    CHECK_RESULT $? 0 0 "Failed to use option: -help"
-    exit 0
-    tidy -? | grep 'tidy [options...] [file...] [options...] [file...]'
-    CHECK_RESULT $? 0 0 "Failed to use option: -?"
-    tidy -help-config | grep 'HTML Tidy Configuration Settings'
-    CHECK_RESULT $? 0 0 "Failed to use option: -help-config"
-
-    # -help-env, -help-option
-    # 与 tidy 有关的环境变量
-    tidy -help-env | grep 'Tidy can configure its option values from multiple sources'
-    CHECK_RESULT $? 0 0 "Failed to use option: -help-env"
-    tidy -help-option add-meta-charset | grep 'This option, when enabled'
-    CHECK_RESULT $? 0 0 "Failed to use option: -help-option"
-
-    # -export-default-config
-    # 导出默认的配置
-    tidy -export-default-config | grep 'add-meta-charset' | grep 'no'
-    CHECK_RESULT $? 0 0 "Failed to use option: -export-default-config"
-
-    # -show-config
-    # 展示当前的配置
-    echo 'add-meta-charset: yes' > ./tidyrc
-    tidy -config ./tidyrc -show-config | grep 'add-meta-charset' | grep 'yes'
-    CHECK_RESULT $? 0 0 "Failed to use option: -show-config"
-
-    # -export-config
-    # 以配置文件的格式展示当前的配置
-    tidy -config ./tidyrc -export-config | grep 'add-meta-charset' | grep 'yes'
-    CHECK_RESULT $? 0 0 "Failed to use option: -export-config"
-
-    # -language
-    # 让 tidy 使用中文进行交互
-    echo '<h1>你好</h1>' | tidy -language zh-cn 2>&1 | grep 'Info: 文档内容看起来像 HTML5'
-    CHECK_RESULT $? 0 0 "Failed to use option: -language"
-
+    # -shiftjis
+    # 用 SHITFT-JIS 作为输入和输出编码
+    # 使用 uchardet 检出结果为 WINDOWS-1252
+    echo 'ｦ' | iconv -f UTF-8 -t SHIFT-JIS | tidy -shiftjis | uchardet | grep 'WINDOWS-1252'
 
     LOG_INFO "Finish test!"
 } 
@@ -143,7 +106,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE
-    rm -f ./tidyrc
     rm -f ./tidied.html
     LOG_INFO "Finish environment cleanup!"
 }
