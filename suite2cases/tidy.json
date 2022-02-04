@@ -35,6 +35,9 @@
             "name": "oe_test_tidy_cleanup_options"
         },
         {
+            "name": "oe_test_tidy_entities_options"
+        },
+        {
             "name": "oe_test_tidy_repair_options"
         },
         {
