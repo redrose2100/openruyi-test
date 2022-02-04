@@ -27,11 +27,6 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    # 依据手册中的章节划分，编写测试样例
-    # 章节间以双行间隔，功能之间以单行间隔
-    # 选项有两种用法，一是在命令行中直接使用，二是写进配置文件中
-    # 选项在两种用法中的名称不尽相同
-
     # -i, -indent, indent
     # 缩进代码后，<h1> 标签的左侧被插入了一个空格
     echo '<h1>hello' | tidy -i | grep ' <h1>hello</h1>'
