@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -20,12 +20,12 @@ function config_params() {
     LOG_INFO "Start to config params of the case."
     check_free_disk
     old_scheduler=$(awk -F '[' '{print$2}' /sys/block/"${local_disk}"/queue/scheduler | awk -F ']' '{print$1}')
+    echo bfq >/sys/block/"${local_disk}"/queue/scheduler
     LOG_INFO "End to config params of the case."
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
-    echo bfq >/sys/block/"${local_disk}"/queue/scheduler
+    LOG_INFO "Start to run test."  
     awk -F '[' '{print$2}' /sys/block/"${local_disk}"/queue/scheduler | awk -F ']' '{print$1}' | grep bfq
     CHECK_RESULT $?
     LOG_INFO "End to run test."

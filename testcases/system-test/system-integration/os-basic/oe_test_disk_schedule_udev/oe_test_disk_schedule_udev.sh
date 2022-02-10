@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -20,15 +20,14 @@ source ../common/disk_lib.sh
 function config_params() {
     LOG_INFO "Start to config params of the case."
     check_free_disk
-    old_scheduler=$(awk -F '[' '{print$2}' /sys/block/"${local_disk}"/queue/scheduler | awk -F ']' '{print$1}')
+    WWID=$(udevadm info --attribute-walk --name=/dev/"${local_disk}" | grep wwid)
+    cp /etc/udev/rules.d/99-scheduler.rules /etc/udev/rules.d/99-scheduler.rules.bak
+    echo "ACTION ==\"add|change\",SUBSYSTEM==\"block\",$WWID,ATTR{queue/scheduler}=\"mq-deadline\"" >/etc/udev/rules.d/99-scheduler.rules
     LOG_INFO "End to config params of the case."
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
-    WWID=$(udevadm info --attribute-walk --name=/dev/"${local_disk}" | grep wwid)
-    cp /etc/udev/rules.d/99-scheduler.rules /etc/udev/rules.d/99-scheduler.rules.bak
-    echo "ACTION ==\"add|change\",SUBSYSTEM==\"block\",$WWID,ATTR{queue/scheduler}=\"mq-deadline\"" >/etc/udev/rules.d/99-scheduler.rules
+    LOG_INFO "Start to run test."    
     udevadm control --reload-rules
     CHECK_RESULT $?
     udevadm trigger --type=devices --action=change
@@ -40,7 +39,6 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    echo "${old_scheduler}" >/sys/block/"$local_disk"/queue/scheduler
     rm -rf /etc/udev/rules.d/99-scheduler.rules
     mv /etc/udev/rules.d/99-scheduler.rules.bak /etc/udev/rules.d/99-scheduler.rules
     udevadm control --reload-rules

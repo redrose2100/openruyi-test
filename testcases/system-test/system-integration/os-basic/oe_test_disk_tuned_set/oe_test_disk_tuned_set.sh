@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -19,8 +19,9 @@
 
 source ../common/disk_lib.sh
 function config_params() {
+    LOG_INFO "Start to config the test environment."
     check_free_disk
-    old_scheduler=$(awk -F '[' '{print$2}' /sys/block/"${local_disk}"/queue/scheduler | awk -F ']' '{print$1}')
+    LOG_INFO "Start to config the test environment."
 }
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -40,12 +41,6 @@ energy_perf_bias=normal
 timeout=10
 [video]
 radeon_powersave=dpm-balanced, auto" >/etc/tuned/my-profile_new/tuned.conf
-    check_free_disk
-    LOG_INFO "End to prepare the test environment."
-}
-
-function run_test() {
-    LOG_INFO "Start to run test."
     old_profile=$(tuned-adm active | awk '{print $4}')
     mkdir /etc/tuned/my-profile
     ID_WWN=$(udevadm info --query=property --name=/dev/"${local_disk}" | grep WWN=)
@@ -54,6 +49,11 @@ include=my-profile_new
 [disk]
 devices_udev_regex=$ID_WWN
 elevator=mq-deadline" >/etc/tuned/my-profile/tuned.conf
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."    
     tuned-adm profile my-profile
     CHECK_RESULT $?
     tuned-adm active | grep "my-profile"
@@ -69,8 +69,7 @@ elevator=mq-deadline" >/etc/tuned/my-profile/tuned.conf
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf /etc/tuned/my-profile /etc/tuned/my-profile_new tuned_log
-    echo "${old_scheduler}" >/sys/block/"${local_disk}"/queue/scheduler
+    rm -rf /etc/tuned/my-profile /etc/tuned/my-profile_new 
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

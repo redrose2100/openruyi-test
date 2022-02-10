@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -21,13 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL tuned
-    LOG_INFO "End to prepare the test environment."
-}
-
-function run_test() {
-    LOG_INFO "Start to run test."
     systemctl enable --now tuned
-    CHECK_RESULT $?
     mkdir /etc/tuned/my-profile
     old_profile=$(tuned-adm active | awk '{print $4}')
     echo "[main]
@@ -39,6 +33,11 @@ energy_perf_bias=normal
 timeout=10
 [video]
 radeon_powersave=dpm-balanced, auto" >/etc/tuned/my-profile/tuned.conf
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."     
     tuned-adm profile my-profile
     CHECK_RESULT $?
     tuned-adm active | grep "my-profile"
@@ -53,7 +52,7 @@ radeon_powersave=dpm-balanced, auto" >/etc/tuned/my-profile/tuned.conf
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf tuned_log /etc/tuned/my-profile
+    rm -rf tuned_log /etc/tuned
     LOG_INFO "End to restore the test environment."
 }
 
