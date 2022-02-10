@@ -25,7 +25,8 @@
             "name":"oe_test_system_log_view"
         },
         {
-            "name":"oe_test_disk_schedule_udev"
+            "name":"oe_test_disk_schedule_udev",
+            "add disk":[2,2,2]
         },
         {
             "name":"oe_test_server_mysql"
@@ -88,7 +89,8 @@
             "name":"oe_test_net_scriprts"
         },
         {
-            "name":"oe_test_disk_tuned_set"
+            "name":"oe_test_disk_tuned_set",
+            "add disk":[2,2,2]
         },
         {
             "name":"oe_test_nmcli_add_connect"
@@ -325,7 +327,8 @@
             "name":"oe_test_net_IPVLAN"
         },
         {
-            "name":"oe_test_disk_schedule_specific"
+            "name":"oe_test_disk_schedule_specific",
+            "add disk":[2,2,2]
         },
         {
             "name":"oe_test_timedatectl"
