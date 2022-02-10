@@ -22,20 +22,20 @@ function run_test() {
     LOG_INFO "Start to run test."
     dnf check-update
     CHECK_RESULT $? 100 0
-    dnf check 
-    CHECK_RESULT $? 
+    dnf check
+    CHECK_RESULT $?
     dnf check --dependencies
     CHECK_RESULT $?
     dnf check --duplicates
-    CHECK_RESULT $? 
+    CHECK_RESULT $?
     dnf check --obsoleted
-    CHECK_RESULT $?   
+    CHECK_RESULT $?
     dnf check --provides
     CHECK_RESULT $?
     dnf -y install vim &
     dnf -y install tree | grep "Complete!"
     CHECK_RESULT $?
-    SLEEP_WAIT 3 
+    SLEEP_WAIT 3
     rpm -q vim-enhanced | grep "vim-enhanced"
     CHECK_RESULT $?
     rpm -q tree | grep "tree"
