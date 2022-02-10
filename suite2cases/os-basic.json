@@ -9,19 +9,36 @@
     ],
     "machine num": 2,
     "cases": [
+
+        {
+            "name": "oe_test_server_vsftpd_transfer",
+            "machine num": 2
         {
             "name": "oe_test_who"
         },
+
         {
+            "name": "oe_test_server_mariadb_compatibilty",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_power_powertop2tuned_optimize"
             "name": "oe_test_versioninfo"
         },
         {
             "name": "oe_test_uname"
         },
+
         {
+            "name": "oe_test_ProcMgmt_start_kill"
             "name": "oe_test_timedatectl"
         },
+
         {
+            "name": "oe_test_ProcMgmt_pgrep"
+        },
+        {
+            "name": "oe_test_ProcMgmt_ps"
             "name": "oe_test_system_monitor_reboot",
             "machine num": 2
         },
