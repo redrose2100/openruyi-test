@@ -29,7 +29,7 @@ function run_test() {
     LOG_INFO "Start executing testcase!"
     lvcreate -y -L 1G -n original openeulertest
     lvcreate --size 100M --snapshot --name snap /dev/openeulertest/original -y &&
-        CHECK_RESULT $?
+    CHECK_RESULT $?
     lvdisplay /dev/openeulertest/original
     CHECK_RESULT $?
     lvs -a -o +devices
