@@ -21,11 +21,8 @@ function pre_test() {
     LOG_INFO "Start to prepare the test env"
     check_free_disk
     pvcreate -y /dev/${local_disk}
-    SLEEP_WAIT 2
     vgcreate openeulertest /dev/${local_disk}
-    SLEEP_WAIT 2
     lvcreate -y -L 50MB -n test openeulertest /dev/${local_disk}
-    SLEEP_WAIT 2
     LOG_INFO "End to prepare the test env"
 }
 
@@ -45,9 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     vgremove -y openeulertest
-    SLEEP_WAIT 1
     pvremove /dev/${local_disk}
-    SLEEP_WAIT 1
     LOG_INFO "Finish environment cleanup."
 }
 

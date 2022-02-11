@@ -21,24 +21,19 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
     pvcreate -y /dev/${local_disk}
-    sleep 2
     vgcreate -y openeulertest /dev/${local_disk}
-    sleep 2
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
     line1=$(lvcreate -y -L 50MB -n test3 openeulertest 2>&1 | wc -l)
-    sleep 2
     lvdisplay | grep "LV Name" | grep test3
     CHECK_RESULT $?
     line2=$(lvcreate -v -L 50MB -n test1 openeulertest 2>&1 | wc -l)
-    sleep 2
     lvdisplay | grep "LV Name" | grep test1
     CHECK_RESULT $?
     line3=$(lvcreate -vvv -L 50MB -n test2 openeulertest 2>&1 | wc -l)
-    sleep 2
     lvdisplay | grep "LV Name" | grep test2
     CHECK_RESULT $?
     test "${line1}" -lt "${line2}"
@@ -51,11 +46,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test3 openeulertest/test1 openeulertest/test2
-    sleep 2
     vgremove -y openeulertest
-    sleep 2
     pvremove /dev/${local_disk}
-    sleep 2
     LOG_INFO "Finish environment cleanup."
 }
 

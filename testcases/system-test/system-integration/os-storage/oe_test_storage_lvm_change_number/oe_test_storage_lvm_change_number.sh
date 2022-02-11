@@ -21,9 +21,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
     pvcreate -y /dev/${local_disk1}
-    SLEEP_WAIT 2
     vgcreate openeulertest /dev/${local_disk1} -y
-    SLEEP_WAIT 2
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -31,22 +29,17 @@ function run_test() {
     LOG_INFO "Start executing testcase!"
     vgextend openeulertest /dev/${local_disk} -y
     CHECK_RESULT $?
-    sleep 2
     vgextend openeulertest /dev/${local_disk3} -y
     CHECK_RESULT $?
-    sleep 2
     lvcreate -L 50MB -n test openeulertest -y
     CHECK_RESULT $?
-    sleep 3
     lvextend -L+1G /dev/openeulertest/test -y
     CHECK_RESULT $?
-    sleep 5
     lvs -a -o name,copy_percent,devices openeulertest
     CHECK_RESULT $?
     expect -c "
     set timeout 30
     spawn lvconvert -m2 openeulertest/test
-    sleep 5
     expect \"*\[y/n\]*\" {send \"y\r\"}
     expect eof
 "
@@ -59,7 +52,6 @@ function run_test() {
     set timeout 30
     log_file testlog
     spawn lvconvert -m2 openeulertest/test /dev/${local_disk3}
-    sleep 5
     expect \"*\[y/n\]*\" {send \"y\r\"}
     expect eof
 "
@@ -73,11 +65,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test
-    SLEEP_WAIT 2
     vgremove -y openeulertest
-    SLEEP_WAIT 2
     pvremove /dev/${local_disk1} /dev/${local_disk} /dev/${local_disk3}
-    SLEEP_WAIT 2
     rm -rf testlog
     LOG_INFO "Finish environment cleanup."
 }

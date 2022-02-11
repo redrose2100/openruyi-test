@@ -26,17 +26,13 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase!"
     pvcreate -y /dev/${local_disk} /dev/${local_disk1}
-    SLEEP_WAIT 2
     pvdisplay | grep "PV Name" | grep /dev/${local_disk}
     CHECK_RESULT $?
     vgcreate openeulertest /dev/${local_disk} /dev/${local_disk1}
-    SLEEP_WAIT 2
     vgdisplay | grep "VG Name" | grep openeulertest
     CHECK_RESULT $?
     lvcreate -y -L 50MB -n test openeulertest /dev/${local_disk}
-    SLEEP_WAIT 2
     lvcreate --type cache-pool -L 1G -n cpool openeulertest /dev/${local_disk1} -y
-    SLEEP_WAIT 2
     lvs -a -o name,size,attr,devices openeulertest
     CHECK_RESULT $?
     lvconvert -y --type cache --cachepool cpool openeulertest/test
@@ -52,9 +48,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     vgremove -y openeulertest
-    SLEEP_WAIT 2
     pvremove -y /dev/${local_disk1} /dev/${local_disk}
-    SLEEP_WAIT 2
     LOG_INFO "Finish environment cleanup."
 }
 

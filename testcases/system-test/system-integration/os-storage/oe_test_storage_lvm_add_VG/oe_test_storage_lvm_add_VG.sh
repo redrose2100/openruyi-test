@@ -21,26 +21,21 @@ function config_params() {
     LOG_INFO "Start loading data!"
     check_free_disk
     mkfs.ext4 -F /dev/${local_disk}
-    SLEEP_WAIT 2
     mkfs.ext4 -F /dev/${local_disk1}
-    SLEEP_WAIT 2
     LOG_INFO "Loading data is complete!"
 }
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pvcreate -y /dev/${local_disk} /dev/${local_disk1}
-    SLEEP_WAIT 2
     vgcreate openeulertest /dev/${local_disk}
-    SLEEP_WAIT 2
     lvcreate -L 50MB -n test openeulertest -y
-    SLEEP_WAIT 2
+    number=$(pvs -o+pv_used 2>&1 | wc -l)
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    number=$(pvs -o+pv_used 2>&1 | wc -l)
     test ${number} -gt 3
     CHECK_RESULT $?
     vgextend openeulertest /dev/${local_disk1} -y
@@ -54,13 +49,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y /dev/openeulertest/test
-    SLEEP_WAIT 1
     vgremove -y openeulertest
-    SLEEP_WAIT 1
     pvremove /dev/${local_disk}
-    SLEEP_WAIT 1
     pvremove /dev/${local_disk1}
-    SLEEP_WAIT 1
     LOG_INFO "Finish environment cleanup."
 }
 

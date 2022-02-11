@@ -21,18 +21,15 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
     pvcreate -y /dev/${local_disk}
-    SLEEP_WAIT 2
     vgcreate openeulertest /dev/${local_disk}
-    SLEEP_WAIT 2
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
     lvcreate -y -L 1G -n original openeulertest
-    SLEEP_WAIT 2
-    lvcreate --size 100M --snapshot --name snap /dev/openeulertest/original -y && SLEEP_WAIT 2
-    CHECK_RESULT $?
+    lvcreate --size 100M --snapshot --name snap /dev/openeulertest/original -y &&
+        CHECK_RESULT $?
     lvdisplay /dev/openeulertest/original
     CHECK_RESULT $?
     lvs -a -o +devices
@@ -43,11 +40,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test
-    SLEEP_WAIT 2
     vgremove -y openeulertest
-    SLEEP_WAIT 2
     pvremove -y /dev/${local_disk}
-    SLEEP_WAIT 2
     LOG_INFO "Finish environment cleanup."
 }
 

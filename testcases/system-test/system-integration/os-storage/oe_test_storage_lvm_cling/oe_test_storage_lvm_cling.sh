@@ -21,22 +21,18 @@ function pre_test() {
     LOG_INFO "Start loading data!"
     check_free_disk
     pvcreate -y /dev/${local_disk3}
-    SLEEP_WAIT 2
     vgcreate opentest /dev/${local_disk3}
-    SLEEP_WAIT 2
     vgextend opentest /dev/${local_disk} /dev/${local_disk1} /dev/${local_disk2} -y
-    SLEEP_WAIT 2
+    echo "cling_tag_list = [\"@A\", \"@B\" ]" >>lvm.conf
     LOG_INFO "Loading data is complete!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    echo "cling_tag_list = [\"@A\", \"@B\" ]" >>lvm.conf
     expect -c "
     set timeout 30
     log_file testlog
     spawn lvcreate --type raid1 -m 1 -n test --nosync -L 50MB opentest
-    sleep 5
     expect \"*\[y/n\]*\" {send \"y\r\"}
     expect eof
 "
@@ -44,8 +40,8 @@ function run_test() {
     CHECK_RESULT $? 1
     lvs -a -o +devices
     CHECK_RESULT $?
-    lvextend --alloc cling -L +50MB opentest/test && SLEEP_WAIT 2
-    CHECK_RESULT $?
+    lvextend --alloc cling -L +50MB opentest/test &&
+        CHECK_RESULT $?
     lvs -a -o +devices
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
@@ -53,11 +49,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf lvm.conf testlog
+    rm -rf lvm.conf test.log
     vgremove -y opentest
-    SLEEP_WAIT 2
     pvremove /dev/${local_disk3} /dev/${local_disk} /dev/${local_disk2} /${local_disk1}
-    SLEEP_WAIT 2
     LOG_INFO "Finish environment cleanup."
 }
 

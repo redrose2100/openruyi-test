@@ -20,12 +20,11 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    lvcreate --help
+    lvcreate --help | grep "Create a linear LV"
     CHECK_RESULT $?
     list_array=(lvscan lvs lvremove pvcreate pvremove pvscan pvs vgcreate vgremove vgscan)
-    len=${#list_array[*]}
-    for ((j = 0; j < "$len"; j = j + 1)); do
-        ${list_array[$j]} --help
+    for cmd in "${list_array[@]}"; do
+        ${cmd} --help
         CHECK_RESULT $?
     done
     LOG_INFO "End of testcase execution!"

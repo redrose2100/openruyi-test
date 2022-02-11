@@ -22,18 +22,14 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
     pvcreate -y /dev/${local_disk} /dev/${local_disk1}
-    sleep 2
     vgcreate openeuler1 /dev/${local_disk}
-    sleep 2
     vgcreate openeulertest /dev/${local_disk1}
-    sleep 2
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
     vgchange --activate n openeulertest
-    sleep 2
     vgmerge -v openeuler1 openeulertest
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
@@ -42,11 +38,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     vgremove -y openeulertest
-    sleep 2
     vgremove -y openeuler1
-    sleep 2
     pvremove /dev/${local_disk} /dev/${local_disk1}
-    sleep 2
     LOG_INFO "Finish environment cleanup."
 }
 
