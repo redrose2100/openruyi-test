@@ -39,8 +39,8 @@ function run_test() {
     CHECK_RESULT $? 1
     lvs -a -o +devices
     CHECK_RESULT $?
-    lvextend --alloc cling -L +50MB opentest/test &&
-        CHECK_RESULT $?
+    lvextend --alloc cling -L +50MB opentest/test
+    CHECK_RESULT $?
     lvs -a -o +devices
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
