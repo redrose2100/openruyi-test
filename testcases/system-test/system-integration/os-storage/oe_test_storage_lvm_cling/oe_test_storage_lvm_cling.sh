@@ -23,7 +23,6 @@ function pre_test() {
     pvcreate -y /dev/${local_disk3}
     vgcreate opentest /dev/${local_disk3}
     vgextend opentest /dev/${local_disk} /dev/${local_disk1} /dev/${local_disk2} -y
-    echo "cling_tag_list = [\"@A\", \"@B\" ]" >>lvm.conf
     LOG_INFO "Loading data is complete!"
 }
 
@@ -49,7 +48,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf lvm.conf test.log
+    rm -rf testlog
     vgremove -y opentest
     pvremove /dev/${local_disk3} /dev/${local_disk} /dev/${local_disk2} /${local_disk1}
     LOG_INFO "Finish environment cleanup."
