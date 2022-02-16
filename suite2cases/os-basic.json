@@ -441,6 +441,9 @@
             "name":"oe_test_net_ncat",
             "machine num":2,
             "add network interface": 2
+        },
+        {
+            "name":"oe_test_cmd_file"
         }
 
 
