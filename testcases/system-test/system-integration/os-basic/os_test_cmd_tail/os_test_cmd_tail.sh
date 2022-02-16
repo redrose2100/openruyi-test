@@ -14,26 +14,24 @@
 # @Contact   :   shileib@uniontech.com
 # @Date      :   2022-2-16
 # @License   :   Mulan PSL v2
-# @Desc      :   File system common command test-file
+# @Desc      :   File system common command test-tail
 # #############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start testing..."
-    file -v | grep -E "^file-*"
-    CHECK_RESULT $? 0 0 "file -v display error"
+    tail --version | grep -E "^tail *"
+    CHECK_RESULT $? 0 0 "tail --version display error"
 
-    file --help | grep "display this help and exit"
-    CHECK_RESULT $? 0 0 "file --help display error"
+    tail --help | grep "standard output"
+    CHECK_RESULT $? 0 0 "tail --help display error"
 
-    file /etc/passwd | grep "/etc/passwd: ASCII text"
-    CHECK_RESULT $? 0 0 "file /etc/passwd display error"
+    tail /etc/passwd | wc -l | grep "10"
+    CHECK_RESULT $? 0 0 "tail /etc/passwd display error"
 
-    file -b /etc/passwd | grep "ASCII text"
-    CHECK_RESULT $? 0 0 "file -b /etc/passwd display error"
+    tail -n 5 /etc/passwd | wc -l | grep "5"
+    CHECK_RESULT $? 0 0 "tail -n 5 /etc/passwd display error"
 
-    file -i /etc/passwd  | grep "/etc/passwd: text/plain; charset=us-ascii"
-    CHECK_RESULT $? 0 0 "file -i /etc/passwd display error"
 
 }
 

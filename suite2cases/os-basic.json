@@ -443,7 +443,7 @@
             "add network interface": 2
         },
         {
-            "name":"oe_test_cmd_file"
+            "name":"oe_test_cmd_tail"
         }
 
 
