@@ -257,7 +257,7 @@ while getopts "c:af:r:dx" option; do
     f)
         test_suite=$OPTARG
 
-        echo $test_suite | grep -q -e ' -a\| -r \|-x\|-d' && {
+        echo $test_suite | grep -q -e ' -a\| -r \| -x\| -d' && {
             usage
             exit 1
         }
