@@ -43,7 +43,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: output-file"
     # -config
     # 使用指定的配置文件
-    echo 'add-meta-charset: yes' > ./tidyrc
+    echo 'add-meta-charset: yes' >./tidyrc
     echo '<h1>hello' | tidy -config ./tidyrc | grep '<meta charset=".*">'
     CHECK_RESULT $? 0 0 "Failed to use option: -config"
     # -f, -file, error-file
@@ -54,27 +54,27 @@ function run_test() {
     echo '<h1>hello' | tidy -file ./errors_and_warnings
     grep 'Warning' ./errors_and_warnings
     CHECK_RESULT $? 0 0 "Failed to use option: -file"
-    echo 'error-file: errors_and_warnings' > ./tidyrc
+    echo 'error-file: errors_and_warnings' >./tidyrc
     echo '<h1>hello' | tidy -config ./tidyrc
     grep 'Warning' ./errors_and_warnings
     CHECK_RESULT $? 0 0 "Failed to use option: -file"
     # -m, -modify, write-back
     # 将处理过的结果写入源文件
-    echo '<h1>hello' > sample.html
+    echo '<h1>hello' >sample.html
     tidy -m ./sample.html
     grep '<h1>hello</h1>' ./tidied.html
     CHECK_RESULT $? 0 0 "Failed to use option: -m"
-    echo '<h1>hello' > sample.html
+    echo '<h1>hello' >sample.html
     tidy -modify ./sample.html
     grep '<h1>hello</h1>' ./tidied.html
     CHECK_RESULT $? 0 0 "Failed to use option: -modify"
-    echo 'write-back: yes' >./tidyrc 
-    echo '<h1>hello' > sample.html
+    echo 'write-back: yes' >./tidyrc
+    echo '<h1>hello' >sample.html
     tidy -config ./tidyrc ./sample.html
     grep '<h1>hello</h1>' ./tidied.html
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: write-back"
     LOG_INFO "Finish test!"
-} 
+}
 
 function post_test() {
     LOG_INFO "start environment cleanup."
