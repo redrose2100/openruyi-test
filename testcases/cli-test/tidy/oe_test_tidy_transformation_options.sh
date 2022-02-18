@@ -32,46 +32,46 @@ function run_test() {
     # 讲 <![CDATA[]]> 的内容转换为普通文本
     echo '<![CDATA[hi]]>' | tidy --escape-cdata true | grep 'CDATA'
     CHECK_RESULT $? 1 0 "Failed to use option: --escape-cdata"
-    echo 'escape-cdata: true' > ./tidyrc
+    echo 'escape-cdata: true' >./tidyrc
     echo '<![CDATA[hi]]>' | tidy -config ./tidyrc | grep 'CDATA'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: escape-cdata"
     # --hide-comments
     # 不打印注释
     echo '<!--this is comment -->' | tidy --hide-comments true | grep 'this is comment'
     CHECK_RESULT $? 1 0 "Failed to use option: --hide-comments"
-    echo 'hide-comments: true' > ./tidyrc
+    echo 'hide-comments: true' >./tidyrc
     echo '<!--this is comment -->' | tidy -config ./tidyrc | grep 'this is comment'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: hide-comments"
     # --join-classes
     # 将多个类名生成一个新类名
     echo '<p class="a" class="b">hi</p>' | tidy --join-classes true | grep 'class="a b"'
     CHECK_RESULT $? 0 0 "Failed to use option: --join-classes"
-    echo 'join-classes: true' > ./tidyrc
+    echo 'join-classes: true' >./tidyrc
     echo '<p class="a" class="b">hi</p>' | tidy -config ./tidyrc | grep 'class="a b"'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: join-classes"
     # --join-styles
     # 将多个样式合并为一个新样式
     echo '<h1 style="color:blue" style="text-align:center;">hi</h1>' | tidy --join-styles false | grep ' style="color:blue; text-align:center;"'
     CHECK_RESULT $? 1 0 "Failed to use option: --join-styles"
-    echo 'join-styles: false' > ./tidyrc
+    echo 'join-styles: false' >./tidyrc
     echo '<h1 style="color:blue" style="text-align:center;">hi</h1>' | tidy -config ./tidyrc | grep ' style="color:blue; text-align:center;"'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: join-styles"
     # --merge-emphasis
     # 合并嵌套的 <b> 和 <i> 元素，默认开启
-    echo '<b><b>hi</b></b>' | tidy --merge-emphasis  false | grep '<b><b>hi</b></b>'
+    echo '<b><b>hi</b></b>' | tidy --merge-emphasis false | grep '<b><b>hi</b></b>'
     CHECK_RESULT $? 0 0 "Failed to use option: --merge-emphasis"
-    echo 'merge-emphasis: false' > ./tidyrc
+    echo 'merge-emphasis: false' >./tidyrc
     echo '<b><b>hi</b></b>' | tidy -config ./tidyrc | grep '<b><b>hi</b></b>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: merge-emphasis"
     # --replace-color
     # 将颜色的数字表示转换为名字
     echo '<font color="#ffffff">hi</font>' | tidy --replace-color true | grep 'color="white"'
     CHECK_RESULT $? 0 0 "Failed to use option: --replace-color"
-    echo 'replace-color: true' > ./tidyrc
+    echo 'replace-color: true' >./tidyrc
     echo '<font color="#ffffff">hi</font>' | tidy -config ./tidyrc | grep 'color="white"'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: replace-color"
     LOG_INFO "Finish test!"
-} 
+}
 
 function post_test() {
     LOG_INFO "start environment cleanup."
