@@ -31,14 +31,14 @@ function run_test() {
     # 指定输入内容的编码格式，若设置，则可能会挑选与输入格式不同的输出格式
     echo '½' | tidy --char-encoding ascii | grep '&frac12;'
     CHECK_RESULT $? 0 0 "Failed to use option: --char-encoding"
-    echo 'char-encoding: ascii' > ./tidyrc
+    echo 'char-encoding: ascii' >./tidyrc
     echo '½' | tidy -config ./tidyrc | grep '&frac12;'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: char-encoding"
     # --input-encoding
     # 指定输入格式
     echo '½' | tidy --input-encoding utf8 | grep '½'
     CHECK_RESULT $? 0 0 "Failed to use option: --input-encoding"
-    echo 'input-encoding: utf8' > ./tidyrc
+    echo 'input-encoding: utf8' >./tidyrc
     echo '½' | tidy -config ./tidyrc | grep '½'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: input-encoding"
     # --newline
@@ -46,7 +46,7 @@ function run_test() {
     echo '' | tidy --newline CRLF -o ./tidied.thml
     file ./tidied.thml | grep 'CRLF'
     CHECK_RESULT $? 0 0 "Failed to use option: --newline"
-    echo 'newline: CRLF' > ./tidyrc
+    echo 'newline: CRLF' >./tidyrc
     echo '' | tidy -config ./tidyrc -o ./tidied.thml
     file ./tidied.thml | grep 'CRLF'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: newline"
@@ -54,18 +54,18 @@ function run_test() {
     # 在输出的开头加入 BOM（字节顺序标记）
     echo '' | tidy --output-bom yes | grep 'DOCTYPE' -b -1 | grep ' '
     CHECK_RESULT $? 0 0 "Failed to use option: --output-bom"
-    echo 'output-bom: true' > ./tidyrc
-    echo '' | tidy -config ./tidyrc | grep 'DOCTYPE' -b -1 | grep ' '    
+    echo 'output-bom: true' >./tidyrc
+    echo '' | tidy -config ./tidyrc | grep 'DOCTYPE' -b -1 | grep ' '
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: output-bom"
     # --output-encoding
     # 指定输出的编码格式
     echo '½' | tidy --output-encoding ASCII | grep '&frac12;'
     CHECK_RESULT $? 0 0 "Failed to use option: --output-encoding"
-    echo 'output-encoding: ASCII' > ./tidyrc
+    echo 'output-encoding: ASCII' >./tidyrc
     echo '½' | tidy -config ./tidyrc | grep '&frac12;'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: output-encoding"
     LOG_INFO "Finish test!"
-} 
+}
 
 function post_test() {
     LOG_INFO "start environment cleanup."
