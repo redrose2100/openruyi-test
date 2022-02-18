@@ -31,19 +31,19 @@ function run_test() {
     # 将错误和警告写入指定文件
     echo '' | tidy --error-file ./errors_and_warnings
     cat ./errors_and_warnings | grep 'Warning'
-    echo 'error-file: true' > ./tidyrc
+    echo 'error-file: true' >./tidyrc
     echo '' | tidy -config ./tidyrc
     cat ./errors_and_warnings | grep 'Warning'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: error-file"
     # --keep-time
     # 保留源文件的最新修改时间
-    echo 'hi' > ./sample.html
+    echo 'hi' >./sample.html
     original_modification_time="$(stat --format "%Y" ./sample.html)"
     tidy --keep-time true -m ./sample.html
     current_modification_time="$(stat --format "%Y" ./sample.html)"
     [ "${original_modification_time}" = "${current_modification_time}" ]
     CHECK_RESULT $? 0 0 "Failed to use option: --keep-time"
-    echo 'keep-time: true' > ./tidyrc
+    echo 'keep-time: true' >./tidyrc
     tidy -config ./tidyrc -m ./sample.html
     current_modification_time="$(stat --format "%Y" ./sample.html)"
     [ "${original_modification_time}" = "${current_modification_time}" ]
@@ -53,22 +53,22 @@ function run_test() {
     echo '<h1>hi' | tidy --output-file ./sample.html
     cat ./sample.html | grep '<h1>hi</h1>'
     CHECK_RESULT $? 0 0 "Failed to use option: --output-file"
-    echo 'output-file: sample.html' > ./tidyrc
+    echo 'output-file: sample.html' >./tidyrc
     cat ./sample.html | grep '<h1>hi</h1>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: output-file"
     # --write-back
     # 指定是否将处理后的结果写回源文件
-    echo '<h1>hi' > ./sample.html
+    echo '<h1>hi' >./sample.html
     tidy --write-back true ./sample.html
     cat ./sample.html | grep '<h1>hi</h1>'
     CHECK_RESULT $? 0 0 "Failed to use option: --write-back"
-    echo '<h1>hi' > ./sample.html
-    echo 'write-back: true' > ./tidyrc
+    echo '<h1>hi' >./sample.html
+    echo 'write-back: true' >./tidyrc
     tidy -config ./tidyrc ./sample.html
     cat ./sample.html | grep '<h1>hi</h1>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: write-back"
     LOG_INFO "Finish test!"
-} 
+}
 
 function post_test() {
     LOG_INFO "start environment cleanup."
