@@ -32,32 +32,32 @@ function run_test() {
     # 在等级一中，有一项是对图片是否包含 alt 信息的检查
     echo '<img src="1.jpg"/>' | tidy --accessibility-check 1 2>&1 | grep "<img> missing 'alt' text"
     CHECK_RESULT $? 0 0 "Failed to use option: --accessibility-check"
-    echo 'accessibility-check: 1' > ./tidyrc
+    echo 'accessibility-check: 1' >./tidyrc
     echo '<img src="1.jpg"/>' | tidy -config ./tidyrc 2>&1 | grep "<img> missing 'alt' text"
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: accessibility-check"
     # --force-output
     # 遇到错误时强制输出
     echo '<hi>' | tidy --force-output true | grep 'body'
     CHECK_RESULT $? 0 0 "Failed to use option: --force-output"
-    echo 'force-output: true' > ./tidyrc
+    echo 'force-output: true' >./tidyrc
     echo '<hi>' | tidy -config ./tidyrc | grep 'body'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: force-output"
     # --show-meta-change
     # 当 Tidy 改变文档所用的字符集时输出提示
     echo '<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">' | tidy --show-meta-change true 2>&1 | grep 'charset' | grep 'replaced'
     CHECK_RESULT $? 0 0 "Failed to use option: --show-meta-change"
-    echo 'show-meta-change: true' > ./tidyrc
+    echo 'show-meta-change: true' >./tidyrc
     echo '<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">' | tidy -config ./tidyrc 2>&1 | grep 'charset' | grep 'replaced'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: show-meta-change"
     # --warn-proprietary-attributes
     # 指定是否对专有特性进行警告，默认开启
     echo '<p what="yes">hi</p>' | tidy --warn-proprietary-attributes false | grep 'Warning' | grep 'what'
     CHECK_RESULT $? 1 0 "Failed to use option: --warn-proprietary-attributes"
-    echo 'warn-proprietary-attributes: false' > ./tidyrc
+    echo 'warn-proprietary-attributes: false' >./tidyrc
     echo '<p what="yes">hi</p>' | tidy -config ./tidyrc | grep 'Warning' | grep 'what'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: warn-proprietary-attributes"
     LOG_INFO "Finish test!"
-} 
+}
 
 function post_test() {
     LOG_INFO "start environment cleanup."
