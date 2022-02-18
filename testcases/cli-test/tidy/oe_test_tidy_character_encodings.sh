@@ -55,9 +55,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -iso2022"
     # -utf8
     # 将 UTF-8 作为输入和输出编码
-    echo 'ε' | iconv -t UTF-8| tidy -utf8 -f /dev/null | grep '<body>' -A 1 | uchardet | grep 'UTF-8'
+    echo 'ε' | iconv -t UTF-8 | tidy -utf8 -f /dev/null | grep '<body>' -A 1 | uchardet | grep 'UTF-8'
     CHECK_RESULT $? 0 0 "Failed to use option: -utf8"
-    # -mac   
+    # -mac
     #  用 MacRoman 作为输入编码, US-ASCII 作为输出编码
     echo '¶' | iconv -t MAC-CENTRALEUROPE | tidy -mac | grep '&para;'
     CHECK_RESULT $? 0 0 "Failed to use option: -mac"
@@ -69,39 +69,33 @@ function run_test() {
     # 用 IBM-858 作为输入编码, US-ASCII 作为输出编码
     echo '║' | iconv -f UTF-8 -t IBM858 | tidy -ibm858 | grep '<body>' -A 1 | grep '&boxV;'
     CHECK_RESULT $? 0 0 "Failed to use option: -ibm858"
-
     # -utf16le
     # 用 UTF-16LE 作为输入和输出编码
     echo 'Σ' | iconv -f UTF-8 -t UTF-16LE | tidy -utf16le -o ./tidied.html
     encguess ./tidied.html | grep 'UTF-16LE'
     CHECK_RESULT $? 0 0 "Failed to use option: -utf16le"
-
-
     # -utf16be
     # 用 UTF-16BE 作为输入和输出编码
     echo 'Σ' | iconv -f UTF-8 -t UTF-16BE | tidy -utf16be -o ./tidied.html
     encguess ./tidied.html | grep 'UTF-16BE'
     CHECK_RESULT $? 0 0 "Failed to use option: -utf16be"
-
-    # -utf16 
+    # -utf16
     # 用 UTF-16 作为输入和输出编码
     echo 'Σ' | iconv -f UTF-8 -t UTF-16 | tidy -utf16 -o ./tidied.html
     encguess ./tidied.html | grep 'UTF-16'
     CHECK_RESULT $? 0 0 "Failed to use option: -utf16"
-
-    # -big5 
+    # -big5
     # 用 BIG-5 作为输入和输出编码
     # 使用 uchardet 检出结果为 WINDOWS-1252
     echo '好' | iconv -f UTF-8 -t BIG-5 | tidy -big5 | uchardet | grep 'WINDOWS-1252'
     CHECK_RESULT $? 0 0 "Failed to use option: -big5"
-
     # -shiftjis
     # 用 SHITFT-JIS 作为输入和输出编码
     # 使用 uchardet 检出结果为 WINDOWS-1252
     echo 'ｦ' | iconv -f UTF-8 -t SHIFT-JIS | tidy -shiftjis | uchardet | grep 'WINDOWS-1252'
-
+    CHECK_RESULT $? 0 0 "Failed to use option: -shiftjis"
     LOG_INFO "Finish test!"
-} 
+}
 
 function post_test() {
     LOG_INFO "start environment cleanup."
