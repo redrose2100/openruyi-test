@@ -30,10 +30,10 @@ function run_test() {
     # --error-file
     # 将错误和警告写入指定文件
     echo '' | tidy --error-file ./errors_and_warnings
-    cat ./errors_and_warnings | grep 'Warning'
+    grep 'Warning' ./errors_and_warnings
     echo 'error-file: true' >./tidyrc
     echo '' | tidy -config ./tidyrc
-    cat ./errors_and_warnings | grep 'Warning'
+    grep 'Warning' ./errors_and_warnings
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: error-file"
     # --keep-time
     # 保留源文件的最新修改时间
@@ -51,21 +51,21 @@ function run_test() {
     # --output-file
     # 将处理结果（标记语言代码）写入指定文件
     echo '<h1>hi' | tidy --output-file ./sample.html
-    cat ./sample.html | grep '<h1>hi</h1>'
+    grep '<h1>hi</h1>' ./sample.html
     CHECK_RESULT $? 0 0 "Failed to use option: --output-file"
     echo 'output-file: sample.html' >./tidyrc
-    cat ./sample.html | grep '<h1>hi</h1>'
+    grep '<h1>hi</h1>' ./sample.html
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: output-file"
     # --write-back
     # 指定是否将处理后的结果写回源文件
     echo '<h1>hi' >./sample.html
     tidy --write-back true ./sample.html
-    cat ./sample.html | grep '<h1>hi</h1>'
+    grep '<h1>hi</h1>' ./sample.html
     CHECK_RESULT $? 0 0 "Failed to use option: --write-back"
     echo '<h1>hi' >./sample.html
     echo 'write-back: true' >./tidyrc
     tidy -config ./tidyrc ./sample.html
-    cat ./sample.html | grep '<h1>hi</h1>'
+    grep '<h1>hi</h1>' ./sample.html
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: write-back"
     LOG_INFO "Finish test!"
 }
