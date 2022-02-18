@@ -31,32 +31,32 @@ function run_test() {
     # 定义新的块级标签
     echo '<what>hi</what>' | tidy --new-blocklevel-tags what | grep '<what>hi</what>'
     CHECK_RESULT $? 0 0 "Failed to use option: --new-blocklevel-tags"
-    echo 'new-blocklevel-tags: what' > ./tidyrc
+    echo 'new-blocklevel-tags: what' >./tidyrc
     echo '<what>hi</what>' | tidy -config ./tidyrc | grep '<what>hi</what>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: new-blocklevel-tags"
     # --new-empty-tags
     # 定义新的空内联标签
     echo '<p><what>hi</p>' | tidy --new-empty-tags what | grep '<what>'
     CHECK_RESULT $? 0 0 "Failed to use option: --new-empty-tags"
-    echo 'new-empty-tags: what' > ./tidyrc
+    echo 'new-empty-tags: what' >./tidyrc
     echo '<p><what>hi</p>' | tidy -config ./tidyrc | grep '<what>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: new-empty-tags"
     # --new-inline-tags
     # 定义新的内联标签
     echo '<p><what>hi<what></p>' | tidy --new-inline-tags what | grep '<p><what>hi</what></p>'
     CHECK_RESULT $? 0 0 "Failed to use option: --new-inline-tags"
-    echo 'new-inline-tags: what' > ./tidyrc
+    echo 'new-inline-tags: what' >./tidyrc
     echo '<p><what>hi<what></p>' | tidy -config ./tidyrc | grep '<p><what>hi</what></p>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: new-inline-tags"
     # --new-pre-tags
     # 定义新的与格式化标签
     echo '<what_pre>hi</what_pre>' | tidy --new-pre-tags what_pre | grep '<what_pre>hi</what_pre>'
     CHECK_RESULT $? 0 0 "Failed to use option: --new-pre-tags"
-    echo 'new-pre-tags: what_pre' > ./tidyrc
+    echo 'new-pre-tags: what_pre' >./tidyrc
     echo '<what_pre>hi</what_pre>' | tidy -config ./tidyrc | grep '<what_pre>hi</what_pre>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: new-pre-tags"
     LOG_INFO "Finish test!"
-} 
+}
 
 function post_test() {
     LOG_INFO "start environment cleanup."
