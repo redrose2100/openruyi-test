@@ -31,7 +31,7 @@ function run_test() {
     tidy -v | grep 'HTML Tidy for Linux version' | grep '[[:digit:]]*'
     CHECK_RESULT $? 0 0 "Failed to use option: -v"
     tidy -version | grep 'HTML Tidy for Linux version' | grep '[[:digit:]]*'
-    CHECK_RESULT $? 0 0 "Failed to use option: -version" 
+    CHECK_RESULT $? 0 0 "Failed to use option: -version"
     # -h, -help, -help-config
     tidy -h | grep -F 'tidy [options...] [file...] [options...] [file...]'
     CHECK_RESULT $? 0 0 "Failed to use option: -h"
@@ -53,7 +53,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -export-default-config"
     # -show-config
     # 展示当前的配置
-    echo 'add-meta-charset: yes' > ./tidyrc
+    echo 'add-meta-charset: yes' >./tidyrc
     tidy -config ./tidyrc -show-config | grep 'add-meta-charset' | grep 'yes'
     CHECK_RESULT $? 0 0 "Failed to use option: -show-config"
     # -export-config
@@ -65,7 +65,7 @@ function run_test() {
     echo '<h1>你好</h1>' | tidy -language zh-cn 2>&1 | grep 'Info: 文档内容看起来像 HTML5'
     CHECK_RESULT $? 0 0 "Failed to use option: -language"
     LOG_INFO "Finish test!"
-} 
+}
 
 function post_test() {
     LOG_INFO "start environment cleanup."
