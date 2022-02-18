@@ -43,7 +43,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -w"
     echo 'Tidy is a console application for macOS, Linux, Windows, UNIX, and more. It corrects and cleans up HTML and XML documents by fixing markup errors and upgrading legacy code to modern standards.' | tidy -wrap 30 | grep -A 1 'Tidy' | grep 'application'
     CHECK_RESULT $? 0 0 "Failed to use option: -wrap"
-    echo 'wrap: 30' > ./tidyrc
+    echo 'wrap: 30' >./tidyrc
     echo 'Tidy is a console application for macOS, Linux, Windows, UNIX, and more. It corrects and cleans up HTML and XML documents by fixing markup errors and upgrading legacy code to modern standards.' | tidy -config ./tidyrc | grep -A 1 'Tidy' | grep 'application'
     # -u, -upper, uppercase-tags
     # 标签大写
@@ -51,7 +51,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -u"
     echo '' | tidy -upper | grep '<HTML>'
     CHECK_RESULT $? 0 0 "Failed to use option: -upper"
-    echo 'uppercase-tags: yes' > ./tidyrc
+    echo 'uppercase-tags: yes' >./tidyrc
     echo '' | tidy -config ./tidyrc | grep '<HTML>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: uppercase-tags"
     # -c, -clean, clean
@@ -60,7 +60,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -c"
     echo '<center>hello</center>' | tidy -clean | grep 'text-align: center'
     CHECK_RESULT $? 0 0 "Failed to use option: -clean"
-    echo 'clean: yes' > ./tidyrc
+    echo 'clean: yes' >./tidyrc
     echo '<center>hello</center>' | tidy -config ./tidyrc | grep 'text-align: center'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: clean"
     # -b, -bare, bare
@@ -69,7 +69,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -b"
     echo '—' | tidy -bare | grep '-'
     CHECK_RESULT $? 0 0 "Failed to use option: -bare"
-    echo 'bare: yes' > ./tidyrc
+    echo 'bare: yes' >./tidyrc
     echo '—' | tidy -config ./tidyrc | grep '-'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: bare"
     # -g, -gdoc, gdoc
@@ -85,7 +85,7 @@ function run_test() {
     tidied_char_num=$(echo "${source_code}" | tidy -gdoc | wc -m)
     [[ $tidied_char_num -lt $gdoc_char_num ]]
     CHECK_RESULT $? 0 0 "Failed to use option: -gdoc"
-    echo 'gdoc: yes' > ./tidyrc
+    echo 'gdoc: yes' >./tidyrc
     tidied_char_num=$(echo "${source_code}" | tidy -config ./tidyrc | wc -m)
     [[ $tidied_char_num -lt $gdoc_char_num ]]
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: gdoc"
@@ -95,7 +95,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -n"
     echo '&nbsp;' | tidy -numeric | grep '&#160'
     CHECK_RESULT $? 0 0 "Failed to use option: -numeric"
-    echo 'numeric-entities: yes' > ./tidyrc
+    echo 'numeric-entities: yes' >./tidyrc
     echo '&nbsp;' | tidy -config ./tidyrc | grep '&#160'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: numeric-entities"
     # -e, -errors, markup
@@ -104,7 +104,7 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Failed to use option: -e"
     echo '' | tidy -errors | grep '<html>'
     CHECK_RESULT $? 1 0 "Failed to use option: -errors"
-    echo 'markup: no' > ./tidyrc
+    echo 'markup: no' >./tidyrc
     echo '' | tidy -config ./tidyrc | grep '<html>'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: markup"
     # -q, -quiet, quiet
@@ -113,7 +113,7 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Failed to use option: -q"
     echo '' | tidy -quiet | grep 'Info'
     CHECK_RESULT $? 1 0 "Failed to use option: -quiet"
-    echo 'quiet: yes' > ./tidyrc
+    echo 'quiet: yes' >./tidyrc
     echo '' | tidy -config ./tidyrc | grep 'Info'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: quiet"
     # -omit, omit-optional-tags
@@ -121,14 +121,14 @@ function run_test() {
     # 测试输出结果中是否不存在 <html> 标签，若不存在，则 grep 匹配不到，故 CHECK_RESULT $? 1 0
     echo '' | tidy -omit | grep '<html>'
     CHECK_RESULT $? 1 0 "Failed to use option: -omit"
-    echo 'omit-optional-tags: yes' > ./tidyrc
+    echo 'omit-optional-tags: yes' >./tidyrc
     echo '' | tidy -config ./tidyrc | grep '<html>'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: omit-optional-tags"
     # -xml, input-xml
     # 指定输入的内容是格式良好的 XML
     echo '<note><body>hello</body></note>' | tidy -xml 2>&1 | grep 'No warnings or errors were found.'
     CHECK_RESULT $? 0 0 "Failed to use option: -xml"
-    echo 'input-xml: yes' > ./tidyrc
+    echo 'input-xml: yes' >./tidyrc
     echo '<note><body>hello</body></note>' | tidy -config ./tidyrc 2>&1 | grep 'No warnings or errors were found.'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: input-xml"
     # -asxml, -asxhtml (output-xhtml: yes)
@@ -138,7 +138,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -asxml"
     echo '<p>hello</p>' | tidy -upper -asxhtml | grep '<p>hello</p>'
     CHECK_RESULT $? 0 0 "Failed to use option: -asxhtml"
-    echo 'output-xhtml: yes' > ./tidyrc
+    echo 'output-xhtml: yes' >./tidyrc
     echo '<p>hello</p>' | tidy -upper -config ./tidyrc | grep '<p>hello</p>'
     CHECK_RESULT $? 0 0 "Failed to use option: output-xhtml"
     # -ashtml, output-html
@@ -150,11 +150,11 @@ function run_test() {
     # 在等级一中，有一项是对图片是否包含 alt 信息的检查
     echo '<img src="1.jpg"/>' | tidy -access 1 2>&1 | grep "<img> missing 'alt' text"
     CHECK_RESULT $? 0 0 "Failed to use option: -access"
-    echo 'accessibility-check: 1' > ./tidyrc
+    echo 'accessibility-check: 1' >./tidyrc
     echo '<img src="1.jpg"/>' | tidy -config ./tidyrc 2>&1 | grep "<img> missing 'alt' text"
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: accessibility-check"
     LOG_INFO "Finish test!"
-} 
+}
 
 function post_test() {
     LOG_INFO "start environment cleanup."
