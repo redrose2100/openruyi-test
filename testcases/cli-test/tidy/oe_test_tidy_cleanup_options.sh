@@ -31,35 +31,35 @@ function run_test() {
     # strip out smart quotes and em dashes, etc.
     echo '—' | tidy --bare true | grep '-'
     CHECK_RESULT $? 0 0 "Failed to use option: --bare"
-    echo 'bare: true' > ./tidyrc
+    echo 'bare: true' >./tidyrc
     echo '—' | tidy -config ./tidyrc | grep '-'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: bare"
     # --clean
     # 清理已弃用的标签
     echo '<center>hello</center>' | tidy --clean true | grep 'text-align: center'
     CHECK_RESULT $? 0 0 "Failed to use option: --clean"
-    echo 'clean: true' > ./tidyrc
+    echo 'clean: true' >./tidyrc
     echo '<center>hello</center>' | tidy -config ./tidyrc | grep 'text-align: center'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: clean"
     # --drop-empty-elements
     # 移除空元素，默认开启
     echo '<h1></h1>' | tidy --drop-empty-elements false | grep '<h1></h1>'
     CHECK_RESULT $? 0 0 "Failed to use option: --drop-empty-elements"
-    echo 'drop-empty-elements: false' > ./tidyrc
-    echo '<p></p>' | tidy -config ./tidyrc  | grep '<p></p>'
+    echo 'drop-empty-elements: false' >./tidyrc
+    echo '<p></p>' | tidy -config ./tidyrc | grep '<p></p>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: drop-empty-elements"
     # --drop-empty-paras
     # 移除空段落（<p> 标签），默认开启
     echo '<p></p>' | tidy --drop-empty-paras false | grep '<p></p>'
     CHECK_RESULT $? 0 0 "Failed to use option: --drop-empty-paras"
-    echo 'drop-empty-paras: false' > ./tidyrc
+    echo 'drop-empty-paras: false' >./tidyrc
     echo '<p></p>' | tidy -config ./tidyrc | grep '<p></p>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: drop-empty-paras"
     # --drop-proprietary-attributes
     # 丢弃专有特性
     echo '<p what="yes">hi</p>' | tidy --drop-proprietary-attributes true | grep 'what'
     CHECK_RESULT $? 1 0 "Failed to use option: --drop-proprietary-attributes"
-    echo 'drop-proprietary-attributes: true' > ./tidyrc
+    echo 'drop-proprietary-attributes: true' >./tidyrc
     echo '<p what="yes">hi</p>' | tidy -config ./tidyrc | grep 'what'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: drop-proprietary-attributes"
     # --gdoc
@@ -71,7 +71,7 @@ function run_test() {
     tidied_char_num=$(echo "${source_code}" | tidy --gdoc true | wc -m)
     [[ $tidied_char_num -lt $gdoc_char_num ]]
     CHECK_RESULT $? 0 0 "Failed to use option: --gdoc"
-    echo 'gdoc: true' > ./tidyrc
+    echo 'gdoc: true' >./tidyrc
     tidied_char_num=$(echo "${source_code}" | tidy -config ./tidyrc | wc -m)
     [[ $tidied_char_num -lt $gdoc_char_num ]]
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: gdoc"
@@ -79,27 +79,27 @@ function run_test() {
     # 将 <i>、<em> 和 <b> 标签替换为 <strong> 标签
     echo '<b>hi</b>' | tidy --logical-emphasis true | grep '<strong>hi</strong>'
     CHECK_RESULT $? 0 0 "Failed to use option: --logical-emphasis"
-    echo 'logical-emphasis: true' > ./tidyrc
+    echo 'logical-emphasis: true' >./tidyrc
     echo '<b>hi</b>' | tidy -config ./tidyrc | grep '<strong>hi</strong>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: logical-emphasis"
     # --merge-divs
     # 与 -clean 搭配使用，默认开启，用于清理嵌套的 <div> 标签
     echo '<div><div>hi</div></div>' | tidy -clean --merge-divs no | grep -c '/div' | grep '2'
     CHECK_RESULT $? 0 0 "Failed to use option: --merge-divs"
-    echo 'merge-divs: no' > ./tidyrc
+    echo 'merge-divs: no' >./tidyrc
     echo '<div><div>hi</div></div>' | tidy -config ./tidyrc | grep -c '/div' | grep '2'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: merge-divs"
     # -merge-spans
     # 与 -clean 搭配使用，默认开启，用于清理嵌套的 <span> 标签
     echo '<span><span>hi</span></span>' | tidy -clean --merge-spans false | grep '<span><span>hi</span></span>'
     CHECK_RESULT $? 0 0 "Failed to use option: --merge-spans"
-    echo 'merge-spans: false' > ./tidyrc
+    echo 'merge-spans: false' >./tidyrc
     echo '<span><span>hi</span></span>' | tidy -config ./tidyrc | grep '<span><span>hi</span></span>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: merge-spans"
     # --word-2000
     # 无法使用
     LOG_INFO "Finish test!"
-} 
+}
 
 function post_test() {
     LOG_INFO "start environment cleanup."
