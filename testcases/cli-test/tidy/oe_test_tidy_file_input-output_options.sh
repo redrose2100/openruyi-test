@@ -38,14 +38,14 @@ function run_test() {
     # --keep-time
     # 保留源文件的最新修改时间
     echo 'hi' > ./sample.html
-    original_modification_time="$(stat --format "%y" ./sample.html)"
-    tidy --keep-time true -o ./sample.html
-    current_modification_time="$(stat --format "%y" ./sample.html)"
+    original_modification_time="$(stat --format "%Y" ./sample.html)"
+    tidy --keep-time true -m ./sample.html
+    current_modification_time="$(stat --format "%Y" ./sample.html)"
     [ "${original_modification_time}" = "${current_modification_time}" ]
     CHECK_RESULT $? 0 0 "Failed to use option: --keep-time"
     echo 'keep-time: true' > ./tidyrc
-    tidy -config ./tidyrc -o ./sample.html
-    current_modification_time="$(stat --format "%y" ./sample.html)"
+    tidy -config ./tidyrc -m ./sample.html
+    current_modification_time="$(stat --format "%Y" ./sample.html)"
     [ "${original_modification_time}" = "${current_modification_time}" ]
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: keep-time"
     # --output-file
@@ -54,7 +54,6 @@ function run_test() {
     cat ./sample.html | grep '<h1>hi</h1>'
     CHECK_RESULT $? 0 0 "Failed to use option: --output-file"
     echo 'output-file: sample.html' > ./tidyrc
-    echo '' | tidy -config ./tidyrc
     cat ./sample.html | grep '<h1>hi</h1>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: output-file"
     # --write-back
