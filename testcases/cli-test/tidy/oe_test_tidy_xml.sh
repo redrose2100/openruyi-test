@@ -41,14 +41,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -xml-strings"
     # -xml-error-strings
     # 以 XML 格式输出错误常熟和字符串
-    tidy  -xml-error-strings | grep 'error_string'
+    tidy -xml-error-strings | grep 'error_string'
     CHECK_RESULT $? 0 0 "Failed to use option: -xml-error-string"
     # -xml-options-strings
     # 以 XML 格式输出选项描述
     tidy -xml-options-strings | grep 'option'
     CHECK_RESULT $? 0 0 "Failed to use option: -xml-options-strings"
     LOG_INFO "Finish test!"
-} 
+}
 
 function post_test() {
     LOG_INFO "start environment cleanup."
