@@ -31,8 +31,8 @@ function run_test() {
     # -raw
     # 不转换为实体而直接输出
     # For raw, Tidy will output values above 127 without translating them into entities.
-    echo '&yen;' | tidy -raw | grep '¥'
-    CHECK_RESULT $? 1 0 "Failed to use option: -raw"
+    echo '￥;' | tidy -raw | grep '￥'
+    CHECK_RESULT $? 0 0 "Failed to use option: -raw"
     # -ascii
     # 用 ISO-8859-1 作为输入编码，用 US-ASCII 输出
     # 用 US-ASCII 输出,其实就是以实体标签名的形式进行输出
