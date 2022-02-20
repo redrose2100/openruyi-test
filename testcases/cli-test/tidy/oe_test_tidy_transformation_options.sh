@@ -30,10 +30,10 @@ function run_test() {
     # --decorate-inferred-ul
     # --escape-cdata
     # 讲 <![CDATA[]]> 的内容转换为普通文本
-    echo '<![CDATA[hi]]>' | tidy --escape-cdata true | grep 'CDATA'
+    echo '<![CDATA[hi]]>' | tidy --escape-cdata true | grep 'hi'
     CHECK_RESULT $? 1 0 "Failed to use option: --escape-cdata"
     echo 'escape-cdata: true' >./tidyrc
-    echo '<![CDATA[hi]]>' | tidy -config ./tidyrc | grep 'CDATA'
+    echo '<![CDATA[hi]]>' | tidy -config ./tidyrc | grep 'hi'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: escape-cdata"
     # --hide-comments
     # 不打印注释
