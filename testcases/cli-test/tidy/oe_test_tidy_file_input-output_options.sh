@@ -31,6 +31,7 @@ function run_test() {
     # 将错误和警告写入指定文件
     echo '' | tidy --error-file ./errors_and_warnings
     grep 'Warning' ./errors_and_warnings
+    CHECK_RESULT $? 0 0 "Failed to use option in configuration: --error-file"
     echo 'error-file: true' >./tidyrc
     echo '' | tidy -config ./tidyrc
     grep 'Warning' ./errors_and_warnings
