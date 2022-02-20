@@ -14,7 +14,7 @@
 # @Contact   :   yingjie@isrc.iscas.ac.cn
 # @Date      :   2022/2/17
 # @License   :   Mulan PSL v2
-# @Desc      :   Test iftop text mode
+# @Desc      :   Test HTML tidy teaching tidy options
 # #############################################
 
 source "../common/common_lib.sh"

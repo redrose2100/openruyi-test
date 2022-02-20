@@ -14,7 +14,7 @@
 # @Contact   :   yingjie@isrc.iscas.ac.cn
 # @Date      :   2022/1/24
 # @License   :   Mulan PSL v2
-# @Desc      :   Test tidy file manipulation
+# @Desc      :   Test HTML tidy file manipulation
 # #############################################
 
 source "../common/common_lib.sh"

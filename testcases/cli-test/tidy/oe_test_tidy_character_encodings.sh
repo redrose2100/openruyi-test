@@ -14,7 +14,7 @@
 # @Contact   :   yingjie@isrc.iscas.ac.cn
 # @Date      :   2022/2/4
 # @License   :   Mulan PSL v2
-# @Desc      :   Test tidy character encodings
+# @Desc      :   Test HTML tidy character encodings
 # #############################################
 
 source "../common/common_lib.sh"
