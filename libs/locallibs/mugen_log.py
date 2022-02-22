@@ -31,11 +31,11 @@ def logging(level, message):
     level_list = ["INFO", "WARN", "DEBUG", "ERROR"]
     log_level = level.upper()
 
-    if level.upper() not in level_list:
+    if log_level not in level_list:
         sys.exit(1)
 
     if log_level in ["INFO", "WARN"]:
-        log_level = level.upper() + " "
+        log_level += " "
     sys.stderr.write(
         "%s - %s - %s\n"
         % (time.asctime(time.localtime(time.time())), log_level, message)
