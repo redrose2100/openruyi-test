@@ -65,7 +65,7 @@ function run_test() {
     # --output-html
     # 指定输出为 HTML
     echo '' | tidy --output-html true | grep '<!DOCTYPE html>'
-    CHECK_RESULT $? 0 0 "Failed to use option: --input-xml"
+    CHECK_RESULT $? 0 0 "Failed to use option: --output-html"
     echo 'output-html: true' >./tidyrc
     echo '' | tidy -config ./tidyrc | grep '<!DOCTYPE html>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: output-html"
