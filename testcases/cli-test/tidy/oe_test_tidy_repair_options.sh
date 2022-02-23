@@ -30,7 +30,6 @@ function run_test() {
     # --alt-text
     # 当 <img> 标签的 alt 特性为空时，设置默认的填充内容
     echo '<img>' | tidy --alt-text 'description' | grep '<img alt="description">'
-    echo '' | tidy --alt-text true | grep ''
     CHECK_RESULT $? 0 0 "Failed to use option: --alt-text"
     echo 'alt-text: description' >./tidyrc
     echo '<img>' | tidy -config ./tidyrc | grep '<img alt="description">'
@@ -63,10 +62,10 @@ function run_test() {
     # --custom-tags
     # --enclose-block-text
     # 插入 <p> 标签用以闭合所有符合混合 HTML 过渡的文段
-    echo '' | tidy --enclose-block-text true | grep ''
+    echo 'hi' | tidy --enclose-block-text true | grep '<p>hi</p>'
     CHECK_RESULT $? 0 0 "Failed to use option: --enclose-block-text"
     echo 'enclose-block-text: true' >./tidyrc
-    echo '' | tidy -config ./tidyrc | grep ''
+    echo 'hi' | tidy -config ./tidyrc | grep ''
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: enclose-block-text"
     # --enclose-text
     # 指定是否应将在 body 元素中找到的任何文本包含在 <p> 元素中
@@ -78,10 +77,15 @@ function run_test() {
     # --escape-scripts
     # --fix-backslash
     # 是否修正 URL 中的反斜杠为正斜杠，默认开启
+    echo '<a href="http:\\openeuler.org"></a>' | tidy --fix-backslash true 2>&1 | grep '//openeuler.org'
+    CHECK_RESULT $? 0 0 "Failed to use option: --fix-backslash"
     echo '<a href="http:\\openeuler.org"></a>' | tidy --fix-backslash false 2>&1 | grep '\\openeuler.org'
     CHECK_RESULT $? 0 0 "Failed to use option: --fix-backslash"
     echo 'fix-backslash: false' >./tidyrc
     echo '<a href="http:\\openeuler.org"></a>' | tidy -config ./tidyrc 2>&1 | grep '\\openeuler.org'
+    CHECK_RESULT $? 0 0 "Failed to use option in configuration: fix-backslash"
+    echo 'fix-backslash: true' >./tidyrc
+    echo '<a href="http:\\openeuler.org"></a>' | tidy -config ./tidyrc 2>&1 | grep '//openeuler.org'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: fix-backslash"
     # --fix-bad-comments
     # 是否替换相连的非预期的连字符为“=”
