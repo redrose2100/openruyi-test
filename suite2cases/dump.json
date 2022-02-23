@@ -3,6 +3,9 @@
 	"cases": [
 	    {
 		"name": "oe_test_service_dump"
+	    },
+	    {
+		    "name": "oe_test_service_restore"
 	    }
 	]
 }

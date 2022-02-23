@@ -66,7 +66,7 @@ EOF
 
 #function post_test() {
 #	LOG_INFO "start environment cleanup."
-#	sed -i 's\ExecStart = /usr/sbin/dump --log.level=debug\ExecStart = /usr/sbin/prometheus\g' /usr/lib/systemd/system/prometheus.service
+#	sed -i 's\ExecStart = /usr/sbin/dump --log.level=debug\ExecStart = /usr/sbin/dump\g' /usr/lib/systemd/system/dump.service
 #	systemctl daemon-reload
 #	systemctl reload prometheus.service
 #	systemctl stop prometheus.service

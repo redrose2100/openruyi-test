@@ -23,7 +23,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function config_params() {
         LOG_INFO "Start to config params of the case."
-        free_port="$(GET_FREE_PORT localhost)"
+#        free_port="$(GET_FREE_PORT localhost)"
         LOG_INFO "End to config params of the case."
 }
 
@@ -32,7 +32,7 @@ function config_params() {
 
 function pre_test() {
         LOG_INFO "Start environmental preparation."
-        DNF_INSTALL tuned
+        DNF_INSTALL dump
         LOG_INFO "End of environmental preparation!"
 }
 
@@ -57,7 +57,7 @@ function run_test(){
 		 LOG_ERROR "Failed to restore backup files in this folder"
 	fi
 	cd /root/mugen/testcases/cli-test/dump
-	rm -rf boot.test/
+	rm -rf /root/boot.test/
 	LOG_INFO "Finish test!"
 }
 main "$@"
