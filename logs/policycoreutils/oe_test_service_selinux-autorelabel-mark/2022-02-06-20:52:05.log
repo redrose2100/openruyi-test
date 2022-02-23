@@ -1,0 +1,7 @@
+Sun Feb  6 20:52:05 2022 - INFO  - Start testing...
+/etc/systemd/system/sysinit.target.wants/selinux-autorelabel-mark.service
+Removed /etc/systemd/system/sysinit.target.wants/selinux-autorelabel-mark.service.
+find: ‘/etc/systemd/system/sysinit.target.wants/selinux-autorelabel-mark.service’: No such file or directory
+Sun Feb  6 20:52:06 2022 - INFO  - Finish test!
+Sun Feb  6 20:52:06 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 20:52:06 2022 - INFO  - oe_test_service_selinux-autorelabel-mark.sh post_test

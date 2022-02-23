@@ -1,0 +1,15 @@
+Sun Feb  6 21:20:03 2022 - INFO  - Start to config params of the case.
+Sun Feb  6 21:20:03 2022 - INFO  - No params need to config.
+Sun Feb  6 21:20:03 2022 - INFO  - End to config params of the case.
+Sun Feb  6 21:20:03 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:20:09 2022 - INFO  - End to prepare the test environment.
+Sun Feb  6 21:20:09 2022 - INFO  - Start to run test.
+total 12
+drwxr-xr-x. 2 root root unconfined_u:object_r:admin_home_t:s0 4096 Jan 28 21:59 .
+drwxr-xr-x. 4 root root unconfined_u:object_r:admin_home_t:s0 4096 Jan 28 21:59 ..
+-rw-r--r--. 1 root root unconfined_u:object_r:admin_home_t:s0 1822 Jan 28 21:59 oe_test_casename_01.sh
+Sun Feb  6 21:20:09 2022 - ERROR - The system is missing a base directory.
+Sun Feb  6 21:20:09 2022 - INFO  - End to run test.
+Sun Feb  6 21:20:09 2022 - ERROR - failed to execute the case.
+Sun Feb  6 21:20:09 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:20:11 2022 - INFO  - End to restore the test environment.

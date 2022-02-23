@@ -1,0 +1,15 @@
+Sun Feb  6 21:20:11 2022 - INFO  - Start environmental preparation.
+Sun Feb  6 21:20:17 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 21:20:17 2022 - INFO  - Start testing...
+     Active: active (exited) since Sun 2022-02-06 21:20:18 CST; 5s ago
+     Active: inactive (dead)
+     Active: active (exited) since Sun 2022-02-06 21:20:29 CST; 5s ago
+/etc/systemd/system/multi-user.target.wants/netlabel.service
+Removed /etc/systemd/system/multi-user.target.wants/netlabel.service.
+find: ‘/etc/systemd/system/multi-user.target.wants/netlabel.service’: No such file or directory
+Failed to reload netlabel.service: Job type reload is not applicable for unit netlabel.service.
+     Active: active (exited) since Sun 2022-02-06 21:20:29 CST; 5s ago
+Sun Feb  6 21:20:35 2022 - INFO  - Finish test!
+Sun Feb  6 21:20:35 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:20:35 2022 - INFO  - start environment cleanup.
+Sun Feb  6 21:20:38 2022 - INFO  - Finish environment cleanup!

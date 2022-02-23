@@ -1,0 +1,200 @@
+Sun Feb  6 21:28:06 2022 - INFO  - Start to prepare the test environment.
+--2022-02-06 21:28:28--  https://github.com/PeterHuewe/tpm-emulator/archive/v0.7.5.zip
+Resolving github.com (github.com)... 20.205.243.166
+Connecting to github.com (github.com)|20.205.243.166|:443... connected.
+HTTP request sent, awaiting response... 
+SIGHUP received.
+Redirecting output to ‘wget-log’.
+Sun Feb  6 21:28:59 2022 - INFO  - Start to restore the test environment.
+kill: usage: kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]
+kill: usage: kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]
+Sun Feb  6 21:29:01 2022 - INFO  - Finish restoring the test environment.
+Archive:  v0.7.5.zip
+ff993d1f3c1435f7306eb759e6ff176f72da2b21
+   creating: tpm-emulator-0.7.5/
+ extracting: tpm-emulator-0.7.5/.gitignore  
+  inflating: tpm-emulator-0.7.5/.travis.yml  
+  inflating: tpm-emulator-0.7.5/AUTHORS  
+  inflating: tpm-emulator-0.7.5/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/ChangeLog  
+  inflating: tpm-emulator-0.7.5/LICENSE  
+  inflating: tpm-emulator-0.7.5/README  
+  inflating: tpm-emulator-0.7.5/build.bat  
+  inflating: tpm-emulator-0.7.5/build.sh  
+  inflating: tpm-emulator-0.7.5/config.h.in  
+   creating: tpm-emulator-0.7.5/crypto/
+  inflating: tpm-emulator-0.7.5/crypto/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/crypto/bn.h  
+  inflating: tpm-emulator-0.7.5/crypto/bn_gmp.c  
+  inflating: tpm-emulator-0.7.5/crypto/bn_openssl.c  
+  inflating: tpm-emulator-0.7.5/crypto/hmac.c  
+  inflating: tpm-emulator-0.7.5/crypto/hmac.h  
+  inflating: tpm-emulator-0.7.5/crypto/rc4.c  
+  inflating: tpm-emulator-0.7.5/crypto/rc4.h  
+  inflating: tpm-emulator-0.7.5/crypto/rsa.c  
+  inflating: tpm-emulator-0.7.5/crypto/rsa.h  
+  inflating: tpm-emulator-0.7.5/crypto/sha1.c  
+  inflating: tpm-emulator-0.7.5/crypto/sha1.h  
+   creating: tpm-emulator-0.7.5/mtm/
+  inflating: tpm-emulator-0.7.5/mtm/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_capability.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_cmd_handler.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_commands.h  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_counter.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_data.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_data.h  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_eviction.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_handles.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_handles.h  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_integrity.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_marshalling.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_marshalling.h  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_structures.h  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_verification.c  
+   creating: tpm-emulator-0.7.5/tddl/
+  inflating: tpm-emulator-0.7.5/tddl/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/tddl/tddl-tpm-emulator.h  
+  inflating: tpm-emulator-0.7.5/tddl/tddl.c  
+  inflating: tpm-emulator-0.7.5/tddl/tddl_unix.h  
+  inflating: tpm-emulator-0.7.5/tddl/tddl_windows.h  
+  inflating: tpm-emulator-0.7.5/tddl/test_tddl.c  
+   creating: tpm-emulator-0.7.5/tpm/
+  inflating: tpm-emulator-0.7.5/tpm/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_audit.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_authorization.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_capability.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_cmd_handler.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_commands.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_context.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_counter.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_credentials.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_crypto.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_daa.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_data.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_data.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_delegation.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_deprecated.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_emulator.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_emulator_extern.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_emulator_extern.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_error.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_eviction.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_handles.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_handles.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_identity.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_integrity.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_maintenance.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_management.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_marshalling.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_marshalling.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_migration.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_nv_storage.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_owner.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_startup.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_storage.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_structures.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_testing.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_ticks.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_transport.c  
+   creating: tpm-emulator-0.7.5/tpmd/
+  inflating: tpm-emulator-0.7.5/tpmd/CMakeLists.txt  
+   creating: tpm-emulator-0.7.5/tpmd/unix/
+  inflating: tpm-emulator-0.7.5/tpmd/unix/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/tpmd/unix/tpmd.c  
+   creating: tpm-emulator-0.7.5/tpmd/windows/
+  inflating: tpm-emulator-0.7.5/tpmd/windows/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/tpmd/windows/control_tpmd.bat  
+  inflating: tpm-emulator-0.7.5/tpmd/windows/tpmd.c  
+   creating: tpm-emulator-0.7.5/tpmd_dev/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/CMakeLists.txt  
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/English.lproj/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/English.lproj/InfoPlist.strings  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/Info.plist  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/Makefile  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.c  
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/TemplateIcon.tiff  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.pbxproj  
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/contents.xcworkspacedata  
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/xcuserdata/
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/xcuserdata/admin.xcuserdatad/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/xcuserdata/admin.xcuserdatad/UserInterfaceState.xcuserstate  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/xcuserdata/admin.xcuserdatad/WorkspaceSettings.xcsettings  
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/xcuserdata/
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/xcuserdata/admin.xcuserdatad/
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/xcuserdata/admin.xcuserdatad/xcschemes/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/xcuserdata/admin.xcuserdatad/xcschemes/tpm_bridge.xcscheme  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/xcuserdata/admin.xcuserdatad/xcschemes/xcschememanagement.plist  
+   creating: tpm-emulator-0.7.5/tpmd_dev/linux/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/linux/Makefile  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/linux/tpmd_dev.c  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/linux/tpmd_dev.rules.in  
+   creating: tpm-emulator-0.7.5/tpmd_dev/openbsd/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/openbsd/Makefile  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/openbsd/tpmd_dev.c  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/openbsd/tpmd_dev.h  
+../common/common_tpm-tools.sh: line 34: cmake: command not found
+tpmd.c:522: Info: starting TPM Emulator daemon (1.2.0.7-475)
+tpmd.c:102: Info: parsing options
+tpmd.c:228: Info: installing signal handlers
+tpmd.c:250: Info: daemonizing process
+tpmd.c:522: Info: starting TPM Emulator daemon (1.2.0.7-475)
+tpmd.c:102: Info: parsing options
+tpmd.c:228: Info: installing signal handlers
+tpmd.c:250: Info: daemonizing process
+20735
+20744
+../common/common_tpm-tools.sh: line 53: tpm_version: command not found
+../common/common_tpm-tools.sh: line 54: tpm_getpubek: command not found
+Sun Feb  6 21:29:31 2022 - INFO  - Finish preparing the test environment.
+Sun Feb  6 21:29:31 2022 - INFO  - Start to run test.
+spawn tpm_takeownership
+couldn't execute "tpm_takeownership": no such file or directory
+    while executing
+"spawn tpm_takeownership"
+oe_test_tpm-tools_02.sh: line 38: tpm_changeownerauth: command not found
+oe_test_tpm-tools_02.sh: line 40: tpm_changeownerauth: command not found
+spawn tpm_changeownerauth -l debug -o
+couldn't execute "tpm_changeownerauth": no such file or directory
+    while executing
+"spawn tpm_changeownerauth -l debug -o"
+spawn tpm_changeownerauth -l debug -s
+couldn't execute "tpm_changeownerauth": no such file or directory
+    while executing
+"spawn tpm_changeownerauth -l debug -s"
+oe_test_tpm-tools_02.sh: line 63: tpm_nvinfo: command not found
+oe_test_tpm-tools_02.sh: line 65: tpm_nvinfo: command not found
+oe_test_tpm-tools_02.sh: line 67: tpm_nvinfo: command not found
+oe_test_tpm-tools_02.sh: line 69: tpm_nvinfo: command not found
+oe_test_tpm-tools_02.sh: line 71: tpm_nvinfo: command not found
+oe_test_tpm-tools_02.sh: line 74: tpm_resetdalock: command not found
+oe_test_tpm-tools_02.sh: line 76: tpm_resetdalock: command not found
+spawn tpm_resetdalock --log debug
+couldn't execute "tpm_resetdalock": no such file or directory
+    while executing
+"spawn tpm_resetdalock --log debug"
+oe_test_tpm-tools_02.sh: line 87: tpm_restrictpubek: command not found
+oe_test_tpm-tools_02.sh: line 89: tpm_restrictpubek: command not found
+spawn tpm_restrictpubek --log debug
+couldn't execute "tpm_restrictpubek": no such file or directory
+    while executing
+"spawn tpm_restrictpubek --log debug "
+spawn tpm_restrictpubek -s
+couldn't execute "tpm_restrictpubek": no such file or directory
+    while executing
+"spawn tpm_restrictpubek -s"
+spawn tpm_restrictpubek -r
+couldn't execute "tpm_restrictpubek": no such file or directory
+    while executing
+"spawn tpm_restrictpubek -r"
+oe_test_tpm-tools_02.sh: line 116: tpm_clear: command not found
+oe_test_tpm-tools_02.sh: line 118: tpm_clear: command not found
+oe_test_tpm-tools_02.sh: line 120: tpm_clear: command not found
+Sun Feb  6 21:29:31 2022 - INFO  - End of the test.
+Sun Feb  6 21:29:31 2022 - ERROR - failed to execute the case.
+Sun Feb  6 21:29:31 2022 - INFO  - Start to restore the test environment.
+../common/common_tpm-tools.sh: line 64: 20735 Killed                  nohup tpmd -d -f clear > /dev/null 2>&1
+../common/common_tpm-tools.sh: line 65: 20744 Killed                  nohup tcsd -e -f > /dev/null 2>&1
+Sun Feb  6 21:29:32 2022 - INFO  - Finish restoring the test environment.

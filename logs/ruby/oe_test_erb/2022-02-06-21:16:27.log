@@ -1,0 +1,83 @@
+Sun Feb  6 21:16:27 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:16:42 2022 - INFO  - Finish preparing the test environment.
+Sun Feb  6 21:16:42 2022 - INFO  - Start to run test.
+erb [switches] [var=value...] [inputfile]
+  -x               print ruby script
+  -n               print ruby script with line number
+  -v               enable verbose mode
+  -d               set $DEBUG to true
+  -r library       load a library
+  -S safe_level    set $SAFE (0..1)
+  -E ex[:in]       set default external/internal encodings
+  -U               set default encoding to UTF-8.
+  -T trim_mode     specify trim_mode (0..2, -)
+  -P               ignore lines which start with "%"
+erb.rb [2.1.0 2018-01-03]
+_erbout = +''; _erbout.<< "<?xml version=\"1.0\" ?>\n".freeze
+;  require 'prime' -; _erbout.<< "\n".freeze
+; _erbout.<< "<erb-example>\n".freeze
+; _erbout.<< "    <calc>".freeze; _erbout.<<(( 1+1 ).to_s); _erbout.<< "</calc>\n".freeze
+; _erbout.<< "    <var>".freeze; _erbout.<<(( __FILE__ ).to_s); _erbout.<< "</var>\n".freeze
+; _erbout.<< "    <library>".freeze; _erbout.<<(( Prime.each(10).to_a.join(", ") ).to_s); _erbout.<< "</library>\n".freeze
+; _erbout.<< "</erb-example>".freeze; _erbout
+  1 #coding:UTF-8
+  2 _erbout = +''; _erbout.<< "<?xml version=\"1.0\" ?>\n".freeze
+  3 ;  require 'prime' -; _erbout.<< "\n".freeze
+  4 ; _erbout.<< "<erb-example>\n".freeze
+  5 ; _erbout.<< "    <calc>".freeze; _erbout.<<(( 1+1 ).to_s); _erbout.<< "</calc>\n".freeze
+  6 ; _erbout.<< "    <var>".freeze; _erbout.<<(( __FILE__ ).to_s); _erbout.<< "</var>\n".freeze
+  7 ; _erbout.<< "    <library>".freeze; _erbout.<<(( Prime.each(10).to_a.join(", ") ).to_s); _erbout.<< "</library>\n".freeze
+  8 ; _erbout.<< "</erb-example>".freeze; _erbout
+_erbout = +''; _erbout.<< "<?xml version=\"1.0\" ?>\n".freeze
+;  require 'prime' -; _erbout.<< "\n".freeze
+; _erbout.<< "<erb-example>\n".freeze
+; _erbout.<< "    <calc>".freeze; _erbout.<<(( 1+1 ).to_s); _erbout.<< "</calc>\n".freeze
+; _erbout.<< "    <var>".freeze; _erbout.<<(( __FILE__ ).to_s); _erbout.<< "</var>\n".freeze
+; _erbout.<< "    <library>".freeze; _erbout.<<(( Prime.each(10).to_a.join(", ") ).to_s); _erbout.<< "</library>\n".freeze
+; _erbout.<< "</erb-example>".freeze; _erbout
+_erbout = +''; _erbout.<< "<?xml version=\"1.0\" ?>\n".freeze
+;  require 'prime' -; _erbout.<< "\n".freeze
+; _erbout.<< "<erb-example>\n".freeze
+; _erbout.<< "    <calc>".freeze; _erbout.<<(( 1+1 ).to_s); _erbout.<< "</calc>\n".freeze
+; _erbout.<< "    <var>".freeze; _erbout.<<(( __FILE__ ).to_s); _erbout.<< "</var>\n".freeze
+; _erbout.<< "    <library>".freeze; _erbout.<<(( Prime.each(10).to_a.join(", ") ).to_s); _erbout.<< "</library>\n".freeze
+; _erbout.<< "</erb-example>".freeze; _erbout
+<?xml version="1.0" ?>
+<erb-example>
+    <calc>2</calc>
+    <var>example2.erb</var>
+    <library>2, 3, 5, 7</library>
+</erb-example>
+_erbout = +''; _erbout.<< "<?xml version=\"1.0\" ?>\n".freeze
+;  require 'prime' -; _erbout.<< "\n".freeze
+; _erbout.<< "<erb-example>\n".freeze
+; _erbout.<< "    <calc>".freeze; _erbout.<<(( 1+1 ).to_s); _erbout.<< "</calc>\n".freeze
+; _erbout.<< "    <var>".freeze; _erbout.<<(( __FILE__ ).to_s); _erbout.<< "</var>\n".freeze
+; _erbout.<< "    <library>".freeze; _erbout.<<(( Prime.each(10).to_a.join(", ") ).to_s); _erbout.<< "</library>\n".freeze
+; _erbout.<< "</erb-example>".freeze; _erbout
+_erbout = +''; _erbout.<< "<?xml version=\"1.0\" ?>\n".freeze
+;  require 'prime' -; _erbout.<< "\n".freeze
+; _erbout.<< "<erb-example>\n".freeze
+; _erbout.<< "    <calc>".freeze; _erbout.<<(( 1+1 ).to_s); _erbout.<< "</calc>\n".freeze
+; _erbout.<< "    <var>".freeze; _erbout.<<(( __FILE__ ).to_s); _erbout.<< "</var>\n".freeze
+; _erbout.<< "    <library>".freeze; _erbout.<<(( Prime.each(10).to_a.join(", ") ).to_s); _erbout.<< "</library>\n".freeze
+; _erbout.<< "</erb-example>".freeze; _erbout
+_erbout = +''; _erbout.<< "<?xml version=\"1.0\" ?>\n".freeze
+;  require 'prime' -; _erbout.<< "\n".freeze
+; _erbout.<< "<erb-example>\n".freeze
+; _erbout.<< "    <calc>".freeze; _erbout.<<(( 1+1 ).to_s); _erbout.<< "</calc>\n".freeze
+; _erbout.<< "    <var>".freeze; _erbout.<<(( __FILE__ ).to_s); _erbout.<< "</var>\n".freeze
+; _erbout.<< "    <library>".freeze; _erbout.<<(( Prime.each(10).to_a.join(", ") ).to_s); _erbout.<< "</library>\n".freeze
+; _erbout.<< "</erb-example>".freeze; _erbout
+<?xml version="1.0" ?>
+<erb-example>
+    <calc>2</calc>
+    <var>example1.erb</var>
+    <library>2, 3, 5, 7</library>
+</erb-example>
+;  require 'prime' -; _erbout.<< "\n<erb-example>\n    <calc>".freeze
+; _erbout.<<(( Prime.each(10).to_a.join(", ") ).to_s); _erbout.<< "</library>\n</erb-example>".freeze
+Sun Feb  6 21:16:44 2022 - INFO  - End of the test.
+Sun Feb  6 21:16:44 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:16:44 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:16:46 2022 - INFO  - Finish restoring the test environment.

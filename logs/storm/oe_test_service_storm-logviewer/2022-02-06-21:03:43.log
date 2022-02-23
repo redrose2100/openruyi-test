@@ -1,0 +1,35 @@
+Sun Feb  6 21:03:43 2022 - INFO  - Start environmental preparation.
+oe_test_service_storm-logviewer.sh: line 35: /etc/storm/storm.yaml: No such file or directory
+Failed to start zookeeper.service: Unit zookeeper.service not found.
+Sun Feb  6 21:03:46 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 21:03:46 2022 - INFO  - Start testing...
+Failed to restart storm-logviewer.service: Unit storm-logviewer.service not found.
+Sun Feb  6 21:03:46 2022 - ERROR - storm-logviewer.service restart failed
+Unit storm-logviewer.service could not be found.
+Sun Feb  6 21:03:51 2022 - ERROR - storm-logviewer.service restart failed
+Failed to stop storm-logviewer.service: Unit storm-logviewer.service not loaded.
+Sun Feb  6 21:03:51 2022 - ERROR - storm-logviewer.service stop failed
+Unit storm-logviewer.service could not be found.
+Sun Feb  6 21:03:57 2022 - ERROR - storm-logviewer.service stop failed
+Failed to start storm-logviewer.service: Unit storm-logviewer.service not found.
+Sun Feb  6 21:03:57 2022 - ERROR - storm-logviewer.service start failed
+Unit storm-logviewer.service could not be found.
+Sun Feb  6 21:04:02 2022 - ERROR - storm-logviewer.service start failed
+Failed to get unit file state for storm-logviewer.service: No such file or directory
+Sun Feb  6 21:04:02 2022 - INFO  - Unit is indirect, ignoring.
+Failed to start storm-logviewer.service: Unit storm-logviewer.service not found.
+Sun Feb  6 21:04:02 2022 - ERROR - Job type reload is not applicable for unit storm-logviewer.service
+Unit storm-logviewer.service could not be found.
+Unit storm-logviewer.service could not be found.
+Sun Feb  6 21:04:02 2022 - INFO  - Finish test!
+Sun Feb  6 21:04:02 2022 - ERROR - failed to execute the case.
+Sun Feb  6 21:04:02 2022 - INFO  - start environment cleanup.
+Failed to stop zookeeper.service: Unit zookeeper.service not loaded.
+Failed to stop storm-logviewer.service: Unit storm-logviewer.service not loaded.
+Traceback (most recent call last):
+  File "/root/mugen/libs/locallibs/rpm_manage.py", line 173, in <module>
+    exitcode = rpm_remove(args.node, args.pkgs, args.tempfile)
+  File "/root/mugen/libs/locallibs/rpm_manage.py", line 144, in rpm_remove
+    with open(tmpfile, "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'Last metadata expiration check: 0:12:05 ago on Sun 06 Feb 2022 08:51:41 PM CST.\nNo match for argument: storm\nError: Unable to find a match: storm'
+Sun Feb  6 21:04:02 2022 - INFO  - Finish environment cleanup!

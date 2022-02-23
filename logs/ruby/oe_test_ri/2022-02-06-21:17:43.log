@@ -1,0 +1,460 @@
+Sun Feb  6 21:17:43 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:17:54 2022 - INFO  - Finish preparing the test environment.
+Sun Feb  6 21:17:55 2022 - INFO  - Start to run test.
+Usage: ri [options] [name ...]
+ri 6.0.1.1
+spawn ri --server
+[2022-02-06 21:17:55] INFO  WEBrick 1.4.2
+[2022-02-06 21:17:55] INFO  ruby 2.5.8 (2020-03-31) [x86_64-linux]
+[2022-02-06 21:17:55] INFO  WEBrick::HTTPServer#start: pid=17232 port=8214
+^C[2022-02-06 21:18:00] INFO  going to shutdown ...
+[2022-02-06 21:18:00] INFO  WEBrick::HTTPServer#start done.
+[2022-02-06 21:17:55] INFO  WEBrick 1.4.2
+[2022-02-06 21:17:55] INFO  ruby 2.5.8 (2020-03-31) [x86_64-linux]
+[2022-02-06 21:17:55] INFO  WEBrick::HTTPServer#start: pid=17232 port=8214
+^C[2022-02-06 21:18:00] INFO  going to shutdown ...
+[2022-02-06 21:18:00] INFO  WEBrick::HTTPServer#start done.
+/usr/share/ri/system
+/usr/share/ri/site
+/root/.rdoc
+spawn ri --profile
+
+Enter the method name you want to look up.
+You can use tab to autocomplete.
+Enter a blank line to exit.
+
+>> 
+  %   cumulative   self              self     total
+ time   seconds   seconds    calls  ms/call  ms/call  name
+ 20.17     0.02      0.02       14     1.34    27.60  Kernel#require
+ 10.66     0.03      0.01      326     0.03     0.08  nil#
+  5.07     0.03      0.00      180     0.03     0.08  FileUtils.collect_method
+  4.70     0.04      0.00       86     0.05     0.06  Module#module_eval
+  2.87     0.04      0.00       35     0.08     1.30  Array#each
+  2.87     0.04      0.00       74     0.04     0.14  Gem::Version#canonical_segments
+  2.84     0.05      0.00       58     0.05     0.15  Array#map!
+  2.17     0.05      0.00        6     0.34     1.32  Array#select
+  1.69     0.05      0.00       22     0.07     0.23  Array#map
+  1.56     0.05      0.00      332     0.00     0.00  Module#method_added
+  1.44     0.05      0.00       38     0.04     0.05  Kernel#dup
+  1.43     0.05      0.00        3     0.44     0.58  Module#public
+  1.36     0.05      0.00       27     0.05     0.33  Gem::Specification#hash
+  1.21     0.06      0.00        1     1.12     1.12  TracePoint#enable
+  1.17     0.06      0.00       40     0.03     0.11  Gem::Version#_split_segments
+  1.11     0.06      0.00       61     0.02     0.02  Module#module_function
+  1.07     0.06      0.00       62     0.02     0.04  Gem::Version#_segments
+  1.05     0.06      0.00       23     0.04     0.23  Gem::Specification#doc_dir
+  0.99     0.06      0.00        6     0.15     0.65  Gem::Version#<=>
+  0.99     0.06      0.00        5     0.18     0.27  Gem.remove_unresolved_default_spec
+  0.85     0.06      0.00       27     0.03     0.04  Array#hash
+  0.85     0.06      0.00      180     0.00     0.00  Array#include?
+  0.84     0.06      0.00       27     0.03     0.27  Gem::Version#hash
+  0.83     0.06      0.00      236     0.00     0.00  BasicObject#singleton_method_added
+  0.77     0.07      0.00       47     0.02     0.52  RDoc::RI::Paths.gemdirs
+  0.71     0.07      0.00      178     0.00     0.00  Hash#[]
+  0.68     0.07      0.00      168     0.00     0.00  Symbol#==
+  0.67     0.07      0.00       12     0.05     0.15  Gem::BasicSpecification#full_name
+  0.65     0.07      0.00       23     0.03     0.09  Gem::Specification#base_dir
+  0.63     0.07      0.00       38     0.02     0.02  Kernel#initialize_dup
+  0.61     0.07      0.00       25     0.02     0.04  Gem::StubSpecification#to_spec
+  0.59     0.07      0.00       14     0.04     0.10  Gem::BasicSpecification#default_gem?
+  0.59     0.07      0.00       28     0.02     0.74  Gem::Specification._all
+  0.53     0.07      0.00       67     0.01     0.01  File.join
+  0.52     0.07      0.00       10     0.05     0.13  Gem::Requirement#initialize
+  0.52     0.07      0.00       17     0.03     0.05  FileUtils.private_module_function
+  0.52     0.07      0.00        6     0.08     1.78  Gem::Dependency#matching_specs
+  0.51     0.07      0.00        7     0.07     0.11  Array#any?
+  0.48     0.07      0.00       24     0.02     1.03  Gem::Specification.each
+  0.45     0.07      0.00        3     0.14     0.14  RDoc::Store#initialize
+  0.44     0.07      0.00       22     0.02     0.02  Module#alias_method
+  0.41     0.07      0.00       10     0.04     0.10  Array#index
+  0.40     0.07      0.00       86     0.00     0.00  Integer#+
+  0.40     0.07      0.00        4     0.09     0.27  Gem::Requirement.create
+  0.39     0.08      0.00       14     0.03     0.05  Gem::BasicSpecification.default_specifications_dir
+  0.37     0.08      0.00       40     0.01     0.01  Array#reverse_each
+  0.36     0.08      0.00       20     0.02     0.05  Enumerable#drop_while
+  0.34     0.08      0.00       20     0.02     0.03  Enumerator#each
+  0.33     0.08      0.00        7     0.04     0.06  MonitorMixin#mon_enter
+  0.32     0.08      0.00       44     0.01     0.01  UnboundMethod#parameters
+  0.31     0.08      0.00        6     0.05     1.46  Gem::Dependency#to_spec
+  0.31     0.08      0.00        5     0.06     0.07  Module#attr_accessor
+  0.30     0.08      0.00        1     0.28     0.28  Readline.readline
+  0.29     0.08      0.00       10     0.03     0.07  Gem::Version#segments
+  0.28     0.08      0.00       45     0.01     0.01  File.dirname
+  0.28     0.08      0.00       52     0.00     0.00  Module#===
+  0.27     0.08      0.00       16     0.02     0.10  Gem::Version#version
+  0.27     0.08      0.00        8     0.03     0.04  Module#attr_reader
+  0.27     0.08      0.00       23     0.01     0.09  Gem::Specification#full_name
+  0.26     0.08      0.00       17     0.01     0.02  Gem::StubSpecification#name
+  0.26     0.08      0.00       44     0.01     0.01  Module#instance_method
+  0.26     0.08      0.00       11     0.02     0.20  Class#new
+  0.25     0.08      0.00       44     0.01     0.01  Hash#[]=
+  0.24     0.08      0.00       12     0.02     0.72  Gem::Requirement#satisfied_by?
+  0.24     0.08      0.00        4     0.05     2.95  Kernel#gem
+  0.23     0.08      0.00       53     0.00     0.00  Kernel#hash
+  0.22     0.08      0.00       44     0.00     0.00  Symbol#to_s
+  0.22     0.08      0.00       14     0.01     0.02  Gem.default_dir
+  0.21     0.08      0.00        7     0.03     0.05  MonitorMixin#mon_exit
+  0.21     0.08      0.00       50     0.00     0.00  Array#compact!
+  0.21     0.08      0.00        3     0.07     0.10  File#initialize
+  0.20     0.08      0.00        4     0.05     0.06  Gem::Requirement.parse
+  0.19     0.08      0.00        8     0.02     0.26  Gem::Requirement#as_list
+  0.19     0.08      0.00       10     0.02     0.04  Enumerable#reduce
+  0.19     0.08      0.00        7     0.02     0.12  Gem::Specification#has_conflicts?
+  0.18     0.08      0.00        4     0.04     0.35  Gem::Requirement#to_s
+  0.18     0.08      0.00        2     0.08     0.31  Gem::Dependency#initialize
+  0.18     0.08      0.00       28     0.01     0.01  String#intern
+  0.17     0.08      0.00        7     0.02     0.03  Module#include
+  0.16     0.08      0.00        3     0.05     0.22  RDoc::Store#load_cache
+  0.16     0.08      0.00        4     0.04     0.23  Gem.env_requirement
+  0.16     0.08      0.00        1     0.15    85.47  RDoc::RI::Paths.each
+  0.16     0.08      0.00        2     0.07     0.17  Gem::Specification#files
+  0.15     0.08      0.00        3     0.05    22.33  RDoc::RI::Driver#initialize
+  0.15     0.08      0.00        4     0.03     0.06  Kernel#extend
+  0.14     0.08      0.00       30     0.00     0.00  Kernel#nil?
+  0.14     0.08      0.00        2     0.07     0.52  RDoc::RI::Driver#interactive
+  0.14     0.08      0.00       30     0.00     0.00  String#to_i
+  0.13     0.08      0.00        5     0.02     0.03  Gem::StubSpecification#version
+  0.13     0.08      0.00       27     0.00     0.00  String#hash
+  0.11     0.08      0.00        4     0.03     0.05  Gem::Platform.match
+  0.11     0.09      0.00        7     0.01     0.02  MonitorMixin#mon_check_owner
+  0.11     0.09      0.00       28     0.00     0.00  String#initialize_copy
+  0.11     0.09      0.00       30     0.00     0.00  Kernel#is_a?
+  0.11     0.09      0.00       10     0.01     0.01  String#scan
+  0.10     0.09      0.00       27     0.00     0.00  Integer#^
+  0.10     0.09      0.00        3     0.03     0.03  IO#write
+  0.10     0.09      0.00        2     0.05     0.06  Gem::Specification#add_bindir
+  0.10     0.09      0.00       20     0.00     0.00  Array#reverse
+  0.09     0.09      0.00        6     0.01     0.72  Enumerable#all?
+  0.09     0.09      0.00        6     0.01     0.66  Comparable#>=
+  0.09     0.09      0.00        3     0.03     0.13  Kernel#open
+  0.09     0.09      0.00        2     0.04     0.75  Gem::Requirement#==
+  0.09     0.09      0.00        4     0.02     0.06  Gem::Requirement#prerelease?
+  0.09     0.09      0.00        4     0.02     0.02  Module#extend_object
+  0.08     0.09      0.00       22     0.00     0.00  Gem::StubSpecification#data
+  0.08     0.09      0.00        3     0.03     0.03  SystemCallError#initialize
+  0.08     0.09      0.00       18     0.00     0.00  Kernel#class
+  0.08     0.09      0.00       21     0.00     0.00  Thread.current
+  0.08     0.09      0.00        3     0.02     0.03  RDoc::Store#cache_path
+  0.08     0.09      0.00       10     0.01     0.01  Array#slice!
+  0.07     0.09      0.00       10     0.01     0.01  Array#concat
+  0.07     0.09      0.00       16     0.00     0.00  Gem::Specification.load
+  0.07     0.09      0.00        8     0.01     0.01  IO#set_encoding
+  0.07     0.09      0.00        8     0.01     0.01  Array#flatten
+  0.07     0.09      0.00       17     0.00     0.00  Module#private_class_method
+  0.07     0.09      0.00        4     0.02     0.02  Array#join
+  0.06     0.09      0.00        7     0.01     0.01  Module#private
+  0.06     0.09      0.00        2     0.03     0.03  Kernel#singleton_methods
+  0.06     0.09      0.00        4     0.01     0.02  Gem::Version#prerelease?
+  0.06     0.09      0.00        2     0.03     0.11  Gem::Dependency#prerelease?
+  0.06     0.09      0.00       14     0.00     0.00  Gem::Specification#platform
+  0.05     0.09      0.00        1     0.05     0.59  Hash#each_value
+  0.05     0.09      0.00        3     0.02     0.05  IO#puts
+  0.05     0.09      0.00        2     0.03     0.08  Gem::Specification#activate_dependencies
+  0.05     0.09      0.00        2     0.02     0.54  Gem::Specification#activate
+  0.05     0.09      0.00        3     0.02     0.06  Kernel#puts
+  0.05     0.09      0.00       14     0.00     0.00  Gem.default_dirs
+  0.05     0.09      0.00        6     0.01     0.01  Array#==
+  0.05     0.09      0.00        4     0.01     0.01  Regexp#=~
+  0.04     0.09      0.00        7     0.01     0.01  Gem.find_unresolved_default_spec
+  0.04     0.09      0.00       12     0.00     0.00  Kernel#untaint
+  0.04     0.09      0.00        4     0.01     0.01  #<Object:0x00005615b0393ea8>.[]
+  0.04     0.09      0.00        2     0.02     2.19  Enumerable#find_all
+  0.04     0.09      0.00        2     0.02     0.07  Enumerable#partition
+  0.04     0.09      0.00        6     0.01     0.01  Gem::Dependency#requirement
+  0.04     0.09      0.00       10     0.00     0.00  Kernel#freeze
+  0.04     0.09      0.00        9     0.00     0.00  Kernel#respond_to?
+  0.04     0.09      0.00       10     0.00     0.00  Array#initialize_copy
+  0.04     0.09      0.00        9     0.00     0.00  Gem::Specification.unresolved_deps
+  0.04     0.09      0.00        2     0.02     0.20  Array#reject!
+  0.04     0.09      0.00       10     0.00     0.00  Gem::Dependency#runtime?
+  0.04     0.09      0.00        2     0.02     3.02  Gem::Dependency#to_specs
+  0.03     0.09      0.00        6     0.01     0.01  Gem::Version#_version
+  0.03     0.09      0.00        2     0.02     0.03  Enumerable#find
+  0.03     0.09      0.00        7     0.00     0.00  Thread::Mutex#lock
+  0.03     0.09      0.00        2     0.01     0.22  Gem::Requirement.default
+  0.03     0.09      0.00        6     0.00     0.00  Class#inherited
+  0.03     0.09      0.00        7     0.00     0.00  Module#append_features
+  0.03     0.09      0.00        1     0.03     0.03  Module#private_instance_methods
+  0.03     0.09      0.00        6     0.00     0.00  Array#uniq!
+  0.03     0.09      0.00        2     0.01     0.01  Gem::Specification.stubs_for
+  0.03     0.09      0.00        2     0.01     0.05  Gem::Specification#runtime_dependencies
+  0.03     0.09      0.00        2     0.01     0.56  Thread::Mutex#synchronize
+  0.03     0.09      0.00        6     0.00     0.00  Array#sort
+  0.03     0.09      0.00        7     0.00     0.00  Thread::Mutex#unlock
+  0.02     0.09      0.00        2     0.01     0.01  Array#-
+  0.02     0.09      0.00        2     0.01     0.01  String#to_str
+  0.02     0.09      0.00        2     0.01     0.38  Gem::Specification#raise_if_conflicts
+  0.02     0.09      0.00        7     0.00     0.00  Module#included
+  0.02     0.09      0.00        1     0.02     0.38  Kernel#loop
+  0.02     0.09      0.00        1     0.02     0.02  RDoc::RI::Paths.home_dir
+  0.02     0.09      0.00        4     0.00     0.00  Array#compact
+  0.02     0.09      0.00        6     0.00     0.00  Integer#<=>
+  0.02     0.09      0.00        5     0.00     0.00  Hash#delete
+  0.02     0.09      0.00        1     0.02     0.02  Numeric#nonzero?
+  0.02     0.09      0.00        1     0.02     0.02  Kernel#methods
+  0.02     0.09      0.00        1     0.02     0.03  RDoc::RI::Paths.site_dir
+  0.02     0.09      0.00        4     0.00     0.00  Module#extended
+  0.02     0.09      0.00        1     0.02     0.02  RDoc::RI::Paths.system_dir
+  0.02     0.09      0.00        4     0.00     0.00  Hash#keys
+  0.02     0.09      0.00        1     0.02     0.68  RDoc::RI::Driver#run
+  0.02     0.09      0.00        2     0.01     0.06  Gem::Specification#add_self_to_load_path
+  0.02     0.09      0.00        1     0.02    11.55  Enumerable#inject
+  0.02     0.09      0.00        4     0.00     0.00  Kernel#instance_variable_defined?
+  0.02     0.09      0.00        3     0.00     0.00  Exception#initialize
+  0.02     0.09      0.00        4     0.00     0.00  Array#last
+  0.02     0.09      0.00        4     0.00     0.00  Array#shift
+  0.01     0.09      0.00        2     0.01     0.01  String#split
+  0.01     0.09      0.00        4     0.00     0.00  String#to_s
+  0.01     0.09      0.00        3     0.00     0.00  Exception#exception
+  0.01     0.09      0.00        4     0.00     0.00  Gem::Specification#dependencies
+  0.01     0.09      0.00        1     0.01     0.01  Array#&
+  0.01     0.09      0.00        2     0.01     0.01  String#upcase
+  0.01     0.09      0.00        3     0.00     0.00  Exception#backtrace
+  0.01     0.09      0.00        1     0.01     0.01  Enumerable#sort_by
+  0.01     0.09      0.00        2     0.01     0.01  Kernel#Array
+  0.01     0.09      0.00        2     0.00     0.00  Array#first
+  0.01     0.09      0.00        3     0.00     0.00  SystemCallError.===
+  0.01     0.09      0.00        2     0.00     0.00  Array#uniq
+  0.01     0.09      0.00        2     0.00     0.00  String#===
+  0.01     0.09      0.00        1     0.01     0.01  File.expand_path
+  0.01     0.09      0.00        2     0.00     0.00  Kernel#kind_of?
+  0.01     0.09      0.00        2     0.00     0.00  Gem.platforms
+  0.01     0.09      0.00        2     0.00     0.00  Kernel#block_given?
+  0.01     0.09      0.00        1     0.01    18.18  Enumerable#map
+  0.01     0.09      0.00        1     0.01     0.01  Readline.completion_proc=
+  0.00     0.09      0.00        1     0.00     0.00  Numeric#zero?
+  0.00     0.09      0.00        1     0.00     0.00  Gem::Specification.stubs
+  0.00     0.09      0.00        1     0.00     0.00  Comparable#==
+  0.00     0.09      0.00        1     0.00     0.00  Kernel#method
+  0.00     0.09      0.00        1     0.00     0.00  TracePoint#disable
+  0.00     0.09      0.00        1     0.00     0.00  Hash#key?
+  0.00     0.09      0.00        1     0.00     0.00  BasicObject#==
+  0.00     0.09      0.00       23     0.00     0.00  File.exist?
+  0.00     0.09      0.00        1     0.00     0.00  Hash#each
+  0.00     0.09      0.00        1     0.00    92.74  #toplevel
+ 20.17     0.02      0.02       14     1.34    27.60  Kernel#require
+ 10.66     0.03      0.01      326     0.03     0.08  nil#
+  5.07     0.03      0.00      180     0.03     0.08  FileUtils.collect_method
+  4.70     0.04      0.00       86     0.05     0.06  Module#module_eval
+  2.87     0.04      0.00       35     0.08     1.30  Array#each
+  2.87     0.04      0.00       74     0.04     0.14  Gem::Version#canonical_segments
+  2.84     0.05      0.00       58     0.05     0.15  Array#map!
+  2.17     0.05      0.00        6     0.34     1.32  Array#select
+  1.69     0.05      0.00       22     0.07     0.23  Array#map
+  1.56     0.05      0.00      332     0.00     0.00  Module#method_added
+  1.44     0.05      0.00       38     0.04     0.05  Kernel#dup
+  1.43     0.05      0.00        3     0.44     0.58  Module#public
+  1.36     0.05      0.00       27     0.05     0.33  Gem::Specification#hash
+  1.21     0.06      0.00        1     1.12     1.12  TracePoint#enable
+  1.17     0.06      0.00       40     0.03     0.11  Gem::Version#_split_segments
+  1.11     0.06      0.00       61     0.02     0.02  Module#module_function
+  1.07     0.06      0.00       62     0.02     0.04  Gem::Version#_segments
+  1.05     0.06      0.00       23     0.04     0.23  Gem::Specification#doc_dir
+  0.99     0.06      0.00        6     0.15     0.65  Gem::Version#<=>
+  0.99     0.06      0.00        5     0.18     0.27  Gem.remove_unresolved_default_spec
+  0.85     0.06      0.00       27     0.03     0.04  Array#hash
+  0.85     0.06      0.00      180     0.00     0.00  Array#include?
+  0.84     0.06      0.00       27     0.03     0.27  Gem::Version#hash
+  0.83     0.06      0.00      236     0.00     0.00  BasicObject#singleton_method_added
+  0.77     0.07      0.00       47     0.02     0.52  RDoc::RI::Paths.gemdirs
+  0.71     0.07      0.00      178     0.00     0.00  Hash#[]
+  0.68     0.07      0.00      168     0.00     0.00  Symbol#==
+  0.67     0.07      0.00       12     0.05     0.15  Gem::BasicSpecification#full_name
+  0.65     0.07      0.00       23     0.03     0.09  Gem::Specification#base_dir
+  0.63     0.07      0.00       38     0.02     0.02  Kernel#initialize_dup
+  0.61     0.07      0.00       25     0.02     0.04  Gem::StubSpecification#to_spec
+  0.59     0.07      0.00       14     0.04     0.10  Gem::BasicSpecification#default_gem?
+  0.59     0.07      0.00       28     0.02     0.74  Gem::Specification._all
+  0.53     0.07      0.00       67     0.01     0.01  File.join
+  0.52     0.07      0.00       10     0.05     0.13  Gem::Requirement#initialize
+  0.52     0.07      0.00       17     0.03     0.05  FileUtils.private_module_function
+  0.52     0.07      0.00        6     0.08     1.78  Gem::Dependency#matching_specs
+  0.51     0.07      0.00        7     0.07     0.11  Array#any?
+  0.48     0.07      0.00       24     0.02     1.03  Gem::Specification.each
+  0.45     0.07      0.00        3     0.14     0.14  RDoc::Store#initialize
+  0.44     0.07      0.00       22     0.02     0.02  Module#alias_method
+  0.41     0.07      0.00       10     0.04     0.10  Array#index
+  0.40     0.07      0.00       86     0.00     0.00  Integer#+
+  0.40     0.07      0.00        4     0.09     0.27  Gem::Requirement.create
+  0.39     0.08      0.00       14     0.03     0.05  Gem::BasicSpecification.default_specifications_dir
+  0.37     0.08      0.00       40     0.01     0.01  Array#reverse_each
+  0.36     0.08      0.00       20     0.02     0.05  Enumerable#drop_while
+  0.34     0.08      0.00       20     0.02     0.03  Enumerator#each
+  0.33     0.08      0.00        7     0.04     0.06  MonitorMixin#mon_enter
+  0.32     0.08      0.00       44     0.01     0.01  UnboundMethod#parameters
+  0.31     0.08      0.00        6     0.05     1.46  Gem::Dependency#to_spec
+  0.31     0.08      0.00        5     0.06     0.07  Module#attr_accessor
+  0.30     0.08      0.00        1     0.28     0.28  Readline.readline
+  0.29     0.08      0.00       10     0.03     0.07  Gem::Version#segments
+  0.28     0.08      0.00       45     0.01     0.01  File.dirname
+  0.28     0.08      0.00       52     0.00     0.00  Module#===
+  0.27     0.08      0.00       16     0.02     0.10  Gem::Version#version
+  0.27     0.08      0.00        8     0.03     0.04  Module#attr_reader
+  0.27     0.08      0.00       23     0.01     0.09  Gem::Specification#full_name
+  0.26     0.08      0.00       17     0.01     0.02  Gem::StubSpecification#name
+  0.26     0.08      0.00       44     0.01     0.01  Module#instance_method
+  0.26     0.08      0.00       11     0.02     0.20  Class#new
+  0.25     0.08      0.00       44     0.01     0.01  Hash#[]=
+  0.24     0.08      0.00       12     0.02     0.72  Gem::Requirement#satisfied_by?
+  0.24     0.08      0.00        4     0.05     2.95  Kernel#gem
+  0.23     0.08      0.00       53     0.00     0.00  Kernel#hash
+  0.22     0.08      0.00       44     0.00     0.00  Symbol#to_s
+  0.22     0.08      0.00       14     0.01     0.02  Gem.default_dir
+  0.21     0.08      0.00        7     0.03     0.05  MonitorMixin#mon_exit
+  0.21     0.08      0.00       50     0.00     0.00  Array#compact!
+  0.21     0.08      0.00        3     0.07     0.10  File#initialize
+  0.20     0.08      0.00        4     0.05     0.06  Gem::Requirement.parse
+  0.19     0.08      0.00        8     0.02     0.26  Gem::Requirement#as_list
+  0.19     0.08      0.00       10     0.02     0.04  Enumerable#reduce
+  0.19     0.08      0.00        7     0.02     0.12  Gem::Specification#has_conflicts?
+  0.18     0.08      0.00        4     0.04     0.35  Gem::Requirement#to_s
+  0.18     0.08      0.00        2     0.08     0.31  Gem::Dependency#initialize
+  0.18     0.08      0.00       28     0.01     0.01  String#intern
+  0.17     0.08      0.00        7     0.02     0.03  Module#include
+  0.16     0.08      0.00        3     0.05     0.22  RDoc::Store#load_cache
+  0.16     0.08      0.00        4     0.04     0.23  Gem.env_requirement
+  0.16     0.08      0.00        1     0.15    85.47  RDoc::RI::Paths.each
+  0.16     0.08      0.00        2     0.07     0.17  Gem::Specification#files
+  0.15     0.08      0.00        3     0.05    22.33  RDoc::RI::Driver#initialize
+  0.15     0.08      0.00        4     0.03     0.06  Kernel#extend
+  0.14     0.08      0.00       30     0.00     0.00  Kernel#nil?
+  0.14     0.08      0.00        2     0.07     0.52  RDoc::RI::Driver#interactive
+  0.14     0.08      0.00       30     0.00     0.00  String#to_i
+  0.13     0.08      0.00        5     0.02     0.03  Gem::StubSpecification#version
+  0.13     0.08      0.00       27     0.00     0.00  String#hash
+  0.11     0.08      0.00        4     0.03     0.05  Gem::Platform.match
+  0.11     0.09      0.00        7     0.01     0.02  MonitorMixin#mon_check_owner
+  0.11     0.09      0.00       28     0.00     0.00  String#initialize_copy
+  0.11     0.09      0.00       30     0.00     0.00  Kernel#is_a?
+  0.11     0.09      0.00       10     0.01     0.01  String#scan
+  0.10     0.09      0.00       27     0.00     0.00  Integer#^
+  0.10     0.09      0.00        3     0.03     0.03  IO#write
+  0.10     0.09      0.00        2     0.05     0.06  Gem::Specification#add_bindir
+  0.10     0.09      0.00       20     0.00     0.00  Array#reverse
+  0.09     0.09      0.00        6     0.01     0.72  Enumerable#all?
+  0.09     0.09      0.00        6     0.01     0.66  Comparable#>=
+  0.09     0.09      0.00        3     0.03     0.13  Kernel#open
+  0.09     0.09      0.00        2     0.04     0.75  Gem::Requirement#==
+  0.09     0.09      0.00        4     0.02     0.06  Gem::Requirement#prerelease?
+  0.09     0.09      0.00        4     0.02     0.02  Module#extend_object
+  0.08     0.09      0.00       22     0.00     0.00  Gem::StubSpecification#data
+  0.08     0.09      0.00        3     0.03     0.03  SystemCallError#initialize
+  0.08     0.09      0.00       18     0.00     0.00  Kernel#class
+  0.08     0.09      0.00       21     0.00     0.00  Thread.current
+  0.08     0.09      0.00        3     0.02     0.03  RDoc::Store#cache_path
+  0.08     0.09      0.00       10     0.01     0.01  Array#slice!
+  0.07     0.09      0.00       10     0.01     0.01  Array#concat
+  0.07     0.09      0.00       16     0.00     0.00  Gem::Specification.load
+  0.07     0.09      0.00        8     0.01     0.01  IO#set_encoding
+  0.07     0.09      0.00        8     0.01     0.01  Array#flatten
+  0.07     0.09      0.00       17     0.00     0.00  Module#private_class_method
+  0.07     0.09      0.00        4     0.02     0.02  Array#join
+  0.06     0.09      0.00        7     0.01     0.01  Module#private
+  0.06     0.09      0.00        2     0.03     0.03  Kernel#singleton_methods
+  0.06     0.09      0.00        4     0.01     0.02  Gem::Version#prerelease?
+  0.06     0.09      0.00        2     0.03     0.11  Gem::Dependency#prerelease?
+  0.06     0.09      0.00       14     0.00     0.00  Gem::Specification#platform
+  0.05     0.09      0.00        1     0.05     0.59  Hash#each_value
+  0.05     0.09      0.00        3     0.02     0.05  IO#puts
+  0.05     0.09      0.00        2     0.03     0.08  Gem::Specification#activate_dependencies
+  0.05     0.09      0.00        2     0.02     0.54  Gem::Specification#activate
+  0.05     0.09      0.00        3     0.02     0.06  Kernel#puts
+  0.05     0.09      0.00       14     0.00     0.00  Gem.default_dirs
+  0.05     0.09      0.00        6     0.01     0.01  Array#==
+  0.05     0.09      0.00        4     0.01     0.01  Regexp#=~
+  0.04     0.09      0.00        7     0.01     0.01  Gem.find_unresolved_default_spec
+  0.04     0.09      0.00       12     0.00     0.00  Kernel#untaint
+  0.04     0.09      0.00        4     0.01     0.01  #<Object:0x00005615b0393ea8>.[]
+  0.04     0.09      0.00        2     0.02     2.19  Enumerable#find_all
+  0.04     0.09      0.00        2     0.02     0.07  Enumerable#partition
+  0.04     0.09      0.00        6     0.01     0.01  Gem::Dependency#requirement
+  0.04     0.09      0.00       10     0.00     0.00  Kernel#freeze
+  0.04     0.09      0.00        9     0.00     0.00  Kernel#respond_to?
+  0.04     0.09      0.00       10     0.00     0.00  Array#initialize_copy
+  0.04     0.09      0.00        9     0.00     0.00  Gem::Specification.unresolved_deps
+  0.04     0.09      0.00        2     0.02     0.20  Array#reject!
+  0.04     0.09      0.00       10     0.00     0.00  Gem::Dependency#runtime?
+  0.04     0.09      0.00        2     0.02     3.02  Gem::Dependency#to_specs
+  0.03     0.09      0.00        6     0.01     0.01  Gem::Version#_version
+  0.03     0.09      0.00        2     0.02     0.03  Enumerable#find
+  0.03     0.09      0.00        7     0.00     0.00  Thread::Mutex#lock
+  0.03     0.09      0.00        2     0.01     0.22  Gem::Requirement.default
+  0.03     0.09      0.00        6     0.00     0.00  Class#inherited
+  0.03     0.09      0.00        7     0.00     0.00  Module#append_features
+  0.03     0.09      0.00        1     0.03     0.03  Module#private_instance_methods
+  0.03     0.09      0.00        6     0.00     0.00  Array#uniq!
+  0.03     0.09      0.00        2     0.01     0.01  Gem::Specification.stubs_for
+  0.03     0.09      0.00        2     0.01     0.05  Gem::Specification#runtime_dependencies
+  0.03     0.09      0.00        2     0.01     0.56  Thread::Mutex#synchronize
+  0.03     0.09      0.00        6     0.00     0.00  Array#sort
+  0.03     0.09      0.00        7     0.00     0.00  Thread::Mutex#unlock
+  0.02     0.09      0.00        2     0.01     0.01  Array#-
+  0.02     0.09      0.00        2     0.01     0.01  String#to_str
+  0.02     0.09      0.00        2     0.01     0.38  Gem::Specification#raise_if_conflicts
+  0.02     0.09      0.00        7     0.00     0.00  Module#included
+  0.02     0.09      0.00        1     0.02     0.38  Kernel#loop
+  0.02     0.09      0.00        1     0.02     0.02  RDoc::RI::Paths.home_dir
+  0.02     0.09      0.00        4     0.00     0.00  Array#compact
+  0.02     0.09      0.00        6     0.00     0.00  Integer#<=>
+  0.02     0.09      0.00        5     0.00     0.00  Hash#delete
+  0.02     0.09      0.00        1     0.02     0.02  Numeric#nonzero?
+  0.02     0.09      0.00        1     0.02     0.02  Kernel#methods
+  0.02     0.09      0.00        1     0.02     0.03  RDoc::RI::Paths.site_dir
+  0.02     0.09      0.00        4     0.00     0.00  Module#extended
+  0.02     0.09      0.00        1     0.02     0.02  RDoc::RI::Paths.system_dir
+  0.02     0.09      0.00        4     0.00     0.00  Hash#keys
+  0.02     0.09      0.00        1     0.02     0.68  RDoc::RI::Driver#run
+  0.02     0.09      0.00        2     0.01     0.06  Gem::Specification#add_self_to_load_path
+  0.02     0.09      0.00        1     0.02    11.55  Enumerable#inject
+  0.02     0.09      0.00        4     0.00     0.00  Kernel#instance_variable_defined?
+  0.02     0.09      0.00        3     0.00     0.00  Exception#initialize
+  0.02     0.09      0.00        4     0.00     0.00  Array#last
+  0.02     0.09      0.00        4     0.00     0.00  Array#shift
+  0.01     0.09      0.00        2     0.01     0.01  String#split
+  0.01     0.09      0.00        4     0.00     0.00  String#to_s
+  0.01     0.09      0.00        3     0.00     0.00  Exception#exception
+  0.01     0.09      0.00        4     0.00     0.00  Gem::Specification#dependencies
+  0.01     0.09      0.00        1     0.01     0.01  Array#&
+  0.01     0.09      0.00        2     0.01     0.01  String#upcase
+  0.01     0.09      0.00        3     0.00     0.00  Exception#backtrace
+  0.01     0.09      0.00        1     0.01     0.01  Enumerable#sort_by
+  0.01     0.09      0.00        2     0.01     0.01  Kernel#Array
+  0.01     0.09      0.00        2     0.00     0.00  Array#first
+  0.01     0.09      0.00        3     0.00     0.00  SystemCallError.===
+  0.01     0.09      0.00        2     0.00     0.00  Array#uniq
+  0.01     0.09      0.00        2     0.00     0.00  String#===
+  0.01     0.09      0.00        1     0.01     0.01  File.expand_path
+  0.01     0.09      0.00        2     0.00     0.00  Kernel#kind_of?
+  0.01     0.09      0.00        2     0.00     0.00  Gem.platforms
+  0.01     0.09      0.00        2     0.00     0.00  Kernel#block_given?
+  0.01     0.09      0.00        1     0.01    18.18  Enumerable#map
+  0.01     0.09      0.00        1     0.01     0.01  Readline.completion_proc=
+  0.00     0.09      0.00        1     0.00     0.00  Numeric#zero?
+  0.00     0.09      0.00        1     0.00     0.00  Gem::Specification.stubs
+  0.00     0.09      0.00        1     0.00     0.00  Comparable#==
+  0.00     0.09      0.00        1     0.00     0.00  Kernel#method
+  0.00     0.09      0.00        1     0.00     0.00  TracePoint#disable
+  0.00     0.09      0.00        1     0.00     0.00  Hash#key?
+  0.00     0.09      0.00        1     0.00     0.00  BasicObject#==
+  0.00     0.09      0.00       23     0.00     0.00  File.exist?
+  0.00     0.09      0.00        1     0.00     0.00  Hash#each
+  0.00     0.09      0.00        1     0.00    92.74  #toplevel
+
+Generating RI format into /root/mugen/testcases/cli-test/ruby/oe_test_ri/doc...
+Parsing sources...
+{:ancestors=>{"Customer"=>["Object"]},
+ :attributes=>{},
+ :class_methods=>{"Customer"=>["new"]},
+ :c_class_variables=>{},
+ :c_singleton_class_variables=>{},
+ :encoding=>#<Encoding:UTF-8>,
+ :instance_methods=>{"Customer"=>["display_details", "total_no_of_customers"]},
+ :main=>nil,
+ :modules=>["Customer"],
+ :pages=>[],
+ :title=>nil}
+Sun Feb  6 21:18:01 2022 - INFO  - End of the test.
+Sun Feb  6 21:18:01 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:18:01 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:18:02 2022 - INFO  - Finish restoring the test environment.
