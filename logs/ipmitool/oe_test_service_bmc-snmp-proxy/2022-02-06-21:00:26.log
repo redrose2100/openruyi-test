@@ -1,0 +1,26 @@
+Sun Feb  6 21:00:27 2022 - INFO  - Start environmental preparation.
+Sun Feb  6 21:01:11 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 21:01:11 2022 - INFO  - Start testing...
+A dependency job for bmc-snmp-proxy.service failed. See 'journalctl -xe' for details.
+Sun Feb  6 21:01:27 2022 - ERROR - bmc-snmp-proxy.service restart failed
+Sun Feb  6 21:01:32 2022 - ERROR - bmc-snmp-proxy.service restart failed
+     Active: inactive (dead)
+A dependency job for bmc-snmp-proxy.service failed. See 'journalctl -xe' for details.
+Sun Feb  6 21:01:37 2022 - ERROR - bmc-snmp-proxy.service start failed
+Sun Feb  6 21:01:42 2022 - ERROR - bmc-snmp-proxy.service start failed
+/etc/systemd/system/multi-user.target.wants/bmc-snmp-proxy.service
+Removed /etc/systemd/system/multi-user.target.wants/bmc-snmp-proxy.service.
+find: ‘/etc/systemd/system/multi-user.target.wants/bmc-snmp-proxy.service’: No such file or directory
+Feb 06 21:01:27 10.0.2.15 systemd[1]: Dependency failed for Setup SNMP proxy to BMC.
+Feb 06 21:01:27 10.0.2.15 systemd[1]: bmc-snmp-proxy.service: Job bmc-snmp-proxy.service/start failed with result 'dependency'.
+Feb 06 21:01:37 10.0.2.15 systemd[1]: Dependency failed for Setup SNMP proxy to BMC.
+Feb 06 21:01:37 10.0.2.15 systemd[1]: bmc-snmp-proxy.service: Job bmc-snmp-proxy.service/start failed with result 'dependency'.
+Sun Feb  6 21:01:43 2022 - ERROR - There is an error message for the log of bmc-snmp-proxy.service
+A dependency job for bmc-snmp-proxy.service failed. See 'journalctl -xe' for details.
+Failed to reload bmc-snmp-proxy.service: Job type reload is not applicable for unit bmc-snmp-proxy.service.
+     Active: inactive (dead)
+Sun Feb  6 21:01:43 2022 - ERROR - bmc-snmp-proxy.service reload causes the service status to change
+Sun Feb  6 21:01:43 2022 - INFO  - Finish test!
+Sun Feb  6 21:01:43 2022 - ERROR - failed to execute the case.
+Sun Feb  6 21:01:43 2022 - INFO  - start environment cleanup.
+Sun Feb  6 21:01:45 2022 - INFO  - Finish environment cleanup!

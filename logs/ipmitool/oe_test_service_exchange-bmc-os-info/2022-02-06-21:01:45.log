@@ -1,0 +1,22 @@
+Sun Feb  6 21:01:45 2022 - INFO  - Start environmental preparation.
+Sun Feb  6 21:01:52 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 21:01:52 2022 - INFO  - Start testing...
+Job for exchange-bmc-os-info.service failed because the control process exited with error code.
+See "systemctl status exchange-bmc-os-info.service" and "journalctl -xe" for details.
+Sun Feb  6 21:02:07 2022 - ERROR - exchange-bmc-os-info.service restart failed
+Sun Feb  6 21:02:13 2022 - ERROR - exchange-bmc-os-info.service restart failed
+Sun Feb  6 21:02:18 2022 - ERROR - exchange-bmc-os-info.service stop failed
+Job for exchange-bmc-os-info.service failed because the control process exited with error code.
+See "systemctl status exchange-bmc-os-info.service" and "journalctl -xe" for details.
+Sun Feb  6 21:02:18 2022 - ERROR - exchange-bmc-os-info.service start failed
+Sun Feb  6 21:02:23 2022 - ERROR - exchange-bmc-os-info.service start failed
+/etc/systemd/system/multi-user.target.wants/exchange-bmc-os-info.service
+Removed /etc/systemd/system/multi-user.target.wants/exchange-bmc-os-info.service.
+find: ‘/etc/systemd/system/multi-user.target.wants/exchange-bmc-os-info.service’: No such file or directory
+Job for exchange-bmc-os-info.service failed because the control process exited with error code.
+See "systemctl status exchange-bmc-os-info.service" and "journalctl -xe" for details.
+Failed to reload exchange-bmc-os-info.service: Job type reload is not applicable for unit exchange-bmc-os-info.service.
+Sun Feb  6 21:02:24 2022 - INFO  - Finish test!
+Sun Feb  6 21:02:24 2022 - ERROR - failed to execute the case.
+Sun Feb  6 21:02:24 2022 - INFO  - start environment cleanup.
+Sun Feb  6 21:02:25 2022 - INFO  - Finish environment cleanup!

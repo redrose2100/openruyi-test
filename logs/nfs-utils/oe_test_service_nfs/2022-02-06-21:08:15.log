@@ -1,0 +1,12 @@
+Sun Feb  6 21:08:15 2022 - INFO  - Start environmental preparation.
+Sun Feb  6 21:08:25 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 21:08:25 2022 - INFO  - Start testing...
+     Active: active (exited) since Sun 2022-02-06 21:08:26 CST; 5s ago
+     Active: inactive (dead) since Sun 2022-02-06 21:08:31 CST; 5s ago
+     Active: active (exited) since Sun 2022-02-06 21:08:37 CST; 5s ago
+Sun Feb  6 21:08:42 2022 - INFO  - Unit is indirect, ignoring.
+     Active: active (exited) since Sun 2022-02-06 21:08:37 CST; 5s ago
+Sun Feb  6 21:08:43 2022 - INFO  - Finish test!
+Sun Feb  6 21:08:43 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:08:43 2022 - INFO  - start environment cleanup.
+Sun Feb  6 21:08:45 2022 - INFO  - Finish environment cleanup!

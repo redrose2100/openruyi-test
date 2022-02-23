@@ -1,0 +1,20 @@
+Sun Feb  6 21:04:30 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:04:40 2022 - INFO  - End to prepare the test environment.
+Sun Feb  6 21:04:40 2022 - INFO  - Start to run test.
+Generating a 3072 bit RSA private key...
+Generating a 3072 bit RSA private key...
+Generating a 3072 bit RSA private key...
+Generating a random key for user 'rich'
+Key stored to /tmp/keys/keys.psk
+nbdkit: debug: TLS disabled: could not load TLS certificates
+nbdkit: debug: registering plugin /usr/lib64/nbdkit/plugins/nbdkit-example1-plugin.so
+nbdkit: debug: registered plugin /usr/lib64/nbdkit/plugins/nbdkit-example1-plugin.so (name example1)
+nbdkit: debug: example1: load
+nbdkit: debug: example1: config_complete
+nbdkit: debug: bound to IP address <any>:10809 (2 socket(s))
+nbdkit: debug: forked into background (new pid = 8978)
+nbdkit 1.6.2
+Sun Feb  6 21:04:42 2022 - INFO  - End to run test.
+Sun Feb  6 21:04:42 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:04:42 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:04:43 2022 - INFO  - End to restore the test environment.

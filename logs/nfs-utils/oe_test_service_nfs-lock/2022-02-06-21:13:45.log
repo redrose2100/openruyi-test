@@ -1,0 +1,13 @@
+Sun Feb  6 21:13:45 2022 - INFO  - Start environmental preparation.
+Sun Feb  6 21:13:54 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 21:13:54 2022 - INFO  - Start testing...
+     Active: active (running) since Sun 2022-02-06 21:13:54 CST; 5s ago
+     Active: inactive (dead) since Sun 2022-02-06 21:13:59 CST; 5s ago
+     Active: active (running) since Sun 2022-02-06 21:14:05 CST; 5s ago
+Sun Feb  6 21:14:10 2022 - INFO  - Unit is indirect, ignoring.
+Failed to reload nfs-lock.service: Job type reload is not applicable for unit rpc-statd.service.
+     Active: active (running) since Sun 2022-02-06 21:14:05 CST; 5s ago
+Sun Feb  6 21:14:10 2022 - INFO  - Finish test!
+Sun Feb  6 21:14:10 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:14:10 2022 - INFO  - start environment cleanup.
+Sun Feb  6 21:14:12 2022 - INFO  - Finish environment cleanup!

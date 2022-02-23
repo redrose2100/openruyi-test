@@ -1,0 +1,15 @@
+Sun Feb  6 21:04:55 2022 - INFO  - Start environmental preparation.
+Sun Feb  6 21:05:03 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 21:05:03 2022 - INFO  - Start testing...
+     Active: active (exited) since Sun 2022-02-06 21:05:03 CST; 5s ago
+     Active: inactive (dead)
+     Active: active (exited) since Sun 2022-02-06 21:05:13 CST; 5s ago
+/etc/systemd/system/multi-user.target.wants/lvmlocks.service
+Removed /etc/systemd/system/multi-user.target.wants/lvmlocks.service.
+find: ‘/etc/systemd/system/multi-user.target.wants/lvmlocks.service’: No such file or directory
+Failed to reload lvmlocks.service: Job type reload is not applicable for unit lvmlocks.service.
+     Active: active (exited) since Sun 2022-02-06 21:05:13 CST; 5s ago
+Sun Feb  6 21:05:19 2022 - INFO  - Finish test!
+Sun Feb  6 21:05:19 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:05:19 2022 - INFO  - start environment cleanup.
+Sun Feb  6 21:05:21 2022 - INFO  - Finish environment cleanup!

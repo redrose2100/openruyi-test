@@ -1,0 +1,182 @@
+Sun Feb  6 21:18:19 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:18:28 2022 - INFO  - Finish preparing the test environment.
+Sun Feb  6 21:18:28 2022 - INFO  - Start to run test.
+6.0.1.1
+Usage: rdoc [options] [names...]
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc...
+Parsing sources...
+Parsing sources...
+Parsing sources...
+100% [ 1/ 1]  ../common/main.rb
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc...
+Copying static files
+mkdir -p ./css
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/css/fonts.css ./css/fonts.css
+mkdir -p ./fonts
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/fonts/Lato-Light.ttf ./fonts/Lato-Light.ttf
+mkdir -p ./fonts
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/fonts/Lato-LightItalic.ttf ./fonts/Lato-LightItalic.ttf
+mkdir -p ./fonts
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/fonts/Lato-Regular.ttf ./fonts/Lato-Regular.ttf
+mkdir -p ./fonts
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/fonts/Lato-RegularItalic.ttf ./fonts/Lato-RegularItalic.ttf
+mkdir -p ./fonts
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/fonts/SourceCodePro-Bold.ttf ./fonts/SourceCodePro-Bold.ttf
+mkdir -p ./fonts
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/fonts/SourceCodePro-Regular.ttf ./fonts/SourceCodePro-Regular.ttf
+mkdir -p ./css
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/css/rdoc.css ./css/rdoc.css
+mkdir -p js
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/js/darkfish.js js/darkfish.js
+mkdir -p js
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/js/search.js js/search.js
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/wrench_orange.png images/wrench_orange.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/bug.png images/bug.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/add.png images/add.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/ruby.png images/ruby.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/brick.png images/brick.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/macFFBgHack.png images/macFFBgHack.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/arrow_up.png images/arrow_up.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/wrench.png images/wrench.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/bullet_toggle_plus.png images/bullet_toggle_plus.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/tag_blue.png images/tag_blue.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/plugin.png images/plugin.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/date.png images/date.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/find.png images/find.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/tag_green.png images/tag_green.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/transparent.png images/transparent.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/loadingAnimation.gif images/loadingAnimation.gif
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/delete.png images/delete.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/package.png images/package.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/brick_link.png images/brick_link.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/zoom.png images/zoom.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/page_green.png images/page_green.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/page_white_width.png images/page_white_width.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/bullet_toggle_minus.png images/bullet_toggle_minus.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/page_white_text.png images/page_white_text.png
+mkdir -p images
+ln /usr/share/gems/gems/rdoc-6.0.1.1/lib/rdoc/generator/template/darkfish/images/bullet_black.png images/bullet_black.png
+Rendering the index page...
+Outputting to /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/index.html
+Generating class documentation in /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc
+  working on Customer (Customer.html)
+  rendering /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/Customer.html
+Outputting to /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/Customer.html
+Generating file documentation in /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc
+  working on ../common/main.rb (/root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/__/common/main_rb.html)
+Rendering the Table of Contents...
+Outputting to /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/table_of_contents.html
+Generating JSON index
+  writing search index to js/search_index.js
+  generating class search index
+    Customer
+  generating method search index
+    Customer#display_details
+    Customer::new
+    Customer#total_no_of_customers
+  generating pages search index
+mkdir -p /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/js
+install -c -m 644 js/searcher.js /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/js/searcher.js
+install -c -m 644 js/navigation.js /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/js/navigation.js
+Compressing generated JSON index
+Reading the JSON index file from /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/js/search_index.js
+Writing gzipped search index to /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/js/search_index.js.gz
+Reading the original js file from /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/js/searcher.js
+Writing gzipped file to /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/js/searcher.js.gz
+Reading the original js file from /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/js/navigation.js
+Writing gzipped file to /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc/js/navigation.js.gz
+
+
+  Files:      1
+
+  Classes:    1 (1 undocumented)
+  Modules:    0 (0 undocumented)
+  Constants:  0 (0 undocumented)
+  Attributes: 0 (0 undocumented)
+  Methods:    3 (3 undocumented)
+
+  Total:      4 (4 undocumented)
+    0.00% documented
+
+  Elapsed: 0.1s
+
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc...
+Parsing sources...
+
+Generating RI format into /root/.rdoc...
+Parsing sources...
+
+Generating RI format into /usr/share/ri/site...
+Parsing sources...
+Parsing sources...
+100% [ 1/ 1]  ../common/main.rb
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc...
+
+
+  Files:      1
+
+  Classes:    1 (1 undocumented)
+  Modules:    0 (0 undocumented)
+  Constants:  0 (0 undocumented)
+  Attributes: 0 (0 undocumented)
+  Methods:    3 (3 undocumented)
+
+  Total:      4 (4 undocumented)
+    0.00% documented
+
+  Elapsed: 0.1s
+
+<meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta charset="UTF-8">
+Parsing sources...
+100% [ 1/ 1]  ../common/main.rb
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_01/doc...
+
+
+  Files:      1
+
+  Classes:    1 (1 undocumented)
+  Modules:    0 (0 undocumented)
+  Constants:  0 (0 undocumented)
+  Attributes: 0 (0 undocumented)
+  Methods:    3 (3 undocumented)
+
+  Total:      4 (4 undocumented)
+    0.00% documented
+
+  Elapsed: 0.1s
+
+Sun Feb  6 21:18:33 2022 - INFO  - End of the test.
+Sun Feb  6 21:18:33 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:18:33 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:18:35 2022 - INFO  - Finish restoring the test environment.

@@ -1,0 +1,12 @@
+Sun Feb  6 20:52:08 2022 - INFO  - Start testing...
+     Active: active (running) since Sun 2022-02-06 20:52:08 CST; 5s ago
+     Active: inactive (dead) since Sun 2022-02-06 20:52:13 CST; 5s ago
+     Active: active (running) since Sun 2022-02-06 20:52:18 CST; 5s ago
+find: ‘/etc/systemd/system/multi-user.target.wants/restorecond.service’: No such file or directory
+Created symlink /etc/systemd/system/multi-user.target.wants/restorecond.service → /usr/lib/systemd/system/restorecond.service.
+/etc/systemd/system/multi-user.target.wants/restorecond.service
+Failed to reload restorecond.service: Job type reload is not applicable for unit restorecond.service.
+     Active: active (running) since Sun 2022-02-06 20:52:18 CST; 5s ago
+Sun Feb  6 20:52:24 2022 - INFO  - Finish test!
+Sun Feb  6 20:52:24 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 20:52:24 2022 - INFO  - oe_test_service_restorecond.sh post_test

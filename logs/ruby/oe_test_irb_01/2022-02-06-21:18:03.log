@@ -1,0 +1,59 @@
+Sun Feb  6 21:18:03 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:18:15 2022 - INFO  - Finish preparing the test environment.
+Sun Feb  6 21:18:15 2022 - INFO  - Start to run test.
+irb 0.9.6(09/06/30)
+Usage:  irb.rb [options] [programfile] [arguments]
+  -f		    Suppress read of ~/.irbrc
+  -d                Set $DEBUG to true (same as `ruby -d')
+  -r load-module    Same as `ruby -r'
+  -I path           Specify $LOAD_PATH directory
+  -U                Same as `ruby -U`
+  -E enc            Same as `ruby -E`
+  -w                Same as `ruby -w`
+  -W[level=2]       Same as `ruby -W`
+  --context-mode n  Set n[0-3] to method to create Binding Object,
+  --echo            Show result(default)
+  --noecho          Don't show result
+  --inspect	    Use `inspect' for output (default except for bc mode)
+  --noinspect	    Don't use inspect for output
+  --readline        Use Readline extension module
+  --noreadline	    Don't use Readline extension module
+  --prompt prompt-mode/--prompt-mode prompt-mode
+		    Switch prompt mode. Pre-defined prompt modes are
+		    `default', `simple', `xmp' and `inf-ruby'
+  --inf-ruby-mode   Use prompt appropriate for inf-ruby-mode on emacs.
+		    Suppresses --readline.
+  --sample-book-mode/--simple-prompt
+  --noprompt        No prompt mode
+  --single-irb      Share self with sub-irb.
+  --tracer          Display trace for each execution of commands.
+  --back-trace-limit n
+  --irb_debug n	    Set internal debug level to n (not for popular use)
+  --verbose         Show details
+  --noverbose       Don't show details
+  -v, --version	    Print the version of irb
+  -h, --help        Print help
+  --                Separate options of irb from the list of command-line args
+Exception `LoadError' at /usr/share/ruby/irb/init.rb:228 - cannot load such file -- /root/mugen/testcases/cli-test/ruby/oe_test_irb_01/.irbrc
+hello.rb(main):001:0> #!/usr/bin/ruby
+hello.rb(main):002:0> 
+hello.rb(main):003:0> puts "Hello World!";hello.rb(main):003:0> 
+hello.rb(main):003:0> 
+hello.rb(main):001:0> #!/usr/bin/ruby
+hello.rb(main):002:0> 
+hello.rb(main):003:0> puts "Hello World!";hello.rb(main):003:0> 
+hello.rb(main):003:0> 
+NameError (uninitialized constant Prime)
+2, 3, 5, 7
+test.rb(main):006:0> puts "Hello World!";test.rb(main):006:0> 
+Hello World!
+hello.rb(main):003:0> puts "Hello World!";hello.rb(main):003:0> 
+Hello World!
+hello.rb(main):003:0> puts "Hello World!";hello.rb(main):003:0> 
+hello.rb(main):003:0> puts "Hello World!";hello.rb(main):003:0> 
+Hello World!
+test.rb(main):005:0> puts Prime.each(10).to_a.join(", ");
+Sun Feb  6 21:18:17 2022 - INFO  - End of the test.
+Sun Feb  6 21:18:17 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:18:17 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:18:18 2022 - INFO  - Finish restoring the test environment.

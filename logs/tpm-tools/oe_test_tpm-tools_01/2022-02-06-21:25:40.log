@@ -1,0 +1,749 @@
+Sun Feb  6 21:25:40 2022 - INFO  - Start to prepare the test environment.
+--2022-02-06 21:26:55--  https://github.com/PeterHuewe/tpm-emulator/archive/v0.7.5.zip
+Resolving github.com (github.com)... 20.205.243.166
+Connecting to github.com (github.com)|20.205.243.166|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://codeload.github.com/PeterHuewe/tpm-emulator/zip/v0.7.5 [following]
+--2022-02-06 21:26:57--  https://codeload.github.com/PeterHuewe/tpm-emulator/zip/v0.7.5
+Resolving codeload.github.com (codeload.github.com)... 20.205.243.165
+Connecting to codeload.github.com (codeload.github.com)|20.205.243.165|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/zip]
+Saving to: ‘v0.7.5.zip’
+
+     0K .......... .......... .......... .......... ..........  353K
+    50K .......... .......... .......... .......... ..........  410K
+   100K .......... .......... .......... .......... ..........  781K
+   150K .......... .......... .......... .......... ..........  393K
+   200K .......... .......... .......... .......... ..........  785K
+   250K .......... .......... .......... .                      516K=0.6s
+
+2022-02-06 21:26:58 (486 KB/s) - ‘v0.7.5.zip’ saved [288132]
+
+Archive:  v0.7.5.zip
+ff993d1f3c1435f7306eb759e6ff176f72da2b21
+   creating: tpm-emulator-0.7.5/
+ extracting: tpm-emulator-0.7.5/.gitignore  
+  inflating: tpm-emulator-0.7.5/.travis.yml  
+  inflating: tpm-emulator-0.7.5/AUTHORS  
+  inflating: tpm-emulator-0.7.5/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/ChangeLog  
+  inflating: tpm-emulator-0.7.5/LICENSE  
+  inflating: tpm-emulator-0.7.5/README  
+  inflating: tpm-emulator-0.7.5/build.bat  
+  inflating: tpm-emulator-0.7.5/build.sh  
+  inflating: tpm-emulator-0.7.5/config.h.in  
+   creating: tpm-emulator-0.7.5/crypto/
+  inflating: tpm-emulator-0.7.5/crypto/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/crypto/bn.h  
+  inflating: tpm-emulator-0.7.5/crypto/bn_gmp.c  
+  inflating: tpm-emulator-0.7.5/crypto/bn_openssl.c  
+  inflating: tpm-emulator-0.7.5/crypto/hmac.c  
+  inflating: tpm-emulator-0.7.5/crypto/hmac.h  
+  inflating: tpm-emulator-0.7.5/crypto/rc4.c  
+  inflating: tpm-emulator-0.7.5/crypto/rc4.h  
+  inflating: tpm-emulator-0.7.5/crypto/rsa.c  
+  inflating: tpm-emulator-0.7.5/crypto/rsa.h  
+  inflating: tpm-emulator-0.7.5/crypto/sha1.c  
+  inflating: tpm-emulator-0.7.5/crypto/sha1.h  
+   creating: tpm-emulator-0.7.5/mtm/
+  inflating: tpm-emulator-0.7.5/mtm/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_capability.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_cmd_handler.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_commands.h  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_counter.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_data.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_data.h  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_eviction.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_handles.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_handles.h  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_integrity.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_marshalling.c  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_marshalling.h  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_structures.h  
+  inflating: tpm-emulator-0.7.5/mtm/mtm_verification.c  
+   creating: tpm-emulator-0.7.5/tddl/
+  inflating: tpm-emulator-0.7.5/tddl/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/tddl/tddl-tpm-emulator.h  
+  inflating: tpm-emulator-0.7.5/tddl/tddl.c  
+  inflating: tpm-emulator-0.7.5/tddl/tddl_unix.h  
+  inflating: tpm-emulator-0.7.5/tddl/tddl_windows.h  
+  inflating: tpm-emulator-0.7.5/tddl/test_tddl.c  
+   creating: tpm-emulator-0.7.5/tpm/
+  inflating: tpm-emulator-0.7.5/tpm/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_audit.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_authorization.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_capability.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_cmd_handler.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_commands.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_context.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_counter.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_credentials.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_crypto.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_daa.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_data.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_data.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_delegation.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_deprecated.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_emulator.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_emulator_extern.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_emulator_extern.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_error.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_eviction.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_handles.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_handles.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_identity.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_integrity.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_maintenance.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_management.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_marshalling.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_marshalling.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_migration.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_nv_storage.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_owner.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_startup.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_storage.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_structures.h  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_testing.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_ticks.c  
+  inflating: tpm-emulator-0.7.5/tpm/tpm_transport.c  
+   creating: tpm-emulator-0.7.5/tpmd/
+  inflating: tpm-emulator-0.7.5/tpmd/CMakeLists.txt  
+   creating: tpm-emulator-0.7.5/tpmd/unix/
+  inflating: tpm-emulator-0.7.5/tpmd/unix/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/tpmd/unix/tpmd.c  
+   creating: tpm-emulator-0.7.5/tpmd/windows/
+  inflating: tpm-emulator-0.7.5/tpmd/windows/CMakeLists.txt  
+  inflating: tpm-emulator-0.7.5/tpmd/windows/control_tpmd.bat  
+  inflating: tpm-emulator-0.7.5/tpmd/windows/tpmd.c  
+   creating: tpm-emulator-0.7.5/tpmd_dev/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/CMakeLists.txt  
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/English.lproj/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/English.lproj/InfoPlist.strings  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/Info.plist  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/Makefile  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.c  
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/TemplateIcon.tiff  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.pbxproj  
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/contents.xcworkspacedata  
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/xcuserdata/
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/xcuserdata/admin.xcuserdatad/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/xcuserdata/admin.xcuserdatad/UserInterfaceState.xcuserstate  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/project.xcworkspace/xcuserdata/admin.xcuserdatad/WorkspaceSettings.xcsettings  
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/xcuserdata/
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/xcuserdata/admin.xcuserdatad/
+   creating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/xcuserdata/admin.xcuserdatad/xcschemes/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/xcuserdata/admin.xcuserdatad/xcschemes/tpm_bridge.xcscheme  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/darwin/tpm_bridge.xcodeproj/xcuserdata/admin.xcuserdatad/xcschemes/xcschememanagement.plist  
+   creating: tpm-emulator-0.7.5/tpmd_dev/linux/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/linux/Makefile  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/linux/tpmd_dev.c  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/linux/tpmd_dev.rules.in  
+   creating: tpm-emulator-0.7.5/tpmd_dev/openbsd/
+  inflating: tpm-emulator-0.7.5/tpmd_dev/openbsd/Makefile  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/openbsd/tpmd_dev.c  
+  inflating: tpm-emulator-0.7.5/tpmd_dev/openbsd/tpmd_dev.h  
+-- The C compiler identification is GNU 9.3.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /root/mugen/testcases/cli-test/tpm-tools/oe_test_tpm-tools_01/tpm-emulator-0.7.5/build
+Scanning dependencies of target tpm
+[  2%] Building C object tpm/CMakeFiles/tpm.dir/tpm_audit.o
+[  4%] Building C object tpm/CMakeFiles/tpm.dir/tpm_authorization.o
+[  6%] Building C object tpm/CMakeFiles/tpm.dir/tpm_capability.o
+[  8%] Building C object tpm/CMakeFiles/tpm.dir/tpm_cmd_handler.o
+[ 11%] Building C object tpm/CMakeFiles/tpm.dir/tpm_context.o
+[ 13%] Building C object tpm/CMakeFiles/tpm.dir/tpm_counter.o
+[ 15%] Building C object tpm/CMakeFiles/tpm.dir/tpm_credentials.o
+[ 17%] Building C object tpm/CMakeFiles/tpm.dir/tpm_crypto.o
+[ 20%] Building C object tpm/CMakeFiles/tpm.dir/tpm_daa.o
+[ 22%] Building C object tpm/CMakeFiles/tpm.dir/tpm_data.o
+[ 24%] Building C object tpm/CMakeFiles/tpm.dir/tpm_delegation.o
+[ 26%] Building C object tpm/CMakeFiles/tpm.dir/tpm_deprecated.o
+[ 28%] Building C object tpm/CMakeFiles/tpm.dir/tpm_emulator_extern.o
+[ 31%] Building C object tpm/CMakeFiles/tpm.dir/tpm_error.o
+[ 33%] Building C object tpm/CMakeFiles/tpm.dir/tpm_eviction.o
+[ 35%] Building C object tpm/CMakeFiles/tpm.dir/tpm_handles.o
+[ 37%] Building C object tpm/CMakeFiles/tpm.dir/tpm_identity.o
+[ 40%] Building C object tpm/CMakeFiles/tpm.dir/tpm_integrity.o
+[ 42%] Building C object tpm/CMakeFiles/tpm.dir/tpm_maintenance.o
+[ 44%] Building C object tpm/CMakeFiles/tpm.dir/tpm_management.o
+[ 46%] Building C object tpm/CMakeFiles/tpm.dir/tpm_marshalling.o
+[ 48%] Building C object tpm/CMakeFiles/tpm.dir/tpm_migration.o
+[ 51%] Building C object tpm/CMakeFiles/tpm.dir/tpm_nv_storage.o
+[ 53%] Building C object tpm/CMakeFiles/tpm.dir/tpm_owner.o
+[ 55%] Building C object tpm/CMakeFiles/tpm.dir/tpm_startup.o
+[ 57%] Building C object tpm/CMakeFiles/tpm.dir/tpm_storage.o
+[ 60%] Building C object tpm/CMakeFiles/tpm.dir/tpm_testing.o
+[ 62%] Building C object tpm/CMakeFiles/tpm.dir/tpm_ticks.o
+[ 64%] Building C object tpm/CMakeFiles/tpm.dir/tpm_transport.o
+[ 66%] Linking C static library libtpm.a
+[ 66%] Built target tpm
+Scanning dependencies of target tpm_crypto
+[ 68%] Building C object crypto/CMakeFiles/tpm_crypto.dir/hmac.o
+[ 71%] Building C object crypto/CMakeFiles/tpm_crypto.dir/rc4.o
+[ 73%] Building C object crypto/CMakeFiles/tpm_crypto.dir/rsa.o
+[ 75%] Building C object crypto/CMakeFiles/tpm_crypto.dir/sha1.o
+[ 77%] Building C object crypto/CMakeFiles/tpm_crypto.dir/bn_gmp.o
+[ 80%] Linking C static library libtpm_crypto.a
+[ 80%] Built target tpm_crypto
+Scanning dependencies of target tddl-tpm-emulator_static
+[ 82%] Building C object tddl/CMakeFiles/tddl-tpm-emulator_static.dir/tddl.o
+[ 84%] Linking C static library libtddl-tpm-emulator.a
+[ 84%] Built target tddl-tpm-emulator_static
+Scanning dependencies of target test_tddl
+[ 86%] Building C object tddl/CMakeFiles/test_tddl.dir/test_tddl.o
+[ 88%] Linking C executable test_tddl
+[ 88%] Built target test_tddl
+Scanning dependencies of target tddl-tpm-emulator
+[ 91%] Building C object tddl/CMakeFiles/tddl-tpm-emulator.dir/tddl.o
+[ 93%] Linking C shared library libtddl-tpm-emulator.so
+[ 93%] Built target tddl-tpm-emulator
+Scanning dependencies of target tpmd_dev
+[ 95%] Generating linux/tpmd_dev.ko
+[ 95%] Built target tpmd_dev
+Scanning dependencies of target tpmd
+[ 97%] Building C object tpmd/unix/CMakeFiles/tpmd.dir/tpmd.o
+[100%] Linking C executable tpmd
+[100%] Built target tpmd
+[ 66%] Built target tpm
+[ 80%] Built target tpm_crypto
+[ 84%] Built target tddl-tpm-emulator_static
+[ 88%] Built target test_tddl
+[ 93%] Built target tddl-tpm-emulator
+[ 95%] Built target tpmd_dev
+[100%] Built target tpmd
+Install the project...
+-- Install configuration: ""
+-- Installing: /usr/local/lib64/libtddl-tpm-emulator.so.1.2.0.7
+-- Installing: /usr/local/lib64/libtddl-tpm-emulator.so.1.2
+-- Installing: /usr/local/lib64/libtddl-tpm-emulator.so
+-- Installing: /usr/local/lib64/libtddl-tpm-emulator.a
+-- Installing: /usr/local/include/tddl-tpm-emulator.h
+make[1]: Entering directory '/root/mugen/testcases/cli-test/tpm-tools/oe_test_tpm-tools_01/tpm-emulator-0.7.5/build/tpmd_dev/linux'
+  INSTALL /root/mugen/testcases/cli-test/tpm-tools/oe_test_tpm-tools_01/tpm-emulator-0.7.5/build/tpmd_dev/linux/tpmd_dev.ko
+At main.c:160:
+- SSL error:02001002:system library:fopen:No such file or directory: crypto/bio/bss_file.c:69
+- SSL error:2006D080:BIO routines:BIO_new_file:no such file: crypto/bio/bss_file.c:76
+sign-file: certs/signing_key.pem: No such file or directory
+  DEPMOD  4.19.140-2009.4.0.0048.oe1.x86_64
+make[1]: Leaving directory '/root/mugen/testcases/cli-test/tpm-tools/oe_test_tpm-tools_01/tpm-emulator-0.7.5/build/tpmd_dev/linux'
+-- Installing: /usr/local/bin/tpmd
+-- Set runtime path of "/usr/local/bin/tpmd" to ""
+tpmd.c:522: Info: starting TPM Emulator daemon (1.2.0.7-475)
+tpmd.c:102: Info: parsing options
+tpmd.c:228: Info: installing signal handlers
+tpmd.c:250: Info: daemonizing process
+tpmd.c:522: Info: starting TPM Emulator daemon (1.2.0.7-475)
+tpmd.c:102: Info: parsing options
+tpmd.c:228: Info: installing signal handlers
+tpmd.c:250: Info: daemonizing process
+20454
+20458
+  TPM 1.2 Version Info:
+  Chip Version:        1.2.0.7
+  Spec Level:          2
+  Errata Revision:     1
+  TPM Vendor ID:       ETHZ
+  TPM Version:         01010000
+  Manufacturer Info:   4554485a
+Public Endorsement Key:
+  Version:   01010000
+  Usage:     0x0002 (Legacy)
+  Flags:     0x00000000 (!VOLATILE, !MIGRATABLE, !REDIRECTION)
+  AuthUsage: 0x00 (Never)
+  Algorithm:         0x00000020 (RSA)
+  Encryption Scheme: 0x00000012 (RSAESOAEP_SHA1_MGF1)
+  Signature Scheme:  0x00000010 (None)
+  Key Size:          2048 bits
+  Public Key:
+	a8dba942 a8f3b806 85907693 adf774ec 3fd33d9d e82eff15 ed0ece5f 9392ebd1
+	962b7218 8179129d 9c40d71a 21da5f56 e0c94831 dd96dcbb 45c68ead 5823cbbe
+	bb132d6b 86c557f5 dd48c13d cd4dda81 c44317aa 05403362 0a59db28 cdb50831
+	bb06f5f7 71ae21a8 f22f0e17 805d9cdf aae98909 54652b46 fb9db200 70630d9a
+	6d3d5e11 786590e6 26ee77be 08ff0760 5accf10a bd44926b cab6ce66 f99340ae
+	f33e5302 3ca681b3 bead6e6c a6f0ebdf e9a28336 0e520d64 17d9ffa1 747c2bbc
+	6acce54e b452d9ec 43bd266a 2b19196e 97b81d9f 7be7322d dd7c51c8 e4f302d4
+	7c9044a0 33728175 a916275c 001d0781 d4f7accb fed66003 6f7acc00 d1c48537
+Sun Feb  6 21:27:43 2022 - INFO  - Finish preparing the test environment.
+Sun Feb  6 21:27:43 2022 - INFO  - Start to run test.
+spawn tpm_takeownership
+Enter owner password: 
+Confirm password: 
+Enter SRK password: 
+Confirm password: 
+Usage: tpm_version [options]
+	-h, --help
+		Display command usage info.
+	-v, --version
+		Display command version info.
+	-l, --log [none|error|info|debug]
+		Set logging level.
+tpm_version version: 1.3.9
+Tspi_Context_Create success
+Tspi_Context_Connect success
+Tspi_Context_GetTpmObject success
+Tspi_TPM_GetCapability success
+Trspi_UnloadBlob_CAP_VERSION_INFO success
+Tspi_TPM_GetCapability success
+Tspi_TPM_GetCapability success
+Tspi_Context_FreeMemory success
+Tspi_Context_Close success
+Usage: tpm_takeownership [options]
+	-h, --help
+		Display command usage info.
+	-v, --version
+		Display command version info.
+	-l, --log [none|error|info|debug]
+		Set logging level.
+	-u, --unicode
+		Use TSS UNICODE encoding for passwords to comply with applications using TSS popup boxes
+	-y, --owner-well-known
+		Set the owner secret to all zeros (20 bytes of zeros).
+	-z, --srk-well-known
+		Set the SRK secret to all zeros (20 bytes of zeros).
+tpm_takeownership version: 1.3.9
+spawn tpm_getpubek
+Tspi_TPM_GetPubEndorsementKey failed: 0x00000008 - layer=tpm, code=0008 (8), The TPM target command has been disabled
+Enter owner password: 
+Public Endorsement Key:
+  Version:   01010000
+  Usage:     0x0002 (Legacy)
+  Flags:     0x00000000 (!VOLATILE, !MIGRATABLE, !REDIRECTION)
+  AuthUsage: 0x00 (Never)
+  Algorithm:         0x00000020 (RSA)
+  Encryption Scheme: 0x00000012 (RSAESOAEP_SHA1_MGF1)
+  Signature Scheme:  0x00000010 (None)
+  Key Size:          2048 bits
+  Public Key:
+	a8dba942 a8f3b806 85907693 adf774ec 3fd33d9d e82eff15 ed0ece5f 9392ebd1
+	962b7218 8179129d 9c40d71a 21da5f56 e0c94831 dd96dcbb 45c68ead 5823cbbe
+	bb132d6b 86c557f5 dd48c13d cd4dda81 c44317aa 05403362 0a59db28 cdb50831
+	bb06f5f7 71ae21a8 f22f0e17 805d9cdf aae98909 54652b46 fb9db200 70630d9a
+	6d3d5e11 786590e6 26ee77be 08ff0760 5accf10a bd44926b cab6ce66 f99340ae
+	f33e5302 3ca681b3 bead6e6c a6f0ebdf e9a28336 0e520d64 17d9ffa1 747c2bbc
+	6acce54e b452d9ec 43bd266a 2b19196e 97b81d9f 7be7322d dd7c51c8 e4f302d4
+	7c9044a0 33728175 a916275c 001d0781 d4f7accb fed66003 6f7acc00 d1c48537
+spawn tpm_getpubek
+Tspi_TPM_GetPubEndorsementKey failed: 0x00000008 - layer=tpm, code=0008 (8), The TPM target command has been disabled
+Enter owner password: 
+Public Endorsement Key:
+  Version:   01010000
+  Usage:     0x0002 (Legacy)
+  Flags:     0x00000000 (!VOLATILE, !MIGRATABLE, !REDIRECTION)
+  AuthUsage: 0x00 (Never)
+  Algorithm:         0x00000020 (RSA)
+  Encryption Scheme: 0x00000012 (RSAESOAEP_SHA1_MGF1)
+  Signature Scheme:  0x00000010 (None)
+  Key Size:          2048 bits
+  Public Key:
+	a8dba942 a8f3b806 85907693 adf774ec 3fd33d9d e82eff15 ed0ece5f 9392ebd1
+	962b7218 8179129d 9c40d71a 21da5f56 e0c94831 dd96dcbb 45c68ead 5823cbbe
+	bb132d6b 86c557f5 dd48c13d cd4dda81 c44317aa 05403362 0a59db28 cdb50831
+	bb06f5f7 71ae21a8 f22f0e17 805d9cdf aae98909 54652b46 fb9db200 70630d9a
+	6d3d5e11 786590e6 26ee77be 08ff0760 5accf10a bd44926b cab6ce66 f99340ae
+	f33e5302 3ca681b3 bead6e6c a6f0ebdf e9a28336 0e520d64 17d9ffa1 747c2bbc
+	6acce54e b452d9ec 43bd266a 2b19196e 97b81d9f 7be7322d dd7c51c8 e4f302d4
+	7c9044a0 33728175 a916275c 001d0781 d4f7accb fed66003 6f7acc00 d1c48537
+Usage: tpm_getpubek [options]
+	-h, --help
+	-v, --version
+	-l, --log [none|error|info|debug]
+	-u, --unicode
+	-z, --well-known
+tpm_getpubek version: 1.3.9
+spawn tpm_getpubek -l debug
+Tspi_Context_Create success
+Tspi_Context_Connect success
+Tspi_Context_GetTpmObject success
+Tspi_TPM_GetPubEndorsementKey failed: 0x00000008 - layer=tpm, code=0008 (8), The TPM target command has been disabled
+Public PubEk access blocked, owner password required
+Enter owner password: 
+Tspi_GetPolicyObject success
+Tspi_Policy_SetSecret success
+Tspi_TPM_GetPubEndorsementKey success
+Public Endorsement Key:
+Tspi_GetAttribData success
+  Version:   01010000
+Tspi_GetAttribUint32 success
+  Usage:     0x0002 (Legacy)
+Tspi_GetAttribUint32 success
+  Flags:     0x00000000 (!VOLATILE, !MIGRATABLE, !REDIRECTION)
+Tspi_GetAttribUint32 success
+  AuthUsage: 0x00 (Never)
+Tspi_GetAttribUint32 success
+  Algorithm:         0x00000020 (RSA)
+Tspi_GetAttribUint32 success
+  Encryption Scheme: 0x00000012 (RSAESOAEP_SHA1_MGF1)
+Tspi_GetAttribUint32 success
+  Signature Scheme:  0x00000010 (None)
+Tspi_GetAttribUint32 success
+  Key Size:          2048 bits
+Tspi_GetAttribData success
+  Public Key:
+	a8dba942 a8f3b806 85907693 adf774ec 3fd33d9d e82eff15 ed0ece5f 9392ebd1
+	962b7218 8179129d 9c40d71a 21da5f56 e0c94831 dd96dcbb 45c68ead 5823cbbe
+	bb132d6b 86c557f5 dd48c13d cd4dda81 c44317aa 05403362 0a59db28 cdb50831
+	bb06f5f7 71ae21a8 f22f0e17 805d9cdf aae98909 54652b46 fb9db200 70630d9a
+	6d3d5e11 786590e6 26ee77be 08ff0760 5accf10a bd44926b cab6ce66 f99340ae
+	f33e5302 3ca681b3 bead6e6c a6f0ebdf e9a28336 0e520d64 17d9ffa1 747c2bbc
+	6acce54e b452d9ec 43bd266a 2b19196e 97b81d9f 7be7322d dd7c51c8 e4f302d4
+	7c9044a0 33728175 a916275c 001d0781 d4f7accb fed66003 6f7acc00 d1c48537
+tpm_getpubek succeeded
+Tspi_Context_FreeMemory success
+Tspi_Context_Close success
+spawn tpm_getpubek -l debug
+Tspi_Context_Create success
+Tspi_Context_Connect success
+Tspi_Context_GetTpmObject success
+Tspi_TPM_GetPubEndorsementKey failed: 0x00000008 - layer=tpm, code=0008 (8), The TPM target command has been disabled
+Public PubEk access blocked, owner password required
+Enter owner password: 
+Tspi_GetPolicyObject success
+Tspi_Policy_SetSecret success
+Tspi_TPM_GetPubEndorsementKey success
+Public Endorsement Key:
+Tspi_GetAttribData success
+  Version:   01010000
+Tspi_GetAttribUint32 success
+  Usage:     0x0002 (Legacy)
+Tspi_GetAttribUint32 success
+  Flags:     0x00000000 (!VOLATILE, !MIGRATABLE, !REDIRECTION)
+Tspi_GetAttribUint32 success
+  AuthUsage: 0x00 (Never)
+Tspi_GetAttribUint32 success
+  Algorithm:         0x00000020 (RSA)
+Tspi_GetAttribUint32 success
+  Encryption Scheme: 0x00000012 (RSAESOAEP_SHA1_MGF1)
+Tspi_GetAttribUint32 success
+  Signature Scheme:  0x00000010 (None)
+Tspi_GetAttribUint32 success
+  Key Size:          2048 bits
+Tspi_GetAttribData success
+  Public Key:
+	a8dba942 a8f3b806 85907693 adf774ec 3fd33d9d e82eff15 ed0ece5f 9392ebd1
+	962b7218 8179129d 9c40d71a 21da5f56 e0c94831 dd96dcbb 45c68ead 5823cbbe
+	bb132d6b 86c557f5 dd48c13d cd4dda81 c44317aa 05403362 0a59db28 cdb50831
+	bb06f5f7 71ae21a8 f22f0e17 805d9cdf aae98909 54652b46 fb9db200 70630d9a
+	6d3d5e11 786590e6 26ee77be 08ff0760 5accf10a bd44926b cab6ce66 f99340ae
+	f33e5302 3ca681b3 bead6e6c a6f0ebdf e9a28336 0e520d64 17d9ffa1 747c2bbc
+	6acce54e b452d9ec 43bd266a 2b19196e 97b81d9f 7be7322d dd7c51c8 e4f302d4
+	7c9044a0 33728175 a916275c 001d0781 d4f7accb fed66003 6f7acc00 d1c48537
+tpm_getpubek succeeded
+Tspi_Context_FreeMemory success
+Tspi_Context_Close success
+Usage: tpm_sealdata [options]
+	-h, --help
+	-v, --version
+	-l, --log [none|error|info|debug]
+	-i, --infile FILE
+	-o, --outfile FILE
+	-p, --pcr NUMBER
+	-z, --well-known
+	-u, --unicode
+tpm_sealdata version: 1.3.9
+spawn tpm_sealdata -l debug
+Tspi_Context_Create success
+Tspi_Context_Connect success
+Tspi_Context_GetTpmObject success
+Tspi_TPM_GetRandom success
+Tspi_Context_LoadKeyByUUID success
+Tspi_GetPolicyObject success
+Enter SRK password: 
+Tspi_Policy_SetSecret success
+Tspi_Context_CreateObject success
+Tspi_Context_CreateObject success
+Tspi_Policy_SetSecret success
+Tspi_Policy_AssignToObject success
+Tspi_Key_CreateKey success
+Tspi_Key_LoadKey success
+Tspi_Context_CreateObject success
+Tspi_Context_CreateObject success
+Tspi_Policy_SetSecret success
+Tspi_Policy_AssignToObject success
+Tspi_Data_Seal success
+Tspi_GetAttribData success
+Tspi_GetAttribData success
+-----BEGIN TSS-----
+-----TSS KEY-----
+AQEAAAARAAAABAEAAAABAAMAAQAAAAwAAAgAAAAAAgAAAAAAAAAAAAABAM5nEyIG
+HWOoIS5SVJ+0Hxx7fZAe/1lXA0PC7jfbk7p2StnmS/3ny5JiAdZjWKajacbtwlTi
+WopmL386I5UMaXnqKsxD6tV5PuINFFNeyoi2qxw+NWTvsDlm5WFeF81U8+XgGwlY
+wPmivGuNfEBFZekamURFh+r236VX5RNXShzf8usudE2NEu/DiQsnxJ8jcJkn9vMP
+JmLrGBeZBmbVFO3bMN8rwhyhk5XM+ENaa/NexG3Z2TMLnNroZuVqhhM6S6hxjrsy
+9JON2INU5btD2pgSjV7e3n1ttknjk04WgVOzG9Flr0Rvlp4G1sUsXxriPTste+cF
+kOUYNokqn62cFEEAAAEAQqZ27k2NbWmAXWUmrDoVPunv1SOnrX0tJ7GFDvOQ0Cx9
+Gu3OxeiNXXNUlACc8CMXVaITeGSmJy+NmXkdfo0oO+el/MiX1QLOypmygiK+ItfA
+uSwbddzaAsuCR0/1ClUxSBb1DGFJI/NG6irbasANyT498qWhXce452w7Xi9M638P
+6C4U33bjViJYVcabdpAb3GoplavaXqLijJs02Vr0dIonmp1oIMvI0FPou9fOsIUn
+jHvYYpZaYp8onZCkLdrhQB+ICBSpfNfvLcABRJLKIapeBYJnHCzV+h5p+uJtKXGh
+t4YUUdSC1aUUgshWqXO92HECLuZC0tbVhPUTETET3w==
+-----ENC KEY-----
+Symmetric Key: AES-256-CBC
+AQEAAAAAAAAAAAEAvsHx0dBuhDBcjt+OVqTmt3lbb/i1eEX3EHxCiZPZjBnU+W35
+8M5NmvBJINB0RBIe7VgJY7PlpIwhoPPpnSZtfwMFiAQy3vOFzVjw51TJo20oPNQm
+N3z7tYRDXcNlsazFJbkXYC+y59l0rtfxxJNV/NdAVH5Zl24/XUJNo/+WLvQ1JQ0f
+AZkAWSGP1CtRJuRhY2VIwUcVOHWGclZ/fR8b5YegEw+WyRvOsAMPB5H8pmafAmYA
+eo4+JVVsX+rZnZIQ7F/EhqsjyRpDQIzHp0slkFad5hGRMbFEeUEn4LrH9b4bRcwi
+b1I7qzt80nh85K23wIisfy3LlwviDc08RD32MQ==
+-----ENC DAT-----
+Tspi_Context_Create success
+Tspi_Context_Connect success
+Tspi_Context_GetTpmObject success
+Tspi_TPM_GetRandom success
+Tspi_Context_LoadKeyByUUID success
+Tspi_GetPolicyObject success
+Tspi_Policy_SetSecret success
+Tspi_Context_CreateObject success
+Tspi_Context_CreateObject success
+Tspi_Policy_SetSecret success
+Tspi_Policy_AssignToObject success
+Tspi_Key_CreateKey success
+Tspi_Key_LoadKey success
+Tspi_Context_CreateObject success
+Tspi_Context_CreateObject success
+Tspi_Policy_SetSecret success
+Tspi_Policy_AssignToObject success
+Tspi_Data_Seal success
+Tspi_GetAttribData success
+Tspi_GetAttribData success
+-----TSS KEY-----
+-----ENC KEY-----
+-----ENC DAT-----
+spawn tpm_sealdata -i testfile
+Enter SRK password: 
+-----BEGIN TSS-----
+-----TSS KEY-----
+AQEAAAARAAAABAEAAAABAAMAAQAAAAwAAAgAAAAAAgAAAAAAAAAAAAABAJuVUh8J
+TKLpQDRRMHynZgLaPAlT4fhuhT47hnZ07CsPFguyzBZM5y4hb84xYnTXLNvavWqJ
+CA0KTrPLu3zIAd9/bA2v99y6D08GlgQJPtTpemd5TOnkTh7Yl+HcL8pHYF/W8Rsg
+EDb1uudCahr3ZUE3VVYJnhLLtmwht2IxDeBQlhc/RhyuPkCO3uemi9yWvlEoaGxG
+W8O802DUucfaAQDzgdubSXFF2BSfLd4s9DdVVhjr1g/NC7v5FS6XnBCTtbK44KCG
+pk7vlpDIH0nMh4oFqkMr6+3VjZjnzPiWkWPXpmzPBvecvGldpEmE7gc+4L0ECWu1
+dnnkCbKhlqHLms0AAAEAvig7Rkyr2Z0s5L4UqLKQ6yFa2/u6OtnZEoJrOWWlTFwr
+r9EtMudGAgU1iUEVwJPcSWdqVwxpy6zVqSGS8te+meb86J+CnbvcKKiPeODpPBH+
+96VDfMaQMpqih40rLaZVENM0AH3j7Zgf9yH7zq/LeR1jPN7LUvEMsYiavKxs8HPk
+W451EQfnCdWtf9vKrPfjp7y/3xOp7fI7atKGLCG6O9y/5ZAFAdY0BghQ4xcOylLg
+uZEdHuVh1FGvGTsz1cVMvfjhBAnYiBuOp+DIGq6xt6Jw0BSI3vnCJaUfrT/Aw3TS
+IEyXXUbMd0PpMmz2XZ04qx6NQiQd5VjMfEDfE8JJgw==
+-----ENC KEY-----
+Symmetric Key: AES-256-CBC
+AQEAAAAAAAAAAAEAVahwRifd7Em00pM7FN5MrO4W1UiHVfrToB/uLamKElNNx7p1
+2ScNYhiKQta1tS5nJBCZAufZ/jhUOprFdTLeUjrlNLMHlmyGb69eg5ua8oBEyv2Y
+I1hulYnAzKS5OeTNLoYBjcz036OOdlohTDT680lpXYderENWQ9japbh9/6d7h4JN
+qzkcg6y11zzfKpGhZgvH0UTkegipM+mOJdsHoIULV9MW4iYZwsDSjkRfLEMGda75
+1kVEwWa7hFHD2hy/0yKJy5fvfZmldH3xjZhd3sygt3F1+P6/7JoCzTvJkal6f//J
+1hw43sVzum54A7pxzRL3iCNz7PJWkYu38DvV0Q==
+-----ENC DAT-----
+z2rCBiDKP/UHOimOlPrgyg==
+-----END TSS-----
+spawn tpm_sealdata -i testfile
+Enter SRK password: 
+-----BEGIN TSS-----
+-----TSS KEY-----
+AQEAAAARAAAABAEAAAABAAMAAQAAAAwAAAgAAAAAAgAAAAAAAAAAAAABAJuVUh8J
+TKLpQDRRMHynZgLaPAlT4fhuhT47hnZ07CsPFguyzBZM5y4hb84xYnTXLNvavWqJ
+CA0KTrPLu3zIAd9/bA2v99y6D08GlgQJPtTpemd5TOnkTh7Yl+HcL8pHYF/W8Rsg
+EDb1uudCahr3ZUE3VVYJnhLLtmwht2IxDeBQlhc/RhyuPkCO3uemi9yWvlEoaGxG
+W8O802DUucfaAQDzgdubSXFF2BSfLd4s9DdVVhjr1g/NC7v5FS6XnBCTtbK44KCG
+pk7vlpDIH0nMh4oFqkMr6+3VjZjnzPiWkWPXpmzPBvecvGldpEmE7gc+4L0ECWu1
+dnnkCbKhlqHLms0AAAEAvig7Rkyr2Z0s5L4UqLKQ6yFa2/u6OtnZEoJrOWWlTFwr
+r9EtMudGAgU1iUEVwJPcSWdqVwxpy6zVqSGS8te+meb86J+CnbvcKKiPeODpPBH+
+96VDfMaQMpqih40rLaZVENM0AH3j7Zgf9yH7zq/LeR1jPN7LUvEMsYiavKxs8HPk
+W451EQfnCdWtf9vKrPfjp7y/3xOp7fI7atKGLCG6O9y/5ZAFAdY0BghQ4xcOylLg
+uZEdHuVh1FGvGTsz1cVMvfjhBAnYiBuOp+DIGq6xt6Jw0BSI3vnCJaUfrT/Aw3TS
+IEyXXUbMd0PpMmz2XZ04qx6NQiQd5VjMfEDfE8JJgw==
+-----ENC KEY-----
+Symmetric Key: AES-256-CBC
+AQEAAAAAAAAAAAEAVahwRifd7Em00pM7FN5MrO4W1UiHVfrToB/uLamKElNNx7p1
+2ScNYhiKQta1tS5nJBCZAufZ/jhUOprFdTLeUjrlNLMHlmyGb69eg5ua8oBEyv2Y
+I1hulYnAzKS5OeTNLoYBjcz036OOdlohTDT680lpXYderENWQ9japbh9/6d7h4JN
+qzkcg6y11zzfKpGhZgvH0UTkegipM+mOJdsHoIULV9MW4iYZwsDSjkRfLEMGda75
+1kVEwWa7hFHD2hy/0yKJy5fvfZmldH3xjZhd3sygt3F1+P6/7JoCzTvJkal6f//J
+1hw43sVzum54A7pxzRL3iCNz7PJWkYu38DvV0Q==
+-----ENC DAT-----
+z2rCBiDKP/UHOimOlPrgyg==
+-----END TSS-----
+spawn tpm_sealdata -i testfile -o result
+Enter SRK password: 
+-----BEGIN TSS-----
+-----TSS KEY-----
+AQEAAAARAAAABAEAAAABAAMAAQAAAAwAAAgAAAAAAgAAAAAAAAAAAAABAMPKp4ZJ
+oIhoAmIckZQDns2KqTxRLYZKYUU9bQ4yaQpM0UMAq+fvznrKSOpmzgV+eGCZS+LK
+feaJtD1qp1TIJsBfZLubiuZgcIzY5vPEpYcTOwRrjLzZ3GZTeb2a6usDSaBvdxV6
+PjvGqEwRNK0SdBpSvhGutmDGcHRnpr3Z2zuCdvs9/RBwe6TYJiD7X9fomwqBW2kg
+xTrBLpLtFP2yp66oPakFnq3ltzUOMDdyX7eVrI36UXtQR0W9VKQaxBANOHeLyRgE
+GbSUUaUTyNxtiYJEwxgHJKIyzWatKcXeMJA6RbWhsTE5BEyuig9YUVcx3doSMwVl
+l5+y41BIdqcHEe8AAAEAUjwbE/FkM0u7Bg/y1qXCDMtDi0a7WpO4xSgofx9U0tqv
+UT2ztlyWh4+WfCWSwJveenaq5bmjIq+8z92WyS/lDaIaZiC/9KhzT5ZskDjHramy
+c9mfCj8sqJ25m8mUrxPJPlQgYKlBlVn745wS9B+LXbz4AjwWhFUBByPsUmx4iWIc
+vZFWcof1kctC9lGMJRQpRn2EnYdkos23mA9USBZP/SiHWEnVxLrpfwbK5Nj9Kj03
+mzxc2rkjLvhEYpNmeWUeZoTtCYT8tHBhjQb88rgOXw6Rff7xRfx0dlUVczcElj2D
+i5si21misKfq1hLfHfjwOIajAMR8nvj0b5DQTyFccw==
+-----ENC KEY-----
+Symmetric Key: AES-256-CBC
+AQEAAAAAAAAAAAEAwpaE5qEai8JErjJbYG1j7mmJqUGwBQllQ8M3FGKxrerKJ+ZA
+3U2qsiySbaUwFQLld+Vx/lfwnsy1WJ/zsJKQghtei34EEz1Z+l/heatyumh8J5kD
+INeP9xmhxirLub+BwRb3fE6bxg2Hh99LR3SqY+n2NVa/V6ZxUf8epG6bZjRa2GN4
+FobV58hmcD2ufx3MSDNsRptuaWwjgYwyrh49Y3HcaMEwv6mKrCuC9zhnLT+FGqQE
+o/kO7/07Q8TLesYZtaDXOp34sBpAOUI5O7a0kZeGwXWTSb+krl1k3NWeuoq9/Oqj
+fV5qv5eGb9POMo3zaaV0nJfyRftO+tgCkE5xXg==
+-----ENC DAT-----
++Hy25w5DTdI8GJDLo2grNw==
+-----END TSS-----
+spawn tpm_sealdata --pcr 16
+Enter SRK password: 
+-----BEGIN TSS-----
+-----TSS KEY-----
+AQEAAAARAAAABAEAAAABAAMAAQAAAAwAAAgAAAAAAgAAAAAAAAAAAAABANXoIaBU
+wotFBhPCTZwoFnJ/uy9WwVegTX2IPkkgLVHxjZxgLyiR4qEY1ZZPJdMmg/QQulWW
+maY1qVxmdLQFVV5fclXid0byNqGFjrD12TCGGLpYfxn39CG2Nj9uJn3wKNz7wJlk
+kmJ+CZEJ5BFpj3UaHSQu9vot0zxsACCb0wiAwCdz1vZGjfsnuooa2DJZn/gCxJWd
+5hzwQtvozLrz8YBIopnvP8Ca8LCWR2TJdnLwg77iai9MbKwg22iL7NP7GH8ggL4o
+XTIPiT7XgD1NrNKODAiUzl050ijrRLWhgtAoIeJhaljbGG521hKLAjsfSHXU15Ev
+Sb13PzNsou2HOYUAAAEAIgZrcCo8Z8HrKhTSfWiCdtyD2bpeVOv4xBnh7OxCy7uG
+ipnb2CAs6RMHhBGgu0PEC6+aw8AfdXkPqXWuXi6sIS1alLp9spOeU9d5YTDLyL7G
+RHFS+Jnvz0xi7rCrPpgZcXKLmaraPZgOk0hFmu+WMCiA+6RcxpiZZK9uptNQuaZk
+b16qHxpwbvSNc23XhXhCqQFjDF2T2wXq27bTI0NkKippAoL7iF/gAp2uhqSLQdD/
+kOz6Z/W/AEsRe0HRWsd+RQAjjU0La0X6PwCKrLsmbWuJ5P+J1sHNxLGq1LShVJto
+I5UkzM+3YMEXT9mDFLP37dgoILKwDXYZYvVPxpKngQ==
+-----ENC KEY-----
+Symmetric Key: AES-256-CBC
+ABYAAAAAADYABgAfAAMAAAAAAwAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAfhCGcl3m
+rC1kwTl/jzxzLN/aPaYAAAEAbUuQHxWZTSFK6O5HPvwt9I91hwOEdZkQ1pY+7iRA
+5W+yP1UKWjlMampiIzDKQ4FAU9qATI9pbusFYKWglhQxxarRTfaMktBzxfoXISHG
+XDqdgEg0WZNaIyhaKYMSgCZn2f/z21Uq9OofsxVVRTrm4RFoamZ3l36xyd3dZH8d
+1I4/Ko4M0sXO6EajIqcjPMWC26JCyiDCs30en5wF2+QoUcj48gqFVkx83as7CjPp
+hRqtXQgrl/fZMf9VYu6s4pFSoHIneZHGWYzF6q5eFl902gWOdyq5Vp6EI0edqznj
+w8GjJ9wapuBmrN0W8ycW0qBE0lTQKEF3ytFU4radUEpIkA==
+-----ENC DAT-----
+^Cspawn tpm_sealdata --pcr 16
+Enter SRK password: 
+-----BEGIN TSS-----
+-----TSS KEY-----
+AQEAAAARAAAABAEAAAABAAMAAQAAAAwAAAgAAAAAAgAAAAAAAAAAAAABANXoIaBU
+wotFBhPCTZwoFnJ/uy9WwVegTX2IPkkgLVHxjZxgLyiR4qEY1ZZPJdMmg/QQulWW
+maY1qVxmdLQFVV5fclXid0byNqGFjrD12TCGGLpYfxn39CG2Nj9uJn3wKNz7wJlk
+kmJ+CZEJ5BFpj3UaHSQu9vot0zxsACCb0wiAwCdz1vZGjfsnuooa2DJZn/gCxJWd
+5hzwQtvozLrz8YBIopnvP8Ca8LCWR2TJdnLwg77iai9MbKwg22iL7NP7GH8ggL4o
+XTIPiT7XgD1NrNKODAiUzl050ijrRLWhgtAoIeJhaljbGG521hKLAjsfSHXU15Ev
+Sb13PzNsou2HOYUAAAEAIgZrcCo8Z8HrKhTSfWiCdtyD2bpeVOv4xBnh7OxCy7uG
+ipnb2CAs6RMHhBGgu0PEC6+aw8AfdXkPqXWuXi6sIS1alLp9spOeU9d5YTDLyL7G
+RHFS+Jnvz0xi7rCrPpgZcXKLmaraPZgOk0hFmu+WMCiA+6RcxpiZZK9uptNQuaZk
+b16qHxpwbvSNc23XhXhCqQFjDF2T2wXq27bTI0NkKippAoL7iF/gAp2uhqSLQdD/
+kOz6Z/W/AEsRe0HRWsd+RQAjjU0La0X6PwCKrLsmbWuJ5P+J1sHNxLGq1LShVJto
+I5UkzM+3YMEXT9mDFLP37dgoILKwDXYZYvVPxpKngQ==
+-----ENC KEY-----
+Symmetric Key: AES-256-CBC
+ABYAAAAAADYABgAfAAMAAAAAAwAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAfhCGcl3m
+rC1kwTl/jzxzLN/aPaYAAAEAbUuQHxWZTSFK6O5HPvwt9I91hwOEdZkQ1pY+7iRA
+5W+yP1UKWjlMampiIzDKQ4FAU9qATI9pbusFYKWglhQxxarRTfaMktBzxfoXISHG
+XDqdgEg0WZNaIyhaKYMSgCZn2f/z21Uq9OofsxVVRTrm4RFoamZ3l36xyd3dZH8d
+1I4/Ko4M0sXO6EajIqcjPMWC26JCyiDCs30en5wF2+QoUcj48gqFVkx83as7CjPp
+hRqtXQgrl/fZMf9VYu6s4pFSoHIneZHGWYzF6q5eFl902gWOdyq5Vp6EI0edqznj
+w8GjJ9wapuBmrN0W8ycW0qBE0lTQKEF3ytFU4radUEpIkA==
+-----ENC DAT-----
+^C
+spawn tpm_sealdata -u
+Enter SRK password: 
+-----BEGIN TSS-----
+-----TSS KEY-----
+AQEAAAARAAAABAEAAAABAAMAAQAAAAwAAAgAAAAAAgAAAAAAAAAAAAABAMVIZt1w
+GibMsYUsoowVSW/gk2CVOVb3ivSGhdzjszRNnryotkioyfmZa/NHa5SXc0A9Hr6V
+FU0w1UeJ151SV6jDS2H3Nuhx9TkfrOFtiUX28i5nWngnhviPW5jfSsyoXIquqi7d
+BBGPfbfm5j+bY3SOHc66ss4z7PGTHqnzKoxIh4zMuv5Tbuh7vTCBWBL8OonP6iEY
+rpHafkR031XYDp8LDS06+eYjCsQ7OIfjes9zrNG1NxGwUXQROK/84INi6B+XLEBt
+C/7cuukSFLllGtgPAZjubprjeSsUiqTsE+eri0r/eomiS63cI2hwmMLENisPQycZ
+rtEojCE5utWkN2UAAAEAZ0ul5Xlx/xqS9Y/74v8y6tsSqbRH/OdwM7lS8BHgShwa
+A8KsAnkudSLoxSUwpcQMGG/W/avpgJz7epMKfNrjHpJJFIC+gxQUm3LcZcrtORT4
+vYFC970Ubd7A8Z6Mx0cPbfj5b89PeiVii+o+Der3QzHzDOL2YNHlVW5lJPdywqjy
+A97XioldN3kF4O0uYHl72AvHOK2nsgO0daJtVf9s2SvoTomPRze/7oi1V+f+YSv0
+H31VkzC+qiVAJJEuAFr6ZejCR6rSITbm4I9WLN4/vD36Y9DgOC8bP5qXjFw/+P1r
+lv6qMW6pUTuleVD+ZoUcV+dDKNFxjRMJSYrcZhtaeg==
+-----ENC KEY-----
+Symmetric Key: AES-256-CBC
+AQEAAAAAAAAAAAEAErvW+5BmpU4IkXyuY/BTADF/MF4KURdCQxzMRXzULMcp30Id
+7yYtaIG74vwK3g1LhTTQqvNhIR12jemhrXZ48iKPc01MwZUI+7vB2eAcNplJiA4y
+l1N1foKDt9MG9SOYsiFagKLwrUEat6BW4YqXAg03husCLytFpiZJRPA8rOOXqM2S
+PSqiOoQQUX04tfuRzTIGurrQSNID8zdzLBIJFE+WdNZBPAEiZ/y2y3FLdta767pH
+AjIgE2u+CrOGAy1nfy46jdg7c5ppQ5uk1ys8dSgI/J3MNXBnDefnYM8CMU9REtOb
+cGttXjuef8mh+z7JIqUTdbBlVnWTqHpcR20BRA==
+-----ENC DAT-----
+spawn tpm_sealdata -u
+Enter SRK password: 
+-----BEGIN TSS-----
+-----TSS KEY-----
+AQEAAAARAAAABAEAAAABAAMAAQAAAAwAAAgAAAAAAgAAAAAAAAAAAAABAMVIZt1w
+GibMsYUsoowVSW/gk2CVOVb3ivSGhdzjszRNnryotkioyfmZa/NHa5SXc0A9Hr6V
+FU0w1UeJ151SV6jDS2H3Nuhx9TkfrOFtiUX28i5nWngnhviPW5jfSsyoXIquqi7d
+BBGPfbfm5j+bY3SOHc66ss4z7PGTHqnzKoxIh4zMuv5Tbuh7vTCBWBL8OonP6iEY
+rpHafkR031XYDp8LDS06+eYjCsQ7OIfjes9zrNG1NxGwUXQROK/84INi6B+XLEBt
+C/7cuukSFLllGtgPAZjubprjeSsUiqTsE+eri0r/eomiS63cI2hwmMLENisPQycZ
+rtEojCE5utWkN2UAAAEAZ0ul5Xlx/xqS9Y/74v8y6tsSqbRH/OdwM7lS8BHgShwa
+A8KsAnkudSLoxSUwpcQMGG/W/avpgJz7epMKfNrjHpJJFIC+gxQUm3LcZcrtORT4
+vYFC970Ubd7A8Z6Mx0cPbfj5b89PeiVii+o+Der3QzHzDOL2YNHlVW5lJPdywqjy
+A97XioldN3kF4O0uYHl72AvHOK2nsgO0daJtVf9s2SvoTomPRze/7oi1V+f+YSv0
+H31VkzC+qiVAJJEuAFr6ZejCR6rSITbm4I9WLN4/vD36Y9DgOC8bP5qXjFw/+P1r
+lv6qMW6pUTuleVD+ZoUcV+dDKNFxjRMJSYrcZhtaeg==
+-----ENC KEY-----
+Symmetric Key: AES-256-CBC
+AQEAAAAAAAAAAAEAErvW+5BmpU4IkXyuY/BTADF/MF4KURdCQxzMRXzULMcp30Id
+7yYtaIG74vwK3g1LhTTQqvNhIR12jemhrXZ48iKPc01MwZUI+7vB2eAcNplJiA4y
+l1N1foKDt9MG9SOYsiFagKLwrUEat6BW4YqXAg03husCLytFpiZJRPA8rOOXqM2S
+PSqiOoQQUX04tfuRzTIGurrQSNID8zdzLBIJFE+WdNZBPAEiZ/y2y3FLdta767pH
+AjIgE2u+CrOGAy1nfy46jdg7c5ppQ5uk1ys8dSgI/J3MNXBnDefnYM8CMU9REtOb
+cGttXjuef8mh+z7JIqUTdbBlVnWTqHpcR20BRA==
+-----ENC DAT-----
+Usage: tpm_unsealdata [options]
+	-h, --help
+	-v, --version
+	-l, --log [none|error|info|debug]
+	-i, --infile FILE
+	-o, --outfile FILE
+	-z, --srk-well-known
+tpm_unsealdata version: 1.3.9
+spawn tpm_sealdata -i infile -p 4 -p 8 -p 9 -p 12 -p 14 -o outresult
+Enter SRK password: 
+-----BEGIN TSS-----
+-----TSS KEY-----
+AQEAAAARAAAABAEAAAABAAMAAQAAAAwAAAgAAAAAAgAAAAAAAAAAAAABANWt61yk
+ZOcUxvcGIUlv4xjEGGsfRMG9K7rMYzqB7AttEsLfiYZv/GoGDzC4DIwY8u8vG1rq
+llDOxolebq46E9bcHZJZi7oKMUpMcb4n/rmL4vEscmlyRbSdHntlAcUZ2dcuZ0i3
+AAsSamU1O2VnUyWifOqKcOiFHEFC4BhMMxMQ+xCXRYU7RFlI6I52p6TLBpFa+JYl
+DHdlFCguNv5A+T59GjQvG6ui71H+Tkgyaq8ZntqfgbYIgYN7QDuI5rsNZ4V5w0QN
+SSaiWHnzNws/XKF7q5EPRgFhxqgMp7bIhWu9+bQ+pTig7Bqv9fMFoKXXAc/fmO3b
+ixOTPlJWGCpz2SUAAAEAEqwSlUettcp15711CIPvVVtxfSwfhoBFMt0sM50eychm
+FYcKxoyipuxZ9/clYwtwXywongk4meRrxttr2YcJVnqAS5cZxgis7XbyYsujL1P8
+qAtWdJqEgFjzK9qtuwsVe/Enu1w/W0SAFm0Qx5Gzh3IxJFVSV6Ne7oF3JW2IvXEl
+PGmD2Y00PIz3kQGImRJDbhnmf1Y6+iO41snFsBNZSQTNNZFsG5WTR+zp7hwYDoI9
+3d8Ck8kC3GAvUk1mvx765NG2gaaQ2O9FSJ5xZCeHtPeKqmx6s/RxHluDxT/fPjl+
+F7aQMJ5pc6axxa/c4D24gyIEzGQtg3Qkzc6Pvng3HA==
+-----ENC KEY-----
+Symmetric Key: AES-256-CBC
+AQEAAAAAACwAAhBTkyUEalmn0CnsJOCtGAt3AocthliTJQRqWafQKewk4K0YC3cC
+hy2GWAAAAQCglleug4J9kTXG3K2VTeV9FuMbaggOCmGhbfuRkHPRwTX53C4PqGzT
+LwRHBZbktsC66Hbm5EnTuQEOXkPSZeFwATEvB3+JY7qtzM6cXEcWQDXYaXzg7z6s
+w45tijAL9aL2SQVxSTyBXfVlzo1n2RgNx9KU8x+SiDE/AX/X64Tn7RzDDWKW5d6Q
+97zXSrV8l9d1HDTNsvQteUqBJ5lm702U0f4uDNeHHimzVyThz+jgUpewIrzkE11D
+AJZM5R4rsL76f3rv7SXSL0hQz5R7nbDL1J1SuJFRzxWYt4qtJqIYYx3K3dT3TAuO
+V0MYSsOwy9u32So5SGhgiJiMbIQhSHrz
+-----ENC DAT-----
++TJQ7p678SAh2T0gaieNIQ==
+-----END TSS-----
+spawn tpm_unsealdata -i outresult -o outfile
+Enter SRK password: 
+Unable to write output file
+Sun Feb  6 21:28:04 2022 - INFO  - End of the test.
+Sun Feb  6 21:28:04 2022 - ERROR - failed to execute the case.
+Sun Feb  6 21:28:04 2022 - INFO  - Start to restore the test environment.
+../common/common_tpm-tools.sh: line 64: 20454 Killed                  nohup tpmd -d -f clear > /dev/null 2>&1
+../common/common_tpm-tools.sh: line 65: 20458 Killed                  nohup tcsd -e -f > /dev/null 2>&1
+Sun Feb  6 21:28:06 2022 - INFO  - Finish restoring the test environment.

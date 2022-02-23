@@ -1,0 +1,23 @@
+Sun Feb  6 21:04:44 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:04:53 2022 - INFO  - End to prepare the test environment.
+Sun Feb  6 21:04:53 2022 - INFO  - Start to run test.
+nbdkit [-D|--debug PLUGIN|FILTER.FLAG=N]
+nbdkit --dump-config
+nbdkit PLUGIN --dump-plugin
+nbdkit --help
+Please read the nbdkit(1) manual page for full usage.
+bindir=/usr/bin
+filterdir=/usr/lib64/nbdkit/filters
+libdir=/usr/lib64
+mandir=/usr/share/man
+name=nbdkit
+plugindir=/usr/lib64/nbdkit/plugins
+root_tls_certificates_dir=/etc/pki/nbdkit
+sbindir=/usr/sbin
+version=1.6.2
+oe_test_nbdkit_01.sh: line 28:  9054 Killed                  nbdkit --exit-with-parent example1
+oe_test_nbdkit_01.sh: line 28:  9065 Killed                  nbdkit -f example1
+Sun Feb  6 21:04:53 2022 - INFO  - End to run test.
+Sun Feb  6 21:04:53 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:04:53 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:04:55 2022 - INFO  - End to restore the test environment.

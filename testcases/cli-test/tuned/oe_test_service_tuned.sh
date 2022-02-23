@@ -19,11 +19,26 @@
 
 source "../common/common_lib.sh"
 
+function pre_test() {
+	LOG_INFO "Start environmental preparation."
+	DNF_INSTALL tuned
+	LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution tuned.service
     test_reload tuned.service
     LOG_INFO "Finish test!"
+}
+function post_test() {
+	LOG_INFO "start environment cleanup."
+	sed -i 's\ExecStart = /usr/sbin/tuned --log.level=debug\ExecStart = /usr/sbin/tuned\g' /usr/lib/systemd/system/tuned.service
+	systemctl daemon-reload
+        systemctl reload tuned.service
+        systemctl stop tuned.service
+        DNF_REMOVE
+        LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

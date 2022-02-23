@@ -1,0 +1,103 @@
+Sun Feb  6 21:20:56 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:20:58 2022 - INFO  - pkgs:(cronie) is already installed
+Sun Feb  6 21:20:58 2022 - INFO  - End to prepare the test environment.
+Sun Feb  6 21:20:58 2022 - INFO  - Start to run test.
+cronie 1.5.5
+● crond.service - Command Scheduler
+     Loaded: loaded (/usr/lib/systemd/system/crond.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2022-02-06 21:20:49 CST; 9s ago
+    Process: 18616 ExecReload=/bin/kill -HUP $MAINPID (code=exited, status=0/SUCCESS)
+   Main PID: 18505 (crond)
+      Tasks: 1 (limit: 47541)
+     Memory: 916.0K
+     CGroup: /system.slice/crond.service
+             └─18505 /usr/sbin/crond -n
+
+Feb 06 21:20:49 10.0.2.15 crond[18505]: (CRON) STARTUP (1.5.5)
+Feb 06 21:20:49 10.0.2.15 crond[18505]: (CRON) INFO (Syslog will be used instead of sendmail.)
+Feb 06 21:20:49 10.0.2.15 crond[18505]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 24% if used.)
+Feb 06 21:20:49 10.0.2.15 crond[18505]: (CRON) INFO (running with inotify support)
+Feb 06 21:20:49 10.0.2.15 crond[18505]: (CRON) INFO (@reboot jobs will be run at computer's startup.)
+Feb 06 21:20:55 10.0.2.15 systemd[1]: crond.service: Current command vanished from the unit file, execution of the command list won't be resumed.
+Feb 06 21:20:55 10.0.2.15 systemd[1]: Reloading Command Scheduler.
+Feb 06 21:20:55 10.0.2.15 systemd[1]: Reloaded Command Scheduler.
+Feb 06 21:20:56 10.0.2.15 systemd[1]: Reloading Command Scheduler.
+Feb 06 21:20:56 10.0.2.15 systemd[1]: Reloaded Command Scheduler.
+● crond.service - Command Scheduler
+     Loaded: loaded (/usr/lib/systemd/system/crond.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2022-02-06 21:20:49 CST; 9s ago
+    Process: 18616 ExecReload=/bin/kill -HUP $MAINPID (code=exited, status=0/SUCCESS)
+   Main PID: 18505 (crond)
+      Tasks: 1 (limit: 47541)
+     Memory: 916.0K
+     CGroup: /system.slice/crond.service
+             └─18505 /usr/sbin/crond -n
+
+Feb 06 21:20:49 10.0.2.15 crond[18505]: (CRON) STARTUP (1.5.5)
+Feb 06 21:20:49 10.0.2.15 crond[18505]: (CRON) INFO (Syslog will be used instead of sendmail.)
+Feb 06 21:20:49 10.0.2.15 crond[18505]: (CRON) INFO (RANDOM_DELAY will be scaled with factor 24% if used.)
+Feb 06 21:20:49 10.0.2.15 crond[18505]: (CRON) INFO (running with inotify support)
+Feb 06 21:20:49 10.0.2.15 crond[18505]: (CRON) INFO (@reboot jobs will be run at computer's startup.)
+Feb 06 21:20:55 10.0.2.15 systemd[1]: crond.service: Current command vanished from the unit file, execution of the command list won't be resumed.
+Feb 06 21:20:55 10.0.2.15 systemd[1]: Reloading Command Scheduler.
+Feb 06 21:20:55 10.0.2.15 systemd[1]: Reloaded Command Scheduler.
+Feb 06 21:20:56 10.0.2.15 systemd[1]: Reloading Command Scheduler.
+Feb 06 21:20:56 10.0.2.15 systemd[1]: Reloaded Command Scheduler.
+no crontab for root
+Sun Feb  6 21:20:58 2022 - ERROR - log message: Failed to run command: crontab -l > ./cron.bak
+* * * * * /root/mugen/testcases/cli-test/cronie/test.sh
+3
+no crontab for root
+no crontab for test_user
+Sun Feb  6 21:23:08 2022 - ERROR - log message: Failed to run command: crontab -u "$USER_NAME" -l > /home/"$USER_NAME"/cron.bak
+* * * * * /home/test_user/test.sh
+2
+crontab: really delete test_user's crontab? cronie 1.5.5
+Find the time of the next scheduled cron job.
+Usage:
+ cronnext [options] [file ...]
+
+Options:
+ -i users  include only the crontab of these users
+ -e users  exclude the crontab of these users
+ -s        do not include the system crontab
+ -a        examine installed crontabs even if files are given
+ -t time   start from this time (seconds since epoch)
+ -q time   end check at this time (seconds since epoch)
+ -j cmd    only check jobs that contain cmd as a substring
+ -l        print next jobs to be executed
+ -c        print next execution of each job
+ -f        print all jobs executed in the given interval
+ -h        this help
+ -V        print version and exit
+cronie 1.5.5
+Usage:
+ anacron [options] [job] ...
+ anacron -T [-t anacrontab-file]
+
+Options:
+ -s         Serialize execution of jobs
+ -f         Force execution of jobs, even before their time
+ -n         Run jobs with no delay, implies -s
+ -d         Don't fork to the background
+ -q         Suppress stderr messages, only applicable with -d
+ -u         Update the timestamps without actually running anything
+ -V         Print version information
+ -h         Print this message
+ -t <file>  Use alternative anacrontab
+ -T         Test an anacrontab
+ -S <dir>   Select a different spool directory
+
+See the anacron(8) manpage for more details.
+Anacron from project cronie 1.5.5
+Copyright (C) 1998  Itai Tzur <itzur@actcom.co.il>
+Copyright (C) 1999  Sean 'Shaleh' Perry <shaleh@debian.org>
+Copyright (C) 2004  Pascal Hakim <pasc@redellipse.net>
+
+Mail comments, suggestions and bug reports to <pasc@redellipse.net>.
+
+Sun Feb  6 21:25:19 2022 - INFO  - End to run test.
+Sun Feb  6 21:25:19 2022 - ERROR - failed to execute the case.
+Sun Feb  6 21:25:19 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:25:19 2022 - WARN  - no thing to do.
+Sun Feb  6 21:25:19 2022 - INFO  - End to restore the test environment.

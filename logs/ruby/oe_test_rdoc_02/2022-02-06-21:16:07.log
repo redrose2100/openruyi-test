@@ -1,0 +1,78 @@
+Sun Feb  6 21:16:08 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:16:21 2022 - INFO  - Finish preparing the test environment.
+Sun Feb  6 21:16:21 2022 - INFO  - Start to run test.
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_02/doc...
+Parsing sources...
+  Classes:    1 (1 undocumented)
+  Modules:    0 (0 undocumented)
+  Constants:  0 (0 undocumented)
+  Attributes: 0 (0 undocumented)
+  Methods:    3 (3 undocumented)
+  Total:      4 (4 undocumented)
+    0.00% documented
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_02/doc...
+100% [ 1/ 1]  ../common/main.rb
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_02/doc...
+Parsing sources...
+could not find template test
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_02/doc...
+  Total:      4 (4 undocumented)
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_02/doc...
+Parsing sources...
+class Customer
+    @@no_of_customers=0
+            puts "Customer id #@cust_id"
+            puts "Customer name #@cust_name"
+            puts "Customer address #@cust_addr"
+        def total_no_of_customers()
+            @@no_of_customers += 1
+            puts "Total number of customers: #@@no_of_customers"
+    cust1=Customer.new("1", "John", "Wisdom Apartments, Ludhiya")
+    cust2=Customer.new("2", "Poul", "New Empire road, Khandala")
+    cust1.total_no_of_customers()
+    cust2.total_no_of_customers()
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_02/doc...
+Parsing sources...
+<title>my rdoc document</title>
+<p>This is the API documentation for my rdoc document.
+<title>class Customer - my rdoc document</title>
+<title>Table of Contents - my rdoc document</title>
+<h1 class="class">Table of Contents - my rdoc document</h1>
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_02/doc...
+Parsing sources...
+
+Generating POT format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_02/doc...
+Parsing sources...
+
+Generating RI format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_02/doc...
+Parsing sources...
+In files:
+  class Customer
+    # in file ../common/main.rb:5
+    def self.new(id, name, addr); end
+    # in file ../common/main.rb:10
+    def display_details(); end
+    # in file ../common/main.rb:15
+    def total_no_of_customers(); end
+In files:
+  class Customer
+    # in file ../common/main.rb:5
+    def self.new(id, name, addr); end
+    # in file ../common/main.rb:10
+    def display_details(); end
+    # in file ../common/main.rb:15
+    def total_no_of_customers(); end
+
+Generating Darkfish format into /root/mugen/testcases/cli-test/ruby/oe_test_rdoc_02/mydoc...
+Parsing sources...
+Sun Feb  6 21:16:25 2022 - INFO  - End of the test.
+Sun Feb  6 21:16:25 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:16:25 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:16:26 2022 - INFO  - Finish restoring the test environment.
