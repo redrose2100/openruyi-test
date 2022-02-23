@@ -29,23 +29,23 @@ function run_test() {
     LOG_INFO "Start testing..."
     # --break-before-br
     # 在 <br> 前插入换行
-    echo 'hi<br>' | tidy --break-before-br true | grep '<br>' -B 1 | grep 'hi'
+    echo 'hi<br>' | tidy --break-before-br true | grep "hi"$'\n'"<br>"
     CHECK_RESULT $? 0 0 "Failed to use option: --break-before-br"
     echo 'break-before-br: true' >./tidyrc
-    echo 'hi<br>' | tidy -config ./tidyrc | grep '<br>' -B 1 | grep 'hi'
+    echo 'hi<br>' | tidy -config ./tidyrc | grep "hi"$'\n'"<br>"
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: break-before-br"
     # --indent
-    echo '<h1>hi</h1>' | tidy --indent true | grep '<h1>' -A1 | grep 'hi'
+    echo '<h1>hi</h1>' | tidy --indent true | grep "<h1>"$'\n'"hi"
     CHECK_RESULT $? 0 0 "Failed to use option: --indent"
     echo 'indent: true' >./tidyrc
-    echo '<h1>hi</h1>' | tidy -config ./tidyrc | grep '<h1>' -A1 | grep 'hi'
+    echo '<h1>hi</h1>' | tidy -config ./tidyrc | grep "<h1>"$'\n'"hi"
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: indent"
     # --indent-attributes
     # 每个特性在一个新的行里
-    echo '<p id="1" class="2">hi</p>' | tidy --indent-attributes true | grep 'id' -A 1 | grep 'class'
+    echo '<p id="1" class="2">hi</p>' | tidy --indent-attributes true | grep "<id>"$'\n'"class"
     CHECK_RESULT $? 0 0 "Failed to use option: --indent-attributes"
     echo 'indent-attributes: true' >./tidyrc
-    echo '<p id="1" class="2">hi</p>' | tidy -config ./tidyrc | grep 'id' -A 1 | grep 'class'
+    echo '<p id="1" class="2">hi</p>' | tidy -config ./tidyrc | grep "<id>"$'\n'"class"
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: indent-attributes"
     # --indent-cdata
     #
@@ -56,10 +56,10 @@ function run_test() {
     # CHECK_RESULT $? 0 0 "Failed to use option in configuration: indent-cdata"
     # --indent-spaces
     # 指定缩进使用的空格数量
-    echo '<p>hi<b>what</b></p>' | tidy --indent yes --indent-spaces 1 | grep '<p>' -A 1 | grep ' h'
+    echo '<p>hi<b>what</b></p>' | tidy --indent yes --indent-spaces 1 | grep "<p>"$'\n'"h"
     CHECK_RESULT $? 0 0 "Failed to use option: --indent-spaces"
     echo 'indent-spaces: 1' >./tidyrc
-    echo '<p>hi<b>what</b></p>' | tidy --indent yes -config ./tidyrc | grep '<p>' -A 1 | grep ' h'
+    echo '<p>hi<b>what</b></p>' | tidy --indent yes -config ./tidyrc | grep "<p>"$'\n'"h"
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: indent-spaces"
     # --indent-with-tabs
     # 使用 tab 来缩进
