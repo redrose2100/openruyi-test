@@ -74,8 +74,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE
-    rm -f ./tidyrc
-    rm -f ./sample.html
+    rm -f ./tidyrc ./sample.html
     LOG_INFO "Finish environment cleanup!"
 }
 
