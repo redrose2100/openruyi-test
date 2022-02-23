@@ -1,0 +1,15 @@
+Sun Feb  6 20:57:34 2022 - INFO  - Start environmental preparation.
+Sun Feb  6 20:59:59 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 20:59:59 2022 - INFO  - Start testing...
+     Active: active (running) since Sun 2022-02-06 20:59:59 CST; 5s ago
+     Active: inactive (dead)
+     Active: active (running) since Sun 2022-02-06 21:00:09 CST; 5s ago
+/etc/systemd/system/multi-user.target.wants/jetty.service
+Removed /etc/systemd/system/multi-user.target.wants/jetty.service.
+find: ‘/etc/systemd/system/multi-user.target.wants/jetty.service’: No such file or directory
+Failed to reload jetty.service: Job type reload is not applicable for unit jetty.service.
+     Active: active (running) since Sun 2022-02-06 21:00:09 CST; 5s ago
+Sun Feb  6 21:00:15 2022 - INFO  - Finish test!
+Sun Feb  6 21:00:15 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:00:15 2022 - INFO  - start environment cleanup.
+Sun Feb  6 21:00:26 2022 - INFO  - Finish environment cleanup!

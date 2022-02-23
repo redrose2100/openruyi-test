@@ -1,0 +1,67 @@
+Sun Feb  6 20:54:31 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 20:57:13 2022 - INFO  - Finish preparing the test environment.
+Sun Feb  6 20:57:13 2022 - INFO  - Start to run test.
+2022-02-06 20:57:14.858:INFO::main: Logging initialized @1184ms to org.eclipse.jetty.util.log.StdErrLog
+2022-02-06 20:57:15.574:WARN::main: demo test-realm is deployed. DO NOT USE IN PRODUCTION!
+2022-02-06 20:57:15.576:INFO:oejs.Server:main: jetty-9.4.15.v20190215; built: unknown; git: unknown; jvm 1.8.0_265-b01
+2022-02-06 20:57:15.671:INFO:oejdp.ScanningAppProvider:main: Deployment monitor [file:///usr/share/jetty/demo-base/webapps/] at interval 1
+2022-02-06 20:57:16.225:WARN:oeja.AnnotationParser:main: Unknown ASM version, assuming ASM7
+2022-02-06 20:57:16.458:INFO:oeja.AnnotationConfiguration:main: Scanning elapsed time=232ms
+2022-02-06 20:57:16.462:WARN::main: async-rest webapp is deployed. DO NOT USE IN PRODUCTION!
+2022-02-06 20:57:16.618:INFO:oejshC.async_rest:main: Warning: No org.apache.tomcat.JarScanner set in ServletContext. Falling back to default JarScanner implementation.
+2022-02-06 20:57:16.913:INFO:oajs.TldScanner:main: At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2022-02-06 20:57:16.934:INFO:oejs.session:main: DefaultSessionIdManager workerName=node0
+2022-02-06 20:57:16.934:INFO:oejs.session:main: No SessionScavenger set, using defaults
+2022-02-06 20:57:16.934:INFO:oejs.session:main: node0 Scavenging every 660000ms
+2022-02-06 20:57:17.021:INFO:oejsh.ContextHandler:main: Started o.e.j.w.WebAppContext@150c158{Async REST Webservice Example,/async-rest,[file:///tmp/jetty-0.0.0.0-8080-async-rest.war-_async-rest-any-6599182009660679489.dir/webapp/, jar:file:///tmp/jetty-0.0.0.0-8080-async-rest.war-_async-rest-any-6599182009660679489.dir/webapp/WEB-INF/lib/example-async-rest-jar-9.4.15.v20190215.jar!/META-INF/resources],AVAILABLE}{/async-rest.war}
+2022-02-06 20:57:17.134:WARN:oeja.AnnotationParser:main: Unknown ASM version, assuming ASM7
+2022-02-06 20:57:17.185:INFO:oeja.AnnotationConfiguration:main: Scanning elapsed time=51ms
+2022-02-06 20:57:17.187:WARN::main: test-spec webapp is deployed. DO NOT USE IN PRODUCTION!
+2022-02-06 20:57:17.224:INFO:oejshC.test_spec:main: Warning: No org.apache.tomcat.JarScanner set in ServletContext. Falling back to default JarScanner implementation.
+2022-02-06 20:57:17.349:INFO:oajs.TldScanner:main: At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2022-02-06 20:57:17.426:INFO:oejsh.ContextHandler:main: Started o.e.j.w.WebAppContext@44c8afef{Test Annotations WebApp,/test-spec,[file:///tmp/jetty-0.0.0.0-8080-test-spec.war-_test-spec-any-2999853904058517219.dir/webapp/, jar:file:///tmp/jetty-0.0.0.0-8080-test-spec.war-_test-spec-any-2999853904058517219.dir/webapp/WEB-INF/lib/test-web-fragment-9.4.15.v20190215.jar!/META-INF/resources],AVAILABLE}{/test-spec.war}
+2022-02-06 20:57:17.530:WARN:oeja.AnnotationParser:main: Unknown ASM version, assuming ASM7
+2022-02-06 20:57:17.623:INFO:oeja.AnnotationConfiguration:main: Scanning elapsed time=92ms
+2022-02-06 20:57:17.625:WARN::main: test webapp is deployed. DO NOT USE IN PRODUCTION!
+2022-02-06 20:57:17.699:INFO:oejshC.test:main: Warning: No org.apache.tomcat.JarScanner set in ServletContext. Falling back to default JarScanner implementation.
+2022-02-06 20:57:17.779:INFO:oajs.TldScanner:main: At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2022-02-06 20:57:17.849:INFO:oejsh.ManagedAttributeListener:main: update PushFilter null->org.eclipse.jetty.servlets.PushCacheFilter@4be29ed9 on o.e.j.w.WebAppContext@4524411f{Test WebApp,/test,file:///tmp/jetty-0.0.0.0-8080-test.war-_test-any-3908114056496193640.dir/webapp/,STARTING}{/test.war}
+2022-02-06 20:57:17.853:INFO:oejsh.ManagedAttributeListener:main: update QoSFilter null->org.eclipse.jetty.servlets.QoSFilter@712625fd on o.e.j.w.WebAppContext@4524411f{Test WebApp,/test,file:///tmp/jetty-0.0.0.0-8080-test.war-_test-any-3908114056496193640.dir/webapp/,STARTING}{/test.war}
+2022-02-06 20:57:17.920:INFO:oejsh.ContextHandler:main: Started o.e.j.w.WebAppContext@4524411f{Test WebApp,/test,file:///tmp/jetty-0.0.0.0-8080-test.war-_test-any-3908114056496193640.dir/webapp/,AVAILABLE}{/test.war}
+2022-02-06 20:57:17.920:INFO:oejsh.ContextHandler:main: Started o.e.j.s.h.MovedContextHandler@401e7803{/oldContextPath,null,AVAILABLE}
+2022-02-06 20:57:17.950:WARN:oeja.AnnotationParser:main: Unknown ASM version, assuming ASM7
+2022-02-06 20:57:17.964:INFO:oeja.AnnotationConfiguration:main: Scanning elapsed time=14ms
+2022-02-06 20:57:17.966:WARN::main: test-jndi webapp is deployed. DO NOT USE IN PRODUCTION!
+2022-02-06 20:57:17.985:INFO:oejshC.test_jndi:main: Warning: No org.apache.tomcat.JarScanner set in ServletContext. Falling back to default JarScanner implementation.
+2022-02-06 20:57:18.066:INFO:oajs.TldScanner:main: At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2022-02-06 20:57:18.096:INFO:oejsh.ContextHandler:main: Started o.e.j.w.WebAppContext@c81cdd1{Test JNDI WebApp,/test-jndi,file:///tmp/jetty-0.0.0.0-8080-test-jndi.war-_test-jndi-any-3781212902725372477.dir/webapp/,AVAILABLE}{/test-jndi.war}
+2022-02-06 20:57:18.119:WARN:oeja.AnnotationParser:main: Unknown ASM version, assuming ASM7
+2022-02-06 20:57:18.119:INFO:oeja.AnnotationConfiguration:main: Scanning elapsed time=0ms
+2022-02-06 20:57:18.121:INFO:oejshC.ROOT:main: Warning: No org.apache.tomcat.JarScanner set in ServletContext. Falling back to default JarScanner implementation.
+2022-02-06 20:57:18.219:INFO:oajs.TldScanner:main: At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2022-02-06 20:57:18.225:INFO:oejsh.ContextHandler:main: Started o.e.j.w.WebAppContext@10dba097{ROOT,/,file:///usr/share/jetty/demo-base/webapps/ROOT/,AVAILABLE}{/ROOT}
+2022-02-06 20:57:18.252:WARN:oeja.AnnotationParser:main: Unknown ASM version, assuming ASM7
+2022-02-06 20:57:18.266:INFO:oeja.AnnotationConfiguration:main: Scanning elapsed time=14ms
+2022-02-06 20:57:18.268:WARN::main: test-jaas webapp is deployed. DO NOT USE IN PRODUCTION!
+2022-02-06 20:57:18.269:INFO:oejshC.test_jaas:main: Warning: No org.apache.tomcat.JarScanner set in ServletContext. Falling back to default JarScanner implementation.
+2022-02-06 20:57:18.352:INFO:oajs.TldScanner:main: At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2022-02-06 20:57:18.357:INFO:oejsh.ContextHandler:main: Started o.e.j.w.WebAppContext@1786f9d5{JAAS Test,/test-jaas,file:///tmp/jetty-0.0.0.0-8080-test-jaas.war-_test-jaas-any-371891237487076578.dir/webapp/,AVAILABLE}{/test-jaas.war}
+2022-02-06 20:57:18.423:WARN:oeja.AnnotationParser:main: Unknown ASM version, assuming ASM7
+2022-02-06 20:57:18.480:INFO:oeja.AnnotationConfiguration:main: Scanning elapsed time=56ms
+2022-02-06 20:57:18.484:INFO:oejshC.javadoc_proxy:main: Warning: No org.apache.tomcat.JarScanner set in ServletContext. Falling back to default JarScanner implementation.
+2022-02-06 20:57:18.548:INFO:oajs.TldScanner:main: At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2022-02-06 20:57:18.703:INFO:oejsh.ContextHandler:main: Started o.e.j.w.WebAppContext@704d6e83{Transparent Proxy WebApp,/proxy,file:///tmp/jetty-0.0.0.0-8080-javadoc-proxy.war-_javadoc-proxy-any-3699146649080582890.dir/webapp/,AVAILABLE}{/javadoc-proxy.war}
+2022-02-06 20:57:18.713:INFO:oejs.AbstractConnector:main: Started ServerConnector@673be18f{HTTP/1.1,[http/1.1]}{0.0.0.0:8080}
+2022-02-06 20:57:18.772:INFO:oejus.SslContextFactory:main: x509=X509@54e7df6a(jetty,h=[jetty.eclipse.org],w=[]) for SslContextFactory@3fed2870[provider=null,keyStore=file:///usr/share/jetty/demo-base/etc/keystore,trustStore=file:///usr/share/jetty/demo-base/etc/keystore]
+2022-02-06 20:57:18.773:INFO:oejus.SslContextFactory:main: x509=X509@77128536(mykey,h=[],w=[]) for SslContextFactory@3fed2870[provider=null,keyStore=file:///usr/share/jetty/demo-base/etc/keystore,trustStore=file:///usr/share/jetty/demo-base/etc/keystore]
+2022-02-06 20:57:18.989:INFO:oejs.AbstractConnector:main: Started ServerConnector@24ba9639{SSL,[ssl, http/1.1]}{0.0.0.0:8443}
+2022-02-06 20:57:18.989:INFO:oejs.Server:main: Started @5315ms
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2725  100  2725    0     0  25707      0 --:--:-- --:--:-- --:--:-- 25707
+            <li><a href="/test-jaas/">JAAS Test</a></li>
+Sun Feb  6 20:57:23 2022 - INFO  - End of the test.
+/root/mugen/libs/locallibs/common_lib.sh: line 19:  6400 Killed                  java -jar ../start.jar
+Sun Feb  6 20:57:23 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 20:57:23 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 20:57:33 2022 - INFO  - Finish restoring the test environment.

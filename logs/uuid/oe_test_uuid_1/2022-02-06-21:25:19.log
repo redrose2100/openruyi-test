@@ -1,0 +1,31 @@
+Sun Feb  6 21:25:20 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:25:29 2022 - INFO  - Finish preparing the test environment.
+Sun Feb  6 21:25:29 2022 - INFO  - Start to run test.
+40eb07ca-8750-11ec-b314-080027014b82
+b7339196-78e0-4439-8f83-a2fdf1477cac
+2f67490d-55a4-395e-b540-457195f7aa95
+6bd69026-2b9c-5629-82dd-f92f408b660e
+10
+40eece46-8750-11ec-9255-080027014b82
+40eecf40-8750-11ec-9a53-080027014b82
+40eecf7c-8750-11ec-9bed-080027014b82
+40eecfa4-8750-11ec-9251-080027014b82
+40eecfcc-8750-11ec-aca7-080027014b82
+40eecff4-8750-11ec-85ac-080027014b82
+40eed026-8750-11ec-8954-080027014b82
+40eed04e-8750-11ec-bf5f-080027014b82
+40eed076-8750-11ec-ac55-080027014b82
+40eed09e-8750-11ec-9948-080027014b82
+40f1f0bc-8750-11ec-ad2b-080027014b82
+40f32824-8750-11ec-92ba-080027014b82
+encode: STR:     40f32824-8750-11ec-92ba-080027014b82
+        SIV:     86333134057333850595595010386774018946
+decode: variant: DCE 1.1, ISO/IEC 11578:1996
+        version: 1 (time and node based)
+        content: time:  2022-02-06 13:25:29.845354.0 UTC
+                 clock: 4794 (usually random)
+                 node:  08:00:27:01:4b:82 (global unicast)
+Sun Feb  6 21:25:29 2022 - INFO  - End of the test.
+Sun Feb  6 21:25:29 2022 - ERROR - failed to execute the case.
+Sun Feb  6 21:25:30 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:25:31 2022 - INFO  - Finish restoring the test environment.

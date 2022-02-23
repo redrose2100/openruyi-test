@@ -1,0 +1,44 @@
+Sun Feb  6 21:17:02 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:17:14 2022 - INFO  - Finish preparing the test environment.
+Sun Feb  6 21:17:14 2022 - INFO  - Start to run test.
+rake default
+    morning:turn_off_alarm
+rake morning:groom_myself
+rake morning:make_coffee
+rake morning:ready_for_the_day
+    turn_off_alarm
+    groom_myself
+    make_coffee
+    walk_dog
+rake morning:turn_off_alarm
+rake morning:walk_dog
+rake root:clean_tmp
+Hello world
+Dog walked.
+2, 3, 5, 7
+Turned off alarm. Would have liked 5 more minutes, though.
+Brushed teeth.
+Showered.
+Shaved.
+Turned off alarm. Would have liked 5 more minutes, though.
+** Invoke morning:make_coffee (first_time)
+** Execute morning:make_coffee
+Made 2 cups of coffee. Shakes are gone.
+rake morning:groom_myself       # Groom myself
+rake morning:make_coffee        # Make coffee
+rake morning:ready_for_the_day  # Ready for the day
+rake morning:turn_off_alarm     # Turn off alarm
+rake morning:walk_dog           # Walk dog
+Turned off alarm. Would have liked 5 more minutes, though.
+rake default                        /root/mugen/testcases/cli-test/ruby/oe_test_rake_03/rakefile:50:in `<top (required)>'
+rake morning:groom_myself           /root/mugen/testcases/cli-test/ruby/oe_test_rake_03/rakefile:27:in `block in <top (required)>'
+rake morning:make_coffee            /root/mugen/testcases/cli-test/ruby/oe_test_rake_03/rakefile:34:in `block in <top (required)>'
+rake morning:ready_for_the_day      /root/mugen/testcases/cli-test/ruby/oe_test_rake_03/rakefile:45:in `block in <top (required)>'
+rake morning:turn_off_alarm         /root/mugen/testcases/cli-test/ruby/oe_test_rake_03/rakefile:22:in `block in <top (required)>'
+rake morning:walk_dog               /root/mugen/testcases/cli-test/ruby/oe_test_rake_03/rakefile:40:in `block in <top (required)>'
+rake root:clean_tmp                 /root/mugen/testcases/cli-test/ruby/oe_test_rake_03/rakefile:3:in `block in <top (required)>'
+Turned off alarm. Would have liked 5 more minutes, though.
+Sun Feb  6 21:17:16 2022 - INFO  - End of the test.
+Sun Feb  6 21:17:16 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:17:16 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:17:18 2022 - INFO  - Finish restoring the test environment.

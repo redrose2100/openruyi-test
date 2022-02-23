@@ -1,0 +1,18 @@
+Sun Feb  6 21:14:13 2022 - INFO  - Start environmental preparation.
+Sun Feb  6 21:14:23 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 21:14:23 2022 - INFO  - Start testing...
+Sun Feb  6 21:14:28 2022 - ERROR - nfs-blkmap.service restart failed
+Sun Feb  6 21:14:33 2022 - ERROR - nfs-blkmap.service stop failed
+Sun Feb  6 21:14:38 2022 - ERROR - nfs-blkmap.service start failed
+/etc/systemd/system/nfs-client.target.wants/nfs-blkmap.service
+Removed /etc/systemd/system/nfs-client.target.wants/nfs-blkmap.service.
+find: ‘/etc/systemd/system/nfs-client.target.wants/nfs-blkmap.service’: No such file or directory
+Feb 06 21:14:23 10.0.2.15 systemd[1]: nfs-blkmap.service: Failed with result 'core-dump'.
+Feb 06 21:14:33 10.0.2.15 systemd[1]: nfs-blkmap.service: Failed with result 'core-dump'.
+Sun Feb  6 21:14:39 2022 - ERROR - There is an error message for the log of nfs-blkmap.service
+Failed to reload nfs-blkmap.service: Job type reload is not applicable for unit nfs-blkmap.service.
+     Active: active (running) since Sun 2022-02-06 21:14:39 CST; 40ms ago
+Sun Feb  6 21:14:39 2022 - INFO  - Finish test!
+Sun Feb  6 21:14:39 2022 - ERROR - failed to execute the case.
+Sun Feb  6 21:14:39 2022 - INFO  - start environment cleanup.
+Sun Feb  6 21:14:42 2022 - INFO  - Finish environment cleanup!

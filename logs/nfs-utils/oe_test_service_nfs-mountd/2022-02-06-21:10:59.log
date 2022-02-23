@@ -1,0 +1,13 @@
+Sun Feb  6 21:11:00 2022 - INFO  - Start environmental preparation.
+Sun Feb  6 21:11:08 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 21:11:09 2022 - INFO  - Start testing...
+     Active: active (running) since Sun 2022-02-06 21:11:09 CST; 5s ago
+     Active: inactive (dead) since Sun 2022-02-06 21:11:14 CST; 5s ago
+     Active: active (running) since Sun 2022-02-06 21:11:19 CST; 5s ago
+Sun Feb  6 21:11:24 2022 - INFO  - The unit files have no installation config,This means they are not meant to be enabled using systemctl.
+Failed to reload nfs-mountd.service: Job type reload is not applicable for unit nfs-mountd.service.
+     Active: active (running) since Sun 2022-02-06 21:11:19 CST; 5s ago
+Sun Feb  6 21:11:24 2022 - INFO  - Finish test!
+Sun Feb  6 21:11:24 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:11:24 2022 - INFO  - start environment cleanup.
+Sun Feb  6 21:11:26 2022 - INFO  - Finish environment cleanup!

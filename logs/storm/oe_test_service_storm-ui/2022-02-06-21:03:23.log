@@ -1,0 +1,35 @@
+Sun Feb  6 21:03:23 2022 - INFO  - Start environmental preparation.
+oe_test_service_storm-ui.sh: line 35: /etc/storm/storm.yaml: No such file or directory
+Failed to start zookeeper.service: Unit zookeeper.service not found.
+Sun Feb  6 21:03:26 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 21:03:26 2022 - INFO  - Start testing...
+Failed to restart storm-ui.service: Unit storm-ui.service not found.
+Sun Feb  6 21:03:26 2022 - ERROR - storm-ui.service restart failed
+Unit storm-ui.service could not be found.
+Sun Feb  6 21:03:31 2022 - ERROR - storm-ui.service restart failed
+Failed to stop storm-ui.service: Unit storm-ui.service not loaded.
+Sun Feb  6 21:03:32 2022 - ERROR - storm-ui.service stop failed
+Unit storm-ui.service could not be found.
+Sun Feb  6 21:03:37 2022 - ERROR - storm-ui.service stop failed
+Failed to start storm-ui.service: Unit storm-ui.service not found.
+Sun Feb  6 21:03:37 2022 - ERROR - storm-ui.service start failed
+Unit storm-ui.service could not be found.
+Sun Feb  6 21:03:42 2022 - ERROR - storm-ui.service start failed
+Failed to get unit file state for storm-ui.service: No such file or directory
+Sun Feb  6 21:03:42 2022 - INFO  - Unit is indirect, ignoring.
+Failed to start storm-ui.service: Unit storm-ui.service not found.
+Sun Feb  6 21:03:42 2022 - ERROR - Job type reload is not applicable for unit storm-ui.service
+Unit storm-ui.service could not be found.
+Unit storm-ui.service could not be found.
+Sun Feb  6 21:03:42 2022 - INFO  - Finish test!
+Sun Feb  6 21:03:42 2022 - ERROR - failed to execute the case.
+Sun Feb  6 21:03:42 2022 - INFO  - start environment cleanup.
+Failed to stop zookeeper.service: Unit zookeeper.service not loaded.
+Failed to stop storm-ui.service: Unit storm-ui.service not loaded.
+Traceback (most recent call last):
+  File "/root/mugen/libs/locallibs/rpm_manage.py", line 173, in <module>
+    exitcode = rpm_remove(args.node, args.pkgs, args.tempfile)
+  File "/root/mugen/libs/locallibs/rpm_manage.py", line 144, in rpm_remove
+    with open(tmpfile, "r") as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'Last metadata expiration check: 0:11:45 ago on Sun 06 Feb 2022 08:51:41 PM CST.\nNo match for argument: storm\nError: Unable to find a match: storm'
+Sun Feb  6 21:03:42 2022 - INFO  - Finish environment cleanup!

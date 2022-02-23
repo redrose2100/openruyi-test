@@ -1,0 +1,33 @@
+Sun Feb  6 21:02:26 2022 - INFO  - Start environmental preparation.
+modprobe: FATAL: Module ipmi_si  not found in directory /lib/modules/4.19.140-2009.4.0.0048.oe1.x86_64
+Sun Feb  6 21:02:27 2022 - INFO  - pkgs:(ipmitool) is already installed
+Sun Feb  6 21:02:27 2022 - INFO  - End of environmental preparation!
+Sun Feb  6 21:02:27 2022 - INFO  - Start testing...
+Job for ipmievd.service failed because the control process exited with error code.
+See "systemctl status ipmievd.service" and "journalctl -xe" for details.
+Sun Feb  6 21:02:27 2022 - ERROR - ipmievd.service restart failed
+Sun Feb  6 21:02:32 2022 - ERROR - ipmievd.service restart failed
+Sun Feb  6 21:02:38 2022 - ERROR - ipmievd.service stop failed
+Job for ipmievd.service failed because the control process exited with error code.
+See "systemctl status ipmievd.service" and "journalctl -xe" for details.
+Sun Feb  6 21:02:38 2022 - ERROR - ipmievd.service start failed
+Sun Feb  6 21:02:43 2022 - ERROR - ipmievd.service start failed
+/etc/systemd/system/multi-user.target.wants/ipmievd.service
+Removed /etc/systemd/system/multi-user.target.wants/ipmievd.service.
+find: ‘/etc/systemd/system/multi-user.target.wants/ipmievd.service’: No such file or directory
+Feb 06 21:02:27 10.0.2.15 systemd[1]: ipmievd.service: Control process exited, code=exited, status=1/FAILURE
+Feb 06 21:02:27 10.0.2.15 systemd[1]: ipmievd.service: Failed with result 'exit-code'.
+Feb 06 21:02:27 10.0.2.15 systemd[1]: Failed to start Ipmievd Daemon.
+Feb 06 21:02:38 10.0.2.15 systemd[1]: ipmievd.service: Control process exited, code=exited, status=1/FAILURE
+Feb 06 21:02:38 10.0.2.15 systemd[1]: ipmievd.service: Failed with result 'exit-code'.
+Feb 06 21:02:38 10.0.2.15 systemd[1]: Failed to start Ipmievd Daemon.
+Sun Feb  6 21:02:43 2022 - ERROR - There is an error message for the log of ipmievd.service
+Job for ipmievd.service failed because the control process exited with error code.
+See "systemctl status ipmievd.service" and "journalctl -xe" for details.
+Failed to reload ipmievd.service: Job type reload is not applicable for unit ipmievd.service.
+Sun Feb  6 21:02:44 2022 - INFO  - Finish test!
+Sun Feb  6 21:02:44 2022 - ERROR - failed to execute the case.
+Sun Feb  6 21:02:44 2022 - INFO  - start environment cleanup.
+modprobe: FATAL: Module ipmi_si  not found.
+Sun Feb  6 21:02:44 2022 - WARN  - no thing to do.
+Sun Feb  6 21:02:44 2022 - INFO  - Finish environment cleanup!

@@ -1,0 +1,42 @@
+Sun Feb  6 21:16:46 2022 - INFO  - Start to prepare the test environment.
+Sun Feb  6 21:16:58 2022 - INFO  - Finish preparing the test environment.
+Sun Feb  6 21:16:58 2022 - INFO  - Start to run test.
+test.rb(main):005:0> puts Prime.each(10).to_a.join(", ");
+2, 3, 5, 7
+hello.rb(main):003:0> puts "Hello World!";hello.rb(main):003:0> 
+Hello World!
+=> nil
+=> nil
+=> nil
+hello.rb(main):003:0> puts "Hello World!";hello.rb(main):003:0> 
+Hello World!
+=> nil
+hello.rb(main):003:0> puts "Hello World!";hello.rb(main):003:0> 
+Hello World!
+hello.rb(main):001:0> #!/usr/bin/ruby
+=> nil
+hello.rb(main):002:0> 
+hello.rb(main):003:0> puts "Hello World!";hello.rb(main):003:0> 
+Hello World!
+=> nil
+hello.rb(main):003:0> 
+    ==>nil
+puts "Hello World!";
+Hello World!
+    ==>nil
+hello.rb(main):001:0> #!/usr/bin/ruby
+nil
+hello.rb(main):002:0> 
+hello.rb(main):003:0> puts "Hello World!";hello.rb(main):003:0> 
+Hello World!
+nil
+hello.rb(main):003:0> 
+hello.rb(main):001:0> #!/usr/bin/ruby
+hello.rb(main):002:0> 
+hello.rb(main):003:0> puts "Hello World!";hello.rb(main):003:0> 
+Hello World!
+hello.rb(main):003:0> 
+Sun Feb  6 21:16:59 2022 - INFO  - End of the test.
+Sun Feb  6 21:16:59 2022 - INFO  - succeed to execute the case.
+Sun Feb  6 21:17:00 2022 - INFO  - Start to restore the test environment.
+Sun Feb  6 21:17:01 2022 - INFO  - Finish restoring the test environment.
