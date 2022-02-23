@@ -28,8 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     # -raw
-    # 不转换为实体而直接输出
-    # For raw, Tidy will output values above 127 without translating them into entities.
+    # 对于码点大于127的字符不转换为实体而直接输出
     echo '￥;' | tidy -raw | grep '￥'
     CHECK_RESULT $? 0 0 "Failed to use option: -raw"
     # -ascii
