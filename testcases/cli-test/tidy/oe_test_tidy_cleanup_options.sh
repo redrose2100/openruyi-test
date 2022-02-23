@@ -29,6 +29,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     # --bare
     # strip out smart quotes and em dashes, etc.
+    # 移除智能引用号和加强破折号
     echo '—' | tidy --bare true | grep '-'
     CHECK_RESULT $? 0 0 "Failed to use option: --bare"
     echo 'bare: true' >./tidyrc
@@ -97,7 +98,6 @@ function run_test() {
     echo '<span><span>hi</span></span>' | tidy -config ./tidyrc | grep '<span><span>hi</span></span>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: merge-spans"
     # --word-2000
-    # 无法使用
     LOG_INFO "Finish test!"
 }
 
