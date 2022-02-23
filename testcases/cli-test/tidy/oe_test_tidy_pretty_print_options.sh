@@ -48,12 +48,6 @@ function run_test() {
     echo '<p id="1" class="2">hi</p>' | tidy -config ./tidyrc | grep "<id>"$'\n'"class"
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: indent-attributes"
     # --indent-cdata
-    #
-    # echo '' | tidy --indent-cdata true | grep ''
-    # CHECK_RESULT $? 0 0 "Failed to use option: --indent-cdata"
-    # echo 'indent-cdata: true' > ./tidyrc
-    # echo '' | tidy -config ./tidyrc | grep ''
-    # CHECK_RESULT $? 0 0 "Failed to use option in configuration: indent-cdata"
     # --indent-spaces
     # 指定缩进使用的空格数量
     echo '<p>hi<b>what</b></p>' | tidy --indent yes --indent-spaces 1 | grep "<p>"$'\n'"h"
