@@ -51,17 +51,22 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: join-classes"
     # --join-styles
     # 将多个样式合并为一个新样式
-    echo '<h1 style="color:blue" style="text-align:center;">hi</h1>' | tidy --join-styles false | grep ' style="color:blue; text-align:center;"'
-    CHECK_RESULT $? 1 0 "Failed to use option: --join-styles"
-    echo 'join-styles: false' >./tidyrc
-    echo '<h1 style="color:blue" style="text-align:center;">hi</h1>' | tidy -config ./tidyrc | grep ' style="color:blue; text-align:center;"'
-    CHECK_RESULT $? 1 0 "Failed to use option in configuration: join-styles"
+    echo '<h1 style="color:blue" style="text-align:center;">hi</h1>' | tidy --join-styles true | grep 'Warning: <h1> joining values of repeated attribute "style"'
+    CHECK_RESULT $? 0 0 "Failed to use option: --join-styles"
+    echo 'join-styles: true' >./tidyrc
+    echo '<h1 style="color:blue" style="text-align:center;">hi</h1>' | tidy -config ./tidyrc | grep 'Warning: <h1> joining values of repeated attribute "style"'
+    CHECK_RESULT $? 0 0 "Failed to use option in configuration: join-styles"
     # --merge-emphasis
     # 合并嵌套的 <b> 和 <i> 元素，默认开启
     echo '<b><b>hi</b></b>' | tidy --merge-emphasis false | grep '<b><b>hi</b></b>'
     CHECK_RESULT $? 0 0 "Failed to use option: --merge-emphasis"
+    echo '<b><b>hi</b></b>' | tidy --merge-emphasis true | grep '<b>hi</b>'
+    CHECK_RESULT $? 0 0 "Failed to use option: --merge-emphasis"
     echo 'merge-emphasis: false' >./tidyrc
     echo '<b><b>hi</b></b>' | tidy -config ./tidyrc | grep '<b><b>hi</b></b>'
+    CHECK_RESULT $? 0 0 "Failed to use option in configuration: merge-emphasis"
+    echo 'merge-emphasis: true' >./tidyrc
+    echo '<b><b>hi</b></b>' | tidy -config ./tidyrc | grep '<b>hi</b>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: merge-emphasis"
     # --replace-color
     # 将颜色的数字表示转换为名字
