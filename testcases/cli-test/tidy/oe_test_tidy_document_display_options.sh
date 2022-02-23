@@ -55,11 +55,11 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: markup"
     # --mute
     # 根据 ID 关闭特定错误信息的提示
-    echo '' | tidy --mute 'MISSING_TITLE_ELEMENT' 2>&1 | grep "missing 'title' element"
-    CHECK_RESULT $? 1 0 "Failed to use option: --mute"
+    echo '' | tidy --mute 'MISSING_TITLE_ELEMENT' 2>&1 | grep 'messages of type "MISSING_TITLE_ELEMENT" will not be output'
+    CHECK_RESULT $? 0 0 "Failed to use option: --mute"
     echo 'mute: MISSING_TITLE_ELEMENT' >./tidyrc
-    echo '' | tidy -config ./tidyrc 2>&1 | grep "missing 'title' element"
-    CHECK_RESULT $? 1 0 "Failed to use option in configuration: mute"
+    echo '' | tidy -config ./tidyrc 2>&1 | grep 'messages of type "MISSING_TITLE_ELEMENT" will not be output'
+    CHECK_RESULT $? 0 0 "Failed to use option in configuration: mute"
     # --mute-id
     # 指定是否要在输出的错误提示中包含其对应的 ID
     echo '' | tidy --mute-id true 2>&1 | grep 'title' | grep 'MISSING_TITLE_ELEMENT'
