@@ -28,10 +28,8 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     # --gnu-emacs
-    # 默认报错格式
-    # line <line number> column <column number> - (Error|Warning): <message>
-    # gnu-emacs 开启后的报错格式
-    # <filename>:<line number>:<column number>: (Error|Warning): <message>
+    # 默认报错格式：line <line number> column <column number> - (Error|Warning): <message>
+    # gnu-emacs 开启后的报错格式：<filename>:<line number>:<column number>: (Error|Warning): <message>
     echo '<h1>hi' >./sample.html
     tidy --gnu-emacs true ./sample.html 2>&1 | grep 'sample.html' | grep 'Warning'
     CHECK_RESULT $? 0 0 "Failed to use option: --gnu-emacs"
