@@ -10,8 +10,8 @@
 # See the Mulan PSL v2 for more detaitest -f.
 
 # #############################################
-# @Author    :   huangrong
-# @Contact   :   1820463064@qq.com
+# @Author    :   wangsongsong
+# @Contact   :   ss_wang@foxmail.com
 # @Date      :   2020/10/23
 # @License   :   Mulan PSL v2
 # @Desc      :   Test pam_namespace.service restart

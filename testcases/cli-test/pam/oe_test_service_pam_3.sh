@@ -10,8 +10,8 @@
 # See the Mulan PSL v2 for more detaitest -f.
 
 # #############################################
-# @Author    :   huangrong
-# @Contact   :   1820463064@qq.com
+# @Author    :   wangsongsong
+# @Contact   :   ss_wang@foxmail.com
 # @Date      :   2020/10/23
 # @License   :   Mulan PSL v2
 # @Desc      :   Test pam_namespace.service restart
@@ -36,9 +36,9 @@ function run_test() {
     LOG_INFO "Finish test!"
 }
 
-#function post_test(){
-#pid_num=`netstat -anp| grep 5555|awk '{print $7}'| awk -F"/" '{print $1}'`
-#kill $pid_num 
+function post_test(){
+pid_num=`netstat -anp| grep 5555|awk '{print $7}'| awk -F"/" '{print $1}'`
+kill $pid_num 
 #systemctl restart firewalld
-#}
+}
 main "$@"
