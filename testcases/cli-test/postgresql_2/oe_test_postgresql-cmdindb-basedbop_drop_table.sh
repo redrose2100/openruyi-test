@@ -9,8 +9,8 @@
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
 # #############################################
-# @Author    :   wangshan
-# @Contact   :   wangshan@163.com
+# @Author    :   wangsongsong
+# @Contact   :   ss_wang@foxmail.com
 # @Date      :   2020-10-15
 # @License   :   Mulan PSL v2
 # @Desc      :   createdb
