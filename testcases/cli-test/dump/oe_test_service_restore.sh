@@ -1,34 +1,27 @@
 #!/usr/bin/bash
-# Copyright (c) [2021] Huawei Technologies Co.,Ltd.ALL rights reserved.
+
+# Copyright (c) 2022 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
-# You can use it according to the terms and conditions of the Mulan PSL v2.
-# http://license.coscl.org.cn/MulanPSL2
+#	 http://license.coscl.org.cn/MulanPSL2
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
-# See the Mulan PSL v2 for more details.
+#See the Mulan PSL v2 for more details.
+
 ####################################
 # @Author : wuzhihao
 # @email : zhihao@isrc.iscas.ac.cn
 # @Date : 2022-02
 # @License : Mulan PSL v2
 # @Version : 1.0
-# @Desc :
+# @Desc : The restore command performs the inverse function of dump
+#A full backup of a file system may be restored and subsequent incremental backups layered on top of it.
+#Single files and directory subtrees may be restored from full or partial backups.
+#Restore works across a network; to do this see the -f flag described below.
+#Other arguments to the command are file or directory names specifying the files that are to be restored.
 #####################################
-export OET_PATH="/root/mugen"
-source "$OET_PATH/libs/locallibs/common_lib.sh"
 
-
-
-
-function config_params() {
-        LOG_INFO "Start to config params of the case."
-#        free_port="$(GET_FREE_PORT localhost)"
-        LOG_INFO "End to config params of the case."
-}
-
-
-
+source "../common/common_lib.sh"
 
 function pre_test() {
         LOG_INFO "Start environmental preparation."
@@ -38,7 +31,6 @@ function pre_test() {
 
 function run_test(){
 	LOG_INFO "Start testing..."
-	cd ~
 	touch /boot/abc
 	restore -C -f /root/boot.bak.bz2 | grep "Some files were modified!"
 	CHECK_RESULT $? 1 0 "Error! Added file detected."
@@ -51,13 +43,27 @@ function run_test(){
 	mkdir boot.test
 	cd boot.test/
 	restore -r -f /root/boot.bak.bz2
+	/n|restore -R -f /root/boot.bak.bz2
 	count=`ls /root/boot.test|wc -w`
 	if [ "$count" -eq "0" ];
 	then
 		 LOG_ERROR "Failed to restore backup files in this folder"
 	fi
-	cd /root/mugen/testcases/cli-test/dump
 	rm -rf /root/boot.test/
+	restore -t -f /root/boot.bak.bz2 | grep "openEuler"
+	CHECK_RESULT $? 0 0 "Failed to list files on the backup"
 	LOG_INFO "Finish test!"
+
 }
+
+function post_test() {
+        LOG_INFO "start environment cleanup."
+        sed -i 's\ExecStart=/usr/sbin/dump -4\ExecStart=/usr/sbin/dump\g' /usr/lib/systemd/system/dump.service
+        systemctl daemon-reload
+        systemctl reload dump.service
+        systemctl stop dump.service
+        DNF_REMOVE
+        LOG_INFO "Finish environment cleanup!"
+}
+
 main "$@"
