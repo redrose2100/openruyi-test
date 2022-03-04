@@ -34,14 +34,15 @@ function run_test(){
 	touch /boot/abc
 	rrestore -C -f /root/boot.bak.bz2 | grep "Some files were modified!"
 	CHECK_RESULT $? 1 0 "Error! Added file detected."
+	rm -rf /boot/abc
 	mv /boot/initramfs-0-rescue-cc63de2ddad7424f885cb8e9c1ef4668.img /boot/initramfs-0-rescue-cc63de2ddad7424f885cb8e9c1ef4669.img
 	rrestore -C -f /root/boot.bak.bz2 | grep "Some files were modified!"
 	CHECK_RESULT $? 0 0 "Failed to detecte revision files"
 	mv /boot/initramfs-0-rescue-cc63de2ddad7424f885cb8e9c1ef4669.img /boot/initramfs-0-rescue-cc63de2ddad7424f885cb8e9c1ef4668.img
 	rrestore -t -f /root/boot.bak.bz2 | grep "Dump   date:"
 	CHECK_RESULT $? 0 0 "Failed to print backup profile informaintioin"
-	mkdir boot.test
-	cd boot.test/
+	mkdir /root/boot.test
+	cd /root/boot.test/
 	rrestore -r -f /root/boot.bak.bz2
 	/n|rrestore -R -f /root/boot.bak.bz2
 	count=`ls /root/boot.test|wc -w`
