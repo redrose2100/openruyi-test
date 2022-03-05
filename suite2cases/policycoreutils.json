@@ -8,10 +8,68 @@
             "name": "oe_test_service_selinux-autorelabel-mark"
         },
         {
-            "name": "oe_test_service_selinux-autorelabel"
+            "name": "oe_test_target_selinux-autorelabel"
         },
         {
-            "name": "oe_test_target_selinux-autorelabel"
+            "name": "oe_test_service_newrole"
+        },
+        {
+            "name": "oe_test_service_selinux-audit2allow"
+        },
+        {
+            "name": "oe_test_service_selinux-fixfiles"
+        },
+        {
+            "name": "oe_test_service_selinux-genhomedircon"
+        }
+        },
+        {
+            "name": "oe_test_service_selinux-getsebool"
+        },
+        {
+            "name": "oe_test_service_selinux-load_policy"
+        },
+        {
+            "name": "oe_test_service_selinux-restorecon"
+        }
+        },
+        {
+            "name": "oe_test_service_selinux-restorecon_xattr"
+        },
+        {
+            "name": "oe_test_service_selinux-secon"
+        },
+        {
+            "name": "oe_test_service_selinux-semodule_expand"
+        }
+        },
+        {
+            "name": "oe_test_service_selinux-semodule_link"
+        },
+        {
+            "name": "oe_test_service_selinux-semodule_package"
+        },
+        {
+            "name": "oe_test_service_selinux-semodule"
+        }
+        },
+        {
+            "name": "oe_test_service_selinux-semodule_unpackage"
+        },
+        {
+            "name": "oe_test_service_selinux-sestatus"
+        },
+        {
+            "name": "oe_test_service_selinux-setfiles"
+        },
+        {
+            "name": "oe_test_service_selinux-setsebool"
+        },
+        {
+            "name": "oe_test_service_semanage"
+        },
+        {
+            "name": "oe_test_service_selinux-autorelabel"
         }
     ]
 }
