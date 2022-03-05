@@ -1,0 +1,218 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/postgresql_0228",
+    "cases": [
+        {
+            "name": "oe_test_postgresql_auth1"
+        },
+        {
+            "name": "oe_test_postgresql_auth2"
+        },        
+        {
+            "name": "oe_test_postgresql_backup_db"
+        },
+        {
+            "name": "oe_test_postgresql_clusterdb"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_alter_table"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_create_database"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_create_table"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_display_db_list"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_display_tablename_list"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_display_table_state"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_drop_database"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_drop_table"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb_change_db"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb_display_index"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb_display_struct"
+        },       
+        {
+            "name": "oe_test_postgresql-cmdindb_display_table"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb_list_db"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb_quit_psql"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_alter_table1"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_alter_table2"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_alter_table3"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_alter_table4"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_alter_table5"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_delete_from1"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_delete_from2"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_insert_into"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_update"
+        },        
+        {
+            "name": "oe_test_postgresql_create_PostgreSQL_db_user_sample"
+        },        
+        {
+            "name": "oe_test_postgresql_ecpg"
+        },        
+        {
+            "name": "oe_test_postgresql_initdb"
+        },        
+        {
+            "name": "oe_test_postgresql_oid2name"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_archivecleanup"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_basebackup"
+        },        
+        {
+            "name": "oe_test_postgresql_pgbench1"
+        },        
+        {
+            "name": "oe_test_postgresql_pgbench2"
+        },        
+        {
+            "name": "oe_test_postgresql_pgbench3"
+        },        
+        {
+            "name": "oe_test_postgresql_pgbench4"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_config1"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_config2"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_isready"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_receivewal"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_recvlogical"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_resetwal"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_standby"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_test_fsync"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_waldump"
+        },        
+        {
+            "name": "oe_test_postgresql_postgres1"
+        },        
+        {
+            "name": "oe_test_postgresql_postgres2"
+        },        
+        {
+            "name": "oe_test_postgresql_postgresql-setup"
+        },        
+        {
+            "name": "oe_test_postgresql_postgres"
+        },        
+        {
+            "name": "oe_test_postgresql_reindexdb"
+        },        
+        {
+            "name": "oe_test_postgresql_set_user_special_right"
+        },        
+        {
+            "name": "oe_test_postgresql-sysutil_pg_ctl"
+        },        
+        {
+            "name": "oe_test_postgresql-sysutil_psql1"
+        },        
+        {
+            "name": "oe_test_postgresql-sysutil_psql2"
+        },        
+        {
+            "name": "oe_test_postgresql-sysutil_psql3"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_createdb"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_createuser2"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_createuser"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_dropdb"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_pg_dump1"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_pg_dump2"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_pg_dump3"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_pg_dumpall"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_pg_restore1"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_pg_restore2"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_psql1"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_psql2"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_psql3"
+        },        
+        {
+            "name": "oe_test_postgresql-utility_vacuumdb"
+        },        
+        {
+            "name": "oe_test_postgresql_vacuumlo"
+        }
+    ]
+}
