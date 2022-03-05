@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/rootsh",
+    "cases": [
+        {
+            "name": "oe_test_rootsh"
+        }
+    ]
+}

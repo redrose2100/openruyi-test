@@ -1,0 +1,689 @@
+Sat Mar  5 13:31:20 2022 - INFO  - Start to prepare the test environment.
+Sat Mar  5 13:31:24 2022 - INFO  - End to prepare the test environment.
+Sat Mar  5 13:31:24 2022 - INFO  - Start to run test.
+spawn procinfo -f
+[H[2J[?25l[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      591232     7028592           0       78868
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.08 0.02 0.01 1/155 5954
+
+
+user  :       0:00:15.68 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.33 0.2  swap in :        0
+idle  :      17:10:24.17 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:19:45.91         context :  1842580
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      591112     7028712           0       78868
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.07 0.02 0.00 1/155 5954
+
+
+user  :       0:00:15.68 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.33 0.2  swap in :        0
+idle  :      17:10:44.07 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:19:50.92         context :  1843232
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[?12l[?25h[27m[37;1Hspawn procinfo -f
+s[H[2J[?25l[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      591200     7028624           0       78880
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.07 0.02 0.00 1/155 5959
+
+
+user  :       0:00:15.69 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.36 0.2  swap in :        0
+idle  :      17:10:44.14 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:19:50.97         context :  1843344
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K[showing system status]
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      591200     7028624           0       78880
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.07 0.02 0.00 2/155 5959
+
+
+user  :       0:00:15.69 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.36 0.2  swap in :        0
+idle  :      17:10:44.14 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:19:50.97         context :  1843345
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      591112     7028712           0       78880
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.07 0.02 0.00 1/155 5959
+
+
+user  :       0:00:15.69 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.37 0.2  swap in :        0
+idle  :      17:11:04.05 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:19:55.98         context :  1843981
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[?12l[?25h[27m[37;1Hspawn procinfo -f
+m[H[2J[?25l[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590932     7028892           0       78888
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.07 0.02 0.00 1/155 5964
+
+
+user  :       0:00:15.70 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.40 0.2  swap in :        0
+idle  :      17:11:04.12 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:19:56.02         context :  1844080
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K[showing modules & devices]
+Kernel Command Line:
+  BOOT_IMAGE=/vmlinuz-5.10.0-5.10.0.24.oe1.x86_64 root=/dev/mapper/openeuler-root ro resume=/dev/mapper/openeuler-swap rd.lvm.lv=openeuler/root rd.lvm.lv=openeuler/swap crashkernel=512M
+
+Modules:
+ 16 *nft_fib_inet    16 *nft_fib_ipv4    16 *nft_fib_ipv6    16 *nft_fib         16 *nft_reject_ine  16 *nf_reject_ipv4 
+ 20 *nf_reject_ipv6  16 *nft_reject      20 *nft_ct          16 *nft_chain_nat  256 *nf_tables       16  ebtable_nat    
+ 16  ebtable_broute  16  ip6table_nat    16  ip6table_mangl  16  ip6table_raw    16  ip6table_secur  16  iptable_nat    
+ 52 *nf_nat         172 *nf_conntrack    24 *nf_defrag_ipv6  16 *nf_defrag_ipv4  16 *libcrc32c       16  iptable_mangle 
+ 16  iptable_raw     16  iptable_securi  28 *rfkill          56  ip_set          16 *nfnetlink       16  ebtable_filter 
+ 40 *ebtables        16  ip6table_filte  36 *ip6_tables      16  iptable_filter 652 *sunrpc         376 *vmwgfx         
+112 *ttm            272 *drm_kms_helper  48  snd_intel8x0   176 *snd_ac97_codec  16 *syscopyarea     16 *sysfillrect    
+ 16 *ac97_bus        16 *sysimgblt      136 *snd_pcm         16 *fb_sys_fops     52 *cec             28  i2c_piix4      
+ 48 *snd_timer       40  sg              28  joydev         108 *snd             16 *soundcore       16  pcspkr         
+656 *drm            148 *fuse            32 *ip_tables      924 *ext4            16 *mbcache        148 *jbd2           
+ 28  sr_mod          64 *sd_mod          80 *cdrom           16 *t10_pi          16  ata_generic     40 *ata_piix       
+ 20  serio_raw       24 *crc32c_intel   296 *libata         164  e1000           52  video           28  dm_mirror      
+ 24 *dm_region_hash  20 *dm_log         164 *dm_mod         [K
+[K
+Character Devices:                      Block Devices:
+  1 mem             180 usb               8 sd              135 sd              [K
+  4 /dev/vc/0       189 usb_device        9 md              253 device-mapper   [K
+  4 tty             202 cpu/msr          11 sr              254 mdp             [K
+  4 ttyS            203 cpu/cpuid        65 sd              259 blkext          [K
+  5 /dev/tty        226 drm              66 sd              [K
+  5 /dev/console    243 aux              67 sd              [K
+  5 /dev/ptmx       244 cec              68 sd              [K
+  7 vcs             245 hidraw           69 sd              [K
+ 10 misc            246 usbmon           70 sd              [K
+ 13 input           247 bsg              71 sd              [K
+ 14 sound           248 watchdog        128 sd              [K
+ 21 sg              249 ptp             129 sd              [K
+ 29 fb              250 pps             130 sd              [K
+116 alsa            251 rtc             131 sd              [K
+128 ptm             252 dax             132 sd              [K
+136 pts             253 tpm             133 sd              [K
+162 raw             254 gpiochip        134 sd              [K
+[K
+File Systems:[K
+[sysfs]             [tmpfs]             [bdev]              [proc]              [cgroup]            [cgroup2]           
+[cpuset]            [devtmpfs]          [configfs]          [debugfs]           [tracefs]           [securityfs]        
+[sockfs]            [bpf]               [pipefs]            [ramfs]             [hugetlbfs]         [devpts]            
+[autofs]            [mqueue]            [selinuxfs]         [pstore]            ext3                ext2                
+ext4                fuseblk             [fuse]              [fusectl]           [rpc_pipefs]        [K
+[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Kernel Command Line:
+  BOOT_IMAGE=/vmlinuz-5.10.0-5.10.0.24.oe1.x86_64 root=/dev/mapper/openeuler-root ro resume=/dev/mapper/openeuler-swap rd.lvm.lv=openeuler/root rd.lvm.lv=openeuler/swap crashkernel=512M
+
+Modules:
+ 16 *nft_fib_inet    16 *nft_fib_ipv4    16 *nft_fib_ipv6    16 *nft_fib         16 *nft_reject_ine  16 *nf_reject_ipv4 
+ 20 *nf_reject_ipv6  16 *nft_reject      20 *nft_ct          16 *nft_chain_nat  256 *nf_tables       16  ebtable_nat    
+ 16  ebtable_broute  16  ip6table_nat    16  ip6table_mangl  16  ip6table_raw    16  ip6table_secur  16  iptable_nat    
+ 52 *nf_nat         172 *nf_conntrack    24 *nf_defrag_ipv6  16 *nf_defrag_ipv4  16 *libcrc32c       16  iptable_mangle 
+ 16  iptable_raw     16  iptable_securi  28 *rfkill          56  ip_set          16 *nfnetlink       16  ebtable_filter 
+ 40 *ebtables        16  ip6table_filte  36 *ip6_tables      16  iptable_filter 652 *sunrpc         376 *vmwgfx         
+112 *ttm            272 *drm_kms_helper  48  snd_intel8x0   176 *snd_ac97_codec  16 *syscopyarea     16 *sysfillrect    
+ 16 *ac97_bus        16 *sysimgblt      136 *snd_pcm         16 *fb_sys_fops     52 *cec             28  i2c_piix4      
+ 48 *snd_timer       40  sg              28  joydev         108 *snd             16 *soundcore       16  pcspkr         
+656 *drm            148 *fuse            32 *ip_tables      924 *ext4            16 *mbcache        148 *jbd2           
+ 28  sr_mod          64 *sd_mod          80 *cdrom           16 *t10_pi          16  ata_generic     40 *ata_piix       
+ 20  serio_raw       24 *crc32c_intel   296 *libata         164  e1000           52  video           28  dm_mirror      
+ 24 *dm_region_hash  20 *dm_log         164 *dm_mod         [K
+[K
+Character Devices:                      Block Devices:
+  1 mem             180 usb               8 sd              135 sd              [K
+  4 /dev/vc/0       189 usb_device        9 md              253 device-mapper   [K
+  4 tty             202 cpu/msr          11 sr              254 mdp             [K
+  4 ttyS            203 cpu/cpuid        65 sd              259 blkext          [K
+  5 /dev/tty        226 drm              66 sd              [K
+  5 /dev/console    243 aux              67 sd              [K
+  5 /dev/ptmx       244 cec              68 sd              [K
+  7 vcs             245 hidraw           69 sd              [K
+ 10 misc            246 usbmon           70 sd              [K
+ 13 input           247 bsg              71 sd              [K
+ 14 sound           248 watchdog        128 sd              [K
+ 21 sg              249 ptp             129 sd              [K
+ 29 fb              250 pps             130 sd              [K
+116 alsa            251 rtc             131 sd              [K
+128 ptm             252 dax             132 sd              [K
+136 pts             253 tpm             133 sd              [K
+162 raw             254 gpiochip        134 sd              [K
+[K
+File Systems:[K
+[sysfs]             [tmpfs]             [bdev]              [proc]              [cgroup]            [cgroup2]           
+[cpuset]            [devtmpfs]          [configfs]          [debugfs]           [tracefs]           [securityfs]        
+[sockfs]            [bpf]               [pipefs]            [ramfs]             [hugetlbfs]         [devpts]            
+[autofs]            [mqueue]            [selinuxfs]         [pstore]            ext3                ext2                
+ext4                fuseblk             [fuse]              [fusectl]           [rpc_pipefs]        [K
+[?12l[?25h[27m[37;1Hspawn procinfo -f
+a[H[2J[?25l[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590868     7028956           0       78896
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.06 0.02 0.00 1/155 5969
+
+
+user  :       0:00:15.70 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.42 0.2  swap in :        0
+idle  :      17:11:24.08 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:01.05         context :  1844828
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K[showing all info]
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590868     7028956           0       78896
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.06 0.02 0.00 3/155 5969
+
+
+user  :       0:00:15.70 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.42 0.2  swap in :        0
+idle  :      17:11:24.08 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:01.05         context :  1844829
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+
+Kernel Command Line:
+  BOOT_IMAGE=/vmlinuz-5.10.0-5.10.0.24.oe1.x86_64 root=/dev/mapper/openeuler-root ro resume=/dev/mapper/openeuler-swap rd.lvm.lv=openeuler/root rd.lvm.lv=openeuler/swap crashkernel=512M
+
+Modules:
+ 16 *nft_fib_inet    16 *nft_fib_ipv4    16 *nft_fib_ipv6    16 *nft_fib         16 *nft_reject_ine  16 *nf_reject_ipv4 
+ 20 *nf_reject_ipv6  16 *nft_reject      20 *nft_ct          16 *nft_chain_nat  256 *nf_tables       16  ebtable_nat    
+ 16  ebtable_broute  16  ip6table_nat    16  ip6table_mangl  16  ip6table_raw    16  ip6table_secur  16  iptable_nat    
+ 52 *nf_nat         172 *nf_conntrack    24 *nf_defrag_ipv6  16 *nf_defrag_ipv4  16 *libcrc32c       16  iptable_mangle 
+ 16  iptable_raw     16  iptable_securi  28 *rfkill          56  ip_set          16 *nfnetlink       16  ebtable_filter 
+ 40 *ebtables        16  ip6table_filte  36 *ip6_tables      16  iptable_filter 652 *sunrpc         376 *vmwgfx         
+112 *ttm            272 *drm_kms_helper  48  snd_intel8x0   176 *snd_ac97_codec  16 *syscopyarea     16 *sysfillrect    
+ 16 *ac97_bus        16 *sysimgblt      136 *snd_pcm         16 *fb_sys_fops     52 *cec             28  i2c_piix4      
+ 48 *snd_timer       40  sg              28  joydev         108 *snd             16 *soundcore       16  pcspkr         
+656 *drm            148 *fuse            32 *ip_tables      924 *ext4            16 *mbcache        148 *jbd2           
+ 28  sr_mod          64 *sd_mod          80 *cdrom           16 *t10_pi          16  ata_generic     40 *ata_piix       
+ 20  serio_raw       24 *crc32c_intel   296 *libata         164  e1000           52  video           28  dm_mirror      
+ 24 *dm_region_hash  20 *dm_log         164 *dm_mod         [K
+[K
+Character Devices:                      Block Devices:
+  1 mem             180 usb               8 sd              135 sd              [K
+  4 /dev/vc/0       189 usb_device        9 md              253 device-mapper   [K
+  4 tty             202 cpu/msr          11 sr              254 mdp             [K
+  4 ttyS            203 cpu/cpuid        65 sd              259 blkext          [K
+  5 /dev/tty        226 drm              66 sd              [K
+  5 /dev/console    243 aux              67 sd              [K
+  5 /dev/ptmx       244 cec              68 sd              [K
+  7 vcs             245 hidraw           69 sd              [K
+ 10 misc            246 usbmon           70 sd              [K
+ 13 input           247 bsg              71 sd              [K
+ 14 sound           248 watchdog        128 sd              [K
+ 21 sg              249 ptp             129 sd              [K
+ 29 fb              250 pps             130 sd              [K
+116 alsa            251 rtc             131 sd              [K
+128 ptm             252 dax             132 sd              [K
+136 pts             253 tpm             133 sd              [K
+162 raw             254 gpiochip        134 sd              [K
+[K
+File Systems:[K
+[sysfs]             [tmpfs]             [bdev]              [proc]              [cgroup]            [cgroup2]           
+[cpuset]            [devtmpfs]          [configfs]          [debugfs]           [tracefs]           [securityfs]        
+[sockfs]            [bpf]               [pipefs]            [ramfs]             [hugetlbfs]         [devpts]            
+[autofs]            [mqueue]            [selinuxfs]         [pstore]            ext3                ext2                
+ext4                fuseblk             [fuse]              [fusectl]           [rpc_pipefs]        [K
+[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590860     7028964           0       78896
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.06 0.01 0.00 1/155 5969
+
+
+user  :       0:00:15.70 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.43 0.2  swap in :        0
+idle  :      17:11:43.95 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:06.06         context :  1845473
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+
+Kernel Command Line:
+  BOOT_IMAGE=/vmlinuz-5.10.0-5.10.0.24.oe1.x86_64 root=/dev/mapper/openeuler-root ro resume=/dev/mapper/openeuler-swap rd.lvm.lv=openeuler/root rd.lvm.lv=openeuler/swap crashkernel=512M
+
+Modules:
+ 16 *nft_fib_inet    16 *nft_fib_ipv4    16 *nft_fib_ipv6    16 *nft_fib         16 *nft_reject_ine  16 *nf_reject_ipv4 
+ 20 *nf_reject_ipv6  16 *nft_reject      20 *nft_ct          16 *nft_chain_nat  256 *nf_tables       16  ebtable_nat    
+ 16  ebtable_broute  16  ip6table_nat    16  ip6table_mangl  16  ip6table_raw    16  ip6table_secur  16  iptable_nat    
+ 52 *nf_nat         172 *nf_conntrack    24 *nf_defrag_ipv6  16 *nf_defrag_ipv4  16 *libcrc32c       16  iptable_mangle 
+ 16  iptable_raw     16  iptable_securi  28 *rfkill          56  ip_set          16 *nfnetlink       16  ebtable_filter 
+ 40 *ebtables        16  ip6table_filte  36 *ip6_tables      16  iptable_filter 652 *sunrpc         376 *vmwgfx         
+112 *ttm            272 *drm_kms_helper  48  snd_intel8x0   176 *snd_ac97_codec  16 *syscopyarea     16 *sysfillrect    
+ 16 *ac97_bus        16 *sysimgblt      136 *snd_pcm         16 *fb_sys_fops     52 *cec             28  i2c_piix4      
+ 48 *snd_timer       40  sg              28  joydev         108 *snd             16 *soundcore       16  pcspkr         
+656 *drm            148 *fuse            32 *ip_tables      924 *ext4            16 *mbcache        148 *jbd2           
+ 28  sr_mod          64 *sd_mod          80 *cdrom           16 *t10_pi          16  ata_generic     40 *ata_piix       
+ 20  serio_raw       24 *crc32c_intel   296 *libata         164  e1000           52  video           28  dm_mirror      
+ 24 *dm_region_hash  20 *dm_log         164 *dm_mod         [K
+[K
+Character Devices:                      Block Devices:
+  1 mem             180 usb               8 sd              135 sd              [K
+  4 /dev/vc/0       189 usb_device        9 md              253 device-mapper   [K
+  4 tty             202 cpu/msr          11 sr              254 mdp             [K
+  4 ttyS            203 cpu/cpuid        65 sd              259 blkext          [K
+  5 /dev/tty        226 drm              66 sd              [K
+  5 /dev/console    243 aux              67 sd              [K
+  5 /dev/ptmx       244 cec              68 sd              [K
+  7 vcs             245 hidraw           69 sd              [K
+ 10 misc            246 usbmon           70 sd              [K
+ 13 input           247 bsg              71 sd              [K
+ 14 sound           248 watchdog        128 sd              [K
+ 21 sg              249 ptp             129 sd              [K
+ 29 fb              250 pps             130 sd              [K
+116 alsa            251 rtc             131 sd              [K
+128 ptm             252 dax             132 sd              [K
+136 pts             253 tpm             133 sd              [K
+162 raw             254 gpiochip        134 sd              [K
+[K
+File Systems:[K
+[sysfs]             [tmpfs]             [bdev]              [proc]              [cgroup]            [cgroup2]           
+[cpuset]            [devtmpfs]          [configfs]          [debugfs]           [tracefs]           [securityfs]        
+[sockfs]            [bpf]               [pipefs]            [ramfs]             [hugetlbfs]         [devpts]            
+[autofs]            [mqueue]            [selinuxfs]         [pstore]            ext3                ext2                
+ext4                fuseblk             [fuse]              [fusectl]           [rpc_pipefs]        [K
+[?12l[?25h[27m[37;1Hspawn procinfo -f
+r[H[2J[?25l[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590612     7029212           0       78904
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.06 0.01 0.00 1/155 5974
+
+
+user  :       0:00:15.71 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.44 0.2  swap in :        0
+idle  :      17:11:44.00 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:06.09         context :  1845576
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K[showing memory usage -/+ buffers/cache]
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590612     7029212           0       78904
+-/+ buffers:            215728     7404096
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.06 0.01 0.00 2/155 5974
+
+
+user  :       0:00:15.71 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.44 0.2  swap in :        0
+idle  :      17:11:44.00 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:06.09         context :  1845576
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590608     7029216           0       78904
+-/+ buffers:            215716     7404108
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.05 0.01 0.00 1/155 5974
+
+
+user  :       0:00:15.71 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.46 0.2  swap in :        0
+idle  :      17:12:03.89 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:11.10         context :  1846227
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[?12l[?25h[27m[37;1Hspawn procinfo -f
+[H[2J[?25l[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590600     7029224           0       78912
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.05 0.01 0.00 4/154 5978
+
+
+user  :       0:00:15.72 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.51 0.2  swap in :        0
+idle  :      17:12:03.97 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:11.17         context :  1846355
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K[checkpoint set]
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590592     7029232           0       78912
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.05 0.01 0.00 8/155 5979
+
+
+user  :       0:00:00.00 0.0  page in :        0
+nice  :       0:00:00.00 0.0  page out:        0
+system:       0:00:00.00 0.0  swap in :        0
+idle  :       0:00:00.01 0.0  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:11.19         context :       10
+
+irq   0:         0 2-edge               irq  15:         0 15-edge             
+irq   1:         0 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590608     7029216           0       78912
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.05 0.01 0.00 1/155 5979
+
+
+user  :       0:00:00.00 0.0  page in :        0
+nice  :       0:00:00.00 0.0  page out:        0
+system:       0:00:00.03 0.0  swap in :        0
+idle  :       0:00:19.79 0.0  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:16.19         context :      769
+
+irq   0:         0 2-edge               irq  15:         0 15-edge             
+irq   1:         0 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[?12l[?25h[27m[37;1Hspawn procinfo -f
+R[H[2J[?25l[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590612     7029212           0       78920
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.05 0.01 0.00 1/155 5984
+
+
+user  :       0:00:15.72 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.56 0.2  swap in :        0
+idle  :      17:12:23.84 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:16.24         context :  1847230
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K[checkpoint released]
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590612     7029212           0       78920
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.05 0.01 0.00 2/155 5984
+
+
+user  :       0:00:15.72 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.56 0.2  swap in :        0
+idle  :      17:12:23.84 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:16.24         context :  1847230
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590356     7029468           0       78920
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.04 0.01 0.00 1/155 5984
+
+
+user  :       0:00:15.72 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.57 0.2  swap in :        0
+idle  :      17:12:43.76 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:21.25         context :  1847887
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[?12l[?25h[27m[37;1Hspawn procinfo -f
+t[H[2J[?25l[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      591144     7028680           0       78928
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.04 0.01 0.00 1/155 5989
+
+
+user  :       0:00:15.73 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.58 0.2  swap in :        0
+idle  :      17:12:43.84 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:21.30         context :  1847993
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K[showing totals]
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      591144     7028680           0       78928
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.04 0.01 0.00 2/155 5989
+
+
+user  :       0:00:15.73 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:31.58 0.2  swap in :        0
+idle  :      17:12:43.84 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:21.30         context :  1847993
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+Sat Mar  5 13:32:00 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 13:32:01 2022 - ERROR - KeyboardInterrupt : 使用ctrl c结束了进程.
+Sat Mar  5 13:32:02 2022 - INFO  - End to restore the test environment.
+Sat Mar  5 13:32:02 2022 - ERROR - Interactive test key t fails
+spawn procinfo -f
+couldn't execute "procinfo": no such file or directory
+    while executing
+"spawn procinfo -f"
+Sat Mar  5 13:32:02 2022 - ERROR - Interactive test key d fails
+spawn procinfo -f
+couldn't execute "procinfo": no such file or directory
+    while executing
+"spawn procinfo -f"
+Sat Mar  5 13:32:02 2022 - ERROR - Interactive test key D fails
+spawn procinfo -f
+couldn't execute "procinfo": no such file or directory
+    while executing
+"spawn procinfo -f"
+Sat Mar  5 13:32:02 2022 - ERROR - Interactive test key S fails
+spawn procinfo -f
+couldn't execute "procinfo": no such file or directory
+    while executing
+"spawn procinfo -f"
+Sat Mar  5 13:32:02 2022 - ERROR - Interactive test key i fails
+spawn procinfo -f
+couldn't execute "procinfo": no such file or directory
+    while executing
+"spawn procinfo -f"
+Sat Mar  5 13:32:02 2022 - ERROR - Interactive test key b fails
+spawn procinfo -f
+couldn't execute "procinfo": no such file or directory
+    while executing
+"spawn procinfo -f"
+Sat Mar  5 13:32:02 2022 - ERROR - Interactive test key n fails
+spawn procinfo -f
+couldn't execute "procinfo": no such file or directory
+    while executing
+"spawn procinfo -f"
+Sat Mar  5 13:32:02 2022 - ERROR - Interactive test key <space> fails
+spawn procinfo -f
+couldn't execute "procinfo": no such file or directory
+    while executing
+"spawn procinfo -f"
+Sat Mar  5 13:32:02 2022 - ERROR - Interactive test key ^L fails
+spawn procinfo -f
+couldn't execute "procinfo": no such file or directory
+    while executing
+"spawn procinfo -f"
+Sat Mar  5 13:32:02 2022 - ERROR - Interactive test key ? fails
+spawn procinfo -f
+couldn't execute "procinfo": no such file or directory
+    while executing
+"spawn procinfo -f"
+Sat Mar  5 13:32:02 2022 - ERROR - Interactive test key h fails
+Sat Mar  5 13:32:02 2022 - INFO  - End to run test.
+Sat Mar  5 13:32:02 2022 - ERROR - failed to execute the case.
+Sat Mar  5 13:32:02 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 13:32:04 2022 - INFO  - End to restore the test environment.

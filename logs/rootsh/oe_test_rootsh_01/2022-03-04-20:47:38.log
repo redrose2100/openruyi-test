@@ -1,0 +1,17 @@
+Fri Mar  4 20:47:39 2022 - INFO  - Start to prepare the test environment.
+Fri Mar  4 20:47:45 2022 - INFO  - End to prepare the test environment.
+Fri Mar  4 20:47:45 2022 - INFO  - Start to run test.
+rootsh: invalid option -- '?'
+Usage: rootsh [OPTION [ARG]] ...
+ -?, --help            show this help statement
+ -i, --login           start a (initial) login shell
+ -u, --user=username   run shell as a different user
+ -f, --logfile=file    name of your logfile (standalone only)
+ -d, --logdir=DIR      directory for your logfile (standalone only)
+ --no-logfile          switch off logging to a file (standalone only)
+ --no-syslog           switch off logging to syslog (standalone only)
+ -V, --version         show version statement
+Fri Mar  4 20:47:45 2022 - INFO  - End to run test.
+Fri Mar  4 20:47:45 2022 - INFO  - succeed to execute the case.
+Fri Mar  4 20:47:45 2022 - INFO  - Start to restore the test environment.
+Fri Mar  4 20:47:47 2022 - INFO  - End to restore the test environment.
