@@ -40,13 +40,8 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    # 测试命令：ls
-    ls -CZl -all
-    CHECK_RESULT 0
-
-    # 测试/目录下是否存在proc|usr|roor|var|sys|etc|boot|dev目录
-    CHECK_RESULT "$(ls / | grep -cE 'proc|usr|roor|var|sys|etc|boot|dev')" 7
-
+    semodule_link -Vv -o 1 basemodpkg modpkg1 modpkg2
+    CHECK_RESULT $? 
     LOG_INFO "End to run test."
 }
 

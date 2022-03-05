@@ -39,20 +39,19 @@ function pre_test() {
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
-
     fixfiles onboot 
-    CHECK_RESULT 0
+    CHECK_RESULT $? 
     fixfiles -v -F check 
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     fixfiles -v -F restore 
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     fixfiles rekabel
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     #检查bc的安全上下文
     fixfiles -R bc check 
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     fixfiles -R bc restore 
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 

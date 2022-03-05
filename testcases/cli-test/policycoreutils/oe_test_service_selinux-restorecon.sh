@@ -39,8 +39,6 @@ function pre_test() {
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
-
-    # 测试命令：ls
     restorecon -Rv /var/cache/dnf/source.solv
     CHECK_RESULT $?
     LOG_INFO "End to run test."

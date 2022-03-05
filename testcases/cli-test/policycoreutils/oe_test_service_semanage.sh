@@ -41,13 +41,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     # HTTPD 在 8585 端口上监听
     semanage port -a -t http_port_t -p tcp 8585
-    CHECK_RESULT 0
+    CHECK_RESULT $? 
     #查看 SELinux 和 Linux 用户之间的映射
     semanage login -l
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     #配置单个进程（域）运行在许可模式
     semanage permissive -a httpd_t
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 

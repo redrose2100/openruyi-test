@@ -30,9 +30,7 @@ function config_params() {
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
-    LOG_INFO "No pkgs need to install."
-
+    audit2allow -a -M httpd 
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -40,22 +38,16 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    # 测试命令：ls
-    ls -CZl -all
-    CHECK_RESULT 0
-
-    # 测试/目录下是否存在proc|usr|roor|var|sys|etc|boot|dev目录
-    CHECK_RESULT "$(ls / | grep -cE 'proc|usr|roor|var|sys|etc|boot|dev')" 7
-
+    # Extract the httpd module file from httpd policy package.
+    semodule_unpackage httpd.pp httpd.mod httpd.fc
+    CHECK_RESULT $? 
     LOG_INFO "End to run test."
 }
 
 # 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
-    LOG_INFO "Nothing to do."
-
+    rm -rf httpd*
     LOG_INFO "End to restore the test environment."
 }
 

@@ -41,12 +41,12 @@ function run_test() {
     LOG_INFO "Start to run test."
     # displays the current mode and the mode from the configuration file referenced during boot
     sestatus |grep -i mode
-    CHECK_RESULT 0
+    CHECK_RESULT $? 
     #查看版本
     sestatus -v
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     sestatus -b | grep httpd | grep on$
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 

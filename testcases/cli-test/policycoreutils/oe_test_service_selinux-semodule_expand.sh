@@ -39,12 +39,14 @@ function pre_test() {
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
+    semodule_expand -V -a -c 15 basemodpkg
+    CHECK_RESULT $?
     semodule_expand -V 
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     semodule_expand -V -a
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     semodule_expand -V -c 18
-    CHECK_RESULT 0
+    CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
