@@ -1,0 +1,12 @@
+Sat Mar  5 15:46:41 2022 - INFO  - Start to prepare the test environment.
+Sat Mar  5 15:46:44 2022 - INFO  - End to prepare the test environment.
+Sat Mar  5 15:46:44 2022 - INFO  - Start to run test.
+rootsh version 1.5.2
+logfiles go to directory /var/log/rootsh
+syslog messages go to priority local5.notice
+line numbering is on
+rootsh can be used as login shell. /bin/bash will interpret your commands
+Sat Mar  5 15:46:44 2022 - INFO  - End to run test.
+Sat Mar  5 15:46:44 2022 - INFO  - succeed to execute the case.
+Sat Mar  5 15:46:45 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 15:46:46 2022 - INFO  - End to restore the test environment.

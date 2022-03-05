@@ -22,6 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
+#    export pid_Oldbash=$(ps | grep -E bash | awk '{print $1}') #获取原bash的进程id
     DNF_INSTALL "rootsh"
 
     LOG_INFO "End to prepare the test environment."
@@ -31,30 +32,58 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-#    # 测试命令：-?
-#    LOG_INFO "Start to test rootsh -?."
-#    rootsh -? 2>&1
-#    CHECK_RESULT $? 0 1 "Failed option: -?"
-#
-#    # 测试命令：-V
-#    rootsh -V 2>&1
-#    CHECK_RESULT $? 0 1 "Failed option: -V"
-#
+    # 测试命令：-?
+    rootsh -? 
+    CHECK_RESULT $? 0 0 "Failed option: -?"
+
+    # 测试命令：-V
+    rootsh -V 2>&1
+    CHECK_RESULT $? 0 0 "Failed option: -V"
+
+# 测试命令：-i
+    expect <<EOF
+        spawn rootsh -i
+        expect "welcome*" {
+                send "exit\r" 
+                expect eof{
+                        catch wait result;
+                        exit [lindex $result 0]  
+            }
+        }
+EOF
+#    if (($? != pid_Oldbash));then
+        CHECK_RESULT $? 0 0 "Failed option: -i"
+#    fi
+    # 测试命令：-u
+    local user=yili
+    expect <<EOF
+        spawn rootsh -u $user
+        expect "welcome*" {
+            send "whoami | grep -E $user"
+            expect "0"{send "exit\r"}
+            expect eof{
+                catch wait result;
+                exit [lindex $result 3] 
+            }
+        }
+EOF
+     CHECK_RESULT $? 0 0 "Failed option: -u"
+
+
 #    # 测试命令：-i
-#    export pid_Oldbash=$(ps | grep -E bash | awk '{print $1}') #获取原bash的进程id
 #    rootsh -i 2>&1                                             #进入rootsh
-#    local pid_Newbash=$(ps | grep -E bash | awk '{print $1}')  #获取新bash的进程id
+#    pid_Newbash=$(ps | grep -E bash | awk '{print $1}')  #获取新bash的进程id
 #    if ((pid_Oldbash == pid_Newbash)); then
-#        CHECK_RESULT 1 0 1 "Failed option: -i" #两个bash进程号相同说明rootsh没有成功启动一个新bash
+#        CHECK_RESULT $? 0 0 "Failed option: -i" #两个bash进程号相同说明rootsh没有成功启动一个新bash
 #    fi
 #    if (($(ls /var/log/rootsh | grep -vE '.closed$') != 0)); then
-#        CHECK_RESULT 1 0 1 "Failed option: -i" #进到rootsh的bash后，会在/var/log/rootsh目录下产生结尾没有".closed"后缀的日志文件，如果没有则说明程序执行有问题
+#        CHECK_RESULT $? 0 0 "Failed option: -i" #进到rootsh的bash后，会在/var/log/rootsh目录下产生结尾没有".closed"后缀的日志文件，如果没有则说明程序执行有问题
 #    fi
 #    exit #退出rootsh的bash
-#    CHECK_RESULT $? 0 1 "Failed option: -i"
-#
+#    CHECK_RESULT $? 0 0 "Failed option: -i"
+
 #    # 测试命令：-u
-#    local user=yili
+#    user=yili
 #    rootsh -u $user 2>&1
 #    pid_Newbash=$(ps | grep -E bash | awk '{print $1}')
 #    if ((pid_Oldbash == pid_Newbash)); then

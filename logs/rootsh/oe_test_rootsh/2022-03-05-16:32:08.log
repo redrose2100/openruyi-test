@@ -1,0 +1,49 @@
+Sat Mar  5 16:32:08 2022 - INFO  - Start to prepare the test environment.
+Sat Mar  5 16:32:09 2022 - INFO  - pkgs:(rootsh) is already installed
+Sat Mar  5 16:32:09 2022 - INFO  - End to prepare the test environment.
+Sat Mar  5 16:32:09 2022 - INFO  - Start to run test.
+
+
+Welcome to 5.10.0-5.10.0.24.oe1.x86_64
+
+System information as of time: 	Sat Mar  5 04:32:09 PM CST 2022
+
+System load: 	[0;33;40m0.06[0m
+Processes: 	135
+Memory used: 	2.5%
+Swap used: 	0%
+Usage On: 	10%
+IP address: 	10.0.2.15
+IP address: 	192.168.56.106
+Users online: 	2
+
+
+]0;root@localhost:/home/yili/mugen/testcases/cli-test/rootsh[?2004h[root@localhost rootsh]# tcsetattr: stdin: Input/output error
+Hangup
+Sat Mar  5 16:33:44 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 16:33:44 2022 - WARN  - no thing to do.
+Sat Mar  5 16:33:44 2022 - INFO  - End to restore the test environment.
+oe_test_rootsh.sh: line 46: ((: 13533
+13703
+13739
+13746: syntax error in expression (error token is "13703
+13739
+13746")
+oe_test_rootsh.sh: line 49: ((: root.20220305115314.01035
+root.20220305125603.01404
+root.20220305141643.01fa7
+root.20220305154836.02f02
+root.20220305155136.03154
+root.20220305155601.03292
+root.20220305162048.03483
+root.20220305163209.035fa != 0: syntax error: invalid arithmetic operator (error token is ".20220305115314.01035
+root.20220305125603.01404
+root.20220305141643.01fa7
+root.20220305154836.02f02
+root.20220305155136.03154
+root.20220305155601.03292
+root.20220305162048.03483
+root.20220305163209.035fa != 0")
+Sat Mar  5 16:33:44 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 16:33:44 2022 - WARN  - no thing to do.
+Sat Mar  5 16:33:44 2022 - INFO  - End to restore the test environment.
