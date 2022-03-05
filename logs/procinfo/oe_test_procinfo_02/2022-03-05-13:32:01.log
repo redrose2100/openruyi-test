@@ -1,0 +1,157 @@
+Sat Mar  5 13:32:01 2022 - INFO  - Start to prepare the test environment.
+Sat Mar  5 13:32:06 2022 - INFO  - End to prepare the test environment.
+Sat Mar  5 13:32:06 2022 - INFO  - Start to run test.
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+Linux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #??? 4CPU [localhost]
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.04 0.01 0.00 1/156 6442
+uptime:       4:20:27.83         context :  1857453
+Memory:      Total        Used        Free      Shared     Buffers      
+Modules:
+Character Devices:                      Block Devices:
+File Systems:
+Kernel Command Line:
+irq  0:       132 2-edge                irq228:         0                      
+irq  1:         9 1-edge                irq229:         0                      
+irq  8:         0 8-edge                irq230:         0                      
+irq  9:         0 9-fasteoi             irq231:         0                      
+irq 12:         0 12-edge               irq232:         0                      
+irq 14:         0 14-edge               irq233:         0                      
+spawn procinfo -n1
+[H[2J[?25l[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      591884     7027940           0       79084
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.04 0.01 0.00 1/157 6455
+
+
+user  :       0:00:17.67 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:33.30 0.2  swap in :        0
+idle  :      17:12:59.75 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:27.86         context :  1857564
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      591752     7028072           0       79084
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.04 0.01 0.00 1/157 6455
+
+
+user  :       0:00:17.67 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:33.30 0.2  swap in :        0
+idle  :      17:13:03.81 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:28.88         context :  1857705
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[?12l[?25h[27m[37;1Hspawn procinfo -d
+[H[2J[?25l[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       1523964      118255     1405709           0       15816
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.04 0.01 0.00 1/157 6460
+
+
+user  :       0:00:17.67 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:33.31 0.2  swap in :        0
+idle  :      17:13:03.85 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:28.89         context :  1857782
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:             0          20         -20           0           2
+Swap:            0           0           0
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.04 0.01 0.00 1/157 6460
+
+
+user  :       0:00:00.00 0.0  page in :        0
+nice  :       0:00:00.00 0.0  page out:        0
+system:       0:00:00.01 0.0  swap in :        0
+idle  :       0:00:19.88 0.0  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:33.90         context :      641
+
+irq   0:         0 2-edge               irq  15:         0 15-edge             
+irq   1:         0 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+[?12l[?25h[27m[37;1Hspawn procinfo -D
+[H[2J[?25l[H[2J[H[7mLinux 5.10.0-5.10.0.24.oe1.x86_64 (abuild@ecs-obsworker-201) (gcc [can't parse]) #???  4CPU [localhost.localdomain]                     [27m
+[K
+Memory:      Total        Used        Free      Shared     Buffers      
+Mem:       7619824      590612     7029212           0       79096
+Swap:      3145724           0     3145724
+
+Bootup: Sat Mar  5 09:11:38 2022    Load average: 0.19 0.05 0.01 1/157 6465
+
+
+user  :       0:00:17.68 0.0  page in :        0
+nice  :       0:00:00.63 0.0  page out:        0
+system:       0:01:33.33 0.2  swap in :        0
+idle  :      17:13:23.78 99.2  swap out:        0
+steal :       0:00:00.00 0.0
+uptime:       4:20:33.92         context :  1858493
+
+irq   0:       132 2-edge               irq  15:         0 15-edge             
+irq   1:         9 1-edge               irq  16:         0 16-fasteoi          
+irq   8:         0 8-edge               irq  18:         0 18-fasteoi          
+irq   9:         0 9-fasteoi            irq  19:         0 19-fasteoi          
+irq  12:         0 12-edge              irq  21:         0 21-fasteoi          
+irq  14:         0 14-edge              irq  22:         0 22-fasteoi          
+Sat Mar  5 13:32:13 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 13:32:13 2022 - ERROR - KeyboardInterrupt : 使用ctrl c结束了进程.
+Sat Mar  5 13:32:14 2022 - INFO  - End to restore the test environment.
+Sat Mar  5 13:32:14 2022 - ERROR - Option test -D fails
+spawn procinfo -SD
+couldn't execute "procinfo": no such file or directory
+    while executing
+"spawn procinfo -SD"
+Sat Mar  5 13:32:14 2022 - ERROR - Option test -S fails
+oe_test_procinfo_02.sh: line 89: procinfo: command not found
+Sat Mar  5 13:32:14 2022 - ERROR - Option test -r fails
+oe_test_procinfo_02.sh: line 92: procinfo: command not found
+Sat Mar  5 13:32:14 2022 - ERROR - Option test -Ffile fails
+oe_test_procinfo_02.sh: line 95: procinfo: command not found
+Sat Mar  5 13:32:14 2022 - ERROR - Option test -v fails
+oe_test_procinfo_02.sh: line 98: procinfo: command not found
+Sat Mar  5 13:32:14 2022 - ERROR - Option test -h fails
+Sat Mar  5 13:32:14 2022 - INFO  - End to run test.
+Sat Mar  5 13:32:14 2022 - ERROR - failed to execute the case.
+Sat Mar  5 13:32:14 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 13:32:15 2022 - INFO  - End to restore the test environment.

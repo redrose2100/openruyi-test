@@ -1,0 +1,30 @@
+Sat Mar  5 17:34:06 2022 - INFO  - Start to prepare the test environment.
+Sat Mar  5 17:34:10 2022 - INFO  - End to prepare the test environment.
+Sat Mar  5 17:34:10 2022 - INFO  - Start to run test.
+spawn rootsh -i
+
+
+Welcome to 5.10.0-5.10.0.24.oe1.x86_64
+
+System information as of time: 	Sat Mar  5 05:34:10 PM CST 2022
+
+System load: 	[0;33;40m0.00[0m
+Processes: 	134
+Memory used: 	2.5%
+Swap used: 	0%
+Usage On: 	10%
+IP address: 	10.0.2.15
+IP address: 	192.168.56.106
+Users online: 	1
+
+
+]0;root@localhost:/home/yili/mugen/testcases/cli-test/rootsh[?2004h[root@localhost rootsh]# oe_test_rootsh.sh: line 54: ((: 14534
+16786
+16822
+16829: syntax error in expression (error token is "16786
+16822
+16829")
+Sat Mar  5 17:34:20 2022 - INFO  - End to run test.
+Sat Mar  5 17:34:20 2022 - INFO  - succeed to execute the case.
+Sat Mar  5 17:34:20 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 17:34:21 2022 - INFO  - End to restore the test environment.

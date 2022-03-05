@@ -1,0 +1,40 @@
+Sat Mar  5 15:48:32 2022 - INFO  - Start to prepare the test environment.
+Sat Mar  5 15:48:36 2022 - INFO  - End to prepare the test environment.
+Sat Mar  5 15:48:36 2022 - INFO  - Start to run test.
+
+
+Welcome to 5.10.0-5.10.0.24.oe1.x86_64
+
+System information as of time: 	Sat Mar  5 03:48:36 PM CST 2022
+
+System load: 	[0;33;40m0.11[0m
+Processes: 	134
+Memory used: 	2.4%
+Swap used: 	0%
+Usage On: 	10%
+IP address: 	10.0.2.15
+IP address: 	192.168.56.106
+Users online: 	1
+
+
+]0;root@localhost:/home/yili/mugen/testcases/cli-test/rootsh[?2004h[root@localhost rootsh]# ^C[?2004l[?2004h[?2004l
+]0;root@localhost:/home/yili/mugen/testcases/cli-test/rootsh[?2004h[root@localhost rootsh]# ^C[?2004l[?2004h[?2004l
+]0;root@localhost:/home/yili/mugen/testcases/cli-test/rootsh[?2004h[root@localhost rootsh]# ^C[?2004l[?2004h[?2004l
+]0;root@localhost:/home/yili/mugen/testcases/cli-test/rootsh[?2004h[root@localhost rootsh]# Hangup
+Sat Mar  5 15:50:34 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 15:50:35 2022 - INFO  - End to restore the test environment.
+oe_test_rootsh.sh: line 46: ((: 8661
+11750
+11786
+12030: syntax error in expression (error token is "11750
+11786
+12030")
+oe_test_rootsh.sh: line 49: ((: root.20220305115314.01035
+root.20220305125603.01404
+root.20220305141643.01fa7
+root.20220305154836.02f02 != 0: syntax error: invalid arithmetic operator (error token is ".20220305115314.01035
+root.20220305125603.01404
+root.20220305141643.01fa7
+root.20220305154836.02f02 != 0")
+Sat Mar  5 15:50:35 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 15:50:36 2022 - INFO  - End to restore the test environment.

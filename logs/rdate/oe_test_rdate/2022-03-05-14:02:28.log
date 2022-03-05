@@ -1,0 +1,14 @@
+Sat Mar  5 14:02:28 2022 - INFO  - Start environmental preparation.
+Sat Mar  5 14:02:29 2022 - INFO  - pkgs:(rdate) is already installed
+Sat Mar  5 14:02:29 2022 - INFO  - End of environmental preparation!
+Sat Mar  5 14:02:29 2022 - INFO  - Start to run testcase.
+rdate: [time.nist.gov]	Sat Mar  5 14:02:30 2022
+rdate: [time.nist.gov]	Sat Mar  5 14:02:31 2022
+rdate: [time.nist.gov]	Sat Mar  5 14:02:31 2022
+rdate: [time.nist.gov]	Mon Jan  1 08:05:43 1900
+rdate: [time.nist.gov]	Mon Jan  1 08:05:43 1900
+Sat Mar  5 14:02:32 2022 - INFO  - End to run testcase.
+Sat Mar  5 14:02:32 2022 - INFO  - succeed to execute the case.
+Sat Mar  5 14:02:32 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 14:02:32 2022 - WARN  - no thing to do.
+Sat Mar  5 14:02:32 2022 - INFO  - End to restore the test environment.

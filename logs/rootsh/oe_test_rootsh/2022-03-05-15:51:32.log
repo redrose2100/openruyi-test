@@ -1,0 +1,54 @@
+Sat Mar  5 15:51:32 2022 - INFO  - Start to prepare the test environment.
+Sat Mar  5 15:51:36 2022 - INFO  - End to prepare the test environment.
+Sat Mar  5 15:51:36 2022 - INFO  - Start to run test.
+
+
+Welcome to 5.10.0-5.10.0.24.oe1.x86_64
+
+System information as of time: 	Sat Mar  5 03:51:37 PM CST 2022
+
+System load: 	[0;33;40m0.19[0m
+Processes: 	131
+Memory used: 	2.4%
+Swap used: 	0%
+Usage On: 	10%
+IP address: 	10.0.2.15
+IP address: 	192.168.56.106
+Users online: 	1
+
+
+[?2004h[root@localhost rootsh]# ^C[?2004l[?2004h[?2004l
+[?2004h[root@localhost rootsh]# ^C[?2004l[?2004h[?2004l
+[?2004h[root@localhost rootsh]# ^C[?2004l[?2004h[?2004l
+[?2004h[root@localhost rootsh]# ^C[?2004l[?2004h[?2004l
+[?2004h[root@localhost rootsh]# ^C[?2004l[?2004h[?2004l
+[?2004h[root@localhost rootsh]# ^C[?2004l[?2004h[?2004l
+[?2004h[root@localhost rootsh]# ^C[?2004l[?2004h[?2004l
+[?2004h[root@localhost rootsh]# ^C[?2004l[?2004h[?2004l
+[?2004h[root@localhost rootsh]# Sat Mar  5 16:21:32 2022 - ERROR - Timeout : Command 'bash oe_test_rootsh.sh' timed out after 1799.9999520910023 seconds
+read: stdin: Input/output error
+Sat Mar  5 16:33:14 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 16:33:15 2022 - INFO  - End to restore the test environment.
+oe_test_rootsh.sh: line 46: ((: 12276
+12344
+12380
+12624: syntax error in expression (error token is "12344
+12380
+12624")
+oe_test_rootsh.sh: line 49: ((: root.20220305115314.01035
+root.20220305125603.01404
+root.20220305141643.01fa7
+root.20220305154836.02f02
+root.20220305155136.03154
+root.20220305155601.03292
+root.20220305162048.03483
+root.20220305163209.035fa != 0: syntax error: invalid arithmetic operator (error token is ".20220305115314.01035
+root.20220305125603.01404
+root.20220305141643.01fa7
+root.20220305154836.02f02
+root.20220305155136.03154
+root.20220305155601.03292
+root.20220305162048.03483
+root.20220305163209.035fa != 0")
+Sat Mar  5 16:33:15 2022 - INFO  - Start to restore the test environment.
+Sat Mar  5 16:33:16 2022 - INFO  - End to restore the test environment.
