@@ -1,0 +1,95 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/postgresql_0228",
+    "cases": [
+        {
+            "name": "oe_test_postgresql_auth1"
+        },
+        {
+            "name": "oe_test_postgresql_auth2"
+        },        
+        {
+            "name": "oe_test_postgresql_backup_db"
+        },
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_alter_table"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_create_database"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_create_table"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_display_db_list"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_display_tablename_list"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_display_table_state"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_drop_database"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-basedbop_drop_table"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb_change_db"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb_display_index"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb_display_struct"
+        },       
+        {
+            "name": "oe_test_postgresql-cmdindb_display_table"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb_list_db"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb_quit_psql"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_alter_table1"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_alter_table2"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_alter_table3"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_alter_table4"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_alter_table5"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_delete_from1"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_delete_from2"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_insert_into"
+        },        
+        {
+            "name": "oe_test_postgresql-cmdindb-tablebaseop_update"
+        },        
+        {
+            "name": "oe_test_postgresql_create_PostgreSQL_db_user_sample"
+        },        
+        {
+            "name": "oe_test_postgresql_pg_basebackup"
+        },        
+        {
+            "name": "oe_test_postgresql_set_user_special_right"
+        },
+        {
+            "name": "oe_test_postgresql_create_PostgreSQL_db_user_sample"
+        }
+    ]
+}
