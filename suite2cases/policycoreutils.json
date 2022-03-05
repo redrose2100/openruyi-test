@@ -21,7 +21,6 @@
         },
         {
             "name": "oe_test_service_selinux-genhomedircon"
-        }
         },
         {
             "name": "oe_test_service_selinux-getsebool"
@@ -31,7 +30,6 @@
         },
         {
             "name": "oe_test_service_selinux-restorecon"
-        }
         },
         {
             "name": "oe_test_service_selinux-restorecon_xattr"
@@ -41,7 +39,6 @@
         },
         {
             "name": "oe_test_service_selinux-semodule_expand"
-        }
         },
         {
             "name": "oe_test_service_selinux-semodule_link"
@@ -51,7 +48,6 @@
         },
         {
             "name": "oe_test_service_selinux-semodule"
-        }
         },
         {
             "name": "oe_test_service_selinux-semodule_unpackage"
