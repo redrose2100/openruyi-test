@@ -35,8 +35,7 @@ function pre_test() {
     spawn newrole -r unconfined_r
     set timeout 30
     expect "Password:"
-    send "123\r"
-    interact
+    send "$passwd\r"
     EOF
     LOG_INFO "End to prepare the test environment."
 }
