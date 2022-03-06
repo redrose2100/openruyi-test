@@ -30,9 +30,14 @@ function config_params() {
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
-    LOG_INFO "No pkgs need to install."
-
+    cat>1.sh<<-EOF
+    #!/usr/bin/expect
+    spawn newrole -r unconfined_r
+    set timeout 30
+    expect "Password:"
+    send "123\r"
+    interact
+    EOF
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -41,7 +46,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # 切换用户,在这个过程中需要输入密码 
-    newrole -r unconfined_r
+    expect 1.sh
     CHECK_RESULT $?
     exit
     LOG_INFO "End to run test."
@@ -50,9 +55,7 @@ function run_test() {
 # 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     LOG_INFO "Nothing to do."
-
     LOG_INFO "End to restore the test environment."
 }
 
