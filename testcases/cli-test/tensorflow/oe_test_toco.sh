@@ -39,13 +39,15 @@ function run_test() {
     CHECK_RESULT $? 
     toco --output_file output4toco --saved_model_dir ./common/mobilenet_gen/1
     CHECK_RESULT $?
+    toco --keras_model_file ./saved_model_keras_dir/ --output_file ./out --enable_v1_converter --experimental_new_converter
+    CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 # 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf toco_out output4toco
+    rm -rf toco_out output4toco out
     DNF_REMOVE "python3-tensorflow" 
     LOG_INFO "End to restore the test environment."
 }
