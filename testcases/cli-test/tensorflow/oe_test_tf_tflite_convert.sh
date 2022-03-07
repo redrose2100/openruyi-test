@@ -35,6 +35,8 @@ function run_test() {
     # tflite_convert: 支持基础模型转换。使用 TFLiteConverter Python API 支持任何涉及量化或其他参数的转换(例如：SavedModels 签名，或者在 Keras 模型上自定义对象).
     tflite_convert  --saved_model_dir ./common/mobilenet_gen/1 --output_file tflite_convert_out
     CHECK_RESULT $?
+    tflite_convert --keras_model_file ./common/saved_model_keras_dir/ --output_file ./out --enable_v1_converter  --experimental_new_converter
+    CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 # 后置处理，恢复测试环境
