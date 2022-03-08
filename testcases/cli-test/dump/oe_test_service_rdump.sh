@@ -67,10 +67,6 @@ EOF
 
 function post_test() {
 	LOG_INFO "start environment cleanup."
-        sed -i 's\ExecStart=/usr/sbin/dump -4\ExecStart=/usr/sbin/dump\g' /usr/lib/systemd/system/dump.service
-	systemctl daemon-reload
-	systemctl reload dump.service
-	systemctl stop dump.service
 	DNF_REMOVE
 	LOG_INFO "Finish environment cleanup!"
 }
