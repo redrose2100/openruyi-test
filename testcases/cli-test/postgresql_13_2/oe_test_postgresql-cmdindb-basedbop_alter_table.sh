@@ -19,7 +19,6 @@ source ./common/lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     postgresql_install
-
     LOG_INFO "End to prepare the test environment."
 }
 
