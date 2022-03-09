@@ -13,19 +13,10 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2022/02/25
 # @License   :   Mulan PSL v2
-# @Desc      :   Test restorecond.service restart
+# @Desc      :   Test restorecond
 # #############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-
-# 需要预加载的数据、参数配置
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-
-    LOG_INFO "No params need to config."
-
-    LOG_INFO "End to config params of the case."
-}
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
