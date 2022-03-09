@@ -18,15 +18,6 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# 需要预加载的数据、参数配置
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-
-    LOG_INFO "No params need to config."
-
-    LOG_INFO "End to config params of the case."
-}
-
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -35,7 +26,7 @@ function pre_test() {
     spawn newrole -r unconfined_r
     set timeout 30
     expect "Password:"
-    send "$passwd\r"
+    send "${NODE1_PASSWORD}\r"
     EOF
     LOG_INFO "End to prepare the test environment."
 }
