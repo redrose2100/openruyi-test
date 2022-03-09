@@ -35,7 +35,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    # 切换用户,在这个过程中需要输入密码 
+    # 切换用户 
     expect 1.sh
     CHECK_RESULT $?
     exit
