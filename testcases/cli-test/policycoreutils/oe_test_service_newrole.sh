@@ -28,6 +28,13 @@ function pre_test() {
     expect "Password:"
     send "${NODE1_PASSWORD}\r"
     EOF
+    cat>2<<-EOF
+    #!/usr/bin/expect
+    spawn newrole -r system_r -t unconfined_t
+    set timeout 30
+    expect "Password:"
+    send "${NODE1_PASSWORD}\r"
+    EOF
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -39,6 +46,12 @@ function run_test() {
     expect 1.sh
     CHECK_RESULT $?
     exit
+    expect 2
+    CHECK_RESULT $?
+    exit
+
+    newrole -l Secret
+    CHECK_RESULT $? 0 0 "Error: you are not allowed to change levels on a non secure terminal"
     LOG_INFO "End to run test."
 }
 
