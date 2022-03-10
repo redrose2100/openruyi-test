@@ -49,7 +49,9 @@ function run_test() {
     expect 2
     CHECK_RESULT $?
     exit
-
+    #检查newrole版本
+    newrole -V 
+    CHECK_RESULT $?
     newrole -l Secret
     CHECK_RESULT $? 0 0 "Error: you are not allowed to change levels on a non secure terminal"
     LOG_INFO "End to run test."
