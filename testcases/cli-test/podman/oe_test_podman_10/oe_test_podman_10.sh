@@ -29,39 +29,30 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     ID=$(podman create --cpuset-cpus 1 alpine ls)
-    CHECK_RESULT $?
     podman inspect $ID | grep '"CpuSetCpus": "1"'
     CHECK_RESULT $?
     ID=$(podman create --cpuset-mems 0 alpine ls)
-    CHECK_RESULT $?
     podman inspect $ID | grep '"CpuSetMems": "0"'
     CHECK_RESULT $?
     ID=$(podman create -d alpine ls)
-    CHECK_RESULT $?
     podman inspect $ID | grep alpine
     CHECK_RESULT $?
     ID=$(podman create --detach-keys abc alpine ls)
-    CHECK_RESULT $?
     podman inspect $ID | grep -i key
     CHECK_RESULT $?
     ID=$(podman create --device /dev/dm-0 alpine ls)
-    CHECK_RESULT $?
     podman inspect $ID | grep '"path": "/dev/dm-0"'
     CHECK_RESULT $?
     ID=$(podman create --device-read-bps=/dev/:1mb alpine ls)
-    CHECK_RESULT $?
     podman inspect $ID | grep -A 5 "lkioDeviceReadBps" | grep 1048576
     CHECK_RESULT $?
     ID=$(podman create --device-read-iops=/dev/:1000 alpine ls)
-    CHECK_RESULT $?
     podman inspect $ID | grep -A 5 "BlkioDeviceReadIOps" | grep 1000
     CHECK_RESULT $?
     ID=$(podman create --device-write-bps=/dev/:1mb alpine ls)
-    CHECK_RESULT $?
     podman inspect $ID | grep -A 5 "BlkioDeviceWriteBps" | grep 1048576
     CHECK_RESULT $?
     ID=$(podman create --device-write-iops=/dev/:1000 alpine ls)
-    CHECK_RESULT $?
     podman inspect $ID | grep -A 5 "BlkioDeviceWriteIOps" | grep 1000
     CHECK_RESULT $?
     LOG_INFO "End to run test."
