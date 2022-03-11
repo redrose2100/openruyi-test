@@ -37,7 +37,7 @@ function postgresql_install() {
     expect "INSERT 0 1"
     send "CREATE SCHEMA myschema;\n"
     expect "CREATE SCHEMA"
-    send "create table myschema.test (id int, val numeric) with oids;\n"
+    send "create table myschema.test (id int, val numeric);\n"
     expect "CREATE TABLE"
     send "insert into myschema.test select generate_series(1,100),random();\n"
     expect "INSERT 0 100"
