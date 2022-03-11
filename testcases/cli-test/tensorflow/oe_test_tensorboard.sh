@@ -9,7 +9,7 @@
 # See the Mulan PSL v2 for more detaitest -f.
 
 # #############################################
-# @Author    :   wangsongsong
+# @Author    :   wangsongsong;zouxun
 # @Contact   :   ss_wang@foxmail.com 
 # @Date      :   2022/03/06
 # @License   :   Mulan PSL v2
@@ -36,9 +36,19 @@ function pre_test() {
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
+    #show full help message and exit
+    tensorboard --helpful|grep tensorflow
+    CHECK_RESULT $?
+    #show this help message and exit
+    tensorboard -h
+    CHECK_RESULT $?
 
     #显示深度学习训练面板
-    tensorboard --logdir ./tensorboard_log --bind_all 
+    tensorboard --logdir ./tensorboard_log --bind_all --port 6006
+    CHECK_RESULT $?
+    tensorboard --logdir ./mobilenet_gen/ --bind_all --debugger_port 6006
+    CHECK_RESULT $?
+    tensorboard --logdir ./mobilenet_gen/ --bind_all --debugger_data_server_grpc_port 6006
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
