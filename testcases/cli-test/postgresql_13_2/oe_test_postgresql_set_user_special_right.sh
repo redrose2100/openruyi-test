@@ -29,10 +29,10 @@ function run_test() {
     CHECK_RESULT $?
     spawn su - postgres -c "psql -d template1"
     expect "template1=#"
-	  send "CREATE GROUP sale;\n"
-	  send "ALTER GROUP sale ADD USER sale1,sale2,sale3;\n"
-	  send "GRANT SELECT ON employee,products TO GROUP sale;\n"
-	  send "ALTER GROUP sale DROP USER sale2;\n"
+	send "CREATE GROUP sale;\n"
+	send "ALTER GROUP sale ADD USER sale1,sale2,sale3;\n"
+	send "GRANT SELECT ON employee,products TO GROUP sale;\n"
+	send "ALTER GROUP sale DROP USER sale2;\n"
     send "\\q\n"
     expect eof
     exit
