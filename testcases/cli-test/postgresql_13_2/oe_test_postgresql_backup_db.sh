@@ -13,7 +13,7 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2022-02-20
 # @License   :   Mulan PSL v2
-# @Desc      :   createdb
+# @Desc      :   backdb
 # ############################################
 
 source ./common/lib.sh
@@ -27,7 +27,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    su - postgres -c "pg_dump sales>/home/tk/pgsql/backup/1.bak"
+    mkdir -p /tmp/pgsql/backup
+    chmod 777 -R /tmp/pgsql/backup
+    su - postgres -c "pg_dump testdb>/tmp/pgsql/backup/1.bak"
+    CHECK_RESULT $?
+    ls /tmp/pgsql/backup/1.bak
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
@@ -36,6 +40,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
     DNF_REMOVE
+    rm -rf /tmp/pgsql/
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }

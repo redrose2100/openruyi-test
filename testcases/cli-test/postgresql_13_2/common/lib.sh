@@ -1,6 +1,4 @@
 #!/usr/bin/bash
-
-
 # #############################################
 # @Author    :   1952113831
 # @Contact   :   1952113831@qq.com
@@ -8,9 +6,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Public class, environment construction
 # #############################################
-
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-
 function postgresql_install() {
     DNF_INSTALL "postgresql postgresql-server postgresql-devel postgresql-contrib"
     /usr/bin/postgresql-setup --initdb

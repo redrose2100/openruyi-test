@@ -13,7 +13,7 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2022-02-20
 # @License   :   Mulan PSL v2
-# @Desc      :   createdb
+# @Desc      :   list_db
 # ############################################
 
 source ./common/lib.sh
@@ -29,18 +29,20 @@ function run_test() {
     LOG_INFO "Start to run test."
     su - postgres -c "psql -c \"select * from pg_roles;\""
     CHECK_RESULT $?
+    expect <<-END
     spawn su - postgres -c "psql -d template1"
     expect "template1=#"
-	send "\\l\n"
-    send "\\q\n"
+    send "\\\l\n"
+    send "\\\q\n"
     expect eof
+END
     exit
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-	DNF_REMOVE
+    DNF_REMOVE
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }

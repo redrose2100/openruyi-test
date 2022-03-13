@@ -27,18 +27,20 @@ function run_test() {
     LOG_INFO "Start to run test."
     su - postgres -c "psql -c \"select * from pg_roles;\""
     CHECK_RESULT $?
+    expect <<-END
     spawn su - postgres -c "psql -d template1"
     expect "template1=#"
-	send "\\d\n"
-    send "\\q\n"
+    send "\\\d\n"
+    send "\\\q\n"
     expect eof
+END
     exit
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-	DNF_REMOVE
+    DNF_REMOVE
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }

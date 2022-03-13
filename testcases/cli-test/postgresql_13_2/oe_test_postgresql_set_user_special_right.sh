@@ -27,14 +27,28 @@ function run_test() {
     LOG_INFO "Start to run test."
     su - postgres -c "psql -c \"select * from pg_roles;\""
     CHECK_RESULT $?
+    expect <<-END
     spawn su - postgres -c "psql -d template1"
     expect "template1=#"
-	send "CREATE GROUP sale;\n"
-	send "ALTER GROUP sale ADD USER sale1,sale2,sale3;\n"
-	send "GRANT SELECT ON employee,products TO GROUP sale;\n"
-	send "ALTER GROUP sale DROP USER sale2;\n"
-    send "\\q\n"
+    send "CREATE GROUP sale;\n"
+    send "create user sale1;\n"
+    send "create role sale2;\n"
+    send "create user sale3;\n"
+    send "ALTER GROUP sale ADD USER sale1,sale2,sale3;\n"
+    send "\\\du\n"
+    send "create table employee(myid int, myname varchar(256), primary key(myid));\n"
+    send "create table products(pid int, pname varchar(256), primary key(pid));\n"
+    send "GRANT SELECT ON employee,products TO GROUP sale;\n"
+    send "ALTER GROUP sale DROP USER sale2;\n"
+    send "drop table employee;\n"
+    send "drop table products;\n"
+    send "drop user sale1;\n"
+    send "drop user sale2;\n"
+    send "drop user sale3;\n"
+    send "drop group sale;\n"
+    send "\\\q\n"
     expect eof
+END
     exit
 }
 

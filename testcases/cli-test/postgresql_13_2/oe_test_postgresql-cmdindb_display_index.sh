@@ -1,5 +1,4 @@
 #!/usr/bin/bash
-
 # Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -13,7 +12,7 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2022-02-20
 # @License   :   Mulan PSL v2
-# @Desc      :   createdb
+# @Desc      :   display_index 
 # ############################################
 
 source ./common/lib.sh
@@ -29,18 +28,20 @@ function run_test() {
     LOG_INFO "Start to run test."
     su - postgres -c "psql -c \"select * from pg_roles;\""
     CHECK_RESULT $?
+    expect <<-END
     spawn su - postgres -c "psql -d template1"
     expect "template1=#"
-	send "\\di\n"
-    send "\\q\n"
-    expect eof
+    send "\\\di\n"
+    send "\\\q\n"
+    expect EOF 
+END
     exit
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-	DNF_REMOVE
+    DNF_REMOVE
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }

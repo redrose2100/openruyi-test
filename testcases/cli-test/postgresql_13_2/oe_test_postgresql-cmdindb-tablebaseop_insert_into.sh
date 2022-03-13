@@ -26,18 +26,26 @@ function run_test() {
     LOG_INFO "Start to run test."
     su - postgres -c "psql -c \"select * from pg_roles;\""
     CHECK_RESULT $?
+    expect <<-END
     spawn su - postgres -c "psql -d template1"
     expect "template1=#"
-	send "insert into mytable(myid,myname) values(1,'hero');\n"
-    send "\\q\n"
+    send "create table mytable(myid int, myname varchar(256), primary key(myid));\n"
+    send "insert into mytable(myid, myname) values(1,'wa');\n"
+    send "insert into mytable(myid, myname) values(2,'Peter');\n"
+    send "insert into mytable(myid, myname) values(3,'Tom');\n"
+    send "insert into mytable(myid, myname) values(4,'John');\n"
+    send "select * from mytable;\n"
+    send "drop table mytable;\n"
+    send "\\\q\n"
     expect eof
+END
     exit
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-	DNF_REMOVE
+    DNF_REMOVE
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }

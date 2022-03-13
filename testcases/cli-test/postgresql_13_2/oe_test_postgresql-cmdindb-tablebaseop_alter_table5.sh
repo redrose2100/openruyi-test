@@ -13,7 +13,7 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2022-02-20
 # @License   :   Mulan PSL v2
-# @Desc      :   alter_table
+# @Desc      :   alter_table_5
 # ############################################
 
 source ./common/lib.sh
@@ -28,13 +28,15 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     su - postgres -c "psql -c \"select * from pg_roles;\""
-    CHECK_RESULT $? 
+    CHECK_RESULT $?
+    expect <<-END 
     spawn su - postgres -c "psql -d template1"
     expect "template1=#"
-    send "create table mytable()
+    send "create table mytable(myid int,myname varchar(256));\n"
     send "alter table mytable alter column myname drop default;\n"
-    send "\\q\n"
+    send "\\\q\n"
     expect eof
+END
     exit
 }
 

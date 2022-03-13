@@ -9,11 +9,11 @@
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
 # #############################################
-# @Author    :   wangshan
-# @Contact   :   wangshan@163.com
-# @Date      :   2020-10-15
+# @Author    :   wangsongsong
+# @Contact   :   ss_wang@foxmail.com
+# @Date      :   2022-03-13
 # @License   :   Mulan PSL v2
-# @Desc      :   createdb
+# @Desc      :   display_db 
 # ############################################
 
 source ./common/lib.sh
@@ -29,18 +29,22 @@ function run_test() {
     LOG_INFO "Start to run test."
     su - postgres -c "psql -c \"select * from pg_roles;\""
     CHECK_RESULT $?
+    expect <<-END
     spawn su - postgres -c "psql -d template1"
     expect "template1=#"
-	send "\\d\n"
-    send "\\q\n"
+    send "create table mytable(myid int, myname varchar(256), primary key(myid));\n"
+    send "\\\d mytable\n"
+    send "drop table mytable;\n"
+    send "\\\q\n"
     expect eof
+END
     exit
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-	DNF_REMOVE
+    DNF_REMOVE
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }

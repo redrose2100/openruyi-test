@@ -13,7 +13,7 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2022-02-20
 # @License   :   Mulan PSL v2
-# @Desc      :   createdb
+# @Desc      :   tablebaseop_delete_from2
 # ############################################
 
 source ./common/lib.sh
@@ -21,25 +21,34 @@ source ./common/lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     postgresql_install
-
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
     LOG_INFO "Start to run test."
     su - postgres -c "psql -c \"select * from pg_roles;\""
     CHECK_RESULT $?
+    expect <<-END
     spawn su - postgres -c "psql -d template1"
     expect "template1=#"
-	send "delete from mytable;\n"
-    send "\\q\n"
+    send "create table mytable(myid int, myname varchar(256), primary key(myid));\n"
+    send "insert into mytable(myid, myname) values(1,'wa');\n"
+    send "insert into mytable(myid, myname) values(2,'ww');\n"
+    send "insert into mytable(myid, myname) values(10,'dw');\n"
+    send "insert into mytable(myid, myname) values(15,'wf');\n"
+    send "select * from mytable;\n"
+    send "delete from mytable;\n"
+    send "select * from mytable;\n"
+    send "drop table mytable;\n"
+    send "\\\q\n"
     expect eof
+END
     exit
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-	DNF_REMOVE
+    DNF_REMOVE
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }
