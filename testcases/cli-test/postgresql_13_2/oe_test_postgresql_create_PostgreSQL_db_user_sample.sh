@@ -31,10 +31,10 @@ function run_test() {
     CHECK_RESULT $?
     spawn su - postgres -c "psql -d template1"
     expect "template1=#"
-	  send "CREATE USER hellen WITH ENCRYPED PASSWORD'zhenzhen';\n"
-	  echo 'local all hellen md5' >> pg_hba.conf
+	send "CREATE USER hellen WITH ENCRYPED PASSWORD'zhenzhen';\n"
+	echo 'local all hellen md5' >> pg_hba.conf
     send "\\q\n"
-	  spawn su - postgres -c "psql -U hellen -d template1\""
+	spawn su - postgres -c "psql -U hellen -d template1\""
     CHECK_RESULT $?
     expect eof
     exit
@@ -43,7 +43,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-	  DNF_REMOVE
+	DNF_REMOVE
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }
