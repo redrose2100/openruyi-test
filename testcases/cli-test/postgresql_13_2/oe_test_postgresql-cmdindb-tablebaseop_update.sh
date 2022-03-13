@@ -29,7 +29,7 @@ function run_test() {
     CHECK_RESULT $?
     spawn su - postgres -c "psql -d template1"
     expect "template1=#"
-	  send "update mytable set myname='PostgreSQLTester' where myid>10;\n"
+	send "update mytable set myname='PostgreSQLTester' where myid>10;\n"
     send "\\q\n"
     expect eof
     exit
@@ -38,7 +38,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-	  DNF_REMOVE
+	DNF_REMOVE
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }
