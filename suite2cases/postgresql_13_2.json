@@ -83,9 +83,6 @@
             "name": "oe_test_postgresql_create_PostgreSQL_db_user_sample"
         },        
         {
-            "name": "oe_test_postgresql_pg_basebackup"
-        },        
-        {
             "name": "oe_test_postgresql_set_user_special_right"
         },
         {
