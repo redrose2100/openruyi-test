@@ -2,7 +2,89 @@
     "path": "$OET_PATH/testcases/cli-test/haproxy",
     "cases": [
         {
-            "name": "oe_test_service_haproxy"
+          "name":  "oe_test_haproxy_balance"
+        },
+        {
+          "name":  "oe_test_haproxy_cache"
+        },
+        {
+          "name":  "oe_test_haproxy_checks"
+        },
+        {
+          "name":  "oe_test_haproxy_compression"
+        },
+        {
+          "name":  "oe_test_haproxy_connection"
+        },
+        {
+          "name":  "oe_test_haproxy_contrib"
+        },
+        {
+          "name":  "oe_test_haproxy_converter"
+        },
+        {
+          "name":  "oe_test_haproxy_filters"
+        },
+        {
+          "name":  "oe_test_haproxy_http-capture"
+        },
+        {
+          "name":  "oe_test_haproxy_http-cookies"
+        },
+        {
+          "name":  "oe_test_haproxy_http-errorfiles"
+        },
+        {
+          "name":  "oe_test_haproxy_http-messaging"
+        },
+        {
+          "name":  "oe_test_haproxy_http-rules"
+        },
+        {
+          "name":  "oe_test_haproxy_http-set-timeout"
+        },
+        {
+          "name":  "oe_test_haproxy_log"
+        },
+        {
+          "name":  "oe_test_haproxy_lua"
+        },
+        {
+          "name":  "oe_test_haproxy_mailers"
+        },
+        {
+          "name":  "oe_test_haproxy_mcli"
+        },
+        {
+          "name":  "oe_test_haproxy_peers"
+        },
+        {
+          "name":  "oe_test_haproxy_sample_fetches"
+        },
+        {
+          "name":  "oe_test_haproxy_seamless-reload"
+        },
+        {
+          "name":  "oe_test_haproxy_server"
+        },
+        {
+          "name":  "oe_test_haproxy_spoe"
+        },
+        {
+          "name":  "oe_test_haproxy_ssl"
+        },
+        {
+          "name":  "oe_test_haproxy_stickiness"
+        },
+        {
+          "name":  "oe_test_haproxy_stick-table"
+        },
+        {
+          "name":  "oe_test_haproxy_stream"
+        },
+        {
+          "name":  "oe_test_haproxy_webstats"
         }
+        
     ]
 }
