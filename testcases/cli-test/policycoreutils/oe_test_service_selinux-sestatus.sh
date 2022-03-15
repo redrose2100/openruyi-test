@@ -44,9 +44,10 @@ function run_test() {
     CHECK_RESULT $? 
     #查看版本
     sestatus -v
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to check version"
+    #Display current state of booleans
     sestatus -b | grep httpd | grep on$
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to displays current state of booleans"
     LOG_INFO "End to run test."
 }
 
