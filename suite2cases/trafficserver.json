@@ -3,6 +3,30 @@
     "cases": [
         {
             "name": "oe_test_service_trafficserver"
+        },
+        {
+            "name": "oe_test_traffic_layout"
+        },
+        {
+            "name": "oe_test_traffic_logstats"
+        },
+        {
+            "name": "oe_test_traffic_manager"
+        },
+        {
+            "name": "oe_test_traffic_server"
+        },
+        {
+            "name": "oe_test_traffic_top"
+        },
+        {
+            "name": "oe_test_traffic_via"
+        },
+        {
+            "name": "oe_test_tspush"
+        },
+        {
+            "name": "oe_test_tsxs"
         }
     ]
 }
