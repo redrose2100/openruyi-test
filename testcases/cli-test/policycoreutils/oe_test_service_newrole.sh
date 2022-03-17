@@ -44,10 +44,10 @@ function run_test() {
 
     # 切换用户 
     expect 1.sh
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to change role"
     exit
     expect 2
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to change to system_r "
     exit
     #检查newrole版本
     newrole -V 
