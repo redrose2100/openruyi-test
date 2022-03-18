@@ -18,7 +18,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "python3-tensorflow"
+    DNF_INSTALL
     export LD_LIBRARY_PATH=/usr/lib64/python3.8/site-packages/tensorflow:$LD_LIBRARY_PATH
     LOG_INFO "End to prepare the test environment."
 }
@@ -34,7 +34,8 @@ function run_test() {
 # 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "python3-tensorflow" 
+    unset LD_LIBRARY_PATH
+    DNF_REMOVE 
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
