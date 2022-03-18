@@ -20,7 +20,8 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # 需要预加载的数据、参数配置
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    export LD_LIBRARY_PATH=/usr/lib64/python3.8/site-packages/tensorflow:$LD_LIBRARY_PATH
+    unset LD_LIBRARY_PATH
+    DNF_REMOVE
     LOG_INFO "End to config params of the case."
 }
 # 测试对象、测试需要的工具等安装准备
