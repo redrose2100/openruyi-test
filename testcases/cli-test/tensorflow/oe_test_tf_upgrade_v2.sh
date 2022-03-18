@@ -42,7 +42,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f report.txt b.py
-    DNF_REMOVE "python3-tensorflow" 
+    unset LD_LIBRARY_PATH
+    DNF_REMOVE 
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
