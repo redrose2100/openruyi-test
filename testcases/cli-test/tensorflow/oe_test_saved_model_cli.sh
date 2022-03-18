@@ -49,8 +49,9 @@ function run_test() {
 # 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    export -p LD_LIBRARY_PATH=/usr/lib64/python3.8/site-packages/tensorflow:$LD_LIBRARY_PATH
     rm -rf ./test_out
-    DNF_REMOVE "python3-tensorflow" 
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
