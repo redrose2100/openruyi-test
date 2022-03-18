@@ -1,26 +1,17 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/OpenEXR",
+    "path": "$OET_PATH/testcases/cli-test/tuned", 
     "cases": [
         {
-            "name": "oe_test_OpenEXR_cmd"
-        },
+            "name": "oe_test_service_dump"
+        }, 
         {
-            "name": "oe_test_OpenEXR_exrenvmap_exrmakepreview"
-        },
+            "name": "oe_test_service_restore"
+        }, 
         {
-            "name": "oe_test_OpenEXR_exrenvmap"
-        },
+            "name": "oe_test_service_rdump"
+        }, 
         {
-            "name": "oe_test_OpenEXR_exrmaketiled"
-        },
-        {
-            "name": "oe_test_OpenEXR_exrstdattr_01"
-        },
-        {
-            "name": "oe_test_OpenEXR_exrstdattr_02"
-        },
-        {
-            "name": "oe_test_OpenEXR_exrstdattr_03"
+            "name": "oe_test_service_rrestore"
         }
     ]
 }
