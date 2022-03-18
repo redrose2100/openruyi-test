@@ -1,0 +1,47 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+###################################
+#@Author    :   qinhaiqi
+#@Contact   :   2683064908@qq.com
+#@Date      :   2022/2/16
+#@License   :   Mulan PSL v2
+#@Desc      :   Test "cobbler profile" command
+###################################
+
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function run_test() {
+    LOG_INFO "Start to run testcase."
+    cobbler profile add --name=OpenEuler --distro=oldOpenEuler 
+    CHECK_RESULT $? 0 0 0 "Failed option: profile add"
+    cobbler profile copy --name=OpenEuler --newname=newOpenEuler
+    CHECK_RESULT $? 0 0 0 "Failed option: profile copy"
+    cobbler profile dumpvars --name=OpenEuler | grep "allow_duplicate_hostnames"
+    CHECK_RESULT $? 0 0 0 "Failed option: profile dumpvars"
+    cobbler profile edit --name=openEuler --owners=tom
+    CHECK_RESULT $? 0 0 0 "Failed option: profile edit"
+    cobbler profile list 2>&1 | grep "newOpenEuler"
+    CHECK_RESULT $? 0 0 0 "Failed option: profile list"
+    cobbler profile find 2>&1 | grep "OpenEuler"
+    CHECK_RESULT $? 0 0 0 "Failed option: profile find"
+    cobbler profile remove --name=OpenEuler
+    CHECK_RESULT $? 0 0 0 "Failed option: profile remove"
+    cobbler profile rename --name=newOpenEuler --newname=oldOpenEuler
+    CHECK_RESULT $? 0 0 0 "Failed option: profile rename"
+    cobbler profile report --name=oldOpenEuler 2>&1 | grep "Name"
+    CHECK_RESULT $? 0 0 0 "Failed option: profile report"
+    cobbler profile get-autoinstall --name=oldOpenEuler
+    CHECK_RESULT $? 0 0 0 "Failed option: profile get-autoinstall"
+    LOG_INFO "End to run testcase."
+}
+
+main "$@"
