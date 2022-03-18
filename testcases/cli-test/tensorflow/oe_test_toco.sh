@@ -48,7 +48,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf toco_out output4toco
-    DNF_REMOVE "python3-tensorflow" 
+    unset LD_LIBRARY_PATH
+    DNF_REMOVE 
     LOG_INFO "End to restore the test environment."
 }
 
