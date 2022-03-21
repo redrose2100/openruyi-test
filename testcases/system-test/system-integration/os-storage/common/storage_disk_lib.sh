@@ -17,6 +17,7 @@
 # @Desc      :   Enable periodic block discard
 # ############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+
 function check_free_disk() {
     disks=$(TEST_DISK)
     disk_list=($disks)
