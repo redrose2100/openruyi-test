@@ -12,7 +12,7 @@
 ####################################
 # @Author : wuzhihao
 # @email : zhihao@isrc.iscas.ac.cn
-# @Date : 2022-02
+# @Date : 2022-02-28
 # @License : Mulan PSL v2
 # @Version : 1.0
 # @Desc : Dump examines files on an ext2/3 filesystem and determines which files need to be backed up.
