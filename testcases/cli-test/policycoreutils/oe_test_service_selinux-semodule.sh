@@ -18,45 +18,35 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# 需要预加载的数据、参数配置
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    LOG_INFO "No params need to config."
-    LOG_INFO "End to config params of the case."
-}
-
-# 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     LOG_INFO "No pkgs need to install."
     LOG_INFO "End to prepare the test environment."
 }
 
-# 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
     #display list of installed modules
     semodule -l |grep bc 
-    CHECK_RESULT $? 
+    CHECK_RESULT $? 0 0 "failed to display list of installed modules"
     #reload policy
     semodule -R 
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to reload policy"
     #build and reload policy
     semodule -B 
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to build and reload policy"
     #disable zebra module
     semodule -d zebra 
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to disable zebra module"
     #enable zebra module
     semodule -e zebra 
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to enable zebra module"
     #install mypolicy module
     semodule -i mypolicy.pp
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to install mypolicy module"
     LOG_INFO "End to run test."
 }
 
-# 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
