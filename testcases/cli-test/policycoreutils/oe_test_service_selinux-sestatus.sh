@@ -18,15 +18,6 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# 需要预加载的数据、参数配置
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-
-    LOG_INFO "No params need to config."
-
-    LOG_INFO "End to config params of the case."
-}
-
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -43,7 +34,7 @@ function run_test() {
     sestatus |grep -i mode
     CHECK_RESULT $? 
     #查看版本
-    sestatus -v
+    sestatus -v|grep "SELinux status"
     CHECK_RESULT $? 0 0 "failed to check version"
     #Display current state of booleans
     sestatus -b | grep httpd | grep on$
