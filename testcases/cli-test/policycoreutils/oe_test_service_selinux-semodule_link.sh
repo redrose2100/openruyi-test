@@ -18,15 +18,6 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# 需要预加载的数据、参数配置
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-
-    LOG_INFO "No params need to config."
-
-    LOG_INFO "End to config params of the case."
-}
-
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -41,7 +32,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     semodule_link -Vv -o 1 basemodpkg modpkg1 modpkg2
-    CHECK_RESULT $? 
+    CHECK_RESULT $? 0 0 "failed to show version"
     LOG_INFO "End to run test."
 }
 
