@@ -15,19 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test restorecond.service restart
 # #############################################
-
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-
-# 需要预加载的数据、参数配置
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-
-    LOG_INFO "No params need to config."
-
-    LOG_INFO "End to config params of the case."
-}
-
-# 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
@@ -40,18 +28,18 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     fixfiles onboot 
-    CHECK_RESULT $? 
+    CHECK_RESULT $? 0 0 "failed to fixfiles onboot"
     fixfiles -v -F check 
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to check"
     fixfiles -v -F restore 
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to restore"
     fixfiles rekabel
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to rekabel"
     #检查bc的安全上下文
     fixfiles -R bc check 
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to bc"
     fixfiles -R bc restore 
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to bc restore"
     LOG_INFO "End to run test."
 }
 
