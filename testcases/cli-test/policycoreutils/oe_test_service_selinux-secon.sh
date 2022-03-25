@@ -18,41 +18,32 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# 需要预加载的数据、参数配置
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    LOG_INFO "No params need to config."
-    LOG_INFO "End to config params of the case."
-}
-
-# 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     LOG_INFO "No pkgs need to install."
     LOG_INFO "End to prepare the test environment."
 }
 
-# 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
     #secon -h
-    secon -h
-    CHECK_RESULT $?
+    secon -h |grep "Usage"
+    CHECK_RESULT $? 0 0 "failed to show message"
     #Show the version
-    secon -V
-    CHECK_RESULT $?
+    secon -V |grep "secon"
+    CHECK_RESULT $? 0 0 "failed to show the version"
     #Show the role of the context
-    secon -r
-    CHECK_RESULT $?
+    secon -r |grep "unconfined_r"
+    CHECK_RESULT $? 0 0 "failed to show the role of the context"
     #Show the user of the context
-    secon -u
-    CHECK_RESULT $?
+    secon -u |grep "unconfined_u"
+    CHECK_RESULT $? 0 0 "failed to show the user of the context"
     #Show the context in "raw" format
-    secon -R
-    CHECK_RESULT $?
+    secon -R |grep "user"
+    CHECK_RESULT $? 0 0 "failed to show the context in "raw" format"
     #Get the context for the current process
-    secon --self
-    CHECK_RESULT $?
+    secon --self |grep "user"
+    CHECK_RESULT $? 0 0 "get the context for the current process"
     touch 1
     #Use the context from the specified file
     secon -f 1
@@ -61,27 +52,26 @@ function run_test() {
     secon -m
     CHECK_RESULT $?
     #Show the sensitivity level of the context.
-    secon -s
-    CHECK_RESULT $?
+    secon -s|grep "user"
+    CHECK_RESULT $? 0 0 "failed to show the sensitivity level of the context"
     #Show the clearance level of the context
-    secon -c
-    CHECK_RESULT $?
+    secon -c |grep "c1023"
+    CHECK_RESULT $? 0 0 "failed to show the clearance level of the context"
     #Show the type of the context
-    secon -t
-    CHECK_RESULT $?
+    secon -t |grep "unconfined"
+    CHECK_RESULT $? 0 0 "failed to show the type of the context"
     #Get the fs context for the current process
-    secon --self-fs
-    CHECK_RESULT $?
+    secon --self-fs|grep "user"
+    CHECK_RESULT $? 0 0 "failed to get the fs context for the current process"
     #Get the key context for the current process
-    secon --self-key
-    CHECK_RESULT $?
+    secon --self-key|grep "user"
+    CHECK_RESULT $? 0 0 "failed to get the key context for the current process"
     #Get the exec context for the current process
-    secon --self-exec
-    CHECK_RESULT $? 
+    secon --self-exec|grep "user"
+    CHECK_RESULT $? 0 0 "failed to get the exec context for the current process"
     LOG_INFO "End to run test."
 }
 
-# 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
