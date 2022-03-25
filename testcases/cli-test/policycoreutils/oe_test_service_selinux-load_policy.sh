@@ -41,7 +41,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # load_policy将已安装的策略文件加载到内核中
-    load_policy qi
+    load_policy -qi
     CHECK_RESULT $? 
     LOG_INFO "End to run test."
 }
