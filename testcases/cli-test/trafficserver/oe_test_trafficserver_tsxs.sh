@@ -20,7 +20,7 @@ source "../common/common_lib.sh"
 # 需要预加载的数据、参数配置
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    DNF_INSTALL trafficserver
+    LOG_INFO "trafficserver has been installed"
     traffic_server start
     LOG_INFO "End to config params of the case."
 }
