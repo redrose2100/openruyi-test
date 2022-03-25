@@ -19,7 +19,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # 需要预加载的数据、参数配置
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    LOG_INFO "No params need to config."
+    DNF_INTSALL "policycoreutils-python-utils"
     LOG_INFO "End to config params of the case."
 }
 # 测试对象、测试需要的工具等安装准备
@@ -32,7 +32,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     #查看允许被拒绝的类型强制规则
-    audit2allow -a
+    audit2allow -a |grep "Network"
     CHECK_RESULT $? 0 0 "failed to check"
     #创建一个自定义模块,其中 -M 选项将创建一个特定名称的强制类型文件（.te），并编译这个规则到一个策略包（.pp）中：mypolicy.pp mypolicy.te
     audit2allow -a -M mypolicy
@@ -42,7 +42,7 @@ function run_test() {
 # 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    LOG_INFO "Nothing to do."
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
