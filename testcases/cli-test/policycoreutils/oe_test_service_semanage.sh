@@ -18,16 +18,6 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# 需要预加载的数据、参数配置
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-
-    LOG_INFO "No params need to config."
-
-    LOG_INFO "End to config params of the case."
-}
-
-# 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
@@ -36,22 +26,20 @@ function pre_test() {
     LOG_INFO "End to prepare the test environment."
 }
 
-# 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
     # HTTPD 在 8585 端口上监听
     semanage port -a -t http_port_t -p tcp 8585
-    CHECK_RESULT $? 
+    CHECK_RESULT $? 0 0 "failed to listen port 8585"
     #查看 SELinux 和 Linux 用户之间的映射
     semanage login -l
     CHECK_RESULT $?
     #配置单个进程（域）运行在许可模式
     semanage permissive -a httpd_t
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to configure"
     LOG_INFO "End to run test."
 }
 
-# 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
