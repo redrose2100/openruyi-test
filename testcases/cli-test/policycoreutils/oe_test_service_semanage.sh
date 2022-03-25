@@ -32,8 +32,8 @@ function run_test() {
     semanage port -a -t http_port_t -p tcp 8585
     CHECK_RESULT $? 0 0 "failed to listen port 8585"
     #查看 SELinux 和 Linux 用户之间的映射
-    semanage login -l
-    CHECK_RESULT $?
+    semanage login -l |grep "Login"
+    CHECK_RESULT $? 0 0 "failed to check"
     #配置单个进程（域）运行在许可模式
     semanage permissive -a httpd_t
     CHECK_RESULT $? 0 0 "failed to configure"
