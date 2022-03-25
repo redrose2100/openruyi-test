@@ -11,7 +11,7 @@
 # #############################################
 # @Author    :   wangsongsong 
 # @Contact   :   ss_wang@foxmail.com
-# @Date      :   2022/02/25
+# @Date      :   2022/03/25
 # @License   :   Mulan PSL v2
 # @Desc      :   Test restorecond.service restart
 # #############################################
@@ -40,22 +40,20 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     semodule_expand -V -a -c 15 basemodpkg
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to show version"
     semodule_expand -V 
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to show version"
     semodule_expand -V -a
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "check assertions"
     semodule_expand -V -c 18
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to policy version to create"
     LOG_INFO "End to run test."
 }
 
 # 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     LOG_INFO "Nothing to do."
-
     LOG_INFO "End to restore the test environment."
 }
 
