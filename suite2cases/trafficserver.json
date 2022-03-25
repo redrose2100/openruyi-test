@@ -5,6 +5,9 @@
             "name": "oe_test_trafficserver_traffic_layout"
         },
         {
+            "name": "oe_test_trafficserver_traffic_cache_tool"
+        },
+        {
             "name": "oe_test_trafficserver_traffic_ctl"
         },
         {
