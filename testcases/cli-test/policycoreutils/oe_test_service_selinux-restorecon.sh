@@ -31,7 +31,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     restorecon -Rv /var/cache/dnf/source.solv
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to restorecon"
     LOG_INFO "End to run test."
 }
 
