@@ -1,3 +1,5 @@
+# @Author    :   Chuanpan Zheng
+# @Contact   :   zhengchuanpan@stu.xmu.edu.cn
 #source from https://github.com/zhengchuanpan/GMAN/blob/master/PeMS/model.py
 import tf_utils
 import tensorflow as tf
