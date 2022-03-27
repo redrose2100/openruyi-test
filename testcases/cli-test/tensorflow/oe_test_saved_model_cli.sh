@@ -34,7 +34,7 @@ function run_test() {
     saved_model_cli convert --dir ./common/mobilenet_gen/1 --output_dir ./test_out  --tag_set serve tensorrt
     CHECK_RESULT $? 0 0 "failed to convert model"
     #run 可运行计算图计算，传递输入，然后显示输出，还可以选择保存
-    saved_model_cli run --dir ./common/mobilenet_gen/1 --signature_def serving_default  --tag_set serve   --input_expr  "input_1=np.ones([32,  224, 224, 3])"
+    saved_model_cli run --dir test_11_model/ --signature_def serving_default --tag_set serve --input_expr "x=np.ones(shape=(1,1), dtype=np.float)"
     CHECK_RESULT $? 0 0 "failed to run model"
     LOG_INFO "End to run test."
 }
