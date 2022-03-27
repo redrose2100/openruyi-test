@@ -35,20 +35,16 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    # 测试命令：ls
-    ls -CZl -all
-    CHECK_RESULT 0
-
-    # 测试/目录下是否存在proc|usr|roor|var|sys|etc|boot|dev目录
-    CHECK_RESULT "$(ls / | grep -cE 'proc|usr|roor|var|sys|etc|boot|dev')" 7
-
+    #check conversion from graphdef to tflite
+    python3 ./common/toco_from_protos_test.py
+    CHECK_RESULT 0 0 "failed to conversion from graphdef to tflite"
     LOG_INFO "End to run test."
 }
 
 # 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "python3-tensorflow" 
+    DNF_REMOVE 
     LOG_INFO "End to restore the test environment."
 }
 
