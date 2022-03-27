@@ -18,7 +18,11 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL
+    DNF_INSTALL "python3-tensorflow"
+    python3 ./common/saved_model.py
+    wait
+    python3 ./common/gen_tf_keras.model.py
+    wait
     unset LD_LIBRARY_PATH
     LOG_INFO "End to prepare the test environment."
 }
@@ -26,7 +30,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     # tflite_convert: 支持基础模型转换。使用 TFLiteConverter Python API 支持任何涉及量化或其他参数的转换(例如：SavedModels 签名，或者在 Keras 模型上自定义对象).
-    tflite_convert  --saved_model_dir ./common/mobilenet_gen/1 --output_file tflite_convert_out
+    tflite_convert  --saved_model_dir ./common/saved_model_dir --output_file tflite_convert_out
     CHECK_RESULT $? 0 0 "failed to convert model"
     tflite_convert --keras_model_file ./common/saved_model_keras_dir/ --output_file ./out --enable_v1_converter  --experimental_new_converter
     CHECK_RESULT $? 0 0 "failed to convert keras model"
@@ -37,6 +41,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tflite_convert_out
     DNF_REMOVE 
+    test -f saved_model_dir && rm -rf saved_model_dir
+    test -f ./common/saved_model_keras_dir/ && rm -rf ./common/saved_model_keras_dir/
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
