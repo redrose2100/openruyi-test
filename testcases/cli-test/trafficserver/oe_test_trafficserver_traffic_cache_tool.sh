@@ -63,7 +63,7 @@ function run_test() {
     SLEEP_WAIT 8
     #Scans the whole cache and lists the urls of the cached contents
     traffic_cache_tool --spans=/usr/local/etc/trafficserver/storage.config --volumes=/usr/local/etc/trafficserver/volume.config scan
-    CHECK_RESULT $? 0 0 "failed to " 
+    CHECK_RESULT $? 0 0 "failed to scan the whole cache" 
     SLEEP_WAIT 8
     #Clear all spans
     traffic_cache_tool  --spans=/usr/local/etc/trafficserver/storage.config  --volumes=/usr/local/etc/trafficserver/volume.config  --write clear |grep "Writing"
