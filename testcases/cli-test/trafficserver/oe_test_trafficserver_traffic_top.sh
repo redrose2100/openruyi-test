@@ -48,7 +48,6 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     pkill [TS_MAIN]
     pkill traffic_m
-    DNF_REMOVE
     test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
     test -f /usr/local/var/trafficserver/manager.lock && rm -rf /usr/local/var/trafficserver/manager.lock
     LOG_INFO "Finish environment cleanup!"
