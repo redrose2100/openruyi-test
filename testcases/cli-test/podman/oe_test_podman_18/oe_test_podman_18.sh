@@ -34,6 +34,7 @@ function run_test() {
     CHECK_RESULT $?
     expect <<EOF
         set time 30
+        log_file testlog
         spawn podman login docker.io 
         expect {
             "Username*" { send "umohnani\r"; exp_continue }
@@ -41,11 +42,14 @@ function run_test() {
         }
         expect eof
 EOF
+    grep -i "Login Succeeded" testlog
     CHECK_RESULT $?
+    rm -rf testlog
     podman logout docker.io
     CHECK_RESULT $?
     expect <<EOF
         set time 30
+        log_file testlog
         spawn podman login --authfile authdir/myauths.json docker.io
         expect {
             "Username*" { send "umohnani\r"; exp_continue }
@@ -53,20 +57,26 @@ EOF
         }
         expect eof
 EOF
+    grep -i "Login Succeeded" testlog
     CHECK_RESULT $?
+    rm -rf testlog
     podman logout --authfile authdir/myauths.json docker.io
     CHECK_RESULT $?
     expect <<EOF
         set time 30
+        log_file testlog
         spawn podman login -u umohnani docker.io
         expect {
             "Password:" { send "\r" }
         }
         expect eof
 EOF
-    CHECK_RESULT $?
+    grep -i "Username" testlog
+    CHECK_RESULT $? 1
+    rm -rf testlog
     expect <<EOF
         set time 30
+        log_file testlog
         spawn podman login --tls-verify=false docker.io
         expect {
             "Username*" { send "umohnani\r"; exp_continue }
@@ -74,6 +84,7 @@ EOF
         }
         expect eof
 EOF
+    grep -i "(umohnani)" testlog
     CHECK_RESULT $?
     podman logout --all | grep "Remove"
     CHECK_RESULT $?
