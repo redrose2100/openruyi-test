@@ -19,6 +19,14 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL cobbler
+    systemctl start httpd
+    systemctl start cobblerd
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start to run testcase."
     cobbler image add --name=OpenEuler 
@@ -40,4 +48,9 @@ function run_test() {
     LOG_INFO "End to run testcase."
 }
 
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
+    LOG_INFO "End to restore the test environment."
+}
 main "$@"

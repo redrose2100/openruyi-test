@@ -19,9 +19,19 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL cobbler
+    mount /dev/cdrom /mnt
+    systemctl start httpd
+    systemctl start cobblerd
+    cobbler distro add --name=OpenEuler --owners=root --boot-loader=grub --initrd=/mnt/images/pxeboot/initrd.img --kernel=/mnt/isolinux/vmlinuz
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start to run testcase."
-    cobbler profile add --name=OpenEuler --distro=oldOpenEuler 
+    cobbler profile add --name=OpenEuler --distro=OpenEuler 
     CHECK_RESULT $? 0 0 0 "Failed option: profile add"
     cobbler profile copy --name=OpenEuler --newname=newOpenEuler
     CHECK_RESULT $? 0 0 0 "Failed option: profile copy"
@@ -42,6 +52,13 @@ function run_test() {
     cobbler profile get-autoinstall --name=oldOpenEuler
     CHECK_RESULT $? 0 0 0 "Failed option: profile get-autoinstall"
     LOG_INFO "End to run testcase."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    umount /dev/cdrom
+    DNF_REMOVE
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

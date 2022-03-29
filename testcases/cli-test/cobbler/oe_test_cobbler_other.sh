@@ -19,57 +19,54 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
-function config_params() {
-    ip=`hostname -I`
-}
-
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    touch test.json
     echo 20 >>./test.json
+    DNF_INSTALL cobbler
+    systemctl start httpd
+    systemctl start cobblerd
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
      LOG_INFO "Start to run testcase."
-     cobbler aclsetup --adduser=root --addgroup=root --removeuser=root --removegroup=root | grep "*** TASK COMPLETE ***"
-     CHECK_RESULT $? 0 0 0 "Failed option: aclsetup"
-     cobbler buildiso | grep "*** TASK COMPLETE ***"
-     CHECK_RESULT $? 0 0 0 "Failed option: buildiso"
-     cobbler import --name=openEuler --arch=x86_64 | grep "*** TASK COMPLETE ***"
-     CHECK_RESULT $? 0 0 0 "Failed option: import"
+     cobbler aclsetup --adduser=root --addgroup=root --removeuser=root --removegroup=root | grep "aclsetup"
+     CHECK_RESULT $? 0 0 "Failed option: aclsetup"
+     cobbler buildiso | grep "buildiso"
+     CHECK_RESULT $? 0 0 "Failed option: buildiso"
+     cobbler import --name=openEuler --arch=x86_64 | grep "import"
+     CHECK_RESULT $? 0 0 "Failed option: import"
      cobbler list | grep "distros" 
-     CHECK_RESULT $? 0 0 0 "Failed option: list"
+     CHECK_RESULT $? 0 0 "Failed option: list"
      cobbler report | grep "distros"
-     CHECK_RESULT $? 0 0 0 "Failed option: report"
-     cobbler reposync --only=only | grep "*** TASK COMPLETE ***"
-     CHECK_RESULT $? 0 0 0 "Failed option: reposync"
-     cobbler sync --verbose | grep "*** TASK COMPLETE ***"
-     CHECK_RESULT $? 0 0 0 "Failed option: sync"
-     cobbler validate-autoinstalls | grep "*** TASK COMPLETE ***"
-     CHECK_RESULT $? 0 0 0 "Failed option: validate-autoinstalls"
+     CHECK_RESULT $? 0 0 "Failed option: report"
+     cobbler reposync --only=only | grep "reposync"
+     CHECK_RESULT $? 0 0 "Failed option: reposync"
+     cobbler sync --verbose | grep "sync"
+     CHECK_RESULT $? 0 0 "Failed option: sync"
+     cobbler validate-autoinstalls | grep "validate_autoinstall"
+     CHECK_RESULT $? 0 0 "Failed option: validate-autoinstalls"
      cobbler version 2>&1 | grep "[[:digit:]]*"
-     CHECK_RESULT $? 0 0 0 "Failed option: version"
-     cobbler signature reload --filename=test.json 
-     CHECK_RESULT $? 0 0 0 "Failed option: signature reload"
-     cobbler signature update | grep "*** TASK COMPLETE ***"
-     CHECK_RESULT $? 0 0 0 "Failed option: signature update"
-     cobbler signature report | grep "Currently"
-     CHECK_RESULT $? 0 0 0 "Failed option: signature report"
-     cobbler get-loaders --force |grep "*** TASK COMPLETE ***"
-     CHECK_RESULT $? 0 0 0 "Failed option: get-loaders"
-     cobbler hardlink | grep "*** TASK COMPLETE ***"
-     CHECK_RESULT $? 0 0 0 "Failed option: hardlink"    
-     cobbler replicate --master=$ip | grep "*** TASK COMPLETE ***"
-     CHECK_RESULT $? 0 0 0 "Failed option: replicate" 
+     CHECK_RESULT $? 0 0 "Failed option: version"
+      cobbler signature update | grep "signatures"
+     CHECK_RESULT $? 0 0 "Failed option: signature update"
+     cobbler signature reload --filename=test.json | grep "Signatures were successfully loaded" 
+     CHECK_RESULT $? 0 0 "Failed option: signature reload"
+     cobbler signature report | grep "signatures"
+     CHECK_RESULT $? 0 0 "Failed option: signature report"
+     cobbler get-loaders --force |grep "get_loaders"
+     CHECK_RESULT $? 0 0 "Failed option: get-loaders"
+     cobbler hardlink | grep "hardlink"
+     CHECK_RESULT $? 0 0 "Failed option: hardlink"    
+     cobbler replicate --master=${NODE1_IPV4} | grep "replicate"
+     CHECK_RESULT $? 0 0 "Failed option: replicate" 
      LOG_INFO "End to run testcase."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm test.json
+    rm test.json 
     DNF_REMOVE
-    rm generated.iso
     LOG_INFO "End to restore the test environment."
 }
 
