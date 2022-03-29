@@ -28,10 +28,10 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     pam_timestamp_check -k
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to remove"
     #需要再看看
     pam_timestamp_check target
-    CHECK_RESULT $? 7 0 
+    CHECK_RESULT $? 7 0 "failed to chek target"
     pam_timestamp_check -h |grep pam_timestamp_check
     CHECK_RESULT $?
     LOG_INFO "Finish test!"
