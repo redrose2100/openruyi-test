@@ -33,6 +33,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     #push file and url Print the PUSHed content to stdout
     touch foo.txt
+    nginx
     tspush -f foo.txt -u http://localhost:8080/foo.txt -v|grep "PUSH" 
     CHECK_RESULT $? 0 0 "failed to push file and url print the PUSEed content to stdout"
     #Print Usage of tspush
