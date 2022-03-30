@@ -29,13 +29,13 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ! ranger --verson 2>&1 | grep "invalid option" && ranger --version 2>&1 | grep "ranger version:"
+    ! ranger --version 2>&1 | grep "no such option" && ranger --version 2>&1 | grep "ranger version:"
     CHECK_RESULT $? 0 0 "Failed option: --version"
 
-    ! ranger -h 2>&1 | grep "invalid option" && ranger -h 2>&1 | grep "Usage: ranger"
+    ! ranger -h 2>&1 | grep "no such option" && ranger -h 2>&1 | grep "Usage: ranger"
     CHECK_RESULT $? 0 0 "Failed option: -h"
 
-    ! ranger --help 2>&1 | grep "invalid option" && ranger --help 2>&1 | grep "Usage: ranger"
+    ! ranger --help 2>&1 | grep "no such option" && ranger --help 2>&1 | grep "Usage: ranger"
     CHECK_RESULT $? 0 0 "Failed option: --help"
 
     if grep "set show_hidden true" /root/.config/ranger/rc.conf; then
@@ -54,7 +54,7 @@ function run_test() {
 EOF
         CHECK_RESULT $? 0 0 "Failed option: -c"
     else
-        CHECK_RESULT 0 1 0 "Failed option: -c, show_hidden is false"
+        LOG_ERROR "Failed option: -c, show_hidden is false"
     fi
 
     if grep "set show_hidden true" /root/.config/ranger/rc.conf; then
@@ -73,7 +73,7 @@ EOF
 EOF
         CHECK_RESULT $? 0 0 "Failed option: --clean"
     else
-        CHECK_RESULT 0 1 0 "Failed option: --clean, show_hidden is false"
+        LOG_ERROR "Failed option: --clean, show_hidden is false"
     fi
 
     if [[ ! -e "/tmp/mylog.txt" ]]; then
