@@ -21,8 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL cobbler 
-    DNF_INSTALL httpd
+    DNF_INSTALL cobbler httpd
     systemctl start httpd
     systemctl start cobblerd
     LOG_INFO "End of environmental preparation!"
@@ -31,21 +30,21 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run testcase."
     cobbler image add --name=OpenEuler 
-    CHECK_RESULT $? 0 0 0 "Failed option: image add"
+    CHECK_RESULT $? 0 0 "Failed option: image add"
     cobbler image copy --name=OpenEuler --newname=newOpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: image copy"
+    CHECK_RESULT $? 0 0 "Failed option: image copy"
     cobbler image edit --name=openEuler --owners=tom
-    CHECK_RESULT $? 0 0 0 "Failed option: image edit"
+    CHECK_RESULT $? 0 0 "Failed option: image edit"
     cobbler image list 2>&1 | grep "newOpenEuler"
-    CHECK_RESULT $? 0 0 0 "Failed option: image list"
+    CHECK_RESULT $? 0 0 "Failed option: image list"
     cobbler image find 2>&1 | grep "OpenEuler"
-    CHECK_RESULT $? 0 0 0 "Failed option: image find"
+    CHECK_RESULT $? 0 0 "Failed option: image find"
     cobbler image remove --name=OpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: image remove"
+    CHECK_RESULT $? 0 0 "Failed option: image remove"
     cobbler image rename --name=newOpenEuler --newname=oldOpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: image rename"
+    CHECK_RESULT $? 0 0 "Failed option: image rename"
     cobbler image report --name=oldOpenEuler 2>&1 | grep "Name"
-    CHECK_RESULT $? 0 0 0 "Failed option: image report"
+    CHECK_RESULT $? 0 0 "Failed option: image report"
     LOG_INFO "End to run testcase."
 }
 

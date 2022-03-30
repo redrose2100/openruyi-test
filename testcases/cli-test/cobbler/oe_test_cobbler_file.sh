@@ -22,8 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     touch test.txt
-    DNF_INSTALL cobbler 
-    DNF_INSTALL httpd
+    DNF_INSTALL cobbler httpd
     systemctl start httpd
     systemctl start cobblerd
     LOG_INFO "End of environmental preparation!"
@@ -32,27 +31,27 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run testcase."
     cobbler file add --name=OpenEuler --path=test.txt --owner=root --group=root --mode=mode --template=tem
-    CHECK_RESULT $? 0 0 0 "Failed option: file add"
+    CHECK_RESULT $? 0 0 "Failed option: file add"
     cobbler file copy --name=OpenEuler --newname=newOpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: file copy"
+    CHECK_RESULT $? 0 0 "Failed option: file copy"
     cobbler file edit --name=openEuler --owners=tom
-    CHECK_RESULT $? 0 0 0 "Failed option: file edit"
+    CHECK_RESULT $? 0 0 "Failed option: file edit"
     cobbler file list 2>&1 | grep "newOpenEuler"
-    CHECK_RESULT $? 0 0 0 "Failed option: file list"
+    CHECK_RESULT $? 0 0 "Failed option: file list"
     cobbler file find 2>&1 | grep "OpenEuler"
-    CHECK_RESULT $? 0 0 0 "Failed option: file find"
+    CHECK_RESULT $? 0 0 "Failed option: file find"
     cobbler file remove --name=OpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: file remove"
+    CHECK_RESULT $? 0 0 "Failed option: file remove"
     cobbler file rename --name=newOpenEuler --newname=oldOpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: file rename"
+    CHECK_RESULT $? 0 0 "Failed option: file rename"
     cobbler file report --name=oldOpenEuler 2>&1 | grep "Name"
-    CHECK_RESULT $? 0 0 0 "Failed option: file report"
+    CHECK_RESULT $? 0 0 "Failed option: file report"
     LOG_INFO "End to run testcase."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm test.txt
+    rm -rf test.txt
     systemctl stop httpd
     systemctl stop cobblerd
     DNF_REMOVE

@@ -21,8 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL cobbler 
-    DNF_INSTALL httpd
+    DNF_INSTALL cobbler httpd
     mount /dev/cdrom /mnt
     systemctl start httpd
     systemctl start cobblerd
@@ -53,13 +52,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 0 "Failed option: system report"
     cobbler system get-autoinstall --name=oldOpenEuler
     CHECK_RESULT $? 0 0 0 "Failed option: system get-autoinstall"
-    cobbler system poweroff --name=oldOpenEuler | grep "*** TASK COMPLETE ***"
+    cobbler system poweroff --name=oldOpenEuler | grep "poweroff"
     CHECK_RESULT $? 0 0 0 "Failed option: system poweroff"    
-    cobbler system poweron --name=oldOpenEuler | grep "*** TASK COMPLETE ***"
+    cobbler system poweron --name=oldOpenEuler | grep "poweron"
     CHECK_RESULT $? 0 0 0 "Failed option: system poweron"
-    cobbler system powerstatus --name=oldOpenEuler | grep "*** TASK COMPLETE ***"
+    cobbler system powerstatus --name=oldOpenEuler | grep "powerstatus"
     CHECK_RESULT $? 0 0 0 "Failed option: system powerstatus"
-    cobbler system reboot --name=oldOpenEuler | grep "*** TASK COMPLETE ***"
+    cobbler system reboot --name=oldOpenEuler | grep "reboot"
     CHECK_RESULT $? 0 0 0 "Failed option: system reboot"
     LOG_INFO "End to run testcase."
 }

@@ -21,8 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL cobbler 
-    DNF_INSTALL httpd
+    DNF_INSTALL cobbler httpd
     mount /dev/cdrom /mnt
     systemctl start httpd
     systemctl start cobblerd
@@ -32,21 +31,21 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run testcase."
     cobbler distro add --name=OpenEuler --owners=root --boot-loader=grub --initrd=/mnt/images/pxeboot/initrd.img --kernel=/mnt/isolinux/vmlinuz
-    CHECK_RESULT $? 0 0 0 "Failed option: distro add"
+    CHECK_RESULT $? 0 0 "Failed option: distro add"
     cobbler distro copy --name=OpenEuler --newname=newOpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: distro copy"
+    CHECK_RESULT $? 0 0 "Failed option: distro copy"
     cobbler distro edit --name=openEuler --owners=tom
-    CHECK_RESULT $? 0 0 0 "Failed option: distro edit"
+    CHECK_RESULT $? 0 0 "Failed option: distro edit"
     cobbler distro list 2>&1 | grep "newOpenEuler"
-    CHECK_RESULT $? 0 0 0 "Failed option: distro list"
+    CHECK_RESULT $? 0 0 "Failed option: distro list"
     cobbler distro find 2>&1 | grep "OpenEuler"
-    CHECK_RESULT $? 0 0 0 "Failed option: distro find"
+    CHECK_RESULT $? 0 0 "Failed option: distro find"
     cobbler distro remove --name=OpenEuler 
-    CHECK_RESULT $? 0 0 0 "Failed option: distro remove"
+    CHECK_RESULT $? 0 0 "Failed option: distro remove"
     cobbler distro rename --name=newOpenEuler --newname=oldOpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: distro rename"
+    CHECK_RESULT $? 0 0 "Failed option: distro rename"
     cobbler distro report --name=oldopenEuler 2>&1 | grep "Name"
-    CHECK_RESULT $? 0 0 0 "Failed option: distro report"
+    CHECK_RESULT $? 0 0 "Failed option: distro report"
     LOG_INFO "End to run testcase."
 }
 

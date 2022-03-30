@@ -21,8 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL cobbler 
-    DNF_INSTALL httpd
+    DNF_INSTALL cobbler httpd
     systemctl start httpd
     systemctl start cobblerd
     LOG_INFO "End of environmental preparation!"
@@ -31,21 +30,21 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run testcase."
     cobbler mgmtclass add --name=OpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: mgmtclass add"
+    CHECK_RESULT $? 0 0 "Failed option: mgmtclass add"
     cobbler mgmtclass copy --name=OpenEuler --newname=newOpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: mgmtclass copy"
+    CHECK_RESULT $? 0 0 "Failed option: mgmtclass copy"
     cobbler mgmtclass edit --name=openEuler --owners=tom
-    CHECK_RESULT $? 0 0 0 "Failed option: mgmtclass edit"
+    CHECK_RESULT $? 0 0 "Failed option: mgmtclass edit"
     cobbler mgmtclass list 2>&1 | grep "newOpenEuler"
-    CHECK_RESULT $? 0 0 0 "Failed option: mgmtclass list"
+    CHECK_RESULT $? 0 0 "Failed option: mgmtclass list"
     cobbler mgmtclass find 2>&1 | grep "OpenEuler"
-    CHECK_RESULT $? 0 0 0 "Failed option: mgmtclass find"
+    CHECK_RESULT $? 0 0 "Failed option: mgmtclass find"
     cobbler mgmtclass remove --name=OpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: mgmtclass remove"
+    CHECK_RESULT $? 0 0 "Failed option: mgmtclass remove"
     cobbler mgmtclass rename --name=newOpenEuler --newname=oldOpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: mgmtclass rename"
+    CHECK_RESULT $? 0 0 "Failed option: mgmtclass rename"
     cobbler mgmtclass report --name=oldOpenEuler 2>&1 | grep "Name"
-    CHECK_RESULT $? 0 0 0 "Failed option: mgmtclass report"
+    CHECK_RESULT $? 0 0 "Failed option: mgmtclass report"
     LOG_INFO "End to run testcase."
 }
 

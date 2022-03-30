@@ -21,8 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL cobbler 
-    DNF_INSTALL httpd
+    DNF_INSTALL cobbler httpd
     systemctl start httpd
     systemctl start cobblerd
     LOG_INFO "End of environmental preparation!"
@@ -31,21 +30,21 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run testcase."
     cobbler package add --name=OpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: package add"
+    CHECK_RESULT $? 0 0 "Failed option: package add"
     cobbler package copy --name=OpenEuler --newname=newOpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: package copy"
+    CHECK_RESULT $? 0 0 "Failed option: package copy"
     cobbler package edit --name=openEuler --owners=tom
-    CHECK_RESULT $? 0 0 0 "Failed option: package edit"
+    CHECK_RESULT $? 0 0 "Failed option: package edit"
     cobbler package list 2>&1 | grep "newOpenEuler"
-    CHECK_RESULT $? 0 0 0 "Failed option: package list"
+    CHECK_RESULT $? 0 0 "Failed option: package list"
     cobbler package find 2>&1 | grep "OpenEuler"
-    CHECK_RESULT $? 0 0 0 "Failed option: package find"
+    CHECK_RESULT $? 0 0 "Failed option: package find"
     cobbler package remove --name=OpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: package remove"
+    CHECK_RESULT $? 0 0 "Failed option: package remove"
     cobbler package rename --name=newOpenEuler --newname=oldOpenEuler
-    CHECK_RESULT $? 0 0 0 "Failed option: package rename"
+    CHECK_RESULT $? 0 0 "Failed option: package rename"
     cobbler package report --name=oldOpenEuler 2>&1 | grep "Name"
-    CHECK_RESULT $? 0 0 0 "Failed option: package report"
+    CHECK_RESULT $? 0 0 "Failed option: package report"
     LOG_INFO "End to run testcase."
 }
 
