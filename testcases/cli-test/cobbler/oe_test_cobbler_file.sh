@@ -22,7 +22,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     touch test.txt
-    DNF_INSTALL cobbler httpd
+    DNF_INSTALL cobbler 
+    DNF_INSTALL httpd
     systemctl start httpd
     systemctl start cobblerd
     LOG_INFO "End of environmental preparation!"
