@@ -34,6 +34,8 @@ function run_test() {
      CHECK_RESULT $? 0 0 "Failed option: aclsetup"
      cobbler buildiso | grep "buildiso"
      CHECK_RESULT $? 0 0 "Failed option: buildiso"
+     if test -f generated.iso ; then echo "The file exists." ; fi | grep "The file exists."
+     CHECK_RESULT $? 0 0 "Failed option: buildiso"
      cobbler import --name=openEuler --arch=x86_64 | grep "import"
      CHECK_RESULT $? 0 0 "Failed option: import"
      cobbler list | grep "distros" 
@@ -65,7 +67,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm test.json 
+    rm test.json generated.iso
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
