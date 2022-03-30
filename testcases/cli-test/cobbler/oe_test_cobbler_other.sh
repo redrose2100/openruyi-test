@@ -69,8 +69,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm test.json generated.iso
-#    systemctl stop httpd
-#    systemctl stop cobblerd
+    systemctl stop httpd
+    systemctl stop cobblerd
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
