@@ -21,8 +21,9 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    echo 20 >>./test.json
-    DNF_INSTALL cobbler
+    echo 20 > test.json
+    DNF_INSTALL cobbler 
+    DNF_INSTALL httpd
     systemctl start httpd
     systemctl start cobblerd
     LOG_INFO "End of environmental preparation!"
@@ -34,7 +35,7 @@ function run_test() {
      CHECK_RESULT $? 0 0 "Failed option: aclsetup"
      cobbler buildiso | grep "buildiso"
      CHECK_RESULT $? 0 0 "Failed option: buildiso"
-     if test -f generated.iso ; then echo "The file exists." ; fi | grep "The file exists."
+     if test -f generated.iso ; then echo "2" ; else echo "1" ; fi | grep "2"
      CHECK_RESULT $? 0 0 "Failed option: buildiso"
      cobbler import --name=openEuler --arch=x86_64 | grep "import"
      CHECK_RESULT $? 0 0 "Failed option: import"
@@ -48,9 +49,9 @@ function run_test() {
      CHECK_RESULT $? 0 0 "Failed option: sync"
      cobbler validate-autoinstalls | grep "validate_autoinstall"
      CHECK_RESULT $? 0 0 "Failed option: validate-autoinstalls"
-     cobbler version 2>&1 | grep "[[:digit:]]*"
+     cobbler version | grep "[[:digit:]]*"
      CHECK_RESULT $? 0 0 "Failed option: version"
-      cobbler signature update | grep "signatures"
+     cobbler signature update | grep "signatures"
      CHECK_RESULT $? 0 0 "Failed option: signature update"
      cobbler signature reload --filename=test.json | grep "Signatures were successfully loaded" 
      CHECK_RESULT $? 0 0 "Failed option: signature reload"
@@ -68,6 +69,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm test.json generated.iso
+#    systemctl stop httpd
+#    systemctl stop cobblerd
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

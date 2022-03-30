@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL cobbler
+    DNF_INSTALL cobbler httpd
     mount /dev/cdrom /mnt
     systemctl start httpd
     systemctl start cobblerd
@@ -52,6 +52,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     umount /dev/cdrom
+    systemctl stop httpd
+    systemctl stop cobblerd
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
