@@ -21,20 +21,20 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    cat>1.sh<<-EOF
+    cat>1.sh<<-END
     #!/usr/bin/expect
     spawn newrole -r unconfined_r
     set timeout 30
     expect "Password:"
     send "${NODE1_PASSWORD}\r"
-    EOF
-    cat>2<<-EOF
+END
+    cat>2.sh<<-END
     #!/usr/bin/expect
     spawn newrole -r system_r -t unconfined_t
     set timeout 30
     expect "Password:"
     send "${NODE1_PASSWORD}\r"
-    EOF
+END
     LOG_INFO "End to prepare the test environment."
 }
 
