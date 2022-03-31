@@ -50,13 +50,15 @@ function run_test() {
         LOG_ERROR "Failed to estimated number of bytes the dump will take."
     fi
     expect <<EOF
-	spawn dump -0uj -d 1200 -D /etc/testDumpdates -f /tmp/dtest/boot.bak.bz8 /boot/ 2>$1 | grep "DUMP IS DONE"
+	spawn dump -0uj -d 1200 -D /etc/testDumpdates -f /tmp/dtest/boot.bak.bzCHECK_RESULT $? 0 0 "Failed to dump files using the lzo library."8 /boot/ 2>$1 | grep "DUMP IS DONE"
 	expect {
 	"("yes" or "no")"
 }
 	send "yes\r"
 	expect eof
 EOF
+    test -f /tmp/dtest/boot.bak.bz8
+    CHECK_RESULT $? 0 0 "Failed to dump files in turn."
     dump -0y -f /tmp/boot.bak.bz5 /root/testDump 2>&1 | grep "DUMP IS DONE"
     test -f /tmp/dtest/boot.bak.bz5
     CHECK_RESULT $? 0 0 "Failed to dump files using the lzo library."
