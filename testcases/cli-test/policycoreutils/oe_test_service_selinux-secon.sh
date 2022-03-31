@@ -52,7 +52,7 @@ function run_test() {
     secon -m
     CHECK_RESULT $?
     #Show the sensitivity level of the context.
-    secon -s|grep "user"
+    secon -s|grep "s0"
     CHECK_RESULT $? 0 0 "failed to show the sensitivity level of the context"
     #Show the clearance level of the context
     secon -c |grep "c1023"
