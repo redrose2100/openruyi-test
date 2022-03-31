@@ -18,12 +18,14 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    old_LD_LIBRARY_PATH=LD_LIBRARY_PATH                          
+    tspath=$(dirname $(find / -name libtensorflow_framework.so*))
+    export LD_LIBRARY_PATH=$tspath:$LD_LIBRARY_PATH              
     DNF_INSTALL "python3-tensorflow"
     python3 ./common/saved_model.py
     wait
     python3 ./common/gen_tf_keras.model.py
     wait
-    unset LD_LIBRARY_PATH
     LOG_INFO "End to prepare the test environment."
 }
 # 测试点的执行
@@ -39,8 +41,9 @@ function run_test() {
 # 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf tflite_convert_out
+    test -f tflite_convert_out && rm -rf tflite_convert_out
     DNF_REMOVE 
+    unset LD_LIBRARY_PATH
     test -f saved_model_dir && rm -rf saved_model_dir
     test -f ./common/saved_model_keras_dir/ && rm -rf ./common/saved_model_keras_dir/
     LOG_INFO "End to restore the test environment."
