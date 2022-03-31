@@ -26,12 +26,12 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL dump
+    test -f /tmp/abc || touch /tmp/abc
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    touch /tmp/abc
     restore -C -f /root/boot.bak.bz2 | grep "Some files were modified!"
     CHECK_RESULT $? 1 0 "Error! Added file detected."
     mv /boot/initramfs-0-rescue-cc63de2ddad7424f885cb8e9c1ef4668.img /boot/initramfs-0-rescue-cc63de2ddad7424f885cb8e9c1ef4669.img
