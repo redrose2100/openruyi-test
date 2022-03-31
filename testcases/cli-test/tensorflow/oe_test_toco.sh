@@ -25,7 +25,9 @@ function pre_test() {
     wait
     python3 ./common/gen_tf_keras.model.py
     wait
-    export LD_LIBRARY_PATH=/usr/lib64/python3.8/site-packages/tensorflow:$LD_LIBRARY_PATH
+    old_LD_LIBRARY_PATH=LD_LIBRARY_PATH                          
+    tspath=$(dirname $(find / -name libtensorflow_framework.so*))
+    export LD_LIBRARY_PATH=$tspath:$LD_LIBRARY_PATH  
     LOG_INFO "End to prepare the test environment."
 }
 
