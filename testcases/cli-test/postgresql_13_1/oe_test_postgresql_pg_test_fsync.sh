@@ -35,7 +35,8 @@ function run_test() {
     CHECK_RESULT $?
     pg_test_timing -? | grep "Usage:"
     CHECK_RESULT $?
-
+    pg_test_timing -d 1 |grep "Test"
+    CHECK_RESULT $?
     pg_upgrade -V | grep "(PostgreSQL)"
     CHECK_RESULT $?
     pg_upgrade -? | grep "Usage:"
