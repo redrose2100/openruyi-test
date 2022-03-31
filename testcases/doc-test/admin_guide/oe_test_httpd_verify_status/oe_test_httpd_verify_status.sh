@@ -25,8 +25,13 @@ function pre_test() {
 
 function run_test() {
 	LOG_INFO "Start executing testcase."
-	systemctl start httpd
+	systemctl enable httpd
+	systemctl daemon-reload
+	SLEEP_WAIT 3
+	systemctl restart httpd
 	SLEEP_WAIT 8
+	systemctl start httpd
+	SLEEP_WAIT 7
 	systemctl is-active httpd.service | grep active
 	CHECK_RESULT $?
 	LOG_INFO "End of  executing testcase."

@@ -17,22 +17,28 @@
 # @Desc      :   Nmcli connection query activation test
 # ############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+function config_params() {
+    LOG_INFO "Start loading data!"
+    test_eth=$(ls /sys/class/net/ | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | grep -v $(ip route | grep ${NODE1_IPV4} | awk '{print$3}') | sed -n 1p)
+    LOG_INFO "Loading data is complete!"
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    nmcli con add type ethernet ifname ${NODE1_NIC} | grep successfully
+    nmcli con add type ethernet ifname ${test_eth} | grep successfully
     CHECK_RESULT $?
 
     nmcli general status | grep "connected"
     CHECK_RESULT $?
-    nmcli connection show | grep "ethernet-${NODE1_NIC}"
+    nmcli connection show | grep "ethernet-${test_eth}"
     CHECK_RESULT $?
     nmcli connection show --active | grep "ethernet"
     CHECK_RESULT $?
     nmcli device status | grep "connected"
     CHECK_RESULT $?
-    nmcli connection up id ethernet-${NODE1_NIC}
+    nmcli connection up id ethernet-${test_eth}
     CHECK_RESULT $?
-    nmcli device disconnect ${NODE1_NIC}
+    nmcli device disconnect ${test_eth}
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
