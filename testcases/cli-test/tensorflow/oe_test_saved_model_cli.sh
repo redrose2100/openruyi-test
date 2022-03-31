@@ -19,7 +19,9 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "python3-tensorflow"
-    export LD_LIBRARY_PATH=/usr/lib64/python3.8/site-packages/tensorflow:$LD_LIBRARY_PATH
+    old_LD_LIBRARY_PATH=LD_LIBRARY_PATH                          
+    tspath=$(dirname $(find / -name libtensorflow_framework.so*)) 
+    export LD_LIBRARY_PATH=$tspath:$LD_LIBRARY_PATH              
     python3 ./common/saved_model.py
     wait
     python3 ./common/gen_tf_keras.model.py
