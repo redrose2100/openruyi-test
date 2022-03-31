@@ -56,9 +56,6 @@
             "name": "oe_test_service_selinux-sestatus"
         },
         {
-            "name": "oe_test_service_selinux-setfiles"
-        },
-        {
             "name": "oe_test_service_selinux-setsebool"
         },
         {
