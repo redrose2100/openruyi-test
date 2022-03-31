@@ -28,6 +28,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     #显示深度学习训练面板
+    firewall-cmd --zone=public --add-port=6006/tcp --permanent
+    firewall-cmd --reload
+    systemctl restart firewalld
     nohup tensorboard --logdir ./tensorboard_log --bind_all >tensorboard.log 2>&1 &
     SLEEP_WAIT 10
     CHECK_RESULT $?
@@ -38,6 +41,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     unset LD_LIBRARY_PATH
     DNF_REMOVE 
+    firewall-cmd --zone=public --remove-port=6006/tcp --permanent
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
