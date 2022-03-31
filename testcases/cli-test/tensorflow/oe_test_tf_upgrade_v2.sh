@@ -17,17 +17,13 @@
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# 需要预加载的数据、参数配置
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    LOG_INFO "No params need to config."
-    LOG_INFO "End to config params of the case."
-}
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "python3-tensorflow"
-    export LD_LIBRARY_PATH=/usr/lib64/python3.8/site-packages/tensorflow:$LD_LIBRARY_PATH
+    old_LD_LIBRARY_PATH=LD_LIBRARY_PATH                          
+    tspath=$(dirname $(find / -name libtensorflow_framework.so*))
+    export LD_LIBRARY_PATH=$tspath:$LD_LIBRARY_PATH  
     LOG_INFO "End to prepare the test environment."
 }
 # 测试点的执行
@@ -41,7 +37,8 @@ function run_test() {
 # 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f report.txt b.py
+    test -f report.txt && rm -f report.txt 
+    test -f b.py && rm -f b.py
     unset LD_LIBRARY_PATH
     DNF_REMOVE 
     LOG_INFO "End to restore the test environment."
