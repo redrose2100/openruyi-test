@@ -27,13 +27,15 @@ function pre_test() {
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
-    fixfiles onboot 
+    fixfiles onboot |grep "System"
     CHECK_RESULT $? 0 0 "failed to fixfiles onboot"
-    fixfiles -v -F check 
+    fixfiles -v -F check |grep "Checking"
     CHECK_RESULT $? 0 0 "failed to check"
-    fixfiles -v -F restore 
+    fixfiles -v -F restore |grep "Relabeling"
     CHECK_RESULT $? 0 0 "failed to restore"
-    fixfiles rekabel
+    touch N
+    echo N > N
+    fixfiles relabel < N|grep  "Relabeling"
     CHECK_RESULT $? 0 0 "failed to rekabel"
     #检查bc的安全上下文
     fixfiles -R bc check 
@@ -47,7 +49,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    LOG_INFO "Nothing to do."
+    test -f N && rm -rf N
 
     LOG_INFO "End to restore the test environment."
 }
