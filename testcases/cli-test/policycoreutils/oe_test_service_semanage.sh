@@ -20,17 +20,15 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
-    LOG_INFO "No pkgs need to install."
-
+    test -f var/lib/selinux/targeted/semanage.trans.LOCK && rm -rf var/lib/selinux/targeted/semanage.trans.LOCK
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    # HTTPD 在 8585 端口上监听
-    semanage port -a -t http_port_t -p tcp 8585
-    CHECK_RESULT $? 0 0 "failed to listen port 8585"
+    # HTTPD 在 5000 端口上监听
+    semanage port -m -t http_port_t -p tcp 5000
+    CHECK_RESULT $? 0 0 "failed to listen port 5000"
     #查看 SELinux 和 Linux 用户之间的映射
     semanage login -l |grep "Login"
     CHECK_RESULT $? 0 0 "failed to check"
