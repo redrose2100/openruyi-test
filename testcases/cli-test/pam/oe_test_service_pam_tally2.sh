@@ -27,7 +27,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     pam_tally2 --user test
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to tally2"
     LOG_INFO "Finish test!"
 }
 
