@@ -28,9 +28,14 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     #pam_tally test
-    pam_tally --user test
-    CHECK_RESULT $? | grep "User"
+    pam_tally --user test |grep "User"
+    CHECK_RESULT $? 0 0 "failed to tally test"
     LOG_INFO "Finish test!"
+}
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    test -f /var/log/faillog && rm -rf /var/log/faillog
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
