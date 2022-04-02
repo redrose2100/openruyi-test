@@ -18,23 +18,17 @@
 # #############################################
 
 source "../common/common_lib.sh"
-
-function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    pam has been installed  
-    LOG_INFO "End of environmental preparation!"
-}
-
 function run_test() {
     LOG_INFO "Start testing..."
     pam_timestamp_check -k
     CHECK_RESULT $? 0 0 "failed to remove"
-    #需要再看看
     pam_timestamp_check target
     CHECK_RESULT $? 7 0 "failed to chek target"
+    nohup pam_timestamp_check -d >name.log 2>&1 &
+    SLEEP_WAIT 10 "grep '7' "name.log"
+    CHECK_RESULT $? 0 0 "failed to print the status on standard output" 
     pam_timestamp_check -h |grep pam_timestamp_check
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to show Usage"
     LOG_INFO "Finish test!"
 }
-
 main "$@"
