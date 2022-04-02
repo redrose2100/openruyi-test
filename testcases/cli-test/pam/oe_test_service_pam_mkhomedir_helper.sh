@@ -1,5 +1,4 @@
 #!/usr/bin/bash
-
 # Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -8,7 +7,6 @@
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more detaitest -f.
-
 # #############################################
 # @Author    :   wangsongsong
 # @Contact   :   ss_wang@foxmail.com
@@ -16,22 +14,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test pam_namespace.service restart
 # #############################################
-
 source "../common/common_lib.sh"
-
-function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    pam has been installed  
-    LOG_INFO "End of environmental preparation!"
-}
-
 function run_test() {
     LOG_INFO "Start testing..."
-    mkhomedir_helper root 
-    CHECK_RESULT $? 
     mkhomedir_helper test
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to creat home directories for test"
     LOG_INFO "Finish test!"
 }
-
 main "$@"
