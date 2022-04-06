@@ -38,7 +38,8 @@ function run_test() {
 
 # 后置处理，恢复测试环境
 function post_test() {
-    mv /etc/security/pam_env.conf_bak /etc/security/pam_env.conf
+    LOG_INFO "start environment cleanup."
+    mv /etc/security/pam_env.conf_bak /etc/security/pam_env.conf -f
     LOG_INFO "End to restore the test environment."
 }
 
