@@ -14,7 +14,7 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2022/03/23
 # @License   :   Mulan PSL v2
-# @Desc      :   Test pam_namespace.service restart
+# @Desc      :   Test sudo
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
@@ -41,6 +41,6 @@ function run_test() {
 function post_test(){
     userdel -rf xtest
     userdel -rf xxtest
-    mv  /etc/pam.d/sudo-pam /etc/pam.d/sudo
+    mv  /etc/pam.d/sudo-pam /etc/pam.d/sudo -f
 }
 main "$@"
