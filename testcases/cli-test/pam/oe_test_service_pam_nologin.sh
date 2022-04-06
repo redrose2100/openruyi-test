@@ -17,9 +17,9 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    test -e /etc/pam.d/sshd_bak || mv /etc/pam.d/sshd   /etc/pam.d/sshd_bak
-    test -e /etc/pam.d/login_bak || mv /etc/pam.d/login /etc/pam.d/login_bak 
-    test -e /etc/pam.d/deniedusers_bak || mv /etc/ssh/deniedusers /etc/ssh/deniedusers_bak
+    test -e /etc/pam.d/sshd_bak || mv /etc/pam.d/sshd   /etc/pam.d/sshd_bak -f
+    test -e /etc/pam.d/login_bak || mv /etc/pam.d/login /etc/pam.d/login_bak -f
+    test -e /etc/pam.d/deniedusers_bak || mv /etc/ssh/deniedusers /etc/ssh/deniedusers_bak -f
     echo "auth required pam_listfile.so onerr=succeed item=user sense=deny file=/etc/ssh/deniedusers" > /etc/pam.d/sshd 
     echo "auth required pam_listfile.so onerr=succeed item=user sense=deny file=/etc/ssh/deniedusers" > /etc/pam.d/login 
     echo ${NODE1_USER} > /etc/ssh/deniedusers 
@@ -41,8 +41,8 @@ function run_test() {
 }
 
 function post_test(){
-     mv /etc/pam.d/sshd_bak  /etc/pam.d/sshd   
-     mv /etc/pam.d/login_bak  /etc/pam.d/login 
-     mv /etc/ssh/deniedusers_bak  /etc/ssh/deniedusers 
+     mv /etc/pam.d/sshd_bak  /etc/pam.d/sshd -f
+     mv /etc/pam.d/login_bak  /etc/pam.d/login -f
+     mv /etc/ssh/deniedusers_bak  /etc/ssh/deniedusers -f
 }
 main "$@"
