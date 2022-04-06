@@ -13,7 +13,7 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2020/03/23
 # @License   :   Mulan PSL v2
-# @Desc      :   Test pam_namespace.service restart
+# @Desc      :   Test pam_timestamp_check
 # #############################################
 source "../common/common_lib.sh"
 function run_test() {
@@ -30,9 +30,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to print the status on standard output" 
     LOG_INFO "Finish test!"
 }
-
+function post_test() {
     LOG_INFO "start environment cleanup."
     test -f /tmp/error.log && rm -f error.log
     test -f name.log && rm -rf name.log
     LOG_INFO "Finish environment cleanup!"
+}
 main "$@"
