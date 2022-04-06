@@ -12,7 +12,7 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2020/10/23
 # @License   :   Mulan PSL v2
-# @Desc      :   Test pam_namespace.service restart
+# @Desc      :   Test nologin
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
