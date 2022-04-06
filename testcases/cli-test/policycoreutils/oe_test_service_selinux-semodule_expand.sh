@@ -13,7 +13,7 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2022/03/25
 # @License   :   Mulan PSL v2
-# @Desc      :   Test restorecond.service restart
+# @Desc      :   Test semodule_expand
 # #############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
