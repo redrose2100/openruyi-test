@@ -17,8 +17,8 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    test -e /etc/pam.d/su_bak || mv  /etc/pam.d/su /etc/pam.d/su_bak
-    echo "auth sufficient pam_rootok.so">/etc/pam.d/su
+    test -e /etc/pam.d/su_bak || mv  /etc/pam.d/su /etc/pam.d/su_bak -f
+    echo "auth sufficient pam_rootok.so">/etc/pam.d/su -f
     LOG_INFO "End of environmental preparation!"
 }
 function run_test() {
@@ -41,7 +41,7 @@ function run_test() {
 function post_test(){
     LOG_INFO "start environment cleanup."
     userdel -rf xtest 
-    mv /etc/pam.d/su_bak /etc/pam.d/su
+    mv /etc/pam.d/su_bak /etc/pam.d/su -f
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
