@@ -12,13 +12,27 @@
 # @Contact   :   yihaolin01@foxmail.com
 # @Date      :   2022/03/13
 # @License   :   Mulan PSL v2
-# @Desc      :   Test pam_namespace.service restart
+# @Desc      :   Test pam_tally2
 # #############################################
 source "../common/common_lib.sh"
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+
+    LOG_INFO "No pkgs need to install."
+
+    LOG_INFO "End to prepare the test environment."
+}
 function run_test() {
     LOG_INFO "Start testing..."
     pam_tally2 --user ${NODE1_USER} 
     CHECK_RESULT $? 
     LOG_INFO "Finish test!"
+}
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+
+    LOG_INFO "Nothing to do."
+
+    LOG_INFO "End to restore the test environment."
 }
 main "$@"
