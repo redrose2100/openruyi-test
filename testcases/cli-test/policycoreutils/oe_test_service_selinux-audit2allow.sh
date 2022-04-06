@@ -13,7 +13,7 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2022/02/25
 # @License   :   Mulan PSL v2
-# @Desc      :   Test restorecond.service restart
+# @Desc      :   Test audit2allow
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 # 测试对象、测试需要的工具等安装准备
