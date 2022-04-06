@@ -18,8 +18,8 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    test -e /etc/pam.d/password-auth_bak || mv /etc/pam.d/password-auth /etc/pam.d/password-auth_bak
-    test -e /etc/pam.d/system-auth_bak   || mv /etc/pam.d/system-auth /etc/pam.d/system-auth_bak 
+    test -e /etc/pam.d/password-auth_bak || mv /etc/pam.d/password-auth /etc/pam.d/password-auth_bak -f
+    test -e /etc/pam.d/system-auth_bak   || mv /etc/pam.d/system-auth /etc/pam.d/system-auth_bak -f
     echo "password    requisite     pam_pwquality.so minlen=8 minclass=3 enforce_for_root try_first_pass local_users_only dcredit=0 ucredit=0 lcredit=0 ocredit=0">/etc/pam.d/password-auth
     echo "password    required      pam_pwhistory.so use_authtok remember=5 enforce_for_root">>/etc/pam.d/password-auth
     echo "password    requisite     pam_pwquality.so minlen=8 minclass=3 enforce_for_root try_first_pass local_users_only  dcredit=0 ucredit=0 lcredit=0 ocredit=0">/etc/pam.d/system-auth
@@ -55,8 +55,8 @@ function run_test() {
     LOG_INFO "Finish test!"
 }
 function post_test(){
-    mv /etc/pam.d/password-auth_bak /etc/pam.d/password-auth
-    mv /etc/pam.d/system-auth_bak /etc/pam.d/system-auth
+    mv /etc/pam.d/password-auth_bak /etc/pam.d/password-auth -f
+    mv /etc/pam.d/system-auth_bak /etc/pam.d/system-auth -f
     userdel -rf xxtest 
 }
 main "$@"
