@@ -12,13 +12,13 @@
 # @Contact   :   ss_wang@foxmail.com
 # @Date      :   2022/03/19
 # @License   :   Mulan PSL v2
-# @Desc      :   Test pam_namespace.service restart
+# @Desc      :   Test pam_su_root
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    test -e /etc/pam.d/su-pam || mv /etc/pam.d/su /etc/pam.d/su-pam 
-    echo "auth required pam_wheel.so group=xtest">/etc/pam.d/su  
+    test -e /etc/pam.d/su-pam || mv /etc/pam.d/su /etc/pam.d/su-pam -f
+    echo "auth required pam_wheel.so group=xtest">/etc/pam.d/su -f 
     useradd xtest>/tmp/null 2>&1
     echo xtest:openEuler#01| chpasswd  
     useradd xxtest>/tmp/null 2>&1
@@ -40,7 +40,7 @@ function run_test() {
 
 function post_test(){
     LOG_INFO "start environment cleanup."
-    mv /etc/pam.d/su-pam /etc/pam.d
+    mv /etc/pam.d/su-pam /etc/pam.d -f
     userdel -rf xxtest
     userdel -rf xtest
     LOG_INFO "Finish environment cleanup!"
