@@ -14,7 +14,7 @@
 # @Contact   :   yihaolin01@foxmail.com
 # @Date      :   2022/03/13
 # @License   :   Mulan PSL v2
-# @Desc      :   Test pam_namespace.service restart
+# @Desc      :   Test pam_tally
 # #############################################
 
 source "../common/common_lib.sh"
