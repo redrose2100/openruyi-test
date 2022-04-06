@@ -42,8 +42,10 @@ function run_test() {
     LOG_INFO "Finish test!"
 }
 function post_test(){
+    LOG_INFO "Start to restore the test environment."
     userdel -rf test_xx10
-    mv /etc/pam.d/password-auth_bak /etc/pam.d/password-auth
-    mv /etc/pam.d/system-auth_bak /etc/pam.d/system-auth
+    mv /etc/pam.d/password-auth_bak /etc/pam.d/password-auth -f
+    mv /etc/pam.d/system-auth_bak /etc/pam.d/system-auth -f
+    LOG_INFO "End to restore the test environment."
 }
 main "$@"
