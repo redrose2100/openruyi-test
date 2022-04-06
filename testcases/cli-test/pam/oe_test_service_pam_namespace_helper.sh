@@ -15,11 +15,23 @@
 # @Desc      :   Test namespace_helper
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    LOG_INFO "No pkgs need to install."
+    LOG_INFO "End to prepare the test environment."
+}
 function run_test() {
     LOG_INFO "Start to run test."
     #pam_namespace_helper test
     pam_namespace_helper
     CHECK_RESULT $? 0 0 "failed to show pam_namespace_helper"
     LOG_INFO "End to run test."
+}
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+
+    LOG_INFO "Nothing to do."
+
+    LOG_INFO "End to restore the test environment."
 }
 main "$@"
