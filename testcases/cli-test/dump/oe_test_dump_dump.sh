@@ -1,4 +1,4 @@
-#usr/bin/bash
+#!/usr/bin/bash
 
 # Copyright (c) 2022 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
@@ -26,17 +26,17 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL dump
-    test -f /tmp/dtest || mkdir /tmp/dtest/
+    test -d /tmp/dtest || mkdir -p /tmp/dtest/
     test -f /root/testDump || touch /root/testDump
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    dump -0uj -f /tmp/dtest/boot.bak.bz2 /boot/ | grep "DUMP IS DONE"
+    dump -0uj -f /tmp/dtest/boot.bak.bz2 /boot/
     test -f /tmp/dtest/boot.bak.bz2
     CHECK_RESULT $? 0 0 "Failed to dump file."
-    dump -0uj -f /tmp/dtest/testAfile /boot | grep "DUMP IS DONE"
+    dump -0uj -f /tmp/dtest/testAfile /boot
     test -f /tmp/dtest/testAfile
     CHECK_RESULT $? 0 0 "Failed to specified archive_file to be used."
     dump -W 2>&1 | grep "Last dump"
@@ -53,7 +53,7 @@ function run_test() {
         LOG_ERROR "Failed to estimated number of bytes the dump will take."
     fi
     expect <<EOF
-        spawn dump -0uj -d 1200 -D /etc/testDumpdates -f /tmp/dtest/boot.bak.bz8 /boot/
+        spawn dump -0uj -d 1200 -D /tmp/testDumpdates -f /tmp/dtest/boot.bak.bz8 /boot/
         expect {
         "("yes" or "no")"
 }
@@ -65,7 +65,8 @@ EOF
     dump -0y -f /tmp/dtest/boot.bak.bz5 /root/testDump
     test -f /tmp/dtest/boot.bak.bz5
     CHECK_RESULT $? 0 0 "Failed to dump files using the lzo library."
-    dump -0y -T 2022-2-24 21:31:23 -f /tmp/boot.bak.bz6 /root/testDump 2>&1 | grep "time"
+    dump -0y -0800 -f /tmp/dtest/boot.bak.bz6 /boot/
+    test -f /tmp/dtest/boot.bak.bz6
     CHECK_RESULT $? 0 0 "Failed to use the specified date as the starting time for the dump."
     dump -0uj -e 1703936 -f /tmp/dtest/boot.bak.bz7 /boot/
     test -f /tmp/dtest/boot.bak.bz7
@@ -75,7 +76,7 @@ EOF
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf /tmp/dtest /root/testDump
+    rm -rf /tmp/dtest /root/testDump /tmp/testDumpdates
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
