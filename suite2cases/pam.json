@@ -2,7 +2,53 @@
     "path": "$OET_PATH/testcases/cli-test/pam",
     "cases": [
         {
+            "name": "oe_test_service_pam_9"
+        },
+        {
+            "name": "oe_test_service_pam_access"
+        },
+        {
+            "name": "oe_test_service_pam_env"
+        },
+        {
+            "name": "oe_test_service_pam_faillock"
+        },
+        {
+            "name": "oe_test_service_pam_mkhomedir_helper"
+        },
+        {
+            "name": "oe_test_service_pam_namespace_helper"
+        },
+        {
             "name": "oe_test_service_pam_namespace"
-        }
+        },
+        {
+            "name": "oe_test_service_pam_nologin"
+        },
+        {
+            "name": "oe_test_service_pam_password_complex01"
+        },
+        {
+            "name": "oe_test_service_pam_password_complex02"
+        },
+        {
+            "name": "oe_test_service_pam_sudo"
+        },
+        {
+            "name": "oe_test_service_pam_su_root"
+        },
+
+        {
+            "name": "oe_test_service_pam_su"
+        },
+        {
+            "name": "oe_test_service_pam_tally2"
+        },
+        {
+            "name": "oe_test_service_pam_tally"
+        },
+        {
+            "name": "oe_test_service_pam_timestamp_check"
+        },
     ]
 }
