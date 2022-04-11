@@ -13,7 +13,7 @@
 # @Contact   :   ss_wang@foxmail.com 
 # @Date      :   2022/03/05
 # @License   :   Mulan PSL v2
-# @Desc      :   Test trafficserver.service restart
+# @Desc      :   Test tsxs
 # #############################################
 
 source "../common/common_lib.sh"
