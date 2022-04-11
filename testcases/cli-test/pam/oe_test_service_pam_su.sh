@@ -17,7 +17,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    test -e /etc/pam.d/su_bak || mv  /etc/pam.d/su /etc/pam.d/su_bak -f
+    test -f /etc/pam.d/su_bak || mv  /etc/pam.d/su /etc/pam.d/su_bak -f
     echo "auth sufficient pam_rootok.so">/etc/pam.d/su -f
     LOG_INFO "End of environmental preparation!"
 }
