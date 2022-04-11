@@ -17,7 +17,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    test -e /etc/pam.d/su-pam || mv /etc/pam.d/su /etc/pam.d/su-pam -f
+    test -f /etc/pam.d/su-pam || mv /etc/pam.d/su /etc/pam.d/su-pam -f
     echo "auth required pam_wheel.so group=xtest">/etc/pam.d/su -f 
     useradd xtest>/tmp/null 2>&1
     echo xtest:openEuler#01| chpasswd  
