@@ -23,8 +23,8 @@ function pre_test() {
     trafficserver has been installed
     pkill [TS_MAIN]
     pkill traffic_m
-    test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
-    test -f /usr/local/var/trafficserver/manager.lock && rm -rf /usr/local/var/trafficserver/manager.lock
+    rm -rf /usr/local/var/trafficserver/server.lock
+    rm -rf /usr/local/var/trafficserver/manager.lock
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
 }
