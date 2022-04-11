@@ -13,7 +13,7 @@
 # @Contact   :   1165507637@qq.com 
 # @Date      :   2022/03/05
 # @License   :   Mulan PSL v2
-# @Desc      :   Test trafficserver.service restart
+# @Desc      :   Test traffic_via
 # #############################################
 
 source "../common/common_lib.sh"
