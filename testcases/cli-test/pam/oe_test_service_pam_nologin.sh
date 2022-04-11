@@ -17,9 +17,9 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    test -e /etc/pam.d/sshd_bak || mv /etc/pam.d/sshd   /etc/pam.d/sshd_bak -f
-    test -e /etc/pam.d/login_bak || mv /etc/pam.d/login /etc/pam.d/login_bak -f
-    test -e /etc/pam.d/deniedusers_bak || mv /etc/ssh/deniedusers /etc/ssh/deniedusers_bak -f
+    test -f /etc/pam.d/sshd_bak || mv /etc/pam.d/sshd   /etc/pam.d/sshd_bak -f
+    test -f /etc/pam.d/login_bak || mv /etc/pam.d/login /etc/pam.d/login_bak -f
+    test -f /etc/pam.d/deniedusers_bak || mv /etc/ssh/deniedusers /etc/ssh/deniedusers_bak -f
     echo "auth required pam_listfile.so onerr=succeed item=user sense=deny file=/etc/ssh/deniedusers" > /etc/pam.d/sshd 
     echo "auth required pam_listfile.so onerr=succeed item=user sense=deny file=/etc/ssh/deniedusers" > /etc/pam.d/login 
     echo ${NODE1_USER} > /etc/ssh/deniedusers 
