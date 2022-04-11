@@ -13,7 +13,7 @@
 # @Contact   :   sswang@hit.edu.cn 
 # @Date      :   2022/03/05
 # @License   :   Mulan PSL v2
-# @Desc      :   Test trafficserver.service restart
+# @Desc      :   Test traffic_manager
 # #############################################
 
 source "../common/common_lib.sh"
