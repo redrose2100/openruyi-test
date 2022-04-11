@@ -24,8 +24,8 @@ function pre_test() {
     pkill traffic_m
     pkill [TS_MAIN]
     pkill traffic_s
-    test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
-    test -f /usr/local/var/trafficserver/manager.lock && rm  -rf /usr/local/var/trafficserver/manager.lock
+    rm -rf /usr/local/var/trafficserver/server.lock
+    rm  -rf /usr/local/var/trafficserver/manager.lock
     nohup traffic_manager -B text >manager.log 2>&1 &
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End to prepare the test environment."
