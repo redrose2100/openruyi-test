@@ -22,8 +22,7 @@ function pre_test() {
     pkill traffic_m
     pkill [TS_MAIN]
     pkill traffic_s
-    rm -rf /usr/local/var/trafficserver/server.lock
-    rm  -rf /usr/local/var/trafficserver/manager.lock
+    rm -rf /usr/local/var/trafficserver/*.lock
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
