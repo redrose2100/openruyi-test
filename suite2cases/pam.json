@@ -49,6 +49,6 @@
         },
         {
             "name": "oe_test_service_pam_timestamp_check"
-        },
+        }
     ]
 }
