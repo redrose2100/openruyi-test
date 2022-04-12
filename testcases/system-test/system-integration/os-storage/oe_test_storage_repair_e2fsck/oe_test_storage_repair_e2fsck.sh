@@ -28,11 +28,11 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environment preparation."
     echo -e "n\np\n1\n\n+20M\nn\np\n2\n\n+20M\nn\np\n3\n\n+20M\np\nw\n" | fdisk /dev/${local_disk}
-    mkfs.ext2 -F "/dev/${local_disk}"1
+    mkfs.ext2 -F "/dev/${local_disk1}"
     SLEEP_WAIT 2
-    mkfs.ext3 -F "/dev/${local_disk}"2
+    mkfs.ext3 -F "/dev/${local_disk2}"
     SLEEP_WAIT 2
-    mkfs.ext4 -F "/dev/${local_disk}"3
+    mkfs.ext4 -F "/dev/${local_disk3}"
     SLEEP_WAIT 2
     udevadm settle
     LOG_INFO "Environmental preparation is over."
@@ -40,11 +40,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    e2fsck -n "/dev/${local_disk}"1
+    e2fsck -n "/dev/${local_disk1}"
     CHECK_RESULT $?
-    e2fsck -n "/dev/${local_disk}"2
+    e2fsck -n "/dev/${local_disk2}"
     CHECK_RESULT $?
-    e2fsck -n "/dev/${local_disk}"3
+    e2fsck -n "/dev/${local_disk3}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }

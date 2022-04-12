@@ -49,7 +49,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf ~/test1
+    rm -rf test1
     cd ${current_path} || exit 1
     LOG_INFO "Finish environment cleanup."
 }
