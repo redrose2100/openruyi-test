@@ -61,15 +61,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     setsebool -P allow_ftpd_anon_write=0
-    wait
     setsebool -P cron_can_relabel 0
-    wait
     setsebool -P daemons_use_tty 0
-    wait
     setsebool -P domain_kernel_load_modules 0
-    wait
     setsebool -P fips_mode 0
-    wait
     setsebool -P polyinstantiation_enabled 0
     LOG_INFO "End to restore the test environment."
 }
