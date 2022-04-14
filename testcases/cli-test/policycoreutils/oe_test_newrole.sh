@@ -15,10 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test newrole
 # #############################################
-
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-
-# 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     cat>1.sh<<-END
@@ -38,18 +35,17 @@ END
     LOG_INFO "End to prepare the test environment."
 }
 
-# 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
 
-    # 切换用户 
+    # change user 
     expect 1.sh
     CHECK_RESULT $? 0 0 "failed to change role"
     exit
     expect 2
     CHECK_RESULT $? 0 0 "failed to change to system_r "
     exit
-    #检查newrole版本
+    #Check newrole version
     newrole -V 
     CHECK_RESULT $?
     newrole -l Secret
@@ -57,7 +53,6 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
-# 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     LOG_INFO "Nothing to do."
