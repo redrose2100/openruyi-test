@@ -17,7 +17,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    test -e /etc/security/access.conf_pam || mv /etc/security/access.conf  /etc/security/access.conf_pam
+    test -f /etc/security/access.conf_pam || mv /etc/security/access.conf  /etc/security/access.conf_pam -f
     echo "-:root:127.0.0.1" >/etc/security/access.conf 
     LOG_INFO "End to prepare the test environment."
 }
@@ -34,7 +34,7 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    mv /etc/security/access.conf_pam  /etc/security/access.conf
+    mv /etc/security/access.conf_pam  /etc/security/access.conf -f
     LOG_INFO "End to restore the test environment."
 }
 

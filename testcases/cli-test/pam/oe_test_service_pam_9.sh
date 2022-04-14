@@ -18,7 +18,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    test -e /etc/pam.d/passwd_bak|| /etc/pam.d/passwd  /etc/pam.d/passwd_bak
+    test -f /etc/pam.d/passwd_bak||mv /etc/pam.d/passwd  /etc/pam.d/passwd_bak -f
     echo "password requisite  pam_cracklib.so try_first_pass retry=3 dcredit=-5 ocredit=-3" >>/etc/pam.d/passwd
     LOG_INFO "End of environmental preparation!"
 }
@@ -31,11 +31,11 @@ function run_test() {
     else
 	varflag="0"
     fi
-    CHECK_RESULT $varflag "0"
+    CHECK_RESULT $varflag "0" "0" "failed to set password"
     LOG_INFO "Finish test!"
 }
 
 function post_test(){
-    mv /etc/pam.d/passwd_bak  /etc/pam.d/passwd
+    mv /etc/pam.d/passwd_bak  /etc/pam.d/passwd -f 
 }
 main "$@"

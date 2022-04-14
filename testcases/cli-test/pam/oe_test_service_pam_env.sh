@@ -18,7 +18,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {  
     cmd="test -e /tmp/a && rm -rf /tmp/a; \
-    mv /etc/security/pam_env.conf /etc/security/pam_env.conf_bak; \
+    mv /etc/security/pam_env.conf /etc/security/pam_env.conf_bak -f; \
     echo HOME DEFAULT=\${HOME} OVERRIDE=/var/>/etc/security/pam_env.conf"
     SSH_CMD "$cmd" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER} 20 22    
     LOG_INFO "End to prepare the test environment."
