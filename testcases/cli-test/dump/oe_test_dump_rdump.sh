@@ -27,7 +27,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL dump
     test -d /tmp/dtest || mkdir -p /tmp/dtest/
-    test -f /root/testDump || touch /root/testDump
+    test -f /tmp/testDump || touch /tmp/testDump
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -49,9 +49,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to  stands for ‘auto-size’."
     dump -0uj -f -z /boot
     CHECK_RESULT $? 0 0 "Failed to compresses every block to be written on to the tape using the zlib library."
-    if [[ !"$(dump -S /dev/)" =~ ^|0-9|+$ ]]; then
-        LOG_ERROR "Failed to estimated number of bytes the dump will take."
-    fi
+    dump -S /dev/ | grep "[0-9]"
+    CHECK_RESULT $? 0 0 "Failed to estimated number of bytes the dump will take."
     expect <<EOF
         spawn dump -0uj -d 1200 -D /tmp/testDumpdates -f /tmp/dtest/boot.bak.bz8 /boot/
         expect {
@@ -62,7 +61,7 @@ function run_test() {
 EOF
     test -f /tmp/dtest/boot.bak.bz8
     CHECK_RESULT $? 0 0 "Failed to dump files in turn."
-    dump -0y -f /tmp/dtest/boot.bak.bz5 /root/testDump
+    dump -0y -f /tmp/dtest/boot.bak.bz5 /tmp/testDump
     test -f /tmp/dtest/boot.bak.bz5
     CHECK_RESULT $? 0 0 "Failed to dump files using the lzo library."
     dump -0y -0800 -f /tmp/dtest/boot.bak.bz6 /boot/
@@ -76,7 +75,7 @@ EOF
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf /tmp/dtest /root/testDump /tmp/testDumpdates
+    rm -rf /tmp/dtest /tmp/testDump /tmp/testDumpdates
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
