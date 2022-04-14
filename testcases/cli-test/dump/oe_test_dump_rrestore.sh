@@ -28,7 +28,7 @@ function pre_test() {
     DNF_INSTALL dump
     dump -0uj -f /tmp/boot.bak.bz2 /boot/
     test -f /boot/abc || touch /boot/abc
-    test -f /root/tmp.test || mkdir /root/tmp.test
+    test -d /root/tmp || mkdir -p /root/tmp
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -36,16 +36,16 @@ function run_test() {
     LOG_INFO "Start testing..."
     restore -C -f /tmp/boot.bak.bz2 | grep "Some files were modified!"
     CHECK_RESULT $? 1 0 "Error! Added file detected."
-    mv /boot/initramfs-0-rescue-cc63de2ddad7424f885cb8e9c1ef4668.img /boot/initramfs-0-rescue-cc63de2ddad7424f885cb8e9c1ef4669.img
+    mv /boot/vmlinuz-2.6.32-279.el6.i686 /boot/vmlinuz-2.6.32-279.el6.i686.bak
     restore -C -f /tmp/boot.bak.bz2 | grep "Some files were modified!"
     CHECK_RESULT $? 0 0 "Failed to detecte revision files"
-    mv /boot/initramfs-0-rescue-cc63de2ddad7424f885cb8e9c1ef4669.img /boot/initramfs-0-rescue-cc63de2ddad7424f885cb8e9c1ef4668.img
+    mv /boot/vmlinuz-2.6.32-279.el6.i686.bak /boot/vmlinuz2.6.32-279.el6.i686
     restore -t -f /tmp/boot.bak.bz2 | grep "Dump   date:"
     CHECK_RESULT $? 0 0 "Failed to print backup profile informaintioin"
     cd /root/tmp.test/
     restore -r -f /tmp/boot.bak.bz2
     /n | restore -R -f /tmp/boot.bak.bz2
-    ls /root/tmp.test | grep ""
+    ls /root/tmp | grep ""
     CHECK_RESULT $? 0 0 "Failed to restore backup files in this folder"
     restore -t -f /tmp/boot.bak.bz2 | grep "openEuler"
     CHECK_RESULT $? 0 0 "Failed to list files on the backup"
@@ -54,7 +54,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf /tmp/abc /root/tmp.test /tmp/boot.bak.bz2
+    rm -rf /tmp/abc /root/tmp /tmp/boot.bak.bz2
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
