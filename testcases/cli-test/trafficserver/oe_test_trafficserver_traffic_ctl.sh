@@ -26,14 +26,12 @@ function pre_test() {
     pkill traffic_s
     rm -rf /usr/local/var/trafficserver/server.lock
     rm  -rf /usr/local/var/trafficserver/manager.lock
-    nohup traffic_manager -B text >manager.log 2>&1 &
-    log_time=$(date '+%Y-%m-%d %T')
+    nohup traffic_manager -B text >/tmp/manager.log 2>&1 &
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-
     #Print usage information
     traffic_ctl -h |grep "Commands"
     CHECK_RESULT $? 0 0 "failed to print usage infomation"
@@ -117,13 +115,12 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
-# 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     pkill traffic_m
     test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
     test -f /usr/local/var/trafficserver/manager.lock && rm  -rf /usr/local/var/trafficserver/manager.lock
-    test -f manager.log && rm -rf manager.log
+    rm -rf /tmp/*
     LOG_INFO "End to restore the test environment."
 }
 

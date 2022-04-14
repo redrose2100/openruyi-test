@@ -15,9 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test traffic_manager
 # #############################################
-
 source "../common/common_lib.sh"
-
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     trafficserver has been installed
@@ -25,25 +23,23 @@ function pre_test() {
     test -f /usr/local/var/trafficserver/manager.lock && rm -rf /usr/local/var/trafficserver/manager.lock
     pkill [TS_MAIN]
     pkill traffic_m    
-    log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
 }
-
 function run_test() {
     LOG_INFO "Start testing..."
     #Show Traffic Server Version
     traffic_manager --version | grep "Apache Traffic Server"
     CHECK_RESULT $? 0 0 "failed to show traffic server version" 
     #Set max number of librecords metrics and configurations
-    nohup traffic_manager -m 2500 >metrics.log 2>&1&    
+    nohup traffic_manager -m 2500 >/tmp/metrics.log 2>&1&    
     SLEEP_WAIT 15
     CHECK_RESULT $? 0 0 "failed to set max number of librecords metrics and configurations"
     #Vertical-bar-separated Debug Tags
-    nohup traffic_manager -T text >debug.log 2>&1&    
+    nohup traffic_manager -T text >/tmp/debug.log 2>&1&    
     SLEEP_WAIT 15
     CHECK_RESULT $? 0 0 "failed to vertical-bar-separated debug tags"
     #Vertical-bar-separated Behavior Tags
-    nohup traffic_manager -B text >behavior.log 2>&1&    
+    nohup traffic_manager -B text >/tmp/behavior.log 2>&1&    
     SLEEP_WAIT 15
     CHECK_RESULT $? 0 0 "failed to vertical-bar-separated debug tags"
     LOG_INFO "Finish test!"
@@ -51,9 +47,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    test -f metrics.log && rm -rf metrics.log
-    test -f debug.log && rm -rf debug.log
-    test -f behavior.log && rm -rf behavior.log
+    rm -rf /tmp/*
     test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
     test -f /usr/local/var/trafficserver/manager.lock && rm -rf /usr/local/var/trafficserver/manager.lock
     pkill [TS_MAIN]

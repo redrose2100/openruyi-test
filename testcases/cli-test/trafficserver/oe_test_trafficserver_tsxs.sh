@@ -15,26 +15,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test tsxs
 # #############################################
-
 source "../common/common_lib.sh"
-# 需要预加载的数据、参数配置
 function config_params() {
     LOG_INFO "Start to config params of the case."
     LOG_INFO "trafficserver has been installed"
     traffic_server start
     LOG_INFO "End to config params of the case."
 }
-
-
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    cat>1.c<<-EOF
+    cat>1.c<<END
 	#include <stdio.h>
 	int main(){
 	printf("hello world\n");
 	}
-	EOF
-   
+END
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
 }

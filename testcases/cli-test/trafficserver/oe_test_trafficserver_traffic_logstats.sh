@@ -7,7 +7,6 @@
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more detaitest -f.
-
 # #############################################
 # @Author    :   wangsongsong
 # @Contact   :   ss_wang@foxmail.com 
@@ -15,9 +14,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test trafficserver.service restart
 # #############################################
-
 source "../common/common_lib.sh"
-
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     LOG_INFO "trafficserver has been installed"
@@ -25,10 +22,8 @@ function pre_test() {
     pkill traffic_m
     test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
     test -f /usr/local/var/trafficserver/manager.lock && rm -rf /usr/local/var/trafficserver/manager.lock
-    log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
 }
-
 function run_test() {
     LOG_INFO "Start testing..."
     #Produce JSON formatted output

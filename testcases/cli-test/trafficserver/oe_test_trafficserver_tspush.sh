@@ -32,9 +32,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     #push file and url Print the PUSHed content to stdout
-    touch foo.txt
+    touch /tmp/foo.txt
     nginx
-    tspush -f foo.txt -u http://localhost:8080/foo.txt -v|grep "PUSH" 
+    tspush -f /tmp/foo.txt -u http://localhost:8080/tmp/foo.txt -v|grep "PUSH" 
     CHECK_RESULT $? 0 0 "failed to push file and url print the PUSEed content to stdout"
     #Print Usage of tspush
     tspush -h
@@ -44,6 +44,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    rm -rf /tmp/*
     pkill [TS_MAIN]
     pkill traffic_m
     LOG_INFO "Finish environment cleanup!"

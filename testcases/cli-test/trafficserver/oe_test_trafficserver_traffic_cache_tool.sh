@@ -23,6 +23,9 @@ function pre_test() {
     pkill [TS_MAIN]
     pkill traffic_s
     rm -rf /usr/local/var/trafficserver/*.lock
+    mkdir -p /usr/local/etc/trafficserver/
+    touch /usr/local/etc/trafficserver/storage.config
+    touch /usr/local/etc/trafficserver/volume.config
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
@@ -68,8 +71,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to find stripe assignment" 
     LOG_INFO "End to run test."
 }
-
-# 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     pkill traffic_m
