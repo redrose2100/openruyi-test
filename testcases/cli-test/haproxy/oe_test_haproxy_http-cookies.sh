@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -19,6 +19,7 @@
 
 source "../common/common_lib.sh"
 source "./common/lib.sh"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     LOG_INFO "Nothing to do."
@@ -35,6 +36,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf $OET_PATH/testcases/cli-test/haproxy/haproxy/ run-regtests.sh 
+    rm -rf /tmp/Vtest/
+    rm -rf reg-tests/
     LOG_INFO "Finish test!"
 }
 
