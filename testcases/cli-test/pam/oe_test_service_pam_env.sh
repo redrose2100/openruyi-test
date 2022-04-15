@@ -15,7 +15,6 @@
 # @Desc      :   Test pam_env
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-
 function pre_test() {  
     cmd="test -e /tmp/a && rm -rf /tmp/a; \
     mv /etc/security/pam_env.conf /etc/security/pam_env.conf_bak -f; \
@@ -28,19 +27,17 @@ function run_test() {
     touch \$HOME>/tmp/a
     chmod 777 \$HOME>/tmp/a
     SSH_CMD "echo \$HOME>/tmp/a" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER} 20 22
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "failed to login NODE2_USER"
     SSH_SCP root@${NODE2_IPV4}:/tmp/a /tmp/a ${NODE2_PASSWORD} 
-    CHECK_RESULT $?
-    tmpa=`cat /tmp/a`
-    CHECK_RESULT "$tmpa"  "/var/"
+    CHECK_RESULT $? 0 0 "failed to send /tmp/a"
+    grep "/var/" /tmp/a
+    CHECK_RESULT $? 0 0 "failed to find /var/"
     LOG_INFO "End to run test."
 }
-
-# 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "start environment cleanup."
+    rm -rf /tmp/*
     mv /etc/security/pam_env.conf_bak /etc/security/pam_env.conf -f
     LOG_INFO "End to restore the test environment."
 }
-
 main "$@"
