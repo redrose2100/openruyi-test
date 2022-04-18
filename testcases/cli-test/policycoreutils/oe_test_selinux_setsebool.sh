@@ -15,10 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test setsebool
 # #############################################
-
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-
-# 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
@@ -27,10 +24,8 @@ function pre_test() {
     LOG_INFO "End to prepare the test environment."
 }
 
-# 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
-    #允许vsftp匿名用户写入权限
     setsebool -P allow_ftpd_anon_write=1
     CHECK_RESULT $? 0 0 "failed to allow"
     #allow system cron jobs to relabel filesystem for restoring file contexts, you must turn on the cron_can_relabel boolean. Disabled by default
@@ -57,7 +52,6 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
-# 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     setsebool -P allow_ftpd_anon_write=0

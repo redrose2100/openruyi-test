@@ -26,13 +26,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    # HTTPD 在 5000 端口上监听
+    # HTTPD listen in port 5000 
     semanage port -m -t http_port_t -p tcp 5000
     CHECK_RESULT $? 0 0 "failed to listen port 5000"
-    #查看 SELinux 和 Linux 用户之间的映射
     semanage login -l |grep "Login"
     CHECK_RESULT $? 0 0 "failed to check"
-    #配置单个进程（域）运行在许可模式
     semanage permissive -a httpd_t
     CHECK_RESULT $? 0 0 "failed to configure"
     LOG_INFO "End to run test."
@@ -40,9 +38,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     LOG_INFO "Nothing to do."
-
     LOG_INFO "End to restore the test environment."
 }
 

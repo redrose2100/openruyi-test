@@ -17,16 +17,13 @@
 # #############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-# 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
 
-    # load_policy将已安装的策略文件加载到内核中
     load_policy -qi
     CHECK_RESULT $? 
     LOG_INFO "End to run test."
 }
-# 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     LOG_INFO "Nothing to do."
