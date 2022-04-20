@@ -42,10 +42,10 @@ function run_test() {
     mv /boot/vmlinuz-2.6.32-279.el6.i686.bak /boot/vmlinuz2.6.32-279.el6.i686
     restore -t -f /tmp/boot.bak.bz2 | grep "Dump   date:"
     CHECK_RESULT $? 0 0 "Failed to print backup profile informaintioin"
-    cd /root/tmp.test/
+    cd /root/tmp
     restore -r -f /tmp/boot.bak.bz2
     /n | restore -R -f /tmp/boot.bak.bz2
-    ls /root/tmp | grep ""
+    ls | grep "^-" | wc -l
     CHECK_RESULT $? 0 0 "Failed to restore backup files in this folder"
     restore -t -f /tmp/boot.bak.bz2 | grep "openEuler"
     CHECK_RESULT $? 0 0 "Failed to list files on the backup"
