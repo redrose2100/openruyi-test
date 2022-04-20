@@ -21,7 +21,7 @@
 #On most media the size is determined by writing until an end-of-media indication is returned.
 #####################################
 
-source "../common/common_lib.sh"
+source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
