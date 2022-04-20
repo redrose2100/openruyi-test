@@ -21,7 +21,7 @@
 #Other arguments to the command are file or directory names specifying the files that are to be restored.
 #####################################
 
-source "../common/common_lib.sh"
+source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
