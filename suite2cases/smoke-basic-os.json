@@ -1,6 +1,5 @@
 {
     "path": "${OET_PATH}/testcases/smoke-test/smoke-basic-os",
-    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_acl_001"
@@ -15,8 +14,8 @@
             "name": "oe_test_cd_002"
         },
         {
-	    "name": "oe_test_chattr"
-	},
+            "name": "oe_test_chattr"
+        },
         {
             "name": "oe_test_chmod_001"
         },
@@ -30,8 +29,7 @@
             "name": "oe_test_CPUinfo_001"
         },
         {
-            "name": "oe_test_criu",
-            "machine num": 2
+            "name": "oe_test_criu"
         },
         {
             "name": "oe_test_dateinfo_001"
@@ -39,7 +37,7 @@
         {
             "name": "oe_test_dd_001"
         },
-	{
+        {
             "name": "oe_test_df"
         },
         {
