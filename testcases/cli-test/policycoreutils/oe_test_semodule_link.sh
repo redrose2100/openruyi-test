@@ -18,17 +18,13 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
-
     semodule_link -Vv -o 1 basemodpkg modpkg1 modpkg2
     CHECK_RESULT $? 0 0 "failed to show version"
     LOG_INFO "End to run test."
 }
-
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     LOG_INFO "Nothing to do."
-
     LOG_INFO "End to restore the test environment."
 }
 

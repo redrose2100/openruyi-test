@@ -5,64 +5,67 @@
             "name": "oe_test_service_restorecond"
        },
         {
-            "name": "oe_test_service_selinux-autorelabel-mark"
+            "name": "oe_test_service_autorelabel-mark"
         },
         {
-            "name": "oe_test_target_selinux-autorelabel"
+            "name": "oe_test_target_autorelabel"
         },
         {
             "name": "oe_test_newrole"
         },
         {
-            "name": "oe_test_selinux_audit2allow"
+            "name": "oe_test_audit2allow"
         },
         {
-            "name": "oe_test_selinux-fixfiles"
+            "name": "oe_test_fixfiles"
         },
         {
-            "name": "oe_test_selinux_genhomedircon"
+            "name": "oe_test_genhomedircon"
         },
         {
-            "name": "oe_test_selinux_getsebool"
+            "name": "oe_test_getsebool"
         },
         {
-            "name": "oe_test_selinux_load_policy"
+            "name": "oe_test_load_policy"
         },
         {
-            "name": "oe_test_selinux_restorecon"
+            "name": "oe_test_restorecon"
         },
         {
-            "name": "oe_test_selinux_restorecon_xattr"
+            "name": "oe_test_restorecon_xattr"
         },
         {
-            "name": "oe_test_selinux-secon"
+            "name": "oe_test_secon"
         },
         {
-            "name": "oe_test_selinux-semodule_expand"
+            "name": "oe_test_semodule_expand"
         },
         {
-            "name": "oe_test_selinux-semodule_link"
+            "name": "oe_test_semodule_link"
         },
         {
-            "name": "oe_test_selinux-semodule_package"
+            "name": "oe_test_semodule_package"
         },
         {
-            "name": "oe_test_selinux_semodule"
+            "name": "oe_test_semodule"
         },
         {
-            "name": "oe_test_selinux_semodule_unpackage"
+            "name": "oe_test_semodule_unpackage"
         },
         {
-            "name": "oe_test_selinux_sestatus"
+            "name": "oe_test_sestatus"
         },
         {
-            "name": "oe_test_selinux_setsebool"
+            "name": "oe_test_setsebool"
         },
         {
             "name": "oe_test_semanage"
         },
         {
-            "name": "oe_test_service_selinux-autorelabel"
+            "name": "oe_test_setfiles"
+        },
+        {
+            "name": "oe_test_service_autorelabel"
         }
     ]
 }

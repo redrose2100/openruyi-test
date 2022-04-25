@@ -19,14 +19,8 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
-
     load_policy -qi
     CHECK_RESULT $? 
     LOG_INFO "End to run test."
-}
-function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    LOG_INFO "Nothing to do."
-    LOG_INFO "End to restore the test environment."
 }
 main "$@"

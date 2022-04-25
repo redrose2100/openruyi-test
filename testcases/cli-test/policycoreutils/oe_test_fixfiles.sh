@@ -16,15 +16,6 @@
 # @Desc      :   Test fixfiles
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
-
-    LOG_INFO "No pkgs need to install."
-
-    LOG_INFO "End to prepare the test environment."
-}
-
-# 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
     fixfiles onboot |grep "System"
@@ -37,7 +28,6 @@ function run_test() {
     echo N > N
     fixfiles relabel < N|grep  "Relabeling"
     CHECK_RESULT $? 0 0 "failed to rekabel"
-    #检查bc的安全上下文
     fixfiles -R bc check 
     CHECK_RESULT $? 0 0 "failed to bc"
     fixfiles -R bc restore 
@@ -45,12 +35,9 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
-# 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     test -f N && rm -rf N
-
     LOG_INFO "End to restore the test environment."
 }
 

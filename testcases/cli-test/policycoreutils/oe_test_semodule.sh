@@ -50,9 +50,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     LOG_INFO "Nothing to do."
-
     LOG_INFO "End to restore the test environment."
 }
 

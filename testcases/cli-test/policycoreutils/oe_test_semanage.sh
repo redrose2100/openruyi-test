@@ -15,9 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test semanage
 # #############################################
-
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     test -f var/lib/selinux/targeted/semanage.trans.LOCK && rm -rf var/lib/selinux/targeted/semanage.trans.LOCK
@@ -36,10 +34,5 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
-function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    LOG_INFO "Nothing to do."
-    LOG_INFO "End to restore the test environment."
-}
 
 main "$@"

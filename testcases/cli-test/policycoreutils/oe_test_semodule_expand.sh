@@ -15,17 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test semodule_expand
 # #############################################
-
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-
-function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
-
-    LOG_INFO "No pkgs need to install."
-
-    LOG_INFO "End to prepare the test environment."
-}
-
 function run_test() {
     LOG_INFO "Start to run test."
     semodule_expand -V -a -c 15 basemodpkg
@@ -37,11 +27,5 @@ function run_test() {
     semodule_expand -V -c 18
     CHECK_RESULT $? 0 0 "failed to policy version to create"
     LOG_INFO "End to run test."
-}
-
-function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    LOG_INFO "Nothing to do."
-    LOG_INFO "End to restore the test environment."
 }
 main "$@"

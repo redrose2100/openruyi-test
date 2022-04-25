@@ -15,15 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test secon
 # #############################################
-
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-
-function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
-    LOG_INFO "No pkgs need to install."
-    LOG_INFO "End to prepare the test environment."
-}
-
 function run_test() {
     LOG_INFO "Start to run test."
     #secon -h
@@ -70,14 +62,6 @@ function run_test() {
     secon --self-exec|grep "user"
     CHECK_RESULT $? 0 0 "failed to get the exec context for the current process"
     LOG_INFO "End to run test."
-}
-
-function post_test() {
-    LOG_INFO "Start to restore the test environment."
-
-    LOG_INFO "Nothing to do."
-
-    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
