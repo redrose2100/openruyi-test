@@ -18,7 +18,7 @@
 source "../common/common_lib.sh"
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    LOG_INFO "trafficserver has been installed"
+    DNF_INSTALL "trafficserver"
     traffic_server start
     LOG_INFO "End to config params of the case."
 }
@@ -44,6 +44,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     test -f 1.c && rm -rf 1.c
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

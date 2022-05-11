@@ -18,7 +18,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    LOG_INFO  "trafficserver has been installed"
+    DNF_INSTALL "trafficserver"
     pkill traffic_m
     pkill [TS_MAIN]
     pkill traffic_s
@@ -73,6 +73,7 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
     pkill traffic_m
     test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
     test -f /usr/local/var/trafficserver/manager.lock && rm  -rf /usr/local/var/trafficserver/manager.lock

@@ -20,7 +20,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "nginx"
+    DNF_INSTALL "nginx,trafficserver"
     sed -i "s/listen       80/listen       8080/" /etc/nginx/nginx.conf
     sed -i "s/listen       \[/\#listen       \[/" /etc/nginx/nginx.conf
     LOG_INFO "trafficserver has been installed"
@@ -51,6 +51,7 @@ function post_test() {
     rm -rf /tmp/*
     test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
     test -f /usr/local/var/trafficserver/manager.lock && rm -rf /usr/local/var/trafficserver/manager.lock
+    DNF_REMOVE 
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

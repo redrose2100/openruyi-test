@@ -1,0 +1,34 @@
+Sat May  7 09:37:27 2022 - INFO  - Start to prepare the test environment.
+Sat May  7 09:37:34 2022 - INFO  - pkgs:(trafficserver) is already installed
+Sat May  7 09:37:34 2022 - INFO  - To use traffic_ctl, traffic_manager needs to be running
+Sat May  7 09:37:34 2022 - INFO  - End to prepare the test environment.
+Sat May  7 09:37:34 2022 - INFO  - Start to run test.
+Commands ---------------------- Description -----------------------
+Apache Traffic Server - traffic_ctl - 9.1.0 - (build # 031118 on Mar 11 2022 at 18:22:28)
+proxy.config.exec_thread.autoconfig: 1
+proxy.config.exec_thread.autoconfig.scale: 1.000000
+Name            : proxy.config.exec_thread.autoconfig
+proxy.config.http.insert_response_via_str: 0
+proxy.config.http.insert_response_via_str: 0
+set proxy.config.http.insert_response_via_str, please wait 10 seconds for traffic server to sync configuration, restart is not required
+Traffic Server: [11] Invalid parameters passed into function call.
+Sat May  7 09:37:34 2022 - ERROR - failed to check the configuration status
+proxy.process.host_status.HOST HOST_STATUS_UP,ACTIVE:UP:0:0,LOCAL:UP:0:0,MANUAL:UP:0:0,SELF_DETECT:UP:0
+Thread 29921, traffic_server:
+Thread 29926, traffic_server:
+Thread 29937, [ET_NET 0]:
+Thread 29938, [ET_NET 1]:
+Thread 29939, [ET_NET 2]:
+Thread 29940, [ET_NET 3]:
+Thread 29941, [ET_NET 4]:
+Thread 29942, [ET_NET 5]:
+Thread 29943, [ET_NET 6]:
+Thread 29944, [ET_NET 7]:
+Thread 29945, [LOG_PREPROC 0]:
+Thread 29946, [LOG_FLUSH]:
+Proxy -- on
+Sat May  7 09:37:34 2022 - INFO  - End to run test.
+Sat May  7 09:37:34 2022 - ERROR - failed to execute the case.
+Sat May  7 09:37:34 2022 - INFO  - Start to restore the test environment.
+Sat May  7 09:37:34 2022 - WARN  - no thing to do.
+Sat May  7 09:37:35 2022 - INFO  - End to restore the test environment.

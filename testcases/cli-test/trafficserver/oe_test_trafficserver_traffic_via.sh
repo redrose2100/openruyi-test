@@ -20,7 +20,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    LOG_INFO "trafficserver has been installed"
+    DNF_REMOVE "trafficserver"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -36,6 +36,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     pkill [TS_MAIN]
     pkill traffic_m
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

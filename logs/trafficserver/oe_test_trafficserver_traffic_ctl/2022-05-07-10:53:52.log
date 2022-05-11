@@ -1,0 +1,25 @@
+Sat May  7 10:53:52 2022 - INFO  - Start to prepare the test environment.
+Sat May  7 10:53:57 2022 - INFO  - pkgs:(trafficserver) is already installed
+Sat May  7 10:53:57 2022 - INFO  - To use traffic_ctl, traffic_manager needs to be running
+Sat May  7 10:53:57 2022 - INFO  - End to prepare the test environment.
+Sat May  7 10:53:57 2022 - INFO  - Start to run test.
+Commands ---------------------- Description -----------------------
+Apache Traffic Server - traffic_ctl - 9.1.0 - (build # 031118 on Mar 11 2022 at 18:22:28)
+proxy.config.exec_thread.autoconfig: 1
+proxy.config.exec_thread.autoconfig.scale: 1.000000
+Name            : proxy.config.exec_thread.autoconfig
+proxy.config.http.insert_response_via_str: 0
+proxy.config.http.insert_response_via_str: 0
+set proxy.config.http.insert_response_via_str, please wait 10 seconds for traffic server to sync configuration, restart is not required
+Traffic Server: [11] Invalid parameters passed into function call.
+Sat May  7 10:53:57 2022 - ERROR - failed to check the configuration status
+Traffic Server: failed to fetch HOST: [11] Invalid parameters passed into function call.
+Sat May  7 10:53:57 2022 - ERROR - failed to get host statuses
+Thread 8504, traffic_server:
+Thread 8509, traffic_server:
+Proxy -- on
+Sat May  7 10:53:57 2022 - INFO  - End to run test.
+Sat May  7 10:53:57 2022 - ERROR - failed to execute the case.
+Sat May  7 10:53:57 2022 - INFO  - Start to restore the test environment.
+Sat May  7 10:53:57 2022 - WARN  - no thing to do.
+Sat May  7 10:53:57 2022 - INFO  - End to restore the test environment.

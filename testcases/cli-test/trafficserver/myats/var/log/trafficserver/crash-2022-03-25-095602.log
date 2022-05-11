@@ -1,0 +1,123 @@
+Process:            bash [4392]
+File:               /usr/bin/bash
+Version:            Traffic Server 9.1.0
+System Version:     Linux aarch64 #1 SMP Mon Dec 21 14:33:58 UTC 2020 4.19.90-2012.4.0.0053.oe1.aarch64
+Date:               Fri, 25 Mar 2022 09:56:02 +0800
+
+No target signal information
+
+No target CPU registers
+
+Unable to retrieve backtrace: [5] Error establishing socket connection.
+
+Process Status:
+Name:	bash
+Umask:	0022
+State:	S (sleeping)
+Tgid:	4392
+Ngid:	0
+Pid:	4392
+PPid:	4391
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	256
+Groups:	0 
+NStgid:	4392
+NSpid:	4392
+NSpgid:	4392
+NSsid:	4392
+VmPeak:	    8576 kB
+VmSize:	    8576 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    5504 kB
+VmRSS:	    5504 kB
+RssAnon:	    1600 kB
+RssFile:	    3904 kB
+RssShmem:	       0 kB
+VmData:	    1152 kB
+VmStk:	     192 kB
+VmExe:	    1152 kB
+VmLib:	    2048 kB
+VmPTE:	     384 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+CoreDumping:	0
+Threads:	1
+SigQ:	0/6273
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000010000
+SigIgn:	0000000000380004
+SigCgt:	000000004b817efb
+CapInh:	0000000000000000
+CapPrm:	0000003fffffffff
+CapEff:	0000003fffffffff
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+NoNewPrivs:	0
+Seccomp:	0
+Speculation_Store_Bypass:	unknown
+Cpus_allowed:	ff
+Cpus_allowed_list:	0-7
+Mems_allowed:	0001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	389
+nonvoluntary_ctxt_switches:	0
+
+Process Limits:
+Limit                     Soft Limit           Hard Limit           Units     
+Max cpu time              unlimited            unlimited            seconds   
+Max file size             unlimited            unlimited            bytes     
+Max data size             unlimited            unlimited            bytes     
+Max stack size            8388608              unlimited            bytes     
+Max core file size        unlimited            unlimited            bytes     
+Max resident set          unlimited            unlimited            bytes     
+Max processes             6273                 6273                 processes 
+Max open files            1024                 524288               files     
+Max locked memory         65536                65536                bytes     
+Max address space         unlimited            unlimited            bytes     
+Max file locks            unlimited            unlimited            locks     
+Max pending signals       6273                 6273                 signals   
+Max msgqueue size         819200               819200               bytes     
+Max nice priority         0                    0                    
+Max realtime priority     0                    0                    
+Max realtime timeout      unlimited            unlimited            us        
+
+Memory Regions:
+aaab5f9a0000-aaab5fac0000 r-xp 00000000 fd:00 3011438                    /usr/bin/bash
+aaab5fad0000-aaab5fae0000 r--p 00120000 fd:00 3011438                    /usr/bin/bash
+aaab5fae0000-aaab5faf0000 rw-p 00130000 fd:00 3011438                    /usr/bin/bash
+aaab5faf0000-aaab5fb00000 rw-p 00000000 00:00 0 
+aaab709c0000-aaab70a80000 rw-p 00000000 00:00 0                          [heap]
+fffd10520000-fffd10580000 r--p 00000000 fd:00 3024818                    /usr/lib/locale/en_US.utf8/LC_CTYPE
+fffd10580000-fffd10590000 r--p 00000000 fd:00 3154740                    /usr/lib/locale/en_US.utf8/LC_NUMERIC
+fffd10590000-fffd105a0000 r--p 00000000 fd:00 3011374                    /usr/lib/locale/en_US.utf8/LC_TIME
+fffd105a0000-fffd10820000 r--p 00000000 fd:00 3154737                    /usr/lib/locale/en_US.utf8/LC_COLLATE
+fffd10820000-fffd10830000 r--p 00000000 fd:00 3011367                    /usr/lib/locale/en_US.utf8/LC_MONETARY
+fffd10830000-fffd10840000 r--p 00000000 fd:00 3154738                    /usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES
+fffd10840000-fffd10850000 r--p 00000000 fd:00 3154754                    /usr/lib/locale/en_US.utf8/LC_PAPER
+fffd10850000-fffd10860000 r--p 00000000 fd:00 3154739                    /usr/lib/locale/en_US.utf8/LC_NAME
+fffd10860000-fffd10870000 r--p 00000000 fd:00 3011362                    /usr/lib/locale/en_US.utf8/LC_ADDRESS
+fffd10870000-fffd10880000 r--p 00000000 fd:00 3011370                    /usr/lib/locale/en_US.utf8/LC_TELEPHONE
+fffd10880000-fffd10890000 r--p 00000000 fd:00 3011366                    /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
+fffd10890000-fffd108a0000 r--s 00000000 fd:00 3140401                    /usr/lib64/gconv/gconv-modules.cache
+fffd108a0000-fffd10a20000 r-xp 00000000 fd:00 3011385                    /usr/lib64/libc.so.6
+fffd10a20000-fffd10a30000 r--p 00170000 fd:00 3011385                    /usr/lib64/libc.so.6
+fffd10a30000-fffd10a40000 rw-p 00180000 fd:00 3011385                    /usr/lib64/libc.so.6
+fffd10a40000-fffd10a50000 r-xp 00000000 fd:00 3011399                    /usr/lib64/libdl.so.2
+fffd10a50000-fffd10a60000 r--p 00000000 fd:00 3011399                    /usr/lib64/libdl.so.2
+fffd10a60000-fffd10a70000 rw-p 00010000 fd:00 3011399                    /usr/lib64/libdl.so.2
+fffd10a70000-fffd10aa0000 r-xp 00000000 fd:00 3011338                    /usr/lib64/libtinfo.so.6.2
+fffd10aa0000-fffd10ab0000 r--p 00020000 fd:00 3011338                    /usr/lib64/libtinfo.so.6.2
+fffd10ab0000-fffd10ac0000 rw-p 00030000 fd:00 3011338                    /usr/lib64/libtinfo.so.6.2
+fffd10ac0000-fffd10ad0000 r--p 00000000 fd:00 3011364                    /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
+fffd10ad0000-fffd10ae0000 r--p 00000000 00:00 0                          [vvar]
+fffd10ae0000-fffd10af0000 r-xp 00000000 00:00 0                          [vdso]
+fffd10af0000-fffd10b20000 r-xp 00000000 fd:00 3011372                    /usr/lib/ld-linux-aarch64.so.1
+fffd10b20000-fffd10b30000 r--p 00020000 fd:00 3011372                    /usr/lib/ld-linux-aarch64.so.1
+fffd10b30000-fffd10b40000 rw-p 00030000 fd:00 3011372                    /usr/lib/ld-linux-aarch64.so.1
+ffffe4740000-ffffe4770000 rw-p 00000000 00:00 0                          [stack]
+
+Unable to retrieve Traffic Server records: [5] Error establishing socket connection.

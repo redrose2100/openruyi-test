@@ -20,7 +20,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    trafficserver has been installed
+    DNF_INSTALL "trafficserver"
     pkill [TS_MAIN]
     pkill traffic_m
     rm -rf /usr/local/var/trafficserver/server.lock
@@ -55,6 +55,7 @@ function post_test() {
     test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
     test -f /usr/local/var/trafficserver/manager.lock && rm -rf /usr/local/var/trafficserver/manager.lock
     test -f myats && rm -rf myats
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
