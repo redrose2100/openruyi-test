@@ -20,6 +20,7 @@ source "common/common_openssl.sh"
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
+    OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     deploy_env
     LOG_INFO "End to config params of the case."
@@ -40,6 +41,8 @@ function run_test() {
     rm -f /etc/httpd/conf.d/ssl.conf
     systemctl restart httpd 
     CHECK_RESULT $?
+    systemctl status httpd | grep "active (running)"
+    CHECK_RESULT $?
     curl --cacert /etc/pki/CA/cacert.pem https://www.openeuler.org/index.html -I 2>&1 | grep 'Connection refused'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
@@ -47,7 +50,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    export LANG=zh_CN.UTF-8
+    export LANG=${OLD_LANG}
     mv -f /etc/pki/tls/openssl.cnf.bak /etc/pki/tls/openssl.cnf
     clean_httpd_openssl
     systemctl stop httpd

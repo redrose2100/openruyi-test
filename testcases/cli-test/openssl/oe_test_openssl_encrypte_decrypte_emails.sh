@@ -43,8 +43,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    roc=$(ls | grep -v "\.sh\|common")
-    rm -f $roc
+    rm -f $(ls | grep -v "\.sh\|common")
     LOG_INFO "End to restore the test environment."
 }
 
