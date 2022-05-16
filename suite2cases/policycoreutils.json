@@ -3,7 +3,10 @@
     "cases": [
         {
             "name": "oe_test_policycoreutils_service_restorecond"
-       },
+        },
+        {
+            "name": "oe_test_policycoreutils_audit2allow"
+        },
         {
             "name": "oe_test_policycoreutils_service_autorelabel-mark"
         },
