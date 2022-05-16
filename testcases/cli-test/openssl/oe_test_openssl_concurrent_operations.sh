@@ -30,7 +30,7 @@ function run_test() {
     done
     SLEEP_WAIT 3
     for i in $(seq 1 200); do
-        test -f encword_$i
+        grep "U2FsdGVkX1" encword_$i
         CHECK_RESULT $?
     done
     LOG_INFO "End to run test."
