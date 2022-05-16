@@ -84,7 +84,12 @@
         },
         {
           "name":  "oe_test_haproxy_webstats"
-        }
-        
+        },
+	{
+	  "name":  "oe_test_service_haproxy"
+	},
+	{
+	  "name":  "oe_test_haproxy_cli"
+	}
     ]
 }
