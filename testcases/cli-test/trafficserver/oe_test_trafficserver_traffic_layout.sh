@@ -23,6 +23,7 @@ function pre_test() {
     DNF_INSTALL "trafficserver"
     pkill [TS_MAIN]
     pkill traffic_m
+    mkdir -p myats
     rm -rf /usr/local/var/trafficserver/server.lock
     rm -rf /usr/local/var/trafficserver/manager.lock
     LOG_INFO "End of environmental preparation!"
@@ -42,7 +43,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to veriry the runboot"
 
     #Remove the runboot 
-    mkdir -p myats
     traffic_layout remove --path myats
     CHECK_RESULT $? 0 0 "failed to remove the runboot"
     LOG_INFO "Finish test!"

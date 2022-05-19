@@ -118,9 +118,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     pkill traffic_m
-    test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
-    test -f /usr/local/var/trafficserver/manager.lock && rm  -rf /usr/local/var/trafficserver/manager.lock
-    rm -rf /tmp/*
+    rm -rf /usr/local/var/trafficserver/server.lock
+    rm  -rf /usr/local/var/trafficserver/manager.lock
+    rm -rf /tmp/manager.log
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
