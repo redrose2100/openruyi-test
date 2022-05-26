@@ -32,11 +32,11 @@ function run_test() {
     CHECK_RESULT $?
     podman push --authfile temp-auths/myauths.json postgres:alpine dir:/tmp/myimage
     CHECK_RESULT $?
-    ls /tmp/myimage | grep manifest.json
+    test -f /tmp/myimage/manifest.json && rm -rf /tmp/myimage/manifest.json
     CHECK_RESULT $?
     podman push --format oci postgres:alpine dir:/tmp/myimage
     CHECK_RESULT $?
-    grep "oci" /tmp/myimage/manifest.json
+    grep "oci" /tmp/myimage/manifest.json && rm -rf /tmp/myimage/manifest.json
     CHECK_RESULT $?
     podman push --compress postgres:alpine dir:/tmp/myimage
     CHECK_RESULT $?
@@ -50,6 +50,7 @@ function run_test() {
     CHECK_RESULT $?
     podman push --creds postgres:screte postgres:alpine dir:/tmp/myimage 2>&1 | grep "Writing manifest"
     CHECK_RESULT $?
+    rm -rf /tmp/myimage
     podman push --cert-dir /tmp postgres:alpine dir:/tmp/myimage
     CHECK_RESULT $?
     test -d /tmp/myimage
@@ -60,7 +61,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    rm -rf $(ls | grep -vE ".sh") /tmp/myimage
     LOG_INFO "End to restore the test environment."
 }
 

@@ -12,7 +12,8 @@
 # #############################################
 # @Author    :   huyahui
 # @Contact   :   huyahui8@163.com
-# @Date      :   2020/7/17
+# @modify    :   wangxiaoya@qq.com
+# @Date      :   2022/05/07
 # @License   :   Mulan PSL v2
 # @Desc      :   Allow kill signals to be sent to processes that do not belong to you
 # #############################################
@@ -31,22 +32,17 @@ function run_test() {
 ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}
 EOF
-    top &
-    top_pid=$!
+    nohup tail -f ./* &
+    tail_pid=$(ps -ef | grep "tail" | xargs | awk '{print $2}')
+    su - example -c "/bin/kill -9 $tail_pid"
+    CHECK_RESULT $? 0 1 "Kill process succeeded, but it should fail here"
     setcap cap_kill=eip /bin/kill
-    CHECK_RESULT $? 0 0 "Failed to set cap"
-    su - example <<EOF1
-    expect << EOF
-    spawn /bin/kill -9 $top_pid
-    expect eof { 
-        catch wait result
-        exit [lindex \$result 3]
-        }
-EOF
-EOF1
-    CHECK_RESULT $? 0 0 "Failed to kill process"
-    ps -aux | grep top | grep $top_pid | grep -v 'grep'
+    CHECK_RESULT $?
+    su - example -c "/bin/kill -9 $tail_pid"
+    CHECK_RESULT $?
+    ps -aux | grep tail | grep $tail_pid | grep -v 'grep'
     CHECK_RESULT $? 0 1 "The viewing process succeeded, but it should fail here"
+
     LOG_INFO "Finish testcase execution."
 }
 

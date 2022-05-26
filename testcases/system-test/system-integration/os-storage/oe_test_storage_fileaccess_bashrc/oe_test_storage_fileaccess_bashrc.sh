@@ -19,7 +19,8 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
-    userdel -r testuser1 && useradd testuser1
+    userdel -rf testuser1 
+    useradd testuser1
     umask_1=$(su testuser1 -c "umask")
 }
 function run_test() {
