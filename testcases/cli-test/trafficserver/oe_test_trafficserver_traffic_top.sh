@@ -20,7 +20,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "nginx,trafficserver"
+    DNF_INSTALL "nginx trafficserver"
     sed -i "s/listen       80/listen       8080/" /etc/nginx/nginx.conf
     sed -i "s/listen       \[/\#listen       \[/" /etc/nginx/nginx.conf
     LOG_INFO "trafficserver has been installed"
