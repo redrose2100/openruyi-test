@@ -37,7 +37,7 @@ function run_test() {
     tspush -f /tmp/foo.txt -u http://localhost:8080/tmp/foo.txt -v|grep "PUSH" 
     CHECK_RESULT $? 0 0 "failed to push file and url print the PUSEed content to stdout"
     #Print Usage of tspush
-    tspush -h
+    tspush -h |grep "OPTIONS"
     CHECK_RESULT $? 0 0 "show help information"
     LOG_INFO "Finish test!"
 }

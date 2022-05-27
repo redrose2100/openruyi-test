@@ -27,9 +27,8 @@ function pre_test() {
     echo "map http://localhost:8080/ http://${NODE1_IPV4}:81/" > /etc/trafficserver/remap.config  
     pkill [TS_MAIN]
     pkill traffic_m
-    test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
-    test -f /usr/local/var/trafficserver/manager.lock && rm -rf /usr/local/var/trafficserver/manager.lock
-    log_time=$(date '+%Y-%m-%d %T')
+    rm -rf /usr/local/var/trafficserver/server.lock
+    rm -rf /usr/local/var/trafficserver/manager.lock
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -38,8 +37,8 @@ function run_test() {
     traffic_top -V|grep "Apache Traffic Server" 
     CHECK_RESULT $? 0 0 "failed to show version" 
     #Display traffic_server infomation
-    nohup  traffic_top http://localhost:8080/ >/tmp/show.log 2>&1 &
-    SLEEP_WAIT 15 "grep 'CACHE INFORMATION' show.log"
+    nohup  traffic_top www.gitee.com >/tmp/show.log 2>&1 &
+    SLEEP_WAIT 15 
     CHECK_RESULT $? 0 0 "failed to display traffic_server infomation"
 
 }
@@ -48,9 +47,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     pkill [TS_MAIN]
     pkill traffic_m
-    rm -rf /tmp/*
-    test -f /usr/local/var/trafficserver/server.lock && rm -rf /usr/local/var/trafficserver/server.lock
-    test -f /usr/local/var/trafficserver/manager.lock && rm -rf /usr/local/var/trafficserver/manager.lock
+    rm -rf /tmp/show.log
+    rm -rf /usr/local/var/trafficserver/server.lock
+    rm -rf /usr/local/var/trafficserver/manager.lock
     DNF_REMOVE 
     LOG_INFO "Finish environment cleanup!"
 }

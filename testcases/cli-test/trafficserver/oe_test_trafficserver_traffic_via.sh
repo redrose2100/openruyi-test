@@ -20,12 +20,14 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_REMOVE "trafficserver"
+    DNF_INSTALL "trafficserver"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
+    traffic_via --version|grep "traffic_via"
+    CHECK_RESULT $? 0 0 "failed to show version"
     #Decode Traffic Server Via header code
     traffic_via "[uScMsEf p eC:t cCMp sF]" | grep "Via Header Details:"
     CHECK_RESULT $? 0 0 "failed to decode traffic server via header code" 

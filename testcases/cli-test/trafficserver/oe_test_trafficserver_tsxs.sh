@@ -18,7 +18,7 @@
 source "../common/common_lib.sh"
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    DNF_INSTALL "trafficserver"
+    DNF_INSTALL "trafficserver trafficserver-devel"
     traffic_server start
     LOG_INFO "End to config params of the case."
 }
@@ -30,7 +30,6 @@ function pre_test() {
 	printf("hello world\n");
 	}
 END
-    log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,7 +42,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    test -f 1.c && rm -rf 1.c
+    rm -rf 1.*
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
