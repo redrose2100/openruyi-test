@@ -31,7 +31,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "fcgi tar libtool"
+    DNF_INSTALL "fcgi libtool tar"
     pre_fcgi
     LOG_INFO "End to prepare the test environment."
 }
