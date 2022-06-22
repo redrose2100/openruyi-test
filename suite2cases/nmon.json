@@ -1,0 +1,17 @@
+{
+        "path": "$OET_PATH/testcases/cli-test/nmon",
+        "cases": [
+            {
+                "name": "oe_test_nmon_data-collect-mode"
+            },
+            {
+                "name": "oe_test_nmon_interactive-mode"
+            },
+            {
+                "name": "oe_test_nmon_capacity-planning-mode"
+            },
+            {
+                "name": "oe_test_nmon_other-interactive-controls"
+            }
+        ]
+}
