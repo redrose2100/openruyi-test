@@ -21,6 +21,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL lvm2
     check_free_disk
+    version_id=`cat /etc/os-release  | grep "VERSION_ID" | awk -F "=" {'print$NF'}`
     LOG_INFO "End to prepare the test environment!"
 }
 
@@ -60,10 +61,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "vgchange del tag failed"
     vgchange --vgmetadatacopies all test | grep "Volume group \"test\" successfully changed"
     CHECK_RESULT $? 0 0 "vgchange --vgmetadatacopies all failed"
-    vgchange --setautoactivation n test | grep "Volume group \"test\" successfully changed"
-    CHECK_RESULT $? 0 0 "vgchange --setautoactivation no failed"
-    vgchange --setautoactivation y test | grep "Volume group \"test\" successfully changed"
-    CHECK_RESULT $? 0 0 "vgchange --setautoactivation yes failed"
+    if [${version_id} = "22.03"];then
+        vgchange --setautoactivation n test | grep "Volume group \"test\" successfully changed"
+        CHECK_RESULT $? 0 0 "vgchange --setautoactivation no failed"
+        vgchange --setautoactivation y test | grep "Volume group \"test\" successfully changed"
+        CHECK_RESULT $? 0 0 "vgchange --setautoactivation yes failed"
+    fi
     LOG_INFO "End executing testcase!"
 }
 function post_test() {

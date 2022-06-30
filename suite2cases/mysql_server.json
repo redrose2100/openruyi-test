@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/mysql-server",
+    "path": "$OET_PATH/testcases/cli-test/mysql_server",
     "cases": [
         {
             "name": "oe_test_mysql_innochecksum_001"
