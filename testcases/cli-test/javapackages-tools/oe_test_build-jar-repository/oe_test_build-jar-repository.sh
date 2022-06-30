@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    build-jar-repository -s ./ db.jar && test -L '[db].jar'
+    build-jar-repository -s ./ log4j.jar && test -L '[log4j].jar'
     CHECK_RESULT $?
     build-jar-repository -h ./ junit.jar && test -f '[junit].jar'
     CHECK_RESULT $?
@@ -40,7 +40,7 @@ function run_test() {
     CHECK_RESULT $?
     rebuild-jar-repository -h ./ junit.jar && test -f '[junit].jar'
     CHECK_RESULT $?
-    rebuild-jar-repository -s ./ db.jar && test -L '[db].jar'
+    rebuild-jar-repository -s ./ log4j.jar && test -L '[log4j].jar'
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
@@ -51,4 +51,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
