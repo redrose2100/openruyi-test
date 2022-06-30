@@ -1,4 +1,4 @@
-  #!/usr/bin/bash
+#!/usr/bin/bash
 
 # Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
