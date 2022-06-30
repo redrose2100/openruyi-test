@@ -1,0 +1,26 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/autoconf213",
+    "cases": [
+        {
+            "name": "oe_test_autoconf213-autoconf213"
+        },
+        {
+            "name": "oe_test_autoconf213-autoheader213"
+        },
+        {
+            "name": "oe_test_autoconf213-autoreconf213"
+        },
+        {
+            "name": "oe_test_autoconf213-autoupdate213"
+        },
+        {
+            "name": "oe_test_autoconf213-help"
+        },
+        {
+            "name": "oe_test_autoconf213-ifnames213"
+        },
+        {
+            "name": "oe_test_autoconf213-version"
+        }
+    ]
+}
