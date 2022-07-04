@@ -53,9 +53,10 @@ EOF
     CHECK_RESULT $? 0 0 "Failed option: -i"
     rm -f /var/log/test.log
 
+    groupadd testUser
     expect <<EOF
         log_file /var/log/test.log
-        spawn rootsh -u yili
+        spawn rootsh -u testUser
         expect "Welcome*" {
             exec sleep 1
             send "exit\r"
@@ -70,6 +71,7 @@ EOF
     cat /var/log/test.log | grep -E "Welcome"
     CHECK_RESULT $? 0 0 "Failed option: -u"
     rm -f /var/log/test.log
+    groupdel testUser
 
     expect <<EOF
         spawn rootsh -u zhangsan
