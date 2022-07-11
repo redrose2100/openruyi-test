@@ -37,14 +37,15 @@ function run_test() {
     #Vertical-bar-separated Debug Tags
     nohup traffic_manager -T text >/tmp/debug.log 2>&1&    
     SLEEP_WAIT 15
+    grep "Traffic" /tmp/debug.log
     CHECK_RESULT $? 0 0 "failed to vertical-bar-separated debug tags"
     #Vertical-bar-separated Behavior Tags
     nohup traffic_manager -B text >/tmp/behavior.log 2>&1&    
     SLEEP_WAIT 15
+    grep "Traffic" /tmp/behavior.log
     CHECK_RESULT $? 0 0 "failed to vertical-bar-separated debug tags"
     LOG_INFO "Finish test!"
 }
-
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/*
