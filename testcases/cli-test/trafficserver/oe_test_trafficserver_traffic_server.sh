@@ -37,12 +37,15 @@ function run_test() {
     traffic_server -l |grep SDK_API
     CHECK_RESULT $? 0 0 "failed to list regression tests"
     #Port descriptor for HTTP Accept
-    nohup traffic_server -p http://localhost:8080 > /tmp/HTTP.log 2>&1&
+    nohup traffic_server -p www.gitee.com > /tmp/HTTP.log 2>&1&
     SLEEP_WAIT 15 
+    grep "traffic_server" /tmp/HTTP.log 
     CHECK_RESULT $? 0 0 "failed to port descriptor for HTTP Accept" 
     #Set Number of UDP Threads
     nohup traffic_server -U 1 > /tmp/UDP.log 2>&1&
     SLEEP_WAIT 15 
+    grep "traffic_server" /tmp/UDP.log 
+    CHECK_RESULT $? 0 0 "failed to set number of UDP" 
     #Run Specific Regression Test
     nohup traffic_server -r list >/tmp/Specific.log 2>&1&
     SLEEP_WAIT 15
@@ -53,7 +56,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to clear cache on startup"
     #Clear HostDB on Startup
     nohup traffic_server -k >/tmp/HostDB.log 2>&1&
-    SLEEP_WAIT 15 0 0 "failed to clear HostDB on startup"
+    SLEEP_WAIT 15  
+    grep "traffic_server" /tmp/HostDB.log
+    CHECK_RESULT $? 0 0 "failed to clear HostDB"
     #Maintenance Command to Execute
     traffic_server -C check|grep CHECK
     CHECK_RESULT $? 0 0 "failed to maintenance command to execute"
