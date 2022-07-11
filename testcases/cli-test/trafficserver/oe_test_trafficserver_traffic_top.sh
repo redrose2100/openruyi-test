@@ -38,7 +38,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to show version" 
     #Display traffic_server infomation
     nohup  traffic_top www.gitee.com >/tmp/show.log 2>&1 &
-    SLEEP_WAIT 15 
+    SLEEP_WAIT 15
+    grep "CACHE" /tmp/show.log 
     CHECK_RESULT $? 0 0 "failed to display traffic_server infomation"
 
 }
