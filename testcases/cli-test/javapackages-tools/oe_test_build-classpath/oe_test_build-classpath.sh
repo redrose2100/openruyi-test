@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    build-classpath db | grep -E "/usr/share/java/db.jar"
+    build-classpath log4j | grep -E "/usr/share/java/log4j.jar"
     CHECK_RESULT $?
     build-classpath junit | grep -E "/usr/share/java/junit.jar"
     CHECK_RESULT $?
@@ -51,4 +51,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
