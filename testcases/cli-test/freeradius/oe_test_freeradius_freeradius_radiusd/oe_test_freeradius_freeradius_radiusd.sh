@@ -21,14 +21,13 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    DNF_INSTALL "freeradius"
+    DNF_INSTALL freeradius
 
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-
     radiusd -d /etc/raddb
     ps -ef | grep "radiusd -d" | grep -v grep
     CHECK_RESULT $? 0 0 "radiusd -d execution failed."
@@ -54,6 +53,7 @@ function run_test() {
     kill -9 $(pgrep -f "radiusd -l")
     cp /etc/raddb/radiusd.conf /etc/raddb/test.conf
     radiusd -n test
+    SLEEP_WAIT 5
     ps -ef | grep "radiusd -n" | grep -v grep
     CHECK_RESULT $? 0 0 "radiusd -n execution failed."
     kill -9 $(pgrep -f "radiusd -n")

@@ -84,7 +84,7 @@ function run_test() {
     test -f hello-clean-clean-clean.tar.gz
     CHECK_RESULT $?
 
-    diff-jars hello/easymock.jar hello/junit.jar | grep "+org/"
+    diff-jars /usr/share/java/easymock.jar /usr/share/java/junit.jar | grep "+org/"
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
@@ -95,4 +95,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
