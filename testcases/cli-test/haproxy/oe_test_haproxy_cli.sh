@@ -26,8 +26,9 @@ function pre_test() {
 }
 
 function run_test() {
-    LOF_INFO "Start to run test"
+    LOG_INFO "Start to run test"
     haproxy -f haproxy.cfg -V
+    pkill haproxy
     CHECK_RESULT $? 0 0 "failed to start haproxy"
     haproxy -f haproxy.cfg -D
     CHECK_RESULT $? 0 0 "failed to set haproxy process as daemon"
@@ -35,9 +36,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to set the default per-proxy maxconn"
     haproxy -f haproxy.cfg -W
     CHECK_RESULT $? 0 0 "failed to set master-worker mode"
-    haproxy -f haproxy.cfg -Ws
-    CHECK_RESULT $? 0 0 "failed to set master-worker mode with supply of notify"
     haproxy -f haproxy.cfg -d
+    pkill haproxy
     CHECK_RESULT $? 0 0 "failed to enter haproxy debug mode"
     haproxy -f haproxy.cfg -dG
     CHECK_RESULT $? 0 0 "failed to disable use of getaddrinfo"

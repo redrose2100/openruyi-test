@@ -27,7 +27,7 @@ function pre_test() {
 }
 
 function run_test() {
-    LOF_INFO "Start to run test"
+    LOG_INFO "Start to run test"
     bash ./run-regtests.sh ./reg-tests/http-set-timeout/
     CHECK_RESULT $? 0 0 "failed to run http set timeout"
     LOG_INFO "End to run test"

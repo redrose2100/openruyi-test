@@ -27,7 +27,7 @@ function pre_test() {
 }
 
 function run_test() {
-    LOF_INFO "Start to run test"
+    LOG_INFO "Start to run test"
     bash ./run-regtests.sh ./reg-tests/http-messaging/
     CHECK_RESULT $? 0 0 "failed to run http messaging"
     LOG_INFO "End to run test"

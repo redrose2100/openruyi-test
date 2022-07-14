@@ -90,6 +90,9 @@
 	},
 	{
 	  "name":  "oe_test_haproxy_cli"
+	},
+	{
+	  "name":  "oe_test_haproxy_halog"
 	}
     ]
 }

@@ -26,9 +26,21 @@ function pre_test() {
 }
 
 function run_test() {
-    LOF_INFO "Start to run test"
-    haproxy -f haproxy.cfg -V
-    CHECK_RESULT $? 0 0 "failed to start haproxy"
+    LOG_INFO "Start to run test"
+    halog -H < haproxy.log | grep "lines"
+    CHECK_RESULT $? 0 0 "failed to filter HTTP log"
+    halog -E < haproxy.log | grep "lines"
+    CHECK_RESULT $? 0 0 "failed to filter no error log"
+    halog -e < haproxy.log | grep "lines"
+    CHECK_RESULT $? 0 0 "failed to filter error log"
+    halog -rt 1 < haproxy.log | grep "lines"
+    CHECK_RESULT $? 0 0 "failed to filter log time larger than 1"
+    halog -Q < haproxy.log | grep "lines"
+    CHECK_RESULT $? 0 0 "failed to filter queued message"
+    halog -hs 200 < haproxy.log | grep "lines"
+    CHECK_RESULT $? 0 0 "failed to filter 200 status code"
+    halog -Q < haproxy.log | grep "lines"
+    CHECK_RESULT $? 0 0 "failed to filter queued message"
     LOG_INFO "End to run test"
 }
 

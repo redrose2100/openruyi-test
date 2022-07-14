@@ -27,7 +27,7 @@ function pre_test() {
 }
 
 function run_test() {
-    LOF_INFO "Start to run test"
+    LOG_INFO "Start to run test"
     bash ./run-regtests.sh ./reg-tests/http-errorfiles/
     CHECK_RESULT $? 0 0 "failed to run error files"
     LOG_INFO "End to run test"
