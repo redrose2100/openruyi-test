@@ -31,7 +31,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     #Print usage information
-    traffic_cache_tool -h |grep "Commands"
+    traffic_cache_tool -h |grep "Usage: traffic_cache_tool"
     CHECK_RESULT $? 0 0 "failed to print usage infomation"
     #Allocate unused storage space
     traffic_cache_tool --spans=/usr/local/etc/trafficserver/storage.config --volumes=/usr/local/etc/trafficserver/volume.config alloc free
