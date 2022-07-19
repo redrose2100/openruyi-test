@@ -21,14 +21,13 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    LOG_INFO "Nothing to do"
+    source "environment.sh"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test"
     haproxy -f haproxy.cfg -V
-    pkill haproxy
     CHECK_RESULT $? 0 0 "failed to start haproxy"
     haproxy -f haproxy.cfg -D
     CHECK_RESULT $? 0 0 "failed to set haproxy process as daemon"
@@ -36,8 +35,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to set the default per-proxy maxconn"
     haproxy -f haproxy.cfg -W
     CHECK_RESULT $? 0 0 "failed to set master-worker mode"
-    haproxy -f haproxy.cfg -d
-    pkill haproxy
+    nohup haproxy -f haproxy.cfg -d >debug_mode.log 2>&1 &
+    SLEEP_WAIT 8
+    grep "Available filters" debug_mode.log
     CHECK_RESULT $? 0 0 "failed to enter haproxy debug mode"
     haproxy -f haproxy.cfg -dG
     CHECK_RESULT $? 0 0 "failed to disable use of getaddrinfo"
@@ -49,11 +49,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to disable SSL verify on the server side"
     haproxy -f haproxy.cfg -dW
     CHECK_RESULT $? 0 0 "failed to refuse to start if any warning was emitted"
-    haproxy -f haproxy.cfg -db
+    nohup haproxy -f haproxy.cfg -db >debug_mode_1.log 2>&1 &
+    SLEEP_WAIT 8
     CHECK_RESULT $? 0 0 "failed to disable background mode and multi-process mode"
     haproxy -f haproxy.cfg -de
     CHECK_RESULT $? 0 0 "failed to disable the use of epoll"
-    haproxy -f haproxy.cfg -dk
+    nohup haproxy -f haproxy.cfg -dk >debug_kqueue.log 2>&1 &
+    SLEEP_WAIT 8
     CHECK_RESULT $? 0 0 "failed to disable the use of kqueue"
     haproxy -f haproxy.cfg -dp
     CHECK_RESULT $? 0 0 "failed to disable the use of poll"
@@ -73,6 +75,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    source "post_environment.sh"
+    rm -rf debug_mode.log
+    rm -rf debug_mode_1.log
+    rm -rf debug_kqueue.log
     LOG_INFO "Finish test!"
 }
 
