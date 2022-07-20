@@ -24,7 +24,7 @@ function deploy_env {
     systemctl start pmcd
     systemctl enable pmlogger
     systemctl start pmlogger
-    SLEEP_WAIT 10
+    SLEEP_WAIT 20
     host_name=$(hostname)
     pcp_version=$(rpm -qa pcp | awk -F '-' '{print $2}')
 }

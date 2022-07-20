@@ -16,11 +16,11 @@
 #@Desc          :   Test "--assumeno" & "-b --best" & "-C,--cacheonly" option, Test "dnf autoremove" command
 ###################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "common/common_dnf.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    export LANG=en_US.UTF-8
+    deploy_env
     DNF_INSTALL vim
     rpm -e vim-enhanced
     LOG_INFO "End to prepare the test environment."
@@ -53,7 +53,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    yum remove -y httpd
+    clear_env
+    DNF_REMOVE 1 httpd
     dnf clean all
     LOG_INFO "Finish restoring the test environment."
 }
