@@ -15,9 +15,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test saved_model_cli 
 # #############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "common/lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    get_tensorflow
+
     DNF_INSTALL "python3-tensorflow"
     old_LD_LIBRARY_PATH=LD_LIBRARY_PATH                          
     tspath=$(dirname $(find / -name libtensorflow_framework.so*)) 

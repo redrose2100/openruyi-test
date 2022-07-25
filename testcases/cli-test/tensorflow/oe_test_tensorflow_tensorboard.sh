@@ -18,10 +18,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL
-    old_LD_LIBRARY_PATH=LD_LIBRARY_PATH                          
-    tspath=$(dirname $(find / -name libtensorflow_framework.so*)) 
-    export LD_LIBRARY_PATH=$tspath:$LD_LIBRARY_PATH  
+    get_tensorflow
     LOG_INFO "End to prepare the test environment."
 }
 # 测试点的执行

@@ -18,14 +18,8 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    old_LD_LIBRARY_PATH=LD_LIBRARY_PATH                          
-    tspath=$(dirname $(find / -name libtensorflow_framework.so*))
-    export LD_LIBRARY_PATH=$tspath:$LD_LIBRARY_PATH              
-    DNF_INSTALL "python3-tensorflow"
-    python3 ./common/saved_model.py
-    wait
-    python3 ./common/gen_tf_keras.model.py
-    wait
+    get_tensorflow
+    model
     LOG_INFO "End to prepare the test environment."
 }
 # 测试点的执行
