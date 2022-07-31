@@ -20,7 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Test for --version"
+    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL autoconf213
     LOG_INFO "Test environment is ready."
 }
@@ -37,7 +37,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 --version run failed"
     ifnames-2.13 --version  2>&1 | grep "Autoconf"
     CHECK_RESULT $? 0 0 "Error: ifnames-2.13 --version run failed"
-    LOG_INFO "End of the version test."
+    LOG_INFO "End to run test."
 }
 
 function post_test() {

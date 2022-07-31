@@ -19,7 +19,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Test for --help"
+    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL autoconf213
     LOG_INFO "Test environment is ready."
 }
@@ -51,7 +51,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Error: ifnames-2.13 --help run failed"
     ifnames-2.13 --h  2>&1 | grep "Usage"
     CHECK_RESULT $? 0 0 "Error: ifnames-2.13 -h run failed"
-    LOG_INFO "End of the help test."
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
