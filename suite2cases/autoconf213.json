@@ -14,13 +14,7 @@
       "name": "oe_test_autoconf213_autoupdate-2.13"
     },
     {
-      "name": "oe_test_autoconf213_help"
-    },
-    {
       "name": "oe_test_autoconf213_ifnames-2.13"
-    },
-    {
-      "name": "oe_test_autoconf213_version"
     }
   ]
 }

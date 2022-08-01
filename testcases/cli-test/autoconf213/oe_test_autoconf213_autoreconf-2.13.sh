@@ -17,190 +17,196 @@
 # ##################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+DIR="${OET_PATH}/testcases/cli-test/autoconf213"
 
 function pre_test() {
-  LOG_INFO "Start to prepare the test environment."
+    LOG_INFO "Start to prepare the test environment."
 
-  DNF_INSTALL autoconf213
+    DNF_INSTALL autoconf213
 
-  # test_macro
-  cd "$OET_PATH"/testcases/cli-test/autoconf213/common/ || exit
-  cp -r /usr/share/autoconf-2.13 ./test-macro
-  # init configure files
-  cp ./configure_autoreconf.in ./configure.in
-  autoconf-2.13 2>&1
-  CHECK_RESULT $? 0 0 "Error: autoconf-2.13 run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: configure file failed to generate."
-  cp ./configure ./configure.bak
+    # test_macro
+    cd "$DIR"/common || exit
+    cp -r /usr/share/autoconf-2.13 test-macro
+    # init configure files
+    cp configure_autoreconf.in configure.in
+    autoconf-2.13 2>&1
+    CHECK_RESULT $? 0 0 "Error: autoconf-2.13 run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: configure file failed to generate."
+    cp configure configure.bak
 
-  LOG_INFO "Test environment is ready."
+    LOG_INFO "Test environment is ready."
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
+    LOG_INFO "Start to run test."
 
-  # run test command
-  cd "$OET_PATH"/testcases/cli-test/autoconf213/common/ || exit
-  sed -i 's/Makefile/Makefilere/g' configure.in
-  autoreconf-2.13 2>&1
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: configure file failed to generate."
-  # check the result
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' configure.in
-  cp -f ./configure.bak ./configure
+    autoreconf-2.13 --help  2>&1 | grep "Usage"
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 --help run failed"
+    autoreconf-2.13 --h  2>&1 | grep "Usage"
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 -h run failed"
+    autoreconf-2.13 --version  2>&1 | grep "Autoconf"
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 --version run failed"
 
-  # with Library directories [-l dir] [--localdir=dir]
-  sed -i 's/Makefile/Makefilere/g' configure.in
-  autoreconf-2.13 --localdir="$OET_PATH"/testcases/cli-test/autoconf213/common/test-macro/acconfig.h 2>&1
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--localdir] run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: [--localdir] configure file failed to generate."
+    # run test command
+    cd "$DIR"/common/ || exit
+    sed -i 's/Makefile/Makefilere/g' configure.in
+    autoreconf-2.13 2>&1
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: configure file failed to generate."
+    # check the result
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf [--localdir] failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' configure.in
-  cp -f ./configure.bak ./configure
+    # with Library directories [-l dir] [--localdir=dir]
+    sed -i 's/Makefile/Makefilere/g' configure.in
+    autoreconf-2.13 --localdir="$DIR"/common/test-macro/acconfig.h 2>&1
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--localdir] run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: [--localdir] configure file failed to generate."
 
-  sed -i 's/Makefile/Makefilere/g' configure.in
-  autoreconf-2.13 -l "$OET_PATH"/testcases/cli-test/autoconf213/common/test-macro/acconfig.h 2>&1
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [-l] run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: [-l] configure file failed to generate."
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf [--localdir] failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf [-l] failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' configure.in
-  cp -f ./configure.bak ./configure
+    sed -i 's/Makefile/Makefilere/g' configure.in
+    autoreconf-2.13 -l "$DIR"/common/test-macro/acconfig.h 2>&1
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [-l] run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: [-l] configure file failed to generate."
 
-  # with custom MACRO [--macrodir=dir]
-  sed -i 's/Makefile/Makefilere/g' configure.in
-  autoreconf-2.13 --macrodir="$OET_PATH"/testcases/cli-test/autoconf213/common/test-macro 2>&1
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--macrodir] run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: [--macrodir] configure file failed to generate."
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf [-l] failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf [--macrodir] failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' configure.in
-  cp -f ./configure.bak ./configure
+    # with custom MACRO [--macrodir=dir]
+    sed -i 's/Makefile/Makefilere/g' configure.in
+    autoreconf-2.13 --macrodir="$DIR"/common/test-macro 2>&1
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--macrodir] run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: [--macrodir] configure file failed to generate."
 
-  # [--verbose]
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure
-  sed -i 's/Makefile/Makefilere/g' configure.in
-  autoreconf-2.13 --verbose 2>&1 | grep "running"
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--verbose] run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: [--verbose] configure file failed to generate."
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf [--macrodir] failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf [--verbose] failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' configure.in
-  cp -f ./configure.bak ./configure
+    # [--verbose]
+    rm -f "$DIR"/common/configure
+    sed -i 's/Makefile/Makefilere/g' configure.in
+    autoreconf-2.13 --verbose 2>&1 | grep "running"
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--verbose] run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: [--verbose] configure file failed to generate."
 
-  # [--force]
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure
-  sed -i 's/Makefile/Makefilere/g' configure.in
-  autoreconf-2.13 --force --verbose 2>&1 | grep "running"
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--force] run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: [--force] configure file failed to generate."
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf [--verbose] failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf [--force] failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' configure.in
-  cp -f ./configure.bak ./configure
+    # [--force]
+    rm -f "$DIR"/common/configure
+    sed -i 's/Makefile/Makefilere/g' configure.in
+    autoreconf-2.13 --force --verbose 2>&1 | grep "running"
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--force] run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: [--force] configure file failed to generate."
 
-  # [--cygnus]
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure
-  sed -i 's/Makefile/Makefilere/g' configure.in
-  autoreconf-2.13 --cygnus --verbose 2>&1 | grep "running"
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--cygnus] run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: [--cygnus] configure file failed to generate."
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf [--force] failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf [--cygnus] failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' configure.in
-  cp -f ./configure.bak ./configure
+    # [--cygnus]
+    rm -f "$DIR"/common/configure
+    sed -i 's/Makefile/Makefilere/g' configure.in
+    autoreconf-2.13 --cygnus --verbose 2>&1 | grep "running"
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--cygnus] run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: [--cygnus] configure file failed to generate."
 
-  # [--foreign]
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure
-  sed -i 's/Makefile/Makefilere/g' configure.in
-  autoreconf-2.13 --foreign --verbose 2>&1 | grep "running"
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--foreign] run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: [--foreign] configure file failed to generate."
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf [--cygnus] failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf [--foreign] failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' configure.in
-  cp -f ./configure.bak ./configure
+    # [--foreign]
+    rm -f "$DIR"/common/configure
+    sed -i 's/Makefile/Makefilere/g' configure.in
+    autoreconf-2.13 --foreign --verbose 2>&1 | grep "running"
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--foreign] run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: [--foreign] configure file failed to generate."
 
-  #  [--gnits]
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure
-  sed -i 's/Makefile/Makefilere/g' configure.in
-  autoreconf-2.13 --gnits --verbose 2>&1 | grep "running"
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--gnits] run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: [--gnits] configure file failed to generate."
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf [--foreign] failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf [--gnits] failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' configure.in
-  cp -f ./configure.bak ./configure
+    #  [--gnits]
+    rm -f "$DIR"/common/configure
+    sed -i 's/Makefile/Makefilere/g' configure.in
+    autoreconf-2.13 --gnits --verbose 2>&1 | grep "running"
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--gnits] run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: [--gnits] configure file failed to generate."
 
-  # [--gnu]
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure
-  sed -i 's/Makefile/Makefilere/g' configure.in
-  autoreconf-2.13 --gnu --verbose 2>&1 | grep "running"
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--gnu] run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: [--gnu] configure file failed to generate."
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf [--gnits] failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf [--gnu] failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' configure.in
-  cp -f ./configure.bak ./configure
+    # [--gnu]
+    rm -f "$DIR"/common/configure
+    sed -i 's/Makefile/Makefilere/g' configure.in
+    autoreconf-2.13 --gnu --verbose 2>&1 | grep "running"
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--gnu] run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: [--gnu] configure file failed to generate."
 
-  # [-i] [--include-deps]
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure
-  sed -i 's/Makefile/Makefilere/g' "$OET_PATH"/testcases/cli-test/autoconf213/common/configure.in
-  autoreconf-2.13 -i --verbose 2>&1 | grep "running"
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [-i] run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: [-i] configure file failed to generate."
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf [--gnu] failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf [-i] failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' ./configure.in
-  cp -f ./configure.bak ./configure
+    # [-i] [--include-deps]
+    rm -f "$DIR"/common/configure
+    sed -i 's/Makefile/Makefilere/g' "$DIR"/common/configure.in
+    autoreconf-2.13 -i --verbose 2>&1 | grep "running"
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [-i] run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: [-i] configure file failed to generate."
 
-  rm -f ./configure
-  sed -i 's/Makefile/Makefilere/g' ./configure.in
-  autoreconf-2.13 --include-deps --verbose 2>&1 | grep "running"
-  CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--include-deps] run failed."
-  ./configure --version | grep "version"
-  CHECK_RESULT $? 0 0 "Error: [--include-deps] configure file failed to generate."
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf [-i] failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
-  diff ./configure ./configure.bak | grep "Makefilere"
-  CHECK_RESULT $? 0 0 "Error: autoreconf [--include-deps] failed to re-config."
-  sed -i 's/Makefilere/Makefile/g' ./configure.in
-  cp -f ./configure.bak ./configure
+    rm -f configure
+    sed -i 's/Makefile/Makefilere/g' configure.in
+    autoreconf-2.13 --include-deps --verbose 2>&1 | grep "running"
+    CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--include-deps] run failed."
+    test -f configure
+    CHECK_RESULT $? 0 0 "Error: [--include-deps] configure file failed to generate."
+
+    diff configure configure.bak | grep "Makefilere"
+    CHECK_RESULT $? 0 0 "Error: autoreconf [--include-deps] failed to re-config."
+    sed -i 's/Makefilere/Makefile/g' configure.in
+    cp -f configure.bak configure
 
     LOG_INFO "End to run test."
 }
 
 function post_test() {
-  DNF_REMOVE
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure.in
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure.bak
-  rm -rf "$OET_PATH"/testcases/cli-test/autoconf213/common/test-macro
-  LOG_INFO "Test environment restored."
+    DNF_REMOVE
+    cd "$DIR"/common || exit
+    rm -rf configure.in configure configure.bak test-macro
+    LOG_INFO "Test environment restored."
 }
 
 main "$@"

@@ -13,60 +13,71 @@
 # @Author    :   LiuZiyi
 # @Contact   :   lavandejoey@outlook.com
 # @Date      :   2022/4/29
-# @Desc      :   Test "ifnames-2.13 [-m dir] [--macrodir=dir] [FILE] " command
+# @Desc      :   Test "ifnames-2.13" command
 # ##################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+DIR="${OET_PATH}/testcases/cli-test/autoconf213"
 
 function pre_test() {
-  LOG_INFO "Start to prepare the test environment."
-  DNF_INSTALL autoconf213
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL autoconf213
 
-  # test_macro
-  cp -r /usr/share/autoconf-2.13 "$OET_PATH"/testcases/cli-test/autoconf213/common/test-macro
-  LOG_INFO "Test environment is ready."
+    cd "$DIR"/common/ || exit
+
+    # test_macro
+    cp -r /usr/share/autoconf-2.13 test-macro
+    LOG_INFO "Test environment is ready."
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-  cd "$OET_PATH"/testcases/cli-test/autoconf213/common/ || exit
-  ifnames-2.13 ./ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
-  CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-2.c run failed"
-  ifnames-2.13 ./ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
-  CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-1.c run failed"
-  ifnames-2.13 ./ifname_test* 2>&1 | grep "IFNDEF_VAR.*1\.c.*2\.c"
-  CHECK_RESULT $? 0 0 "Error: ifnames-2.13 multi source file run failed"
-  ifnames-2.13 ./ifname_test* 2>&1 | grep "ifnames-test-3\.c"
-  CHECK_RESULT $? 1 0 "Error: ifnames-2.13 ifnames-test-3.c(ineligible) source file run failed"
+    LOG_INFO "Start to run test."
 
-  # [-m dir] [--macrodir=dir]
-  cd "$OET_PATH"/testcases/cli-test/autoconf213/common/ || exit
-  ifnames-2.13 -m ./test-macro ./ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
-  CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-2.c run failed"
-  ifnames-2.13 -m ./test-macro ./ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
-  CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-1.c run failed"
-  ifnames-2.13 -m ./test-macro ./ifname_test* 2>&1 | grep "IFNDEF_VAR.*1\.c.*2\.c"
-  CHECK_RESULT $? 0 0 "Error: ifnames-2.13 multi source file run failed"
-  ifnames-2.13 -m ./test-macro ./ifname_test* 2>&1 | grep "ifnames-test-3\.c"
-  CHECK_RESULT $? 1 0 "Error: ifnames-2.13 ifnames-test-3.c(ineligible) source file run failed"
+    ifnames-2.13 --help  2>&1 | grep "Usage"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 --help run failed"
+    ifnames-2.13 --h  2>&1 | grep "Usage"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 -h run failed"
+    ifnames-2.13 --version  2>&1 | grep "Autoconf"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 --version run failed"
 
-  cd "$OET_PATH"/testcases/cli-test/autoconf213/common/ || exit
-  ifnames-2.13 --macrodir=./test-macro ./ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
-  CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-2.c run failed"
-  ifnames-2.13 --macrodir=./test-macro ./ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
-  CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-1.c run failed"
-  ifnames-2.13 --macrodir=./test-macro ./ifname_test* 2>&1 | grep "IFNDEF_VAR.*1\.c.*2\.c"
-  CHECK_RESULT $? 0 0 "Error: ifnames-2.13 multi source file run failed"
-  ifnames-2.13 --macrodir=./test-macro ./ifname_test* 2>&1 | grep "ifnames-test-3\.c"
-  CHECK_RESULT $? 1 0 "Error: ifnames-2.13 ifnames-test-3.c(ineligible) source file run failed"
+    cd "$DIR"/common/ || exit
+
+    ifnames-2.13 ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-2.c run failed"
+    ifnames-2.13 ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-1.c run failed"
+    ifnames-2.13 ifname_test* 2>&1 | grep "IFNDEF_VAR.*1\.c.*2\.c"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 multi source file run failed"
+    ifnames-2.13 ifname_test* 2>&1 | grep "ifnames-test-3\.c"
+    CHECK_RESULT $? 1 0 "Error: ifnames-2.13 ifnames-test-3.c(ineligible) source file run failed"
+
+    # [-m dir] [--macrodir=dir]
+    ifnames-2.13 -m test-macro ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-2.c run failed"
+    ifnames-2.13 -m test-macro ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-1.c run failed"
+    ifnames-2.13 -m test-macro ifname_test* 2>&1 | grep "IFNDEF_VAR.*1\.c.*2\.c"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 multi source file run failed"
+    ifnames-2.13 -m test-macro ifname_test* 2>&1 | grep "ifnames-test-3\.c"
+    CHECK_RESULT $? 1 0 "Error: ifnames-2.13 ifnames-test-3.c(ineligible) source file run failed"
+
+    ifnames-2.13 --macrodir=test-macro ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-2.c run failed"
+    ifnames-2.13 --macrodir=test-macro ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-1.c run failed"
+    ifnames-2.13 --macrodir=test-macro ifname_test* 2>&1 | grep "IFNDEF_VAR.*1\.c.*2\.c"
+    CHECK_RESULT $? 0 0 "Error: ifnames-2.13 multi source file run failed"
+    ifnames-2.13 --macrodir=test-macro ifname_test* 2>&1 | grep "ifnames-test-3\.c"
+    CHECK_RESULT $? 1 0 "Error: ifnames-2.13 ifnames-test-3.c(ineligible) source file run failed"
 
     LOG_INFO "End to run test."
 }
 
 function post_test() {
-  rm -rf "$OET_PATH"/testcases/cli-test/autoconf213/common/test-macro
-  DNF_REMOVE
-  LOG_INFO "Test environment restored."
+    cd "$DIR"/common/ || exit
+    rm -rf test-macro
+    DNF_REMOVE
+    LOG_INFO "Test environment restored."
 }
 
 main "$@"

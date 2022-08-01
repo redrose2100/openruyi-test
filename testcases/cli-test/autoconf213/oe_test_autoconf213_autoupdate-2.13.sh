@@ -17,51 +17,59 @@
 # ##################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+DIR="${OET_PATH}/testcases/cli-test/autoconf213"
 
 function pre_test() {
-  LOG_INFO "Start to prepare the test environment."
-  DNF_INSTALL autoconf213
-  # init test files
-  cd "$OET_PATH"/testcases/cli-test/autoconf213/common/ || exit
-  cp ./configure_autoconf.in ./configure.in
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL autoconf213
+    # init test files
+    cd "$DIR"/common/ || exit
+    cp configure_autoconf.in configure.in
 
-  # test_macro
-  cp -r /usr/share/autoconf-2.13 ./test-macro
+    # test_macro
+    cp -r /usr/share/autoconf-2.13 test-macro
 
-  LOG_INFO "Test environment is ready."
+    LOG_INFO "Test environment is ready."
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
+    LOG_INFO "Start to run test."
 
-  cd "$OET_PATH"/testcases/cli-test/autoconf213/common/ || exit
-  autoupdate-2.13 2>&1
-  CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 run failed."
-  cat ./configure.in~ | grep "autoconf-test"
-  CHECK_RESULT $? 0 0 "Error: configure~ file failed to generate."
+    autoupdate-2.13 --help  2>&1 | grep "Usage"
+    CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 --help run failed"
+    autoupdate-2.13 --h  2>&1 | grep "Usage"
+    CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 -h run failed"
+    autoupdate-2.13 --version  2>&1 | grep "Autoconf"
+    CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 --version run failed"
 
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure.in~
+    cd "$DIR"/common/ || exit
+    autoupdate-2.13 2>&1
+    CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 run failed."
+    cat configure.in~ | grep "autoconf-test"
+    CHECK_RESULT $? 0 0 "Error: configure~ file failed to generate."
 
-  # with custom MACRO [--macrodir=dir] [-m dir]
-  autoupdate-2.13 --macrodir="$OET_PATH"/testcases/cli-test/autoconf213/common/test-macro 2>&1
-  CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 [--macrodir] run failed."
-  cat ./configure.in~ | grep "autoconf-test"
-  CHECK_RESULT $? 0 0 "Error: [--macrodir] configure file failed to generate."
+    rm -f configure.in~
 
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure.in~
-  autoupdate-2.13 -m "$OET_PATH"/testcases/cli-test/autoconf213/common/test-macro 2>&1
-  CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 [-m dir] run failed."
-  cat ./configure.in~ | grep "autoconf-test"
-  CHECK_RESULT $? 0 0 "Error: [-m dir] configure file failed to generate."
+    # with custom MACRO [--macrodir=dir] [-m dir]
+    autoupdate-2.13 --macrodir=test-macro 2>&1
+    CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 [--macrodir] run failed."
+    cat configure.in~ | grep "autoconf-test"
+    CHECK_RESULT $? 0 0 "Error: [--macrodir] configure file failed to generate."
+
+    rm -f configure.in~
+    autoupdate-2.13 -m test-macro 2>&1
+    CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 [-m dir] run failed."
+    cat configure.in~ | grep "autoconf-test"
+    CHECK_RESULT $? 0 0 "Error: [-m dir] configure file failed to generate."
 
     LOG_INFO "End to run test."
 }
 
 function post_test() {
-  DNF_REMOVE
-  rm -f "$OET_PATH"/testcases/cli-test/autoconf213/common/configure.in*
-  rm -rf "$OET_PATH"/testcases/cli-test/autoconf213/common/test-macro
-  LOG_INFO "Test environment restored."
+    DNF_REMOVE
+    cd "$DIR"/common/ || exit
+    rm -rf configure.in* test-macro
+    LOG_INFO "Test environment restored."
 }
 
 main "$@"
