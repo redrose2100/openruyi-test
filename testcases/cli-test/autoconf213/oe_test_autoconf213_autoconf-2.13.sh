@@ -17,39 +17,37 @@
 # ##################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-DIR="${OET_PATH}/testcases/cli-test/autoconf213"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     # [--macrodir=dir] [-l dir] [--localdir=dir] [template-file]
     DNF_INSTALL autoconf213
+    dir=$(pwd)
 
     # test_macro
-    cd "$DIR"/common || exit
+    cd common || exit
     cp configure_autoconf.in configure.in
     cp -r /usr/share/autoconf-2.13 test-macro
-    LOG_INFO "Test environment is ready."
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    autoconf-2.13 --help 2>&1 | grep "Usage"
+    autoconf-2.13 --help 2>&1 | grep "Usage: autoconf"
     CHECK_RESULT $? 0 0 "Error: autoconf-2.13 --help run failed"
-    autoconf-2.13 -h 2>&1 | grep "Usage"
+    autoconf-2.13 -h 2>&1 | grep "Usage: autoconf"
     CHECK_RESULT $? 0 0 "Error: autoconf-2.13 -h run failed"
-    autoconf-2.13 --version  2>&1 | grep "Autoconf"
+    autoconf-2.13 --version  2>&1 | grep "Autoconf version"
     CHECK_RESULT $? 0 0 "Error: autoconf-2.13 --version run failed"
 
-
-    cd "$DIR"/common || exit
     autoconf-2.13 2>&1
     CHECK_RESULT $? 0 0 "Error: autoconf-2.13 run failed."
     test -f configure
     CHECK_RESULT $? 0 0 "Error: configure file failed to generate."
 
-    rm -f configure
+    rm -rf configure
 
     # with Library directories [-l dir] [--localdir=dir]
     autoconf-2.13 --localdir=test-macro/acconfig.h 2>&1
@@ -57,7 +55,7 @@ function run_test() {
     test -f configure
     CHECK_RESULT $? 0 0 "Error: [--localdir] configure file failed to generate."
 
-    rm -f configure
+    rm -rf configure
 
     autoconf-2.13 -l test-macro/acconfig.h 2>&1
     CHECK_RESULT $? 0 0 "Error: autoconf-2.13 [-l] run failed."
@@ -65,14 +63,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Error: [-l] configure file failed to generate."
 
     # with custom MACRO [-m dir] [--macrodir=dir]
-    rm -f configure
-    autoconf-2.13 -m "$DIR"/common/test-macro 2>&1
+    rm -rf configure
+    autoconf-2.13 -m test-macro 2>&1
     CHECK_RESULT $? 0 0 "Error: autoconf-2.13 [-m dir] run failed."
     test -f configure
     CHECK_RESULT $? 0 0 "Error: [-m dir] configure file failed to generate."
 
-    rm -f configure
-    autoconf-2.13 --macrodir="$DIR"/common/test-macro 2>&1
+    rm -rf configure
+    autoconf-2.13 --macrodir=test-macro 2>&1
     CHECK_RESULT $? 0 0 "Error: autoconf-2.13 [--macrodir] run failed."
     test -f configure
     CHECK_RESULT $? 0 0 "Error: [--macrodir] configure file failed to generate."
@@ -81,11 +79,12 @@ function run_test() {
 }
 
 function post_test() {
+    LOG_INFO "Start to restore the test environment."
     # rm -f temp-autoconf_test-1.c temp-autoconf_test-2.c temp-autoconf_test-3.c # clean the autoconf_test files
     DNF_REMOVE
-    cd "$DIR"/common || exit
     rm -rf test-macro configure.in configure
-    LOG_INFO "Test environment restored."
+    cd "$dir" || exit
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

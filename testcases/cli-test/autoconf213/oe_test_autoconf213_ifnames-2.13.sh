@@ -17,30 +17,30 @@
 # ##################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-DIR="${OET_PATH}/testcases/cli-test/autoconf213"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL autoconf213
 
-    cd "$DIR"/common/ || exit
+    dir=$(pwd)
+    cd common || exit
 
     # test_macro
     cp -r /usr/share/autoconf-2.13 test-macro
-    LOG_INFO "Test environment is ready."
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ifnames-2.13 --help  2>&1 | grep "Usage"
+    ifnames-2.13 --help  2>&1 | grep "Usage: ifnames"
     CHECK_RESULT $? 0 0 "Error: ifnames-2.13 --help run failed"
-    ifnames-2.13 --h  2>&1 | grep "Usage"
+    ifnames-2.13 --h  2>&1 | grep "Usage: ifnames"
     CHECK_RESULT $? 0 0 "Error: ifnames-2.13 -h run failed"
-    ifnames-2.13 --version  2>&1 | grep "Autoconf"
+    ifnames-2.13 --version  2>&1 | grep "Autoconf version"
     CHECK_RESULT $? 0 0 "Error: ifnames-2.13 --version run failed"
 
-    cd "$DIR"/common/ || exit
+    # cd common || exit
 
     ifnames-2.13 ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
     CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-2.c run failed"
@@ -74,10 +74,11 @@ function run_test() {
 }
 
 function post_test() {
-    cd "$DIR"/common/ || exit
+    LOG_INFO "Start to restore the test environment."
     rm -rf test-macro
+    cd "$dir" || exit
     DNF_REMOVE
-    LOG_INFO "Test environment restored."
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

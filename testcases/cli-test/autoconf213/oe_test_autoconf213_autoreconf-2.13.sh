@@ -17,15 +17,15 @@
 # ##################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-DIR="${OET_PATH}/testcases/cli-test/autoconf213"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL autoconf213
 
+    dir=$(pwd)
     # test_macro
-    cd "$DIR"/common || exit
+    cd common || exit
     cp -r /usr/share/autoconf-2.13 test-macro
     # init configure files
     cp configure_autoreconf.in configure.in
@@ -35,21 +35,20 @@ function pre_test() {
     CHECK_RESULT $? 0 0 "Error: configure file failed to generate."
     cp configure configure.bak
 
-    LOG_INFO "Test environment is ready."
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    autoreconf-2.13 --help  2>&1 | grep "Usage"
+    autoreconf-2.13 --help  2>&1 | grep "Usage: autoreconf"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 --help run failed"
-    autoreconf-2.13 --h  2>&1 | grep "Usage"
+    autoreconf-2.13 --h  2>&1 | grep "Usage: autoreconf"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 -h run failed"
-    autoreconf-2.13 --version  2>&1 | grep "Autoconf"
+    autoreconf-2.13 --version  2>&1 | grep "Autoconf version"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 --version run failed"
 
     # run test command
-    cd "$DIR"/common/ || exit
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 2>&1
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 run failed."
@@ -63,7 +62,7 @@ function run_test() {
 
     # with Library directories [-l dir] [--localdir=dir]
     sed -i 's/Makefile/Makefilere/g' configure.in
-    autoreconf-2.13 --localdir="$DIR"/common/test-macro/acconfig.h 2>&1
+    autoreconf-2.13 --localdir="$dir"/common/test-macro/acconfig.h 2>&1
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--localdir] run failed."
     test -f configure
     CHECK_RESULT $? 0 0 "Error: [--localdir] configure file failed to generate."
@@ -74,7 +73,7 @@ function run_test() {
     cp -f configure.bak configure
 
     sed -i 's/Makefile/Makefilere/g' configure.in
-    autoreconf-2.13 -l "$DIR"/common/test-macro/acconfig.h 2>&1
+    autoreconf-2.13 -l "$dir"/common/test-macro/acconfig.h 2>&1
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [-l] run failed."
     test -f configure
     CHECK_RESULT $? 0 0 "Error: [-l] configure file failed to generate."
@@ -86,7 +85,7 @@ function run_test() {
 
     # with custom MACRO [--macrodir=dir]
     sed -i 's/Makefile/Makefilere/g' configure.in
-    autoreconf-2.13 --macrodir="$DIR"/common/test-macro 2>&1
+    autoreconf-2.13 --macrodir="$dir"/common/test-macro 2>&1
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--macrodir] run failed."
     test -f configure
     CHECK_RESULT $? 0 0 "Error: [--macrodir] configure file failed to generate."
@@ -97,7 +96,7 @@ function run_test() {
     cp -f configure.bak configure
 
     # [--verbose]
-    rm -f "$DIR"/common/configure
+    rm -f "$dir"/common/configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--verbose] run failed."
@@ -110,7 +109,7 @@ function run_test() {
     cp -f configure.bak configure
 
     # [--force]
-    rm -f "$DIR"/common/configure
+    rm -f "$dir"/common/configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --force --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--force] run failed."
@@ -123,7 +122,7 @@ function run_test() {
     cp -f configure.bak configure
 
     # [--cygnus]
-    rm -f "$DIR"/common/configure
+    rm -f "$dir"/common/configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --cygnus --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--cygnus] run failed."
@@ -136,7 +135,7 @@ function run_test() {
     cp -f configure.bak configure
 
     # [--foreign]
-    rm -f "$DIR"/common/configure
+    rm -f "$dir"/common/configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --foreign --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--foreign] run failed."
@@ -149,7 +148,7 @@ function run_test() {
     cp -f configure.bak configure
 
     #  [--gnits]
-    rm -f "$DIR"/common/configure
+    rm -f "$dir"/common/configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --gnits --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--gnits] run failed."
@@ -162,7 +161,7 @@ function run_test() {
     cp -f configure.bak configure
 
     # [--gnu]
-    rm -f "$DIR"/common/configure
+    rm -f "$dir"/common/configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --gnu --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--gnu] run failed."
@@ -175,8 +174,8 @@ function run_test() {
     cp -f configure.bak configure
 
     # [-i] [--include-deps]
-    rm -f "$DIR"/common/configure
-    sed -i 's/Makefile/Makefilere/g' "$DIR"/common/configure.in
+    rm -f "$dir"/common/configure
+    sed -i 's/Makefile/Makefilere/g' "$dir"/common/configure.in
     autoreconf-2.13 -i --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [-i] run failed."
     test -f configure
@@ -203,10 +202,11 @@ function run_test() {
 }
 
 function post_test() {
+    LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    cd "$DIR"/common || exit
     rm -rf configure.in configure configure.bak test-macro
-    LOG_INFO "Test environment restored."
+    cd "$dir" || exit
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
