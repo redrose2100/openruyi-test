@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Error: autoconf-2.13 --help run failed"
     autoconf-2.13 -h 2>&1 | grep "Usage: autoconf"
     CHECK_RESULT $? 0 0 "Error: autoconf-2.13 -h run failed"
-    autoconf-2.13 --version  2>&1 | grep "Autoconf version"
+    autoconf-2.13 --version 2>&1 | grep "Autoconf version"
     CHECK_RESULT $? 0 0 "Error: autoconf-2.13 --version run failed"
 
     autoconf-2.13 2>&1
@@ -80,7 +80,6 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    # rm -f temp-autoconf_test-1.c temp-autoconf_test-2.c temp-autoconf_test-3.c # clean the autoconf_test files
     DNF_REMOVE
     rm -rf test-macro configure.in configure
     cd "$dir" || exit

@@ -35,11 +35,11 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    autoupdate-2.13 --help  2>&1 | grep "Usage: autoupdate"
+    autoupdate-2.13 --help 2>&1 | grep "Usage: autoupdate"
     CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 --help run failed"
-    autoupdate-2.13 --h  2>&1 | grep "Usage: autoupdate"
+    autoupdate-2.13 --h 2>&1 | grep "Usage: autoupdate"
     CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 -h run failed"
-    autoupdate-2.13 --version  2>&1 | grep "Autoconf version"
+    autoupdate-2.13 --version 2>&1 | grep "Autoconf version"
     CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 --version run failed"
 
     autoupdate-2.13 2>&1

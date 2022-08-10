@@ -33,14 +33,12 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ifnames-2.13 --help  2>&1 | grep "Usage: ifnames"
+    ifnames-2.13 --help 2>&1 | grep "Usage: ifnames"
     CHECK_RESULT $? 0 0 "Error: ifnames-2.13 --help run failed"
-    ifnames-2.13 --h  2>&1 | grep "Usage: ifnames"
+    ifnames-2.13 --h 2>&1 | grep "Usage: ifnames"
     CHECK_RESULT $? 0 0 "Error: ifnames-2.13 -h run failed"
-    ifnames-2.13 --version  2>&1 | grep "Autoconf version"
+    ifnames-2.13 --version 2>&1 | grep "Autoconf version"
     CHECK_RESULT $? 0 0 "Error: ifnames-2.13 --version run failed"
-
-    # cd common || exit
 
     ifnames-2.13 ifname_test* 2>&1 | grep "DEF_VAR_1 .*2\.c"
     CHECK_RESULT $? 0 0 "Error: ifnames-2.13 ifnames-test-2.c run failed"

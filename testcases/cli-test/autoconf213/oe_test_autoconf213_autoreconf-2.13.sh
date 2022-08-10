@@ -41,11 +41,11 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    autoreconf-2.13 --help  2>&1 | grep "Usage: autoreconf"
+    autoreconf-2.13 --help 2>&1 | grep "Usage: autoreconf"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 --help run failed"
-    autoreconf-2.13 --h  2>&1 | grep "Usage: autoreconf"
+    autoreconf-2.13 --h 2>&1 | grep "Usage: autoreconf"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 -h run failed"
-    autoreconf-2.13 --version  2>&1 | grep "Autoconf version"
+    autoreconf-2.13 --version 2>&1 | grep "Autoconf version"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 --version run failed"
 
     # run test command
@@ -58,11 +58,11 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
     # with Library directories [-l dir] [--localdir=dir]
     sed -i 's/Makefile/Makefilere/g' configure.in
-    autoreconf-2.13 --localdir="$dir"/common/test-macro/acconfig.h 2>&1
+    autoreconf-2.13 --localdir=test-macro/acconfig.h 2>&1
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--localdir] run failed."
     test -f configure
     CHECK_RESULT $? 0 0 "Error: [--localdir] configure file failed to generate."
@@ -70,10 +70,10 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [--localdir] failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
     sed -i 's/Makefile/Makefilere/g' configure.in
-    autoreconf-2.13 -l "$dir"/common/test-macro/acconfig.h 2>&1
+    autoreconf-2.13 -l test-macro/acconfig.h 2>&1
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [-l] run failed."
     test -f configure
     CHECK_RESULT $? 0 0 "Error: [-l] configure file failed to generate."
@@ -81,11 +81,11 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [-l] failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
     # with custom MACRO [--macrodir=dir]
     sed -i 's/Makefile/Makefilere/g' configure.in
-    autoreconf-2.13 --macrodir="$dir"/common/test-macro 2>&1
+    autoreconf-2.13 --macrodir=test-macro 2>&1
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--macrodir] run failed."
     test -f configure
     CHECK_RESULT $? 0 0 "Error: [--macrodir] configure file failed to generate."
@@ -93,10 +93,10 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [--macrodir] failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
     # [--verbose]
-    rm -f "$dir"/common/configure
+    rm -f configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--verbose] run failed."
@@ -106,10 +106,10 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [--verbose] failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
     # [--force]
-    rm -f "$dir"/common/configure
+    rm -f configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --force --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--force] run failed."
@@ -119,10 +119,10 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [--force] failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
     # [--cygnus]
-    rm -f "$dir"/common/configure
+    rm -f configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --cygnus --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--cygnus] run failed."
@@ -132,10 +132,10 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [--cygnus] failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
     # [--foreign]
-    rm -f "$dir"/common/configure
+    rm -f configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --foreign --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--foreign] run failed."
@@ -145,10 +145,10 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [--foreign] failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
-    #  [--gnits]
-    rm -f "$dir"/common/configure
+    # [--gnits]
+    rm -f configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --gnits --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--gnits] run failed."
@@ -158,10 +158,10 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [--gnits] failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
     # [--gnu]
-    rm -f "$dir"/common/configure
+    rm -f configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --gnu --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--gnu] run failed."
@@ -171,11 +171,11 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [--gnu] failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
     # [-i] [--include-deps]
-    rm -f "$dir"/common/configure
-    sed -i 's/Makefile/Makefilere/g' "$dir"/common/configure.in
+    rm -f configure
+    sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 -i --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [-i] run failed."
     test -f configure
@@ -184,7 +184,7 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [-i] failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
     rm -f configure
     sed -i 's/Makefile/Makefilere/g' configure.in
@@ -196,7 +196,7 @@ function run_test() {
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [--include-deps] failed to re-config."
     sed -i 's/Makefilere/Makefile/g' configure.in
-    cp -f configure.bak configure
+    \cp -f configure.bak configure
 
     LOG_INFO "End to run test."
 }
