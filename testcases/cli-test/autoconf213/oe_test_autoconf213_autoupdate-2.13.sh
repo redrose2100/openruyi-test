@@ -47,7 +47,7 @@ function run_test() {
     test -f configure.in~
     CHECK_RESULT $? 0 0 "Error: configure~ file failed to generate."
 
-    rm -f configure.in~
+    rm -rf configure.in~
 
     # with custom MACRO [--macrodir=dir] [-m dir]
     autoupdate-2.13 --macrodir=test-macro 2>&1
@@ -55,7 +55,7 @@ function run_test() {
     test -f configure.in~
     CHECK_RESULT $? 0 0 "Error: [--macrodir] configure file failed to generate."
 
-    rm -f configure.in~
+    rm -rf configure.in~
     autoupdate-2.13 -m test-macro 2>&1
     CHECK_RESULT $? 0 0 "Error: autoupdate-2.13 [-m dir] run failed."
     test -f configure.in~

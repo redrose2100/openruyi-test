@@ -48,7 +48,7 @@ function run_test() {
     test -f config.h.in
     CHECK_RESULT $? 0 0 "Error: config.h.in file failed to generate."
 
-    rm -f config.h.in
+    rm -rf config.h.in
 
     # with Library directories [-l dir] [--localdir=dir]
     autoheader-2.13 --localdir=test-macro/acconfig.h 2>&1
@@ -56,20 +56,20 @@ function run_test() {
     test -f config.h.in
     CHECK_RESULT $? 0 0 "Error: [--localdir] configure file failed to generate."
 
-    rm -f config.h.in
+    rm -rf config.h.in
     autoheader-2.13 -l test-macro/acconfig.h 2>&1
     CHECK_RESULT $? 0 0 "Error: autoheader-2.13 [-l] run failed."
     test -f config.h.in
     CHECK_RESULT $? 0 0 "Error: [-l] configure file failed to generate."
 
     # with custom MACRO [--macrodir=dir] [-m dir]
-    rm -f config.h.in
+    rm -rf config.h.in
     autoheader-2.13 --macrodir=test-macro 2>&1
     CHECK_RESULT $? 0 0 "Error: autoheader-2.13 [--macrodir] run failed."
     test -f config.h.in
     CHECK_RESULT $? 0 0 "Error: [--macrodir] configure file failed to generate."
 
-    rm -f config.h.in
+    rm -rf config.h.in
     autoheader-2.13 -m test-macro 2>&1
     CHECK_RESULT $? 0 0 "Error: autoheader-2.13 [-m] run failed."
     test -f config.h.in

@@ -96,7 +96,7 @@ function run_test() {
     \cp -f configure.bak configure
 
     # [--verbose]
-    rm -f configure
+    rm -rf configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--verbose] run failed."
@@ -109,7 +109,7 @@ function run_test() {
     \cp -f configure.bak configure
 
     # [--force]
-    rm -f configure
+    rm -rf configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --force --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--force] run failed."
@@ -122,7 +122,7 @@ function run_test() {
     \cp -f configure.bak configure
 
     # [--cygnus]
-    rm -f configure
+    rm -rf configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --cygnus --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--cygnus] run failed."
@@ -135,7 +135,7 @@ function run_test() {
     \cp -f configure.bak configure
 
     # [--foreign]
-    rm -f configure
+    rm -rf configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --foreign --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--foreign] run failed."
@@ -148,7 +148,7 @@ function run_test() {
     \cp -f configure.bak configure
 
     # [--gnits]
-    rm -f configure
+    rm -rf configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --gnits --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--gnits] run failed."
@@ -161,7 +161,7 @@ function run_test() {
     \cp -f configure.bak configure
 
     # [--gnu]
-    rm -f configure
+    rm -rf configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --gnu --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--gnu] run failed."
@@ -174,7 +174,7 @@ function run_test() {
     \cp -f configure.bak configure
 
     # [-i] [--include-deps]
-    rm -f configure
+    rm -rf configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 -i --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [-i] run failed."
@@ -186,7 +186,7 @@ function run_test() {
     sed -i 's/Makefilere/Makefile/g' configure.in
     \cp -f configure.bak configure
 
-    rm -f configure
+    rm -rf configure
     sed -i 's/Makefile/Makefilere/g' configure.in
     autoreconf-2.13 --include-deps --verbose 2>&1 | grep "running"
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [--include-deps] run failed."
