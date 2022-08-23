@@ -1,0 +1,19 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/htslib",
+    "cases": [
+        {
+            "name": "oe_test_bgzip_01"
+        },
+        {
+            "name": "oe_test_bgzip_02"
+        },
+        {
+            "name": "oe_test_htsfile_01"
+        },
+        {
+            "name": "oe_test_tabix_01"
+        }
+    ]
+}
+
+
