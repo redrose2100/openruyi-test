@@ -1,0 +1,26 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/samtools",
+    "cases": [
+        {
+            "name": "oe_test_indexing_01"
+        },
+        {
+            "name": "oe_test_Editing_01"
+        },
+        {
+            "name": "oe_test_File_operations_01"
+        },
+        {
+            "name": "oe_test_File_operations_02"
+        },
+        {
+            "name": "oe_test_Statistics_01"
+        },
+        {
+            "name": "oe_test_viewing_01"
+        },
+        {
+            "name": "oe_test_misc_01"
+        }
+    ]
+}
