@@ -1,0 +1,35 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libsmi",
+    "cases": [
+        {
+            "name": "oe_test_libsmi_smidump_01"
+        },
+        {
+            "name": "oe_test_libsmi_smidump_02"
+        },{
+            "name":"oe_test_libsmi_smidump_03"
+        },
+        {
+            "name":"oe_test_libsmi_smidump_04"
+        },
+        {
+            "name":"oe_test_libsmi_smidump_05"
+        },{
+            "name":"oe_test_libsmi_smidump_06"
+        },{
+            "name":"oe_test_libsmi_smidump_07"
+        },{
+            "name":"oe_test_libsmi_smilint"
+        },{
+            "name":"oe_test_libsmi_smicache"
+        },{
+            "name":"oe_test_libsmi_smidiff"
+        },{
+            "name":"oe_test_libsmi_smiquery"
+        },{
+            "name":"oe_test_libsmi_smistrip"
+        },{
+            "name":"oe_test_libsmi_smixlate"
+        }
+    ]
+}
