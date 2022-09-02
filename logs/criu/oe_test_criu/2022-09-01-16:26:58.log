@@ -1,0 +1,150 @@
+Thu Sep  1 16:26:58 2022 - INFO  - Start to prepare the test environment.
+Traceback (most recent call last):
+  File "/root/Desktop/mugenSI/libs/locallibs/rpm_manage.py", line 29, in <module>
+    import ssh_cmd
+  File "/root/Desktop/mugenSI/libs/locallibs/ssh_cmd.py", line 23, in <module>
+    import paramiko
+ModuleNotFoundError: No module named 'paramiko'
+Thu Sep  1 16:26:58 2022 - INFO  - End to prepare the test environment.
+Thu Sep  1 16:26:58 2022 - INFO  - Start to run test.
+Usage:
+Version: 3.16.1
+0 PID, BASHPID, 和PPID是65547, 65564, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65566 with interrupted system call
+oe_test_criu.sh：行 62: 65564 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65576, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65578 with interrupted system call
+oe_test_criu.sh：行 62: 65576 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65588, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65590 with interrupted system call
+0 PID, BASHPID, 和PPID是65547, 65600, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65602 with interrupted system call
+0 PID, BASHPID, 和PPID是65547, 65612, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65614 with interrupted system call
+oe_test_criu.sh：行 62: 65612 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65624, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65626 with interrupted system call
+oe_test_criu.sh：行 62: 65624 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65636, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65638 with interrupted system call
+oe_test_criu.sh：行 62: 65636 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65649, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65651 with interrupted system call
+oe_test_criu.sh：行 62: 65648 已杀死               criu lazy-pages -D ckpt
+oe_test_criu.sh：行 62: 65649 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65661, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65663 with interrupted system call
+oe_test_criu.sh：行 62: 65661 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65673, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65675 with interrupted system call
+oe_test_criu.sh：行 62: 65673 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65685, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65687 with interrupted system call
+oe_test_criu.sh：行 62: 65685 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65697, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65699 with interrupted system call
+oe_test_criu.sh：行 62: 65697 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65709, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65711 with interrupted system call
+oe_test_criu.sh：行 62: 65709 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65721, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65723 with interrupted system call
+oe_test_criu.sh：行 62: 65721 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65733, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65735 with interrupted system call
+oe_test_criu.sh：行 62: 65733 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65745, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65747 with interrupted system call
+oe_test_criu.sh：行 62: 65745 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65757, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65759 with interrupted system call
+oe_test_criu.sh：行 62: 65757 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65769, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65771 with interrupted system call
+oe_test_criu.sh：行 62: 65769 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65781, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65783 with interrupted system call
+oe_test_criu.sh：行 62: 65781 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65793, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65795 with interrupted system call
+oe_test_criu.sh：行 62: 65793 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65805, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65807 with interrupted system call
+oe_test_criu.sh：行 62: 65805 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65817, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65819 with interrupted system call
+oe_test_criu.sh：行 62: 65817 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65829, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65831 with interrupted system call
+oe_test_criu.sh：行 62: 65829 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65841, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65843 with interrupted system call
+oe_test_criu.sh：行 62: 65841 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65853, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65855 with interrupted system call
+oe_test_criu.sh：行 62: 65853 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65865, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65867 with interrupted system call
+oe_test_criu.sh：行 62: 65865 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65877, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65879 with interrupted system call
+oe_test_criu.sh：行 62: 65877 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65889, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65891 with interrupted system call
+oe_test_criu.sh：行 62: 65889 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65917, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65919 with interrupted system call
+oe_test_criu.sh：行 62: 65917 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65929, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65931 with interrupted system call
+oe_test_criu.sh：行 62: 65929 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65941, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65943 with interrupted system call
+oe_test_criu.sh：行 62: 65941 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65953, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 65955 with interrupted system call
+oe_test_criu.sh：行 62: 65953 已杀死               ( test_process )
+0 PID, BASHPID, 和PPID是65547, 65965, 65546
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Error (criu/mem.c:499): open file: /dev/pinmem fail.
+Error (criu/mem.c:721): Can't dump page with parasite
+Error (criu/cr-dump.c:1794): Dumping FAILED.
+Thu Sep  1 16:26:59 2022 - ERROR - L193: dump --pin-memory No Pass
+Thu Sep  1 16:26:59 2022 - ERROR - oe_test_criu.sh line 193
+Thu Sep  1 16:26:59 2022 - INFO  - End to run test.
+Thu Sep  1 16:26:59 2022 - ERROR - failed to execute the case.
+Thu Sep  1 16:26:59 2022 - INFO  - Start to restore the test environment.
+Thu Sep  1 16:26:59 2022 - WARN  - no thing to do.
+Thu Sep  1 16:26:59 2022 - INFO  - End to restore the test environment.

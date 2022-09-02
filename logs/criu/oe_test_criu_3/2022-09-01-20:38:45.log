@@ -1,0 +1,2 @@
+oe_test_criu_3.sh:行66: 未预期的符号“pid”附近有语法错误
+oe_test_criu_3.sh:行66: `    DUMP(pid){'

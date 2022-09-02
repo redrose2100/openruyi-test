@@ -1,0 +1,19 @@
+custodia	
+
+oe_test_custodia	
+
+单元测试	
+
+功能测试	
+
+Custodia是一个旨在为现代云应用程序定义API的项目，该API允许以保持数据安全、可管理和可审计的方式轻松存储和共享密码、令牌、证书和任何其他机密。	
+
+1	
+
+安装custodia
+	
+custodia命令的用法：
+1、-h --help：显示帮助信息。执行命令custodia -h | grep -E "usage: custodia \[-h\] \[--debug\] \[--instance INSTANCE\] \[configfile\]"
+2、--debug：进入debug模式。执行命令custodia --debug | kill -9 $(pgrep -f /usr/sbin/custodia)
+3、--instance INSTANCE：应用指定的实例。执行命令custodia --instance custodia | kill -9 $(pgrep -f /usr/sbin/custodia)
+4、configfile：应用配置文件。执行命令custodia custodia.conf | kill -9 $(pgrep -f /usr/sbin/custodia)

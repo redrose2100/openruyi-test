@@ -1,0 +1,51 @@
+Thu Sep  1 20:48:55 2022 - INFO  - Start to prepare the test environment.
+Traceback (most recent call last):
+  File "/root/Desktop/mugenSI/libs/locallibs/rpm_manage.py", line 29, in <module>
+    import ssh_cmd
+  File "/root/Desktop/mugenSI/libs/locallibs/ssh_cmd.py", line 23, in <module>
+    import paramiko
+ModuleNotFoundError: No module named 'paramiko'
+Thu Sep  1 20:48:55 2022 - INFO  - End to prepare the test environment.
+Thu Sep  1 20:48:55 2022 - INFO  - Start to run test.
+0 PID, BASHPID, 和PPID是6973, 6987, 6972
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 6989 with interrupted system call
+oe_test_criu_3.sh：行 66:  6987 已杀死               ( test_process )
+Error (criu/util.c:635): exited, status=4
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Error (criu/namespaces.c:742): Can't dump nested time namespace for 6987
+Error (criu/cr-dump.c:1794): Dumping FAILED.
+Thu Sep  1 20:48:55 2022 - ERROR - L73: restore -j No Pass
+Thu Sep  1 20:48:55 2022 - ERROR - oe_test_criu_3.sh line 73
+Thu Sep  1 20:48:55 2022 - INFO  - End to run test.
+Thu Sep  1 20:48:55 2022 - ERROR - failed to execute the case.
+Thu Sep  1 20:48:55 2022 - INFO  - Start to restore the test environment.
+Thu Sep  1 20:48:55 2022 - WARN  - no thing to do.
+Thu Sep  1 20:48:55 2022 - INFO  - End to restore the test environment.
+1 PID, BASHPID, 和PPID是6973, 6987, 6972
+2 PID, BASHPID, 和PPID是6973, 6987, 6972
+3 PID, BASHPID, 和PPID是6973, 6987, 6972
+4 PID, BASHPID, 和PPID是6973, 6987, 6972
+5 PID, BASHPID, 和PPID是6973, 6987, 6972
+6 PID, BASHPID, 和PPID是6973, 6987, 6972
+7 PID, BASHPID, 和PPID是6973, 6987, 6972
+8 PID, BASHPID, 和PPID是6973, 6987, 6972
+9 PID, BASHPID, 和PPID是6973, 6987, 6972
+10 PID, BASHPID, 和PPID是6973, 6987, 6972
+11 PID, BASHPID, 和PPID是6973, 6987, 6972
+12 PID, BASHPID, 和PPID是6973, 6987, 6972
+13 PID, BASHPID, 和PPID是6973, 6987, 6972
+14 PID, BASHPID, 和PPID是6973, 6987, 6972
+15 PID, BASHPID, 和PPID是6973, 6987, 6972
+16 PID, BASHPID, 和PPID是6973, 6987, 6972
+17 PID, BASHPID, 和PPID是6973, 6987, 6972
+18 PID, BASHPID, 和PPID是6973, 6987, 6972
+19 PID, BASHPID, 和PPID是6973, 6987, 6972
+20 PID, BASHPID, 和PPID是6973, 6987, 6972
+21 PID, BASHPID, 和PPID是6973, 6987, 6972
+22 PID, BASHPID, 和PPID是6973, 6987, 6972
+23 PID, BASHPID, 和PPID是6973, 6987, 6972
+24 PID, BASHPID, 和PPID是6973, 6987, 6972
+25 PID, BASHPID, 和PPID是6973, 6987, 6972
+26 PID, BASHPID, 和PPID是6973, 6987, 6972

@@ -1,0 +1,18 @@
+Thu Sep  1 16:59:34 2022 - INFO  - Start to prepare the test environment.
+Traceback (most recent call last):
+  File "/root/Desktop/mugenSI/libs/locallibs/rpm_manage.py", line 29, in <module>
+    import ssh_cmd
+  File "/root/Desktop/mugenSI/libs/locallibs/ssh_cmd.py", line 23, in <module>
+    import paramiko
+ModuleNotFoundError: No module named 'paramiko'
+Thu Sep  1 16:59:35 2022 - INFO  - End to prepare the test environment.
+Thu Sep  1 16:59:35 2022 - INFO  - Start to run test.
+0 PID, BASHPID, 和PPID是70066, 70080, 70065
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 70082 with interrupted system call
+Thu Sep  1 16:59:35 2022 - INFO  - End to run test.
+/root/Desktop/mugenSI/libs/locallibs/common_lib_python.sh：行 19: 70080 已杀死               ( test_process )  (工作目录: ~/Desktop/mugenSI/testcases/cli-test/criu/checkpoint_file)
+Thu Sep  1 16:59:35 2022 - INFO  - succeed to execute the case.
+Thu Sep  1 16:59:35 2022 - INFO  - Start to restore the test environment.
+Thu Sep  1 16:59:35 2022 - WARN  - no thing to do.
+Thu Sep  1 16:59:35 2022 - INFO  - End to restore the test environment.

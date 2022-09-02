@@ -1,0 +1,27 @@
+Mon Aug 29 15:26:43 2022 - INFO  - Start to prepare the test environment.
+Traceback (most recent call last):
+  File "/root/Desktop/mugenSI/libs/locallibs/rpm_manage.py", line 29, in <module>
+    import ssh_cmd
+  File "/root/Desktop/mugenSI/libs/locallibs/ssh_cmd.py", line 23, in <module>
+    import paramiko
+ModuleNotFoundError: No module named 'paramiko'
+Mon Aug 29 15:26:43 2022 - INFO  - End to prepare the test environment.
+Mon Aug 29 15:26:43 2022 - INFO  - Start to run test.
+Usage:
+Version: 3.16.1
+0 PID, BASHPID, 和PPID是13021, 13038, 13020
+Error (criu/config.c:1059): invalid argument for -t: =13038
+Mon Aug 29 15:26:43 2022 - ERROR - L74: dump -D No Pass
+Mon Aug 29 15:26:43 2022 - ERROR - oe_test_criu.sh line 74
+echo 
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Error (criu/protobuf.c:72): Unexpected EOF on (empty-image)
+Mon Aug 29 15:26:43 2022 - INFO  - End to run test.
+Mon Aug 29 15:26:43 2022 - ERROR - failed to execute the case.
+Mon Aug 29 15:26:43 2022 - INFO  - Start to restore the test environment.
+Mon Aug 29 15:26:43 2022 - WARN  - no thing to do.
+Mon Aug 29 15:26:43 2022 - INFO  - End to restore the test environment.
+1 PID, BASHPID, 和PPID是13021, 13038, 13020
+2 PID, BASHPID, 和PPID是13021, 13038, 13020
+3 PID, BASHPID, 和PPID是13021, 13038, 13020
+4 PID, BASHPID, 和PPID是13021, 13038, 13020

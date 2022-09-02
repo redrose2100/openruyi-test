@@ -1,0 +1,43 @@
+Thu Sep  1 20:58:07 2022 - INFO  - Start to prepare the test environment.
+Traceback (most recent call last):
+  File "/root/Desktop/mugenSI/libs/locallibs/rpm_manage.py", line 29, in <module>
+    import ssh_cmd
+  File "/root/Desktop/mugenSI/libs/locallibs/ssh_cmd.py", line 23, in <module>
+    import paramiko
+ModuleNotFoundError: No module named 'paramiko'
+mkdir: 无法创建目录 “checkpoint_file”: 文件已存在
+Thu Sep  1 20:58:07 2022 - INFO  - End to prepare the test environment.
+Thu Sep  1 20:58:07 2022 - INFO  - Start to run test.
+0 PID, BASHPID, 和PPID是8936, 8949, 8935
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 8951 with interrupted system call
+oe_test_criu_3.sh：行 66:  8949 已杀死               ( test_process )
+Error (criu/util.c:635): exited, status=4
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/src/lib/infect.c:126): Unable to interrupt task: 8949 (No such process)
+Error (compel/src/lib/infect.c:355): Unable to detach from 8949: No such process
+Error (criu/cr-dump.c:1794): Dumping FAILED.
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Thu Sep  1 20:58:07 2022 - ERROR - L74: restore -j No Pass
+Thu Sep  1 20:58:07 2022 - ERROR - oe_test_criu_3.sh line 74
+Thu Sep  1 20:58:08 2022 - INFO  - End to run test.
+Thu Sep  1 20:58:08 2022 - ERROR - failed to execute the case.
+Thu Sep  1 20:58:08 2022 - INFO  - Start to restore the test environment.
+Thu Sep  1 20:58:08 2022 - WARN  - no thing to do.
+Thu Sep  1 20:58:08 2022 - INFO  - End to restore the test environment.
+1 PID, BASHPID, 和PPID是8936, 8949, 8935
+2 PID, BASHPID, 和PPID是8936, 8949, 8935
+3 PID, BASHPID, 和PPID是8936, 8949, 8935
+4 PID, BASHPID, 和PPID是8936, 8949, 8935
+5 PID, BASHPID, 和PPID是8936, 8949, 8935
+6 PID, BASHPID, 和PPID是8936, 8949, 8935
+7 PID, BASHPID, 和PPID是8936, 8949, 8935
+8 PID, BASHPID, 和PPID是8936, 8949, 8935
+9 PID, BASHPID, 和PPID是8936, 8949, 8935
+10 PID, BASHPID, 和PPID是8936, 8949, 8935
+11 PID, BASHPID, 和PPID是8936, 8949, 8935
+12 PID, BASHPID, 和PPID是8936, 8949, 8935
+13 PID, BASHPID, 和PPID是8936, 8949, 8935
+14 PID, BASHPID, 和PPID是8936, 8949, 8935
+15 PID, BASHPID, 和PPID是8936, 8949, 8935
+16 PID, BASHPID, 和PPID是8936, 8949, 8935

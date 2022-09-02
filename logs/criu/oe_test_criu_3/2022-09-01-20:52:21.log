@@ -1,0 +1,65 @@
+Thu Sep  1 20:52:21 2022 - INFO  - Start to prepare the test environment.
+Traceback (most recent call last):
+  File "/root/Desktop/mugenSI/libs/locallibs/rpm_manage.py", line 29, in <module>
+    import ssh_cmd
+  File "/root/Desktop/mugenSI/libs/locallibs/ssh_cmd.py", line 23, in <module>
+    import paramiko
+ModuleNotFoundError: No module named 'paramiko'
+Thu Sep  1 20:52:21 2022 - INFO  - End to prepare the test environment.
+Thu Sep  1 20:52:21 2022 - INFO  - Start to run test.
+0 PID, BASHPID, 和PPID是7528, 7542, 7527
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/arch/x86/src/lib/infect.c:340): Will restore 7544 with interrupted system call
+oe_test_criu_3.sh：行 66:  7542 已杀死               ( test_process )
+Error (criu/util.c:635): exited, status=4
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Warn  (compel/src/lib/infect.c:126): Unable to interrupt task: 7542 (No such process)
+Error (compel/src/lib/infect.c:355): Unable to detach from 7542: No such process
+Error (criu/cr-dump.c:1794): Dumping FAILED.
+Warn  (criu/kerndat.c:1205): CRIU was built without libnftables support
+Thu Sep  1 20:52:21 2022 - INFO  - End to run test.
+Thu Sep  1 20:52:21 2022 - INFO  - succeed to execute the case.
+Thu Sep  1 20:52:21 2022 - INFO  - Start to restore the test environment.
+Thu Sep  1 20:52:21 2022 - WARN  - no thing to do.
+Thu Sep  1 20:52:21 2022 - INFO  - End to restore the test environment.
+1 PID, BASHPID, 和PPID是7528, 7542, 7527
+2 PID, BASHPID, 和PPID是7528, 7542, 7527
+3 PID, BASHPID, 和PPID是7528, 7542, 7527
+4 PID, BASHPID, 和PPID是7528, 7542, 7527
+5 PID, BASHPID, 和PPID是7528, 7542, 7527
+6 PID, BASHPID, 和PPID是7528, 7542, 7527
+7 PID, BASHPID, 和PPID是7528, 7542, 7527
+8 PID, BASHPID, 和PPID是7528, 7542, 7527
+9 PID, BASHPID, 和PPID是7528, 7542, 7527
+10 PID, BASHPID, 和PPID是7528, 7542, 7527
+11 PID, BASHPID, 和PPID是7528, 7542, 7527
+12 PID, BASHPID, 和PPID是7528, 7542, 7527
+13 PID, BASHPID, 和PPID是7528, 7542, 7527
+14 PID, BASHPID, 和PPID是7528, 7542, 7527
+15 PID, BASHPID, 和PPID是7528, 7542, 7527
+16 PID, BASHPID, 和PPID是7528, 7542, 7527
+17 PID, BASHPID, 和PPID是7528, 7542, 7527
+18 PID, BASHPID, 和PPID是7528, 7542, 7527
+19 PID, BASHPID, 和PPID是7528, 7542, 7527
+20 PID, BASHPID, 和PPID是7528, 7542, 7527
+21 PID, BASHPID, 和PPID是7528, 7542, 7527
+22 PID, BASHPID, 和PPID是7528, 7542, 7527
+23 PID, BASHPID, 和PPID是7528, 7542, 7527
+24 PID, BASHPID, 和PPID是7528, 7542, 7527
+25 PID, BASHPID, 和PPID是7528, 7542, 7527
+26 PID, BASHPID, 和PPID是7528, 7542, 7527
+27 PID, BASHPID, 和PPID是7528, 7542, 7527
+28 PID, BASHPID, 和PPID是7528, 7542, 7527
+29 PID, BASHPID, 和PPID是7528, 7542, 7527
+30 PID, BASHPID, 和PPID是7528, 7542, 7527
+31 PID, BASHPID, 和PPID是7528, 7542, 7527
+32 PID, BASHPID, 和PPID是7528, 7542, 7527
+33 PID, BASHPID, 和PPID是7528, 7542, 7527
+34 PID, BASHPID, 和PPID是7528, 7542, 7527
+35 PID, BASHPID, 和PPID是7528, 7542, 7527
+36 PID, BASHPID, 和PPID是7528, 7542, 7527
+37 PID, BASHPID, 和PPID是7528, 7542, 7527
+38 PID, BASHPID, 和PPID是7528, 7542, 7527
+39 PID, BASHPID, 和PPID是7528, 7542, 7527
+40 PID, BASHPID, 和PPID是7528, 7542, 7527
+41 PID, BASHPID, 和PPID是7528, 7542, 7527
