@@ -1,0 +1,4 @@
+"@"="Root"
+"A"="abcd"
+"B"=dword:12345678
+"C"="dcba"
