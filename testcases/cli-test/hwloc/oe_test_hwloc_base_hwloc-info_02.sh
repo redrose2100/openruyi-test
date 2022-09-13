@@ -1,0 +1,65 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more detaitest -f.
+
+# #############################################
+# @Author    :   zhangshaowei
+# @Contact   :   756800989@qq.com
+# @Date      :   2022/07/26
+# @License   :   Mulan PSL v2
+# @Desc      :   Test hwloc-info
+# #############################################
+
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test()
+{
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "hwloc"
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+    hwloc-info --topology | grep 'depth'
+    CHECK_RESULT $? 0 0 "hwloc-info --topology failed"
+    hwloc-info --support | grep 'cpubind'
+    CHECK_RESULT $? 0 0 "hwloc-info --support failed"
+    hwloc-info -p | grep "type #1"
+    CHECK_RESULT $? 0 0 "hwloc-info -p failed"
+    hwloc-info -l | grep 'depth'
+    CHECK_RESULT $? 0 0 "hwloc-info -l failed"
+    hwloc-info --children machine:0 | grep 'type = Package'
+    CHECK_RESULT $? 0 0 "hwloc-info --children failed"
+    hwloc-info --descendants pu core:0 | grep 'type = PU'
+    CHECK_RESULT $? 0 0 "hwloc-info --descendants <type> failed"
+    hwloc-info --descendants pu machine:0 | grep 'type = Core'
+    CHECK_RESULT $? 1 0 "hwloc-info --descendants <type> failed"
+    hwloc-info --no-icaches | grep 'iCache'
+    CHECK_RESULT $? 1 0 "hwloc-info --no-icaches failed"
+    hwloc-info --no-io | grep 'Bridge'
+    CHECK_RESULT $? 1 0 "hwloc-info --no-io failed"
+    hwloc-info --no-bridges | grep 'PU'
+    CHECK_RESULT $? 0 0 "hwloc-info --no-bridges failed"
+    lstopo -i "node:2 8" ./old.xml
+    hwloc-info --input-format xml -i old.xml | grep '2 NUMANode'
+    CHECK_RESULT $? 0 0 "hwloc-info --input-format failed"
+    LOG_INFO "End of the test."
+}
+
+function post_test()
+{
+    LOG_INFO "Start to restore the test environment."
+    rm -rf old.xml
+    DNF_REMOVE
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
