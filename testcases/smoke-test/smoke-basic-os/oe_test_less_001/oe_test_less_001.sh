@@ -23,7 +23,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     less --help > /dev/null 2>&1
     CHECK_RESULT $? 0 0 "less not install"
-    command -v less
+    command -v less | grep "/usr/bin/less"
     CHECK_RESULT $? 0 0 "check version failed"
     LOG_INFO "Finish test!"
 }
