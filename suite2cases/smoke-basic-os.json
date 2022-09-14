@@ -180,6 +180,27 @@
         },
         {
             "name": "oe_test_uname"
-        }
+        },
+        {
+            "name": "oe_test_wc"
+        },
+        {
+            "name": "oe_test_chroncy_001"
+        },
+	{
+            "name": "oe_test_diffstat_001"
+        },
+	{
+            "name": "oe_test_rollback"
+	},
+        {   
+	    "name": "oe_test_gcc"
+	},
+	{
+            "name":"oe_test_cmp"
+	},
+	{
+	    "name": "oe_test_umask_002"
+	}
     ]
 }
