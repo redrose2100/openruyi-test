@@ -204,6 +204,9 @@
 	},
 	{
 	    "name": "oe_test_llvm"
+	},
+	{
+	    "name": "oe_test_crypto-policies_001"
 	}
     ]
 }
