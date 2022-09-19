@@ -24,6 +24,7 @@ function pre_test(){
     DNF_INSTALL "criu"
     
     mkdir checkpoint_file
+    mkdir checkpoint_file_2
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -95,9 +96,6 @@ function run_test(){
     (test_process) & criu dump -D checkpoint_file -j -t $! --weak-sysctls
     CHECK_RESULT $? 0 0 "L$LINENO: dump --weak-sysctls No Pass"
 
-    criu lazy-pages -D ckpt & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: --lazy-pages No Pass"
-
     # (test_process) & criu dump -D checkpoint_file -j -t $! --stream
     # CHECK_RESULT $? 0 0 "L$LINENO: dump --stream No Pass"
 
@@ -158,9 +156,6 @@ function run_test(){
     (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-dump-controller NAME
     CHECK_RESULT $? 0 0 "L$LINENO: dump --cgroup-dump-controller No Pass"
 
-    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-dump-controller NAME
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --cgroup-dump-controller No Pass"
-
     (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-yard PATH
     CHECK_RESULT $? 0 0 "L$LINENO: dump --cgroup-yard No Pass"
 
@@ -194,6 +189,23 @@ function run_test(){
     # (test_process) & criu dump -D checkpoint_file -j -t $! --pin-memory
     # CHECK_RESULT $? 0 0 "L$LINENO: dump --pin-memory No Pass"
 
+    (test_process) & criu dump -D checkpoint_file -j -t $! --track-mem
+    CHECK_RESULT $? 0 0 "L$LINENO: dump --track-mem No Pass"
+
+    pre_name='checkpoint_file' && pre_path=$(readlink -f $pre_name)
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid
+    criu dump -D checkpoint_file_2 -j -t $pid --prev-images-dir $pre_path
+    CHECK_RESULT $? 0 0 "L$LINENO: dump --prev-images-dir No Pass"
+
+    # (test_process) & criu dump -D checkpoint_file -j -t $! --page-server
+    # CHECK_RESULT $? 0 0 "L$LINENO: dump --page-server No Pass"
+
+    (test_process) & criu dump -D checkpoint_file -j -t $! --auto-dedup
+    CHECK_RESULT $? 0 0 "L$LINENO: dump --auto-dedup No Pass"
+
+    (test_process) & criu dump -D checkpoint_file -j -t $! --pre-dump-mode splice
+    CHECK_RESULT $? 0 0 "L$LINENO: dump --pre-dump-mode No Pass"
+
     LOG_INFO "End to run test."
 }
 
@@ -202,6 +214,7 @@ function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
     rm -rf checkpoint_file
+    rm -rf checkpoint_file_2
     LOG_INFO "End to restore the test environment."
 }
 

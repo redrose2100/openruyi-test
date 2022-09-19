@@ -45,13 +45,16 @@ function run_test(){
     custodia -h | grep -E "usage: custodia \[-h\] \[--debug\] \[--instance INSTANCE\] \[configfile\]"
     CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
 
-    custodia --debug | kill -9 $(pgrep -f /usr/sbin/custodia)
+    custodia --debug &
+    kill -9 $(pgrep -f /usr/sbin/custodia)
     CHECK_RESULT $? 0 0 "L$LINENO: --debug No Pass"
 
-    custodia --instance custodia | kill -9 $(pgrep -f /usr/sbin/custodia)
+    custodia --instance custodia &
+    kill -9 $(pgrep -f /usr/sbin/custodia)
     CHECK_RESULT $? 0 0 "L$LINENO: --instance INSTANCE No Pass"
     
-    custodia custodia.conf | kill -9 $(pgrep -f /usr/sbin/custodia)
+    custodia custodia.conf &
+    kill -9 $(pgrep -f /usr/sbin/custodia)
     CHECK_RESULT $? 0 0 "L$LINENO: configfile No Pass"
 
     LOG_INFO "End to run test."

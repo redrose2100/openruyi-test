@@ -185,6 +185,15 @@ function run_test(){
     # (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --pin-memory && kill -9 $pid
     # CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --pin-memory No Pass"
 
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --track-mem && kill -9 $pid
+    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --track-mem No Pass"
+
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --auto-dedup && kill -9 $pid
+    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --auto-dedup No Pass"
+
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --pre-dump-mode splice && kill -9 $pid
+    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --pre-dump-mode No Pass"
+
     LOG_INFO "End to run test."
 }
 
