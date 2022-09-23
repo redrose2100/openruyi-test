@@ -54,12 +54,6 @@ function pre_test(){
 function run_test(){
     LOG_INFO "Start to run test."
 
-    criu -h | grep -E "Usage:"
-    CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
-
-    criu -V | grep -E "Version: [[:digit:]]*.[[:digit:]]*.[[:digit:]]*"
-    CHECK_RESULT $? 0 0 "L$LINENO: -V No Pass"
-    
     test_process(){
         num=0
         while true;

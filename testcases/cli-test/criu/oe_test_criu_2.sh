@@ -120,7 +120,7 @@ function run_test(){
     CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --ghost-limit No Pass"
 
     # (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --action-script FILE && kill -9 $pid
-    # CHECK_RESULT $? 0 0 "L$LINENO: dump --action-script No Pass"
+    # CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --action-script No Pass"
 
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -l && kill -9 $pid
     CHECK_RESULT $? 0 0 "L$LINENO: pre-dump -l No Pass"
@@ -145,9 +145,6 @@ function run_test(){
 
     # (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-props-file FILE && kill -9 $pid
     # CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --cgroup-props-file STRING No Pass"
-
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-dump-controller NAME && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --cgroup-dump-controller No Pass"
 
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-dump-controller NAME && kill -9 $pid
     CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --cgroup-dump-controller No Pass"

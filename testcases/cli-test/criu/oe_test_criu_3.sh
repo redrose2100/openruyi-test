@@ -142,7 +142,7 @@ function run_test(){
     CHECK_RESULT $? 0 0 "L$LINENO: restore --irmap-scan-path No Pass"
 
     criu restore -j --manage-cgroups & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -j --manage-cgroups No Pass"
+    CHECK_RESULT $? 0 0 "L$LINENO: restore --manage-cgroups No Pass"
 
     criu restore -j --cgroup-root / & DUMP
     CHECK_RESULT $? 0 0 "L$LINENO: restore --cgroup-root No Pass"
