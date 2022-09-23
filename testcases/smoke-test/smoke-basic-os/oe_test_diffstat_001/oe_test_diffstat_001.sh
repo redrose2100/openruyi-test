@@ -21,24 +21,26 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL diffstat
     mkdir diff_test1 diff_test2
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    echo -e "abc\n123\ndef" > diff_test1/test.txt
-    echo -e "abc\n123\ndef" > diff_test2/test.txt
-    diff diff_test1 diff_test2 | diffstat | grep "0 files changed" 
+    echo -e "abc\n123\ndef" >diff_test1/test.txt
+    echo -e "abc\n123\ndef" >diff_test2/test.txt
+    diff diff_test1 diff_test2 | diffstat | grep "0 files changed"
     CHECK_RESULT $? 0 0 "The file content is abnormal"
-    echo -e "abc\n456\njqk" > ./diff_test2/test.txt
+    echo -e "abc\n456\njqk" >./diff_test2/test.txt
     diff diff_test1 diff_test2 | diffstat | grep "2 insertions(+), 2 deletions(-)"
-    CHECK_RESULT $? 0 0 "The file content is abnormal" 
+    CHECK_RESULT $? 0 0 "The file content is abnormal"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
     rm -rf diff_test1 diff_test2
     LOG_INFO "End to restore the test environment."
 }
