@@ -1,0 +1,12 @@
+{
+    "path": "${OET_PATH}/testcases/celt051-test",
+    "cases": [
+        {
+            "name": "oe_test_celt051_celtenc"
+        },
+        {
+            "name": "oe_test_celt051_celtdec"
+        }
+    ]
+}
+
