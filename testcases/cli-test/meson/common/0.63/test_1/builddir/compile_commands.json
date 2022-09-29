@@ -1,0 +1,14 @@
+[
+  {
+    "directory": "/root/mugen/testcases/cli-test/meson/common/test_1/builddir",
+    "command": "c++ -Isubprojects/cmMod/libcmModLib__.so.p -Isubprojects/cmMod -I../subprojects/cmMod -Isubprojects/cmMod/__CMake_build -I../subprojects/cmMod/__CMake_build -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -O0 -g -fPIC -DDO_NOTHING_JUST_A_FLAG=1 -DMESON_MAGIC_FLAG=21 -DcmModLib___EXPORTS -MD -MQ subprojects/cmMod/libcmModLib__.so.p/cmMod.cpp.o -MF subprojects/cmMod/libcmModLib__.so.p/cmMod.cpp.o.d -o subprojects/cmMod/libcmModLib__.so.p/cmMod.cpp.o -c ../subprojects/cmMod/cmMod.cpp",
+    "file": "../subprojects/cmMod/cmMod.cpp",
+    "output": "subprojects/cmMod/libcmModLib__.so.p/cmMod.cpp.o"
+  },
+  {
+    "directory": "/root/mugen/testcases/cli-test/meson/common/test_1/builddir",
+    "command": "c++ -Imain.p -I. -I.. -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -O0 -g -DMESON_MAGIC_FLAG=42 -isystem../subprojects/cmMod -isystemsubprojects/cmMod -isystem../subprojects/cmMod/__CMake_build -isystemsubprojects/cmMod/__CMake_build -MD -MQ main.p/main.cpp.o -MF main.p/main.cpp.o.d -o main.p/main.cpp.o -c ../main.cpp",
+    "file": "../main.cpp",
+    "output": "main.p/main.cpp.o"
+  }
+]

@@ -1,0 +1,4 @@
+Log of Meson test suite run on 2022-09-20T11:31:10.367433
+
+Inherited environment: SHELL='/bin/bash' HISTCONTROL='ignoredups' HISTSIZE='1000' HOSTNAME='host-192-168-0-33' PWD='/root/mugen/testcases/cli-test/meson/common/test_1/builddir' LOGNAME='root' XDG_SESSION_TYPE='tty' MOTD_SHOWN='pam' HOME='/root' LANG='zh_CN.UTF-8' SSH_CONNECTION='180.212.181.119 61408 192.168.0.33 22' XDG_SESSION_CLASS='user' TERM='xterm-256color' USER='root' SHLVL='0' XDG_SESSION_ID='106' XDG_RUNTIME_DIR='/run/user/0' SSH_CLIENT='180.212.181.119 61408 22' PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin' DBUS_SESSION_BUS_ADDRESS='unix:path=/run/user/0/bus' MAIL='/var/spool/mail/root' SSH_TTY='/dev/pts/2' OLDPWD='/root/mugen/testcases/cli-test/meson/common/test_1' _='/usr/bin/meson' 
+

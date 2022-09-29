@@ -1,0 +1,5 @@
+ 0x000000000000000e (SONAME)             Library soname: [libcmModLib__.so]
+_ZN10cmModClassC1ENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE T
+_ZN10cmModClassC2ENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE T
+_ZNK10cmModClass6getStrB5cxx11Ev T
+_ZStplIcSt11char_traitsIcESaIcEENSt7__cxx1112basic_stringIT_T0_T1_EERKS8_PKS5_ W

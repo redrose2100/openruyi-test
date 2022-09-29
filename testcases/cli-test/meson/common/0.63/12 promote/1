@@ -1,0 +1,4 @@
+usage: meson [-h]
+             {setup,configure,dist,install,introspect,init,test,wrap,subprojects,rewrite,compile,devenv,env2mfile,help}
+             ...
+meson: error: unrecognized arguments: 2

@@ -1,0 +1,1 @@
+[{"cmd": ["/root/mugen/testcases/cli-test/meson/common/test_1/builddir/main"], "env": {}, "name": "test1", "workdir": null, "timeout": 30, "suite": ["cmakeSubTest"], "is_parallel": true, "priority": 0, "protocol": "exitcode", "depends": ["main@exe"]}]

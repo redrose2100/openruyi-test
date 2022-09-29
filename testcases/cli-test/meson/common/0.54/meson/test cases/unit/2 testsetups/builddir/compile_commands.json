@@ -1,0 +1,12 @@
+[
+  {
+    "directory": "/root/mugen/testcases/cli-test/meson/common/0.54/meson/test cases/unit/2 testsetups/builddir",
+    "command": "cc -Ibuggy@exe -I. -I.. -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -g -MD -MQ 'buggy@exe/buggy.c.o' -MF 'buggy@exe/buggy.c.o.d' -o 'buggy@exe/buggy.c.o' -c ../buggy.c",
+    "file": "../buggy.c"
+  },
+  {
+    "directory": "/root/mugen/testcases/cli-test/meson/common/0.54/meson/test cases/unit/2 testsetups/builddir",
+    "command": "cc -Ibuggy@exe -I. -I.. -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -g -MD -MQ 'buggy@exe/impl.c.o' -MF 'buggy@exe/impl.c.o.d' -o 'buggy@exe/impl.c.o' -c ../impl.c",
+    "file": "../impl.c"
+  }
+]

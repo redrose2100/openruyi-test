@@ -1,0 +1,7 @@
+# ninja log v5
+1	20	1664248011	buggy@exe/impl.c.o	36772a660202a25f
+1	25	1664248011	buggy@exe/buggy.c.o	ecabe42d97fe61b0
+25	41	1664248011	buggy	cccba49b5a8fef2e
+0	22	1664248812	buggy@exe/buggy.c.o	ecabe42d97fe61b0
+0	23	1664248812	buggy@exe/impl.c.o	36772a660202a25f
+23	38	1664248812	buggy	cccba49b5a8fef2e

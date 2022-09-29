@@ -1,0 +1,7 @@
+[
+  {
+    "directory": "/root/mugen/testcases/cli-test/meson/common/test_1/builddir",
+    "command": "cc -Itest_1@exe -I. -I.. -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -g -MD -MQ 'test_1@exe/test_1.c.o' -MF 'test_1@exe/test_1.c.o.d' -o 'test_1@exe/test_1.c.o' -c ../test_1.c",
+    "file": "../test_1.c"
+  }
+]

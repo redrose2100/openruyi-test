@@ -1,0 +1,44 @@
+Build started at 2022-09-20T11:02:58.340235
+Main binary: /usr/bin/python3
+Build Options: 
+Python system: Linux
+The Meson build system
+Version: 0.54.3
+Source dir: /root/mugen/testcases/cli-test/meson/common/test_1
+Build dir: /root/mugen/testcases/cli-test/meson/common/test_1/builddir
+Build type: native build
+None of 'PKG_CONFIG_PATH' are defined in the environment, not changing global flags.
+None of 'PKG_CONFIG_PATH' are defined in the environment, not changing global flags.
+Project name: test_1
+Project version: 0.1
+C compiler for the build machine: cc (gcc 7.3.0 "cc (GCC) 7.3.0")
+C linker for the build machine: cc ld.bfd 2.34
+None of 'AR' are defined in the environment, not changing global flags.
+C compiler for the host machine: cc (gcc 7.3.0 "cc (GCC) 7.3.0")
+C linker for the host machine: cc ld.bfd 2.34
+None of 'AR' are defined in the environment, not changing global flags.
+Build machine cpu family: x86_64
+Build machine cpu: x86_64
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Target machine cpu family: x86_64
+Target machine cpu: x86_64
+Adding test "basic"
+Build targets in project: 1
+
+Found ninja-1.8.2 at /usr/bin/ninja
+Running compile:
+Working directory:  /root/mugen/testcases/cli-test/meson/common/test_1/builddir/meson-private/tmpk_yuk9ik
+Command line:  cc /root/mugen/testcases/cli-test/meson/common/test_1/builddir/meson-private/tmpk_yuk9ik/testfile.c -o /root/mugen/testcases/cli-test/meson/common/test_1/builddir/meson-private/tmpk_yuk9ik/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ install: /usr/lib/gcc/x86_64-linux-gnu/7.3.0/
+programs: =/usr/libexec/gcc/x86_64-linux-gnu/7.3.0/:/usr/libexec/gcc/x86_64-linux-gnu/7.3.0/:/usr/libexec/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7.3.0/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/7.3.0/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/7.3.0/:/usr/lib/gcc/x86_64-linux-gnu/7.3.0/../../../../x86_64-linux-gnu/bin/
+libraries: =/usr/lib/gcc/x86_64-linux-gnu/7.3.0/:/usr/lib/gcc/x86_64-linux-gnu/7.3.0/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/7.3.0/:/usr/lib/gcc/x86_64-linux-gnu/7.3.0/../../../../x86_64-linux-gnu/lib/../lib64/:/usr/lib/gcc/x86_64-linux-gnu/7.3.0/../../../x86_64-linux-gnu/7.3.0/:/usr/lib/gcc/x86_64-linux-gnu/7.3.0/../../../../lib64/:/lib/x86_64-linux-gnu/7.3.0/:/lib/../lib64/:/usr/lib/x86_64-linux-gnu/7.3.0/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-linux-gnu/7.3.0/../../../../x86_64-linux-gnu/lib/:/usr/lib/gcc/x86_64-linux-gnu/7.3.0/../../../:/lib/:/usr/lib/
+
+Compiler stderr:
+ 
+None of 'STRIP' are defined in the environment, not changing global flags.
+None of 'STRIP' are defined in the environment, not changing global flags.
