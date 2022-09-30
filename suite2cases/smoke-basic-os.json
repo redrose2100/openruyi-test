@@ -234,6 +234,9 @@
         },
         {
             "name": "oe_test_chrt"
-        }
+        },
+	{
+	    "name": "oe_test_pcre_001"
+	}
     ]
 }
