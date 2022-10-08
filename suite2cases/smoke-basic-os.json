@@ -234,6 +234,88 @@
         },
         {
             "name": "oe_test_chrt"
+        },
+	{
+            "name": "oe_test_aide_config_cfgfile"
+        },
+        {
+            "name": "oe_test_aide_config_check"
+        },
+        {
+            "name": "oe_test_aide_help"
+        },
+        {
+            "name": "oe_test_aide_init_database"
+        },
+        {
+            "name": "oe_test_aide_security"
+        },
+        {
+            "name": "oe_test_aide_version"
+        },
+        {
+            "name": "oe_test_audit_abnormal_kill"
+        },
+        {
+            "name": "oe_test_audit_fixed_memory_increase_abnormally_01"
+        },
+        {
+            "name": "oe_test_audit_fixed_memory_increase_abnormally_02"
+        },
+        {
+            "name": "oe_test_bbr_02"
+        },
+        {
+            "name": "oe_test_bbr_04"
+        },
+        {
+            "name": "oe_test_bonding_SCEN_05"
+        },
+        {
+            "name": "oe_test_ima_v2_manual_gen_digest_01"
+        },
+        {
+            "name": "oe_test_ipv6_sysctl_01"
+        },
+        {
+            "name": "oe_test_ipv6_sysctl_02"
+        },
+        {
+            "name": "oe_test_IPVLAN_07"
+        },
+	{
+            "name": "oe_test_mpstat_01"
+        },
+        {
+            "name": "oe_test_mtr_01"
+        },
+        {
+            "name": "oe_test_Netlink_ip_01"
+        },
+        {
+            "name": "oe_test_netstat_01"
+        },
+        {
+            "name": "oe_test_normal_tcpdump_02"
+        },
+        {
+            "name": "oe_test_normal_tcpdump_04"
+        },
+        {
+            "name": "oe_test_Numad_01"
+        },
+        {
+            "name": "oe_test_perf_top_01"
+        },
+        {
+            "name": "oe_test_sar_01"
+        },
+        {
+            "name": "oe_test_user_debug_iotop_03"
+        },
+        {
+            "name": "oe_test_user_debug_iotop_SCEN_01"
         }
+
     ]
 }
