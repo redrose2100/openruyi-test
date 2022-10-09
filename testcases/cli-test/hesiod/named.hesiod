@@ -1,0 +1,32 @@
+; SOA and NS records.
+@	IN	SOA ns.test.com. test.com.  (
+		40000	      ; serial - database version number
+		1800	      ; refresh - sec servers
+		300	      ; retry - for refresh
+		3600000       ; expire - unrefreshed data
+		7200 )        ; min
+        NS ns.test.com.
+        A 127.0.0.1
+
+; Actual Hesiod data.
+
+testuserABC.passwd    	TXT    	"testuserABC:x:1000:1000:TestuserABC Worthington:/home/testuserABC:/bin/dash"
+1000.uid       			CNAME  	testuserABC.passwd
+
+; groups
+testuserABC.group   	TXT    	"testuserABC:x:1000"
+1000.gid      			CNAME  	testuserABC.group
+
+; group memberships
+testuserABC.grplist  	TXT    	"testuserABC:1000:root:0:test:50:users:100"
+
+; Any format
+A100.B100				CNAME	A101.B101
+A101.B101				CNAME   A102.B102
+A102.B102				CNAME   A103.B103
+A103.B103				CNAME   A104.B104
+A104.B104				TXT    	"hesiod-test"
+; Dead cycle
+A105.B105				CNAME   A105.B105
+A106.B106				CNAME   A107.B107
+A107.B107				CNAME   A106.B106
