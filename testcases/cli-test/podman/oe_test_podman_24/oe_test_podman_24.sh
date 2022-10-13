@@ -37,7 +37,7 @@ function run_test() {
     CHECK_RESULT $?
     id=$(podman run --name ${name} -e POSTGRES_PASSWORD=secret -d postgres:alpine)
     CHECK_RESULT $?
-    podman container stop ${name} | grep ${id}
+    podman container stop ${name}
     CHECK_RESULT $?
     podman container rm ${name} | grep ${id}
     CHECK_RESULT $?
@@ -45,7 +45,7 @@ function run_test() {
     CHECK_RESULT $? 1
     id1=$(podman run --name ${name}1 -e POSTGRES_PASSWORD=secret -d postgres:alpine)
     CHECK_RESULT $?
-    podman container stop ${name}1 | grep ${id1}
+    podman container stop ${name}1 
     CHECK_RESULT $?
     podman container cleanup ${name}1
     CHECK_RESULT $?

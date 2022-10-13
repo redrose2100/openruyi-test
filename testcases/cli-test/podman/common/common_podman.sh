@@ -31,7 +31,7 @@ registries = []
 
 function clear_env() {
     podman stop postgres
-    podman rm -all
-    podman rmi -f -all
+    podman rm --all
+    podman rmi -f --all
     DNF_REMOVE
 }

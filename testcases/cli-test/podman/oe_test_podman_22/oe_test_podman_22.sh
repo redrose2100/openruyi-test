@@ -28,16 +28,17 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
     podman rm -all
+    cp ../common/test.json .
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    podman search --limit 5 term | wc -l | grep 5
+    podman search --limit 5 term | wc -l | grep 6
     CHECK_RESULT $?
     podman search --no-trunc term | grep "docker.io"
     CHECK_RESULT $?
-    podman search --authfile value term | grep "TerminusDB serve"
+    podman search --authfile test.json term | grep -i "DESCRIPTION"
     CHECK_RESULT $?
     podman search json --format json | grep "json"
     CHECK_RESULT $?

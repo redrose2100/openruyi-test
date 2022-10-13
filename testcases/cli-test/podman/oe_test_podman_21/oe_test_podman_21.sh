@@ -27,7 +27,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
-    podman rm -all
+    podman rm --all
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -47,7 +47,7 @@ function run_test() {
     CHECK_RESULT $?
     podman start ${name}1 ${name}2
     CHECK_RESULT $?
-    podman start ${id} | grep ${id}
+    podman start ${id} 
     CHECK_RESULT $?
     podman start -i -l
     CHECK_RESULT $?

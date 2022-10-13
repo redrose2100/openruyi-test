@@ -27,7 +27,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
-    docker rm -all
+    podman rm --all
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -37,7 +37,7 @@ function run_test() {
     CHECK_RESULT $?
     docker ps -a | grep ${name}
     CHECK_RESULT $?
-    docker stop ${name} | grep ${value}
+    docker stop ${name} | grep ${name}
     CHECK_RESULT $?
     docker rm ${name} | grep ${value}
     CHECK_RESULT $?
@@ -45,7 +45,7 @@ function run_test() {
     CHECK_RESULT $?
     docker ps -a | grep ${name}1
     CHECK_RESULT $?
-    docker stop ${name}1 | grep ${id1}
+    docker stop ${name}1 | grep ${name}1
     CHECK_RESULT $?
     docker rm ${id1}
     CHECK_RESULT $?
@@ -53,7 +53,7 @@ function run_test() {
     CHECK_RESULT $?
     id3=$(docker run --name ${name}3 -e POSTGRES_PASSWORD=secret -d postgres:alpine)
     CHECK_RESULT $?
-    docker stop ${name}2 ${name}3
+    docker stop ${name}2 ${name}3 
     CHECK_RESULT $?
     docker rm ${name}2 ${name}3 | grep ${id3}
     CHECK_RESULT $?

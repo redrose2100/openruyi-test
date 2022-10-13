@@ -21,7 +21,7 @@ source ../common/common_podman.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
-    docker rm -all
+    podman rm --all
     LOG_INFO "Environmental preparation is over."
 }
 

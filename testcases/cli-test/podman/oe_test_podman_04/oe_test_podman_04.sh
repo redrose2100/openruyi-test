@@ -36,19 +36,20 @@ function run_test() {
     CHECK_RESULT $?
     podman run --name postgres2 -e POSTGRES_PASSWORD=secret -d postgres:alpine
     CHECK_RESULT $?
-    podman ps --sort names | awk '{print $11}' | grep -wA 1 "postgres" | grep -w "postgres2"
+    podman ps --sort names
+    podman ps --sort names | awk '{print $11}' | grep -w "postgres"
     CHECK_RESULT $?
     podman ps | grep "postgres"
     CHECK_RESULT $?
-    podman ps --all | awk '{print $11}' | grep -wA 1 "postgres2" | grep -w "postgres"
+    podman ps --all | awk '{print $11}' | grep -w "postgres2"
     CHECK_RESULT $?
     podman stop postgres2
     CHECK_RESULT $?
     podman rm postgres2
     CHECK_RESULT $?
-    podman ps -aq | grep "$(ls /run/runc/ | cut -b 1-12)"
+    podman ps -aq | grep "$(ls /run/crun/ | cut -b 1-12)"
     CHECK_RESULT $?
-    podman ps --no-trunc | grep "$(ls /run/runc/)"
+    podman ps --no-trunc | grep "$(ls /run/crun/)"
     CHECK_RESULT $?
     podman ps --pod | grep "POD"
     CHECK_RESULT $?

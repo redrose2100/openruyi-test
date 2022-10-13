@@ -27,7 +27,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
-    docker rm -all
+    podman rm --all
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -47,11 +47,11 @@ function run_test() {
     CHECK_RESULT $?
     docker mount --notruncate | grep merged
     CHECK_RESULT $?
-    docker stop ${name} | grep ${id}
+    docker stop ${name} 
     CHECK_RESULT $?
-    docker unmount -f ${name} | grep ${id}
+    docker unmount -f ${name} | grep ${name}
     CHECK_RESULT $?
-    docker mount ${name}
+    docker mount ${name} 
     CHECK_RESULT $?
     docker unmount --all
     CHECK_RESULT $?

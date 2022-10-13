@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    docker image history --format=json postgres:alpine | grep "comment"
+    docker image history --format=json postgres:alpine | grep "created"
     CHECK_RESULT $?
     docker image history --human postgres:alpine | grep "B"
     CHECK_RESULT $?

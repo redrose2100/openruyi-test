@@ -48,7 +48,7 @@ function run_test() {
     CHECK_RESULT $?
     touch /tmp/host || exit 1
     ID=$(podman create --mount type=bind,source=/tmp/host,destination=/tmp/container alpine ls)
-    podman inspect $ID | grep '"source": "/tmp/host"'
+    podman inspect $ID | grep '/tmp/host'
     CHECK_RESULT $?
     ID=$(podman create --name example alpine ls)
     podman inspect $ID | grep '"Name": "example"'

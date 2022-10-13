@@ -37,9 +37,6 @@ function run_test() {
     ID=$(docker create -d alpine ls)
     docker inspect $ID | grep alpine
     CHECK_RESULT $?
-    ID=$(docker create --detach-keys abc alpine ls)
-    docker inspect $ID | grep -i key
-    CHECK_RESULT $?
     ID=$(docker create --device /dev/dm-0 alpine ls)
     docker inspect $ID | grep '"path": "/dev/dm-0"'
     CHECK_RESULT $?

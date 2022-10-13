@@ -35,7 +35,7 @@ function run_test() {
     CHECK_RESULT $?
     docker logs --since 2020-12-31 $(docker ps -aq) 2>&1 | grep $(date '+%Y-%m-%d')
     CHECK_RESULT $?
-    docker logs --tail 10 $(podman ps -aq) 2>&1 | grep -v "Docker CLI using podman" | wc -l | grep 10
+    docker logs --tail 10 $(docker ps -aq) 2>&1 | wc -l | grep 10
     CHECK_RESULT $?
     docker logs -t $(docker ps -aq) | grep "+08:00"
     CHECK_RESULT $?
@@ -56,7 +56,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    docker rmi test
+    podman rmi test
     clear_env
     rm -rf $(ls | grep -vE ".sh")
     LOG_INFO "End to restore the test environment."

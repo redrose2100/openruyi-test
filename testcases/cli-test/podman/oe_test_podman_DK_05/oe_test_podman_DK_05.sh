@@ -38,7 +38,7 @@ function run_test() {
     CHECK_RESULT $?
     docker info | grep -E "host|insecure registries|registries|store"
     CHECK_RESULT $?
-    docker info --debug | grep "debug"
+    docker info --debug | grep "host"
     CHECK_RESULT $?
     docker info --format json | grep "\"host\":"
     CHECK_RESULT $?

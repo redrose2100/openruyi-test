@@ -37,9 +37,6 @@ function run_test() {
     ID=$(podman create -d alpine ls)
     podman inspect $ID | grep alpine
     CHECK_RESULT $?
-    ID=$(podman create --detach-keys abc alpine ls)
-    podman inspect $ID | grep -i key
-    CHECK_RESULT $?
     ID=$(podman create --device /dev/dm-0 alpine ls)
     podman inspect $ID | grep '"path": "/dev/dm-0"'
     CHECK_RESULT $?

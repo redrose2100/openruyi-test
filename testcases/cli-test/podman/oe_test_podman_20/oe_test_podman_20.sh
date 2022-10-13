@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $?
     podman ps -a | grep ${name}
     CHECK_RESULT $?
-    podman stop ${name} | grep ${id}
+    podman stop ${name} | grep ${name}
     CHECK_RESULT $?
     podman rm ${name} | grep ${id}
     CHECK_RESULT $?

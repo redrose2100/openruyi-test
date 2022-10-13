@@ -37,9 +37,6 @@ function run_test() {
     ID=$(docker create --image-volume bind alpine ls)
     docker inspect $ID | grep -i bind
     CHECK_RESULT $?
-    ID=$(docker create --builtin-volume tmpfs alpine ls)
-    docker inspect $ID | grep -i tmpfs
-    CHECK_RESULT $?
     ID=$(docker create --ip ${NODE1_IPV4} alpine ls)
     docker inspect $ID | grep -i ip
     CHECK_RESULT $?

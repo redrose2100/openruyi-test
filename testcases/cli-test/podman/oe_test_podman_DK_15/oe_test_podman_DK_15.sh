@@ -44,9 +44,6 @@ function run_test() {
     CHECK_RESULT $?
     docker create --stop-timeout 10 alpine ls
     CHECK_RESULT $?
-    ID=$(docker create --storage-opt overlay alpine ls)
-    docker inspect $ID | grep '"Name": "overlay"'
-    CHECK_RESULT $?
     ID=$(docker create --sysctl net.ipv6.conf.all.disable_ipv6=1 alpine ls)
     grep '"net.ipv6.conf.all.disable_ipv6":"1"' /var/lib/containers/storage/overlay-containers/$ID/userdata/artifacts/create-config
     CHECK_RESULT $?

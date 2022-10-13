@@ -27,7 +27,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
-    podman rm -all
+    podman rm --all
     cp ../common/* .
     LOG_INFO "Environmental preparation is over."
 }

@@ -13,7 +13,7 @@
 # @Author    :   liujingjing
 # @Contact   :   liujingjing25812@163.com
 # @Date      :   2021/01/11
-# @License   :   Mulan PSL v2
+# @License   :   Mulan PSL v2   
 # @Desc      :   The usage of commands in docker package
 # ############################################
 
@@ -22,7 +22,8 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     podman pull postgres:alpine
-    podman run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
+    podman pull postgres:alpine
+    run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -38,21 +39,21 @@ function run_test() {
     CHECK_RESULT $?
     docker images --all
     CHECK_RESULT $?
-    docker images --digests | grep "DIGEST"
+    docker images --digests | grep -i "DIGEST"
     CHECK_RESULT $?
-    docker images --format=json | grep "\"digest\":"
+    docker images --format=json | grep -i "\"digest\":"
     CHECK_RESULT $?
     docker images --no-trunc | grep "sha256"
     CHECK_RESULT $?
-    docker images --noheading | grep -i "id"
+    docker images --noheading | grep -i "IMAGE ID"
     CHECK_RESULT $? 1
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    podamn stop postgres2
-    podamn rm postgres2
+    podman stop postgres*
+    podman rm postgres*
     clear_env
     rm -rf $(ls | grep -vE ".sh")
     LOG_INFO "End to restore the test environment."

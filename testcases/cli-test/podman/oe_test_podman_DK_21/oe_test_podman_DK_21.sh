@@ -27,7 +27,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
-    docker rm -all
+    podman rm --all
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -47,19 +47,19 @@ function run_test() {
     CHECK_RESULT $?
     docker start ${name}1 ${name}2
     CHECK_RESULT $?
-    docker start ${id} | grep ${id}
+    docker start ${id} 
     CHECK_RESULT $?
     docker start -i -l
     CHECK_RESULT $?
     docker pause ${name}1 ${name}2 | grep -iE "${id1}|${id2}"
     CHECK_RESULT $?
-    docker ps -a | grep ${name}1
+    docker ps -a | grep ${name}1 
     CHECK_RESULT $?
     docker unpause ${name}1 ${name}2 | grep -iE "${id1}|${id2}"
     CHECK_RESULT $?
-    docker stop ${name} ${name}1 ${name}2
+    docker stop ${name} ${name}1 ${name}2 
     CHECK_RESULT $?
-    docker rm ${name} ${name}1 ${name}2
+    docker rm ${name} ${name}1 ${name}2 
     CHECK_RESULT $?
     LOG_INFO "End executing testcase."
 }

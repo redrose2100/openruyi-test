@@ -37,9 +37,6 @@ function run_test() {
     ID=$(podman create --image-volume bind alpine ls)
     podman inspect $ID | grep -i bind
     CHECK_RESULT $?
-    ID=$(podman create --builtin-volume tmpfs alpine ls)
-    podman inspect $ID | grep -i tmpfs
-    CHECK_RESULT $?
     ID=$(podman create --ip ${NODE1_IPV4} alpine ls)
     podman inspect $ID | grep -i ip
     CHECK_RESULT $?
