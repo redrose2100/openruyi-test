@@ -28,21 +28,21 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(podman create --tmpfs tmpfs alpine ls)
-    podman inspect $ID | grep tmpfs
+    ID=$(podman create --tmpfs /tmp:rw alpine ls)
+    podman inspect $ID | grep "/tmp:rw"
     CHECK_RESULT $?
     ID=$(podman create --user root alpine ls)
     grep '"User":"root"' /var/lib/containers/storage/overlay-containers/$ID/userdata/artifacts/create-config
     CHECK_RESULT $?
     ID=$(podman create --userns host alpine ls)
-    podman inspect $ID | grep '"UsernsMode": "host"'
+    podman inspect $ID | grep 'UsernsMode'
     CHECK_RESULT $?
     ID=$(podman create --uts host alpine ls)
     podman inspect $ID | grep '"UTSMode": "host"'
     CHECK_RESULT $?
     podman create --name example alpine ls
     ID=$(podman create --volume /tmp:/tmp:z alpine ls)
-    podman inspect $ID | grep '"destination": "/tmp"'
+    podman inspect $ID | grep -i '"destination": "/tmp"'
     CHECK_RESULT $?
     ID=$(podman create --volumes-from example alpine ls)
     grep '"VolumesFrom":\["example"\]' /var/lib/containers/storage/overlay-containers/$ID/userdata/artifacts/create-config

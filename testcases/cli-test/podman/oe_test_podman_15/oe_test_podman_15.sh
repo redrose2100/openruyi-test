@@ -44,9 +44,6 @@ function run_test() {
     CHECK_RESULT $?
     podman create --stop-timeout 10 alpine ls
     CHECK_RESULT $?
-    ID=$(podman create --storage-opt overlay alpine ls)
-    podman inspect $ID | grep '"Name": "overlay"'
-    CHECK_RESULT $?
     ID=$(podman create --sysctl net.ipv6.conf.all.disable_ipv6=1 alpine ls)
     grep '"net.ipv6.conf.all.disable_ipv6":"1"' /var/lib/containers/storage/overlay-containers/$ID/userdata/artifacts/create-config
     CHECK_RESULT $?

@@ -27,16 +27,16 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
-    docker rm -all
+    podman rm --all
     cp ../common/* .
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker build . >>test.log
+    docker build . >> test.log
     CHECK_RESULT $?
-    id=$(cat test.log | awk '{print $2}')
+    id=`cat test.log | awk '{print $2}'`
     echo ${id}
     cat ./Dockerfile | docker build -f - . | grep ${id}
     CHECK_RESULT $?
@@ -50,11 +50,11 @@ function run_test() {
     CHECK_RESULT $?
     docker build -f Dockerfile.in ${HOME} | grep ${id}
     CHECK_RESULT $?
-    docker build --no-cache --rm=false -t newimages1 .
+    docker build --no-cache --rm=false -t newimages1 . 
     CHECK_RESULT $?
-    docker build --layers --force-rm -t testname .
+    docker build --layers --force-rm -t testname .  
     CHECK_RESULT $?
-    docker build --no-cache -t imageert .
+    docker build --no-cache -t imageert . 
     CHECK_RESULT $?
     docker rmi -force --all
     CHECK_RESULT $?

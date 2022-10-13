@@ -1,0 +1,5 @@
+spawn docker login --tls-verify=false docker.io
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+Username: umohnani
+Password: 
+Login Succeeded!

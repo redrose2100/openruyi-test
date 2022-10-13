@@ -14,7 +14,7 @@
 # @Contact   :   duanxuemin@foxmail.com
 # @Date      :   2020.4.27
 # @License   :   Mulan PSL v2
-# @Desc      :   docker build
+# @Desc      :   podman build
 # ############################################
 
 source ../common/common_podman.sh
@@ -27,27 +27,27 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
-    docker rm -all
+    podman rm -all
     cp ../common/* .
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker build --security-opt label=level:s0:c100,c200 --cgroup-parent /path/to/cgroup/parent -t imageme . >>logfile
+    podman build --security-opt label=level:s0:c100,c200 --cgroup-parent /path/to/cgroup/parent -t imageme . >> logfile
     CHECK_RESULT $?
-    value=$(cat logfile | awk -F ' ' '{print $NF}')
-    docker build --authfile /tmp/auths/myauths.json --cert-dir $HOME/auth --tls-verify=true --creds=username:password -t imageme -f Dockerfile.simple . | grep ${value}
+    value=`cat logfile | awk -F ' ' '{print $NF}'`
+    podman build --authfile /tmp/auths/myauths.json --cert-dir $HOME/auth --tls-verify=true --creds=username:password -t imageme -f Dockerfile.simple . | grep ${value}
     CHECK_RESULT $?
-    docker build --runtime-flag log-format=json . | grep ${value}
+    podman build --runtime-flag log-format=json . | grep  ${value}
     CHECK_RESULT $?
-    docker build --tls-verify=false -t imagename . | grep ${value}
+    podman build --tls-verify=false -t imagename . | grep ${value}
     CHECK_RESULT $?
-    docker build --tls-verify=true -t imagename1 -f Dockerfile.simple . | grep ${value}
+    podman build --tls-verify=true -t imagename1 -f Dockerfile.simple . | grep ${value}
     CHECK_RESULT $?
-    docker build -t imag . | grep ${value}
+    podman build -t imag . | grep ${value}
     CHECK_RESULT $?
-    docker rmi -force --all
+    podman rmi -force --all
     CHECK_RESULT $?
     LOG_INFO "End executing testcase."
 }

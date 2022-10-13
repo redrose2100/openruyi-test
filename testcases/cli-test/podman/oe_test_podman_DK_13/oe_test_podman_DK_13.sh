@@ -17,7 +17,7 @@
 # @Desc      :   The usage of commands in docker package
 # ############################################
 
-source "../common/common_podman.sh"
+source "../common/podman_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
@@ -48,7 +48,7 @@ function run_test() {
     CHECK_RESULT $?
     touch /tmp/host || exit 1
     ID=$(docker create --mount type=bind,source=/tmp/host,destination=/tmp/container alpine ls)
-    docker inspect $ID | grep '"source": "/tmp/host"'
+    docker inspect $ID | grep '/tmp/host'
     CHECK_RESULT $?
     ID=$(docker create --name example alpine ls)
     docker inspect $ID | grep '"Name": "example"'

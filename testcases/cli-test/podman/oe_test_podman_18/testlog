@@ -1,0 +1,4 @@
+spawn podman login --tls-verify=false docker.io
+Username: umohnani
+Password: 
+Login Succeeded!

@@ -38,7 +38,7 @@ function run_test() {
     CHECK_RESULT $?
     podman info | grep -E "host|insecure registries|registries|store"
     CHECK_RESULT $?
-    podman info --debug | grep "debug"
+    podman info --debug | grep "host"
     CHECK_RESULT $?
     podman info --format json | grep "\"host\":"
     CHECK_RESULT $?

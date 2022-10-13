@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    podman image history --format=json postgres:alpine | grep "comment"
+    podman image history --format=json postgres:alpine | grep "created"
     CHECK_RESULT $?
     podman image history --human postgres:alpine | grep "B"
     CHECK_RESULT $?

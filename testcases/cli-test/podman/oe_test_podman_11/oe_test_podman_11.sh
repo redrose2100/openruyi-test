@@ -44,11 +44,11 @@ function run_test() {
     ID=$(podman create --env-file ./a alpine ls)
     podman inspect $ID | grep "ENV"
     CHECK_RESULT $?
-    ID=$(podman create --expose 0 alpine ls)
+    ID=$(podman create --expose 1 alpine ls)
     podman inspect $ID | grep "0"
     CHECK_RESULT $?
     ID=$(podman create --uidmap 0:30000:7000 --gidmap 0:30000:7000 fedora echo hello)
-    podman inspect $ID | grep '"gid": 0'
+    podman inspect $ID | grep "gid"
     CHECK_RESULT $?
     ID=$(podman create --group-add groups alpine ls)
     podman inspect $ID | grep -i group

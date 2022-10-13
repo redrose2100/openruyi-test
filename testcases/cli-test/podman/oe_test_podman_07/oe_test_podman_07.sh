@@ -49,10 +49,10 @@ function run_test() {
     podman ps -a | grep "Exited"
     CHECK_RESULT $?
     podman start postgres
-    podman varlink tcp:127.0.0.1:12345
-    CHECK_RESULT $?
-    podman varlink --timeout 1000 tcp:127.0.0.1:12345
-    CHECK_RESULT $?
+#    podman varlink tcp:127.0.0.1:12345
+ #   CHECK_RESULT $?
+  #  podman varlink --timeout 1000 tcp:127.0.0.1:12345
+   # CHECK_RESULT $?
     podman diff postgres | grep -E "C|A"
     CHECK_RESULT $?
     podman diff --format json postgres | grep -E "changed|added"

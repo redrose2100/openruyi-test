@@ -27,17 +27,18 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
-    docker rm -all
+    podman rm --all
+    cp ../common/test.json .
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker search --limit 5 term | wc -l | grep 5
+    docker search --limit 5 term | wc -l | grep 6
     CHECK_RESULT $?
     docker search --no-trunc term | grep "docker.io"
     CHECK_RESULT $?
-    docker search --authfile value term | grep "TerminusDB serve"
+    docker search --authfile test.json term | grep -i "DESCRIPTION"
     CHECK_RESULT $?
     docker search json --format json | grep "json"
     CHECK_RESULT $?
@@ -57,9 +58,9 @@ function run_test() {
     CHECK_RESULT $?
     docker stats --no-stream --format "table {{.ID}} {{.Name}} {{.MemUsage}}" | grep ${name}
     CHECK_RESULT $?
-    docker stop ${id}
+    docker stop ${id} 
     CHECK_RESULT $?
-    docker rm ${id}
+    docker rm ${id} 
     CHECK_RESULT $?
     LOG_INFO "End executing testcase."
 }

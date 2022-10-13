@@ -22,13 +22,13 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     podman pull postgres:alpine
-    podman run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
+    podman run --name postgres -p 256:456 -e POSTGRES_PASSWORD=secret -d postgres:alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    podman port --all | grep "$(podman ps -aq)"
+    podman port --all | grep "0.0.0.0:256"
     CHECK_RESULT $?
     podman port --latest
     CHECK_RESULT $?
@@ -44,7 +44,7 @@ function run_test() {
 EOF
     grep -i "Login Succeeded" testlog
     CHECK_RESULT $?
-    rm -rf testlog
+   # rm -rf testlog
     podman logout docker.io
     CHECK_RESULT $?
     expect <<EOF
@@ -84,7 +84,7 @@ EOF
         }
         expect eof
 EOF
-    grep -i "(umohnani)" testlog
+    grep -i "umohnani" testlog
     CHECK_RESULT $?
     podman logout --all | grep "Remove"
     CHECK_RESULT $?
@@ -94,7 +94,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+   # rm -rf $(ls | grep -vE ".sh")
     LOG_INFO "End to restore the test environment."
 }
 

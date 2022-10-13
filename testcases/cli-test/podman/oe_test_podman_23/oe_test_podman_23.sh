@@ -47,9 +47,9 @@ function run_test() {
     CHECK_RESULT $?
     podman mount --notruncate | grep merged
     CHECK_RESULT $?
-    podman stop ${name} | grep ${id}
+    podman stop ${name} 
     CHECK_RESULT $?
-    podman unmount -f ${name} | grep ${id}
+    podman unmount -f ${name} | grep ${name}
     CHECK_RESULT $?
     podman mount ${name} 
     CHECK_RESULT $?

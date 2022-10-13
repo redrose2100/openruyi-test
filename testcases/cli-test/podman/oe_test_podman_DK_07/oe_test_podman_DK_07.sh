@@ -49,10 +49,10 @@ function run_test() {
     docker ps -a | grep "Exited"
     CHECK_RESULT $?
     docker start postgres
-    docker varlink tcp:127.0.0.1:12345
-    CHECK_RESULT $?
-    docker varlink --timeout 1000 tcp:127.0.0.1:12345
-    CHECK_RESULT $?
+#    docker varlink tcp:127.0.0.1:12345
+ #   CHECK_RESULT $?
+  #  docker varlink --timeout 1000 tcp:127.0.0.1:12345
+   # CHECK_RESULT $?
     docker diff postgres | grep -E "C|A"
     CHECK_RESULT $?
     docker diff --format json postgres | grep -E "changed|added"

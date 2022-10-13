@@ -41,17 +41,15 @@ function run_test() {
     docker inspect $ID | grep '"PidsLimit": 3'
     CHECK_RESULT $?
     docker pod create --infra=false
-    CHECK_RESULT $?
     ID=$(docker create --pod $(docker pod list -lq) alpine ls)
     docker rm $ID
     CHECK_RESULT $?
     docker pod rm $(docker pod list -q)
-    CHECK_RESULT $?
     ID=$(docker create --privileged alpine ls)
     docker inspect $ID | grep '"Privileged": true'
     CHECK_RESULT $?
     ID=$(docker create --publish 23 alpine ls)
-    docker inspect $ID | grep '"containerPort": 23'
+    docker inspect $ID | grep '23'
     CHECK_RESULT $?
     ID=$(docker create --publish-all alpine ls)
     docker inspect $ID | grep '"PublishAllPorts": false'

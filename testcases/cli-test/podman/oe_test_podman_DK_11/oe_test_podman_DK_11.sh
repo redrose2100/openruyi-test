@@ -44,11 +44,11 @@ function run_test() {
     ID=$(docker create --env-file ./a alpine ls)
     docker inspect $ID | grep "ENV"
     CHECK_RESULT $?
-    ID=$(docker create --expose 0 alpine ls)
+    ID=$(docker create --expose 1 alpine ls)
     docker inspect $ID | grep "0"
     CHECK_RESULT $?
     ID=$(docker create --uidmap 0:30000:7000 --gidmap 0:30000:7000 fedora echo hello)
-    docker inspect $ID | grep '"gid": 0'
+    docker inspect $ID | grep "gid"
     CHECK_RESULT $?
     ID=$(docker create --group-add groups alpine ls)
     docker inspect $ID | grep -i group

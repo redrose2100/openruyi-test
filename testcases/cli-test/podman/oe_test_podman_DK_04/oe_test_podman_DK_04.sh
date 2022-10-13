@@ -36,19 +36,20 @@ function run_test() {
     CHECK_RESULT $?
     docker run --name postgres2 -e POSTGRES_PASSWORD=secret -d postgres:alpine
     CHECK_RESULT $?
-    docker ps --sort names | awk '{print $11}' | grep -wA 1 "postgres" | grep -w "postgres2"
+    docker ps --sort names
+    docker ps --sort names | awk '{print $11}' | grep -w "postgres"
     CHECK_RESULT $?
     docker ps | grep "postgres"
     CHECK_RESULT $?
-    docker ps --all | awk '{print $11}' | grep -wA 1 "postgres2" | grep -w "postgres"
+    docker ps --all | awk '{print $11}' | grep -w "postgres2"
     CHECK_RESULT $?
     docker stop postgres2
     CHECK_RESULT $?
     docker rm postgres2
     CHECK_RESULT $?
-    docker ps -aq | grep "$(ls /run/runc/ | cut -b 1-12)"
+    docker ps -aq | grep "$(ls /run/crun/ | cut -b 1-12)"
     CHECK_RESULT $?
-    docker ps --no-trunc | grep "$(ls /run/runc/)"
+    docker ps --no-trunc | grep "$(ls /run/crun/)"
     CHECK_RESULT $?
     docker ps --pod | grep "POD"
     CHECK_RESULT $?

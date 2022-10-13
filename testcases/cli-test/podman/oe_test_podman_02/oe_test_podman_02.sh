@@ -31,7 +31,7 @@ function run_test() {
     podman pull busybox
     podman images --filter after=$(podman images -q) | grep $(podman images -q)
     CHECK_RESULT $? 0 1
-    podman images -sort created | grep busybox
+    podman images --sort created | grep busybox
     CHECK_RESULT $?
     podman rmi busybox
     podman images | grep "alpine"

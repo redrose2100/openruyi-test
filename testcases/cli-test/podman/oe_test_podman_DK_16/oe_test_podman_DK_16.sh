@@ -28,21 +28,21 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(docker create --tmpfs tmpfs alpine ls)
-    docker inspect $ID | grep tmpfs
+    ID=$(docker create --tmpfs /tmp:rw alpine ls)
+    docker inspect $ID | grep "/tmp:rw"
     CHECK_RESULT $?
     ID=$(docker create --user root alpine ls)
     grep '"User":"root"' /var/lib/containers/storage/overlay-containers/$ID/userdata/artifacts/create-config
     CHECK_RESULT $?
     ID=$(docker create --userns host alpine ls)
-    docker inspect $ID | grep '"UsernsMode": "host"'
+    docker inspect $ID | grep 'UsernsMode'
     CHECK_RESULT $?
     ID=$(docker create --uts host alpine ls)
     docker inspect $ID | grep '"UTSMode": "host"'
     CHECK_RESULT $?
     docker create --name example alpine ls
     ID=$(docker create --volume /tmp:/tmp:z alpine ls)
-    docker inspect $ID | grep '"destination": "/tmp"'
+    docker inspect $ID | grep -i '"destination": "/tmp"'
     CHECK_RESULT $?
     ID=$(docker create --volumes-from example alpine ls)
     grep '"VolumesFrom":\["example"\]' /var/lib/containers/storage/overlay-containers/$ID/userdata/artifacts/create-config

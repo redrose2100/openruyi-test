@@ -38,21 +38,21 @@ function run_test() {
     CHECK_RESULT $?
     podman images --all
     CHECK_RESULT $?
-    podman images --digests | grep "DIGEST"
+    podman images --digests | grep -i "DIGEST"
     CHECK_RESULT $?
-    podman images --format=json | grep "\"digest\":"
+    podman images --format=json | grep -i "\"digest\":"
     CHECK_RESULT $?
     podman images --no-trunc | grep "sha256"
     CHECK_RESULT $?
-    podman images --noheading | grep -i "id"
+    podman images --noheading | grep -i "IMAGE ID"
     CHECK_RESULT $? 1
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    podamn stop postgres2
-    podamn rm postgres2
+    podman stop postgres*
+    podman rm postgres*
     clear_env
     rm -rf $(ls | grep -vE ".sh")
     LOG_INFO "End to restore the test environment."

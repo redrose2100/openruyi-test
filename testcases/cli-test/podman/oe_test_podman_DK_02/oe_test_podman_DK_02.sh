@@ -31,7 +31,7 @@ function run_test() {
     docker pull busybox
     docker images --filter after=$(docker images -q) | grep $(docker images -q)
     CHECK_RESULT $? 0 1
-    docker images -sort created | grep busybox
+    docker images --sort created | grep busybox
     CHECK_RESULT $?
     docker rmi busybox
     docker images | grep "alpine"

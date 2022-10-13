@@ -49,7 +49,7 @@ function run_test() {
     podman inspect $ID | grep '"Privileged": true'
     CHECK_RESULT $?
     ID=$(podman create --publish 23 alpine ls)
-    podman inspect $ID | grep '"containerPort": 23'
+    podman inspect $ID | grep '23'
     CHECK_RESULT $?
     ID=$(podman create --publish-all alpine ls)
     podman inspect $ID | grep '"PublishAllPorts": false'

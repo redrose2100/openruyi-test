@@ -27,7 +27,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
-    docker rm -all
+    podman rm -all
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -37,7 +37,7 @@ function run_test() {
     CHECK_RESULT $?
     id=$(docker run --name ${name} -e POSTGRES_PASSWORD=secret -d postgres:alpine)
     CHECK_RESULT $?
-    docker container stop ${name} | grep ${id}
+    docker container stop ${name}
     CHECK_RESULT $?
     docker container rm ${name} | grep ${id}
     CHECK_RESULT $?
@@ -45,7 +45,7 @@ function run_test() {
     CHECK_RESULT $? 1
     id1=$(docker run --name ${name}1 -e POSTGRES_PASSWORD=secret -d postgres:alpine)
     CHECK_RESULT $?
-    docker container stop ${name}1 | grep ${id1}
+    docker container stop ${name}1 
     CHECK_RESULT $?
     docker container cleanup ${name}1
     CHECK_RESULT $?
@@ -56,7 +56,7 @@ function run_test() {
     docker exec --privileged ${name}2 ls | grep "docker-entrypoint-initdb.d"
     CHECK_RESULT $?
     docker exec --user root ${name}2 ls | grep "home"
-    docker stop ${name}2
+    docker stop ${name}2 
     CHECK_RESULT $?
     docker rm ${name}1 ${name}2
     CHECK_RESULT $?
