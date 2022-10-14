@@ -1,0 +1,13 @@
+{	
+	"path":"$OET_PATH/testcases/cli-test/rhino",
+	"cases":[
+	{
+		"name":"oe_test_rhino_01"
+	},
+	{
+		"name":"oe_test_rhino_02"
+	}
+
+	]
+
+}

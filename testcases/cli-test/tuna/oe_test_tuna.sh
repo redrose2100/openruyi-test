@@ -1,0 +1,148 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# ##################################
+# @Author    :   gaoyue
+# @Contact   :   2829807379@qq.com
+# @Date      :   2022/8/05
+# @License   :   Mulan PSL v2
+# @Desc      :   Test "tuna" command
+# ##################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment"
+    DNF_INSTALL "tuna"
+    systemctl restart sshd.service
+    touch savefile
+    cp /etc/tuna/example.conf ./
+    LOG_INFO "End to prepare the test environment"
+}
+##########################################################
+#Usage: tuna [OPTIONS]
+#	-h, --help                               Give this help list
+#	-a, --config_file_apply=profilename      Apply changes described in profile
+#	-l, --config_file_list                   List preloaded profiles
+#	-g, --gui                                Start the GUI
+#	-G, --cgroup                             Display the processes with the type of cgroups they are in
+#	-c, --cpus=CPU-LIST                      CPU-LIST affected by commands
+#	-C, --affect_children                    Operation will affect children threads
+#	-f, --filter                             Display filter the selected entities
+#	-i, --isolate                            Move all threads away from CPU-LIST
+#	-I, --include                            Allow all threads to run on CPU-LIST
+#	-K, --no_kthreads                        Operations will not affect kernel threads
+#	-m, --move                               Move selected entities to CPU-LIST
+#	-N, --nohz_full                          CPUs in nohz_full= kernel command line will be affected by operations
+#	-p, --priority=[POLICY:]RTPRIO           Set thread scheduler tunables: POLICY and RTPRIO
+#	-P, --show_threads                       Show thread list
+#	-Q, --show_irqs                          Show IRQ list
+#	-q, --irqs=IRQ-LIST                      IRQ-LIST affected by commands
+#	-r, --run=COMMAND                        fork a new process and run the COMMAND
+#	-s, --save=FILENAME                      Save kthreads sched tunables to FILENAME
+#	-S, --sockets=CPU-SOCKET-LIST            CPU-SOCKET-LIST affected by commands
+#	-t, --threads=THREAD-LIST                THREAD-LIST affected by commands
+#	-U, --no_uthreads                        Operations will not affect user threads
+#	-v, --version                            Show version
+#	-W, --what_is                            Provides help about selected entities
+#	-x, --spread                             Spread selected entities over CPU-LIST
+
+##########################################################
+function run_test() {
+    LOG_INFO "Start to run testcase:oe_test_tuna."
+    ### -h ###
+    tuna -h | grep -E "Usage: tuna \[OPTIONS\]"
+    CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
+    ### -a ###
+    tuna -a example.conf
+    CHECK_RESULT $? 0 0 "L$LINENO: -a No Pass"
+    ### -l ###
+    tuna -l | grep -e "example.conf"
+    CHECK_RESULT $? 0 0 "L$LINENO: -l No Pass"
+    ### -g ###
+    tuna -g &
+    sleep 1
+    kill -9 $!
+    CHECK_RESULT $? 0 0 "L$LINENO: -g No Pass"
+    ### -G ###
+    tuna -G -t kthreadd -P | grep -E ":(\\w+):"
+    CHECK_RESULT $? 0 0 "L$LINENO: -G No Pass"
+    ### -c ###
+    tuna -c 0,1 -t sshd\* -m -P | grep "0,1"
+    CHECK_RESULT $? 0 0 "L$LINENO: -c No Pass"
+    ### -C ###
+    tuna -C -t systemd\* -P
+    CHECK_RESULT $? 0 0 "L$LINENO: -C No Pass"
+    ### -f ###
+    tuna -f -t sshd -c 0 -P
+    CHECK_RESULT $? 0 0 "L$LINENO: -f No Pass"
+    ### -i ###
+    tuna -c 0 -i -P | grep "0"
+    CHECK_RESULT $? 0 0 "L$LINENO: -i No Pass"
+    ### -I ###
+    tuna -c 1 -i -P \
+        -c 0 -I -P
+    CHECK_RESULT $? 0 0 "L$LINENO: -I No Pass"
+    ### -K ###
+    tuna -t kthreadd -P && tuna -K -t kthreadd -P
+    CHECK_RESULT $? 0 0 "L$LINENO: -K No Pass"
+    ### -m ###
+    tuna -t sshd\* -P -c 0 -m \
+        -P -c 1 -m \
+        -P -c +0 -m -P
+    CHECK_RESULT $? 0 0 "L$LINENO: -m No Pass"
+    ### -p ###
+    tuna -t sshd -P -p RR:40 -P | grep -E "RR|40"
+    CHECK_RESULT $? 0 0 "L$LINENO: -p No Pass"
+    ### -P ###
+    tuna -P >result &&
+        grep -E "tuna" result
+    CHECK_RESULT $? 0 0 "L$LINENO: -P No Pass"
+    ### -Q ###
+    tuna -Q | grep pciehp
+    CHECK_RESULT $? 0 0 "L$LINENO: -Q No Pass"
+    ### -q ###
+    tuna -q pciehp -P | grep "pciehp"
+    CHECK_RESULT $? 0 0 "L$LINENO: -q No Pass"
+    ### -r ###
+    tuna -r systemctl | grep "sshd"
+    CHECK_RESULT $? 0 0 "L$LINENO: -r No Pass"
+    ### -s ###
+    tuna -s savefile && grep -E "# Generated by tuna" savefile
+    CHECK_RESULT $? 0 0 "L$LINENO: -s No Pass"
+    ### -S ###
+    tuna -S 0 -t sshd -P
+    CHECK_RESULT $? 0 0 "L$LINENO: -S No Pass"
+    ### -t ###
+    tuna -t sshd\* -P
+    CHECK_RESULT $? 0 0 "L$LINENO: -t No Pass"
+    ### -U ###
+    tuna -U -t sshd -P
+    CHECK_RESULT $? 0 0 "L$LINENO: -U No Pass"
+    ### -v ###
+    tuna -v | grep -E "[[:digit:]]*"
+    CHECK_RESULT $? 0 0 "L$LINENO: -v No Pass"
+    ### -W ###
+    tuna -t kthreadd -W | grep "kthread_create()"
+    CHECK_RESULT $? 0 0 "L$LINENO: -W No Pass"
+    ### -x ###
+    tuna -t sshd -c 0,1 -x
+    CHECK_RESULT $? 0 0 "L$LINENO: -x No Pass"
+    LOG_INFO "End to run test."
+}
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
+    rm -rf savefile result example.conf
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
