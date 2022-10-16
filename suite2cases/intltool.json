@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/intltool",
+    "cases": [
+        {
+            "name": "oe_test_intltool_intltool-merge"    
+        },
+        {
+            "name": "oe_test_intltool_intltool-update"
+        },
+        {
+            "name": "oe_test_intltool_intltool-extract"
+        },
+        {
+            "name": "oe_test_intltool_intltool-prepare"
+        },
+        {
+            "name": "oe_test_intltool_intltoolize"
+        }
+    ]
+}
