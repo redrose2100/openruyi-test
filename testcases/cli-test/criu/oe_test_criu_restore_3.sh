@@ -70,68 +70,6 @@ function run_test(){
     cd checkpoint_file
     (test_process) & pid=$! && DUMP
 
-    criu restore -j & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -j No Pass"
-    
-    criu restore -j -d & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -d No Pass"
-
-    criu restore -j -d -S & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -S No Pass"
-
-    cd ..
-    criu restore -j -D checkpoint_file & cd checkpoint_file && DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -D No Pass"
-
-    cd ..
-    criu restore -j -D checkpoint_file -W checkpoint_file & cd checkpoint_file && DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -W No Pass"
-    
-    criu restore -j --exec-cmd echo 'exec-cmd test' & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --exec-cmd No Pass"
-
-    # criu restore -j --freeze-cgroup & DUMP
-    # CHECK_RESULT $? 0 0 "L$LINENO: restore --freeze-cgroup No Pass"
-
-    criu restore -j --weak-sysctls & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --weak-sysctls No Pass"
-
-    # criu restore -j --stream & DUMP
-    # CHECK_RESULT $? 0 0 "L$LINENO: restore --stream No Pass"
-
-    criu restore -j --network-lock iptables & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --network-lock No Pass"
-
-    criu restore -j --external dev & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --external No Pass"
-
-    criu restore -j --tcp-established & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --tcp-established No Pass"
-
-    criu restore -j --skip-in-flight & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --skip-in-flight No Pass"
-
-    criu restore -j --tcp-close & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --tcp-close No Pass"
-
-    criu restore -j -r / & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -r No Pass"
-
-    criu restore -j --evasive-devices & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --evasive-devices No Pass"
-
-    criu restore -j --link-remap & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --link-remap No Pass"
-
-    criu restore -j --ghost-limit size & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --ghost-limit No Pass"
-
-    # criu restore -j --action-script FILE & DUMP
-    # CHECK_RESULT $? 0 0 "L$LINENO: restore --action-script No Pass"
-
-    criu restore -j -l & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -l No Pass"
-
     criu restore -j -L / & DUMP
     CHECK_RESULT $? 0 0 "L$LINENO: restore -L No Pass"
 
@@ -161,42 +99,6 @@ function run_test(){
 
     criu restore -j --lsm-profile selinux:NAME & DUMP
     CHECK_RESULT $? 0 0 "L$LINENO: restore --lsm-profile No Pass"
-
-    criu restore -j --lsm-mount-context CTX & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --lsm-mount-context No Pass"
-
-    criu restore -j --skip-mnt PATH & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --skip-mnt No Pass"
-
-    criu restore -j --enable-fs FSNAMES & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --enable-fs No Pass"
-
-    # criu restore -j --inherit-fd fd[NUM]:RES & DUMP
-    # CHECK_RESULT $? 0 0 "L$LINENO: restore --inherit-fd No Pass"
-
-    criu restore -j --empty-ns net & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --empty-ns net No Pass"
-
-    # criu restore -j -J NS:{PID|NS_FILE}[,OPTIONS] & DUMP
-    # CHECK_RESULT $? 0 0 "L$LINENO: restore -J No Pass"
-
-    criu restore -j --file-validation filesize & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --file-validation No Pass"
-
-    criu restore -j --with-cpu-affinity & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --with-cpu-affinity No Pass"
-
-    # criu restore -j --pin-memory & DUMP
-    # CHECK_RESULT $? 0 0 "L$LINENO: restore --pin-memory No Pass"
-
-    criu restore -j --track-mem & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --track-mem No Pass"
-
-    criu restore -j --page-server & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --page-server No Pass"
-
-    criu restore -j --auto-dedup & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --auto-dedup No Pass"
 
     cd ..
     LOG_INFO "End to run test."

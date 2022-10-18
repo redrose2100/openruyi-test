@@ -22,9 +22,6 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
-    
-    mkdir checkpoint_file
-
     LOG_INFO "End to prepare the test environment."
 }
 ##########################################################
@@ -53,51 +50,6 @@ function pre_test(){
 function run_test(){
     LOG_INFO "Start to run test."
     
-    criu check | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check default No Pass"
-
-    criu check --extra | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check --extra No Pass"
-
-    criu check --experimental | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check --experimental No Pass"
-
-    criu check --all | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check --all No Pass"
-
-    criu check --feature mnt_id | grep 'mnt_id is supported'
-    CHECK_RESULT $? 0 0 "L$LINENO: check --feature No Pass"
-
-    criu check -o FILE | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check -o No Pass"
-
-    criu check -v | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check -v No Pass"
-
-    criu check -vNUM | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check -vNUM No Pass"
-
-    criu check --display-stats | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check --display-stats No Pass"
-
-    criu page-server & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: page-server No Pass"
-
-    criu page-server --address 127.0.0.1 & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: page-server --address No Pass"
-
-    criu page-server --port 114514 & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: page-server --port No Pass"
-
-    # criu page-server --ps-socket FD & kill -9 $!
-    # CHECK_RESULT $? 0 0 "L$LINENO: page-server --ps-socket No Pass"
-
-    criu page-server -d & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: page-server -d No Pass"
-
-    criu page-server --status-fd \0 & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: page-server --status-fd No Pass"
-
     criu service & kill -9 $!
     CHECK_RESULT $? 0 0 "L$LINENO: service No Pass"
 
@@ -116,30 +68,6 @@ function run_test(){
     criu service --status-fd \0 & kill -9 $!
     CHECK_RESULT $? 0 0 "L$LINENO: service --status-fd No Pass"
 
-    # criu dedup 
-    # CHECK_RESULT $? 0 0 "L$LINENO: dedup No Pass"
-
-    criu lazy-pages -D checkpoint_file & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: --lazy-pages No Pass"
-
-    criu cpuinfo dump
-    CHECK_RESULT $? 0 0 "L$LINENO: cpuinfo dump No Pass"
-
-    criu cpuinfo check
-    CHECK_RESULT $? 0 0 "L$LINENO: cpuinfo check No Pass"
-
-    criu check --config FILEPATH | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: --config No Pass"
-
-    criu check --no-default-config | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: --no-default-config No Pass"
-
-    criu -h | grep -E "Usage:"
-    CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
-
-    criu -V | grep -E "Version: [[:digit:]]*.[[:digit:]]*.[[:digit:]]*"
-    CHECK_RESULT $? 0 0 "L$LINENO: -V No Pass"
-
     LOG_INFO "End to run test."
 }
 
@@ -147,9 +75,6 @@ function run_test(){
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf checkpoint_file
-    rm -rf FILE
-    rm -rf cpuinfo.img
     LOG_INFO "End to restore the test environment."
 }
 
