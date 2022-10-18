@@ -22,8 +22,6 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
 
-    cp /root/rpmbuild/BUILD/pyScss-1.4.0/scss/tests/files/compass/current-color.scss ./
-    mkdir tmp_dir
     pip3 install pyScss
 
     LOG_INFO "End to prepare the test environment."
@@ -33,45 +31,6 @@ function pre_test(){
 ##########################################################
 function run_test(){
     LOG_INFO "Start to run test."
-
-    python -mscss < current-color.scss | grep "currentColor"
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -m No Pass"
-
-    python -mscss -i &
-    echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -i No Pass"
-
-    python -mscss -w tmp_dir &
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -w No Pass"
-
-    python -mscss -r & 
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -r No Pass"
-
-    python -mscss -o output &
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -o No Pass"
-
-    python -mscss -s STRING &
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -s No Pass"
-
-    python -mscss --time &
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss --time No Pass"
-
-    python -mscss --debug-info &
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss --debug-info No Pass"
-
-    python -mscss --no-debug-info &
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss --no-debug-info No Pass"
-
-    python -mscss -t NAME &
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -t No Pass"
 
     python -mscss -C &
     kill -9 $(pgrep -f scss)
@@ -111,18 +70,6 @@ function run_test(){
     kill -9 $(pgrep -f scss)
     CHECK_RESULT $? 0 0 "L$LINENO: pyScss -f No Pass"
 
-    python -mscss --images-root=PATH &
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss --images-root No Pass"
-
-    python -mscss --images-url=PATH &
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss --images-url No Pass"
-
-    python -mscss --cache-root=PATH &
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss --cache-root No Pass"
-
     LOG_INFO "End to run test."
 }
 
@@ -130,9 +77,6 @@ function run_test(){
 function post_test(){
     LOG_INFO "Start to restore the test environment."
 
-    rm -rf current-color.scss
-    rm -rf tmp_dir
-    rm -rf output
     pip3 uninstall -y pyScss
     
     LOG_INFO "End to restore the test environment."
