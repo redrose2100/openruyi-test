@@ -2,7 +2,13 @@
     "path": "$OET_PATH/testcases/cli-test/units",
     "cases": [
         {
-            "name": "oe_test_units"
+            "name": "oe_test_units_1"
+        },
+        {
+            "name": "oe_test_units_2"
+        },
+        {
+            "name": "oe_test_units_3"
         }
    ]
 }

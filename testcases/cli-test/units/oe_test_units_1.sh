@@ -70,55 +70,6 @@ function run_test(){
     units -n &
     echo "exit"
     CHECK_RESULT $? 0 0 "L$LINENO: units -n No Pass"
-    
-    units -S &
-    echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -S No Pass"
-
-    units -o %.8g &
-    echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -o No Pass"
-
-    units -p &
-    echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -p No Pass"
-
-    units -q &
-    echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -q No Pass"
-
-    units -s &
-    echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -s No Pass"
-
-    units -v &
-    echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -v No Pass"
-
-    units -1 &
-    echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -1 No Pass"
-
-    units -t &
-    echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -t No Pass"
-
-    units -r &
-    echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -r No Pass"
-    
-    units -U | grep "/usr/share/units/definitions.units"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -U No Pass"
-
-    units -u gauss &
-    echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -u No Pass"
-
-    units -V | grep "GNU Units version"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -V No Pass"
-
-    units -I | grep "GNU Units version"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -I No Pass"
 
     LOG_INFO "End to run test."
 }
