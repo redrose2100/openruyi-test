@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/pyScss",
+    "cases": [
+        {
+            "name": "oe_test_pyScss_1"
+        },
+        {
+            "name": "oe_test_pyScss_2"
+        },
+        {
+            "name": "oe_test_pyScss_3"
+        }
+   ]
+}
