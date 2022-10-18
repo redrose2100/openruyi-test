@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/fftw",
+    "cases": [
+        {
+            "name": "oe_test_fftw_fftw-wisdom-to-conf"
+        },
+        {
+            "name": "oe_test_fftw_fftw-wisdom"
+        }
+    ]
+}
