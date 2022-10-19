@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/embedded-test/communication_check_tests",
+    "cases": [
+        {
+            "name": "communication_check_test"
+        }
+    ]
+}
+
