@@ -23,33 +23,26 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # Data and parameter configuration that need to be preloaded
 function config_params() {
     LOG_INFO "Start to config params of the case."
-
-    TMP_DIR="$(mktemp -d -t intltool.XXXXXXXXXXXX)"
-
+    TMP_DIR="./tmp"
     LOG_INFO "End to config params of the case."
 }
 
 # Preparation for installation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "intltool"
     cp -rf test_input/* ${TMP_DIR}
-
     LOG_INFO "End to prepare the test environment."
 }
 
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-
     intltool-merge --help | grep -q "Usage"
     CHECK_RESULT $? 0 0 "option: --help error"
     intltool-merge --version | grep -qE "intltool-merge.*[0-9.]+"
     CHECK_RESULT $? 0 0 "option: --version error"
-
     cd ${TMP_DIR}
-    
     intltool-merge -d po test.desktop test.desktop.out | grep -q "Merging" && \
         cat test.desktop.out | grep -q "你好，我是desktop文件"
     CHECK_RESULT $? 0 0 "option: -d error"
@@ -118,19 +111,15 @@ function run_test() {
     rm -rf test_quiet.keys.out
     intltool-merge --quiet -k po test.keys test_quiet.keys.out
     CHECK_RESULT $? 0 0 "option: --quiet error"
-
     cd - > /dev/null
-
     LOG_INFO "End to run test."
 }
 
 # Post-processing to restore the test environment
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    
     rm -rf ${TMP_DIR}
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 
