@@ -23,31 +23,25 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # Installation Preparation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "libiec61883"
     # Simulate equipment or prepare equipment environment
     ln /dev/null /dev/raw1394
-
     LOG_INFO "End to prepare the test environment."
 }
 
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-
     plugreport
     CHECK_RESULT $? 0 0 "plugreport output error"
-
     LOG_INFO "End to run test."
 }
 
 # Post processing to restore the test environment
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     rm -rf /dev/raw1394
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 
