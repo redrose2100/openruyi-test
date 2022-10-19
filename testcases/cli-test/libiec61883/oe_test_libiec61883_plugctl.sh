@@ -32,7 +32,7 @@ function pre_test() {
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-    plugctl -h | grep -q "plugctl:"
+    plugctl -h | grep "plugctl:"
     CHECK_RESULT $? 0 0 "option: -h error"
     plugctl oMPR.data_rate
     CHECK_RESULT $? 0 0 "plugctl read error"
