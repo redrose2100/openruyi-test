@@ -20,23 +20,6 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-function src_update(){ 
-    for src in $(ls -R ../common/src/update/$1)
-    do
-        if [[ -d ${src%:} ]]; then
-            root_path=${src%:}
-        else 
-            for src_path in $( find \
-                    $(python3 -c "import site;[print(path) for path in site.getsitepackages()]") \
-                    /usr/bin \
-                    -name ${src} )
-            do
-                cp -rf ${root_path}/${src} ${src_path}
-            done
-        fi
-    done
-}
-
 function notoconfig_pre(){
     TMP_SRCDIR="$(mktemp -d -t nototools.SRC.XXXXXXXXXXXX)"
     yumdownloader --source nototools --destdir ${TMP_SRCDIR} > /dev/null
@@ -52,15 +35,13 @@ function notoconfig_pre(){
 }
 
 function common_pre() {
-    pip install -r ../common/src/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple > /dev/null 2>&1
+    pip install -r ../common/requirements.txt > /dev/null 2>&1
     DNF_INSTALL "nototools harfbuzz-devel cpio pango python3-gobject python3-cairo"
-    src_update new
     notoconfig_pre
 }
 
 function common_post() {
-    # src_update old
     rm -rf ${TMP_SRCDIR} ~/.notoconfig
     DNF_REMOVE
-    # pip3 uninstall -r ../common/src/requirements.txt -y > /dev/null 2>&1
+    # pip3 uninstall -r ../common/requirements.txt -y > /dev/null 2>&1
 }
