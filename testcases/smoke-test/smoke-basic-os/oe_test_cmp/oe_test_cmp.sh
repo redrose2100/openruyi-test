@@ -24,7 +24,7 @@ function pre_test() {
     DNF_INSTALL "diffutils"
     local=$(localectl status | grep System | awk -F "=" '{print $2}')
     localectl set-locale LANG=zh_CN.utf8
-    source /etc/locale.conf    
+    source /etc/locale.conf
     LOG_INFO "End of environmental preparation!"
 
 }
