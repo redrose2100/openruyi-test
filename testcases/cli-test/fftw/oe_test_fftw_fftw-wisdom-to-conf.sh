@@ -23,28 +23,23 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # Data and parameter configuration that need to be preloaded
 function config_params() {
     LOG_INFO "Start to config params of the case."
-
-    TMP_DIR="$(mktemp -d -t fftw.XXXXXXXXXXXX)"
+    TMP_DIR="./tmp"
     echo "(fftw-3.3.8 fftw_wisdom #x4be12fff #x7b2df9b2 #xa5975329 #x385b0041
     (fftw_codelet_n1_16 0 #x12345 #x22222 #x0 #x4396230b #x936694df #xa8dfdff3 #x77777777)
     )" > ${TMP_DIR}/wisdom
-
     LOG_INFO "End to config params of the case."
 }
 
 # Installation Preparation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "fftw gcc"
-
     LOG_INFO "End to prepare the test environment."
 }
 
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-
     fftw-wisdom-to-conf -h | grep -q "Usage"
     CHECK_RESULT $? 0 0 "option: -h error"
     fftw-wisdom-to-conf --help | grep -q "Usage"
@@ -55,17 +50,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: --version error"
     fftw-wisdom-to-conf < ${TMP_DIR}/wisdom | grep -q "fftw_configure_planner"
     CHECK_RESULT $? 0 0 "fftw-wisdom-to-conf output error"
-    
     LOG_INFO "End to run test."
 }
 
 # Post processing to restore the test environment
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     rm -rf ${TMP_DIR}
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 
