@@ -24,9 +24,8 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "bind hesiod nss_hesiod"
-    touch /etc/resolv.conf /etc/named.conf /etc/hesiod.conf
     # Comment the test information for subsequent deletion (# hesiod_test)
-    sed '1a nameserver 127.0.0.1 # hesiod_test' /etc/resolv.conf > /etc/resolv.conf
+    sed -i '1a nameserver 127.0.0.1 # hesiod_test' /etc/resolv.conf
     sed -i '$a zone "ns.test.com" { # hesiod_test\
     type master; # hesiod_test\
     file "named.hesiod"; # hesiod_test\
