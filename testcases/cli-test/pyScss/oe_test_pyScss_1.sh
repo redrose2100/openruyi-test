@@ -28,9 +28,7 @@ function pre_test(){
 
     LOG_INFO "End to prepare the test environment."
 }
-##########################################################
 
-##########################################################
 function run_test(){
     LOG_INFO "Start to run test."
 
@@ -76,13 +74,10 @@ function run_test(){
     LOG_INFO "End to run test."
 }
 
-
 function post_test(){
     LOG_INFO "Start to restore the test environment."
 
-    rm -rf current-color.scss
-    rm -rf tmp_dir
-    rm -rf output
+    rm -rf current-color.scss tmp_dir output
     pip3 uninstall -y pyScss
     
     LOG_INFO "End to restore the test environment."
