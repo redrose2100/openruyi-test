@@ -22,34 +22,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
-    
     mkdir checkpoint_file
-
     LOG_INFO "End to prepare the test environment."
 }
-##########################################################
-# Usage:
-#   criu dump|pre-dump -t PID [<options>]
-#   criu restore [<options>]
-#   criu check [--feature FEAT]
-#   criu page-server
-#   criu service [<options>]
-#   criu dedup
-#   criu lazy-pages -D DIR [<options>]
 
-# Commands:
-#   dump           checkpoint a process/tree identified by pid
-#   pre-dump       pre-dump task(s) minimizing their frozen time
-#   restore        restore a process/tree
-#   check          checks whether the kernel support is up-to-date
-#   page-server    launch page server
-#   service        launch service
-#   dedup          remove duplicates in memory dump
-#   cpuinfo dump   writes cpu information into image file
-#   cpuinfo check  validates cpu information read from image file
-
-# Try -h|--help for more info
-##########################################################
 function run_test(){
     LOG_INFO "Start to run test."
     
@@ -57,35 +33,33 @@ function run_test(){
     # CHECK_RESULT $? 0 0 "L$LINENO: dedup No Pass"
 
     criu lazy-pages -D checkpoint_file & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: --lazy-pages No Pass"
+    CHECK_RESULT $? 0 0 "Check --lazy-pages failed."
 
     criu cpuinfo dump
-    CHECK_RESULT $? 0 0 "L$LINENO: cpuinfo dump No Pass"
+    CHECK_RESULT $? 0 0 "Check cpuinfo dump failed."
 
     criu cpuinfo check
-    CHECK_RESULT $? 0 0 "L$LINENO: cpuinfo check No Pass"
+    CHECK_RESULT $? 0 0 "Check cpuinfo check failed."
 
     criu check --config FILEPATH | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: --config No Pass"
+    CHECK_RESULT $? 0 0 "Check --config failed."
 
     criu check --no-default-config | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: --no-default-config No Pass"
+    CHECK_RESULT $? 0 0 "Check --no-default-config failed."
 
     criu -h | grep -E "Usage:"
-    CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
+    CHECK_RESULT $? 0 0 "Check -h failed."
 
-    criu -V | grep -E "Version: [[:digit:]]*.[[:digit:]]*.[[:digit:]]*"
-    CHECK_RESULT $? 0 0 "L$LINENO: -V No Pass"
+    criu -V | grep -E "Version: 3.16.1"
+    CHECK_RESULT $? 0 0 "Check -V failed."
 
     LOG_INFO "End to run test."
 }
 
-
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf checkpoint_file
-    rm -rf cpuinfo.img
+    rm -rf checkpoint_file cpuinfo.img
     LOG_INFO "End to restore the test environment."
 }
 
