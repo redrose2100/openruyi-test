@@ -33,7 +33,7 @@ function pre_test() {
     mkfs.ext3 -F ./images/fs.img
     mount ./images/fs.img ./testmnt
     yes abcdefghijklmnopqrstuvwxyz0123456789 >./testmnt/largefile
-    rm ./testmnt/largefile
+    rm -rf ./testmnt/largefile
     umount ./testmnt
     LOG_INFO "End of environmental preparation!"
 }
