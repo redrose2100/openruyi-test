@@ -2,6 +2,9 @@
     "path": "$OET_PATH/testcases/cli-test/libcroco",
     "cases": [
         {
+            "name": "oe_test_libcroco_croco-config"
+        },
+        {
             "name": "oe_test_libcroco_csslint"
         }
     ]

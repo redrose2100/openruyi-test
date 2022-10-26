@@ -23,9 +23,8 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # Data and parameter configuration that need to be preloaded
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    CSSLINT="csslint-0.6"
-    TMP_DIR="./tmp"
-    echo "body > div p.process { color: aqua; }" > ${TMP_DIR}/test.css
+    mkdir -p ./tmp
+    echo "body > div p.process { color: aqua; }" > ./tmp/test.css
     echo "<test>
  <body>
   <div>
@@ -35,7 +34,7 @@ function config_params() {
   </div>
  </body>
 </test>
-" > ${TMP_DIR}/test.xml
+" > ./tmp/test.xml
     LOG_INFO "End to config params of the case."
 }
 
@@ -43,29 +42,30 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "libcroco"
+    VERSION="$(rpm -qa libcroco | grep "[0-9]+.[0-9]+.[0-9]+")"
     LOG_INFO "End to prepare the test environment."
 }
 
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-    ${CSSLINT} | grep "Usage: csslint <path to a css file>"
+    csslint-0.6 | grep "Usage: csslint <path to a css file>"
     CHECK_RESULT $? 0 0 "option: help error"
-    ${CSSLINT} -v | grep "[[:digit:]]"
+    csslint-0.6 -v | grep "${VERSION}"
     CHECK_RESULT $? 0 0 "option: -v error"
-    ${CSSLINT} -version | grep "[[:digit:]]"
+    csslint-0.6 -version | grep "${VERSION}"
     CHECK_RESULT $? 0 0 "option: -version error"
-    ${CSSLINT} ${TMP_DIR}/test.css | grep "color : aqua"
-    CHECK_RESULT $? 0 0 "${CSSLINT} output error"
-    ${CSSLINT} --dump-location ${TMP_DIR}/test.css | grep "Parsing location information"
+    csslint-0.6 ./tmp/test.css | grep "color : aqua"
+    CHECK_RESULT $? 0 0 "csslint-0.6 output error"
+    csslint-0.6 --dump-location ./tmp/test.css | grep "Parsing location information"
     CHECK_RESULT $? 0 0 "option: --dump-location error"
-    ${CSSLINT} --evaluate --author-sheet ${TMP_DIR}/test.css --xml ${TMP_DIR}/test.xml --xpath //p | grep "Properties of xml element"
+    csslint-0.6 --evaluate --author-sheet ./tmp/test.css --xml ./tmp/test.xml --xpath //p | grep "Properties of xml element"
     CHECK_RESULT $? 0 0 "option: --evaluate --author-sheet --xml --xpath error"
-    ${CSSLINT} -e --author-sheet ${TMP_DIR}/test.css --xml ${TMP_DIR}/test.xml --xpath //p | grep "Properties of xml element"
+    csslint-0.6 -e --author-sheet ./tmp/test.css --xml ./tmp/test.xml --xpath //p | grep "Properties of xml element"
     CHECK_RESULT $? 0 0 "option: -e --author-sheet --xml --xpath error"
-    ${CSSLINT} -e --user-sheet ${TMP_DIR}/test.css --xml ${TMP_DIR}/test.xml --xpath //p | grep "Properties of xml element"
+    csslint-0.6 -e --user-sheet ./tmp/test.css --xml ./tmp/test.xml --xpath //p | grep "Properties of xml element"
     CHECK_RESULT $? 0 0 "option: -e --user-sheet --xml --xpath error"
-    ${CSSLINT} -e --ua-sheet ${TMP_DIR}/test.css --xml ${TMP_DIR}/test.xml --xpath //p | grep "Properties of xml element"
+    csslint-0.6 -e --ua-sheet ./tmp/test.css --xml ./tmp/test.xml --xpath //p | grep "Properties of xml element"
     CHECK_RESULT $? 0 0 "option: -e --ua-sheet --xml --xpath error"
     LOG_INFO "End to run test."
 }
@@ -73,7 +73,7 @@ function run_test() {
 # Post processing to restore the test environment
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf ${TMP_DIR}
+    rm -rf ./tmp
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
