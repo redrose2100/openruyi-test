@@ -1,3 +1,3 @@
-| 测试套 | 用例名 | 测试级别 | 测试类型 | 用例描述 | 节点数 | 预支条件 | 操作步骤 | 预期结果 | 是否自动化 | 备注 |
+| 测试套 | 用例名 | 测试级别 | 测试类型 | 用例描述 | 节点数 | 预置条件 | 操作步骤 | 预期结果 | 是否自动化 | 备注 |
 | - | - | - | - | - | - | - | - | - | - | - |
 | hesiod | oe_test_hesiod_hesinfo   | 单元测试 | 性能测试 | hesinfo将输入内容通过hesiod服务获取内容， 这里验证hesinfo命令获取不同数据的结果 | 1 | 安装二进制包hesiod：dnf install -y hesiod bind，配置运行必要文件<br> 1、在/etc/resolv.conf中设置nameserver 127.0.0.1<br> 2、在/etc/hesiod.conf中设置rhs=.test.com lhs=.ns<br> 3、在/etc/hesiod.conf中设置zone "ns.test.com" {  type master; file "named.hesiod"; }<br> 4、配置映射文件/var/named/named.hesiod | hesinfo命令的用法：<br> 1、无参数：根据待查询信息的名称和类别检索 执行命令：hesinfo testuserABC grplist \| grep "testuserABC:1000"<br> 2、-l：根据待查询信息的名称和类别检索并以长格式输出 执行命令：hesinfo -l 1000 uid \| grep "resolves to"<br> 3、-b：根据待查询信息的名称和类别输出传递给nameserver的完整完全限定字符串 执行命令：hesinfo -b testuserABC group \| grep "testuserABC.group.ns.test.com" | 1、显示检索结果<br> 2、以长格式显示检索结果<br> 3、输出传递给nameserver的完整完全限定字符串 | 是 |  |
