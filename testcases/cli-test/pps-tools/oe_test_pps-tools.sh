@@ -37,7 +37,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "pps-tools kernel-source"
+    DNF_INSTALL "pps-tools kernel-source  kernel-devel systemtap-stap-exporter"
     CRTDIR=$(
         cd "$(dirname $0)" || exit 1
         pwd
