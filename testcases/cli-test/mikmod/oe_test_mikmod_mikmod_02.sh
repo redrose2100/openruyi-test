@@ -34,143 +34,114 @@ function run_test() {
     # Test the -y,-di[rectory] parameter
     echo "Q" | mikmod -y common > /dev/null && \
         cat ~/.mikmod_playlist | grep -q "common"
-    CHECK_RESULT $? 0 0 "option: -y error"
+    CHECK_RESULT $? 0 0 "Check -y failed"
     rm -rf ~/.mikmod_playlist
     echo "Q" | mikmod -directory common > /dev/null && \
         cat ~/.mikmod_playlist | grep -q "common"
-    CHECK_RESULT $? 0 0 "option: -di[rectory] error"
+    CHECK_RESULT $? 0 0 "Check -di[rectory] failed"
     # Test the -q[uiet] parameter
     mikmod -q & ps | grep -q "mikmod" && kill -INT $!
-    CHECK_RESULT $? 0 0 "option: -q[uiet] error"
+    CHECK_RESULT $? 0 0 "Check -q[uiet] failed"
+	mikmod -quiet & ps | grep -q "mikmod" && kill -INT $!
+    CHECK_RESULT $? 0 0 "Check -quiet failed"
     # Test the -v[olume] parameter
-    for ((i=0; i<=100; i+=7))
-    do
-        echo "Q" | mikmod -v ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "VOLUME = ${i}"
-        CHECK_RESULT $? 0 0 "option: -v[olume] ${i} error"
-    done
+    echo "Q" | mikmod -v 1 > /dev/null && \
+        cat ~/.mikmodrc | grep -q "VOLUME = 1"
+    CHECK_RESULT $? 0 0 "Check -v 1 failed"
+	echo "Q" | mikmod -volume 1 > /dev/null && \
+        cat ~/.mikmodrc | grep -q "VOLUME = 1"
+    CHECK_RESULT $? 0 0 "Check -volume 1 failed"
     #Test the -o[utput] parameter
-    declare -A RE=(["8"]="no" ["16"]="yes" ["m"]="no" ["s"]="yes")
-    for i in "8" "16"
-    do
-        for j in "m" "s"
-        do
-            echo "Q" | mikmod -o ${i}${j} > /dev/null && \
-                cat ~/.mikmodrc | grep -qE "16BIT = ${RE[${i}]}|STEREO = ${RE[${j}]}"
-            CHECK_RESULT $? 0 0 "option: -o[utput] ${i}${j} error"
-        done
-    done
+	echo "Q" | mikmod -o 8m > /dev/null && \
+        cat ~/.mikmodrc | grep -qE "16BIT = no|STEREO = no"
+    CHECK_RESULT $? 0 0 "Check -o[utput] 8m failed"
+	echo "Q" | mikmod -o 8s > /dev/null && \
+        cat ~/.mikmodrc | grep -qE "16BIT = no|STEREO = yes"
+    CHECK_RESULT $? 0 0 "Check -o[utput] 8s failed"
+	echo "Q" | mikmod -o 16m > /dev/null && \
+        cat ~/.mikmodrc | grep -qE "16BIT = yes|STEREO = no"
+    CHECK_RESULT $? 0 0 "Check -o[utput] 16m failed"
+	echo "Q" | mikmod -o 16s > /dev/null && \
+        cat ~/.mikmodrc | grep -qE "16BIT = yes|STEREO = yes"
+    CHECK_RESULT $? 0 0 "Check -o[utput] 16s failed"
+	echo "Q" | mikmod -output 8m > /dev/null && \
+        cat ~/.mikmodrc | grep -qE "16BIT = no|STEREO = no"
+    CHECK_RESULT $? 0 0 "Check -output 8m failed"
     #Test the -f[requency] parameter
-    for i in 11025 22050 24000 44100 48000
-    do 
-        echo "Q" | mikmod -f ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "FREQUENCY = ${i}"
-        CHECK_RESULT $? 0 0 "coption: -f[requency] ${i} error"
-    done
+	echo "Q" | mikmod -f 11025 > /dev/null && \
+        cat ~/.mikmodrc | grep -q "FREQUENCY = 11025"
+    CHECK_RESULT $? 0 0 "cCheck -f 11025 failed"
+	echo "Q" | mikmod -frequency 11025 > /dev/null && \
+        cat ~/.mikmodrc | grep -q "FREQUENCY = 11025"
+    CHECK_RESULT $? 0 0 "cCheck -frequency 11025 failed"
     #Test the -r[everb] parameter
-    for ((i=0; i<=15; i++))
-    do 
-        echo "Q" | mikmod -r ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "REVERB = ${i}"
-        CHECK_RESULT $? 0 0 "option: -r[everb] ${i} error"
-    done
+	echo "Q" | mikmod -r 0 > /dev/null && \
+        cat ~/.mikmodrc | grep -q "REVERB = 0"
+    CHECK_RESULT $? 0 0 "Check -r 0 failed"
+	echo "Q" | mikmod -reverb 0 > /dev/null && \
+        cat ~/.mikmodrc | grep -q "REVERB = 0"
+    CHECK_RESULT $? 0 0 "Check -reverb 0 failed"
     # Test the -F|-fa[deout],-nofa[deout] parameter
-    declare -A RE=(["-F"]="yes" ["-fa"]="yes" ["-nofa"]="no")
-    for i in "-F" "-nofa" "-fa"
-    do
-        echo "Q" | mikmod ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "FADEOUT = ${RE[${i}]}"
-        CHECK_RESULT $? 0 0 "option: ${i} error"
-    done
+	echo "Q" | mikmod -F > /dev/null && \
+        cat ~/.mikmodrc | grep -q "FADEOUT = yes"
+    CHECK_RESULT $? 0 0 "Check -F failed"
+	echo "Q" | mikmod -nofa > /dev/null && \
+        cat ~/.mikmodrc | grep -q "FADEOUT = no"
+    CHECK_RESULT $? 0 0 "Check -nofa failed"
+	echo "Q" | mikmod -fa > /dev/null && \
+        cat ~/.mikmodrc | grep -q "FADEOUT = yes"
+    CHECK_RESULT $? 0 0 "Check -fa failed"
+	echo "Q" | mikmod -fadeout > /dev/null && \
+        cat ~/.mikmodrc | grep -q "FADEOUT = yes"
+    CHECK_RESULT $? 0 0 "Check -fadeout failed"
+	echo "Q" | mikmod -nofadeout > /dev/null && \
+        cat ~/.mikmodrc | grep -q "FADEOUT = no"
+    CHECK_RESULT $? 0 0 "Check -nofadeout failed"
     # Test the -l[oops],-nol[oops] parameter
-    declare -A RE=(["-l"]="yes" ["-nol"]="no")
-    for i in "-l" "-nol"
-    do
-        echo "Q" | mikmod ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "LOOP = ${RE[${i}]}"
-        CHECK_RESULT $? 0 0 "option: ${i} error"
-    done
+	echo "Q" | mikmod -l > /dev/null && \
+        cat ~/.mikmodrc | grep -q "LOOP = yes"
+    CHECK_RESULT $? 0 0 "Check -l failed"
+	echo "Q" | mikmod -nol > /dev/null && \
+        cat ~/.mikmodrc | grep -q "LOOP = no"
+    CHECK_RESULT $? 0 0 "Check -nol failed"
+	echo "Q" | mikmod -loops > /dev/null && \
+        cat ~/.mikmodrc | grep -q "LOOP = yes"
+    CHECK_RESULT $? 0 0 "Check -loops failed"
+	echo "Q" | mikmod -noloops > /dev/null && \
+        cat ~/.mikmodrc | grep -q "LOOP = no"
+    CHECK_RESULT $? 0 0 "Check -noloops failed"
     # Test the -a|-pa[nning], parameter
-    declare -A RE=(["-a"]="yes" ["-pa"]="yes" ["-nopa"]="no")
-    for i in "-pa" "-nopa" "-a"
-    do
-        echo "Q" | mikmod ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "PANNING = ${RE[${i}]}"
-        CHECK_RESULT $? 0 0 "option: ${i} error"
-    done
+	echo "Q" | mikmod -pa > /dev/null && \
+        cat ~/.mikmodrc | grep -q "PANNING = yes"
+    CHECK_RESULT $? 0 0 "Check -pa failed"
+	echo "Q" | mikmod -nopa > /dev/null && \
+        cat ~/.mikmodrc | grep -q "PANNING = no"
+    CHECK_RESULT $? 0 0 "Check -nopa failed"
+	echo "Q" | mikmod -a > /dev/null && \
+        cat ~/.mikmodrc | grep -q "PANNING = yes"
+    CHECK_RESULT $? 0 0 "Check -a failed"
+	echo "Q" | mikmod -panning > /dev/null && \
+        cat ~/.mikmodrc | grep -q "PANNING = yes"
+    CHECK_RESULT $? 0 0 "Check -panning failed"
+	echo "Q" | mikmod -nopanning > /dev/null && \
+        cat ~/.mikmodrc | grep -q "PANNING = no"
+    CHECK_RESULT $? 0 0 "Check -nopanning failed"
     # Test the -x|-pr[otracker],-nopr[otracker] parameter
-    declare -A RE=(["-x"]="no" ["-pr"]="no" ["-nopr"]="yes")
-    for i in "-pr" "-nopr" "-x"
-    do
-        echo "Q" | mikmod ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "EXTSPD = ${RE[${i}]}"
-        CHECK_RESULT $? 0 0 "option: ${i} error"
-    done
-    # Test the -c[urious],-noc[urious] parameter
-    declare -A RE=(["-c"]="yes" ["-noc"]="no")
-    for i in "-c" "-noc"
-    do
-        echo "Q" | mikmod ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "CURIOUS = ${RE[${i}]}"
-        CHECK_RESULT $? 0 0 "option: ${i} error"
-    done
-    # Test the -p[laymode] parameter
-    declare -A RE=(["1"]="PM_MODULE" ["2"]="PM_MULTI" ["4"]="PM_SHUFFLE" ["8"]="PM_RANDOM")
-    for i in 1 2 4 8
-    do
-        echo "Q" | mikmod -p ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "${RE[${i}]} = yes"
-        CHECK_RESULT $? 0 0 "option: -p ${i} error"
-    done
-    # Test the -t[olerant] parameter
-    declare -A RE=(["-t"]="yes" ["-not"]="no")
-    for i in "-t" "-not"
-    do
-        echo "Q" | mikmod ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "TOLERANT = ${RE[${i}]}"
-        CHECK_RESULT $? 0 0 "option: ${i} error"
-    done
-    # Test the -s|-ren[ice],-noren[ice],-S|-rea[ltime],-norea[ltime] parameter
-    declare -A RE=(
-        ["-s"]="RENICE_PRI" ["-ren"]="RENICE_PRI" 
-        ["-noren"]="RENICE_NONE" 
-        ["-S"]="RENICE_REAL"  ["-rea"]="RENICE_REAL" 
-        ["-norea"]="RENICE_NONE"
-    )
-    for i in "-ren" "-noren" "-s" "-rea" "-norea" "-S"
-    do
-        echo "Q" | mikmod ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "RENICE = ${RE[${i}]}"
-        CHECK_RESULT $? 0 0 "option: ${i} error"
-    done
-    # Test the -i[nterpolate],-noi[nterpolate] parameter
-    declare -A RE=(["-i"]="yes" ["-noi"]="no")
-    for i in "-i" "-noi"
-    do
-        echo "Q" | mikmod ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "INTERPOLATE = ${RE[${i}]}"
-        CHECK_RESULT $? 0 0 "option: ${i} error"
-    done
-    # Test the -hq[mixer],-nohq[mixer] parameter
-    declare -A RE=(["-hq"]="yes" ["-nohq"]="no")
-    for i in "-hq" "-nohq"
-    do
-        echo "Q" | mikmod ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "HQMIXER = ${RE[${i}]}"
-        CHECK_RESULT $? 0 0 "option: ${i} error"
-    done
-    # Test the -su[rround],-nosu[rround] parameter
-    declare -A RE=(["-su"]="yes" ["-nosu"]="no")
-    for i in "-su" "-nosu"
-    do
-        echo "Q" | mikmod ${i} > /dev/null && \
-            cat ~/.mikmodrc | grep -q "SURROUND = ${RE[${i}]}"
-        CHECK_RESULT $? 0 0 "option: ${i} error"
-    done
-    # Test the -norc parameter
-    echo "Q" | mikmod -norc | grep -q "empty" 
-    CHECK_RESULT $? 0 0 "option: -norc error"
-    LOG_INFO "End to run test."
+	echo "Q" | mikmod -pr > /dev/null && \
+        cat ~/.mikmodrc | grep -q "EXTSPD = no"
+    CHECK_RESULT $? 0 0 "Check -pr failed"
+	echo "Q" | mikmod -nopr > /dev/null && \
+        cat ~/.mikmodrc | grep -q "EXTSPD = yes"
+    CHECK_RESULT $? 0 0 "Check -nopr failed"
+	echo "Q" | mikmod -x > /dev/null && \
+        cat ~/.mikmodrc | grep -q "EXTSPD = no"
+    CHECK_RESULT $? 0 0 "Check -x failed"
+	echo "Q" | mikmod -protracker > /dev/null && \
+        cat ~/.mikmodrc | grep -q "EXTSPD = no"
+    CHECK_RESULT $? 0 0 "Check -protracker failed"
+	echo "Q" | mikmod -noprotracker > /dev/null && \
+        cat ~/.mikmodrc | grep -q "EXTSPD = yes"
+    CHECK_RESULT $? 0 0 "Check -noprotracker failed"
 }
 
 # Post-processing, restore the test environment

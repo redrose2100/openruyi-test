@@ -20,14 +20,12 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# Data and parameter configuration that need to be preloaded
 function config_params() {
     LOG_INFO "Start to config params of the case."
     TMP_DIR="./tmp"
     LOG_INFO "End to config params of the case."
 }
 
-#Installation preparation for test objects, tools required for testing, etc.
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     modprobe snd-dummy
@@ -39,33 +37,26 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     mikmod -h | grep -q "Usage"
-    CHECK_RESULT $? 0 0 "option: -h[elp] error"
+    CHECK_RESULT $? 0 0 "Check -h failed."
     mikmod --help | grep -q "Usage"
-    CHECK_RESULT $? 0 0 "option: --help error"
-    mikmod -V | grep -q "\-=.*=-"
-    CHECK_RESULT $? 0 0 "option: -V error"
-    mikmod -version | grep -q "\-=.*=-"
-    CHECK_RESULT $? 0 0 "option: -version error"
+    CHECK_RESULT $? 0 0 "Check --help failed"
+    rpm -qa mikmod | grep -q "[0-9].[0-9].[0-9]-[0-9]"
+    CHECK_RESULT $? 0 0 "Check mikmod-version failed"
     mikmod -n | grep -q "drivers"
-    CHECK_RESULT $? 0 0 "option: -n error"
+    CHECK_RESULT $? 0 0 "Check -n failed"
     mikmod -information | grep -q "drivers"
-    CHECK_RESULT $? 0 0 "option: -in[formation] error"
-    DRIVER_NUM="$(mikmod -n | grep -B 100 "Recognized" | grep -cE "^[ 0-9]")"
+    CHECK_RESULT $? 0 0 "Check -in[formation] failed"
     # Test the -N,-drvinfo parameter
-    for ((i=1; i<=${DRIVER_NUM}; i++))
-    do
-        mikmod -N ${i} | grep "Parameter list"
-        CHECK_RESULT $? 0 0 "option: -N ${i} error"
-        mikmod -drvinfo ${i} | grep "Parameter list"
-        CHECK_RESULT $? 0 0 "option: -drvinfo ${i} error"
-    done
+    mikmod -N 1 | grep "Parameter list"
+    CHECK_RESULT $? 0 0 "Check -N 1 failed"
+    mikmod -drvinfo 1 | grep "Parameter list"
+    CHECK_RESULT $? 0 0 "Check -drvinfo 1 failed"
     # Test the -d[river] parameter
     cd ${TMP_DIR}
-    for ((i=0; i<=${DRIVER_NUM}; i++))
-    do
-        echo "Q" | mikmod -d $i > /dev/null && cat ~/.mikmodrc | grep -q "DRIVER = ${i}"
-        CHECK_RESULT $? 0 0 "option: -d[river] ${i} error"
-    done
+	echo "Q" | mikmod -d 1 > /dev/null && cat ~/.mikmodrc | grep -q "DRIVER = 1"
+	CHECK_RESULT $? 0 0 "Check -d 1 failed"
+	echo "Q" | mikmod -driver 2 > /dev/null && cat ~/.mikmodrc | grep -q "DRIVER = 2"
+	CHECK_RESULT $? 0 0 "Check -driver 2 failed"
     cd -
     LOG_INFO "End to run test."
 }

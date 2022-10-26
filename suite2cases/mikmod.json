@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_mikmod_mikmod_01"
+        },
+        {
+            "name": "oe_test_mikmod_mikmod_03"
         }
     ]
 }
