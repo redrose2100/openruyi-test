@@ -20,8 +20,13 @@ void writeLogLine(const char *fileName,const char *content)
 		printf("Open Failed.\n");
 		return;
 	}
-	fprintf(fp,"%s\n",content);
-	fclose(fp);
+	char *p = (char *)malloc(SOME_SIZE);
+    if (p == NULL) {    // 符合: 对返回数据进行合法性检查
+      ...
+       return ...;
+}
+// 符合: 此处符合可省略memset_s返回值检查的例外场景，可以显式忽略掉返回值的检查
+(void)memset_s(p, SOME_SIZE, 0, SOME_SIZE);
 }
 
 int main(void)
