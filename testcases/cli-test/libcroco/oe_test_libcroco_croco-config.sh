@@ -20,12 +20,6 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# Data and parameter configuration that need to be preloaded
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    LOG_INFO "End to config params of the case."
-}
-
 # Installation Preparation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
