@@ -30,6 +30,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     modprobe snd-dummy
     DNF_INSTALL "mikmod"
+	VERSION=$(rpm -qa mikmod | awk -F '-' '{print $2}')
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -40,8 +41,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check -h failed."
     mikmod --help | grep -q "Usage"
     CHECK_RESULT $? 0 0 "Check --help failed"
-    rpm -qa mikmod | grep -q "[0-9].[0-9].[0-9]-[0-9]"
-    CHECK_RESULT $? 0 0 "Check mikmod-version failed"
+    mikmod -V | grep -q "${VERSION}" 
+    CHECK_RESULT $? 0 0 "Check -V failed"
+    mikmod -version | grep -q "${VERSION}"
+    CHECK_RESULT $? 0 0 "Check -version failed"
     mikmod -n | grep -q "drivers"
     CHECK_RESULT $? 0 0 "Check -n failed"
     mikmod -information | grep -q "drivers"
