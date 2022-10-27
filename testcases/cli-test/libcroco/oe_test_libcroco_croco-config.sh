@@ -24,7 +24,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "libcroco-devel"
-    VERSION="$(rpm -qa libcroco-devel | grep "[0-9]+.[0-9]+.[0-9]+")"
+    VERSION=$(rpm -qa libcroco-devel | awk -F '-' '{print $3}')
     LOG_INFO "End to prepare the test environment."
 }
 

@@ -42,7 +42,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "libcroco"
-    VERSION="$(rpm -qa libcroco | grep "[0-9]+.[0-9]+.[0-9]+")"
+    VERSION=$(rpm -qa libcroco | awk -F '-' '{print $2}')
     LOG_INFO "End to prepare the test environment."
 }
 
