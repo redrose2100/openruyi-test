@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    iscsistart -h | grep "Usage"
+    iscsistart -h | grep -i "Usage"
     CHECK_RESULT $?
     test "$(iscsistart -v | grep -Eo "[0-9]*\.[0-9]*\.[0-9]*")" == \
         "$(rpm -qi open-iscsi | grep "Version" | awk '{print$3}')"

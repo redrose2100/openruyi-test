@@ -1,7 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/yelp-tools",
     "cases": [
-i        {
+        {
             "name": "oe_test_yelp-build"
         },
 	{
