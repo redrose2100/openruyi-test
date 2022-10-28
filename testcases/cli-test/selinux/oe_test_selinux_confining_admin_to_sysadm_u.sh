@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-     DNF_INSTALL policycoreutils-python-utils
+    DNF_INSTALL policycoreutils-python-utils
     adduser -G wheel -Z sysadm_u example
     passwd example << EOF
 ${NODE1_PASSWORD}

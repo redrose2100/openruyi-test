@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-     DNF_INSTALL policycoreutils-python-utils
+    DNF_INSTALL policycoreutils-python-utils
     User=$(semanage login -l | grep "__default__" | awk '{print $2}')
     Range=$(semanage login -l | grep "__default__" | awk '{print $3}')
     LOG_INFO "End of environmental preparation."
