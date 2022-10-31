@@ -30,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     hwclock &
     hwclock >testlog 2>&1
-    SLEEP_WAIT 4
+    SLEEP_WAIT 6
     grep "Cannot access" testlog
     CHECK_RESULT $? 0 0 "Failed to execute hwclock"
     LOG_INFO "End to run test."
