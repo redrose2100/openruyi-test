@@ -1,7 +1,0 @@
-# ninja log v5
-1	57	0	meson-internal__clean	66591e4e747db2e9
-0	307	1663053856562574695	subprojects/cmMod/libcmModLib__.so.p/cmMod.cpp.o	e1c890291ff54c17
-307	360	1663053856614575159	subprojects/cmMod/libcmModLib__.so	2f3e8eb99685ec5b
-0	435	1663053856690575836	main.p/main.cpp.o	8f125c64916f93c3
-360	754	1663053856946578117	subprojects/cmMod/libcmModLib__.so.p/libcmModLib__.so.symbols	5dbccfa75709635a
-754	825	1663053857078579293	main	7946858bfec92635

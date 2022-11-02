@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -22,48 +22,38 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "meson"
-
+    cd ./common/0.59/
+    tar -xvf test_1.tgz
+    cd ./../../
     cp -rf ./common/0.59/test_1 ./
-
     cd ./test_1
-
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-
     meson configure --cmake-prefix-path /root 2>&1 | grep "cmake_prefix_path"
     CHECK_RESULT $? 0 0 "meson-configure --cmake-prefix-path failed"
-
     meson configure --build.cmake-prefix-path /root 2>&1 | grep "build.cmake_prefix_path"
     CHECK_RESULT $? 0 0 "meson-configure --build.cmake-prefix-path BUILD.CMAKE_PREFIX_PATH  failed"
-    
     meson configure -D =1 | grep "D"
     CHECK_RESULT $? 0 0 "meson-configure -D option failed"
-    
     meson configure --clearcache 2>&1 | grep "Main project options:"
     CHECK_RESULT $? 0 0 "meson-configure --clearcache failed"
-
     meson configure --build.pkg-config-path /root 2>&1 | grep "build.pkg_config_path"
     CHECK_RESULT $? 0 0 "meson-configure --build.pkg-config-path BUILD.PKG_CONFIG_PATH failed"
-    
     meson configure --force-fallback-for subproject 2>&1 | grep "force_fallback_for"
     CHECK_RESULT $? 0 0 "meson-configure --force-fallback-for FORCE_FALLBACK_FOR failed"
-
     LOG_INFO "Finish test!"
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-
     rm -rf ./../test_1
-
+    rm -rf ./../common/0.59/test_1
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 

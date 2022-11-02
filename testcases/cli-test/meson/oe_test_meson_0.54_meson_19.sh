@@ -21,16 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "meson"
-
+    cd ./common/0.54/
+    tar -xvf test_5.tgz
+    cd ./../../
     cp -rf ./common/0.54/test_5/2\ testsetups/ ./
-
     cd ./2\ testsetups/
-
-    # cp ./common/distances_test.xml ./tmp ###! ./common/distances_test.xml ./ dame
-    # cp ./common/input_test.xml ./tmp     ###! {OET_PATH}/testcases/cli-test/common/input_test.xml ./
-
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
@@ -51,7 +47,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "meson test --gdb-path failed"
     meson test --list 2>&1 | grep "testsetups:"
     CHECK_RESULT $? 0 0 "meson test --list failed"
-
     meson test -C ./ 2>&1 | grep "ninja"
     CHECK_RESULT $? 0 0 "meson test -C WD failed"
     meson test --suite foo
@@ -64,13 +59,10 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-
     cd ../../
-
     rm -rf ./2\ testsetups/
-
+    rm -rf ./commom/0.54/test_5
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 

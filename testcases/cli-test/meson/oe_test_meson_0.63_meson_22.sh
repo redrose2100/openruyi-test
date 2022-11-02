@@ -21,16 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "meson"
-
-    cp -rf ./common/0.63/'12 promote' ./
-
-    cd ./'12 promote'
-
-    # cp ./common/distances_test.xml ./tmp ###! ./common/distances_test.xml ./ dame
-    # cp ./common/input_test.xml ./tmp     ###! {OET_PATH}/testcases/cli-test/common/input_test.xml ./
-
+    cd ./common/0.63/
+    tar -xvf '12 promote.tgz' 
+    cd ./../../
+    cp -rf ./common/0.63/'12 promote.tgz'    ./   
+    cd ./'12 promote' 
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
@@ -49,24 +45,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "meson wrap promote failed"
     meson wrap update zlib
     CHECK_RESULT $? 0 0 "meson wrap update failed"
-
-
-
-
-
     LOG_INFO "Finish test!"
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-
     cd ..
-
     rm -rf ./'12 promote'
-
+    rm -rf ./common/0.63/'12 promote'
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 

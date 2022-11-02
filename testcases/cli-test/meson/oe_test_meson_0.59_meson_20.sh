@@ -21,16 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "meson"
-
-    cp -rf ./common/0.59/test_6/ ./
-
-    cd ./test_6
-
-    # cp ./common/distances_test.xml ./tmp ###! ./common/distances_test.xml ./ dame
-    # cp ./common/input_test.xml ./tmp     ###! {OET_PATH}/testcases/cli-test/common/input_test.xml ./
-
+    cd ./common/0.59/
+    tar -xvf test_6.tgz
+    cd ./../../
+    cp -r ./common/0.59/test_6 ./
+    cd ./test_6/
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
@@ -47,7 +43,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "meson test --benchmark failed"
     meson test --num-processes 1 2>&1 | grep "ninja"
     CHECK_RESULT $? 0 0 "meson test --num-processes failed"
-
     meson test --verbose 2>&1 | grep "ninja" 
     CHECK_RESULT $? 0 0 "meson test --verbose failed"
     meson test -v 2>&1 | grep "ninja"
@@ -62,20 +57,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "meson test --setup failed"
     meson test --test-args TEST_ARGS 2>&1 | grep "ninja"
     CHECK_RESULT $? 0 0 "meson test --test-args failed"
-
     LOG_INFO "Finish test!"
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-
     cd ../../
-
-    rm -rf ./'test_6'
-
+    rm -rf ./common/0.59/test_6
+    rm -rf ./test_6
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 

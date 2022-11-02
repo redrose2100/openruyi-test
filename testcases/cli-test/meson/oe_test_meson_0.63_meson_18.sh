@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -18,56 +18,43 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "meson"
-
+    cd ./common/0.63/
+    tar -xvf wrap-git.tgz
+    cd ./../../
     cp -rf ./common/0.63/"81 wrap-git" ./
-    
     cd ./"81 wrap-git"
-
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-
     meson subprojects purge --help 2>&1 | grep "usage: meson"
     CHECK_RESULT $? 0 0 "meson-subprojects-purge --help failed"
-
     meson subprojects purge -h 2>&1 | grep "usage: meson"
     CHECK_RESULT $? 0 0 "meson-subprojects-purge -h failed"
-
     meson subprojects purge --sourcedir ./
     CHECK_RESULT $? 0 0 "meson-subprojects-purge --sourcedir SOURCEDIR failed"
-
     meson subprojects purge --types git
     CHECK_RESULT $? 0 0 "meson-subprojects-purge --types TYPES failed"
-
     meson subprojects purge --num-processes 2
     CHECK_RESULT $? 0 0 "meson-subprojects-purge --num-processes NUM_PROCESSES failed"
-
     meson subprojects purge --include-cache
     CHECK_RESULT $? 0 0 "meson-subprojects-purge --include-cache failed"
-
     meson subprojects purge --confirm
     CHECK_RESULT $? 0 0 "meson-subprojects-purge --confirm failed"
-    
     LOG_INFO "Finish test!"
-
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-
     rm -rf ./../"81 wrap-git"
-
+    rm -rf ./../common/0.63/"81 wrap-git"
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 

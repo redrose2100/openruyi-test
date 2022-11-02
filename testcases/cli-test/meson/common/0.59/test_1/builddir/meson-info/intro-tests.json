@@ -1,1 +1,0 @@
-[{"cmd": ["/root/mugen/testcases/cli-test/meson/common/test_1/builddir/test_1"], "env": {}, "name": "basic", "workdir": null, "timeout": 30, "suite": ["test_1"], "is_parallel": true, "priority": 0, "protocol": "exitcode"}]

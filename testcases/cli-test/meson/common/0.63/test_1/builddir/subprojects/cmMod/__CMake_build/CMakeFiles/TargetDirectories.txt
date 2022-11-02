@@ -1,3 +1,0 @@
-/root/mugen/testcases/cli-test/meson/common/test_1/builddir/subprojects/cmMod/__CMake_build/CMakeFiles/cmModLib++.dir
-/root/mugen/testcases/cli-test/meson/common/test_1/builddir/subprojects/cmMod/__CMake_build/CMakeFiles/edit_cache.dir
-/root/mugen/testcases/cli-test/meson/common/test_1/builddir/subprojects/cmMod/__CMake_build/CMakeFiles/rebuild_cache.dir

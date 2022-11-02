@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -18,66 +18,48 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "meson"
-
+    cd ./common/0.63/
+    tar -xvf test_1.tgz
+    cd ./../../
     cp -rf ./common/0.63/test_1 ./
-
     cd ./test_1
-
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-
     cd ./builddir
-    
     meson introspect --test 2>&1 | grep ']'
     CHECK_RESULT $? 0 0 "meson-introspect --test failed"
-
     meson introspect --backend ninja 2>&1 | grep "No command specified"
     CHECK_RESULT $? 0 0 "meson-introspect --backend failed"
-
     meson introspect -a 2>&1 | grep '{'
     CHECK_RESULT $? 0 0 "meson-introspect -a failed"
-
     meson introspect --all 2>&1 | grep '{'
     CHECK_RESULT $? 0 0 "meson-introspect --all failed"
-
     meson introspect -i 2>&1 | grep "No command specified"
     CHECK_RESULT $? 0 0 "meson-introspect -i failed"
-
     meson introspect --indent 2>&1 | grep "No command specified"
     CHECK_RESULT $? 0 0 "meson-introspect --indent failed"
-
     meson introspect --projectinfo 2>&1 | grep '{'
     CHECK_RESULT $? 0 0 "meson-introspect --projectinfo failed"
-
     meson introspect --force-object-output 2>&1 | grep '{'
     CHECK_RESULT $? 0 0 "meson-introspect --force-object-output failed"
-
     meson introspect -f 2>&1 | grep '{'
     CHECK_RESULT $? 0 0 "meson-introspect -f failed"
-
     LOG_INFO "Finish test!"
-
 }
 
 function post_test()
 {
-
-    
     LOG_INFO "Start to restore the test environment."
-
     rm -rf ./../../test_1
-
+    rm -rf ./../../common/0.63/test_1
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 

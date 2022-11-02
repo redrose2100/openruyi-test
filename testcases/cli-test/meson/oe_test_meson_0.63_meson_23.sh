@@ -9,53 +9,46 @@
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
 ####################################
-#@Author        :   liuzhaoda
-#@Contact       :   1048074322@@qq.com
-#@Date          :   2022-09-19
+#@Author        :   yuyi
+#@Contact       :   1140934993@@qq.com
+#@Date          :   2022-09-06
 #@License       :   Mulan PSL v2
-#@Desc          :   Test meson-env2mfile
+#@Desc          :   Test meson  devenv
 #####################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "meson"
-
-    cp -rf ./common/"test_1" ./
-    
-    cd ./"test_1"
-
+    cd ./common/0.63/
+    tar -xvf '1 basic.tgz'  
+    cd ./../../
+    cp -rf ./common/0.63/'1 basic'   ./   
+    cd ./'1 basic' 
     LOG_INFO "End to prepare the test environment."
 }
-
 function run_test() {
     LOG_INFO "Start testing..."
-
-    meson env2mfile --help 2>&1 | grep "usage: meson" && meson env2mfile -h 2>&1 | grep "usage: meson"
-    CHECK_RESULT $? 0 0 "meson-env2mfile -h or --help failed"
-
-    meson env2mfile --cross -o current_cross.txt --gccsuffix=0.45 --system=linux --cpu=arm7a --cpu-family=arm
-    CHECK_RESULT $? 0 0 "meson-env2mfile --gccsuffix or --cross or -o or --system or --cpu or --cpu-family failed"
-
-     meson env2mfile --cross -o current_cross.txt --endian=big --system=linux --cpu=arm7a --cpu-family=arm
-    CHECK_RESULT $? 0 0 "meson-env2mfile --endian or --cross or -o or --system or --cpu or --cpu-family failed"
-    
+    meson setup --reconfigure builddir
+    cd ./builddir
+    meson devenv --help 2>&1 | grep "usage: meson" 
+    CHECK_RESULT $? 0 0 "meson devenv --help failed"
+    meson devenv -h 2>&1 | grep "usage: meson"
+    CHECK_RESULT $? 0 0 "meson devenv -h failed"
+    meson devenv --dump
+    CHECK_RESULT $? 0 0 "meson devenv -dump failed"
     LOG_INFO "Finish test!"
-
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-
-    rm -rf ./../"test_1"
-
+    cd ../../
+    rm -rf ./1\ basic/
+    rm -rf ./common/0.63/'1 basic'
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 

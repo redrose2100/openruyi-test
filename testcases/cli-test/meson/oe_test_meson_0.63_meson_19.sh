@@ -21,22 +21,17 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "meson"
-
-    cp -rf ./common/0.63/1\ basic/ ./
-
-    cd ./1\ basic/
-
-    # cp ./common/distances_test.xml ./tmp ###! ./common/distances_test.xml ./ dame
-    # cp ./common/input_test.xml ./tmp     ###! {OET_PATH}/testcases/cli-test/common/input_test.xml ./
-
+    cd ./common/0.63/
+    tar -xvf '1 basic.tgz'  
+    cd ./../../
+    cp -rf ./common/0.63/'1 basic'   ./   
+    cd ./'1 basic' 
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
     LOG_INFO "Start testing..."
-    meson setup --reconfigure builddir
-    
+    meson setup --reconfigure builddir    
     cd ./builddir
     meson test --help 2>&1 | grep "usage: meson"
     CHECK_RESULT $? 0 0 "meson test --help  failed"
@@ -52,7 +47,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "meson test --gdb-path failed"
     meson test --list 2>&1 | grep "test1"
     CHECK_RESULT $? 0 0 "meson test --list failed"
-
     meson test -C ./
     CHECK_RESULT $? 0 0 "meson test -C WD failed"
     meson test --suite foo
@@ -65,13 +59,10 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-
     cd ../../
-
     rm -rf ./1\ basic/
-
+    rm -rf ./common/0.63/'1 basic'
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 
