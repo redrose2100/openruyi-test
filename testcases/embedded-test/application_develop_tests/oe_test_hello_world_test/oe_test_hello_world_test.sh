@@ -22,12 +22,13 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ls ./hello_world
+    test -f ./hello_world
     CHECK_RESULT $? 0 0 "no hello world bin file build fail"
     chmod 777 ./hello_world
+    ls -l ./hello_world | grep "\-rwxrwxrwx"
+    CHECK_RESULT $? 0 0 "hello world chmod fail"
 
-    message=$(./hello_world)
-    echo ${message} | grep "hello world"
+    ./hello_world | grep "hello world"
     CHECK_RESULT $? 0 0 "hello world out put fail"
 
     LOG_INFO "End to run test."
