@@ -393,6 +393,36 @@
         },
         {
             "name": "oe_test_libuser_sm"
+        },
+	{
+            "name": "oe_test_losetup"
+        },
+        {
+            "name": "oe_test_lsof"
+        },
+        {
+            "name": "oe_test_lz4_01"
+        },
+        {
+            "name": "oe_test_lz4_02"
+        },
+        {
+            "name": "oe_test_maildrop_delivery_agent"
+        },
+        {
+            "name": "oe_test_mktemp"
+        },
+        {
+            "name": "oe_test_ncurses"
+        },
+        {
+            "name": "oe_test_nfs_01"
+        },
+        {
+            "name": "oe_test_nfs_02"
+        },
+        {
+            "name": "oe_test_nfs_03"
         }
     ]
 }
