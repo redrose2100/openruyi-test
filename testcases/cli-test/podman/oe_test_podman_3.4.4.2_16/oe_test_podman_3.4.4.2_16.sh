@@ -35,7 +35,9 @@ function run_test() {
     ID=$(podman create --uts host alpine ls)
     podman inspect $ID | grep '"UTSMode": "host"'
     CHECK_RESULT $? 0 0 'check UTSMode host failed'
-    podman create --name example alpine ls
+    ID=$(podman create --name example alpine ls)
+    podman inspect ${ID} | grep '"Name": "example"'
+    CHECK_RESULT $? 0 0 'check Name - example failed'
     ID=$(podman create --volume /tmp:/tmp:z alpine ls)
     podman inspect $ID | grep -i '"destination": "/tmp"'
     CHECK_RESULT $? 0 0 'check destination failed'
