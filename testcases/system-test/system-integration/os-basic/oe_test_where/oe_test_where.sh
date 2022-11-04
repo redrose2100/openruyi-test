@@ -10,11 +10,11 @@
 # See the Mulan PSL v2 for more details.
 
 # #############################################
-# @Author    :   doraemon2020
-# @Contact   :   xcl_job@163.com
-# @Date      :   2020-04-09
+# @Author    :   deepin12
+# @Contact   :   chenyia@uniontech.com
+# @Date      :   2020-11-04
 # @License   :   Mulan PSL v2
-# @Desc      :   Command test-man -w
+# @Desc      :   Command  where
 # ############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
