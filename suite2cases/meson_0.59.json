@@ -1,0 +1,68 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/meson",
+    "cases": [
+        {
+            "name": "oe_test_meson_0.59_meson_1"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_2"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_3"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_4"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_5"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_6"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_7"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_8"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_9"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_10"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_11"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_12"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_13"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_14"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_15"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_16"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_17"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_18"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_19"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_20"
+        },
+        {
+            "name": "oe_test_meson_0.59_meson_23"
+        }
+    ]
+}
