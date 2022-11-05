@@ -23,7 +23,8 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # Data and parameter configuration that need to be preloaded
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    TMP_DIR="./tmp"
+    local_LANG=$LANG
+    export LANG=en_US
     LOG_INFO "End to config params of the case."
 }
 
@@ -31,64 +32,96 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "intltool"
-    cp -rf test_input ${TMP_DIR}
+    test -d tmp || mkdir tmp
+    cp -rf test_input/* tmp
     LOG_INFO "End to prepare the test environment."
 }
 
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-    intltool-extract -h | grep -q "Usage"
+
+    intltool-extract -h | grep "Usage"
     CHECK_RESULT $? 0 0 "option: -h error"
-    intltool-extract --help | grep -q "Usage"
+    intltool-extract --help | grep "Usage"
     CHECK_RESULT $? 0 0 "option: --help error"
-    intltool-extract -v | grep -qE "intltool-extract.*[0-9.]+"
+
+    intltool-prepare -v | grep -E "intltool-prepare intltool [0-9].+"
     CHECK_RESULT $? 0 0 "option: -v error"
-    intltool-extract --version | grep -qE "intltool-extract.*[0-9.]+"
+    intltool-prepare -v | grep -E "intltool-prepare intltool [0-9].+"
     CHECK_RESULT $? 0 0 "option: --version error"
-    cd ${TMP_DIR}
+
+
+    cd tmp
+    tar -xvf common.tar 
     for type in "glade" "ini" "keys" "rfc822deb"  \
                 "schemas" "gsettings" "xml" "tlk" \
                 "quoted" "quotedxml" "qtdesigner"
     do
-        intltool-extract --type="gettext/${type}" test_input/test.${type} | grep -q "Wrote" && \
-            cat test_input/test.${type}.h | grep -q "char"
+        intltool-extract --type="gettext/${type}" common/test.${type} | grep "Wrote" 
+        CHECK_RESULT $? 0 0 "option: --type=\"gettext/${type}\" error"
+        test -f common/test.${type}.h
+        CHECK_RESULT $? 0 0 "option: --type=\"gettext/${type}\" error"
+        grep "char" common/test.${type}.h
         CHECK_RESULT $? 0 0 "option: --type=\"gettext/${type}\" error"
     done
-    intltool-extract --type="gettext/xml" test_input/test.xml -l | grep -q "Wrote" && \
-        cat tmp/test.xml.h | grep -q "char"
+
+    intltool-extract --type="gettext/xml" test.xml -l | grep "Wrote"
+    CHECK_RESULT $? 0 0 "option: -l error"
+    test -f tmp/test.xml.h
+    CHECK_RESULT $? 0 0 "option: -l error"
+    grep "char" tmp/test.xml.h
     CHECK_RESULT $? 0 0 "option: -l error"
     rm -rf tmp/test.xml.h
-    intltool-extract --type="gettext/xml" test_input/test.xml --local | grep -q "Wrote" && \
-        cat tmp/test.xml.h | grep -q "char"
+    intltool-extract --type="gettext/xml" test.xml --local | grep "Wrote"
     CHECK_RESULT $? 0 0 "option: --local error"
-    cp -bf test_input/test.new.xml test_input/test.xml
-    intltool-extract --type="gettext/xml" test_input/test.xml --update | grep -q "Wrote" && \
-        cat test_input/test.xml.h | grep -q "new"
+    test -f tmp/test.xml.h
+    CHECK_RESULT $? 0 0 "option: -l error"
+    grep "char" tmp/test.xml.h
+    CHECK_RESULT $? 0 0 "option: --local error"
+
+    cp -bf test.new.xml test.xml
+    intltool-extract --type="gettext/xml" test.xml --update | grep "Wrote"
     CHECK_RESULT $? 0 0 "option: --update error"
-    mv -f test_input/test.xml~ test_input/test.xml
-    intltool-extract --type="gettext/xml" test.xml --srcdir ./test_input | grep -q "Wrote" && \
-        cat test.xml.h | grep -q "char"
+    test -f test.xml.h
+    CHECK_RESULT $? 0 0 "option: --update error"
+    grep "new" test.xml.h
+    CHECK_RESULT $? 0 0 "option: --update error"
+    mv -f test.xml~ test.xml
+    
+    rm -rf test.xml.h
+    cp test.xml ./tmp
+    intltool-extract --type="gettext/xml" test.xml --srcdir ./tmp | grep "Wrote"
     CHECK_RESULT $? 0 0 "option: --srcdir error"
-    rm -rf test_input/test.xml.h
-    OUTPUT=$(intltool-extract --type="gettext/xml" test_input/test.xml -q) && \
-        cat test_input/test.xml.h | grep -q "char"
+    test -f test.xml.h
+    CHECK_RESULT $? 0 0 "option: --srcdir error"
+    grep "char" test.xml.h
+    CHECK_RESULT $? 0 0 "option: --srcdir error"
+
+    rm -rf test.xml.h
+    OUTPUT=$(intltool-extract --type="gettext/xml" test.xml -q) 
+    grep "char" test.xml.h
+    CHECK_RESULT $? 0 0 "option: -q error"
     test -z "${OUTPUT}" -a $? -eq 0
     CHECK_RESULT $? 0 0 "option: -q error"
-    rm -rf test_input/test.xml.h
-    OUTPUT=$(intltool-extract --type="gettext/xml" test_input/test.xml --quiet) && \
-        cat test_input/test.xml.h | grep -q "char"
+    rm -rf test.xml.h
+    OUTPUT=$(intltool-extract --type="gettext/xml" test.xml --quiet)
+    grep "char" test.xml.h
+    CHECK_RESULT $? 0 0 "option: --quiet error"
     test -z "${OUTPUT}" -a $? -eq 0 
     CHECK_RESULT $? 0 0 "option: --quiet error"
-    cd - > /dev/null
+
+    cd ../
+
     LOG_INFO "End to run test."
 }
 
 # Post-processing to restore the test environment
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf ${TMP_DIR}
+    rm -rf tmp
     DNF_REMOVE
+    export LANG=${local_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

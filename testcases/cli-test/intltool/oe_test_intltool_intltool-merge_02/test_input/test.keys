@@ -1,6 +1,5 @@
 application/oda
-	description=hello, i am keys
-	[merge_test]description=你好，我是keys文件。
+	_description=hello, i am keys
 
 	default_action_type=application
 	short_list_component_iids_for_novice_user_level=OAFIID:gpdf_component:892f2727-e2ec-423c-91ad-6f7b75fec6c8
