@@ -82,7 +82,7 @@ function run_test() {
     intltoolize --debug --force 2>&1 | grep "force=yes"
     CHECK_RESULT $? 0 0 "option: --force error" 
 
-    cd ../
+    cd ../../
     
     LOG_INFO "End to run test."
 }
