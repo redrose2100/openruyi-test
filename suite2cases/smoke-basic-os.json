@@ -44,6 +44,9 @@
             "name": "oe_test_file_001"
         },
         {
+            "name": "oe_test_golang"
+        },
+        {
             "name": "oe_test_grep_001"
         },
         {
@@ -63,6 +66,9 @@
         },
         {
             "name": "oe_test_iscsi"
+        },
+        {
+            "name": "oe_test_krb5"
         },
         {
             "name": "oe_test_ln_001"
@@ -127,7 +133,7 @@
         {
             "name": "oe_test_sevice_001"
         },
-	{
+        {
             "name": "oe_test_sort"
         },
         {
@@ -169,9 +175,9 @@
         {
             "name": "oe_test_rm_001"
         },
-	{
-	    "name":"oe_test_which"
-	},
+        {
+            "name": "oe_test_which"
+        },
         {
             "name": "oe_test_yumgroup_001"
         },
@@ -187,25 +193,25 @@
         {
             "name": "oe_test_chroncy_001"
         },
-	{
+        {
             "name": "oe_test_diffstat_001"
         },
-	{
+        {
             "name": "oe_test_rollback"
-	},
-        {   
-	    "name": "oe_test_gcc"
-	},
-	{
-            "name":"oe_test_cmp"
-	},
-	{
-	    "name": "oe_test_umask_002"
-	},
-	{
-	    "name": "oe_test_llvm"
-	},
-	{
+        },
+        {
+            "name": "oe_test_gcc"
+        },
+        {
+            "name": "oe_test_cmp"
+        },
+        {
+            "name": "oe_test_umask_002"
+        },
+        {
+            "name": "oe_test_llvm"
+        },
+        {
             "name": "oe_test_acpid"
         },
         {
@@ -238,5 +244,158 @@
 	{
 	    "name": "oe_test_pcre_001"
 	}
+        {
+            "name": "oe_test_cifsclient"
+        },
+        {
+            "name": "oe_test_cpio"
+        },
+        {
+            "name": "oe_test_curl_01"
+        },
+        {
+            "name": "oe_test_curl_02"
+        },
+        {
+            "name": "oe_test_curl_03"
+        },
+        {
+            "name": "oe_test_dbus-binging-tool"
+        },
+        {
+            "name": "oe_test_dbus-cleanup-sockets"
+        },
+        {
+            "name": "oe_test_dbus-daemon"
+        },
+        {
+            "name": "oe_test_dbus-monitor"
+        },
+        {
+            "name": "oe_test_dbus-send"
+        },
+        {
+            "name": "oe_test_dbus"
+        },
+        {
+            "name": "oe_test_dbus-uuidgen"
+        },
+        {
+            "name": "oe_test_dhclient_01"
+        },
+        {
+            "name": "oe_test_dracut"
+        },
+        {
+            "name": "oe_test_ebtables"
+        },
+        {
+            "name": "oe_test_ethtool_01"
+        },
+        {
+            "name": "oe_test_firewalld"
+        },
+        {
+            "name": "oe_test_glibc_getaddrinfo_01"
+        },
+        {
+            "name": "oe_test_glibc_getaddrinfo_02"
+        },
+        {
+            "name": "oe_test_grub2_mkconfig"
+        },
+        {
+            "name": "oe_test_gzip"
+        },
+        {
+            "name": "oe_test_hwclock"
+        },
+        {
+            "name": "oe_test_hwdata"
+        },
+        {
+            "name": "oe_test_ifconfig_ipv6_01"
+        },
+        {
+            "name": "oe_test_ip6tables_01"
+        },
+        {
+            "name": "oe_test_ip6tables_02"
+        },
+        {
+            "name": "oe_test_ip_ipv6_01"
+        },
+        {
+            "name": "oe_test_ip_ipv6_02"
+        },
+        {
+            "name": "oe_test_ip_ipv6_03"
+        },
+        {
+            "name": "oe_test_ip_ipv6_04"
+        },
+        {
+            "name": "oe_test_iproute_ipv6_01"
+        },
+        {
+            "name": "oe_test_iproute"
+        },
+        {
+            "name": "oe_test_ip_rule_01"
+        },
+        {
+            "name": "oe_test_ip_rule_02"
+        },
+        {
+            "name": "oe_test_iptables-save"
+        },
+        {
+            "name": "oe_test_iptables"
+        },
+        {
+            "name": "oe_test_ipv6_BRIDGE"
+        },
+        {
+            "name": "oe_test_ipv6_dnsmasq"
+        },
+        {
+            "name": "oe_test_IPV6_traceroute6_01"
+        },
+        {
+            "name": "oe_test_IPV6_traceroute6_02"
+        },
+        {
+            "name": "oe_test_IPV6_traceroute6_tracepath6"
+        },
+        {
+            "name": "oe_test_ipv6_VLAN_01"
+        },
+        {
+            "name": "oe_test_ipv6_VLAN_02"
+        },
+        {
+            "name": "oe_test_lldpad"
+        },
+        {
+            "name": "oe_test_iscsid"
+        },
+        {
+            "name": "oe_test_less"
+        },
+        {
+            "name": "oe_test_libcgroup_01"
+        },
+        {
+            "name": "oe_test_libcgroup_02"
+        },
+        {
+            "name": "oe_test_libcgroup_03"
+        },
+        {
+            "name": "oe_test_libcgroup_04"
+        },
+        {
+            "name": "oe_test_libuser_sm"
+        }
     ]
 }
