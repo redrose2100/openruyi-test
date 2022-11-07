@@ -1,0 +1,17 @@
+{
+  "path": "$OET_PATH/testcases/cli-test/libfabric",
+  "cases": [
+    {
+      "name": "oe_test_fi_info_base_01"
+    },
+    {
+      "name": "oe_test_fi_info_base_02"
+    },
+    {
+      "name": "oe_test_fi_strerror"
+    },
+    {
+      "name": "oe_test_fi_pingpong"
+    }
+  ]
+}
