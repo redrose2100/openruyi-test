@@ -1,0 +1,26 @@
+{
+  "path": "$OET_PATH/testcases/cli-test/tboot",
+  "cases": [
+    {
+      "name": "oe_test_lcp2_crtpol"
+    },
+    {
+      "name": "oe_test_lcp2_crtpolelt"
+    },
+    {
+      "name": "oe_test_lcp2_crtpollist"
+    },
+    {
+      "name": "oe_test_lcp2_mlehash"
+    },
+    {
+      "name": "oe_test_tb_polgen"
+    }
+  ]
+}
+
+
+
+
+
+
