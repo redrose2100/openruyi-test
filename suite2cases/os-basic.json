@@ -32,6 +32,9 @@
             "name": "oe_test_uname"
         },
         {
+            "name": "oe_test_where"
+        },
+        {
             "name": "oe_test_timedatectl"
         },
         {
