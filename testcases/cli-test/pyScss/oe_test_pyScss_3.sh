@@ -21,38 +21,30 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-
     pip3 install pyScss
-
     LOG_INFO "End to prepare the test environment."
 }
-##########################################################
 
-##########################################################
 function run_test(){
     LOG_INFO "Start to run test."
-
     python -mscss --images-root=PATH &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss --images-root No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss --images-root failed"
     python -mscss --images-url=PATH &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss --images-url No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss --images-url failed"
     python -mscss --cache-root=PATH &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss --cache-root No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss --cache-root failed"
     LOG_INFO "End to run test."
 }
 
-
 function post_test(){
     LOG_INFO "Start to restore the test environment."
-
     pip3 uninstall -y pyScss
-    
     LOG_INFO "End to restore the test environment."
 }
 

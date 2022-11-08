@@ -21,64 +21,54 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-
     pip3 install pyScss
-
     LOG_INFO "End to prepare the test environment."
 }
-##########################################################
 
-##########################################################
 function run_test(){
     LOG_INFO "Start to run test."
-
     python -mscss -C &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -C No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss -C failed"
     python -mscss -h | grep "Converts Scss files to CSS."
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -h No Pass"
-
-    python -mscss -v | grep "pyScss v[[:digit:]]*.[[:digit:]]*.[[:digit:]]*"
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -v No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss -h failed"
+    python -mscss -v | grep "pyScss v1.4.0"
+    CHECK_RESULT $? 0 0 "Check pyScss -v failed"
     python -mscss -sass &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -sass No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss -sass failed"
     python -mscss -I PATH &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -I No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss -I failed"
     python -mscss -S PATH &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -S No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss -S failed"
     python -mscss -A PATH &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -A No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss -A failed"
     python -mscss -a URL &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -a No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss -a failed"
     python -mscss -F PATH &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -F No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss -F failed"
     python -mscss -f PATH &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "L$LINENO: pyScss -f No Pass"
-
+    CHECK_RESULT $? 0 0 "Check pyScss -f failed"
     LOG_INFO "End to run test."
 }
 
-
 function post_test(){
     LOG_INFO "Start to restore the test environment."
-
     pip3 uninstall -y pyScss
-    
     LOG_INFO "End to restore the test environment."
 }
 
