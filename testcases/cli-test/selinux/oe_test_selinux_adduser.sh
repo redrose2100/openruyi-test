@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL policycoreutils-python-utils
     useradd example
     passwd example << EOF
 ${NODE1_PASSWORD}
@@ -88,8 +89,9 @@ EOF1
 function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf example
-    userdel -rfZ test
+    userdel -rf test
     rm -rf testlog
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

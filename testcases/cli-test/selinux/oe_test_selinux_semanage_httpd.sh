@@ -21,7 +21,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "setroubleshoot-server httpd"
+    DNF_INSTALL "setroubleshoot-server httpd policycoreutils-python-utils"
     test -f /srv/www1 || rm -rf /srv/www1
     rdport=$(GET_FREE_PORT "$NODE1_IPV4")
     LOG_INFO "End of environmental preparation!"

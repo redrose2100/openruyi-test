@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL policycoreutils-python-utils
     adduser -G wheel -Z sysadm_u example
     passwd example << EOF
 ${NODE1_PASSWORD}
@@ -78,6 +79,7 @@ EOF1
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    DNF_REMOVE
     userdel -rfZ example
     rm -rf testlog
     setsebool -P ssh_sysadm_login off

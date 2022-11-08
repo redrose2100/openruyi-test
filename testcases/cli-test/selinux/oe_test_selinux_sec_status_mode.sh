@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     default_selinux_status=$(getenforce)
     setenforce 1
-    DNF_INSTALL "setroubleshoot-server"
+    DNF_INSTALL "setroubleshoot-server policycoreutils-python-utils"
     LOG_INFO "End of environmental preparation!"
 }
 

@@ -33,7 +33,7 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     systemctl restart httpd
     sealert -a /var/log/audit/audit.log | grep "[a-z]" >/tmp/prevent_info.txt
-    grep "SELinux is preventing httpd from name_bind access on the tcp_socket port 3131" /tmp/prevent_info.txt
+    grep "SELinux is preventing httpd from name_bind access on the tcp_socket port 3131" /tmp/prevent_info.txt || cat /var/log/audit/audit.log | grep avc | grep httpd | grep 3131
     CHECK_RESULT $?
     suggest_infoc=$(grep "ausearch -c" /tmp/prevent_info.txt)
     suggest_infox=$(grep "semodule -X" /tmp/prevent_info.txt)

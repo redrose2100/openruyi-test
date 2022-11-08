@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL policycoreutils-python-utils
     adduser -G wheel -Z staff_u example
     passwd example << EOF
 ${NODE1_PASSWORD}
@@ -73,6 +74,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rfZ example
     rm -rf testlog /etc/sudoers.d/example
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
