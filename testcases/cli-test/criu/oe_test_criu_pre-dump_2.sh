@@ -22,37 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
-    
     mkdir checkpoint_file
-
-    LOG_INFO "End to prepare the test environment."
-}
-##########################################################
-# Usage:
-#   criu dump|pre-dump -t PID [<options>]
-#   criu restore [<options>]
-#   criu check [--feature FEAT]
-#   criu page-server
-#   criu service [<options>]
-#   criu dedup
-#   criu lazy-pages -D DIR [<options>]
-
-# Commands:
-#   dump           checkpoint a process/tree identified by pid
-#   pre-dump       pre-dump task(s) minimizing their frozen time
-#   restore        restore a process/tree
-#   check          checks whether the kernel support is up-to-date
-#   page-server    launch page server
-#   service        launch service
-#   dedup          remove duplicates in memory dump
-#   cpuinfo dump   writes cpu information into image file
-#   cpuinfo check  validates cpu information read from image file
-
-# Try -h|--help for more info
-##########################################################
-function run_test(){
-    LOG_INFO "Start to run test."
-
     test_process(){
         num=0
         while true;
@@ -63,6 +33,12 @@ function run_test(){
             sleep 1
         done
     }
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test(){
+    LOG_INFO "Start to run test."
+
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --external dev && kill -9 $pid
     CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --external No Pass"
 
@@ -87,15 +63,14 @@ function run_test(){
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --ghost-limit size && kill -9 $pid
     CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --ghost-limit No Pass"
 
-    # (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --action-script FILE && kill -9 $pid
-    # CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --action-script No Pass"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --action-script FILE && kill -9 $pid
+    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --action-script No Pass"
 
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -l && kill -9 $pid
     CHECK_RESULT $? 0 0 "L$LINENO: pre-dump -l No Pass"
 
     LOG_INFO "End to run test."
 }
-
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."

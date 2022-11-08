@@ -73,8 +73,8 @@ function run_test(){
     criu restore -j -L / & DUMP
     CHECK_RESULT $? 0 0 "L$LINENO: restore -L No Pass"
 
-    # criu restore -j --force-irmap & DUMP
-    # CHECK_RESULT $? 0 0 "L$LINENO: restore --force-irmap No Pass"
+    criu restore -j --force-irmap & DUMP
+    CHECK_RESULT $? 0 0 "L$LINENO: restore --force-irmap No Pass"
 
     criu restore -j --irmap-scan-path FILE & DUMP
     CHECK_RESULT $? 0 0 "L$LINENO: restore --irmap-scan-path No Pass"
