@@ -5,7 +5,22 @@
             "name": "oe_test_fftw_fftw-wisdom-to-conf"
         },
         {
-            "name": "oe_test_fftw_fftw-wisdom"
+            "name": "oe_test_fftw_fftw-wisdom01"
+        },
+        {
+            "name": "oe_test_fftw_fftw-wisdom02"
+        },
+        {
+            "name": "oe_test_fftw_fftwf-wisdom01"
+        },
+        {
+            "name": "oe_test_fftw_fftwf-wisdom02"
+        },
+        {
+            "name": "oe_test_fftw_fftwl-wisdom01"
+        },
+        {
+            "name": "oe_test_fftw_fftwl-wisdom02"
         }
     ]
 }
