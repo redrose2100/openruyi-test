@@ -394,5 +394,8 @@
         {
             "name": "oe_test_libuser_sm"
         }
+        {
+            "name": "oe_test_xz_001"
+        }
     ]
 }
