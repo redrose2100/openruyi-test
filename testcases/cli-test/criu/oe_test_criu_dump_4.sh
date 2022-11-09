@@ -22,87 +22,42 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
-    
-    mkdir checkpoint_file
-    mkdir checkpoint_file_2
-
-    LOG_INFO "End to prepare the test environment."
-}
-##########################################################
-# Usage:
-#   criu dump|pre-dump -t PID [<options>]
-#   criu restore [<options>]
-#   criu check [--feature FEAT]
-#   criu page-server
-#   criu service [<options>]
-#   criu dedup
-#   criu lazy-pages -D DIR [<options>]
-
-# Commands:
-#   dump           checkpoint a process/tree identified by pid
-#   pre-dump       pre-dump task(s) minimizing their frozen time
-#   restore        restore a process/tree
-#   check          checks whether the kernel support is up-to-date
-#   page-server    launch page server
-#   service        launch service
-#   dedup          remove duplicates in memory dump
-#   cpuinfo dump   writes cpu information into image file
-#   cpuinfo check  validates cpu information read from image file
-
-# Try -h|--help for more info
-##########################################################
-function run_test(){
-    LOG_INFO "Start to run test."
-
+    mkdir checkpoint_file checkpoint_file_2
     test_process(){
         num=0
         while true;
-        # while (( num < 5));
         do
             echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
             (( num += 1 ))
             sleep 1
         done
     }
-    (test_process) & criu dump -D checkpoint_file -j -t $! --lsm-mount-context CTX
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --lsm-mount-context No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --skip-mnt PATH
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --skip-mnt No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --enable-fs FSNAMES
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --enable-fs No Pass"
-
-    # (test_process) & criu dump -D checkpoint_file -j -t $! --inherit-fd fd[NUM]:RES
-    # CHECK_RESULT $? 0 0 "L$LINENO: dump --inherit-fd No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --empty-ns net
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --empty-ns net No Pass"
-
-    # (test_process) & criu dump -D checkpoint_file -j -t $! -J NS:{PID|NS_FILE}[,OPTIONS]
-    # CHECK_RESULT $? 0 0 "L$LINENO: dump -J No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --file-validation filesize
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --file-validation No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --with-cpu-affinity
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --with-cpu-affinity No Pass"
-
-    # (test_process) & criu dump -D checkpoint_file -j -t $! --pin-memory
-    # CHECK_RESULT $? 0 0 "L$LINENO: dump --pin-memory No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --track-mem
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --track-mem No Pass"
-    
-    LOG_INFO "End to run test."
+    LOG_INFO "End to prepare the test environment."
 }
 
+function run_test(){
+    LOG_INFO "Start to run test."
+    (test_process) & criu dump -D checkpoint_file -j -t $! --lsm-mount-context CTX
+    CHECK_RESULT $? 0 0 "Check criu dump --lsm-mount-context failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --skip-mnt PATH
+    CHECK_RESULT $? 0 0 "Check criu dump --skip-mnt failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --enable-fs FSNAMES
+    CHECK_RESULT $? 0 0 "Check criu dump --enable-fs failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --empty-ns net
+    CHECK_RESULT $? 0 0 "Check criu dump --empty-ns net failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --file-validation filesize
+    CHECK_RESULT $? 0 0 "Check criu dump --file-validation failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --with-cpu-affinity
+    CHECK_RESULT $? 0 0 "Check criu dump --with-cpu-affinity failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --track-mem
+    CHECK_RESULT $? 0 0 "Check criu dump --track-mem failed"
+    LOG_INFO "End to run test."
+}
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf checkpoint_file
-    rm -rf checkpoint_file_2
+    rm -rf checkpoint_file checkpoint_file_2
     LOG_INFO "End to restore the test environment."
 }
 

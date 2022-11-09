@@ -26,7 +26,6 @@ function pre_test(){
     test_process(){
         num=0
         while true;
-        # while (( num < 5));
         do
             echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
             (( num += 1 ))
@@ -38,39 +37,24 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-
     cd checkpoint_file
     (test_process) & pid=$! && criu pre-dump -j -t $! && kill -9 $pid
     cd ..
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump -j -t No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -j -t failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump -D No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -D failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -s && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump -s No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -s failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -R && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump -R No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -R failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -W checkpoint_file && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump -W No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -W failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cpu-cap && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --cpu-cap No Pass"
-
-    # (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --freeze-cgroup && kill -9 $pid
-    # CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --freeze-cgroup No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --cpu-cap failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --weak-sysctls && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --weak-sysctls No Pass"
-
-    # (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $! --stream && kill -9 $pid
-    # CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --stream No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --weak-sysctls failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --network-lock iptables && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --network-lock No Pass"
-    
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --network-lock failed"
     LOG_INFO "End to run test."
 }
 

@@ -26,7 +26,6 @@ function pre_test(){
     test_process(){
         num=0
         while true;
-        # while (( num < 5));
         do
             echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
             (( num += 1 ))
@@ -38,40 +37,22 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --lsm-mount-context CTX && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --lsm-mount-context No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --lsm-mount-context failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --skip-mnt PATH && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --skip-mnt No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --skip-mnt failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --enable-fs FSNAMES && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --enable-fs No Pass"
-
-    # (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --inherit-fd fd[NUM]:RES && kill -9 $pid
-    # CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --inherit-fd No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --enable-fs failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --empty-ns net && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --empty-ns net No Pass"
-
-    # (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -J NS:{PID|NS_FILE}[,OPTIONS] && kill -9 $pid
-    # CHECK_RESULT $? 0 0 "L$LINENO: pre-dump -J No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --empty-ns net failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --file-validation filesize && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --file-validation No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --file-validation failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --with-cpu-affinity && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --with-cpu-affinity No Pass"
-
-    # (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --pin-memory && kill -9 $pid
-    # CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --pin-memory No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --with-cpu-affinity failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --track-mem && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --track-mem No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --track-mem failed"
     LOG_INFO "End to run test."
 }
-
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."

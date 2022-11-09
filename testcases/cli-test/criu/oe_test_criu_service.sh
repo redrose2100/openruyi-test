@@ -24,53 +24,35 @@ function pre_test(){
     DNF_INSTALL "criu"
     LOG_INFO "End to prepare the test environment."
 }
-##########################################################
-# Usage:
-#   criu dump|pre-dump -t PID [<options>]
-#   criu restore [<options>]
-#   criu check [--feature FEAT]
-#   criu page-server
-#   criu service [<options>]
-#   criu dedup
-#   criu lazy-pages -D DIR [<options>]
 
-# Commands:
-#   dump           checkpoint a process/tree identified by pid
-#   pre-dump       pre-dump task(s) minimizing their frozen time
-#   restore        restore a process/tree
-#   check          checks whether the kernel support is up-to-date
-#   page-server    launch page server
-#   service        launch service
-#   dedup          remove duplicates in memory dump
-#   cpuinfo dump   writes cpu information into image file
-#   cpuinfo check  validates cpu information read from image file
-
-# Try -h|--help for more info
-##########################################################
 function run_test(){
     LOG_INFO "Start to run test."
-    
-    criu service & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: service No Pass"
-
-    criu service --address ADDR & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: service --address No Pass"
-
-    criu service --port 114514 & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: service --port No Pass"
-
-    criu service --ps-socket FD & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: service --ps-socket No Pass"
-
-    criu service -d & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: service -d No Pass"
-
-    criu service --status-fd \0 & kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: service --status-fd No Pass"
-
+    criu service &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f "criu service")
+    CHECK_RESULT $? 0 0 "Check criu service failed"
+    criu service --address ADDR &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f "criu service")
+    CHECK_RESULT $? 0 0 "Check criu service --address failed"
+    criu service --port 114514 &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f "criu service")
+    CHECK_RESULT $? 0 0 "Check criu service --port failed"
+    criu service --ps-socket FD &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f "criu service")
+    CHECK_RESULT $? 0 0 "Check criu service --ps-socket failed"
+    criu service -d &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f "criu service")
+    CHECK_RESULT $? 0 0 "Check criu service -d failed"
+    criu service --status-fd \0 &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f "criu service")
+    CHECK_RESULT $? 0 0 "Check criu service --status-fd failed"
     LOG_INFO "End to run test."
 }
-
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."

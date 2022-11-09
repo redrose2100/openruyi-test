@@ -27,35 +27,26 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    
     criu page-server &
     CHECK_RESULT $? 0 0
-    pgrep -f "criu page-server" && kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: page-server No Pass"
-
+    kill -9 $(pgrep -f "criu page-server")
+    CHECK_RESULT $? 0 0 "Check criu page-server failed"
     criu page-server --address 127.0.0.1 &
     CHECK_RESULT $? 0 0
-    pgrep -f "criu page-server" && kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: page-server --address No Pass"
-
+    kill -9 $(pgrep -f "criu page-server")
+    CHECK_RESULT $? 0 0 "Check criu page-server --address failed"
     criu page-server --port 114514 &
     CHECK_RESULT $? 0 0
-    pgrep -f "criu page-server" && kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: page-server --port No Pass"
-
-    # criu page-server --ps-socket FD & kill -9 $!
-    # CHECK_RESULT $? 0 0 "L$LINENO: page-server --ps-socket No Pass"
-
+    kill -9 $(pgrep -f "criu page-server")
+    CHECK_RESULT $? 0 0 "Check criu page-server --port failed"
     criu page-server -d &
     CHECK_RESULT $? 0 0
-    pgrep -f "criu page-server" && kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: page-server -d No Pass"
-
+    kill -9 $(pgrep -f "criu page-server")
+    CHECK_RESULT $? 0 0 "Check criu page-server -d failed"
     criu page-server --status-fd \0 &
     CHECK_RESULT $? 0 0
-    pgrep -f "criu page-server" && kill -9 $!
-    CHECK_RESULT $? 0 0 "L$LINENO: page-server --status-fd No Pass"
-
+    kill -9 $(pgrep -f "criu page-server")
+    CHECK_RESULT $? 0 0 "Check criu page-server --status-fd failed"
     LOG_INFO "End to run test."
 }
 

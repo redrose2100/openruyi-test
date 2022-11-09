@@ -22,87 +22,44 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
-    
-    mkdir checkpoint_file
-    mkdir checkpoint_file_2
-
-    LOG_INFO "End to prepare the test environment."
-}
-##########################################################
-# Usage:
-#   criu dump|pre-dump -t PID [<options>]
-#   criu restore [<options>]
-#   criu check [--feature FEAT]
-#   criu page-server
-#   criu service [<options>]
-#   criu dedup
-#   criu lazy-pages -D DIR [<options>]
-
-# Commands:
-#   dump           checkpoint a process/tree identified by pid
-#   pre-dump       pre-dump task(s) minimizing their frozen time
-#   restore        restore a process/tree
-#   check          checks whether the kernel support is up-to-date
-#   page-server    launch page server
-#   service        launch service
-#   dedup          remove duplicates in memory dump
-#   cpuinfo dump   writes cpu information into image file
-#   cpuinfo check  validates cpu information read from image file
-
-# Try -h|--help for more info
-##########################################################
-function run_test(){
-    LOG_INFO "Start to run test."
-
+    mkdir checkpoint_file checkpoint_file_2
     test_process(){
         num=0
         while true;
-        # while (( num < 5));
         do
             echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
             (( num += 1 ))
             sleep 1
         done
     }
-    (test_process) & criu dump -D checkpoint_file -j -t $! -L /
-    CHECK_RESULT $? 0 0 "L$LINENO: dump -L No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --force-irmap
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --force-irmap No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --irmap-scan-path FILE
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --irmap-scan-path No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --manage-cgroups
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --manage-cgroups No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-root /
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --cgroup-root No Pass"
-
-    # (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-props STRING
-    # CHECK_RESULT $? 0 0 "L$LINENO: dump --cgroup-props STRING No Pass"
-
-    # (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-props-file FILE
-    # CHECK_RESULT $? 0 0 "L$LINENO: dump --cgroup-props-file STRING No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-dump-controller NAME
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --cgroup-dump-controller No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-yard PATH
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --cgroup-yard No Pass"
-
-    (test_process) & criu dump -D checkpoint_file -j -t $! --lsm-profile selinux:NAME
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --lsm-profile No Pass"
-    
-    LOG_INFO "End to run test."
+    LOG_INFO "End to prepare the test environment."
 }
 
+function run_test(){
+    LOG_INFO "Start to run test."
+    (test_process) & criu dump -D checkpoint_file -j -t $! -L /
+    CHECK_RESULT $? 0 0 "Check criu dump -L failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --force-irmap
+    CHECK_RESULT $? 0 0 "Check criu dump --force-irmap failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --irmap-scan-path FILE
+    CHECK_RESULT $? 0 0 "Check criu dump --irmap-scan-path failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --manage-cgroups
+    CHECK_RESULT $? 0 0 "Check criu dump --manage-cgroups failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-root /
+    CHECK_RESULT $? 0 0 "Check criu dump --cgroup-root failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-dump-controller NAME
+    CHECK_RESULT $? 0 0 "Check criu dump --cgroup-dump-controller failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-yard PATH
+    CHECK_RESULT $? 0 0 "Check criu dump --cgroup-yard failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --lsm-profile selinux:NAME
+    CHECK_RESULT $? 0 0 "Check criu dump --lsm-profile failed"
+    LOG_INFO "End to run test."
+}
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf checkpoint_file
-    rm -rf checkpoint_file_2
+    rm -rf checkpoint_file checkpoint_file_2
     LOG_INFO "End to restore the test environment."
 }
 

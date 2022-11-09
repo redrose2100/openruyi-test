@@ -28,31 +28,22 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    
-    # criu dedup 
-    # CHECK_RESULT $? 0 0 "L$LINENO: dedup No Pass"
-
-    criu lazy-pages -D checkpoint_file & kill -9 $!
+    criu lazy-pages -D checkpoint_file &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f "criu lazy-pages")
     CHECK_RESULT $? 0 0 "Check --lazy-pages failed."
-
     criu cpuinfo dump
     CHECK_RESULT $? 0 0 "Check cpuinfo dump failed."
-
     criu cpuinfo check
     CHECK_RESULT $? 0 0 "Check cpuinfo check failed."
-
     criu check --config FILEPATH | grep 'Looks good'
     CHECK_RESULT $? 0 0 "Check --config failed."
-
     criu check --no-default-config | grep 'Looks good'
     CHECK_RESULT $? 0 0 "Check --no-default-config failed."
-
     criu -h | grep -E "Usage:"
     CHECK_RESULT $? 0 0 "Check -h failed."
-
     criu -V | grep -E "Version: 3.16.1"
     CHECK_RESULT $? 0 0 "Check -V failed."
-
     LOG_INFO "End to run test."
 }
 

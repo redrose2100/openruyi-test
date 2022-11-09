@@ -26,7 +26,6 @@ function pre_test(){
     test_process(){
         num=0
         while true;
-        # while (( num < 5));
         do
             echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
             (( num += 1 ))
@@ -38,16 +37,12 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --auto-dedup && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --auto-dedup No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --auto-dedup failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --pre-dump-mode splice && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --pre-dump-mode No Pass"
-    
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --pre-dump-mode failed"
     LOG_INFO "End to run test."
 }
-
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."

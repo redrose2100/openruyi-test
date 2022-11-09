@@ -26,7 +26,6 @@ function pre_test(){
     test_process(){
         num=0
         while true;
-        # while (( num < 5));
         do
             echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
             (( num += 1 ))
@@ -42,46 +41,29 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    
     cd checkpoint_file
     (test_process) & pid=$! && DUMP
-
     criu restore -j & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -j No Pass"
-    
+    CHECK_RESULT $? 0 0 "Check criu restore -j failed"
     criu restore -j -d & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -d No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore -d failed"
     criu restore -j -d -S & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -S No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore -S failed"
     cd ..
     criu restore -j -D checkpoint_file & cd checkpoint_file && DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -D No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore -D failed"
     cd ..
     criu restore -j -D checkpoint_file -W checkpoint_file & cd checkpoint_file && DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -W No Pass"
-    
+    CHECK_RESULT $? 0 0 "Check criu restore -W failed"
     criu restore -j --exec-cmd echo 'exec-cmd test' & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --exec-cmd No Pass"
-
-    # criu restore -j --freeze-cgroup & DUMP
-    # CHECK_RESULT $? 0 0 "L$LINENO: restore --freeze-cgroup No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore --exec-cmd failed"
     criu restore -j --weak-sysctls & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --weak-sysctls No Pass"
-
-    # criu restore -j --stream & DUMP
-    # CHECK_RESULT $? 0 0 "L$LINENO: restore --stream No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore --weak-sysctls failed"
     criu restore -j --network-lock iptables & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --network-lock No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore --network-lock failed"
     cd ..
     LOG_INFO "End to run test."
 }
-
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."

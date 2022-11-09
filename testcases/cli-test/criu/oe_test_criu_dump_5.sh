@@ -22,71 +22,36 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
-    
-    mkdir checkpoint_file
-    mkdir checkpoint_file_2
-
-    LOG_INFO "End to prepare the test environment."
-}
-##########################################################
-# Usage:
-#   criu dump|pre-dump -t PID [<options>]
-#   criu restore [<options>]
-#   criu check [--feature FEAT]
-#   criu page-server
-#   criu service [<options>]
-#   criu dedup
-#   criu lazy-pages -D DIR [<options>]
-
-# Commands:
-#   dump           checkpoint a process/tree identified by pid
-#   pre-dump       pre-dump task(s) minimizing their frozen time
-#   restore        restore a process/tree
-#   check          checks whether the kernel support is up-to-date
-#   page-server    launch page server
-#   service        launch service
-#   dedup          remove duplicates in memory dump
-#   cpuinfo dump   writes cpu information into image file
-#   cpuinfo check  validates cpu information read from image file
-
-# Try -h|--help for more info
-##########################################################
-function run_test(){
-    LOG_INFO "Start to run test."
-
+    mkdir checkpoint_file checkpoint_file_2
     test_process(){
         num=0
         while true;
-        # while (( num < 5));
         do
             echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
             (( num += 1 ))
             sleep 1
         done
     }
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test(){
+    LOG_INFO "Start to run test."
     pre_name='checkpoint_file' && pre_path=$(readlink -f $pre_name)
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid
     criu dump -D checkpoint_file_2 -j -t $pid --prev-images-dir $pre_path
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --prev-images-dir No Pass"
-
-    # (test_process) & criu dump -D checkpoint_file -j -t $! --page-server
-    # CHECK_RESULT $? 0 0 "L$LINENO: dump --page-server No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu dump --prev-images-dir failed"
     (test_process) & criu dump -D checkpoint_file -j -t $! --auto-dedup
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --auto-dedup No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu dump --auto-dedup failed"
     (test_process) & criu dump -D checkpoint_file -j -t $! --pre-dump-mode splice
-    CHECK_RESULT $? 0 0 "L$LINENO: dump --pre-dump-mode No Pass"
-    
+    CHECK_RESULT $? 0 0 "Check criu dump --pre-dump-mode failed"
     LOG_INFO "End to run test."
 }
-
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf checkpoint_file
-    rm -rf checkpoint_file_2
+    rm -rf checkpoint_file checkpoint_file_2
     LOG_INFO "End to restore the test environment."
 }
 

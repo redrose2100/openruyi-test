@@ -26,7 +26,6 @@ function pre_test(){
     test_process(){
         num=0
         while true;
-        # while (( num < 5));
         do
             echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
             (( num += 1 ))
@@ -38,37 +37,26 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --external dev && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --external No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --external failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --tcp-established && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --tcp-established No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --tcp-established failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --skip-in-flight && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --skip-in-flight No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --skip-in-flight failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --tcp-close && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --tcp-close No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --tcp-close failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -r / && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump -r No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -r failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --evasive-devices && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --evasive-devices No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --evasive-devices failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --link-remap && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --link-remap No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --link-remap failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --ghost-limit size && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --ghost-limit No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --ghost-limit failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --action-script FILE && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --action-script No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --action-script failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -l && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump -l No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -l failed"
     LOG_INFO "End to run test."
 }
 

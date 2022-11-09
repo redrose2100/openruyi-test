@@ -26,7 +26,6 @@ function pre_test(){
     test_process(){
         num=0
         while true;
-        # while (( num < 5));
         do
             echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
             (( num += 1 ))
@@ -38,37 +37,26 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -L / && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump -L No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -L failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --force-irmap && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --force-irmap No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --force-irmap failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --irmap-scan-path FILE && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --irmap-scan-path No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --irmap-scan-path failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --manage-cgroups && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --manage-cgroups No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --manage-cgroups failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-root / && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --cgroup-root No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --cgroup-root failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-props STRING && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --cgroup-props STRING No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --cgroup-props STRING failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-props-file FILE && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --cgroup-props-file STRING No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --cgroup-props-file STRING failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-dump-controller NAME && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --cgroup-dump-controller No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --cgroup-dump-controller failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-yard PATH && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --cgroup-yard No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --cgroup-yard failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --lsm-profile selinux:NAME && kill -9 $pid
-    CHECK_RESULT $? 0 0 "L$LINENO: pre-dump --lsm-profile No Pass"
-    
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --lsm-profile failed"
     LOG_INFO "End to run test."
 }
 

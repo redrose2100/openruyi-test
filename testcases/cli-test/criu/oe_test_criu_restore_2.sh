@@ -22,41 +22,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
-    
     mkdir checkpoint_file
-
-    LOG_INFO "End to prepare the test environment."
-}
-##########################################################
-# Usage:
-#   criu dump|pre-dump -t PID [<options>]
-#   criu restore [<options>]
-#   criu check [--feature FEAT]
-#   criu page-server
-#   criu service [<options>]
-#   criu dedup
-#   criu lazy-pages -D DIR [<options>]
-
-# Commands:
-#   dump           checkpoint a process/tree identified by pid
-#   pre-dump       pre-dump task(s) minimizing their frozen time
-#   restore        restore a process/tree
-#   check          checks whether the kernel support is up-to-date
-#   page-server    launch page server
-#   service        launch service
-#   dedup          remove duplicates in memory dump
-#   cpuinfo dump   writes cpu information into image file
-#   cpuinfo check  validates cpu information read from image file
-
-# Try -h|--help for more info
-##########################################################
-function run_test(){
-    LOG_INFO "Start to run test."
-    
     test_process(){
         num=0
         while true;
-        # while (( num < 5));
         do
             echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
             (( num += 1 ))
@@ -67,43 +36,34 @@ function run_test(){
         sleep 0.1
         criu dump -j -t $pid
     }
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test(){
+    LOG_INFO "Start to run test."
     cd checkpoint_file
     (test_process) & pid=$! && DUMP
-
     criu restore -j --external dev & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --external No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore --external failed"
     criu restore -j --tcp-established & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --tcp-established No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore --tcp-established failed"
     criu restore -j --skip-in-flight & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --skip-in-flight No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore --skip-in-flight failed"
     criu restore -j --tcp-close & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --tcp-close No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore --tcp-close failed"
     criu restore -j -r / & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -r No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore -r failed"
     criu restore -j --evasive-devices & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --evasive-devices No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore --evasive-devices failed"
     criu restore -j --link-remap & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --link-remap No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore --link-remap failed"
     criu restore -j --ghost-limit size & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore --ghost-limit No Pass"
-
-    # criu restore -j --action-script FILE & DUMP
-    # CHECK_RESULT $? 0 0 "L$LINENO: restore --action-script No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore --ghost-limit failed"
     criu restore -j -l & DUMP
-    CHECK_RESULT $? 0 0 "L$LINENO: restore -l No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu restore -l failed"
     cd ..
     LOG_INFO "End to run test."
 }
-
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."

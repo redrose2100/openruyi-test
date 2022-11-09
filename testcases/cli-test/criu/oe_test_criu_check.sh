@@ -27,34 +27,24 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    
     criu check | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check default No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu check failed"
     criu check --extra | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check --extra No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu check --extra failed"
     criu check --experimental | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check --experimental No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu check --experimental failed"
     criu check --all | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check --all No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu check --all failed"
     criu check --feature mnt_id | grep 'mnt_id is supported'
-    CHECK_RESULT $? 0 0 "L$LINENO: check --feature No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu check --feature failed"
     criu check -o FILE | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check -o No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu check -o failed"
     criu check -v | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check -v No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu check -v failed"
     criu check -vNUM | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check -vNUM No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu check -vNUM failed"
     criu check --display-stats | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "L$LINENO: check --display-stats No Pass"
-
+    CHECK_RESULT $? 0 0 "Check criu check --display-stats failed"
     LOG_INFO "End to run test."
 }
 
