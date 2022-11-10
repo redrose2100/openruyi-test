@@ -19,34 +19,34 @@ msgstr ""
 
 #: ..//test.desktop.h:1
 msgid "hello, i am desktop"
-msgstr "你好，我是desktop文件。"
+msgstr "desktop"
 
 #: ..//test.keys.h:1
 msgid "hello, i am keys"
-msgstr "你好，我是keys文件。"
+msgstr "keys"
 
 #: test.quoted:1
 msgid "hello, i am quoted"
-msgstr "你好，我是quoted文件。"
+msgstr "quoted"
 
 #: ..//test.schemas.h:1
 msgid "hello, i am schemas"
-msgstr "你好，我是schemas文件。"
+msgstr "schemas"
 
 #. Description
 #. This comment is inserted in PO files to help translators
 #.
 #: test.rfc822deb:6
 msgid "hello, i am rfc822 file"
-msgstr "你好，我是rfc822deb文件。"
+msgstr "rfc822deb"
 
 #: test.quotedxml:2
 msgid "hello, i am quotedxml"
-msgstr "你好，我是quotedxml文件。"
+msgstr "quotedxml"
 
 #: ..//test.xml.h:1
 msgid "hello, i am xml"
-msgstr "你好，我是xml文件。"
+msgstr "xml"
 
 
 

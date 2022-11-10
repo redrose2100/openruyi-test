@@ -23,16 +23,16 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # Data and parameter configuration that need to be preloaded
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    local_LANG=$LANG
-    export LANG=en_US
     test -d tmp || mkdir tmp
     LOG_INFO "End to config params of the case."
 }
 
 # Preparation for installation of test objects, tools required for testing, etc
 function pre_test() {
-   LOG_INFO "Start to prepare the test environment."
+    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "intltool"
+    local_LANG=$LANG
+    export LANG=en_US.UTF-8
     cp -rf test_input/* tmp
     LOG_INFO "End to prepare the test environment."
 }
@@ -40,72 +40,81 @@ function pre_test() {
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-    intltool-update --help | grep "Usage"
+    intltool-update --help | grep -i "Usage"
     CHECK_RESULT $? 0 0 "option: --help error"
     intltool-update --version | grep -E "intltool-update.*[0-9.]+"
     CHECK_RESULT $? 0 0 "option: --version error"
     cd tmp/po
     intltool-update -p 
-    grep -c "hello, i am xml." untitled.pot | grep 5
+    grep -i "hello, i am xml." untitled.pot
     CHECK_RESULT $? 0 0 "option: -p error"
     rm -rf untitled.pot
     intltool-update --pot
-    grep -c "hello, i am xml." untitled.pot | grep 5
+    grep -i "hello, i am xml." untitled.pot
     CHECK_RESULT $? 0 0 "option: --pot error"
     rm -rf untitled.pot
+
     intltool-update -p -g "test_output"
-    grep -c "hello, i am xml.*" test_output.pot | grep 5
+    grep -i "hello, i am xml.*" test_output.pot
     CHECK_RESULT $? 0 0 "option: -g error"
     rm -rf test_output.pot
     intltool-update -p --gettext-package="test_output"
-    grep -c "hello, i am xml.*" test_output.pot | grep 5
+    grep -i "hello, i am xml.*" test_output.pot
     CHECK_RESULT $? 0 0 "option: --gettext-package=NAME error"
     rm -rf test_output.pot
+
     intltool-update -s
-    grep -c "char.*hello, i am xml.*" ../extract.xml.h | grep 5
+    grep -i "char.*hello, i am xml.*" ../extract.xml.h
     CHECK_RESULT $? 0 0 "option: -s error"
     rm -rf ../extract.xml.h
     intltool-update --headers
-    grep -c "char.*hello, i am xml.*" ../extract.xml.h | grep 5
+    grep -i "char.*hello, i am xml.*" ../extract.xml.h
     CHECK_RESULT $? 0 0 "option: --headers error"
     rm -rf ../extract.xml.h
-    intltool-update -x -s | grep -q "Wrote ../extract.xml.h"
+
+    intltool-update -x -s | grep -i "Wrote ../extract.xml.h"
     CHECK_RESULT $? 0 0 "option: -x error"
     rm -rf ../extract.xml.h
-    intltool-update --verbose -s | grep -q "Wrote ../extract.xml.h"
+    intltool-update --verbose -s | grep -i "Wrote ../extract.xml.h"
     CHECK_RESULT $? 0 0 "option: --verbose error"
     rm -rf ../extract.xml.h
-    intltool-update -x -m | grep -q "Searching for missing"
+
+    intltool-update -x -m | grep -i "Searching for missing"
     CHECK_RESULT $? 0 0 "option: -m error"
-    intltool-update -x --maintain | grep -q "Searching for missing"
+    rm -rf missing
+    intltool-update -x --maintain | grep -i "Searching for missing"
     CHECK_RESULT $? 0 0 "option: --maintain error"
-    intltool-update -r 2>&1 | grep "2 translated messages, 1 fuzzy translation, untranslated messages."
+    rm -rf missing
+
+    intltool-update -r 2>&1 | grep -i "2 translated messages, 1 fuzzy translation, 2 untranslated messages."
     CHECK_RESULT $? 0 0 "option: -r error"
-    grep -c "hello, i am xml.*" untitled.pot | grep 5
+    grep -i "hello, i am xml.*" untitled.pot | grep 5
     CHECK_RESULT $? 0 0 "option: -r error"
     rm -rf untitled.pot
-    intltool-update --report 2>&1 | grep "2 translated messages, 1 fuzzy translation, untranslated messages."
+    intltool-update --report 2>&1 | grep -i "2 translated messages, 1 fuzzy translation, 2 untranslated messages."
     CHECK_RESULT $? 0 0 "option: --report error"
-    grep -c "hello, i am xml.*" untitled.pot | grep 5
+    grep -i "hello, i am xml.*" untitled.pot | grep 5
     CHECK_RESULT $? 0 0 "option: --report error"
     rm -rf untitled.pot
-    intltool-update -g test_input -d test_input -o test.out 2>&1 | grep -q "2 translated messages, 1 fuzzy translation, untranslated messages." 
+
+    intltool-update -g test_input -d test_input -o test.out 2>&1 | grep -i "2 translated messages, 1 fuzzy translation, 2 untranslated messages." 
     CHECK_RESULT $? 0 0 "option: -d -o error"
-    grep -cE "msgstr ""|xml__2|xml__3|#~ msgstr.*xml__7" test.out | grep 6
+    grep -i "hello, i am xml" test.out
     CHECK_RESULT $? 0 0 "option: -d -o error"
     rm -rf test.out
-    intltool-update -g test_input --dist test_input --output-file=test.out 2>&1 | grep -q "2 translated messages, 1 fuzzy translation, untranslated messages." && \
-    grep -cE "msgstr ""|xml__2|xml__3|#~ msgstr.*xml__7" test.out | grep 6
+    intltool-update -g test_input --dist test_input --output-file=test.out 2>&1 | grep -q "2 translated messages, 1 fuzzy translation, 2 untranslated messages."
+    CHECK_RESULT $? 0 0 "option: --dist test_input --output-file error"
+    grep -i "hello, i am xml" test.out
     CHECK_RESULT $? 0 0 "option: --dist --output-file=FILE error"
     rm -rf test.out
-    cd ../../
+
     LOG_INFO "End to run test."
 }
 
 # Post-processing to restore the test environment
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf tmp
+    rm -rf ../../tmp
     DNF_REMOVE
     export LANG=${local_LANG}
     LOG_INFO "End to restore the test environment."

@@ -1,5 +1,0 @@
-Template: timezoneconf/toplevel
-Type: select
-Choices: ${choices}
-Description: hello, i am rfc822 file
-Description-merge_test.UTF-8: 你好，我是rfc822deb文件。

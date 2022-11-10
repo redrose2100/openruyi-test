@@ -33,9 +33,11 @@ function config_params() {
 function pre_test() {
    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "intltool"
+    local_LANG=$LANG
+    export LANG=en_US.UTF-8
     test -d tmp || mkdir tmp
     cp -rf test_input/* tmp
-    mkdir -p tmp/po
+    mkdir -p po
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -43,9 +45,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    intltool-prepare -h | grep "Usage"
+    intltool-prepare -h | grep -i "Usage"
     CHECK_RESULT $? 0 0 "option: -h error"
-    intltool-prepare --help | grep "Usage"
+    intltool-prepare --help | grep -i "Usage"
     CHECK_RESULT $? 0 0 "option: --help error"
 
     intltool-prepare -v | grep -E "intltool-prepare intltool [0-9].+"
@@ -53,57 +55,52 @@ function run_test() {
     intltool-prepare -v | grep -E "intltool-prepare intltool [0-9].+"
     CHECK_RESULT $? 0 0 "option: --version error"
 
-    cd tmp
-
-    intltool-prepare 2>&1 | grep "Working"
+    tar -xvf ./tmp/common.tar -C ./tmp
+    intltool-prepare 2>&1 | grep -i "Working"
     CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep $'extract1.desktop.in\nmerge8.keys.in' po/POTFILES.in
+    grep -i $'extract1.desktop.in\nmerge8.keys.in' po/POTFILES.in
     CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep "msgstr" po/test.po
+    grep -i "msgstr" po/test.po
     CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep $'extract1.desktop\nmerge8.keys' .cvsignore
+    grep -i $'extract1.desktop\nmerge8.keys' ./tmp/common/.cvsignore
     CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep "Desktop Entry" extract1.desktop.in
+    grep -i "Desktop Entry" ./tmp/common/extract1.desktop.in
     CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep "_description" merge8.keys.in
+    grep -i "_description" ./tmp/common/merge8.keys.in
     CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    test -f Makefile.am
+    test -f ./tmp/common/Makefile.am
     CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    rm -rf po/* *.in .cvsignore Makefile.am*
 
     intltool-prepare -x 2>&1 | grep -E "Appending|Generating"
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-     grep $'extract1.desktop.in\nmerge8.keys.in' po/POTFILES.in
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep "msgstr" po/test.po
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep $'extract1.desktop\nmerge8.keys' .cvsignore
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep "Desktop Entry" extract1.desktop.in
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep "_description" merge8.keys.in
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    test -f Makefile.am
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    rm -rf po/* *.in .cvsignore Makefile.am*
+    CHECK_RESULT $? 0 0 "intltool-prepare -x output error"
+    grep -i $'extract1.desktop.in\nmerge8.keys.in' po/POTFILES.in
+    CHECK_RESULT $? 0 0 "intltool-prepare -x output error"
+    grep -i "msgstr" po/test.po
+    CHECK_RESULT $? 0 0 "intltool-prepare -x output error"
+    grep -i $'extract1.desktop\nmerge8.keys' ./tmp/common/.cvsignore
+    CHECK_RESULT $? 0 0 "intltool-prepare -x output error"
+    grep -i "Desktop Entry" ./tmp/common/extract1.desktop.in
+    CHECK_RESULT $? 0 0 "intltool-prepare -x output error"
+    grep -i "_description" ./tmp/common/merge8.keys.in
+    CHECK_RESULT $? 0 0 "intltool-prepare -x output error"
+    test -f ./tmp/common/Makefile.am
+    CHECK_RESULT $? 0 0 "intltool-prepare -x output error"
 
     intltool-prepare --verbose 2>&1 | grep -E "Appending|Generating"
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep $'extract1.desktop.in\nmerge8.keys.in' po/POTFILES.in
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep "msgstr" po/test.po
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep $'extract1.desktop\nmerge8.keys' .cvsignore
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep "Desktop Entry" extract1.desktop.in
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    grep "_description" merge8.keys.in
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    test -f Makefile.am
-    CHECK_RESULT $? 0 0 "intltool-prepare output error"
-    rm -rf po/* *.in .cvsignore Makefile.am*
+    CHECK_RESULT $? 0 0 "intltool-prepare --verbose output error"
+    grep -i $'extract1.desktop.in\nmerge8.keys.in' po/POTFILES.in
+    CHECK_RESULT $? 0 0 "intltool-prepare --verbose output error"
+    grep -i "msgstr" po/test.po
+    CHECK_RESULT $? 0 0 "intltool-prepare --verbose output error"
+    grep -i $'extract1.desktop\nmerge8.keys' ./tmp/common/.cvsignore
+    CHECK_RESULT $? 0 0 "intltool-prepare --verbose output error"
+    grep -i "Desktop Entry" ./tmp/common/extract1.desktop.in
+    CHECK_RESULT $? 0 0 "intltool-prepare --verbose output error"
+    grep -i "_description" ./tmp/common/merge8.keys.in
+    CHECK_RESULT $? 0 0 "intltool-prepare --verbose output error"
+    test -f ./tmp/common/Makefile.am
+    CHECK_RESULT $? 0 0 "intltool-prepare --verbose output error"
 
-    cd ../
     
     LOG_INFO "End to run test."
 }
@@ -111,7 +108,7 @@ function run_test() {
 # Post-processing to restore the test environment
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf tmp
+    rm -rf tmp po
     DNF_REMOVE
     export LANG=${local_LANG}
     LOG_INFO "End to restore the test environment."

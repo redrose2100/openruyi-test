@@ -20,25 +20,14 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# Data and parameter configuration that need to be preloaded
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-
-    local_LANG=$LANG
-    export LANG=en_US
-    test -d tmp || mkdir tmp
-
-    LOG_INFO "End to config params of the case."
-}
-
 # Preparation for installation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "intltool"
-    cp -rf test_input/* tmp
-    mkdir -p tmp/po
-    
+    local_LANG=$LANG
+    export LANG=en_US.UTF-8
+    cp -rf test_input/* ./
+    mkdir -p ./po
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -46,15 +35,13 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    intltoolize --help | grep "Usage"
+    intltoolize --help | grep -i "Usage"
     CHECK_RESULT $? 0 0 "option: --help error"
     intltoolize --version | grep -E "intltoolize.*[0-9.]+"
     CHECK_RESULT $? 0 0 "option: --version error"
 
-    cd tmp
-
     rm -rf po/*
-    intltoolize --automake
+    intltoolize --automake  
     grep -c "Makefile" po/Makefile.in.in | grep 9
     CHECK_RESULT $? 0 0 "option: --automake error"
     ls -Al po/Makefile.in.in | grep "\->" 
@@ -81,8 +68,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: -f error" 
     intltoolize --debug --force 2>&1 | grep "force=yes"
     CHECK_RESULT $? 0 0 "option: --force error" 
-
-    cd ../../
     
     LOG_INFO "End to run test."
 }
@@ -90,10 +75,9 @@ function run_test() {
 # Post-processing to restore the test environment
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    
-    rm -rf oe_test_intltool_intltoolize/tmp
+    rm -rf po aclocal.m4 configure.in
     DNF_REMOVE
-
+    export LANG=${local_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

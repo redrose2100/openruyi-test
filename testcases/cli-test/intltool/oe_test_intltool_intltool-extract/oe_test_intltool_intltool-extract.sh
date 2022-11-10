@@ -21,10 +21,10 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 # Data and parameter configuration that need to be preloaded
+# Data and parameter configuration that need to be preloaded
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    local_LANG=$LANG
-    export LANG=en_US
+    test -d tmp || mkdir tmp
     LOG_INFO "End to config params of the case."
 }
 
@@ -32,7 +32,8 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "intltool"
-    test -d tmp || mkdir tmp
+    local_LANG=$LANG
+    export LANG=en_US.UTF-8
     cp -rf test_input/* tmp
     LOG_INFO "End to prepare the test environment."
 }
@@ -41,9 +42,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    intltool-extract -h | grep "Usage"
+    intltool-extract -h | grep -i "Usage"
     CHECK_RESULT $? 0 0 "option: -h error"
-    intltool-extract --help | grep "Usage"
+    intltool-extract --help | grep -i "Usage"
     CHECK_RESULT $? 0 0 "option: --help error"
 
     intltool-prepare -v | grep -E "intltool-prepare intltool [0-9].+"
@@ -52,66 +53,65 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: --version error"
 
 
-    cd tmp
-    tar -xvf common.tar 
+
+    tar -xvf ./tmp/common.tar -C ./tmp
     for type in "glade" "ini" "keys" "rfc822deb"  \
                 "schemas" "gsettings" "xml" "tlk" \
                 "quoted" "quotedxml" "qtdesigner"
     do
-        intltool-extract --type="gettext/${type}" common/test.${type} | grep "Wrote" 
+        intltool-extract --type="gettext/${type}" ./tmp/common/test.${type} | grep -i "Wrote" 
         CHECK_RESULT $? 0 0 "option: --type=\"gettext/${type}\" error"
-        test -f common/test.${type}.h
+        test -f ./tmp/common/test.${type}.h
         CHECK_RESULT $? 0 0 "option: --type=\"gettext/${type}\" error"
-        grep "char" common/test.${type}.h
+        grep -i "char" ./tmp/common/test.${type}.h
         CHECK_RESULT $? 0 0 "option: --type=\"gettext/${type}\" error"
     done
 
-    intltool-extract --type="gettext/xml" test.xml -l | grep "Wrote"
+    intltool-extract --type="gettext/xml" ./tmp/test.xml -l | grep -i "Wrote"
     CHECK_RESULT $? 0 0 "option: -l error"
-    test -f tmp/test.xml.h
+    test -f ./tmp/test.xml.h
     CHECK_RESULT $? 0 0 "option: -l error"
-    grep "char" tmp/test.xml.h
+    grep -i "char" ./tmp/test.xml.h
     CHECK_RESULT $? 0 0 "option: -l error"
-    rm -rf tmp/test.xml.h
-    intltool-extract --type="gettext/xml" test.xml --local | grep "Wrote"
+    rm -rf ./tmp/test.xml.h
+    intltool-extract --type="gettext/xml" ./tmp/test.xml --local | grep -i "Wrote"
     CHECK_RESULT $? 0 0 "option: --local error"
-    test -f tmp/test.xml.h
+    test -f ./tmp/test.xml.h
     CHECK_RESULT $? 0 0 "option: -l error"
-    grep "char" tmp/test.xml.h
+    grep -i "char" ./tmp/test.xml.h
     CHECK_RESULT $? 0 0 "option: --local error"
 
-    cp -bf test.new.xml test.xml
-    intltool-extract --type="gettext/xml" test.xml --update | grep "Wrote"
+    cp -bf ./tmp/test.new.xml ./tmp/test.xml
+    intltool-extract --type="gettext/xml" ./tmp/test.xml --update | grep -i "Wrote"
     CHECK_RESULT $? 0 0 "option: --update error"
-    test -f test.xml.h
+    test -f ./tmp/test.xml.h
     CHECK_RESULT $? 0 0 "option: --update error"
-    grep "new" test.xml.h
+    grep -i "new" ./tmp/test.xml.h
     CHECK_RESULT $? 0 0 "option: --update error"
-    mv -f test.xml~ test.xml
+    mv -f ./tmp/test.xml~ ./tmp/test.xml
     
-    rm -rf test.xml.h
-    cp test.xml ./tmp
-    intltool-extract --type="gettext/xml" test.xml --srcdir ./tmp | grep "Wrote"
+    rm -rf ./tmp/test.xml.h
+    intltool-extract --type="gettext/xml" test.xml --srcdir ./tmp | grep -i "Wrote"
     CHECK_RESULT $? 0 0 "option: --srcdir error"
     test -f test.xml.h
     CHECK_RESULT $? 0 0 "option: --srcdir error"
-    grep "char" test.xml.h
+    grep -i "char" test.xml.h
     CHECK_RESULT $? 0 0 "option: --srcdir error"
 
     rm -rf test.xml.h
-    OUTPUT=$(intltool-extract --type="gettext/xml" test.xml -q) 
-    grep "char" test.xml.h
+    OUTPUT=$(intltool-extract --type="gettext/xml" ./tmp/test.xml -q) 
+    grep -i "char" ./tmp/test.xml.h
     CHECK_RESULT $? 0 0 "option: -q error"
     test -z "${OUTPUT}" -a $? -eq 0
     CHECK_RESULT $? 0 0 "option: -q error"
-    rm -rf test.xml.h
-    OUTPUT=$(intltool-extract --type="gettext/xml" test.xml --quiet)
-    grep "char" test.xml.h
+    rm -rf ./tmp/test.xml.h
+    OUTPUT=$(intltool-extract --type="gettext/xml" ./tmp/test.xml --quiet)
+    grep -i "char" ./tmp/test.xml.h
     CHECK_RESULT $? 0 0 "option: --quiet error"
     test -z "${OUTPUT}" -a $? -eq 0 
     CHECK_RESULT $? 0 0 "option: --quiet error"
 
-    cd ../
+    
 
     LOG_INFO "End to run test."
 }
