@@ -1,43 +1,38 @@
-#!/usr/bin/bash
+#! /usr/bin/bash
+
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
 
 # #############################################
 # @Author    :   xiechangyan1
 # @Contact   :   xiechangyan@uniontech.com
-# @Date      :   2022-11-09
+# @Date      :   2022-11-10
+# @License   :   Mulan PSL v2
+# @Desc      :   Test pcre use
 # ############################################
 
+source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-function prce_install() {
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
     yum install  pcre pcre-devel -y
-    if [ $? -eq 0 ];then
-      echo 'pcre installation succeeded'
-    else
-      echo 'Packages name or warehouse error'
-    fi
-}
-
-function check_version() {
-    version=`pcre-config --version`
-    if [ $? -eq 0 ];then
-      echo "pcre's  installed successfully"
-    else
-      echo 'pcre  installed failed'
-      exit 1
-    fi
-}
-
-function import_config() {
+    CHECK_RESULT $? 0 0 "Packages name or warehouse error"
     echo '/usr/local/lib/pcre' >> /etc/ld.so.conf
     ldconfig
-    if [ $? -eq 0 ];then
-      echo "File configuration successful(ld.so.conf)"
-    else
-      echo "check your file configuration (/etc/ld.so.conf)"
-      exit 1
-    fi
-}
-
-function edit_config() {
+    CHECK_RESULT $? 0 0 "check your file configuration (/etc/ld.so.conf)"
     cat > file.c << EOF
 #include <pcre.h>
 #include <stdio.h>
@@ -47,27 +42,17 @@ int main()
   return 0;
 }
 EOF
-    if [ $? -eq 0 ];then
-      echo "File configuration successful(file.c)"
-    else
-      echo "check your file configuration (file.c)"
-      exit 1
-    fi
+    CHECK_RESULT $? 0 0 "check your file configuration (file.c)"
+    gcc -I/usr/local/include/pcre -L/usr/local/lib/pcre -lpcre file.c
+    CHECK_RESULT $? 0 0 "check your file configuration"
+    LOG_INFO "End to run test."
 }
 
-
-function make_file.c() {
-      gcc -I/usr/local/include/pcre -L/usr/local/lib/pcre -lpcre file.c
-  if [ $? -eq 0 ];then
-    echo 'pcre verify successful'
-  else
-    echo 'check your file configuration (File.c)'
-    exit 1
-  fi
+function post_test() {
+    LOG_INFO "Start to clean the test environment."
+    userdel -rf testuser
+    rm -rf /opt/myproject
+    LOG_INFO "Start to clean the test environment."
 }
 
-prce_install
-check_version
-import_config
-edit_config
-make_file.c
+main "$@"
