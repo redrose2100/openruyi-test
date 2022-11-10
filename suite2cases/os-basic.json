@@ -520,7 +520,7 @@
 	    "name": "oe_test_net_mtr"
 	},
     {
-        "name":"os_test_basic_pcre_use"
+        "name":"oe_test_basic_pcre_use"
     }
     ]
 }
