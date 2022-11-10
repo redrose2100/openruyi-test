@@ -21,59 +21,43 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "units"
     touch test.txt
-
     LOG_INFO "End to prepare the test environment."
 }
-##########################################################
 
-##########################################################
 function run_test(){
     LOG_INFO "Start to run test."
-
     units -h | grep "Usage: units"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -h No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -h failed"
     units -c | grep "Currency exchange rates from FloatRates"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -c No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -c failed"
     units -d 8 &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -d No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -d failed"
     units -e &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -e No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -e failed"
     units -f test.txt &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -f No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -f failed"
     units -H test.txt &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -H No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -H failed"
     units -L test.txt &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -L No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -L failed"
     units -l test.txt &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -l No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -l failed"
     units -m &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -m No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -m failed"
     units -n &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -n No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -n failed"
     LOG_INFO "End to run test."
 }
-
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
