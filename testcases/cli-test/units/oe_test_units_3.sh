@@ -24,25 +24,18 @@ function pre_test(){
     DNF_INSTALL "units"
     LOG_INFO "End to prepare the test environment."
 }
-##########################################################
 
-##########################################################
 function run_test(){
     LOG_INFO "Start to run test."
-
     units -u gauss &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -u No Pass"
-
-    units -V | grep "GNU Units version"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -V No Pass"
-
-    units -I | grep "GNU Units version"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -I No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -u failed"
+    units -V | grep "GNU Units version 2.21"
+    CHECK_RESULT $? 0 0 "Check units -V failed"
+    units -I | grep "GNU Units version 2.21"
+    CHECK_RESULT $? 0 0 "Check units -I failed"
     LOG_INFO "End to run test."
 }
-
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."

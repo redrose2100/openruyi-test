@@ -24,54 +24,40 @@ function pre_test(){
     DNF_INSTALL "units"
     LOG_INFO "End to prepare the test environment."
 }
-##########################################################
 
-##########################################################
 function run_test(){
     LOG_INFO "Start to run test."
-
     units -S &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -S No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -S failed"
     units -o %.8g &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -o No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -o failed"
     units -p &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -p No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -p failed"
     units -q &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -q No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -q failed"
     units -s &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -s No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -s failed"
     units -v &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -v No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -v failed"
     units -1 &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -1 No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -1 failed"
     units -t &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -t No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -t failed"
     units -r &
     echo "exit"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -r No Pass"
-    
+    CHECK_RESULT $? 0 0 "Check units -r failed"
     units -U | grep "/usr/share/units/definitions.units"
-    CHECK_RESULT $? 0 0 "L$LINENO: units -U No Pass"
-
+    CHECK_RESULT $? 0 0 "Check units -U failed"
     LOG_INFO "End to run test."
 }
-
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
