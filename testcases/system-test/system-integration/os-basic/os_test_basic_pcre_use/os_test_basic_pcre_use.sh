@@ -6,7 +6,6 @@
 # @Date      :   2022-11-09
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function prce_install() {
     yum install  pcre pcre-devel -y
@@ -67,4 +66,8 @@ function make_file.c() {
   fi
 }
 
-main "$@"
+prce_install
+check_version
+import_config
+edit_config
+make_file.c
