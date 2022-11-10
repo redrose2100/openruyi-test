@@ -28,7 +28,7 @@ function pre_test(){
 function run_test(){
     LOG_INFO "Start to run test."
     docker run -it --rm registry.gitlab.com/python-gitlab/python-gitlab:latest project get --id gitlab-org/gitlab
-    CHECK_RESULT $? 0 0 "L$LINENO: python-gitlab docker run No Pass"
+    CHECK_RESULT $? 0 0 "Check python-gitlab docker run failed"
     LOG_INFO "End to run test."
 }
 
