@@ -21,23 +21,16 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "python-gitlab"
-
     LOG_INFO "End to prepare the test environment."
 }
-##########################################################
 
-##########################################################
 function run_test(){
     LOG_INFO "Start to run test."
-
     docker run -it --rm registry.gitlab.com/python-gitlab/python-gitlab:latest project get --id gitlab-org/gitlab
     CHECK_RESULT $? 0 0 "L$LINENO: python-gitlab docker run No Pass"
-
     LOG_INFO "End to run test."
 }
-
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
