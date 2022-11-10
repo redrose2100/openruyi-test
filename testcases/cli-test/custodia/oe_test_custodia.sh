@@ -22,41 +22,57 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "custodia"
+    touch custodia.conf
+    echo -e "[global]
+debug = true
+makedirs = true
 
-    cp /etc/custodia/custodia.conf ./
+[store:sqlite]
+handler = SqliteStore
+dburi = \${libdir}/secrets.db
+table = secrets
+
+[store:encrypted_sqlite]
+handler = EncryptedOverlay
+backing_store = sqlite
+master_key = \${libdir}/secrets.key
+master_enctype = A128CBC-HS256
+autogen_master_key = true
+
+[auth:creds]
+handler = SimpleCredsAuth
+uid = root
+gid = root
+
+[authz:paths]
+handler = SimplePathAuthz
+paths = /. /secrets
+
+[/]
+handler = Root
+
+[/secrets]
+handler = Secrets
+store = encrypted_sqlite" > custodia.conf
     LOG_INFO "End to prepare the test environment."
 }
-##########################################################
-# usage: custodia [-h] [--debug] [--instance INSTANCE] [configfile]
 
-# Custodia server
-
-# positional arguments:
-#   configfile           Path to custodia server config (default: /etc/custodia/{instance}/custodia.conf)
-
-# optional arguments:
-#   -h, --help           show this help message and exit
-#   --debug              Debug mode
-#   --instance INSTANCE  Instance name
-##########################################################
 function run_test(){
     LOG_INFO "Start to run test."
-
     custodia -h | grep -E "usage: custodia \[-h\] \[--debug\] \[--instance INSTANCE\] \[configfile\]"
-    CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
-
+    CHECK_RESULT $? 0 0 "Check custodia -h failed"
     custodia --debug &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f /usr/sbin/custodia)
-    CHECK_RESULT $? 0 0 "L$LINENO: --debug No Pass"
-
+    CHECK_RESULT $? 0 0 "Check custodia --debug failed"
     custodia --instance custodia &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f /usr/sbin/custodia)
-    CHECK_RESULT $? 0 0 "L$LINENO: --instance INSTANCE No Pass"
-    
+    CHECK_RESULT $? 0 0 "Check custodia --instance INSTANCE failed"
     custodia custodia.conf &
+    CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f /usr/sbin/custodia)
-    CHECK_RESULT $? 0 0 "L$LINENO: configfile No Pass"
-
+    CHECK_RESULT $? 0 0 "Check custodia configfile failed"
     LOG_INFO "End to run test."
 }
 
