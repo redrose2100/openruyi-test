@@ -43,7 +43,7 @@ function run_test() {
         CHECK_RESULT $?
 
     else
-        grep $(lscpu | grep "Vendor ID" | awk -F " " '{print$3}') /proc/cpuinfo
+        grep $(lscpu | grep "^Vendor ID" | awk -F " " '{print$3}') /proc/cpuinfo
         CHECK_RESULT $?
     fi
     if [[ "$(dmidecode -s system-product-name)" =~ "KVM" ]]; then
