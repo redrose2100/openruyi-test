@@ -23,6 +23,9 @@
             "name": "oe_test_awk"
         },
 	{
+	    "name": "oe_test_auditctl"
+	},
+	{
 	    "name": "oe_test_ulimit"
 	},
         {
