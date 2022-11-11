@@ -20,68 +20,55 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# Data and parameter configuration that need to be preloaded
 function config_params() {
     LOG_INFO "Start to config params of the case."
-
     TMP_DIR="$(mktemp -d -t fftw.XXXXXXXXXXXX)"
-
     LOG_INFO "End to config params of the case."
 }
 
-# Installation Preparation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "fftw"
     echo "(fftw-3.3.8 fftwf_wisdom #xca4daf64 #xc8f59ea6 #x586875c9 #x14018994
 (fftwf_codelet_n1_16 0 #x12345 #x22222 #x0 #x4396230b #x936694df #xa8dfdff3 #x77777777)
 )" > ${TMP_DIR}/fftwf_wisdom
-
     LOG_INFO "End to prepare the test environment."
 }
 
-# Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-
+    fftwf-wisdom -o ${TMP_DIR}/test_1_fftwf.out cif3x4x5
+    grep -q "fftwf_wisdom" < ${TMP_DIR}/test_1_fftwf.out
+    CHECK_RESULT $? 0 0 "Check fftwf-wisdom -o failed."
+    fftwf-wisdom --output-file=${TMP_DIR}/test_2_fftwf.out cif3x4x5
+    grep -q "fftwf_wisdom" < ${TMP_DIR}/test_2_fftwf.out
+    CHECK_RESULT $? 0 0 "Check fftwf-wisdom --output-file=FILE failed."
+    LOG_INFO "End to run test."
     fftwf-wisdom -n -v 2>&1 | grep -q "system-wisdom"
-    CHECK_RESULT $? 1 0 "Check -n failed."
+    CHECK_RESULT $? 1 0 "Check fftwf-wisdom -n failed."
     fftwf-wisdom --no-system-wisdom -v 2>&1 | grep -q "system-wisdom"
-    CHECK_RESULT $? 1 0 "Check --no-system-wisdom failed."
+    CHECK_RESULT $? 1 0 "Check fftwf-wisdom --no-system-wisdom failed."
     fftwf-wisdom -w ${TMP_DIR}/fftwf_wisdom 2>&1 | grep -q "#x12345"
-    CHECK_RESULT $? 0 0 "Check -w failed."
+    CHECK_RESULT $? 0 0 "Check fftwf-wisdom -w failed."
     fftwf-wisdom -w - < ${TMP_DIR}/fftwf_wisdom 2>&1 | grep -q "#x12345"
-    CHECK_RESULT $? 0 0 "Check -w STDIN failed."    
+    CHECK_RESULT $? 0 0 "Check fftwf-wisdom -w STDIN failed."
     fftwf-wisdom --wisdom-file ${TMP_DIR}/fftwf_wisdom 2>&1 | grep -q "#x12345"
-    CHECK_RESULT $? 0 0 "Check --wisdom-file failed."
+    CHECK_RESULT $? 0 0 "Check fftwf-wisdom --wisdom-file failed."
     fftwf-wisdom -T 2 cif3x4x5 2>&1 | grep -q "fftwf_wisdom"
-    CHECK_RESULT $? 0 0 "Check -T failed."
+    CHECK_RESULT $? 0 0 "Check fftwf-wisdom -T failed."
     fftwf-wisdom --threads=2 cif3x4x5 2>&1 | grep -q "fftwf_wisdom"
-    CHECK_RESULT $? 0 0 "Check --threads=N failed."
+    CHECK_RESULT $? 0 0 "Check fftwf-wisdom --threads=N failed."
     fftwf-wisdom -m cif3x4x5 2>&1 | grep -q "#x11bdd"
-    CHECK_RESULT $? 0 0 "Check -m failed."
+    CHECK_RESULT $? 0 0 "Check fftwf-wisdom -m failed."
     fftwf-wisdom --measure cif3x4x5 2>&1 | grep -q "#x11bdd"
-    CHECK_RESULT $? 0 0 "Check --measure failed."
-    fftwf-wisdom -e cif3x4x5 2>&1 | grep -q "#x31bff"
-    CHECK_RESULT $? 0 0 "Check -e failed."
-    fftwf-wisdom --estimate cif3x4x5 2>&1 | grep -q "#x31bff"
-    CHECK_RESULT $? 0 0 "Check --estimate failed."
-    fftwf-wisdom -x cif3x4x5 2>&1 | grep -q "#x1040"
-    CHECK_RESULT $? 0 0 "Check -e failed."
-    fftwf-wisdom --exhaustive cif3x4x5 2>&1 | grep -q "#x1040"
-    CHECK_RESULT $? 0 0 "Check --exhaustive failed."
-    
+    CHECK_RESULT $? 0 0 "Check fftwf-wisdom --measure failed."
     LOG_INFO "End to run test."
 }
 
-# Post processing to restore the test environment
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     rm -rf ${TMP_DIR}
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 

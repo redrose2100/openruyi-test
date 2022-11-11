@@ -20,70 +20,52 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# Data and parameter configuration that need to be preloaded
 function config_params() {
     LOG_INFO "Start to config params of the case."
-
     TMP_DIR="$(mktemp -d -t fftw.XXXXXXXXXXXX)"
-
     LOG_INFO "End to config params of the case."
 }
 
-# Installation Preparation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
     DNF_INSTALL "fftw"
      echo "(fftw-3.3.8 fftw_wisdom #x4be12fff #x7b2df9b2 #xa5975329 #x385b0041
 (fftw_codelet_n1_16 0 #x12345 #x22222 #x0 #x4396230b #x936694df #xa8dfdff3 #x77777777)
 )" > ${TMP_DIR}/fftw_wisdom
-
     LOG_INFO "End to prepare the test environment."
 }
 
-# Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-
     fftw-wisdom -h 2>&1 | grep -q "Usage"
-    CHECK_RESULT $? 0 0 "Check -h failed."
+    CHECK_RESULT $? 0 0 "Check fftw-wisdom -h failed."
     fftw-wisdom --help 2>&1 | grep -q "Usage"
-    CHECK_RESULT $? 0 0 "Check --help failed."
-    fftw-wisdom -V 2>&1 | grep -q "version"
-    CHECK_RESULT $? 0 0 "Check -V failed."
-    fftw-wisdom --version 2>&1 | grep -q "version"
-    CHECK_RESULT $? 0 0 "Check --version failed."
+    CHECK_RESULT $? 0 0 "Check fftw-wisdom --help failed."
+    fftw-wisdom -V 2>&1 | grep -q "FFTW version"
+    CHECK_RESULT $? 0 0 "Check fftw-wisdom -V failed."
+    fftw-wisdom --version 2>&1 | grep -q "FFTW version"
+    CHECK_RESULT $? 0 0 "Check fftw-wisdom --version failed."
     fftw-wisdom cif3x4x5 2>&1 | grep -q "fftw_wisdom"
     CHECK_RESULT $? 0 0 "fftw-wisdom output failed."
     fftw-wisdom -v cif3x4x5 2>&1 | grep -q "Planning transform"
-    CHECK_RESULT $? 0 0 "Check -v failed."
+    CHECK_RESULT $? 0 0 "Check fftw-wisdom -v failed."
     fftw-wisdom --verbose cif3x4x5 2>&1 | grep -q "Planning transform"
-    CHECK_RESULT $? 0 0 "Check --verbose failed."
+    CHECK_RESULT $? 0 0 "Check fftw-wisdom --verbose failed."
     fftw-wisdom -t "1e-18" -c 2>&1 | grep -q "fftw_wisdom"
-    CHECK_RESULT $? 0 0 "Check -c failed."
+    CHECK_RESULT $? 0 0 "Check fftw-wisdom -c failed."
     fftw-wisdom -t "1e-18" --canonical 2>&1 | grep -q "fftw_wisdom"
-    CHECK_RESULT $? 0 0 "Check --canonical failed."
+    CHECK_RESULT $? 0 0 "Check fftw-wisdom --canonical failed."
     fftw-wisdom -v -t "1e-18" -c 2>&1 | grep -q "TIME LIMIT"
-    CHECK_RESULT $? 0 0 "Check -t failed."
+    CHECK_RESULT $? 0 0 "Check fftw-wisdom -t failed."
     fftw-wisdom -v --time-limit="1e-18" --canonical 2>&1 | grep -q "TIME LIMIT"
-    CHECK_RESULT $? 0 0 "Check --time-limit=<h> failed."
-    fftw-wisdom -o ${TMP_DIR}/test_1_fftw.out cif3x4x5
-    grep -q "fftw_wisdom" < ${TMP_DIR}/test_1_fftw.out
-    CHECK_RESULT $? 0 0 "Check -o failed."
-    fftw-wisdom --output-file=${TMP_DIR}/test_2_fftw.out cif3x4x5
-    grep -q "fftw_wisdom" < ${TMP_DIR}/test_2_fftw.out
-    CHECK_RESULT $? 0 0 "Check --output-file=FILE failed."
-    
+    CHECK_RESULT $? 0 0 "Check fftw-wisdom --time-limit=<h> failed."
     LOG_INFO "End to run test."
 }
 
-# Post processing to restore the test environment
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     rm -rf ${TMP_DIR}
     DNF_REMOVE
-
     LOG_INFO "End to restore the test environment."
 }
 
