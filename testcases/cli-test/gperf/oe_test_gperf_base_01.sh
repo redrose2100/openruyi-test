@@ -86,16 +86,16 @@ function run_test() {
     gperf --debug -e 2>&1 | grep "Starting program gperf"
     CHECK_RESULT $? 0 0 "Check gperf -d failed."
 
-    gperf -d -e ',' ../common/test.gperf > ./tmp/test.hpp
+    gperf -d -e ',' ./common/test.gperf > ./tmp/test.hpp
     CHECK_RESULT $? 0 0 "Check gperf -e failed."
 
-    gperf --delimiters=',' ../common/test.gperf   > ./tmp/test.hpp
+    gperf --delimiters=',' common/test.gperf   > ./tmp/test.hpp
     CHECK_RESULT $? 0 0 "Check gperf --delimiters failed."
 
-    gperf -t ../common/test.gperf  > ./tmp/test.hpp
+    gperf -t ./common/test.gperf  > ./tmp/test.hpp
     CHECK_RESULT $? 0 0 "Check gperf -t failed."
 
-    gperf --struct-type ../common/test.gperf  > ./tmp/test.h
+    gperf --struct-type ./common/test.gperf  > ./tmp/test.h
     CHECK_RESULT $? 0 0 "Check gperf --struct-type failed."
 
     rm -rf tmp
