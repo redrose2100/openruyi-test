@@ -66,7 +66,7 @@ function run_test() {
 #    return 0;
 #}
 #EOL
-    mkidr tmp
+    mkdir tmp
 
     gperf --help 2>&1 | grep "GNU 'gperf' generates"
     CHECK_RESULT $? 0 0 "Check '--help  failed"
