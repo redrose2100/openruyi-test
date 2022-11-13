@@ -20,17 +20,11 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    TMP_DIR="./tmp"
-    LOG_INFO "End to config params of the case."
-}
-
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     modprobe snd-dummy
     DNF_INSTALL "mikmod"
-	VERSION=$(rpm -qa mikmod | awk -F '-' '{print $2}')
+    VERSION=$(rpm -qa mikmod | awk -F '-' '{print $2}')
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -38,29 +32,25 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     mikmod -h | grep -q "Usage"
-    CHECK_RESULT $? 0 0 "Check -h failed."
+    CHECK_RESULT $? 0 0 "Check mikmod-h failed."
     mikmod --help | grep -q "Usage"
-    CHECK_RESULT $? 0 0 "Check --help failed"
+    CHECK_RESULT $? 0 0 "Check mikmod--help failed"
     mikmod -V | grep -q "${VERSION}" 
-    CHECK_RESULT $? 0 0 "Check -V failed"
+    CHECK_RESULT $? 0 0 "Check mikmod-V failed"
     mikmod -version | grep -q "${VERSION}"
-    CHECK_RESULT $? 0 0 "Check -version failed"
+    CHECK_RESULT $? 0 0 "Check mikmod-version failed"
     mikmod -n | grep -q "drivers"
-    CHECK_RESULT $? 0 0 "Check -n failed"
+    CHECK_RESULT $? 0 0 "Check mikmod-n failed"
     mikmod -information | grep -q "drivers"
-    CHECK_RESULT $? 0 0 "Check -in[formation] failed"
-    # Test the -N,-drvinfo parameter
+    CHECK_RESULT $? 0 0 "Check mikmod-in[formation] failed"
     mikmod -N 1 | grep "Parameter list"
-    CHECK_RESULT $? 0 0 "Check -N 1 failed"
+    CHECK_RESULT $? 0 0 "Check mikmod-N 1 failed"
     mikmod -drvinfo 1 | grep "Parameter list"
-    CHECK_RESULT $? 0 0 "Check -drvinfo 1 failed"
-    # Test the -d[river] parameter
-    cd ${TMP_DIR}
+    CHECK_RESULT $? 0 0 "Check mikmod-drvinfo 1 failed"
 	echo "Q" | mikmod -d 1 > /dev/null && cat ~/.mikmodrc | grep -q "DRIVER = 1"
-	CHECK_RESULT $? 0 0 "Check -d 1 failed"
+	CHECK_RESULT $? 0 0 "Check mikmod-d 1 failed"
 	echo "Q" | mikmod -driver 2 > /dev/null && cat ~/.mikmodrc | grep -q "DRIVER = 2"
-	CHECK_RESULT $? 0 0 "Check -driver 2 failed"
-    cd -
+	CHECK_RESULT $? 0 0 "Check mikmod-driver 2 failed"
     LOG_INFO "End to run test."
 }
 
@@ -68,7 +58,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     modprobe -r snd-dummy
-    rm -rf ~/.mikmod* ${TMP_DIR}
+    rm -rf ~/.mikmod*
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

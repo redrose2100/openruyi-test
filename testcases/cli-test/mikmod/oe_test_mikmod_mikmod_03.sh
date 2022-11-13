@@ -31,118 +31,32 @@ function pre_test() {
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-    # Test the -c[urious],-noc[urious] parameter
-	echo "Q" | mikmod -c > /dev/null && \
-        cat ~/.mikmodrc | grep -q "CURIOUS = yes"
-    CHECK_RESULT $? 0 0 "Check -c failed"
-	echo "Q" | mikmod -noc > /dev/null && \
-        cat ~/.mikmodrc | grep -q "CURIOUS = no"
-    CHECK_RESULT $? 0 0 "Check -noc failed"
-	echo "Q" | mikmod -curious > /dev/null && \
-        cat ~/.mikmodrc | grep -q "CURIOUS = yes"
-    CHECK_RESULT $? 0 0 "Check -curious failed"
-	echo "Q" | mikmod -nocurious > /dev/null && \
-        cat ~/.mikmodrc | grep -q "CURIOUS = no"
-    CHECK_RESULT $? 0 0 "Check -nocurious failed"
-    # Test the -p[laymode] parameter
-	echo "Q" | mikmod -p 1 > /dev/null && \
-        cat ~/.mikmodrc | grep -q "PM_MODULE = yes"
-    CHECK_RESULT $? 0 0 "Check -p 1 failed"
-	echo "Q" | mikmod -p 2 > /dev/null && \
-        cat ~/.mikmodrc | grep -q "PM_MULTI = yes"
-    CHECK_RESULT $? 0 0 "Check -p 2 failed"
-	echo "Q" | mikmod -p 4 > /dev/null && \
-        cat ~/.mikmodrc | grep -q "PM_SHUFFLE = yes"
-    CHECK_RESULT $? 0 0 "Check -p 4 failed"
-	echo "Q" | mikmod -p 8 > /dev/null && \
-        cat ~/.mikmodrc | grep -q "PM_RANDOM = yes"
-    CHECK_RESULT $? 0 0 "Check -p 8 failed"
-	echo "Q" | mikmod -playmode 1 > /dev/null && \
-        cat ~/.mikmodrc | grep -q "PM_MODULE = yes"
-    CHECK_RESULT $? 0 0 "Check -playmode 1 failed"
-    # Test the -t[olerant] parameter
-	echo "Q" | mikmod -t > /dev/null && \
-        cat ~/.mikmodrc | grep -q "TOLERANT = yes"
-    CHECK_RESULT $? 0 0 "Check -t failed"	
-	echo "Q" | mikmod -not > /dev/null && \
-        cat ~/.mikmodrc | grep -q "TOLERANT = no"
-    CHECK_RESULT $? 0 0 "Check -not failed"
-	echo "Q" | mikmod -tolerant > /dev/null && \
-        cat ~/.mikmodrc | grep -q "TOLERANT = yes"
-    CHECK_RESULT $? 0 0 "Check -tolerant failed"	
-	echo "Q" | mikmod -notolerant > /dev/null && \
-        cat ~/.mikmodrc | grep -q "TOLERANT = no"
-    CHECK_RESULT $? 0 0 "Check -tolerant failed"
-    # Test the -s|-ren[ice],-noren[ice],-S|-rea[ltime],-norea[ltime] parameter
-	echo "Q" | mikmod -ren > /dev/null && \
-        cat ~/.mikmodrc | grep -q "RENICE = RENICE_PRI"
-    CHECK_RESULT $? 0 0 "Check -ren failed"
-	echo "Q" | mikmod -renice > /dev/null && \
-        cat ~/.mikmodrc | grep -q "RENICE = RENICE_PRI"
-    CHECK_RESULT $? 0 0 "Check -renice failed"
-	echo "Q" | mikmod -norenice > /dev/null && \
-        cat ~/.mikmodrc | grep -q "RENICE = RENICE_NONE"
-    CHECK_RESULT $? 0 0 "Check -norenice failed"
-	echo "Q" | mikmod -s > /dev/null && \
-        cat ~/.mikmodrc | grep -q "RENICE = RENICE_PRI"
-    CHECK_RESULT $? 0 0 "Check -s failed"
-	echo "Q" | mikmod -rea > /dev/null && \
-        cat ~/.mikmodrc | grep -q "RENICE = RENICE_REAL"
-    CHECK_RESULT $? 0 0 "Check -rea failed"
-	echo "Q" | mikmod -norea > /dev/null && \
-        cat ~/.mikmodrc | grep -q "RENICE = RENICE_NONE"
-    CHECK_RESULT $? 0 0 "Check -norea failed"
-	echo "Q" | mikmod -realtime > /dev/null && \
-        cat ~/.mikmodrc | grep -q "RENICE = RENICE_REAL"
-    CHECK_RESULT $? 0 0 "Check -realtime failed"
-	echo "Q" | mikmod -norealtime > /dev/null && \
-        cat ~/.mikmodrc | grep -q "RENICE = RENICE_NONE"
-    CHECK_RESULT $? 0 0 "Check -norealtime failed"
-	echo "Q" | mikmod -S > /dev/null && \
-        cat ~/.mikmodrc | grep -q "RENICE = RENICE_REAL"
-    CHECK_RESULT $? 0 0 "Check -S failed"
-    # Test the -i[nterpolate],-noi[nterpolate] parameter
-	echo "Q" | mikmod -i > /dev/null && \
-        cat ~/.mikmodrc | grep -q "INTERPOLATE = yes"
-    CHECK_RESULT $? 0 0 "Check -i failed"
-	echo "Q" | mikmod -noi > /dev/null && \
-        cat ~/.mikmodrc | grep -q "INTERPOLATE = no"
-    CHECK_RESULT $? 0 0 "Check -noi failed"
-	echo "Q" | mikmod -interpolate > /dev/null && \
-        cat ~/.mikmodrc | grep -q "INTERPOLATE = yes"
-    CHECK_RESULT $? 0 0 "Check -interpolate failed"
-	echo "Q" | mikmod -nointerpolate > /dev/null && \
-        cat ~/.mikmodrc | grep -q "INTERPOLATE = no"
-    CHECK_RESULT $? 0 0 "Check -nointerpolate failed"
-    # Test the -hq[mixer],-nohq[mixer] parameter
-	echo "Q" | mikmod -hq > /dev/null && \
-        cat ~/.mikmodrc | grep -q "HQMIXER = yes"
-    CHECK_RESULT $? 0 0 "Check -hq failed"
-	echo "Q" | mikmod -nohq > /dev/null && \
-        cat ~/.mikmodrc | grep -q "HQMIXER = no"
-	CHECK_RESULT $? 0 0 "Check -nohq failed"
-	echo "Q" | mikmod -hqmixer > /dev/null && \
-        cat ~/.mikmodrc | grep -q "HQMIXER = yes"
-    CHECK_RESULT $? 0 0 "Check -hqmixer failed"
-	echo "Q" | mikmod -nohqmixer > /dev/null && \
-        cat ~/.mikmodrc | grep -q "HQMIXER = no"
-    CHECK_RESULT $? 0 0 "Check -nohqmixer failed"
-    # Test the -su[rround],-nosu[rround] parameter
-	echo "Q" | mikmod -su > /dev/null && \
-        cat ~/.mikmodrc | grep -q "SURROUND = yes"
-    CHECK_RESULT $? 0 0 "Check -su failed"
-	echo "Q" | mikmod -nosu > /dev/null && \
-        cat ~/.mikmodrc | grep -q "SURROUND = no"
-    CHECK_RESULT $? 0 0 "Check -nosu failed"
-	echo "Q" | mikmod -surround > /dev/null && \
-        cat ~/.mikmodrc | grep -q "SURROUND = yes"
-    CHECK_RESULT $? 0 0 "Check -surround failed"
-	echo "Q" | mikmod -nosurround > /dev/null && \
-        cat ~/.mikmodrc | grep -q "SURROUND = no"
-    CHECK_RESULT $? 0 0 "Check -nosurround failed"
-    # Test the -norc parameter
-    echo "Q" | mikmod -norc | grep -q "empty" 
-    CHECK_RESULT $? 0 0 "Check -norc failed"
+	echo "Q" | mikmod -c > /dev/null && cat ~/.mikmodrc | grep -q "CURIOUS = yes"
+    CHECK_RESULT $? 0 0 "Check mikmod -c failed"
+	echo "Q" | mikmod -noc > /dev/null && cat ~/.mikmodrc | grep -q "CURIOUS = no"
+    CHECK_RESULT $? 0 0 "Check mikmod -noc failed"
+	echo "Q" | mikmod -curious > /dev/null && cat ~/.mikmodrc | grep -q "CURIOUS = yes"
+    CHECK_RESULT $? 0 0 "Check mikmod -curious failed"
+	echo "Q" | mikmod -nocurious > /dev/null && cat ~/.mikmodrc | grep -q "CURIOUS = no"
+    CHECK_RESULT $? 0 0 "Check mikmod -nocurious failed"
+	echo "Q" | mikmod -p 1 > /dev/null && cat ~/.mikmodrc | grep -q "PM_MODULE = yes"
+    CHECK_RESULT $? 0 0 "Check mikmod -p 1 failed"
+	echo "Q" | mikmod -p 2 > /dev/null && cat ~/.mikmodrc | grep -q "PM_MULTI = yes"
+    CHECK_RESULT $? 0 0 "Check mikmod -p 2 failed"
+	echo "Q" | mikmod -p 4 > /dev/null && cat ~/.mikmodrc | grep -q "PM_SHUFFLE = yes"
+    CHECK_RESULT $? 0 0 "Check mikmod -p 4 failed"
+	echo "Q" | mikmod -p 8 > /dev/null && cat ~/.mikmodrc | grep -q "PM_RANDOM = yes"
+    CHECK_RESULT $? 0 0 "Check mikmod -p 8 failed"
+	echo "Q" | mikmod -playmode 1 > /dev/null && cat ~/.mikmodrc | grep -q "PM_MODULE = yes"
+    CHECK_RESULT $? 0 0 "Check mikmod -playmode 1 failed"
+	echo "Q" | mikmod -t > /dev/null && cat ~/.mikmodrc | grep -q "TOLERANT = yes"
+    CHECK_RESULT $? 0 0 "Check mikmod -t failed"
+	echo "Q" | mikmod -not > /dev/null && cat ~/.mikmodrc | grep -q "TOLERANT = no"
+    CHECK_RESULT $? 0 0 "Check mikmod -not failed"
+	echo "Q" | mikmod -tolerant > /dev/null && cat ~/.mikmodrc | grep -q "TOLERANT = yes"
+    CHECK_RESULT $? 0 0 "Check mikmod -tolerant failed"
+    echo "Q" | mikmod -notolerant > /dev/null && cat ~/.mikmodrc | grep -q "TOLERANT = no"
+    CHECK_RESULT $? 0 0 "Check mikmod -notolerant failed"
     LOG_INFO "End to run test."
 }
 
