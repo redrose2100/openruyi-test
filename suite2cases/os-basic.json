@@ -25,6 +25,9 @@
 	{
 	    "name": "oe_test_auditctl"
 	},
+        {
+            "name": "oe_test_cksum"
+        },
 	{
 	    "name": "oe_test_ulimit"
 	},
@@ -515,9 +518,6 @@
 	},
 	{
 	    "name": "oe_test_brotli"
-	},
-	{
-	    "name": "oe_test_net_mtr"
 	}
     ]
 }
