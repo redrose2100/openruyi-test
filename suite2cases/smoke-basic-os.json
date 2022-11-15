@@ -394,7 +394,7 @@
         {
             "name": "oe_test_libuser_sm"
         },
-	{
+        {
             "name": "oe_test_losetup"
         },
         {
@@ -461,7 +461,7 @@
             "name": "oe_test_python_subprocess_03"
         },
         {
-	   　　 "name": "oe_test_pcre_001"
+            "name": "oe_test_pcre_001"
         }
     ]
 }
