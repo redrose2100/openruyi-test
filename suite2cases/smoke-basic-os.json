@@ -423,6 +423,9 @@
         },
         {
             "name": "oe_test_nfs_03"
-        }
+        },
+	{
+	    "name": "oe_test_pcre_001"
+	}
     ]
 }
