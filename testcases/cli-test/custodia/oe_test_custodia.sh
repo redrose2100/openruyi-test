@@ -23,37 +23,6 @@ function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "custodia"
     touch custodia.conf
-    echo -e "[global]
-debug = true
-makedirs = true
-
-[store:sqlite]
-handler = SqliteStore
-dburi = \${libdir}/secrets.db
-table = secrets
-
-[store:encrypted_sqlite]
-handler = EncryptedOverlay
-backing_store = sqlite
-master_key = \${libdir}/secrets.key
-master_enctype = A128CBC-HS256
-autogen_master_key = true
-
-[auth:creds]
-handler = SimpleCredsAuth
-uid = root
-gid = root
-
-[authz:paths]
-handler = SimplePathAuthz
-paths = /. /secrets
-
-[/]
-handler = Root
-
-[/secrets]
-handler = Secrets
-store = encrypted_sqlite" > custodia.conf
     LOG_INFO "End to prepare the test environment."
 }
 
