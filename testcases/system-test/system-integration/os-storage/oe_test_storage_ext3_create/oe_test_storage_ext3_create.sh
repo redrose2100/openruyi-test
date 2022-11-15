@@ -21,8 +21,6 @@ source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
     check_free_disk
-#    mkfs.ext4 -F "/dev/${local_disk}"
-    SLEEP_WAIT 3
     LOG_INFO "Loading data is complete!"
 }
 
