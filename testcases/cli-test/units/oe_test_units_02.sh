@@ -27,35 +27,52 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    units -S &
-    echo "exit"
+    units -S & echo "exit"
     CHECK_RESULT $? 0 0 "Check units -S failed"
-    units -o %.8g &
-    echo "exit"
+    units --show-factor & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --show-factor failed"
+    units --conformable & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --conformable failed"
+    units -o %.8g & echo "exit"
     CHECK_RESULT $? 0 0 "Check units -o failed"
-    units -p &
-    echo "exit"
+    units --output-format %.8g & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --output-format failed"
+    units -p & echo "exit"
     CHECK_RESULT $? 0 0 "Check units -p failed"
-    units -q &
-    echo "exit"
+    units --product & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --product failed"
+    units -q & echo "exit"
     CHECK_RESULT $? 0 0 "Check units -q failed"
-    units -s &
-    echo "exit"
+    units --quiet & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --quiet failed"
+    units --silent & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --silent failed"
+    units -s & echo "exit"
     CHECK_RESULT $? 0 0 "Check units -s failed"
-    units -v &
-    echo "exit"
+    units --strict & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --strict failed"
+    units -v & echo "exit"
     CHECK_RESULT $? 0 0 "Check units -v failed"
-    units -1 &
-    echo "exit"
+    units --verbose & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --verbose failed"
+    units --compact & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --compact failed"
+    units -1 & echo "exit"
     CHECK_RESULT $? 0 0 "Check units -1 failed"
-    units -t &
-    echo "exit"
+    units --one-line & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --one-line failed"
+    units -t & echo "exit"
     CHECK_RESULT $? 0 0 "Check units -t failed"
-    units -r &
-    echo "exit"
+    units --terse & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --terse failed"
+    units -r & echo "exit"
     CHECK_RESULT $? 0 0 "Check units -r failed"
+    units --round & echo "exit"
+    CHECK_RESULT $? 0 0 "Check units --round failed"
     units -U | grep "/usr/share/units/definitions.units"
     CHECK_RESULT $? 0 0 "Check units -U failed"
+    units --unitsfile | grep "/usr/share/units/definitions.units"
+    CHECK_RESULT $? 0 0 "Check units --unitsfile failed"
     LOG_INFO "End to run test."
 }
 
