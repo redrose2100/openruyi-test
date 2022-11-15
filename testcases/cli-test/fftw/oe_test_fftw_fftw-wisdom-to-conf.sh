@@ -22,10 +22,11 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    TMP_DIR="$(mkdir -p ./tmp)"
+    mkdir -p ./tmp
+    VERSION="$(rpm -qa fftw | awk -F '-' '{print $2}')"
     echo "(fftw-3.3.8 fftw_wisdom #x4be12fff #x7b2df9b2 #xa5975329 #x385b0041
     (fftw_codelet_n1_16 0 #x12345 #x22222 #x0 #x4396230b #x936694df #xa8dfdff3 #x77777777)
-    )" > ${TMP_DIR}/wisdom
+    )" > ./tmp/wisdom
     LOG_INFO "End to config params of the case."
 }
 
@@ -41,11 +42,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check fftw-wisdom-to-conf -h failed."
     fftw-wisdom-to-conf --help | grep -q "Usage"
     CHECK_RESULT $? 0 0 "Check fftw-wisdom-to-conf --help failed."
-    fftw-wisdom-to-conf -V | grep -q "FFTW version"
+    fftw-wisdom-to-conf -V | grep -q "${VERSION}"
     CHECK_RESULT $? 0 0 "Check fftw-wisdom-to-conf -V failed."
-    fftw-wisdom-to-conf --version | grep -q "FFTW version"
+    fftw-wisdom-to-conf --version | grep -q "${VERSION}"
     CHECK_RESULT $? 0 0 "Check fftw-wisdom-to-conf --version failed."
-    fftw-wisdom-to-conf < ${TMP_DIR}/wisdom | grep -q "fftw_configure_planner"
+    fftw-wisdom-to-conf < ./tmp/wisdom | grep -q "fftw_configure_planner"
     CHECK_RESULT $? 0 0 "Check fftw-wisdom-to-conf output failed."
     LOG_INFO "End to run test."
 }

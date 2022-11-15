@@ -20,18 +20,9 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    TMP_DIR="$(mktemp -d -t fftw.XXXXXXXXXXXX)"
-    LOG_INFO "End to config params of the case."
-}
-
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "fftw"
-    echo "(fftw-3.3.8 fftw_wisdom #x4be12fff #x7b2df9b2 #xa5975329 #x385b0041
-(fftw_codelet_n1_16 0 #x12345 #x22222 #x0 #x4396230b #x936694df #xa8dfdff3 #x77777777)
-)" > ${TMP_DIR}/fftw_wisdom
     LOG_INFO "End to prepare the test environment."
 }
 

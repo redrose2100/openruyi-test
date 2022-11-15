@@ -20,18 +20,10 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    TMP_DIR="$(mktemp -d -t fftw.XXXXXXXXXXXX)"
-    LOG_INFO "End to config params of the case."
-}
-
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "fftw"
-     echo "(fftw-3.3.8 fftw_wisdom #x4be12fff #x7b2df9b2 #xa5975329 #x385b0041
-(fftw_codelet_n1_16 0 #x12345 #x22222 #x0 #x4396230b #x936694df #xa8dfdff3 #x77777777)
-)" > ${TMP_DIR}/fftw_wisdom
+    VERSION="$(rpm -qa fftw | awk -F '-' '{print $2}')"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -41,9 +33,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check fftw-wisdom -h failed."
     fftw-wisdom --help 2>&1 | grep -q "Usage"
     CHECK_RESULT $? 0 0 "Check fftw-wisdom --help failed."
-    fftw-wisdom -V 2>&1 | grep -q "FFTW version"
+    fftw-wisdom -V 2>&1 | grep -q "${VERSION}"
     CHECK_RESULT $? 0 0 "Check fftw-wisdom -V failed."
-    fftw-wisdom --version 2>&1 | grep -q "FFTW version"
+    fftw-wisdom --version 2>&1 | grep -q "${VERSION}"
     CHECK_RESULT $? 0 0 "Check fftw-wisdom --version failed."
     fftw-wisdom cif3x4x5 2>&1 | grep -q "fftw_wisdom"
     CHECK_RESULT $? 0 0 "fftw-wisdom output failed."
@@ -64,7 +56,6 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf ${TMP_DIR}
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

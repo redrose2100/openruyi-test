@@ -20,15 +20,10 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    TMP_DIR="$(mktemp -d -t fftw.XXXXXXXXXXXX)"
-    LOG_INFO "End to config params of the case."
-}
-
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "fftw"
+    TMP_DIR="$(mktemp -d -t fftw.XXXXXXXXXXXX)"
     echo "(fftw-3.3.8 fftwf_wisdom #xca4daf64 #xc8f59ea6 #x586875c9 #x14018994
 (fftwf_codelet_n1_16 0 #x12345 #x22222 #x0 #x4396230b #x936694df #xa8dfdff3 #x77777777)
 )" > ${TMP_DIR}/fftwf_wisdom
@@ -37,11 +32,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    fftwf-wisdom -o ${TMP_DIR}/test_1_fftwf.out cif3x4x5
-    grep -q "fftwf_wisdom" < ${TMP_DIR}/test_1_fftwf.out
+    fftwf-wisdom -o ${TMP_DIR}/test_1_fftwf.out cif3x4x5 && grep -q "fftwf_wisdom" < ${TMP_DIR}/test_1_fftwf.out
     CHECK_RESULT $? 0 0 "Check fftwf-wisdom -o failed."
-    fftwf-wisdom --output-file=${TMP_DIR}/test_2_fftwf.out cif3x4x5
-    grep -q "fftwf_wisdom" < ${TMP_DIR}/test_2_fftwf.out
+    fftwf-wisdom --output-file=${TMP_DIR}/test_2_fftwf.out cif3x4x5 && grep -q "fftwf_wisdom" < ${TMP_DIR}/test_2_fftwf.out
     CHECK_RESULT $? 0 0 "Check fftwf-wisdom --output-file=FILE failed."
     LOG_INFO "End to run test."
     fftwf-wisdom -n -v 2>&1 | grep -q "system-wisdom"
