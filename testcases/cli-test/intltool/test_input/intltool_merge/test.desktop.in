@@ -1,10 +1,10 @@
 [Desktop Entry]
 Exec=run-nautilus
 Icon=nautilus-launch-icon.png
-Name=test.desktop
+_Name=test.desktop
 Terminal=0
 TryExec=run-nautilus
 Type=Application
 X-Deepin-Vendor=user-custom
 _Comment=hello, i am desktop
-Name=test.desktop
+_Name=test.desktop

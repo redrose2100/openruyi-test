@@ -1,5 +1,0 @@
-Template: timezoneconf/toplevel
-Type: select
-Choices: ${choices}
-# This comment is inserted in PO files to help translators
-_Description: hello, i am rfc822 file

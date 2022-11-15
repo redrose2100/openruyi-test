@@ -20,24 +20,15 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# Data and parameter configuration that need to be preloaded
-# Data and parameter configuration that need to be preloaded
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    local_LANG=$LANG
-    export LANG=en_US
-    LOG_INFO "End to config params of the case."
-}
-
 # Preparation for installation of test objects, tools required for testing, etc
 function pre_test() {
    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "intltool"
     local_LANG=$LANG
-    export LANG=en_US.UTF-8
-    test -d tmp || mkdir tmp
-    cp -rf test_input/* tmp
+    test -d tmp || mkdir tmp 
     mkdir -p po
+    export LANG=en_US.UTF-8
+    cp -rf test_input/intltool_prepare/* tmp
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -101,7 +92,6 @@ function run_test() {
     test -f ./tmp/common/Makefile.am
     CHECK_RESULT $? 0 0 "intltool-prepare --verbose output error"
 
-    
     LOG_INFO "End to run test."
 }
 

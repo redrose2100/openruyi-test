@@ -21,7 +21,6 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 # Data and parameter configuration that need to be preloaded
-# Data and parameter configuration that need to be preloaded
 function config_params() {
     LOG_INFO "Start to config params of the case."
     test -d tmp || mkdir tmp
@@ -34,7 +33,7 @@ function pre_test() {
     DNF_INSTALL "intltool"
     local_LANG=$LANG
     export LANG=en_US.UTF-8
-    cp -rf test_input/* tmp
+    cp -rf test_input/intltool_extract/* tmp
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -51,8 +50,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: -v error"
     intltool-prepare -v | grep -E "intltool-prepare intltool [0-9].+"
     CHECK_RESULT $? 0 0 "option: --version error"
-
-
 
     tar -xvf ./tmp/common.tar -C ./tmp
     for type in "glade" "ini" "keys" "rfc822deb"  \
@@ -110,8 +107,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: --quiet error"
     test -z "${OUTPUT}" -a $? -eq 0 
     CHECK_RESULT $? 0 0 "option: --quiet error"
-
-    
 
     LOG_INFO "End to run test."
 }

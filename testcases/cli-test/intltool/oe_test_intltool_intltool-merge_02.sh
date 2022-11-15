@@ -26,7 +26,7 @@ function pre_test() {
     DNF_INSTALL "intltool"
     local_LANG=$LANG
     export LANG=en_US.UTF-8
-    cp -rf test_input/* ./
+    cp -rf test_input/intltool_merge/* ./
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -53,27 +53,31 @@ function run_test() {
     
     intltool-merge -p -x po test.xml test_pass.xml.out 2>&1 | grep "Warning: option --pass-through"
     CHECK_RESULT $? 0 0 "option: -p error"
+    rm -rf test_pass.xml.out
     intltool-merge --pass-through -x po test.xml test_pass.xml.out 2>&1 | grep "Warning: option --pass-through"
     CHECK_RESULT $? 0 0 "option: --pass-through error"
+    rm -rf test_pass.xml.out
     
     intltool-merge -m --quoted-style po test.quoted test.quoted.out
     test -f merge_test/test.quoted.out
     CHECK_RESULT $? 0 0 "option: -m --quoted-style generate error"
     grep -i "quoted" merge_test/test.quoted.out
     CHECK_RESULT $? 0 0 "option: -m --quoted-style error"
-    rm -rf merge_test/test.quoted.out
+    rm -rf merge_test
     intltool-merge --multiple-output --quotedxml-style po test.quotedxml test.quotedxml.out
     test -f merge_test/test.quotedxml.out
     CHECK_RESULT $? 0 0 "option: --multiple-output --quotedxml-style generate error"
     grep -i "quotedxml" merge_test/test.quotedxml.out
     CHECK_RESULT $? 0 0 "option: --multiple-output --quotedxml-style error"
-    rm -rf test_utf8.rfc822deb.out
+    rm -rf merge_test
 
     intltool-merge --no-translations -x test.xml test_no.xml.out
     test -f test_no.xml.out
     CHECK_RESULT $? 0 0 "option: --no-translations generate error"
     grep -i "<welcome>" test_no.xml.out
     CHECK_RESULT $? 0 0 "option: --no-translations error"
+    rm -rf test_no.xml.out
+
     intltool-merge po/ -x -c po/.intltool-merge-cache test.xml test_cache.xml.out
     test -f po/.intltool-merge-cache
     CHECK_RESULT $? 0 0 "option: -c generate error"
@@ -100,8 +104,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf po
-    rm -rf merge_test
+    rm -rf po test.* .cvsignore Makefile.am
     export LANG=${local_LANG}
     LOG_INFO "End to restore the test environment."
 }

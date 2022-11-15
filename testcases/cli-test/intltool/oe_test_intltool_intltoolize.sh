@@ -26,7 +26,7 @@ function pre_test() {
     DNF_INSTALL "intltool"
     local_LANG=$LANG
     export LANG=en_US.UTF-8
-    cp -rf test_input/* ./
+    cp -rf test_input/intltoolize/* ./
     mkdir -p ./po
     LOG_INFO "End to prepare the test environment."
 }
@@ -40,7 +40,6 @@ function run_test() {
     intltoolize --version | grep -E "intltoolize.*[0-9.]+"
     CHECK_RESULT $? 0 0 "option: --version error"
 
-    rm -rf po/*
     intltoolize --automake  
     grep -c "Makefile" po/Makefile.in.in | grep 9
     CHECK_RESULT $? 0 0 "option: --automake error"
