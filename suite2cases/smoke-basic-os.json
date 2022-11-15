@@ -394,7 +394,7 @@
         {
             "name": "oe_test_libuser_sm"
         },
-	{
+        {
             "name": "oe_test_losetup"
         },
         {
@@ -424,8 +424,44 @@
         {
             "name": "oe_test_nfs_03"
         },
-	{
-	    "name": "oe_test_pcre_001"
-	}
+        {
+            "name": "oe_test_nmap"
+        },
+        {
+            "name": "oe_test_normal_tcpdump_03"
+        },
+        {
+            "name": "oe_test_ntp_01"
+        },
+        {
+            "name": "oe_test_ntp_02"
+        },
+        {
+            "name": "oe_test_os-prober_01"
+        },
+        {
+            "name": "oe_test_os-prober_02"
+        },
+        {
+            "name": "oe_test_perl"
+        },
+        {
+            "name": "oe_test_python_01"
+        },
+        {
+            "name": "oe_test_python_pip_install"
+        },
+        {
+            "name": "oe_test_python_subprocess_01"
+        },
+        {
+            "name": "oe_test_python_subprocess_02"
+        },
+        {
+            "name": "oe_test_python_subprocess_03"
+        },
+        {
+            "name": "oe_test_pcre_001"
+        }
     ]
 }
