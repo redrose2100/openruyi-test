@@ -424,7 +424,7 @@
         {
             "name": "oe_test_nfs_03"
         },
-	{
+        {
             "name": "oe_test_nmap"
         },
         {
@@ -459,6 +459,9 @@
         },
         {
             "name": "oe_test_python_subprocess_03"
+        },
+        {
+	   　　 "name": "oe_test_pcre_001"
         }
     ]
 }
