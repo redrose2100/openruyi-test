@@ -156,6 +156,39 @@
         },
         {
             "name": "oe_test_FSIO_overlay_mount"
+        },
+        {
+            "name": "oe_test_FSIO_overlay_rename_1"
+        },
+        {
+            "name": "oe_test_FSIO_overlay_rename_2"
+        },
+        {
+            "name": "oe_test_FSIO_overlay_rename_3"
+        },
+        {
+            "name": "oe_test_FSIO_overlay_rm_1"
+        },
+        {
+            "name": "oe_test_FSIO_overlay_rm_2"
+        },
+        {
+            "name": "oe_test_FSIO_overlay_rm_3"
+        },
+        {
+            "name": "oe_test_FSIO_remkfs"
+        },
+        {
+            "name": "oe_test_FSIO_rw_mount"
+        },
+        {
+            "name": "oe_test_FSIO_umount_busy"
+        },
+        {
+            "name": "oe_test_FSIO_umount_by_openfile"
+        },
+        {
+            "name": "oe_test_FSIO_xfs_resize2fs"
         }
     ]
 }
