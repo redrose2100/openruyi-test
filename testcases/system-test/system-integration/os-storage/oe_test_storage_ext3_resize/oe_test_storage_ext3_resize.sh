@@ -33,13 +33,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    mkfs.ext3 -F "/dev/${local_disk1}"
+    mkfs.ext3 -F "/dev/${local_disk}1"
     CHECK_RESULT $?
-    e2fsck -y "/dev/${local_disk1}"
+    e2fsck -y "/dev/${local_disk}1"
     CHECK_RESULT $?
-    systemsize=$(resize2fs -P "/dev/${local_disk1}" 2>&1 | sed -n 'p' | awk -F ": " '{if (NR>1) print $NF}')
+    systemsize=$(resize2fs -P "/dev/${local_disk}1" 2>&1 | sed -n 'p' | awk -F ": " '{if (NR>1) print $NF}')
     CHECK_RESULT $?
-    resize2fs "/dev/${local_disk1}" $[${systemsize}+10]
+    resize2fs "/dev/${local_disk}1" $[${systemsize}+10]
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }

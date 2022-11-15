@@ -27,7 +27,7 @@ p
 
 +20M
 w" | fdisk /dev/"${local_disk}"
-    mkfs.xfs -f /dev/"${local_disk1}"
+    mkfs.xfs -f /dev/"${local_disk}1"
     CHECK_RESULT $?
     sleep 2
     udevadm settle
@@ -38,14 +38,14 @@ w" | fdisk /dev/"${local_disk}"
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    echo /dev/"${local_disk1} /tmp/data xfs defaults 0 0" >>/etc/fstab
+    echo /dev/"${local_disk}1 /tmp/data xfs defaults 0 0" >>/etc/fstab
     CHECK_RESULT $?
     mount /tmp/data
     CHECK_RESULT $?
     df -h | grep '/tmp/data'
     CHECK_RESULT $?
     umount /tmp/data
-    mount /dev/"${local_disk1}"
+    mount /dev/"${local_disk}1"
     df -h | grep '/tmp/data'
     CHECK_RESULT $?
     umount /tmp/data
