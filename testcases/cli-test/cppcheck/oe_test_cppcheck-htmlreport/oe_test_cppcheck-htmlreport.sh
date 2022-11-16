@@ -27,11 +27,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cppcheck --xml file.c 2>err1.xml
+    cppcheck --xml pcre.c 2>err1.xml
     CHECK_RESULT $?
     grep -E "<?xml|<|>|arrayIndexOutOfBounds" err1.xml
     CHECK_RESULT $?
-    cppcheck --enable=all --xml-version=2 file.c 2>err2.xml
+    cppcheck --enable=all --xml-version=2 pcre.c 2>err2.xml
     CHECK_RESULT $?
     grep -E "<?xml|<|>|arrayIndexOutOfBounds|unreadVariable|missingIncludeSystem" err2.xml
     CHECK_RESULT $?
