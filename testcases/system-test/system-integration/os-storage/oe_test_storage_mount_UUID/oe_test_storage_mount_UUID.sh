@@ -28,11 +28,11 @@ p
 
 +20M
 w" | fdisk /dev/"${local_disk}"
-    mkfs.xfs -f /dev/"${local_disk1}"
+    mkfs.xfs -f /dev/"${local_disk}1"
     sleep 2
     udevadm settle
     mkdir /tmp/data
-    UUID=$(lsblk --fs /dev/"${local_disk1}" | awk '{if (NR>1){print $3}}')
+    UUID=$(lsblk --fs /dev/"${local_disk}1" | awk '{if (NR>1){print $3}}')
     LOG_INFO "Environmental preparation is over."
 }
 
