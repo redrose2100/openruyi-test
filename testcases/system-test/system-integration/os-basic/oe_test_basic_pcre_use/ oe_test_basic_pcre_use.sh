@@ -23,17 +23,18 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
+    DNF_INSTALL pcre pcre-devel
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    yum install  pcre pcre-devel -y
+    `pcre-config --version`
     CHECK_RESULT $? 0 0 "Packages name or warehouse error"
     echo '/usr/local/lib/pcre' >> /etc/ld.so.conf
     ldconfig
     CHECK_RESULT $? 0 0 "check your file configuration (/etc/ld.so.conf)"
-    cat > file.c << EOF
+        cat > pcre.c << EOF
 #include <pcre.h>
 #include <stdio.h>
 int main()
@@ -50,8 +51,8 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to clean the test environment."
-    userdel -rf testuser
-    rm -rf /opt/myproject
+    sed '2,$d' /etc/ld.so.conf
+    rm $(realpath pcre.c))
     LOG_INFO "Start to clean the test environment."
 }
 
