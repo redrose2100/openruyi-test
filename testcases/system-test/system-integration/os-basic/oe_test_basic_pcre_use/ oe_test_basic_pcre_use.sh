@@ -23,28 +23,28 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL pcre pcre-devel
+    DNF_INSTALL "pcre pcre-devel"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    `pcre-config --version`
-    CHECK_RESULT $? 0 0 "Packages name or warehouse error"
+    pcre-config --version
+    CHECK_RESULT $? 0 0 "Pcre is not installed"
     echo '/usr/local/lib/pcre' >> /etc/ld.so.conf
     ldconfig
     CHECK_RESULT $? 0 0 "check your file configuration (/etc/ld.so.conf)"
         cat > pcre.c << EOF
 #include <pcre.h>
 #include <stdio.h>
-int mai   n()
+int main()
 {
   printf("aaa");
   return 0;
 }
 EOF
     CHECK_RESULT $? 0 0 "check your file configuration (file.c)"
-    gcc -I/usr/local/include/pcre -L/usr/local/lib/pcre -lpcre file.c
+    gcc -I/usr/local/include/pcre -L/usr/local/lib/pcre -lpcre pcre.c
     CHECK_RESULT $? 0 0 "check your file configuration"
     LOG_INFO "End to run test."
 }
@@ -53,6 +53,7 @@ function post_test() {
     LOG_INFO "Start to clean the test environment."
     sed '2,$d' /etc/ld.so.conf
     rm $(realpath pcre.c) && rm $(realpath a.out)
+    export LANG=${OLD_LANG}
     LOG_INFO "Start to clean the test environment."
 }
 
