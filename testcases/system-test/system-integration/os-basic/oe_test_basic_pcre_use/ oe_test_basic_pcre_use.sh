@@ -37,7 +37,7 @@ function run_test() {
         cat > pcre.c << EOF
 #include <pcre.h>
 #include <stdio.h>
-int main()
+int mai   n()
 {
   printf("aaa");
   return 0;
@@ -52,7 +52,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to clean the test environment."
     sed '2,$d' /etc/ld.so.conf
-    rm $(realpath pcre.c))
+    rm $(realpath pcre.c) && rm $(realpath a.out)
     LOG_INFO "Start to clean the test environment."
 }
 
