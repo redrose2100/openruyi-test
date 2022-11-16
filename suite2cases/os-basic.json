@@ -25,6 +25,9 @@
 	{
 	    "name": "oe_test_auditctl"
 	},
+        {
+            "name": "oe_test_cksum"
+        },
 	{
 	    "name": "oe_test_ulimit"
 	},
