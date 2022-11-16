@@ -33,14 +33,14 @@ p
 
 +200M
 w" | fdisk /dev/"${local_disk}"
-    mkfs.xfs -f /dev/"${local_disk1}"
+    mkfs.xfs -f /dev/"${local_disk}1"
     sleep 1
-    mkfs.ext2 -F /dev/"${local_disk2}"
+    mkfs.ext2 -F /dev/"${local_disk}2"
     sleep 1
     udevadm settle
     mkdir /tmp/data_xfs /tmp/data_ext
-    mount /dev/"${local_disk1}" /tmp/data_xfs
-    mount /dev/"${local_disk2}" /tmp/data_ext
+    mount /dev/"${local_disk}1" /tmp/data_xfs
+    mount /dev/"${local_disk}2" /tmp/data_ext
     LOG_INFO "Environmental preparation is over."
 }
 
