@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/rubygem-asciidoctor",
+    "cases": [
+        {
+            "name": "oe_test_asciidoctor_001"
+        },
+        {
+            "name": "oe_test_asciidoctor_002"
+        },
+        {
+            "name": "oe_test_asciidoctor_003"
+        },
+        {
+            "name": "oe_test_asciidoctor_004"
+        }
+    ]
+}

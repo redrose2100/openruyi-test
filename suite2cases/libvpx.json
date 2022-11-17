@@ -1,0 +1,62 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libvpx",
+    "cases": [
+        {
+            "name": "oe_test_vpxenc_001"
+        },
+        {
+            "name": "oe_test_vpxenc_002"
+        },
+        {
+            "name": "oe_test_vpxenc_003"
+        },
+        {
+            "name": "oe_test_vpxenc_004"
+        },
+        {
+            "name": "oe_test_vpxenc_005"
+        },
+        {
+            "name": "oe_test_vpxenc_006"
+        },
+        {
+            "name": "oe_test_vpxdec_007"
+        },
+        {
+            "name": "oe_test_vpxdec_008"
+        },
+        {
+            "name": "oe_test_vp8_simple_encoder"
+        },
+        {
+            "name": "oe_test_vp8_simple_decoder"
+        },
+        {
+            "name": "oe_test_vp8_twopass_encoder"
+        },
+        {
+            "name": "oe_test_vp9_lossless_encoder"
+        },
+        {
+            "name": "oe_test_vp9_spatial_svc_encoder"
+        },
+        {
+            "name": "oe_test_vpx_temporal_svc_encoder"
+        },
+        {
+            "name": "oe_test_vp9cx_set_ref"
+        },
+        {
+            "name": "oe_test_vp8cx_set_ref"
+        },
+        {
+            "name": "oe_test_set_maps"
+        },
+        {
+            "name": "oe_test_decode_to_md5"
+        },
+        {
+            "name": "oe_test_decode_with_drops"
+        }
+    ]
+}

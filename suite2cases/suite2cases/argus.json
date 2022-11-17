@@ -1,0 +1,26 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/argus",
+    "cases": [
+        {
+            "name": "oe_test_argusclientbug"
+        },
+        {
+            "name": "oe_test_argus_001"
+        },
+        {
+            "name": "oe_test_argus_002"
+        },
+        {
+            "name": "oe_test_argus_003"
+        },
+        {
+            "name": "oe_test_argusbug"
+        },
+        {
+            "name": "oe_test_argusextip"
+        },
+        {
+            "name": "oe_test_argusextip"
+        }
+    ]
+}

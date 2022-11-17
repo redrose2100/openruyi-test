@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/sassc",
+    "cases": [
+        {
+            "name": "oe_test_sassc_001"
+        }
+    ]
+}

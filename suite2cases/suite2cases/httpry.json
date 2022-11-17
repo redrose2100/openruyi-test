@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/httpry",
+    "cases": [
+        {
+            "name": "oe_test_httpry_001"
+        },
+        {
+            "name": "oe_test_httpry_002"
+        }
+    ]
+}

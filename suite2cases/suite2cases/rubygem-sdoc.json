@@ -1,0 +1,26 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/rubygem-sdoc",
+    "cases": [
+        {
+            "name": "oe_test_sdoc_merge"
+        },
+        {
+            "name": "oe_test_sdoc_001"
+        },
+        {
+            "name": "oe_test_sdoc_002"
+        },
+        {
+            "name": "oe_test_sdoc_003"
+        },
+        {
+            "name": "oe_test_sdoc_004"
+        },
+        {
+            "name": "oe_test_sdoc_005"
+        },
+        {
+            "name": "oe_test_sdoc_006"
+        }
+    ]
+}

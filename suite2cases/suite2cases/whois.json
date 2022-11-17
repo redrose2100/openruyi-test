@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/whois",
+    "cases": [
+        {
+            "name": "oe_test_whois_001"
+        },
+        {
+            "name": "oe_test_whois_002"
+        }
+    ]
+}
