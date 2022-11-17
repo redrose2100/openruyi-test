@@ -29,6 +29,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
+    cdb -c tmp/example test/example
     cdb -l tmp/example | grep '+3:one'
     CHECK_RESULT $? 0 0 "Failed option: cdb -l"
     cdb -d tmp/example 2>&1 | grep '+3,7:two->Goodbye'
