@@ -1,0 +1,50 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/cvs",
+    "cases": [
+        {
+            "name": "oe_test_socket_cvs"
+        },
+        {
+            "name": "oe_test_target_cvs"
+        },
+        {
+            "name": "oe_test_cvs_001"
+        },
+        {
+            "name": "oe_test_cvs_002"
+        },
+        {
+            "name": "oe_test_cvs_003"
+        },
+        {
+            "name": "oe_test_cvs_004"
+        },
+        {
+            "name": "oe_test_cvs_005"
+        },
+        {
+            "name": "oe_test_cvs_006"
+        },
+        {
+            "name": "oe_test_cvs_007"
+        },
+        {
+            "name": "oe_test_cvs_008"
+        },
+        {
+            "name": "oe_test_cvs_009"
+        },
+        {
+            "name": "oe_test_cvs_010"
+        },
+        {
+            "name": "oe_test_cvs_011"
+        },
+        {
+            "name": "oe_test_cvs_012"
+        },
+        {
+            "name": "oe_test_cvs_013"
+        }
+    ]
+}

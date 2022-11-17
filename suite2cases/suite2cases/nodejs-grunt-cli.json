@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/nodejs-grunt-cli",
+    "cases": [
+        {
+            "name": "oe_test_grunt_001"
+        },
+        {
+            "name": "oe_test_grunt_002"
+        }
+    ]
+}

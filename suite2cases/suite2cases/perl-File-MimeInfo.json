@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/perl-File-MimeInfo",
+    "cases": [
+        {
+            "name": "oe_test_perl-File-MimeInfo"
+        }
+    ]
+}

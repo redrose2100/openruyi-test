@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/groovy18",
+    "cases": [
+        {
+            "name": "oe_test_java2groovy18"
+        },
+        {
+            "name": "oe_test_groovy18sh"
+        },
+        {
+            "name": "oe_test_groovy18"
+        },
+        {
+            "name": "oe_test_groovy18c"
+        },
+        {
+            "name": "oe_test_grape"
+        }
+    ]
+}
