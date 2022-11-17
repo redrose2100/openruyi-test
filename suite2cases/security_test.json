@@ -105,6 +105,9 @@
         },
         {
             "name": "oe_test_security_test_FUN339"
+        },
+	    {
+            "name": "oe_test_user_management_groupmod"
         }
     ]
 }
