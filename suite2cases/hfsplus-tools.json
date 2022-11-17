@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/hfsplus-tools",
+    "cases": [
+        {
+            "name": "oe_test_fsck_hfs"
+        },
+        {
+            "name": "oe_test_fsck_hfsplus_001"
+        },
+        {
+            "name": "oe_test_fsck_hfsplus_002"
+        },
+        {
+            "name": "oe_test_mkfs_hfsplus"
+        }
+    ]
+}

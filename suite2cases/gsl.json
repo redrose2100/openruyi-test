@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/gsl",
+    "cases": [
+        {
+            "name": "oe_test_gsl_histogram_001"
+        },
+        {
+            "name": "oe_test_gsl_randlist_001"
+        },
+        {
+            "name": "oe_test_gsl_randlist_002"
+        },
+        {
+            "name": "oe_test_gsl_randlist_003"
+        },
+        {
+            "name": "oe_test_gsl_randlist_004"
+        }
+    ]
+}
