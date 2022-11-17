@@ -14,7 +14,7 @@
 # @Contact   :   1960887351@qq.com
 # @Date      :   2022/9/23
 # @License   :   Mulan PSL v2
-# @Desc      :   Test "python-gitlab" command
+# @Desc      :   Test "units" command
 # ##################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
