@@ -38,21 +38,21 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check mikmod -di[rectory] failed"
     mikmod -q & ps | grep -q "mikmod" && kill -INT $!
     CHECK_RESULT $? 0 0 "Check mikmod -q[uiet] failed"
-	mikmod -quiet & ps | grep -q "mikmod" && kill -INT $!
+    mikmod -quiet & ps | grep -q "mikmod" && kill -INT $!
     CHECK_RESULT $? 0 0 "Check mikmod -quiet failed"
     echo "Q" | mikmod -v 1 > /dev/null && cat ~/.mikmodrc | grep -q "VOLUME = 1"
     CHECK_RESULT $? 0 0 "Check mikmod -v 1 failed"
-	echo "Q" | mikmod -volume 1 > /dev/null && cat ~/.mikmodrc | grep -q "VOLUME = 1"
+    echo "Q" | mikmod -volume 1 > /dev/null && cat ~/.mikmodrc | grep -q "VOLUME = 1"
     CHECK_RESULT $? 0 0 "Check mikmod -volume 1 failed"
-	echo "Q" | mikmod -o 8m > /dev/null && cat ~/.mikmodrc | grep -qE "16BIT = no|STEREO = no"
+    echo "Q" | mikmod -o 8m > /dev/null && cat ~/.mikmodrc | grep -qE "16BIT = no|STEREO = no"
     CHECK_RESULT $? 0 0 "Check mikmod -o[utput] 8m failed"
-	echo "Q" | mikmod -o 8s > /dev/null && cat ~/.mikmodrc | grep -qE "16BIT = no|STEREO = yes"
+    echo "Q" | mikmod -o 8s > /dev/null && cat ~/.mikmodrc | grep -qE "16BIT = no|STEREO = yes"
     CHECK_RESULT $? 0 0 "Check mikmod -o[utput] 8s failed"
-	echo "Q" | mikmod -o 16m > /dev/null && cat ~/.mikmodrc | grep -qE "16BIT = yes|STEREO = no"
+    echo "Q" | mikmod -o 16m > /dev/null && cat ~/.mikmodrc | grep -qE "16BIT = yes|STEREO = no"
     CHECK_RESULT $? 0 0 "Check mikmod -o[utput] 16m failed"
-	echo "Q" | mikmod -o 16s > /dev/null && cat ~/.mikmodrc | grep -qE "16BIT = yes|STEREO = yes"
+    echo "Q" | mikmod -o 16s > /dev/null && cat ~/.mikmodrc | grep -qE "16BIT = yes|STEREO = yes"
     CHECK_RESULT $? 0 0 "Check mikmod -o[utput] 16s failed"
-	echo "Q" | mikmod -output 8m > /dev/null && cat ~/.mikmodrc | grep -qE "16BIT = no|STEREO = no"
+    echo "Q" | mikmod -output 8m > /dev/null && cat ~/.mikmodrc | grep -qE "16BIT = no|STEREO = no"
     CHECK_RESULT $? 0 0 "Check mikmod -output 8m failed"
     LOG_INFO "End to run test."
 }
