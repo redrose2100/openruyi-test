@@ -1,0 +1,23 @@
+{
+    "path": "${OET_PATH}/testcases/cli-test/dnssec-triggerd",
+    "cases": [
+        {
+            "name": "oe_test_dnssec-triggerd"
+        },
+        {
+            "name": "oe_test_dnssec-trigger-control-setup"
+        },
+        {
+            "name": "oe_test_dnssec-trigger-control_001"
+        },
+        {
+            "name": "oe_test_dnssec-trigger-control_002"
+        },
+        {
+            "name": "oe_test_dnssec-trigger-control_003"
+        },
+        {
+            "name": "oe_test_dnssec-trigger-control_004"
+        }
+    ]
+}

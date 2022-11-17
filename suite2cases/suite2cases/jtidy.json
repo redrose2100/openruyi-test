@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/jtidy",
+    "cases": [
+        {
+            "name": "oe_test_jtidy_001"
+        },
+        {
+            "name": "oe_test_jtidy_002"
+        },
+        {
+            "name": "oe_test_jtidy_003"
+        },
+        {
+            "name": "oe_test_jtidy_004"
+        }
+    ]
+}

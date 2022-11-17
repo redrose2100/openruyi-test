@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/rubygem-ZenTest",
+    "cases": [
+        {
+            "name": "oe_test_autotest"
+        },
+        {
+            "name": "oe_test_multiruby_setup"
+        },
+        {
+            "name": "oe_test_unit_diff"
+        },
+        {
+            "name": "oe_test_zentest"
+        },
+        {
+            "name": "oe_test_multigem"
+        },
+        {
+            "name": "oe_test_multiruby" 
+        }
+    ]
+}
