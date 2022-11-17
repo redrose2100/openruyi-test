@@ -1,0 +1,62 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/netsniff-ng",
+    "cases": [
+        {
+            "name": "oe_test_astraceroute_001"
+        },
+        {
+            "name": "oe_test_astraceroute_002"
+        },
+        {
+            "name": "oe_test_astraceroute_003"
+        },
+        {
+            "name": "oe_test_astraceroute_004"
+        },
+        {
+            "name": "oe_test_astraceroute_005"
+        },
+        {
+            "name": "oe_test_bpfc"
+        },
+        {
+            "name": "oe_test_curvetun_client"
+        },
+        {
+            "name": "oe_test_curvetun_common"
+        },
+        {
+            "name": "oe_test_curvetun_server"
+        },
+        {
+            "name": "oe_test_flowtop_001"
+        },
+        {
+            "name": "oe_test_ifpps_001"
+        },
+        {
+            "name": "oe_test_ifpps_002"
+        },
+        {
+            "name": "oe_test_netsniff_ng_001"
+        },
+        {
+            "name": "oe_test_netsniff_ng_002"
+        },
+        {
+            "name": "oe_test_netsniff_ng_003"
+        },
+        {
+            "name": "oe_test_netsniff_ng_004"
+        },
+        {
+            "name": "oe_test_trafgen_001"
+        },
+        {
+            "name": "oe_test_trafgen_002"
+        },
+        {
+            "name": "oe_test_trafgen_003"
+        }
+    ]
+}

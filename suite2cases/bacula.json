@@ -9,6 +9,30 @@
         },
         {
             "name": "oe_test_service_bacula-sd"
+        },
+        {
+            "name": "oe_test_bconsole"
+        },
+        {
+            "name": "oe_test_bcopy"
+        },
+        {
+            "name": "oe_test_bsdjson"
+        },
+        {
+            "name": "oe_test_bfdjson"
+        },
+        {
+            "name": "oe_test_bregex"
+        },
+        {
+            "name": "oe_test_bextract"
+        },
+        {
+            "name": "oe_test_bwild"
+        },
+        {
+            "name": "oe_test_dbcheck"
         }
     ]
 }

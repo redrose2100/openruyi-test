@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/nodejs-clean-css",
+    "cases": [
+        {
+            "name": "oe_test_clean_css_001"
+        },
+        {
+            "name": "oe_test_clean_css_002"
+        }
+    ]
+}
