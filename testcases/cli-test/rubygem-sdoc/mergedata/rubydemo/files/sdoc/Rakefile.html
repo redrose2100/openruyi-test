@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Rakefile</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../css/github.css" type="text/css" media="screen" />
+<script src="../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>
+    <div class="banner">
+        
+        <h1>
+            Rakefile
+        </h1>
+        <ul class="files">
+            <li>sdoc/Rakefile</li>
+            <li>Last modified: 2022-10-10 22:16:01 +0800</li>
+        </ul>
+    </div>
+
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<p>require &#39;bundler&#39; Bundler::GemHelper.install_tasks</p>
+
+<p>require &#39;rake/testtask&#39;</p>
+
+<p>Rake::TestTask.new do |t|</p>
+
+<pre><code>t.pattern = &quot;spec/*_spec.rb&quot;
+t.libs &lt;&lt; &quot;spec&quot;
+</code></pre>
+
+<p>end</p>
+
+<p>task :default =&gt; :test task :spec =&gt; :test</p>
+
+<p>require &#39;sdoc&#39; require &#39;sdoc/merge&#39; require &#39;rdoc/task&#39;</p>
+
+<p>rails = File.expand_path “rails” ruby = File.expand_path “ruby”</p>
+
+<p>directory rails do</p>
+
+<pre><code>sh &quot;git clone --depth=1 https://github.com/rails/rails&quot;
+</code></pre>
+
+<p>end</p>
+
+<p>directory ruby do</p>
+
+<pre><code>sh &quot;git clone --depth=1 https://github.com/ruby/ruby&quot;
+</code></pre>
+
+<p>end</p>
+
+<p>namespace :test do</p>
+
+<pre><code>desc &#39;Deletes all generated test documentation&#39;
+task :reset_docs do
+  FileUtils.remove_dir(File.expand_path(&#39;doc&#39;), force: true)
+end
+
+desc &#39;Generates test rails documentation&#39;
+task :rails =&gt; [rails, :generate_rails] do
+  FileUtils.mv(
+    File.expand_path(&#39;doc/rails&#39;),
+    File.expand_path(&#39;doc/public&#39;)
+  )
+end
+
+RDoc::Task.new(:generate_rails) do |rdoc|
+  rdoc.rdoc_dir = &#39;doc/rails&#39;
+  rdoc.generator = &#39;sdoc&#39;
+  rdoc.template = &#39;rails&#39;
+  rdoc.title = &#39;Ruby on Rails&#39;
+  rdoc.main = &#39;rails/README.md&#39;
+  rdoc.options &lt;&lt; &#39;--exclude=test&#39;
+
+  rdoc.rdoc_files.include(&quot;rails/&quot;)
+end
+
+desc &#39;Generates test ruby documentation&#39;
+task :ruby =&gt; [ruby, :generate_ruby] do
+  FileUtils.mv(
+    File.expand_path(&#39;doc/ruby&#39;),
+    File.expand_path(&#39;doc/public&#39;)
+  )
+end
+
+RDoc::Task.new(:generate_ruby) do |rdoc|
+  rdoc.rdoc_dir = &#39;doc/ruby&#39;
+  rdoc.generator = &#39;sdoc&#39;
+  rdoc.template = &#39;rails&#39;
+  rdoc.title = &#39;Ruby&#39;
+  rdoc.main = &#39;ruby/README.md&#39;
+
+  rdoc.rdoc_files.include(&quot;ruby/&quot;)
+end
+
+desc &#39;Generates merged test documentation&#39;
+task :merged =&gt; [rails, :generate_rails, ruby, :generate_ruby, :merge]
+
+task :merge do
+  SDoc::Merge.new.merge(
+    [
+      &#39;--title&#39;, &#39;Rails + Ruby&#39;,
+      &#39;--op&#39;, &#39;doc/public&#39;,
+      &#39;--names&#39;, &#39;rails, ruby&#39;,
+      &#39;doc/rails&#39;, &#39;doc/ruby&#39;
+    ]
+  )
+end
+</code></pre>
+
+<p>end</p>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+
+
+  
+
+
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+    
+    
+    
+  
+</div>
+
+    </div>
+  </body>
+</html>
