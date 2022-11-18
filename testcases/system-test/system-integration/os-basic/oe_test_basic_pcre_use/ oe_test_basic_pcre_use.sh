@@ -34,7 +34,7 @@ function run_test() {
     echo '/usr/local/lib/pcre' >> /etc/ld.so.conf
     ldconfig
     CHECK_RESULT $? 0 0 "check your file configuration (/etc/ld.so.conf)"
-        cat > pcre.c << EOF
+    cat > pcre.c << EOF
 #include <pcre.h>
 #include <stdio.h>
 int main()
