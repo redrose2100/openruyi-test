@@ -463,8 +463,44 @@
         {
             "name": "oe_test_python_subprocess_03"
         },
-	{
-	    "name": "oe_test_gettext"
-	}
+        {
+            "name": "oe_test_gettext"
+        },
+        {
+            "name": "oe_test_python_urllib3_urlopen_01"
+        },
+        {
+            "name": "oe_test_python_urllib3_urlopen_02"
+        },
+        {
+            "name": "oe_test_python_urllib3_urlopen_03"
+        },
+        {
+            "name": "oe_test_route_ipv4"
+        },
+        {
+            "name": "oe_test_route_ipv6"
+        },
+        {
+            "name": "oe_test_rpcbind"
+        },
+        {
+            "name": "oe_test_rpm_cmd"
+        },
+        {
+            "name": "oe_test_rpmrebuild"
+        },
+        {
+            "name": "oe_test_rsyslog_01"
+        },
+        {
+            "name": "oe_test_rsyslog_02"
+        },
+        {
+            "name": "oe_test_rsyslog_03"
+        },
+        {
+            "name": "oe_test_rsyslog_04"
+        }
     ]
 }
