@@ -21,20 +21,40 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "python-gitlab"
+    DNF_INSTALL "python3-python-gitlab"
+    echo -e "[global]
+default = test
+timeout = 5
+ssh_verify = False
+
+[test]
+url = https://gitlab.com
+private_token = glpat-gtfsnPBxt_DG16Jy5GbX
+api_version = 4" > tmp.cfg
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){
     LOG_INFO "Start to run test."
-    docker run -it --rm registry.gitlab.com/python-gitlab/python-gitlab:latest project get --id gitlab-org/gitlab
-    CHECK_RESULT $? 0 0 "Check python-gitlab docker run failed"
+    gitlab -o json -c tmp.cfg user list | jq
+    CHECK_RESULT $? 0 0 "Check gitlab -o {json,legacy,yaml} failed"
+    gitlab --output json -c tmp.cfg user list | jq
+    CHECK_RESULT $? 0 0 "Check gitlab --output {json,legacy,yaml} failed"
+    gitlab -f FIELDS -c tmp.cfg user list | grep "username:"
+    CHECK_RESULT $? 0 0 "Check gitlab -f FIELDS failed"
+    gitlab --fields FIELDS -c tmp.cfg user list | grep "username:"
+    CHECK_RESULT $? 0 0 "Check gitlab --fields FIELDS failed"
+    gitlab -h | grep "usage: gitlab"
+    CHECK_RESULT $? 0 0 "Check gitlab -h failed"
+    gitlab --help | grep "usage: gitlab"
+    CHECK_RESULT $? 0 0 "Check gitlab --help failed"
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
+    rm -rf tmp.cfg
     LOG_INFO "End to restore the test environment."
 }
 
