@@ -6,6 +6,30 @@
         },
         {
             "name": "oe_test_service_strongswan-swanctl"
+        },
+        {
+            "name": "oe_test_service_strongswan_001"
+        },
+        {
+            "name": "oe_test_service_strongswan_002"
+        },
+        {
+            "name": "oe_test_service_strongswan_003"
+        },
+        {
+            "name": "oe_test_service_charon-systemd"
+        },
+        {
+            "name": "oe_test_service_swanctl_001"
+        },
+        {
+            "name": "oe_test_service_swanctl_002"
+        },
+        {
+            "name": "oe_test_service_charon-cmd_001"
+        },
+        {
+            "name": "oe_test_service_charon-cmd_002"
         }
     ]
 }
