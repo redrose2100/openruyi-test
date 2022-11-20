@@ -38,7 +38,7 @@ EOL
   mcdiff --version 2>&1 | grep 'GNU Midnight '
   CHECK_RESULT $? 0 0 "Check mcdiff --version  failed"
 
-  mcdiff -F 2>&1 | grep 'Home路径'
+  mcdiff -F 2>&1 | grep 'Home'
   CHECK_RESULT $? 0 0 "Check mcdiff -F  failed"
 
   mcdiff --datadir-info 2>&1 | grep 'Home'
