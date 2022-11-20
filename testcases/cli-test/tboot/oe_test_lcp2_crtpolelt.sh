@@ -32,6 +32,9 @@ function run_test() {
     lcp2_crtpolelt --show pconf.elt --verbose 2>&1 | grep 'policy element'
     CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --verbose  failed"
 
+    lcp2_crtpolelt --help 2>&1 | grep 'Usage'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --help  failed"
+
     rm -rf pconf.elt
 
     LOG_INFO "End of the test."

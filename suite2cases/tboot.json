@@ -15,6 +15,9 @@
     },
     {
       "name": "oe_test_tb_polgen"
+    },
+    {
+      "name": "oe_test_txt-stat"
     }
   ]
 }
