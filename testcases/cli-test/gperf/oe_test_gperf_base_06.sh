@@ -1,5 +1,5 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -16,59 +16,66 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # @Desc      :   verify the uasge of mpich command
 # ############################################
 
-
-
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL gperf
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL gperf
+  mkdir tmp
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
+  LOG_INFO "Start to run test."
 
-    mkdir tmp
-    gperf --duplicates ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --duplicates failed."
+  gperf --duplicates ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -m'ITERATIONS' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf -m failed."
+  gperf -m'ITERATIONS' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf --multiple-iterations='ITERATIONS' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --multiple-iterations  failed."
+  gperf --multiple-iterations='ITERATIONS' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -i'1' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf -i failed."
+  gperf -i'1' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf --initial-asso='1' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --initial-asso failed."
+  gperf --initial-asso='1' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -j '10' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf j failed."
+  gperf -j '10' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf --jump='10' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --jump failed."
+  gperf --jump='10' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -n ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf -n failed."
+  gperf -n ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf --no-strlen ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --no-strlen failed."
+  gperf --no-strlen ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -r ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf -r failed."
+  gperf -r ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    rm -rf tmp
-
-    LOG_INFO "End of the test."
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE gperf
+  DNF_REMOVE
+  rm -rf tmp
 
-    LOG_INFO "Finish restoring the test environment."
+  LOG_INFO "Finish restoring the test environment."
 }
 
 main $@
