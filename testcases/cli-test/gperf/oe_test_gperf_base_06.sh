@@ -29,34 +29,44 @@ function run_test() {
 
     mkdir tmp
     gperf --duplicates ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --duplicates failed."
+    CHECK_RESULT  "$(ls ./tmp | grep -cE "test.hpp")" 1
+    rm -rf ./tmp/test.hpp
 
     gperf -m'ITERATIONS' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf -m failed."
+    CHECK_RESULT  "$(ls ./tmp | grep -cE "test.hpp")" 1
+    rm -rf ./tmp/test.hpp
 
     gperf --multiple-iterations='ITERATIONS' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --multiple-iterations  failed."
+    CHECK_RESULT  "$(ls ./tmp | grep -cE "test.hpp")" 1
+    rm -rf ./tmp/test.hpp
 
     gperf -i'1' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf -i failed."
+    CHECK_RESULT  "$(ls ./tmp | grep -cE "test.hpp")" 1
+    rm -rf ./tmp/test.hpp
 
     gperf --initial-asso='1' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --initial-asso failed."
+    CHECK_RESULT  "$(ls ./tmp | grep -cE "test.hpp")" 1
+    rm -rf ./tmp/test.hpp
 
     gperf -j '10' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf j failed."
+    CHECK_RESULT  "$(ls ./tmp | grep -cE "test.hpp")" 1
+    rm -rf ./tmp/test.hpp
 
     gperf --jump='10' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --jump failed."
+    CHECK_RESULT  "$(ls ./tmp | grep -cE "test.hpp")" 1
+    rm -rf ./tmp/test.hpp
 
     gperf -n ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf -n failed."
+    CHECK_RESULT  "$(ls ./tmp | grep -cE "test.hpp")" 1
+    rm -rf ./tmp/test.hpp
 
     gperf --no-strlen ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --no-strlen failed."
+    CHECK_RESULT  "$(ls ./tmp | grep -cE "test.hpp")" 1
+    rm -rf ./tmp/test.hpp
 
     gperf -r ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf -r failed."
+    CHECK_RESULT  "$(ls ./tmp | grep -cE "test.hpp")" 1
+    rm -rf ./tmp/test.hpp
 
     rm -rf tmp
 
@@ -66,7 +76,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE gperf
+    DNF_REMOVE
 
     LOG_INFO "Finish restoring the test environment."
 }

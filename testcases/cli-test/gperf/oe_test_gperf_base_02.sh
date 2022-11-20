@@ -16,59 +16,68 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # @Desc      :   verify the uasge of mpich command
 # ############################################
 
-
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL gperf
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL gperf
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
+  LOG_INFO "Start to run test."
 
-    mkdir tmp
+  mkdir tmp
 
-    gperf --ignore-case ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --ignore-case failed."
+  gperf --ignore-case ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -L 'C' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf  -L  failed."
+  gperf -L 'C' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf --language='C' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --lanaguage   failed."
+  gperf --language='C' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -t -K "NAME" ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf  -t -K  failed."
+  gperf -t -K "NAME" ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -t --initializer-suffix=1 ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf -t --initializer-suffix   failed."
+  gperf -t --initializer-suffix=1 ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -H 'HASH' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf  -H  failed."
+  gperf -H 'HASH' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf --hash-function-name='HASH'  ./common/test.gperf  > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --hash-function-name   failed."
+  gperf --hash-function-name='HASH' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -N 'NAME' ./common/test.gperf  > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf  -N  failed."
+  gperf -N 'NAME' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -Z 'NAME' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf  -Z  failed."
+  gperf -Z 'NAME' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf --class-name='NAME' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf --class-name   failed."
+  gperf --class-name='NAME' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    rm -rf tmp
+  rm -rf tmp
 
-    LOG_INFO "End of the test."
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE gperf
+  DNF_REMOVE
 
-    LOG_INFO "Finish restoring the test environment."
+  LOG_INFO "Finish restoring the test environment."
 }
 
 main $@

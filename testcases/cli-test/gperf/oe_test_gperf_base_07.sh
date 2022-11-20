@@ -16,36 +16,38 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # @Desc      :   verify the uasge of mpich command
 # ############################################
 
-
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL gperf
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL gperf
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
+  LOG_INFO "Start to run test."
 
-    mkdir tmp
+  mkdir tmp
 
-    gperf --random ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf  --random  failed."
+  gperf --random ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf -s'2' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf -s   failed."
+  gperf -s'2' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
 
-    gperf --size-multiple='2' ./common/test.gperf > ./tmp/test.hpp
-    CHECK_RESULT $? 0 0 "Check gperf  --size-multiple  failed."
-    rm -rf tmp
-    LOG_INFO "End of the test."
+  gperf --size-multiple='2' ./common/test.gperf >./tmp/test.hpp
+  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  rm -rf ./tmp/test.hpp
+  rm -rf tmp
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE gperf
+  DNF_REMOVE
 
-    LOG_INFO "Finish restoring the test environment."
+  LOG_INFO "Finish restoring the test environment."
 }
 
 main $@
