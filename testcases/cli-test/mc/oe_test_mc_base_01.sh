@@ -26,10 +26,10 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  mc -h 2>&1 | grep '用法'
+  mc -h 2>&1 | grep '--help'
   CHECK_RESULT $? 0 0 "Check mc -h failed"
 
-  mc --help 2>&1 | grep '用法'
+  mc --help 2>&1 | grep '--help'
   CHECK_RESULT $? 0 0 "Check mc --help failed"
 
   mc -V 2>&1 | grep 'GNU Midnight Commander' >/dev/nul 2>&1 &
