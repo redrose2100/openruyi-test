@@ -1,0 +1,17 @@
+{
+    "path": "${OET_PATH}/testcases/cli-test/conmon",
+    "cases": [
+        {
+            "name": "oe_test_conmon_001"
+        },
+        {
+            "name": "oe_test_conmon_002"
+        },
+        {
+            "name": "oe_test_conmon_003"
+        },
+        {
+            "name": "oe_test_conmon_004"
+        }
+    ]
+}
