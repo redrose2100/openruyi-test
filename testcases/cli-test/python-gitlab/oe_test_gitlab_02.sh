@@ -36,9 +36,9 @@ api_version = 4" > tmp.cfg
 
 function run_test(){
     LOG_INFO "Start to run test."
-    gitlab -o json -c tmp.cfg user list | jq
+    gitlab -o json -c tmp.cfg user list | grep -e "\[{.*}\]"
     CHECK_RESULT $? 0 0 "Check gitlab -o {json,legacy,yaml} failed"
-    gitlab --output json -c tmp.cfg user list | jq
+    gitlab --output json -c tmp.cfg user list | grep -e "\[{.*}\]"
     CHECK_RESULT $? 0 0 "Check gitlab --output {json,legacy,yaml} failed"
     gitlab -f FIELDS -c tmp.cfg user list | grep "username:"
     CHECK_RESULT $? 0 0 "Check gitlab -f FIELDS failed"
