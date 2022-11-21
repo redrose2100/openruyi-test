@@ -521,6 +521,9 @@
 	},
 	{
 	    "name": "oe_test_net_mtr"
+	},
+	{
+	    "name": "oe_test_gsettings"
 	}
     ]
 }
