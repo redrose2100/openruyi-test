@@ -21,53 +21,62 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
+    echo -e "p {\n  // currentColor is not actually a SCSS color value, but should be left alone\n  background-image: linear-gradient(to top, transparent, currentColor);\n}" > current-color.scss
+    mkdir tmp_dir
     pip3 install pyScss
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){
     LOG_INFO "Start to run test."
-    python -mscss -C &
+    python -mscss < current-color.scss | grep "currentColor"
+    CHECK_RESULT $? 0 0 "Check pyScss -m failed"
+    expect<<EOF
+    spawn python -mscss -i
+    expect "Welcome to pyScss v1.4.0" {send "exit\n"}
+    expect eof
+EOF
+    CHECK_RESULT $? 0 0 "Check pyScss -i failed"
+    expect<<EOF
+    spawn python -mscss --interactive
+    expect "Welcome to pyScss v1.4.0" {send "exit\n"}
+    expect eof
+EOF
+    CHECK_RESULT $? 0 0 "Check pyScss --interactive failed"
+    python -mscss -w tmp_dir &
     CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "Check pyScss -C failed"
-    python -mscss -h | grep "Converts Scss files to CSS."
-    CHECK_RESULT $? 0 0 "Check pyScss -h failed"
-    python -mscss -v | grep "pyScss v1.4.0"
-    CHECK_RESULT $? 0 0 "Check pyScss -v failed"
-    python -mscss -sass &
+    CHECK_RESULT $? 0 0 "Check pyScss -w failed"
+    python -mscss --watch tmp_dir &
     CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "Check pyScss -sass failed"
-    python -mscss -I PATH &
+    CHECK_RESULT $? 0 0 "Check pyScss --watch failed"
+    python -mscss -r &
+    CHECK_RESULT $? 0 0 
+    kill -9 $(pgrep -f scss)
+    CHECK_RESULT $? 0 0 "Check pyScss -r failed"
+    python -mscss --recursive &
+    CHECK_RESULT $? 0 0 
+    kill -9 $(pgrep -f scss)
+    CHECK_RESULT $? 0 0 "Check pyScss --recursive failed"
+    python -mscss -o output &
     CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "Check pyScss -I failed"
-    python -mscss -S PATH &
+    CHECK_RESULT $? 0 0 "Check pyScss -o failed"
+    python -mscss --output output &
     CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "Check pyScss -S failed"
-    python -mscss -A PATH &
+    CHECK_RESULT $? 0 0 "Check pyScss --output failed"
+    python -mscss -s STRING &
     CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "Check pyScss -A failed"
-    python -mscss -a URL &
-    CHECK_RESULT $? 0 0
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "Check pyScss -a failed"
-    python -mscss -F PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "Check pyScss -F failed"
-    python -mscss -f PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 $(pgrep -f scss)
-    CHECK_RESULT $? 0 0 "Check pyScss -f failed"
+    CHECK_RESULT $? 0 0 "Check pyScss -s failed"
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
+    rm -rf current-color.scss tmp_dir output
     pip3 uninstall -y pyScss
     LOG_INFO "End to restore the test environment."
 }

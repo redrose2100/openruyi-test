@@ -27,6 +27,26 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
+    python -mscss --assets-url URL &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f scss)
+    CHECK_RESULT $? 0 0 "Check pyScss --assets-url failed"
+    python -mscss -F PATH &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f scss)
+    CHECK_RESULT $? 0 0 "Check pyScss -F failed"
+    python -mscss --fonts-root PATH &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f scss)
+    CHECK_RESULT $? 0 0 "Check pyScss --fonts-root failed"
+    python -mscss -f PATH &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f scss)
+    CHECK_RESULT $? 0 0 "Check pyScss -f failed"
+    python -mscss --fonts-url PATH &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f scss)
+    CHECK_RESULT $? 0 0 "Check pyScss --fonts-url failed"
     python -mscss --images-root=PATH &
     CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f scss)
