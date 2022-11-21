@@ -30,6 +30,8 @@ function run_test(){
     LOG_INFO "Start to run test."
     custodia -h | grep -E "usage: custodia \[-h\] \[--debug\] \[--instance INSTANCE\] \[configfile\]"
     CHECK_RESULT $? 0 0 "Check custodia -h failed"
+    custodia --help | grep -E "usage: custodia \[-h\] \[--debug\] \[--instance INSTANCE\] \[configfile\]"
+    CHECK_RESULT $? 0 0 "Check custodia --help failed"
     custodia --debug &
     CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f /usr/sbin/custodia)
@@ -42,6 +44,19 @@ function run_test(){
     CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f /usr/sbin/custodia)
     CHECK_RESULT $? 0 0 "Check custodia configfile failed"
+
+    custodia-cli -h | grep "usage: custodia-cli"
+    CHECK_RESULT $? 0 0 "Check custodia-cli -h failed"
+    custodia-cli --help | grep "usage: custodia-cli"
+    CHECK_RESULT $? 0 0 "Check custodia-cli --help failed"
+    custodia-cli --server ./ plugins | grep "custodia.clients"
+    CHECK_RESULT $? 0 0 "Check custodia-cli --server failed"
+    
+
+    custodia-cli --verbose plugins | grep "custodia.authorizers"
+    CHECK_RESULT $? 0 0 "Check custodia-cli --verbose failed"
+    custodia-cli --debug plugins | grep "custodia.authenticators"
+    CHECK_RESULT $? 0 0 "Check custodia-cli --debug failed"
     LOG_INFO "End to run test."
 }
 
