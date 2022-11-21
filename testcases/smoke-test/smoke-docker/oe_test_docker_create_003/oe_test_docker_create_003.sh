@@ -28,10 +28,17 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     containers_id=$(docker run -d ${Images_name} /bin/sh -c "while true;do echo hello world;sleep 1;done")
     CHECK_RESULT $?
+
     docker inspect -f {{.State.Status}} ${containers_id} | grep running
     CHECK_RESULT $?
 
     docker logs ${containers_id} | grep "hello world"
+    CHECK_RESULT $?
+
+    containers_id=$(docker run -d ${Images_name} /bin/sh -c "curl www.baidu.com")
+    CHECK_RESULT $?
+
+    docker logs ${containers_id} 2>&1 | grep "!--STATUS OK--"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
