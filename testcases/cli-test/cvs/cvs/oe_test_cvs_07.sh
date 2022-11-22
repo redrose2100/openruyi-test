@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -18,57 +18,57 @@
 # #############################################
 
 source "../common/common_lib.sh"
-source "./init/cvs_complex.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL cvs
-    tar -zxvf test.tar.gz
+    DNF_INSTALL "cvs"
+    tar -zxvf common/test.tar.gz
+    source "./init/cvs_complex.sh"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
 echo "abc" >> tmp.txt
-    su cvsroot << EOF
-cvs diff --side-by-side | grep 'abc'
+su cvsroot << EOF
+cvs diff --ifdef=a | grep 'abc'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff --side-by-side"
+    CHECK_RESULT $? 0 0 "Failed option: cvs diff --ifdef=name"
     su cvsroot << EOF
-cvs diff --speed-large-files | grep 'abc'
+cvs diff --ignore-all-space | grep 'abc'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff --speed-large-files"
+    CHECK_RESULT $? 0 0 "Failed option: cvs diff --ignore-all-space"
     su cvsroot << EOF
-cvs diff --suppress-common-lines | grep 'abc'
+cvs diff --ignore-blank-lines | grep 'abc'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff --suppress-common-lines"
+    CHECK_RESULT $? 0 0 "Failed option: cvs diff --ignore-blank-lines"
     su cvsroot << EOF
-cvs diff -t | grep 'abc'
+cvs diff --ignore-case | grep 'abc'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -t"
+    CHECK_RESULT $? 0 0 "Failed option: cvs diff --ignore-case"
     su cvsroot << EOF
-cvs diff -T | grep 'abc'
+cvs diff --ignore-matching-lines=regexp | grep 'abc'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -T"
+    CHECK_RESULT $? 0 0 "Failed option: cvs diff --ignore-matching-lines=regexp"
     su cvsroot << EOF
-cvs diff --text | grep 'abc'
+cvs diff --ignore-space-change | grep 'abc'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff --text"
+    CHECK_RESULT $? 0 0 "Failed option: cvs diff --ignore-space-change"
     su cvsroot << EOF
-cvs diff -u | grep 'abc'
+cvs diff --initial-tab | grep 'abc'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -u"
+    CHECK_RESULT $? 0 0 "Failed option: cvs diff --initial-tab"
     su cvsroot << EOF
-cvs diff -w | grep 'abc'
+cvs diff --left-column | grep 'abc'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -w"
+    CHECK_RESULT $? 0 0 "Failed option: cvs diff --left-column"
     su cvsroot << EOF
-cvs diff -W 1 | grep 'abc'
+cvs diff --old-line-format=format | grep 'abc'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: -W columns"
+    CHECK_RESULT $? 0 0 "Failed option: cvs diff --line-format=format"
     su cvsroot << EOF
-cvs diff -U 1 | grep 'abc'
+cvs diff --minimal | grep 'abc'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -U"
+    CHECK_RESULT $? 0 0 "Failed option: cvs diff --minimal"
     LOG_INFO "Finish test!"
 
 }

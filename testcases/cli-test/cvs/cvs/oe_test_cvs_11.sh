@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -18,11 +18,11 @@
 # #############################################
 
 source "../common/common_lib.sh"
-source "./init/cvs_complex.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL cvs
-    tar -zxvf test.tar.gz
+    DNF_INSTALL "cvs"
+    tar -zxvf common/test.tar.gz
+    source "./init/cvs_complex.sh"
     LOG_INFO "End of environmental preparation!"
 }
 
