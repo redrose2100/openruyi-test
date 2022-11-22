@@ -17,7 +17,6 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# 测试对象、测试需要的工具等安装准备
 function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL tboot
@@ -27,14 +26,17 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
+  if [[ 20.03 != $(cat /etc/os-release | awk '{if($2 ~ /^\w/){print $2}}') ]]; then
+    lcp2_mlehash --version
+    CHECK_RESULT $? 0 0 "Check lcp2_mlehash --version  failed"
+  fi
+
   lcp2_mlehash --create --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz >mle_hash
   CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create  failed"
 
   lcp2_mlehash --create --verbose --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz >mle_hash
   CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create  failed"
 
-  lcp2_mlehash --version
-  CHECK_RESULT $? 0 0 "Check lcp2_mlehash --version  failed"
   LOG_INFO "End of the test."
 }
 

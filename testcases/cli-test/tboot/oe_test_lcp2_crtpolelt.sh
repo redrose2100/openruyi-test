@@ -18,40 +18,37 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
-  DNF_INSTALL tboot
-  LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL tboot
+    LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
+    LOG_INFO "Start to run test."
 
-  lcp2_crtpolelt --create --type pconf --out pconf.elt
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create  failed"
+    lcp2_crtpolelt --create --type mle --out pconf.elt
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create  failed"
 
-  lcp2_crtpolelt --show pconf.elt 2>&1 | grep 'policy element'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --show  failed"
+    lcp2_crtpolelt --show pconf.elt 2>&1 | grep 'policy element'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --show  failed"
 
-  lcp2_crtpolelt --show pconf.elt 2>&1 | grep 'policy element file'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --show  failed"
+    lcp2_crtpolelt --show pconf.elt --verbose 2>&1 | grep 'policy element'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --verbose  failed"
 
-  lcp2_crtpolelt --show pconf.elt --verbose 2>&1 | grep 'policy element'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --verbose  failed"
+    lcp2_crtpolelt --help 2>&1 | grep 'Usage'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --help  failed"
 
-  lcp2_crtpolelt --help 2>&1 | grep 'Usage'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --help  failed"
+    rm -rf pconf.elt
 
-  rm -rf pconf.elt
-
-  LOG_INFO "End of the test."
+    LOG_INFO "End of the test."
 }
 
 function post_test() {
-  LOG_INFO "Start to restore the test environment."
+    LOG_INFO "Start to restore the test environment."
 
-  DNF_REMOVE
+    DNF_REMOVE
 
-  LOG_INFO "Finish restoring the test environment."
+    LOG_INFO "Finish restoring the test environment."
 }
 
 main $@

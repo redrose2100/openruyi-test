@@ -26,28 +26,33 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  lcp2_crtpollist --create --listver 0x200 --out list_unsig.lst
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --listver --out failed"
+  if [[ 20.03 == $(cat /etc/os-release | awk '{if($2 ~ /^\w/){print $2}}') ]]; then
+    lcp2_crtpollist --create --out list_unsig.lst
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --listver --out failed"
+  else
+    lcp2_crtpollist --create --listver 0x200 --out list_unsig.lst
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --listver --out failed"
+
+    lcp2_crtpollist --verify list_unsig.lst
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --verify  failed"
+
+    lcp2_crtpollist --version 2>&1 | grep 'lcp2_crtpollist version'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --version  failed"
+  fi
 
   openssl genrsa -out privkey.pem 2048
   openssl rsa -pubout -in privkey.pem -out pubkey.pem
   lcp2_crtpollist --sign --sigalg rsa --pub pubkey.pem --priv privkey.pem --out list_unsig.lst
   CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --sign --sigalg --pub --priv --out  failed"
 
-  lcp2_crtpollist --show list_unsig.lst
+  lcp2_crtpollist --show list_unsig.lst 2>&1 | grep 'policy'
   CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --show failed"
 
-  lcp2_crtpollist --verify list_unsig.lst
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --verify  failed"
-
-  lcp2_crtpollist --help
+  lcp2_crtpollist --help 2>&1 | grep 'Usage:'
   CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --help  failed"
 
-  lcp2_crtpollist --show list_unsig.lst --verbose 2>&1 | grep 'cmdline opt'
+  lcp2_crtpollist --show list_unsig.lst --verbose
   CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --show --verbose failed"
-
-  lcp2_crtpollist --version 2>&1 | grep 'lcp2_crtpollist version'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --version  failed"
 
   rm -rf list_unsig privkey.pem pubkey.pem
 
