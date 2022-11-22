@@ -36,4 +36,11 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    userdel -rf groupB
+    LOG_INFO "Finish environment cleanup!"
+}
+
+
 main "$@"
