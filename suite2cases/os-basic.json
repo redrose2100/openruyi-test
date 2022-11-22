@@ -29,6 +29,9 @@
 	    "name": "oe_test_cksum"
 	},
 	{
+	    "name": "oe_test_chgrp"
+	},
+	{
 	    "name": "oe_test_ulimit"
 	},
         {
