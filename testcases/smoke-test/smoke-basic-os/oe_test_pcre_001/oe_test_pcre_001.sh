@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL pcre pcre-devel pcre-help
+    DNF_INSTALL "pcre pcre-devel pcre-help"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -29,11 +29,11 @@ function run_test() {
     LOG_INFO "Start testing..."
     pcre-config --version
     CHECK_RESULT $? 0 0 "The current pcre version cannot be recognized. Please download it again"
-    echo "/usr/share/doc/pcre" >> /etc/ld.so.conf
+    echo "/usr/share/doc/pcre" >>/etc/ld.so.conf
     CHECK_RESULT $? 0 0 "Import library files into cache"
     ldconfig
     CHECK_RESULT $? 0 0 "Run failed from ldconfig"
-    cat > file.c << EOF
+    cat >file.c <<EOF
 #include <pcre.h>
 #include <stdio.h>
 int main()
@@ -50,7 +50,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE
-    rm  -rf  file.c
+    rm -rf file.c
     sed -i '$d' /etc/ld.so.conf
     LOG_INFO "Finish environment cleanup!"
 }
