@@ -32,50 +32,54 @@ function run_test(){
     CHECK_RESULT $? 0 0 "Check units -h failed"
     units --help | grep "Usage: units"
     CHECK_RESULT $? 0 0 "Check units --help failed"
-    units -c | grep "Currency exchange rates from FloatRates"
+    units -c | grep "Currency exchange rates from"
     CHECK_RESULT $? 0 0 "Check units -c failed"
-    units --check | grep "Currency exchange rates from FloatRates"
+    units --check | grep "Currency exchange rates from"
     CHECK_RESULT $? 0 0 "Check units --check failed"
     units --check-verbose | grep "doing"
     CHECK_RESULT $? 0 0 "Check units --check-verbose failed"
     units --verbose-check | grep "doing"
     CHECK_RESULT $? 0 0 "Check units --verbose-check failed"
-    units -d 8 & echo "exit"
+    expect<<EOF
+    spawn units -d 8
+    expect {
+        "You have:" {send "1\n";exp_continue}
+        "You want:" {send "5\n"}
+    }
+    expect -re "\\\* 0.2\\r.*/ 5" {send "exit\n"}
+    expect eof
+EOF
     CHECK_RESULT $? 0 0 "Check units -d failed"
-    units --digits 8 & echo "exit"
+    expect<<EOF
+    spawn units --digits 8
+    expect {
+        "You have:" {send "1\n";exp_continue}
+        "You want:" {send "5\n"}
+    }
+    expect -re "\\\* 0.2\\r.*/ 5" {send "exit\n"}
+    expect eof
+EOF
     CHECK_RESULT $? 0 0 "Check units --digits failed"
-    units -e & echo "exit"
+    expect<<EOF
+    spawn units -e
+    expect {
+        "You have:" {send "1\n";exp_continue}
+        "You want:" {send "5\n"}
+    }
+    expect -re "\\\* 2.0000000e-01\\r.*/ 5.0000000e\\\+00" {send "exit\n"}
+    expect eof
+EOF
     CHECK_RESULT $? 0 0 "Check units -e failed"
-    units --exponential & echo "exit"
+    expect<<EOF
+    spawn units --exponential
+    expect {
+        "You have:" {send "1\n";exp_continue}
+        "You want:" {send "5\n"}
+    }
+    expect -re "\\\* 2.0000000e-01\\r.*/ 5.0000000e\\\+00" {send "exit\n"}
+    expect eof
+EOF
     CHECK_RESULT $? 0 0 "Check units --exponential failed"
-    units -f test.txt & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -f failed"
-    units --file test.txt & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --file failed"
-    units -H test.txt & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -H failed"
-    units --history test.txt & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --history failed"
-    units -L test.txt & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -L failed"
-    units --log test.txt & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --log failed"
-    units -l test.txt & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -l failed"
-    units --locale test.txt & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --locale failed"
-    units -m & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -m failed"
-    units --minus & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --minus failed"
-    units --oldstar & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --oldstar failed"
-    units --newstar & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --newstar failed"
-    units -n & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -n failed"
-    units --nolists & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --nolists failed"
     LOG_INFO "End to run test."
 }
 

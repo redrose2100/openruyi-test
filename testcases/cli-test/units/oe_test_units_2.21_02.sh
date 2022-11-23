@@ -27,16 +27,17 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    expect<<EOF
-    spawn units -d 8
-    expect {
-        "You have:" {send "1\n";exp_continue}
-        "You want:" {send "5\n"}
-    }
-    expect -re "\\\* 0.2\\r.*/ 5" {send "exit\n"}
-    expect eof
-EOF
-    CHECK_RESULT $? 0 0 "Check units -d failed"
+    units_cur --source floatrates
+    CHECK_RESULT $? 0 0 "Check units_cur --source failed"
+    units_cur -b USD
+    CHECK_RESULT $? 0 0 "Check units_cur -b failed"
+    units_cur --base USD
+    CHECK_RESULT $? 0 0 "Check units_cur --base failed"
+    LOG_INFO "End to run test."
+    units_cur -k KEY
+    CHECK_RESULT $? 0 0 "Check units_cur -k failed"
+    units_cur --key KEY
+    CHECK_RESULT $? 0 0 "Check units_cur --key failed"
     LOG_INFO "End to run test."
 }
 
