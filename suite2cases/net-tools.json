@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_net-tools_route"
+        },
+        {
+            "name": "oe_test_net-tools_ipmaddr"
         }
     ]
 }
