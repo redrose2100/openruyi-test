@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/units",
+    "cases": [
+        {
+            "name": "oe_test_units_base_01"
+        },
+        {
+            "name": "oe_test_units_base_02"
+        },
+        {
+            "name": "oe_test_units_base_03"
+        },
+        {
+            "name": "oe_test_units_base_04"
+        },
+        {
+            "name": "oe_test_units_base_05"
+        },
+        {
+            "name": "oe_test_units_2.17_01"
+        }
+   ]
+}

@@ -27,52 +27,54 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    units -S & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -S failed"
-    units --show-factor & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --show-factor failed"
-    units --conformable & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --conformable failed"
-    units -o %.8g & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -o failed"
-    units --output-format %.8g & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --output-format failed"
-    units -p & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -p failed"
-    units --product & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --product failed"
-    units -q & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -q failed"
-    units --quiet & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --quiet failed"
-    units --silent & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --silent failed"
-    units -s & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -s failed"
-    units --strict & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --strict failed"
-    units -v & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -v failed"
-    units --verbose & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --verbose failed"
-    units --compact & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --compact failed"
-    units -1 & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -1 failed"
-    units --one-line & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --one-line failed"
-    units -t & echo "exit"
+    expect<<EOF
+    spawn units -t
+    send "1\n5\n"
+    expect "0.2" {send "exit\n"}
+    expect eof
+EOF
     CHECK_RESULT $? 0 0 "Check units -t failed"
-    units --terse & echo "exit"
+    expect<<EOF
+    spawn units --terse
+    send "1\n5\n"
+    expect "0.2" {send "exit\n"}
+    expect eof
+EOF
     CHECK_RESULT $? 0 0 "Check units --terse failed"
-    units -r & echo "exit"
+    expect<<EOF
+    spawn units -r
+    expect {
+        "You have:" {send "1\n";exp_continue}
+        "You want:" {send "5\n"}
+    }
+    expect -re "\\\* 0.2\\r.*/ 5" {send "exit\n"}
+    expect eof
+EOF
     CHECK_RESULT $? 0 0 "Check units -r failed"
-    units --round & echo "exit"
+    expect<<EOF
+    spawn units --round
+    expect {
+        "You have:" {send "1\n";exp_continue}
+        "You want:" {send "5\n"}
+    }
+    expect -re "\\\* 0.2\\r.*/ 5" {send "exit\n"}
+    expect eof
+EOF
     CHECK_RESULT $? 0 0 "Check units --round failed"
     units -U | grep "/usr/share/units/definitions.units"
     CHECK_RESULT $? 0 0 "Check units -U failed"
     units --unitsfile | grep "/usr/share/units/definitions.units"
     CHECK_RESULT $? 0 0 "Check units --unitsfile failed"
+    units_cur -h | grep "usage: units_cur"
+    CHECK_RESULT $? 0 0 "Check units_cur -h failed"
+    units_cur --help | grep "usage: units_cur"
+    CHECK_RESULT $? 0 0 "Check units_cur --help failed"
+    units_cur -v
+    CHECK_RESULT $? 0 0 "Check units_cur -v failed"
+    units_cur --verbose
+    CHECK_RESULT $? 0 0 "Check units_cur --verbose failed"
+    units_cur - | grep "# ISO Currency Codes"
+    CHECK_RESULT $? 0 0 "Check units_cur filename failed"
     LOG_INFO "End to run test."
 }
 

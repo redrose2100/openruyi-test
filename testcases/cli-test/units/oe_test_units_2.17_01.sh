@@ -27,46 +27,18 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    units -u gauss & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units -u failed"
-    units --units gauss & echo "exit"
-    CHECK_RESULT $? 0 0 "Check units --units failed"
-    units -V | grep "GNU Units version 2.21"
+    units -V | grep "GNU Units version 2.17"
     CHECK_RESULT $? 0 0 "Check units -V failed"
-    units --version | grep "GNU Units version 2.21"
+    units --version | grep "GNU Units version 2.17"
     CHECK_RESULT $? 0 0 "Check units --version failed"
-    units -I | grep "GNU Units version 2.21"
+    units -I | grep "GNU Units version 2.17"
     CHECK_RESULT $? 0 0 "Check units -I failed"
-    units --info | grep "GNU Units version 2.21"
+    units --info | grep "GNU Units version 2.17"
     CHECK_RESULT $? 0 0 "Check units --info failed"
-
-    units_cur -h | grep "usage: units_cur"
-    CHECK_RESULT $? 0 0 "Check units_cur -h failed"
-    units_cur --help | grep "usage: units_cur"
-    CHECK_RESULT $? 0 0 "Check units_cur --help failed"
-    units_cur -V | grep "units_cur version 5.0"
+    units_cur -V | grep "units_cur version 4.3"
     CHECK_RESULT $? 0 0 "Check units_cur -V failed"
-    units_cur --version | grep "units_cur version 5.0"
+    units_cur --version | grep "units_cur version 4.3"
     CHECK_RESULT $? 0 0 "Check units_cur --version failed"
-    units_cur -v
-    CHECK_RESULT $? 0 0 "Check units_cur -v failed"
-    units_cur --verbose
-    CHECK_RESULT $? 0 0 "Check units_cur --verbose failed"
-    units_cur -s floatrates
-    CHECK_RESULT $? 0 0 "Check units_cur -s failed"
-    units_cur --source floatrates
-    CHECK_RESULT $? 0 0 "Check units_cur --source failed"
-    units_cur -b USD
-    CHECK_RESULT $? 0 0 "Check units_cur -b failed"
-    units_cur --base USD
-    CHECK_RESULT $? 0 0 "Check units_cur --base failed"
-    LOG_INFO "End to run test."
-    units_cur -k KEY
-    CHECK_RESULT $? 0 0 "Check units_cur -k failed"
-    units_cur --key KEY
-    CHECK_RESULT $? 0 0 "Check units_cur --key failed"
-    units_cur - | grep "# ISO Currency Codes"
-    CHECK_RESULT $? 0 0 "Check units_cur filename failed"
     LOG_INFO "End to run test."
 }
 
