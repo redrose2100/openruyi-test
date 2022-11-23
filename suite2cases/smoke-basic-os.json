@@ -504,6 +504,66 @@
         },
         {
             "name": "oe_test_rsyslog_04"
+        },
+	{
+            "name": "oe_test_rsyslog_05"
+        },
+        {
+            "name": "oe_test_rsyslog_06"
+        },
+        {
+            "name": "oe_test_rsyslog_07"
+        },
+        {
+            "name": "oe_test_rsyslog_08"
+        },
+        {
+            "name": "oe_test_rsyslog_09"
+        },
+        {
+            "name": "oe_test_rsyslog_10"
+        },
+        {
+            "name": "oe_test_rule_ipv6"
+        },
+        {
+            "name": "oe_test_service"
+        },
+        {
+            "name": "oe_test_setools"
+        },
+        {
+            "name": "oe_test_shadow"
+        },
+        {
+            "name": "oe_test_sshd"
+        },
+        {
+            "name": "oe_test_stat"
+        },
+        {
+            "name": "oe_test_sudo_E"
+        },
+        {
+            "name": "oe_test_sudo_maxseq"
+        },
+	{
+            "name": "oe_test_sudo"
+        },
+        {
+            "name": "oe_test_sudo_U"
+        },
+        {
+            "name": "oe_test_systemd_journald"
+        },
+        {
+            "name": "oe_test_systemd-update-utmp"
+        },
+        {
+            "name": "oe_test_tcpdump"
+        },
+        {
+            "name": "oe_test_tftp_ipv6"
         }
     ]
 }
