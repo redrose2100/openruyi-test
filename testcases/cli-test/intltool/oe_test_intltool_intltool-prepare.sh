@@ -28,7 +28,7 @@ function pre_test() {
     test -d tmp || mkdir tmp 
     mkdir -p po
     export LANG=en_US.UTF-8
-    cp -rf test_input/intltool_prepare/* tmp
+    cp -rf common/intltool_prepare/* tmp
     LOG_INFO "End to prepare the test environment."
 }
 

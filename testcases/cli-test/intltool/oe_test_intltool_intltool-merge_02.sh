@@ -26,7 +26,7 @@ function pre_test() {
     DNF_INSTALL "intltool"
     local_LANG=$LANG
     export LANG=en_US.UTF-8
-    cp -rf test_input/intltool_merge/* ./
+    cp -rf common/intltool_merge/* ./
     LOG_INFO "End to prepare the test environment."
 }
 

@@ -26,7 +26,7 @@ function pre_test() {
     DNF_INSTALL "intltool"
     local_LANG=$LANG
     export LANG=en_US.UTF-8
-    cp -rf test_input/intltoolize/* ./
+    cp -rf common/intltoolize/* ./
     mkdir -p ./po
     LOG_INFO "End to prepare the test environment."
 }
