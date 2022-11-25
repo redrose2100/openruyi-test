@@ -564,6 +564,9 @@
         },
         {
             "name": "oe_test_tftp_ipv6"
-        }
+        },
+	{
+	    "name": "oe_test_expat"
+	}
     ]
 }
