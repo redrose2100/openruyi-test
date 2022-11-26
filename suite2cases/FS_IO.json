@@ -1,0 +1,34 @@
+{
+    "path": "${OET_PATH}/testcases/system-test/fs-test/FS_IO",
+    "add disk": [20],
+    "cases": [
+        {
+            "name": "oe_test_FSIO_aio_cancel"
+        },
+        {
+            "name": "oe_test_FSIO_aio_libaio"
+        },
+        {
+            "name": "oe_test_FSIO_aio_read"
+        },
+        {
+            "name": "oe_test_FSIO_aio_suspend"
+        },
+        {
+            "name": "oe_test_FSIO_aio_write"
+        },
+        {
+            "name": "oe_test_FSIO_cat_page_fault"
+        },
+        {
+            "name": "oe_test_FSIO_delay_write_sync"
+        },
+        {
+            "name": "oe_test_FSIO_dirty_page_more_than_bg_ratio"
+        },
+        {
+            "name": "oe_test_FSIO_dirty_page_more_than_ratio"
+        }
+    ]
+}
+
