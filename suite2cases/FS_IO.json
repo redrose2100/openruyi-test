@@ -28,6 +28,30 @@
         },
         {
             "name": "oe_test_FSIO_dirty_page_more_than_ratio"
+        },
+        {
+            "name": "oe_test_FSIO_dirty_page_writeback_centisecs"
+        },
+        {
+            "name": "oe_test_FSIO_fopen_a"
+        },
+        {
+            "name": "oe_test_FSIO_fopen_a+"
+        },
+        {
+            "name": "oe_test_FSIO_fopen_r"
+        },
+        {
+            "name": "oe_test_FSIO_fopen_r+"
+        },
+        {
+            "name": "oe_test_FSIO_fopen_w"
+        },
+        {
+            "name": "oe_test_FSIO_fopen_w+"
+        },
+        {
+            "name": "oe_test_FSIO_fread_unlimit_count"
         }
     ]
 }
