@@ -14,7 +14,7 @@
 # @Contact   :   3170809690@qq.com
 # @Date      :   2022/08/18
 # @License   :   Mulan PSL v2
-# @Desc      :   Test cvs service function
+# @Desc      :   Test cvs
 # #############################################
 
 source "../common/common_lib.sh"
@@ -27,6 +27,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
+    cvs -v | grep 'Concurrent Versions System'
+    CHECK_RESULT $? 0 0 "Failed option: cvs -v"
     ! cvs --version 2>&1 | grep 'unrecognized option' && cvs --version 2>&1 | grep 'Concurrent Versions System'
     CHECK_RESULT $? 0 0 "Failed option: cvs --version"
     ! cvs --help 2>&1 | grep 'unrecognized option' && cvs --help 2>&1 | grep 'Usage:'
@@ -34,19 +36,7 @@ function run_test() {
     ! cvs --help-options 2>&1 | grep 'unrecognized option' && cvs --help-options 2>&1 | grep 'CVS global options'
     CHECK_RESULT $? 0 0 "Failed option: cvs --help-options"
     ! cvs --help-commands 2>&1 | grep 'unrecognized option' && cvs --help-commands 2>&1 | grep 'CVS commands are'
-    CHECK_RESULT $? 0 0 "Failed option: cvs --help-options"
-    ! cvs --help add 2>&1 | grep 'Unknown command' && cvs --help add 2>&1 | grep 'Usage:'
-    CHECK_RESULT $? 0 0 "Failed option: cvs --help-options"
-    ! cvs --help admin 2>&1 | grep 'Unknown command' && cvs --help admin 2>&1 | grep 'Usage:'
-    CHECK_RESULT $? 0 0 "Failed option: cvs --help-options"
-    ! cvs --help annotate 2>&1 | grep 'Unknown command' && cvs --help annotate 2>&1 | grep 'Usage:'
-    CHECK_RESULT $? 0 0 "Failed option: cvs --help-options"
-    ! cvs --help checkout 2>&1 | grep 'Unknown command' && cvs --help checkout 2>&1 | grep 'Usage:'
-    CHECK_RESULT $? 0 0 "Failed option: cvs --help-options"
-    ! cvs --help commit 2>&1 | grep 'Unknown command' && cvs --help commit 2>&1 | grep 'Usage:'
-    CHECK_RESULT $? 0 0 "Failed option: cvs --help-options"
-    ! cvs --help diff 2>&1 | grep 'Unknown command' && cvs --help diff 2>&1 | grep 'Usage:'
-    CHECK_RESULT $? 0 0 "Failed option: cvs --help-options"
+    CHECK_RESULT $? 0 0 "Failed option: cvs --help-commands"
     LOG_INFO "Finish test!"
 }
 

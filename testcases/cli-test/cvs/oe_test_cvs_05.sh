@@ -14,14 +14,14 @@
 # @Contact   :   3170809690@qq.com
 # @Date      :   2022/08/18
 # @License   :   Mulan PSL v2
-# @Desc      :   Test cvs service function
+# @Desc      :   Test cvs
 # #############################################
 
 source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "cvs"
-    tar -zxvf common/test.tar.gz -C ../
+    tar -zxvf common/test.tar.gz 
     source "./init/cvs_complex.sh"
     LOG_INFO "End of environmental preparation!"
 }
@@ -29,48 +29,34 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     su cvsroot << EOF
-echo "abc" >> tmp.txt
-cvs diff -l 2>&1 < /dev/null | grep 'abc'
+cvs rtag rel-1-0 myProject 2>&1 | grep 'cvs rtag: Tagging myProject'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -l"
+    CHECK_RESULT $? 0 0 "Failed option: cvs rtag"
     su cvsroot << EOF
-echo " efg" >> dir/2.txt
-cvs diff -R 2>&1 < /dev/null | grep 'diff -r1.1 2.txt'
+cvs -f rtag rel-1-0 myProject 2>&1 | grep 'cvs rtag: Tagging myProject'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -R"
+    CHECK_RESULT $? 0 0 "Failed option: cvs -f"
     su cvsroot << EOF
-cvs add dir/2.txt tmp.txt 
-cvs commit -l -m 'Added an optimization pass for tmp.txt' | grep 'new revision:'
+cvs -x rtag rel-1-0 myProject 2>&1 | grep 'cvs rtag: Tagging myProject'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs commit -l "
+    CHECK_RESULT $? 0 0 "Failed option: cvs -x"
     su cvsroot << EOF
-cvs diff -N | grep 'efg'
+cvs -a rtag rel-1-0 myProject 2>&1 | grep 'cvs rtag: Tagging myProject'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -N "
+    CHECK_RESULT $? 0 0 "Failed option: cvs -a"
     su cvsroot << EOF
-cvs diff -kk -c -r 1.1 -r 1.2 tmp.txt | grep '*** 0 ****'
+cvs remove tmp.txt 2>&1 | grep 'cvs remove: 1 file exists; remove it first'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -kk -c "
+    CHECK_RESULT $? 0 0 "Failed option: cvs remove"
+   su cvsroot << EOF
+cvs update tmp.txt
+cvs status tmp.txt 2>&1 | grep 'Sticky Tag:.*(none)'
+EOF
+    CHECK_RESULT $? 0 0 "Failed option: cvs update"
     su cvsroot << EOF
-cvs diff -i -w -b -r 1.1 -r 1.2 tmp.txt | grep 'abc'
+cvs status tmp.txt 2>&1 | grep 'Sticky Tag:.*(none)'
 EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -i -w -b "
-    su cvsroot << EOF
-cvs diff -I 'efg' -r 1.1 -r 1.2 tmp.txt | grep 'abc' && ! cvs diff -I 'abc' -r 1.1 -r 1.2 tmp.txt | grep '> abc'
-EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -I "
-    su cvsroot << EOF
-cvs diff --binary -r 1.1 -r 1.2 tmp.txt | grep 'abc'
-EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff --binary "
-    su cvsroot << EOF
-cvs diff -a -r 1.1 -r 1.2 tmp.txt | grep 'abc'
-EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -a "
-    su cvsroot << EOF
-cvs diff -kk -r 1.1 -r 1.2 tmp.txt | grep 'abc'
-EOF
-    CHECK_RESULT $? 0 0 "Failed option: cvs diff -r "
+    CHECK_RESULT $? 0 0 "Failed option: cvs status"
     LOG_INFO "Finish test!"
 
 }
@@ -79,8 +65,8 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     cd $cvs_dir/../../
     unset CVSROOT cvs_dir testd_cvs_dir
-    rm -rf cvs_test/cvs_testd_dir myProject/ cvs_test/ init/
     userdel -rf cvsroot;groupdel cvs
+    rm -rf cvs_test/cvs_testd_dir myProject cvs_test/ init/ passwd
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
