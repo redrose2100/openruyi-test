@@ -25,6 +25,9 @@
        {
             "name": "oe_test_sdiff"
         },
+       {
+            "name": "oe_test_diff3"
+        },
 	{
 	    "name": "oe_test_auditctl"
 	},
