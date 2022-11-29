@@ -567,6 +567,9 @@
         },
 	{
 	    "name": "oe_test_expat"
+	},
+	{
+	    "name": "oe_test_procps-ng-uptime"
 	}
     ]
 }
