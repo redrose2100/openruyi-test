@@ -35,6 +35,9 @@
 	    "name": "oe_test_cksum"
 	},
 	{
+	    "name": "oe_test_paste"
+	},
+	{
 	    "name": "oe_test_ulimit"
 	},
         {
