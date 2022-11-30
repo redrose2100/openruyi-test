@@ -111,6 +111,9 @@
         },
         {
             "name": "oe_test_user_management_groupmod"
+        },
+        {
+            "name": "oe_test_user_management_useradd"
         }
     ]
 }
