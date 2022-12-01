@@ -534,8 +534,11 @@
 	{
 	    "name": "oe_test_net_mtr"
 	},
-	{
+    {
 	    "name": "oe_test_gsettings"
+	},
+	{
+	    "name": "oe_test_basic_pcre_use"
 	}
     ]
 }
