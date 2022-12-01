@@ -548,6 +548,9 @@
 	},
 	{
 	    "name":"oe_test_pcre_use"
+	},
+	{
+	    "name":"oe_test_ACL_dir"
 	}
     ]
 }
