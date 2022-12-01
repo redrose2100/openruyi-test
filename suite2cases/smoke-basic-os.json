@@ -570,9 +570,12 @@
         },
         {
             "name": "oe_test_attr_001"
-	},
-	{
-	    "name": "oe_test_procps-ng-uptime"
+        },
+        {
+            "name": "oe_test_procps-ng-uptime"
+        },
+        {
+            "name": "oe_test_runc"
         }
     ]
 }
