@@ -40,6 +40,9 @@
         {
             "name": "oe_test_chgrp"
         },
+        {
+            "name": "oe_test_cut"
+        },
 	{
 	    "name": "oe_test_ulimit"
 	},
