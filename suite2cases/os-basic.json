@@ -536,6 +536,9 @@
 	},
 	{
 	    "name": "oe_test_gsettings"
+	},
+	{
+	    "name":"oe_test_pcre_use"
 	}
     ]
 }
