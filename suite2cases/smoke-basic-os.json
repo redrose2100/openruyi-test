@@ -576,6 +576,9 @@
 	},
 	{
             "name": "oe_test_procps-ng-sysctl"
-        }
+        },
+	{
+	    "name": "oe_test_unalias_001"
+	}
     ]
 }
