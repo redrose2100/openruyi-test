@@ -22,13 +22,14 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 # Preparation for installation of test objects, tools required for testing, etc
 function pre_test() {
-   LOG_INFO "Start to prepare the test environment."
+    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "intltool"
     local_LANG=$LANG
-    test -d tmp || mkdir tmp 
-    mkdir -p po
     export LANG=en_US.UTF-8
+    test -d tmp || mkdir tmp
+    mkdir -p po
     cp -rf common/intltool_prepare/* tmp
+    tar -xf ./tmp/common.tar -C ./tmp
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -43,10 +44,9 @@ function run_test() {
 
     intltool-prepare -v | grep -E "intltool-prepare intltool [0-9].+"
     CHECK_RESULT $? 0 0 "option: -v error"
-    intltool-prepare -v | grep -E "intltool-prepare intltool [0-9].+"
+    intltool-prepare --version | grep -E "intltool-prepare intltool [0-9].+"
     CHECK_RESULT $? 0 0 "option: --version error"
 
-    tar -xvf ./tmp/common.tar -C ./tmp
     intltool-prepare 2>&1 | grep -i "Working"
     CHECK_RESULT $? 0 0 "intltool-prepare output error"
     grep -i $'extract1.desktop.in\nmerge8.keys.in' po/POTFILES.in

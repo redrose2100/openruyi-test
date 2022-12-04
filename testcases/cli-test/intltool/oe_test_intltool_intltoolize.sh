@@ -43,8 +43,6 @@ function run_test() {
     intltoolize --automake  
     grep -c "Makefile" po/Makefile.in.in | grep 9
     CHECK_RESULT $? 0 0 "option: --automake error"
-    ls -Al po/Makefile.in.in | grep "\->" 
-    CHECK_RESULT $? 0 0 "option: --automake error"
 
     rm -rf po/*
     intltoolize -c

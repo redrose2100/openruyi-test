@@ -20,18 +20,12 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-# Data and parameter configuration that need to be preloaded
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    test -d tmp || mkdir tmp
-    LOG_INFO "End to config params of the case."
-}
-
 # Preparation for installation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "intltool"
     local_LANG=$LANG
+    test -d tmp || mkdir tmp
     export LANG=en_US.UTF-8
     cp -rf common/intltool_update/* tmp
     LOG_INFO "End to prepare the test environment."
