@@ -505,7 +505,7 @@
         {
             "name": "oe_test_rsyslog_04"
         },
-	{
+        {
             "name": "oe_test_rsyslog_05"
         },
         {
@@ -547,7 +547,7 @@
         {
             "name": "oe_test_sudo_maxseq"
         },
-	{
+        {
             "name": "oe_test_sudo"
         },
         {
@@ -570,15 +570,72 @@
         },
         {
             "name": "oe_test_attr_001"
-	},
-	{
-	    "name": "oe_test_procps-ng-uptime"
-	},
-	{
+        },
+        {
+            "name": "oe_test_procps-ng-uptime"
+        },
+        {
             "name": "oe_test_procps-ng-sysctl"
         },
-	{
-	    "name": "oe_test_unalias_001"
-	}
+        {
+            "name": "oe_test_unalias_001"
+        },
+        {
+            "name": "oe_test_procps-ng-uptime"
+        },
+        {
+            "name": "oe_test_time_01"
+        },
+        {
+            "name": "oe_test_time_02"
+        },
+        {
+            "name": "oe_test_wget"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_01"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_02"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_03"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_04"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_05"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_06"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_07"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_08"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_09"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_10"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_11"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_12"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_13"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_14"
+        },
+        {
+            "name": "oe_test_systemd_SCEN_15"
+        }
     ]
 }
