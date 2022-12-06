@@ -43,20 +43,29 @@ function run_test(){
     LOG_INFO "Start to run test."
     cd checkpoint_file
     (test_process) & pid=$! && DUMP
-    criu restore -j --lsm-mount-context CTX & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --lsm-mount-context failed"
-    criu restore -j --skip-mnt PATH & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --skip-mnt failed"
-    criu restore -j --enable-fs FSNAMES & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --enable-fs failed"
-    criu restore -j --empty-ns net & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --empty-ns net failed"
-    criu restore -j --file-validation filesize & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --file-validation failed"
-    criu restore -j --with-cpu-affinity & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --with-cpu-affinity failed"
-    criu restore -j --track-mem & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --track-mem failed"
+    criu restore -j & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore -j failed"
+    criu restore --shell-job & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --shell-job failed"
+    criu restore -j -d & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore -d failed"
+    criu restore -j --restore-detached & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --restore-detached failed"
+    criu restore -j -d -S & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore -S failed"
+    criu restore -j -d --restore-sibling & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --restore-sibling failed"
+    cd ..
+    criu restore -j -D checkpoint_file & cd checkpoint_file && DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore -D failed"
+    cd ..
+    criu restore -j --images-dir checkpoint_file & cd checkpoint_file && DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --images-dir failed"
+    criu restore -j --pidfile FILE & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --pidfile failed"
+    cd ..
+    criu restore -j -D checkpoint_file -W checkpoint_file & cd checkpoint_file && DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore -W failed"
     cd ..
     LOG_INFO "End to run test."
 }

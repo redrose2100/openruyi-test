@@ -22,7 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
-    mkdir checkpoint_file checkpoint_file_2
+    mkdir checkpoint_file
     test_process(){
         num=0
         while true;
@@ -32,32 +32,45 @@ function pre_test(){
             sleep 1
         done
     }
+    DUMP(){
+        sleep 0.1
+        criu dump -j -t $pid
+    }
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){
     LOG_INFO "Start to run test."
-    (test_process) & criu dump -D checkpoint_file -j -t $! --lsm-mount-context CTX
-    CHECK_RESULT $? 0 0 "Check criu dump --lsm-mount-context failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --skip-mnt PATH
-    CHECK_RESULT $? 0 0 "Check criu dump --skip-mnt failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --enable-fs FSNAMES
-    CHECK_RESULT $? 0 0 "Check criu dump --enable-fs failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --empty-ns net
-    CHECK_RESULT $? 0 0 "Check criu dump --empty-ns net failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --file-validation filesize
-    CHECK_RESULT $? 0 0 "Check criu dump --file-validation failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --with-cpu-affinity
-    CHECK_RESULT $? 0 0 "Check criu dump --with-cpu-affinity failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --track-mem
-    CHECK_RESULT $? 0 0 "Check criu dump --track-mem failed"
+    cd checkpoint_file
+    (test_process) & pid=$! && DUMP
+    criu restore -j --link-remap & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --link-remap failed"
+    criu restore -j --ghost-limit size & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --ghost-limit failed"
+    criu restore -j -l & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore -l failed"
+    criu restore -j --file-locks & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --file-locks failed"
+    criu restore -j -L / & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore -L failed"
+    criu restore -j --libdir / & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --libdir failed"
+    criu restore -j --irmap-scan-path FILE & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --irmap-scan-path failed"
+    criu restore -j --manage-cgroups & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --manage-cgroups failed"
+    criu restore -j --cgroup-root / & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --cgroup-root failed"
+    criu restore -j --cgroup-props STRING & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --cgroup-props failed"
+    cd ..
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf checkpoint_file checkpoint_file_2
+    rm -rf checkpoint_file
     LOG_INFO "End to restore the test environment."
 }
 

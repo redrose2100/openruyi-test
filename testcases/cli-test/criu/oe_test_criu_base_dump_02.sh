@@ -37,22 +37,26 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    (test_process) & criu dump -D checkpoint_file -j -t $! -L /
-    CHECK_RESULT $? 0 0 "Check criu dump -L failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --force-irmap
-    CHECK_RESULT $? 0 0 "Check criu dump --force-irmap failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --irmap-scan-path FILE
-    CHECK_RESULT $? 0 0 "Check criu dump --irmap-scan-path failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --manage-cgroups
-    CHECK_RESULT $? 0 0 "Check criu dump --manage-cgroups failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-root /
-    CHECK_RESULT $? 0 0 "Check criu dump --cgroup-root failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-dump-controller NAME
-    CHECK_RESULT $? 0 0 "Check criu dump --cgroup-dump-controller failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-yard PATH
-    CHECK_RESULT $? 0 0 "Check criu dump --cgroup-yard failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --lsm-profile selinux:NAME
-    CHECK_RESULT $? 0 0 "Check criu dump --lsm-profile failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! -W checkpoint_file
+    CHECK_RESULT $? 0 0 "Check criu dump -W failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --work-dir checkpoint_file
+    CHECK_RESULT $? 0 0 "Check criu dump --work-dir failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --cpu-cap
+    CHECK_RESULT $? 0 0 "Check criu dump --cpu-cap failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --weak-sysctls
+    CHECK_RESULT $? 0 0 "Check criu dump --weak-sysctls failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --external dev
+    CHECK_RESULT $? 0 0 "Check criu dump --external failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --tcp-established
+    CHECK_RESULT $? 0 0 "Check criu dump --tcp-established failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --skip-in-flight
+    CHECK_RESULT $? 0 0 "Check criu dump --skip-in-flight failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --tcp-close
+    CHECK_RESULT $? 0 0 "Check criu dump --tcp-close failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! -r /
+    CHECK_RESULT $? 0 0 "Check criu dump -r failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --root /
+    CHECK_RESULT $? 0 0 "Check criu dump --root failed"
     LOG_INFO "End to run test."
 }
 

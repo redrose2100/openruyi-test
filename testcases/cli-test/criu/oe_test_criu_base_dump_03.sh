@@ -37,16 +37,6 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    (test_process) & criu dump -D checkpoint_file -j -t $! --external dev
-    CHECK_RESULT $? 0 0 "Check criu dump --external failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --tcp-established
-    CHECK_RESULT $? 0 0 "Check criu dump --tcp-established failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --skip-in-flight
-    CHECK_RESULT $? 0 0 "Check criu dump --skip-in-flight failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --tcp-close
-    CHECK_RESULT $? 0 0 "Check criu dump --tcp-close failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! -r /
-    CHECK_RESULT $? 0 0 "Check criu dump -r failed"
     (test_process) & criu dump -D checkpoint_file -j -t $! --evasive-devices
     CHECK_RESULT $? 0 0 "Check criu dump --evasive-devices failed"
     (test_process) & criu dump -D checkpoint_file -j -t $! --link-remap
@@ -55,6 +45,18 @@ function run_test(){
     CHECK_RESULT $? 0 0 "Check criu dump --ghost-limit failed"
     (test_process) & criu dump -D checkpoint_file -j -t $! -l
     CHECK_RESULT $? 0 0 "Check criu dump -l failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --file-locks
+    CHECK_RESULT $? 0 0 "Check criu dump --file-locks failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! -L /
+    CHECK_RESULT $? 0 0 "Check criu dump -L failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --libdir /
+    CHECK_RESULT $? 0 0 "Check criu dump --libdir failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --force-irmap
+    CHECK_RESULT $? 0 0 "Check criu dump --force-irmap failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --irmap-scan-path FILE
+    CHECK_RESULT $? 0 0 "Check criu dump --irmap-scan-path failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --manage-cgroups
+    CHECK_RESULT $? 0 0 "Check criu dump --manage-cgroups failed"
     LOG_INFO "End to run test."
 }
 

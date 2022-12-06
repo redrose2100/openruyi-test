@@ -22,36 +22,36 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
+    mkdir checkpoint_file
+    test_process(){
+        num=0
+        while true;
+        do
+            echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
+            (( num += 1 ))
+            sleep 1
+        done
+    }
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){
     LOG_INFO "Start to run test."
-    criu check | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "Check criu check failed"
-    criu check --extra | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "Check criu check --extra failed"
-    criu check --experimental | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "Check criu check --experimental failed"
-    criu check --all | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "Check criu check --all failed"
-    criu check --feature mnt_id | grep 'mnt_id is supported'
-    CHECK_RESULT $? 0 0 "Check criu check --feature failed"
-    criu check -o FILE | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "Check criu check -o failed"
-    criu check -v | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "Check criu check -v failed"
-    criu check -vNUM | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "Check criu check -vNUM failed"
-    criu check --display-stats | grep 'Looks good'
-    CHECK_RESULT $? 0 0 "Check criu check --display-stats failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --with-cpu-affinity && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --with-cpu-affinity failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --track-mem && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --track-mem failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --auto-dedup && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --auto-dedup failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --pre-dump-mode splice && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --pre-dump-mode failed"
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf FILE
+    rm -rf checkpoint_file
     LOG_INFO "End to restore the test environment."
 }
 

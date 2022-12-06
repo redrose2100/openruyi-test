@@ -47,6 +47,10 @@ function run_test(){
     CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f "criu service")
     CHECK_RESULT $? 0 0 "Check criu service -d failed"
+    criu service --daemon &
+    CHECK_RESULT $? 0 0
+    kill -9 $(pgrep -f "criu service")
+    CHECK_RESULT $? 0 0 "Check criu service --daemon failed"
     criu service --status-fd \0 &
     CHECK_RESULT $? 0 0
     kill -9 $(pgrep -f "criu service")

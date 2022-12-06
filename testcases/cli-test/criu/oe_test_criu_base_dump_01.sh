@@ -22,7 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
-    mkdir checkpoint_file
+    mkdir checkpoint_file checkpoint_file_2
     test_process(){
         num=0
         while true;
@@ -37,27 +37,35 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --lsm-mount-context CTX && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --lsm-mount-context failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --skip-mnt PATH && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --skip-mnt failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --enable-fs FSNAMES && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --enable-fs failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --empty-ns net && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --empty-ns net failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --file-validation filesize && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --file-validation failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --with-cpu-affinity && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --with-cpu-affinity failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --track-mem && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --track-mem failed"
+    cd checkpoint_file
+    (test_process) & criu dump -j -t $! 
+    CHECK_RESULT $? 0 0 "Check criu dump -j -t failed"
+    (test_process) & criu dump --shell-job -t $! 
+    CHECK_RESULT $? 0 0 "Check criu dump --shell-job failed"
+    (test_process) & criu dump -j --tree $! 
+    CHECK_RESULT $? 0 0 "Check criu dump --tree failed"
+    (test_process) & criu dump --pidfile FILE -j -t $!
+    CHECK_RESULT $? 0 0 "Check criu dump --pidfile failed"
+    cd ..
+    (test_process) & criu dump -D checkpoint_file -j -t $!
+    CHECK_RESULT $? 0 0 "Check criu dump -D failed"
+    (test_process) & criu dump --images-dir checkpoint_file -j -t $!
+    CHECK_RESULT $? 0 0 "Check criu dump --images-dir failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! -s
+    CHECK_RESULT $? 0 0 "Check criu dump -s failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --leave-stopped
+    CHECK_RESULT $? 0 0 "Check criu dump --leave-stopped failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! -R
+    CHECK_RESULT $? 0 0 "Check criu dump -R failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --leave-running
+    CHECK_RESULT $? 0 0 "Check criu dump --leave-running failed"
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf checkpoint_file
+    rm -rf checkpoint_file checkpoint_file_2
     LOG_INFO "End to restore the test environment."
 }
 

@@ -37,26 +37,26 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --evasive-devices && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --evasive-devices failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --link-remap && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --link-remap failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --ghost-limit size && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --ghost-limit failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --action-script FILE && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --action-script failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -l && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -l failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --file-locks && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --file-locks failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -L / && kill -9 $pid
     CHECK_RESULT $? 0 0 "Check criu pre-dump -L failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --libdir / && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --libdir failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --force-irmap && kill -9 $pid
     CHECK_RESULT $? 0 0 "Check criu pre-dump --force-irmap failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --irmap-scan-path FILE && kill -9 $pid
     CHECK_RESULT $? 0 0 "Check criu pre-dump --irmap-scan-path failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --manage-cgroups && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --manage-cgroups failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-root / && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --cgroup-root failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-props STRING && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --cgroup-props STRING failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-props-file FILE && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --cgroup-props-file STRING failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-dump-controller NAME && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --cgroup-dump-controller failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cgroup-yard PATH && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --cgroup-yard failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --lsm-profile selinux:NAME && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --lsm-profile failed"
     LOG_INFO "End to run test."
 }
 

@@ -32,29 +32,39 @@ function pre_test(){
             sleep 1
         done
     }
+    DUMP(){
+        sleep 0.1
+        criu dump -j -t $pid
+    }
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){
     LOG_INFO "Start to run test."
     cd checkpoint_file
-    (test_process) & pid=$! && criu pre-dump -j -t $! && kill -9 $pid
+    (test_process) & pid=$! && DUMP
     cd ..
-    CHECK_RESULT $? 0 0 "Check criu pre-dump -j -t failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump -D failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -s && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump -s failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -R && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump -R failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -W checkpoint_file && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump -W failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cpu-cap && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --cpu-cap failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --weak-sysctls && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --weak-sysctls failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --network-lock iptables && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --network-lock failed"
+    criu restore -j -D checkpoint_file --work-dir checkpoint_file & cd checkpoint_file && DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --work-dir failed"
+    criu restore -j --exec-cmd echo 'exec-cmd test' & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --exec-cmd failed"
+    criu restore -j --weak-sysctls & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --weak-sysctls failed"
+    criu restore -j --external dev & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --external failed"
+    criu restore -j --tcp-established & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --tcp-established failed"
+    criu restore -j --skip-in-flight & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --skip-in-flight failed"
+    criu restore -j --tcp-close & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --tcp-close failed"
+    criu restore -j -r / & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore -r failed"
+    criu restore -j --root / & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --root failed"
+    criu restore -j --evasive-devices & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --evasive-devices failed"
+    cd ..
     LOG_INFO "End to run test."
 }
 

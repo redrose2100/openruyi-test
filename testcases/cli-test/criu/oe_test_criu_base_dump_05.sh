@@ -22,7 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
-    mkdir checkpoint_file checkpoint_file_2
+    mkdir checkpoint_file
     test_process(){
         num=0
         while true;
@@ -37,31 +37,17 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    cd checkpoint_file
-    (test_process) & criu dump -j -t $! 
-    cd ..
-    CHECK_RESULT $? 0 0 "Check criu dump -j -t failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $!
-    CHECK_RESULT $? 0 0 "Check criu dump -D failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! -s
-    CHECK_RESULT $? 0 0 "Check criu dump -s failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! -R
-    CHECK_RESULT $? 0 0 "Check criu dump -R failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! -W checkpoint_file
-    CHECK_RESULT $? 0 0 "Check criu dump -W failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --cpu-cap
-    CHECK_RESULT $? 0 0 "Check criu dump --cpu-cap failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --weak-sysctls
-    CHECK_RESULT $? 0 0 "Check criu dump --weak-sysctls failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --network-lock iptables
-    CHECK_RESULT $? 0 0 "Check criu dump --network-lock failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --auto-dedup
+    CHECK_RESULT $? 0 0 "Check criu dump --auto-dedup failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --pre-dump-mode splice
+    CHECK_RESULT $? 0 0 "Check criu dump --pre-dump-mode failed"
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf checkpoint_file checkpoint_file_2
+    rm -rf checkpoint_file
     LOG_INFO "End to restore the test environment."
 }
 

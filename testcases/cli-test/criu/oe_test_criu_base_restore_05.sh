@@ -22,37 +22,37 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
+    mkdir checkpoint_file
+    test_process(){
+        num=0
+        while true;
+        do
+            echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
+            (( num += 1 ))
+            sleep 1
+        done
+    }
+    DUMP(){
+        sleep 0.1
+        criu dump -j -t $pid
+    }
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){
     LOG_INFO "Start to run test."
-    criu page-server &
-    CHECK_RESULT $? 0 0
-    kill -9 $(pgrep -f "criu page-server")
-    CHECK_RESULT $? 0 0 "Check criu page-server failed"
-    criu page-server --address 127.0.0.1 &
-    CHECK_RESULT $? 0 0
-    kill -9 $(pgrep -f "criu page-server")
-    CHECK_RESULT $? 0 0 "Check criu page-server --address failed"
-    criu page-server --port 114514 &
-    CHECK_RESULT $? 0 0
-    kill -9 $(pgrep -f "criu page-server")
-    CHECK_RESULT $? 0 0 "Check criu page-server --port failed"
-    criu page-server -d &
-    CHECK_RESULT $? 0 0
-    kill -9 $(pgrep -f "criu page-server")
-    CHECK_RESULT $? 0 0 "Check criu page-server -d failed"
-    criu page-server --status-fd \0 &
-    CHECK_RESULT $? 0 0
-    kill -9 $(pgrep -f "criu page-server")
-    CHECK_RESULT $? 0 0 "Check criu page-server --status-fd failed"
+    cd checkpoint_file
+    (test_process) & pid=$! && DUMP
+    criu restore -j --auto-dedup & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --auto-dedup failed"
+    cd ..
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
+    rm -rf checkpoint_file
     LOG_INFO "End to restore the test environment."
 }
 

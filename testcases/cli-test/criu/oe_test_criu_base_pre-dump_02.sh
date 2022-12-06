@@ -37,6 +37,14 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -W checkpoint_file && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -W failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --work-dir checkpoint_file && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --work-dir failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cpu-cap && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --cpu-cap failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --weak-sysctls && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --weak-sysctls failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --external dev && kill -9 $pid
     CHECK_RESULT $? 0 0 "Check criu pre-dump --external failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --tcp-established && kill -9 $pid
@@ -47,16 +55,8 @@ function run_test(){
     CHECK_RESULT $? 0 0 "Check criu pre-dump --tcp-close failed"
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -r / && kill -9 $pid
     CHECK_RESULT $? 0 0 "Check criu pre-dump -r failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --evasive-devices && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --evasive-devices failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --link-remap && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --link-remap failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --ghost-limit size && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --ghost-limit failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --action-script FILE && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --action-script failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -l && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump -l failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --root / && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --root failed"
     LOG_INFO "End to run test."
 }
 

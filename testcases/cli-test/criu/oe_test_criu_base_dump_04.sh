@@ -37,14 +37,28 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
+    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-root /
+    CHECK_RESULT $? 0 0 "Check criu dump --cgroup-root failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-dump-controller NAME
+    CHECK_RESULT $? 0 0 "Check criu dump --cgroup-dump-controller failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --cgroup-yard PATH
+    CHECK_RESULT $? 0 0 "Check criu dump --cgroup-yard failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --skip-mnt PATH
+    CHECK_RESULT $? 0 0 "Check criu dump --skip-mnt failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --enable-fs FSNAMES
+    CHECK_RESULT $? 0 0 "Check criu dump --enable-fs failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --empty-ns net
+    CHECK_RESULT $? 0 0 "Check criu dump --empty-ns net failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --file-validation filesize
+    CHECK_RESULT $? 0 0 "Check criu dump --file-validation failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --with-cpu-affinity
+    CHECK_RESULT $? 0 0 "Check criu dump --with-cpu-affinity failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --track-mem
+    CHECK_RESULT $? 0 0 "Check criu dump --track-mem failed"
     pre_name='checkpoint_file' && pre_path=$(readlink -f $pre_name)
     (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid
     criu dump -D checkpoint_file_2 -j -t $pid --prev-images-dir $pre_path
     CHECK_RESULT $? 0 0 "Check criu dump --prev-images-dir failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --auto-dedup
-    CHECK_RESULT $? 0 0 "Check criu dump --auto-dedup failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --pre-dump-mode splice
-    CHECK_RESULT $? 0 0 "Check criu dump --pre-dump-mode failed"
     LOG_INFO "End to run test."
 }
 

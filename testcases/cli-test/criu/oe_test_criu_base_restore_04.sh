@@ -43,24 +43,26 @@ function run_test(){
     LOG_INFO "Start to run test."
     cd checkpoint_file
     (test_process) & pid=$! && DUMP
-    criu restore -j -L / & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore -L failed"
-    criu restore -j --irmap-scan-path FILE & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --irmap-scan-path failed"
-    criu restore -j --manage-cgroups & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --manage-cgroups failed"
-    criu restore -j --cgroup-root / & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --cgroup-root failed"
-    criu restore -j --cgroup-props STRING & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --cgroup-props failed"
     criu restore -j --cgroup-props-file FILE & DUMP
     CHECK_RESULT $? 0 0 "Check criu restore --cgroup-props-file failed"
     criu restore -j --cgroup-dump-controller NAME & DUMP
     CHECK_RESULT $? 0 0 "Check criu restore --cgroup-dump-controller failed"
     criu restore -j --cgroup-yard PATH & DUMP
     CHECK_RESULT $? 0 0 "Check criu restore --cgroup-yard failed"
-    criu restore -j --lsm-profile selinux:NAME & DUMP
-    CHECK_RESULT $? 0 0 "Check criu restore --lsm-profile failed"
+    criu restore -j --skip-mnt PATH & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --skip-mnt failed"
+    criu restore -j --enable-fs FSNAMES & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --enable-fs failed"
+    criu restore -j --empty-ns net & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --empty-ns net failed"
+    criu restore -j --file-validation filesize & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --file-validation failed"
+    criu restore -j --with-cpu-affinity & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --with-cpu-affinity failed"
+    criu restore -j --track-mem & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --track-mem failed"
+    criu restore -j --page-server & DUMP
+    CHECK_RESULT $? 0 0 "Check criu restore --page-server failed"
     cd ..
     LOG_INFO "End to run test."
 }
