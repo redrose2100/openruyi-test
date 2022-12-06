@@ -637,5 +637,8 @@
         {
             "name": "oe_test_systemd_SCEN_15"
         }
+        {
+            "name": "oe_test_xz_001"
+        }
     ]
 }
