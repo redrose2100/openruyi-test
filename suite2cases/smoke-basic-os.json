@@ -639,6 +639,9 @@
         },
 	{
 	    "name": "oe_test_find"
+	},
+	{
+	    "name": "oe_test_source"
 	}
     ]
 }
