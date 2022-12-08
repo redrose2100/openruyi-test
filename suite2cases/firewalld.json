@@ -162,6 +162,9 @@
         },
         {
             "name": "oe_test_service_firewalld"
+        },
+        {
+            "name": "oe_test_firewalld_default_rules"
         }
     ]
 }
