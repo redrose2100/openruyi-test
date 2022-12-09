@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/embedded-test/dsoftbus_basic_test",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_dsoftbus_test_001",
+            "machine num": 2
+        }
+    ]
+}
