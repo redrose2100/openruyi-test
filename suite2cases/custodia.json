@@ -3,6 +3,15 @@
     "cases": [
         {
             "name": "oe_test_custodia"
+        },
+        {
+            "name": "oe_test_custodia-cli_01"
+        },
+        {
+            "name": "oe_test_custodia-cli_02"
+        },
+        {
+            "name": "oe_test_custodia-cli_03"
         }
    ]
 }
