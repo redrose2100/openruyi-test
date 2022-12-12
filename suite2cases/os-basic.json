@@ -46,6 +46,9 @@
         {
             "name": "oe_test_cut"
         },
+        {
+            "name": "oe_test_bsdcat"
+        },
 	{
 	    "name": "oe_test_ulimit"
 	},
