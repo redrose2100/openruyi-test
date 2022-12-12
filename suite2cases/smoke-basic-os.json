@@ -642,6 +642,9 @@
 	},
 	{
 	    "name": "oe_test_source"
+	},
+	{
+	    "name": "oe_test_pwd_002"
 	}
     ]
 }
