@@ -41,6 +41,9 @@
             "name": "oe_test_df"
         },
         {
+            "name": "oe_test_diff"
+        },
+        {
             "name": "oe_test_file_001"
         },
         {
