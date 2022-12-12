@@ -165,6 +165,9 @@
         },
         {
             "name": "oe_test_firewalld_default_rules"
+        },
+        {
+            "name": "oe_test_firewalld_runtime_rules_in_effect"
         }
     ]
 }
