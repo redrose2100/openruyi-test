@@ -12,22 +12,34 @@
 # #############################################
 # @Author    :   aliceye666
 # @Contact   :   yezhifen@uniontech.com
-# @Date      :   2022-12-15
+# @Date      :   2022-12-13
 # @License   :   Mulan PSL v2
-# @Desc      :   Command id
+# @Desc      :   Command useradd
 # ############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function run_test() {
-    id
+    useradd -D
     CHECK_RESULT $? 
-    id -g
+    useradd -m -s /bin/bash ACE1
     CHECK_RESULT $? 
-    id -G	
+    useradd ACE2
+    CHECK_RESULT $?    	
+    useradd -M -s /bin/sh ACE3
     CHECK_RESULT $? 
-    id --help 	
+    useradd -e 2020-8-4 ACE4	
     CHECK_RESULT $? 
     LOG_INFO "End to run test."
+}
+
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    userdel -rf ACE1
+    userdel -rf ACE2
+    userdel -f ACE3
+    userdel -rf ACE4
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
