@@ -110,7 +110,7 @@
             "name": "oe_test_user_management_usermod"
         },
         {
-            "name": "oe_test_user_management_id"
+            "name": "oe_test_user_management_useradd"
         },
     ]
 }
