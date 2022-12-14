@@ -31,21 +31,21 @@ function pre_test() {
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "Q" | mikmod -hq > /dev/null && cat ~/.mikmodrc | grep -q "HQMIXER = yes"
+    echo "Q" | mikmod -hq > /dev/null && grep "HQMIXER = yes" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -hq failed"
-    echo "Q" | mikmod -nohq > /dev/null && cat ~/.mikmodrc | grep -q "HQMIXER = no"
+    echo "Q" | mikmod -nohq > /dev/null && grep "HQMIXER = no" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -nohq failed"
-    echo "Q" | mikmod -hqmixer > /dev/null && cat ~/.mikmodrc | grep -q "HQMIXER = yes"
+    echo "Q" | mikmod -hqmixer > /dev/null && grep "HQMIXER = yes" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -hqmixer failed"
-    echo "Q" | mikmod -nohqmixer > /dev/null && cat ~/.mikmodrc | grep -q "HQMIXER = no"
+    echo "Q" | mikmod -nohqmixer > /dev/null && grep "HQMIXER = no" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -nohqmixer failed"
-    echo "Q" | mikmod -su > /dev/null && cat ~/.mikmodrc | grep -q "SURROUND = yes"
+    echo "Q" | mikmod -su > /dev/null && grep "SURROUND = yes" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -su failed"
-    echo "Q" | mikmod -nosu > /dev/null && cat ~/.mikmodrc | grep -q "SURROUND = no"
+    echo "Q" | mikmod -nosu > /dev/null && grep "SURROUND = no" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -nosu failed"
-    echo "Q" | mikmod -surround > /dev/null && cat ~/.mikmodrc | grep -q "SURROUND = yes"
+    echo "Q" | mikmod -surround > /dev/null && grep "SURROUND = yes" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -surround failed"
-    echo "Q" | mikmod -nosurround > /dev/null && cat ~/.mikmodrc | grep -q "SURROUND = no"
+    echo "Q" | mikmod -nosurround > /dev/null && grep "SURROUND = no" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -nosurround failed"
     echo "Q" | mikmod -norc | grep -q "empty" 
     CHECK_RESULT $? 0 0 "Check mikmod -norc failed"

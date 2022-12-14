@@ -31,25 +31,25 @@ function pre_test() {
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "Q" | mikmod -pa > /dev/null && cat ~/.mikmodrc | grep -q "PANNING = yes"
+    echo "Q" | mikmod -pa > /dev/null && grep "PANNING = yes" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -pa failed"
-    echo "Q" | mikmod -nopa > /dev/null && cat ~/.mikmodrc | grep -q "PANNING = no"
+    echo "Q" | mikmod -nopa > /dev/null && grep "PANNING = no" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -nopa failed"
-    echo "Q" | mikmod -a > /dev/null && cat ~/.mikmodrc | grep -q "PANNING = yes"
+    echo "Q" | mikmod -a > /dev/null && grep "PANNING = yes" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -a failed"
-    echo "Q" | mikmod -panning > /dev/null && cat ~/.mikmodrc | grep -q "PANNING = yes"
+    echo "Q" | mikmod -panning > /dev/null && grep "PANNING = yes" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -panning failed"
-    echo "Q" | mikmod -nopanning > /dev/null && cat ~/.mikmodrc | grep -q "PANNING = no"
+    echo "Q" | mikmod -nopanning > /dev/null && grep "PANNING = no" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -nopanning failed"
-    echo "Q" | mikmod -pr > /dev/null && cat ~/.mikmodrc | grep -q "EXTSPD = no"
+    echo "Q" | mikmod -pr > /dev/null && grep "EXTSPD = no" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -pr failed"
-    echo "Q" | mikmod -nopr > /dev/null && cat ~/.mikmodrc | grep -q "EXTSPD = yes"
+    echo "Q" | mikmod -nopr > /dev/null && grep "EXTSPD = yes" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -nopr failed"
-    echo "Q" | mikmod -x > /dev/null && cat ~/.mikmodrc | grep -q "EXTSPD = no"
+    echo "Q" | mikmod -x > /dev/null && grep "EXTSPD = no" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -x failed"
-    echo "Q" | mikmod -protracker > /dev/null && cat ~/.mikmodrc | grep -q "EXTSPD = no"
+    echo "Q" | mikmod -protracker > /dev/null && grep "EXTSPD = no" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -protracker failed"
-    echo "Q" | mikmod -noprotracker > /dev/null && cat ~/.mikmodrc | grep -q "EXTSPD = yes"
+    echo "Q" | mikmod -noprotracker > /dev/null && grep "EXTSPD = yes" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -noprotracker failed"
     LOG_INFO "End to run test."
 }

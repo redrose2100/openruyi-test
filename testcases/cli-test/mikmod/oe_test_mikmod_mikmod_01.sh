@@ -47,9 +47,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check mikmod-N 1 failed"
     mikmod -drvinfo 1 | grep "Parameter list"
     CHECK_RESULT $? 0 0 "Check mikmod-drvinfo 1 failed"
-    echo "Q" | mikmod -d 1 > /dev/null && cat ~/.mikmodrc | grep -q "DRIVER = 1"
+    echo "Q" | mikmod -d 1 > /dev/null && grep -q "DRIVER = 1" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod-d 1 failed"
-    echo "Q" | mikmod -driver 2 > /dev/null && cat ~/.mikmodrc | grep -q "DRIVER = 2"
+    echo "Q" | mikmod -driver 2 > /dev/null && grep -q "DRIVER = 2" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod-driver 2 failed"
     LOG_INFO "End to run test."
 }
