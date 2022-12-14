@@ -654,7 +654,11 @@
 	},
 	{
 	    "name": "oe_test_pstree"
+	},
+	{
+	    "name": "oe_test_vmstat"
 	}
+
     ]
 }
 
