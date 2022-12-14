@@ -651,6 +651,9 @@
 	},
 	{
 	    "name": "oe_test_sadf_001"
+	},
+	{
+	    "name": "oe_test_pstree"
 	}
     ]
 }
