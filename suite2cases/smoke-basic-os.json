@@ -653,10 +653,19 @@
 	    "name": "oe_test_sadf_001"
 	},
 	{
+	    "name": "oe_test_bash"
+        },
+        {
 	    "name": "oe_test_pstree"
 	},
 	{
 	    "name": "oe_test_vmstat"
+	},
+	{
+	    "name": "oe_test_bash"
+	},
+	{
+	    "name": "oe_test_mtools"
 	}
 
     ]
