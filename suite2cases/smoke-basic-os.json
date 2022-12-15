@@ -653,12 +653,9 @@
 	    "name": "oe_test_sadf_001"
 	},
 	{
-<<<<<<< HEAD
-=======
 	    "name": "oe_test_bash"
         },
         {
->>>>>>> 40280e4d... add
 	    "name": "oe_test_pstree"
 	},
 	{
@@ -666,6 +663,9 @@
 	},
 	{
 	    "name": "oe_test_bash"
+	},
+	{
+	    "name": "oe_test_mtools"
 	}
 
     ]
