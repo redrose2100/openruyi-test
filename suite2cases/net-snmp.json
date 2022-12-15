@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_net-snmp_01"
+        },
+        {
+            "name": "oe_test_net-snmp_02"
         }
     ]
 }
