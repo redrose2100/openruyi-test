@@ -84,6 +84,9 @@
         },
         {
             "name": "oe_test_start_audit"
+        },
+        {
+            "name": "oe_test_audit_ausearch"
         }
     ]
 }
