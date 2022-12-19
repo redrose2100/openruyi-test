@@ -1,0 +1,8 @@
+<figure id="fig-example1">
+    <title>Composants</title>
+    <mediaobject>
+        <imageobject>
+            <imagedata fileref="LOGO" align="center" scale="70"></imagedata>
+        </imageobject>
+    </mediaobject>
+</figure>
