@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topology SYSTEM "hwloc.dtd">
+<topology>
+  <object type="Machine" os_index="0" cpuset="0x00000003" complete_cpuset="0x00000003" online_cpuset="0x00000003" allowed_cpuset="0x00000003" local_memory="3595235328">
+    <page_type size="4096" count="877743"/>
+    <page_type size="2097152" count="0"/>
+    <page_type size="1073741824" count="0"/>
+    <info name="DMIProductName" value="OpenStack Nova"/>
+    <info name="DMIProductVersion" value="13.2.1-20220425155324_61248d6"/>
+    <info name="DMIProductSerial" value="e2d15bf5-1148-4971-a858-15340506332e"/>
+    <info name="DMIProductUUID" value="e2d15bf5-1148-4971-a858-15340506332e"/>
+    <info name="DMIChassisVendor" value=""/>
+    <info name="DMIChassisType" value="1"/>
+    <info name="DMIChassisVersion" value="pc-i440fx-2.8"/>
+    <info name="DMIChassisSerial" value=""/>
+    <info name="DMIChassisAssetTag" value="HUAWEICLOUD"/>
+    <info name="DMIBIOSVendor" value="SeaBIOS"/>
+    <info name="DMIBIOSVersion" value="rel-1.10.2-0-g5f4c7b1-20210417_160349-szxrtosci10000"/>
+    <info name="DMIBIOSDate" value="04/01/2014"/>
+    <info name="DMISysVendor" value="OpenStack Foundation"/>
+    <info name="Backend" value="Linux"/>
+    <info name="LinuxCgroup" value="/"/>
+    <info name="OSName" value="Linux"/>
+    <info name="OSRelease" value="4.19.90-2003.4.0.0036.oe1.x86_64"/>
+    <info name="OSVersion" value="#1 SMP Mon Mar 23 19:10:41 UTC 2020"/>
+    <info name="HostName" value="ecs-342275"/>
+    <info name="Architecture" value="x86_64"/>
+    <info name="hwlocVersion" value="1.11.9"/>
+    <info name="ProcessName" value="lstopo"/>
+    <object type="Package" os_index="0" cpuset="0x00000003" complete_cpuset="0x00000003" online_cpuset="0x00000003" allowed_cpuset="0x00000003">
+      <info name="CPUVendor" value="GenuineIntel"/>
+      <info name="CPUFamilyNumber" value="6"/>
+      <info name="CPUModelNumber" value="85"/>
+      <info name="CPUModel" value="Intel(R) Xeon(R) Gold 6278C CPU @ 2.60GHz"/>
+      <info name="CPUStepping" value="7"/>
+      <object type="Cache" cpuset="0x00000003" complete_cpuset="0x00000003" online_cpuset="0x00000003" allowed_cpuset="0x00000003" cache_size="37486592" depth="3" cache_linesize="64" cache_associativity="11" cache_type="0">
+        <info name="Inclusive" value="0"/>
+        <object type="Cache" cpuset="0x00000003" complete_cpuset="0x00000003" online_cpuset="0x00000003" allowed_cpuset="0x00000003" cache_size="1048576" depth="2" cache_linesize="64" cache_associativity="16" cache_type="0">
+          <info name="Inclusive" value="0"/>
+          <object type="Cache" cpuset="0x00000003" complete_cpuset="0x00000003" online_cpuset="0x00000003" allowed_cpuset="0x00000003" cache_size="32768" depth="1" cache_linesize="64" cache_associativity="8" cache_type="1">
+            <info name="Inclusive" value="0"/>
+            <object type="Cache" cpuset="0x00000003" complete_cpuset="0x00000003" online_cpuset="0x00000003" allowed_cpuset="0x00000003" cache_size="32768" depth="1" cache_linesize="64" cache_associativity="8" cache_type="2">
+              <info name="Inclusive" value="0"/>
+              <object type="Core" os_index="0" cpuset="0x00000003" complete_cpuset="0x00000003" online_cpuset="0x00000003" allowed_cpuset="0x00000003">
+                <object type="PU" os_index="0" cpuset="0x00000001" complete_cpuset="0x00000001" online_cpuset="0x00000001" allowed_cpuset="0x00000001"/>
+                <object type="PU" os_index="1" cpuset="0x00000002" complete_cpuset="0x00000002" online_cpuset="0x00000002" allowed_cpuset="0x00000002"/>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+    <object type="Misc" os_index="0">
+      <info name="Type" value="MemoryModule"/>
+      <info name="DeviceLocation" value="DIMM 0"/>
+      <info name="Vendor" value="QEMU"/>
+    </object>
+    <object type="Bridge" os_index="0" bridge_type="0-1" depth="0" bridge_pci="0000:[00-08]">
+      <object type="PCIDev" os_index="17" name="Intel Corporation 82371SB PIIX3 IDE [Natoma/Triton II]" pci_busid="0000:00:01.1" pci_type="0101 [8086:7010] [1af4:1100] 00" pci_link_speed="0.000000">
+        <info name="PCIVendor" value="Intel Corporation"/>
+        <info name="PCIDevice" value="82371SB PIIX3 IDE [Natoma/Triton II]"/>
+      </object>
+      <object type="PCIDev" os_index="32" name="Cirrus Logic GD 5446" pci_busid="0000:00:02.0" pci_type="0300 [1013:00b8] [1af4:1100] 00" pci_link_speed="0.000000">
+        <info name="PCIVendor" value="Cirrus Logic"/>
+        <info name="PCIDevice" value="GD 5446"/>
+        <object type="OSDev" name="controlD64" osdev_type="1"/>
+        <object type="OSDev" name="card0" osdev_type="1"/>
+      </object>
+      <object type="PCIDev" os_index="48" name="Virtio: Virtio network device" pci_busid="0000:00:03.0" pci_type="0200 [1af4:1000] [1af4:0001] 00" pci_link_speed="0.000000">
+        <info name="PCIVendor" value="Virtio:"/>
+        <info name="PCIDevice" value="Virtio network device"/>
+        <info name="PCISlot" value="3"/>
+      </object>
+      <object type="Bridge" os_index="80" name="Red Hat, Inc. QEMU PCI-PCI bridge" bridge_type="1-1" depth="1" bridge_pci="0000:[02-02]" pci_busid="0000:00:05.0" pci_type="0604 [1b36:0001] [0000:0000] 00" pci_link_speed="0.000000">
+        <info name="PCIVendor" value="Red Hat, Inc."/>
+        <info name="PCIDevice" value="QEMU PCI-PCI bridge"/>
+        <object type="PCIDev" os_index="8208" name="Virtio: Virtio block device" pci_busid="0000:02:01.0" pci_type="0100 [1af4:1001] [1af4:0002] 00" pci_link_speed="0.000000">
+          <info name="PCIVendor" value="Virtio:"/>
+          <info name="PCIDevice" value="Virtio block device"/>
+          <info name="PCISlot" value="1-2"/>
+        </object>
+      </object>
+    </object>
+  </object>
+</topology>
