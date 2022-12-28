@@ -26,45 +26,35 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  gperf -7 ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -7 ./common/test.gperf >./tmp/test1.hpp
+  CHECK_RESULT "$(test -f ./tmp/test1.hpp)" 
 
-  gperf --seven-bit ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --seven-bit ./common/test.gperf >./tmp/test2.hpp
+  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
 
-  gperf -l ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -l ./common/test.gperf >./tmp/test3.hpp
+  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
 
-  gperf --compare-lengths ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --compare-lengths ./common/test.gperf >./tmp/test4.hpp
+  CHECK_RESULT "$(test -f ./tmp/test4.hpp)"
 
-  gperf -c ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -c ./common/test.gperf >./tmp/test5.hpp
+  CHECK_RESULT "$(test -f ./tmp/test5.hpp)"
 
-  gperf --compare-strncmp ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --compare-strncmp ./common/test.gperf >./tmp/test6.hpp
+  CHECK_RESULT "$(test -f ./tmp/test6.hpp)"
 
-  gperf -C ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -C ./common/test.gperf >./tmp/test7.hpp
+  CHECK_RESULT "$(test -f ./tmp/test7.hpp)"
 
-  gperf --readonly-tables ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --readonly-tables ./common/test.gperf >./tmp/test8.hpp
+  CHECK_RESULT "$(test -f ./tmp/test8.hpp)"
 
-  gperf -E ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -E ./common/test.gperf >./tmp/test9.hpp
+  CHECK_RESULT "$(test -f ./tmp/test9.hpp)"
 
-  gperf --enum ./common/test.gperf >./tmp/tesf.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --enum ./common/test.gperf >./tmp/test10.hpp
+  CHECK_RESULT "$(test -f ./tmp/test10.hpp)"
 
   LOG_INFO "End of the test."
 }

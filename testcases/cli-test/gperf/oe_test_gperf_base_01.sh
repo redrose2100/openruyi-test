@@ -44,21 +44,21 @@ function run_test() {
   gperf --debug -e 2>&1 | grep "Starting program gperf"
   CHECK_RESULT $? 0 0 "Check gperf -d failed."
 
-  gperf -d -e ',' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(test -f ./tmp/test.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf -d -e ',' ./common/test.gperf >./tmp/test1.hpp
+  CHECK_RESULT "$(test -f ./tmp/test1.hpp)"
+  rm -rf ./tmp/test1.hpp
 
-  gperf --delimiters=',' common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(test -f ./tmp/test.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf --delimiters=',' common/test.gperf >./tmp/test2.hpp
+  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
+  rm -rf ./tmp/test2.hpp
 
-  gperf -t ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(test -f ./tmp/test.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf -t ./common/test.gperf >./tmp/test3.hpp
+  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
+  rm -rf ./tmp/test3.hpp
 
-  gperf --struct-type ./common/test.gperf >./tmp/test.h
-  CHECK_RESULT "$(test -f ./tmp/test.hpp)"
-  rm -rf ./tmp/test.h
+  gperf --struct-type ./common/test.gperf >./tmp/test4.h
+  CHECK_RESULT "$(test -f ./tmp/test4.hpp)"
+  rm -rf ./tmp/test4.h
 
   LOG_INFO "End of the test."
 }

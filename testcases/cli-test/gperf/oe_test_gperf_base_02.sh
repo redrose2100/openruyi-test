@@ -26,45 +26,35 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  gperf --ignore-case ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --ignore-case ./common/test.gperf >./tmp/test1.hpp
+  CHECK_RESULT "$(test -f ./tmp/test1.hpp)"
 
-  gperf -L 'C' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -L 'C' ./common/test.gperf >./tmp/test2.hpp
+  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
 
-  gperf --language='C' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --language='C' ./common/test.gperf >./tmp/test3.hpp
+  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
 
-  gperf -t -K "NAME" ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -t -K "NAME" ./common/test.gperf >./tmp/test4.hpp
+  CHECK_RESULT "$(test -f ./tmp/test4.hpp)"
 
-  gperf -t --initializer-suffix=1 ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -t --initializer-suffix=1 ./common/test.gperf >./tmp/test5.hpp
+  CHECK_RESULT "$(test -f ./tmp/test5.hpp)"
 
-  gperf -H 'HASH' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -H 'HASH' ./common/test.gperf >./tmp/test6.hpp
+  CHECK_RESULT "$(test -f ./tmp/test6.hpp)"
 
-  gperf --hash-function-name='HASH' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --hash-function-name='HASH' ./common/test.gperf >./tmp/test7.hpp
+  CHECK_RESULT "$(test -f ./tmp/test7.hpp)"
 
-  gperf -N 'NAME' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -N 'NAME' ./common/test.gperf >./tmp/test8.hpp
+  CHECK_RESULT "$(test -f ./tmp/test8.hpp)"
 
-  gperf -Z 'NAME' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -Z 'NAME' ./common/test.gperf >./tmp/test9.hpp
+  CHECK_RESULT "$(test -f ./tmp/test9.hpp)"
 
-  gperf --class-name='NAME' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --class-name='NAME' ./common/test.gperf >./tmp/test10.hpp
+  CHECK_RESULT "$(test -f ./tmp/test10.hpp)"
 
   LOG_INFO "End of the test."
 }

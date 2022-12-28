@@ -26,44 +26,44 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  gperf -W'NAME' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf -W'NAME' ./common/test.gperf >./tmp/test1.hpp
+  CHECK_RESULT "$(test -f ./tmp/test1.hpp)"
   rm -rf ./tmp/test.hpp
 
-  gperf --word-array-name='NAME' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf --word-array-name='NAME' ./common/test.gperf >./tmp/test2.hpp
+  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
   rm -rf ./tmp/test.hpp
 
-  gperf --length-table-name='NAME' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf --length-table-name='NAME' ./common/test.gperf >./tmp/test3.hpp
+  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
   rm -rf ./tmp/test.hpp
 
-  gperf -S '10' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf -S '10' ./common/test.gperf >./tmp/test4.hpp
+  CHECK_RESULT "$(test -f ./tmp/test4.hpp)"
   rm -rf ./tmp/test.hpp
 
-  gperf --switch='10' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf --switch='10' ./common/test.gperf >./tmp/test5.hpp
+  CHECK_RESULT "$(test -f ./tmp/test5.hpp)"
   rm -rf ./tmp/test.hpp
 
-  gperf -T ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf -T ./common/test.gperf >./tmp/test6.hpp
+  CHECK_RESULT "$(test -f ./tmp/test6.hpp)"
   rm -rf ./tmp/test.hpp
 
-  gperf --omit-struct-type ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf --omit-struct-type ./common/test.gperf >./tmp/test7.hpp
+  CHECK_RESULT "$(test -f ./tmp/test7.hpp)"
   rm -rf ./tmp/test.hpp
 
-  gperf -k '*' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf -k '*' ./common/test.gperf >./tmp/test8.hpp
+  CHECK_RESULT "$(test -f ./tmp/test8.hpp)"
   rm -rf ./tmp/test.hpp
 
-  gperf --key-positions='*' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf --key-positions='*' ./common/test.gperf >./tmp/test9.hpp
+  CHECK_RESULT "$(test -f ./tmp/test9.hpp)"
   rm -rf ./tmp/test.hpp
 
-  gperf -D ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf -D ./common/test.gperf >./tmp/test10.hpp
+  CHECK_RESULT "$(test -f ./tmp/test10.hpp)"
   rm -rf ./tmp/test.hpp
 
   LOG_INFO "End of the test."

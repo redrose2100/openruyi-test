@@ -26,45 +26,35 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  gperf -I ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -I ./common/test.gperf >./tmp/test1.hpp
+  CHECK_RESULT "$(test -f ./tmp/test1.hpp)"
 
-  gperf --includes ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --includes ./common/test.gperf >./tmp/test2.hpp
+  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
 
-  gperf -G ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -G ./common/test.gperf >./tmp/test3.hpp
+  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
 
-  gperf --global-table ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --global-table ./common/test.gperf >./tmp/test4.hpp
+  CHECK_RESULT "$(test -f ./tmp/test4.hpp)"
 
-  gperf -P ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -P ./common/test.gperf >./tmp/test5.hpp
+  CHECK_RESULT "$(test -f ./tmp/test5.hpp)"
 
-  gperf --pic ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --pic ./common/test.gperf >./tmp/test6.hpp
+  CHECK_RESULT "$(test -f ./tmp/test6.hpp)"
 
-  gperf -Q 'NAME' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf -Q 'NAME' ./common/test.gperf >./tmp/test7.hpp
+  CHECK_RESULT "$(test -f ./tmp/test7.hpp)"
 
-  gperf --string-pool-name='NAME' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --string-pool-name='NAME' ./common/test.gperf >./tmp/test8.hpp
+  CHECK_RESULT "$(test -f ./tmp/test8.hpp)"
 
-  gperf --null-strings ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --null-strings ./common/test.gperf >./tmp/test9.hpp
+  CHECK_RESULT "$(test -f ./tmp/test9.hpp)"
 
-  gperf --constants-prefix='PREFIX' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
-  rm -rf ./tmp/test.hpp
+  gperf --constants-prefix='PREFIX' ./common/test.gperf >./tmp/test10.hpp
+  CHECK_RESULT "$(test -f ./tmp/test10.hpp)"
 
   LOG_INFO "End of the test."
 }

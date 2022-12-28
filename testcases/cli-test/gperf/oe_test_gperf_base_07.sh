@@ -26,16 +26,16 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  gperf --random ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf --random ./common/test.gperf >./tmp/test1.hpp
+  CHECK_RESULT "$(test -f ./tmp/test1.hpp)"
   rm -rf ./tmp/test.hpp
 
-  gperf -s'2' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf -s'2' ./common/test.gperf >./tmp/test2.hpp
+  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
   rm -rf ./tmp/test.hpp
 
-  gperf --size-multiple='2' ./common/test.gperf >./tmp/test.hpp
-  CHECK_RESULT "$(ls ./tmp | grep -cE "test.hpp")" 1
+  gperf --size-multiple='2' ./common/test.gperf >./tmp/test3.hpp
+  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
   rm -rf ./tmp/test.hpp
 
   LOG_INFO "End of the test."
