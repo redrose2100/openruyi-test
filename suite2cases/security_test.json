@@ -114,6 +114,9 @@
         },
         {
             "name": "oe_test_ACL_setfacl_test_mode"
+        },
+        {
+            "name": "oe_test_openssl_RSA_key"
         }
     ]
 }
