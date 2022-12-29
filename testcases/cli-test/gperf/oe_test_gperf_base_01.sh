@@ -19,7 +19,6 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL gperf
-  mkdir tmp
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -44,21 +43,17 @@ function run_test() {
   gperf --debug -e 2>&1 | grep "Starting program gperf"
   CHECK_RESULT $? 0 0 "Check gperf -d failed."
 
-  gperf -d -e ',' ./common/test.gperf >./tmp/test1.hpp
-  CHECK_RESULT "$(test -f ./tmp/test1.hpp)"
-  rm -rf ./tmp/test1.hpp
+  gperf -d -e ',' ./common/test.gperf 2>&1 | grep 'Starting program gperf'
+  CHECK_RESULT $? 0 0 "Check gperf -d -e failed."
 
-  gperf --delimiters=',' common/test.gperf >./tmp/test2.hpp
-  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
-  rm -rf ./tmp/test2.hpp
+  gperf --delimiters=',' common/test.gperf 2>&1 | grep 'Command-line: gperf --delimiters'
+  CHECK_RESULT $? 0 0 "Check gperf --delimiters failed."
 
-  gperf -t ./common/test.gperf >./tmp/test3.hpp
-  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
-  rm -rf ./tmp/test3.hpp
+  gperf -t ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t'
+  CHECK_RESULT $? 0 0 "Check gperf -t failed."
 
-  gperf --struct-type ./common/test.gperf >./tmp/test4.h
-  CHECK_RESULT "$(test -f ./tmp/test4.hpp)"
-  rm -rf ./tmp/test4.h
+  gperf --struct-type ./common/test.gperf 2>&1 | grep 'Command-line: gperf --struct-type'
+  CHECK_RESULT $? 0 0 "Check gperf --struct-type failed."
 
   LOG_INFO "End of the test."
 }
@@ -67,9 +62,7 @@ function post_test() {
   LOG_INFO "Start to restore the test environment."
 
   DNF_REMOVE
-  rm -rf tmp
   LOG_INFO "Finish restoring the test environment."
 }
 
 main $@
-

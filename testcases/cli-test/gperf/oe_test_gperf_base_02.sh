@@ -26,35 +26,35 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  gperf --ignore-case ./common/test.gperf >./tmp/test1.hpp
-  CHECK_RESULT "$(test -f ./tmp/test1.hpp)"
+  gperf --ignore-case ./common/test.gperf 2>&1 | grep 'Command-line: gperf --ignore-case'
+  CHECK_RESULT $? 0 0 "Check gperf --ignore-case failed."
 
-  gperf -L 'C' ./common/test.gperf >./tmp/test2.hpp
-  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
+  gperf -L 'C' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -L'
+  CHECK_RESULT $? 0 0 "Check gperf -L failed."
 
-  gperf --language='C' ./common/test.gperf >./tmp/test3.hpp
-  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
+  gperf --language='C' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --language'
+  CHECK_RESULT $? 0 0 "Check gperf --language failed."
 
-  gperf -t -K "NAME" ./common/test.gperf >./tmp/test4.hpp
-  CHECK_RESULT "$(test -f ./tmp/test4.hpp)"
+  gperf -t -K "NAME" ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t -K'
+  CHECK_RESULT $? 0 0 "Check gperf -t -K  failed."
 
-  gperf -t --initializer-suffix=1 ./common/test.gperf >./tmp/test5.hpp
-  CHECK_RESULT "$(test -f ./tmp/test5.hpp)"
+  gperf -t --initializer-suffix=1 ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t --initializer-'
+  CHECK_RESULT $? 0 0 "Check gperf -t --initializer-suffix failed."
 
-  gperf -H 'HASH' ./common/test.gperf >./tmp/test6.hpp
-  CHECK_RESULT "$(test -f ./tmp/test6.hpp)"
+  gperf -H 'HASH' ./common/test.gperf  2>&1 | grep 'Command-line: gperf -H'
+  CHECK_RESULT $? 0 0 "Check gperf -H failed."
 
-  gperf --hash-function-name='HASH' ./common/test.gperf >./tmp/test7.hpp
-  CHECK_RESULT "$(test -f ./tmp/test7.hpp)"
+  gperf --hash-function-name='HASH' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --hash-function-name'
+  CHECK_RESULT $? 0 0 "Check gperf --hash-function-name failed."
 
-  gperf -N 'NAME' ./common/test.gperf >./tmp/test8.hpp
-  CHECK_RESULT "$(test -f ./tmp/test8.hpp)"
+  gperf -N 'NAME' ./common/test.gperf  2>&1 | grep 'Command-line: gperf -N'
+  CHECK_RESULT $? 0 0 "Check gperf -N failed."
 
-  gperf -Z 'NAME' ./common/test.gperf >./tmp/test9.hpp
-  CHECK_RESULT "$(test -f ./tmp/test9.hpp)"
+  gperf -Z 'NAME' ./common/test.gperf  2>&1 | grep 'Command-line: gperf -Z'
+  CHECK_RESULT $? 0 0 "Check gperf -Z failed."
 
-  gperf --class-name='NAME' ./common/test.gperf >./tmp/test10.hpp
-  CHECK_RESULT "$(test -f ./tmp/test10.hpp)"
+  gperf --class-name='NAME' ./common/test.gperf  2>&1 | grep 'Command-line: gperf --class-name'
+  CHECK_RESULT $? 0 0 "Check gperf --class-name failed."
 
   LOG_INFO "End of the test."
 }

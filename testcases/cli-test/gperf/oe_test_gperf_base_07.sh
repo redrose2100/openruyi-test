@@ -26,17 +26,14 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  gperf --random ./common/test.gperf >./tmp/test1.hpp
-  CHECK_RESULT "$(test -f ./tmp/test1.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf --random ./common/test.gperf 2>&1 | grep 'Command-line: gperf --random'
+  CHECK_RESULT $? 0 0 "Check gperf --random failed."
 
-  gperf -s'2' ./common/test.gperf >./tmp/test2.hpp
-  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf -s'2' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -s'
+  CHECK_RESULT $? 0 0 "Check gperf -s failed."
 
-  gperf --size-multiple='2' ./common/test.gperf >./tmp/test3.hpp
-  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf --size-multiple='2' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --size-multiple'
+  CHECK_RESULT $? 0 0 "Check gperf --size-multiple failed."
 
   LOG_INFO "End of the test."
 }

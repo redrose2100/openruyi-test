@@ -26,35 +26,35 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  gperf -7 ./common/test.gperf >./tmp/test1.hpp
-  CHECK_RESULT "$(test -f ./tmp/test1.hpp)" 
+  gperf -7 ./common/test.gperf 2>&1 | grep 'Command-line: gperf -7'
+  CHECK_RESULT $? 0 0 "Check gperf -7 failed."
 
-  gperf --seven-bit ./common/test.gperf >./tmp/test2.hpp
-  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
+  gperf --seven-bit ./common/test.gperf 2>&1 | grep 'Command-line: gperf --seven-bit'
+  CHECK_RESULT $? 0 0 "Check gperf --seven-bit failed."
 
-  gperf -l ./common/test.gperf >./tmp/test3.hpp
-  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
+  gperf -l ./common/test.gperf 2>&1 | grep 'Command-line: gperf -l'
+  CHECK_RESULT $? 0 0 "Check gperf -l failed."
 
-  gperf --compare-lengths ./common/test.gperf >./tmp/test4.hpp
-  CHECK_RESULT "$(test -f ./tmp/test4.hpp)"
+  gperf --compare-lengths ./common/test.gperf 2>&1 | grep 'Command-line: gperf --compare-lengths'
+  CHECK_RESULT $? 0 0 "Check gperf --compare-lengths failed."
 
-  gperf -c ./common/test.gperf >./tmp/test5.hpp
-  CHECK_RESULT "$(test -f ./tmp/test5.hpp)"
+  gperf -c ./common/test.gperf 2>&1 | grep 'Command-line: gperf -c'
+  CHECK_RESULT $? 0 0 "Check gperf -c failed."
 
-  gperf --compare-strncmp ./common/test.gperf >./tmp/test6.hpp
-  CHECK_RESULT "$(test -f ./tmp/test6.hpp)"
+  gperf --compare-strncmp ./common/test.gperf 2>&1 | grep 'Command-line: gperf --compare-strncmp'
+  CHECK_RESULT $? 0 0 "Check gperf --compare-strncmp failed."
 
-  gperf -C ./common/test.gperf >./tmp/test7.hpp
-  CHECK_RESULT "$(test -f ./tmp/test7.hpp)"
+  gperf -C ./common/test.gperf 2>&1 | grep 'Command-line: gperf -C'
+  CHECK_RESULT $? 0 0 "Check gperf -C failed."
 
-  gperf --readonly-tables ./common/test.gperf >./tmp/test8.hpp
-  CHECK_RESULT "$(test -f ./tmp/test8.hpp)"
+  gperf --readonly-tables ./common/test.gperf 2>&1 | grep 'Command-line: gperf --readonly-tables'
+  CHECK_RESULT $? 0 0 "Check gperf --readonly-tables failed."
 
-  gperf -E ./common/test.gperf >./tmp/test9.hpp
-  CHECK_RESULT "$(test -f ./tmp/test9.hpp)"
+  gperf -E ./common/test.gperf 2>&1 | grep 'Command-line: gperf -E'
+  CHECK_RESULT $? 0 0 "Check gperf -E failed."
 
-  gperf --enum ./common/test.gperf >./tmp/test10.hpp
-  CHECK_RESULT "$(test -f ./tmp/test10.hpp)"
+  gperf --enum ./common/test.gperf 2>&1 | grep 'Command-line: gperf --enum'
+  CHECK_RESULT $? 0 0 "Check gperf --enum failed."
 
   LOG_INFO "End of the test."
 }

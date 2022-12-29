@@ -26,45 +26,35 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  gperf -W'NAME' ./common/test.gperf >./tmp/test1.hpp
-  CHECK_RESULT "$(test -f ./tmp/test1.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf -W'NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -WNAME'
+  CHECK_RESULT $? 0 0 "Check gperf -W failed."
 
-  gperf --word-array-name='NAME' ./common/test.gperf >./tmp/test2.hpp
-  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf --word-array-name='NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --word-array-name'
+  CHECK_RESULT $? 0 0 "Check gperf --word-array-name failed."
 
-  gperf --length-table-name='NAME' ./common/test.gperf >./tmp/test3.hpp
-  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf --length-table-name='NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --length-table-name'
+  CHECK_RESULT $? 0 0 "Check gperf --length-table-name failed."
 
-  gperf -S '10' ./common/test.gperf >./tmp/test4.hpp
-  CHECK_RESULT "$(test -f ./tmp/test4.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf -S '10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -S'
+  CHECK_RESULT $? 0 0 "Check gperf -S failed."
 
-  gperf --switch='10' ./common/test.gperf >./tmp/test5.hpp
-  CHECK_RESULT "$(test -f ./tmp/test5.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf --switch='10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --switch'
+  CHECK_RESULT $? 0 0 "Check gperf --switch failed."
 
-  gperf -T ./common/test.gperf >./tmp/test6.hpp
-  CHECK_RESULT "$(test -f ./tmp/test6.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf -T ./common/test.gperf 2>&1 | grep 'Command-line: gperf -T'
+  CHECK_RESULT $? 0 0 "Check gperf -T failed."
 
-  gperf --omit-struct-type ./common/test.gperf >./tmp/test7.hpp
-  CHECK_RESULT "$(test -f ./tmp/test7.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf --omit-struct-type ./common/test.gperf 2>&1 | grep 'Command-line: gperf --omit-struct-type'
+  CHECK_RESULT $? 0 0 "Check gperf --omit-struct-type failed."
 
-  gperf -k '*' ./common/test.gperf >./tmp/test8.hpp
-  CHECK_RESULT "$(test -f ./tmp/test8.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf -k '*' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -k'
+  CHECK_RESULT $? 0 0 "Check gperf -k failed."
 
-  gperf --key-positions='*' ./common/test.gperf >./tmp/test9.hpp
-  CHECK_RESULT "$(test -f ./tmp/test9.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf --key-positions='*' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --key-positions'
+  CHECK_RESULT $? 0 0 "Check gperf --key-positions failed."
 
-  gperf -D ./common/test.gperf >./tmp/test10.hpp
-  CHECK_RESULT "$(test -f ./tmp/test10.hpp)"
-  rm -rf ./tmp/test.hpp
+  gperf -D ./common/test.gperf 2>&1 | grep 'Command-line: gperf -D'
+  CHECK_RESULT $? 0 0 "Check gperf -D failed."
 
   LOG_INFO "End of the test."
 }

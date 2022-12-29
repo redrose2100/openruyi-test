@@ -26,35 +26,35 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  gperf -I ./common/test.gperf >./tmp/test1.hpp
-  CHECK_RESULT "$(test -f ./tmp/test1.hpp)"
+  gperf -I ./common/test.gperf 2>&1 | grep 'Command-line: gperf -I'
+  CHECK_RESULT $? 0 0 "Check gperf -I failed."
 
-  gperf --includes ./common/test.gperf >./tmp/test2.hpp
-  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
+  gperf --includes ./common/test.gperf 2>&1 | grep 'Command-line: gperf --includes'
+  CHECK_RESULT $? 0 0 "Check gperf --includes failed."
 
-  gperf -G ./common/test.gperf >./tmp/test3.hpp
-  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
+  gperf -G ./common/test.gperf 2>&1 | grep 'Command-line: gperf -G'
+  CHECK_RESULT $? 0 0 "Check gperf -G failed."
 
-  gperf --global-table ./common/test.gperf >./tmp/test4.hpp
-  CHECK_RESULT "$(test -f ./tmp/test4.hpp)"
+  gperf --global-table ./common/test.gperf 2>&1 | grep 'Command-line: gperf --global-table'
+  CHECK_RESULT $? 0 0 "Check gperf --global-table failed."
 
-  gperf -P ./common/test.gperf >./tmp/test5.hpp
-  CHECK_RESULT "$(test -f ./tmp/test5.hpp)"
+  gperf -P ./common/test.gperf 2>&1 | grep 'Command-line: gperf -P'
+  CHECK_RESULT $? 0 0 "Check gperf -P failed."
 
-  gperf --pic ./common/test.gperf >./tmp/test6.hpp
-  CHECK_RESULT "$(test -f ./tmp/test6.hpp)"
+  gperf --pic ./common/test.gperf 2>&1 | grep 'Command-line: gperf --pic'
+  CHECK_RESULT $? 0 0 "Check gperf --pic failed."
 
-  gperf -Q 'NAME' ./common/test.gperf >./tmp/test7.hpp
-  CHECK_RESULT "$(test -f ./tmp/test7.hpp)"
+  gperf -Q 'NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -Q'
+  CHECK_RESULT $? 0 0 "Check gperf -Q failed."
 
-  gperf --string-pool-name='NAME' ./common/test.gperf >./tmp/test8.hpp
-  CHECK_RESULT "$(test -f ./tmp/test8.hpp)"
+  gperf --string-pool-name='NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --string-pool-name'
+  CHECK_RESULT $? 0 0 "Check gperf --string-pool-name failed."
 
-  gperf --null-strings ./common/test.gperf >./tmp/test9.hpp
-  CHECK_RESULT "$(test -f ./tmp/test9.hpp)"
+  gperf --null-strings ./common/test.gperf 2>&1 | grep 'Command-line: gperf --null-strings'
+  CHECK_RESULT $? 0 0 "Check gperf --null-strings failed."
 
-  gperf --constants-prefix='PREFIX' ./common/test.gperf >./tmp/test10.hpp
-  CHECK_RESULT "$(test -f ./tmp/test10.hpp)"
+  gperf --constants-prefix='PREFIX' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --constants-prefix'
+  CHECK_RESULT $? 0 0 "Check gperf --constants-prefix failed."
 
   LOG_INFO "End of the test."
 }

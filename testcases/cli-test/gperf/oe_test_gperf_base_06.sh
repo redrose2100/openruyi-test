@@ -26,35 +26,35 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  gperf --duplicates ./common/test.gperf >./tmp/test1.hpp
-  CHECK_RESULT "$(test -f ./tmp/test1.hpp)"
+  gperf --duplicates ./common/test.gperf 2>&1 | grep 'Command-line: gperf --duplicates'
+  CHECK_RESULT $? 0 0 "Check gperf --duplicates failed."
 
-  gperf -m'ITERATIONS' ./common/test.gperf >./tmp/test2.hpp
-  CHECK_RESULT "$(test -f ./tmp/test2.hpp)"
+  gperf -m'ITERATIONS' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -m'
+  CHECK_RESULT $? 0 0 "Check gperf -m failed."
 
-  gperf --multiple-iterations='ITERATIONS' ./common/test.gperf >./tmp/test3.hpp
-  CHECK_RESULT "$(test -f ./tmp/test3.hpp)"
+  gperf --multiple-iterations='ITERATIONS' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --multiple-iterations'
+  CHECK_RESULT $? 0 0 "Check gperf --multiple-iterations failed."
 
-  gperf -i'1' ./common/test.gperf >./tmp/test4.hpp
-  CHECK_RESULT "$(test -f ./tmp/test4.hpp)"
+  gperf -i'1' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -i'
+  CHECK_RESULT $? 0 0 "Check gperf -i failed."
 
-  gperf --initial-asso='1' ./common/test.gperf >./tmp/test5.hpp
-  CHECK_RESULT "$(test -f ./tmp/test5.hpp)"
+  gperf --initial-asso='1' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --initial-asso'
+  CHECK_RESULT $? 0 0 "Check gperf --initial-asso failed."
 
-  gperf -j '10' ./common/test.gperf >./tmp/test6.hpp
-  CHECK_RESULT "$(test -f ./tmp/test6.hpp)"
+  gperf -j '10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -j'
+  CHECK_RESULT $? 0 0 "Check gperf -j failed."
 
-  gperf --jump='10' ./common/test.gperf >./tmp/test7.hpp
-  CHECK_RESULT "$(test -f ./tmp/test7.hpp)"
+  gperf --jump='10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --jump'
+  CHECK_RESULT $? 0 0 "Check gperf --jump failed."
 
-  gperf -n ./common/test.gperf >./tmp/test8.hpp
-  CHECK_RESULT "$(test -f ./tmp/test8.hpp)"
+  gperf -n ./common/test.gperf 2>&1 | grep 'Command-line: gperf -n'
+  CHECK_RESULT $? 0 0 "Check gperf -n failed."
 
-  gperf --no-strlen ./common/test.gperf >./tmp/test9.hpp
-  CHECK_RESULT "$(test -f ./tmp/test9.hpp)"
+  gperf --no-strlen ./common/test.gperf 2>&1 | grep 'Command-line: gperf --no-strlen'
+  CHECK_RESULT $? 0 0 "Check gperf --no-strlen failed."
 
-  gperf -r ./common/test.gperf >./tmp/test10.hpp
-  CHECK_RESULT "$(test -f ./tmp/test10.hpp)"
+  gperf -r ./common/test.gperf 2>&1 | grep 'Command-line: gperf -r'
+  CHECK_RESULT $? 0 0 "Check gperf -r failed."
 
   LOG_INFO "End of the test."
 }
