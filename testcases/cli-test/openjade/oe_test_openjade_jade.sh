@@ -28,16 +28,23 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  jade -b utf-8 -f ./error.log -c ./  -C -D ./  -t fot ./common/null.sgml
-  CHECK_RESULT $? 0 0 "Check jade -c failed"
+  jade -b utf-8 -f ./error.log -c ./ -C -D ./ -R -s ./common/null.sgml
+  CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s failed "
 
+  jade -b utf-8 -f ./error.log -c ./ -C -D ./ -R -a test -A TEST -e -g -n -x -i INCLUDE -w xml -t fot -G -2 -d text -V 10 -s ./common/null.sgml -o abc.fot
+  CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s -a -A -e -g -n -x -i -w -t -G -2 -d -V -s -o failed "
 
-  openjade --help 2>&1 | grep 'Usage: openjade'
+  jade --help 2>&1 | grep 'Usage: openjade'
   CHECK_RESULT $? 0 0 "Check jade --help  failed"
 
-  openjade -h 2>&1 | grep 'Usage: openjade'
+  jade -h 2>&1 | grep 'Usage: openjade'
   CHECK_RESULT $? 0 0 "Check jade -h  failed"
 
+  jade -v -f -c ./ 2>&1 | grep 'jade'
+  CHECK_RESULT $? 0 0 "Check jade -v -f -c   failed"
+
+  jade --version -f -c ./ 2>&1 | grep 'jade'
+  CHECK_RESULT $? 0 0 "Check jade -v -f -c   failed"
 
 }
 

@@ -2,7 +2,10 @@
   "path": "$OET_PATH/testcases/cli-test/openjade",
   "cases": [
     {
-      "name": "oe_test_openjade"
+      "name": "oe_test_openjade_jade"
+    },
+    {
+      "name": "oe_test_openjade_openjade"
     }
   ]
 }
