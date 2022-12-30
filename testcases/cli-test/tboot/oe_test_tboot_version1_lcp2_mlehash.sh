@@ -26,24 +26,11 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  tb_polgen --create --type nonfatal vl.pol
-  CHECK_RESULT $? 0 0 "Check tb_polgen create --type  failed"
+  lcp2_mlehash --create --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz >mle_hash
+  CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create  failed"
 
-  tb_polgen --add --num 1 --pcr 18 --hash any vl.pol
-  CHECK_RESULT $? 0 0 "Check tb_polgen --add --num --pcr --hash  failed"
-
-  lcp2_crtpol --create --alg sha1 --polver 3.2 --type any --pol list.pol --sign rsa-2048-sha1
-  lcp2_crtpolelt --create --type pconf --out pconf.elt
-  tb_polgen --unwrap --elt list.pol pconf.elt --verbose 2>&1 | grep 'cmd'
-  CHECK_RESULT $? 0 0 "Check tb_polgen --unwrap --elt failed"
-
-  tb_polgen --show vl.pol 2>&1 | grep 'policy'
-  CHECK_RESULT $? 0 0 "Check tb_polgen --show failed"
-
-  tb_polgen --help 2>&1 | grep 'tb_polgen'
-  CHECK_RESULT $? 0 0 "Check tb_polgen --help failed"
-
-  rm -rf vl.pol list.pol pconf.elt
+  lcp2_mlehash --create --verbose --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz >mle_hash
+  CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create  failed"
 
   LOG_INFO "End of the test."
 }

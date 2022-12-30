@@ -26,28 +26,21 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  if [ 20.03 != $(cat /etc/os-release | awk '{if($2 ~ /^\w/){print $2}}') ]; then
+  lcp2_mlehash --version
+  CHECK_RESULT $? 0 0 "Check lcp2_mlehash --version  failed"
 
-    lcp2_crtpol --create --alg sha1 --polver 3.2 --type any --pol list.pol --sign rsa-2048-sha1
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create failed"
+  lcp2_mlehash --create --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz >mle_hash
+  CHECK_RESULT $? 0 0 "Check lcp2_mlehash --create --alg sha1 --cmdline  failed"
 
-    lcp2_crtpol --version 2>&1 | grep 'lcp2_crtpol version'
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpol -version  failed"
-
-    lcp2_crtpol --show list.pol 2>&1 | grep 'version'
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --show  failed"
-
-  fi
-
-  lcp2_crtpol --help 2>&1 | grep 'Usage: lcp2_crtpol'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpol -h  failed"
+  lcp2_mlehash --create --verbose --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz >mle_hash
+  CHECK_RESULT $? 0 0 "Check lcp2_mlehash --create --verbose --alg sha1 --cmdline failed"
 
   LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "Start to restore the test environment."
-
+  rm -rf mle_hash
   DNF_REMOVE
 
   LOG_INFO "Finish restoring the test environment."
