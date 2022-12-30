@@ -13,24 +13,16 @@
 # @Contact   :   1820463064@qq.com
 # @Date      :   2020/10/23
 # @License   :   Mulan PSL v2
-# @Desc      :   SCP specified port
+# @Desc      :   SCP keeps the permission information of the source file
 # #############################################
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
-function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
-    SSH_CMD "
-    sed -i 's/#Port 22/Port 50000/g' /etc/ssh/sshd_config
-    systemctl restart sshd
-    systemctl stop firewalld
-    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    LOG_INFO "End to prepare the test environment."
-}
-
 function run_test() {
     LOG_INFO "Start to run test."
+    echo "openEuler" >/tmp/file_push
+    chmod 777 /tmp/file_push
     expect <<EOF
-        spawn scp -P 50000 ${NODE2_USER}@${NODE2_IPV4}:/etc/openEuler-latest /tmp/openEuler-latest
+        spawn scp -p /tmp/file_push ${NODE2_USER}@${NODE2_IPV4}:/tmp
         expect {
             "*yes/no*" {
                 send "yes\\r"
@@ -44,10 +36,13 @@ function run_test() {
         expect eof
 EOF
     CHECK_RESULT $?
-    grep "openEuler" /tmp/openEuler-latest
+    SSH_CMD "
+    grep openEuler /tmp/file_push 
+    ls -l /tmp/file_push | grep 'rwxrwxrwx'
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     expect <<EOF
-        spawn scp -P 50000 /etc/openEuler-latest ${NODE2_USER}@${NODE2_IPV4}:/tmp/openEuler-latest
+        spawn scp -p ${NODE2_USER}@${NODE2_IPV4}:/tmp/file_push /tmp/file_pull
         expect {
             "*yes/no*" {
                 send "yes\\r"
@@ -61,18 +56,15 @@ EOF
         expect eof
 EOF
     CHECK_RESULT $?
-    SSH_CMD "grep openEuler /tmp/openEuler-latest" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 15 50000
+    ls -l /tmp/file_pull | grep 'rwxrwxrwx'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    SSH_CMD "
-    sed -i 's/Port 50000/#Port 22/g' /etc/ssh/sshd_config
-    systemctl restart sshd
-    systemctl start firewalld
-    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 15 50000
+    rm -rf /tmp/file_*
+    SSH_CMD "rm -rf /tmp/file_*" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "End to restore the test environment."
 }
 
