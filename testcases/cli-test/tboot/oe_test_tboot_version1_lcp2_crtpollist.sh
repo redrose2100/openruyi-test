@@ -36,7 +36,7 @@ function run_test() {
   lcp2_crtpollist --sign --hashalg sha1 --sigalg rsa --pub pubkey.pem --priv privkey.pem --rev 1 --out list.lst 2>&1 | grep 'successfully'
   CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --sign --hashalg --listver --sigalg --pub --priv --rev --out failed"
 
-  lcp2_crtpollist --show list_unsig.lst --verbose 2>&1 | grep 'succeed!'
+  lcp2_crtpollist --show list.lst --verbose 2>&1 | grep 'succeed!'
   CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --show --verbose failed"
 
   lcp2_crtpollist --create --sigalg rsa --listver 0x200 --out list-unsig.lst
@@ -59,7 +59,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "Start to restore the test environment."
-  rm -rf privkey.pem pubkey.pem list-sig* list* pconf.elt
+  rm -rf list* pconf.elt privkey.pem pubkey.pem
   DNF_REMOVE
 
   LOG_INFO "Finish restore the test environment."
