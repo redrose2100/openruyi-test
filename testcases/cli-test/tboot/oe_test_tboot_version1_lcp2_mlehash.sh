@@ -43,7 +43,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "Start to restore the test environment."
-
+  rm -rf mle-hash
   DNF_REMOVE
 
   LOG_INFO "Finish restore the test environment."
