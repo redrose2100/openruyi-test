@@ -47,7 +47,7 @@ function run_test() {
   openssl dgst -sha1 -sign privkey.pem -out list.sig list-sig.lst
 
   lcp2_crtpollist --addsig --sig list.sig --out list-sig.lst
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --addsig --sig --out failed"
+  CHECK_RESULT "$(test -f ./list-sig.lst)"1 0 "Check lcp2_crtpollist --addsig --sig --out failed"
 
   lcp2_crtpollist --version 2>&1 | grep 'lcp2_crtpollist version'
   CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --version  failed"
