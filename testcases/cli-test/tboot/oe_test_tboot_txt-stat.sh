@@ -18,9 +18,9 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
+  LOG_INFO "Start to prepare the test environment."
   DNF_INSTALL tboot
-  LOG_INFO "End of environmental preparation!"
+  LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
@@ -35,7 +35,7 @@ function run_test() {
   txt-stat -h 2>&1 | grep 'Usage'
   CHECK_RESULT $? 0 0 "Check txt-stat -h failed"
 
-  LOG_INFO "End of the test."
+  LOG_INFO "End to run test."
 }
 
 function post_test() {
@@ -43,7 +43,7 @@ function post_test() {
 
   DNF_REMOVE
 
-  LOG_INFO "Finish restoring the test environment."
+  LOG_INFO "Finish restore the test environment."
 }
 
 main $@
