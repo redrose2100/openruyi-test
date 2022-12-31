@@ -26,14 +26,14 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  lcp2_mlehash --version
-  CHECK_RESULT $? 0 0 "Check lcp2_mlehash --version  failed"
+  lcp2_mlehash --create --cmdline "logging=memory,serial,vga" --alg sha1 /boot/tboot.gz >mle-hash
+  CHECK_RESULT "$(test -f ./mle-hash)"1 0 "Check lcp2_mlehash -create --cmdline --alg failed"
 
-  lcp2_mlehash --create --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz >mle_hash
-  CHECK_RESULT $? 0 0 "Check lcp2_mlehash --create --alg sha1 --cmdline  failed"
+  lcp2_mlehash --create --verbose --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz 2>&1 | grep 'hdr succeed'
+  CHECK_RESULT $? 0 0 "Check lcp2_mlehash --create --verbose --alg --cmdline failed"
 
-  lcp2_mlehash --create --verbose --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz >mle_hash
-  CHECK_RESULT $? 0 0 "Check lcp2_mlehash --create --verbose --alg sha1 --cmdline failed"
+  lcp2_mlehash --help 2>&1 | grep 'Usage:'
+  CHECK_RESULT $? 0 0 "Check lcp2_mlehash --help failed"
 
   LOG_INFO "End of the test."
 }

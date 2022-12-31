@@ -59,7 +59,7 @@ function run_test() {
   lcp2_crtpolelt --help 2>&1 | grep 'Usage'
   CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --help failed"
 
-  LOG_INFO "End of the test."
+  LOG_INFO "End to run test."
 }
 
 function post_test() {
@@ -67,7 +67,7 @@ function post_test() {
   rm -rf pconf.elt
   DNF_REMOVE
 
-  LOG_INFO "Finish restoring the test environment."
+  LOG_INFO "Finish restore the test environment."
 }
 
 main $@

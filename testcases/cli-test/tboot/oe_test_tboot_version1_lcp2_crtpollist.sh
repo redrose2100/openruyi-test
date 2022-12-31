@@ -18,46 +18,49 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
+  LOG_INFO "Start to prepare the test environment."
   DNF_INSTALL tboot
-  LOG_INFO "End of environmental preparation!"
+  openssl genrsa -out privkey.pem 2048
+  openssl rsa -pubout -in privkey.pem -out pubkey.pem
+  LOG_INFO "Start to prepare the test environment."
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
 
-  lcp2_crtpollist --create --listver 0x200 --out list_unsig.lst
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --listver --out failed"
+  lcp2_crtpollist --create --sigalg rsa --listver 0x200 --out list.lst pconf.elt 2>&1 | grep 'CONSTRAINT'
+  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --sigalg --listver --out failed"
 
-  lcp2_crtpollist --verify list_unsig.lst
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --verify  failed"
+  lcp2_crtpollist --sign --hashalg sha1 --sigalg rsa --pub pubkey.pem --priv privkey.pem --rev 1 --out list.lst 2>&1 | grep 'successfully'
+  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --sign --hashalg --listver --sigalg --pub --priv --rev --out failed"
+
+  lcp2_crtpollist --show list_unsig.lst --verbose 2>&1 | grep 'succeed!'
+  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --show --verbose failed"
+
+  lcp2_crtpollist --create --sigalg rsa --listver 0x200 --out list-unsig.lst
+  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --sigalg --listver --out failed"
+
+  cp list-unsig.lst list-sig.lst
+  openssl genrsa -out privkey.pem 2048
+  openssl dgst -sha1 -sign privkey.pem -out list.sig list-sig.lst
+  lcp2_crtpollist --addsig --sig list.sig --out list-sig.lst
+  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --addsig --sig --out failed"
 
   lcp2_crtpollist --version 2>&1 | grep 'lcp2_crtpollist version'
   CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --version  failed"
 
-  openssl genrsa -out privkey.pem 2048
-  openssl rsa -pubout -in privkey.pem -out pubkey.pem
-  lcp2_crtpollist --sign --sigalg rsa --pub pubkey.pem --priv privkey.pem --out list_unsig.lst
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --sign --sigalg --pub --priv --out  failed"
-
-  lcp2_crtpollist --show list_unsig.lst 2>&1 | grep 'policy'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --show failed"
-
   lcp2_crtpollist --help 2>&1 | grep 'Usage:'
   CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --help  failed"
 
-  lcp2_crtpollist --show list_unsig.lst --verbose
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --show --verbose failed"
-
-  LOG_INFO "End of the test."
+  LOG_INFO "End to run  test."
 }
 
 function post_test() {
   LOG_INFO "Start to restore the test environment."
-  rm -rf list_unsig privkey.pem pubkey.pem
+  rm -rf privkey.pem pubkey.pem list-sig* list* pconf.elt
   DNF_REMOVE
 
-  LOG_INFO "Finish restoring the test environment."
+  LOG_INFO "Finish restore the test environment."
 }
 
 main $@

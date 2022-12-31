@@ -21,29 +21,23 @@ function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL tboot
 
-  cat >list.lst <<EOL
-  http://www.baidu.com/
-EOL
   LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
 
-  lcp2_crtpol --version 2>&1 | grep 'lcp2_crtpol version'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpol -version  failed"
-
-  lcp2_crtpol --create --alg sha1 --polver 3.2 --type any --pol list.pol --sign rsa-2048-sha1
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create failed"
-
-  lcp2_crtpol --create --type list --pol list.pol --alg sha256 --data list.data --sign 0x8 list.lst
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create --type list --pol list.pol --alg sha256 --data list.data --sign failed"
+  lcp2_crtpol --create --alg sha256 --type any --polver 3.2 --minver 1 --max_sinit_min --ctrl 0x00 sha1 --auxalg --data list.data --sign rsa-2048-sha1 list.lst --pol list.pol
+  CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create --alg --type --polver --minver --max_sinit_min --ctrl --mask --auxalg --data --sign --pol failed"
 
   lcp2_crtpol --show list.pol --brief 2>&1 | grep 'version' 2>&1 | grep 'version'
   CHECK_RESULT $? 0 0 "Check lcp2_crtpol --show  failed"
 
   lcp2_crtpol --help 2>&1 | grep 'Usage: lcp2_crtpol'
   CHECK_RESULT $? 0 0 "Check lcp2_crtpol -h  failed"
+
+  lcp2_crtpol --create --alg sha1 --verbose --type list 2>&1 | grep 'pol_ver'
+  CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create --alg --verbose --type failed"
 
   LOG_INFO "End of the test."
 }
