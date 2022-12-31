@@ -45,6 +45,7 @@ function run_test() {
   cp list-unsig.lst list-sig.lst
   openssl genrsa -out privkey.pem 2048
   openssl dgst -sha1 -sign privkey.pem -out list.sig list-sig.lst
+
   lcp2_crtpollist --addsig --sig list.sig --out list-sig.lst
   CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --addsig --sig --out failed"
 
