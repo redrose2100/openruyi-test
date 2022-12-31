@@ -22,12 +22,14 @@ function pre_test() {
   DNF_INSTALL tboot
   openssl genrsa -out privkey.pem 2048
   openssl rsa -pubout -in privkey.pem -out pubkey.pem
+
   LOG_INFO "Start to prepare the test environment."
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
 
+  lcp2_crtpolelt --create --type mle --out pconf.elt
   lcp2_crtpollist --create --sigalg rsa --listver 0x200 --out list.lst pconf.elt 2>&1 | grep 'CONSTRAINT'
   CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --sigalg --listver --out failed"
 
