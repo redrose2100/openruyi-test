@@ -18,42 +18,32 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
-
-  DNF_INSTALL openjade
-
-  LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL openjade
+    LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-
-  openjade -b utf-8 -f ./error.log -c ./ -C -D ./ -R -s ./common/null.sgml
-  CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s failed "
-
-  openjade -b utf-8 -f ./error.log -c ./ -C -D ./ -R -a test -A TEST -e -g -n -x -i INCLUDE -w xml -t fot -G -2 -d text -V 10 -s ./common/null.sgml -o abc.fot
-  CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s -a -A -e -g -n -x -i -w -t -G -2 -d -V -s -o failed "
-
-  openjade --help 2>&1 | grep 'Usage: openjade'
-  CHECK_RESULT $? 0 0 "Check jade --help  failed"
-
-  openjade -h 2>&1 | grep 'Usage: openjade'
-  CHECK_RESULT $? 0 0 "Check jade -h  failed"
-
-  openjade -v -f -c ./ 2>&1 | grep 'jade'
-  CHECK_RESULT $? 0 0 "Check jade -v -f -c   failed"
-
-  openjade --version -f -c ./ 2>&1 | grep 'jade'
-  CHECK_RESULT $? 0 0 "Check jade -v -f -c   failed"
-
-  LOG_INFO "End of the test."
+    LOG_INFO "Start to run test."
+    openjade -b utf-8 -f ./error.log -c ./ -C -D ./ -R -s ./common/null.sgml
+    CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s failed "
+    openjade -b utf-8 -f ./error.log -c ./ -C -D ./ -R -a test -A TEST -e -g -n -x -i INCLUDE -w xml -t fot -G -2 -d text -V 10 -s ./common/null.sgml -o abc.fot
+    CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s -a -A -e -g -n -x -i -w -t -G -2 -d -V -s -o failed "
+    openjade --help 2>&1 | grep 'Usage: openjade'
+    CHECK_RESULT $? 0 0 "Check jade --help failed"
+    openjade -h 2>&1 | grep 'Usage: openjade'
+    CHECK_RESULT $? 0 0 "Check jade -h failed"
+    openjade -v -f -c ./ 2>&1 | grep 'jade'
+    CHECK_RESULT $? 0 0 "Check jade -v -f -c failed"
+    openjade --version -f -c ./ 2>&1 | grep 'jade'
+    CHECK_RESULT $? 0 0 "Check jade -v -f -c failed"
+    LOG_INFO "End of the test."
 }
 
 function post_test() {
-  LOG_INFO "Start to restore the test environment."
-
-  DNF_REMOVE
-  LOG_INFO "Finish restoring the test environment."
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
+    LOG_INFO "Finish restoring the test environment."
 }
 
 main $@
