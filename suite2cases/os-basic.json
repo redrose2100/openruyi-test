@@ -31,6 +31,9 @@
        {
             "name": "oe_test_fuse"
         },
+      {
+            "name": "oe_test_zstd"
+        },
 	{
 	    "name": "oe_test_auditctl"
 	},
