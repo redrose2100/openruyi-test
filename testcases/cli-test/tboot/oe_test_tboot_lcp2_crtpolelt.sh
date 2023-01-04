@@ -18,56 +18,43 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-  LOG_INFO "Start to prepare the test environment."
-  DNF_INSTALL tboot
-   LOG_INFO "End to prepare the test environment."
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL tboot
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-
-  lcp2_crtpolelt --create --type mle --out pconf.elt
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create  failed"
-
-  lcp2_crtpolelt --create --type custom --uuid tboot --out pconf.elt 2>&1 | grep 'CONSTRAINT'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create  failed"
-
-  lcp2_crtpolelt --create --type custom --uuid tboot --out pconf.elt
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type --uuid --out failed"
-
-  lcp2_crtpolelt --create --type mle --out pconf.elt
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type mle --out failed"
-
-  lcp2_crtpolelt --create --type pconf --out pconf.elt
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type pconf --out failed"
-
-  lcp2_crtpolelt --create --type sbios --alg sha1 --out pconf.elt
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --create --type sbios --alg --out failed"
-
-  lcp2_crtpolelt --create --type stm --alg sha1 --out pconf.elt
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type stm --alg --out failed"
-
-  lcp2_crtpolelt --create --type mle2 --alg sha1 --minver 1 --out pconf.elt
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type mle2 --alg --minver --out failed"
-
-  lcp2_crtpolelt --show pconf.elt 2>&1 | grep 'policy element'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --show failed"
-
-  lcp2_crtpolelt --show pconf.elt --verbose 2>&1 | grep 'policy element'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --verbose failed"
-
-  lcp2_crtpolelt --help 2>&1 | grep 'Usage'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --help failed"
-
-  LOG_INFO "End to run test."
+    LOG_INFO "Start to run test."
+    lcp2_crtpolelt --create --type mle --out pconf.elt
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create  failed"
+    lcp2_crtpolelt --create --type custom --uuid tboot --out pconf.elt 2>&1 | grep 'CONSTRAINT'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create  failed"
+    lcp2_crtpolelt --create --type custom --uuid tboot --out pconf.elt
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type --uuid --out failed"
+    lcp2_crtpolelt --create --type mle --out pconf.elt
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type mle --out failed"
+    lcp2_crtpolelt --create --type pconf --out pconf.elt
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type pconf --out failed"
+    lcp2_crtpolelt --create --type sbios --alg sha1 --out pconf.elt
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --create --type sbios --alg --out failed"
+    lcp2_crtpolelt --create --type stm --alg sha1 --out pconf.elt
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type stm --alg --out failed"
+    lcp2_crtpolelt --create --type mle2 --alg sha1 --minver 1 --out pconf.elt
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type mle2 --alg --minver --out failed"
+    lcp2_crtpolelt --show pconf.elt 2>&1 | grep 'policy element'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --show failed"
+    lcp2_crtpolelt --show pconf.elt --verbose 2>&1 | grep 'policy element'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --verbose failed"
+    lcp2_crtpolelt --help 2>&1 | grep 'Usage'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --help failed"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-  LOG_INFO "Start to restore the test environment."
-  rm -rf pconf.elt
-  DNF_REMOVE
-
-  LOG_INFO "Finish restore the test environment."
+    LOG_INFO "Start to restore the test environment."
+    rm -rf pconf.elt
+    DNF_REMOVE
+    LOG_INFO "Finish restore the test environment."
 }
 
 main $@

@@ -18,42 +18,35 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-  LOG_INFO "Start to prepare the test environment."
-  DNF_INSTALL tboot
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL tboot
 
-  cat >list.lst <<EOL
+    cat >list.lst <<EOL
   http://www.baidu.com/
 EOL
-  LOG_INFO "End to prepare the test environment."
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-
-  lcp2_crtpol --create --alg sha256 --type any --polver 3.2 --minver 1 --max_sinit_min --ctrl 0x00 sha1 --auxalg --data list.data --sign rsa-2048-sha1 list.lst --pol list.pol
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create --alg --type --polver --minver --max_sinit_min --ctrl --mask --auxalg --data --sign --pol failed"
-
-  lcp2_crtpol --show list.pol --brief 2>&1 | grep 'version' 2>&1 | grep 'version'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpol --show  failed"
-
-  lcp2_crtpol --help 2>&1 | grep 'Usage: lcp2_crtpol'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpol -h  failed"
-
-  lcp2_crtpol --create --alg sha1 --verbose --type list 2>&1 | grep 'pol_ver'
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create --alg --verbose --type failed"
-
-  lcp2_crtpol --version 2>&1 | grep -E "lcp2_crtpol version: [0-9]{1,}"
-  CHECK_RESULT $? 0 0 "Check lcp2_crtpol --version failed"
-
-  LOG_INFO "End to run test."
+    LOG_INFO "Start to run test."
+    lcp2_crtpol --create --alg sha256 --type any --polver 3.2 --minver 1 --max_sinit_min --ctrl 0x00 sha1 --auxalg --data list.data --sign rsa-2048-sha1 list.lst --pol list.pol
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create --alg --type --polver --minver --max_sinit_min --ctrl --mask --auxalg --data --sign --pol failed"
+    lcp2_crtpol --show list.pol --brief 2>&1 | grep 'version' 2>&1 | grep 'version'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --show  failed"
+    lcp2_crtpol --help 2>&1 | grep 'Usage: lcp2_crtpol'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpol -h  failed"
+    lcp2_crtpol --create --alg sha1 --verbose --type list 2>&1 | grep 'pol_ver'
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create --alg --verbose --type failed"
+    lcp2_crtpol --version 2>&1 | grep -E "lcp2_crtpol version: [0-9]{1,}"
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --version failed"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-  LOG_INFO "Start to restore the test environment."
-  rm -rf list*
-  DNF_REMOVE
-
-  LOG_INFO "Finish restore the test environment."
+    LOG_INFO "Start to restore the test environment."
+    rm -rf list*
+    DNF_REMOVE
+    LOG_INFO "Finish restore the test environment."
 }
 
 main $@
