@@ -17,54 +17,42 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # ############################################
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
-  DNF_INSTALL gperf
-  mkdir tmp
-  LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL gperf
+    mkdir tmp
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-
-  gperf --ignore-case ./common/test.gperf 2>&1 | grep 'Command-line: gperf --ignore-case'
-  CHECK_RESULT $? 0 0 "Check gperf --ignore-case failed."
-
-  gperf -L 'C' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -L'
-  CHECK_RESULT $? 0 0 "Check gperf -L failed."
-
-  gperf --language='C' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --language'
-  CHECK_RESULT $? 0 0 "Check gperf --language failed."
-
-  gperf -t -K "NAME" ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t -K'
-  CHECK_RESULT $? 0 0 "Check gperf -t -K  failed."
-
-  gperf -t --initializer-suffix=1 ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t --initializer-'
-  CHECK_RESULT $? 0 0 "Check gperf -t --initializer-suffix failed."
-
-  gperf -H 'HASH' ./common/test.gperf  2>&1 | grep 'Command-line: gperf -H'
-  CHECK_RESULT $? 0 0 "Check gperf -H failed."
-
-  gperf --hash-function-name='HASH' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --hash-function-name'
-  CHECK_RESULT $? 0 0 "Check gperf --hash-function-name failed."
-
-  gperf -N 'NAME' ./common/test.gperf  2>&1 | grep 'Command-line: gperf -N'
-  CHECK_RESULT $? 0 0 "Check gperf -N failed."
-
-  gperf -Z 'NAME' ./common/test.gperf  2>&1 | grep 'Command-line: gperf -Z'
-  CHECK_RESULT $? 0 0 "Check gperf -Z failed."
-
-  gperf --class-name='NAME' ./common/test.gperf  2>&1 | grep 'Command-line: gperf --class-name'
-  CHECK_RESULT $? 0 0 "Check gperf --class-name failed."
-
-  LOG_INFO "End of the test."
+    LOG_INFO "Start to run test."
+    gperf --ignore-case ./common/test.gperf 2>&1 | grep 'Command-line: gperf --ignore-case'
+    CHECK_RESULT $? 0 0 "Check gperf --ignore-case failed."
+    gperf -L 'C' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -L'
+    CHECK_RESULT $? 0 0 "Check gperf -L failed."
+    gperf --language='C' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --language'
+    CHECK_RESULT $? 0 0 "Check gperf --language failed."
+    gperf -t -K "NAME" ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t -K'
+    CHECK_RESULT $? 0 0 "Check gperf -t -K  failed."
+    gperf -t --initializer-suffix=1 ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t --initializer-'
+    CHECK_RESULT $? 0 0 "Check gperf -t --initializer-suffix failed."
+    gperf -t -F "1" ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t -F'
+    CHECK_RESULT $? 0 0 "Check gperf -F failed."
+    gperf -H 'HASH' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -H'
+    CHECK_RESULT $? 0 0 "Check gperf -H failed."
+    gperf --hash-function-name='HASH' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --hash-function-name'
+    CHECK_RESULT $? 0 0 "Check gperf --hash-function-name failed."
+    gperf -N 'NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -N'
+    CHECK_RESULT $? 0 0 "Check gperf -N failed."
+    gperf -Z 'NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -Z'
+    CHECK_RESULT $? 0 0 "Check gperf -Z failed."
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-  LOG_INFO "Start to restore the test environment."
-
-  DNF_REMOVE
-  rm -rf tmp
-  LOG_INFO "Finish restoring the test environment."
+    LOG_INFO "Start to restore the test environment."
+    rm -rf tmp
+    DNF_REMOVE
+    LOG_INFO "Finish restore the test environment."
 }
 
 main $@

@@ -17,55 +17,42 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # ############################################
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
-  DNF_INSTALL gperf
-  mkdir tmp
-  LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL gperf
+    mkdir tmp
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-
-  gperf --duplicates ./common/test.gperf 2>&1 | grep 'Command-line: gperf --duplicates'
-  CHECK_RESULT $? 0 0 "Check gperf --duplicates failed."
-
-  gperf -m'ITERATIONS' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -m'
-  CHECK_RESULT $? 0 0 "Check gperf -m failed."
-
-  gperf --multiple-iterations='ITERATIONS' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --multiple-iterations'
-  CHECK_RESULT $? 0 0 "Check gperf --multiple-iterations failed."
-
-  gperf -i'1' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -i'
-  CHECK_RESULT $? 0 0 "Check gperf -i failed."
-
-  gperf --initial-asso='1' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --initial-asso'
-  CHECK_RESULT $? 0 0 "Check gperf --initial-asso failed."
-
-  gperf -j '10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -j'
-  CHECK_RESULT $? 0 0 "Check gperf -j failed."
-
-  gperf --jump='10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --jump'
-  CHECK_RESULT $? 0 0 "Check gperf --jump failed."
-
-  gperf -n ./common/test.gperf 2>&1 | grep 'Command-line: gperf -n'
-  CHECK_RESULT $? 0 0 "Check gperf -n failed."
-
-  gperf --no-strlen ./common/test.gperf 2>&1 | grep 'Command-line: gperf --no-strlen'
-  CHECK_RESULT $? 0 0 "Check gperf --no-strlen failed."
-
-  gperf -r ./common/test.gperf 2>&1 | grep 'Command-line: gperf -r'
-  CHECK_RESULT $? 0 0 "Check gperf -r failed."
-
-  LOG_INFO "End of the test."
+    LOG_INFO "Start to run test."
+    gperf -D ./common/test.gperf 2>&1 | grep 'Command-line: gperf -D'
+    CHECK_RESULT $? 0 0 "Check gperf -D failed."
+    gperf --duplicates ./common/test.gperf 2>&1 | grep 'Command-line: gperf --duplicates'
+    CHECK_RESULT $? 0 0 "Check gperf --duplicates failed."
+    gperf -m'ITERATIONS' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -m'
+    CHECK_RESULT $? 0 0 "Check gperf -m failed."
+    gperf --multiple-iterations='ITERATIONS' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --multiple-iterations'
+    CHECK_RESULT $? 0 0 "Check gperf --multiple-iterations failed."
+    gperf -i'1' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -i'
+    CHECK_RESULT $? 0 0 "Check gperf -i failed."
+    gperf --initial-asso='1' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --initial-asso'
+    CHECK_RESULT $? 0 0 "Check gperf --initial-asso failed."
+    gperf -j '10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -j'
+    CHECK_RESULT $? 0 0 "Check gperf -j failed."
+    gperf --jump='10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --jump'
+    CHECK_RESULT $? 0 0 "Check gperf --jump failed."
+    gperf -n ./common/test.gperf 2>&1 | grep 'Command-line: gperf -n'
+    CHECK_RESULT $? 0 0 "Check gperf -n failed."
+    gperf --no-strlen ./common/test.gperf 2>&1 | grep 'Command-line: gperf --no-strlen'
+    CHECK_RESULT $? 0 0 "Check gperf --no-strlen failed."
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-  LOG_INFO "Start to restore the test environment."
-
-  DNF_REMOVE
-  rm -rf tmp
-
-  LOG_INFO "Finish restoring the test environment."
+    LOG_INFO "Start to restore the test environment."
+    rm -rf tmp
+    DNF_REMOVE
+    LOG_INFO "Finish restore the test environment."
 }
 
 main $@

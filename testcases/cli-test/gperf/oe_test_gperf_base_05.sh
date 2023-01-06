@@ -17,54 +17,42 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # ############################################
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
-  DNF_INSTALL gperf
-  mkdir tmp
-  LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL gperf
+    mkdir tmp
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-
-  gperf -W'NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -WNAME'
-  CHECK_RESULT $? 0 0 "Check gperf -W failed."
-
-  gperf --word-array-name='NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --word-array-name'
-  CHECK_RESULT $? 0 0 "Check gperf --word-array-name failed."
-
-  gperf --length-table-name='NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --length-table-name'
-  CHECK_RESULT $? 0 0 "Check gperf --length-table-name failed."
-
-  gperf -S '10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -S'
-  CHECK_RESULT $? 0 0 "Check gperf -S failed."
-
-  gperf --switch='10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --switch'
-  CHECK_RESULT $? 0 0 "Check gperf --switch failed."
-
-  gperf -T ./common/test.gperf 2>&1 | grep 'Command-line: gperf -T'
-  CHECK_RESULT $? 0 0 "Check gperf -T failed."
-
-  gperf --omit-struct-type ./common/test.gperf 2>&1 | grep 'Command-line: gperf --omit-struct-type'
-  CHECK_RESULT $? 0 0 "Check gperf --omit-struct-type failed."
-
-  gperf -k '*' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -k'
-  CHECK_RESULT $? 0 0 "Check gperf -k failed."
-
-  gperf --key-positions='*' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --key-positions'
-  CHECK_RESULT $? 0 0 "Check gperf --key-positions failed."
-
-  gperf -D ./common/test.gperf 2>&1 | grep 'Command-line: gperf -D'
-  CHECK_RESULT $? 0 0 "Check gperf -D failed."
-
-  LOG_INFO "End of the test."
+    LOG_INFO "Start to run test."
+    gperf --null-strings ./common/test.gperf 2>&1 | grep 'Command-line: gperf --null-strings'
+    CHECK_RESULT $? 0 0 "Check gperf --null-strings failed."
+    gperf -W'NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -WNAME'
+    CHECK_RESULT $? 0 0 "Check gperf -W failed."
+    gperf --word-array-name='NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --word-array-name'
+    CHECK_RESULT $? 0 0 "Check gperf --word-array-name failed."
+    gperf --length-table-name='NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --length-table-name'
+    CHECK_RESULT $? 0 0 "Check gperf --length-table-name failed."
+    gperf -S '10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -S'
+    CHECK_RESULT $? 0 0 "Check gperf -S failed."
+    gperf --switch='10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --switch'
+    CHECK_RESULT $? 0 0 "Check gperf --switch failed."
+    gperf -T ./common/test.gperf 2>&1 | grep 'Command-line: gperf -T'
+    CHECK_RESULT $? 0 0 "Check gperf -T failed."
+    gperf --omit-struct-type ./common/test.gperf 2>&1 | grep 'Command-line: gperf --omit-struct-type'
+    CHECK_RESULT $? 0 0 "Check gperf --omit-struct-type failed."
+    gperf -k '*' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -k'
+    CHECK_RESULT $? 0 0 "Check gperf -k failed."
+    gperf --key-positions='*' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --key-positions'
+    CHECK_RESULT $? 0 0 "Check gperf --key-positions failed."
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-  LOG_INFO "Start to restore the test environment."
-
-  DNF_REMOVE
-  rm -rf tmp
-  LOG_INFO "Finish restoring the test environment."
+    LOG_INFO "Start to restore the test environment."
+    rm -rf tmp
+    DNF_REMOVE
+    LOG_INFO "Finish restore the test environment."
 }
 
 main $@

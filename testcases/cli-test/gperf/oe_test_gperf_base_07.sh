@@ -17,33 +17,31 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # ############################################
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
-  DNF_INSTALL gperf
-  mkdir tmp
-  LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL gperf
+    mkdir tmp
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-
-  gperf --random ./common/test.gperf 2>&1 | grep 'Command-line: gperf --random'
-  CHECK_RESULT $? 0 0 "Check gperf --random failed."
-
-  gperf -s'2' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -s'
-  CHECK_RESULT $? 0 0 "Check gperf -s failed."
-
-  gperf --size-multiple='2' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --size-multiple'
-  CHECK_RESULT $? 0 0 "Check gperf --size-multiple failed."
-
-  LOG_INFO "End of the test."
+    LOG_INFO "Start to run test."
+    gperf -r ./common/test.gperf 2>&1 | grep 'Command-line: gperf -r'
+    CHECK_RESULT $? 0 0 "Check gperf -r failed."
+    gperf --random ./common/test.gperf 2>&1 | grep 'Command-line: gperf --random'
+    CHECK_RESULT $? 0 0 "Check gperf --random failed."
+    gperf -s'2' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -s'
+    CHECK_RESULT $? 0 0 "Check gperf -s failed."
+    gperf --size-multiple='2' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --size-multiple'
+    CHECK_RESULT $? 0 0 "Check gperf --size-multiple failed."
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-  LOG_INFO "Start to restore the test environment."
+    LOG_INFO "Start to restore the test environment."
 
-  DNF_REMOVE
-  rm -rf tmp
-  LOG_INFO "Finish restoring the test environment."
+    DNF_REMOVE
+    rm -rf tmp
+    LOG_INFO "Finish restore the test environment."
 }
 
 main $@
