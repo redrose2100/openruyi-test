@@ -663,7 +663,35 @@
 	},
 	{
 	    "name": "oe_test_unset_001"
-	}
+	},
+        {
+            "name": "oe_test_aide_config_cfgfile"
+        },
+        {
+            "name": "oe_test_aide_config_check"
+        },
+        {
+            "name": "oe_test_aide_basic_info"
+        },
+        {
+            "name": "oe_test_aide_init_database"
+        },
+        {
+            "name": "oe_test_aide_security"
+        },
+        {
+            "name": "oe_test_audit_abnormal_kill"
+        },
+        {
+            "name": "oe_test_audit_fixed_memory_01"
+        },
+        {
+            "name": "oe_test_audit_fixed_memory_02"
+        },
+        {
+            "name": "oe_test_bbr_02"
+        }
+
     ]
 }
 
