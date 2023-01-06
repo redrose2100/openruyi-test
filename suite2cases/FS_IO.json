@@ -52,6 +52,30 @@
         },
         {
             "name": "oe_test_FSIO_fread_unlimit_count"
+        },
+        {
+            "name": "oe_test_FSIO_frw_fseek_cur"
+        },
+        {
+            "name": "oe_test_FSIO_frw_fseek_end"
+        },
+        {
+            "name": "oe_test_FSIO_frw_fseek_set"
+        },
+        {
+            "name": "oe_test_FSIO_fs_IO"
+        },
+        {
+            "name": "oe_test_FSIO_fwrite_unlimit_count"
+        },
+        {
+            "name": "oe_test_FSIO_hdparm"
+        },
+        {
+            "name": "oe_test_FSIO_lio_listio"
+        },
+        {
+            "name": "oe_test_FSIO_loop_fopen_fclose"
         }
     ]
 }
