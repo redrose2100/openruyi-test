@@ -32,12 +32,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create  --type --out failed"
     lcp2_crtpollist --create --sigalg rsa --listver 0x200 --out list.lst pconf.elt 2>&1 | grep 'CONSTRAINT'
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --sigalg --listver --out failed"
+    lcp2_crtpollist --create --sigalg rsa --listver 0x200 --out list-unsig.lst
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --sigalg --listver --out failed"
     lcp2_crtpollist --sign --hashalg sha1 --sigalg rsa --pub pubkey.pem --priv privkey.pem --rev 1 --out list.lst 2>&1 | grep 'successfully'
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --sign --hashalg --listver --sigalg --pub --priv --rev --out failed"
     lcp2_crtpollist --show list.lst --verbose 2>&1 | grep 'succeed!'
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --show --verbose failed"
-    lcp2_crtpollist --create --sigalg rsa --listver 0x200 --out list-unsig.lst
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --sigalg --listver --out failed"
     cp list-unsig.lst list-sig.lst
     openssl genrsa -out privkey.pem 2048
     openssl dgst -sha1 -sign privkey.pem -out list.sig list-sig.lst

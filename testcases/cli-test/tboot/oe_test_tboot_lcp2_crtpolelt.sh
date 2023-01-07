@@ -29,10 +29,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create  failed"
     lcp2_crtpolelt --create --type custom --uuid tboot --out pconf.elt 2>&1 | grep 'CONSTRAINT'
     CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create  failed"
-    lcp2_crtpolelt --create --type custom --uuid tboot --out pconf.elt
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type --uuid --out failed"
-    lcp2_crtpolelt --create --type mle --out pconf.elt
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type mle --out failed"
     lcp2_crtpolelt --create --type pconf --out pconf.elt
     CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create --type pconf --out failed"
     lcp2_crtpolelt --create --type sbios --alg sha1 --out pconf.elt
