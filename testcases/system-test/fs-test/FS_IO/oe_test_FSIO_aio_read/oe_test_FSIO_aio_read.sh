@@ -31,8 +31,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     readbytes=$(echo test_aio_read_file | ./aio_read_file)
-    [[ $readbytes -eq $filebytes ]] 
-    CHECK_RESULT $? 0 0 "Aio read file failed."
+    CHECK_RESULT $readbytes $filebytes 0 "Aio read file failed."
     LOG_INFO "End to run test."
 }
 
