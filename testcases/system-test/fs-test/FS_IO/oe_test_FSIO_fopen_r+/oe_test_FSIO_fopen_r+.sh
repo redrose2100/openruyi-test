@@ -23,14 +23,16 @@ function pre_test() {
     [[ ! -f ./fopen_r+_file ]] && {
         make
     }
-    echo "test read only file" > test_r+_file
+    echo "read only file" > test_r+_file
     LOG_INFO "End to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     echo test_r+_file | ./fopen_r+_file
-    CHECK_RESULT $? 0 0 "Write file unexpectly while fopen file by r+."
+    CHECK_RESULT $? 0 0 "Write file failed while fopen file by r+."
+    grep "test" test_r+_file
+    CHECK_RESULT $? 0 0 "Check file failed."
     LOG_INFO "End to run test."
 }
 

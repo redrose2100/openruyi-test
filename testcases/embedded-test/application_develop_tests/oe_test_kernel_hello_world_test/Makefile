@@ -1,4 +1,7 @@
 KERNELDIR := ${KERNEL_SRC_DIR}
+ifeq ($(KERNELDIR),)
+	KERNELDIR = ${KERNEL_SRC}
+endif
 CURRENT_PATH := $(shell pwd)
 
 target := kernel_hello_world
