@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>test</id>
+  <name>Firewall</name>
+  <name xml:lang="ar">الجدار النّاري</name>
+  <name xml:lang="as">ফায়াৰ্ৱাল</name>
+  <name xml:lang="bg">Защитна стена</name>
+  <name xml:lang="bn_IN">ফায়ারওয়াল</name>
+  <name xml:lang="ca">Tallafoc</name>
+  <name xml:lang="cs">Brána firewall</name>
+  <name xml:lang="el">Τείχος προστασίας</name>
+  <name xml:lang="es">Cortafuegos</name>
+  <name xml:lang="et">Tulemüür</name>
+  <name xml:lang="eu">Suhesia</name>
+  <name xml:lang="fa">دیوار آتش</name>
+  <name xml:lang="fi">Palomuuri</name>
+  <name xml:lang="fr">Pare-feu</name>
+  <name xml:lang="gl">Devasa</name>
+  <name xml:lang="gu">ફાયરવોલ</name>
+  <name xml:lang="hi">फायरवाल</name>
+  <name xml:lang="hu">Tűzfal</name>
+  <name xml:lang="ia">Parafoco</name>
+  <name xml:lang="ja">ファイアウォール</name>
+  <name xml:lang="ka">ქსელური ფარი</name>
+  <name xml:lang="kn">ಫೈರ್ವಾಲ್</name>
+  <name xml:lang="ko">방화벽</name>
+  <name xml:lang="lt">Užkarda</name>
+  <name xml:lang="ml">ഫയര്‍വോള്‍</name>
+  <name xml:lang="mr">फायरवॉल</name>
+  <name xml:lang="or">ଅଗ୍ନିକବଚ</name>
+  <name xml:lang="pa">ਫਾਇਰਵਾਲ</name>
+  <name xml:lang="pl">Zapora sieciowa</name>
+  <name xml:lang="ru">Межсетевой экран</name>
+  <name xml:lang="sr">Заштитни зид</name>
+  <name xml:lang="sr@latin">Zaštitni zid</name>
+  <name xml:lang="sv">Brandvägg</name>
+  <name xml:lang="ta">ஃபயர்வால்</name>
+  <name xml:lang="te">ఫైర్‌వాల్</name>
+  <name xml:lang="tr">Güvenlik Duvarı</name>
+  <name xml:lang="uk">Мережний екран</name>
+  <name xml:lang="zh_CN">防火墙</name>
+  <name xml:lang="zh_TW">防火牆</name>
+  <summary>test</summary>
+  <summary xml:lang="ar">إعدادات الجدار النّاري</summary>
+  <summary xml:lang="as">ফায়াৰ্ৱাল বিন্যাস</summary>
+  <summary xml:lang="bg">Конфигуриране на защитната стена</summary>
+  <summary xml:lang="bn_IN">ফায়ারওয়াল কনফিগারেশন</summary>
+  <summary xml:lang="ca">Configuració del tallafoc</summary>
+  <summary xml:lang="cs">Nastavení brány firewall</summary>
+  <summary xml:lang="da">Konfiguration af firewall</summary>
+  <summary xml:lang="de">Firewall-Konfiguration</summary>
+  <summary xml:lang="el">Ρύθμιση τείχους προστασίας</summary>
+  <summary xml:lang="es">Configuración del cortafuegos</summary>
+  <summary xml:lang="et">Tulemüüri seadistamine</summary>
+  <summary xml:lang="eu">Suhesiaren konfigurazioa</summary>
+  <summary xml:lang="fa">پیکربندی دیوار آتش</summary>
+  <summary xml:lang="fi">Palomuuriasetukset</summary>
+  <summary xml:lang="fr">Configuration du pare-feu</summary>
+  <summary xml:lang="gl">Configuración da devasa</summary>
+  <summary xml:lang="gu">ફાયરવોલ રૂપરેખાંકન</summary>
+  <summary xml:lang="hi">फायरवाल विन्यास </summary>
+  <summary xml:lang="hu">Tűzfal beállítások</summary>
+  <summary xml:lang="ia">Configuration de parafoco</summary>
+  <summary xml:lang="id">Pengaturan Firewall</summary>
+  <summary xml:lang="it">Configurazione del firewall</summary>
+  <summary xml:lang="ja">ファイアウォールの設定</summary>
+  <summary xml:lang="ka">ქსელური ფარის კონფიგურაცია</summary>
+  <summary xml:lang="kn">ಫೈರ್ವಾಲ್ ಸ್ವರೂಪಣೆ</summary>
+  <summary xml:lang="ko">방화벽 설정</summary>
+  <summary xml:lang="lt">Užkardos konfigūravimas</summary>
+  <summary xml:lang="ml">ഫയര്‍വോള്‍ ക്രമീകരണം</summary>
+  <summary xml:lang="mr">फायरवॉल संयोजना</summary>
+  <summary xml:lang="nl">Firewall configuratie</summary>
+  <summary xml:lang="or">ଅଗ୍ନିକବଚର ବିନ୍ଯାସ</summary>
+  <summary xml:lang="pa">ਫਾਇਰਵਾਲ ਸੰਰਚਨਾ</summary>
+  <summary xml:lang="pl">Konfiguracja zapory sieciowej</summary>
+  <summary xml:lang="pt">Configuração da Firewall</summary>
+  <summary xml:lang="pt_BR">Configuração do Firewall</summary>
+  <summary xml:lang="ru">Настройка межсетевого экрана</summary>
+  <summary xml:lang="sk">Nastavenia firewallu</summary>
+  <summary xml:lang="sq">Konfigurimi i Firewall</summary>
+  <summary xml:lang="sr">Подешавање заштитног зида</summary>
+  <summary xml:lang="sr@latin">Podešavanje zaštitnog zida</summary>
+  <summary xml:lang="sv">Brandväggskonfiguration</summary>
+  <summary xml:lang="ta">ஃபயர்வால் கட்டமைப்பு</summary>
+  <summary xml:lang="te">Firewall ఆకృతీకరణ</summary>
+  <summary xml:lang="tr">Güvenlik Duvarı Yapılandırması</summary>
+  <summary xml:lang="uk">Налаштовування мережного екрану</summary>
+  <summary xml:lang="zh_CN">防火墙配置</summary>
+  <summary xml:lang="zh_TW">防火牆組態</summary>
+  <developer_name>XXX: Insert Company or Developer Name</developer_name>
+  <description>
+    <p>
+   This should be long prose.
+  </p>
+    <p>
+   This should a second paragraph.
+  </p>
+  </description>
+  <keywords>
+    <keyword xml:lang="ar">firewall</keyword>
+    <keyword xml:lang="ar">iptables</keyword>
+    <keyword xml:lang="ar">netfilter</keyword>
+    <keyword xml:lang="ar">network</keyword>
+    <keyword xml:lang="ar">security</keyword>
+    <keyword xml:lang="as">firewall</keyword>
+    <keyword xml:lang="as">iptables</keyword>
+    <keyword xml:lang="as">netfilter</keyword>
+    <keyword xml:lang="as">network</keyword>
+    <keyword xml:lang="as">security</keyword>
+    <keyword xml:lang="bn_IN">firewall</keyword>
+    <keyword xml:lang="bn_IN">iptables</keyword>
+    <keyword xml:lang="bn_IN">netfilter</keyword>
+    <keyword xml:lang="bn_IN">network</keyword>
+    <keyword xml:lang="bn_IN">security</keyword>
+    <keyword xml:lang="ca">iptables</keyword>
+    <keyword xml:lang="ca">netfilter</keyword>
+    <keyword xml:lang="ca">seguretat</keyword>
+    <keyword xml:lang="ca">tallafoc</keyword>
+    <keyword xml:lang="ca">xarxa</keyword>
+    <keyword xml:lang="cs">firewall</keyword>
+    <keyword xml:lang="cs">iptables</keyword>
+    <keyword xml:lang="cs">netfilter</keyword>
+    <keyword xml:lang="cs">síť</keyword>
+    <keyword xml:lang="cs">zabezpečení</keyword>
+    <keyword xml:lang="da">firewall</keyword>
+    <keyword xml:lang="da">iptabeller</keyword>
+    <keyword xml:lang="da">iptables</keyword>
+    <keyword xml:lang="da">netfilter</keyword>
+    <keyword xml:lang="da">netværk</keyword>
+    <keyword xml:lang="da">network</keyword>
+    <keyword xml:lang="da">security</keyword>
+    <keyword xml:lang="da">sikkerhed</keyword>
+    <keyword xml:lang="de">Firewall</keyword>
+    <keyword xml:lang="de">Iptables</keyword>
+    <keyword xml:lang="de">Netfilter</keyword>
+    <keyword xml:lang="de">Netzwerk</keyword>
+    <keyword xml:lang="de">Sicherheit</keyword>
+    <keyword xml:lang="en_US">firewall</keyword>
+    <keyword xml:lang="en_US">iptables</keyword>
+    <keyword xml:lang="en_US">netfilter</keyword>
+    <keyword xml:lang="en_US">network</keyword>
+    <keyword xml:lang="en_US">security</keyword>
+    <keyword xml:lang="es">cortafuegos</keyword>
+    <keyword xml:lang="es">iptables</keyword>
+    <keyword xml:lang="es">netfilter</keyword>
+    <keyword xml:lang="es">red</keyword>
+    <keyword xml:lang="es">seguridad</keyword>
+    <keyword xml:lang="fi">firewall</keyword>
+    <keyword xml:lang="fi">iptables</keyword>
+    <keyword xml:lang="fi">netfilter</keyword>
+    <keyword xml:lang="fi">network</keyword>
+    <keyword xml:lang="fi">palomuuri</keyword>
+    <keyword xml:lang="fi">security</keyword>
+    <keyword xml:lang="fi">suojaus</keyword>
+    <keyword xml:lang="fi">tietoturva</keyword>
+    <keyword xml:lang="fi">turva</keyword>
+    <keyword xml:lang="fi">verkko</keyword>
+    <keyword xml:lang="fr">iptables</keyword>
+    <keyword xml:lang="fr">netfilter</keyword>
+    <keyword xml:lang="fr">pare-feu</keyword>
+    <keyword xml:lang="fr">réseau</keyword>
+    <keyword xml:lang="fr">sécurité</keyword>
+    <keyword xml:lang="gu">iptables</keyword>
+    <keyword xml:lang="gu">netfilter</keyword>
+    <keyword xml:lang="gu">નેટવર્ક</keyword>
+    <keyword xml:lang="gu">ફાયરવોસ</keyword>
+    <keyword xml:lang="gu">સુરક્ષા</keyword>
+    <keyword xml:lang="hi">firewall</keyword>
+    <keyword xml:lang="hi">iptables</keyword>
+    <keyword xml:lang="hi">netfilter</keyword>
+    <keyword xml:lang="hi">network</keyword>
+    <keyword xml:lang="hi">security</keyword>
+    <keyword xml:lang="hu">biztonság</keyword>
+    <keyword xml:lang="hu">hálózat</keyword>
+    <keyword xml:lang="hu">iptables</keyword>
+    <keyword xml:lang="hu">netfilter</keyword>
+    <keyword xml:lang="hu">tűzfal</keyword>
+    <keyword xml:lang="id">firewall</keyword>
+    <keyword xml:lang="id">iptables</keyword>
+    <keyword xml:lang="id">netfilter</keyword>
+    <keyword xml:lang="id">network</keyword>
+    <keyword xml:lang="id">security</keyword>
+    <keyword xml:lang="it">firewall</keyword>
+    <keyword xml:lang="it">iptables</keyword>
+    <keyword xml:lang="it">netfilter</keyword>
+    <keyword xml:lang="it">rete</keyword>
+    <keyword xml:lang="it">sicurezza</keyword>
+    <keyword xml:lang="ja">iptables</keyword>
+    <keyword xml:lang="ja">netfilter</keyword>
+    <keyword xml:lang="ja">セキュリティー</keyword>
+    <keyword xml:lang="ja">ネットワーク</keyword>
+    <keyword xml:lang="ja">ファイアウォール</keyword>
+    <keyword xml:lang="kn">iptables</keyword>
+    <keyword xml:lang="kn">ಜಾಲಬಂಧ</keyword>
+    <keyword xml:lang="kn">ನೆಟ್‌ಫಿಲ್ಟರ್‌</keyword>
+    <keyword xml:lang="kn">ಫೈರ್ವಾಲ್</keyword>
+    <keyword xml:lang="kn">ಸುರಕ್ಷತೆ</keyword>
+    <keyword xml:lang="ko">iptables</keyword>
+    <keyword xml:lang="ko">netfilter</keyword>
+    <keyword xml:lang="ko">네트워크</keyword>
+    <keyword xml:lang="ko">방화벽</keyword>
+    <keyword xml:lang="ko">보안</keyword>
+    <keyword xml:lang="lt">iptables</keyword>
+    <keyword xml:lang="lt">netfilter</keyword>
+    <keyword xml:lang="lt">saugumas</keyword>
+    <keyword xml:lang="lt">tinklas</keyword>
+    <keyword xml:lang="lt">užkarda</keyword>
+    <keyword xml:lang="ml">firewall</keyword>
+    <keyword xml:lang="ml">iptables</keyword>
+    <keyword xml:lang="ml">netfilter</keyword>
+    <keyword xml:lang="ml">network</keyword>
+    <keyword xml:lang="ml">security</keyword>
+    <keyword xml:lang="mr">iptables</keyword>
+    <keyword xml:lang="mr">netfilter</keyword>
+    <keyword xml:lang="mr">नेटवर्क</keyword>
+    <keyword xml:lang="mr">फायरवॉल</keyword>
+    <keyword xml:lang="mr">सुरक्षा</keyword>
+    <keyword xml:lang="nl">beveiliging</keyword>
+    <keyword xml:lang="nl">firewall</keyword>
+    <keyword xml:lang="nl">iptables</keyword>
+    <keyword xml:lang="nl">netfilter</keyword>
+    <keyword xml:lang="nl">netwerk</keyword>
+    <keyword xml:lang="or">firewall</keyword>
+    <keyword xml:lang="or">iptables</keyword>
+    <keyword xml:lang="or">netfilter</keyword>
+    <keyword xml:lang="or">network</keyword>
+    <keyword xml:lang="or">security</keyword>
+    <keyword xml:lang="pl">bezpieczeństwo</keyword>
+    <keyword xml:lang="pl">firewall</keyword>
+    <keyword xml:lang="pl">iptables</keyword>
+    <keyword xml:lang="pl">netfilter</keyword>
+    <keyword xml:lang="pl">network</keyword>
+    <keyword xml:lang="pl">ogniowa</keyword>
+    <keyword xml:lang="pl">security</keyword>
+    <keyword xml:lang="pl">sieci</keyword>
+    <keyword xml:lang="pl">sieciowa</keyword>
+    <keyword xml:lang="pl">sieć</keyword>
+    <keyword xml:lang="pl">zabezpieczenia</keyword>
+    <keyword xml:lang="pl">zapora</keyword>
+    <keyword xml:lang="pt">filtro de rede</keyword>
+    <keyword xml:lang="pt">firewall</keyword>
+    <keyword xml:lang="pt">rede</keyword>
+    <keyword xml:lang="pt">segurança</keyword>
+    <keyword xml:lang="pt">tabelas de ip</keyword>
+    <keyword xml:lang="pt_BR">firewall</keyword>
+    <keyword xml:lang="pt_BR">iptables</keyword>
+    <keyword xml:lang="pt_BR">netfilter</keyword>
+    <keyword xml:lang="pt_BR">network</keyword>
+    <keyword xml:lang="pt_BR">rede</keyword>
+    <keyword xml:lang="pt_BR">security</keyword>
+    <keyword xml:lang="pt_BR">segurança</keyword>
+    <keyword xml:lang="ru">iptables</keyword>
+    <keyword xml:lang="ru">netfilter</keyword>
+    <keyword xml:lang="ru">безопасность</keyword>
+    <keyword xml:lang="ru">межсетевой экран</keyword>
+    <keyword xml:lang="ru">сеть</keyword>
+    <keyword xml:lang="sk">bezpečnosť</keyword>
+    <keyword xml:lang="sk">firewall</keyword>
+    <keyword xml:lang="sk">iptables</keyword>
+    <keyword xml:lang="sk">netfilter</keyword>
+    <keyword xml:lang="sk">sieť</keyword>
+    <keyword xml:lang="sr">iptables</keyword>
+    <keyword xml:lang="sr">заштитни зид</keyword>
+    <keyword xml:lang="sr">мрежа</keyword>
+    <keyword xml:lang="sr">мрежни филтер</keyword>
+    <keyword xml:lang="sr">сигурност</keyword>
+    <keyword xml:lang="sv">brandvägg</keyword>
+    <keyword xml:lang="sv">iptables</keyword>
+    <keyword xml:lang="sv">netfilter</keyword>
+    <keyword xml:lang="sv">nätverk</keyword>
+    <keyword xml:lang="sv">säkerhet</keyword>
+    <keyword xml:lang="ta">firewall</keyword>
+    <keyword xml:lang="ta">iptables</keyword>
+    <keyword xml:lang="ta">netfilter</keyword>
+    <keyword xml:lang="ta">network</keyword>
+    <keyword xml:lang="ta">security</keyword>
+    <keyword xml:lang="te">firewall</keyword>
+    <keyword xml:lang="te">iptables</keyword>
+    <keyword xml:lang="te">netfilter</keyword>
+    <keyword xml:lang="te">network</keyword>
+    <keyword xml:lang="te">security</keyword>
+    <keyword xml:lang="tr">ağ</keyword>
+    <keyword xml:lang="tr">firewall</keyword>
+    <keyword xml:lang="tr">güvenlik duvarı</keyword>
+    <keyword xml:lang="tr">iptables</keyword>
+    <keyword xml:lang="tr">koruma</keyword>
+    <keyword xml:lang="tr">netfilter</keyword>
+    <keyword xml:lang="tr">network</keyword>
+    <keyword xml:lang="tr">security</keyword>
+    <keyword xml:lang="uk">firewall</keyword>
+    <keyword xml:lang="uk">iptables</keyword>
+    <keyword xml:lang="uk">netfilter</keyword>
+    <keyword xml:lang="uk">network</keyword>
+    <keyword xml:lang="uk">security</keyword>
+    <keyword xml:lang="uk">айпітейблс</keyword>
+    <keyword xml:lang="uk">безпека</keyword>
+    <keyword xml:lang="uk">брандмауер</keyword>
+    <keyword xml:lang="uk">екран</keyword>
+    <keyword xml:lang="uk">захист</keyword>
+    <keyword xml:lang="uk">мережа</keyword>
+    <keyword xml:lang="uk">нетфільтр</keyword>
+    <keyword xml:lang="uk">файрвол</keyword>
+    <keyword xml:lang="zh_CN">iptables</keyword>
+    <keyword xml:lang="zh_CN">netfilter</keyword>
+    <keyword xml:lang="zh_CN">安全</keyword>
+    <keyword xml:lang="zh_CN">网络</keyword>
+    <keyword xml:lang="zh_CN">防火墙</keyword>
+    <keyword xml:lang="zh_TW">iptables</keyword>
+    <keyword xml:lang="zh_TW">netfilter</keyword>
+    <keyword xml:lang="zh_TW">安全性</keyword>
+    <keyword xml:lang="zh_TW">網路</keyword>
+    <keyword xml:lang="zh_TW">防火牆</keyword>
+  </keywords>
+
+  <!--FIXME: convert to an SPDX ID-->
+  <metadata_license>XXX: Insert SPDX value here</metadata_license>
+
+  <!--FIXME: convert to an SPDX license string-->
+  <project_license>XXX: Insert SPDX value here</project_license>
+  <url type="bugtracker">XXX: http://www.homepage.com/where-to-report_bug.html</url>
+  <url type="donation">XXX: http://www.homepage.com/donation.html</url>
+  <url type="faq">XXX: http://www.homepage.com/faq.html</url>
+  <url type="help">XXX: http://www.homepage.com/docs/</url>
+  <url type="homepage">XXX: http://www.homepage.com/</url>
+  <project_group>XXX: Values valid are none, GNOME, KDE or XFCE</project_group>
+  <screenshots>
+    <screenshot type="default">
+      <caption>XXX: Describe the default screenshot</caption>
+      <image height="630" width="1120">XXX: http://www.my-screenshot-default.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>XXX: Describe another screenshot</caption>
+      <image height="630" width="1120">XXX: http://www.my-screenshot.png</image>
+    </screenshot>
+  </screenshots>
+  <update_contact>XXX: upstream-contact@email.com</update_contact>
+
+  <!--FIXME: where to submit translations-->
+  <url type="translate"/>
+  <type>test</type>
+</component>
