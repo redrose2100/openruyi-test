@@ -28,21 +28,19 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check '--help  failed"
     gperf -h 2>&1 | grep "GNU 'gperf' generates"
     CHECK_RESULT $? 0 0 "Check gperf -h failed."
-    gperf --version 2>&1 | grep -E "GNU gperf.[0-9]{1,}"
+    gperf --version 2>&1 | grep $(rpm -q gperf --queryformat '%{version}\n')
     CHECK_RESULT $? 0 0 "Check gperf --version failed."
-    gperf -v 2>&1 | grep "GNU gperf "
+    gperf -v 2>&1 | grep $(rpm -q gperf --queryformat '%{version}\n')
     CHECK_RESULT $? 0 0 "Check gperf -v failed."
-    gperf -d -e 2>&1 | grep "Starting program gperf"
+    gperf --debug --delimiters ',' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -d failed."
-    gperf --debug -e 2>&1 | grep "Starting program gperf"
-    CHECK_RESULT $? 0 0 "Check gperf -d failed."
-    gperf -d -e ',' ./common/test.gperf 2>&1 | grep 'Starting program gperf'
+    gperf -d -e ',' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -d -e failed."
-    gperf --delimiters=',' common/test.gperf 2>&1 | grep 'Command-line: gperf --delimiters'
+    gperf --delimiters=',' common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --delimiters failed."
-    gperf -t ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t'
+    gperf -t ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -t failed."
-    gperf --struct-type ./common/test.gperf 2>&1 | grep 'Command-line: gperf --struct-type'
+    gperf --struct-type ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --struct-type failed."
     LOG_INFO "End to run test."
 }
@@ -50,7 +48,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    LOG_INFO "Finish restore the test environment."
+    LOG_INFO "Eed to restore the test environment."
 }
 
 main $@

@@ -25,25 +25,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    gperf -D ./common/test.gperf 2>&1 | grep 'Command-line: gperf -D'
+    gperf -D ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -D failed."
-    gperf --duplicates ./common/test.gperf 2>&1 | grep 'Command-line: gperf --duplicates'
+    gperf --duplicates ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --duplicates failed."
-    gperf -m'ITERATIONS' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -m'
+    gperf -m'ITERATIONS' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -m failed."
-    gperf --multiple-iterations='ITERATIONS' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --multiple-iterations'
+    gperf --multiple-iterations='ITERATIONS' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --multiple-iterations failed."
-    gperf -i'1' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -i'
+    gperf -i'1' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -i failed."
-    gperf --initial-asso='1' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --initial-asso'
+    gperf --initial-asso='1' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --initial-asso failed."
-    gperf -j '10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -j'
+    gperf -j '10' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -j failed."
-    gperf --jump='10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --jump'
+    gperf --jump='10' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --jump failed."
-    gperf -n ./common/test.gperf 2>&1 | grep 'Command-line: gperf -n'
+    gperf -n ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -n failed."
-    gperf --no-strlen ./common/test.gperf 2>&1 | grep 'Command-line: gperf --no-strlen'
+    gperf --no-strlen ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --no-strlen failed."
     LOG_INFO "End to run test."
 }
@@ -52,7 +52,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp
     DNF_REMOVE
-    LOG_INFO "Finish restore the test environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main $@

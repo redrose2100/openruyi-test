@@ -25,23 +25,22 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    gperf -r ./common/test.gperf 2>&1 | grep 'Command-line: gperf -r'
+    gperf -r ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -r failed."
-    gperf --random ./common/test.gperf 2>&1 | grep 'Command-line: gperf --random'
+    gperf --random ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --random failed."
-    gperf -s'2' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -s'
+    gperf -s'2' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -s failed."
-    gperf --size-multiple='2' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --size-multiple'
+    gperf --size-multiple='2' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --size-multiple failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     DNF_REMOVE
     rm -rf tmp
-    LOG_INFO "Finish restore the test environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main $@

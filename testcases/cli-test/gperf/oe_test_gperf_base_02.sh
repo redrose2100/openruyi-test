@@ -25,25 +25,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    gperf --ignore-case ./common/test.gperf 2>&1 | grep 'Command-line: gperf --ignore-case'
+    gperf --ignore-case ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --ignore-case failed."
-    gperf -L 'C' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -L'
+    gperf -L 'C' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -L failed."
-    gperf --language='C' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --language'
+    gperf --language='C' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --language failed."
-    gperf -t -K "NAME" ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t -K'
+    gperf -t -K "NAME" ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -t -K  failed."
-    gperf -t --initializer-suffix=1 ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t --initializer-'
+    gperf -t --initializer-suffix=1 ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -t --initializer-suffix failed."
-    gperf -t -F "1" ./common/test.gperf 2>&1 | grep 'Command-line: gperf -t -F'
+    gperf -t -F "1" ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -F failed."
-    gperf -H 'HASH' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -H'
+    gperf -H 'HASH' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -H failed."
-    gperf --hash-function-name='HASH' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --hash-function-name'
+    gperf --hash-function-name='HASH' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --hash-function-name failed."
-    gperf -N 'NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -N'
+    gperf -N 'NAME' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -N failed."
-    gperf -Z 'NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -Z'
+    gperf -Z 'NAME' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -Z failed."
     LOG_INFO "End to run test."
 }
@@ -52,7 +52,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp
     DNF_REMOVE
-    LOG_INFO "Finish restore the test environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main $@

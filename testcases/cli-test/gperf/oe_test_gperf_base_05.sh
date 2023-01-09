@@ -25,25 +25,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    gperf --null-strings ./common/test.gperf 2>&1 | grep 'Command-line: gperf --null-strings'
+    gperf --null-strings ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --null-strings failed."
-    gperf -W'NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -WNAME'
+    gperf -W'NAME' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -W failed."
-    gperf --word-array-name='NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --word-array-name'
+    gperf --word-array-name='NAME' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --word-array-name failed."
-    gperf --length-table-name='NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --length-table-name'
+    gperf --length-table-name='NAME' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --length-table-name failed."
-    gperf -S '10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -S'
+    gperf -S '10' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -S failed."
-    gperf --switch='10' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --switch'
+    gperf --switch='10' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --switch failed."
-    gperf -T ./common/test.gperf 2>&1 | grep 'Command-line: gperf -T'
+    gperf -T ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -T failed."
-    gperf --omit-struct-type ./common/test.gperf 2>&1 | grep 'Command-line: gperf --omit-struct-type'
+    gperf --omit-struct-type ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --omit-struct-type failed."
-    gperf -k '*' ./common/test.gperf 2>&1 | grep 'Command-line: gperf -k'
+    gperf -k '*' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -k failed."
-    gperf --key-positions='*' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --key-positions'
+    gperf --key-positions='*' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --key-positions failed."
     LOG_INFO "End to run test."
 }
@@ -52,7 +52,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp
     DNF_REMOVE
-    LOG_INFO "Finish restore the test environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main $@

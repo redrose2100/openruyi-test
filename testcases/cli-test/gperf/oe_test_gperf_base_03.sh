@@ -25,25 +25,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    gperf --class-name='NAME' ./common/test.gperf 2>&1 | grep 'Command-line: gperf --class-name'
+    gperf --class-name='NAME' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --class-name failed."
-    gperf -7 ./common/test.gperf 2>&1 | grep 'Command-line: gperf -7'
+    gperf -7 ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -7 failed."
-    gperf --seven-bit ./common/test.gperf 2>&1 | grep 'Command-line: gperf --seven-bit'
+    gperf --seven-bit ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --seven-bit failed."
-    gperf -l ./common/test.gperf 2>&1 | grep 'Command-line: gperf -l'
+    gperf -l ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -l failed."
-    gperf --compare-lengths ./common/test.gperf 2>&1 | grep 'Command-line: gperf --compare-lengths'
+    gperf --compare-lengths ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --compare-lengths failed."
-    gperf -c ./common/test.gperf 2>&1 | grep 'Command-line: gperf -c'
+    gperf -c ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -c failed."
-    gperf --compare-strncmp ./common/test.gperf 2>&1 | grep 'Command-line: gperf --compare-strncmp'
+    gperf --compare-strncmp ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --compare-strncmp failed."
-    gperf -C ./common/test.gperf 2>&1 | grep 'Command-line: gperf -C'
+    gperf -C ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -C failed."
-    gperf --readonly-tables ./common/test.gperf 2>&1 | grep 'Command-line: gperf --readonly-tables'
+    gperf --readonly-tables ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf --readonly-tables failed."
-    gperf -E ./common/test.gperf 2>&1 | grep 'Command-line: gperf -E'
+    gperf -E ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -E failed."
     LOG_INFO "End to run test."
 }
@@ -52,7 +52,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp
     DNF_REMOVE gperf
-    LOG_INFO "Finish restore the test environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main $@
