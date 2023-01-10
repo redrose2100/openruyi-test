@@ -42,6 +42,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    rm -rf error.*
     DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }

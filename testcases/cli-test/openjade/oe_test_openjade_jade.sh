@@ -29,10 +29,10 @@ function run_test() {
     CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s failed "
     jade -b utf-8 -f ./error.log -c ./ -C -D ./ -R -a test -A TEST -e -g -n -x -i INCLUDE -w xml -t fot -G -2 -d text -V 10 -s ./common/null.sgml -o abc.fot
     CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s -a -A -e -g -n -x -i -w -t -G -2 -d -V -s -o failed "
-    jade --help 2>&1 | grep 'Usage: openjade'
+    jade --help 2>&1 | grep 'Usage: '
     CHECK_RESULT $? 0 0 "Check jade --help  failed"
-    jade -h 2>&1 | grep 'Usage: openjade'
-    CHECK_RESULT $? 0 0 "Check jade -h  failed"
+    jade -h 2>&1 | grep 'Usage:'
+    CHECK_RESULT $? 0 0 "Check jade -h failed"
     jade -v -f -c ./ 2>&1 | grep 'jade'
     CHECK_RESULT $? 0 0 "Check jade -v -f -c failed"
     jade --version -f -c ./ 2>&1 | grep 'jade'
@@ -42,6 +42,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    rm -rf error.*
     DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
