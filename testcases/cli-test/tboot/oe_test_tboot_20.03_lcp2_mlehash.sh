@@ -20,33 +20,27 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL tboot
-
-    cat >list.lst <<EOL
-  http://www.baidu.com/
-EOL
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    lcp2_crtpol --create --alg sha256 --type any --polver 3.2 --minver 1 --max_sinit_min --ctrl 0x00 sha1 --auxalg --data list.data --sign rsa-2048-sha1 list.lst --pol list.pol
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create --alg --type --polver --minver --max_sinit_min --ctrl --mask --auxalg --data --sign --pol failed"
-    lcp2_crtpol --show list.pol --brief 2>&1 | grep 'version' 2>&1 | grep 'version'
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --show  failed"
-    lcp2_crtpol --help 2>&1 | grep 'Usage: lcp2_crtpol'
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpol -h  failed"
-    lcp2_crtpol --create --alg sha1 --verbose --type list 2>&1 | grep 'pol_ver'
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create --alg --verbose --type failed"
-    lcp2_crtpol --version 2>&1 | grep -E "lcp2_crtpol version: [0-9]{1,}"
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --version failed"
+    lcp2_mlehash --create --cmdline "logging=memory,serial,vga" --alg sha1 /boot/tboot.gz >mle-hash
+    CHECK_RESULT "$(test -f ./mle-hash)"1 0 "Check lcp2_mlehash -create --cmdline --alg failed"
+    lcp2_mlehash --create --verbose --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz 2>&1 | grep 'hdr succeed'
+    CHECK_RESULT $? 0 0 "Check lcp2_mlehash --create --verbose --alg --cmdline failed"
+    lcp2_mlehash --help 2>&1 | grep 'Usage:'
+    CHECK_RESULT $? 0 0 "Check lcp2_mlehash --help failed"
+    lcp2_mlehash --version 2>&1 | grep -E "lcp2_mlehash version: [0-9]"
+    CHECK_RESULT $? 0 0 "Check lcp2_mlehash --version failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf list*
+    rm -rf mle-hash
     DNF_REMOVE
-    LOG_INFO "Finish restore the test environment."
+    LOG_INFO "Een to restore the test environment."
 }
 
 main $@

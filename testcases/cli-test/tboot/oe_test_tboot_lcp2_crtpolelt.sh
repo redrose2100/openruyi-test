@@ -50,7 +50,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf pconf.elt
     DNF_REMOVE
-    LOG_INFO "Finish restore the test environment."
+    LOG_INFO "Een to restore the test environment."
 }
 
 main $@

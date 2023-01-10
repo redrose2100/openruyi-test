@@ -18,12 +18,11 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
+    LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL tboot
     openssl genrsa -out privkey.pem 2048
     openssl rsa -pubout -in privkey.pem -out pubkey.pem
-
-    LOG_INFO "Start to prepare the test environment."
+    LOG_INFO "End to prepare the test environment!"
 }
 
 function run_test() {
@@ -54,7 +53,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf list* pconf.elt privkey.pem pubkey.pem
     DNF_REMOVE
-    LOG_INFO "Finish restore the test environment."
+    LOG_INFO "Een to restore the test environment."
 }
 
 main $@

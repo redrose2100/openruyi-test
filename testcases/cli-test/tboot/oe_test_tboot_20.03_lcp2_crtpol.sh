@@ -18,9 +18,13 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL tboot
-    LOG_INFO "End of environmental preparation!"
+
+    cat >list.lst <<EOL
+  http://www.baidu.com/
+EOL
+    LOG_INFO "End to prepare the test environment!"
 }
 
 function run_test() {
@@ -33,14 +37,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lcp2_crtpol -h  failed"
     lcp2_crtpol --create --alg sha1 --verbose --type list 2>&1 | grep 'pol_ver'
     CHECK_RESULT $? 0 0 "Check lcp2_crtpol --create --alg --verbose --type failed"
-    LOG_INFO "End of the test."
+    lcp2_crtpol --version 2>&1 | grep -E "lcp2_crtpol version: [0-9]{1,}"
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --version failed"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf list.*
+    rm -rf list*
     DNF_REMOVE
-    LOG_INFO "Finish restoring the test environment."
+    LOG_INFO "Een to restore the test environment."
 }
 
 main $@

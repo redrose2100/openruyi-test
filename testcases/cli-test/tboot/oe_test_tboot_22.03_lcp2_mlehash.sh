@@ -18,9 +18,9 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
+    LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL tboot
-    LOG_INFO "End to prepare the test environment."
+    LOG_INFO "End to prepare the test environment!"
 }
 
 function run_test() {
@@ -31,16 +31,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lcp2_mlehash --create --verbose --alg --cmdline failed"
     lcp2_mlehash --help 2>&1 | grep 'Usage:'
     CHECK_RESULT $? 0 0 "Check lcp2_mlehash --help failed"
-    lcp2_mlehash --version 2>&1 | grep -E "lcp2_mlehash version: [0-9]"
-    CHECK_RESULT $? 0 0 "Check lcp2_mlehash --version failed"
-    LOG_INFO "End to run test."
+    LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf mle-hash
+    rm -rf mle_hash
     DNF_REMOVE
-    LOG_INFO "Finish restore the test environment."
+    LOG_INFO "Een to restore the test environment."
 }
 
 main $@

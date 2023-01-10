@@ -18,9 +18,9 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL tboot
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment!"
 }
 
 function run_test() {
@@ -48,7 +48,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf list* privkey.pem pubkey.pem
     DNF_REMOVE
-    LOG_INFO "Finish restore the test environment."
+    LOG_INFO "Een to restore the test environment."
 }
 
 main $@
