@@ -25,6 +25,35 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+
+tb_polgen --create --alg sha1 --type continue vl.pol
+tb_polgen --add --num 0 --pcr 19 --hash image --cmdline "$(cut -d' ' -f2-</proc/cmdline)" --image "/boot/vmlinuz-$(uname -r)" vl.pol
+tb_polgen --add --num 1 --pcr 20 --hash image --image "/boot/initramfs-$(uname -r).img" vl.pol
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     tb_polgen --create --type nonfatal --alg sha1 --ctrl 0x00 --verbose vl.pol 2>&1 | grep 'new policy'
     CHECK_RESULT $? 0 0 "Check tb_polgen create --type  failed"
     lcp2_crtpol --create --alg sha1 --polver 3.2 --type any --pol list.pol --sign rsa-2048-sha1

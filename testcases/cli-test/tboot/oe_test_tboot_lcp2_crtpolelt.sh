@@ -20,11 +20,21 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL tboot
+
+    lcp2_mlehash --create --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz > mle_hash
+
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+
+    lcp2_crtpolelt --create --type mle --minver 17 --out mle.elt mle_hash
+    CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create --type --minver --out failed"
+
+
+
+
     lcp2_crtpolelt --create --type mle --out pconf.elt
     CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --create  failed"
     lcp2_crtpolelt --create --type custom --uuid tboot --out pconf.elt 2>&1 | grep 'CONSTRAINT'

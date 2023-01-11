@@ -22,11 +22,18 @@ function pre_test() {
     DNF_INSTALL tboot
     openssl genrsa -out privkey.pem 2048
     openssl rsa -pubout -in privkey.pem -out pubkey.pem
+
+    lcp2_mlehash --create --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz > mle_hash
+    lcp2_crtpolelt --create --type mle --minver 17 --out mle.elt mle_hash
     LOG_INFO "End to prepare the test environment!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+
+    lcp2_crtpollist --create --out list_unsig.lst mle.elt vl.elt
+    CHECK_RESULT $? 0 0 "Check --create --out failed"
+
     lcp2_crtpolelt --create --type mle --out pconf.elt
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create  --type --out failed"
     lcp2_crtpollist --create --sigalg rsa --listver 0x200 --out list.lst pconf.elt 2>&1 | grep 'CONSTRAINT'
