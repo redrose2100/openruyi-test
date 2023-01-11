@@ -25,8 +25,6 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    gperf --class-name='NAME' ./common/test.gperf
-    CHECK_RESULT $? 0 0 "Check gperf --class-name failed."
     gperf -7 ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -7 failed."
     gperf --seven-bit ./common/test.gperf
@@ -45,6 +43,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check gperf --readonly-tables failed."
     gperf -E ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -E failed."
+    gperf --enum ./common/test.gperf
+    CHECK_RESULT $? 0 0 "Check gperf --enum failed."
     LOG_INFO "End to run test."
 }
 

@@ -45,6 +45,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check gperf -N failed."
     gperf -Z 'NAME' ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -Z failed."
+    gperf --class-name='NAME' ./common/test.gperf
+    CHECK_RESULT $? 0 0 "Check gperf --class-name failed."
     LOG_INFO "End to run test."
 }
 

@@ -25,8 +25,6 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    gperf --enum ./common/test.gperf
-    CHECK_RESULT $? 0 0 "Check gperf --enum failed."
     gperf -I ./common/test.gperf
     CHECK_RESULT $? 0 0 "Check gperf -I failed."
     gperf --includes ./common/test.gperf
