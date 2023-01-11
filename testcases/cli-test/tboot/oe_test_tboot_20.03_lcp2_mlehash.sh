@@ -25,7 +25,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    lcp2_mlehash --create --verbose --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz > mle_hash
+    lcp2_mlehash --create --verbose --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz > common/mle_hash
     CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create --cmdline --alg failed"
     lcp2_mlehash --help 2>&1 | grep 'Usage:'
     CHECK_RESULT $? 0 0 "Check lcp2_mlehash --help failed"
