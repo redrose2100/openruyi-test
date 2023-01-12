@@ -11,7 +11,7 @@
 ####################################
 #@Author    	:   dingjiao
 #@Contact   	:   15829797643@163.com
-#@Date      	:   2022-07-06 09:39:43
+#@Date      	:   2022-07-06
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Detect whether there is a problem with the configuration file
 #####################################

@@ -690,8 +690,37 @@
         },
         {
             "name": "oe_test_bbr_02"
+        },
+        {
+            "name": "oe_test_bbr_04"
+        },
+        {
+            "name": "oe_test_bonding_SCEN_05"
+        },
+        {
+            "name": "oe_test_ima_v2_manual_gen_digest_01"
+        },
+        {
+            "name": "oe_test_ipv6_sysctl_01"
+        },
+        {
+            "name": "oe_test_ipv6_sysctl_02"
+        },
+        {
+            "name": "oe_test_IPVLAN_07"
+        },
+        {
+            "name": "oe_test_mpstat_01"
+        },
+        {
+            "name": "oe_test_mtr_01"
+        },
+        {
+            "name": "oe_test_Netlink_ip_01"
+        },
+        {
+            "name": "oe_test_netstat_01"
         }
-
     ]
 }
 
