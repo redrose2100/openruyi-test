@@ -52,6 +52,9 @@
         {
             "name": "oe_test_bsdcat"
         },
+        {
+            "name": "oe_test_b2sum"
+        },
 	{
 	    "name": "oe_test_ulimit"
 	},
