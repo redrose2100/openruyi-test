@@ -75,7 +75,7 @@ function run_test() {
     clamonacc --stream
     CHECK_RESULT $? 0 0 "Execute clamonacc --stream failed."
 
-    nohup clamonacc -v -F &
+    nohup clamonacc -v -F >nohup.out &
     SLEEP_WAIT 2
     # create a new console to execute cmd to be watched
     SSH_CMD "echo 'test force file' >/opt/test_forcefile" ${NODE1_IPV4} ${NODE1_PASSWORD} ${NODE1_USER}
