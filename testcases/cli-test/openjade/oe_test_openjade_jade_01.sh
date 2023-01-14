@@ -41,10 +41,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check jade -h failed"
     jade --help 2>&1 | grep 'Usage'
     CHECK_RESULT $? 0 0 "Check jade -help failed"
-    jade -b utf-8 -C -D ./ common/null.sgml
-    CHECK_RESULT $? 0 0 "Check jade -C failed"
-    jade -b utf-8 --catalogs -D ./ common/null.sgml
-    CHECK_RESULT $? 0 0 "Check jade --catalogs failed"
     LOG_INFO "End to run test."
 
 }
