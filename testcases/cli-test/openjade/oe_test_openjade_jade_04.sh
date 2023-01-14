@@ -47,7 +47,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf error*
+    rm -rf error.* common/*.rtf common/*.fot common/*.xml common/error.*
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
