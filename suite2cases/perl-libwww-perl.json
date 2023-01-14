@@ -1,0 +1,41 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/perl-libwww-perl",
+    "cases": [
+        {
+            "name": "oe_test_perl-libwww-perl_GET_base_01"
+        },
+        {
+            "name": "oe_test_perl-libwww-perl_GET_base_02"
+        },
+        {
+            "name": "oe_test_perl-libwww-perl_HEAD_base_01"
+        },
+        {
+            "name": "oe_test_perl-libwww-perl_HEAD_base_02"
+        },
+        {
+            "name": "oe_test_perl-libwww-perl_lwp-dump"
+        },
+        {
+            "name": "oe_test_perl-libwww-perl_lwp_request_base_01"
+        },
+        {
+            "name": "oe_test_perl-libwww-perl_lwp_request_base_02"
+        },
+        {
+            "name": "oe_test_perl-libwww-perl_POST_base_01"
+        },
+        {
+            "name": "oe_test_perl-libwww-perl_POST_base_02"
+        }
+    ]
+}
+
+
+
+
+
+
+
+
+
