@@ -29,10 +29,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check openjade -D failed"
     openjade -b utf-8 --directory ./ common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade  --directory failed"
-    openjade -b utf-8 -D ./ -R -s common/null.sgml
+    cd common
+    openjade -b utf-8 -D ./ -R -s null.sgml
     CHECK_RESULT $? 0 0 "Check openjade -R  failed"
     openjade -b utf-8 -D ./ --restricted -s common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade --restricted failed"
+    cd ..
     openjade -b utf-8 -a test common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade -a failed"
     openjade -b utf-8 --activate test common/null.sgml

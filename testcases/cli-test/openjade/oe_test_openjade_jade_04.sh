@@ -35,8 +35,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check jade -d failed"
     jade -b utf-8 -V 10 common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -V failed"
-    jade -b utf-8 -D ./ -R -s common/null.sgml
+    cd common
+    jade -b utf-8 -D ./ -R -s null.sgml
     CHECK_RESULT $? 0 0 "Check jade -s failed"
+    cd ..
     jade -t rtf common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -t failed"
     LOG_INFO "End to run test."
