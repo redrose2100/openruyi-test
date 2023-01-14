@@ -25,20 +25,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-
-    jade -b utf-8 -w xml -f./error.log -n null.sgml
+    jade -b utf-8 -w xml -f./error.log -n common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -w failed"
-    jade -b utf-8 --warning xml -f./error.log -n null.sgml
+    jade -b utf-8 --warning xml -f./error.log -n common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade --warning failed"
-    jade -b utf-8 -G null.sgml
+    jade -b utf-8 -G common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -G failed"
-    jade -t rtf -d null.dsl null.sgml
+    jade -t rtf -d common/null.dsl common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -d failed"
-    jade -b utf-8 -V 10 null.sgml
+    jade -b utf-8 -V 10 common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -V failed"
-    jade -b utf-8 -D ./ -R -s null.sgml
+    jade -b utf-8 -D ./ -R -s common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -s failed"
-    jade -t rtf null.sgml
+    jade -t rtf common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -t failed"
     LOG_INFO "End to run test."
 

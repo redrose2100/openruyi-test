@@ -25,25 +25,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    openjade -b utf-8 -e null.sgml
+    openjade -b utf-8 -e common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade -e failed"
-    openjade -b utf-8 --open-entities null.sgml
+    openjade -b utf-8 --open-entities common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade --open-entities failed"
-    openjade -b utf-8 -g null.sgml
+    openjade -b utf-8 -g common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade -g failed"
-    openjade -b utf-8 --open-elements null.sgml
+    openjade -b utf-8 --open-elements common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade --open-elements failed"
-    openjade -b utf-8 -n null.sgml
+    openjade -b utf-8 -n common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade -n failed"
-    openjade -b utf-8 --error-numbers null.sgml
+    openjade -b utf-8 --error-numbers common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade --error-numbers failed"
-    openjade -b utf-8 -x -f ./error.log -n null.sgml
+    openjade -b utf-8 -x -f ./error.log -n common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade -x failed"
-    openjade -b utf-8 --references -f ./error.log -n null.sgml
+    openjade -b utf-8 --references -f ./error.log -n common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade --references failed"
-    openjade -t sgml -i html -d null.dsl#html null.sgml
+    openjade -t sgml -i html -d null.dsl#html common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade -i failed"
-    openjade -t sgml --include html -d null.dsl#html null.sgml
+    openjade -t sgml --include html -d null.dsl#html common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade --include failed"
     LOG_INFO "End to run test."
 

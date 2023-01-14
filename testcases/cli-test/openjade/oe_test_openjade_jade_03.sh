@@ -25,25 +25,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    jade -b utf-8 -e null.sgml
+    jade -b utf-8 -e common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -e failed"
-    jade -b utf-8 --open-entities null.sgml
+    jade -b utf-8 --open-entities common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade --open-entities failed"
-    jade -b utf-8 -g null.sgml
+    jade -b utf-8 -g common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -g failed"
-    jade -b utf-8 --open-elements null.sgml
+    jade -b utf-8 --open-elements common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade --open-elements failed"
-    jade -b utf-8 -n null.sgml
+    jade -b utf-8 -n common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -n failed"
-    jade -b utf-8 --error-numbers null.sgml
+    jade -b utf-8 --error-numbers common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade --error-numbers failed"
-    jade -b utf-8 -x -f ./error.log -n null.sgml
+    jade -b utf-8 -x -f ./error.log -n common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -x failed"
-    jade -b utf-8 --references -f ./error.log -n null.sgml
+    jade -b utf-8 --references -f ./error.log -n common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade --references failed"
-    jade -t sgml -i html -d null.dsl#html null.sgml
+    jade -t sgml -i html -d common/null.dsl#html common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -i failed"
-    jade -t sgml --include html -d null.dsl#html null.sgml
+    jade -t sgml --include html -d common/null.dsl#html common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade --include failed"
     LOG_INFO "End to run test."
 
