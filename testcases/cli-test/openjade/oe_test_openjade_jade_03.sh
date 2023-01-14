@@ -25,26 +25,35 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    openjade -b utf-8 -f ./error.log -c ./ -C -D ./ -R -s ./common/null.sgml
-    CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s failed "
-    openjade -b utf-8 -f ./error.log -c ./ -C -D ./ -R -a test -A TEST -e -g -n -x -i INCLUDE -w xml -t fot -G -2 -d text -V 10 -s ./common/null.sgml -o abc.fot
-    CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s -a -A -e -g -n -x -i -w -t -G -2 -d -V -s -o failed "
-    openjade --help 2>&1 | grep 'Usage: openjade'
-    CHECK_RESULT $? 0 0 "Check jade --help failed"
-    openjade -h 2>&1 | grep 'Usage: openjade'
-    CHECK_RESULT $? 0 0 "Check jade -h failed"
-    openjade -v -f -c ./ 2>&1 | grep 'jade'
-    CHECK_RESULT $? 0 0 "Check jade -v -f -c failed"
-    openjade --version -f -c ./ 2>&1 | grep 'jade'
-    CHECK_RESULT $? 0 0 "Check jade -v -f -c failed"
-    LOG_INFO "End of the test."
+    jade -b utf-8 -e null.sgml
+    CHECK_RESULT $? 0 0 "Check jade -e failed"
+    jade -b utf-8 --open-entities null.sgml
+    CHECK_RESULT $? 0 0 "Check jade --open-entities failed"
+    jade -b utf-8 -g null.sgml
+    CHECK_RESULT $? 0 0 "Check jade -g failed"
+    jade -b utf-8 --open-elements null.sgml
+    CHECK_RESULT $? 0 0 "Check jade --open-elements failed"
+    jade -b utf-8 -n null.sgml
+    CHECK_RESULT $? 0 0 "Check jade -n failed"
+    jade -b utf-8 --error-numbers null.sgml
+    CHECK_RESULT $? 0 0 "Check jade --error-numbers failed"
+    jade -b utf-8 -x -f ./error.log -n null.sgml
+    CHECK_RESULT $? 0 0 "Check jade -x failed"
+    jade -b utf-8 --references -f ./error.log -n null.sgml
+    CHECK_RESULT $? 0 0 "Check jade --references failed"
+    jade -t sgml -i html -d null.dsl#html null.sgml
+    CHECK_RESULT $? 0 0 "Check jade -i failed"
+    jade -t sgml --include html -d null.dsl#html null.sgml
+    CHECK_RESULT $? 0 0 "Check jade --include failed"
+    LOG_INFO "End to run test."
+
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf error.*
     DNF_REMOVE
-    LOG_INFO "Finish restoring the test environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main $@

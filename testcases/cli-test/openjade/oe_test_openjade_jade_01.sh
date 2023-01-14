@@ -25,18 +25,27 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    jade -b utf-8 -f ./error.log -c ./ -C -D ./ -R -s ./common/null.sgml
-    CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s failed "
-    jade -b utf-8 -f ./error.log -c ./ -C -D ./ -R -a test -A TEST -e -g -n -x -i INCLUDE -w xml -t fot -G -2 -d text -V 10 -s ./common/null.sgml -o abc.fot
-    CHECK_RESULT "$(test -f ./error.log)" 1 0 "Check jade -b -f -c -C -D -R -s -a -A -e -g -n -x -i -w -t -G -2 -d -V -s -o failed "
-    jade --help 2>&1 | grep 'Usage: '
-    CHECK_RESULT $? 0 0 "Check jade --help  failed"
-    jade -h 2>&1 | grep 'Usage:'
+    jade -b utf-8 -f ./error.log common/null.sgml
+    CHECK_RESULT $? 0 0 "Check jade -b failed"
+    jade --encoding utf-8 -f ./error.log common/null.sgml
+    CHECK_RESULT $? 0 0 "Check jade --encoding failed"
+    jade -b utf-8 -f ./error.log common/null.sgml
+    CHECK_RESULT $? 0 0 "Check jade -f failed"
+    jade -b utf-8 --error-file ./error.log common/null.sgml
+    CHECK_RESULT $? 0 0 "Check jade --error-file failed"
+    jade -v -t rtf common/null.sgml 2>&1 | grep $(rpm -q openjade --queryformat '%{version}\n')
+    CHECK_RESULT $? 0 0 "Check jade -v failed"
+    jade --version -t rtf common/null.sgml 2>&1 | grep $(rpm -q openjade --queryformat '%{version}\n')
+    CHECK_RESULT $? 0 0 "Check jade --version failed"
+    jade -h 2>&1 | grep 'Usage'
     CHECK_RESULT $? 0 0 "Check jade -h failed"
-    jade -v -f -c ./ 2>&1 | grep 'jade'
-    CHECK_RESULT $? 0 0 "Check jade -v -f -c failed"
-    jade --version -f -c ./ 2>&1 | grep 'jade'
-    CHECK_RESULT $? 0 0 "Check jade -v -f -c failed"
+    jade --help 2>&1 | grep 'Usage'
+    CHECK_RESULT $? 0 0 "Check jade -help failed"
+    jade -b utf-8 -C -D ./ common/null.sgml
+    CHECK_RESULT $? 0 0 "Check jade -C failed"
+    jade -b utf-8 --catalogs -D ./ common/null.sgml
+    CHECK_RESULT $? 0 0 "Check jade --catalogs failed"
+    LOG_INFO "End to run test."
 
 }
 
@@ -44,7 +53,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf error.*
     DNF_REMOVE
-    LOG_INFO "Finish restoring the test environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main $@
