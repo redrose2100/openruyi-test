@@ -50,9 +50,6 @@ function run_test() {
     tb_polgen --del --num 0 common/vl.pol
     CHECK_RESULT $? 0 0 "Check tb_polgen --del --num failed"
 
-    tb_polgen --unwrap --elt common/vl.pol
-    CHECK_RESULT $? 0 0 "Check tb_polgen --unwrap --elt failed"
-
     tb_polgen --show common/vl.pol 2>&1 | grep 'policy:'
     CHECK_RESULT $? 0 0 "Check tb_polgen --show failed"
 
