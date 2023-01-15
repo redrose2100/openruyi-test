@@ -34,7 +34,7 @@ function run_test() {
     openssl dgst -sha1 -sign common/privkey.pem -out common/list.sig common/list_unsig.lst
     lcp2_crtpollist --addsig --sig common/list.sig --out common/list_unsig.lst
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --addsig --sig --out failed"
-    lcp2_crtpollist --show common/list_unsig.lst
+    lcp2_crtpollist --show common/list.sig
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --show  failed"
     lcp2_crtpollist --version 2>&1 | grep 'lcp2_crtpollist version'
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --version  failed"
