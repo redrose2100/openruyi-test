@@ -28,24 +28,20 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-
-
     lcp2_crtpolelt --create --type mle --minver 17 --ctrl 0x00  --out mle.elt mle_hash
-    CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create --type --minver --out failed"
+    CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create --type --minver --ctrl --out failed"
     lcp2_crtpolelt --create --type mle --minver 17 --out mle.elt mle_hash
+    CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create --type --minver --out failed"
     lcp2_crtpolelt --create --type custom --uuid tboot --out mle.elt mle_hash
+    CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create --type custom --uuid --out failed"
     lcp2_crtpolelt --create --type sbios --alg sha1 --out mle.elt mle_hash
+    CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create --type sbios --alg --out failed"
     lcp2_crtpolelt --create --type stm --alg sha1 --out mle.elt mle_hash
-
-
-
+    CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create --type stm --out failed"
     lcp2_crtpolelt --show common/vl.elt
     CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --show failed"
-
     lcp2_crtpolelt --verbose --show common/vl.elt
     CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --verbose failed"
-
-
     lcp2_crtpolelt --help 2>&1 | grep 'Usage'
     CHECK_RESULT $? 0 0 "Check lcp2_crtpolelt --help failed"
     LOG_INFO "End to run test."
@@ -53,7 +49,6 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf pconf.elt
     DNF_REMOVE
     LOG_INFO "Een to restore the test environment."
 }

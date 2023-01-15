@@ -25,34 +25,24 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-
     tb_polgen --create --alg sha1 --type continue common/vl.pol
     CHECK_RESULT $? 0 0 "Check tb_polgen --create --type --alg failed"
-
     tb_polgen --create --alg sha1 --type nonfatal common/vl.pol
     CHECK_RESULT $? 0 0 "Check tb_polgen --create --type --alg failed"
-
     tb_polgen --create --alg sha1 --type halt common/vl.pol
     CHECK_RESULT $? 0 0 "Check tb_polgen --create --type --alg failed"
-
     tb_polgen --create --type nonfatal --alg sha1 --ctrl 0x00 --verbose common/vl.pol
     CHECK_RESULT $? 0 0 "Check tb_polgen --create --type --alg failed"
-
     tb_polgen --add --num 0 --pcr 19 --hash image --cmdline "$(cut -d' ' -f2- </proc/cmdline)" --image "/boot/vmlinuz-$(uname -r)" common/vl.pol
     CHECK_RESULT $? 0 0 "Check tb_polgen --add --num --pcr --hash --cmdline --image failed"
-
     tb_polgen --add --num 1 --pcr 20 --hash image --image "/boot/initramfs-$(uname -r).img" common/vl.pol
     CHECK_RESULT $? 0 0 "Check tb_polgen --add --num --pcr --hash --image failed"
-
     tb_polgen --add --num 1 --pcr 20 --hash image --image "/boot/initramfs-$(uname -r).img" --verbose common/vl.pol
     CHECK_RESULT $? 0 0 "Check tb_polgen --add --num --pcr --hash --image --verbose failed"
-
     tb_polgen --del --num 0 common/vl.pol
     CHECK_RESULT $? 0 0 "Check tb_polgen --del --num failed"
-
     tb_polgen --show common/vl.pol 2>&1 | grep 'policy:'
     CHECK_RESULT $? 0 0 "Check tb_polgen --show failed"
-
     tb_polgen --help 2>&1 | grep 'tb_polgen --create --type'
     CHECK_RESULT $? 0 0 "Check tb_polgen --help failed"
     LOG_INFO "End to run test."

@@ -27,7 +27,6 @@ function run_test() {
     LOG_INFO "Start to run test."
     lcp2_mlehash --create --alg sha1 --verbose --cmdline "logging=serial,memory,vga" /boot/tboot.gz
     CHECK_RESULT $? 0 0 "Check lcp2_mlehash -create --cmdline --alg --verbose failed"
-
     lcp2_mlehash --help 2>&1 | grep 'Usage: lcp2_mlehash'
     CHECK_RESULT $? 0 0 "Check lcp2_mlehash --help failed"
 
@@ -36,7 +35,6 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf mle-hash
     DNF_REMOVE
     LOG_INFO "Een to restore the test environment."
 }

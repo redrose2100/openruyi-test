@@ -25,36 +25,26 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-
-
     lcp2_crtpollist --create --listver 0x100 --out common/list_unsig.lst common/mle.elt common/vl.elt
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --listver --out failed"
     lcp2_crtpollist --create --listver 0x200 --sigalg rsa --out common/list_unsig.lst common/mle.elt common/vl.elt
-
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --out failed"
-
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create ==listver --sigalg --out failed"
     lcp2_crtpollist --sign --sigalg rsa --pub common/tboot.pub --priv common/tboot.priv --out common/list_unsig.lst
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --sign --sigalg --pub --priv --out failed"
-
-
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist -sign --sigalg --pub --priv --out failed"
     openssl dgst -sha1 -sign common/privkey.pem -out common/list.sig common/list_sig.lst
     lcp2_crtpollist --addsig --sig common/list.sig --out common/list_sig.lst
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --addsig --sig --out failed"
-
     lcp2_crtpollist --show common/list_unsig.lst
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --show  failed"
-
     lcp2_crtpollist --version 2>&1 | grep 'lcp2_crtpollist version'
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --version  failed"
-
     lcp2_crtpollist --help 2>&1 | grep 'Usage: lcp2_crtpollist'
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --help  failed"
-
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf list* privkey.pem pubkey.pem
     DNF_REMOVE
     LOG_INFO "Een to restore the test environment."
 }
