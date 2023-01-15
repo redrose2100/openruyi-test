@@ -29,7 +29,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --listver --out failed"
     lcp2_crtpollist --create --listver 0x200 --sigalg rsa --out common/list_unsig.lst common/mle.elt common/vl.elt
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create ==listver --sigalg --out failed"
-    lcp2_crtpollist --sign --sigalg rsa --pub common/tboot.pub --priv common/tboot.priv --out common/list_unsig.lst
+    lcp2_crtpollist --sign --pub common/pubkey.pem --priv common/tboot.priv --out common/list_unsig.lst
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist -sign --sigalg --pub --priv --out failed"
     openssl dgst -sha1 -sign common/privkey.pem -out common/list.sig common/list_sig.lst
     lcp2_crtpollist --addsig --sig common/list.sig --out common/list_sig.lst
