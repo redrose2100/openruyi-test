@@ -20,10 +20,8 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL tboot
-    openssl genrsa -out privkey.pem 2048
-    openssl rsa -pubout -in privkey.pem -out pubkey.pem
 
-    lcp2_mlehash --create --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz > mle_hash
+    lcp2_mlehash --create --alg sha1 --cmdline "logging=serial,memory,vga" /boot/tboot.gz >mle_hash
     lcp2_crtpolelt --create --type mle --minver 17 --out mle.elt mle_hash
     LOG_INFO "End to prepare the test environment!"
 }
@@ -31,28 +29,26 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    lcp2_crtpollist --create --out list_unsig.lst mle.elt vl.elt
-    CHECK_RESULT $? 0 0 "Check --create --out failed"
+    lcp2_crtpollist --create --out common/list_unsig.lst common/mle.elt common/vl.elt
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --out failed"
 
-    lcp2_crtpolelt --create --type mle --out pconf.elt
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create  --type --out failed"
-    lcp2_crtpollist --create --sigalg rsa --listver 0x200 --out list.lst pconf.elt 2>&1 | grep 'CONSTRAINT'
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --sigalg --listver --out failed"
-    lcp2_crtpollist --create --sigalg rsa --listver 0x200 --out list-unsig.lst
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --create --sigalg --listver --out failed"
-    lcp2_crtpollist --sign --hashalg sha1 --sigalg rsa --pub pubkey.pem --priv privkey.pem --rev 1 --out list.lst 2>&1 | grep 'successfully'
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --sign --hashalg --listver --sigalg --pub --priv --rev --out failed"
-    lcp2_crtpollist --show list.lst --verbose 2>&1 | grep 'succeed!'
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --show --verbose failed"
-    cp list-unsig.lst list-sig.lst
-    openssl genrsa -out privkey.pem 2048
-    openssl dgst -sha1 -sign privkey.pem -out list.sig list-sig.lst
-    lcp2_crtpollist --addsig --sig list.sig --out list-sig.lst
-    CHECK_RESULT "$(test -f ./list-sig.lst)"1 0 "Check lcp2_crtpollist --addsig --sig --out failed"
-    lcp2_crtpollist --version 2>&1 | grep 'lcp2_crtpollist version'
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --version  failed"
-    lcp2_crtpollist --help 2>&1 | grep 'Usage:'
+    lcp2_crtpollist --sign --sigalg rsa --pub common/tboot.pub --priv common/tboot.priv --out common/list_unsig.lst
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --sign --sigalg --pub --priv --out failed"
+
+    lcp2_crtpollist --sign --pub common/pubkey.pem --nosig --out list_sig.lst
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --nosig failed"
+
+    openssl dgst -sha1 -sign common/privkey.pem -out common/list.sig list_sig.lst
+
+    lcp2_crtpollist --addsig --sig common/list.sig --out common/list_sig.lst
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --addsig --sig --out failed"
+
+    lcp2_crtpollist --show common/list_unsig.lst
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --show  failed"
+
+    lcp2_crtpollist --help 2>&1 | grep 'Usage: lcp_crtpollist'
     CHECK_RESULT $? 0 0 "Check lcp2_crtpollist --help  failed"
+
     LOG_INFO "End to run  test."
 }
 

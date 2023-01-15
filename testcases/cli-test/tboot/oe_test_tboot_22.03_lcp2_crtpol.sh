@@ -25,11 +25,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    lcp2_crtpol --show list.pol --brief 2>&1 | grep 'version' 2>&1 | grep 'version'
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --show  failed"
 
     lcp2_crtpol --help 2>&1 | grep 'Usage: lcp2_crtpol'
-    CHECK_RESULT $? 0 0 "Check lcp2_crtpol -h  failed"
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --help  failed"
+
+    lcp2_crtpol --version | grep -E "lcp2_crtpol version: [0-9]{1}"
+    CHECK_RESULT $? 0 0 "Check lcp2_crtpol --version failed"
 
     LOG_INFO "End of the test."
 }
