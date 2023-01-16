@@ -47,7 +47,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check  amqp-get --help failed"
     amqp-get -? | grep 'Usage: amqp-get \[OPTIONS\]'
     CHECK_RESULT $? 0 0 "Check  amqp-get -? failed"
-    amqp-get --usageamqp-get --usage | grep 'Usage: amqp-get'
+    amqp-get --usage | grep 'Usage: amqp-get'
     CHECK_RESULT $? 0 0 "Check amqp-get --usage failed"
     LOG_INFO "End to run test."
 }
