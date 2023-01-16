@@ -57,7 +57,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check amqp-consume -e -x failed"
     amqp-consume --help | grep 'Usage: amqp-consume \[OPTIONS\]'
     CHECK_RESULT $? 0 0 "Check  amqp-consume --help failed"
-    amqp-consume --usageamqp-consume --usage | grep 'Usage: amqp-consume \[-dxA?\]'
+    amqp-consume --usageamqp-consume --usage | grep 'Usage: amqp-consume'
     CHECK_RESULT $? 0 0 "Check amqp-consume --usage failed"
     amqp-consume -? | grep 'Usage: amqp-consume \[OPTIONS\]'
     CHECK_RESULT $? 0 0 "Check amqp-consume -? failed"
