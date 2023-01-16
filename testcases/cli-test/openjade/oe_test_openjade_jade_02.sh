@@ -29,12 +29,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check jade -D failed"
     jade -b utf-8 --directory ./ common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade  --directory failed"
-    cd common
-    jade -b utf-8 -D ./ -R -s null.sgml
+    jade -b utf-8 -D ./ -R -s common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -R  failed"
-    jade -b utf-8 -D ./ --restricted -s null.sgml
+    jade -b utf-8 -D ./ --restricted -s common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade --restricted failed"
-    cd ..
     jade -b utf-8 -a test common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -a failed"
     jade -b utf-8 --activate test common/null.sgml
