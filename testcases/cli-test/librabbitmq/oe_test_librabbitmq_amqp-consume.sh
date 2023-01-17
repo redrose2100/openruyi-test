@@ -53,6 +53,7 @@ function run_test() {
     nohup amqp-consume -dx -c 5 -p 10 -s 127.0.0.1 --port=5672 -e test-ex -r test-routing -x --vhost=/ --username=guest --password=guest --heartbeat=1 cat >./info2.out 2>&1 &
     SLEEP_WAIT 3
     echo 'aaaaa' | amqp-publish -e test-ex -l --username=guest --password=guest -r test-routing
+    SLEEP_WAIT 10
     grep "aaaaa" ./info2.out
     CHECK_RESULT $? 0 0 "Check amqp-consume -e -x failed"
     amqp-consume --help | grep 'Usage: amqp-consume \[OPTIONS\]'
