@@ -68,7 +68,7 @@ function run_test() {
 
     LOG_INFO "End to run test."
 }
-dicts | filters | modes
+
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
