@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "perl-libwww-perl perl-CPAN"
-    tar -zxvf common/HTML-Tree-5.07.tar.gz
+    tar -xf common/HTML-Tree-5.07.tar.gz
     cd HTML-Tree-5.07
     perl Build.PL
     ./Build

@@ -50,6 +50,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    rm -rf a.txt index.*
     DNF_REMOVE
     LOG_INFO "End to restoring the test environment."
 }
