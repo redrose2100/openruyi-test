@@ -1,4 +1,5 @@
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+#!/usr/bin/bash
+
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -15,6 +16,8 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of mpich command
 # ############################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
