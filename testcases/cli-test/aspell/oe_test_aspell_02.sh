@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -22,7 +24,8 @@ function pre_test() {
     DNF_INSTALL aspell
     unzip common/aspell6-en-2020.12.07-0.zip
     cp -R ./aspell6-en-2020.12.07-0/* /usr/lib64/aspell-0.60
-    export LANG=en_US
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,7 +38,7 @@ function run_test() {
     echo name | aspell soundslike | grep "NM"
     CHECK_RESULT $? 0 0 "Check aspell soundslike failed"
 
-    echo name | aspell expand | grep "name"
+    echo name | aspell expand 1 | grep "name"
     CHECK_RESULT $? 0 0 "Check aspell expand failed"
 
     echo and | aspell clean | grep "and"
@@ -47,8 +50,11 @@ function run_test() {
     aspell dicts | grep "en_US-variant_0"
     CHECK_RESULT $? 0 0 "Check aspell dicts failed"
 
-    echo "this" | aspell munch --sug-mode=bad-spellers -l en dump | grep "this thi/S"
-    CHECK_RESULT $? 0 0 "Check aspell munch --sug-mode=bad-spellers dump failed"
+    aspell filters | grep "filter to skip URL"
+    CHECK_RESULT $? 0 0 "Check aspell filters failed"
+
+    aspell modes | grep "mode for checking generic SGML/XML"
+    CHECK_RESULT $? 0 0 "Check aspell modes failed"
 
     echo "and" | aspell munch --sug-mode=bad-spellers -l en conv from to either none | grep "and"
     CHECK_RESULT $? 0 0 "Check aspell munch --sug-mode=bad-spellers conv from to either none failed"
@@ -67,6 +73,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
     rm -rf aspell6-en-2020.12.07-0 2.txt
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 
