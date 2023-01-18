@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
