@@ -21,6 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL openjade
+    cp common/*.sgml ./
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -31,9 +32,9 @@ function run_test() {
     jade -b utf-8 --directory ./ common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade  --directory failed"
 
-    jade -b utf-8 -D ./ -R -s ./common/null.sgml
+    jade -b utf-8 -D ./ -R -s ./null.sgml
     CHECK_RESULT $? 0 0 "Check jade -R  failed"
-    jade -b utf-8 -D ./ --restricted -s ./common/null.sgml
+    jade -b utf-8 -D ./ --restricted -s ./null.sgml
     CHECK_RESULT $? 0 0 "Check jade --restricted failed"
 
     jade -b utf-8 -a test common/null.sgml
@@ -53,7 +54,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf error.* common/*.rtf common/*.fot common/*.xml common/error.*
+    rm -rf *.sgml error.* common/*.rtf common/*.fot common/*.xml common/error.*
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
