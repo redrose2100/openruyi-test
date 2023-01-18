@@ -1,3 +1,4 @@
+#!/usr/bin/bash
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -35,10 +36,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check jade -d failed"
     jade -b utf-8 -V 10 common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -V failed"
-    cd common
-    jade -b utf-8 -D ./ -R -s null.sgml
+
+    jade -b utf-8 -D ./ -R -s ./common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -s failed"
-    cd ..
+
     jade -t rtf common/null.sgml
     CHECK_RESULT $? 0 0 "Check jade -t failed"
     LOG_INFO "End to run test."
