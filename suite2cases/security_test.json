@@ -117,6 +117,9 @@
         },
         {
             "name": "oe_test_openssl_RSA_key"
+        },
+        {
+            "name": "oe_test_chage"
         }
     ]
 }
