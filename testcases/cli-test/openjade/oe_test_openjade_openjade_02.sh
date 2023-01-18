@@ -1,3 +1,4 @@
+#!/usr/bin/bash
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -20,6 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL openjade
+    cp common/*.sgml ./
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -29,12 +31,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check openjade -D failed"
     openjade -b utf-8 --directory ./ common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade  --directory failed"
-    cd common
-    openjade -b utf-8 -D ./ -R -s null.sgml
+
+    openjade -b utf-8 -D ./ -R -s ./null.sgml
     CHECK_RESULT $? 0 0 "Check openjade -R  failed"
-    openjade -b utf-8 -D ./ --restricted -s null.sgml
+    openjade -b utf-8 -D ./ --restricted -s ./null.sgml
     CHECK_RESULT $? 0 0 "Check openjade --restricted failed"
-    cd ..
+
     openjade -b utf-8 -a test common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade -a failed"
     openjade -b utf-8 --activate test common/null.sgml
@@ -52,7 +54,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf error.* common/*.rtf common/*.fot common/*.xml common/error.*
+    rm -rf *.sgml error.* common/*.rtf common/*.fot common/*.xml common/error.*
     DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }

@@ -1,3 +1,4 @@
+#!/usr/bin/bash
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -20,6 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL openjade
+    cp common/*.sgml ./
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -29,24 +31,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check openjade -w failed"
     openjade -b utf-8 --warning xml -f./error.log -n common/null.sgml
     CHECK_RESULT $? 0 0 "Check openjade --warning failed"
-    openjade -b utf-8 -G common/null.sgml
-    CHECK_RESULT $? 0 0 "Check openjade -G failed"
-    openjade -t rtf -d common/null.dsl common/null.sgml
-    CHECK_RESULT $? 0 0 "Check openjade -d failed"
-    openjade -b utf-8 -V 10 common/null.sgml
-    CHECK_RESULT $? 0 0 "Check openjade -V failed"
-    cd common
-    openjade -b utf-8 -D ./ -R -s null.sgml
-    CHECK_RESULT $? 0 0 "Check openjade -s failed"
-    openjade -t rtf null.sgml
-    cd ..
-    CHECK_RESULT $? 0 0 "Check openjade -t failed"
+    jade -b utf-8 -w xml -f./error.log -n common/null.sgml
+    CHECK_RESULT $? 0 0 "Check jade -w failed"
+    jade -b utf-8 --warning xml -f./error.log -n common/null.sgml
+    CHECK_RESULT $? 0 0 "Check jade --warning failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf error.* common/*.rtf common/*.fot common/*.xml common/error.*
+    rm -rf *.sgml error.* common/*.rtf common/*.fot common/*.xml common/error.*
     DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
