@@ -720,6 +720,27 @@
         },
         {
             "name": "oe_test_netstat_01"
+        },
+        {
+            "name": "oe_test_normal_tcpdump_02"
+        },
+        {
+            "name": "oe_test_normal_tcpdump_04"
+        },
+        {
+            "name": "oe_test_Numad_01"
+        },
+        {
+            "name": "oe_test_perf_top_01"
+        },
+        {
+            "name": "oe_test_sar_01"
+        },
+        {
+            "name": "oe_test_user_debug_iotop_03"
+        },
+	{
+            "name": "oe_test_user_debug_iotop_SCEN_01"
         }
     ]
 }
