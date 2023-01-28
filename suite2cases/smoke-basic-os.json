@@ -741,6 +741,9 @@
         },
 	{
             "name": "oe_test_user_debug_iotop_SCEN_01"
+        },
+        {
+	     "name": "oe_test_sed_001"
         }
     ]
 }
