@@ -76,6 +76,27 @@
         },
         {
             "name": "oe_test_FSIO_loop_fopen_fclose"
+        },
+        {
+            "name": "oe_test_FSIO_loop_open_close_file"
+        },
+        {
+            "name": "oe_test_FSIO_open_direct_file"
+        },
+        {
+            "name": "oe_test_FSIO_open_excl_file"
+        },
+        {
+            "name": "oe_test_FSIO_open_noctty_trun_file"
+        },
+        {
+            "name": "oe_test_FSIO_open_ro_file"
+        },
+        {
+            "name": "oe_test_FSIO_open_rw_append_file"
+        },
+        {
+            "name": "oe_test_FSIO_open_wo_create_file"
         }
     ]
 }
