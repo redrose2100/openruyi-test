@@ -293,7 +293,7 @@
             "name": "oe_test_ethtool_01"
         },
         {
-            "name": "oe_test_firewalld"
+            "name": "oe_test_firewalld_server"
         },
         {
             "name": "oe_test_glibc_getaddrinfo_01"
