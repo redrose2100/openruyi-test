@@ -16,30 +16,30 @@
         {
             "name": "oe_test_tail"
         },
-	{
+        {
             "name": "oe_test_systool"
         },
         {
             "name": "oe_test_awk"
         },
-       {
+        {
             "name": "oe_test_sdiff"
         },
-       {
+        {
             "name": "oe_test_diff3"
         },
-       {
+        {
             "name": "oe_test_fuse"
         },
-      {
+        {
             "name": "oe_test_zstd"
         },
-	{
-	    "name": "oe_test_auditctl"
-	},
-	{
-	    "name": "oe_test_cksum"
-	},
+        {
+            "name": "oe_test_auditctl"
+        },
+        {
+            "name": "oe_test_cksum"
+        },
         {
             "name": "oe_test_paste"
         },
@@ -55,9 +55,9 @@
         {
             "name": "oe_test_b2sum"
         },
-	{
-	    "name": "oe_test_ulimit"
-	},
+        {
+            "name": "oe_test_ulimit"
+        },
         {
             "name": "oe_test_versioninfo"
         },
@@ -528,35 +528,35 @@
         {
             "name": "oe_test_patch"
         },
-	{
-	    "name": "oe_test_exiv2"
-	},
-	{
-	    "name": "oe_test_json-c"
-	},
+        {
+            "name": "oe_test_exiv2"
+        },
+        {
+            "name": "oe_test_json-c"
+        },
         {
             "name": "oe_test_whoami"
         },
-	{
-	    "name": "oe_test_lz4"
-	},
-	{
-	    "name": "oe_test_zlib"
-	},
-	{
-	    "name": "oe_test_brotli"
-	},
-	{
-	    "name": "oe_test_net_mtr"
-	},
-	{
-	    "name": "oe_test_gsettings"
-	},
-	{
-	    "name":"oe_test_pcre_use"
-	},
-	{
-	    "name":"oe_test_ACL_dir"
-	}
+        {
+            "name": "oe_test_lz4"
+        },
+        {
+            "name": "oe_test_zlib"
+        },
+        {
+            "name": "oe_test_brotli"
+        },
+        {
+            "name": "oe_test_net_mtr"
+        },
+        {
+            "name": "oe_test_gsettings"
+        },
+        {
+            "name": "oe_test_pcre_use"
+        },
+        {
+            "name": "oe_test_ACL_dir"
+        }
     ]
 }
