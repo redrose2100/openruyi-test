@@ -744,7 +744,10 @@
         },
         {
 	     "name": "oe_test_sed_001"
-        }
+        },
+	{
+	     "name": "oe_test_pigz"
+	}
     ]
 }
 
