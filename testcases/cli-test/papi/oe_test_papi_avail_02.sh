@@ -1,0 +1,73 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   hua
+# @Contact   :   dchang@zhixundn.com
+# @Date      :   2022/11/20
+# @License   :   Mulan PSL v2
+# @Desc      :   verify the uasge of papi command
+# ############################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL papi
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+
+    papi_avail --cache 2>&1 | grep "Available PAPI"
+    CHECK_RESULT $? 0 0 "Check papi_avail --cache failed"
+
+    papi_avail --cnd 2>&1 | grep "Available PAPI"
+    CHECK_RESULT $? 0 0 "Check papi_avail --cnd failed"
+
+    papi_avail --fp 2>&1 | grep "Available PAPI"
+    CHECK_RESULT $? 0 0 "Check papi_avail --fp failed"
+
+    papi_avail --ins 2>&1 | grep "Available PAPI"
+    CHECK_RESULT $? 0 0 "Check papi_avail --ins failed"
+
+    papi_avail --idl 2>&1 | grep "Available PAPI"
+    CHECK_RESULT $? 0 0 "Check papi_avail --idl failed"
+
+    papi_avail --l1 2>&1 | grep "Available PAPI"
+    CHECK_RESULT $? 0 0 "Check papi_avail --l1 failed"
+
+    papi_avail --l2 2>&1 | grep "Available PAPI"
+    CHECK_RESULT $? 0 0 "Check papi_avail --l2 failed"
+
+    papi_avail --l3 2>&1 | grep "Available PAPI"
+    CHECK_RESULT $? 0 0 "Check papi_avail --l3 failed"
+
+    papi_avail --mem 2>&1 | grep "Available PAPI"
+    CHECK_RESULT $? 0 0 "Check papi_avail --mem failed"
+
+    papi_avail --msc 2>&1 | grep "Available PAPI"
+    CHECK_RESULT $? 0 0 "Check papi_avail --msc failed"
+
+    papi_avail --tlb 2>&1 | grep "Available PAPI"
+    CHECK_RESULT $? 0 0 "Check papi_avail --tlb failed"
+
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<location>
+    <appSettings>
+        <add key="name" value="zhangsan" description="name"></add>
+        <add key="title" value="zhang san" description="title"></add>
+    </appSettings>
+</location>

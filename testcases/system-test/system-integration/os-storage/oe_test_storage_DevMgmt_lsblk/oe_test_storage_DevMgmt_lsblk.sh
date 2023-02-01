@@ -20,50 +20,48 @@ source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
     check_free_disk
-    DISK_A="/dev/${local_disk}"
-    ADD_DISK="/dev/${local_disk1}"
     new_uuid=12d59867-ff81-40d8-a7e7-45e971d31255
+    value=`lsblk | grep openeuler | sed -n '$p' |  awk -F "└─" {'print $2'} | awk -F " " {'print $1'}`
     LOG_INFO "Loading data is complete!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    mkfs.ext4 -F ${DISK_A}
-    CHECK_RESULT $(lsblk --fs "${DISK_A}" | grep -i "${local_disk}" | awk '{print$4}' | wc -l) 1
-    count_uuid=$(lsblk --output +UUID "${DISK_A}" | grep "${local_disk}" | awk '{print$7}' | wc -l)
-    test ${count_uuid} -gt 0
+    mkfs.ext4 -F /dev/${local_disk}
+    sleep 2
+    lsblk --fs "/dev/${local_disk}" |awk '{if (NR>1){print$NF}}' | grep -E '[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}'
     CHECK_RESULT $?
-    mkfs.ext4 -F "${ADD_DISK}"
-    CHECK_RESULT $?
-    disk_uuid=$(lsblk --fs ${ADD_DISK} | grep "${local_disk1}" | awk '{print$4}')
-    tune2fs -U ${new_uuid} -L new-label "${ADD_DISK}"
-    SLEEP_WAIT 2
-    modify_uuid=$(lsblk --fs ${ADD_DISK} | grep "${local_disk1}" | awk '{print$5}')
-    [ ${modify_uuid}X == ${new_uuid}X ]
+    lsblk --output +UUID /dev/${local_disk} | awk '{if (NR>1){print$NF}}' | grep -E '[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}'
     CHECK_RESULT $?
 
-    mkfs.xfs -f "${ADD_DISK}"
+    mkfs.ext4 -F /dev/${local_disk1}
     CHECK_RESULT $?
-    disk_uuid=$(lsblk --fs ${ADD_DISK} | grep "${local_disk1}" | awk '{print$3}')
-    xfs_admin -U ${new_uuid} -L new-label "${ADD_DISK}"
-    SLEEP_WAIT 2
-    modify_uuid=$(lsblk --fs ${ADD_DISK} | grep "${local_disk1}" | awk '{print$4}')
-    [ ${modify_uuid}X == ${new_uuid}X ]
+    tune2fs -U ${new_uuid} -L new-label /dev/${local_disk1}
+    udevadm settle
+    sleep 2
+    lsblk --output +UUID /dev/${local_disk1} | awk '{if (NR>1){print$NF}}' | grep ${new_uuid}
     CHECK_RESULT $?
-    mkfs.xfs -f "${ADD_DISK}"
+    mkfs.xfs -f /dev/${local_disk1}
     CHECK_RESULT $?
-
-    disk_uuid=$(lsblk --fs /dev/mapper/openeuler_openeuler-swap | grep "openeuler-swap" | awk '{print$4}')
-    swapoff /dev/mapper/openeuler_openeuler-swap
-    swaplabel -U ${new_uuid} -L new-label /dev/mapper/openeuler_openeuler-swap
-    SLEEP_WAIT 2
-    modify_uuid=$(lsblk --fs /dev/mapper/openeuler_openeuler-swap | grep "openeuler-swap" | awk '{print$5}')
-    [ ${modify_uuid}X == ${new_uuid}X ]
+    xfs_admin -U ${new_uuid} -L new-label /dev/${local_disk1}
+    udevadm settle
+    sleep 2
+    lsblk --output +UUID /dev/${local_disk1} | awk '{if (NR>1){print$NF}}' | grep ${new_uuid}
     CHECK_RESULT $?
-    swaplabel -U ${disk_uuid} -L '' /dev/mapper/openeuler_openeuler-swap
+    swapoff /dev//mapper/${value}
+    swaplabel -U ${new_uuid} -L new-label /dev/mapper/${value}
+    udevadm settle
+    sleep 2
+    lsblk --fs /dev/mapper/${value} | awk '{if (NR>1){print$NF}}' | grep ${new_uuid}
     CHECK_RESULT $?
-    swapon -a
     LOG_INFO "End of testcase execution."
 }
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    swapon -a
+    LOG_INFO "Finish environment cleanup."
+}
+
 
 main "$@"

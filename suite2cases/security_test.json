@@ -105,6 +105,21 @@
         },
         {
             "name": "oe_test_security_test_FUN339"
+        },
+        {
+            "name": "oe_test_user_management_id"
+        },
+        {
+            "name": "oe_test_user_management_groupmod"
+        },
+        {
+            "name": "oe_test_ACL_setfacl_test_mode"
+        },
+        {
+            "name": "oe_test_openssl_RSA_key"
+        },
+        {
+            "name": "oe_test_chage"
         }
     ]
 }

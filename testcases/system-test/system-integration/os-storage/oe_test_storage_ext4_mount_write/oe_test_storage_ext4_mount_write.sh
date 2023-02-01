@@ -27,9 +27,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    mkfs.ext4 -F /dev/"${local_disk}"
+    mkfs.ext4 -F /dev/"${local_disk}1"
     CHECK_RESULT $?
-    sudo mount /dev/"${local_disk}" /mnt
+    sudo mount /dev/"${local_disk}1" /mnt
     CHECK_RESULT $?
     dd if=/dev/zero of=/mnt/test.img bs=1M count=1024 oflag=direct
     CHECK_RESULT $?
