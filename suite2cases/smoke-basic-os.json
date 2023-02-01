@@ -744,6 +744,12 @@
         },
         {
 	     "name": "oe_test_sed_001"
+	},
+	{
+            "name": "oe_test_procps-ng-sysctl"
+	},
+	{
+	    "name": "oe_test_nspr"
         }
     ]
 }
