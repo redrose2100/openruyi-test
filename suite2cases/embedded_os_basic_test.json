@@ -141,6 +141,9 @@
         },
         {
             "name": "oe_test_var_log"
+        },
+        {
+            "name": "oe_test_ar"
         }
     ]
 }
