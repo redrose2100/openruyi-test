@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -21,8 +21,9 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    touch a b
-    touch a.c b.c c.c d.c
+
+    touch a b a.c b.c c.c d.c
+
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -31,13 +32,10 @@ function run_test() {
 
     ar rv one.bak a b
     CHECK_RESULT $? 0 0 "check one.bak creation fail"
-
     ar rv two.bak *.c
     CHECK_RESULT $? 0 0 "check two.bak creation fail"
-
     ar t two.bak |grep -E "[a.c|b.c|c.c|d.c]"
     CHECK_RESULT $? 0 0 "check file fail"
-
     ar d two.bak a.c b.c c.c
     CHECK_RESULT $? 0 0 "check file delete fail"
 
