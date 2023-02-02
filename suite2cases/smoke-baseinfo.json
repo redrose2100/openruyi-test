@@ -29,7 +29,7 @@
             "name": "oe_test_ssh"
 	},
         {
-            "name": "oe_test_rpm_package_name"
+            "name": "oe_test_rpm_suffix_name"
         }
     ]
 }
