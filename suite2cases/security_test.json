@@ -120,6 +120,9 @@
         },
         {
             "name": "oe_test_chage"
+        },
+        {
+            "name": "oe_test_authselect"
         }
     ]
 }
