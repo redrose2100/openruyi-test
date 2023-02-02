@@ -748,6 +748,9 @@
 	{
 	     "name": "oe_test_pigz"
 	}
+        {
+	     "name": "oe_test_xz"
+        }
     ]
 }
 
