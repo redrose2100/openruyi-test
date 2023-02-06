@@ -306,6 +306,9 @@
         },
         {
             "name": "oe_test_chrt"
+        },
+        {
+            "name": "oe_test_libxml2"
         }
     ]
 }
