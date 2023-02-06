@@ -747,6 +747,9 @@
         },
         {
 	     "name": "oe_test_xz"
+        },
+        {
+             "name": "oe_test_libesmtp"
         }
     ]
 }
