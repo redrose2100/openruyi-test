@@ -21,15 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
     touch a b a.c b.c c.c d.c
-
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-
     ar rv one.bak a b
     CHECK_RESULT $? 0 0 "check one.bak creation fail"
     ar rv two.bak *.c
@@ -38,15 +35,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check file fail"
     ar d two.bak a.c b.c c.c
     CHECK_RESULT $? 0 0 "check file delete fail"
-
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     rm -rf a b *.c *.bak
-
     LOG_INFO "End to restore the test environment."
 }
 
