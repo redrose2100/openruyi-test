@@ -560,6 +560,9 @@
         },
         {
             "name": "oe_test_du"
+        },
+        {
+            "name": "oe_test_ar"
         }
     ]
 }
