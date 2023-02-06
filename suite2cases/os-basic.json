@@ -557,6 +557,9 @@
         },
         {
             "name": "oe_test_ACL_dir"
+        },
+        {
+            "name": "oe_test_du"
         }
     ]
 }
