@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     useradd test1
+    useradd test2
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -83,6 +84,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start cleanning environment."
     rm -rf testlog*
+    userdel -rf test1
+    userdel -rf test2
     LOG_INFO "Finish environment cleanup!"
 }
 

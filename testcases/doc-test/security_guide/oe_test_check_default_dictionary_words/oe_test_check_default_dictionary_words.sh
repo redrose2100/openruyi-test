@@ -31,7 +31,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     cracklib-unpacker /usr/share/cracklib/pw_dict |grep '!!65logan'
     CHECK_RESULT $? 0 0 "Query default dictionary words failed"
-    CHECK_RESULT "$(echo '!!65logan' | cracklib-check |awk '{print $NF}')" "它基于一个字典中的词" 0 "Default dictionary words check failed"
+    CHECK_RESULT "$(echo '!!65logan' | cracklib-check |awk '{print $NF}')" "word" 0 "Default dictionary words check failed"
     echo '!!65logan' | passwd normal --stdin
     CHECK_RESULT $? 0 1 "Change weak password failed"
 
