@@ -19,11 +19,6 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
-    LOG_INFO "End to prepare the test environment."
-}
-
 function run_test() {
     LOG_INFO "Start to run test."
     basename /var/log/messages |grep messages
@@ -33,11 +28,6 @@ function run_test() {
     basename /var/log |grep log
     CHECK_RESULT $? 0 0 "check file fail"
     LOG_INFO "End to run test."
-}
-
-function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    LOG_INFO "End to restore the test environment."
 }
 
 main $@
