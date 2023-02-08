@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check source: failed!"
     grep 'name=update' /etc/yum.repos.d/*.repo
     CHECK_RESULT $? 0 0 "Check update: failed!"
-    current_suffix_num=$(dnf list | grep -w $package_name| wc -l)
+    current_suffix_num=$(dnf list | grep -w $package_name | wc -l)
     all_suffix_num=$(dnf list | wc -l)
     test $current_suffix_num -eq $all_suffix_num
     CHECK_RESULT $? 0 0 "Check rpm package name: failed!"
