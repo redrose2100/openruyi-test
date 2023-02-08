@@ -569,6 +569,9 @@
         },
         {
             "name": "oe_test_basename"
+        },
+        {
+            "name": "oe_test_groff"
         }
     ]
 }
