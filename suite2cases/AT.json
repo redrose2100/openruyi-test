@@ -855,6 +855,9 @@
         },
         {
             "name": "oe_test_module"
+        },
+        {
+            "name": "oe_test_libxml2"
         }
     ]
 }

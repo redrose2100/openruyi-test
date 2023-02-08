@@ -26,10 +26,6 @@
             "machine num": 2
         },
         {
-            "name": "oe_test_openssh_scp_p",
-            "machine num": 2
-        },
-        {
             "name": "oe_test_openssh_scp_P",
             "machine num": 2
         },

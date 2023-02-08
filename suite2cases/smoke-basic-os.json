@@ -293,7 +293,7 @@
             "name": "oe_test_ethtool_01"
         },
         {
-            "name": "oe_test_firewalld"
+            "name": "oe_test_firewalld_server"
         },
         {
             "name": "oe_test_glibc_getaddrinfo_01"
@@ -741,6 +741,15 @@
         },
 	{
             "name": "oe_test_user_debug_iotop_SCEN_01"
+        },
+        {
+	     "name": "oe_test_sed_001"
+        },
+        {
+	     "name": "oe_test_xz"
+        },
+	 {
+	     "name": "oe_test_tr"
         }
     ]
 }
