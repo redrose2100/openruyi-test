@@ -566,6 +566,9 @@
         },
         {
             "name": "oe_test_vim"
+        },
+        {
+            "name": "oe_test_basename"
         }
     ]
 }
