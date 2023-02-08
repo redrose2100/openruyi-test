@@ -14,6 +14,9 @@
             "name": "oe_test_cd_002"
         },
         {
+            "name": "oe_test_redis"
+        },
+        {
             "name": "oe_test_chattr"
         },
         {
