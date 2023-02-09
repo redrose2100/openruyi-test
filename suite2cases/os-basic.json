@@ -572,6 +572,9 @@
         },
         {
             "name": "oe_test_groff"
+        },
+        {
+            "name": "oe_test_whatis"
         }
     ]
 }
