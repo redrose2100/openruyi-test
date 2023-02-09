@@ -753,7 +753,10 @@
         },
 	 {
 	     "name": "oe_test_tr"
-        }
+        },
+	{
+	     "name": "oe_test_libcap"
+	}
     ]
 }
 
