@@ -76,6 +76,7 @@ function run_test() {
 function post_test() {
     # clean env
     LOG_INFO "cleanup etmem test env"
+    rm -f ./config_project.yaml ./config_slide_engine.yaml ./config_slide_task.yaml
     killall etmemd
 }
 main "$@"
