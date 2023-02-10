@@ -1,0 +1,19 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/etmem",
+    "cases": [
+        {
+            "name": "oe_test_etmem_slide_engine_function"
+        },
+        {
+            "name": "oe_test_etmemd_param_function"
+        },
+        {
+            "name": "oe_test_etmemd_reliability_function"
+        },
+        {
+            "name": "oe_test_one_etmemd_add_many_task"
+        }
+    ]
+}
+
+
