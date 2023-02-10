@@ -1,0 +1,6 @@
+[project]
+name=etmemtest_slide
+loop=3
+interval=1
+sleep=3
+scan_type=page
