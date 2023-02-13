@@ -9,6 +9,9 @@
     },
     {
       "name": "oe_test_binutils_strip"
+    },
+    {
+      "name": "oe_test_binutils_addr2line"
     }
   ]
 }
