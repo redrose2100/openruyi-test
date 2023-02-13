@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/nspr_001",
+    "path": "$OET_PATH/testcases/cli-test/nspr",
     "cases": [
         {
             "name": "oe_test_nspr_001"
