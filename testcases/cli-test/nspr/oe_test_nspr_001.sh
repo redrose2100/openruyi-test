@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   pengrui
 # @Contact   :   pengrui@uniontech.com
-# @Date      :   2023.2.10
+# @Date      :   2023.2.13
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-nspr
 # ############################################
@@ -36,7 +36,7 @@ PR_LogPrint("2021年11月08日 UOS 10:40:35");
 return 0;
 }
 EOF
-    DNF_INASTALL nspr-devel
+    DNF_INASTALL "nspr-devel"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -50,15 +50,13 @@ function run_test() {
     ./test_nspr1
     test -f /root/nspr_log.log
     CHECK_RESULT $? 0 0 "Generate log fail "
-    cat /root/nspr_log.log | grep "this is a test"
+    grep "this is a test" /root/nspr_log.log |
     CHECK_RESULT $? 0 0 "information is error"   
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf /tmp/test_nspr1
-    rm -rf /tmp/test_nspr1.cpp
-    rm -rf /root/nspr_log.log
+    rm -rf /tmp/test_nspr1 test_nspr1.cpp /root/nspr_log.log
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
