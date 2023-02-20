@@ -578,6 +578,9 @@
         },
         {
             "name": "oe_test_auditc_01"
+        },
+        {
+            "name": "oe_test_libunistring"
         }
     ]
 }
