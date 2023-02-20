@@ -581,6 +581,9 @@
         },
         {
             "name": "oe_test_gmp"
+        },
+        {
+            "name": "oe_test_libffi.sh"
         }
     ]
 }
