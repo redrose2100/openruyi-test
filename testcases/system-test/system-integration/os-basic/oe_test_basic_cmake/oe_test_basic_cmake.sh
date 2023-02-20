@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cmake --version
+    cmake --version | grep 3.16.5 
     CHECK_RESULT $? 0 0 "Error, please check 'cmake'"
 
     cat > main.c << EOF
