@@ -1,0 +1,18 @@
+#!/usr/bin/hivexsh -f
+
+load minimal
+ls
+add test0
+add test1
+cd test0
+del
+cd test1
+setval 2
+@
+string:test
+A
+string:abcd
+lsval
+commit modified_01
+close
+exit

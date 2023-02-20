@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gimp-tips>
+
+  <tip level="start">
+    <_welcome>
+      <big>hello, i am xml1</big>
+    </_welcome>  
+    <_welcome>
+      <big>hello, i am xml2</big>
+    </_welcome> 
+    <_welcome>
+      <big>hello, i am xml3</big>
+    </_welcome> 
+    <_welcome>
+      <big>hello, i am xml4</big>
+    </_welcome> 
+    <_welcome>
+      <big>hello, i am xml5</big>
+    </_welcome> 
+  </tip>   
+
+</gimp-tips>

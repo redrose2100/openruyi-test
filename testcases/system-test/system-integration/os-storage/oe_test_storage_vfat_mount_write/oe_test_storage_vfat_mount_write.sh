@@ -31,9 +31,9 @@ function run_test() {
     echo -e "n\np\n1\n\n+1200M\np\nw\n" | fdisk /dev/${local_disk}
     CHECK_RESULT $?
     SLEEP_WAIT 2
-    mkfs -t vfat "/dev/${local_disk}"
+    mkfs -t vfat "/dev/${local_disk}1"
     CHECK_RESULT $?
-    mount "/dev/${local_disk}" /mnt
+    mount "/dev/${local_disk}1" /mnt
     dd if=/dev/zero of=/mnt/test.img bs=1M count=1024 oflag=direct
     ls /mnt/test.img
     CHECK_RESULT $?

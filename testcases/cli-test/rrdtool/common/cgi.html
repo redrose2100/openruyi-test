@@ -1,0 +1,13 @@
+<HTML>
+<HEAD><TITLE>RRDCGI Demo</TITLE></HEAD>
+<BODY>
+<H1>RRDCGI Example Page</H1>
+<P>
+    <RRD::GRAPH
+                ./speed.png  --lazy --start 920804400 --end 920808000 --title="Temperatures"
+                DEF:myspeed=./common/test.rrd:speed:AVERAGE
+                LINE2:myspeed#FF0000:"D. Celsius">
+
+</P>
+</BODY>
+</HTML>

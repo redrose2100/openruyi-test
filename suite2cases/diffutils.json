@@ -1,0 +1,12 @@
+{
+  "path": "$OET_PATH/testcases/cli-test/diffutils",
+  "cases": [
+    {
+      "name": "oe_test_diffutils_001"
+    },
+    {
+      "name": "oe_test_diffutils_002"
+    }
+  ]
+}
+

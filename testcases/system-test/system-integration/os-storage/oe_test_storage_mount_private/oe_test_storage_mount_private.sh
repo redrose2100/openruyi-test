@@ -33,9 +33,9 @@ p
 +200M
 w
 EOF
-    mkfs.ext2 -F /dev/"${local_disk1}"
+    mkfs.ext2 -F /dev/"${local_disk}1"
     sleep 2
-    mkfs.ext2 -F /dev/"${local_disk2}"
+    mkfs.ext2 -F /dev/"${local_disk}2"
     sleep 2
     udevadm settle
     LOG_INFO "Environmental preparation is over."
@@ -51,7 +51,7 @@ function run_test() {
     CHECK_RESULT $?
     test -d /media/cdrom || mkdir -p /media/cdrom
     CHECK_RESULT $?
-    mount /dev/"${local_disk1}" /media/cdrom
+    mount /dev/"${local_disk}1" /media/cdrom
 
     CHECK_RESULT $?
     echo "test" >/media/cdrom/test
@@ -61,7 +61,7 @@ function run_test() {
     CHECK_RESULT $(find /mnt/cdrom | wc -l) 1
     test -d /mnt/flashdisk || mkdir -p /mnt/flashdisk
     CHECK_RESULT $?
-    mount /dev/"${local_disk2}" /mnt/flashdisk
+    mount /dev/"${local_disk}2" /mnt/flashdisk
     CHECK_RESULT $?
     echo "test" >/mnt/flashdisk/test
     CHECK_RESULT $?
