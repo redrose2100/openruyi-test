@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   xiechangyan1
 # @Contact   :   xiechangyan@uniontech.com
-# @Date      :   2022-01-09
+# @Date      :   2023-01-09
 # @License   :   Mulan PSL v2
 # @Desc      :   Test use cmake
 # ############################################
@@ -61,7 +61,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to clean the test environment."
-    cd .. && rm -rf test/
+    rm -rf main.c CMakeLists.txt
     DNF_REMOVE
     LOG_INFO "End to clean the test environment."
 }
