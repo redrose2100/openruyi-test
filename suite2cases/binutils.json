@@ -15,6 +15,9 @@
     },
     {
       "name": "oe_test_binutils_ar"
+    },
+    {
+      "name": "oe_test_binutils_nm"
     }
   ]
 }
