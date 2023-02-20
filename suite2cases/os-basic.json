@@ -526,6 +526,8 @@
             "name": "oe_test_basic_set_permissions"
         },
         {
+            "name": "oe_test_gmp"
+        },
             "name": "oe_test_patch"
         },
         {
