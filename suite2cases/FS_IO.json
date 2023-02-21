@@ -97,6 +97,36 @@
         },
         {
             "name": "oe_test_FSIO_open_wo_create_file"
+        },
+        {
+            "name": "oe_test_FSIO_page_cache"
+        },
+        {
+            "name": "oe_test_FSIO_prw_file"
+        },
+        {
+            "name": "oe_test_FSIO_read_larger_filesize"
+        },
+        {
+            "name": "oe_test_FSIO_readahead"
+        },
+        {
+            "name": "oe_test_FSIO_rw_file_lseek_cur"
+        },
+        {
+            "name": "oe_test_FSIO_rw_file_lseek_end"
+        },
+        {
+            "name": "oe_test_FSIO_rw_file_lseek_set"
+        },
+        {
+            "name": "oe_test_FSIO_splice"
+        },
+        {
+            "name": "oe_test_FSIO_sync_dirty_page"
+        },
+        {
+            "name": "oe_test_FSIO_truncate"
         }
     ]
 }
