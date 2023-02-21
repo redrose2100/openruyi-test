@@ -584,6 +584,9 @@
         },
         {
             "name": "oe_test_libffi"
+        },
+        {
+            "name": "oe_test_make"
         }
     ]
 }
