@@ -80,11 +80,6 @@ function run_test() {
   guestunmount /mnt
   LOG_INFO "==================11=================="
 
-  guestmount --no-fork -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
-  CHECK_RESULT $? 0 0 "Check guestmount --no-fork failed"
-  guestunmount /mnt
-  LOG_INFO "==================12=================="
-
   guestmount -n -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount -n failed"
   guestunmount /mnt
@@ -124,6 +119,12 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Check guestmount -x failed"
   guestunmount /mnt
   LOG_INFO "==================20=================="
+
+
+  guestmount --no-fork -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt &
+  CHECK_RESULT $? 0 0 "Check guestmount --no-fork failed"
+  guestunmount /mnt
+  LOG_INFO "==================12=================="
 
   LOG_INFO "End to run test."
 }
