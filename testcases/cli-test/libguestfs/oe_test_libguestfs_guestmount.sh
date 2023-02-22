@@ -47,13 +47,12 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Check guestmount --echo-keys failed"
   guestunmount /mnt
 
-  guestmount --format=raw -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  guestmount --format=qcow2 -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount --format failed"
   guestunmount /mnt
 
   guestmount --fuse-help -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt 2>&1 | grep 'usage: guestmount'
   CHECK_RESULT $? 0 0 "Check guestmount --fuse-help failed"
-  guestunmount /mnt
 
   guestmount --help | grep 'guestmount: FUSE module for libguestfs'
   CHECK_RESULT $? 0 0 "Check guestmount --help failed"
