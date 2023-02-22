@@ -19,65 +19,98 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    
-    DNF_INSTALL libguestfs
-    touch file.txt
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL libguestfs
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
+  LOG_INFO "Start to run test."
 
+  guestfish -h | grep '命令'
+  CHECK_RESULT $? 0 0 "Check guestfish -h failed"
 
+  guestfish -h cat | grep 'cat'
+  CHECK_RESULT $? 0 0 "Check guestfish -h cat failed"
 
+  guestfish --csh -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --csh failed"
 
-    guestfish -h ｜ grep '命令'
-    guestfish -h cat ｜ grep 'cat'
-    guestfish --csh -a 4.img -i cat /etc/group
-    guestfish -c test:///default -a 4.img -i cat /etc/group
-    guestfish  -d vm4 -i cat /etc/group
-    guestfish --echo-keys -a 4.img -i cat /etc/group
-    echo "--help" > file.txt
-    guestfish -f file.txt -a 4.img -i cat /etc/group
-    guestfish --format=qcow2 -a 4.img -i cat /etc/group
-    guestfish --help
-    guestfish --key ID:key:KEY_STRING -a 4.img -i cat /etc/group
-    guestfish --keys-from-stdin -a 4.img -i cat /etc/group
-    guestfish --listen
-    guestfish -N fs:ext4
-    guestfish -n -a 4.img -i cat /etc/group
+  guestfish -c test:///default -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish -c failed"
 
-    guestfish --no-dest-paths -a 4.img -i cat /etc/group
-    guestfish --pipe-error -a 4.img -i cat /etc/group
-    guestfish --progress-bars -a 4.img -i cat /etc/group
-    guestfish --no-progress-bars -a 4.img -i cat /etc/group
-    guestfish --selinux -a 4.img -i cat /etc/group
+  guestfish -d vm4 -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish -d failed"
 
+  guestfish --echo-keys -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --echo-keys failed"
 
-    guestfish --ro -a 4.img -i cat /etc/group
+  echo "--help" >file.txt
+  guestfish -f file.txt -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish -f failed"
 
-    guestfish -v -a 4.img -i cat /etc/group
+  guestfish --format=qcow2 -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --format failed"
 
+  guestfish --help 2>&1 | grep 'guest filesystem shell'
+  CHECK_RESULT $? 0 0 "Check guestfish --help failed"
 
-    guestfish -V 2>&1 | grep $(rpm  -q libguestfs --queryformat '%{version}\n')
-    guestfish --rw -a 4.img -i cat /etc/group
-    guestfish -x -a 4.img -i cat /etc/group
+  guestfish --key ID:key:KEY_STRING -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --key failed"
 
+  guestfish --keys-from-stdin -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --keys-from-stdin failed"
 
+  guestfish --listen
+  CHECK_RESULT $? 0 0 "Check guestfish --listen failed"
 
+  guestfish -N fs:ext4
+  CHECK_RESULT $? 0 0 "Check guestfish -N failed"
 
-    guestfish -h 2>&1 | grep 'help'
-    CHECK_RESULT $? 0 0 "Check guestfish -h failed"
+  guestfish -n -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish -n failed"
 
-    LOG_INFO "End of the test."
+  guestfish --no-dest-paths -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --no-dest-paths failed"
+
+  guestfish --pipe-error -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --pipe-error failed"
+
+  guestfish --progress-bars -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --progress-bars failed"
+
+  guestfish --no-progress-bars -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --no-progress-bars failed"
+
+  guestfish --selinux -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --selinux failed"
+
+  guestfish --ro -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --ro failed"
+
+  guestfish -v -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish -v failed"
+
+  guestfish -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+  CHECK_RESULT $? 0 0 "Check guestfish -V failed"
+
+  guestfish --rw -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish --rw failed"
+
+  guestfish -x -a 4.img -i cat /etc/group
+  CHECK_RESULT $? 0 0 "Check guestfish -x failed"
+
+  guestfish -h 2>&1 | grep 'help'
+  CHECK_RESULT $? 0 0 "Check guestfish -h failed"
+
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    rm -rf file*
-    DNF_INSTALL
-    LOG_INFO "Finish to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
+  rm -rf file*
+  DNF_INSTALL
+  LOG_INFO "Finish to restore the test environment."
 }
 
 main $@

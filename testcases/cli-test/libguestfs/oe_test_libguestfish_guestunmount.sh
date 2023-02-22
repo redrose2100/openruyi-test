@@ -19,30 +19,29 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libguestfs
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL libguestfs
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
+  LOG_INFO "Start to run test."
 
+  guestunmount --help | grep 'guestunmount'
+  guestunmount -q /mnt
+  guestunmount --no-retry /mnt/
+  guestunmount --retry=5 /boot/efi/
+  guestunmount -v /mnt
+  guestunmount -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+  CHECK_RESULT $? 0 0 "Check guestunmount -V failed"
 
-    guestunmount  --help | grep 'guestunmount'
-    guestunmount -q /mnt
-    guestunmount --no-retry /mnt/
-    guestunmount --retry=5 /boot/efi/
-    guestunmount -v /mnt
-    guestunmount -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
-    CHECK_RESULT $? 0 0 "Check guestunmount -V failed"
-
-    LOG_INFO "End of the test."
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    DNF_INSTALL
-    LOG_INFO "Finish to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
+  DNF_INSTALL
+  LOG_INFO "Finish to restore the test environment."
 }
 
 main $@
