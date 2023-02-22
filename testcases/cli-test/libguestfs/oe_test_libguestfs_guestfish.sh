@@ -109,6 +109,8 @@ function run_test() {
 function post_test() {
   LOG_INFO "Start to restore the test environment."
   rm -rf file*
+  ps -ef | grep guest | grep -v grep  | awk '{print $2}' | xargs kill -9
+  ps -ef | grep virt | grep -v grep  | awk '{print $2}' | xargs kill -9
   DNF_INSTALL
   LOG_INFO "Finish to restore the test environment."
 }

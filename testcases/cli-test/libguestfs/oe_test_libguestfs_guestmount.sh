@@ -27,33 +27,96 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  guestmount -a 1.img -m /dev/sda1 --ro /mnt
-  guestmount -c test:///default -a 1.img -m /dev/sda --ro /mnt
-  guestmount -a 1.img --dir-cache-timeout 5 -m /dev/sda1 --ro /mnt
-  guestmount -d vm1 -i --ro /mnt
-  guestmount -a 1.img --echo-keys -m /dev/sda1 --ro /mnt
-  guestmount --format=raw -a 1.img -m /dev/sda1 --ro /mnt
-  guestmount --fuse-help -a 1.img -m /dev/sda1 --ro /mnt 2>&1 | grep 'usage: guestmount'
-  guestmount -d vm1 -i --ro /mnt
-  guestmount --help | grep 'guestmount: FUSE module for libguestfs'
-
-  guestmount -a 1.img --key ID:key:KEY_STRING -m /dev/sda1 --ro /mnt
-  guestmount -a 1.img --echo-keys -m /dev/sda1 --ro /mnt
-  bguestmount --live -d vm106 -m /dev/sda1 /mnt
-  guestmount -a 1.img -m /dev/sda1 --ro /mnt
-  guestmount --no-fork -a 1.img -m /dev/sda1 --ro /mnt
-  guestmount -n -a 1.img -m /dev/sda1 --ro /mnt
-  guestmount -a 1.img -m /dev/sda1 --ro /mnt -o allow_other
-  guestmount --pid-file pidfile.txt -a 1.img -m /dev/sda1 --ro /mnt
-  guestmount -a 1.img -m /dev/sda1 --ro /mnt
-  guestmount --selinux -a 1.img -m /dev/sda1 --ro /mnt
-
-  guestmount -v -a 1.img -m /dev/sda1 --ro /mnt
-  guestmount -V | grep $(rpm -q libguestfs --queryformat '%{version}\n') 2>&1
+  guestmount -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount -V failed"
-  guestmount -a 1.img -m /dev/sda1 --rw /mnt
-  guestmount -a 1.img -x -m /dev/sda1 --ro /mnt
+  guestunmount /mnt
 
+  guestmount -c test:///default -a /home/kvm/images/vm3_3.img -m /dev/sda --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -a /home/kvm/images/vm3_3.img --dir-cache-timeout 5 -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -d vm1 -i --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -a /home/kvm/images/vm3_3.img --echo-keys -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount --format=raw -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount --fuse-help -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt 2>&1 | grep 'usage: guestmount'
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -d vm1 -i --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount --help | grep 'guestmount: FUSE module for libguestfs'
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -a /home/kvm/images/vm3_3.img --key ID:key:KEY_STRING -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -a /home/kvm/images/vm3_3.img --echo-keys -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount --live -d vm3_3 -m /dev/sda1 /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount --no-fork -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -n -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt -o allow_other
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount --pid-file pidfile.txt -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount --selinux -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -v -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -a /home/kvm/images/vm3_3.img -m /dev/sda1 --rw /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
+  guestunmount /mnt
+
+  guestmount -a /home/kvm/images/vm3_3.img -x -m /dev/sda1 --ro /mnt
+  CHECK_RESULT $? 0 0 "Check guestmount -V failed"
   guestunmount /mnt
 
   LOG_INFO "End to run test."
@@ -61,9 +124,8 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "Start to restore the test environment."
-  sudo umount ./CentOS-7-x86_64-Minimal-2009.img
-  sudo umount /mnt
-  rm -rf CentOS-7-x86_64-Minimal-2009.img.*
+  ps -ef | grep guest | grep -v grep | awk '{print $2}' | xargs kill -9
+  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   DNF_INSTALL
   LOG_INFO "Finish to restore the test environment."
 }
