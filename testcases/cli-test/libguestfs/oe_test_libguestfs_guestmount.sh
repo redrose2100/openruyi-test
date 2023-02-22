@@ -31,7 +31,7 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Check guestmount -a -m --ro failed"
   guestunmount /mnt
 
-  guestmount -c test:///default -a /home/kvm/images/vm3_3.img -m /dev/sda --ro /mnt
+  guestmount -c test:///default -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount -c failed"
   guestunmount /mnt
 
@@ -39,7 +39,7 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Check guestmount --dir-cache-timeout failed"
   guestunmount /mnt
 
-  guestmount -d vm1 -i --ro /mnt
+  guestmount -d vm3_3 -i --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount -d failed"
   guestunmount /mnt
 
@@ -57,7 +57,6 @@ function run_test() {
 
   guestmount --help | grep 'guestmount: FUSE module for libguestfs'
   CHECK_RESULT $? 0 0 "Check guestmount --help failed"
-
 
   guestmount -a /home/kvm/images/vm3_3.img --key ID:key:KEY_STRING -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount --key failed"
