@@ -121,7 +121,7 @@ function run_test() {
   guestunmount /mnt
   LOG_INFO "==================19=================="
 
-  guestmount --no-fork -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt &
+  guestmount --no-fork -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount --no-fork failed"
   guestunmount /mnt
   LOG_INFO "==================12=================="
@@ -131,9 +131,10 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "Start to restore the test environment."
-  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   virsh destroy centeros-2003
   virsh undefine centeros-2003 --nvram
+
+  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   DNF_INSTALL
   LOG_INFO "Finish to restore the test environment."
 }

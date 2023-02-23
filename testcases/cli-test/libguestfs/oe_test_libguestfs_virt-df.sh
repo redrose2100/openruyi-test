@@ -19,45 +19,75 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libguestfs
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL libguestfs
+
+  wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+
+  mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
+
+  virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
+
+  virsh destroy centeros-2003
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
-    
-    
-    
-    virt-df -a 1.img
-    virt-df -c test:///default  -a 1.img
-    virt-df --csv -a 1.img
-    virt-df -d vm1
-    virt-df --format=raw -a 1.img
-    virt-df -h 1.img
-    virt-df --help
-    virt-df -i 1.img
-    virt-df --one-per-guest 1.img
-    virt-df -P 2 1.img
-    virt-df --help 2>&1 | grep 'virt-df'
-    CHECK_RESULT $? 0 0 "Check guestunmount virt-df --help failed"
-    
-    virt-df -v 1.img
+  LOG_INFO "Start to run test."
 
-    virt-df -V 2>&1 ｜ grep  $(rpm -q libguestfs --queryformat '%{version}\n') 
-    virt-df -x 1.img
+  virt-df -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df -a failed"
 
-    
-    
-    
-    
-    LOG_INFO "End of the test."
+  virt-df -c test:///default -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df -c failed"
+
+  virt-df --csv -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df --csv failed"
+
+  virt-df -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df -d failed"
+
+  virt-df --format=raw -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df --format failed"
+
+  virt-df -h /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df -h failed"
+
+  virt-df -i /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df -i failed"
+
+  virt-df --one-per-guest /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df --one-per-guest failed"
+
+  virt-df -P 2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df -P failed"
+
+  virt-df --help 2>&1 | grep 'virt-df'
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df --help failed"
+
+  virt-df -v /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df -v failed"
+
+  virt-df -V | grep $(rpm -q libguestfs --queryformat '%{version}\n') 2>&1
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df -V failed"
+
+  virt-df -x /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check guestunmount virt-df -x failed"
+
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    DNF_INSTALL
-    LOG_INFO "Finish to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
+
+  virsh destroy centeros-2003
+  virsh destroy centeros-2003-1
+  virsh undefine centeros-2003 --nvram
+  virsh undefine centeros-2003-1 --nvram
+  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
+  DNF_INSTALL
+
+  LOG_INFO "Finish to restore the test environment."
 }
 
 main $@

@@ -19,28 +19,41 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libguestfs
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL libguestfs
+
+  wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+
+  mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
+
+  virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
+
+  virsh destroy centeros-2003
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
+  LOG_INFO "Start to run test."
 
-    libguestfs-test-tool --help 2>&1 | grep 'libguestfs-test-tool'
-    CHECK_RESULT $? 0 0 "Check guestunmount --help failed"
-    libguestfs-test-tool --qemu /usr/bin/qemu-kvm
-    libguestfs-test-tool -t 100
-    libguestfs-test-tool --version  2>&1 ｜ grep $(rpm -q libguestfs --queryformat '%{version}\n')
+  libguestfs-test-tool --help 2>&1 | grep 'libguestfs-test-tool'
+  CHECK_RESULT $? 0 0 "Check libguestfs-test-tool --help failed"
+  libguestfs-test-tool --qemu /usr/bin/qemu-kvm
+  CHECK_RESULT $? 0 0 "Check libguestfs-test-tool --qemu failed"
+  libguestfs-test-tool -t 100
+  CHECK_RESULT $? 0 0 "Check libguestfs-test-tool -t failed"
+  libguestfs-test-tool --version 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+  CHECK_RESULT $? 0 0 "Check libguestfs-test-tool --version failed"
 
-
-    LOG_INFO "End of the test."
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    DNF_INSTALL
-    LOG_INFO "Finish to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
+  virsh destroy centeros-2003
+  virsh undefine centeros-2003 --nvram
+  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
+  DNF_INSTALL
+  LOG_INFO "Finish to restore the test environment."
 }
 
 main $@

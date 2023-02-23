@@ -19,30 +19,51 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libguestfs
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL libguestfs
+
+  wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+
+  mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
+
+  virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
+
+  virsh destroy centeros-2003
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
-libguestfs-boot-analysis --help 2>&1 | grep 'boot-analysis: Trace and'
-CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis --help failed"
-libguestfs-boot-analysis --append cat
-libguestfs-boot-analysis --colour
-libguestfs-boot-analysis -m 1024
-libguestfs-boot-analysis --smp 1
-libguestfs-boot-analysis -v
+  LOG_INFO "Start to run test."
+  libguestfs-boot-analysis --help 2>&1 | grep 'boot-analysis: Trace and'
+  CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis --help failed"
+
+  libguestfs-boot-analysis --append cat
+  CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis --append failed"
+
+  libguestfs-boot-analysis --colour
+  CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis --colour failed"
+
+  libguestfs-boot-analysis -m 1024
+  CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis -m failed"
+
+  libguestfs-boot-analysis --smp 1
+  CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis --smp failed"
+
+  libguestfs-boot-analysis -v
+  CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis -v failed"
 
 
-    LOG_INFO "End of the test."
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-     ps -ef | grep libguestfs | grep -v grep  | awk '{print $2}' | xargs kill -9
-    DNF_INSTALL
-    LOG_INFO "Finish to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
+  virsh destroy centeros-2003
+  virsh undefine centeros-2003 --nvram
+
+  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
+  DNF_INSTALL
+  LOG_INFO "Finish to restore the test environment."
 }
 
 main $@
