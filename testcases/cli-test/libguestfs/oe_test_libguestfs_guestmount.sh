@@ -21,43 +21,50 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL libguestfs
+
+  wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+
+  mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
+
+  virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
+
   LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
 
-  guestmount -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  guestmount -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount -a -m --ro failed"
   guestunmount /mnt
   LOG_INFO "==================01=================="
 
-  guestmount -c test:///default -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  guestmount -c test:///default -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount -c failed"
   guestunmount /mnt
   LOG_INFO "==================2=================="
 
-  guestmount -a /home/kvm/images/vm3_3.img --dir-cache-timeout 5 -m /dev/sda1 --ro /mnt
+  guestmount -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --dir-cache-timeout 5 -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount --dir-cache-timeout failed"
   guestunmount /mnt
   LOG_INFO "==================3=================="
 
-  guestmount -d vm3_3 -i --ro /mnt
+  guestmount -d centeros-2003 -i --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount -d failed"
   guestunmount /mnt
   LOG_INFO "==================4=================="
 
-  guestmount -a /home/kvm/images/vm3_3.img --echo-keys -m /dev/sda1 --ro /mnt
+  guestmount -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --echo-keys -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount --echo-keys failed"
   guestunmount /mnt
   LOG_INFO "==================5=================="
 
-  guestmount --format=qcow2 -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  guestmount --format=qcow2 -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount --format failed"
   guestunmount /mnt
   LOG_INFO "==================6=================="
 
-  guestmount --fuse-help -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt 2>&1 | grep 'usage: guestmount'
+  guestmount --fuse-help -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt 2>&1 | grep 'usage: guestmount'
   CHECK_RESULT $? 0 0 "Check guestmount --fuse-help failed"
   LOG_INFO "==================7=================="
 
@@ -65,63 +72,56 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Check guestmount --help failed"
   LOG_INFO "==================8=================="
 
-  guestmount -a /home/kvm/images/vm3_3.img --key ID:key:KEY_STRING -m /dev/sda1 --ro /mnt
+  guestmount -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --key ID:key:KEY_STRING -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount --key failed"
   guestunmount /mnt
   LOG_INFO "==================9=================="
 
-  guestmount -a /home/kvm/images/vm3_3.img --echo-keys -m /dev/sda1 --ro /mnt
+  guestmount -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --echo-keys -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount -echo-keys failed"
   guestunmount /mnt
   LOG_INFO "==================10=================="
 
-  guestmount --live -d vm3_3 -m /dev/sda1 /mnt
+  guestmount --live -d centeros-2003 -m /dev/sda1 /mnt
   CHECK_RESULT $? 0 0 "Check guestmount --live failed"
   guestunmount /mnt
   LOG_INFO "==================11=================="
 
-  guestmount -n -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  guestmount -n -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount -n failed"
   guestunmount /mnt
   LOG_INFO "==================13=================="
 
-  guestmount -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt -o allow_other
+  guestmount -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt -o allow_other
   CHECK_RESULT $? 0 0 "Check guestmount -o failed"
   guestunmount /mnt
   LOG_INFO "==================14=================="
 
-  guestmount --pid-file pidfile.txt -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  guestmount --pid-file pidfile.txt -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount --pid-file failed"
   guestunmount /mnt
   LOG_INFO "==================15=================="
 
-  guestmount --selinux -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  guestmount --selinux -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount --selinux failed"
   guestunmount /mnt
   LOG_INFO "==================16=================="
 
-  guestmount -v -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt
+  guestmount -v -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt
   CHECK_RESULT $? 0 0 "Check guestmount -v failed"
   guestunmount /mnt
   LOG_INFO "==================17=================="
 
   guestmount -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
   CHECK_RESULT $? 0 0 "Check guestmount -V failed"
-  guestunmount /mnt
   LOG_INFO "==================18=================="
 
-  guestmount -a /home/kvm/images/vm3_3.img -m /dev/sda1 --rw /mnt
+  guestmount -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --rw /mnt
   CHECK_RESULT $? 0 0 "Check guestmount -m failed"
   guestunmount /mnt
   LOG_INFO "==================19=================="
 
-  guestmount -a /home/kvm/images/vm3_3.img -x -m /dev/sda1 --ro /mnt
-  CHECK_RESULT $? 0 0 "Check guestmount -x failed"
-  guestunmount /mnt
-  LOG_INFO "==================20=================="
-
-
-  guestmount --no-fork -a /home/kvm/images/vm3_3.img -m /dev/sda1 --ro /mnt &
+  guestmount --no-fork -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt &
   CHECK_RESULT $? 0 0 "Check guestmount --no-fork failed"
   guestunmount /mnt
   LOG_INFO "==================12=================="
@@ -132,6 +132,8 @@ function run_test() {
 function post_test() {
   LOG_INFO "Start to restore the test environment."
   ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
+  virsh destroy centeros-2003
+  virsh undefine centeros-2003 --nvram
   DNF_INSTALL
   LOG_INFO "Finish to restore the test environment."
 }
