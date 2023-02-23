@@ -1,4 +1,4 @@
-# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -9,41 +9,45 @@
 ####################################
 # @Author    	:   chen zhenghao
 # @Contact   	:   zhenghao@isrc.iscas.ac.cn
-# @Date      	:   2022-11-7
+# @Date      	:   2023-2-23
 # @License   	:   Mulan PSL v2
-# @Desc      	:   the test of byacc package
+# @Desc      	:   the test of ckbcomp package
 ####################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL byacc
-    test -d tmp || mkdir tmp
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start to prepare the test environment."
+
+    LOG_INFO "No pkgs need to install."
+
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
 
-    LOG_INFO "Start testing..."
+     LOG_INFO "Start to run test."
 
-    #生成XKB紧凑键图
+    
     ckbcomp -compact ./common/symbolstest 2>&1 | grep "keycode 101"
     CHECK_RESULT $? 0 0 "Failed option: -compact"
-    #生成FreeBSD键图
+    
     ckbcomp -freebsd ./common/symbolstest | grep "#"
     CHECK_RESULT $? 0 0 "Failed option: -freebsd"
-    #为测试文件指定控制码，bs指定符合vt100的行为
+    
     ckbcomp -backspace bs ./common/symbolstest 2>&1 | grep "Next Scroll_Forward"
     CHECK_RESULT $? 0 0 "Failed option: -backspace"
+
+    LOG_INFO "End to run test."
 }
 
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
-    DNF_REMOVE
-    rm -rf ./tmp
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "Start to restore the test environment."
+
+    LOG_INFO "Nothing to do."
+
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
