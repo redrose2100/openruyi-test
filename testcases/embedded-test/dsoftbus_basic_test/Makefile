@@ -1,4 +1,4 @@
-SUBDIRS=${shell ls | grep -v "Makefile"}
+SUBDIRS=${shell ls | grep -v "Makefile" | grep -v "comm_lib_single.sh" | grep -v "comm_lib_pair.sh"}
 
 all: subdirs
 

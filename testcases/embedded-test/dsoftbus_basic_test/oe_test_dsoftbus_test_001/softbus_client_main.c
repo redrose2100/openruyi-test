@@ -1,3 +1,6 @@
+/**
+ * @ttitle:测试正常情况下，进行可信设备添加后，两个设备之间自动组网、连接、通信的场景
+ */
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
