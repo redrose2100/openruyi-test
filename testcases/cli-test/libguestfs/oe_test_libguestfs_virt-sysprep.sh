@@ -19,96 +19,168 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libguestfs
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL libguestfs
+
+  wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+
+  mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
+
+  virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --noautoconsole
+
+  virsh destroy centeros-2003
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
+  LOG_INFO "Start to run test."
 
+  virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --append-line '/etc/hosts:10.0.0.1 foo' -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep -c test:///default -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --chmod 777:/etc/a.txt -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --color -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --commands-from-file a.txt -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --copy /etc/a.txt:/opt
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --copy-in /opt/software/a.txt:/etc
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --delete /etc/b.txt
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep -n -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --echo-keys -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --edit /etc/a.txt:Str
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --enable ssh-hostkeys,udev-persistent-net -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --firstboot-command cat -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --firstboot-install PKG -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --format qcow2 -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --help 2>&1 | grep 'virt-sysprep'
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+    
+  virt-sysprep --hostname 8899 -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --key ID:key:KEY_STRING -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --keys-from-stdin -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --list-operations -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --mkdir /etc/dir -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --mount-options /mnt -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --move /etc/c.txt:/opt
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --no-logfile -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --no-network -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --no-selinux-relabel -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --operation ssh-hostkeys -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --password root:password -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --password-crypto md5 -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep -q -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --root-password password -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --run-command cat -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --scriptdir /etc/tmp -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --scrub /etc/a.txt -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --selinux-relabel -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --timezone Europe/London -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --touch /etc/a.txt -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --truncate /etc/a.txt -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --truncate-recursive /etc/ -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+    
+  virt-sysprep -v -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep --write /etc/a.txt:"hello" -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
+  virt-sysprep -x -d centeros-2003
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  
 
-virt-sysprep -a 22.img
-virt-sysprep --append-line '/etc/hosts:10.0.0.1 foo' -d vm4
-virt-sysprep -c test:///default -a 22.img
-virt-sysprep --chmod 777:/etc/a.txt -d vm4
-virt-sysprep --color -d vm4
-virt-sysprep --commands-from-file a.txt -d vm4
-virt-sysprep -a 22.img --copy /etc/a.txt:/opt
-virt-sysprep -a 22.img --copy-in /opt/software/a.txt:/etc
-virt-sysprep -d vm4
-virt-sysprep -a 22.img --delete /etc/b.txt
-
-
-
-
-virt-sysprep -n -d vm4
-virt-sysprep --echo-keys -d vm4
-virt-sysprep -a 22.img --edit /etc/a.txt:Str
-virt-sysprep --enable ssh-hostkeys,udev-persistent-net -d vm4
-virt-sysprep --firstboot-command cat -d vm4
-virt-sysprep --firstboot-install PKG -d vm4
-virt-sysprep --format qcow2 -a 22.img
-virt-sysprep --help 2>&1 | grep 'virt-sysprep'
-CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
-virt-sysprep --hostname 8899 -a 22.img
-
-
-
-virt-sysprep --key ID:key:KEY_STRING -d vm4
-virt-sysprep --keys-from-stdin -d vm4
-
-virt-sysprep --list-operations -d vm4
-virt-sysprep --mkdir /etc/dir -d vm4
-
-virt-sysprep --mount-options /mnt -d vm4
-virt-sysprep -a 22.img --move /etc/c.txt:/opt
-
-
-virt-sysprep --no-logfile -d vm4
-virt-sysprep --no-network -a 22.img
-virt-sysprep --no-selinux-relabel -d vm4
-virt-sysprep --operation ssh-hostkeys -d vm4
-virt-sysprep --password root:password -d vm22
-virt-sysprep --password-crypto md5 -d vm4
-virt-sysprep -q -d vm4
-virt-sysprep --root-password password -d vm22
-
-
-
-virt-sysprep --run-command cat -d vm4
-virt-sysprep --scriptdir /etc/tmp -d vm4
-virt-sysprep --scrub /etc/a.txt -d vm4
-virt-sysprep --selinux-relabel -d vm4
-
-
-
-virt-sysprep --timezone Europe/London -d vm4
-virt-sysprep --touch /etc/a.txt -d vm4
-virt-sysprep --truncate /etc/a.txt -d vm4
-virt-sysprep --truncate-recursive /etc/ -d vm4
-    virt-sysprep -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
-    CHECK_RESULT $? 0 0 "Check virt-sysprep -V failed"
-virt-sysprep -v -d vm4
-virt-sysprep --write /etc/a.txt:"hello" -d vm4
-virt-sysprep -x -d vm4
-
-
-
-
-
-
-
-
-
-
-    LOG_INFO "End of the test."
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    DNF_INSTALL
-    LOG_INFO "Finish to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
+  virsh destroy centeros-2003
+  virsh undefine centeros-2003 --nvram
+  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
+  DNF_INSTALL
+  LOG_INFO "Finish to restore the test environment."
 }
 
 main $@

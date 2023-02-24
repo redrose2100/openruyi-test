@@ -19,74 +19,109 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libguestfs
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL libguestfs
+
+  wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
+
+  mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
+  cp /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+
+  virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
+  truncate -r /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  truncate -s +50G /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+
+  virsh destroy centeros-2003
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
+  LOG_INFO "Start to run test."
 
-virt-resize --align-first never 2.img 2_1.img
-virt-resize --alignment 128 2.img 2_1.img
-virt-resize --color 2.img 2_1.img
-virt-resize -d 2.img 2_1.img
-virt-resize --delete /dev/sda2 2.img 2_1.img
-virt-resize -n 2.img 2_1.img
-virt-resize --expand /dev/sda2 2.img 2_1.img
-virt-resize --format qcow2 2.img 2_1.img
-    virt-resize --help | grep 'virt-resize: resize a virtual'
-    CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
-virt-resize --ignore /dev/sda2 2.img 2_1.img
+  virt-resize --align-first never /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --alignment 128 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --color /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
-virt-resize --machine-readable qcow2 2.img 2_1.img
-virt-resize --no-copy-boot-loader 2.img 2_1.img
-virt-resize --no-expand-content 2.img 2_1.img
-virt-resize --no-extra-partition  2.img 2_1.img
-virt-resize --no-sparse  2.img 2_1.img
-virt-resize --ntfsresize-force 2.img 2_1.img
-virt-resize --output-format raw 2.img 2_1.img
-virt-resize -q 2.img 2_1.img
-virt-resize -q 2.img 2_1.img
+  virt-resize -d centeros-2003 centeros-2003-1
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --delete /dev/sda2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
-virt-resize --resize-force /dev/sda1=+128K 2.img 2_1.img
-virt-resize --unknown-filesystems ignore 2.img 2_1.img
+  virt-resize -n /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
-    virt-resize -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
-    CHECK_RESULT $? 0 0 "Check virt-resize -V failed"
-virt-resize -v 2.img 2_1.img
-virt-resize -x 2.img 2_1.img
+  virt-resize --expand /dev/sda2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --format qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --help | grep 'virt-resize: resize a virtual'
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --ignore /dev/sda2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --machine-readable qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --no-copy-boot-loader /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --no-expand-content /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --no-extra-partition /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --no-sparse /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --ntfsresize-force /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --output-format raw /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize -q /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize -q /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --resize-force /dev/sda1=+128K /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize --unknown-filesystems ignore /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize -v /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
+  virt-resize -x /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
-
-
-
-    LOG_INFO "End of the test."
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    DNF_INSTALL
-    LOG_INFO "Finish to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
+  virsh destroy centeros-2003
+  virsh undefine centeros-2003 --nvram
+  virsh destroy centeros-2003-1
+  virsh undefine centeros-2003-1 --nvram
+  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
+  DNF_INSTALL
+  LOG_INFO "Finish to restore the test environment."
 }
 
 main $@
