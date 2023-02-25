@@ -118,7 +118,7 @@ function run_test() {
   guestunmount /mnt
   LOG_INFO "==================19=================="
 
-  guestmount --no-fork -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt
+  guestmount --no-fork -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -m /dev/sda1 --ro /mnt &
   CHECK_RESULT $? 0 0 "Check guestmount --no-fork failed"
   guestunmount /mnt
   LOG_INFO "==================12=================="
