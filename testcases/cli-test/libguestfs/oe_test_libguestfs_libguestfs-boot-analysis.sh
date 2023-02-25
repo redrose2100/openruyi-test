@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL libguestfs
+  DNF_INSTALL "libguestfs"
 
   wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
 
@@ -49,7 +49,7 @@ function run_test() {
   libguestfs-boot-analysis --smp 1 &
   CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis --smp failed"
 
-  libguestfs-boot-analysis -v
+  libguestfs-boot-analysis -v &
   CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis -v failed"
 
   LOG_INFO "End of the test."
