@@ -77,11 +77,11 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "Start to restore the test environment."
+  rm -rf a.txt
   virsh start centeros-2003
   virsh destroy centeros-2003
   virsh undefine centeros-2003 --nvram
-  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
-  DNF_INSTALL
+  DNF_REMOVE
   LOG_INFO "Finish to restore the test environment."
 }
 

@@ -76,7 +76,7 @@ function post_test() {
   virsh start centeros-2003
   virsh destroy centeros-2003
   virsh undefine centeros-2003 --nvram
-  DNF_INSTALL
+  DNF_REMOVE
   LOG_INFO "Finish to restore the test environment."
 }
 
