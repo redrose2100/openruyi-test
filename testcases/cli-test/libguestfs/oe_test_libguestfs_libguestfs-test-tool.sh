@@ -38,10 +38,10 @@ function run_test() {
   libguestfs-test-tool --help 2>&1 | grep 'libguestfs-test-tool'
   CHECK_RESULT $? 0 0 "Check libguestfs-test-tool --help failed"
 
-  libguestfs-test-tool --qemu /usr/bin/qemu-kvm
+  libguestfs-test-tool --qemu /usr/bin/qemu-kvm 2>&1 | grep 'TEST FINISHED OK'
   CHECK_RESULT $? 0 0 "Check libguestfs-test-tool --qemu failed"
 
-  libguestfs-test-tool -t 100
+  libguestfs-test-tool -t 100 2>&1 | grep 'TEST FINISHED OK'
   CHECK_RESULT $? 0 0 "Check libguestfs-test-tool -t failed"
 
   libguestfs-test-tool --version 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')

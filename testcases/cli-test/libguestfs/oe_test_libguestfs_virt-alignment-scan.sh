@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL libguestfs
+  DNF_INSTALL "libguestfs"
 
   wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
 
@@ -76,8 +76,8 @@ function post_test() {
   virsh start centeros-2003
   virsh destroy centeros-2003
   virsh undefine centeros-2003 --nvram
-  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   DNF_INSTALL
+  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   LOG_INFO "Finish to restore the test environment."
 }
 
