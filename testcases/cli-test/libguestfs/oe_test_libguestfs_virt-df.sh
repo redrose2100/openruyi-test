@@ -68,7 +68,7 @@ function run_test() {
   virt-df -v /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
   CHECK_RESULT $? 0 0 "Check guestunmount virt-df -v failed"
 
-  virt-df -V | grep $(rpm -q libguestfs --queryformat '%{version}\n') 2>&1
+  virt-df -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
   CHECK_RESULT $? 0 0 "Check guestunmount virt-df -V failed"
 
   virt-df -x /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
@@ -80,12 +80,12 @@ function run_test() {
 function post_test() {
   LOG_INFO "Start to restore the test environment."
   virsh start centeros-2003
+
   virsh destroy centeros-2003
-  virsh destroy centeros-2003-1
+
   virsh undefine centeros-2003 --nvram
-  virsh undefine centeros-2003-1 --nvram
-  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
-  DNF_INSTALL
+
+  DNF_REMOVE
 
   LOG_INFO "Finish to restore the test environment."
 }
