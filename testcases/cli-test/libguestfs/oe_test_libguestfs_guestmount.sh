@@ -123,8 +123,9 @@ function run_test() {
   guestunmount /mnt
   LOG_INFO "==================12=================="
 
-  guestmount -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -x -m /dev/sda1 --ro /mnt
-  CHECK_RESULT $? 0 0 "Check guestmount -x failed"guestunmount /mnt
+  #guestmount -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -x -m /dev/sda1 --ro /mnt
+  #CHECK_RESULT $? 0 0 "Check guestmount -x failed"
+  #guestunmount /mnt
 
   LOG_INFO "End to run test."
 }

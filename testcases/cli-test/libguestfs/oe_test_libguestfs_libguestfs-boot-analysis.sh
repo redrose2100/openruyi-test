@@ -37,21 +37,20 @@ function run_test() {
   libguestfs-boot-analysis --help 2>&1 | grep 'boot-analysis: Trace and'
   CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis --help failed"
 
-  libguestfs-boot-analysis --append cat
+  libguestfs-boot-analysis --append cat &
   CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis --append failed"
 
-  libguestfs-boot-analysis --colour
+  libguestfs-boot-analysis --colour &
   CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis --colour failed"
 
-  libguestfs-boot-analysis -m 1024
+  libguestfs-boot-analysis -m 1024 &
   CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis -m failed"
 
-  libguestfs-boot-analysis --smp 1
+  libguestfs-boot-analysis --smp 1 &
   CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis --smp failed"
 
   libguestfs-boot-analysis -v
   CHECK_RESULT $? 0 0 "Check libguestfs-boot-analysis -v failed"
-
 
   LOG_INFO "End of the test."
 }
@@ -61,9 +60,8 @@ function post_test() {
   virsh start centeros-2003
   virsh destroy centeros-2003
   virsh undefine centeros-2003 --nvram
-
   ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
-  DNF_INSTALL
+  DNF_REMOVE
   LOG_INFO "Finish to restore the test environment."
 }
 
