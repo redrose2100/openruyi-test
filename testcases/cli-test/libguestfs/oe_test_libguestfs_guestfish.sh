@@ -24,6 +24,7 @@ function pre_test() {
   wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
   mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
   virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
+  virsh destroy centeros-2003
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -48,7 +49,7 @@ function run_test() {
   guestfish --echo-keys -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -i cat /etc/group
   CHECK_RESULT $? 0 0 "Check guestfish --echo-keys failed"
 
-  echo "--help" > file.txt
+  echo "--help" >file.txt
   guestfish -f file.txt -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -i cat /etc/group
   CHECK_RESULT $? 0 0 "Check guestfish -f failed"
 
