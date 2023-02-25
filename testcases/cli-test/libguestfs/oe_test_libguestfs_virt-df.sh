@@ -79,7 +79,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "Start to restore the test environment."
-
+  virsh start centeros-2003
   virsh destroy centeros-2003
   virsh destroy centeros-2003-1
   virsh undefine centeros-2003 --nvram

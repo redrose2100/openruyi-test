@@ -48,7 +48,7 @@ function run_test() {
   guestfish --echo-keys -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -i cat /etc/group
   CHECK_RESULT $? 0 0 "Check guestfish --echo-keys failed"
 
-  echo "--help" >file.txt
+  echo "--help" > file.txt
   guestfish -f file.txt -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -i cat /etc/group
   CHECK_RESULT $? 0 0 "Check guestfish -f failed"
 
@@ -112,6 +112,7 @@ function run_test() {
 function post_test() {
   LOG_INFO "Start to restore the test environment."
   rm -rf file*
+  virsh start centeros-2003
   virsh destroy centeros-2003
   virsh undefine centeros-2003 --nvram
   ps -ef | grep guest | grep -v grep | awk '{print $2}' | xargs kill -9
