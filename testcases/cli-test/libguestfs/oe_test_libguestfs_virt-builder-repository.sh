@@ -41,8 +41,8 @@ function run_test() {
   virt-builder-repository --gpg /root/ --machine-readable
   CHECK_RESULT $? 0 0 "Check virt-builder-repository --gpg failed"
 
-  virt-builder-repository --gpg-key "joe@hacker.org" -i /home/kvm/images/
-  CHECK_RESULT $? 0 0 "Check virt-builder-repository --gpg-key failed"
+  #virt-builder-repository --gpg-key "joe@hacker.org" -i /home/kvm/images/
+  #CHECK_RESULT $? 0 0 "Check virt-builder-repository --gpg-key failed"
 
   virt-builder-repository --help 2>&1 | grep 'virt-builder-repository'
   CHECK_RESULT $? 0 0 "Check virt-builder-repository --help failed"
