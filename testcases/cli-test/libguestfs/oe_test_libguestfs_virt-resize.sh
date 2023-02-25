@@ -39,76 +39,74 @@ function run_test() {
   LOG_INFO "Start to run test."
 
   virt-resize --align-first never /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --align-first failed"
 
   virt-resize --alignment 128 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --alignment failed"
 
   virt-resize --color /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --color failed"
 
   virt-resize -d centeros-2003 centeros-2003-1
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize -d failed"
 
   virt-resize --delete /dev/sda2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --delete failed"
 
   virt-resize -n /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize -n failed"
 
   virt-resize --expand /dev/sda2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --expand failed"
 
   virt-resize --format qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --format failed"
 
   virt-resize --help | grep 'virt-resize: resize a virtual'
   CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
   virt-resize --ignore /dev/sda2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --ignore failed"
 
   virt-resize --machine-readable qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --machine-readable failed"
 
   virt-resize --no-copy-boot-loader /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --no-copy-boot-loader failed"
 
   virt-resize --no-expand-content /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --no-expand-content failed"
 
   virt-resize --no-extra-partition /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --no-extra-partition failed"
 
   virt-resize --no-sparse /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --no-sparse failed"
 
   virt-resize --ntfsresize-force /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --ntfsresize-force failed"
 
   virt-resize --output-format raw /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --output-format failed"
 
   virt-resize -q /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize -q failed"
 
-  virt-resize -q /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
 
   virt-resize --resize-force /dev/sda1=+128K /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --resize-force failed"
 
   virt-resize --unknown-filesystems ignore /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize --unknown-filesystems failed"
 
   virt-resize -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize -V failed"
 
   virt-resize -v /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize -v failed"
 
   virt-resize -x /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-resize --help failed"
+  CHECK_RESULT $? 0 0 "Check virt-resize -x failed"
 
   LOG_INFO "End of the test."
 }

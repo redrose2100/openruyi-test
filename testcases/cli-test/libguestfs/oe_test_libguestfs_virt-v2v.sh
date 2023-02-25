@@ -19,24 +19,24 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libguestfs
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL libguestfs
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
-    virt-v2v --help 2>&1 | grep 'virt-v2v'
-    CHECK_RESULT $? 0 0 "Check virt-v2v --help failed"
-    virt-v2v -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
-    CHECK_RESULT $? 0 0 "Check virt-copy-in -V failed"
-    LOG_INFO "End of the test."
+  LOG_INFO "Start to run test."
+  virt-v2v --help 2>&1 | grep 'virt-v2v'
+  CHECK_RESULT $? 0 0 "Check virt-v2v --help failed"
+  virt-v2v -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+  CHECK_RESULT $? 0 0 "Check virt-copy-in -V failed"
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    DNF_INSTALL
-    LOG_INFO "Finish to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
+  DNF_INSTALL
+  LOG_INFO "Finish to restore the test environment."
 }
 
 main $@

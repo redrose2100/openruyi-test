@@ -28,7 +28,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     virt-sparsify --help | grep 'virt-sparsify: sparsify'
     CHECK_RESULT $? 0 0 "Check virt-sparsify --help failed"
-    
+
     virt-sparsify -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
     CHECK_RESULT $? 0 0 "Check virt-sparsify -V failed"
     LOG_INFO "End of the test."

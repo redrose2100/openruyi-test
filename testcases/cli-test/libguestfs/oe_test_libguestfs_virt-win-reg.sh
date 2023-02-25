@@ -19,24 +19,24 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libguestfs
-    LOG_INFO "End of environmental preparation!"
+  LOG_INFO "Start environmental preparation."
+  DNF_INSTALL libguestfs
+  LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
-    virt-win-reg --help 2>&1 | grep 'virt-win-reg'
-    CHECK_RESULT $? 0 0 "Check guestunmount --help failed"
-    virt-win-reg --version | grep $(rpm -q libguestfs --queryformat '%{version}\n')
-    CHECK_RESULT $? 0 0 "Check guestunmount --version failed"
-    LOG_INFO "End of the test."
+  LOG_INFO "Start to run test."
+  virt-win-reg --help 2>&1 | grep 'virt-win-reg'
+  CHECK_RESULT $? 0 0 "Check guestunmount --help failed"
+  virt-win-reg --version | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+  CHECK_RESULT $? 0 0 "Check guestunmount --version failed"
+  LOG_INFO "End of the test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    DNF_INSTALL
-    LOG_INFO "Finish to restore the test environment."
+  LOG_INFO "Start to restore the test environment."
+  DNF_INSTALL
+  LOG_INFO "Finish to restore the test environment."
 }
 
 main $@

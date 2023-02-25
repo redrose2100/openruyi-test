@@ -36,7 +36,7 @@ function run_test() {
   LOG_INFO "Start to run test."
 
   virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -a failed"
   
   virt-sysprep --append-line '/etc/hosts:10.0.0.1 foo' -d centeros-2003
   CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
