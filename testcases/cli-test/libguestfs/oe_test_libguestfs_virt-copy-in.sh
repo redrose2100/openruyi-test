@@ -52,6 +52,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "Start to restore the test environment."
+  rm -rf a.txt
   virsh start centeros-2003
   virsh destroy centeros-2003
   virsh undefine centeros-2003 --nvram
