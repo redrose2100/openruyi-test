@@ -26,16 +26,12 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-
   virt-p2v-make-kickstart --help | grep 'virt-p2v-make-kickstart'
   CHECK_RESULT $? 0 0 "Check irt-p2v-make-kickstart --help failed"
-
   virt-p2v-make-kickstart --verbose repo
   CHECK_RESULT $? 0 0 "Check virt-p2v-make-kickstart --verbose failed"
-
   virt-p2v-make-kickstart -o output repo
   CHECK_RESULT $? 0 0 "Check virt-p2v-make-disk virt-p2v-make-kickstart -o failed"
-
   LOG_INFO "End of the test."
 }
 

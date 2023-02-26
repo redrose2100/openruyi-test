@@ -26,13 +26,10 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-
   virt-p2v-make-kiwi --help | grep 'virt-p2v-make-kiwi'
   CHECK_RESULT $? 0 0 "Check virt-p2v-make-kiwi --help failed"
-
   virt-p2v-make-kiwi -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
   CHECK_RESULT $? 0 0 "Check virt-p2v-make-kiwi -V failed"
-
   LOG_INFO "End of the test."
 }
 
