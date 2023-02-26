@@ -27,14 +27,12 @@ function pre_test() {
   mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
   cp /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
 
-  virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
+  #  virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
+  #
+  #  virt-install --name centeros-2003-1 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
 
-  virt-install --name centeros-2003-1 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
+  qemu-img create -f qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2 50G
 
-  qemu-img create -f qcow2 CentOS-7-aarch64-GenericCloud-2003-1.qcow2 50G
-
-  virsh destroy centeros-2003
-  virsh destroy centeros-2003-1
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -115,12 +113,6 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "Start to restore the test environment."
-  virsh start centeros-2003
-  virsh start centeros-2003-1
-  virsh destroy centeros-2003
-  virsh undefine centeros-2003 --nvram
-  virsh destroy centeros-2003-1
-  virsh undefine centeros-2003-1 --nvram
   DNF_REMOVE
   LOG_INFO "Finish to restore the test environment."
 }
