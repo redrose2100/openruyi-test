@@ -21,57 +21,40 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL libguestfs
-
   wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
-
   mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
-
   virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
-
   virsh destroy centeros-2003
+  echo "hello" >a.txt
+  virt-copy-in -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 a.txt /etc
+  virt-copy-in -d centeros-2003 a.txt /etc
   LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
-
-  echo "hello" >a.txt
-  virt-copy-in -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 a.txt /etc
-
   virt-cat -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount -a failed"
-
   virt-cat -c test:///default -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount -c failed"
-
-  virt-copy-in -d centeros-2003 a.txt /etc
   virt-cat -d centeros-2003 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount -d failed"
-
   virt-cat --echo-keys -d centeros-2003 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount --echo-keys failed"
-
   virt-cat --format=qcow2 -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount --format failed"
-
   virt-cat --help 2>&1 | grep "virt-cat"
   CHECK_RESULT $? 0 0 "Check guestunmount --help failed"
-
   virt-cat --key ID:key:KEY_STRING -d centeros-2003 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount --key failed"
-
   virt-cat --keys-from-stdin -d centeros-2003 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount --keys-from-stdin failed"
-
   virt-cat -v -d centeros-2003 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount -v failed"
-
   virt-cat -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
   CHECK_RESULT $? 0 0 "Check guestunmount -V failed"
-
   virt-cat -x -d centeros-2003 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount -x failed"
-
   LOG_INFO "End of the test."
 }
 
