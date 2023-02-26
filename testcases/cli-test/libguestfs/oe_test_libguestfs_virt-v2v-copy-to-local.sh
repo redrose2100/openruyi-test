@@ -37,7 +37,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "Start to restore the test environment."
-  DNF_INSTALL
+  DNF_REMOVE
   LOG_INFO "Finish to restore the test environment."
 }
 

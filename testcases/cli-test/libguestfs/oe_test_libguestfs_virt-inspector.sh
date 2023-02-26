@@ -86,7 +86,7 @@ function post_test() {
   virsh destroy centeros-2003
   virsh undefine centeros-2003 --nvram
   ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
-  DNF_INSTALL
+  DNF_REMOVE
   LOG_INFO "End to restore the test environment."
 }
 

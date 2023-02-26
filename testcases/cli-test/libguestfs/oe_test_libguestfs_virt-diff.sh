@@ -32,6 +32,7 @@ function pre_test() {
 
   virsh destroy centeros-2003
   virsh destroy centeros-2003-1
+
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -125,7 +126,7 @@ function post_test() {
   virsh destroy centeros-2003-1
   virsh undefine centeros-2003-1 --nvram
   ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
-  DNF_INSTALL
+  DNF_REMOVE
   LOG_INFO "Finish to restore the test environment."
 }
 
