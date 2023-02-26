@@ -28,10 +28,13 @@ function pre_test() {
   cp /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
 
   virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
-  truncate -r /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+
+  virt-install --name centeros-2003-1 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
+
   truncate -s +50G /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
 
   virsh destroy centeros-2003
+  virsh destroy centeros-2003-1
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -119,7 +122,6 @@ function post_test() {
   virsh destroy centeros-2003-1
   virsh undefine centeros-2003-1 --nvram
   DNF_REMOVE
-  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   LOG_INFO "Finish to restore the test environment."
 }
 
