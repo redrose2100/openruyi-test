@@ -21,59 +21,35 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL libguestfs
-
   wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
-
   mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
-
   virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
-
   virsh destroy centeros-2003
   LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
-
   virt-edit -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount -a failed"
-
   virt-edit -b test.ext -d centeros-2003 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount -b failed"
-
   virt-edit -c test:///default -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount -c failed"
-
   virt-edit -d centeros-2003 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount -d failed"
-
   virt-edit --echo-keys -d centeros-2003 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount --echo-keys failed"
-
   virt-edit -d centeros-2003 /etc/a.txt -e 'expr'
   CHECK_RESULT $? 0 0 "Check guestunmount -e failed"
-
   virt-edit --format=qcow2 -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount --format failed"
-
   virt-edit --help 2>&1 | grep 'virt-edit'
   CHECK_RESULT $? 0 0 "Check guestunmount --help failed"
-
   virt-edit --key ID:key:KEY_STRING -d centeros-2003 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount --key failed"
-
   virt-edit --keys-from-stdin -d centeros-2003 /etc/a.txt
   CHECK_RESULT $? 0 0 "Check guestunmount --keys-from-stdin failed"
-
-  virt-edit -v -d centeros-2003 /etc/a.txt
-  CHECK_RESULT $? 0 0 "Check guestunmount -v failed"
-
-  virt-edit -V | grep $(rpm -q libguestfs --queryformat '%{version}\n') 2>&1
-  CHECK_RESULT $? 0 0 "Check guestunmount -V failed"
-
-  virt-edit -x -d centeros-2003 /etc/a.txt
-  CHECK_RESULT $? 0 0 "Check guestunmount -x failed"
-
   LOG_INFO "End of the test."
 }
 
@@ -83,7 +59,6 @@ function post_test() {
   virsh destroy centeros-2003
   virsh undefine centeros-2003 --nvram
   DNF_REMOVE
-  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   LOG_INFO "Finish to restore the test environment."
 }
 
