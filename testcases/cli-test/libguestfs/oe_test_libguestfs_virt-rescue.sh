@@ -34,6 +34,7 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
+  # 进入了shell命令行内部
 
   virt-rescue -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
   CHECK_RESULT $? 0 0 "Check virt-rescue -a failed"
@@ -95,8 +96,8 @@ function post_test() {
   virsh start centeros-2003
   virsh destroy centeros-2003
   virsh undefine centeros-2003 --nvram
-  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   DNF_INSTALL
+  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   LOG_INFO "Finish to restore the test environment."
 }
 
