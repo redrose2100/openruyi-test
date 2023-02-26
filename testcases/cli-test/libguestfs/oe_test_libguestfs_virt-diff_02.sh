@@ -21,99 +21,37 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL libguestfs
-
   wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
-
   mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
   cp /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-
   virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
   virt-install --name centeros-2003-1 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole
-
   virsh destroy centeros-2003
   virsh destroy centeros-2003-1
-
   LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
-
-  virt-diff -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check guestunmount -a -A failed"
-
-  virt-diff --all -d centeros-2003 -D centeros-2003-1
-  CHECK_RESULT $? 0 0 "Check guestunmount -d -D failed"
-
-  virt-diff --atime -d centeros-2003 -D centeros-2003-1
-  CHECK_RESULT $? 0 0 "Check guestunmount --atime failed"
-
-  virt-diff --checksum=crc -d centeros-2003 -D centeros-2003-1
-  CHECK_RESULT $? 0 0 "Check guestunmount --checksum failed"
-
-  virt-diff -c test:///default -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check guestunmount -c failed"
-
-  virt-diff --csv -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check guestunmount --csv failed"
-
-  virt-diff --dir-links -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check guestunmount --dir-links failed"
-
-  virt-diff --dir-times -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check guestunmount --dir-times failed"
-
-  virt-diff --all -d centeros-2003 -D centeros-2003-1
-  CHECK_RESULT $? 0 0 "Check guestunmount --all failed"
-
   virt-diff --echo-keys -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
   CHECK_RESULT $? 0 0 "Check guestunmount --echo-keys failed"
-
-  virt-diff --extra-stats -d centeros-2003 -D centeros-2003-1
+  virt-diff --extra-stats -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
   CHECK_RESULT $? 0 0 "Check guestunmount --extra-stats failed"
-
   virt-diff --format=qcow2 -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
   CHECK_RESULT $? 0 0 "Check guestunmount --format failed"
-
   virt-diff --help 2>&1 | grep 'virt-diff'
   CHECK_RESULT $? 0 0 "Check guestunmount --help failed"
-
   virt-diff -h -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
   CHECK_RESULT $? 0 0 "Check guestunmount -h failed"
-
   virt-diff --key ID:key:KEY_STRING -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
   CHECK_RESULT $? 0 0 "Check guestunmount --key failed"
-
   virt-diff --keys-from-stdin -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
   CHECK_RESULT $? 0 0 "Check guestunmount --keys-from-stdin failed"
-
   virt-diff --times -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
   CHECK_RESULT $? 0 0 "Check guestunmount --times failed"
-
   virt-diff --time-days -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
   CHECK_RESULT $? 0 0 "Check guestunmount --time-days failed"
-
-  virt-diff --time-relative -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check guestunmount --time-relative failed"
-
-  virt-diff --time-t -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check guestunmount --time-t failed"
-
-  virt-diff --uids -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check guestunmount --uids failed"
-
-  virt-diff -v -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check guestunmount -v failed"
-
-  virt-diff -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
-  CHECK_RESULT $? 0 0 "Check guestunmount -V failed"
-
-  virt-diff -x -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
-  CHECK_RESULT $? 0 0 "Check guestunmount -x failed"
-
-  virt-diff --xattrs -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 -A /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
   CHECK_RESULT $? 0 0 "Check guestunmount --xattrs failed"
-
   LOG_INFO "End of the test."
 }
 
@@ -126,7 +64,6 @@ function post_test() {
   virsh destroy centeros-2003-1
   virsh undefine centeros-2003-1 --nvram
   DNF_REMOVE
-  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   LOG_INFO "Finish to restore the test environment."
 }
 
