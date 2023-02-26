@@ -29,6 +29,7 @@ function pre_test() {
   virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --noautoconsole
 
   virsh destroy centeros-2003
+  echo "hello" > a.txt
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -42,133 +43,133 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
   
   virt-sysprep -c test:///default -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --append-line failed"
   
   virt-sysprep --chmod 777:/etc/a.txt -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --chmod failed"
   
   virt-sysprep --color -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --color failed"
   
   virt-sysprep --commands-from-file a.txt -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --commands-from-file failed"
   
   virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --copy /etc/a.txt:/opt
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --copy failed"
   
   virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --copy-in /opt/software/a.txt:/etc
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --copy-in failed"
   
   virt-sysprep -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -d failed"
   
   virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --delete /etc/b.txt
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --delete failed"
   
   virt-sysprep -n -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -n failed"
   
   virt-sysprep --echo-keys -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --echo-keys failed"
   
   virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --edit /etc/a.txt:Str
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --edit failed"
   
   virt-sysprep --enable ssh-hostkeys,udev-persistent-net -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --enable failed"
   
   virt-sysprep --firstboot-command cat -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --firstboot-command failed"
   
   virt-sysprep --firstboot-install PKG -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --firstboot-install failed"
   
   virt-sysprep --format qcow2 -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --format failed"
   
   virt-sysprep --help 2>&1 | grep 'virt-sysprep'
   CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
     
   virt-sysprep --hostname 8899 -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --hostname failed"
   
   virt-sysprep --key ID:key:KEY_STRING -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --key failed"
   
   virt-sysprep --keys-from-stdin -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --keys-from-stdin failed"
   
   virt-sysprep --list-operations -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --list-operations failed"
   
   virt-sysprep --mkdir /etc/dir -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --mkdir failed"
   
   virt-sysprep --mount-options /mnt -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --mount-options failed"
   
   virt-sysprep -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 --move /etc/c.txt:/opt
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --move failed"
   
   virt-sysprep --no-logfile -d centeros-2003
   CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
   
   virt-sysprep --no-network -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --no-network failed"
   
   virt-sysprep --no-selinux-relabel -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --no-selinux-relabel failed"
   
   virt-sysprep --operation ssh-hostkeys -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --operation failed"
   
   virt-sysprep --password root:password -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --password failed"
   
   virt-sysprep --password-crypto md5 -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --password-crypto failed"
   
   virt-sysprep -q -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -q failed"
   
   virt-sysprep --root-password password -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --root-password failed"
   
   virt-sysprep --run-command cat -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep ---run-command failed"
   
   virt-sysprep --scriptdir /etc/tmp -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --scriptdir failed"
   
-  virt-sysprep --scrub /etc/a.txt -d centeros-2003
+  virt-sysprep --scrub /etc/a.txt --scrub centeros-2003
   CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
   
   virt-sysprep --selinux-relabel -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --selinux-relabel failed"
   
   virt-sysprep --timezone Europe/London -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --timezone failed"
   
   virt-sysprep --touch /etc/a.txt -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --touch failed"
   
   virt-sysprep --truncate /etc/a.txt -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --truncate failed"
   
   virt-sysprep --truncate-recursive /etc/ -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --truncate-recursive failed"
   
   virt-sysprep -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -V failed"
     
   virt-sysprep -v -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -v failed"
   
   virt-sysprep --write /etc/a.txt:"hello" -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep --write failed"
   
   virt-sysprep -x -d centeros-2003
-  CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
+  CHECK_RESULT $? 0 0 "Check virt-sysprep -x failed"
   
 
   LOG_INFO "End of the test."

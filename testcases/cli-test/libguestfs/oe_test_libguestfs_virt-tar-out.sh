@@ -36,10 +36,10 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  virt-tar-out -d centeros-2003 /etc/ qemu-4.2.0.tar
+  virt-tar-out -d centeros-2003 /etc/ qemu-4.2.0.tar.xz
   CHECK_RESULT $? 0 0 "Check virt-copy-in -d failed"
 
-  virt-tar-out -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /etc/ qemu-4.2.0.tar
+  virt-tar-out -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /etc/ qemu-4.2.0.tar.xz
   CHECK_RESULT $? 0 0 "Check virt-copy-in -a failed"
 
   virt-tar-out -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
