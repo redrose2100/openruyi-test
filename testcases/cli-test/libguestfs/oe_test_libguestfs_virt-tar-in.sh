@@ -44,7 +44,7 @@ function run_test() {
   virt-tar-in -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
   CHECK_RESULT $? 0 0 "Check virt-copy-in -V failed"
 
-  virt-tar-in -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 virt-tar-in -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 qemu-4.2.0.tar /etc/
+  virt-tar-in -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 qemu-4.2.0.tar /etc/
   CHECK_RESULT $? 0 0 "Check virt-copy-in -a failed"
 
   virt-tar-in -h 2>&1 | grep 'display a list of commands'
