@@ -69,7 +69,7 @@ function run_test() {
   virt-resize --ignore /dev/sda2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
   CHECK_RESULT $? 0 0 "Check virt-resize --ignore failed"
 
-  virt-resize --machine-readable qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
+  virt-resize --machine-readable /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
   CHECK_RESULT $? 0 0 "Check virt-resize --machine-readable failed"
 
   virt-resize --no-copy-boot-loader /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003-1.qcow2
