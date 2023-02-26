@@ -125,8 +125,8 @@ function post_test() {
   virsh undefine centeros-2003 --nvram
   virsh destroy centeros-2003-1
   virsh undefine centeros-2003-1 --nvram
-  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   DNF_REMOVE
+  ps -ef | grep virt | grep -v grep | awk '{print $2}' | xargs kill -9
   LOG_INFO "Finish to restore the test environment."
 }
 

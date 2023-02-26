@@ -29,6 +29,7 @@ function pre_test() {
   virt-install --name centeros-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --noautoconsole
 
   virsh destroy centeros-2003
+  mkdir test
   LOG_INFO "End of environmental preparation!"
 }
 
