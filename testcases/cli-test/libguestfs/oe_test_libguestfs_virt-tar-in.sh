@@ -23,6 +23,8 @@ function pre_test() {
   DNF_INSTALL libguestfs
 
   wget https://download.qemu.org/qemu-4.2.0.tar.xz
+  xz -dk qemu-4.2.0.tar.xz
+
   wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
 
   mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
@@ -36,13 +38,13 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  virt-tar-in -d centeros-2003 qemu-4.2.0.tar.xz /etc/
+  virt-tar-in -d centeros-2003 qemu-4.2.0.tar /etc/
   CHECK_RESULT $? 0 0 "Check virt-copy-in -d failed"
 
   virt-tar-in -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
   CHECK_RESULT $? 0 0 "Check virt-copy-in -V failed"
 
-  virt-tar-in -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 virt-tar-in -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 qemu-4.2.0.tar.xz /etc/
+  virt-tar-in -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 virt-tar-in -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 qemu-4.2.0.tar /etc/
   CHECK_RESULT $? 0 0 "Check virt-copy-in -a failed"
 
   virt-tar-in -h 2>&1 | grep 'display a list of commands'

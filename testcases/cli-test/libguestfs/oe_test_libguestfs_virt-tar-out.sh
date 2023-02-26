@@ -23,6 +23,8 @@ function pre_test() {
   DNF_INSTALL libguestfs
 
   wget https://download.qemu.org/qemu-4.2.0.tar.xz
+  xz -dk qemu-4.2.0.tar.xz
+
   wget https://mirrors.ustc.edu.cn/centos-cloud/centos/7/images/CentOS-7-aarch64-GenericCloud-2003.qcow2
 
   mv CentOS-7-aarch64-GenericCloud-2003.qcow2 /home/kvm/images/
@@ -36,10 +38,10 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
 
-  virt-tar-out -d centeros-2003 /etc/ qemu-4.2.0.tar.xz
+  virt-tar-out -d centeros-2003 /etc/ qemu-4.2.0.tar
   CHECK_RESULT $? 0 0 "Check virt-copy-in -d failed"
 
-  virt-tar-out -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /etc/ qemu-4.2.0.tar.xz
+  virt-tar-out -a /home/kvm/images/CentOS-7-aarch64-GenericCloud-2003.qcow2 /etc/ qemu-4.2.0.tar
   CHECK_RESULT $? 0 0 "Check virt-copy-in -a failed"
 
   virt-tar-out -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
