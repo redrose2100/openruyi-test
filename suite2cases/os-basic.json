@@ -587,6 +587,9 @@
         },
         {
             "name": "oe_test_libunistring"
+        },
+        {
+            "name": "oe_test_expect"
         }
     ]
 }
