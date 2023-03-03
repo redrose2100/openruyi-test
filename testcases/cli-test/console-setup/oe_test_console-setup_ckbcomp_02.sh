@@ -19,24 +19,24 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    LOG_INFO "No pkgs need to install."
+    DNF_INSTALL console-setup
 
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
 
-     LOG_INFO "Start to run test."
+    LOG_INFO "Start to run test."
 
     
-    ckbcomp -compact ./common/symbolstest 2>&1 | grep "keycode 101"
-    CHECK_RESULT $? 0 0 "Failed option: -compact"
+    ckbcomp -compact ./common/symbolstest 2>&1 | grep "keymaps 0-4,6,8,10,12,14"
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -compact failed"
     
-    ckbcomp -freebsd ./common/symbolstest | grep "#"
-    CHECK_RESULT $? 0 0 "Failed option: -freebsd"
+    ckbcomp -freebsd ./common/symbolstest | grep " 001   esc    esc    esc    esc    esc    esc    debug  debug   O"
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -freebsd failed"
     
-    ckbcomp -backspace bs ./common/symbolstest 2>&1 | grep "Next Scroll_Forward"
-    CHECK_RESULT $? 0 0 "Failed option: -backspace"
+    ckbcomp -backspace bs ./common/symbolstest 2>&1 | grep "keycode 54 = Shift"
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -backspace failed"
 
     LOG_INFO "End to run test."
 }
@@ -45,7 +45,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    LOG_INFO "Nothing to do."
+    DNF_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

@@ -17,32 +17,36 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
-    LOG_INFO "No pkgs need to install."
-
+    
+    DNF_INSTALL console-setup
+    
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
 
     LOG_INFO "Start to run test."
     setupcon -v 2>&1 | grep "The charmap is UTF-8 "
+    CHECK_RESULT $? 0 0 "Check setupcon:  -v failed"
     setupcon --verbose 2>&1 | grep "The charmap is UTF-8"
-    CHECK_RESULT $? 0 0 "Failed option:  -v, --verbose "
+    CHECK_RESULT $? 0 0 "Check setupcon:  --verbose failed"
     setupcon -k 2>&1 | grep "keyboard configuration success"
+    CHECK_RESULT $? 0 0 "Check setupcon:  -k failed"
     setupcon --keyboard-only 2>&1 | grep "keyboard configuration success"
-    CHECK_RESULT $? 0 0 "Failed option:  -k, --keyboard-only"
+    CHECK_RESULT $? 0 0 "Check setupcon:  --keyboard-only failed"
       
     setupcon -f 2>&1 | grep "font configuration success"
+    CHECK_RESULT $? 0 0 "Check setupcon:  -f failed"
     setupcon --font-only 2>&1 | grep "font configuration success"
-    CHECK_RESULT $? 0 0 "Failed option:  -f, --font-only "
+    CHECK_RESULT $? 0 0 "Check setupcon:  --font-only failed"
       
-   setupcon -t 2>&1 | grep "success"
-   setupcon --terminal-only 2>&1 | grep "success"
-   CHECK_RESULT $? 0 0 "Failed option:  -t,--terminal-only"
-   setupcon --current-tty 2>&1 | grep "success"
-   CHECK_RESULT $? 0 0 "Failed option:  --current-tty"
-   setupcon --force 2>&1 | grep "success"
-   CHECK_RESULT $? 0 0 "Failed option:  --force"
+    setupcon -t 2>&1 | grep "success"
+    CHECK_RESULT $? 0 0 "Check setupcon:  -t failed"
+    setupcon --terminal-only 2>&1 | grep "configuration success"
+    CHECK_RESULT $? 0 0 "Check setupcon:  --terminal-only failed"
+    setupcon --current-tty 2>&1 | grep "configuration success"
+    CHECK_RESULT $? 0 0 "Check setupcon:  --current-tty failed"
+    setupcon --force 2>&1 | grep "configuration success"
+    CHECK_RESULT $? 0 0 "Check setupcon:  --force failed"
    
    LOG_INFO "End to run test."
 }
@@ -51,7 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    LOG_INFO "Nothing to do."
+    DNF_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

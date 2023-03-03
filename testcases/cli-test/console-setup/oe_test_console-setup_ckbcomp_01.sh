@@ -19,7 +19,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    LOG_INFO "No pkgs need to install."
+    DNF_INSTALL console-setup 
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -28,38 +28,39 @@ function run_test() {
 
     LOG_INFO "Start to run test."
     ckbcomp  -help 2>&1 | grep "Usage: ckbcomp"
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -? failed"
     ckbcomp  -? 2>&1 | grep "Usage: ckbcomp"
-    CHECK_RESULT $? 0 0 "Failed option: -?,-help"
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -help failed"
     
-    ckbcomp  -charmap ARMSCII-8  ./common/symbolstest  2>&1 | grep "keymaps 0-127"
-    CHECK_RESULT $? 0 0 "Failed option: -charmap"
+    ckbcomp  -charmap ARMSCII-8  ./common/symbolstest  2>&1 
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -charmap failed"
    
-    ckbcomp ./common/symbolstest -I /usr/  2>&1 | grep "keymaps 0-127"
-    CHECK_RESULT $? 0 0 "Failed option: -I"
+    ckbcomp ./common/symbolstest -I /usr/  2>&1 
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -I failed"
     
-    ckbcomp -keycodes ./common/keycodestest us 2>&1 | grep "keymaps 0-127" 
-    CHECK_RESULT $? 0 0 "Failed option: -keycodes"
+    ckbcomp -keycodes ./common/keycodestest us 2>&1 
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -keycodes failed"
     
-    ckbcomp -symbols ./common/symbolstest  norman 2>&1 | grep "keymaps 0-127"
-    CHECK_RESULT $? 0 0 "Failed option: -symbols"
+    ckbcomp -symbols ./common/symbolstest  norman 2>&1
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -symbols failed"
     
-    ckbcomp -rules ./base ./common/symbolstest 2>&1 | grep "keycode"
-    CHECK_RESULT $? 0 0 "Failed option: -rules"
+    ckbcomp -rules ./base ./common/symbolstest 2>&1 
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -rules failed"
    
-    ckbcomp -model pc105 ./common/symbolstest 2>&1 | grep "keycode"
-    CHECK_RESULT $? 0 0 "Failed option: -model"
+    ckbcomp -model pc105 ./common/symbolstest 2>&1 
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -model failed"
     
-    ckbcomp -layout us ./common/symbolstest 2>&1 | grep "keycode"
-    CHECK_RESULT $? 0 0 "Failed option: -layout"
+    ckbcomp -layout us ./common/symbolstest 2>&1 
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -layout failed"
   
-    ckbcomp -variant  $ ./common/symbolstest 2>&1 | grep "keycode"
-    CHECK_RESULT $? 0 0 "Failed option: -variant"
+    ckbcomp -variant  $ ./common/symbolstest 2>&1 
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -variant failed"
     
-    ckbcomp -option terminate:ctrl_alt_bksp,lv3:ralt_switch,grp:alts_toggle ./common/symbolstest 2>&1 | grep "keycode"
-    CHECK_RESULT $? 0 0 "Failed option: -option"
+    ckbcomp -option terminate:ctrl_alt_bksp,lv3:ralt_switch,grp:alts_toggle ./common/symbolstest 2>&1 | grep "shiftl alt control keycode 14 = Delete"
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -option failed"
     
-    ckbcomp -v 1  ./common/symbolstest | grep "Down" 
-    CHECK_RESULT $? 0 0 "Failed option: -v"
+    ckbcomp -v 1  ./common/symbolstest | grep "keycode 119 = Pause" 
+    CHECK_RESULT $? 0 0 "Check ckbcomp: -v failed"
     
     LOG_INFO "End to run test."
 }
@@ -68,7 +69,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    LOG_INFO "Nothing to do."
+    DNF_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

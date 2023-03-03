@@ -18,7 +18,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    LOG_INFO "No pkgs need to install."
+    DNF_INSTALL console-setup
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -27,14 +27,15 @@ function run_test() {
    LOG_INFO "Start to run test."
 
    setupcon --print-commands-only 2>&1 | grep "setfont '-C' '/dev/tty1' '/usr/share/consolefonts/Uni2-TerminusBold16.psf.gz' "
-   CHECK_RESULT $? 0 0 "Failed option:  --print-commands-only"
+   CHECK_RESULT $? 0 0 "Check option:  --print-commands-only failed"
    setupcon --save-keyboard 2>&1 | grep "success"
-   CHECK_RESULT $? 0 0 "Failed option:  --save-keyboard"
+   CHECK_RESULT $? 0 0 "Check option:  --save-keyboard failed"
    setupcon --setup-dir 2>&1 | grep "success"
    CHECK_RESULT $? 0 0 "Check setupcon --setup-dir failed"
    setupcon -h 2>&1 | grep "Sets up the font and the keyboard on Linux console."
+   CHECK_RESULT $? 0 0 "Check option:  -h failed"
    setupcon --help 2>&1 | grep "Sets up the font and the keyboard on Linux console."
-   CHECK_RESULT $? 0 0 "Failed option:  -h,--help"
+   CHECK_RESULT $? 0 0 "Check option:  --help failed"
 
    LOG_INFO "End to run test."
 }
@@ -43,7 +44,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    LOG_INFO "Nothing to do."
+    DNF_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }
