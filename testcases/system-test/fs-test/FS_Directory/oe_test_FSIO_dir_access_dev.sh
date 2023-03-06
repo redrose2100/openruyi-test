@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to prepare the database config."
-    disk=$(lsblk | grep disk | awk '{print $1}')
+    disk=$(lsblk | grep disk | awk '{print $1}'| tail -n 1)
     LOG_INFO "Finish to prepare the database config."
 }
 
