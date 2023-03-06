@@ -25,6 +25,7 @@ function pre_test() {
     user_mq="test"
     passwd_mq="test"
     DNF_INSTALL rabbitmq-server
+    getenforce && setenforce 0
     which firewalld && systemctl stop firewalld
     systemctl restart rabbitmq-server
     rabbitmqctl add_vhost ${vhost_name}
@@ -63,6 +64,7 @@ function post_test() {
     systemctl stop rabbitmq-server
     DNF_REMOVE
     rm -rf /var/lib/rabbitmq/
+    setenforce 1
     which firewalld && systemctl start firewalld
     LOG_INFO "Finish environment cleanup!"
 }
