@@ -18,10 +18,23 @@
 # #############################################
 
 source "../common/common_lib.sh"
+source "./common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL mdadm
+    check_free_disk
+    version=$(rpm -qa | grep mdadm | awk -F '-' '{print $2}')
+    if version_ge $version 4.2 ;then
+        echo "$version is greater than or equal to 4.2"
+        echo -e "n\ne\n\n\n+5G\nn\nl\n\n\nw\n" | fdisk /dev/${local_disk}
+        echo -e "t\n\nfd\nw\n" | fdisk /dev/${local_disk}
+        echo -e "n\ne\n\n\n+5G\nn\nl\n\n\nw\n" | fdisk /dev/${local_disk1}
+        echo -e "t\n\nfd\nw\n" | fdisk /dev/${local_disk1}
+        mdadm -Cv /dev/md0 -l5 -n2 /dev/${local_disk}5 /dev/${local_disk1}5
+        mdadm -D /dev/md0 | grep /dev/${local_disk}5 
+        CHECK_RESULT $? 0 0 "check mdadm state failed"
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -34,6 +47,14 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    if version_ge $version 4.2 ;then
+       mdadm -S /dev/md0
+       #cat /dev/null > /etc/mdadm.conf
+       mdadm --zero-superblock /dev/${local_disk}5
+       mdadm --zero-superblock /dev/${local_disk1}5
+       echo -e "d\n1\nw\n" | fdisk "/dev/${local_disk}"
+       echo -e "d\n1\nw\n" | fdisk "/dev/${local_disk1}"
+    fi
     systemctl stop mdmonitor.service
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
