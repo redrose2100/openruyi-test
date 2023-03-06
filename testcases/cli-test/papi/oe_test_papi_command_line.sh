@@ -47,6 +47,14 @@ function run_test() {
     papi_cost -h 2>&1 | grep "This is the PAPI cost"
     CHECK_RESULT $? 0 0 "Check papi_cost -h failed"
 
+    if papi_avail -a | grep -q "Of 0 available events, 0 are derived"; then
+        papi_cost -b min -s -t min
+        CHECK_RESULT $? 0 1 "Check papi_cost -b -s -t failed"
+    else
+        papi_cost -b min -s -t min
+        CHECK_RESULT $? 0 0 "Check papi_cost -b -s -t failed"
+    fi
+
     papi_decode -h 2>&1 | grep "decode [options]"
     CHECK_RESULT $? 0 0 "Check papi_decode -h failed"
 
