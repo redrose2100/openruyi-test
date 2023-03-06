@@ -31,8 +31,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "There is an error for the status of sbd_remote.service"
     systemctl restart sbd_remote.service 2>&1 | grep "it is configured to refuse manual start/stop"
     CHECK_RESULT $? 0 0 "Check sbd_remote.service failed"
-    systemctl stop sbd_remote.service 2>&1 | grep "it is configured to refuse manual start/stop"
-    CHECK_RESULT $? 0 0 "Check sbd_remote.service failed"
+    systemctl stop sbd_remote.service
+    CHECK_RESULT $? 0 0 "sbd_remote.service stop failed"
     systemctl start sbd_remote.service 2>&1 | grep "it is configured to refuse manual start/stop"
     CHECK_RESULT $? 0 0 "Check sbd_remote.service failed"
     test_enabled sbd_remote.service
