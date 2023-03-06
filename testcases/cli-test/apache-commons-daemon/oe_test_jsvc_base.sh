@@ -73,6 +73,9 @@ function run_test() {
 
     /usr/bin/jsvc -pidfile $path/springboot-demo.pid -stop demo
     CHECK_RESULT $? 0 0 "Check  /usr/bin/jsvc -pidfile $path/springboot-demo.pid -stop demo  failed"
+
+    /usr/bin/jsvc -pidfile $path/springboot-demo.pid -stop demo
+    /usr/bin/jsvc -jvm client -client -home /opt/jdk1.8.0_351 -procname demo -Dserver.port=18888 -user daemon -cwd /opt/apache-commons-daemon/config -java-home /opt/apache-commons-daemon/jdk1.8.0_351 -wait 60 -pidfile /opt/apache-commons-daemon/springboot-demo.pid -outfile /opt/apache-commons-daemon/logs/out.log -errfile /opt/apache-commons-daemon/logs/jsvc.log -cp /opt/apache-commons-daemon/commons-daemon-1.0.15.jar:/opt/apache-commons-daemon/demo-1.0-SNAPSHOT.jar org.example.JsvcStart -debug -check -nodetach -verbose -version -showversion
 }
 
 function post_test() {
