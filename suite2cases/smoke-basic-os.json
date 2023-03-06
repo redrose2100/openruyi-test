@@ -756,6 +756,9 @@
         },
 	{
 	     "name": "oe_test_popt"
+	},
+	{
+	     "name": "oe_test_etmemd_001"
 	}
     ]
 }
