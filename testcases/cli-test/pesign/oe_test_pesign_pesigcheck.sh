@@ -37,6 +37,18 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check pesigcheck --help failed"
     pesigcheck --usage 2>&1 | grep "Usage: pesigcheck"
     CHECK_RESULT $? 0 0 "Check pesigcheck --usage failed"
+    pesigcheck -i grubx64.efi -q -v -n 1 -D ./baidu/cert9.db | grep "Searching db cert9.db"
+    CHECK_RESULT $? 0 0 "Check pesigcheck -i -q -v -n -D failed"
+    pesigcheck --in=grubx64.efi --quiet --verbose --no-system-db=1 --dbfile=./baidu/cert9.db | grep "Searching db cert9.db"
+    CHECK_RESULT $? 0 0 "Check pesigcheck --in --quiet --verbose --no-system-db --dbfile failed"
+    pesigcheck -i grubx64.efi -q -v -n 1 -X ./baidu/cert9.db -c grubx64.efi.signed | grep "Searching dbx cert9.db"
+    CHECK_RESULT $? 0 0 "Check pesigcheck -i -q -v -n -X -c failed"
+    pesigcheck --in=grubx64.efi --quiet --verbose --no-system-db=1 --dbxfile=./baidu/cert9.db --certfile=grubx64.efi.signed | grep "Searching dbx cert9.db"
+    CHECK_RESULT $? 0 0 "Check pesigcheck --in --quiet --verbose --no-system-db --dbxfile --certfile failed"
+    authvar -i ./test -d ./baidu
+    CHECK_RESULT $? 0 0 "Check authvar -i -d failed"
+    authvar -l -d ./baidu
+    CHECK_RESULT $? 0 0 "Check authvar -l -d failed"
     LOG_INFO "End to run test."
 }
 
