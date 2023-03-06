@@ -43,6 +43,9 @@ function run_test() {
     sanlock client release -r test:testres1:./res:0 -p $(pgrep -f "sanlock client command") | grep "release done 0"
     CHECK_RESULT $? 0 0 "Check sanlock client release -r -p failed"
 
+    sanlock client convert -r test:testres1:./res:0 -p $(pgrep -f "sanlock client command") | grep "convert done"
+    CHECK_RESULT $? 0 0 "Check sanlock client convert -r -p failed"
+
     sanlock client inquire -p $(pgrep -f "sanlock client command") | grep "test:testres:./res:0:1"
     CHECK_RESULT $? 0 0 "Check sanlock client inquire -p failed"
 
@@ -60,6 +63,9 @@ function run_test() {
 
     sanlock client create -x test:./res:0 -e testres1 | grep "create_resource done 0"
     CHECK_RESULT $? 0 0 "Check sanlock client create -x -e failed"
+
+    sanlock client update -x test:./res:0 -e testres1:0 -z 0 | grep "update done"
+    CHECK_RESULT $? 0 0 "Check sanlock client update -x -e -z failed"
 
     sanlock client lookup -x test:./res:0 -e testres1:0 | grep "lookup done 0"
     CHECK_RESULT $? 0 0 "Check sanlock client lookup -x -e failed"
