@@ -1,74 +1,22 @@
 /**
- * @ttitle:测试RemoveSessionServer移除session服务端函数，入参RE_PACKAGE_NAME为NULL、RE_LOCAL_SESSION_NAME为正常
+ * @title:测试RemoveSessionServer移除session服务端函数，
+ *    入参RE_PACKAGE_NAME为NULL、RE_LOCAL_SESSION_NAME为正常
  */
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdio.h>
-#include <cJSON.h>
-#include <securec.h>
-#include <softbus_common.h>
-#include <device_auth.h>
-#include <parameter.h>
-#include "securec.h"
-#include "discovery_service.h"
-#include "softbus_bus_center.h"
-#include "session.h"
+#include "dsoftbus_common.h"
 
-#define PACKAGE_NAME "softbus_sample"
-#define LOCAL_SESSION_NAME "session_test"
 #define RE_PACKAGE_NAME NULL
 #define RE_LOCAL_SESSION_NAME "session_test"
 
-static int g_sessionId;
-
-static int SessionOpened(int sessionId, int result)
-{
-    printf("<SessionOpened>CB: session %d open fail:%d\n", sessionId, result);
-    if (result == 0) {
-        g_sessionId = sessionId;
-    }
-
-    return result;
-}
-
-static void SessionClosed(int sessionId)
-{
-    printf("<SessionClosed>CB: session %d closed\n", sessionId);
-}
-
-static void ByteRecived(int sessionId, const void *data, unsigned int dataLen)
-{
-    printf("<ByteRecived>CB: session %d received %u bytes data=%s\n", sessionId, dataLen, (const char *)data);
-}
-
-static void MessageReceived(int sessionId, const void *data, unsigned int dataLen)
-{
-    printf("<MessageReceived>CB: session %d received %u bytes message=%s\n", sessionId, dataLen, (const char *)data);
-}
-
-static int CreateSessionServerInterface(void)
-{
-    const ISessionListener sessionCB = {
-        .OnSessionOpened = SessionOpened,
-        .OnSessionClosed = SessionClosed,
-        .OnBytesReceived = ByteRecived,
-        .OnMessageReceived = MessageReceived,
-    };
-
-    return CreateSessionServer(PACKAGE_NAME, LOCAL_SESSION_NAME, &sessionCB);
-}
-
 int main(int argc, char **argv)
 {
-		int ret;
+    int ret;
 
-		ret = CreateSessionServerInterface();
+    ret = CreateSessionServerInterface();
     if (ret) {
         printf("CreateSessionServer fail, ret=%d\n", ret);
         return 1;
     }
-    
+
     ret = RemoveSessionServer(RE_PACKAGE_NAME, RE_LOCAL_SESSION_NAME);
     if (ret) {
         printf("RemoveSessionServer fail:%d\n", ret);
