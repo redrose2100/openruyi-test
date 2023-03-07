@@ -1,35 +1,10 @@
 /**
- * @ttitle:测试PublishService发布特定服务能力函数，入参PACKAGE_NAME为123、&info为正常、&cb为正常
+ * @title:测试PublishService发布特定服务能力函数，
+ *     入参PACKAGE_NAME为123、&info为正常、&cb为正常
  */
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include "securec.h"
-#include "discovery_service.h"
-#include "softbus_bus_center.h"
-#include "session.h"
-#include <stdio.h>
-#include <cJSON.h>
-#include <securec.h>
-#include <softbus_common.h>
-#include <device_auth.h>
-#include <parameter.h>
+#include "dsoftbus_common.h"
 
-#define PACKAGE_NAME 123
-#define DEFAULT_CAPABILITY "osdCapability"
-#define DEFAULT_PUBLISH_ID 123
-
-static void PublishSuccess(int publishId)
-{
-    printf("<PublishSuccess>CB: publish %d done\n", publishId);
-}
-
-static void PublishFailed(int publishId, PublishFailReason reason)
-{
-    printf("<PublishFailed>CB: publish %d failed, reason=%d\n", publishId, (int)reason);
-}
-
-static int PublishServiceInterface()
+static int PublishService_PackageName123()
 {
     PublishInfo info = {
         .publishId = DEFAULT_PUBLISH_ID,
@@ -44,14 +19,14 @@ static int PublishServiceInterface()
         .OnPublishSuccess = PublishSuccess,
         .OnPublishFail = PublishFailed,
     };
-    return PublishService(PACKAGE_NAME, &info, &cb);
+    return PublishService(123, &info, &cb);
 }
 
 int main(int argc, char **argv)
 {
     int ret;
 
-    ret = PublishServiceInterface();
+    ret = PublishService_PackageName123();
     if (ret) {
         printf("PublishService fail, ret = %d\n", ret);
         return 1;
