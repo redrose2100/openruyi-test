@@ -22,6 +22,8 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL rabbitmq-server
+    getenforce && setenforce 0
+    which firewalld && systemctl stop firewalld
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -36,6 +38,8 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop rabbitmq-server.service
     DNF_REMOVE
+    setenforce 1
+    which firewalld && systemctl start firewalld
     LOG_INFO "Finish environment cleanup!"
 }
 

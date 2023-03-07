@@ -27,6 +27,7 @@ function pre_test() {
     name_host_1=rabbitmq1
     name_host_2=rabbitmq2
     DNF_INSTALL rabbitmq-server
+    getenforce && setenforce 0
     which firewalld && systemctl stop firewalld
     sed -i "/${name_host}/d" /etc/hosts
     hostname | grep -i ${name_host} || hostnamectl set-hostname ${name_host_1}
@@ -37,6 +38,7 @@ function pre_test() {
     cookie_erlang=$(cat /var/lib/rabbitmq/.erlang.cookie)
     SSH_CMD "
     dnf install -y rabbitmq-server
+    getenforce && setenforce 0
     which firewalld && systemctl stop firewalld
     sed -i '/${name_host}/d' /etc/hosts
     hostname | grep -i ${name_host} || hostnamectl set-hostname ${name_host_2}
@@ -100,6 +102,7 @@ function post_test() {
     kill -9 $(pgrep -u rabbitmq)
     DNF_REMOVE
     rm -rf /var/lib/rabbitmq/ /var/log/rabbitmq
+    setenforce 1
     which firewalld && systemctl start firewalld
     SSH_CMD "
     systemctl  stop rabbitmq-server
@@ -107,6 +110,7 @@ function post_test() {
     hostnamectl set-hostname '${host_name}'
     dnf remove -y rabbitmq-server
     rm -rf /var/lib/rabbitmq/ /var/log/rabbitmq
+    setenforce 1
     which firewalld && systemctl start firewalld
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "Finish environment cleanup!"

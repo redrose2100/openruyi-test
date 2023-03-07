@@ -25,6 +25,7 @@ function pre_test() {
     user_mq="test"
     passwd_mq="test"
     newpasswd_mq="newtest"
+    getenforce && setenforce 0
     which firewalld && systemctl stop firewalld
     systemctl restart rabbitmq-server
     LOG_INFO "End of environmental preparation!"
@@ -57,6 +58,7 @@ function post_test() {
     DNF_REMOVE
     rm -rf /var/lib/rabbitmq/
     kill -9 $(pgrep -u rabbitmq)
+    setenforce 1
     which firewalld && systemctl start firewalld
     LOG_INFO "Finish environment cleanup!"
 }
