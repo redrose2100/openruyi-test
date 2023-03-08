@@ -162,6 +162,21 @@
         },
         {
             "name": "oe_test_service_firewalld"
+        },
+        {
+            "name": "oe_test_firewalld_default_rules"
+        },       
+       	{
+            "name": "oe_test_firewalld_runtime_rules_in_effect",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_firewalld_permanent_rules_in_effect",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_firewalld_zone_migration",
+            "machine num": 2
         }
     ]
 }

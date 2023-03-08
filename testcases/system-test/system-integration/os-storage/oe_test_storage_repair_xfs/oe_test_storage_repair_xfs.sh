@@ -29,14 +29,14 @@ function pre_test() {
     SLEEP_WAIT 2
     echo -e "n\np\n1\n\n+200M\np\nw\n" | fdisk /dev/${local_disk}
     SLEEP_WAIT 2
-    mkfs.xfs -f "/dev/${local_disk1}"
+    mkfs.xfs -f "/dev/${local_disk}1"
     SLEEP_WAIT 3
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    xfs_repair -n "/dev/${local_disk1}"
+    xfs_repair -n "/dev/${local_disk}1"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }

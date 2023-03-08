@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<doc its:version="2.0" xmlns:its="http://www.w3.org/2005/11/its" lang="lang0">
+  <its:rules version="2.0">
+    <its:translateRule selector="/doc" translate="no"/>
+	<its:langRule selector="//doc" langPointer="@lang"/>
+    <its:translateRule selector="//msg[@lcid='value0']" translate="yes"/>
+  </its:rules>
+  <msg lcid="value0" num="1">content of value0</msg>
+  <msg lcid="value1" num="1">content of value1</msg>
+  <msg lcid="value2" num="1">content of value2</msg>
+  <msg lcid="value3" num="1">content of value3</msg>
+</doc>

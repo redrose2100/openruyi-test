@@ -38,12 +38,12 @@ function run_test() {
     lshw -c cpu | grep "capacity" | grep "Hz"
     CHECK_RESULT $?
 
-    if [ "$FRAME"x == "aarch64"x ]; then
+    if [ "$NODE1_FRAME"x == "aarch64"x ]; then
         grep "0x48" /proc/cpuinfo
         CHECK_RESULT $?
 
     else
-        grep $(lscpu | grep "Vendor ID" | awk -F " " '{print$3}') /proc/cpuinfo
+        grep $(lscpu | grep "^Vendor ID" | awk -F " " '{print$3}') /proc/cpuinfo
         CHECK_RESULT $?
     fi
     if [[ "$(dmidecode -s system-product-name)" =~ "KVM" ]]; then
