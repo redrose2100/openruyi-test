@@ -1,0 +1,3 @@
+GRUB_CMDLINE_TBOOT='logging=serial,memory,vga'
+GRUB_CMDLINE_LINUX_TBOOT='intel_iommu=on'
+GRUB_TBOOT_POLICY_DATA=

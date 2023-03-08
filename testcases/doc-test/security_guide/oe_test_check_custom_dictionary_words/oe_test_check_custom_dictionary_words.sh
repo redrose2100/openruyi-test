@@ -42,7 +42,7 @@ function run_test() {
     cracklib-unpacker /usr/share/cracklib/pw_dict |grep 'mugen12#\$'
     CHECK_RESULT $? 0 0 "Custom dictionary words failed"
 
-    CHECK_RESULT "$(echo "mugen12#$" | cracklib-check |awk '{print $NF}')" "它基于一个字典中的词" 0 "Custom dictionary words check failed"
+    CHECK_RESULT "$(echo "mugen12#$" | cracklib-check |awk '{print $NF}')" "word" 0 "Custom dictionary words check failed"
     echo "mugen12#$" | passwd normal --stdin
     CHECK_RESULT $? 0 1 "Change weak password failed"
     LOG_INFO "End to run test."

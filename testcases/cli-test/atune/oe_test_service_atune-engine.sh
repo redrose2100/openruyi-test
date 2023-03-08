@@ -25,6 +25,9 @@ function pre_test() {
     disk_name=$(lsblk | grep disk | awk 'NR==1{print $1}')
     sed -i "s\disk = sda\disk = ${disk_name}\g" /etc/atuned/atuned.cnf
     sed -i "s\network = enp189s0f0\network = ${NODE1_NIC}\g" /etc/atuned/atuned.cnf
+    sed -i "s\rest_tls = true\rest_tls = false\g" /etc/atuned/atuned.cnf
+    sed -i "s\engine_tls = true\engine_tls = false\g" /etc/atuned/atuned.cnf
+    sed -i "s\engine_tls = true\engine_tls = false\g" /etc/atuned/engine.cnf
     systemctl start atuned.service
     LOG_INFO "End of environmental preparation!"
 }
@@ -41,6 +44,9 @@ function post_test() {
     systemctl stop atuned.service
     sed -i "s\disk = ${disk_name}\disk = sda\g" /etc/atuned/atuned.cnf
     sed -i "s\network = ${NODE1_NIC}\network = enp189s0f0\g" /etc/atuned/atuned.cnf
+    sed -i "s\rest_tls = false\rest_tls = true\g" /etc/atuned/atuned.cnf
+    sed -i "s\engine_tls = false\engine_tls = true\g" /etc/atuned/atuned.cnf
+    sed -i "s\engine_tls = false\engine_tls = true\g" /etc/atuned/engine.cnf
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
