@@ -35,7 +35,7 @@ function pre_test() {
         DNF_INSTALL oemaker
     else
         echo "Not found oemaker package in repo source."
-        exit 0
+        exit 1
     fi
     LOG_INFO "End to prepare the test environment."
 }
