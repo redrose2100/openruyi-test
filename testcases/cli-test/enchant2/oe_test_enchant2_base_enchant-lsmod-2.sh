@@ -34,7 +34,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: -help error"
     enchant-lsmod-2 -version 2>&1 | grep -E "[0-9.]+$"
     CHECK_RESULT $? 0 0 "option: -version error"
-    enchant-lsmod-2 -list-dicts | grepE "[a-zA-Z_]+ (.*)"
+    enchant-lsmod-2 -list-dicts | grep -E "[a-zA-Z_]+ (.*)"
     CHECK_RESULT $? 0 0 "option: -list-dicts error"
     enchant-lsmod-2 -lang en_AU | grep "en_AU"
     CHECK_RESULT $? 0 0 "option: -lang error"
