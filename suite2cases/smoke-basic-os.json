@@ -89,6 +89,9 @@
             "name": "oe_test_logrotate_001"
         },
         {
+            "name": "oe_test_logrotate_003"
+        },
+        {
             "name": "oe_test_ls_001"
         },
         {
