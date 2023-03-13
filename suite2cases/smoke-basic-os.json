@@ -756,7 +756,11 @@
         },
 	{
 	     "name": "oe_test_popt"
-	}
+	},
+         {
+             "name": "oe_test_chkconfig_01"
+        }
+
     ]
 }
 
