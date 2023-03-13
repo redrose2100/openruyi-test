@@ -32,7 +32,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     enchant-lsmod-2 -help 2>&1 | grep "language_tag"
     CHECK_RESULT $? 0 0 "option: -help error"
-    enchant-lsmod-2 -version 2>&1 | grepE "[0-9.]+$"
+    enchant-lsmod-2 -version 2>&1 | grep -E "[0-9.]+$"
     CHECK_RESULT $? 0 0 "option: -version error"
     enchant-lsmod-2 -list-dicts | grepE "[a-zA-Z_]+ (.*)"
     CHECK_RESULT $? 0 0 "option: -list-dicts error"
