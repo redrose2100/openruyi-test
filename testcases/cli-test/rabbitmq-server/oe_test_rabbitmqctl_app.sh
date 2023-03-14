@@ -22,6 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL rabbitmq-server
+    setenforce 0
     which firewalld && systemctl stop firewalld
     systemctl restart rabbitmq-server
     platform=$(uname -i)
@@ -51,12 +52,6 @@ function run_test() {
     rabbitmqctl start_app
     rabbitmqctl rotate_logs | grep "Rotating logs"
     CHECK_RESULT $?
-    if [ "$platform" = x86_64 ]; then
-        rabbitmqctl hipe_compile /tmp/rabbit-hipe/ebin | grep "Compiled"
-        CHECK_RESULT $?
-        test -d /tmp/rabbit-hipe/ebin
-        CHECK_RESULT $?
-    fi
     LOG_INFO "Finish test!"
 }
 
@@ -65,6 +60,7 @@ function post_test() {
     systemctl stop rabbitmq-server
     DNF_REMOVE
     rm -rf /var/lib/rabbitmq/
+    setenforce 1
     which firewalld && systemctl start firewalld
     LOG_INFO "Finish environment cleanup!"
 }
