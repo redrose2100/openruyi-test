@@ -28,6 +28,7 @@ function pre_test() {
     b="x86_64"
     echo $a
     echo $b
+    DNF_INSTALL tar
     if test "$a" == $b; then
       echo '获取x86'
       cp ../common/x86/apache-commons-daemon.tar.gz ./
