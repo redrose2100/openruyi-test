@@ -590,6 +590,9 @@
         },
         {
             "name": "oe_test_expect"
+        },
+        {
+            "name": "oe_test_xmlsec"
         }
     ]
 }
