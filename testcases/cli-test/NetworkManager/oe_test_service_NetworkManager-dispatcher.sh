@@ -21,6 +21,7 @@ source "../common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
+    DNF_INSTALL NetworkManager
     test_execution NetworkManager-dispatcher.service
     test_reload NetworkManager-dispatcher.service
     LOG_INFO "Finish test!"
