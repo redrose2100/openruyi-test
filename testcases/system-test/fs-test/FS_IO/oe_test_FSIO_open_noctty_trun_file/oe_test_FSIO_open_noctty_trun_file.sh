@@ -20,6 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL gcc
     [[ ! -f ./open_notty_trun_file ]] && {
         make
     }
@@ -38,6 +39,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
     rm -f test_notty_trun_file
     make clean
     LOG_INFO "End to restore the test environment."
