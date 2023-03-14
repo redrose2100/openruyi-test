@@ -21,6 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL NetworkManager
     service=NetworkManager.service
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
