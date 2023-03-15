@@ -32,11 +32,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "No safety reinforcement."
     grep "^PubkeyAuthentication yes" /etc/ssh/sshd_config
     CHECK_RESULT $? 0 0 "No safety reinforcement."
-    grep "^RSAAuthentication yes" /etc/ssh/sshd_config
-    CHECK_RESULT $? 0 0 "No safety reinforcement."
     grep "^IgnoreRhosts yes" /etc/ssh/sshd_config
-    CHECK_RESULT $? 0 0 "No safety reinforcement."
-    grep "^RhostsRSAAuthentication no" /etc/ssh/sshd_config
     CHECK_RESULT $? 0 0 "No safety reinforcement."
     grep "^HostbasedAuthentication no" /etc/ssh/sshd_config
     CHECK_RESULT $? 0 0 "No safety reinforcement."

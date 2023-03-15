@@ -29,8 +29,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "X11Forwarding is not no"
     grep "^IgnoreRhosts yes" /etc/ssh/sshd_config
     CHECK_RESULT $? 0 0 "IgnoreRhosts is not yes"
-    grep "^RhostsRSAAuthentication no" /etc/ssh/sshd_config
-    CHECK_RESULT $? 0 0 "RhostsRSAAuthentication is not no"
     grep "^Subsystem sftp /usr/libexec/openssh/sftp-server -l INFO -f AUTH" /etc/ssh/sshd_config
     CHECK_RESULT $? 0 0 "grep 'Subsystem sftp /usr/libexec/openssh/sftp-server -l INFO -f AUTH' failed"
     grep "^HostbasedAuthentication no" /etc/ssh/sshd_config

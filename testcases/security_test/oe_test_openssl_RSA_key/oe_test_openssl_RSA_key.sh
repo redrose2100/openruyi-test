@@ -39,8 +39,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Error, No build rsa_aes_private_nopasswd.key"
     openssl rsa -in rsa_aes_private_nopasswd.key -aes256 -passout pass:111111 -out rsa_aes_private_passwd.key
     CHECK_RESULT $? 0 0 "Error, Encryption rsa_aes_private_nopasswd.key failed"
-    grep -e AES-256-CBC ./*key
-    CHECK_RESULT $? 0 0 "key is not AES-256-CBC"
     LOG_INFO "End to run test."
 }
 

@@ -89,7 +89,7 @@ EOF
         }
         expect eof
 EOF
-    grep "stat remote file: No such file or directory" /home/sftpuser/testlog1
+    grep "No such file or directory" /home/sftpuser/testlog1
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }

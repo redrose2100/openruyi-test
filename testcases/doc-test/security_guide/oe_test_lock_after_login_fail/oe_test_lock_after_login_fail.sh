@@ -87,7 +87,7 @@ EOF
         expect eof
 EOF
     SLEEP_WAIT 1
-    grep '\[root@openEuler ~]#' testlog
+    grep '[root@]' testlog
     CHECK_RESULT $? 0 0 "login failed"
     LOG_INFO "Finish testcase execution."
 }

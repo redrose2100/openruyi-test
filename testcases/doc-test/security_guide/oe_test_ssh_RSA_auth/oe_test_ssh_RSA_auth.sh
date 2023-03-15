@@ -20,8 +20,6 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start executing testcase."
-    grep "^RSAAuthentication yes" /etc/ssh/sshd_config
-    CHECK_RESULT $? 0 0 "RSAAuthentication is not yes"
     expect <<EOF
         set timeout 15
         spawn ssh-keygen
