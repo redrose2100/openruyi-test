@@ -596,6 +596,9 @@
         },
         {
             "name": "oe_test_xmlsec"
+        },
+        {
+            "name": "oe_test_tcl"
         }
     ]
 }
