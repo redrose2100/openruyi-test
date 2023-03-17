@@ -589,10 +589,16 @@
             "name": "oe_test_libunistring"
         },
         {
+            "name": "oe_test_shred"
+        },
+        {
             "name": "oe_test_expect"
         },
         {
             "name": "oe_test_tcl"
+        },
+        {
+            "name": "oe_test_xmlsec"
         }
     ]
 }

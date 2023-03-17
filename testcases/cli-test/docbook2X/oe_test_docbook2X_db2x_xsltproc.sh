@@ -35,6 +35,12 @@ function run_test() {
     db2x_xsltproc --help | grep "Usage: /usr/bin/db2x_xsltproc \[options]"
     CHECK_RESULT $? 0 0 "Check --help  failed"
 
+    db2x_xsltproc -v | grep "db2x_xsltproc (part of docbook2X [[:digit:]].*)"
+    CHECK_RESULT $? 0 0 "Check db2x_xsltproc --version  failed"
+
+    db2x_xsltproc -h | grep "Usage: /usr/bin/db2x_xsltproc \[options]"
+    CHECK_RESULT $? 0 0 "Check --help  failed"
+
     db2x_xsltproc -s texi -o doctest/hello.txml -D 100 -C /etc/xml/catalog -X libxslt doctest/text.xml -d -I -S -N -P
     test -f doctest/hello.txml
     CHECK_RESULT $? 0 0 "Check db2x_xsltproc -s -o -D -C -X -d -I -S -N -P failed"

@@ -54,6 +54,11 @@ function run_test() {
     SLEEP_WAIT  10
     grep "state live reply 0 timestamp" ./info4.log
     CHECK_RESULT $? 0 0 "Check sanlk-reset -D reset -i --native-timeout failed"
+
+    nohup sanlk-reset -D reset -i 1 -t 0 test > ./info5.log 2>&1 &
+    SLEEP_WAIT  10
+    grep "state live reply 0 timestamp" ./info5.log
+    CHECK_RESULT $? 0 0 "Check sanlk-reset -D reset -i -t failed"
 }
 
 function post_test() {

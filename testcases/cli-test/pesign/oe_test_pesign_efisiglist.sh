@@ -45,6 +45,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check efisiglist -i -o -c failed"
     efisiglist -i ./baidu -o test5 --certificate=test && test -f ./test5
     CHECK_RESULT $? 0 0 "Check efisiglist -i -o --certificate failed"
+    efisiglist -i test -o test -r -h 741a03a10f3de6b2eb81985d06b70f549e762d2e9a1895c5156ffc5e10ffde32
+    CHECK_RESULT $? 0 0 "Check efisiglist -i -o -r failed" && test -f ./test
     LOG_INFO "End to run test."
 }
 

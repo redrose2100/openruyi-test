@@ -64,6 +64,9 @@ function run_test() {
     sanlock direct format -x test:./res:0 -Z 512 -A 1M | grep "format done 0"
     CHECK_RESULT $? 0 0 "Check sanlock direct format -x test:./res:0 -Z 512 -A 1M failed"
 
+    sanlock direct update -x test:./res:0 -e testres1:0 -z 0 | grep "update done"
+    CHECK_RESULT $? 0 0 "Check sanlock direct update -x -e -z failed"
+
     sanlock direct rebuild -x test:./res:0 | grep "rebuild done 0"
     CHECK_RESULT $? 0 0 "Check sanlock direct rebuild -x failed"
 }
