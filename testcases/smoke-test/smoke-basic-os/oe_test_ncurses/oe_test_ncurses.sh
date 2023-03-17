@@ -25,7 +25,7 @@ function pre_test() {
 log_file testlog
 spawn ssh -o StrictHostKeyChecking=no 127.0.0.1
 expect {
-    "*?assword:*" {send "openEuler12#\$\r";exp_continue}
+    "*?assword:*" {send "'${NODE1_PASSWORD}'\r";exp_continue}
     "Users" {send "\rexport TERM=vt100\r";exp_continue}
     "export" {send "\recho \$TERM\r"; exp_continue}
     "echo" {send "\rexit\n"}
