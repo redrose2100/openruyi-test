@@ -599,6 +599,9 @@
         },
         {
             "name": "oe_test_tcl"
-        }
+        },
+        {
+            "name": "oe_test_disk_io_sched"
+    	}
     ]
 }
