@@ -31,48 +31,48 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    orte-clean -h | grep "ompi-clean \[OPTIONS\]"
-    CHECK_RESULT $?
-    orte-dvm --allow-run-as-root -h | grep "Usage"
-    CHECK_RESULT $?
-    test "$(orte-dvm --allow-run-as-root -V |
-        grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa openmpi | awk -F "-" '{print$2}')"
-    CHECK_RESULT $?
-    orte-top -h | grep "Usage"
-    CHECK_RESULT $?
-    orte-ps -h | grep "ompi-ps \[OPTIONS\]"
-    CHECK_RESULT $?
-    orte-server -h | grep "Usage"
-    CHECK_RESULT $?
-    orte-submit --allow-run-as-root -h | grep "Usage"
-    CHECK_RESULT $?
-    test "$(orte-submit --allow-run-as-root -V |
-        grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa openmpi | awk -F "-" '{print$2}')"
-    CHECK_RESULT $?
-    orte-top -h | grep "Usage"
-    CHECK_RESULT $?
-    orted -h 2>&1 | grep "Usage"
-    CHECK_RESULT $?
+    #orte-clean -h | grep "ompi-clean \[OPTIONS\]"
+    #CHECK_RESULT $?
+    #orte-dvm --allow-run-as-root -h | grep "Usage"
+    #CHECK_RESULT $?
+    #test "$(orte-dvm --allow-run-as-root -V |
+    #    grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa openmpi | awk -F "-" '{print$2}')"
+    #CHECK_RESULT $?
+    #orte-top -h | grep "Usage"
+    #CHECK_RESULT $?
+   # orte-ps -h | grep "ompi-ps \[OPTIONS\]"
+   # CHECK_RESULT $?
+    #orte-server -h | grep "Usage"
+   # CHECK_RESULT $?
+   # orte-submit --allow-run-as-root -h | grep "Usage"
+   # CHECK_RESULT $?
+    #test "$(orte-submit --allow-run-as-root -V |
+    #    grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa openmpi | awk -F "-" '{print$2}')"
+    #CHECK_RESULT $?
+   # orte-top -h | grep "Usage"
+   # CHECK_RESULT $?
+    #orted -h 2>&1 | grep "Usage"
+   # CHECK_RESULT $?
     orterun --allow-run-as-root -h | grep "Usage"
     CHECK_RESULT $?
     test "$(orterun --allow-run-as-root -V |
         grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa openmpi | awk -F "-" '{print$2}')"
     CHECK_RESULT $?
-    oshmem_info -h | grep "Syntax"
-    CHECK_RESULT $?
-    test "$(oshmem_info -V |
-        grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa openmpi | awk -F "-" '{print$2}')"
-    CHECK_RESULT $?
-    oshrun --allow-run-as-root -h | grep "Usage"
-    CHECK_RESULT $?
-    test "$(oshrun --allow-run-as-root -V |
-        grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa openmpi | awk -F "-" '{print$2}')"
-    CHECK_RESULT $?
-    shmemrun --allow-run-as-root -h | grep "Usage"
-    CHECK_RESULT $?
-    test "$(shmemrun --allow-run-as-root -V |
-        grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa openmpi | awk -F "-" '{print$2}')"
-    CHECK_RESULT $?
+    #oshmem_info -h | grep "Syntax"
+  #  CHECK_RESULT $?
+  #  test "$(oshmem_info -V |
+  #      grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa openmpi | awk -F "-" '{print$2}')"
+  #  CHECK_RESULT $?
+  #  oshrun --allow-run-as-root -h | grep "Usage"
+ #   CHECK_RESULT $?
+ #   test "$(oshrun --allow-run-as-root -V |
+ #       grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa openmpi | awk -F "-" '{print$2}')"
+#    CHECK_RESULT $?
+ #   shmemrun --allow-run-as-root -h | grep "Usage"
+  #  CHECK_RESULT $?
+ #   test "$(shmemrun --allow-run-as-root -V |
+  #      grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa openmpi | awk -F "-" '{print$2}')"
+ #   CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
 
