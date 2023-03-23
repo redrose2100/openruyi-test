@@ -47,7 +47,7 @@ function run_test() {
     sgml2xml-isoent -b utf-8 -l empty doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -l failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error --dtd_location=empty doctest/hello.sgml | grep "Hello World!"
+    sgml2xml -b utf-8 -f doctest/error --dtd_location=empty doctest/test1.sgml | grep "<NOTHING"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --dtd_location failed"
 
     LOG_INFO "End to run test."
