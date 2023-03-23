@@ -29,25 +29,25 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    sgml2xml-isoent -b utf-8 -f doctest/error --warning=default doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --warning=default doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --warning failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error -x empty doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -x empty doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -x failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error --xml-output-option=empty doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --xml-output-option=empty doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --xml-output-option failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error -d empty doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -d empty doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -d failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error --entity_output_location=empty doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --entity_output_location=empty doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --entity_output_location failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error -l empty doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -l empty doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -l failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error --dtd_location=empty doctest/hello.sgml | grep "Hello World!"
+    sgml2xml -b utf-8 -f doctest/error --dtd_location=empty doctest/test1.sgml | grep "<NOTHING"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --dtd_location failed"
 
     LOG_INFO "End to run test."
