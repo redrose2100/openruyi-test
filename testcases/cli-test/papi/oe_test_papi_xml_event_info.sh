@@ -43,6 +43,14 @@ function run_test() {
     papi_version | grep "PAPI Version: [[:digit:]]"
     CHECK_RESULT $? 0 0 "Check 'papi_version failed"
 
+    if papi_avail -a | grep -q "Of 0 available events, 0 are derived"; then
+        papi_event_chooser NATIVE PAPI_TLB_DM
+        CHECK_RESULT $? 0 1 "Check papi_event_chooser NATIVE failed"
+    else
+        papi_event_chooser NATIVE PAPI_TLB_DM
+        CHECK_RESULT $? 0 0 "Check papi_event_chooser NATIVE failed"
+    fi
+
     LOG_INFO "End to run test."
 }
 
