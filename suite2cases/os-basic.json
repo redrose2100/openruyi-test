@@ -602,6 +602,9 @@
         },
         {
             "name": "oe_test_disk_io_sched"
+    	},
+        {
+            "name": "oe_test_lsusb"
     	}
     ]
 }
