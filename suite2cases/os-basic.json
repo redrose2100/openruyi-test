@@ -605,6 +605,9 @@
     	},
         {
             "name": "oe_test_lsusb"
+    	},
+        {
+            "name": "oe_test_lastb"
     	}
     ]
 }
