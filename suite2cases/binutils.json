@@ -18,6 +18,9 @@
     },
     {
       "name": "oe_test_binutils_nm"
+    },
+    { 
+      "name": "oe_test_binutils_objdump"    
     }
   ]
 }
