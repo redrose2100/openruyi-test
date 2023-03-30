@@ -12,6 +12,9 @@
         },
         {
             "name": "oe_test_service_nm-cloud-setup"
+        },
+        {
+            "name": "oe_test_libnetfilter_conntrack"
         }
     ]
 }
