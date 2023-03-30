@@ -611,6 +611,9 @@
     	},
         {
             "name": "oe_test_lastb"
+    	},
+        {
+            "name": "oe_test_aureport"
     	}
     ]
 }
