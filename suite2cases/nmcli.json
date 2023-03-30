@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/nmcli",
+    "cases": [
+        {
+            "name": "oe_test_nmcli_cancel_auto_configuration"
+        }
+    ]
+}
+
