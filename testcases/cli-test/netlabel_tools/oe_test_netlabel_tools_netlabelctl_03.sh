@@ -34,6 +34,21 @@ function run_test() {
     netlabelctl calipso add pass doi:11
     netlabelctl calipso list 2>&1 | grep '11'
     CHECK_RESULT $? 0 0 "Check netlabelctl calipso list failed"
+    netlabelctl unlbl add interface:lo address:::1 label:foo
+    CHECK_RESULT $? 0 0 "Check netlabelctl calipso unlbl add interface failed"
+    netlabelctl unlbl del interface:lo address:::1 label:foo  
+    IP=${NODE1_IPV4}
+    IP=${IP%.*}
+    IP=${IP%.*}.0.0/16
+    netlabelctl unlbl add default address:${IP} label:bar
+    CHECK_RESULT $? 0 0 "Check netlabelctl calipso map add default failed"
+    netlabelctl unlbl del default address:${IP} label:bar
+    netlabelctl map add domain:lsm_domain protocol:cipso,16
+    CHECK_RESULT $? 0 0 "Check netlabelctl map add failed"
+    netlabelctl map del domain:lsm_domain
+    netlabelctl map add domain:lsm_domain address:${NODE1_IPV4}/00 protocol:cipso,16
+    CHECK_RESULT $? 0 0 "Check netlabelctl calipso map add failed"
+    netlabelctl map del domain:lsm_domain
     LOG_INFO "End to run test"
 }
 
