@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/c-ares",
+    "cases": [
+        {
+            "name": "oe_test_c_ares"
+        }
+    ]
+}
+
