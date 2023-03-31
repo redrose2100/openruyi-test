@@ -614,6 +614,9 @@
     	},
         {
             "name": "oe_test_aureport"
+    	},
+        {
+            "name": "oe_test_chsh"
     	}
     ]
 }
