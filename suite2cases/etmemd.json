@@ -3,9 +3,6 @@
     "cases": [
         {
             "name": "oe_test_etmemd_001"
-        },
-        {
-            "name": "oe_test_etmem_course"
         }
     ]
 }
