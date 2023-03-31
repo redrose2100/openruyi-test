@@ -24,6 +24,9 @@
 	},
 	{
 	    "name": "oe_test_acl_setfacl"
+	},
+      {
+	    "name": "oe_test_access_providepam"
 	}
     ]
 }
