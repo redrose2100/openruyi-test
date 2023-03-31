@@ -21,6 +21,9 @@
     },
     { 
       "name": "oe_test_binutils_objdump"    
+    },
+    {
+      "name": "oe_test_binutils_readelf"
     }
   ]
 }
