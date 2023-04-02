@@ -18,36 +18,27 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-function pre_test()
-{
+function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
     useradd test
-    touch 1.txt
-
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start to run test."
-
     useradd root 2>&1 | grep -e "useradd: user 'root' already exists"
     CHECK_RESULT $? 0 0 "add root failed"
     useradd test 2>&1 | grep -e "useradd: user 'test' already exists"
     CHECK_RESULT $? 0 0 "add user failed"
-    CHECK_RESULT $(cat /etc/passwd | awk -F ":" '{a[$3]++}END{for(i in a){if(a[i]!=1){print i,a[i]}}}' | wc -l) 0 0 "print failed"
-
+    #CHECK_RESULT $(cat /etc/passwd | awk -F ":" '{a[$3]++}END{for(i in a){if(a[i]!=1){print i,a[i]}}}' | wc -l) 0 0 "print failed"
+    [[ $(cat /etc/passwd | awk -F ":" '{print $3}' | sort | uniq -d | wc -l) == 0 ]]
+    CHECK_RESULT $? 0 0 "uid is not unique"
     LOG_INFO "End to run test."
 }
 
-function post_test()
-{
+function post_test() {
     LOG_INFO "Start to restore the test environment."
-
     userdel -rf test
-    rm -rf 1.txt
-    
     LOG_INFO "End to restore the test environment."
 }
 

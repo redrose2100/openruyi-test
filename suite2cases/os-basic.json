@@ -14,6 +14,9 @@
             "name": "oe_test_who"
         },
         {
+            "name": "oe_test_c++"
+        },
+        {
             "name": "oe_test_tail"
         },
         {
@@ -588,8 +591,32 @@
         {
             "name": "oe_test_libunistring"
         },
+	{
+	    "name": "oe_test_shred"
+	},
         {
             "name": "oe_test_expect"
-        }
+        },
+        {
+            "name": "oe_test_xmlsec"
+        },
+        {
+            "name": "oe_test_tcl"
+        },
+        {
+            "name": "oe_test_disk_io_sched"
+    	},
+        {
+            "name": "oe_test_lsusb"
+    	},
+        {
+            "name": "oe_test_lastb"
+    	},
+        {
+            "name": "oe_test_aureport"
+    	},
+        {
+            "name": "oe_test_chsh"
+    	}
     ]
 }

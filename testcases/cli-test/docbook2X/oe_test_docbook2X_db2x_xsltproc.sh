@@ -35,28 +35,28 @@ function run_test() {
     db2x_xsltproc --help | grep "Usage: /usr/bin/db2x_xsltproc \[options]"
     CHECK_RESULT $? 0 0 "Check --help  failed"
 
-    db2x_xsltproc -s texi -o doctest/hello.txml -D 100 -C /etc/xml/catalog -X libxslt doctest/text.xml -d -I -S -N -P
-    test -f doctest/hello.txml
+    db2x_xsltproc -v | grep "db2x_xsltproc (part of docbook2X [[:digit:]].*)"
+    CHECK_RESULT $? 0 0 "Check db2x_xsltproc --version  failed"
+
+    db2x_xsltproc -h | grep "Usage: /usr/bin/db2x_xsltproc \[options]"
+    CHECK_RESULT $? 0 0 "Check --help  failed"
+
+    db2x_xsltproc -s texi -o doctest/hello.txml -D 100 -C /etc/xml/catalog -X libxslt doctest/text.xml -d -I -S -N -P && test -f doctest/hello.txml
     CHECK_RESULT $? 0 0 "Check db2x_xsltproc -s -o -D -C -X -d -I -S -N -P failed"
 
-    db2x_xsltproc --stylesheet texi --output doctest/hello1.txml --nesting-limit 100 --catalogs /etc/xml/catalog --xslt-processor libxslt doctest/text.xml --debug --xinclude --sgml --network --profile
-    test -f doctest/hello1.txml
+    db2x_xsltproc --stylesheet texi --output doctest/hello1.txml --nesting-limit 100 --catalogs /etc/xml/catalog --xslt-processor libxslt doctest/text.xml --debug --xinclude --sgml --network --profile && test -f doctest/hello1.txml
     CHECK_RESULT $? 0 0 "Check db2x_xsltproc --stylesheet --output --nesting-limit --catalogs --xslt-processor --debug --xinclude --sgml --network --profile failed"
 
-    db2x_xsltproc -s texi -o doctest/hello2.txml -D 100 -C /etc/xml/catalog -X libxslt -p name=admin doctest/text.xml -d -I -S -N
-    test -f doctest/hello2.txml
+    db2x_xsltproc -s texi -o doctest/hello2.txml -D 100 -C /etc/xml/catalog -X libxslt -p name=admin doctest/text.xml -d -I -S -N && test -f doctest/hello2.txml
     CHECK_RESULT $? 0 0 "Check db2x_xsltproc -p failed"
 
-    db2x_xsltproc -s texi -o doctest/hello3.txml -D 100 -C /etc/xml/catalog -X libxslt --param name=admin doctest/text.xml -d -I -S -N
-    test -f doctest/hello3.txml
+    db2x_xsltproc -s texi -o doctest/hello3.txml -D 100 -C /etc/xml/catalog -X libxslt --param name=admin doctest/text.xml -d -I -S -N && test -f doctest/hello3.txml
     CHECK_RESULT $? 0 0 "Check db2x_xsltproc --param failed"
 
-    db2x_xsltproc -s texi -o doctest/hello4.txml -D 100 -C /etc/xml/catalog -X libxslt -g name=admin doctest/text.xml -d -I -S -N
-    test -f doctest/hello4.txml
+    db2x_xsltproc -s texi -o doctest/hello4.txml -D 100 -C /etc/xml/catalog -X libxslt -g name=admin doctest/text.xml -d -I -S -N && test -f doctest/hello4.txml
     CHECK_RESULT $? 0 0 "Check db2x_xsltproc -g failed"
 
-    db2x_xsltproc -s texi -o doctest/hello5.txml -D 100 -C /etc/xml/catalog -X libxslt --string-param name=admin doctest/text.xml -d -I -S -N
-    test -f doctest/hello5.txml
+    db2x_xsltproc -s texi -o doctest/hello5.txml -D 100 -C /etc/xml/catalog -X libxslt --string-param name=admin doctest/text.xml -d -I -S -N && test -f doctest/hello5.txml
     CHECK_RESULT $? 0 0 "Check db2x_xsltproc -g failed"
 
     LOG_INFO "End to run test."
