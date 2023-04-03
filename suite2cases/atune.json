@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_service_atuned_01"
+        },
+        {
+            "name": "oe_test_service_atuned_02"
         }
 
     ]
