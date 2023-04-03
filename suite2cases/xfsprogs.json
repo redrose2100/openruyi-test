@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_xfs_scrub_all"
+        },
+        {
+            "name": "oe_test_service_xfsprogs_001"
         }
     ]
 }
