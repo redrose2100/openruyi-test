@@ -87,6 +87,9 @@
 	},
 	{
 	    "name": "oe_test_openssl_rc4_encryption_file"
+	},
+	{
+	    "name": "oe_test_openssl_sm2"
 	}
     ]
 }
