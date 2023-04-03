@@ -14,6 +14,9 @@
             "name": "oe_test_who"
         },
         {
+            "name": "oe_test_c++"
+        },
+        {
             "name": "oe_test_tail"
         },
         {
@@ -604,7 +607,20 @@
             "name": "oe_test_disk_io_sched"
     	},
         {
+            "name": "oe_test_lsusb"
+    	},
+        {
+            "name": "oe_test_lastb"
+    	},
+        {
+            "name": "oe_test_aureport"
+    	},
+        {
+            "name": "oe_test_chsh"
+    	},
+        {
             "name": "oe_test_lua"
     	}
+
     ]
 }

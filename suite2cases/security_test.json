@@ -123,6 +123,14 @@
         },
         {
             "name": "oe_test_authselect"
+        },
+        {
+            "name": "oe_test_authselect_01"
+        },
+        {
+            "name": "oe_test_authselect_02"
         }
+
+
     ]
 }

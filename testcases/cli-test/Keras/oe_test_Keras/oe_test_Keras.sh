@@ -1,0 +1,47 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2023 Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   zuohanxu
+# @Contact   :   zuohanxu@uniontech.com
+# @Date      :   2023.3.29
+# @License   :   Mulan PSL v2
+# @Desc      :   File system common command test-Keras
+# ############################################
+
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test(){
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "python3-Keras"
+    pip3 install tensorflow -i https://pypi.tuna.tsinghua.edu.cn/simple
+    LOG_INFO "End of environmental preparation!"
+}
+
+function run_test() {
+    python3 Keras_1.py > log1.txt 
+    CHECK_RESULT $? 0 0 "Keras_1.py failure"
+    cat log1.txt | grep Epoch
+    CHECK_RESULT $? 0 0 "Functional model failure"
+    python3 Keras_2.py > log2.txt
+    CHECK_RESULT $? 0 0 "Keras_2.py failure"
+    cat log2.txt | grep Epoch
+    CHECK_RESULT $? 0 0 "Serialization model failure"
+}
+
+function post_test() {
+    DNF_REMOVE
+    pip3 uninstall tensorflow -y
+}
+
+main $@
+
+

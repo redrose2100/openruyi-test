@@ -47,16 +47,16 @@ function run_test() {
     sgml2xml-isoent --help 2>&1 | grep "Usage: /usr/bin/sgml2xml \[OPTION]"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --help failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error -c doctest/1.log -E 10 doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -c doctest/1.log -E 10 doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -c -E failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error --catalog=doctest/1.log -E 10 doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --catalog=doctest/1.log -E 10 doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --catalog -E failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error -C doctest/log doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
+    sgml2xml-isoent -b utf-8 -C doctest/log doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -C failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error1 --catalogs doctest/log doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
+    sgml2xml-isoent -b utf-8 --catalogs doctest/log doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --catalogs failed"
 
     LOG_INFO "End to run test."

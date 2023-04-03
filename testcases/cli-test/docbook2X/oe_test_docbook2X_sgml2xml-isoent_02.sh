@@ -29,34 +29,34 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    sgml2xml-isoent -b utf-8 -f doctest/error -D ./doctest doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -D ./doctest doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -D failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error --directory=./doctest doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --directory=./doctest doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --directory failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error -R doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
+    sgml2xml-isoent -b utf-8 -R doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -R failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error --restricted doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
+    sgml2xml-isoent -b utf-8 --restricted doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --restricted failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error -a doctype doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -a doctype doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -a failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error --activate=doctype doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --activate=doctype doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --activate failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error -A doc doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
+    sgml2xml-isoent -b utf-8 -A doc doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -A failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error --architecture=doc doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
+    sgml2xml-isoent -b utf-8 --architecture=doc doctest/hello.sgml | grep 'xml version="1.0" encoding="utf-8"'
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --architecture failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error -E 10 doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -E 10 doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -E failed"
 
-    sgml2xml-isoent -b utf-8 -f doctest/error --max-errors=10 doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --max-errors=10 doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --max-errors failed"
 
     LOG_INFO "End to run test."
