@@ -36,7 +36,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    sudo firewall-cmd --permanent-to-runtime
+    sudo firewall-cmd --runtime-to-permanent
     sudo firewall-cmd --reload
     LOG_INFO "Finish environment cleanup!"
 }
