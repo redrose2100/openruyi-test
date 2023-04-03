@@ -90,6 +90,9 @@
 	},
 	{
 	    "name": "oe_test_openssl_sm2"
+	},
+	{
+	    "name": "oe_test_openssl_sm4"
 	}
     ]
 }
