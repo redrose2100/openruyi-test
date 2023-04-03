@@ -765,6 +765,9 @@
         },
        {
 	     "name": "oe_test_libxml2_001"
+        },
+        {
+	     "name": "oe_test_libxml2_002"
         }
 
     ]
