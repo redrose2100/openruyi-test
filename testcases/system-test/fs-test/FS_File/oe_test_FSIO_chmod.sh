@@ -30,6 +30,8 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to test."
     mkdir -p /tmp/$testdir/test02/test03
+    touch /tmp/$testdir/test02/test02.txt
+    touch /tmp/$testdir/test02/test03/test03.txt
     per01=$(ls -l /tmp | grep "$testdir" | awk '{print $1}')
     per02=$(ls -l /tmp/$testdir | grep "test02" | awk '{print $1}')
     [[ "$per01" =~ "drwxr-xr-x" ]]
@@ -41,13 +43,28 @@ function run_test() {
     CHECK_RESULT $? 0 0 "The access of /tmp is error."
     [ "$per02" == "$per04" ]
     CHECK_RESULT $? 0 0 "The access of /tmp/$testdir is error."
+    chmod +x /tmp/$testdir/test02/test03/test03.txt
+    per08=$(ls -l /tmp/$testdir/test02/test03 | grep "test03.txt" | awk '{print $1}')
+    [[ "$per08" =~ "-rwxr-xr-x." ]]
+    CHECK_RESULT $? 0 0 "The access of /tmp/$testdir/test02/test03/test03.txt is error."
+    chmod u-x /tmp/$testdir/test02/test03/test03.txt
+    per09=$(ls -l /tmp/$testdir/test02/test03 | grep "test03.txt" | awk '{print $1}')
+    [[ "$per09" =~ "-rw-r-xr-x" ]]
+    CHECK_RESULT $? 0 0 "The access of /tmp/$testdir/test02/test03/test03.txt is error."
+    chmod o-w /tmp/$testdir/test02/test03/test03.txt
+    per10=$(ls -l /tmp/$testdir/test02/test03 | grep "test03.txt" | awk '{print $1}')
+    [[ "$per10" =~ "-rw-r-xr-x" ]]
+    CHECK_RESULT $? 0 0 "The access of /tmp/$testdir/test02/test03/test03.txt is error."
     chmod -R 777 /tmp/$testdir
     per05=$(ls -l /tmp/ | grep "$testdir" | awk '{print $1}')
     per06=$(ls -l /tmp/$testdir | grep "test02" | awk '{print $1}')
+    per07=$(ls -l /tmp/$testdir/test02/ | grep "test02.txt" | awk '{print $1}')
     [[ "$per05" =~ "drwxrwxrwx" ]]
     CHECK_RESULT $? 0 0 "The access of /tmp is error."
     [[ "$per06" =~ "drwxrwxrwx" ]]
     CHECK_RESULT $? 0 0 "The access of /tmp/$testdir is error."
+    [[ "$per07" =~ "-rwxrwxrwx" ]]
+    CHECK_RESULT $? 0 0 "The access of /tmp/$testdir/test02/test02.txt is error."
     chmod --help | grep "Usage"
     CHECK_RESULT $? 0 0 "The chmode help usage is error."
     LOG_INFO "End to test!"
@@ -60,3 +77,4 @@ function post_test() {
 }
 
 main $@
+
