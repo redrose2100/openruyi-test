@@ -21,6 +21,10 @@
         {
             "name": "oe_test_ipip",
             "machine type": "physical"
+        },
+        {
+            "name": "oe_test_io_sched",
+            "machine type": "physical"
         }
     ]
 }
