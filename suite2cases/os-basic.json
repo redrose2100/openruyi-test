@@ -20,6 +20,9 @@
             "name": "oe_test_md5sum"
         },
         {
+            "name": "oe_test_sha256sum"
+        },
+        {
             "name": "oe_test_tail"
         },
         {
