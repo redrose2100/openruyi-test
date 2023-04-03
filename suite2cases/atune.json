@@ -6,6 +6,11 @@
         },
         {
             "name": "oe_test_service_atune-engine"
+        },
+        {
+            "name": "oe_test_service_atuned_01"
         }
+
     ]
 }
+
