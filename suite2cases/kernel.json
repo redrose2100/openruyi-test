@@ -25,6 +25,10 @@
         {
             "name": "oe_test_io_sched",
             "machine type": "physical"
+        },
+        {
+            "name": "oe_test_cache_rw",
+            "machine type": "physical"
         }
     ]
 }
