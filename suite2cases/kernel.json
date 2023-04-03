@@ -17,6 +17,10 @@
         {
             "name": "oe_test_service_cpupower",
             "machine type": "physical"
+        },
+        {
+            "name": "oe_test_ipip",
+            "machine type": "physical"
         }
     ]
 }
