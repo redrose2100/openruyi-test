@@ -19,6 +19,16 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+<<<<<<< HEAD
+=======
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    LOG_INFO "End to prepare the test environment."
+}
+
+>>>>>>> fb75928cf517aea2f3a0648eb773646e0e8b93c8
 function run_test() {
     LOG_INFO "Start to run test."
     sha256sum --help | grep "Usage: sha256sum"
