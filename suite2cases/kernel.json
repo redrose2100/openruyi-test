@@ -41,6 +41,10 @@
         {
             "name": "oe_test_hqlogic",
             "machine type": "physical"
+        },
+        {
+            "name": "oe_test_cpu_rand",
+            "machine type": "physical"
         }
     ]
 }
