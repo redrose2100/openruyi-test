@@ -93,6 +93,9 @@
 	},
 	{
 	    "name": "oe_test_openssl_sm4"
+	},
+	{
+	    "name": "oe_test_openssl_hmac"
 	}
     ]
 }
