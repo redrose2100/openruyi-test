@@ -620,6 +620,9 @@
     	},
         {
             "name": "oe_test_chsh"
+    	},
+        {
+            "name": "oe_test_lua"
     	}
     ]
 }
