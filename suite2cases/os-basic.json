@@ -626,6 +626,9 @@
     	},
         {
             "name": "oe_test_server_fontconfig"
+    	},
+        {
+            "name": "oe_test_server_libtasn1"
     	}
     ]
 }
