@@ -45,6 +45,10 @@
         {
             "name": "oe_test_cpu_rand",
             "machine type": "physical"
+        },
+        {
+            "name": "oe_test_qxl",
+            "machine type": "physical"
         }
     ]
 }
