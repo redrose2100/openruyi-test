@@ -36,6 +36,30 @@ function run_test() {
          CHECK_RESULT $? 0 0 "Check inode failed."
         grep -q "test" $var/testfile2
         CHECK_RESULT $? 0 0 "The file info of $var/testfile2 is false."
+        mkdir $var/test_dir
+        mv $var/testfile2 $var/test_dir
+        inode3=$(stat $var/test_dir/testfile2 | grep Inode | cut -d : -f 3 | awk '{print $1}')
+        [[ $inode1 -eq $inode3 ]]
+         CHECK_RESULT $? 0 0 "Check inode failed."
+        grep -q "test" $var/test_dir/testfile2
+        CHECK_RESULT $? 0 0 "The file info of $var/test_dir/testfile2 is false."
+        touch $var/test_dir/testfile3
+        echo "cover" >$var/test_dir/testfile3
+        grep -q "cover" $var/test_dir/testfile3
+        CHECK_RESULT $? 0 0 "The file info of $var/test_dir/testfile3 is false."
+        mv -f $var/test_dir/testfile2 $var/test_dir/testfile3
+        grep -q "test" $var/test_dir/testfile3
+        CHECK_RESULT $? 0 0 "The file info of $var/test_dir/testfile3 is false."
+        touch $var/test_dir/testfile4
+        echo "new" >$var/test_dir/testfile4
+        grep -q "new" $var/test_dir/testfile4
+        CHECK_RESULT $? 0 0 "The file info of $var/test_dir/testfile4 is false."
+        mv -u $var/test_dir/testfile3 $var/test_dir/testfile4
+        grep -q "new" $var/test_dir/testfile4
+        CHECK_RESULT $? 0 0 "The file info of $var/test_dir/testfile4 is false."
+        mv -fb $var/test_dir/testfile3 $var/test_dir/testfile4
+        grep -q "new" $var/test_dir/testfile4~
+        CHECK_RESULT $? 0 0 "The file info of -fb $var/test_dir/testfile4 is false."
     done
     LOG_INFO "End to run test."
 }
