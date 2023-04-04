@@ -22,6 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
 	LOG_INFO "Start to prepare the test environment."
 	DNF_INSTALL "sos tar"
+	hostname=$(hostname)
 	LOG_INFO "Finish preparing the test environment."
 }
 
@@ -37,7 +38,7 @@ function run_test() {
 		sleep 120
 		expect eof
 EOF
-	grep "sosreport-localhost-log-size-$(date +%Y-%m-%d)" sos_log16 && test -f /var/tmp/sosreport-localhost-log-size-$(date +%Y-%m-%d)-*.tar.xz
+	grep "sosreport-${hostname}-log-size-$(date +%Y-%m-%d)" sos_log16 && test -f /var/tmp/sosreport-${hostname}-log-size-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
 	expect <<EOF
 		log_file sos_log17
@@ -47,7 +48,7 @@ EOF
 		sleep 120
 		expect eof
 EOF
-	grep "sosreport-localhost-skip-plugins-$(date +%Y-%m-%d)" sos_log17 && test -f /var/tmp/sosreport-localhost-skip-plugins-$(date +%Y-%m-%d)-*.tar.xz
+	grep "sosreport-${hostname}-skip-plugins-$(date +%Y-%m-%d)" sos_log17 && test -f /var/tmp/sosreport-${hostname}-skip-plugins-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
 	expect <<EOF
 		log_file sos_log18
@@ -57,11 +58,11 @@ EOF
 		sleep 120
 		expect eof
 EOF
-	grep "sosreport-localhost-no-report-$(date +%Y-%m-%d)" sos_log18 && test -f /var/tmp/sosreport-localhost-no-report-$(date +%Y-%m-%d)-*.tar.xz
+	grep "sosreport-${hostname}-no-report-$(date +%Y-%m-%d)" sos_log18 && test -f /var/tmp/sosreport-${hostname}-no-report-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
-	no_report_file=$(ls /var/tmp/sosreport-localhost-no-report-$(date +%Y-%m-%d)-*.tar.xz)
+	no_report_file=$(ls /var/tmp/sosreport-${hostname}-no-report-$(date +%Y-%m-%d)-*.tar.xz)
 	tar -xvf ${no_report_file}
-	test -f sosreport-localhost-no-report-$(date +%Y-%m-%d)-*/sos_reports/sos.html -a -f sosreport-localhost-no-report-$(date +%Y-%m-%d)-*/sos_reports/sos.txt -a -f sosreport-localhost-no-report-$(date +%Y-%m-%d)-*/sos_reports/sos.json
+	test -f sosreport-${hostname}-no-report-$(date +%Y-%m-%d)-*/sos_reports/sos.html -a -f sosreport-${hostname}-no-report-$(date +%Y-%m-%d)-*/sos_reports/sos.txt -a -f sosreport-${hostname}-no-report-$(date +%Y-%m-%d)-*/sos_reports/sos.json
 	CHECK_RESULT $? 1
 	expect <<EOF
 		log_file sos_log21
@@ -71,11 +72,11 @@ EOF
 		sleep 120
 		expect eof
 EOF
-	grep "sosreport-localhost-testnote-$(date +%Y-%m-%d)" sos_log21 && test -f /var/tmp/sosreport-localhost-testnote-$(date +%Y-%m-%d)-*.tar.xz
+	grep "sosreport-${hostname}-testnote-$(date +%Y-%m-%d)" sos_log21 && test -f /var/tmp/sosreport-${hostname}-testnote-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
 	sosreport -o dnf,rpm,selinux,dovecot --batch --label only-plugins >sos_log22
 	CHECK_RESULT $?
-	grep -E "4|dnf|rpm|selinux|dovecot|sosreport-localhost-only-plugins-$(date +%Y-%m-%d)-.*.tar.xz" sos_log22 && test -f /var/tmp/sosreport-localhost-only-plugins-$(date +%Y-%m-%d)-*.tar.xz
+	grep -E "4|dnf|rpm|selinux|dovecot|sosreport-${hostname}-only-plugins-$(date +%Y-%m-%d)-.*.tar.xz" sos_log22 && test -f /var/tmp/sosreport-${hostname}-only-plugins-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
 	LOG_INFO "End of the test."
 }
