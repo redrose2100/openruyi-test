@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_service_iptables"
+        },
+        {
+            "name": "oe_test_iptables-restore"
         }
     ]
 }
