@@ -632,6 +632,9 @@
     	},
         {
             "name": "oe_test_server_libtasn1"
+    	},
+        {
+            "name": "oe_test_count_gperftools_function"
     	}
     ]
 }
