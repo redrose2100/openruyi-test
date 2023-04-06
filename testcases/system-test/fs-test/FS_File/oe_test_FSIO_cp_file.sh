@@ -34,6 +34,19 @@ function run_test() {
         inode2=$(stat $var/testfile2 | grep Inode | cut -d : -f 3 | awk '{print $1}')
         [[ $inode1 -ne $inode2 ]]
         CHECK_RESULT $? 0 0 "Check inode failed."
+        chmod 777 $var/testfile2
+        cp -p $var/testfile2 $var/testfile3
+        per01=$(ls -l $var/ | grep "testfile3" | awk '{print $1}')
+        [[ "$per01" =~ "-rwxrwxrwx." ]]
+        mkdir -p $var/testdir1/testdir2
+        cp $var/testfile2 $var/testdir1/testdir2
+        cp -r $var/testdir1 $var/testdir3
+        ls $var/testdir3/testdir2/testfile2
+        CHECK_RESULT $? 0 0 "Check $var/testdir1/$var/testdir1/testfile2 file failed."
+        echo "test1111" > $var/testfile2
+        cp -f $var/testfile2 $var/testdir3/testdir2/testfile2
+        grep -q "test1111" $var/testdir3/testdir2/testfile2
+        CHECK_RESULT $? 0 0 "Check file failed."
     done
     LOG_INFO "End to run test."
 }
