@@ -31,6 +31,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "gsettings list-relocatable-schemas error"
     gsettings list-recursively
     CHECK_RESULT $? 0 0 "gsettings list-recursively error"
+    t_schema=$(gsettings list-schemas | tail -n 1)
+    gsettings list-keys "${t_schema}" 
+    CHECK_RESULT $? 0 0 "gsettings list-keys error"
+    t_key=$(gsettings list-keys "${t_schema}" | tail -n 1)
+    gsettings get "${t_schema}" "${t_key}"
+    CHECK_RESULT $? 0 0 "gsettings get key value error"
     LOG_INFO "End to run test."
 }
 
