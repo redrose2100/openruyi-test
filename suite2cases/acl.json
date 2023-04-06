@@ -27,6 +27,9 @@
 	},
       {
 	    "name": "oe_test_access_providepam"
+	},
+        {
+	    "name": "oe_test_acl_file"
 	}
     ]
 }
