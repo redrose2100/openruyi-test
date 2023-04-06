@@ -17,6 +17,9 @@
             "name": "oe_test_sha256sum"
         },
         {
+            "name": "oe_test_dmraid"
+        },
+        {
             "name": "oe_test_c++"
         },
         {
