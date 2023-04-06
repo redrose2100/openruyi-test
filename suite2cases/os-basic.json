@@ -635,6 +635,9 @@
     	},
         {
             "name": "oe_test_count_gperftools_function"
-    	}
+    	},
+	{
+	    "name": "oe_test_split"
+	}
     ]
 }
