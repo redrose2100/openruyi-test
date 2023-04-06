@@ -98,7 +98,7 @@ xmlFreeDoc(doc);
 return 0;
 }
 EOF
-    DNF_INASTALL "libxml2 libxml2-devel"
+    DNF_INSTALL "libxml2 libxml2-devel"
     LOG_INFO "End of environmental preparation!"
 }
 
