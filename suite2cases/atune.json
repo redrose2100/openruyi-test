@@ -21,6 +21,12 @@
 	},
 	{
 	    "name": "oe_test_service_atuned_05"
+        },
+        {
+            "name": "oe_test_service_atuned_06"
+        },
+        {
+            "name": "oe_test_service_atuned_07"
         }
 
     ]
