@@ -32,7 +32,8 @@ function deploy_autund()
     sed -i "s/rest_tls = true/rest_tls = false/g" /etc/atuned/atuned.cnf
     sed -i "s/engine_tls = true/engine_tls = false/g" /etc/atuned/atuned.cnf
     sed -i "s/engine_tls = true/engine_tls = false/g" /etc/atuned/engine.cnf
-    systemctl start atuned
+    creat_ca
+    systemctl start atuned 
     systemctl status atuned |grep running
     CHECK_RESULT $? 0 0 "atuned service startup failure"
     systemctl start atune-engine
@@ -48,3 +49,61 @@ function clean_autund() {
     mv /etc/atuned/engine.cnf.bak /etc/atuned/engine.cnf
     DNF_REMOVE
 }
+
+function creat_ca() {
+    CERT_PATH=demo
+    mkdir $CERT_PATH
+
+    ### 2) 生成CA的RSA密钥对
+    openssl genrsa -out $CERT_PATH/ca.key 2048
+
+    ### 3) 生成CA根证书
+    openssl req -new -x509 -days 3650 -subj "/CN=ca" -key $CERT_PATH/ca.key -out $CERT_PATH/ca.crt
+
+    ### 4) 生成服务器证书
+
+    # ip地址可以根据实际情况修改
+
+    IP_ADDR=localhost
+    openssl genrsa -out $CERT_PATH/server.key 2048
+    cp /etc/pki/tls/openssl.cnf $CERT_PATH
+
+    if test $IP_ADDR == localhost; then
+        echo "[SAN]\nsubjectAltName=DNS:$IP_ADDR" >> $CERT_PATH/openssl.cnf
+        echo "subjectAltName=DNS:$IP_ADDR" > $CERT_PATH/extfile.cnf
+    else
+        echo "[SAN]\nsubjectAltName=IP:$IP_ADDR" >> $CERT_PATH/openssl.cnf
+        echo "subjectAltName=IP:$IP_ADDR" > $CERT_PATH/extfile.cnf
+    fi
+
+    openssl req -new -subj "/CN=$IP_ADDR" -config $CERT_PATH/openssl.cnf \
+                     -key $CERT_PATH/server.key -out $CERT_PATH/server.csr
+    openssl x509 -req -sha256 -CA $CERT_PATH/ca.crt -CAkey $CERT_PATH/ca.key -CAcreateserial -days 3650 \
+                     -extfile $CERT_PATH/extfile.cnf -in $CERT_PATH/server.csr -out $CERT_PATH/server.crt
+    rm -rf $CERT_PATH/*.srl $CERT_PATH/*.csr $CERT_PATH/*.cnf
+
+    ### 5) 生成客户端证书
+    # ip地址可以根据实际情况修改
+    IP_ADDR=localhost
+    openssl genrsa -out $CERT_PATH/client.key 2048
+    cp /etc/pki/tls/openssl.cnf $CERT_PATH
+
+
+    if test $IP_ADDR == localhost; then
+        echo "[SAN]\nsubjectAltName=DNS:$IP_ADDR" >> $CERT_PATH/openssl.cnf
+        echo "subjectAltName=DNS:$IP_ADDR" > $CERT_PATH/extfile.cnf
+    else
+        echo "[SAN]\nsubjectAltName=IP:$IP_ADDR" >> $CERT_PATH/openssl.cnf
+        echo "subjectAltName=IP:$IP_ADDR" > $CERT_PATH/extfile.cnf
+    fi
+
+    openssl req -new -subj "/CN=$IP_ADDR" -config $CERT_PATH/openssl.cnf \
+                -key $CERT_PATH/client.key -out $CERT_PATH/client.csr
+    openssl x509 -req -sha256 -CA $CERT_PATH/ca.crt -CAkey $CERT_PATH/ca.key -CAcreateserial -days 3650 \
+                -extfile $CERT_PATH/extfile.cnf -in $CERT_PATH/client.csr -out $CERT_PATH/client.crt
+    rm -rf $CERT_PATH/*.srl $CERT_PATH/*.csr $CERT_PATH/*.cnf
+    cp -ar $(pwd)/demo/ca.crt demo/server* /etc/atuned/rest_certs/
+    cp -ar $(pwd)/demo/ca.crt demo/client* /etc/atuned/engine_certs/
+    cp -ar $(pwd)/demo/ca.crt demo/server* /etc/atuned/engine_certs/
+}
+
