@@ -96,6 +96,9 @@
 	},
 	{
 	    "name": "oe_test_openssl_hmac"
+	},
+	{
+	    "name": "oe_test_openssl_speed"
 	}
     ]
 }
