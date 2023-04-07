@@ -12,6 +12,9 @@
         },
         {
             "name": "oe_test_ip6tables-save"
+	},
+	{
+	    "name": "oe_test_ip6tables-restore_01"
         }
     ]
 }
