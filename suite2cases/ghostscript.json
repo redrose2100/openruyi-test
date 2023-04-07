@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_ghostscript_001"
+        },
+        {
+            "name": "oe_test_ghostscript_002"
         }
     ]
 }
