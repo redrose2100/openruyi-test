@@ -57,6 +57,11 @@
         {
             "name": "oe_test_swap_compress",
             "machine type": "physical"
+        },
+        {
+            "name": "oe_test_lpfc",
+            "machine type": "physical"
         }
     ]
 }
+
