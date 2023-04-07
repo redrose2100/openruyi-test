@@ -66,5 +66,7 @@
 	    "name": "oe_test_swappiness",
             "machine type": "physical"
 	}
+        }
     ]
 }
+
