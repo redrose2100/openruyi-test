@@ -61,6 +61,11 @@
         {
             "name": "oe_test_lpfc",
             "machine type": "physical"
+        },
+	{
+	    "name": "oe_test_swappiness",
+            "machine type": "physical"
+	}
         }
     ]
 }
