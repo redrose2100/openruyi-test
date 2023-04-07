@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_iptables-restore"
+        },
+        {
+            "name": "oe_test_ip6tables-save"
         }
     ]
 }
