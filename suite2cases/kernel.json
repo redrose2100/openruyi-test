@@ -53,6 +53,10 @@
         {
             "name": "oe_test_vport-geneve",
             "machine type": "physical"
+        },
+        {
+            "name": "oe_test_swap_compress",
+            "machine type": "physical"
         }
     ]
 }
