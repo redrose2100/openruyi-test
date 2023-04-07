@@ -768,7 +768,10 @@
         },
         {
 	     "name": "oe_test_libxml2_002"
-        }
+        },
+	{
+	    "name": "oe_test_logrotate_004"
+	}
 
     ]
 }
