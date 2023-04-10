@@ -50,6 +50,9 @@
             "name": "oe_test_auditctl"
         },
         {
+            "name": "oe_test_accessdb"
+        },
+        {
             "name": "oe_test_cksum"
         },
         {
