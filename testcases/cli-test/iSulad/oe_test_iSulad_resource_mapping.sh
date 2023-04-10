@@ -22,6 +22,8 @@ source "./common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     iSulad_install
+    localhostname=$(hostname)
+    hostname test
     LOG_INFO "Start to prepare the test environment."
 }
 
@@ -108,6 +110,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    hostname ${localhostname}
     isula rmi centos
     iSulad_remove
     rm -rf /tmp/log_volume
