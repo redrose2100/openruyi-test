@@ -1,0 +1,11 @@
+{
+    "path": "${OET_PATH}/testcases/cli-test/accessControl",
+    "machine type": "physical",
+    "cases": [
+        {
+            "name": "oe_test_directory_exe_permission",
+            "machine type": "physical"
+        }
+    ]
+}
+
