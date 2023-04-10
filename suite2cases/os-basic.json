@@ -17,6 +17,9 @@
             "name": "oe_test_base32"
         },
         {
+            "name": "oe_test_base64"
+        },
+        {
             "name": "oe_test_sha256sum"
         },
         {
