@@ -68,6 +68,9 @@
             "name": "oe_test_iscsi"
         },
         {
+            "name": "oe_test_journalctl"
+        },
+        {
             "name": "oe_test_krb5"
         },
         {
