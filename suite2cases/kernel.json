@@ -61,6 +61,10 @@
         {
             "name": "oe_test_lpfc",
             "machine type": "physical"
+        },
+        {
+            "name": "oe_test_check_huge_task",
+            "machine type": "physical"
         }
     ]
 }
