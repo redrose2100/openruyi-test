@@ -29,6 +29,9 @@ function run_test() {
     echo 65536 >/proc/sys/fs/file-max
     grep 65536 /proc/sys/fs/file-max
     CHECK_RESULT $? 0 0 "Modify /proc/sys/fs/file-max failed."
+    file_nr=$(cat /proc/sys/fs/file-nr |awk '{ print$3 }')
+    [[ "$file_nr" =~ "65536" ]]
+    CHECK_RESULT $? 0 0 "/proc/sys/fs/file-nr does not change with the value of /proc/sys/fs/file-max"
     echo 65536 >/proc/sys/fs/file-nr
     CHECK_RESULT $? 1 0 "/proc/sys/fs/file-nr can be modified"
     LOG_INFO "End to run test."
@@ -37,6 +40,11 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     echo $origin >/proc/sys/fs/file-max
+    grep $origin /proc/sys/fs/file-max
+    CHECK_RESULT $? 0 0 "Modify /proc/sys/fs/file-max failed."
+    file_nr=$(cat /proc/sys/fs/file-nr |awk '{ print$3 }')
+    [[ "$file_nr" =~ "$origin" ]]
+    CHECK_RESULT $? 0 0 "/proc/sys/fs/file-nr does not change with the value of /proc/sys/fs/file-max"
     LOG_INFO "End to restore the test environment."
 }
 
