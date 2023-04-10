@@ -65,7 +65,12 @@
         {
             "name": "oe_test_check_huge_task",
             "machine type": "physical"
+	},
+	{
+            "name": "oe_test_swappiness",
+            "machine type": "physical"
         }
+
     ]
 }
 
