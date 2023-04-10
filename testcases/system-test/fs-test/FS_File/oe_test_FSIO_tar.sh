@@ -46,6 +46,18 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Check files in tar in $var failed."
         tar -Pxvf $testTar
         CHECK_RESULT $? 0 0 "Decompress file by tar in $var failed."
+        tar -czf "$var/testTar$cur_date.tar.gz" $var/$testFile1 $var/$testFile2 $var/$testFile3
+        CHECK_RESULT $? 0 0 "Compress file by tar in $var failed."
+        tar -xzvf "$var/testTar$cur_date.tar.gz" |grep "testFile1"
+        CHECK_RESULT $? 0 0 "Check files $var/testTar$cur_date.tar.gz failed."
+        grep -q "test file 1" $var/$testFile1
+        CHECK_RESULT $? 0 0 "Check files $var/$testFile1 failed."
+        tar -cjf "$var/testTar$cur_date.tar.bz2" $var/$testFile1 $var/$testFile2 $var/$testFile3
+        CHECK_RESULT $? 0 0 "Compress file by tar in $var failed."
+        tar -xjvf "$var/testTar$cur_date.tar.bz2" | grep "testFile1"
+        CHECK_RESULT $? 0 0 "Check files $var/testTar$cur_date.tar.bz2 failed."
+        grep -q "test file 2" $var/$testFile2
+        CHECK_RESULT $? 0 0 "Check files $var/$testFile2 failed."
     done
     LOG_INFO "End to run test."
 }
