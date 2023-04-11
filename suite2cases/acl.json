@@ -30,6 +30,9 @@
 	},
         {
 	    "name": "oe_test_acl_file"
+	},
+        {
+	    "name": "oe_test_acl_default_kernel_setting"
 	}
     ]
 }
