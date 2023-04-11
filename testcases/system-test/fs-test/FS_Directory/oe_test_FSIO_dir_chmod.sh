@@ -75,6 +75,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list=$(echo ${point_list[@]})
     REMOVE_FS "$list"
+    userdel $user
     LOG_INFO "End to restore the test environment."
 }
 
