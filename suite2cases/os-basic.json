@@ -20,6 +20,9 @@
             "name": "oe_test_base64"
         },
         {
+            "name": "oe_test_biosdecode"
+        },
+        {
             "name": "oe_test_sha256sum"
         },
         {
