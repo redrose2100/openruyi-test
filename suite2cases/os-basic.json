@@ -659,6 +659,9 @@
         },
         {
             "name": "oe_test_glibc"
+        },
+        {
+            "name": "oe_test_cairo"
         }
     ]
 }
