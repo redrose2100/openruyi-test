@@ -745,7 +745,7 @@
         {
             "name": "oe_test_user_debug_iotop_03"
         },
-	{
+	 {
             "name": "oe_test_user_debug_iotop_SCEN_01"
         },
         {
@@ -771,6 +771,9 @@
         },
 	{
 	    "name": "oe_test_logrotate_004"
+	},
+       {
+	    "name": "oe_test_gcc_001"
 	}
 
     ]
