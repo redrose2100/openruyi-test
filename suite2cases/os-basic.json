@@ -648,11 +648,14 @@
         {
             "name": "oe_test_count_gperftools_function"
     	},
-	{
-	    "name": "oe_test_split"
-	},
-	{
-	    "name": "oe_test_popd_001"
-	}
+    {
+        "name": "oe_test_split"
+    },
+    {
+        "name": "oe_test_popd_001"
+    },
+    {
+        "name": "oe_test_glibc"
+    }
     ]
 }
