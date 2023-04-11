@@ -69,6 +69,10 @@
 	{
             "name": "oe_test_swappiness",
             "machine type": "physical"
+        },
+	{
+            "name": "oe_test_softdog",
+            "machine type": "physical"
         }
 
     ]
