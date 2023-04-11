@@ -22,6 +22,9 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     cur_date=$(date +%Y%m%d%H%M%S)
     point_list=($(CREATE_FS))
+    user="test"$cur_date
+    useradd $user
+    echo "testpasswd" | passwd $user --stdin
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -41,6 +44,20 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Check access of $var/tmp failed."
         [ "$per02" == "$per04" ]
         CHECK_RESULT $? 0 0 "Check access of $var/tmp/test01 failed."
+        chmod u-x $var/tmp/test01/test02
+        per07=$(ls -l $var/tmp/test01 | grep "test02" | awk '{print $1}')
+        [[ "$per07" =~ "drw-r-xr-x" ]]
+        CHECK_RESULT $? 0 0 "Check access of $var/tmp/test01/test02 failed."
+        chmod a-r $var/tmp/test01/test02/test03
+        per08=$(ls -l $var/tmp/test01/test02 | grep "test03" | awk '{print $1}')
+        [[ "$per08" =~ "d-wx--x--x" ]]
+        CHECK_RESULT $? 0 0 "Check access of $var/tmp/test01/test02/test03 failed."
+        chmod o-x $var/tmp/test01/test02/test03
+        per09=$(ls -l $var/tmp/test01/test02 | grep "test03" | awk '{print $1}')
+        [[ "$per09" =~ "d-wx--x---" ]]
+        CHECK_RESULT $? 0 0 "Check access of $var/tmp/test01/test02/test03 failed."
+        su - $user -c "cd $var/tmp/test01/test02/test03"
+        CHECK_RESULT $? 0 1 "Successfully accessed $var/tmp/test01/test02/test03 using $user"
         chmod -R 777 $var/tmp/test01
         per05=$(ls -l $var/tmp/ | grep "test01" | awk '{print $1}')
         per06=$(ls -l $var/tmp/test01 | grep "test02" | awk '{print $1}')
@@ -58,6 +75,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list=$(echo ${point_list[@]})
     REMOVE_FS "$list"
+    userdel $user
     LOG_INFO "End to restore the test environment."
 }
 
