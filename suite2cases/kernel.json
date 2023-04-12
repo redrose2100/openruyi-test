@@ -77,6 +77,10 @@
 	{
             "name": "oe_test_cifs",
             "machine type": "physical"
+	},
+	{
+            "name": "oe_test_xfs",
+            "machine type": "physical"
         }
     
     ]
