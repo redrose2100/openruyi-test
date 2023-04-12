@@ -23,6 +23,10 @@ function run_test()
 {
     LOG_INFO "Start to run test."
     service auditd restart
+    aureport --success | grep "Success Summary Report"
+    CHECK_RESULT $? 0 0 "aureport --success failed"
+    aureport --failed  | grep "Failed Summary Report"
+    CHECK_RESULT $? 0 0 "aureport --failed failed"
     aureport -e -ts today -te today
     CHECK_RESULT $? 0 0 "aureport failed"
     LOG_INFO "End to run test."
