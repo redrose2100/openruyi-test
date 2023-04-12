@@ -14,7 +14,7 @@
 # @Contact   :   pengrui@uniontech.com
 # @Date      :   2023.4.12
 # @License   :   Mulan PSL v2
-# @Desc      :   File system common command test-gcc
+# @Desc      :   Dynamic Compilation Test for gcc Command
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
@@ -76,8 +76,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf ${path1} ${path2}
-    
+    rm -rf ${path1} ${path2}    
     LOG_INFO "Finish environment cleanup!"
 }
 
