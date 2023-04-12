@@ -14,7 +14,7 @@
 # @Contact   :   xiechangyan@uniontech.com
 # @Date      :   2023-04-12
 # @License   :   Mulan PSL v2
-# @Desc      :   Use nss case
+# @Desc      :   Use c_stat case
 # ############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
