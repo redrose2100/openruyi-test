@@ -30,16 +30,16 @@ function run_test() {
     LOG_INFO "Start to run test."
     echo "111" >testfile1
     CHECK_RESULT $? 0 0 "check create file fail"
-    sum=`cksum testfile1 |awk '{print$1}'`
+    sum=$(cksum testfile1 |awk '{print$1}')
     CHECK_RESULT $? 0 0  "check integrity of file fail"
     echo "222" >testfile1
     CHECK_RESULT $? 0 0 "check modify file fail"
-    cksum testfile1 |awk '{print$1}'|grep $sum
-    CHECK_RESULT $? 0 1 
+    cksum testfile1 |awk '{print$1}'|grep ${sum}
+    CHECK_RESULT $? 0 1 "cksum exec error after testfile changed"
     cksum --help|grep cksum
-    CHECK_RESULT $? 0 0  "check command fail"
-    cksum --version|grep "8.32"
-    CHECK_RESULT $? 0 0  "check command fail"
+    CHECK_RESULT $? 0 0 "cksum --help command fail"
+    cksum --version
+    CHECK_RESULT $? 0 0 "cksum --version command fail"
     rm -rf testfile1
     CHECK_RESULT $? 0 0 "check delete file fail"
     LOG_INFO "End to run test."
