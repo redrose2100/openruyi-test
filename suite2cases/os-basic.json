@@ -17,6 +17,9 @@
             "name": "oe_test_comm"
         },
         {
+            "name": "oe_test_look"
+        },
+        {
             "name": "oe_test_whereis"
         },
         {
