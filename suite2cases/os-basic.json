@@ -674,6 +674,9 @@
         },
         {
             "name": "oe_test_cairo"
+        },
+        {
+            "name": "oe_test_c_stat"
         }
     ]
 }
