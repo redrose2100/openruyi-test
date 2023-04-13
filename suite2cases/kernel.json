@@ -81,8 +81,11 @@
 	{
             "name": "oe_test_xfs",
             "machine type": "physical"
-        }
-    
+        },
+	{ 
+	    "name": "oe_test_wangxun",
+	    "machine type": "physical"
+	}
     ]
 }
 
