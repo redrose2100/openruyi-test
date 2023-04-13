@@ -22,12 +22,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
     sha256sum --help | grep "Usage: sha256sum"
-    CHECK_RESULT $? 0 0 "The file content is abnormal "
+    CHECK_RESULT $? 0 0 "sha256sum --help exec failed"
     echo "test1234" >testfile
     CHECK_RESULT $? 0 0 "check create file fail"
     sha256sum  testfile  > testfile.sha256sum  
-    test -f testfile1.sha256sum
-    CHECK_RESULT $? 0 0 "The testfile1.sha256sum is not exit "  
+    test -e testfile.sha256sum
+    CHECK_RESULT $? 0 0 "The testfile.sha256sum is not exit "  
     LOG_INFO "End to run test."
 }
 
