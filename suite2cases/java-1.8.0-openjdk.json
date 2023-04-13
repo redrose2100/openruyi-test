@@ -30,6 +30,9 @@
         },
         {
             "name": "oe_test_openjdk_servertool_unpack200"
+        },
+        {
+            "name": "oe_test_java"
         }
     ]
 }
