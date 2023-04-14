@@ -686,6 +686,9 @@
         },
         {
             "name": "oe_test_history"
-        }
+        },
+	{ 
+	    "name": "oe_test_virt-what"
+	}
     ]
 }
