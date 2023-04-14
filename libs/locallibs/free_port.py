@@ -22,7 +22,7 @@ import os
 import sys
 import subprocess
 import socket
-import random
+import secrets
 import telnetlib
 import argparse
 
@@ -60,7 +60,8 @@ def find_free_port(ip="", start=1000, stop=10000):
     count = 0
     while count < 100:
         count += 1
-        port = random.randint(start, stop)
+        secretsGnerator = secrets.SystemRandom()
+        port = secretsGnerator.randint(start, stop)
         if ip == "":
             try:
                 conn.bind(("", port))
