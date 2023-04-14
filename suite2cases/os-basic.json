@@ -680,6 +680,9 @@
         },
         {
             "name": "oe_test_c_stat"
+        },
+        {
+            "name": "oe_test_chroot"
         }
     ]
 }
