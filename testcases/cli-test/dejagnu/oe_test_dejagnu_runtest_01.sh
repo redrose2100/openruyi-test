@@ -73,7 +73,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option : --mail (to one host)"
     runtest CALC=common/calc -v --mail ${mailAddress1},${mailAddress2} --srcdir common --outdir tmp 
     SLEEP_WAIT 3
-    grep "To: ${anotherUser}@$(hostname), ${USER}@$(hostname)" /var/spool/mail/${USER} && grep "To: ${anotheruser}@$(hostname), ${USER}@$(hostname)" /var/spool/mail/${anotherUser}
+    grep "To: ${anotherUser}@$(hostname), ${USER}@$(hostname)" /var/spool/mail/${USER} && grep "To: ${anotherUser}@$(hostname), ${USER}@$(hostname)" /var/spool/mail/${anotherUser}
     CHECK_RESULT $? 0 0 "Failed option : --mail (to multihost)"
     LOG_INFO "End to run test."
 }
