@@ -3,7 +3,9 @@
     "cases": [
         {
             "name": "oe_test_cht_client_mode"
+        },
+        {
+            "name": "oe_test_cht_ordinary_mode"
         }
     ]
 }
-
