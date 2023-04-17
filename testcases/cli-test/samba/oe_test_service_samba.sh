@@ -56,7 +56,7 @@ EOF
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution samba.service
-    sed -i 's\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS -d\' /usr/lib/systemd/system/samba.service
+    sed -i 's\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS -d 10\' /usr/lib/systemd/system/samba.service
     systemctl daemon-reload
     systemctl reload samba.service
     CHECK_RESULT $? 0 0 "samba.service reload failed"
