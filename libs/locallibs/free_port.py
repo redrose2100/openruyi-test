@@ -25,6 +25,7 @@ import socket
 import random
 import telnetlib
 import argparse
+import secrets
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
@@ -60,7 +61,8 @@ def find_free_port(ip="", start=1000, stop=10000):
     count = 0
     while count < 100:
         count += 1
-        port = random.randint(start, stop)
+        secretsGnerator = secrets.SystemRandom()
+        port = secretsGnerator.randint(start, stop)
         if ip == "":
             try:
                 conn.bind(("", port))
