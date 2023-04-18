@@ -54,14 +54,16 @@ function copyFiles() {
     fi
 
     findThings=$(find ${findDir} -name $2)
-    if [ -f $findThings ]; then
-        cp $findThings ./tmp_test/
-    elif [ -d $findThings ]; then
-        cp -rR $findThings ./tmp_test/
-    else
+    if [ $(find ${findDir} -name $2 | wc -l) -gt 1 ]; then
         for oneThing in ${findThings}; do
             cp -rR $oneThing ./tmp_test/
         done
+    else
+        if [ -f $findThings ]; then
+            cp $findThings ./tmp_test/
+        elif [ -d $findThings ]; then
+            cp -rR $findThings ./tmp_test/
+        fi
     fi
 }
 

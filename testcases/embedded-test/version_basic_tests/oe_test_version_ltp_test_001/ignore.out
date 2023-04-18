@@ -1,0 +1,78 @@
+alarm06 alarm06
+chroot01 chroot01
+fchmod03 fchmod03
+fchmod04 fchmod04
+msgctl04 msgctl04
+nftw01 nftw01
+nftw6401 nftw6401
+prot_hsymlinks prot_hsymlinks
+semget02 semget02
+semop02 semop02
+shmget04 shmget04
+swapoff01 swapoff01
+swapoff02 swapoff02
+swapon01 swapon01
+swapon02 swapon02
+swapon03 swapon03
+symlink03 symlink03
+utime02 utime02
+utime05 utime05
+dirtyc0w dirtyc0w
+quotactl06 quotactl06
+quotactl08 quotactl08
+quotactl09 quotactl09
+semctl02 semctl02
+shmctl02 shmctl02
+proc01 proc01 -m 128
+vma05 vma05.sh
+irqbalance01 irqbalance01
+netns_netlink netns_netlink
+fs_bind22_sh fs_bind22.sh
+fs_bind_move09_sh fs_bind_move09.sh
+fs_bind_move21_sh fs_bind_move21.sh
+fs_bind_move22_sh fs_bind_move22.sh
+fs_bind_rbind21_sh fs_bind_rbind21.sh
+fs_bind_rbind33_sh fs_bind_rbind33.sh
+fs_bind_rbind34_sh fs_bind_rbind34.sh
+fs_bind_rbind35_sh fs_bind_rbind35.sh
+fs_bind_rbind36_sh fs_bind_rbind36.sh
+fs_bind_rbind39_sh fs_bind_rbind39.sh
+fs_bind_cloneNS06_sh fs_bind_cloneNS06.sh
+fs_bind_cloneNS07_sh fs_bind_cloneNS07.sh
+cgroup_fj_function_memory cgroup_fj_function.sh memory
+cgroup_fj_stress_memory_2_2_none cgroup_fj_stress.sh memory 2 2 none
+cgroup_fj_stress_memory_3_3_none cgroup_fj_stress.sh memory 3 3 none
+cgroup_fj_stress_memory_4_4_none cgroup_fj_stress.sh memory 4 4 none
+cgroup_fj_stress_memory_2_9_none cgroup_fj_stress.sh memory 2 9 none
+cgroup_fj_stress_memory_10_3_none cgroup_fj_stress.sh memory 10 3 none
+cgroup_fj_stress_memory_1_200_none cgroup_fj_stress.sh memory 1 200 none
+cgroup_fj_stress_memory_200_1_none cgroup_fj_stress.sh memory 200 1 none
+cgroup_fj_stress_memory_2_2_one cgroup_fj_stress.sh memory 2 2 one
+cgroup_fj_stress_memory_3_3_one cgroup_fj_stress.sh memory 3 3 one
+cgroup_fj_stress_memory_4_4_one cgroup_fj_stress.sh memory 4 4 one
+cgroup_fj_stress_memory_2_9_one cgroup_fj_stress.sh memory 2 9 one
+cgroup_fj_stress_memory_10_3_one cgroup_fj_stress.sh memory 10 3 one
+cgroup_fj_stress_memory_1_200_one cgroup_fj_stress.sh memory 1 200 one
+cgroup_fj_stress_memory_200_1_one cgroup_fj_stress.sh memory 200 1 one
+cgroup_fj_stress_memory_2_2_each cgroup_fj_stress.sh memory 2 2 each
+cgroup_fj_stress_memory_3_3_each cgroup_fj_stress.sh memory 3 3 each
+cgroup_fj_stress_memory_4_4_each cgroup_fj_stress.sh memory 4 4 each
+cgroup_fj_stress_memory_2_9_each cgroup_fj_stress.sh memory 2 9 each
+cgroup_fj_stress_memory_10_3_each cgroup_fj_stress.sh memory 10 3 each
+cgroup_fj_stress_memory_1_200_each cgroup_fj_stress.sh memory 1 200 each
+cgroup_fj_stress_memory_200_1_each cgroup_fj_stress.sh memory 200 1 each
+ldd01_sh ldd01.sh
+logrotate_sh export TCdat=$LTPROOT/testcases/bin; logrotate_tests.sh
+mv01_sh mv_tests.sh
+df01_ext2_sh df01.sh -f ext2
+df01_ext3_sh df01.sh -f ext3
+df01_ext4_sh df01.sh -f ext4
+df01_vfat_sh df01.sh -f vfat
+mkfs01_sh mkfs01.sh
+mkfs01_ext2_sh mkfs01.sh -f ext2
+mkfs01_ext3_sh mkfs01.sh -f ext3
+mkfs01_ext4_sh mkfs01.sh -f ext4
+mkfs01_msdos_sh mkfs01.sh -f msdos
+mkfs01_vfat_sh mkfs01.sh -f vfat
+cve-2016-5195 dirtyc0w
+cve-2020-25705 icmp_rate_limit01

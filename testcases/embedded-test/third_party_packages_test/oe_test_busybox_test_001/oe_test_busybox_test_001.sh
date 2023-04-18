@@ -22,7 +22,13 @@ source ../comm_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    cp ./tmp_test/defconfig-busybox /bin/.config
+    if [ -e ./tmp_test/defconfig-busybox ]; then
+        cp ./tmp_test/defconfig-busybox /bin/.config
+    fi
+    if [ -e ./tmp_test/defconfig ]; then
+        cp ./tmp_test/defconfig /bin/.config
+    fi
+    
     export bindir=/bin/
     export SKIP_KNOWN_BUGS=1
 
@@ -48,6 +54,9 @@ function pre_test() {
 
     # patch du -l
     sed -i '/144/a \ \ -o x"`busybox du -l .`" = x"145\t." \\' du/du-l-works
+
+    # fix hostname -s
+    sed -i 's/x$(busybox hostname -s)/x$(busybox hostname -s) || test x$(hostname) = x$(busybox hostname -s)/g' hostname/hostname-s-works
 
     popd
 

@@ -1,7 +1,10 @@
 SUBDIRS=${shell ls | grep -v "Makefile" | grep -v "common.sh" | grep -v "make" | grep -v "comm_lib.sh" | grep -v "dejagnu*"}
 CURDIR=${shell pwd}
 
-all:makemake subdirs
+all:copycommon makemake subdirs
+
+copycommon:
+	cp -r $${OET_PATH}/testcases/embedded-test/common_libs/* ./
 
 makemake:
 	yum install libtool -y

@@ -3,10 +3,11 @@ all:
 	cd ./tmp_extract/procps* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
 	make && \
-	make -C testsuite site.exp
+	make -C testsuite site.exp && \
+	make check || echo "done"
 	sh ../common.sh -c "procps*" "testsuite"
-	sh ../common.sh -c "procps*" "lib"
 	sh ../common.sh -c "procps*" "ps"
+	sh ../common.sh -c "procps*" "tests"
 	sh ../common.sh -r
 clean:
 	sh ../common.sh -r "all"
