@@ -28,6 +28,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "aureport Authentication fail"
     aureport -e | grep "Event Report"
     CHECK_RESULT $? 0 0 "aureport Event fail"
+    aureport -if /var/log/audit/audit.log | grep "Summary Report"
+    CHECK_RESULT $? 0 0 "don't dispaly Summary Report"
+    aureport -l -i  | grep "Login Report"
+    CHECK_RESULT $? 0 0 "don't dispaly Login Report"
+    aureport --failed | grep "Failed Summary Report"
+    CHECK_RESULT $? 0 0 "don't dispaly Failed Summary Report"
+    aureport --success | grep "Success Summary Report"
+    CHECK_RESULT $? 0 0 "don't dispaly Success Summary Report"
+    aureport --help | grep "usage"
+    CHECK_RESULT $? 0 0 "don't dispaly usage"
     LOG_INFO "End to run test."
 }
 
