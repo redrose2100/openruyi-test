@@ -692,6 +692,9 @@
         },
 	{
 	    "name": "oe_test_virt-what"
-	}
+	},
+        {
+            "name":"oe_test_gcc_01"
+        }
     ]
 }
