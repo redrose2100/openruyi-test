@@ -85,7 +85,10 @@
 	{ 
 	    "name": "oe_test_wangxun",
 	    "machine type": "physical"
-	}
+	},
+        {
+            "name": "oe_test_vm_swappiness"
+        }
     ]
 }
 
