@@ -17,14 +17,17 @@
 # @Desc      :   File system common command locate
 # ############################################
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    mkdir /home/new
+    touch /home/new/locate_test1
+    touch /home/new/locate_test1
+    LOG_INFO "End to prepare the test environment."
+}
 function run_test() {
     LOG_INFO "Start testing..."
     DNF_INSTALL 'mlocate'
-    mkdir /home/new
     CHECK_RESULT $? 0 0 "create fail"
-    touch /home/new/locate_test1
-    touch /home/new/locate_test2
     CHECK_RESULT $? 0 0 "Failed to touch the files"
     locate /home/new/locate_test
     CHECK_RESULT $? 0 1 "Command executed error" 
