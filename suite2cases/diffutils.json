@@ -9,6 +9,9 @@
     },
     {
       "name": "oe_test_diffutils_003"
+    },
+    {
+      "name": "oe_test_diffutils_004"
     }
   ]
 }
