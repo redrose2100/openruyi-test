@@ -27,8 +27,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     DNF_INSTALL 'mlocate'
-    CHECK_RESULT $? 0 0 "create fail"
-    CHECK_RESULT $? 0 0 "Failed to touch the files"
     locate /home/new/locate_test
     CHECK_RESULT $? 0 1 "Command executed error" 
     updatedb
