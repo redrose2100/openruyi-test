@@ -135,6 +135,9 @@
         },
         {
             "name": "oe_test_AccessControl_01"
+        },
+        {
+            "name": "oe_test_UserMgmt_username_and_UID"
         }
 
 
