@@ -19,6 +19,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL 'mlocate'
     mkdir /home/new
     touch /home/new/locate_test1
     touch /home/new/locate_test1
@@ -26,7 +27,6 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start testing..."
-    DNF_INSTALL 'mlocate'
     locate /home/new/locate_test
     CHECK_RESULT $? 0 1 "Command executed error" 
     updatedb
