@@ -698,6 +698,9 @@
         },
 	{
 	    "name": "oe_test_locate_001"
+	},
+	{
+	    "name": "oe_test_bzcmp"
 	}
     ]
 }
