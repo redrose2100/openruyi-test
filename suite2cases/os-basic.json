@@ -701,6 +701,9 @@
 	},
 	{
 	    "name": "oe_test_bzcmp"
+	},
+	{
+	    "name": "oe_test_unlink"
 	}
     ]
 }
