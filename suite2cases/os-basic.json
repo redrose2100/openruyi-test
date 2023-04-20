@@ -695,6 +695,9 @@
 	},
         {
             "name":"oe_test_gcc_01"
-        }
+        },
+	{
+	    "name":"oe_test_bzcmp"
+	}
     ]
 }
