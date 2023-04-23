@@ -707,6 +707,9 @@
 	},
 	{
 	    "name": "oe_test_xzcmp"
+	},
+	{
+	    "name": "oe_test_zgrep"
 	}
     ]
 }
