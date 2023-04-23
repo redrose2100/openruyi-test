@@ -27,22 +27,22 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    isula run -itd --name volume -v vol:/vol:rw,nocopy centos
+    isula run -itd -h $(hostname) --name volume -v vol:/vol:rw,nocopy centos
     CHECK_RESULT $? 0 0 "create container failed"
     expect <<EOF
         spawn isula exec -it volume
         expect {
-            "root@localhost*" {
+            "root@$(hostname)" {
                 send "cd /vol\\r"
             }
         }
         expect {
-            "root@localhost*" {
+            "root@$(hostname)" {
                 send "echo 'hello world' > test\\r"
             }
         }
         expect {
-            "root@localhost*" {
+            "root@$(hostname)" {
                 send "exit\\r"
             }
         }
@@ -50,22 +50,22 @@ function run_test() {
 EOF
     grep "hello world" /var/lib/isulad/volumes/vol/_data/test
     CHECK_RESULT $? 0 0 "resource mapping failed"
-    isula run -itd --name volume1 --mount type=volume,src=vol1,dst=/vol1,volume-nocopy=true centos
+    isula run -itd -h $(hostname) --name volume1 --mount type=volume,src=vol1,dst=/vol1,volume-nocopy=true centos
     CHECK_RESULT $? 0 0 "create container failed"
     expect <<EOF
         spawn isula exec -it volume1
         expect {
-            "root@localhost*" {
+            "root@$(hostname)" {
                 send "cd /vol1\\r"
             }
         }
         expect {
-            "root@localhost*" {
+            "root@$(hostname)" {
                 send "echo 'hello world' > test\\r"
             }
         }
         expect {
-            "root@localhost*" {
+            "root@$(hostname)" {
                 send "exit\\r"
             }
         }
@@ -73,23 +73,23 @@ EOF
 EOF
     grep "hello world" /var/lib/isulad/volumes/vol1/_data/test
     CHECK_RESULT $? 0 0 "resource mapping failed"
-    isula run -itd --name volume2 --volumes-from volume --volumes-from volume1 centos
+    isula run -itd -h $(hostname) --name volume2 --volumes-from volume --volumes-from volume1 centos
     CHECK_RESULT $? 0 0 "create container failed"
     expect <<EOF
         log_file /tmp/log_volume
         spawn isula exec -it volume2
         expect {
-            "root@localhost*" {
+            "root@$(hostname)" {
                 send "grep 'hello world' /vol/test\\r"
             }
         }
         expect {
-            "root@localhost*" {
+            "root@$(hostname)" {
                 send "grep 'hello world' /vol1/test\\r"
             }
         }
         expect {
-            "root@localhost*" {
+            "root@$(hostname)" {
                 send "exit\\r"
             }
         }
