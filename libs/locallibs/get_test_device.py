@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
- Copyright (c) [2021] Huawei Technologies Co.,Ltd.ALL rights reserved.
+ Copyright (c) [2023] Huawei Technologies Co.,Ltd.ALL rights reserved.
  This program is licensed under Mulan PSL v2.
  You can use it according to the terms and conditions of the Mulan PSL v2.
           http://license.coscl.org.cn/MulanPSL2
@@ -9,9 +9,9 @@
  MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  See the Mulan PSL v2 for more details.
 
- @Author  : lemon-higgins
- @email   : lemon.higgins@aliyun.com
- @Date    : 2021-04-22 10:52:19
+ @Author  : lemon-higgins anyubo
+ @email   : lemon.higgins@aliyun.com anyubo@xfusion.com
+ @Date    : 2021-04-22 10:52:19 2023-04-25
  @License : Mulan PSL v2
  @Version : 1.0
  @Desc    : 测试设备名获取
@@ -90,7 +90,7 @@ def get_test_disk(node=1):
         )
 
         test_disk = subprocess.getoutput(
-            "lsblk -n | grep -v '└─.*\|"
+            "lsblk -n |grep -v '└─.*\|├─.*\|"
             + used_disk.replace(" ", "\|")
             + "' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'"
         )
@@ -107,7 +107,7 @@ def get_test_disk(node=1):
         )[1]
         test_disk = ssh_cmd.pssh_cmd(
             conn,
-            "lsblk -n | grep -v '└─.*\|"
+            "lsblk -n |grep -v '└─.*\|├─.*\|"
             + used_disk.replace(" ", "\|")
             + "' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'",
         )[1]
