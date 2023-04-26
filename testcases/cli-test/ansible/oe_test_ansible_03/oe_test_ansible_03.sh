@@ -23,7 +23,7 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    ansible-doc --help | grep "Usage:"
+    ansible-doc --help | grep -i "Usage:"
     CHECK_RESULT $? 0 0 "Check ansible-doc --help failed."
     ansible-doc --version | grep "ansible-doc"
     CHECK_RESULT $? 0 0 "Check ansible-doc --version failed."
@@ -43,7 +43,7 @@ END
     expect eof
 END
     CHECK_RESULT $? 0 0 "Check ansible-doc -a failed."
-    ansible-galaxy --help | grep "Usage:"
+    ansible-galaxy --help | grep -i "Usage:"
     CHECK_RESULT $? 0 0 "Check ansible-galaxy --help failed."
     ansible-galaxy --version | grep "ansible-galaxy"
     CHECK_RESULT $? 0 0 "Check ansible-galaxy --version failed."

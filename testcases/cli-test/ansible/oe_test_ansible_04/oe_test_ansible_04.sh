@@ -24,7 +24,7 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    ansible-inventory --help | grep "Usage:"
+    ansible-inventory --help | grep -i "Usage:"
     CHECK_RESULT $? 0 0 "Check ansible-inventory --help failed."
     ansible-inventory --version | grep "ansible-inventory"
     CHECK_RESULT $? 0 0 "Check ansible-inventory --version failed."
@@ -51,15 +51,15 @@ END
     expect eof
 END
     CHECK_RESULT $? 0 0 "Check ansible-console --vault-password failed."
-    ansible-playbook --help | grep "Usage:"
+    ansible-playbook --help | grep -i "Usage:"
     CHECK_RESULT $? 0 0 "Check ansible-playbook --help failed."
     ansible-playbook --version | grep "ansible-playbook"
     CHECK_RESULT $? 0 0 "Check ansible-playbook --version failed."
-    ansible-pull --help | grep "Usage:"
+    ansible-pull --help | grep -i "Usage:"
     CHECK_RESULT $? 0 0 "Check ansible-pull --help failed."
     ansible-pull --version | grep "ansible-pull"
     CHECK_RESULT $? 0 0 "Check ansible-pull --version failed."
-    ansible-vault --help | grep "Usage:"
+    ansible-vault --help | grep -i "Usage:"
     CHECK_RESULT $? 0 0 "Check ansible-vault --help failed."
     ansible-vault --version | grep "ansible-vault"
     CHECK_RESULT $? 0 0 "Check ansible-vault --version failed."
