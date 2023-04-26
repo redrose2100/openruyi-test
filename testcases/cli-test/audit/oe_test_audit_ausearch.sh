@@ -31,12 +31,12 @@ function run_test() {
     LOG_INFO "start to run test."
     ausearch --format csv
     CHECK_RESULT $? 0 0 "format check fail"   
-    ausearch -m AVC
+    ausearch -m ADD_USER
     CHECK_RESULT $? 0 0 "AVC check fail"   
     ausearch -ua uos1
     CHECK_RESULT $? 0 0 "ua check fail"   
-    ausearch -f testfile
-    CHECK_RESULT $? 0 0 "testfile check fail"  
+    ausearch -f /home/uos1/testfile
+    CHECK_RESULT $? 0 0 "ausearch -f fail"  
     ausearch -k testfile_audit
     CHECK_RESULT $? 0 0 "testfile_audit check fail"   
     ausearch -sv yes 
