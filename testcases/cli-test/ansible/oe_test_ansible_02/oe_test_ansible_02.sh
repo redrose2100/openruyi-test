@@ -26,7 +26,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     ansible-config --version | grep "ansible-config"
     CHECK_RESULT $? 0 0 "Check ansible-config --version failed."
-    ansible-config --help | grep "Usage:"
+    ansible-config --help | grep -i "Usage:"
     CHECK_RESULT $? 0 0 "Check ansible-config --help failed."
     expect <<-END
     spawn ansible-config view
@@ -49,7 +49,7 @@ END
     expect eof
 END
     CHECK_RESULT $? 0 0 "Check ansible-config list -v failed."
-    ansible-console --help | grep "Usage:"
+    ansible-console --help | grep -i "Usage:"
     CHECK_RESULT $? 0 0 "Check ansible-console --help failed."
     ansible-console --version | grep "ansible-console"
     CHECK_RESULT $? 0 0 "Check ansible-console --version failed."
