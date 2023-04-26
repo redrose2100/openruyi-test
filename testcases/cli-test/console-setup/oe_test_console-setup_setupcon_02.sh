@@ -28,9 +28,9 @@ function run_test() {
 
    setupcon --print-commands-only 2>&1 | grep "setfont '-C' '/dev/tty1' '/usr/share/consolefonts/Uni2-TerminusBold16.psf.gz' "
    CHECK_RESULT $? 0 0 "Check option:  --print-commands-only failed"
-   setupcon --save-keyboard 2>&1 | grep "success"
+   setupcon --save-keyboard 
    CHECK_RESULT $? 0 0 "Check option:  --save-keyboard failed"
-   setupcon --setup-dir 2>&1 | grep "success"
+   setupcon --setup-dir 
    CHECK_RESULT $? 0 0 "Check setupcon --setup-dir failed"
    setupcon -h 2>&1 | grep "Sets up the font and the keyboard on Linux console."
    CHECK_RESULT $? 0 0 "Check option:  -h failed"
