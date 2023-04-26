@@ -26,7 +26,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     ansible --version | grep "ansible"
     CHECK_RESULT $? 0 0 "Check ansible --version failed."
-    ansible --help | grep "Usage:"
+    ansible --help | grep -i "Usage:"
     CHECK_RESULT $? 0 0 "Check ansible --help failed."
     SLEEP_WAIT 5 "ansible -m ping all|grep \"SUCCESS\"" 2
     CHECK_RESULT $? 0 0 "Check ansible -mfailed."
