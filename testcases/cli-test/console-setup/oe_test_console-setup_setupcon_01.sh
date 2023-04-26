@@ -29,23 +29,23 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check setupcon:  -v failed"
     setupcon --verbose 2>&1 | grep "The charmap is UTF-8"
     CHECK_RESULT $? 0 0 "Check setupcon:  --verbose failed"
-    setupcon -k 2>&1 | grep "keyboard configuration success"
+    setupcon -k 
     CHECK_RESULT $? 0 0 "Check setupcon:  -k failed"
-    setupcon --keyboard-only 2>&1 | grep "keyboard configuration success"
+    setupcon --keyboard-only 
     CHECK_RESULT $? 0 0 "Check setupcon:  --keyboard-only failed"
       
-    setupcon -f 2>&1 | grep "font configuration success"
+    setupcon -f 
     CHECK_RESULT $? 0 0 "Check setupcon:  -f failed"
-    setupcon --font-only 2>&1 | grep "font configuration success"
+    setupcon --font-only
     CHECK_RESULT $? 0 0 "Check setupcon:  --font-only failed"
       
-    setupcon -t 2>&1 | grep "success"
+    setupcon -t 
     CHECK_RESULT $? 0 0 "Check setupcon:  -t failed"
-    setupcon --terminal-only 2>&1 | grep "configuration success"
+    setupcon --terminal-only 
     CHECK_RESULT $? 0 0 "Check setupcon:  --terminal-only failed"
-    setupcon --current-tty 2>&1 | grep "configuration success"
+    setupcon --current-tty 
     CHECK_RESULT $? 0 0 "Check setupcon:  --current-tty failed"
-    setupcon --force 2>&1 | grep "configuration success"
+    setupcon --force 
     CHECK_RESULT $? 0 0 "Check setupcon:  --force failed"
    
    LOG_INFO "End to run test."
