@@ -19,6 +19,12 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL iptables
+    LOG_INFO "End to prepare the test environment."
+}
+	
 function run_test() {
     LOG_INFO "Start to run test."
     ip6tables-save | grep -A 200 nat | grep -A 100 mangle | grep -A 80 raw | grep -A 60 security | grep filter
@@ -28,6 +34,12 @@ function run_test() {
     ip6tables-save -t filter | grep -E "nat|mangle|raw|security"
     CHECK_RESULT $? 0 1 "Not just filter"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

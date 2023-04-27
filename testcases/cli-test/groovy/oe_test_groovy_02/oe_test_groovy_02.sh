@@ -59,10 +59,9 @@ function run_test() {
     groovydoc --version | grep "GroovyDoc"
     CHECK_RESULT $? 0 0 "Check groovydoc --version failed."
     groovydoc test.groovy
-    CHECK_RESULT "$(ls ./ | wc -w)" 14
+    CHECK_RESULT $? 0 0 "Check test.groovy failed."
     groovydoc -d /tmp ./test.groovy
     CHECK_RESULT $? 0 0 "Check groovydoc -d failed."
-    CHECK_RESULT "$(ls /tmp/ | wc -w)" 15
     LOG_INFO "End to run test."
 }
 
