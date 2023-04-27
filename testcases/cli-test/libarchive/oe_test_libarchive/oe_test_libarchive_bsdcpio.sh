@@ -10,7 +10,8 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    OLD_LANG=$LANG
+    DNF_INSTALL "bsdcpio"
+	OLD_LANG=$LANG
     export LANG=en_US.UTF-8    
     LOG_INFO "End to prepare the test environment."
 }
@@ -32,7 +33,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf testfile1 test
+    DNF_REMOVE
+	rm -rf testfile1 test
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
