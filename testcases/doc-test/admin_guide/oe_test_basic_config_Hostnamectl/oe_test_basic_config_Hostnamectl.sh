@@ -21,8 +21,8 @@ function run_test() {
     LOG_INFO "Start executing testcase!"
     hostname="hostnamectl status | awk -F' ' '{print $NF}'  | sed -n 1p"
     remotehost=`SSH_CMD "hostnamectl status | awk -F' ' '{print $NF}'  | sed -n 1p" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}`
-    hostnamectl set-hostname my_host
-    hostnamectl status | grep "Pretty hostname: my_host"
+    hostnamectl set-hostname my_host.
+    hostnamectl status | grep "Pretty hostname: my_host."
     CHECK_RESULT $?
     hostnamectl set-hostname "Tester's notebook" --pretty
     hostnamectl status | grep "Pretty hostname" | grep "Tester's notebook"
