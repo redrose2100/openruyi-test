@@ -54,6 +54,7 @@ EOF
     mkdir -p locale/en_US/LC_MESSAGES/
     msgfmt -o locale/zh_CN/LC_MESSAGES/test.mo test.po
     CHECK_RESULT $? 0 0 "Can't generate mo file"
+    LANG=zh_CN.UTF-8
     python3 test.py | grep "你好"
     CHECK_RESULT $? 0 0 "test.py cannot be executed properly or Unable to filter necessary characters"
     xgettext -k_ -o us.po test.py
