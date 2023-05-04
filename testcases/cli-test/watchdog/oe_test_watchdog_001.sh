@@ -42,7 +42,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    systemctl stop watchdog
+    kill -9 $(pgrep -f "watchdog -c")
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
