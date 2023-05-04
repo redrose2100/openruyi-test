@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "jgit tar"
+    DNF_INSTALL "jgit tar git"
     tar -xvf ./common/data.tar.gz > /dev/null
     pojpath=$(
     cd "$(dirname "$0")" || exit 1
