@@ -24,6 +24,10 @@
         },
         {
             "name": "oe_test_bird_02"
+        },
+        {
+            "name": "oe_test_service_bird"
         }
+
     ]
 }
