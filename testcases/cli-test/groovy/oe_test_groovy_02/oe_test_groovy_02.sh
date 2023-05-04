@@ -59,15 +59,18 @@ function run_test() {
     groovydoc --version | grep "GroovyDoc"
     CHECK_RESULT $? 0 0 "Check groovydoc --version failed."
     groovydoc test.groovy
-    CHECK_RESULT $? 0 0 "Check test.groovy failed."
-    groovydoc -d /tmp ./test.groovy
+    CHECK_RESULT "$(ls ./ | wc -w)" 14
+    mkdir test1
+    groovydoc -d test1 ./test.groovy 
     CHECK_RESULT $? 0 0 "Check groovydoc -d failed."
+    CHECK_RESULT "$(ls test1 | wc -w)" 12
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf $(ls | grep -v '\.sh') /tmp/*
+    rm -rf test1
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
