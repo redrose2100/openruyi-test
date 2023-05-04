@@ -1,8 +1,8 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/zvbi",
+    "path": "$OET_PATH/testcases/cli-test/graphviz",
     "cases": [
         {
-            "name": "oe_test_service_zvbid"
+            "name": "oe_test_graphviz"
         }
 
     ]
