@@ -1,0 +1,15 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/afterburn",
+    "cases": [
+        {
+            "name": "oe_test_service_afterburn-firstboot-checkin"
+        },
+        {
+            "name": "oe_test_service_afterburn"
+        },
+        {
+            "name": "oe_test_service_afterburn-checkin"
+        }
+    ]
+}
+
