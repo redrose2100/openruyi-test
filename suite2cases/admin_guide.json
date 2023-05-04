@@ -395,6 +395,9 @@
         },
         {
             "name": "oe_test_ip_config_static_route"
+        },
+        {
+            "name": "oe_test_basic_date_common"
         }
     ]
 }
