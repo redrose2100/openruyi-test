@@ -35,7 +35,7 @@ function run_test() {
     CHECK_RESULT $?
     identify test1.jpg | grep "test1.jpg JPEG"
     CHECK_RESULT $?
-    identify -verbose test1.jpg | grep -i "Image:"
+    identify -verbose test1.jpg | grep "Filename: test1.jpg"
     CHECK_RESULT $?
     identify -depth 8 -size 900x518 test1.jpg | grep "8-bit"
     CHECK_RESULT $?
