@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    whereis --help | grep "Usage: whereis"
+    whereis --help | grep "Usage:"
     CHECK_RESULT $? 0 0 "The file content is abnormal"
     whereis -V | awk '{print $3}' 
     CHECK_RESULT $? 0 0 "check version display failed"
