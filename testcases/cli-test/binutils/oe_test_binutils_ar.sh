@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "binutils"
+    DNF_INSTALL "binutils gcc"
     touch file1.c file2.c file3.c
     LOG_INFO "End of environmental preparation!"
 }
