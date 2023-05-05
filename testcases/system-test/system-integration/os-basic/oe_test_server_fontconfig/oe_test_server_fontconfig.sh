@@ -19,6 +19,12 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL dejavu-fonts
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     fc-list |grep fonts
@@ -28,6 +34,12 @@ function run_test() {
     fc-list | grep 'DejaVu Serif'
     CHECK_RESULT $? 0 0 "Failed to view installed fonts"
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
