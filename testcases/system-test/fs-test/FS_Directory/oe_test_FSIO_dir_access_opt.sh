@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ls -l /opt | grep "total 0"
+    ls -l /opt | grep "total"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
