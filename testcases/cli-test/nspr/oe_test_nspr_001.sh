@@ -36,7 +36,7 @@ PR_LogPrint("2021年11月08日 UOS 10:40:35");
 return 0;
 }
 EOF
-    DNF_INSTALL "nspr-devel"
+    DNF_INSTALL "nspr-devel g++"
     LOG_INFO "End of environmental preparation!"
 }
 
