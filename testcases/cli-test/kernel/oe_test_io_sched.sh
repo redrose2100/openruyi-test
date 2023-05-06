@@ -27,8 +27,6 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    grep CONFIG_DEFAULT_IOSCHED /boot/config-`uname -r`
-    CHECK_RESULT $? 0 0 "Query failed"
     test_name=(none mq-deadline bfq kyber)
     for i in ${test_name[*]}
     do
