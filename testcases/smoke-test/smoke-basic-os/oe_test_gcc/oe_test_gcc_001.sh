@@ -74,7 +74,7 @@ function run_test() {
     cd ${path1}&&g++ main.cpp ../person/person.o -o main_static -I ../person/ -static
     test -f ${path1}/main_static
     CHECK_RESULT $? 0 0 "main_static file fails"
-    ldd main_static > main_static.txt
+    ldd main_static > main_static.txt 2>&1
     grep "not a dynamic executable" ${path1}/main_static.txt
     CHECK_RESULT $? 0 0 "ldd main_static file fails"
 
