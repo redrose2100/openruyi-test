@@ -53,7 +53,8 @@ printf("create person\n");
 }
 EOF
 
-    LOG_INFO "End of environmental preparation!"
+    DNF_INSTALL g++
+	LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
