@@ -20,7 +20,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "gperftools"
+    DNF_INSTALL "gperftools gperftools-devel g++ pprof"
     LOG_INFO "End of environmental preparation!"
 
 }
