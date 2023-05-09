@@ -31,7 +31,7 @@ function run_test() {
     SLEEP_WAIT 2
     ls | grep "bird.ctl"
     CHECK_RESULT $? 0 0 "check bird -l failed"
-    kill -9 $(pgrep "bird -l")
+    kill -9 $(pgrep -f "bird -l")
     rm -f bird.ctl
     popd
     bird -p
@@ -45,12 +45,12 @@ function run_test() {
     bird -c ./data/bird.conf -R
     birdc show pro | grep "ospf1      OSPF"
     CHECK_RESULT $? 0 0 "check bird -R failed"
-    kill -9 $(pgrep "bird -l")
+    kill -9 $(pgrep -f "bird -l")
     bird -c ./data/bird.conf -s tmp.socket
     SLEEP_WAIT 2
     ls | grep "tmp.socket"
     CHECK_RESULT $? 0 0 "check bird -s failed"
-    kill -9 $(pgrep "bird -c")
+    kill -9 $(pgrep -f "bird -c")
     rm -f tmp.socket
     LOG_INFO "End to run test."
 }
