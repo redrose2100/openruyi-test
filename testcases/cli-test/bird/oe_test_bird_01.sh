@@ -36,23 +36,23 @@ function run_test() {
     SLEEP_WAIT 2
     birdc show protocols | grep "ospf1      OSPF"
     CHECK_RESULT $? 0 0 "check bird -c failed"
-    kill -9 $(pgrep "bird -c")
+    kill -9 $(pgrep -f "bird -c")
     bird -c ./data/bird.conf -d &
     SLEEP_WAIT 2
     birdc show protocols | grep "ospf1      OSPF"
     CHECK_RESULT $? 0 0 "check bird -d failed"
-    kill -9 $(pgrep "bird -c")
+    kill -9 $(pgrep -f "bird -c")
     bird -c ./data/bird.conf -D tmp.log
     SLEEP_WAIT 2
     test -f tmp.log
     CHECK_RESULT $? 0 0 "check bird -D failed"
-    kill -9 $(pgrep "bird -c")
+    kill -9 $(pgrep -f "bird -c")
     rm -f tmp.log
     bird -c ./data/bird.conf -f &
     SLEEP_WAIT 2
     birdc show protocols | grep "ospf1      OSPF"
     CHECK_RESULT $? 0 0 "check bird -f failed"
-    kill -9 $(pgrep "bird -c")
+    kill -9 $(pgrep -f "bird -c")
     useradd testdemo
     bird -c ./data/bird.conf -u testdemo -g testdemo
     SLEEP_WAIT 2
@@ -63,7 +63,7 @@ function run_test() {
 	echo "aa" | grep "bb"
     fi
     CHECK_RESULT $? 0 0 "check bird -u failed"
-    kill -9 $(pgrep "bird -c")
+    kill -9 $(pgrep -f "bird -c")
     bird -c ./data/bird.conf -u testdemo -g testdemo
     SLEEP_WAIT 2
     result2=$(ps -ef | grep "bird -c" | grep -v "grep")
@@ -73,7 +73,7 @@ function run_test() {
 	echo "aa" | grep "bb"
     fi
     CHECK_RESULT $? 0 0 "check bird -g failed"
-    kill -9 $(pgrep "bird -c")
+    kill -9 $(pgrep -f "bird -c")
     LOG_INFO "End to run test."
 }
 
