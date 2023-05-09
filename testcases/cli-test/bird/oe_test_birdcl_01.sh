@@ -66,7 +66,7 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    num=$(wc -l tmp.txt)
+    num=$(cat tmp.txt | wc -l)
     if [[ $num == 4 ]]; then
 	echo "aa" | grep "aa"
     else
@@ -91,7 +91,7 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    grep "ospf1: disabled" tmp.txt
+    grep "ospf1: already disabled" tmp.txt
     CHECK_RESULT $? 0 0 "check birdcl disable failed"
     rm -f tmp.txt
     LOG_INFO "End to run test."
@@ -101,7 +101,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
     clean_dir
-    kill -9 $(pgrep "bird -c")
+    kill -9 $(pgrep -f "bird -c")
     rm -rf ./sim_*
     LOG_INFO "End to restore the test environment."
 }
