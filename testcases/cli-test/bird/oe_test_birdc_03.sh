@@ -45,7 +45,7 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    num=$(wc -l tmp.txt)
+    num=$(cat tmp.txt | wc -l)
     if [[ ${num} == 4 ]]; then
 	echo "aa" | grep "aa"
     else
@@ -60,7 +60,7 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    num=$(wc -l tmp.txt)
+    num=$(cat tmp.txt | wc -l)
     if [[ ${num} == 4 ]]; then
 	echo "aa" | grep "aa"
     else
@@ -75,7 +75,7 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    num=$(wc -l tmp.txt)
+    num=$(cat tmp.txt | wc -l)
     if [[ ${num} == 4 ]]; then
 	echo "aa" | grep "aa"
     else
