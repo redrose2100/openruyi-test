@@ -35,7 +35,7 @@ function run_test() {
     echo server.1=$local_ip:8881:7771 >>/opt/zookeeper/conf/zoo.cfg
     bash /opt/zookeeper/bin/zkServer.sh start
     CHECK_RESULT $? 0 0 "don't dispaly STARTED"
-    bash /opt/zookeeper/bin/zkServer.sh status | grep -v "Client SSL: false" 
+    bash /opt/zookeeper/bin/zkServer.sh status | grep "Mode\:" 
     CHECK_RESULT $? 0 0 "don't dispaly ZooKeeper" 
 }
 
