@@ -18,7 +18,7 @@
 # #############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-
+version=$(uname -r | awk -F '-' {'print $1'})
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL opencc
@@ -27,8 +27,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
+    if [[ "$version" == 5.10.0 ]];then
     opencc_dict -i /usr/share/opencc/TSPhrases.ocd2 -o /tmp/TSPhrases.txt -f ocd2 -t ocd2
     CHECK_RESULT $?
+    elif [[ "$version" == 4.19.90 ]];then
+    opencc_dict -i /usr/share/opencc/TSPhrases.ocd -o /tmp/TSPhrases.txt -f ocd -t text
+    CHECK_RESULT $?
+    fi
     grep '老态龙钟' /tmp/TSPhrases.txt 
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
