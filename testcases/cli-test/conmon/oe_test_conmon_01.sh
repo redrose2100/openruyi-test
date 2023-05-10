@@ -29,7 +29,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    conmon --help |grep "conmon \[OPTION?\]"
+    conmon --help |grep "conmon \[OPTION.\?\]"
     CHECK_RESULT $? 0 0 "Failed to check the --help"
     conmon --version|grep "conmon version"
     CHECK_RESULT $? 0 0 "Failed to check the --version"
