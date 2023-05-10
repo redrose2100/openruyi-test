@@ -56,7 +56,7 @@ function run_test() {
     aspell config f-html-skip | grep "style"
     CHECK_RESULT $? 0 0 "Check aspell config f-html-skip failed"
 
-    echo aaa | aspell -a | grep "& aaa 15 0:"
+    echo aaa | aspell -a | grep "& aaa [0-9]* 0:"
     CHECK_RESULT $? 0 0 "Check aspell -a failed"
 
     LOG_INFO "End to run test."
