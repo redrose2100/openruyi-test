@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "libnetfilter_conntrack libnetfilter_conntrack-devel libnfnetlink-devel libmnl-devel"
+    DNF_INSTALL "libnetfilter_conntrack libnetfilter_conntrack-devel libnfnetlink-devel libmnl-devel gcc"
     test -f ./test_api.log && rm -rf ./test_api.log
     test -f ./test_api && rm -rf ./test_api
     LOG_INFO "End to prepare the test environment."
