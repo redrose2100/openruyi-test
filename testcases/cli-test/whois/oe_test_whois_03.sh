@@ -41,7 +41,7 @@ function run_test(){
     CHECK_RESULT $? 0 0 "test whois -g failed"
     whois -t domain baidu | grep "domain:"
     CHECK_RESULT $? 0 0 "test whois -t failed"
-    whois -v domain baidu | grep "A short decription related to the object"
+    whois -v domain baidu | grep "A short description related to the object"
     CHECK_RESULT $? 0 0 "test whois -v failed"
     whois -q sources | grep "RIPE:3:N:0-0"
     CHECK_RESULT $? 0 0 "test whois -q failed"
