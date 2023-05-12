@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    cp RocksJavaTest.java /tmp/test_rocksdb_java/   
+    cp $OET_PATH/testcases/cli-test/rocksdb/RocksJavaTest.java /tmp/test_rocksdb_java/   
     javac -cp .:/usr/share/java/rocksdbjni/rocksdbjni.jar -Xlint:deprecation RocksJavaTest.java
     CHECK_RESULT $? 0 0 "Compilation failed" 
     java -cp .:/usr/share/java/rocksdbjni/rocksdbjni.jar RocksJavaTest
