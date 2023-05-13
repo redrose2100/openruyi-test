@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command zookeeper
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -32,7 +32,7 @@ function run_test() {
     mkdir -p /home/zookeeper/dataDir
     echo 1 >  /home/zookeeper/dataDir/myid
     cat /home/zookeeper/dataDir/myid 
-    echo server.1=$local_ip:8881:7771 >>/opt/zookeeper/conf/zoo.cfg
+    echo server.1="$local_ip":8881:7771 >>/opt/zookeeper/conf/zoo.cfg
     bash /opt/zookeeper/bin/zkServer.sh start
     CHECK_RESULT $? 0 0 "don't dispaly STARTED"
     bash /opt/zookeeper/bin/zkServer.sh status | grep -v "Client SSL: false" 
@@ -42,7 +42,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE 2 "apache-zookeeper"
     rm -rf /home/zookeeper/dataDir
     mv /opt/zookeeper/conf/zoo.cfg.bak /opt/zookeeper/conf/zoo.cfg
     LOG_INFO "End to restore the test environment."
