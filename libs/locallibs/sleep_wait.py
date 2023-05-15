@@ -41,7 +41,8 @@ def sleep_wait(wait_time, cmd=None, mode=1):
         time.sleep(wait_time)
         sys.exit(0)
     if cmd and mode == 1:
-        try:
+    try:
+        if sys.version_info >= (3, 7):
             p = subprocess.Popen(
                 cmd,
                 stderr=sys.stderr,
@@ -50,8 +51,19 @@ def sleep_wait(wait_time, cmd=None, mode=1):
                 text=True,
                 shell=True,
             )
-            p.communicate(timeout=wait_time)
-            exitcode = p.returncode
+        else:
+            p = subprocess.Popen(
+                cmd,
+                stderr=sys.stderr,
+                close_fds=True,
+                stdout=sys.stdout,
+                shell=True,
+            )
+        p.communicate(timeout=wait_time)
+        exitcode = p.returncode
+    except subprocess.TimeoutExpired:
+        p.kill()
+        exitcode = -1
         except subprocess.CalledProcessError as e:
             mugen_log.logging("error", "CallError ：" + e.output.decode("utf-8"))
             exitcode = e.returncode
