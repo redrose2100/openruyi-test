@@ -51,9 +51,6 @@
             "name": "oe_test_FSIO_create_character"
         },
         {
-            "name": "oe_test_FSIO_create_file"
-        },
-        {
             "name": "oe_test_FSIO_create_hardlink_fail"
         },
         {

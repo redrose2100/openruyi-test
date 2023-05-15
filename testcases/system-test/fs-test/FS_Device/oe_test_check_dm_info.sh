@@ -15,14 +15,13 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Create lvm to check dm info
 #####################################
+# shellcheck disable=SC1091
 
 source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
-    point_list=($(CREATE_FS))
-    group_name=$(vgdisplay | grep "VG Name" | tail -n 1 | awk '{print $3}')
+    point_list=("$(CREATE_FS)")
     mkdir /mnt/test_snap_dir 
     LOG_INFO "Finish to prepare the database config."
 }
@@ -31,10 +30,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 $((${#point_list[@]}  - 1))); do
         var=${point_list[$i]}
-        lv_name=$(df -iT | grep $var | awk '{print $1}')
-        fs_type=$(df -iT | grep $var | awk '{print $2}')
+        lv_name=$(df -iT | grep "$var" | awk '{print $1}')
+        fs_type=$(df -iT | grep "$var" | awk '{print $2}')
         blkid > info_log
-        grep $lv_name info_log | grep $fs_type
+        grep "$lv_name" info_log | grep "$fs_type"
         CHECK_RESULT $? 0 0 "Check blkid info for $lv_name failed."
     done
     LOG_INFO "End to run test."
@@ -42,11 +41,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
+    list=${point_list[*]}
     REMOVE_FS "$list"
-    rm -f info_log
+    rm -rf info_log /mnt/test_snap_dir
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-
