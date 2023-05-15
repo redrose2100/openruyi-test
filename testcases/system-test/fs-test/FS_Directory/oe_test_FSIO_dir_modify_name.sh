@@ -38,17 +38,17 @@ function run_test() {
     mv $ext3_point/test1 $ext3_point/test1_mod
     CHECK_RESULT $? 0 0 "mv file in ext3 failed."
     mv $ext3_point/test2 $ext3_point/test2_mod
-    test -f $ext3_point/test2_mod
+    test -d $ext3_point/test2_mod
     CHECK_RESULT $? 0 0 "Check file in ext3 failed."
     mv $ext4_point/test1 $ext4_point/test1_mod
     CHECK_RESULT $? 0 0 "mv file in ext4 failed."
     mv $ext4_point/test2 $ext4_point/test2_mod
-    test -f $ext4_point/test2_mod
+    test -d $ext4_point/test2_mod
     CHECK_RESULT $? 0 0 "Check file in ext4 failed."
     mv $xfs_point/test1 $xfs_point/test1_mod
     CHECK_RESULT $? 0 0 "mv file in xfs failed."
     mv $xfs_point/test2 $xfs_point/test2_mod
-    test -f $xfs_point/test2_mod
+    test -d $xfs_point/test2_mod
     CHECK_RESULT $? 0 0 "Check file in xfs failed."
     LOG_INFO "End to run test."
 }
