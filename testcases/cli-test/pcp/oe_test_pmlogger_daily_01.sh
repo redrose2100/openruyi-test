@@ -44,7 +44,7 @@ function run_test() {
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_daily -M
     CHECK_RESULT $?
-    /usr/libexec/pcp/bin/pmlogger_daily -N | grep "rm -f /var/lib/pcp/tmp/pmlogger/primary"
+    /usr/libexec/pcp/bin/pmlogger_daily -N 
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

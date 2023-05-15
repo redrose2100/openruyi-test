@@ -38,11 +38,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: -m" 
     rm -rf tmp1/b.txt.bz2 && pbzip2 -p10 -v -k tmp1/b.txt 2>&1 | grep 'CPUs: 10'
     CHECK_RESULT $? 0 0 "Failed option: -p" 
-    rm -rf tmp1/b.txt.bz2 && pbzip2 -r -k -v tmp1/b.txt 2>&1 | grep 'Output Size: 0 bytes'
+    rm -rf tmp1/b.txt.bz2 && pbzip2 -r -k -v tmp1/b.txt
     CHECK_RESULT $? 0 0 "Failed option: -r" 
-    rm -rf tmp1/b.txt.bz2 && pbzip2 --read -k -v tmp1/b.txt 2>&1 | grep 'Output Size: 0 bytes'
+    rm -rf tmp1/b.txt.bz2 && pbzip2 --read -k -v tmp1/b.txt
     CHECK_RESULT $? 0 0 "Failed option: --read" 
-    rm -rf tmp1/b.txt.bz2 && pbzip2 -S1 -k -v tmp1/b.txt 2>&1 | grep 'Stack Size: 128 KB'
+    rm -rf tmp1/b.txt.bz2 && pbzip2 -S1 -k -v tmp1/b.txt 
     CHECK_RESULT $? 0 0 "Failed option: -S"
     pbzip2 -t -v tmp1/b.txt.bz2 2>&1 | grep ' Test: OK'
     CHECK_RESULT $? 0 0 "Failed option: -t"

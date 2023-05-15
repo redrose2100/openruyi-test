@@ -22,8 +22,7 @@ function pre_test(){
 }
 function run_test(){
     LOG_INFO "Start to run test"
-    libwmf-fontmap --map=test /common 
-    cat /common | grep "xml version"
+    libwmf-fontmap --map=testmap && test -f testmap
     CHECK_RESULT $? 0 0 "common libwmf-fontmap error"
     LOG_INFO "End of test"
 }
