@@ -22,13 +22,14 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "booth-arbitrator pcs"
-    pcs booth setup sites 10.13.55.13 10.13.55.14 arbitrators "${NODE1_IPV4}" --force
+    pcs booth setup sites "${NODE1_IPV4}" "${NODE2_IPV4}" arbitrators "${NODE1_IPV4}" --force
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution booth-arbitrator.service
+    test_reload booth-arbitrator.service
     LOG_INFO "End to run test."
 }
 
