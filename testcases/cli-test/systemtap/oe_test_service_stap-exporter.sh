@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL systemtap-stap-exporter
+    DNF_INSTALL "systemtap-stap-exporter kernel-devel"
     LOG_INFO "End of environmental preparation!"
 }
 
