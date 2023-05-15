@@ -40,16 +40,16 @@ function run_test() {
         set timeout 30
         log_file testlog
         spawn smbclient -U testsamba //${NODE2_IPV4}/testsamba
-		expect \"*assword*\" {send \"${NODE2_PASSWORD}\\r\";
+		expect \"*assword*\" {send \"${NODE1_PASSWORD}\\r\";
 		expect \"smb*>\" {send \"ls\\r\";
 		expect \"smb*>\" {send \"exit\\r\"}}}
         expect eof
 	"
     grep -iE "error|fail" testlog
     CHECK_RESULT $? 1
-    smbclient -L ${NODE2_IPV4} -U testsamba%${NODE2_PASSWORD}
+    smbclient -L ${NODE2_IPV4} -U testsamba%${NODE1_PASSWORD}
     CHECK_RESULT $?
-    smbclient -c "ls" //${NODE2_IPV4}/testsamba -U testsamba%${NODE2_PASSWORD}
+    smbclient -c "ls" //${NODE2_IPV4}/testsamba -U testsamba%${NODE1_PASSWORD}
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
