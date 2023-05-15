@@ -84,7 +84,7 @@
             "name": "oe_test_FSIO_open_direct_file"
         },
         {
-            "name": "oe_test_FSIO_open_excl_file"
+            "name": "oe_test_FSIO_open_excel_file"
         },
         {
             "name": "oe_test_FSIO_open_noctty_trun_file"
