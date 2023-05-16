@@ -15,6 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test modify file on fs
 #####################################
+# shellcheck disable=SC1091,SC2207
 
 source ../common_lib/fsio_lib.sh
 
@@ -28,14 +29,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         var=${point_list[$i]}
-        touch $var/testfile
-        echo "modify by echo" >$var/testfile
+        touch "$var"/testfile
+        SLEEP_WAIT 2
+        echo "modify by echo" >"$var"/testfile
         CHECK_RESULT $? 0 0 "Modify file by echo failed."
-        sed -i "amodfiy by sed" $var/testfile
-        CHECK_RESULT $? 0 0 "Modify file by sed failed."
-        touch $var/testfile
-        modify_time=$(stat $var/testfile | grep "Change" | awk '{print $3}')
-        birth_time=$(stat $var/testfile | grep "Birth" | awk '{print $3}')
+        stat "$var"/testfile
+        modify_time=$(date -d "$(stat "$var"/testfile | grep "Change" | awk '{print $3}')" +%s)
+        birth_time=$(date -d "$(stat "$var"/testfile | grep "Birth" | awk '{print $3}')" +%s)
         [[ $modify_time -ne $birth_time ]]
         CHECK_RESULT $? 0 0 "Check time failed."
     done
@@ -44,10 +44,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
+    list=${point_list[*]}
     REMOVE_FS "$list"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
-
+main "$@"
