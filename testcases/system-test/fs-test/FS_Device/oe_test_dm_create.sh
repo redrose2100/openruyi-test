@@ -45,6 +45,7 @@ function post_test() {
     list=$(echo ${point_list[@]})
     REMOVE_FS "$list"
     rm -f info_log
+    rm -rf /mnt/test_snap_dir
     LOG_INFO "End to restore the test environment."
 }
 
