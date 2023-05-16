@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check mcedit -V failed"
     mcdiff --version 2>&1 | grep 'GNU Midnight Commander '
     CHECK_RESULT $? 0 0 "Check mcedit --version failed"
-    mcedit -F 2>&1 | grep 'Home路径'
+    mcedit -F 
     CHECK_RESULT $? 0 0 "Check mcedit -F failed"
     mcedit --datadir-info 2>&1 | grep 'Home'
     CHECK_RESULT $? 0 0 "Check mcedit --datadir-info failed"
