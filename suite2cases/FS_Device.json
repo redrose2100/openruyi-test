@@ -4,7 +4,7 @@
     "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_dm_create"
+            "name": "oe_test_check_dm_info"
         },
         {
             "name": "oe_test_dm_info"

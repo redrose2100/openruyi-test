@@ -15,13 +15,14 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   cp file between localhost and isula
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL iSulad
-    if [[ ${NODE1_FRAME} == "aarch64" ]]; then
+    if [[ "${NODE1_FRAME}"x == "aarch64"x ]]; then
         wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/aarch64/openEuler-docker.aarch64.tar.xz
         image_name="openEuler-docker.aarch64.tar.xz"
     else 
@@ -29,35 +30,34 @@ function pre_test() {
         image_name="openEuler-docker.x86_64.tar.xz"
     fi
     systemctl start isulad
-    isula load -i $image_name
+    isula load -i "$image_name"
     image_id=$(isula images | grep openeuler-20.03-lts-sp1 | head -n 1 | awk '{print $3}')
-    isula run -itd $image_id
+    isula run -itd "$image_id"
     isula_id=$(isula ps -a | grep "Up" | head -n 1 | awk '{print $1}')
-    isula exec $isula_id touch /mnt/test_isula
+    isula exec "$isula_id" touch /mnt/test_isula
     echo "testfileinlocalhost" > test_localhost
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    isula cp ${isula_id}:/mnt/test_isula /opt
+    isula cp "${isula_id}":/mnt/test_isula /opt
     test -f /opt/test_isula
     CHECK_RESULT $? 0 0 "CP file from docker to localhost failed."
-    isula cp test_localhost ${isula_id}:/opt
-    isula exec $isula_id cat /opt/test_localhost
+    isula cp test_localhost "${isula_id}":/opt
+    isula exec "$isula_id" cat /opt/test_localhost
     CHECK_RESULT $? 0 0 "CP file from localhost to docker failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    isula stop -f $isula_id
-    isula rm $(isula ps -a -q)
-    isula rmi $(isula images -q)
-    DNF_REMOVE
-    rm -f $image_name test_localhost
+    isula stop -f "$isula_id"
+    isula rm "$(isula ps -a -q)"
+    isula rmi "$(isula images -q)"
+    DNF_REMOVE iSulad
+    rm -f "$image_name" test_localhost /opt/test_isula
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-
