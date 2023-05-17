@@ -21,6 +21,8 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    [ -f /etc/resolv.conf-bak ] || cp /etc/resolv.conf /etc/resolv.conf-bak
+    echo "nameserver 127.0.0.1" > /etc/resolv.conf
     DNF_INSTALL unbound
     service=unbound.service
     log_time=$(date '+%Y-%m-%d %T')
@@ -57,6 +59,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    [ -f /etc/resolv.conf-bak ] && \cp /etc/resolv.conf-bak /etc/resolv.conf
     sed -i 's\ExecStart=/usr/sbin/unbound -v\ExecStart=/usr/sbin/unbound\g' /usr/lib/systemd/system/${service}
     systemctl daemon-reload
     systemctl reload ${service}
