@@ -21,7 +21,11 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    systemctl stop sshd.service  
+    systemctl status sshd | grep "Active: active (running)"
+    if [ $? -eq 0 ]; then 
+    systemctl stop sshd.service
+    flag=1
+    fi  
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -30,6 +34,14 @@ function run_test() {
     test_execution sshd.socket
     test_reload sshd.socket
     LOG_INFO "End of the test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    if [ $flag -eq 1 ]; then
+    systemctl start sshd
+    fi
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
