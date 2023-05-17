@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/fapolicyd",
+    "cases": [
+        {
+            "name": "oe_test_fapolicyd-service"
+        }
+    ]
+}

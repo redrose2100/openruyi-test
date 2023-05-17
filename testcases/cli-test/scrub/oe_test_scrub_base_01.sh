@@ -34,6 +34,12 @@ function run_test() {
     scrub -v | grep "scrub version [[:digit:]]"
     CHECK_RESULT $? 0 0 "Check scrub -v failed"
 
+    scrub -h 2>&1 | grep "Usage: scrub"
+    CHECK_RESULT $? 0 0 "Check scrub -h failed"
+
+    scrub --help 2>&1 | grep "Usage: scrub"
+    CHECK_RESULT $? 0 0 "Check scrub --help failed"
+
     timeout -s SIGKILL 2s scrub -b 102400 -X -s 1024K empty
     test -f ./empty/scrub.000
     CHECK_RESULT $? 0 0 "Check scrub -b -X -s failed"

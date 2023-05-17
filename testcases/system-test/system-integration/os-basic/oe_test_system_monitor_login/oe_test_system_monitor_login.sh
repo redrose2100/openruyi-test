@@ -35,7 +35,7 @@ function run_test() {
         exp_continue
 		}
         \"*assword*\" {
-        send \"openEuler12#$\r\"
+        send \"${NODE2_PASSWORD}\r\"
         expect \"*localhost*\" {send \"exit\r\"}
         exp_continue
 		}
@@ -49,7 +49,7 @@ function run_test() {
         exp_continue
 		}
         \"*assword*\" {
-        send \"openEuler12#$\r\"
+        send \"${NODE2_PASSWORD}\r\"
         expect \"*localhost*\" {send \"exit\r\"}
         exp_continue
 		}
@@ -63,7 +63,7 @@ function run_test() {
         exp_continue
 		}
         \"*assword*\" {
-        send \"openEuler12#$\r\"
+        send \"${NODE2_PASSWORD}\r\"
         expect \"*localhost*\" {send \"exit\r\"}
         exp_continue
 		}

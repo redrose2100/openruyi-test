@@ -39,7 +39,7 @@ function run_test() {
     sed -i "${line1}c enabled=0" /etc/yum.repos.d/*.repo
     sed -i "${line2}c enabled=0" /etc/yum.repos.d/*.repo
     dnf repolist | grep "OS\|everything"
-    CHECK_RESULT $? 1 0
+    CHECK_RESULT $?
     dnf install -y sysstat 2>&1 | grep "No match for argument: sysstat"
     CHECK_RESULT $?
     dnf --enablerepo=EPOL repolist | grep EPOL

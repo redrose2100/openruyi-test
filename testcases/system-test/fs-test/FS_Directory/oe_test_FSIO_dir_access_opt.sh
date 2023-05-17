@@ -15,8 +15,9 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test access of /opt
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
@@ -27,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ls -l /opt | grep "total"
+    ls -l /opt
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

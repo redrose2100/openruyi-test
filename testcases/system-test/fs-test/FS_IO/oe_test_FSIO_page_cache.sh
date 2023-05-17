@@ -41,7 +41,7 @@ function run_test() {
     end_time=$(date +%s)
     exec2=$(($end_time - $start_time))
     echo "First execution time is: "$exec2
-    [[ $rel -lt cache ]]
+    [[ $rel -lt $cache ]]
     CHECK_RESULT $? 0 0 "The read speed is not faster when it has page cache."
     LOG_INFO "End to run test."
 }

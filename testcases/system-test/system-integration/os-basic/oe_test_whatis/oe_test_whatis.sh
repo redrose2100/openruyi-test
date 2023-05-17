@@ -22,11 +22,11 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
     whatis -? |grep "version"
-    CHECK_RESULT $? 0 0 "check display failed"
+    CHECK_RESULT $? 0 0 "check display failed after whatis -?"
     whatis -V
-    CHECK_RESULT $? 0 0 "check display failed"
-    whatis man |grep "macros"
-    CHECK_RESULT $? 0 0 "check display failed"
+    CHECK_RESULT $? 0 0 "check display failed after whatis -V"
+    whatis man |grep -E "manuals|手册"
+    CHECK_RESULT $? 0 0 "check display failed after whatis man"
     LOG_INFO "End to run test."
 }
 

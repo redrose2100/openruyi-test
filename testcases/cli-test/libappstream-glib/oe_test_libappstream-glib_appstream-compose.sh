@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL libappstream-glib
     mkdir glibtest
-    cp ../common/dejavu.metainfo.xml ./glibtest
+    cp common/dejavu.metainfo.xml ./glibtest
     appstream-util -v --profile --nonet install glibtest/dejavu.metainfo.xml
     mv /usr/share/metainfo/dejavu.metainfo.xml /usr/share/metainfo/dejavu.metainfo.xml-bak
     cp glibtest/dejavu.metainfo.xml /usr/share/metainfo/

@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     if ! lspci | grep -i audio; then
         LOG_INFO "The environment does not support testing"
-        exit 0
+        exit 1
     else
         DNF_INSTALL alsa-utils
         mv /etc/alsa/state-daemon.conf /etc/alsa/state-daemon.conf_bak

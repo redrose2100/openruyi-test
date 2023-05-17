@@ -7,7 +7,7 @@
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
-# See the Mulan PSL v2 for more detaitest -f.
+# See the Mulan PSL v2 for more details.
 
 # #############################################
 # @Author    :   huangrong
@@ -17,32 +17,32 @@
 # @Desc      :   Test bacula-dir.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "bacula-client mysql5-server"
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database
     /usr/libexec/bacula/make_mysql_tables
     alternatives --set libbaccats.so /usr/lib64/libbaccats-mysql.so
     sed -i 's\dbuser = "bacula"\dbuser = "root"\g' /etc/bacula/bacula-dir.conf
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     test_execution bacula-dir.service
     systemctl start bacula-dir.service
     systemctl reload bacula-dir.service 2>&1 | grep "Job type reload is not applicable"
     CHECK_RESULT $? 0 0 "Job type reload is not applicable for unit bacula-dir.service"
     systemctl status bacula-dir.service | grep "Active: active"
     CHECK_RESULT $? 0 0 "bacula-dir.service reload causes the service status to change"
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "Start to restore the test environment."
     systemctl stop bacula-dir.service
     sed -i 's\dbuser = "root"\dbuser = "bacula"\g' /etc/bacula/bacula-dir.conf
     alternatives --set libbaccats.so /usr/lib64/libbaccats-postgresql.so
@@ -51,7 +51,7 @@ function post_test() {
     systemctl stop mysqld
     DNF_REMOVE
     rm -rf /var/lib/mysql/*
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_service_mailman3"
+        },
+        {
+            "name": "oe_test_service_mailman3-digests"
         }
     ]
 }

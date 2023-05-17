@@ -1,0 +1,9 @@
+<root>
+<UOS1>UOS1 content</UOS1>
+<UOS2>UOS2 content</UOS2>
+<UOS3>UOS3 content</UOS3>
+<node2 UOS="yes">NODE CONTENT</node2>
+<xian-uos>
+<branch>xian-uos yes!</branch>
+</xian-uos>
+</root>

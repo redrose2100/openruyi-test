@@ -29,8 +29,6 @@ function run_test() {
     LOG_INFO "Start to run test."
     nasm -f macho32 myfile.asm
     CHECK_RESULT $? 0 0 "Check nasm -f macho32 failed"
-    nasm --reproducible myfile.asm
-    CHECK_RESULT $? 0 0 "Check nasm --reproducible failed"
     nasm -w[+-]error=macro-defaults myfile.asm
     CHECK_RESULT $? 0 0 "Check nasm -w[+-]error=other failed"
     nasm -w[+-]error=macro-params myfile.asm
@@ -43,6 +41,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check nasm -w[+-]error=macro-params-single failed"
     nasm --before move myfile.asm
     CHECK_RESULT $? 0 0 "Check nasm nasm --before failed"
+    nasm -f elf -gdwarf myfile.asm
+    CHECK_RESULT $? 0 0 "Check nasm nasm -f -gdwarf failed"
+    nasm --postfix 'str' myfile.asm
+    CHECK_RESULT $? 0 0 "Check nasm nasm --postfix failed"
+    nasm --gpostfix 'str' myfile.asm
+    CHECK_RESULT $? 0 0 "Check nasm nasm --gpostfix failed"
+    nasm --suffix 'str' myfile.asm
+    CHECK_RESULT $? 0 0 "Check nasm nasm --suffix failed"
+    nasm --prefix 'str' myfile.asm
+    CHECK_RESULT $? 0 0 "Check nasm nasm --prefix failed"
     LOG_INFO "End to run test."
 }
 

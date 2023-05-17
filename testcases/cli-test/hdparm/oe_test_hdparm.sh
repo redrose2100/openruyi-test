@@ -26,9 +26,9 @@ function run_test() {
     dev=$(sed -n "2, 1p" lsblk.txt |awk '{print $1}')
     hdparm -h | grep -i "Usage"
     CHECK_RESULT $? 0 0 "hdparm -h fail"
-    hdparm -a /dev/$dev | grep -i "/dev/sd"
+    hdparm -a /dev/$dev | grep -i /dev/$dev
     CHECK_RESULT $? 0 0 "hdparm -a system fail"
-    hdparm -b /dev/$dev | grep -i "/dev/sd"
+    hdparm -b /dev/$dev | grep -i /dev/$dev
     CHECK_RESULT $? 0 0 "hdparm -b system fail"
     hdparm -c /dev/$dev | grep -i "IO_support"
     CHECK_RESULT $? 0 0 "hdparm -c system fail"

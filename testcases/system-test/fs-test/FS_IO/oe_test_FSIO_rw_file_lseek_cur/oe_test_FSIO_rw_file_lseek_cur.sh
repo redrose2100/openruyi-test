@@ -20,6 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL gcc
     [[ ! -f ./rw_lseek_cur_file ]] && {
         make
     }
@@ -45,6 +46,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
     rm -f test_lseek_cur_file test_byte_lseek_cur
     make clean
     LOG_INFO "End to restore the test environment."

@@ -23,8 +23,12 @@ function pre_test() {
     point_list=($(CREATE_FS))
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         var=${point_list[$i]}
-        mkdir $var/testDir $var/testDir2
+        mkdir -p $var/testDir $var/testDir2 $var/test1/test2/test3
         echo "test file" >$var/testDir/testFile
+        echo "test file1" >$var/test1/testfile1
+        echo "test file2" >$var/test1/test2/testfile2
+        echo "test file3" >$var/test1/test2/test3/testfile3
+        echo "test homefile" >$var/testfile
     done
     LOG_INFO "End of environmental preparation!"
 }
@@ -40,6 +44,13 @@ function run_test() {
         unzip $var/testdir.zip
         ls $var/testDir | grep "testFile"
         CHECK_RESULT $? 0 0 "Decompress file by zip in $var failed."
+        zip -r $var/test.zip $var/test1
+        zip -d $var/test.zip $var/test1/testfile1 |grep "deleting"
+        CHECK_RESULT $? 0 0 "delete $var/test1/testfile1 failed in $var/test.zip"
+        zip -m $var/testfile $var/test.zip |grep "adding"
+        CHECK_RESULT $? 0 0 "add $var/testfile failed in $var/test.zip"
+        zip -j $var/test1.zip $var/test1
+        CHECK_RESULT $? 0 1 "-j does not support compressing directories"
     done
     LOG_INFO "End to run test."
 }

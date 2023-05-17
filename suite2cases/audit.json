@@ -87,6 +87,9 @@
         },
         {
             "name": "oe_test_audit_ausearch"
+        },
+        {
+            "name": "oe_test_aulastlog"
         }
     ]
 }

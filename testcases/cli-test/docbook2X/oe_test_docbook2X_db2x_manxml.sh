@@ -52,17 +52,17 @@ function run_test() {
     db2x_manxml --encoding utf-8 --utf8trans-program=./doctest --utf8trans-map=./doctest --iconv-program=./doctest doctest/manpage.xsl && test -f ./'_.{$section}'
     CHECK_RESULT $? 0 0 "Check db2x_manxml --utf8trans-program --utf8trans-map= --iconv-program failed"
 
-    db2x_docbook2man --string-param custom-localization-file= --sgml --solinks doctest/manpages.xml
+    db2x_docbook2man --encoding=utf-8 --string-param custom-localization-file= --sgml --solinks doctest/manpages.xml
     grep ".g .mso www.tmac" ./docbook2man.1
     CHECK_RESULT $? 0 0 "Check db2x_docbook2man --string-param custom-localization-file failed"
 
-    rm -rf docbook2man.1
-    db2x_docbook2man --string-param custom-n-data=text.xml --sgml --solinks doctest/manpages.xml
+    rm -rf _.1 docbook2man.1 '_manxml;.1'
+    db2x_docbook2man --encoding=utf-8 --string-param custom-n-data=text.xml --sgml --solinks doctest/manpages.xml
     grep ".g .mso www.tmac" ./docbook2man.1
     CHECK_RESULT $? 0 0 "Check db2x_docbook2man --string-param custom-n-data failed"
 
-    rm -rf docbook2man.1
-    db2x_docbook2man --string-param author-othername-in-middle=1 --sgml --solinks doctest/manpages.xml
+    rm -rf _.1 docbook2man.1 '_manxml;.1'
+    db2x_docbook2man --encoding=utf-8 --string-param author-othername-in-middle=1 --sgml --solinks doctest/manpages.xml
     grep ".g .mso www.tmac" ./docbook2man.1
     CHECK_RESULT $? 0 0 "Check db2x_docbook2man --string-param author-othername-in-middle failed"
 
@@ -71,8 +71,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf doctest untitled.texi docbook2man.1 '_.{$section}'
+    DNF_REMOVErm
+    rm -rf doctest untitled.texi docbook2man.1 '_.{$section}' _.1 docbook2man.1 '_manxml;.1'
     LOG_INFO "Finish restore the test environment."
 }
 

@@ -33,18 +33,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check db2x_texixml --output-dir --encoding --info --to-stdout failed"
 
     rm -rf doctest/chunk.xsl.txt
-    db2x_texixml --output-dir ./doctest --encoding utf-8 doctest/chunk.xsl --list-files
-    test -f doctest/chunk.xsl.texi
+    db2x_texixml --output-dir ./doctest --encoding utf-8 doctest/chunk.xsl --list-files && test -f doctest/chunk.xsl.texi
     CHECK_RESULT $? 0 0 "Check db2x_texixml --output-dir --encoding --list-files failed"
 
     rm -rf doctest/chunk.xsl.txt
-    db2x_texixml --output-dir ./doctest --encoding utf-8 doctest/chunk.xsl --plaintext
-    test -f doctest/chunk.xsl.txt
+    db2x_texixml --output-dir ./doctest --encoding utf-8 doctest/chunk.xsl --plaintext && test -f doctest/chunk.xsl.txt
     CHECK_RESULT $? 0 0 "Check db2x_texixml --output-dir --encoding --plaintext failed"
 
     rm -rf doctest/chunk.xsl.txt
-    db2x_texixml --encoding utf-8 --utf8trans-program=./doctest --utf8trans-map=./doctest --iconv-program=./doctest --makeinfo-program=./doctest doctest/chunk.xsl
-    test -f chunk.xsl.texi
+    db2x_texixml --encoding utf-8 --utf8trans-program=./doctest --utf8trans-map=./doctest --iconv-program=./doctest --makeinfo-program=./doctest doctest/chunk.xsl && test -f chunk.xsl.texi
     CHECK_RESULT $? 0 0 "Check db2x_texixml --encoding --utf8trans-program --utf8trans-map --iconv-program --makeinfo-program failed"
 
     db2x_texixml --help | grep "Usage: /usr/bin/db2x_texixml \[OPTION]"

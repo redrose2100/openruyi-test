@@ -29,34 +29,34 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
   
-    sgml2xml-isoent -b utf-8 -f doctest/error -e doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -e doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -b -f -e failed"
   
-    sgml2xml-isoent -b utf-8 -f doctest/error --open-entities doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --open-entities doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -b -f --open-entities failed"
   
-    sgml2xml-isoent -b utf-8 -f doctest/error -g doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -g doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -g failed"
   
-    sgml2xml-isoent -b utf-8 -f doctest/error --open-entities doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --open-entities doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --open-entities failed"
   
-    sgml2xml-isoent -b utf-8 -f doctest/error -n doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -n doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -n failed"
   
-    sgml2xml-isoent -b utf-8 -f doctest/error --error-numbers doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --error-numbers doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --error-numbers failed"
   
-    sgml2xml-isoent -b utf-8 -f doctest/error --references doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --references doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --references failed"
   
-    sgml2xml-isoent -b utf-8 -f doctest/error -i doc doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -i doc doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -i failed"
   
-    sgml2xml-isoent -b utf-8 -f doctest/error --include=doc doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 --include=doc doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent --include failed"
   
-    sgml2xml-isoent -b utf-8 -f doctest/error -w default doctest/hello.sgml | grep "Hello World!"
+    sgml2xml-isoent -b utf-8 -w default doctest/hello.sgml | grep "Hello World!"
     CHECK_RESULT $? 0 0 "Check sgml2xml-isoent -w failed"
 
     LOG_INFO "End to run test."

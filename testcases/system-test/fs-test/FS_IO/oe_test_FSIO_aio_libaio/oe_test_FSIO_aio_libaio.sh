@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL libaio-devel
+    DNF_INSTALL "libaio-devel gcc"
     [[ ! -f ./libaio_file ]] && {
         make
     }
