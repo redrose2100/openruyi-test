@@ -710,6 +710,9 @@
 	},
 	{
 	    "name": "oe_test_zgrep"
+	},
+        {
+	    "name": "oe_test_server_subversion"
 	}
     ]
 }
