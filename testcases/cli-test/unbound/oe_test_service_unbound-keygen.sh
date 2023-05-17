@@ -23,6 +23,8 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL unbound
     service=unbound-keygen.service
+    [ -f /etc/resolv.conf-bak ] || cp /etc/resolv.conf /etc/resolv.conf-bak
+    echo "nameserver 127.0.0.1" > /etc/resolv.conf
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
 }
@@ -55,6 +57,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop "${service}"
+    [ -f /etc/resolv.conf-bak ] && \cp /etc/resolv.conf-bak /etc/resolv.conf 
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
