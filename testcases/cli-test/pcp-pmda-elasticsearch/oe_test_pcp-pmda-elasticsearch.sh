@@ -17,11 +17,11 @@
 # @Desc      :   test pcp-pmda-elasticsearch
 # ############################################
 
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "pcp-pmda-elasticsearch"
+  DNF_INSTALL pcp-pmda-elasticsearch
   LOG_INFO "End of environmental preparation!"
 }
 
