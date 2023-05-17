@@ -17,6 +17,9 @@
             "name": "oe_test_expr"
         },
         {
+            "name": "oe_test_fold"
+        },
+        {
             "name": "oe_test_comm"
         },
         {
