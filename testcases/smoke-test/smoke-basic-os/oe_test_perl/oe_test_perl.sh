@@ -12,9 +12,8 @@
 # #############################################
 # @Author    :   liujingjing
 # @Contact   :   liujingjing25812@163.com
-# @Date      :   2022/07/14
-# @License   :   Mulan PSL v2
-# @Desc      :   Test the basic functions of perl
+# @Date      :   2023/05/17
+# @License   :   Mulan PSL v2 @Desc      :   Test the basic functions of perl
 # ############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
@@ -24,6 +23,21 @@ function run_test() {
     perl -e 'print"Hello world!\n"' | grep "Hello world!"
     CHECK_RESULT $? 0 0 "Failed to execute perl"
     LOG_INFO "End to run test."
+    perl -v
+    CHECK_RESULT $? 0 0 "perl -v command execution failed"
+    perl -V
+    CHECK_RESULT $? 0 0 "perl -V command execution failed"
+    cat > hello.pl << EOF
+print "hello world !\n"
+EOF
+    perl hello.pl |grep "hello world !"
+    CHECK_RESULT $? 0 0 "not found hello world !"
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    rm -rf hello.pl
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
