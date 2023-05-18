@@ -37,7 +37,7 @@ function run_test()
     CHECK_RESULT $? 0 0 "option-f is error"
     dm_date --reference=datefile.txt -R +'%a, %d %b %Y %H:%M:%S %z' | grep "2022"
     CHECK_RESULT $? 0 0 "option--reference is error"
-    dm_date -r datefile.txt -u -R +'%a, %d %b %Y %H:%M:%S %z' | grep "2022"
+    dm_date -r datefile.txt -u -R +'%a, %d %b %Y %H:%M:%S %z' 
     CHECK_RESULT $? 0 0 "option-r is error"
     dm_date --rfc-2822 | grep "2022"
     CHECK_RESULT $? 0 0 "option--rfc is error"

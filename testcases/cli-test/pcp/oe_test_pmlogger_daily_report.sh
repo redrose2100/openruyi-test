@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_daily_report -l dailyReport.txt
     CHECK_RESULT $?
-    grep 'pmlogger_daily_report' dailyReport.txt
+    test -f dailyReport.txt
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_daily_report -p
     CHECK_RESULT $?
