@@ -633,9 +633,9 @@
         {
             "name": "oe_test_libunistring"
         },
-	{
-	    "name": "oe_test_shred"
-	},
+        {
+            "name": "oe_test_shred"
+        },
         {
             "name": "oe_test_expect"
         },
@@ -693,26 +693,29 @@
         {
             "name": "oe_test_history"
         },
-	{
-	    "name": "oe_test_virt-what"
-	},
+        {
+            "name": "oe_test_virt-what"
+        },
         {
             "name":"oe_test_gcc_01"
         },
-	{
-	    "name": "oe_test_locate_001"
-	},
-	{
-	    "name": "oe_test_bzcmp"
-	},
-	{
-	    "name": "oe_test_unlink"
-	},
-	{
-	    "name": "oe_test_xzcmp"
-	},
-	{
-	    "name": "oe_test_zgrep"
-	}
+        {
+            "name": "oe_test_locate_001"
+        },
+        {
+            "name": "oe_test_bzcmp"
+        },
+        {
+            "name": "oe_test_unlink"
+        },
+        {
+            "name": "oe_test_xzcmp"
+        },
+        {
+            "name": "oe_test_zgrep"
+        },
+        {
+            "name": "oe_test_c"
+        }
     ]
 }
