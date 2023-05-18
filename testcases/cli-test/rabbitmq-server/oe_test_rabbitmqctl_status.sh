@@ -23,6 +23,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     vhost_name="myvhost"
     DNF_INSTALL rabbitmq-server
+    setenforce 0
     which firewalld && systemctl stop firewalld
     systemctl restart rabbitmq-server
     LOG_INFO "End of environmental preparation!"
@@ -62,6 +63,7 @@ function post_test() {
     DNF_REMOVE
     rm -rf /var/lib/rabbitmq/
     kill -9 $(pgrep -u rabbitmq)
+    setenforce 1
     which firewalld && systemctl start firewalld
     LOG_INFO "Finish environment cleanup!"
 }
