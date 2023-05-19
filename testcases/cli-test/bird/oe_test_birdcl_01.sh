@@ -16,8 +16,8 @@
 #@Desc      	:   verification birdcl command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
-source "./common/lib/util.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source ./common/lib/util.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "bird tar"
@@ -101,7 +101,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
     clean_dir
-    kill -9 $(pgrep -f "bird -c")
+    kill -9 "$(pgrep -f "bird -c")"
     rm -rf ./sim_*
     LOG_INFO "End to restore the test environment."
 }
