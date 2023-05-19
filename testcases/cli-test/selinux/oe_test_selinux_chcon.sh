@@ -1,0 +1,52 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   aliceye666
+# @Contact   :   yezhifen@uniontech.com
+# @Date      :   2023-5-16
+# @License   :   Mulan PSL v2
+# @Desc      :   selinux chcon
+# ############################################
+source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    useradd test
+    su - test -c "touch /home/test/testfile"
+    echo 123 > /home/test/testfile
+    LOG_INFO "End to prepare the test environment."
+}
+
+
+function run_test() {
+    LOG_INFO "start to run test."
+    chcon -t root_t /home/test/testfile
+    CHECK_RESULT $? 0 0 "setting selinux context type fail"
+    chcon -u user_u /home/test/testfile
+    CHECK_RESULT $? 0 0 "setting selinux context user fail"
+    setenforce 0
+    CHECK_RESULT $? 0 0 "setting selinux mode fail"
+    chcon -r user_r /home/test/testfile
+    CHECK_RESULT $? 0 0 "setting selinux context role fail"
+    ls -Z /home/test/testfile| grep "user_u:user_r:root_t"
+    CHECK_RESULT $? 0 0 "selinux context is error"
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    setenforce 1
+    userdel -rf test
+    LOG_INFO "Finish environment cleanup!"
+}
+
+main "$@"
