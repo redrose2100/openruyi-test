@@ -34,8 +34,8 @@ function run_test() {
         sed -i "amodfiy by sed" $var/testfile
         CHECK_RESULT $? 0 0 "Modify file by sed failed."
         touch $var/testfile
-        modify_time=$(stat $var/testfile | grep "Change" | awk '{print $3}')
-        birth_time=$(stat $var/testfile | grep "Birth" | awk '{print $3}')
+        modify_time=$(stat $var/testfile | grep "Change" | awk '{print $3}' | awk -F "." '{print $2}' | sed -r 's/0*([0-9])/\1/')
+        birth_time=$(stat $var/testfile | grep "Birth" | awk '{print $3}' | awk -F "." '{print $2}' | sed -r 's/0*([0-9])/\1/')
         [[ $modify_time -ne $birth_time ]]
         CHECK_RESULT $? 0 0 "Check time failed."
     done
