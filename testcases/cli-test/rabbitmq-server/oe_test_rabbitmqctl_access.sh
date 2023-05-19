@@ -25,6 +25,7 @@ function pre_test() {
     user_mq="test"
     passwd_mq="test"
     vhost_name="myvhost"
+    setenforce 0
     which firewalld && systemctl stop firewalld
     systemctl restart rabbitmq-server
     LOG_INFO "End of environmental preparation!"
@@ -56,8 +57,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop rabbitmq-server
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /var/lib/rabbitmq/
+    setenforce 1
     which firewalld && systemctl start firewalld
     LOG_INFO "Finish environment cleanup!"
 }
