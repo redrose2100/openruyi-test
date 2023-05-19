@@ -100,7 +100,7 @@ function post_test() {
     sed -i "/${name_host}/d" /etc/hosts
     hostnamectl set-hostname "${host_name}"
     kill -9 $(pgrep -u rabbitmq)
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /var/lib/rabbitmq/ /var/log/rabbitmq
     setenforce 1
     which firewalld && systemctl start firewalld

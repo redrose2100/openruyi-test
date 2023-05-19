@@ -36,7 +36,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop rabbitmq-server.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     setenforce 0
     LOG_INFO "Finish environment cleanup!"
 }
