@@ -66,7 +66,7 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    num=$(cat tmp.txt | wc -l)
+    num=$(wc -l <tmp.txt)
     if [[ $num == 4 ]]; then
 	echo "aa" | grep "aa"
     else
@@ -99,7 +99,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     clean_dir
     kill -9 $(pgrep -f "bird -c")
     rm -rf ./sim_*
