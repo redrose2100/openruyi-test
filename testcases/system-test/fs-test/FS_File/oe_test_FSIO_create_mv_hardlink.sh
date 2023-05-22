@@ -23,8 +23,9 @@ function pre_test() {
     cur_date=$(date +%Y%m%d%H%M%S)
     point_list=($(CREATE_FS "ext3 ext4"))
     ext3_point=${point_list[1]}
-    ext4_point=${point_list[3]}
+    ext4_point=${point_list[2]}
     echo "test ext3" > $ext3_point/testFile
+    echo "test ext4" > $ext4_point/testFileTmp
     ln $ext3_point/testFile $ext3_point/testLink
     LOG_INFO "End of environmental preparation!"
 }
