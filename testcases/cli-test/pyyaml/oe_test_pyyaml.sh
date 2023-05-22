@@ -32,7 +32,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "file does not exist"
     grep 'school: zhang' generate.yaml
     CHECK_RESULT $? 0 0 "Keyword not matched"
-    python3 test2.py |grep students |grep a | grep b
+    python3 test2.py |grep students && python3 test2.py|grep a && python3 test2.py | grep b
     CHECK_RESULT $? 0 0 "Conversion to dictionary failed"
     LOG_INFO "End to run test."
 }
