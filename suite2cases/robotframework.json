@@ -24,6 +24,9 @@
         },
 	{
             "name": "oe_test_robotframework_robot_04"
+        },
+	{
+            "name": "oe_test_robotframework_run"
         }
     ]
 }
