@@ -17,7 +17,7 @@
 # @Desc      :   Testing rabbitmq-server command parameters
 # #############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -25,28 +25,29 @@ function pre_test() {
     user_mq="test"
     passwd_mq="test"
     vhost_name="myvhost"
+    setenforce 0
     which firewalld && systemctl stop firewalld
     systemctl restart rabbitmq-server
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    rabbitmqctl add_vhost ${vhost_name} | grep "${vhost_name}"
+    rabbitmqctl add_vhost "${vhost_name}" | grep "${vhost_name}"
     CHECK_RESULT $?
     grep -r "myvhost" /var/lib/rabbitmq/mnesia/ --binary-files=without-match
     CHECK_RESULT $?
-    rabbitmqctl list_vhosts name tracing | grep ${vhost_name}
+    rabbitmqctl list_vhosts name tracing | grep "${vhost_name}"
     CHECK_RESULT $?
-    rabbitmqctl add_user ${user_mq} ${passwd_mq}
-    rabbitmqctl set_permissions -p ${vhost_name} ${user_mq} "^${user_mq}-.*" ".*" ".*" | grep "${vhost_name}"
+    rabbitmqctl add_user "${user_mq}" "${passwd_mq}"
+    rabbitmqctl set_permissions -p "${vhost_name}" "${user_mq}" "^${user_mq}-.*" ".*" ".*" | grep "${vhost_name}"
     CHECK_RESULT $?
-    rabbitmqctl list_permissions -p ${vhost_name} | grep "${user_mq}"
+    rabbitmqctl list_permissions -p "${vhost_name}" | grep "${user_mq}"
     CHECK_RESULT $?
-    rabbitmqctl list_user_permissions ${user_mq} | grep "${vhost_name}"
+    rabbitmqctl list_user_permissions "${user_mq}" | grep "${vhost_name}"
     CHECK_RESULT $?
-    rabbitmqctl clear_permissions -p ${vhost_name} ${user_mq} | grep "${vhost_name}"
+    rabbitmqctl clear_permissions -p "${vhost_name}" "${user_mq}" | grep "${vhost_name}"
     CHECK_RESULT $?
-    rabbitmqctl delete_vhost ${vhost_name} | grep "${vhost_name}"
+    rabbitmqctl delete_vhost "${vhost_name}" | grep "${vhost_name}"
     CHECK_RESULT $?
     grep -r "myvhost" /var/lib/rabbitmq/mnesia/ --binary-files=without-match
     CHECK_RESULT $? 0 1
@@ -56,8 +57,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop rabbitmq-server
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /var/lib/rabbitmq/
+    setenforce 1
     which firewalld && systemctl start firewalld
     LOG_INFO "Finish environment cleanup!"
 }
