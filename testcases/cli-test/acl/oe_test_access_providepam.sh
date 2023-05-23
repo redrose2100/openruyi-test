@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
   LOG_INFO "Start to run test."
-  rpm -qa|grep pam
+  rpm -qa | grep pam
   CHECK_RESULT $? 0 0 "pam not exist"
   test -e  /usr/lib64/security/pam_systemd.so
   CHECK_RESULT $? 0 0 "pam_systemd.so not exist"
