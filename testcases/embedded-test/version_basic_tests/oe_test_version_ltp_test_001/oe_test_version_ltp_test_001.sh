@@ -15,6 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   run ltp test
 #####################################
+# shellcheck disable=SC1091
 
 source ../../common_libs/comm_lib.sh
 
