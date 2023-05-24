@@ -16,7 +16,7 @@
 #@Desc      	:   run posix test suite
 #####################################
 
-source ../comm_lib.sh
+source ../../common_libs/comm_lib.sh
 
 CUR_DATE=`date +'%Y-%m-%d %H:%M:%S'`
 
