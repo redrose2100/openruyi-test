@@ -35,7 +35,7 @@ function pre_test() {
     MAKE=${MAKEDIR}/make
 
     timestap=$(stat -c %Y tmp_test/allinfo.tar)
-    formart_date=$(date '+%Y-%m-%d %H:%M:%S' -d @$timestap)
+    formart_date=$(date '+%Y-%m-%d %H:%M:%S' -d @"$timestap")
     date -s "$formart_date"
 
     # 将头文件等解压到系统根目录，无法恢复
