@@ -31,7 +31,7 @@ function pre_test() {
     MAKE=${MAKEDIR}/make
 
     timestap=$(stat -c %Y tmp_test/build.log)
-    formart_date=$(date '+%Y-%m-%d %H:%M:%S' -d @$timestap)
+    formart_date=$(date '+%Y-%m-%d %H:%M:%S' -d @"$timestap")
     date -s "$formart_date"
 
     LOG_INFO "End to prepare the test environment."
@@ -42,7 +42,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     pushd tmp_test/ || exit
-    pushd posixtestsuite/
+    pushd posixtestsuite/ || exit
     POSIX_TARGET=./ ${MAKE} run-tests > ../run.log 2>&1
     popd || exit
 
