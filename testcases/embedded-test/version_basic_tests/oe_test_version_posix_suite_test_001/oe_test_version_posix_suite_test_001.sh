@@ -24,7 +24,7 @@ CUR_DATE=$(date +'%Y-%m-%d %H:%M:%S')
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    EXECUTE_T="180m"
+  #  EXECUTE_T="180m"
 
     MAKEDIR=$(cd .. && pwd)
     chmod 777 "${MAKEDIR}"/make
@@ -50,9 +50,9 @@ function run_test() {
     cat ../ignore.out >> skip.name
     awk -F': ' '{if($2=="execution" && $3!="PASS") print $1}' run.log > fail.name
 
-    while read line || [[ -n $line ]]; do
+    while read -r line || [[ -n $line ]]; do
         grep -q "$line" skip.name
-        if [ $? -eq 0 ]; then
+        if mycmd; then
             continue
         fi
         # 单独再执行一次
