@@ -28,11 +28,11 @@ CUR_DIR=$(
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    EXECUTE_T="1440m"
+ #   EXECUTE_T="1440m"
 
     MAKEDIR=$(cd .. && pwd)
     chmod 777 "${MAKEDIR}"/make
-    MAKE=${MAKEDIR}/make
+  #  MAKE=${MAKEDIR}/make
 
     timestap=$(stat -c %Y tmp_test/allinfo.tar)
     formart_date=$(date '+%Y-%m-%d %H:%M:%S' -d @"$timestap")
