@@ -68,9 +68,9 @@ function run_test() {
                     -C "${CUR_DIR}"/tmp_test/run_fail_1              
     popd || exit
 
-    while read line || [[ -n $line ]]; do
+    while read -r line || [[ -n $line ]]; do
         grep -q "$line" ignore.out
-        if [ $? -eq 0 ]; then
+        if mycmd; then
             continue
         fi
         CHECK_RESULT $? 0 0 "run posix testcase fail case name: $line"
