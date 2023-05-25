@@ -48,7 +48,7 @@ function run_test() {
     env --debug | grep "USER=" 
     CHECK_RESULT $? 0 0 "Check env --debug failed"
 
-    env --help | fgrep "Usage: env [OPTION]"
+    env --help | grep -F "Usage: env [OPTION]"
     CHECK_RESULT $? 0 0 "Check env --help failed"
 
     env --version | grep "env (GNU coreutils) [[:digit:]]"
