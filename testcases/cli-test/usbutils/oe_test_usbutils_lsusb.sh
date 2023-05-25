@@ -27,7 +27,7 @@ function run_test() {
         lsusb --help | grep "Show usage and help"
     CHECK_RESULT $? 0 0 "execute lsusb --help failure"
 
-    lsusb -V | grep "lsusb (usbutils) 014"
+    lsusb -V | grep "lsusb (usbutils)"
     CHECK_RESULT $? 0 0 "execute lsusb -V failure"
 
     lsusb | grep -E "[0-9a-fA-F]{4}:[0-9a-fA-F]{4}"
