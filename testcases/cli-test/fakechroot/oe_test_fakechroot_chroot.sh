@@ -36,7 +36,7 @@ function run_test() {
     chroot --userspec=root:root --skip-chdir / ./hello.sh | grep "hello world!"
     CHECK_RESULT $? 0 0 "Check chroot --userspec --skip-chdir failed"
 
-    chroot --help | fgrep "Usage: chroot [OPTION]"
+    chroot --help | grep -F "Usage: chroot [OPTION]"
     CHECK_RESULT $? 0 0 "Check chroot --help failed"
 
     chroot --version | grep "chroot (GNU coreutils) [[:digit:]]"
