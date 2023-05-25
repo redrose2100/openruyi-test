@@ -22,7 +22,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     shopt -p
     CHECK_RESULT $? 0 0 "run shopt failed"
-    shopt --help |grep "选项："
+    shopt --help |egrep "选项:|Options:"
     CHECK_RESULT $? 0 0 "run shopt --help failed"
     shopt -s cdspell
     res=$(shopt -s |grep cdspell |awk '{ print$2 }')
