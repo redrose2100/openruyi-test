@@ -52,11 +52,12 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    mv -f  /etc/sysconfig/network-scripts/ifcfg-${NODE1_NIC}.bak /etc/sysconfig/network-scripts/ifcfg-${NODE1_NIC}
+    mv -f /etc/sysconfig/network-scripts/ifcfg-${NODE1_NIC}.bak /etc/sysconfig/network-scripts/ifcfg-${NODE1_NIC}
     mv -f /etc/rc.d/rc.local.bak /etc/rc.d/rc.local
-    rm -rf ifcfg-bond0 /etc/modprobe.d/modprobe.conf
+    rm -rf /etc/sysconfig/network-scripts/ifcfg-bond0 /etc/modprobe.d/modprobe.conf
     ip netns delete name1
     nmcli c reload
+    modprobe -r bonding
     LOG_INFO "End to restore the test environment."
 }
 

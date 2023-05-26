@@ -97,10 +97,15 @@ function DNF_INSTALL() {
         exit 1
     fi
 
-    location=$[ "NODE"$node"_LOCATION" ]
+    location=$(("NODE"$node"_LOCATION"))
     if [[ location == "local" ]]; then
         reponames=$(grep '^\[.*\]' /etc/yum.repos.d/*.repo | tr -d [] | sed -e ':a;N;$!ba;s/\n/ /g')
-        mapfile -t __install_pkgs < <(dnf --assumeno install ${__pkg_list[*]} 2>&1 | grep -wE "${reponames// /|}" | grep -wE "$(uname -m)|noarch" | awk '{print $1}')
+        update_pkgs=$(dnf --assumeno install ${__pkg_list[*]} 2>&1 | grep -A 1000 Upgrading: | grep update | grep -wE "$(uname -m)|noarch" | awk '{print $1}' | xargs)
+        if [ -z "$update_pkgs" ]; then
+            mapfile -t __install_pkgs < <(dnf --assumeno install ${__pkg_list[*]} 2>&1 | grep -wE "${reponames// /|}" | grep -wE "$(uname -m)|noarch" | awk '{print $1}')
+        else
+            mapfile -t __install_pkgs < <(dnf --assumeno install ${__pkg_list[*]} 2>&1 | grep -wE "${reponames// /|}" | grep -wE "$(uname -m)|noarch" | awk '{print $1}' | grep -vE "${update_pkgs// /|}")
+        fi
         dnf -y install ${__pkg_list[*]}
 
         if ! dnf -y install ${__pkg_list[*]}; then
@@ -108,10 +113,10 @@ function DNF_INSTALL() {
             exit 1
         fi
     else
-        remoteIp=$[ "NODE"$node"_IPV4" ]
-        password=$[ "NODE"$node"_PASSWORD" ]
-        ssh_port=$[ "NODE"$node"_SSH_PORT" ]
-        remoteUser=$[ "NODE"$node"_USER" ]
+        remoteIp=$(("NODE"$node"_IPV4"))
+        password=$(("NODE"$node"_PASSWORD"))
+        ssh_port=$(("NODE"$node"_SSH_PORT"))
+        remoteUser=$(("NODE"$node"_USER"))
         cmd="dnf -y install ${__pkg_list[*]}"
 
         ret=SSH_CMD "$cmd" "$remoteIp" "$password" "$remoteUser" 300 "$ssh_port"
@@ -152,17 +157,17 @@ function DNF_REMOVE() {
 
     if [ "$node" -eq 0 ]; then
         for node_id in $(seq 1 $node_number); do
-            location=$[ "NODE"$node_id"_LOCATION" ]
+            location=$(("NODE"$node_id"_LOCATION"))
             if [[ location == "local" ]]; then
                 if ! dnf -y remove ${__installed_pkgs[*]} ${__pkg_list[*]}; then
                     LOG_ERROR "pkg_list:${__installed_pkgs[*]} ${__pkg_list[*]} remove failed."
                     exit 1
                 fi
             else
-                remoteIp=$[ "NODE"$node_id"_IPV4" ]
-                password=$[ "NODE"$node_id"_PASSWORD" ]
-                ssh_port=$[ "NODE"$node_id"_SSH_PORT" ]
-                remoteUser=$[ "NODE"$node_id"_USER" ]
+                remoteIp=$(("NODE"$node_id"_IPV4"))
+                password=$(("NODE"$node_id"_PASSWORD"))
+                ssh_port=$(("NODE"$node_id"_SSH_PORT"))
+                remoteUser=$(("NODE"$node_id"_USER"))
                 cmd="dnf -y remove ${__installed_pkgs[*]} ${__pkg_list[*]}"
 
                 ret=SSH_CMD "$cmd" "$remoteIp" "$password" "$remoteUser" 300 "$ssh_port"
@@ -174,17 +179,17 @@ function DNF_REMOVE() {
             fi
         done
     else
-        location=$[ "NODE"$node"_LOCATION" ]
+        location=$(("NODE"$node"_LOCATION"))
         if [[ location == "local" ]]; then
             if ! dnf -y remove ${__installed_pkgs[*]} ${__pkg_list[*]}; then
                 LOG_ERROR "pkg_list:${__installed_pkgs[*]} ${__pkg_list[*]} remove failed."
                 exit 1
             fi
         else
-            remoteIp=$[ "NODE"$node"_IPV4" ]
-            password=$[ "NODE"$node"_PASSWORD" ]
-            ssh_port=$[ "NODE"$node"_SSH_PORT" ]
-            remoteUser=$[ "NODE"$node"_USER" ]
+            remoteIp=$(("NODE"$node"_IPV4"))
+            password=$(("NODE"$node"_PASSWORD"))
+            ssh_port=$(("NODE"$node"_SSH_PORT"))
+            remoteUser=$(("NODE"$node"_USER"))
             cmd="dnf -y remove ${__installed_pkgs[*]} ${__pkg_list[*]}"
 
             ret=SSH_CMD "$cmd" "$remoteIp" "$password" "$remoteUser" 300 "$ssh_port"
@@ -231,11 +236,11 @@ function GET_FREE_PORT() {
             exit 1
         fi
     fi
-    
-    range=`expr $end_port - $start_port`
+
+    range=$(expr $end_port - $start_port)
     for i in seq 100; do
-        rand=`expr$RANDOM % $range`
-        new_port=`expr $start_port + $rand`
+        rand=$(expr$RANDOM % $range)
+        new_port=$(expr $start_port + $rand)
         check=IS_FREE_PORT new_port
         if [ $check -eq 0 ]; then
             return $new_port
@@ -254,13 +259,13 @@ function SLEEP_WAIT() {
     waitesend=${wait_time:0:-1}
     case $waiteType in
     m)
-        waitesend=`expr $waitesend * 60`
+        waitesend=$(expr $waitesend * 60)
         ;;
     h)
-        waitesend=`expr $waitesend * 3600`
+        waitesend=$(expr $waitesend * 3600)
         ;;
-    s)
-        ;;
+    s) ;;
+
     [0-9])
         waitesend=$wait_time
         ;;
@@ -284,10 +289,10 @@ function REMOTE_REBOOT_WAIT() {
     node=${1-2}
     waittime=${2-""}
 
-    remoteip=$[ "NODE"$node"_IPV4" ]
-    remotepasswd=$[ "NODE"$node"_PASSWORD" ]
-    ssh_port=$[ "NODE"$node"_SSH_PORT" ]
-    remoteuser=$[ "NODE"$node"_USER" ]
+    remoteip=$(("NODE"$node"_IPV4"))
+    remotepasswd=$(("NODE"$node"_PASSWORD"))
+    ssh_port=$(("NODE"$node"_SSH_PORT"))
+    remoteuser=$(("NODE"$node"_USER"))
 
     count=0
 
@@ -320,10 +325,10 @@ function REMOTE_REBOOT() {
     node=${1-2}
     waittime=${2-""}
 
-    remoteip=$[ "NODE"$node"_IPV4" ]
-    remotepasswd=$[ "NODE"$node"_PASSWORD" ]
-    ssh_port=$[ "NODE"$node"_SSH_PORT" ]
-    remoteuser=$[ "NODE"$node"_USER" ]
+    remoteip=$(("NODE"$node"_IPV4"))
+    remotepasswd=$(("NODE"$node"_PASSWORD"))
+    ssh_port=$(("NODE"$node"_SSH_PORT"))
+    remoteuser=$(("NODE"$node"_USER"))
 
     if SSH_CMD "reboot" $remoteip $remotepasswd $remoteuser; then
         LOG_ERROR "do reboot fail"

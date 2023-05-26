@@ -48,6 +48,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "TestA.service stop failed"
     systemctl start TestA
     CHECK_RESULT $? 0 0 "TestA.service start failed"
+    SLEEP_WAIT 5
     TestA_status=$(systemctl status TestA | grep "running" | awk '{print $7}')
     systemctl status TestB | grep failed | grep $TestA_status
     CHECK_RESULT $? 0 0 "TestB.service restart success"

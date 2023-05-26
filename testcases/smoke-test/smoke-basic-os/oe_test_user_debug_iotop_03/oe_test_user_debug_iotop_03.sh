@@ -34,11 +34,12 @@ function run_test() {
     LOG_INFO "Start to run test."
     ./iotoptest &
     CHECK_RESULT $? 0 0 "Execute i/o process:failed"
+    SLEEP_WAIT 3
     iotop -o -b -n 2 -d 10 | grep "iotoptest"
     CHECK_RESULT $? 0 0 "Failed to check the running i/o process"
     running_io_total=$(iotop -o -b -n 1 -d 10 | wc -l)
     all_io_total=$(iotop -b -n 1 -d 10 | wc -l)
-    test $all_io_total > $running_io_total
+    test $all_io_total >$running_io_total
     CHECK_RESULT $? 0 0 "Failed to check the all i/o process!"
     LOG_INFO "End to run test."
 }

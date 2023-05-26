@@ -36,6 +36,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     gcc -o demo demo.c
     ./demo &
+    SLEEP_WAIT 3
     echo $! >demo_pid
     sleep 1
     criu dump -D checkpoint_demo -j -t $(cat demo_pid)

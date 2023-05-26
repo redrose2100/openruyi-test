@@ -29,14 +29,14 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     if ps -aux | grep -w "dhclient" | grep -vE "grep|sh"; then
-        netstat -aupx | grep dhclient | awk '{print $NF}' | uniq | wc -l | grep 1
+        netstat -aupx | grep dhclient | awk '{print $NF}' | awk -F '/' '{print $2}' | uniq | wc -l | grep 1
         CHECK_RESULT $? 0 0 "There are multiple ports"
         echo "" >/etc/resolv.conf
         systemctl restart NetworkManager
         SLEEP_WAIT 3
         grep "nameserver" /etc/resolv.conf
         CHECK_RESULT $? 0 0 "Different files"
-        netstat -aupx | grep dhclient | awk '{print $NF}' | uniq | wc -l | grep 1
+        netstat -aupx | grep dhclient | awk '{print $NF}' | awk -F '/' '{print $2}' | uniq | wc -l | grep 1
         CHECK_RESULT $? 0 0 "Not just one ports"
     fi
     LOG_INFO "End to run test."
@@ -45,7 +45,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     mv -f /etc/resolv.conf.bak /etc/resolv.conf
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -35,7 +35,7 @@ function run_test() {
     systemctl disable rsyslog
     CHECK_RESULT $? 0 0 "Failed to start rsyslog service"
     systemctl enable rsyslog
-    CHECK_RESULT $?0 0 "Failed to start rsyslog service"
+    CHECK_RESULT $? 0 0 "Failed to start rsyslog service"
     whitelist='kdump|lm_sensors|wait-online'
     systemctl -all --failed | grep -vE ${whitelist} | grep failed
     CHECK_RESULT $? 1 0 "There are failed services"

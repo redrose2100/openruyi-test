@@ -39,8 +39,9 @@ function run_test() {
     done
     " >test.sh
     sh test.sh &
-    kill -9 $old_pid
     SLEEP_WAIT 3
+    kill -9 $old_pid
+    SLEEP_WAIT 5
     systemctl status rsyslog | grep running
     CHECK_RESULT $? 0 0 "The service was not pulled up again"
     kill -9 $(jobs -l | grep test.sh | awk '{print $2}')

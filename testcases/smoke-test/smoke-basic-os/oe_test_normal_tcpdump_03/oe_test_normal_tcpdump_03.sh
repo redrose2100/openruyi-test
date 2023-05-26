@@ -23,6 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL tcpdump
     ping -q -I ${NODE1_NIC} baidu.com &
+    SLEEP_WAIT 3
     LOG_INFO "End to prepare the test environment."
 }
 

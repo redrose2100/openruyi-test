@@ -33,14 +33,14 @@ function run_test() {
     echo "" >/run/log/imjournal.state
     systemctl start rsyslog
     CHECK_RESULT $? 0 0 "Failed to start service"
-    SLEEP_WAIT 8
+    SLEEP_WAIT 5
     main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
     grep rsyslog /var/log/messages | grep $main_pid
     CHECK_RESULT $? 0 0 "Log not recorded"
     rm -rf /run/log/imjournal.state
     systemctl restart rsyslog
     CHECK_RESULT $? 0 0 "Failed to restart service"
-    SLEEP_WAIT 3
+    SLEEP_WAIT 5
     main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
     grep rsyslog /var/log/messages | grep $main_pid
     CHECK_RESULT $? 0 0 "The pid not recorded"
@@ -50,6 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     mv -f /run/log/imjournal.state.bak /run/log/imjournal.state
+    systemctl restart rsyslog
     LOG_INFO "End to restore the test environment."
 }
 

@@ -28,6 +28,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     ping -I ${NODE1_NIC} baidu.com &
     CHECK_RESULT $? 0 0 "ping -I  ${NODE1_NIC} baidu.com:failed"
+    SLEEP_WAIT 3
     timeout 5 tcpdump -i ${NODE1_NIC} 2>&1 | grep "listening on ${NODE1_NIC}"
     CHECK_RESULT $? 0 0 "tcpdump -i: failed!"
     LOG_INFO "End to run test."

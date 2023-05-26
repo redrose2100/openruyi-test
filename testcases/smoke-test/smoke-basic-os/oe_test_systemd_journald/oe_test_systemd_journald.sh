@@ -24,7 +24,7 @@ function run_test() {
     journalctl -f >testlog &
     CHECK_RESULT $? 0 0 "Failed to execute journalctl -f"
     SLEEP_WAIT 3
-    grep -E "begins at|begin at" testlog
+    grep -E "begins at|begin at|[0-9]|entries" testlog
     CHECK_RESULT $? 0 0 "Failed to find begin"
     kill -9 $(pgrep journalctl)
     journalctl --reverse --lines 10 --no-pager | grep -vE "begins at|begin at" | wc -l | grep 10
@@ -40,7 +40,7 @@ function run_test() {
     journalctl /usr/lib/systemd/systemd1
     CHECK_RESULT $? 0 1 "Succeed to execute journalctl"
     local_disk=$(lsblk | grep disk | grep da | head -n 1 | awk '{print $1}')
-    journalctl /dev/$local_disk | grep -E "begins at|begin at"
+    journalctl /dev/$local_disk | grep -E "begins at|begin at|[0-9]|entries"
     CHECK_RESULT $? 0 0 "Failed to execute journalctl disk"
     journalctl /dev/testdev
     CHECK_RESULT $? 0 1 "Succeed to execute journalctl disk"

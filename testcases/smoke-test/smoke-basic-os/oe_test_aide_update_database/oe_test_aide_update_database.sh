@@ -21,7 +21,8 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL aide
+    DNF_INSTALL "aide gcc"
+    sed -i '$a/home DATAONLY' /etc/aide.conf
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -43,7 +44,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     userdel -rf testuser
     rm -rf testlog /var/log/aide/aide.log /var/lib/aide/aide*
     LOG_INFO "End to restore the test environment."

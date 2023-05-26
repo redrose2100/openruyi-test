@@ -21,13 +21,13 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "popt popt-devel"
+    DNF_INSTALL "popt popt-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    cat > parse.c << EOF
+    cat >parse.c <<EOF
 #include <popt.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -118,20 +118,20 @@ exit ( 0 ) ;
 }
 EOF
     gcc -Wall -o parse parse.c -lpopt
-    CHECK_RESULT $? 0 0  "c file failed to compile"
-    ./parse > test.log 2>&1
+    CHECK_RESULT $? 0 0 "c file failed to compile"
+    ./parse >test.log 2>&1
     cat test.log | grep Usage
-    CHECK_RESULT $? 0 0  "Unable to view parse usage"
+    CHECK_RESULT $? 0 0 "Unable to view parse usage"
     ./parse -?
-    CHECK_RESULT $? 0 0  "The parse usage fails to be applied"
+    CHECK_RESULT $? 0 0 "The parse usage fails to be applied"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf parse*
-    DNF_REMOVE
+    rm -rf parse* test.log
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

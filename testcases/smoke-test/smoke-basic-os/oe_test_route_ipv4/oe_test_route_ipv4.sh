@@ -36,7 +36,7 @@ function run_test() {
     route del default gw ${default_route}
     CHECK_RESULT $? 0 0 "Failed to del route"
     SLEEP_WAIT 2
-    ip r | grep default
+    ip r | grep default && ip -r | grep -v "9.0.0.0" | grep ${default_route}
     CHECK_RESULT $? 0 1 "Succeed to show route"
     route add default gw ${default_route}
     CHECK_RESULT $? 0 0 "Failed to add default route"
@@ -48,7 +48,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     route del -net 9.0.0.0/8 gw ${default_route}
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

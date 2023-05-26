@@ -84,7 +84,7 @@ function run_test() {
     CHECK_RESULT $?
     ovs-vsctl del-br br0
     CHECK_RESULT $?
-    ip a | grep br0
+    ip a | grep -w br0
     CHECK_RESULT $? 1
     ip netns delete ns_1
     CHECK_RESULT $?
@@ -103,7 +103,7 @@ function post_test() {
     if [ $result_flag -eq 1 ]; then
         setenforce 1
     fi
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End of environmental cleanup"
 }
 main "$@"
