@@ -17,7 +17,7 @@
 # @Desc      :   Test cgexec
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,16 +28,17 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cgexec -g cpu:test ip a | grep ${NODE1_IPV4}
+    cgexec -g cpu:test ip a | grep "${NODE1_IPV4}"
     CHECK_RESULT $? 0 0 "Failed to execute cgexec"
     ping -q www.baidu.com &
-    ping_pid=$(ps -aux | grep "ping -q www.baidu.com" | grep -v grep | awk '{print $2}')
-    cgclassify -g cpu:test $ping_pid
+    SLEEP_WAIT 3
+    ping_pid=$(pgrep -f "ping -q www.baidu.com")
+    cgclassify -g cpu:test "$ping_pid"
     CHECK_RESULT $? 0 0 "Failed to execute cgclassify"
-    grep $ping_pid /sys/fs/cgroup/cpu/test/tasks
+    grep "$ping_pid" /sys/fs/cgroup/cpu/test/tasks
     CHECK_RESULT $? 0 0 "Failed to display pid"
-    kill -9 $ping_pid
-    cat /sys/fs/cgroup/cpu/test/tasks | wc -l | grep 0
+    kill -9 "$ping_pid"
+    wc -l /sys/fs/cgroup/cpu/test/tasks | grep 0
     CHECK_RESULT $? 0 0 "File is not empty"
     LOG_INFO "End to run test."
 }
@@ -45,7 +46,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     cgdelete -g cpu:test
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

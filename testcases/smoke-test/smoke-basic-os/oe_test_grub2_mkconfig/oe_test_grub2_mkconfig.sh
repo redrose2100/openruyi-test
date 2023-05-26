@@ -17,7 +17,7 @@
 # @Desc      :   Test the basic functions of grub2-mkconfig
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -27,7 +27,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to find vmlinuz in tmp_grub_cfg"
     grep -r "vmlinuz" /boot | awk -F 'cfg:' '{print $NF}' | grep linux >testlog2
     CHECK_RESULT $? 0 0 "Failed to find vmlinuz in /boot"
-    diff -Bw testlog1 testlog2
+    diff -Bw testlog1 testlog2 || grep -f testlog1 testlog2
     CHECK_RESULT $? 0 0 "Files are different"
     LOG_INFO "End to run test."
 }

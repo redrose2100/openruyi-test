@@ -16,7 +16,7 @@
 #@Desc          :   Check the number of packets sent by mtr
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -26,7 +26,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mtr -6 -r -c 15 -s 128 -n $(hostname) | awk 'NR==3{print $4}' | grep 15
+    mtr -6 -r -c 15 -s 128 -n | awk 'NR==3{print $4}' | grep 15
     CHECK_RESULT $? 0 0 "Check the number of packets sent per second 15: failed!"
     mtr -h | grep "Usage"
     CHECK_RESULT $? 0 0 "Check mtr -h: failed!"
@@ -35,7 +35,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF REMOVE 
+    DNF REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

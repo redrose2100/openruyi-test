@@ -17,7 +17,7 @@
 # @Desc      :   Test basic service status
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
     systemctl | grep sys
@@ -35,11 +35,11 @@ function run_test() {
     systemctl disable rsyslog
     CHECK_RESULT $? 0 0 "Failed to start rsyslog service"
     systemctl enable rsyslog
-    CHECK_RESULT $?0 0 "Failed to start rsyslog service"
+    CHECK_RESULT $? 0 0 "Failed to start rsyslog service"
     whitelist='kdump|lm_sensors|wait-online'
     systemctl -all --failed | grep -vE ${whitelist} | grep failed
     CHECK_RESULT $? 1 0 "There are failed services"
-    [ $(journalctl -aeb | wc -l) -gt 0 ]
+    [ "$(journalctl -aeb | wc -l)" -gt 0 ]
     CHECK_RESULT $? 0 0 "Failed command: journalctl"
     LOG_INFO "End to run test."
 }

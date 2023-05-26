@@ -17,7 +17,7 @@
 # @Desc      :   criu test
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
@@ -36,19 +36,20 @@ function run_test() {
     LOG_INFO "Start testing..."
     gcc -o demo demo.c
     ./demo &
+    SLEEP_WAIT 3
     echo $! >demo_pid
     sleep 1
-    criu dump -D checkpoint_demo -j -t $(cat demo_pid)
+    criu dump -D checkpoint_demo -j -t "$(cat demo_pid)"
     CHECK_RESULT $?
-    ps aux | grep demo | grep -w $(cat demo_pid)
+    pgrep -f demo | grep -w "$(cat demo_pid)"
     CHECK_RESULT $? 1
-    num1=$(cat output.txt | tail -1)
+    num1=$(tail -1 output.txt)
     criu restore -D ./checkpoint_demo -j
     CHECK_RESULT $?
-    let num2=num1+1
-    grep -w $last_num output.txt
+    num2=$(("$num1" + 1))
+    grep -w "$last_num" output.txt
     CHECK_RESULT $?
-    grep -w $num2 output.txt
+    grep -w "$num2" output.txt
     CHECK_RESULT $?
     LOG_INFO "Finish test!"
 }
@@ -56,8 +57,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf checkpoint_demo demo output.txt demo_pid
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
