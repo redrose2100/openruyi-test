@@ -85,7 +85,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: --out-lines error"
 
     #Test the -w parameter
-    notodiff --before test_input/test_input_1/"${TEST_FILE_1}" --after test_input/test_input_1/"${TEST_FILE_2}" -w ${MISS_LIST}" | grep -q "15 differences in glyph shape"
+    notodiff --before test_input/test_input_1/"${TEST_FILE_1}" --after test_input/test_input_1/"${TEST_FILE_2}" -w "${MISS_LIST}" | grep -q "15 differences in glyph shape"
     CHECK_RESULT $? 0 0 "option: -w error"
     notodiff --before test_input/test_input_1/"${TEST_FILE_1}" --after test_input/test_input_1/"${TEST_FILE_2}" --allowlist "${MISS_LIST}" | grep -q "15 differences in glyph shape"
     CHECK_RESULT $? 0 0 "option: --allowlist error"
