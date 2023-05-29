@@ -88,6 +88,9 @@
 	},
         {
             "name": "oe_test_vlan_8021q"
+        },
+        {
+            "name": "oe_test_nbd"
         }
     ]
 }
