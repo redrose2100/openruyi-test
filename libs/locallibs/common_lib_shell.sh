@@ -97,7 +97,7 @@ function DNF_INSTALL() {
         exit 1
     fi
 
-    location=$(("NODE"$node"_LOCATION"))
+    location=$[ "NODE"$node"_LOCATION" ]
     if [[ location == "local" ]]; then
         reponames=$(grep '^\[.*\]' /etc/yum.repos.d/*.repo | tr -d [] | sed -e ':a;N;$!ba;s/\n/ /g')
         update_pkgs=$(dnf --assumeno install ${__pkg_list[*]} 2>&1 | grep -A 1000 Upgrading: | grep update | grep -wE "$(uname -m)|noarch" | awk '{print $1}' | xargs)
