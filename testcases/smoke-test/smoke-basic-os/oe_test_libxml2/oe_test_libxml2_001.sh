@@ -19,9 +19,9 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
-function pre_test(){
+function pre_test() {
     LOG_INFO "Start environment preparation."
-    cat > /tmp/createxml.cpp  <<EOF
+    cat >/tmp/createxml.cpp <<EOF
 #include <stdio.h>
 #include <stdlib.h>
 #include <libxml/parser.h>
@@ -62,7 +62,7 @@ xmlFreeDoc(doc);
 return 1;
 }
 EOF
-    DNF_INSTALL "libxml2 libxml2-devel"
+    DNF_INSTALL "libxml2 libxml2-devel gcc-c++"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -72,7 +72,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Return value error"
     cd /tmp && g++ createxml.cpp -o createdxml -I /usr/include/libxml2/ -L /usr/local/lib -lxml2 -lm -lz
     test -f /tmp/createdxml
-    CHECK_RESULT $? 0 0 "compile testfile fail"    
+    CHECK_RESULT $? 0 0 "compile testfile fail"
     ./createdxml
     test -f /tmp/CreatedXml.xml
     CHECK_RESULT $? 0 0 "Generate CreatedXml.xml fail "
@@ -80,15 +80,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "CreatedXml.xml information is error"
     xmllint --format CreatedXml.xml --output createxml.xml
     CHECK_RESULT $? 0 0 "Generate createxml.xml fail"
-    grep "<UOS3>UOS3 content</UOS3>" /tmp/createxml.xml |grep -v "<UOS2>UOS2 content</UOS2>"
+    grep "<UOS3>UOS3 content</UOS3>" /tmp/createxml.xml | grep -v "<UOS2>UOS2 content</UOS2>"
     CHECK_RESULT $? 0 0 "createxml.xml information error"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/createdxml /tmp/createxml.cpp /tmp/CreatedXml.xml /tmp/createxml.xml
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

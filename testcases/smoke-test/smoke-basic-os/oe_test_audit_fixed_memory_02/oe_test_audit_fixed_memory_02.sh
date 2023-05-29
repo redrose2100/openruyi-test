@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "audit-devel"
+    DNF_INSTALL "audit-devel gcc"
     auditctl rate_limit=0
     auditctl backlog_wait_time=0
     echo "
@@ -46,6 +46,7 @@ function run_test() {
     [ -e a.out ]
     CHECK_RESULT $? 0 0 "Get a.out: failed!"
     ./a.out &
+    SLEEP_WAIT 3
     auditctl -s | grep -w "backlog"
     CHECK_RESULT $? 0 0 "Get backlog: failed!"
     LOG_INFO "End to run test."
@@ -53,8 +54,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf test.c  a.out
+    rm -rf test.c a.out
     kill -9 $(ps -ef | grep ./a.out | grep -v grep | awk '{print $2}')
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

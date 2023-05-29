@@ -18,6 +18,12 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    old_para=$(cat /proc/sys/net/ipv4/tcp_congestion_control)
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     echo bbr >/proc/sys/net/ipv4/tcp_congestion_control
@@ -29,7 +35,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    sed -i '/bbr/d' /proc/sys/net/ipv4/tcp_congestion_control
+    echo ${old_para} > /proc/sys/net/ipv4/tcp_congestion_control
     LOG_INFO "End to restore the test environment."
 }
 

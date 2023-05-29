@@ -19,9 +19,9 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
-function pre_test(){
+function pre_test() {
     LOG_INFO "Start environment preparation."
-    cat > /tmp/readxml.cpp  <<EOF
+    cat >/tmp/readxml.cpp <<EOF
 #include <libxml/parser.h>
 #include <iostream>
 using namespace std;
@@ -98,7 +98,7 @@ xmlFreeDoc(doc);
 return 0;
 }
 EOF
-    DNF_INSTALL "libxml2 libxml2-devel"
+    DNF_INSTALL "libxml2 libxml2-devel gcc-c++"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -109,18 +109,18 @@ function run_test() {
     cp CreatedXml.xml /tmp/
     cd /tmp && g++ readxml.cpp -o readxml -I /usr/include/libxml2/ -L /usr/local/lib -lxml2 -lm -lz
     test -f /tmp/readxml
-    CHECK_RESULT $? 0 0 "compile testfile fail"     
-    ./readxml CreatedXml.xml > libxml2
+    CHECK_RESULT $? 0 0 "compile testfile fail"
+    ./readxml CreatedXml.xml >libxml2
     grep "get value = yes" /tmp/libxml2
     CHECK_RESULT $? 0 0 "libxml2 information error "
-   
+
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/readxml /tmp/readxml.cpp /tmp/CreatedXml.xml /tmp/libxml2
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

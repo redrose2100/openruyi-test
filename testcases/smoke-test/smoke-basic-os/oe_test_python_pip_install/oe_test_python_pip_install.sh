@@ -23,6 +23,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     pip3 install --user requests
     CHECK_RESULT $? 0 0 "Failed to execute pip3 install --user"
+    SLEEP_WAIT 3
     test -d /root/.local/lib/python*/site-packages/requests
     CHECK_RESULT $? 0 0 "Failed to find site-packages/requests in /root"
     pip3 uninstall requests -y

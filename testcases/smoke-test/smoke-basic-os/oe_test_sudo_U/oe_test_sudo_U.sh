@@ -46,7 +46,8 @@ function post_test() {
     mv -f /etc/sudoers.bak /etc/sudoers
     userdel -rf testuser1
     userdel -rf testuser2
-    DNF_REMOVE
+    systemctl stop sssd
+    DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }

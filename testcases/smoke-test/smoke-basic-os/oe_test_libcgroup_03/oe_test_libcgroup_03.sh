@@ -31,6 +31,7 @@ function run_test() {
     cgexec -g cpu:test ip a | grep ${NODE1_IPV4}
     CHECK_RESULT $? 0 0 "Failed to execute cgexec"
     ping -q www.baidu.com &
+    SLEEP_WAIT 3
     ping_pid=$(ps -aux | grep "ping -q www.baidu.com" | grep -v grep | awk '{print $2}')
     cgclassify -g cpu:test $ping_pid
     CHECK_RESULT $? 0 0 "Failed to execute cgclassify"

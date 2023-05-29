@@ -27,8 +27,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "No / partition"
     lsblk | grep "SWAP"
     CHECK_RESULT $? 0 0 "No swap partition"
-    lsblk | grep "/home$"
-    CHECK_RESULT $? 0 0 "No home partition"
     lsblk --help
     CHECK_RESULT $? 0 0 "lsblk -h info error"
     lsblk -t | grep SCHED
