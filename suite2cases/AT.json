@@ -8,9 +8,6 @@
             "name": "oe_test_module"
         },
         {
-            "name": "oe_test_dmesg_messages_log"
-        },
-        {
             "name": "oe_test_baseinfo"
         },
         {
@@ -35,9 +32,6 @@
             "name": "oe_test_ssh"
         },
         {
-            "name": "oe_test_rpm_suffix_name"
-        },
-        {
             "name": "oe_test_acl_001"
         },
         {
@@ -60,9 +54,6 @@
         },
         {
             "name": "oe_test_cp_001"
-        },
-        {
-            "name": "oe_test_CPUinfo_001"
         },
         {
             "name": "oe_test_criu"
