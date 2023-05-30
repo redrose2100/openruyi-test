@@ -42,7 +42,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    cd $pwd || exit
+    cd "$pwd" || exit
     rm -rf testdir osinfo-db-20230308.tar.xz
     DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
