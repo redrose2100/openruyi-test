@@ -16,7 +16,7 @@
 #@Desc      	:   Confirm numad -m parameter function
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -26,9 +26,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ping -I ${NODE1_NIC} baidu.com &
+    ping -I "${NODE1_NIC}" baidu.com &
     CHECK_RESULT $? 0 0 "ping -I  ${NODE1_NIC} baidu.com:failed"
-    tcpdump -i ${NODE1_NIC} -c 10 2>&1 | grep "10 packets captured"
+    SLEEP_WAIT 3
+    tcpdump -i "${NODE1_NIC}" -c 10 2>&1 | grep "10 packets captured"
     CHECK_RESULT $? 0 0 "tcpdump -i ${NODE1_NIC} -c 10:failed"
     LOG_INFO "End to run test."
 }
@@ -36,7 +37,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF REMOVE
-    kill -9 $(ps -ef | grep "baidu.com" | grep -v grep | awk '{print $2}')
+    kill -9 "$(pgrep ping)"
     LOG_INFO "End to restore the test environment."
 }
 

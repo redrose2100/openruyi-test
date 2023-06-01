@@ -17,7 +17,7 @@
 # @Desc      :   gettext Basic Functions test
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
@@ -29,7 +29,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    cat > test.py << EOF
+    cat >test.py <<EOF
 import os
 import gettext
 
@@ -54,6 +54,7 @@ EOF
     mkdir -p locale/en_US/LC_MESSAGES/
     msgfmt -o locale/zh_CN/LC_MESSAGES/test.mo test.po
     CHECK_RESULT $? 0 0 "Can't generate mo file"
+    LANG=zh_CN.UTF-8
     python3 test.py | grep "你好"
     CHECK_RESULT $? 0 0 "test.py cannot be executed properly or Unable to filter necessary characters"
     xgettext -k_ -o us.po test.py
@@ -70,10 +71,10 @@ EOF
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
-    rm -rf locale/ *.po test.py
-    localectl set-locale LANG=${local}
+    DNF_REMOVE "$@"
+    rm -rf locale/ ./*.po test.py
+    localectl set-locale LANG="${local}"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

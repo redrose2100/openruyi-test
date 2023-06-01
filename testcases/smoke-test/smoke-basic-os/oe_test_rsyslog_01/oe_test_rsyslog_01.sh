@@ -17,7 +17,7 @@
 # @Desc      :   Test the basic functions of rsyslog
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -39,15 +39,16 @@ function run_test() {
     done
     " >test.sh
     sh test.sh &
-    kill -9 $old_pid
     SLEEP_WAIT 3
+    kill -9 "$old_pid"
+    SLEEP_WAIT 5
     systemctl status rsyslog | grep running
     CHECK_RESULT $? 0 0 "The service was not pulled up again"
-    kill -9 $(jobs -l | grep test.sh | awk '{print $2}')
+    kill -9 "$(jobs -l | grep test.sh | awk '{print $2}')"
     CHECK_RESULT $? 0 0 "Service not started"
-    test $(grep -c ldapdb /var/log/messages) -lt 100
+    test "$(grep -c ldapdb /var/log/messages)" -lt 100
     CHECK_RESULT $? 0 0 "Quantity is greater than 100"
-    test $old_pid -ne $(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
+    test "$old_pid" -ne "$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')"
     CHECK_RESULT $? 0 0 "Pid unchanged"
     LOG_INFO "End to run test."
 }

@@ -17,11 +17,11 @@
 # @Desc      :   Use pcre to compile c programs
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "pcre pcre-devel pcre-help"
+    DNF_INSTALL "pcre pcre-devel pcre-help gcc"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -49,10 +49,10 @@ EOF
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
-    rm -rf file.c
+    DNF_REMOVE "$@"
+    rm -rf file.c a.out
     sed -i '$d' /etc/ld.so.conf
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

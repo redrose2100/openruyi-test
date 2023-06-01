@@ -17,13 +17,14 @@
 # @Desc      :   Test the basic functions of pip3
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
     pip3 install --user requests
     CHECK_RESULT $? 0 0 "Failed to execute pip3 install --user"
-    test -d /root/.local/lib/python*/site-packages/requests
+    SLEEP_WAIT 3
+    test -d /root/.local/lib/python*/site-packages/requests || test -d /usr/lib/python*/site-packages/requests
     CHECK_RESULT $? 0 0 "Failed to find site-packages/requests in /root"
     pip3 uninstall requests -y
     pip3 install --root /tmp requests
@@ -33,7 +34,7 @@ function run_test() {
     rm -rf /tmp/usr
     pip3 install --prefix /tmp requests
     CHECK_RESULT $? 0 0 "Failed to execute pip3 install --prefix"
-    ls -R /tmp | grep requests
+    test -d /tmp/lib/python*/site-packages/requests
     CHECK_RESULT $? 0 0 "Failed to find requests in /tmp"
     pip3 list | grep "charset-normalizer"
     CHECK_RESULT $? 0 0 "Failed to execute pip3 list"

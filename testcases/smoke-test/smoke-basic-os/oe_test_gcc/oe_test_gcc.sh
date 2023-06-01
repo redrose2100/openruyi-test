@@ -1,4 +1,4 @@
-﻿#!/usr/bin/bash
+#!/bin/bash
 
 # Copyright (c) 2022 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
@@ -17,13 +17,14 @@
 # @Desc      :   File system common command test-gcc
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
-function pre_test(){
+function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL gcc
     mkdir /tmp/test
     path=/tmp/test
-    cat > ${path}/test1.c  <<EOF
+    cat >${path}/test1.c <<EOF
 #include <stdio.h>
 int main()
 {
@@ -39,7 +40,7 @@ function run_test() {
     gcc -o ${path}/a.out ${path}/test1.c
     ls ${path}/a.out
     CHECK_RESULT $? 0 0 "gcc file fails"
-    ${path}/a.out > ${path}/tmp.1 2>&1
+    ${path}/a.out >${path}/tmp.1 2>&1
     CHECK_RESULT $? 0 0 "Compilation fails"
     grep "hello world!" ${path}/tmp.1
     CHECK_RESULT $? 0 0 "Compilation fails"
@@ -47,7 +48,7 @@ function run_test() {
     gcc ${path}/test1.c -o ${path}/test2
     ls ${path}/test2
     CHECK_RESULT $? 0 0 "gcc -o file fails"
-    ${path}/test2 > ${path}/tmp.2 2>&1
+    ${path}/test2 >${path}/tmp.2 2>&1
     CHECK_RESULT $? 0 0 "test2 Compilation fails"
     grep "hello world!" ${path}/tmp.2
     CHECK_RESULT $? 0 0 "nothingness hello word"
@@ -67,7 +68,7 @@ function run_test() {
     gcc ${path}/test.o -o ${path}/test1
     ls ${path}/test1
     CHECK_RESULT $? 0 0 "tset1 Generate failure"
-    ${path}/test1 > ${path}/tmp.3 2>&1
+    ${path}/test1 >${path}/tmp.3 2>&1
     CHECK_RESULT $? 0 0 "test1 Compilation fails"
     grep "hello world!" ${path}/tmp.3
     CHECK_RESULT $? 0 0 "test1 Compilation fails"
@@ -80,7 +81,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf ${path}
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
+
