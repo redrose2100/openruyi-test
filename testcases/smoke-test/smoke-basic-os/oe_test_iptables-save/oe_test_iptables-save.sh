@@ -17,12 +17,20 @@
 # @Desc      :   Test the basic functions of iptables-save
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    iptables-save | grep -A 200 nat | grep -A 100 mangle | grep -A 80 raw | grep -A 60 security | grep filter
-    CHECK_RESULT $? 0 0 "Incomplete display"
+    iptables-save | grep nat
+    CHECK_RESULT $? 0 0 "Incomplete display nat"
+    iptables-save | grep mangle
+    CHECK_RESULT $? 0 0 "Incomplete display mangle"
+    iptables-save | grep raw
+    CHECK_RESULT $? 0 0 "Incomplete display raw"
+    iptables-save | grep security
+    CHECK_RESULT $? 0 0 "Incomplete display security"
+    iptables-save | grep filter
+    CHECK_RESULT $? 0 0 "Incomplete display filter"
     iptables-save -t filter | grep filter
     CHECK_RESULT $? 0 0 "Failed to display filter"
     iptables-save -t filter | grep -E "nat|mangle|raw|security"

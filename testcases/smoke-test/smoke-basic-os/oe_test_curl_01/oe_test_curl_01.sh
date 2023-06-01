@@ -17,13 +17,13 @@
 # @Desc      :   Test curl upload file
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "ftp vsftpd"
     cp /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.bak
-    sed -i 's/anonymous_enable=NO/anonymous_enable=YES/g' /etc/vsftpd/vsftpd.conf
+    sed -i 's/anonymous_enable=NO/#anonymous_enable=NO/g' /etc/vsftpd/vsftpd.conf
     sed -i 's/#anon_upload_enable=YES/anon_upload_enable=YES/g' /etc/vsftpd/vsftpd.conf
     sed -i 's/#anon_mkdir_write_enable=YES/anon_mkdir_write_enable=YES/g' /etc/vsftpd/vsftpd.conf
     echo "anon_world_readable_only=YES
@@ -46,7 +46,7 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    curl --upload-file example.txt --user example:${NODE1_PASSWORD} ftp://${NODE1_IPV4}
+    curl --upload-file example.txt --user example:"${NODE1_PASSWORD}" ftp://"${NODE1_IPV4}"
     CHECK_RESULT $? 0 0 "Failed to execute curl"
     test -f /var/ftp/pub/example.txt
     CHECK_RESULT $? 0 0 "Failed to execute curl"
@@ -60,7 +60,7 @@ function post_test() {
     systemctl status firewalld | grep dead && systemctl start firewalld
     rm -rf example.txt /var/ftp/pub/example.txt
     userdel -rf example
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

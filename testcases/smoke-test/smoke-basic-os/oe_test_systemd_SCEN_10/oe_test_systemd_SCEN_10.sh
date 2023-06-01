@@ -17,7 +17,7 @@
 # @Desc      :   Test the basic functions of systemd
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -48,8 +48,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "TestA.service stop failed"
     systemctl start TestA
     CHECK_RESULT $? 0 0 "TestA.service start failed"
+    SLEEP_WAIT 5
     TestA_status=$(systemctl status TestA | grep "running" | awk '{print $7}')
-    systemctl status TestB | grep failed | grep $TestA_status
+    systemctl status TestB | grep failed | grep "$TestA_status"
     CHECK_RESULT $? 0 0 "TestB.service restart success"
 
     LOG_INFO "End to run test."

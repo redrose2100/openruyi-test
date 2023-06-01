@@ -16,7 +16,7 @@
 #@Desc      	:   Add the macvlan device created on bond to the network namespace verification
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -26,18 +26,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ping -I ${NODE1_NIC} baidu.com &
+    ping -I "${NODE1_NIC}" baidu.com &
     CHECK_RESULT $? 0 0 "ping -I  ${NODE1_NIC} baidu.com:failed"
-    timeout 5 tcpdump -i ${NODE1_NIC} 2>&1 | grep "listening on ${NODE1_NIC}"
+    SLEEP_WAIT 3
+    timeout 5 tcpdump -i "${NODE1_NIC}" 2>&1 | grep "listening on ${NODE1_NIC}"
     CHECK_RESULT $? 0 0 "tcpdump -i: failed!"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF REMOVE
-    kill -9 $(ps -ef | grep "baidu.com" | grep -v grep | awk '{print $2}')
-    kill -9 $(ps -ef | grep "tcpdump -i" | grep -v grep | awk '{print $2}')
+    DNF_REMOVE "$@"
+    kill -9 "$(pgrep -f ping)"
+    kill -9 "$(pgrep "tcpdump -i")"
     LOG_INFO "End to restore the test environment."
 }
 
