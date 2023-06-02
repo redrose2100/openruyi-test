@@ -17,28 +17,31 @@
 # @Desc      :   Test the basic functions of infocmp
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    echo '#!/usr/bin/expect
-log_file testlog
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    printf '%s' "log_file testlog
 spawn ssh -o StrictHostKeyChecking=no 127.0.0.1
 expect {
-    "*?assword:*" {send "openEuler12#\$\r";exp_continue}
-    "Users" {send "\rexport TERM=vt100\r";exp_continue}
-    "export" {send "\recho \$TERM\r"; exp_continue}
-    "echo" {send "\rexit\n"}
+    \"password\" {send \"NODE1_PASSWORD\r\";exp_continue}
+    \"Users\" {send \"\rexport TERM=vt100\r\";exp_continue}
+    \"export\" {send \"\recho \\\$TERM\r\";exp_continue}
+    \"echo\" {send \"\rexit\n\"}
 }
 expect eof
-' >run-term
+" >run-term
+    sed -i '1i#!/usr/bin/expect' run-term
+    sed -i "s/NODE1_PASSWORD/${NODE1_PASSWORD}/g" run-term
     chmod 777 run-term
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    [ $TERM ]
+    [ "$TERM" ]
     CHECK_RESULT $? 0 0 "Failed to execute xterm"
     infocmp | grep terminfo
     CHECK_RESULT $? 0 0 "Failed to execute infocmp"
@@ -55,6 +58,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf testlog run-term test.log
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

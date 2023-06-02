@@ -17,12 +17,13 @@
 # @Desc      :   Test the basic functions of tcpdump
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL tcpdump
-    ping -q -I ${NODE1_NIC} baidu.com &
+    ping -q -I "${NODE1_NIC}" baidu.com &
+    SLEEP_WAIT 3
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,7 +36,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

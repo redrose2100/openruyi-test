@@ -17,25 +17,25 @@
 # @Desc      :   Test firewalld and iptables
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 check_iptables() {
     case $1 in
     mangle)
-        iptables -t $1 -L | grep -A 20 PREROUTING | grep -A 10 INPUT | grep -A 10 FORWARD | grep -A 10 OUTPUT | grep -A 10 POSTROUTING || return 1
-        ip6tables -t $1 -L | grep -A 20 PREROUTING | grep -A 10 INPUT | grep -A 10 FORWARD | grep -A 10 OUTPUT | grep -A 10 POSTROUTING || return 1
+        iptables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
+        ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
         ;;
     nat)
-        iptables -t $1 -L | grep -A 20 PREROUTING | grep -A 10 INPUT | grep -A 10 OUTPUT | grep -A 10 POSTROUTING || return 1
-        ip6tables -t $1 -L | grep -A 20 PREROUTING | grep -A 10 INPUT | grep -A 10 OUTPUT | grep -A 10 POSTROUTING || return 1
+        iptables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
+        ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
         ;;
     filter)
-        iptables -t $1 -L | grep -A 20 INPUT | grep -A 10 FORWARD | grep -A 10 OUTPUT || return 1
-        ip6tables -t $1 -L | grep -A 20 INPUT | grep -A 10 FORWARD | grep -A 10 OUTPUT || return 1
+        iptables -t "$1" -L -w | grep -C 20 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT || return 1
+        ip6tables -t "$1" -L -w | grep -C 20 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT || return 1
         ;;
     raw)
-        iptables -t $1 -L | grep -A 20 PREROUTING | grep -A 10 OUTPUT || return 1
-        ip6tables -t $1 -L | grep -A 20 PREROUTING | grep -A 10 OUTPUT || return 1
+        iptables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 OUTPUT || return 1
+        ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 OUTPUT || return 1
         ;;
     esac
     return 0

@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-df
 # ############################################
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -28,20 +28,20 @@ function run_test() {
     CHECK_RESULT $? 0 0 "df -h didn't find G|M|K"
     df --help
     CHECK_RESULT $? 0 0 "df --help error"
-    res1=$(df -i | grep Inodes|awk '{ print$2 }')
+    res1=$(df -i | grep Inodes | awk '{ print$2 }')
     [[ "$res1" == "Inodes" ]]
     CHECK_RESULT $? 0 0 "df -i error"
-    res2=$(df --total | awk '{ print$1 }'|tail -1)
-    [[ $res2 == "total" ]]
+    res2=$(df --total | awk '{ print$1 }' | tail -1)
+    [[ "$res2" == "total" ]]
     CHECK_RESULT $? 0 0 "df --total error"
     res3=$(df | grep devtmpfs |awk '{ print$2 }' |awk '{a=$1/1024}{if($1%1024!=0){a=a+1}}{printf("%d\n",a~/./?int(a):a)}')
     res4=$(df -m | grep devtmpfs |awk '{ print$2 }')
     [[ $res3 == $res4 ]]
     CHECK_RESULT $? 0 0 "df -m error"
-    res5=$(df --type=tmpfs |awk '{ print$1 }'|head -2|tail -1)
-    [[ $res5 == "tmpfs" ]]
+    res5=$(df --type=tmpfs | awk '{ print$1 }' | head -2 | tail -1)
+    [[ "$res5" == "tmpfs" ]]
     CHECK_RESULT $? 0 0 "df --type error"
     LOG_INFO "Finish test!"
 }
 
-main $@
+main "$@"

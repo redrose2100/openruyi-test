@@ -17,7 +17,7 @@
 # @Desc      :   nfs test
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
@@ -35,12 +35,13 @@ function pre_test() {
     useradd $test_user
     mkdir $server_dir $client_dir
     test -f /etc/exports && cp /etc/exports .
+    echo "$server_dir *(rw,sync,no_root_squash)" >>/etc/exports
+    exportfs -avr
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    echo "$server_dir *(rw,sync,no_root_squash)" >>/etc/exports
     systemctl restart nfs-server
     CHECK_RESULT $?
     systemctl status nfs-server | grep 'Active: active'
@@ -78,9 +79,9 @@ function post_test() {
     userdel -r $test_user
     rm -f /tmp/error.log
     test -f exports && mv exports /etc/exports
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

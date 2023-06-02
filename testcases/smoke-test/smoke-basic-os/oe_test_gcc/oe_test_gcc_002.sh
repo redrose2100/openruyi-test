@@ -17,14 +17,15 @@
 # @Desc      :   Dynamic Compilation Test for gcc Command
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
-function pre_test(){
+function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL gcc-c++
     mkdir -p /tmp/test /tmp/person
     path1=/tmp/test
     path2=/tmp/person
-    cat > ${path1}/main.cpp  <<EOF
+    cat >${path1}/main.cpp <<EOF
 #include<iostream>
 #include "person.h"
 using namespace std;
@@ -36,7 +37,7 @@ return 0;
 }
 EOF
 
-     cat > ${path2}/person.h  <<EOF
+    cat >${path2}/person.h <<EOF
 class person
 {
 public:
@@ -44,7 +45,7 @@ person();
 };
 EOF
 
-     cat > ${path2}/person.cpp  <<EOF
+    cat >${path2}/person.cpp <<EOF
 #include "person.h"
 #include "stdio.h"
 person::person()
@@ -58,17 +59,17 @@ EOF
 
 function run_test() {
     LOG_INFO "Start testing..."
-    cd ${path2}&&gcc person.cpp -fpic -shared -o libperson.so
+    cd ${path2} && gcc person.cpp -fpic -shared -o libperson.so
     test -f ${path2}/libperson.so
     CHECK_RESULT $? 0 0 "libperson file fails"
-    cd ${path1}&&g++ main.cpp -o main -I../person -L../person -lperson
+    cd ${path1} && g++ main.cpp -o main -I../person -L../person -lperson
     test -f ${path1}/main
     CHECK_RESULT $? 0 0 "main file fails"
     export LD_LIBRARY_PATH=../person
-    ./main > main.txt
+    ./main >main.txt
     grep "test g++" ${path1}/main.txt
     CHECK_RESULT $? 0 0 "main.txt file fails"
-    ldd main > lddmain.txt
+    ldd main >lddmain.txt
     grep "linux-vdso.so.1" ${path1}/lddmain.txt
     CHECK_RESULT $? 0 0 "lddmain.txt file fails"
 
@@ -76,8 +77,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf ${path1} ${path2}    
+    rm -rf ${path1} ${path2}
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
