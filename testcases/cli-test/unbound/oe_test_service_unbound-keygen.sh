@@ -17,12 +17,14 @@
 # @Desc      :   Test unbound-keygen.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL unbound
     service=unbound-keygen.service
+    [ -f /etc/resolv.conf-bak ] || cp /etc/resolv.conf /etc/resolv.conf-bak
+    echo "nameserver 127.0.0.1" > /etc/resolv.conf
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
 }
@@ -51,11 +53,12 @@ function run_test() {
     test_reload "${service}"
     LOG_INFO "Finish test!"
 }
-
+ 
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop "${service}"
-    DNF_REMOVE
+    [ -f /etc/resolv.conf-bak ] && \cp /etc/resolv.conf-bak /etc/resolv.conf 
+    DNF_REMOVE unbound
     LOG_INFO "Finish environment cleanup!"
 }
 
