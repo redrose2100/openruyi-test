@@ -17,10 +17,12 @@
 # @Desc      :   Test unbound.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    [ -f /etc/resolv.conf-bak ] || cp /etc/resolv.conf /etc/resolv.conf-bak
+    echo "nameserver 127.0.0.1" > /etc/resolv.conf
     DNF_INSTALL unbound
     service=unbound.service
     log_time=$(date '+%Y-%m-%d %T')
@@ -38,10 +40,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "${service} start failed"
     systemctl status "${service}" | grep "Active" | grep "active (running)"
     CHECK_RESULT $? 0 0 "${service} start failed"
-    find ${symlink_file}
+    find "${symlink_file}"
     CHECK_RESULT $? 0 0 "${service} enable failed"
     systemctl disable "${service}"
-    find ${symlink_file}
+    find "${symlink_file}"
     CHECK_RESULT $? 0 1 "${service} disable failed"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v "no errors"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
@@ -57,12 +59,15 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    [ -f /etc/resolv.conf-bak ] && \cp /etc/resolv.conf-bak /etc/resolv.conf
     sed -i 's\ExecStart=/usr/sbin/unbound -v\ExecStart=/usr/sbin/unbound\g' /usr/lib/systemd/system/${service}
     systemctl daemon-reload
     systemctl reload ${service}
     systemctl stop ${service}
-    DNF_REMOVE
+    DNF_REMOVE unbound
     LOG_INFO "Finish environment cleanup!"
 }
+
+main "$@"
 
 main "$@"
