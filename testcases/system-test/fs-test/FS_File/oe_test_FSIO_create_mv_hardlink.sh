@@ -26,7 +26,9 @@ function pre_test() {
     ext4_point=$(echo "${point_list[@]}" | awk '{print $3}')
     xfs_point=$(echo "${point_list[@]}" | awk '{print $4}')
     echo "test ext3" >"$ext3_point"/testFile
-    ln "$ext3_point"/testFile "$ext3_point"/testLink
+    echo "test ext4" > $ext4_point/testFileTmp
+    echo "test xfs" > xfs_point/testFileTmp    
+    ln $ext3_point/testFile $ext3_point/testLink
     LOG_INFO "End of environmental preparation!"
 }
 
