@@ -38,10 +38,10 @@ function run_test() {
     systemctl status "${service}" | grep "Active" | grep "active (running)"
     CHECK_RESULT $? 0 0 "${service} start failed"
     symlink_file=$(systemctl enable "${service}" 2>&1 | awk '{print $3}')
-    find ${symlink_file}
+    find "${symlink_file}"
     CHECK_RESULT $? 0 0 "${service} enable failed"
     systemctl disable "${service}"
-    find ${symlink_file}
+    find "${symlink_file}"
     CHECK_RESULT $? 0 1 "${service} disable failed"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v "/etc/strongswan/ipsec.d/triplets.dat" | grep -v "/etc/tnc_config"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
@@ -52,7 +52,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop "${service}"
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
