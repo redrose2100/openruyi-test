@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/iproute_tc",
+    "cases": [
+        {
+            "name": "oe_test_iproute_tc_01"
+        }
+    ]
+}
