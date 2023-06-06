@@ -56,6 +56,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    ipset destroy bb${random}
+    ipset destroy cc${random}
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
