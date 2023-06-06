@@ -17,13 +17,14 @@
 # @Desc      :   Test the basic functions of rsyslog
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     old_id=$(pgrep rsyslog)
     old_timezone=$(date | awk '{print $6}')
-    cp -f /etc/localtime /etc/localtime.bak
+    old_zone=$(timedatectl | grep "Time zone" | awk '{print $3}')
+    rm -rf /etc/localtime
     cp -f /var/log/messages /var/log/messages.bak
     echo "" >/var/log/messages
     LOG_INFO "End to prepare the test environment."
@@ -33,10 +34,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     cp -f /usr/share/zoneinfo/NZ /etc/localtime
     CHECK_RESULT $? 0 0 "Failed to execute cp"
-    date | grep $old_timezone
+    date | grep "$old_timezone"
     CHECK_RESULT $? 0 1 "Time zone changed"
     SLEEP_WAIT 900
-    pgrep rsyslog | grep $old_id
+    pgrep rsyslog | grep "$old_id"
     CHECK_RESULT $? 0 1 "Pid not changed"
     date | grep -i NZ
     CHECK_RESULT $? 0 0 "Time zone not changed"
@@ -47,8 +48,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    mv -f /etc/localtime.bak /etc/localtime
+    rm -rf /etc/localtime
+    timedatectl set-timezone "$old_zone"
     mv -f /var/log/messages.bak /var/log/messages
+    systemctl restart rsyslog
     LOG_INFO "End to restore the test environment."
 }
 

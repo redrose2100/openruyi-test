@@ -1,4 +1,4 @@
-﻿#!/usr/bin/bash
+#!/usr/bin/bash
 
 # Copyright (c) 2022 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "glib2 glib2-devel"
+    DNF_INSTALL "glib2 glib2-devel gcc"
     LOG_INFO "End to prepare the test environment."
 }
 

@@ -85,7 +85,13 @@
 	{ 
 	    "name": "oe_test_wangxun",
 	    "machine type": "physical"
-	}
+	},
+        {
+            "name": "oe_test_vlan_8021q"
+        },
+        {
+            "name": "oe_test_nbd"
+        }
     ]
 }
 

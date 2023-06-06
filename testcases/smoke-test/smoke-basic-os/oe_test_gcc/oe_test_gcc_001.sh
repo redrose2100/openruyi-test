@@ -17,14 +17,14 @@
 # @Desc      :   File system common command test-gcc
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
-function pre_test(){
+function pre_test() {
     LOG_INFO "Start environment preparation."
     mkdir -p /tmp/test /tmp/person
     path1=/tmp/test
     path2=/tmp/person
-    cat > ${path1}/main.cpp  <<EOF
+    cat >${path1}/main.cpp <<EOF
 #include<iostream>
 #include "person.h"
 using namespace std;
@@ -36,7 +36,7 @@ return 0;
 }
 EOF
 
-     cat > ${path2}/person.h  <<EOF
+    cat >${path2}/person.h <<EOF
 class person
 {
 public:
@@ -44,7 +44,7 @@ person();
 };
 EOF
 
-     cat > ${path2}/person.cpp  <<EOF
+    cat >${path2}/person.cpp <<EOF
 #include "person.h"
 #include "stdio.h"
 person::person()
@@ -53,28 +53,28 @@ printf("create person\n");
 }
 EOF
 
-    DNF_INSTALL "glibc-static libstdc++-static"
+    DNF_INSTALL "glibc-static libstdc++-static gcc-c++"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    cd ${path2}&&g++ -c ${path2}/person.cpp
+    cd ${path2} && g++ -c ${path2}/person.cpp
     test -f ${path2}/person.o
     CHECK_RESULT $? 0 0 "person file fails"
-    cd ${path1}&&g++ main.cpp ../person/person.o -I ../person/ -o main
+    cd ${path1} && g++ main.cpp ../person/person.o -I ../person/ -o main
     test -f ${path1}/main
     CHECK_RESULT $? 0 0 "main file fails"
-    ./main > main.txt
+    ./main >main.txt
     grep "test g++" ${path1}/main.txt
     CHECK_RESULT $? 0 0 "main.txt file fails"
-    ldd main > main.txt1
+    ldd main >main.txt1
     grep "libstdc++.so.6" ${path1}/main.txt1
     CHECK_RESULT $? 0 0 "ldd main file fails"
-    cd ${path1}&&g++ main.cpp ../person/person.o -o main_static -I ../person/ -static
+    cd ${path1} && g++ main.cpp ../person/person.o -o main_static -I ../person/ -static
     test -f ${path1}/main_static
     CHECK_RESULT $? 0 0 "main_static file fails"
-    ldd main_static > main_static.txt
+    ldd main_static >main_static.txt 2>&1
     grep "not a dynamic executable" ${path1}/main_static.txt
     CHECK_RESULT $? 0 0 "ldd main_static file fails"
 
@@ -83,8 +83,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf ${path1} ${path2}
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

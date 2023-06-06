@@ -17,7 +17,7 @@
 # @Desc      :   Basic information of test system
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -37,7 +37,7 @@ function run_test() {
     grep -iE "name|version" /etc/os-release | grep openEuler
     CHECK_RESULT $? 0 0 "/etc/os-release file view failed"
     old_zone=$(timedatectl | grep "Time zone" | awk '{print $3}')
-    timedatectl | grep $(date | awk '{print$1}')
+    timedatectl | grep "$(date | awk '{print$1}')"
     CHECK_RESULT $? 0 0 "Failed command: timedatectl"
     timedatectl list-timezones | grep Tokyo
     CHECK_RESULT $? 0 0 "Time zone information display failed"
@@ -47,7 +47,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to set time zone"
     timedatectl | grep Tokyo
     CHECK_RESULT $? 0 0 "The time zone isn't Tokyo"
-    timedatectl set-timezone $old_zone
+    timedatectl set-timezone "$old_zone"
     CHECK_RESULT $? 0 0 "Failed to recover time zone"
     localectl status | grep -i "us"
     CHECK_RESULT $? 0 0 "The system language does not belong to us"

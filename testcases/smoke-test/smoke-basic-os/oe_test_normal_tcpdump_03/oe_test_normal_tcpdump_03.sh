@@ -17,18 +17,19 @@
 # @Desc      :   Test the basic functions of tcpdump
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL tcpdump
-    ping -q -I ${NODE1_NIC} baidu.com &
+    ping -q -I "${NODE1_NIC}" baidu.com &
+    SLEEP_WAIT 3
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    tcpdump -i ${NODE1_NIC} -c 10 -w test.pcap 2>&1 | grep "listening on ${NODE1_NIC}"
+    tcpdump -i "${NODE1_NIC}" -c 10 -w test.pcap 2>&1 | grep "listening on ${NODE1_NIC}"
     CHECK_RESULT $? 0 0 "Failed to execute tcpdump -w"
     test -f ./test.pcap
     CHECK_RESULT $? 0 0 "Failed to find test.pcap"
@@ -41,9 +42,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 $(pgrep ping)
+    kill -9 "$(pgrep ping)"
     rm -rf ./test.pcap
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

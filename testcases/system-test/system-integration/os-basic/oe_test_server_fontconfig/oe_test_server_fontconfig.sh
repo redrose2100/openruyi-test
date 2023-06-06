@@ -14,10 +14,10 @@
 # @Contact   :   xiongneng@uniontech.com
 # @Date      :   2023/04/04
 # @License   :   Mulan PSL v2
-# @Desc      :   外围包-fontconfig-fc-list命令
+# @Desc      :   外围包-fontconfig-fc-list、fontconfig-fc-match命令
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -34,6 +34,10 @@ function run_test() {
     fc-list | grep 'DejaVu Serif'
     CHECK_RESULT $? 0 0 "Failed to view installed fonts"
     LOG_INFO "Finish test!"
+    fc-match
+    CHECK_RESULT $? 0 0 "Failed to display the font list"
+    fc-match -s 'DejaVu Serif' | grep "DejaVu Serif"
+    CHECK_RESULT $? 0 0 "Sorting list display failed"
 }
 
 function post_test() {

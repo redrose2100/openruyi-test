@@ -22,6 +22,7 @@ source "../common/common_javapackages-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
+    DNF_INSTALL objectweb-asm3
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -42,6 +43,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
+    DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

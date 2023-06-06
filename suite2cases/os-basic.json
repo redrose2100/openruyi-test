@@ -14,7 +14,13 @@
             "name": "oe_test_who"
         },
         {
+            "name": "oe_test_envsubst"
+        },
+        {
             "name": "oe_test_expr"
+        },
+        {
+            "name": "oe_test_fold"
         },
         {
             "name": "oe_test_comm"
@@ -710,6 +716,9 @@
 	},
 	{
 	    "name": "oe_test_zgrep"
+	},
+	{
+	    "name": "oe_test_server_subversion"
 	}
     ]
 }
