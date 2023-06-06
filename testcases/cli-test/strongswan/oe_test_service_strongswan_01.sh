@@ -58,18 +58,18 @@ function run_test() {
     grep "Reloading strongSwan IPsec configuration" strongswan_test_reload.log
     CHECK_RESULT $? 0 0 "Failed to check the reload"
     SLEEP_WAIT 3
-    connectionname=`strongswan statusall|grep "Connections" -A 1|tail -n 1|awk -F: {'print $1'}`
-    strongswan up $connectionname &
+    connectionname=$(strongswan statusall|grep "Connections" -A 1|tail -n 1|awk -F: {'print $1'})
+    strongswan up "$connectionname" &
     pgrep -f "strongswan up"
     CHECK_RESULT $? 0 0 "Failed to check the up"
     SLEEP_WAIT 3
     strongswan down shared>strongswan_test_down.log
     grep "closed successfully" strongswan_test_down.log
     CHECK_RESULT $? 0 0 "Failed to check the down"
-    strongswan route $connectionname >strongswan_test_route.log
+    strongswan route "$connectionname" >strongswan_test_route.log
     grep "'shared' routed" strongswan_test_route.log
     CHECK_RESULT $? 0 0 "Failed to check the route"
-    strongswan unroute $connectionname >strongswan_test_unroute.log
+    strongswan unroute "$connectionname" >strongswan_test_unroute.log
     grep "trap policy 'shared' unrouted" strongswan_test_unroute.log
     CHECK_RESULT $? 0 0 "Failed to check the unroute"
     LOG_INFO "End to run test."
@@ -81,7 +81,7 @@ function post_test() {
     pgrep -f "starter" && strongswan stop
     SLEEP_WAIT 3 "podman stop -all"
     podman rm -f $(podman ps -qa)
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
