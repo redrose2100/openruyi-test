@@ -53,7 +53,7 @@ function pre_test() {
     ip addr add 192.0.2.1/32 dev lo
     ip addr add 2001:db8:1::10/64 dev "${node1_net_card2}"
     ip addr add 2001:db8:2::10/64 dev "${node1_net_card3}"
-    ip addr add 2001:db8::1/128 lo
+    ip addr add 2001:db8::1/128 dev lo
     ip -6 route add default nexthop via 2001:db8:1::1 nexthop via 2001:db8:2::1
 
     SSH_CMD "dnf -y install keepalived
