@@ -15,11 +15,14 @@
 # @Desc      :   Test argusbug
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "argus lsof"
+    DNF_INSTALL "argus lsof net-snmp"
+    echo "rocommunity qosient" > /etc/snmp/snmpd.conf 
+    systemctl start snmpd
+    sed -i 's/10.0.1.1/localhost/g' /usr/bin/argus-snmp
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
@@ -28,11 +31,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check argus-extip failed"
     argus-lsof  | grep "Program: /usr/bin/lsof"
     CHECK_RESULT $? 0 0 "Check argus-lsof failed"
+    argus-snmp  | grep "ifOutDiscards.2"
+    CHECK_RESULT $? 0 0 "Check argus-snmp failed"
     LOG_INFO "End to run test."
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -f /tmp/argus-bugreport-template
     LOG_INFO "End to restore the test environment."
 }
