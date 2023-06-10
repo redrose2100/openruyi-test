@@ -15,16 +15,17 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Copy file by splice
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL gcc
     [[ ! -f ./splice_file ]] && {
         make
     }
-    echo "test splice file" > test_ori_file
-    file_byte=$(ls -l test_ori_file | awk '{print $5}')
+    echo "test splice file" >test_ori_file
     LOG_INFO "End to prepare the database config."
 }
 
@@ -41,8 +42,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f test_ori_file test_splice_file
     make clean
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-

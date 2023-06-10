@@ -15,8 +15,9 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Check dirty page writeback when it is more than dirty_ratio
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -27,12 +28,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dd if=/dev/zero of=/tmp/test_dirty_page_file_1 bs=5120 count=100
+    dd if=/dev/zero of=/tmp/test_dirty_page_file_1 bs=10K count=100
     dirty1=$(grep Dirty /proc/meminfo | awk '{print $2}')
     sysctl vm.dirty_ratio=0
     SLEEP_WAIT 30
     dirty2=$(grep Dirty /proc/meminfo | awk '{print $2}')
-    dd if=/dev/zero of=/tmp/test_dirty_page_file_2 bs=5120 count=100
+    dd if=/dev/zero of=/tmp/test_dirty_page_file_2 bs=10K count=100
     SLEEP_WAIT 30
     dirty3=$(grep Dirty /proc/meminfo | awk '{print $2}')
     SLEEP_WAIT 30
@@ -43,10 +44,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    sysctl vm.dirty_ratio=$ori
+    sysctl vm.dirty_ratio="$ori"
     rm -f /tmp/test_dirty_page_file*
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-

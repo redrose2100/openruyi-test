@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test access of /dev
 #####################################
-# shellcheck disable=SC2010,SC1090
+# shellcheck disable=SC1090,SC2010
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -27,13 +27,13 @@ function config_params() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ls -l /dev/autofs | grep "crw-r--r--"
+    ls -l /dev | grep "autofs" | grep "crw-r--r--"
     CHECK_RESULT $? 0 0 "The file autofs on /dev has some errors."
-    ls -l /dev/block | grep "drwxr-xr-x"
+    ls -l /dev | grep "block" | grep "drwxr-xr-x"
     CHECK_RESULT $? 0 0 "The file block on /dev has some errors."
-    ls -l /dev/console | grep "crw--w----"
+    ls -l /dev | grep "console" | grep "crw--w----"
     CHECK_RESULT $? 0 0 "The file console on /dev has some errors."
-    ls -l /dev/"$disk" | grep "brw-rw----"
+    ls -l /dev | grep "$disk" | grep "brw-rw----"
     CHECK_RESULT $? 0 0 "The disk file $disk on /dev has some errors."
     LOG_INFO "End to run test."
 }

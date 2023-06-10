@@ -15,12 +15,13 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Compress and run isula
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL iSulad
+    DNF_INSTALL "iSulad gcc"
     if [[ ${NODE1_FRAME} == "aarch64" ]]; then
         wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/aarch64/openEuler-docker.aarch64.tar.xz
         image_name="openEuler-docker.aarch64.tar.xz"
@@ -28,35 +29,34 @@ function pre_test() {
         wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/x86_64/openEuler-docker.x86_64.tar.xz
         image_name="openEuler-docker.x86_64.tar.xz"
     fi
-    cur_path=$(pwd)
-    cd ${OET_PATH}/libs/fault_injection/inject_mem_overloading_malloc
+    cur_path="$(pwd)"
+    cd ../common_lib/fault_injection/inject_mem_overloading_malloc || exit
     bash inject_mem_overloading_malloc.sh inject
-    cd $cur_path
+    cd "$cur_path" || exit
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     systemctl start isulad
-    isula load -i $image_name
+    isula load -i "$image_name"
     image_id=$(isula images | grep openeuler-20.03-lts-sp1 | head -n 1 | awk '{print $3}')
-    isula run -itd $image_id
+    isula run -itd "$image_id"
     CHECK_RESULT $? 0 0 "Run isula failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    cd ${OET_PATH}/libs/fault_injection/inject_mem_overloading_malloc
+    cd ../common_lib/fault_injection/inject_mem_overloading_malloc || exit
     bash inject_mem_overloading_malloc.sh clean
-    cd $cur_path
-    isula stop -f $isula_id
-    isula rm $(isula ps -a -q)
-    isula rmi $(isula images -q)
-    DNF_REMOVE
-    rm -f $image_name
+    cd "$cur_path" || exit
+    isula stop -f "$image_id"
+    isula rm "$(isula ps -a -q)"
+    isula rmi "$(isula images -q)"
+    DNF_REMOVE "$@"
+    rm -f "$image_name"
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-

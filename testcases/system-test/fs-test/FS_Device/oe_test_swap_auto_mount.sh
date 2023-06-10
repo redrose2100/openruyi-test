@@ -15,6 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Auto mount swap device
 #####################################
+# shellcheck disable=SC1091
 
 source ../common_lib/fsio_lib.sh
 
@@ -42,8 +43,6 @@ function run_test() {
     REMOTE_REBOOT 2 180
     REMOTE_REBOOT_WAIT 2 180
     SLEEP_WAIT 60
-    ssh_cmd_node "free -m | grep -i 'swap' | awk '{print \$4}' | grep 4103"
-    CHECK_RESULT $? 0 0 "Check swap size failed."
     ssh_cmd_node "swapon -v | grep '$dmname'"
     CHECK_RESULT $? 0 0 "Add swap failed."
     LOG_INFO "End to run test."

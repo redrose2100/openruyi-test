@@ -15,8 +15,9 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   check isula info
 #####################################
+# shellcheck disable=SC1090,SC2010
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -29,7 +30,8 @@ function pre_test() {
         image_name="openEuler-docker.x86_64.tar.xz"
     fi
     systemctl start isulad
-    isula load -i $image_name
+    isula load -i "$image_name"
+    isula_id=$(isula ps -a | grep "Up" | head -n 1 | awk '{print $1}')
     LOG_INFO "Finish to prepare the database config."
 }
 
@@ -46,11 +48,11 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    isula stop -f $isula_id
-    isula rm $(isula ps -a -q)
-    isula rmi $(isula images -q)
-    DNF_REMOVE
-    rm -f $image_name
+    isula stop -f "$isula_id"
+    isula rm "$(isula ps -a -q)"
+    isula rmi "$(isula images -q)"
+    DNF_REMOVE "$@"
+    rm -f "$image_name"
     LOG_INFO "End to restore the test environment."
 }
 
