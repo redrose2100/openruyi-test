@@ -16,7 +16,8 @@
 #@Desc          :   iperf3 command parameter automation use case
 ####################################
 #source ../common/common_lib.sh
-source ${OET_PATH}/testcases/cli-test/iperf3/common/common_lib.sh
+# shellcheck disable=SC2046
+source "${OET_PATH}"/testcases/cli-test/iperf3/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
