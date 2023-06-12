@@ -17,7 +17,7 @@
 # @Desc      :   Test strongswan-swanctl.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -46,7 +46,7 @@ function post_test() {
     systemctl reload strongswan-swanctl.service
     rm -rf /etc/strongswan/ipsec.d/triplets.dat /etc/tnc_config
     systemctl stop strongswan-swanctl.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
