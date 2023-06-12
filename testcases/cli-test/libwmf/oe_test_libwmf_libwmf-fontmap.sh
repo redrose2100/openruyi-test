@@ -30,8 +30,8 @@ function run_test(){
 }
 function post_test(){
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE"$@"
+    DNF_REMOVE "$@"
     rm -rf test*
     LOG_INFO "Finish environment cleanup!"
 }
-main"$@"
+main "$@"
