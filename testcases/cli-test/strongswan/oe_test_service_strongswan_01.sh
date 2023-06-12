@@ -16,6 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test strongswan command 
 # #############################################
+# shellcheck disable=SC2046
+# shellcheck disable=SC1083
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
 
@@ -29,7 +31,7 @@ function pre_test() {
     podman run -itd --name vpn --env-file ./test_file/vpn.env -p 700:700/udp -p 4700:4700/udp -d --privileged docker.io/hwdsl2/ipsec-vpn-server:latest
     pgrep -f "strongswan" && strongswan stop
     SLEEP_WAIT 3 "rm -rf strongswan_test*.log"
-    log_time=$(date '+%Y-%m-%d %T')
+ #   log_time=$(date '+%Y-%m-%d %T')
     grep "shared" /etc/strongswan/ipsec.conf || cat ./test_file/ipsec_add.conf >> /etc/strongswan/ipsec.conf
     LOG_INFO "End to prepare the test environment."
 }
