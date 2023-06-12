@@ -35,7 +35,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "iperf3 -P execution failed."
     iperf3 -c "$NODE2_IPV4" --get-server-output | grep "Server output"
     CHECK_RESULT $? 0 0 "iperf3 --get-server-output execution failed."
-    [ $(expr $(iperf3 -c "$NODE2_IPV4" -w 20240 | grep "sender" | awk '{print $5}') \> $(iperf3 -c "$NODE2_IPV4" -w 102400 | grep "sender" | awk '{print $5}')) -eq 0 ]
+    [ $(iperf3 -c "$NODE2_IPV4" -w 20240 | grep "sender" | awk '{print $5}') > $(iperf3 -c "$NODE2_IPV4" -w 102400 | grep "sender" | awk '{print $5}') ]
     CHECK_RESULT $? 0 0 "iperf3 -w execution failed."
     iperf3 -c "$NODE2_IPV4" -R | grep "Reverse mode"
     CHECK_RESULT $? 0 0 "iperf3 -R execution failed."
