@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_jpegoptim_01"
+	},
+	{
+	    "name": "oe_test_jpegoptim_02"
         }
     ]
 }
