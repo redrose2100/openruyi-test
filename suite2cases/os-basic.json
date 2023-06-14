@@ -722,6 +722,9 @@
 	},
 	{
 	    "name": "oe_test_server_subversion"
+	},
+	{
+	    "name": "oe_test_auditctl_02"
 	}
     ]
 }
