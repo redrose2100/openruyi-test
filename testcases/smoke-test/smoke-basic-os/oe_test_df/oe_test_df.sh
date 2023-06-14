@@ -35,7 +35,7 @@ function run_test() {
     [[ "$res2" == "total" ]]
     CHECK_RESULT $? 0 0 "df --total error"
     res3=$(df -h | grep devtmpfs | awk '{ print$2 }' | awk -F '.0' '{print $1}')
-    res4=$(df -m -h | grep devtmpfs | awk '{ print$2 }')
+    res4=$(df -m | grep devtmpfs | awk '{ print$2 }')
     [[ "$res3" == "$res4" ]]
     CHECK_RESULT $? 0 0 "df -m error"
     res5=$(df --type=tmpfs | awk '{ print$1 }' | head -2 | tail -1)
