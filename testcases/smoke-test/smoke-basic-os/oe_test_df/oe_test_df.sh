@@ -34,9 +34,9 @@ function run_test() {
     res2=$(df --total | awk '{ print$1 }' | tail -1)
     [[ "$res2" == "total" ]]
     CHECK_RESULT $? 0 0 "df --total error"
-    res3=$(df -h | grep devtmpfs | awk '{ print$2 }' | awk -F '.0' '{print $1}')
-    res4=$(df -m -h | grep devtmpfs | awk '{ print$2 }')
-    [[ "$res3" == "$res4" ]]
+    res3=$(df | grep devtmpfs |awk '{ print$2 }' |awk '{a=$1/1024}{if($1%1024!=0){a=a+1}}{printf("%d\n",a~/./?int(a):a)}')
+    res4=$(df -m | grep devtmpfs |awk '{ print$2 }')
+    [[ $res3 == $res4 ]]
     CHECK_RESULT $? 0 0 "df -m error"
     res5=$(df --type=tmpfs | awk '{ print$1 }' | head -2 | tail -1)
     [[ "$res5" == "tmpfs" ]]
