@@ -19,6 +19,13 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "kernel-devel"
+    LOG_INFO "End of environmental preparation!"
+}
+
+
 function run_test() {
     LOG_INFO "Start to run test."
     insmod -h | grep -E "Usage:|insmod \[options\]"
@@ -45,5 +52,12 @@ function run_test() {
     CHECK_RESULT $? 1
     LOG_INFO "End of the test."
 }
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
+}
+
 
 main "$@"
