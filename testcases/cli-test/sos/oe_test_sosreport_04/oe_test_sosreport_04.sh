@@ -37,21 +37,21 @@ function run_test() {
 	grep "sosreport-localhost-sysroot-$(date +%Y-%m-%d)" sos_log25 && test -f /var/tmp/sosreport-localhost-sysroot-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
 	if [ $VERSION_ID != "22.03" ]; then
-		sosreport --batch --ticket-number 666
+		sosreport --batch --case-id 666
 		CHECK_RESULT $?
 		test -f /var/tmp/sosreport-localhost-666-$(date +%Y-%m-%d)-*.tar.xz
 		CHECK_RESULT $?
 		mkdir temp
 		CHECK_RESULT $?
-		sosreport --batch --tmp-dir temp --ticket-number temp
+		sosreport --batch --tmp-dir temp --case-id temp
 		CHECK_RESULT $?
 		test -f temp/sosreport-localhost-temp-$(date +%Y-%m-%d)-*.tar.xz
 		CHECK_RESULT $?
-		sosreport --batch --tmp-dir temp -v --ticket-number verbose >sos_log26
+		sosreport --batch --tmp-dir temp -v --case-id verbose >sos_log26
 		CHECK_RESULT $?
 		grep -E "adding|collecting|sosreport-localhost-verbose-$(date +%Y-%m-%d)-.*.tar.xz" sos_log26 && test -f temp/sosreport-localhost-verbose-$(date +%Y-%m-%d)-*.tar.xz
 		CHECK_RESULT $?
-		sosreport --batch --verify --tmp-dir temp --ticket-number verify
+		sosreport --batch --verify --tmp-dir temp --case-id verify
 		CHECK_RESULT $?
 		test -f temp/sosreport-localhost-verify-$(date +%Y-%m-%d)-*.tar.xz
 		CHECK_RESULT $?
