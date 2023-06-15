@@ -28,6 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
+    systemctl stop dbus.socket
     test_restart ${service}
     test_enabled ${service}
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v "Activation via systemd failed"
@@ -47,6 +48,7 @@ function post_test() {
     sed -i "s\ExecStart=/usr/bin/dbus-daemon --session\ExecStart=/usr/bin/dbus-daemon\g" /usr/lib/systemd/system/"${service}"
     systemctl daemon-reload
     systemctl reload "${service}"
+    systemctl start dbus.socket
     LOG_INFO "Finish environment cleanup!"
 }
 
