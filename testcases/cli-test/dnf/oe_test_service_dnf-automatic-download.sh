@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "dnf-automatic"
+    DNF_INSTALL "dnf"
     service=dnf-automatic-download.service
     log_time=$(date '+%Y-%m-%d %T')
     status='inactive (dead)'
