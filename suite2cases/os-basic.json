@@ -17,6 +17,9 @@
             "name": "oe_test_factor"
         },
         {
+            "name": "oe_test_csplit"
+        },
+        {
             "name": "oe_test_expand"
         },
         {
