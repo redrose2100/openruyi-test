@@ -16,7 +16,7 @@
 #@Desc      	:   Kill -19 audit process, execute audit log script and check the status of auditd
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -26,7 +26,7 @@ function pre_test() {
     #!/bin/bash
 while true
 do
-   sudo ls /root/ > /dev/null
+   sudo ls /root/ > /dev/null 2>&1
 done" >audit_shell
     chmod +777 ./audit_shell
     LOG_INFO "End to prepare the test environment."
@@ -35,11 +35,12 @@ done" >audit_shell
 function run_test() {
     LOG_INFO "Start to run test."
     ./audit_shell &
+    SLEEP_WAIT 3
     auditctl -s >audit_log 2>&1
     CHECK_RESULT $? 0 0 "Check auditctl -s: failed!"
     backlog=$(grep -w "backlog" audit_log | awk '{print $2}')
     backlog_limit=$(grep -w "backlog_limit" audit_log | awk '{print $2}')
-    [ $backlog -lt $backlog_limit ]
+    [ "$backlog" -lt "$backlog_limit" ]
     CHECK_RESULT $? 0 0 "Backlog not increase indefinitely: failed!"
     LOG_INFO "End to run test."
 }
@@ -47,7 +48,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf audit_shell audit_log
-    kill -9 $(ps -ef | grep ./audit_shell | grep -v grep | awk '{print $2}')
+    kill -9 "$(jobs -l | grep audit_shell | awk '{print $2}')"
+    kill -9 "$(pgrep -f "sudo ls /root/")"
     LOG_INFO "End to restore the test environment."
 }
 

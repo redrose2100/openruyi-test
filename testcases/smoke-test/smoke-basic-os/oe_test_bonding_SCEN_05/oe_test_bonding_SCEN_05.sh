@@ -16,14 +16,14 @@
 #@Desc      	:   Add the macvlan device created on bond to the network namespace verification
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     gateway=$(ip route show | grep "default" | awk -F' ' 'NR==1{print $3}')
-    cp /etc/sysconfig/network-scripts/ifcfg-${NODE1_NIC} /etc/sysconfig/network-scripts/ifcfg-${NODE1_NIC}.bak
-    sed -i "s/BOOTPROTO=dhcp/BOOTPROTO=none/" /etc/sysconfig/network-scripts/ifcfg-${NODE1_NIC}
-    echo -e 'MASTER=bond0 \nSLAVE=yes \nUSERCTL=no' >>/etc/sysconfig/network-scripts/ifcfg-${NODE1_NIC}
+    cp /etc/sysconfig/network-scripts/ifcfg-"${NODE1_NIC}" /etc/sysconfig/network-scripts/ifcfg-"${NODE1_NIC}".bak
+    sed -i "s/BOOTPROTO=dhcp/BOOTPROTO=none/" /etc/sysconfig/network-scripts/ifcfg-"${NODE1_NIC}"
+    echo -e 'MASTER=bond0 \nSLAVE=yes \nUSERCTL=no' >>/etc/sysconfig/network-scripts/ifcfg-"${NODE1_NIC}"
     echo -e "DEVICE=bond0 \nTYPE=Ethernet \nONBOOT=yes \nBOOTPROTO=static \nIPADDR=${NODE1_IPV4} \nGATEWAY=$gateway \nNAME=bond0 \nBONDING_OPTS='miimon=100 mode=1 fail_over_mac=1'" >/etc/sysconfig/network-scripts/ifcfg-bond0
     echo -e 'alias bond0 bonding \noptions bond0 miimon=100 mode=1 fail_over_mac=1' >/etc/modprobe.d/modprobe.conf
     cp /etc/rc.d/rc.local /etc/rc.d/rc.local.bak
@@ -52,11 +52,12 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    mv -f  /etc/sysconfig/network-scripts/ifcfg-${NODE1_NIC}.bak /etc/sysconfig/network-scripts/ifcfg-${NODE1_NIC}
+    mv -f /etc/sysconfig/network-scripts/ifcfg-"${NODE1_NIC}".bak /etc/sysconfig/network-scripts/ifcfg-"${NODE1_NIC}"
     mv -f /etc/rc.d/rc.local.bak /etc/rc.d/rc.local
-    rm -rf ifcfg-bond0 /etc/modprobe.d/modprobe.conf
+    rm -rf /etc/sysconfig/network-scripts/ifcfg-bond0 /etc/modprobe.d/modprobe.conf
     ip netns delete name1
     nmcli c reload
+    modprobe -r bonding
     LOG_INFO "End to restore the test environment."
 }
 

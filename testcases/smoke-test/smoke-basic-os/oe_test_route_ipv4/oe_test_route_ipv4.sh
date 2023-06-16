@@ -17,28 +17,28 @@
 # @Desc      :   Test route add ipv4 route
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL net-tools
     default_route=$(ip r | grep default | awk '{print $3}' | uniq)
-    ifup ${NODE1_IPV4}
+    ifup "${NODE1_IPV4}"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    route add -net 9.0.0.0/8 gw ${default_route}
+    route add -net 9.0.0.0/8 gw "${default_route}"
     CHECK_RESULT $? 0 0 "Failed to add route"
     route -4 | grep 9.0.0.0
     CHECK_RESULT $? 0 0 "Failed to show route"
-    route del default gw ${default_route}
+    route del default gw "${default_route}"
     CHECK_RESULT $? 0 0 "Failed to del route"
     SLEEP_WAIT 2
-    ip r | grep default
+    ip r | grep default && ip -r | grep -v "9.0.0.0" | grep "${default_route}"
     CHECK_RESULT $? 0 1 "Succeed to show route"
-    route add default gw ${default_route}
+    route add default gw "${default_route}"
     CHECK_RESULT $? 0 0 "Failed to add default route"
     ip r | grep default
     CHECK_RESULT $? 0 0 "Failed to show default route"
@@ -47,8 +47,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    route del -net 9.0.0.0/8 gw ${default_route}
-    DNF_REMOVE
+    route del -net 9.0.0.0/8 gw "${default_route}"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

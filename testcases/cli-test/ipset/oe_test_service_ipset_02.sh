@@ -42,6 +42,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "start environment cleanup."
+  ipset destroy blacklist
   DNF_REMOVE ipset
   rm -rf blacklist.txt
   LOG_INFO "Finish environment cleanup!"

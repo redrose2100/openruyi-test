@@ -17,14 +17,14 @@
 # @Desc      :   Test sudo -U
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     DNF_INSTALL sssd
-    echo 'echo "export PATH=/tmp:\$PATH"' >/tmp/test.sh
+    echo "echo \"export PATH=/tmp:\$PATH\"" >/tmp/test.sh
     cp -f /etc/sudoers /etc/sudoers.bak
     chmod +w /etc/sudoers
     useradd -m testuser1
@@ -46,7 +46,8 @@ function post_test() {
     mv -f /etc/sudoers.bak /etc/sudoers
     userdel -rf testuser1
     userdel -rf testuser2
-    DNF_REMOVE
+    systemctl stop sssd
+    DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }

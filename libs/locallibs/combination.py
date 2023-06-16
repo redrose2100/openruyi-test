@@ -183,7 +183,7 @@ def generate_execute_env_script(env_name_list:list, env_dict:dict):
         if one_env_dict["type"] == "host":
             env_srcipt = env_srcipt + "\n" + f'bash {MUGEN_SH_PATH} -c'
             for one_key in one_env_dict.keys():
-                if one_key == "type":
+                if one_key == "type" or one_key == "sdk_path":
                     continue
                 if one_key == "run_remote":
                     run_remote = True
@@ -221,8 +221,8 @@ def generate_execute_env_script(env_name_list:list, env_dict:dict):
                     env_srcipt = env_srcipt + " " + f'--{one_key}'
                 else:
                     env_srcipt = env_srcipt + " " + f'--{one_key} "{one_env_dict[one_key]}"'
-            if "sdk_path" in one_env_dict:
-                env_srcipt = env_srcipt + "\n" + generate_sdk_set_script(one_env_dict["sdk_path"], one_env_name)
+        if "sdk_path" in one_env_dict:
+            env_srcipt = env_srcipt + "\n" + generate_sdk_set_script(one_env_dict["sdk_path"], one_env_name)
     return env_srcipt, start_qemu, run_remote
 
 def execute_env_combination_ok(one_exec:dict, env_dict:dict, combination_dict:dict):
@@ -242,10 +242,12 @@ def execute_env_combination_ok(one_exec:dict, env_dict:dict, combination_dict:di
 
 def generate_execute_script(env_dict:dict, combination_dict:dict, exec_list:list):
     execute_script = ""
+    execute_suffix = 0
     for one_exec in exec_list:
+        execute_suffix += 1
         if not execute_env_combination_ok(one_exec, env_dict, combination_dict):
             continue
-        execute_script = execute_script + "\n" + f'echo "---run execute" \n' + \
+        execute_script = execute_script + "\n" + f'echo "---run execute_{execute_suffix}" \n' + \
                                                  f'bash {QEMU_CTL_PATH} stop\n' \
                                                  f'rm -rf {CONF_PATH}'
         env_script, start_qemu, run_remote = generate_execute_env_script(one_exec["env"], env_dict)
@@ -254,7 +256,7 @@ def generate_execute_script(env_dict:dict, combination_dict:dict, exec_list:list
         new_suite2case_path = os.path.join(OET_PATH, "tmp_suite2cases")
         run_suite2case_path = combination_dict[one_exec["combination"]]
         run_suite2case_result_path = os.path.join(COMBINATION_RESULT_PATH, 
-                                                  os.path.basename(run_suite2case_path))
+                                                  os.path.basename(run_suite2case_path) + f"_{execute_suffix}")
         run_script = "-a -x"
         if run_remote:
             run_script = "-a -s"
@@ -264,6 +266,7 @@ def generate_execute_script(env_dict:dict, combination_dict:dict, exec_list:list
                                                  f'bash {MUGEN_SH_PATH} {run_script}\n' \
                                                  f'mkdir -p {run_suite2case_result_path}\n' \
                                                  f'cp -r {MUGEN_RESULT_PATH}/* {run_suite2case_result_path}\n' \
+                                                 f'bash {os.path.join(SCRIPT_PATH, "combination_do_clean.sh")}\n' \
                                                  f'mv {old_suite2case_path} {run_suite2case_path}\n' \
                                                  f'mv {new_suite2case_path} {old_suite2case_path}\n'
         if start_qemu:
@@ -338,7 +341,13 @@ def generate_one_combination(combination:str, prefix:str):
                 continue
             exec_list.append(one_execute)
     run_script, all_script_ok = generate_execute_script(env_dict, combination_dict, exec_list)
-
+    if "export" in json_info:
+        export_str = ""
+        export_back = ""
+        for one_export in json_info["export"].keys():
+            export_str += f"export {one_export}={json_info['export'][one_export]}\n"
+            export_back += f"export {one_export}={os.environ.get(one_export) if os.environ.get(one_export) else ''}\n"
+        run_script = export_str + "\n" + run_script + "\n" + export_back + "\n"
     return run_script, all_script_ok
 
 
@@ -426,6 +435,7 @@ def print_combination_info_results(result_info:dict):
                                                      add_space_to_str("testcase_name", case_len),
                                                      add_space_to_str("result", result_len))
     print_str = print_str + "\n" + '-'*one_line_len
+    fail_test_num = 0
     for one_comb in result_info.keys():
         if (one_comb == "max_combinations_name_len" or
             one_comb == "max_suite_name_len" or
@@ -441,6 +451,7 @@ def print_combination_info_results(result_info:dict):
                                                     add_space_to_str("succeed", result_len))
             if "fail" in result_info[one_comb][one_suite]:
                 for one_case in result_info[one_comb][one_suite]["fail"]:
+                    fail_test_num += 1
                     print_str = print_str + "\n" + "| %s | %s | %s | %s |"%(
                                                     add_space_to_str(one_comb, comb_len),
                                                     add_space_to_str(one_suite, suite_len),
@@ -449,6 +460,7 @@ def print_combination_info_results(result_info:dict):
     print_str = print_str + "\n" + '-'*one_line_len
     print_str = print_str + "\n"
     print(print_str)
+    return fail_test_num
 
 def print_combination_results():
     result_info = get_combination_results_info()
@@ -487,19 +499,19 @@ if __name__ == "__main__":
             if os.path.splitext(one_file)[-1] != ".json":
                 continue
             combinations.append(os.path.join(arge.dir, one_file))
-    if len(combinations) == 0 and not arge.all:
-        mugen_log.logging("ERROR", "未配置需要执行的组合测试名")
     for one_combinations in arge.combinations:
         tmp_name = one_combinations
         if os.path.splitext(tmp_name)[-1] != ".json":
             tmp_name = tmp_name + ".json"
-        combinations.extend(os.path.join(COMBINATION_PATH, tmp_name))
+        combinations.append(os.path.join(COMBINATION_PATH, tmp_name))
+    if len(combinations) == 0 and not arge.all:
+            mugen_log.logging("ERROR", "未配置需要执行的组合测试名")
     if arge.all:
         combinations.extend(get_all_combinations())
     generate_script(combinations)
     if arge.run is not None and arge.run:
         run_proc = subprocess.run(['sh', '-x', COMBINATION_SCRIPT_PATH])
         result_info = get_combination_results_info()
-        print_combination_info_results(result_info)
-        sys.exit(run_proc.returncode)
+        result_fail_num = print_combination_info_results(result_info)
+        sys.exit(run_proc.returncode + result_fail_num)
     sys.exit(0)
