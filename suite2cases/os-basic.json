@@ -728,6 +728,9 @@
 	},
 	{
 	    "name": "oe_test_auditctl_02"
+	},
+	{
+	    "name": "oe_test_bunzip2"
 	}
     ]
 }
