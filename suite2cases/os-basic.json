@@ -737,6 +737,9 @@
 	},
 	{
 	    "name": "oe_test_zipdetails"
-        }
+        },
+	{
+	    "name": "oe_test_zcat"
+	}
     ]
 }
