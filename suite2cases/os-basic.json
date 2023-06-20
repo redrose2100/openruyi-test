@@ -734,6 +734,9 @@
 	},
 	{
 	    "name": "oe_test_bunzip2"
-	}
+	},
+	{
+	    "name": "oe_test_zipdetails"
+        }
     ]
 }
