@@ -24,6 +24,7 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
+	fluentd --help | grep "Usage:"
     CHECK_RESULT $? 0 0 "Check fluent-cap-ctl --help failed"
     LOG_INFO "End to run test."
 }
