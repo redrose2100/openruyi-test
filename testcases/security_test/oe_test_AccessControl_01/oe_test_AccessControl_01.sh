@@ -36,14 +36,14 @@ function run_test() {
     su - normal_737709 -c "cd /home/normal_737709"
     CHECK_RESULT $? 0 0 "su - normal_737709 failed !"
 
-    su - adm_737709 -c "cd /root" 2>&1 |grep "权限不够"
+    su - adm_737709 -c "cd /root" 2>&1 |grep -E "权限不够|Permission denied"
     CHECK_RESULT $? 0 0 "cd root  adm Permission isolation failure"
-    su - adm_737709 -c "cd /home/normal_737709" 2>&1 |grep "权限不够"
+    su - adm_737709 -c "cd /home/normal_737709" 2>&1 |grep -E "权限不够|Permission denied"
     CHECK_RESULT $? 0 0 "cd /home/normal_737709 adm Permission isolation failure"
 
-    su - normal_737709 -c "cd /root" 2>&1 |grep "权限不够"
+    su - normal_737709 -c "cd /root" 2>&1 |grep -E "权限不够|Permission denied"
     CHECK_RESULT $? 0 0 "cd /root normal Permission isolation failure"
-    su - normal_737709 -c "cd /home/adm_737709" 2>&1 |grep "权限不够"
+    su - normal_737709 -c "cd /home/adm_737709" 2>&1 |grep -E "权限不够|Permission denied"
     CHECK_RESULT $? 0 0 "cd /home/adm_737709 normal Permission isolation failure"
     LOG_INFO "Finish test!"
 }
