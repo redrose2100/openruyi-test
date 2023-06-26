@@ -17,6 +17,9 @@
             "name": "oe_test_fluent_ctl"
         },
         {
+            "name": "oe_test_fluent_cap_ctl"
+        },
+        {
             "name": "oe_test_fluentd_01"
         },
         {
@@ -39,6 +42,9 @@
         },
         {
             "name": "oe_test_fluent_gem_03"
+        },
+        {
+            "name": "oe_test_fluent_gem_04"
         },
         {
             "name": "oe_test_fluent_plugin_config_format"
