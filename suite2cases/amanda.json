@@ -19,6 +19,9 @@
         {
             "name": "oe_test_socket_amanda-udp"
         },
+	{
+	    "name": "oe_test_amanda_dump"
+	},
         {
             "name": "oe_test_socket_kamanda"
         }
