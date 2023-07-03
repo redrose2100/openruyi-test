@@ -10,11 +10,11 @@
 # See the Mulan PSL v2 for more details.
 
 # #############################################
-# @Author    :   shidongdong
-# @Contact   :   1220713556@qq.com
-# @Date      :   2023/02/01
+# @Author    :   yuanlulu
+# @Contact   :   1297248816@qq.com
+# @Date      :   2023/07/03
 # @License   :   Mulan PSL v2
-# @Desc      :   etmem common function
+# @Desc      :   gala-gopher common function
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 

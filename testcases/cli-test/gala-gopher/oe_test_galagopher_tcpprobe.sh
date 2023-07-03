@@ -24,7 +24,6 @@ function run_test() {
     if is_support_rest; then
         # 添加动态配置
         curl -X PUT http://localhost:9999/tcp -d json='{"cmd":{"bin":"/opt/gala-gopher/extend_probes/tcpprobe","check_cmd":"","probe":["tcp_rtt","tcp_srtt","tcp_abnormal","tcp_windows","tcp_rate","tcp_sockbuf","tcp_stats"]},"snoopers":{"proc_name":[{"comm":"iperf","cmdline":"","debugging_dir":""}]},"params":{"report_event":1,"report_period":5,"latency_thr":10,"drops_thr":10,"res_lower_thr":10,"res_upper_thr":50,"metrics_type":["raw","telemetry"]}}'
-        #curl -X PUT http://localhost:9999/tcp -d json='{"cmd":{"bin":"/opt/gala-gopher/extend_probes/tcpprobe","check_cmd":"","probe":["tcp_rtt","tcp_srtt","tcp_abnormal","tcp_windows","tcp_rate","tcp_sockbuf","tcp_stats"]},"snoopers":{"proc_name":[{"comm":"iperf","cmdline":"iperf-V-s-p5001-i1","debugging_dir":""}]},"params":{"report_event":1,"report_period":5,"latency_thr":10,"drops_thr":10,"res_lower_thr":10,"res_upper_thr":50,"metrics_type":["raw","telemetry"]}}'
         # 启动探针
         curl -X PUT http://localhost:9999/tcp -d json='{"state": "running"}'
         CHECK_RESULT $? 0 0
