@@ -20,6 +20,9 @@
             "name": "oe_test_csplit"
         },
         {
+            "name": "oe_test_ctags"
+        },
+        {
             "name": "oe_test_expand"
         },
         {
