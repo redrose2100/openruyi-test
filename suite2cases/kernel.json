@@ -91,6 +91,9 @@
         },
         {
             "name": "oe_test_nbd"
+        },
+        {
+            "name": "oe_test_hifc"
         }
     ]
 }
