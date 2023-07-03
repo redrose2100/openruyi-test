@@ -14,7 +14,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test gala-gopher tcpprobe
 # #############################################
-source common/gala-gopher.sh
+source ./common/gala-gopher.sh
 
 function pre_test() {
     start_gopher
