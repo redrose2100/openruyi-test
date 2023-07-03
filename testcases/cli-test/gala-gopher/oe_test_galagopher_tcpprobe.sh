@@ -42,7 +42,7 @@ function run_test() {
     systemctl stop firewalld
     stdbuf -oL iperf -V -s -p 5001 -i 1 &> log_iperf &
     sleep 2
-    SSH_CMD "iperf -c ${NODE1_IPV4} -i 1 -t 20" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "iperf -c ${NODE1_IPV4} -i 1 -t 60" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     #20s没有tcp_rate 60s有tcp_rate
     curl "${NODE1_IPV4}":8888 > tcp.txt
     while read line; do
