@@ -740,6 +740,9 @@
         },
 	{
 	    "name": "oe_test_zcat"
+	},
+	{
+	    "name": "oe_test_libsecret"
 	}
     ]
 }
