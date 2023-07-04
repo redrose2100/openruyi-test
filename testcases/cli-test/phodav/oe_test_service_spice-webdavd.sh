@@ -21,6 +21,9 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    touch org.spice-space.webdav.0
+    mkdir -p  /dev/virtio-ports/
+    mv org.spice-space.webdav.0  /dev/virtio-ports/
     DNF_INSTALL spice-webdavd
     systemctl start avahi-daemon.service
     LOG_INFO "End of environmental preparation!"
