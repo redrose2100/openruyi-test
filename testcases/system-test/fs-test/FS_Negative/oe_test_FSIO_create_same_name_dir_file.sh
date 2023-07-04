@@ -15,12 +15,13 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Inject create same name directory and file on mnt_point
 #####################################
+# shellcheck disable=SC1091
 
 source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    point_list=($(CREATE_FS))
+    mapfile -t point_list < <(CREATE_FS "$@")
     LOG_INFO "End to prepare the database config."
 }
 
@@ -29,11 +30,11 @@ function run_test() {
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         mnt_point=${point_list[$i]}
         file=$(find / -name ls)
-        cp $file $mnt_point/testSame &
-        mkdir $mnt_point/testSame &
-        cat $mnt_point/testSame
+        nohup cp "$file" "$mnt_point"/testSame &
+        nohup mkdir "$mnt_point"/testSame &
+        cat "$mnt_point"/testSame
         CHECK_RESULT $? 1 0 "Cat same name file unexpectly."
-        cd $mnt_point/testSame
+        cd "$mnt_point"/testSame || exit
         CHECK_RESULT $? 1 0 "cd same name directory unexpectly."
     done
     LOG_INFO "End to run test."
@@ -41,10 +42,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
+    list=${point_list[*]}
     REMOVE_FS "$list"
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-

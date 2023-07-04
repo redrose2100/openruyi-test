@@ -15,8 +15,9 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Set one of devices on md is faulty and rw
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to prepare the database config."
@@ -29,7 +30,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL mdadm
     mkdir /mnt/test_md
-    fdisk ${disk_name} << diskEof
+    fdisk "${disk_name}" <<diskEof
 n
 p
 1
@@ -44,8 +45,7 @@ p
 Y
 w
 diskEof
-    mdadm --stop /dev/md1
-    echo y | mdadm -C -v /dev/md1 -l 1 -n 2 ${disk_name}1 ${disk_name}2
+    echo y | mdadm -C -v /dev/md1 -l 1 -n 2 "${disk_name}"1 "${disk_name}"2
     echo y | mkfs -t ext4 /dev/md1
     mount /dev/md1 /mnt/test_md
     LOG_INFO "Finish to prepare the database config."
@@ -53,8 +53,8 @@ diskEof
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dd if=/dev/zero of=/mnt/test_md/testfile bs=1000 count=1 &
-    mdadm /dev/md1 -f ${disk_name}2
+    dd if=/dev/zero of=/mnt/test_md/testfile bs=100K count=100 &
+    mdadm /dev/md1 -f "${disk_name}"2
     CHECK_RESULT $? 0 0 "Set ${disk_name}2 faulty failed."
     ls /mnt/test_md/lost+found
     CHECK_RESULT $? 0 0 "Check file failed."
@@ -66,17 +66,16 @@ function post_test() {
     umount /dev/md1
     mdadm --stop /dev/md1
     rm -rf /mnt/test_md
-    mdadm --misc --zero-superblock ${disk_name}1 ${disk_name}2
-    fdisk ${disk_name} << diskEof
+    mdadm --misc --zero-superblock "${disk_name}"1 "${disk_name}"2
+    fdisk "${disk_name}" <<diskEof
 d
 
 d
 
 w
 diskEof
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-

@@ -15,11 +15,13 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   fopen nonexist file by r+
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL gcc
     make
     LOG_INFO "End to prepare the database config."
 }
@@ -35,8 +37,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f fopen_r+_file
     make clean
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-
