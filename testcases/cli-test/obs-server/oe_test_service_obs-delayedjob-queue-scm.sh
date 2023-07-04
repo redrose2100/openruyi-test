@@ -20,23 +20,23 @@
 source "./common.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
     env_pre
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     test_execution obs-delayedjob-queue-scm.service
     test_reload obs-delayedjob-queue-scm.service
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "Start to restore the test environment."
     systemctl stop obs-delayedjob-queue-scm.service
     env_post
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
