@@ -35,6 +35,8 @@ function pre_test() {
 function run_test() {
     if is_support_rest; then
         # 添加动态配置
+	curl -X PUT http://localhost:9999/flamegraph -d json='{"cmd":{"bin":"/opt/gala-gopher/extend_probes/stackprobe","check_cmd":"","probe":["oncpu","offcpu"]},"snoopers":{"proc_name":[{"comm":"iperf","cmdline":"","debugging_dir":""}]},"params":{"report_event":1,"report_period":5,"latency_thr":10,"drops_thr":10,"res_lower_thr":10,"res_upper_thr":50,"metrics_type":["raw","telemetry"]}}'
+
         curl -X PUT http://localhost:9999/flamegraph -d json='{"cmd":{"bin":"/opt/gala-gopher/extend_probes/stackprobe","check_cmd":"","probe":["oncpu","offcpu","mem"]},"snoopers":{"proc_name":[{"comm":"iperf","cmdline":"","debugging_dir":""}]},"params":{"report_event":1,"report_period":5,"latency_thr":10,"drops_thr":10,"res_lower_thr":10,"res_upper_thr":50,"metrics_type":["raw","telemetry"]}}'
         # 启动探针
         curl -X PUT http://localhost:9999/flamegraph -d json='{"state": "running"}'
@@ -70,6 +72,7 @@ function run_test() {
     done
 
     #TODO最多存储100个进程的符号表，内存持续增加直到100个进程
+    #TODO 未启动iperf进程时启动探针，启动iperf进程后启动探针
 }
 
 function post_test() {

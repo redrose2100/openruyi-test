@@ -50,12 +50,6 @@ function run_test() {
         [ $? -eq 0 ] || echo "tcp:$line" >> fail_log
     done < metrics/tcp_metric
     check_log
-
-    for((i=0;i<100;i++));do
-	    stdbuf -oL iperf -V -s -p 5001 -i 1 &> log_iperf &
-	    SSH_CMD "iperf -c ${NODE1_IPV4} -i 1 -t 40" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-	    pkill -9 iperf
-    done
 }
 
 function post_test() {
