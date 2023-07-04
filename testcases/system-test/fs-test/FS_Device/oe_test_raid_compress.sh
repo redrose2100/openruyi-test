@@ -15,8 +15,9 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Compress to system and act md
 #####################################
+# shellcheck disable=SC1090,SC2034
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to prepare the database config."
@@ -27,9 +28,9 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL mdadm
+    DNF_INSTALL "mdadm gcc kernel-devel"
     mkdir /mnt/test_md
-    fdisk ${disk_name} << diskEof
+    fdisk "${disk_name}" <<diskEof
 n
 p
 1
@@ -44,48 +45,47 @@ p
 Y
 w
 diskEof
-    mdadm --stop /dev/md1
-    echo y | mdadm -C -v /dev/md1 -l 1 -n 2 ${disk_name}1 ${disk_name}2
+    echo y | mdadm -C -v /dev/md1 -l 1 -n 2 "${disk_name}"1 "${disk_name}"2
     echo y | mkfs -t ext4 /dev/md1
     mount /dev/md1 /mnt/test_md
-    cd ../../../libs/fault_injection/inject_mem_overloading_kmalloc
+    cd ../common_lib/fault_injection/inject_mem_overloading_kmalloc || exit
     bash inject_mem_overloading_kmalloc.sh inject
-    cd -
+    cd - || exit
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for i in seq {1..50}; do 
-        mdadm /dev/md1 -f ${disk_name}2
+    for i in seq {1..50}; do
+        mdadm /dev/md1 -f "${disk_name}"2
         CHECK_RESULT $? 0 0 "Set ${disk_name}2 faulty failed."
-        mdadm /dev/md1 -r ${disk_name}2
+        mdadm /dev/md1 -r "${disk_name}"2
         CHECK_RESULT $? 0 0 "Remove ${disk_name}2 faulty failed."
-        mdadm /dev/md1 -a ${disk_name}2
+        mdadm /dev/md1 -a "${disk_name}"2
         CHECK_RESULT $? 0 0 "Add ${disk_name}2 faulty failed."
+        SLEEP_WAIT 2
     done
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    cd ../../../libs/fault_injection/inject_mem_overloading_kmalloc
-    bash inject_mem_overloading_kmalloc.sh revert
-    cd -
+    cd ../common_lib/fault_injection/inject_mem_overloading_kmalloc || exit
+    bash inject_mem_overloading_kmalloc.sh clean
+    cd - || exit
     umount /dev/md1
     mdadm --stop /dev/md1
     rm -rf /mnt/test_md
-    mdadm --misc --zero-superblock ${disk_name}1 ${disk_name}2 
-    fdisk ${disk_name} << diskEof
+    mdadm --misc --zero-superblock "${disk_name}"1 "${disk_name}"2
+    fdisk "${disk_name}" <<diskEof
 d
 
 d
 
 w
 diskEof
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-

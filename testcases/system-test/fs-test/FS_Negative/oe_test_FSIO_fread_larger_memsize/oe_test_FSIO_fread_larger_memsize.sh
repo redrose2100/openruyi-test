@@ -13,15 +13,17 @@
 #@Contact   	:   bubble_mt@outlook.com
 #@Date      	:   2021-05-14
 #@License   	:   Mulan PSL v2
-#@Desc      	:   fread file 
+#@Desc      	:   fread file
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL gcc
     make
-    echo "test fread file" > test_fread_file
+    echo "test fread file" >test_fread_file
     LOG_INFO "End to prepare the database config."
 }
 
@@ -38,8 +40,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f test_fread_file fread_file
     make clean
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-

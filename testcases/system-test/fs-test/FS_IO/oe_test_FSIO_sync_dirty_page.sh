@@ -15,14 +15,16 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Check dirty page writeback after executing sync
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dd if=/dev/zero of=/tmp/test_dirty_page_file bs=5120 count=1
+    dd if=/dev/zero of=/tmp/test_dirty_page_file bs=10K count=100
     dirty1=$(grep Dirty /proc/meminfo | awk '{print $2}')
     sync
+    SLEEP_WAIT 2
     dirty2=$(grep Dirty /proc/meminfo | awk '{print $2}')
     [[ $dirty1 -gt $dirty2 ]]
     CHECK_RESULT $? 0 0 "The dirty page doesn't writeback after executing sync."
@@ -30,4 +32,3 @@ function run_test() {
 }
 
 main "$@"
-
