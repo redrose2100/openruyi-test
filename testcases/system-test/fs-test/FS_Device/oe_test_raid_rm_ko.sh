@@ -53,7 +53,7 @@ function run_test() {
     for i in {1..50}; do 
         rmmod raid1
         CHECK_RESULT $? 0 0 "Remove mode failed."
-        insmod /usr/lib/modules/${kernel_version}/kernel/drivers/md/raid1.ko
+        insmod /usr/lib/modules/${kernel_version}/kernel/drivers/md/raid1.ko.xz
         CHECK_RESULT $? 0 0 "Add mode failed."
         echo y | mdadm -C -v /dev/md0 -l 1 -n 2 ${disk_name}1 ${disk_name}2
         echo y | mkfs -t ext4 /dev/md0
