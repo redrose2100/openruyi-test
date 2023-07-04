@@ -81,6 +81,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE
+    userdel -rf ${anotherUser}
     rm -rf tmp *.sum *.log /var/spool/mail/{${USER},${anotherUser}}
     LOG_INFO "Finish environment cleanup!"
 }
