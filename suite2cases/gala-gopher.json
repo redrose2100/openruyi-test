@@ -3,6 +3,12 @@
     "cases": [
         {
             "name": "oe_test_service_gopher"
-        }
+        },
+	{
+	    "name": "oe_test_galagopher_tcpprobe"
+	},
+	{
+	    "name": "oe_test_galagopher_stackprobe"
+	}
     ]
 }
