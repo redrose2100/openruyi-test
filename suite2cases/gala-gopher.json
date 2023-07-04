@@ -1,0 +1,11 @@
+{
+    "path": "/opt/mugen/testcases/cli-test/gala-gopher",
+    "cases": [
+        {
+            "name": "oe_test_galagopher_tcpprobe"
+        },
+	{
+            "name": "oe_test_galagopher_jvmprobe"
+        }
+    ]
+}
