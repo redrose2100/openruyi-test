@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_grub-boot-indeterminate"
+        },
+        {
+            "name": "oe_test_service_grub2-systemd-integration"
         }
     ]
 }

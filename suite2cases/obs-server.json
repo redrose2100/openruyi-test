@@ -81,6 +81,12 @@
         },
         {
             "name": "oe_test_service_obs-delayedjob-queue-default"
+        },
+        {
+            "name":"oe_test_service_obs-delayedjob-queue-scm"
+        },
+        {
+            "name":"oe_test_service_obssourcepublish"
         }
     ]
 }

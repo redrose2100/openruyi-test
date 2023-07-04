@@ -1,0 +1,12 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/nvwa",
+    "cases": [
+        {
+            "name": "oe_test_service_nvwa"
+        },
+        {
+            "name": "oe_test_service_nvwa-pre"
+        }
+    ]
+}
+
