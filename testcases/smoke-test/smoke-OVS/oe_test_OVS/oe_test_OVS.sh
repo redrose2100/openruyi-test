@@ -42,7 +42,7 @@ function run_test() {
     CHECK_RESULT $?
     ovs-vsctl add-br br0
     CHECK_RESULT $?
-    ip a | grep br0
+    ip a | grep -w br0
     CHECK_RESULT $?
     ovs-vsctl add-port br0 tap1 -- set Interface tap1 type=internal
     CHECK_RESULT $?
