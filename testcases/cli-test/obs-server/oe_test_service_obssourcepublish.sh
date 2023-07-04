@@ -17,7 +17,7 @@
 # @Desc      :   Test obssourcepublish.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "./common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
