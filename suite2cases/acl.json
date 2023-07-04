@@ -33,6 +33,9 @@
 	},
         {
 	    "name": "oe_test_acl_default_kernel_setting"
+	},
+        {
+	    "name": "oe_test_acl_backup_recovery"
 	}
     ]
 }
