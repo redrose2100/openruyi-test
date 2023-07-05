@@ -18,6 +18,9 @@
         },
         {
             "name": "oe_test_fix_anisible"
+        },
+        {
+            "name": "oe_test_service_oscap-remediate"
         }
     ]
 }
