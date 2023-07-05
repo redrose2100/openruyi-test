@@ -45,8 +45,11 @@ function run_test()
     CHECK_RESULT $? 0 0 "check net.ipv4.icmp_ignore_bogus_error_responses set fail"
 
     # check rp_filter
-    sysctl net.ipv4.icmp_ignore_bogus_error_responses | awk -F "=" '{print $2}' | grep "1"
-    CHECK_RESULT $? 0 0 "check net.ipv4.icmp_ignore_bogus_error_responses set fail"
+    sysctl net.ipv4.conf.all.rp_filter | awk -F "=" '{print $2}' | grep "1"
+    CHECK_RESULT $? 0 0 "check net.ipv4.conf.all.rp_filter set fail"
+
+    sysctl net.ipv4.conf.default.rp_filter | awk -F "=" '{print $2}' | grep "1"
+    CHECK_RESULT $? 0 0 "check net.ipv4.conf.default.rp_filter set fail"
 
     LOG_INFO "End to run test."
 }
