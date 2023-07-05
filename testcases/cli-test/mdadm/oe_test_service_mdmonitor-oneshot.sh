@@ -24,10 +24,10 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL mdadm
     disks=$(TEST_DISK)
-    disk_list=($disks)
+    disk_list="${disks}"
     disk1=${disk_list[0]}
     disk2=${disk_list[1]}
-    echo "y" | mdadm -C /dev/md0 -l1 -n2 /dev/${disk1} /dev/${disk2}
+    echo "y" | mdadm -C /dev/md0 -l1 -n2 /dev/"${disk1}" /dev/"${disk2}"
     systemctl enable mdmonitor-oneshot.timer
     systemctl start mdmonitor-oneshot.timer
     LOG_INFO "End to prepare the test environment."
