@@ -30,6 +30,9 @@
         },
         {
             "name": "oe_test_service_charon-cmd_02"
+        },
+        {
+            "name": "oe_test_service_strongswan-starter"
         }
     ]
 }
