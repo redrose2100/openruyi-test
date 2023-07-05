@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test obssourcepublish.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "./common.sh"
 
 function pre_test() {
