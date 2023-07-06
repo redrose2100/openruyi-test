@@ -17,16 +17,16 @@
 # @Desc      :   Test the basic functions of rpm
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    tcllib_url=$(yumdownloader --resolve --url tcllib | grep http)
-    rpm -ivh $tcllib_url
+    yumdownloader tcllib
+    rpm -ivh tcllib*.rpm
     CHECK_RESULT $? 0 0 "Failed to execute rpm -ivh"
     rpm -qa | grep -v help | grep tcllib
     CHECK_RESULT $? 0 0 "Failed to execute rpm -qa"
-    rpm -e $(rpm -qa tcllib)
+    rpm -e "$(rpm -qa tcllib)"
     CHECK_RESULT $? 0 0 "Failed to execute rpm -e"
     rpm -qa | grep -v help | grep tcllib
     CHECK_RESULT $? 0 1 "Succeed to display tcllib"
@@ -35,7 +35,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf /etc/yum.repos.d/openeuler.repo
+    rm -rf tcllib*.rpm
     LOG_INFO "End to restore the test environment."
 }
 
