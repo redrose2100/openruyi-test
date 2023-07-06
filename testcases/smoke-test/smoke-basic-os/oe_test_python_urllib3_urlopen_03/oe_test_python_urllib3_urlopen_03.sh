@@ -17,7 +17,7 @@
 # @Desc      :   Test request timeout
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -30,7 +30,7 @@ function run_test() {
         expect ">>>" {send "parsed_result=urlparse('http://baidu123.com/')\r"}
         expect ">>>" {send "print(parsed_result)\r"}
         expect ">>>" {send "urllib.request.urlopen('http://gitee.com',timeout=2)\r"}
-        expect ">>>" {send "urllib.request.urlopen('http://gite.com',timeout=0.1)\r"}
+        expect ">>>" {send "urllib.request.urlopen('http://gitee.com/noexist',timeout=0.1)\r"}
         expect ">>>" {send "exit()\r"}
         expect eof
 EOF
