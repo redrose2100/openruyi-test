@@ -746,6 +746,9 @@
 	},
 	{
 	    "name": "oe_test_libsecret"
+	},
+	{
+	    "name": "oe_test_namei"
 	}
     ]
 }
