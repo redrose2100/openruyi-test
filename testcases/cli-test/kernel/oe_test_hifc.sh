@@ -14,7 +14,7 @@
 # @Contact   :   pengrui@uniontech.com
 # @Date      :   2023/07/03
 # @License   :   Mulan PSL v2
-# @Desc      :   内核增加华为hifc_HBA卡驱动
+# @Desc      :   Huawei HIFC added to the kernel_ HBA card driver
 # #############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
