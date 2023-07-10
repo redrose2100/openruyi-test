@@ -35,7 +35,7 @@ function run_test() {
 		sleep 120
 		expect eof
 EOF
-	grep "sosreport-localhost-debug-$(date +%Y-%m-%d)" sos_log9 && test -f /var/tmp/sosreport-localhost-debug-$(date +%Y-%m-%d)-*.tar.xz
+	grep "sosreport-$(hostname)-debug-$(date +%Y-%m-%d)" sos_log9 && test -f /var/tmp/sosreport-$(hostname)-debug-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
 	expect <<EOF
 		log_file sos_log10
@@ -45,7 +45,7 @@ EOF
 		sleep 120
 		expect eof
 EOF
-	grep "sosreport-localhost-desc-$(date +%Y-%m-%d)" sos_log10 && test -f /var/tmp/sosreport-localhost-desc-$(date +%Y-%m-%d)-*.tar.xz
+	grep "sosreport-$(hostname)-desc-$(date +%Y-%m-%d)" sos_log10 && test -f /var/tmp/sosreport-$(hostname)-desc-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
 	expect <<EOF
 		log_file sos_log12
@@ -55,7 +55,7 @@ EOF
 		sleep 120
 		expect eof
 EOF
-	grep "sosreport-localhost-experimental-$(date +%Y-%m-%d)" sos_log12 && test -f /var/tmp/sosreport-localhost-experimental-$(date +%Y-%m-%d)-*.tar.xz
+	grep "sosreport-$(hostname)-experimental-$(date +%Y-%m-%d)" sos_log12 && test -f /var/tmp/sosreport-$(hostname)-experimental-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
 	expect <<EOF
 		log_file sos_log13
@@ -65,7 +65,7 @@ EOF
 		sleep 120
 		expect eof
 EOF
-	grep "sosreport-localhost-enable-plugins-$(date +%Y-%m-%d)" sos_log13 && test -f /var/tmp/sosreport-localhost-enable-plugins-$(date +%Y-%m-%d)-*.tar.xz
+	grep "sosreport-$(hostname)-enable-plugins-$(date +%Y-%m-%d)" sos_log13 && test -f /var/tmp/sosreport-$(hostname)-enable-plugins-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
 	sosreport -l | grep -E "on|off|inactive"
 	CHECK_RESULT $?
@@ -77,7 +77,7 @@ EOF
 		sleep 180
 		expect eof
 EOF
-	grep "sosreport-localhost-plugin-option-$(date +%Y-%m-%d)" sos_log14 && test -f /var/tmp/sosreport-localhost-plugin-option-$(date +%Y-%m-%d)-*.tar.xz
+	grep "sosreport-$(hostname)-plugin-option-$(date +%Y-%m-%d)" sos_log14 && test -f /var/tmp/sosreport-$(hostname)-plugin-option-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
 	expect <<EOF
 		log_file sos_log15
@@ -87,7 +87,7 @@ EOF
 		sleep 120
 		expect eof
 EOF
-	grep "sosreport-localhost-test-label-$(date +%Y-%m-%d)" sos_log15 && test -f /var/tmp/sosreport-localhost-test-label-$(date +%Y-%m-%d)-*.tar.xz
+	grep "sosreport-$(hostname)-test-label-$(date +%Y-%m-%d)" sos_log15 && test -f /var/tmp/sosreport-$(hostname)-test-label-$(date +%Y-%m-%d)-*.tar.xz
 	CHECK_RESULT $?
 	sosreport --list-presets
 	CHECK_RESULT $?
