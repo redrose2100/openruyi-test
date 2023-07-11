@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    mkdir -p ~/apr &&cd ~/apr
+    mkdir -p ~/apr && cd ~/apr
     cat > /root/apr/test  <<EOF
 hello apr ...
 EOF
@@ -114,4 +114,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

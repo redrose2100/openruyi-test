@@ -26,7 +26,7 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    mkdir APRdir && cd APRdir
+    mkdir APRdir && cd APRdir || exit
     cat > test_apr1.c << EOF
 #include <stdio.h>
 #include <stdlib.h>
