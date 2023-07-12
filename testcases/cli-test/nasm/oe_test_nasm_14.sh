@@ -41,7 +41,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf your_program your_file.o
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Een to restore the test environment."
 }
 
