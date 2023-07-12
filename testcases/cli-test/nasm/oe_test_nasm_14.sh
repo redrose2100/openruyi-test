@@ -45,4 +45,4 @@ function post_test() {
     LOG_INFO "Een to restore the test environment."
 }
 
-main $@
+main "$@"
