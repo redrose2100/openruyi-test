@@ -17,7 +17,7 @@
 # @Desc      :   Service Management Common Command Test -su
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -30,6 +30,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+
+    export LANG="en_CN.UTF-8"
 
     useradd testuser
     echo $NODE1_PASSWORD | passwd testuser --stdin
