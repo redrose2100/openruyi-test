@@ -1,0 +1,108 @@
+{
+    "path": "${OET_PATH}/testcases/system-test/network-test/network_struct",
+    "machine type": "physical",
+    "machine num": 2,
+    "add network interface": 1,
+    "cases": [
+        {
+            "name": "oe_test_add_ip"
+        },
+        {
+            "name": "oe_test_bridge_create",
+            "add network interface": 1 
+        },
+        {
+            "name": "oe_test_bridge_create_by_config_reboot",
+            "machine num": 2,
+            "add network interface": 1 
+        },
+        {
+            "name": "oe_test_bridge_create_reboot",
+            "machine num": 2,
+            "add network interface": 1 
+        },
+        {
+            "name": "oe_test_check_ip"
+        },
+        {
+            "name": "oe_test_check_ip_route"
+        },
+        {
+            "name": "oe_test_check_network_status"
+        },
+        {
+            "name": "oe_test_check_tcp_udp"
+        },
+        {
+            "name": "oe_test_dns_set",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_icmp",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_icmp_change_config",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_ip_route_add"
+        },
+        {
+            "name": "oe_test_ipv6_add"
+        },
+        {
+            "name": "oe_test_ipv6_static_setting",
+            "add network interface": 1 
+        },
+        {
+            "name": "oe_test_lo"
+        },
+        {
+            "name": "oe_test_nic_change_mac"
+        },
+        {
+            "name": "oe_test_nic_change_queue"
+        },
+        {
+            "name": "oe_test_nic_check"
+        },
+        {
+            "name": "oe_test_nic_ifconfig"
+        },
+        {
+            "name": "oe_test_nic_ifup"
+        },
+        {
+            "name": "oe_test_nic_ip"
+        },
+        {
+            "name": "oe_test_nic_nmcli"
+        },
+        {
+            "name": "oe_test_nic_queue",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_nic_scapy",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_nic_work_format",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_nmap_check"
+        },
+        {
+            "name": "oe_test_nmap_open_port",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_nmap_up_down"
+        },
+        {
+            "name": "oe_test_ss"
+        }
+    ]
+}

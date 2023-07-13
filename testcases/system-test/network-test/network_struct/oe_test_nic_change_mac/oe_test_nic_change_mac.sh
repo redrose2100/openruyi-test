@@ -1,0 +1,58 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+####################################
+#@Author    	:   meitingli
+#@Contact   	:   244349477@qq.com
+#@Date      	:   2021-08-12
+#@License   	:   Mulan PSL v2
+#@Desc      	:   Change mac
+#####################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the database config."
+
+    DNF_INSTALL net-tools
+    test_nic=$(TEST_NIC 1 | awk '{print $1}')
+    ori_mac=$(ip a | grep "link/ether" | tail -n 1 | awk '{print $2}')
+    new_mac=$(ip a | grep "link/ether" | tail -n 1 | awk '{print $2}' | cut -d ':' -f 1-5):aa
+
+    LOG_INFO "End to prepare the database config."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+
+    ifconfig $test_nic down
+    CHECK_RESULT $? 0 0 "Down $test_nic failed."
+    ifconfig $test_nic hw ether $new_mac
+    CHECK_RESULT $? 0 0 "Change mac failed."
+    ifconfig $test_nic up
+    CHECK_RESULT $? 0 0 "Up $test_nic failed."
+    ip a | grep $new_mac
+    CHECK_RESULT $? 0 0 "Check mac modified failed."
+
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+
+    ifconfig $test_nic down
+    ifconfig $test_nic hw ether $ori_mac
+    ifconfig $test_nic up
+    DNF_REMOVE
+
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
