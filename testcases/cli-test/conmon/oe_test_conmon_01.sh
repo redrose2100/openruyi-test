@@ -33,19 +33,19 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to check the --help"
     conmon --version | grep "conmon version"
     CHECK_RESULT $? 0 0 "Failed to check the --version"
-    conmon -c $podman_build_id -u $podman_build_id --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/$podman_build_id/userdata/ctr.log
+    conmon -c "$podman_build_id" -u "$podman_build_id" --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/"$podman_build_id"/userdata/ctr.log
     CHECK_RESULT $? 0 0 "Failed to check the -c"
-    conmon -c $podman_build_id -u $podman_build_id -n busybox2 --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/$podman_build_id/userdata/ctr.log
+    conmon -c "$podman_build_id" -u "$podman_build_id" -n busybox2 --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/"$podman_build_id"/userdata/ctr.log
     CHECK_RESULT $? 0 0 "Failed to check the -n"
-    conmon -c $podman_build_id -u $podman_build_id -n busybox2 --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/$podman_build_id/userdata/ctr.log -i
+    conmon -c "$podman_build_id" -u "$podman_build_id" -n busybox2 --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/"$podman_build_id"/userdata/ctr.log -i
     CHECK_RESULT $? 0 0 "Failed to check the -i"
-    conmon -c $podman_build_id -u $podman_build_id --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/$podman_build_id/userdata/ctr.log
+    conmon -c "$podman_build_id" -u "$podman_build_id" --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/"$podman_build_id"/userdata/ctr.log
     CHECK_RESULT $? 0 0 "Failed to check the -u"
-    conmon -c $podman_build_id -u $podman_build_id --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/$podman_build_id/userdata/ctr.log
+    conmon -c "$podman_build_id" -u "$podman_build_id" --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/"$podman_build_id"/userdata/ctr.log
     CHECK_RESULT $? 0 0 "Failed to check the --runtime"
-    conmon -c $podman_build_id -u $podman_build_id --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/$podman_build_id/userdata/ctr.log
+    conmon -c "$podman_build_id" -u "$podman_build_id" --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/"$podman_build_id"/userdata/ctr.log
     CHECK_RESULT $? 0 0 "Failed to check the -l"
-    conmon -c $podman_build_id -u $podman_build_id --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/$podman_build_id/userdata/ctr.log -p /var/run/containers/storage/overlay-containers/$podman_build_id/userdata/pidfile
+    conmon -c "$podman_build_id" -u "$podman_build_id" --runtime /usr/bin/runc -l /var/lib/containers/storage/overlay-containers/"$podman_build_id"/userdata/ctr.log -p /var/run/containers/storage/overlay-containers/"$podman_build_id"/userdata/pidfile
     CHECK_RESULT $? 0 0 "Failed to check the -p"
     LOG_INFO "End to run test."
 }
