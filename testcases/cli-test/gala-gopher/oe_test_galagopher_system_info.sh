@@ -14,20 +14,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test gala-gopher system_infos
 # #############################################
-source gala-gopher.sh
+source common/gala-gopher.sh
 
 function pre_test() {
     start_gopher
 }
 
 function run_test() {
-    if is_support_rest;then
-        # 添加动态配置
+    if is_support_rest; then
         curl -X PUT http://localhost:9999/baseinfo -d json='{"cmd":{"bin":"system_infos","check_cmd":"","probe":["proc","fs","disk","net","nic","mem","cpu","host"]},"params":{"report_event":1,"report_period":5,"latency_thr":10,"res_lower_thr":10,"res_upper_thr":50,"metrics_type":["raw","telemetry"]}}'
-        #启动探针
-        curl -X PUT http://localhost:9999/baseinfo -d json='{"state": "running"}'
-        CHECK_RESULT $? 0 0
-        #重启探针
         curl -X PUT http://localhost:9999/baseinfo -d json='{"state": "running"}'
         CHECK_RESULT $? 0 0
     fi
@@ -43,7 +38,7 @@ function run_test() {
     stdbuf -oL iperf -V -s -p 5001 -i 1 &> log_iperf &
     SSH_CMD "iperf -c ${NODE1_IPV4} -i 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     curl "${NODE1_IPV4}":8888 > system_info
-    
+
     while read line; do
         cat system_info | grep cpu | grep "$line"
         [ $? -eq 0 ] || echo "cpu:$line not exist" >> fail_log
@@ -72,10 +67,7 @@ function run_test() {
         cat system_info | grep host | grep "$line" | grep os_version | grep hostname | grep kversion | grep cpu_num | grep memory_MB | grep ip_addr
         [ $? -eq 0 ] || echo "host:$line not exist" >> fail_log
     done < metrics/host_metric
-
-    cat fail_log | wc -l | grep 0
-    CHECK_RESULT $? 0 0
-    cat fail_log #debug
+    check_log
 }
 
 function post_test() {
