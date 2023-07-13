@@ -783,7 +783,10 @@
 	},
         {
 	    "name": "oe_test_od"
-	    }
+	},
+	{
+	    "name": "oe_test_nodejs-jsonpointer"
+	}
     ]
 }
 
