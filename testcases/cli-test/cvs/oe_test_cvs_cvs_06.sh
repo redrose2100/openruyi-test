@@ -17,14 +17,14 @@
 # @Desc      :   Test cvs
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "cvs tar"
     tar -zxvf common/test.tar.gz 
-    source "./init/cvs_remote_make.sh"
-    source "./init/cvs_complex.sh"
+    source "${OET_PATH}"/testcases/cli-test/cvs/init/cvs_complex.sh
+    source "${OET_PATH}"/testcases/cli-test/cvs/init/cvs_remote_make.sh
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -32,15 +32,15 @@ function run_test() {
     LOG_INFO "Start to run test."
     su cvsroot -c "echo y | cvs release -d dir && ! test -d dir"
     CHECK_RESULT $? 0 0 "test cvs release failed"
-    P_SSH_CMD --cmd "yum install cvs -y;export CVSROOT=:pserver:cvsroot@${NODE2_IPV4}:2401${cvs_dir};echo cvs | cvs login;cvs -z 1 log; unset CVSROOT" --node 2 
+    P_SSH_CMD --cmd "yum install cvs -y;export CVSROOT=:pserver:cvsroot@"${NODE_IPV4}":2401"${cvs_dir}";echo cvs | cvs login;cvs -z 1 log; unset CVSROOT" --node 2 
     CHECK_RESULT $? 0 0 "test cvs login failed"
-    P_SSH_CMD --cmd "export CVSROOT=:pserver:cvsroot@${NODE2_IPV4}:2401${cvs_dir};echo cvs | cvs login;cvs -z 1 log; unset CVSROOT" --node 2 
+    P_SSH_CMD --cmd "export CVSROOT=:pserver:cvsroot@"${NODE_IPV4}":2401"${cvs_dir}";echo cvs | cvs login;cvs -z 1 log; unset CVSROOT" --node 2 
     CHECK_RESULT $? 0 0 "test cvs -z failed"
-    P_SSH_CMD --cmd "export CVSROOT=:pserver:cvsroot@${NODE2_IPV4}:2401${cvs_dir};echo cvs | cvs login;cvs logout;unset CVSROOT" --node 2 
+    P_SSH_CMD --cmd "export CVSROOT=:pserver:cvsroot@"${NODE_IPV4}":2401"${cvs_dir}";echo cvs | cvs login;cvs logout;unset CVSROOT" --node 2 
     CHECK_RESULT $? 0 0 "test cvs logout failed"
-    P_SSH_CMD --cmd "export CVSROOT=:pserver:cvsroot@${NODE2_IPV4}:2401${cvs_dir};echo cvs | cvs login;unset CVSROOT" --node 2 
+    P_SSH_CMD --cmd "export CVSROOT=:pserver:cvsroot@"${NODE_IPV4}":2401"${cvs_dir}";echo cvs | cvs login;unset CVSROOT" --node 2 
     CHECK_RESULT $? 0 0 "test cvs pserver failed"
-    SSH_SCP ${run_dir}/init/ext.sh root@${NODE2_IPV4}:/root "=*W5FTY3em"
+    SSH_SCP "${run_dir}"/init/ext.sh root@"${NODE_IPV4}":/root "${NODE1_PASSWORD}"
     P_SSH_CMD --cmd "$(expect ext.sh 2>&1 | grep 'U myProject/1.txt')" --node 2 
     P_SSH_CMD --cmd  "rm -rf ext.sh myProject;yum remove cvd -y" --node 2
     CHECK_RESULT $? 0 0 "test cvs server failed"
@@ -49,13 +49,13 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    source "./init/cvs_remote_clean.sh"
+    source "${OET_PATH}"/testcases/cli-test/cvs/init/cvs_remote_clean.sh
     unset CVSROOT cvs_dir testd_cvs_dir 
     userdel -rf cvsroot;groupdel cvs
-    pushd $run_dir
+    pushd "$run_dir" || exit
     rm -rf myProject/ cvs_test/ init/ passwd
-    DNF_REMOVE
-    popd
+    DNF_REMOVE "$@"
+    popd || exit
     LOG_INFO "End to restore the test environment."
 }
 

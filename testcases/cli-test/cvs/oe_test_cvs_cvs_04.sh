@@ -17,12 +17,12 @@
 # @Desc      :   Test cvs
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "cvs tar"
     tar -zxvf common/test.tar.gz 
-    source "./init/cvs_complex.sh"
+    source "${OET_PATH}"/testcases/cli-test/cvs/init/cvs_complex.sh
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -56,10 +56,10 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     unset CVSROOT cvs_dir testd_cvs_dir
     userdel -rf cvsroot;groupdel cvs
-    pushd $run_dir
+    pushd "$run_dir" || exit
     rm -rf myProject/ cvs_test/ init/ passwd
-    DNF_REMOVE
-    popd
+    DNF_REMOVE "$@"
+    popd || exit
     LOG_INFO "End to restore the test environment."
 }
 
