@@ -35,7 +35,7 @@ function run_test() {
     cd testdir
     osinfo-db-export
     CHECK_RESULT $? 0 0 "Failed to export data"
-    test -e osinfo-db-20230331.tar.xz
+    test -e osinfo-db-`date +%Y%m%d`.tar.xz
     CHECK_RESULT $? 0 0 "Export file does not exist"
     LOG_INFO "End of the test."
 }
