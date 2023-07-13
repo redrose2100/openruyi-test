@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    mkdir -p ~/apr && cd ~/apr
+    mkdir -p ~/apr && cd ~/apr || exit
     cat > /root/apr/test  <<EOF
 hello apr ...
 EOF
