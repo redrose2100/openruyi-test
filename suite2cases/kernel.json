@@ -95,6 +95,9 @@
         {
             "name": "oe_test_hifc"
         }
+        {
+            "name": "oe_test_fnic"
+        }
     ]
 }
 
