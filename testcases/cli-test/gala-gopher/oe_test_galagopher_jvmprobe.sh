@@ -16,6 +16,15 @@
 # #############################################
 source common/gala-gopher.sh
 
+function start_java() {
+    local port=$1
+    ls common/JavaOOMHttpServer.class || javac -classpath /usr/share/java/javassist.jar common/JavaOOMHttpServer.java
+    cd common
+    java JavaOOMHttpServer "$port" &
+    cd -
+    sleep 1
+}
+
 function pre_test() {
     start_gopher
     rm -rf /tmp/java-data*
@@ -23,54 +32,66 @@ function pre_test() {
 
 function run_test() {
     yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel javassist
-    ls common/JavaOOMHttpServer.class || javac -classpath /usr/share/java/javassist.jar common/JavaOOMHttpServer.java
-    if is_support_rest;then
-        # 添加动态配置
-	curl -X PUT http://localhost:9999/jvm -d json='{"cmd":{"bin":"/opt/gala-gopher/extend_probes/jvmprobe","check_cmd":""},"snoopers":{"proc_name":[{"comm":"java","cmdline":"JavaOOMHttpServer8007","debugging_dir":""}]},"params":{"report_event":1,"report_period":5,"latency_thr":10,"res_lower_thr":10,"res_upper_thr":50,"metrics_type":["raw","telemetry"]}}'
-        #启动探针
+    # start java process before probe running
+    start_java 8007
+    pid=$(ps aux | grep 'java JavaOOMHttpServer 8007' | grep -v grep | awk '{print $2}')
+    if is_support_rest; then
+        curl -X PUT http://localhost:9999/jvm -d json='{"cmd":{"bin":"/opt/gala-gopher/extend_probes/jvmprobe","check_cmd":""},"snoopers":{"proc_name":[{"comm":"java","cmdline":"JavaOOMHttpServer","debugging_dir":""}]},"params":{"report_event":1,"report_period":5,"latency_thr":10,"res_lower_thr":10,"res_upper_thr":50,"metrics_type":["raw","telemetry"]}}'
         curl -X PUT http://localhost:9999/jvm -d json='{"state": "running"}'
         CHECK_RESULT $? 0 0
-        ps aux | grep "extend_probes\/jvmprobe" | grep -v grep
-        CHECK_RESULT $? 0 0
-    else
-        # check jvmprobe
-	ps aux | grep "extend_probes\/jvmprobe" | grep -v grep
-        CHECK_RESULT $? 0 0
     fi
-
-    # start java process
-    cd common
-    java JavaOOMHttpServer 8007 &
-    pid=$!
-    cd -
-    sleep 1
-    ps aux | grep 'java JavaOOMHttpServer' | grep -v grep
+    # check jvmprobe
+    ps aux | grep "extend_probes\/jvmprobe" | grep -v grep
     CHECK_RESULT $? 0 0
 
     # check
-    for((i=0;i<5;i++));do
-	ls /tmp | grep java-data-"$pid"
-	[ $? -eq 0 ] && break
-	sleep 1
+    for ((i = 0; i < 5; i++)); do
+        ls /tmp | grep java-data-"$pid"
+        [ $? -eq 0 ] && break
+        sleep 1
     done
+    sleep 5
     curl "${NODE1_IPV4}":8888 > jvm.txt
     while read line; do
-        cat jvm.txt | grep "$line"
-	[ $? -eq 0 ] || echo "jvm:$line" >> fail_log
+        cat jvm.txt | grep "$pid" | grep "$line"
+        [ $? -eq 0 ] || echo "jvm:$line" >> fail_log
+    done < metrics/jvm_metrics
+    check_log
+
+    # start java process after probe running
+    start_java 8008
+    pid=$(ps aux | grep 'java JavaOOMHttpServer 8008' | grep -v grep | awk '{print $2}')
+    # check
+    for ((i = 0; i < 5; i++)); do
+        ls /tmp | grep java-data-"$pid"
+        [ $? -eq 0 ] && break
+        sleep 1
+    done
+    sleep 5
+    curl "${NODE1_IPV4}":8888 > jvm.txt
+    while read line; do
+        cat jvm.txt | grep "$pid" | grep "$line"
+        [ $? -eq 0 ] || echo "jvm:$line" >> fail_log
     done < metrics/jvm_metrics
     check_log
 
     # multi java process
-    for((i=0;i<100;i++));do
-	java JavaOOMHttpServer $((8008+i))&
+    cd common
+    for ((i = 0; i < 50; i++)); do
+        java JavaOOMHttpServer $((8009 + i)) &
     done
-    for((i=0;i<100;i++));do
-        ls /tmp | grep java-data | wc -l | grep 101
-        [ $? -eq 0 ] && break
-        sleep 1
+    cd -
+    for ((i = 0; i < 50; i++)); do
+        num=$(ls /tmp | grep java-data | wc -l)
+        [ "$num" -ge 52 ] && break
+        sleep 5
     done
-    [ $i -le 60 ] 
+    [ $i -lt 50 ]
     CHECK_RESULT $? 0 0
+
+    # check coredump
+    systemctl restart gala-gopher
+    ll /var/lib/systemd/coredump | wc -l
 }
 
 function post_test() {

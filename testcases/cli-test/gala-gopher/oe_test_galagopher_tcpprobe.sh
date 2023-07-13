@@ -43,6 +43,44 @@ function run_test() {
     stdbuf -oL iperf -V -s -p 5001 -i 1 &> log_iperf &
     sleep 2
     SSH_CMD "iperf -c ${NODE1_IPV4} -i 1 -t 60" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    curl "${NODE1_IPV4}":8888 > tcp.txt
+    while read line; do
+        cat tcp.txt | grep tcp_link_"$line"
+        [ $? -eq 0 ] || echo "tcp:$line" >> fail_log
+    done < metrics/tcp_metric
+    check_log
+
+    #探针启动前iperf进程已经运行
+    systemctl restart gala-gopher
+    if is_support_rest; then
+        # 添加动态配置
+        curl -X PUT http://localhost:9999/tcp -d json='{"cmd":{"bin":"/opt/gala-gopher/extend_probes/tcpprobe","check_cmd":"","probe":["tcp_rtt","tcp_srtt","tcp_abnormal","tcp_windows","tcp_rate","tcp_sockbuf","tcp_stats"]},"snoopers":{"proc_name":[{"comm":"iperf","cmdline":"","debugging_dir":""}]},"params":{"report_event":1,"report_period":5,"latency_thr":10,"drops_thr":10,"res_lower_thr":10,"res_upper_thr":50,"metrics_type":["raw","telemetry"]}}'
+        # 启动探针
+        curl -X PUT http://localhost:9999/tcp -d json='{"state": "running"}'
+        CHECK_RESULT $? 0 0
+        ps aux | grep "extend_probes\/tcpprobe" | grep -v grep
+        CHECK_RESULT $? 0 0
+    else
+        # check tcp_probe
+        ls "$GOPHER_CONF_PATH".bak || cp "$GOPHER_CONF_PATH" "$GOPHER_CONF_PATH".bak
+        sed -i 's/warn -P .*"/warn -P ffff"/g' "$GOPHER_CONF_PATH"
+        systemctl restart gala-gopher
+        ps aux | grep "extend_probes\/tcpprobe" | grep -v grep
+        CHECK_RESULT $? 0 0
+    fi
+    curl "${NODE1_IPV4}":8888 > tcp.txt #debug
+    SSH_CMD "iperf -c ${NODE1_IPV4} -i 1 -t 60" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    curl "${NODE1_IPV4}":8888 > tcp.txt
+    while read line; do
+        cat tcp.txt | grep tcp_link_"$line"
+        [ $? -eq 0 ] || echo "tcp:$line" >> fail_log
+    done < metrics/tcp_metric
+    check_log
+
+    #重复创建连接
+    curl "${NODE1_IPV4}":8888 > tcp.txt
+    curl "${NODE1_IPV4}":8888 > tcp.txt
+    curl "${NODE1_IPV4}":8888 > tcp.txt
     SSH_CMD "iperf -c ${NODE1_IPV4} -i 1 -t 60" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     curl "${NODE1_IPV4}":8888 > tcp.txt
     while read line; do
