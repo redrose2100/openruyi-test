@@ -783,7 +783,11 @@
 	},
         {
 	    "name": "oe_test_od"
-	    }
+	 },
+        {
+             "name": "oe_test_mkdosfs"
+        }
+
     ]
 }
 
