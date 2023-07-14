@@ -786,6 +786,9 @@
 	 },
         {
              "name": "oe_test_mkdosfs"
+        },
+        {
+             "name": "oe_test_dumpe2fs"
         }
 
     ]
