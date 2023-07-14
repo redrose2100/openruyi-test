@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/gdbm",
+    "cases": [
+        {
+            "name": "oe_test_gdbm_01"
+        }
+    ]
+}
