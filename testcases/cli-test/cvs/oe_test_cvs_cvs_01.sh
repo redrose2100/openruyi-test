@@ -17,7 +17,7 @@
 # @Desc      :   Test cvs
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,9 +28,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     version=$(rpm -qa | grep cvs | awk 'BEGIN {FS="-"}{print $2}' | tail -n 1)
-    cvs -v | grep $version
+    cvs -v | grep "$version"
     CHECK_RESULT $? 0 0 "test cvs -v failed"
-    cvs --version | grep $version
+    cvs --version | grep "$version"
     CHECK_RESULT $? 0 0 "test cvs --version failed"
     cvs --help 2>&1 | grep 'Usage:'
     CHECK_RESULT $? 0 0 "test cvs --help"
@@ -43,7 +43,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
