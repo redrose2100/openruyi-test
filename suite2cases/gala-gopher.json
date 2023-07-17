@@ -26,7 +26,7 @@
             "name": "oe_test_galagopher_system_info"
         },
         {
-            "name": "oe_test_galagopher_taskprobe.sh"
+            "name": "oe_test_galagopher_taskprobe"
         },
         {
             "name": "oe_test_galagopher_tprofiling"
