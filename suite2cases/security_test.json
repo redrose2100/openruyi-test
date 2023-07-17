@@ -138,8 +138,9 @@
         },
         {
             "name": "oe_test_UserMgmt_username_and_UID"
+        },
+        {
+            "name": "oe_test_sm3_encryption_test"
         }
-
-
     ]
 }
