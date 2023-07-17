@@ -14,6 +14,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test jvmprobe
 # #############################################
+# shellcheck disable=SC2002,SC2009,SC2148,SC2162,SC2181,SC1091,SC2164,SC2010
 source common/gala-gopher.sh
 
 function start_java() {
