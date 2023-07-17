@@ -30,6 +30,12 @@
         },
         {
             "name": "oe_test_galagopher_tprofiling"
+        },
+        {
+            "name": "oe_test_galagopher_docker"
+        },
+        {
+            "name": "oe_test_galagopher_guassdb"
         }
     ]
 }
