@@ -21,6 +21,9 @@
         },
         {
             "name": "oe_test_service_abrt-xorg"
-        }
+        },
+	{
+	    "name": "oe_test_abrt_cli_001"
+	}
     ]
 }
