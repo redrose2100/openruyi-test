@@ -9,6 +9,9 @@
         },
         {
             "name":"oe_test_iSulad_resource_restriction_cgroup"
+        },
+        {
+            "name":"oe_test_iSulad_container"
         }
     ]
 }
