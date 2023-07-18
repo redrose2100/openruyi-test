@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_gdbm_01"
+        },
+	{
+            "name": "oe_test_gdbm_02"
         }
     ]
 }
