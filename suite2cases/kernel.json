@@ -101,6 +101,9 @@
         {
             "name": "oe_test_libfc"
         },
+        {
+            "name": "oe_test_qla2xxx"
+        }
     ]
 }
 
