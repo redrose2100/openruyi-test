@@ -141,6 +141,10 @@
         },
         {
             "name": "oe_test_sm3_encryption_test"
-        }
+        },
+	{
+	    "name": "oe_test_acl_formats"
+	}
+
     ]
 }
