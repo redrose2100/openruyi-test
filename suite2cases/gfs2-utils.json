@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/gfs2-utils",
+    "cases": [
+        {
+            "name": "oe_test_gfs2-utils_mkfs.gfs2"
+        }
+    ]
+}
