@@ -36,6 +36,9 @@
 	},
         {
 	    "name": "oe_test_acl_backup_recovery"
-	}
+	},
+      {
+        "name": "oe_test_acl_delete_acl"
+      }
     ]
 }
