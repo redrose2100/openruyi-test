@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/boom-boot",
+    "cases": [
+        {
+            "name": "oe_test_boom_boot"
+        }
+    ]
+}
