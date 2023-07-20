@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_luajit_print"
-        }
+        },
+	{
+	    "name": "oe_test_luajit_print1"
+	}
     ]
 }
