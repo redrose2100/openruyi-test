@@ -54,6 +54,9 @@
         },
         {
             "name": "oe_test_selinux_chcon"
+        },
+        {
+            "name": "oe_test_selinux_semanage_user"
         }
     ]
 }
