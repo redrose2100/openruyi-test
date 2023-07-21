@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of socat command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -33,9 +33,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check filan -? failed"
     filan -d
     CHECK_RESULT $? 0 0 "Check filan -d failed"
-    filan -i 2 | awk '{print $1}' | grep -v FD | wc -l | grep 1
+    filan -i 2 | awk '{print $1}' | grep -v FD -c | grep 1
     CHECK_RESULT $? 0 0 "Check filan -i failed"
-    filan -n 2 | awk '{print $1}' | grep -v FD | wc -l | grep 2
+    filan -n 2 | awk '{print $1}' | grep -v FD -c | grep 2
     CHECK_RESULT $? 0 0 "Check filan -n failed"
     filan -s | grep 'tty'
     CHECK_RESULT $? 0 0 "Check filan -s failed"
@@ -55,8 +55,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    rm -fr a.txt
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
