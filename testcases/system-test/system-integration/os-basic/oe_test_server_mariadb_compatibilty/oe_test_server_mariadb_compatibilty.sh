@@ -53,8 +53,8 @@ function run_test() {
     SSH_CMD "dnf -y install mariadb-server expect" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     SSH_CMD "systemctl start mariadb;systemctl stop firewalld" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     cp ../common/mariadb_remote .
-    sed -i "s/local_ip/${NODE1_IPV4}/g" mariadb_remote
-    sed -i "s/local_password/${NODE1_PASSWORD}/g" mariadb_remote
+    sed -i s/local_ip/${NODE1_IPV4}/g mariadb_remote
+    sed -i s/local_password/${NODE1_PASSWORD}/g mariadb_remote
     SSH_SCP ./mariadb_remote ${NODE2_USER}@${NODE2_IPV4}:/opt/mugen ${NODE2_PASSWORD}
     SSH_CMD "expect /opt/mugen/mariadb_remote" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     CHECK_RESULT $?
