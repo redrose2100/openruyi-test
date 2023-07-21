@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2022 Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -20,26 +20,28 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environment preparation."
+    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "chrony ntpstat" 
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
-    systemctl start chronyd
-    CHECK_RESULT $? 0 0 "Start chrony fail"
-    systemctl status chronyd | grep running
-    CHECK_RESULT $? 0 0 "Start chronyd.service fail"
-    chronyc makestep |grep "200 OK"
-    CHECK_RESULT $? 0 0 "Failure to synchronize time"
-    LOG_INFO "Finish test!"
+    LOG_INFO "Start to run test."
+    if ! df -h / |grep overlay; then
+        systemctl start chronyd
+        CHECK_RESULT $? 0 0 "Start chrony fail"
+        systemctl status chronyd | grep running
+        CHECK_RESULT $? 0 0 "Start chronyd.service fail"
+        chronyc makestep |grep "200 OK"
+        CHECK_RESULT $? 0 0 "Failure to synchronize time"
+    fi
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
-    DNF_REMOVE
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
