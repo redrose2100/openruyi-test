@@ -18,10 +18,21 @@
 # #############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     grep "^example:" /etc/passwd && userdel -rf example
     LOG_INFO "End of environmental preparation!"
+}
+
+function check_ext_e_attribute() {
+    local file="$1"
+    local hidden_attrs=$(su - example -c "lsattr $file")
+    if echo "$hidden_attrs" | grep -q "e"; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 function run_test() {
@@ -32,14 +43,33 @@ ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}
 EOF
     su - example -c 'touch /home/example/test'
-    su - example -c 'chattr +i /home/example/test'
-    CHECK_RESULT $? 0 1 "Authorization succeeded, but it should fail here"
+
+    # Check if the file system is ext
+    if check_ext_e_attribute "/home/example/test"; then
+        LOG_INFO "The file system is ext, has 'e' attribute."
+        su - example -c 'chattr +i /home/example/test'
+        CHECK_RESULT $? 0 1 "Authorization succeeded, but it should fail here"
+    else
+        LOG_INFO "The file system is not ext, does not have 'e' attribute."
+        su - example -c 'chattr +a /home/example/test'
+        CHECK_RESULT $? 0 0 "Failed to set 'a' attribute"
+    fi
+
     setcap cap_linux_immutable=eip /bin/chattr.e2fsprogs
     CHECK_RESULT $? 0 0 "Failed to set cap"
+
     su - example -c 'chattr +i /home/example/test'
     CHECK_RESULT $? 0 0 "Privilege grant failed"
-    su - example -c 'lsattr /home/example/test | grep "\-\-\-\-i\-\-\-\-\-\-\-\-\-e\-\-\-\-\-"'
-    CHECK_RESULT $? 0 0 "Failed to view ----i---------e----- field in file properties"
+
+    # Check if the file system is ext
+    if check_ext_e_attribute "/home/example/test"; then
+        su - example -c 'lsattr /home/example/test | grep "\-\-\-\-i\-\-\-\-\-\-\-\-\-e\-\-\-\-\-"'
+        CHECK_RESULT $? 0 0 "Failed to view ----i---------e----- field in file properties"
+    else
+        su - example -c 'lsattr /home/example/test | grep "\-\-\-\-i\-\-\-\-\-\-\-\-\-"'
+        CHECK_RESULT $? 0 0 "Failed to view ----i--------- field in file properties"
+    fi
+
     LOG_INFO "Finish testcase execution."
 }
 
@@ -51,4 +81,5 @@ function post_test() {
     userdel -rf example
     LOG_INFO "Finish environment cleanup!"
 }
+
 main "$@"
