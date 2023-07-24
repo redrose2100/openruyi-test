@@ -1,0 +1,70 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# ##################################
+# @Author    :   huangjiayi
+# @Contact   :   1960887351@qq.com
+# @Date      :   2022/8/22
+# @License   :   Mulan PSL v2
+# @Desc      :   Test "criu" command
+# ##################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test(){
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "criu"
+    mkdir checkpoint_file checkpoint_file_2
+    test_process(){
+        num=0
+        while true;
+        do
+            echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
+            (( num += 1 ))
+            sleep 1
+        done
+    }
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test(){
+    LOG_INFO "Start to run test."
+    (test_process) & criu dump -D checkpoint_file -j -t $! -W checkpoint_file
+    CHECK_RESULT $? 0 0 "Check criu dump -W failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --work-dir checkpoint_file
+    CHECK_RESULT $? 0 0 "Check criu dump --work-dir failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --cpu-cap
+    CHECK_RESULT $? 0 0 "Check criu dump --cpu-cap failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --weak-sysctls
+    CHECK_RESULT $? 0 0 "Check criu dump --weak-sysctls failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --external dev
+    CHECK_RESULT $? 0 0 "Check criu dump --external failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --tcp-established
+    CHECK_RESULT $? 0 0 "Check criu dump --tcp-established failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --skip-in-flight
+    CHECK_RESULT $? 0 0 "Check criu dump --skip-in-flight failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --tcp-close
+    CHECK_RESULT $? 0 0 "Check criu dump --tcp-close failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! -r /
+    CHECK_RESULT $? 0 0 "Check criu dump -r failed"
+    (test_process) & criu dump -D checkpoint_file -j -t $! --root /
+    CHECK_RESULT $? 0 0 "Check criu dump --root failed"
+    LOG_INFO "End to run test."
+}
+
+function post_test(){
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
+    rm -rf checkpoint_file checkpoint_file_2
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
