@@ -9,6 +9,9 @@
 	},
 	{
 	    "name": "oe_test_jpegoptim_03"
-        }
+        },
+	{
+	    "name": "oe_test_jpegoptim_04"
+	}	    
     ]
 }
