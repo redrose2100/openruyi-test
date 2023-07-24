@@ -132,7 +132,7 @@ EOF
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
