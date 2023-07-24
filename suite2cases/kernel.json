@@ -102,6 +102,9 @@
             "name": "oe_test_libfc"
         },
         {
+            "name": "oe_test_hpsa"
+        }
+        {
             "name": "oe_test_qla2xxx"
         }
     ]
