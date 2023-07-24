@@ -1,0 +1,70 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# ##################################
+# @Author    :   huangjiayi
+# @Contact   :   1960887351@qq.com
+# @Date      :   2022/8/22
+# @License   :   Mulan PSL v2
+# @Desc      :   Test "criu" command
+# ##################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test(){
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "criu"
+    mkdir checkpoint_file
+    test_process(){
+        num=0
+        while true;
+        do
+            echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
+            (( num += 1 ))
+            sleep 1
+        done
+    }
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test(){
+    LOG_INFO "Start to run test."
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -W checkpoint_file && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -W failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --work-dir checkpoint_file && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --work-dir failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --cpu-cap && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --cpu-cap failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --weak-sysctls && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --weak-sysctls failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --external dev && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --external failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --tcp-established && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --tcp-established failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --skip-in-flight && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --skip-in-flight failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --tcp-close && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --tcp-close failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid -r / && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump -r failed"
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --root / && kill -9 $pid
+    CHECK_RESULT $? 0 0 "Check criu pre-dump --root failed"
+    LOG_INFO "End to run test."
+}
+
+function post_test(){
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    rm -rf checkpoint_file
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
