@@ -14,7 +14,7 @@
 # @Contact   :   liujingjing25812@163.com
 # @Date      :   2023/07/06
 # @License   :   Mulan PSL v2
-# @Desc      :   Test software package self compilation
+# @Desc      :   Compile
 # ############################################
 # shellcheck disable=SC2034,SC2154,SC1091
 
@@ -34,13 +34,13 @@ function pre_test() {
         cfg_openEuler_update_test_repo
         sed -i '/source\//!b;n;cenabled=0' /etc/yum.repos.d/"${openeulerversion}".repo
         sed -i '/update_.\{8\}\/source\//!b;n;cenabled=1' /etc/yum.repos.d/"${openeulerversion}".repo
-        dnf list --available --repo="source" | grep oe | awk '{print $1}' | awk -F. '{print $1}' >source_list
+        dnf list --available --repo="${version_info}_source_${test_update_repo}" | grep oe | awk '{print $1}' | awk -F. '{print $1}' >source_list
     else
         cfg_openEuler_repo
         sed -i '/source\/.*/!b;n;cenabled=0' /etc/yum.repos.d/"${openeulerversion}".repo
         sed -i '/update\/.*/!b;n;cenabled=0' /etc/yum.repos.d/"${openeulerversion}".repo
         sed -i '/openEuler-.\{,14\}\/source\//!b;n;cenabled=1' /etc/yum.repos.d/"${openeulerversion}".repo
-        dnf list --available --repo="source" | grep oe | awk '{print $1}' | awk -F. '{print $1}' | grep -vE "kernel|gcc|glibc" >source_list.bak
+        dnf list --available --repo="${version_info}_source" | grep oe | awk '{print $1}' | awk -F. '{print $1}' | grep -vE "kernel|gcc|glibc" >source_list.bak
         shuf -n"${pkg_name}" source_list.bak >source_list
         sed -i "1i kernel\ngcc\nglibc" source_list
     fi
