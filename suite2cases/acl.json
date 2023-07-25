@@ -25,7 +25,7 @@
 	{
 	    "name": "oe_test_acl_setfacl"
 	},
-      {
+        {
 	    "name": "oe_test_access_providepam"
 	},
         {
@@ -37,8 +37,11 @@
         {
 	    "name": "oe_test_acl_backup_recovery"
 	},
-      {
-        "name": "oe_test_acl_delete_acl"
-      }
+        {
+            "name": "oe_test_acl_delete_acl"
+        },
+        {
+            "name": "oe_test_acl_dir_write"
+        }
     ]
 }
