@@ -1,0 +1,9 @@
+{
+    "path": "${OET_PATH}/testcases/feature-test/k3s",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_k3s_deployment_guide"
+        }
+    ]
+}
