@@ -17,7 +17,7 @@
 # ############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
-source ./common.sh
+source "${OET_PATH}/testcases/feature-test/sysmonitor/common.sh"
 
 dir='/home/mnt/mpoint1'
 fn_mount_100_disk "${dir}"

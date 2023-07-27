@@ -17,7 +17,7 @@
 # ############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
-source ./common.sh
+source "${OET_PATH}/testcases/feature-test/sysmonitor/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {

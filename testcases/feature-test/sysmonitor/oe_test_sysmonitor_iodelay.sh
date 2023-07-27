@@ -17,7 +17,7 @@
 # ############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
-source ./common.sh
+source "${OET_PATH}/testcases/feature-test/sysmonitor/common.sh"
 
 negative_numbers="-1234"
 words="abc"

@@ -17,7 +17,7 @@
 # ############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
-source ./common.sh
+source "${OET_PATH}/testcases/feature-test/sysmonitor/common.sh"
 
 # shellcheck disable=SC2010
 test_NetPort="$(ls /sys/class/net | grep -v lo | tail -1)"
