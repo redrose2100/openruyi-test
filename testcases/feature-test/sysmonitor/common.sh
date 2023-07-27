@@ -1,40 +1,42 @@
 #!/bin/bash
 set +e
-MONITOR_CONFIG=/etc/sysconfig/sysmonitor
-SIGNAL_CONFIG=/etc/sysmonitor/signal
-FILE_CONFIG=/etc/sysmonitor/file
-FILE_CONFIG_UVP=/etc/sysmonitor/file-uvp
-DISK_CONFIG=/etc/sysmonitor/disk
-INODE_CONFIG=/etc/sysmonitor/inode
-NETWORK_CONFIG=/etc/sysmonitor/network
-PSCNT_CONFIG=/etc/sysmonitor/pscnt
-FDCNT_CONFIG=/etc/sysmonitor/fdcnt
-CPU_CONFIG=/etc/sysmonitor/cpu
-MEMORY_CONFIG=/etc/sysmonitor/memory
-PROCESS_CONF=/etc/sysmonitor/process
-IODELAY_CONF=/etc/sysmonitor/iodelay
-sysmonitor_log=/var/log/sysmonitor.log
-sysmonitor_conf=/etc/sysconfig/sysmonitor
-sysmonitor_list=/etc/sysmonitor
-tmp_dir=$(pwd)/monitor_tmp
+# shellcheck disable=SC2034
+{
+    MONITOR_CONFIG=/etc/sysconfig/sysmonitor
+    SIGNAL_CONFIG=/etc/sysmonitor/signal
+    FILE_CONFIG=/etc/sysmonitor/file
+    FILE_CONFIG_UVP=/etc/sysmonitor/file-uvp
+    DISK_CONFIG=/etc/sysmonitor/disk
+    INODE_CONFIG=/etc/sysmonitor/inode
+    NETWORK_CONFIG=/etc/sysmonitor/network
+    PSCNT_CONFIG=/etc/sysmonitor/pscnt
+    FDCNT_CONFIG=/etc/sysmonitor/fdcnt
+    CPU_CONFIG=/etc/sysmonitor/cpu
+    MEMORY_CONFIG=/etc/sysmonitor/memory
+    PROCESS_CONF=/etc/sysmonitor/process
+    IODELAY_CONF=/etc/sysmonitor/iodelay
+    sysmonitor_log=/var/log/sysmonitor.log
+    sysmonitor_conf=/etc/sysconfig/sysmonitor
+    sysmonitor_list=/etc/sysmonitor
+    tmp_dir=$(pwd)/monitor_tmp
 
-object_path="$ETS_PATH"/testcases/bin/TestEL_MONITORALARM/sysmonitor-alarm
-DIR_NAME=$(dirname "$0")
-BASE_NAME=$(basename "$0")
-MESSAGES_LOG=/var/log/sysmonitor.log
-SYS_LOG=/var/log/messages
-dfx_file_path="/opt/dfx-fault-injection"
-#process monitor start
-MONITOR_DEMOE_PATH="${PROCESS_CONF}"/cron
-MONITOR_DEMOE_PROCESS=$(grep -w 'NAME' "$MONITOR_DEMOE_PATH" | sed "s/.*NAME=\(.*\).*/\1/g")
-MONITOR_LOG="${MESSAGES_LOG}"
-MEM_FD_PROCESS=hirmd
-MEM_FD_CONF=/opt/uvp/uvpHealthCheck/uvphealth.conf
-STATUSCHECK_PARAM="-s hirmd -b /usr/bin/hirmd -n hirmd -p /var/run/hirmd.pid"
-MEM_ERR_INFO="Found unknown characters in the memory limit of service ${MEM_FD_PROCESS}"
-FD_ERR_INFO="Found unknown characters in the fdsize limit of service ${MEM_FD_PROCESS}"
-#process monitor end
-
+    object_path="$ETS_PATH"/testcases/bin/TestEL_MONITORALARM/sysmonitor-alarm
+    DIR_NAME=$(dirname "$0")
+    BASE_NAME=$(basename "$0")
+    MESSAGES_LOG=/var/log/sysmonitor.log
+    SYS_LOG=/var/log/messages
+    dfx_file_path="/opt/dfx-fault-injection"
+    #process monitor start
+    MONITOR_DEMOE_PATH="${PROCESS_CONF}"/cron
+    MONITOR_DEMOE_PROCESS=$(grep -w 'NAME' "$MONITOR_DEMOE_PATH" | sed "s/.*NAME=\(.*\).*/\1/g")
+    MONITOR_LOG="${MESSAGES_LOG}"
+    MEM_FD_PROCESS=hirmd
+    MEM_FD_CONF=/opt/uvp/uvpHealthCheck/uvphealth.conf
+    STATUSCHECK_PARAM="-s hirmd -b /usr/bin/hirmd -n hirmd -p /var/run/hirmd.pid"
+    MEM_ERR_INFO="Found unknown characters in the memory limit of service ${MEM_FD_PROCESS}"
+    FD_ERR_INFO="Found unknown characters in the fdsize limit of service ${MEM_FD_PROCESS}"
+    #process monitor end
+}
 # 启动sysmonitor
 yum install -y sysmonitor-kmod &> /dev/null
 systemctl restart rsyslog
@@ -86,7 +88,6 @@ function wait_sysmonitor_ready() {
 
 function fn_wait_for_monitor_log_print() {
     count=${2:-60}
-    type=$3
     monitor_log_file=${4:-$sysmonitor_log}
     for ((i = 1; i <= count; i++)); do
         grep "$1" "${monitor_log_file}" && return 0
@@ -133,7 +134,7 @@ function del_custommonitor() {
 function stress_mem() {
     local ratio=${1-90}
     local stress_time=${2-300}
-    nohup stress-ng --vm 1 --vm-bytes "${ratio}"% --timeout ${stress_time} &> /dev/null &
+    nohup stress-ng --vm 1 --vm-bytes "${ratio}"% --timeout "${stress_time}" &> /dev/null &
 }
 
 #usage：使用stress-ng工具对cpu加压
@@ -143,8 +144,8 @@ function stress_cpu() {
     local ratio=${1-90}
     local stress_time=${2-300}
     local cpu_num
-    cpu_num=$(cat /proc/cpuinfo | grep "processor" | wc -l)
-    nohup stress-ng --cpu ${cpu_num} -l ${ratio} --timeout ${stress_time} &> /dev/null &
+    cpu_num=$(grep -c "processor" /proc/cpuinfo)
+    nohup stress-ng --cpu "${cpu_num}" -l "${ratio}" --timeout "${stress_time}" &> /dev/null &
 }
 function stress_cpu_with_num() {
     local cpu_core=${1:-1}
@@ -157,7 +158,7 @@ function stress_cpu_with_num() {
 
 #usage：清除环境加压
 function pressure_clear() {
-    ps aux | grep stress-ng | grep -v grep && pkill -9 stress-ng
+    pgrep stress-ng && pkill -9 stress-ng
 }
 
 function mem_prefun() {
@@ -195,8 +196,8 @@ function disk_postfun() {
 }
 
 function fn_clean_disk_to_zero() {
-    tmp_disk=$1
-    rm -r "${tmp_disk}"/tmpfile_* &> /dev/null
+    local tmp_disk="$1"
+    rm -rf "${tmp_disk}/tmpfile_*" &> /dev/null
 }
 
 function fn_clean_disk_to_resume() {
@@ -253,7 +254,7 @@ function fn_clean_inode_to_zero() {
 
 fn_make_disk_alarm() {
     tmp_disk=$1
-    tmp_alarm=$(expr "$2" + 5)
+    tmp_alarm=$(($2 + 5))
     for i in $(seq 900000); do
         size_old=$(df "${tmp_disk}" | awk 'NR==2{print $5}' | awk -F % '{print $1}')
         echo "**************${size_old}***********************"
@@ -264,7 +265,7 @@ fn_make_disk_alarm() {
             df "${tmp_disk}"
             break
         fi
-        temp=$(expr "$i" \% 100)
+        temp=$((i % 100))
         if [ "$temp" = 0 ]; then
             df "${tmp_disk}"
         fi
@@ -278,10 +279,7 @@ fn_clean_disk_to_zero() {
 
 function make_dir_mount() {
     ext_type=mkfs.ext3
-    lsmod | grep ext4
-    if [ $? -eq 0 ]; then
-        ext_type=mkfs.ext4
-    fi
+    lsmod | grep ext4 && ext_type=mkfs.ext4
 
     rm -rf /home/mnt
     mkdir -p /home/mnt/mpoint

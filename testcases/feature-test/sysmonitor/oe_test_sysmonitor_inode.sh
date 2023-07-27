@@ -44,8 +44,8 @@ function pre_test() {
     echo "DISK=\"${dir}\" ALARM=\"${disk_alarm}\" RESUME=\"${disk_resume}\"" >> "${DISK_CONFIG}"
     diff --color "${DISK_CONFIG}.bak" "${DISK_CONFIG}"
 
-    cp "$sysmonitor_conf" "${sysmonitor_conf}.bak"
-    sed -i "/^INODE_MONITOR_PERIOD=/ s/=.*/=\"2\"/" "${sysmonitor_conf}"
+    cp "${sysmonitor_conf:-}" "${sysmonitor_conf}.bak"
+    sed -i "/^INODE_MONITOR_PERIOD=/ s/=.*/=\"2\"/" "${sysmonitor_conf:-}"
     sed -i "/^DISK_ALARM=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     sed -i "/^INODE_ALARM=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     diff --color "${sysmonitor_conf}.bak" "$sysmonitor_conf"
@@ -57,7 +57,6 @@ function run_test() {
     grep -w "DISK=\"${dir}\"" "${INODE_CONFIG}" \
         || add_failure "INODE_CONFIG check [$dir] failed"
     # 1 alarm
-    monitor_pid=$(pgrep sysmonitor)
     fn_make_inode_alarm "${dir}" "${inode_alarm}"
     fn_make_disk_alarm "${dir}" "${disk_alarm}"
     # alarm: monitor log check
@@ -74,7 +73,7 @@ function run_test() {
 
 # 后置处理，恢复测试环境
 function post_test() {
-    grep "$dir" "$sysmonitor_log"
+    grep "$dir" "${sysmonitor_log:-}"
     fn_clean_inode_to_zero "${dir}"
     fn_clean_disk_to_zero "${dir}"
 

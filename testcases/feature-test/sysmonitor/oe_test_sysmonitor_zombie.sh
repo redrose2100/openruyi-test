@@ -32,7 +32,7 @@ function pre_test() {
 function run_test() {
     python ./zombie_make.py 20 10
     sleep 10
-    grep "warning.*sysmonitor.*: zombie process count alarm" "${sysmonitor_log}"
+    grep "warning.*sysmonitor.*: zombie process count alarm" "${sysmonitor_log:-}"
     grep "info.*sysmonitor.*: zombie process count resume" "${sysmonitor_log}"
     zombie_parent_pid=$(cat /tmp/zombie_parent_pid)
     grep "zombie parent process: pid is \"${zombie_parent_pid}\", args is python" /var/log/messages

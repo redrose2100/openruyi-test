@@ -27,7 +27,7 @@ function pre_test() {
 
 # 测试点的执行
 function run_test() {
-    cp -a "${sysmonitor_list}"/file "${sysmonitor_list}"/file.bak
+    cp -a "${sysmonitor_list:-}"/file "${sysmonitor_list}"/file.bak
     echo "/home 0x300" >> "${sysmonitor_list}"/file
     monitor_restart
     fn_wait_for_monitor_log_print "file name is .*/home.*, watch event is 0x300" \

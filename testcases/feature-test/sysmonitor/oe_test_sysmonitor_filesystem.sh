@@ -21,7 +21,7 @@ source ./common.sh
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
-    cp -a "${sysmonitor_conf}" "${sysmonitor_conf}".bak
+    cp -a "${sysmonitor_conf:-}" "${sysmonitor_conf}".bak
     sed -i "/^FILESYSTEM_MONITOR=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     monitor_restart
 }
@@ -38,7 +38,7 @@ function run_test() {
     mount /home/mnt/disk /home/mnt/mpoint || oe_err "mount /home/mnt/mpoint check failed"
     dd if=/dev/zero of=/home/mnt/disk bs=512 count=10
     devloop=$(df | grep /home/mnt/mpoint | awk '{print $1}')
-    loop_name=$(echo "${devloop:5}")
+    loop_name="${devloop:5}"
     ls /home/mnt/mpoint
     fn_wait_for_monitor_log_print "${loop_name} filesystem error" || oe_err "filesystem error check failed"
 }

@@ -70,7 +70,6 @@ function run_test() {
     wait "$pidlist"
     echo "pidlist is ""$pidlist"
     fn_wait_for_monitor_log_print "${DISK_RESUME_INFO}" || oe_err "[monitor] resume check failed"
-    size=$(df ${dir} | awk 'NR==2{print $5}' | awk -F % '{print $1}')
     df ${dir}
 
 }

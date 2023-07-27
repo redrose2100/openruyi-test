@@ -23,9 +23,9 @@ source ./common.sh
 function pre_test() {
     DNF_INSTALL stress
     DNF_INSTALL stress-ng
-    true > "${sysmonitor_log}"
+    true > "${sysmonitor_log:-}"
     # 1 sysmonitor_conf bak
-    cp -a "${sysmonitor_conf}" "${sysmonitor_conf}".bak
+    cp -a "${sysmonitor_conf:-}" "${sysmonitor_conf}".bak
     sed -i "/^CPU_MONITOR=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     sed -i "/^CPU_ALARM=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     # 2 sysmonitor-cpu bak
@@ -51,7 +51,6 @@ function run_test() {
 
 # 后置处理，恢复测试环境
 function post_test() {
-    grep "msg:CPU usage" "${alarm_log}"
     pkill -9 stress-ng &> /dev/null
     # restore
     mv "${sysmonitor_conf}".bak "${sysmonitor_conf}"

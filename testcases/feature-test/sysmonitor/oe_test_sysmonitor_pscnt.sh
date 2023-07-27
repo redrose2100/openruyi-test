@@ -21,33 +21,33 @@ source ./common.sh
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
-    cp ${sysmonitor_conf} ${sysmonitor_conf}.bak
-    sed -i "/^PSCNT_MONITOR=/ s/=.*/=\"on\"/" ${sysmonitor_conf}
+    cp "${sysmonitor_conf:-}" "${sysmonitor_conf}.bak"
+    sed -i "/^PSCNT_MONITOR=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     monitor_restart
-    cp ${PSCNT_CONFIG} ${PSCNT_CONFIG}.bak
+    cp "${PSCNT_CONFIG}" "${PSCNT_CONFIG}.bak"
 }
 
 # 测试点的执行
 function run_test() {
     ##step 1  PERIOD="a"
-    sed -i "/^PERIOD=/ s/=.*/=\"a\"/" ${PSCNT_CONFIG}
-    true > "$sysmonitor_log"
+    sed -i "/^PERIOD=/ s/=.*/=\"a\"/" "${PSCNT_CONFIG}"
+    true > "${sysmonitor_log:-}"
     monitor_restart
     fn_wait_for_monitor_log_print "process count monitor: configuration illegal" || oe_err "illegal check failed"
     #step 2   PERIOD="1600.1"
-    sed -i "/^PERIOD=/ s/=.*/=\"1600.1\"/" ${PSCNT_CONFIG}
+    sed -i "/^PERIOD=/ s/=.*/=\"1600.1\"/" "${PSCNT_CONFIG}"
     true > "$sysmonitor_log"
     monitor_restart
     fn_wait_for_monitor_log_print "process count monitor: configuration illegal" || oe_err "illegal check failed"
 
     #step 3   PERIOD="-1"
-    sed -i "/^PERIOD=/ s/=.*/=\"-1\"/" ${PSCNT_CONFIG}
+    sed -i "/^PERIOD=/ s/=.*/=\"-1\"/" "${PSCNT_CONFIG}"
     true > "$sysmonitor_log"
     monitor_restart
     fn_wait_for_monitor_log_print "process count monitor: configuration illegal" || oe_err "illegal check failed"
 
     #step 4  PERIOD="0"
-    sed -i "/^PERIOD=/ s/=.*/=\"0\"/" ${PSCNT_CONFIG}
+    sed -i "/^PERIOD=/ s/=.*/=\"0\"/" "${PSCNT_CONFIG}"
     true > "$sysmonitor_log"
     monitor_restart
     fn_wait_for_monitor_log_print "process count monitor: configuration illegal" || oe_err "illegal check failed"
@@ -55,8 +55,8 @@ function run_test() {
 
 # 后置处理，恢复测试环境
 function post_test() {
-    mv ${PSCNT_CONFIG}.bak ${PSCNT_CONFIG}
-    mv ${sysmonitor_conf}.bak ${sysmonitor_conf}
+    mv "${PSCNT_CONFIG}.bak" "${PSCNT_CONFIG}"
+    mv "${sysmonitor_conf}.bak" "${sysmonitor_conf}"
     monitor_restart
 }
 

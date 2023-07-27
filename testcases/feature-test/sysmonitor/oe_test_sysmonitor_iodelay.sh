@@ -25,7 +25,7 @@ special_characters="~\!@#%^*"
 big_num="999999999999"
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
-    cp -a "${sysmonitor_conf}" "${sysmonitor_conf}".bak
+    cp -a "${sysmonitor_conf:-}" "${sysmonitor_conf}".bak
     sed -i "/^IO_DELAY_MONITOR=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     sed -i "/^IO_DELAY_ALARM=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     monitor_restart
@@ -37,6 +37,7 @@ function pre_test() {
 function run_test() {
     # step 1: 查看/etc/sysmonitor/iodelay配置文件，观察DALAY_VALUE默认配置
     delay_value=$(grep DELAY_VALUE "${IODELAY_CONF}")
+    [ "$delay_value" -eq 500 ] || oe_err "default check failed"
     # step 2: 配置DALAY_VALU的值为空\注释掉该配置，reload sysmonitor
     # sysmonitor reload成功，sysmonitor日志中没有io delay monitor: configuration illegal日志
     # 等待5分钟后可以看到iodelay 的阈值为默认值500（I/O delay threshold is 500）
@@ -64,7 +65,7 @@ function run_test() {
     # step 4: 配置DALAY_VALU的值为非法值（负数、字母、非法字符）
     local array=("$negative_numbers" "$words" "$special_characters")
     for ((i = 0; i < ${#array[@]}; i++)); do
-        true > "${sysmonitor_log}"
+        true > "${sysmonitor_log:-}"
         sed -i "/^DELAY_VALUE=/ s/=.*/=\"${array[i]}\"/" "${IODELAY_CONF}"
         systemctl reload sysmonitor
         fn_wait_for_monitor_log_print "io delay monitor: configuration illegal" || oe_err "$i illegal check failed"

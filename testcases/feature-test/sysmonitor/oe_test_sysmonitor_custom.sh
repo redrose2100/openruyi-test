@@ -21,7 +21,7 @@ source ./common.sh
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
-    cp "$sysmonitor_log" "${sysmonitor_log}.bak"
+    cp "${sysmonitor_log:-}" "${sysmonitor_log}.bak"
     sed -i "/^CUSTOM_DAEMON_MONITOR=/ s/=.*/=\"on\"/" "$sysmonitor_log"
     sed -i "/^CUSTOM_PERIODIC_MONITOR=/ s/=.*/=\"on\"/" "$sysmonitor_log"
     diff --color "${sysmonitor_log}.bak" "$sysmonitor_log"
@@ -37,8 +37,8 @@ function run_test() {
     monitor_restart
     sleep 15
     pgrep -a -f daemon1 || oe_err "daemon1 start failed"
-    grep -w "type\[daemon\] conf_name\[daemon1\] is added to monitor list" ${sysmonitor_log} || oe_err "[monitor] add daemon1 check failed"
-    grep -w "type\[periodic\] conf_name\[periodic1\] is added to monitor list" ${sysmonitor_log} || oe_err "[monitor] add periodic1 check failed"
+    grep -w "type\[daemon\] conf_name\[daemon1\] is added to monitor list" "${sysmonitor_log}" || oe_err "[monitor] add daemon1 check failed"
+    grep -w "type\[periodic\] conf_name\[periodic1\] is added to monitor list" "${sysmonitor_log}" || oe_err "[monitor] add periodic1 check failed"
 }
 
 # 后置处理，恢复测试环境

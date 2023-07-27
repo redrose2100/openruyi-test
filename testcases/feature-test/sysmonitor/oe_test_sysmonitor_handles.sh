@@ -21,7 +21,7 @@ source ./common.sh
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
-    cp -a "${sysmonitor_conf}" "${sysmonitor_conf}".bak
+    cp -a "${sysmonitor_conf:-}" "${sysmonitor_conf}".bak
     sed -i "/^FDCNT_MONITOR=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     diff --color "${sysmonitor_conf}".bak "${sysmonitor_conf}"
 
@@ -35,7 +35,7 @@ function pre_test() {
 
 # 测试点的执行
 function run_test() {
-    info_count=$(grep -c "system fd num monitor: configuration illegal,use default value" "${sysmonitor_log}")
+    info_count=$(grep -c "system fd num monitor: configuration illegal,use default value" "${sysmonitor_log:-}")
     [ "$info_count" -eq 1 ] || oe_err "config check failed"
     grep "system fd num monitor" "${sysmonitor_log}"
 }

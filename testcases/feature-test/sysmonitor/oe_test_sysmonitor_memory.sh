@@ -38,7 +38,7 @@ function run_test() {
 
 # 后置处理，恢复测试环境
 function post_test() {
-    grep "msg:memory usage" "${sysmonitor_log}"
+    grep "msg:memory usage" "${sysmonitor_log:-}"
     pressure_clear
     mem_postfun
 }

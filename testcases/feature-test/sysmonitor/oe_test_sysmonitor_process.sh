@@ -21,16 +21,16 @@ source ./common.sh
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
-    recover_file=$(cat /etc/sysmonitor/process/cron | grep "MONITOR_COMMAND=" | awk -F "=" '{print $2}')
-    cp -a ${recover_file} ${recover_file}.bak
-    chmod 777 ${recover_file}
-    sed '2 isleep 3' -i ${recover_file}
-    diff --color ${recover_file}.bak ${recover_file}
+    recover_file=$(grep "MONITOR_COMMAND=" /etc/sysmonitor/process/cron | awk -F "=" '{print $2}')
+    cp -a "${recover_file}" "${recover_file}.bak"
+    chmod 777 "${recover_file}"
+    sed '2 isleep 3' -i "${recover_file}"
+    diff --color "${recover_file}.bak" "${recover_file}"
 }
 
 # 测试点的执行
 function run_test() {
-    kill -9 $(pidof crond)
+    kill -9 "$(pidof crond)"
     fn_wait_for_monitor_log_print "crond is recovered" || oe_err "crond check failed"
     sleep 40
     pgrep -a crond || oe_err "crond is not started"
@@ -38,7 +38,7 @@ function run_test() {
 
 # 后置处理，恢复测试环境
 function post_test() {
-    mv ${recover_file}.bak ${recover_file}
+    mv "${recover_file}.bak" "${recover_file}"
     monitor_restart
 }
 
