@@ -32,7 +32,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    # to test ls
     seq 3
     CHECK_RESULT $? 0 0 "seq default print error"
 
