@@ -755,6 +755,9 @@
 	},
 	{
 	    "name": "oe_test_rev"	
-	}	
+	},
+	{
+	    "name": "oe_test_python3-kmod"
+	}
     ]
 }
