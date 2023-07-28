@@ -18,12 +18,12 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
-oeversion=$(cat /etc/openEuler-latest | grep openeulerversion | awk -F '=' '{print $2}')
-dir=$(pwd)
+oeversion="$(cat /etc/openEuler-latest | grep openeulerversion | awk -F '=' '{print $2}')"
+dir="$(pwd)"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL imageTailor
+    DNF_INSTALL imageTailor wget
     mv /opt/imageTailor /home/
     mkdir -p /home/imageTailor/repos/euler_base/
     wget https://repo.openeuler.org/"${oeversion}"/ISO/"$(arch)"/"${oeversion}"-everything-"$(arch)"-dvd.iso -P /home
@@ -42,12 +42,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    cd /home/imageTailor ;./mkdliso -p openEuler -c custom/cfg_openEuler
+    cd /home/imageTailor || exit
+    ./mkdliso -p openEuler -c custom/cfg_openEuler
     CHECK_RESULT $? 0 0
     ls /home/imageTailor/result/"$(date +%Y)"*/openEuler-"$(arch)".iso
     CHECK_RESULT $? 0 0
-    cd /home/imageTailor/result/"$(date +%Y)"*/
-    sha256sum -c openEuler-$(arch).iso.sha256
+    cd /home/imageTailor/result/"$(date +%Y)"*/ || exit
+    sha256sum -c openEuler-"$(arch)".iso.sha256
     CHECK_RESULT $? 0 0
     LOG_INFO "Finish test!"
 }
