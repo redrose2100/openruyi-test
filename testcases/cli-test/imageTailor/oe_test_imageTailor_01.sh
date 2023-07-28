@@ -16,7 +16,8 @@
 # @Desc      :   imageTailor function test
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 oeversion=$(cat /etc/openEuler-latest | grep openeulerversion | awk -F '=' '{print $2}')
 dir=$(pwd)
 
