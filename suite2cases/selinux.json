@@ -57,6 +57,9 @@
         },
         {
             "name": "oe_test_selinux_semanage_user"
+        },
+        {
+            "name": "oe_test_selinux_semanage_login"
         }
     ]
 }
