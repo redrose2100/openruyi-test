@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    mkdir -p ~/apr &&cd ~/apr
+    mkdir -p ~/apr && cd ~/apr || exit
     cat > /root/apr/test  <<EOF
 hello apr ...
 EOF
@@ -91,7 +91,7 @@ apr_terminate();        //结束
 return APR_SUCCESS;
 }
 EOF
-    DNF_INSTALL "apr-util-devel"
+    DNF_INSTALL "apr-util-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -110,8 +110,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /root/apr/
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
