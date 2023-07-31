@@ -15,6 +15,9 @@
         },
          {
             "name": "oe_test_openjdk11_jdb_jdeps"
+        },
+        {
+            "name": "oe_test_openjdk11_jjs_jmap"
         }
     ]
 }
