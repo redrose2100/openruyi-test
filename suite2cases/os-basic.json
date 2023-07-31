@@ -756,8 +756,12 @@
 	{
 	    "name": "oe_test_rev"	
 	},
-        {
+    {
 	    "name": "oe_test_uid_old_uid"
+	},
+    {
+	    "name": "oe_test_python3-kmod"
 	}
+
     ]
 }
