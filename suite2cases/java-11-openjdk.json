@@ -12,6 +12,9 @@
         },
         {
             "name": "oe_test_openjdk11_javap"
+        },
+         {
+            "name": "oe_test_openjdk11_jdb_jdeps"
         }
     ]
 }
