@@ -15,7 +15,7 @@
  @Date    : 2023-02-06 14:09:36
  @License : Mulan PSL v2
  @Version : 1.0
- @Desc    : 检查mugen测试套，测试名称是否重复(不区分大小写)
+ @Desc    : 检查mugen测试套，测试名称是否重复(不区分大小写)：
 """
 
 import os
