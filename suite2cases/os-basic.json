@@ -761,6 +761,9 @@
 	},
     {
 	    "name": "oe_test_python3-kmod"
+	},
+	{    
+	    "name": "oe_test_mktemp"
 	}
     ]
 }
