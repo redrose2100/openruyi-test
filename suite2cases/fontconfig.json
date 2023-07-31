@@ -3,7 +3,9 @@
     "cases": [
         {
             "name": "oe_test_fontconfig_fc-list"
-        }
-
+        },
+        {
+            "name": "oe_test_fontconfig_fc-cache"
+        }    
     ]
 }
