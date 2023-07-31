@@ -42,6 +42,9 @@
         },
         {
             "name": "oe_test_acl_dir_write"
+        },
+        {
+            "name": "oe_test_acl_dir_read"
         }
     ]
 }
