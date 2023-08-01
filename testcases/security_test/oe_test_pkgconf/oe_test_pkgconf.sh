@@ -41,10 +41,9 @@ int main(int argc, char** argv)
 }
 EOF
     CHECK_RESULT $? 0 0 "Error,Please check the file 'test.cpp'"
-    g++ -o /tmp/test /tmp/test.cpp "`pkg-config --cflags --libs liblzma`"
+    g++ -o /tmp/test /tmp/test.cpp "$(pkg-config --cflags --libs liblzma)"
     CHECK_RESULT $? 0 0 "Error,Please check the file 'test'"
-    /tmp/test > /tmp/log
-    grep lzma /tmp/log
+    /tmp/test | grep lzma
     CHECK_RESULT $? 0 0 "Error,Please check lzma version"
     LOG_INFO "End to run test."
 }
