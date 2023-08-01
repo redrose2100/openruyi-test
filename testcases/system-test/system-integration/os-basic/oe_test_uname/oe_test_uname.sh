@@ -17,19 +17,20 @@
 # @Desc      :   Command test-uname
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function run_test() {
     LOG_INFO "Start to run test."
     uname -a | grep GNU
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Execution failed"
     uname -m | grep -E "aarch64|x86_64"
-    CHECK_RESULT $?
-    uname -n | grep $(hostname)
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Execution failed"
+    uname -n | grep "$(hostname)"
+    CHECK_RESULT $? 0 0 "Execution failed"
     uname -r | grep -E "^[1-9]+\\.[0-9]+\\.[0-9]+"
-    CHECK_RESULT $?
-    uname --help | grep "Usage"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Execution failed"
+    LANG=C uname --help | grep "Usage"
+    CHECK_RESULT $? 0 0 "Execution failed"
     LOG_INFO "End to run test."
 }
 
