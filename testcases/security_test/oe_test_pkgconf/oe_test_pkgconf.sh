@@ -43,8 +43,8 @@ EOF
     CHECK_RESULT $? 0 0 "Error,Please check the file 'test.cpp'"
     g++ -o /tmp/test /tmp/test.cpp "$(pkg-config --cflags --libs liblzma)"
     CHECK_RESULT $? 0 0 "Error,Please check the file 'test'"
-    /tmp/test > /tmp/log 2>&1
-    grep lzma /tmp/log
+    cd /tmp/
+    ./test | grep 'lzma'
     CHECK_RESULT $? 0 0 "Error,Please check lzma version"
     LOG_INFO "End to run test."
 }
