@@ -147,7 +147,9 @@
 	    },
         {
             "name": "oe_test_hdf5"
+	    },
+        {
+            "name": "oe_test_pkgconf"
 	    }
-
     ]
 }
