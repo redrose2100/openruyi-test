@@ -43,14 +43,15 @@ EOF
     CHECK_RESULT $? 0 0 "Error,Please check the file 'test.cpp'"
     g++ -o /tmp/test /tmp/test.cpp "$(pkg-config --cflags --libs liblzma)"
     CHECK_RESULT $? 0 0 "Error,Please check the file 'test'"
-    /tmp/test | grep lzma
+    /tmp/test > /tmp/log 2 >& 1
+    grep lzma /tmp/log
     CHECK_RESULT $? 0 0 "Error,Please check lzma version"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm /tmp/*test*
+    rm /tmp/*test* /tmp/log
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
