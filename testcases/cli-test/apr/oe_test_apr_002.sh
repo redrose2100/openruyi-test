@@ -17,7 +17,7 @@
 # @Desc      :   Use usermod case
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -26,7 +26,7 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    mkdir APRdir && cd APRdir
+    mkdir APRdir && cd APRdir || exit
     cat > test_apr1.c << EOF
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,8 +65,8 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf APRdir/
+    DNF_REMOVE "$@"
+    cd - && rm -rf APRdir/
     LOG_INFO "End to restore the test environment."
 }
 
