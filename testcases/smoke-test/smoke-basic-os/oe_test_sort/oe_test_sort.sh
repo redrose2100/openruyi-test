@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    cat  > sort_test.txt  << EOF
+    cat >sort_test.txt <<EOF
 hello
 world
  openeuler
@@ -35,15 +35,24 @@ EOF
 
 function run_test() {
     LOG_INFO "Start testing..."
-    res=$(sort sort_test.txt | head -1)
-    CHECK_RESULT $res 66 0 "sort faild"
+    if df -h / | grep overlay; then
+        sort sort_test.txt | head -1 | grep aa
+        CHECK_RESULT $? 0 0 "sort faild"
+        sort -d sort_test.txt | head -3 | grep "66"
+        CHECK_RESULT $? 0 0 "sort -d faild"
+        sort -g sort_test.txt | head -2 | grep "openeuler"
+        CHECK_RESULT $? 0 0 "sort -g faild"
+    else
+        res=$(sort sort_test.txt | head -1)
+        CHECK_RESULT "$res" 66 0 "sort faild"
+        sort -d sort_test.txt | head -3 | grep "aa"
+        CHECK_RESULT $? 0 0 "sort -d faild"
+        sort -g sort_test.txt | head -2 | grep "hello"
+        CHECK_RESULT $? 0 0 "sort -g faild"
+    fi
     sort -c sort_test.txt
     CHECK_RESULT $? 1 0 "sort -c faild"
-    sort -d sort_test.txt | head -3 | grep "aa"
-    CHECK_RESULT $? 0 0 "sort -d faild"
-    sort -g sort_test.txt | head -2 | grep "hello"
-    CHECK_RESULT $? 0 0 "sort -g faild"
-    sort --help > /dev/null 2>&1
+    sort --help >/dev/null 2>&1
     CHECK_RESULT $? 0 0 "sort help faild"
     LOG_INFO "Finish test!"
 }
@@ -54,4 +63,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

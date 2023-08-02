@@ -17,7 +17,7 @@
 # @Desc      :   Test the basic functions of wget
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -33,7 +33,8 @@ function run_test() {
     echo "" >/etc/resolv.conf
     wget www.baidu.com 2>&1 | grep "unable to resolve host address"
     CHECK_RESULT $? 0 0 "Wget executed successfully"
-    mv -f /etc/resolv.conf.bak /etc/resolv.conf
+    cp -f /etc/resolv.conf.bak /etc/resolv.conf
+    rm -rf /etc/resolv.conf.bak
     wget www.baidu.com
     CHECK_RESULT $? 0 0 "Failed to execute wget"
     test -f index.html
@@ -43,7 +44,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf index.html
     export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."

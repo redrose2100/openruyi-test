@@ -17,10 +17,11 @@
 # @Desc      :   Test response.getcode
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL python3-pip
     pip3 install fake_useragent
     LOG_INFO "End to prepare the test environment."
 }
@@ -55,6 +56,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf testlog
     pip3 uninstall fake_useragent -y
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

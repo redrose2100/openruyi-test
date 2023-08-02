@@ -25,8 +25,8 @@ se_stat="Enforcing"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL rsync
-    cp $conf_file conf_bak
+    DNF_INSTALL "rsync hostname"
+    cp "$conf_file" conf_bak
     mkdir -p "${src_dir}" "${des_dir}"
     se_stat="$(getenforce)"
     LOG_INFO "End of environmental preparation!"
@@ -40,14 +40,14 @@ function run_test() {
     CHECK_RESULT $?
     diff "${src_dir}" "${des_dir}" -r
     CHECK_RESULT $?
-    rm -rf ${des_dir}/*
-    echo -e "[test]\npath = ${des_dir}\nread only = no\nuid = root" >$conf_file
+    rm -rf "${des_dir:?}/"*
+    echo -e "[test]\npath =${des_dir}\nread only = no\nuid = root" >$conf_file
     getenforce | grep Enforcing && setenforce 0
     systemctl restart rsyncd
     CHECK_RESULT $?
-    rsync -a $0 $(hostname)::test
+    rsync -a "$0" "$(hostname)"::test
     CHECK_RESULT $?
-    diff $0 "${des_dir}"/$0
+    diff "$0" "${des_dir}"/"$0"
     CHECK_RESULT $?
     LOG_INFO "Finish test!"
 }
@@ -55,11 +55,11 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop rsyncd
-    mv conf_bak $conf_file
+    mv conf_bak "$conf_file"
     rm -rf "${src_dir}" "${des_dir}"
     setenforce "${se_stat}"
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
