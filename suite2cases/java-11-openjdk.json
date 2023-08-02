@@ -21,6 +21,9 @@
         },
         {
             "name": "oe_test_openjdk11_jstack"
+        },
+        {
+            "name": "oe_test_openjdk11_pack200"
         }
     ]
 }
