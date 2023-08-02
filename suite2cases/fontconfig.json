@@ -2,7 +2,7 @@
     "path": "$OET_PATH/testcases/cli-test/fontconfig",
     "cases": [
         {
-            "name": "oe_test_fontconfig_fc-list"
+            "name": "oe_test_fc-list"
         }
 
     ]
