@@ -18,6 +18,9 @@
         },
         {
             "name": "oe_test_openjdk11_jjs_jmap"
+        },
+        {
+            "name": "oe_test_openjdk11_jstack"
         }
     ]
 }
