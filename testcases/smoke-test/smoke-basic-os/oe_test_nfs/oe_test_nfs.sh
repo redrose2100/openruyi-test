@@ -21,9 +21,14 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    test_user=nfs_test_$$
-    server_dir=/home/nfs_server_$$
-    client_dir=/home/nfs_client_$$
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    else
+        test_user=nfs_test_$$
+        server_dir=/home/nfs_server_$$
+        client_dir=/home/nfs_client_$$
+    fi
     LOG_INFO "End to config params of the case."
 }
 

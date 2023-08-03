@@ -17,17 +17,22 @@
 # @Desc      :   Test the mount function of NFS
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL nfs-utils
-    cp /etc/exports /etc/exports.bak
-    echo "/home/nfs *(rw,sync,all_squash)" >>/etc/exports
-    mkdir /home/nfs /home/test
-    exportfs -avr
-    systemctl restart nfs
-    chmod 777 /home/nfs
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    else
+        DNF_INSTALL nfs-utils
+        cp /etc/exports /etc/exports.bak
+        echo "/home/nfs *(rw,sync,all_squash)" >>/etc/exports
+        mkdir /home/nfs /home/test
+        exportfs -avr
+        systemctl restart nfs
+        chmod 777 /home/nfs
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -51,7 +56,7 @@ function post_test() {
     mv -f /etc/exports.bak /etc/exports
     exportfs -avr
     systemctl stop nfs
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

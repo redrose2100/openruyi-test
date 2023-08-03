@@ -21,11 +21,16 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    lun1=/home/iscsi_lun1_$$
-    lun2=/home/iscsi_lun2_$$
-    local_addr="127.0.0.1"
-    iscsi_name="iqn.2020-07.org.openeuler:iscsi$$"
-    firewall_status=0
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    else
+        lun1=/home/iscsi_lun1_$$
+        lun2=/home/iscsi_lun2_$$
+        local_addr="127.0.0.1"
+        iscsi_name="iqn.2020-07.org.openeuler:iscsi$$"
+        firewall_status=0
+    fi
     LOG_INFO "End to config params of the case."
 }
 
@@ -87,8 +92,8 @@ function post_test() {
     test -f initiatorname.iscsi && mv initiatorname.iscsi /etc/iscsi/initiatorname.iscsi
     rm -rf $lun1 $lun2
     test ${firewall_status} -eq 1 && systemctl restart firewalld
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

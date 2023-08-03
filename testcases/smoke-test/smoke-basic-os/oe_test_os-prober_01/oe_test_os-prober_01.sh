@@ -17,13 +17,25 @@
 # @Desc      :   Test the basic functions of os-prober
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL os-prober
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
     os-prober
     CHECK_RESULT $? 0 0 "Failed to execute os-prober"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
