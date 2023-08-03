@@ -19,6 +19,17 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    else
+        DNF_INSTALL grub2-tools
+    fi
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     grub2-mkconfig -o tmp_grub_cfg
@@ -35,6 +46,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf testlog* tmp_grub_cfg
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL net-tools
+    DNF_INSTALL "net-tools NetworkManager ethtool"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -32,9 +32,12 @@ function run_test() {
 
     systemctl status NetworkManager | grep 'Active: active'
     CHECK_RESULT $?
-
-    nmcli connection show | grep "${NODE1_NIC}"
-    CHECK_RESULT $?
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+    else
+        nmcli connection show | grep "${NODE1_NIC}"
+        CHECK_RESULT $?
+    fi
     ip link | grep "${NODE1_NIC}"
     CHECK_RESULT $?
     route | grep default
@@ -54,8 +57,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     ip addr del 192.1.1.11 dev "${NODE1_NIC}"
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
