@@ -19,11 +19,28 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    else
+        DNF_INSTALL os-prober
+    fi
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     linux-boot-prober $(df -Th | grep 'boot$' | awk '{print $1}') | grep vmlinuz
     CHECK_RESULT $? 0 0 "Failed to execute linux-boot-prober"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

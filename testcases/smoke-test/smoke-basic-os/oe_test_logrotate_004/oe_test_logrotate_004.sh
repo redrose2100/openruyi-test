@@ -21,7 +21,8 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL logrotate
+    DNF_INSTALL "logrotate rsyslog"
+    systemctl start rsyslog
     touch /var/log/log-file
     head -c 10M < /dev/urandom > /var/log/log-file
     LOG_INFO "End of environmental preparation!"
@@ -35,13 +36,14 @@ function run_test() {
     test -e /var/log/log-file
     CHECK_RESULT $? 0 0 "File does not exist"
     test -e /var/log/log-file.1
-    CHECK_RESULT $? 0 0 "File does not exist2"
+    CHECK_RESULT $? 0 0 "File does not exist"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /var/log/log-file* /etc/logrotate.d/log-file
+    systemctl stop rsyslog
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
