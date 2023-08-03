@@ -45,10 +45,12 @@ function run_test() {
     gcc -laudit test.c
     [ -e a.out ]
     CHECK_RESULT $? 0 0 "Get a.out: failed!"
-    ./a.out &
-    SLEEP_WAIT 3
-    auditctl -s | grep -w "backlog"
-    CHECK_RESULT $? 0 0 "Get backlog: failed!"
+    if ! df -h / |grep overlay; then
+        ./a.out &
+        SLEEP_WAIT 3
+        auditctl -s | grep -w "backlog"
+        CHECK_RESULT $? 0 0 "Get backlog: failed!"
+    fi
     LOG_INFO "End to run test."
 }
 

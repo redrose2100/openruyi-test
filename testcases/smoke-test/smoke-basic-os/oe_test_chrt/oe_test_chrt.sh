@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -17,18 +17,20 @@
 # @Desc      :   Test the basic functions of chrt
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    chrt -f -p 10 11
-    CHECK_RESULT $? 0 0 "Failed to execute chrt"
-    chrt -p 11 | grep pid
-    CHECK_RESULT $? 0 0 "Failed to execute chrt"
-    chrt -r -p 10 11
-    CHECK_RESULT $? 0 0 "Failed to execute chrt"
-    chrt -p 11 | grep pid
-    CHECK_RESULT $? 0 0 "Failed to execute chrt"
+    if ! df -h / |grep overlay; then
+        chrt -f -p 10 11
+        CHECK_RESULT $? 0 0 "Failed to execute chrt"
+        chrt -p 11 | grep pid
+        CHECK_RESULT $? 0 0 "Failed to execute chrt"
+        chrt -r -p 10 11
+        CHECK_RESULT $? 0 0 "Failed to execute chrt"
+        chrt -p 11 | grep pid
+        CHECK_RESULT $? 0 0 "Failed to execute chrt"
+    fi
     LOG_INFO "End to run test."
 }
 

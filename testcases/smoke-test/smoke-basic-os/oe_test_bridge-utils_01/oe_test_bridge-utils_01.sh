@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -17,11 +17,11 @@
 # @Desc      :   Test the basic functions of brctl
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "bridge-utils net-tools"
+    DNF_INSTALL "bridge-utils net-tools NetworkManager"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -48,7 +48,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     ifconfig br0 down
     brctl delbr br0
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

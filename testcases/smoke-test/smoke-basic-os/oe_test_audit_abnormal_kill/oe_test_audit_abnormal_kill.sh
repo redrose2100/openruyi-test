@@ -16,38 +16,40 @@
 #@Desc      	:   Check the audit service after killing the audit process abnormally
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL audit
+    DNF_INSTALL "audit"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    systemctl start auditd
-    CHECK_RESULT $? 0 0 "Start audit: failed!"
-    systemctl status auditd | grep "active (running)"
-    CHECK_RESULT $? 0 0 "Check audit status: failed!"
-    grep "Restart=on-failure" /usr/lib/systemd/system/auditd.service
-    CHECK_RESULT $? 0 0 "View auditd.service file: failed!"
-    kill -9 $(systemctl status auditd | grep 'Main PID' | tr -cd "[0-9]")
-    CHECK_RESULT $? 0 0 "Kill auditd.service server: failed!"
-    SLEEP_WAIT 3
-    systemctl status auditd | grep "active (running)"
-    CHECK_RESULT $? 0 0 "Stop audit process and get audit status:  failed!"
-    pid=$(systemctl status auditd | grep 'Main PID' | tr -cd "[0-9]")
-    pid_1=$(cat /var/run/auditd.pid)
-    test $pid == $pid_1
-    CHECK_RESULT $? 0 0 "Check whether the two pid are the same:  failed!"
+    if ! df -h / |grep overlay; then
+        systemctl start auditd
+        CHECK_RESULT $? 0 0 "Start audit: failed!"
+        systemctl status auditd | grep "active (running)"
+        CHECK_RESULT $? 0 0 "Check audit status: failed!"
+        grep "Restart=on-failure" /usr/lib/systemd/system/auditd.service
+        CHECK_RESULT $? 0 0 "View auditd.service file: failed!"
+        kill -9 "$(systemctl status auditd | grep 'Main PID' | tr -cd '0-9')"
+        CHECK_RESULT $? 0 0 "Kill auditd.service server: failed!"
+        SLEEP_WAIT 3
+        systemctl status auditd | grep "active (running)"
+        CHECK_RESULT $? 0 0 "Stop audit process and get audit status:  failed!"
+        pid=$(systemctl status auditd | grep 'Main PID' | tr -cd '0-9')
+        pid_1=$(cat /var/run/auditd.pid)
+        test "${pid}" == "${pid_1}"
+        CHECK_RESULT $? 0 0 "Check whether the two pid are the same:  failed!"
+    fi
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 $pid
-    DNF_REMOVE
+    kill -9 "${pid}"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

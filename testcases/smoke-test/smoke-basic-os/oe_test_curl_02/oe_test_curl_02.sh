@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -17,7 +17,7 @@
 # @Desc      :   Test strace curl
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -57,9 +57,9 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    strace curl -i --insecure -X GET https://${NODE1_IPV4}/notexist 2>&1 | grep -i "404 not found"
+    strace curl -i --insecure -X GET https://"${NODE1_IPV4}"/notexist 2>&1 | grep -i "404 not found"
     CHECK_RESULT $? 0 0 "Failed to execute curl"
-    strace curl -i --insecure -X GET https://${NODE1_IPV4}/example 2>&1 | grep -i "200 ok"
+    strace curl -i --insecure -X GET https://"${NODE1_IPV4}"/example 2>&1 | grep -i "200 ok"
     CHECK_RESULT $? 0 0 "Failed to execute curl"
     LOG_INFO "End to run test."
 }
@@ -70,7 +70,7 @@ function post_test() {
     rm -rf /etc/pki/tls/private/server.key /etc/pki/tls/certs/server.* ./server* ./ca* /var/www/html/example
     getenforce | grep Permissive && setenforce 1
     systemctl status firewalld | grep dead && systemctl start firewalld
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

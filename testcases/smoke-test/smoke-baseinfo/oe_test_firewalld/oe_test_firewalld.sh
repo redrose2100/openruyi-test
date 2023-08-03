@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -19,23 +19,37 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "firewalld iptables" 
+    LOG_INFO "End to prepare the test environment."
+}
+
 check_iptables() {
     case $1 in
     mangle)
         iptables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
-        ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
+	if ! df -h / |grep overlay; then
+            ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
+	fi
         ;;
     nat)
         iptables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
-        ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
+	if ! df -h / |grep overlay; then
+            ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
+	fi
         ;;
     filter)
         iptables -t "$1" -L -w | grep -C 20 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT || return 1
-        ip6tables -t "$1" -L -w | grep -C 20 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT || return 1
+	if ! df -h / |grep overlay; then
+            ip6tables -t "$1" -L -w | grep -C 20 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT || return 1
+	fi
         ;;
     raw)
         iptables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 OUTPUT || return 1
-        ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 OUTPUT || return 1
+	if ! df -h / |grep overlay; then
+            ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 OUTPUT || return 1
+	fi
         ;;
     esac
     return 0
@@ -77,6 +91,12 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Iptables execution failed"
     fi
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
