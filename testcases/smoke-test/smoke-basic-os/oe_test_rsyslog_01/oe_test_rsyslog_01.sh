@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL rsyslog
     systemctl start rsyslog
     cp -f /var/log/messages /var/log/messages.bak
     echo "" >/var/log/messages
@@ -57,6 +58,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     mv -f /var/log/messages.bak /var/log/messages
     rm -rf test.sh
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

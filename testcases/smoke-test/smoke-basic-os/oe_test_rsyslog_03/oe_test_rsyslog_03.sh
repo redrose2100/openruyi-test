@@ -17,10 +17,12 @@
 # @Desc      :   Test the basic functions of rsyslog
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL rsyslog
+    systemctl start rsyslog
     cp -f /run/log/journal/*/system.journal /run/log/journal/*/system.journal.bak
     cp -f /run/log/imjournal.state /run/log/imjournal.state.bak
     echo "" >/run/log/imjournal.state
@@ -44,6 +46,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     mv -f /run/log/journal/*/system.journal.bak /run/log/journal/*/system.journal
     mv -f /run/log/imjournal.state.bak /run/log/imjournal.state
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

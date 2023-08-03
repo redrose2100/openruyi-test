@@ -19,6 +19,12 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL python3-pip
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     pip3 install --user requests
@@ -59,6 +65,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /tmp/lib /tmp/local
     pip3 uninstall -y requests urllib3 idna charset-normalizer certifi
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

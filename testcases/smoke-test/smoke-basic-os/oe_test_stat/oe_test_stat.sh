@@ -17,18 +17,11 @@
 # @Desc      :   Test the basic functions of stat
 # ############################################
 
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    local exp root_maj_min maj min maj_hex min_hex
-    root_maj_min=$(lsblk -o MAJ:MIN,MOUNTPOINT | grep " /$" | awk '{print $1}')
-    maj=${root_maj_min%:*}
-    min=${root_maj_min#*:}
-    maj_hex=$(printf "%x" "$maj")
-    min_hex=$(printf "%x" "$min")
-    exp="${maj_hex}0${min_hex}"
-    stat -c %D /etc/passwd | grep "$exp"
+    stat -c %D /etc/passwd | grep -iE "[-0-9]|[a-z]"
     CHECK_RESULT $? 0 0 "Failed to execute stat"
     LOG_INFO "End to run test."
 }

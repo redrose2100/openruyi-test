@@ -17,7 +17,14 @@
 # @Desc      :   Test the basic functions of rsyslog
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL rsyslog
+    systemctl start rsyslog
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -35,11 +42,17 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Failed to find imjournal.state"
         SLEEP_WAIT 2
         main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
-        grep rsyslog /var/log/messages | grep $main_pid
+        grep rsyslog /var/log/messages | grep "$main_pid"
         CHECK_RESULT $? 0 0 "Failed to find main_pid"
-        let flag+=1
+        flag=$(("$flag" + 1))
     done
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

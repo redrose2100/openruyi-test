@@ -17,17 +17,18 @@
 # @Desc      :   File system common command test-pwd
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    current_path=$(dirname $0)
+    DNF_INSTALL grub2-common
+    current_path=$(dirname "$0")
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    cd /etc/kernel
+    cd /etc/kernel || exit 1
     pwd | grep "/etc/kernel"
     CHECK_RESULT $?
     LOG_INFO "Finish test!"
@@ -35,7 +36,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    cd ${current_path}
+    cd "${current_path}" || exit 1
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
-main $@
+main "$@"
