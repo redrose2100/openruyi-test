@@ -16,22 +16,26 @@
 #@Desc      	:   The ipvlan driver is unloaded and loaded normally
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    lsmod | grep ipvlan
-    CHECK_RESULT $? 1 0 "ipvlan is not loaded: failed!"
-    modprobe ipvlan
-    CHECK_RESULT $? 0 0 "Modprobe ipvlan: failed!"
-    lsmod | grep ipvlan
-    CHECK_RESULT $? 0 0 "Load ipvlan: failed!"
-    modinfo ipvlan | grep -E "filename|alias|description|author|license|srcversion|depends|retpoline|intree|name|vermagic|sig_id|signer|sig_key|sig_hashalgo|signature"
-    CHECK_RESULT $? 0 0 "Display ipvlan mode info: failed!"
-    rmmod ipvlan
-    CHECK_RESULT $? 0 0 "Remove ipvlan mode: failed!"
-    lsmod | grep ipvlan
-    CHECK_RESULT $? 1 0 "ipvlan is not loaded after lsmod: failed!"
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+    else
+        lsmod | grep ipvlan
+        CHECK_RESULT $? 1 0 "ipvlan is not loaded: failed!"
+        modprobe ipvlan
+        CHECK_RESULT $? 0 0 "Modprobe ipvlan: failed!"
+        lsmod | grep ipvlan
+        CHECK_RESULT $? 0 0 "Load ipvlan: failed!"
+        modinfo ipvlan | grep -E "filename|alias|description|author|license|srcversion|depends|retpoline|intree|name|vermagic|sig_id|signer|sig_key|sig_hashalgo|signature"
+        CHECK_RESULT $? 0 0 "Display ipvlan mode info: failed!"
+        rmmod ipvlan
+        CHECK_RESULT $? 0 0 "Remove ipvlan mode: failed!"
+        lsmod | grep ipvlan
+        CHECK_RESULT $? 1 0 "ipvlan is not loaded after lsmod: failed!"
+    fi
     LOG_INFO "End to run test."
 }
 

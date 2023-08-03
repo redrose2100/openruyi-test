@@ -20,8 +20,13 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    module_list=$(lsmod | grep -w 0 | awk '{print $1}' | grep -vE "Module|virtio|net_failover")
-    module_used_list=$(lsmod | grep -vw 0 | awk '{print $1}' | grep -vE "Module|virtio|net_failover")
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    else
+        module_list=$(lsmod | grep -w 0 | awk '{print $1}' | grep -vE "Module|virtio|net_failover")
+        module_used_list=$(lsmod | grep -vw 0 | awk '{print $1}' | grep -vE "Module|virtio|net_failover")
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
