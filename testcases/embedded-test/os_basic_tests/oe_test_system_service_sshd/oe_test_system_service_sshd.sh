@@ -17,17 +17,18 @@
 # @Desc      :   Restart and stop the OpenSSH service repeatedly
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    for i in $(seq 1 10); do
-        /etc/init.d/sshd stop
+    for ((i = 1; i < 10; i ++)); do
+        systemctl stop sshd
         CHECK_RESULT $? 0 0 "stop sshd fail"
-        /etc/init.d/sshd start
+        systemctl start sshd
         CHECK_RESULT $? 0 0 "start sshd fail"
-        /etc/init.d/sshd restart
+	SLEEP_WAIT 2
+        systemctl restart sshd
         CHECK_RESULT $? 0 0 "restart sshd fail"
         SLEEP_WAIT 2
     done
@@ -38,9 +39,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    /etc/init.d/sshd restart
+    systemctl restart sshd
 
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
