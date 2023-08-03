@@ -17,7 +17,7 @@
 # @Desc      :   test psutils
 # #############################################
 
-source "../common/common_lib.sh"
+source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -54,7 +54,7 @@ function run_test() {
     extractres -v 2>&1 | grep -i "extractres"
     CHECK_RESULT $? 0 0 "extractres -v execution failed."
     extractres -m a4-1.ps 2>&1
-    ls | grep -i -a "ISO-8859-1Encoding.enc" 
+    find . -name ISO-8859-1Encoding.enc | grep ISO-8859-1Encoding.enc
     CHECK_RESULT $? 0 0 "extractres -m a4-1.ps execution failed."
     rm ISO-8859-1Encoding.enc
     rm a2ps*
