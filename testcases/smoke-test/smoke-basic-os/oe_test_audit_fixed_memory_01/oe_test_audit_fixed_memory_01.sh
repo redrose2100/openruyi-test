@@ -34,14 +34,16 @@ done" >audit_shell
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ./audit_shell &
-    SLEEP_WAIT 3
-    auditctl -s >audit_log 2>&1
-    CHECK_RESULT $? 0 0 "Check auditctl -s: failed!"
-    backlog=$(grep -w "backlog" audit_log | awk '{print $2}')
-    backlog_limit=$(grep -w "backlog_limit" audit_log | awk '{print $2}')
-    [ "$backlog" -lt "$backlog_limit" ]
-    CHECK_RESULT $? 0 0 "Backlog not increase indefinitely: failed!"
+    if ! df -h / |grep overlay; then
+        ./audit_shell &
+        SLEEP_WAIT 3
+        auditctl -s >audit_log 2>&1
+        CHECK_RESULT $? 0 0 "Check auditctl -s: failed!"
+        backlog=$(grep -w "backlog" audit_log | awk '{print $2}')
+        backlog_limit=$(grep -w "backlog_limit" audit_log | awk '{print $2}')
+        [ "$backlog" -lt "$backlog_limit" ]
+        CHECK_RESULT $? 0 0 "Backlog not increase indefinitely: failed!"
+    fi
     LOG_INFO "End to run test."
 }
 

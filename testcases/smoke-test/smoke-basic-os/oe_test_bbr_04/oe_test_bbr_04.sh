@@ -16,21 +16,35 @@
 #@Desc      	:   modprobe/rmmod sch_fq
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "kmod"
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
-    modinfo sch_fq | grep "sch_fq.ko"
-    CHECK_RESULT $? 0 0 "Display sch_fq info: failed!"
-    modprobe sch_fq
-    CHECK_RESULT $? 0 0 "Modprobe sch_fq: failed!"
-    lsmod | grep -w sch_fq
-    CHECK_RESULT $? 0 0 "Check sch_fq exist: failed!"
-    rmmod sch_fq
-    CHECK_RESULT $? 0 0 "Remove sch_fq: failed!"
-    lsmod | grep -w sch_fq
-    CHECK_RESULT $? 1 0 "Check sch_fq not exist: failed!"
+    if ! df -h / |grep overlay; then
+        modinfo sch_fq | grep "sch_fq.ko"
+        CHECK_RESULT $? 0 0 "Display sch_fq info: failed!"
+        modprobe sch_fq
+        CHECK_RESULT $? 0 0 "Modprobe sch_fq: failed!"
+        lsmod | grep -w sch_fq
+        CHECK_RESULT $? 0 0 "Check sch_fq exist: failed!"
+        rmmod sch_fq
+        CHECK_RESULT $? 0 0 "Remove sch_fq: failed!"
+        lsmod | grep -w sch_fq
+        CHECK_RESULT $? 1 0 "Check sch_fq not exist: failed!"
+    fi
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

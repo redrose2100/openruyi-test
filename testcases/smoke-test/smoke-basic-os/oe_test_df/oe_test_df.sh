@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021 Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -19,9 +19,11 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
-    LOG_INFO "Start testing..."
-    df | grep '/boot'
-    CHECK_RESULT $? 0 0 "df display error"
+    LOG_INFO "Start to run test."
+    if ! df -h / |grep overlay; then
+        df | grep '/boot'
+        CHECK_RESULT $? 0 0 "df display error"
+    fi
     df | grep 'G'
     CHECK_RESULT $? 1 0 "df default display error"
     df -h | grep -E 'G|M|K'
@@ -41,7 +43,7 @@ function run_test() {
     res5=$(df --type=tmpfs | awk '{ print$1 }' | head -2 | tail -1)
     [[ "$res5" == "tmpfs" ]]
     CHECK_RESULT $? 0 0 "df --type error"
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 main "$@"
