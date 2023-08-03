@@ -17,10 +17,11 @@
 # @Desc      :   Test the basic functions of python
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL python3-distro
     system_name=$(grep PRETTY_NAME /etc/os-release | awk -F '="' '{print $2}' | awk '{print $1}')
     system_version=$(grep PRETTY_NAME /etc/os-release | awk -F '="' '{print $2}' | awk '{print $2}' | awk -F '"' '{print$1}')
     kernel_version=$(uname -a | awk '{print $3}')
@@ -39,11 +40,11 @@ function run_test() {
         expect ">>>" {send "exit()\r"}
         expect eof
 EOF
-    grep $system_name ./testlog
+    grep "${system_name}" ./testlog
     CHECK_RESULT $? 0 0 "system_name display failed"
-    grep $system_version ./testlog
+    grep "${system_version}" ./testlog
     CHECK_RESULT $? 0 0 "system_version display failed"
-    grep $kernel_version ./testlog
+    grep "${kernel_version}" ./testlog
     CHECK_RESULT $? 0 0 "kernel_version display failed"
     LOG_INFO "End to run test."
 }
@@ -51,6 +52,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf testlog
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

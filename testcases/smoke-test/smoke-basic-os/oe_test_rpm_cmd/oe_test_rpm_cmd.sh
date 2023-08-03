@@ -19,6 +19,12 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "python3-pip dnf-plugins-core"
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     yumdownloader tcllib
@@ -36,6 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tcllib*.rpm
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

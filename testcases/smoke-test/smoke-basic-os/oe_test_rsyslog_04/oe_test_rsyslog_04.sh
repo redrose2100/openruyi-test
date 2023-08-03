@@ -21,6 +21,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL rsyslog
+    systemctl start rsyslog
     cp -f /run/log/imjournal.state /run/log/imjournal.state.bak
     LOG_INFO "End to prepare the test environment."
 }
@@ -51,6 +53,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     mv -f /run/log/imjournal.state.bak /run/log/imjournal.state
     systemctl restart rsyslog
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -28,6 +28,7 @@ function pre_test() {
     export LANG=en_US.UTF-8
     EXECUTE_T="600m"
     test -z "${test_repo}" || official_repo=${test_repo}
+    DNF_INSTALL "rpm-build make python3-gssapi"
     mv -f /etc/yum.repos.d/*.repo ./
     if [ "${test_mode}" == "update" ]; then
         cfg_openEuler_repo
@@ -44,8 +45,12 @@ function pre_test() {
         shuf -n"${test_pkg_num}" source_list.bak >source_list
         sed -i "1i kernel\ngcc\nglibc" source_list
     fi
+    if [ "${test_type}" == "single" ]; then
+        echo -e "${test_pkg_name}" >source_list
+    else
+        LOG_INFO "Test all software packages"
+    fi
     useradd compileuser
-    DNF_INSTALL "rpm-build make python3-gssapi"
     mkdir /home/compileuser/source
     LOG_INFO "End to prepare the test environment."
 }
@@ -53,16 +58,20 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     while read -r source_name; do
-        yumdownloader --source --destdir /home/compileuser/source "${source_name}".src >>/dev/null 2>&1
-        CHECK_RESULT $? 0 0 "yumdownloader \"${source_name}\".src failed"
-        su - compileuser -c "rpm -ivh /home/compileuser/source/${source_name}* >>/dev/null 2>&1"
-        CHECK_RESULT $? 0 0 "install \"${source_name}\" failed"
-        yum builddep --assumeno /home/compileuser/rpmbuild/SPECS/"${source_name}".spec 2>&1 | grep "root" && rpm -ivh /home/compileuser/source/"${source_name}"*
-        yum builddep --assumeno /home/compileuser/rpmbuild/SPECS/"${source_name}".spec 2>&1 | sed '/Upgrading:/,+100000d' | sed '/Installing dependencies:/,+100000d' | grep -v "Operation aborted." | grep Installing: -A 10000 | grep oe | awk '{print $1}' >dep_list
-        yum builddep -y /home/compileuser/rpmbuild/SPECS/"${source_name}".spec >builddep.log
-        CHECK_RESULT $? 0 0 "install builddep \"${source_name}\" failed"
-        su - compileuser -c "rpmbuild -ba /home/compileuser/rpmbuild/SPECS/${source_name}.spec >${source_name}.log 2>&1"
-        CHECK_RESULT $? 0 0 "rpmbuild \"${source_name}\" failed"
+        if [[ "${skip_pkg_name}" =~ ${source_name} ]]; then
+            LOG_INFO "Skip package named ${source_name}" >/home/compileuser/"${source_name}".log
+        else
+            yumdownloader --source --destdir /home/compileuser/source "${source_name}".src >>/dev/null 2>&1
+            CHECK_RESULT $? 0 0 "yumdownloader \"${source_name}\".src failed"
+            su - compileuser -c "rpm -ivh /home/compileuser/source/${source_name}* >>/dev/null 2>&1"
+            CHECK_RESULT $? 0 0 "install \"${source_name}\" failed"
+            yum builddep --assumeno /home/compileuser/rpmbuild/SPECS/"${source_name}".spec 2>&1 | grep "root" && rpm -ivh /home/compileuser/source/"${source_name}"*
+            yum builddep --assumeno /home/compileuser/rpmbuild/SPECS/"${source_name}".spec 2>&1 | sed '/Upgrading:/,+100000d' | sed '/Installing dependencies:/,+100000d' | grep -v "Operation aborted." | grep Installing: -A 10000 | grep oe | awk '{print $1}' >dep_list
+            yum builddep -y /home/compileuser/rpmbuild/SPECS/"${source_name}".spec >builddep.log
+            CHECK_RESULT $? 0 0 "install builddep \"${source_name}\" failed"
+            su - compileuser -c "rpmbuild -ba /home/compileuser/rpmbuild/SPECS/${source_name}.spec >${source_name}.log 2>&1"
+            CHECK_RESULT $? 0 0 "rpmbuild \"${source_name}\" failed"
+        fi
         tail -n 1 /home/compileuser/"${source_name}".log | grep "xit 0"
         CHECK_RESULT $? 0 0 "complie \"${source_name}\" failed"
         while read -r dep_name; do

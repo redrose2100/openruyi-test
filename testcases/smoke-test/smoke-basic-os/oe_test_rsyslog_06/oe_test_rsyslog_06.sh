@@ -17,10 +17,12 @@
 # @Desc      :   Test the basic functions of rsyslog
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL rsyslog
+    systemctl start rsyslog
     cp -f /etc/rsyslog.conf /etc/rsyslog.conf.bak
     echo "local0.info /tmp/testlog/test.log" >>/etc/rsyslog.conf
     getenforce | grep -i Enforcing && setenforce 0
@@ -49,10 +51,11 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    mv -f /etc/rsyslog.conf.bak /etc/rsyslog.conf
+    cp -f /etc/rsyslog.conf.bak /etc/rsyslog.conf
     getenforce | grep -i Permissive && setenforce 1
     systemctl restart rsyslog
-    rm -rf /tmp//testlog/test.log
+    rm -rf /tmp/testlog/test.log /etc/rsyslog.conf.bak
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

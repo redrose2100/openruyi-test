@@ -44,7 +44,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    mv -f /etc/resolv.conf.bak /etc/resolv.conf
+    cp -f /etc/resolv.conf.bak /etc/resolv.conf
+    rm -rf /etc/resolv.conf.bak
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
