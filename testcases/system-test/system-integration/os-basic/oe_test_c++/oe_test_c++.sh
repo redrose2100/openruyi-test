@@ -17,7 +17,7 @@
 # @Desc      :   Use c++ to compile c programs
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
@@ -32,23 +32,24 @@ function run_test() {
 using namespace std;
 int main()
 {
-cout << "Hello C++!\n" << endl;
+cout << "Hello C++!" << endl;
 return 0;
 }
 EOF
     CHECK_RESULT $? 0 0 "Error, fail to create test.cpp"
     g++  test.cpp -o test
     CHECK_RESULT $? 0 0 "Error, fail to create test"
-    ./test
+    res=$(./test)
+    [ "$res" == "Hello C++!" ]
     CHECK_RESULT $? 0 0 "Error, please check 'hello C++'"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf test test.cpp
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
