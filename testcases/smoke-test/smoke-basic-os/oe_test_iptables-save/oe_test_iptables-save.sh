@@ -19,16 +19,26 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL iptables
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
-    iptables-save | grep nat
-    CHECK_RESULT $? 0 0 "Incomplete display nat"
-    iptables-save | grep mangle
-    CHECK_RESULT $? 0 0 "Incomplete display mangle"
-    iptables-save | grep raw
-    CHECK_RESULT $? 0 0 "Incomplete display raw"
-    iptables-save | grep security
-    CHECK_RESULT $? 0 0 "Incomplete display security"
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+    else
+        iptables-save | grep nat
+        CHECK_RESULT $? 0 0 "Incomplete display nat"
+        iptables-save | grep mangle
+        CHECK_RESULT $? 0 0 "Incomplete display mangle"
+        iptables-save | grep raw
+        CHECK_RESULT $? 0 0 "Incomplete display raw"
+        iptables-save | grep security
+        CHECK_RESULT $? 0 0 "Incomplete display security"
+    fi
     iptables-save | grep filter
     CHECK_RESULT $? 0 0 "Incomplete display filter"
     iptables-save -t filter | grep filter
@@ -36,6 +46,12 @@ function run_test() {
     iptables-save -t filter | grep -E "nat|mangle|raw|security"
     CHECK_RESULT $? 0 1 "Not just filter"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

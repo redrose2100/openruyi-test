@@ -17,7 +17,13 @@
 # @Desc      :   Test ip6tables add rule
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL iptables-nft
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -56,6 +62,7 @@ function post_test() {
     ip6tables -D OUTPUT -o eth0 -j ACCEPT
     ip6tables -D FORWARD -i eth1 -j ACCEPT
     ip6tables -D FORWARD -o eth1 -j ACCEPT
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

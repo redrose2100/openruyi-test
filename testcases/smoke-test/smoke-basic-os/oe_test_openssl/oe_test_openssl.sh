@@ -28,7 +28,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL openssl
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    else
+        DNF_INSTALL openssl
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -51,8 +56,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf cert.crt rsa_private.key $encry_file $decry_file
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

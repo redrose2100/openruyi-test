@@ -17,7 +17,13 @@
 # @Desc      :   Test iptables add rule
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL iptables
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -56,6 +62,7 @@ function post_test() {
     iptables -D OUTPUT -o eth0 -j ACCEPT
     iptables -D FORWARD -i eth1 -j ACCEPT
     iptables -D FORWARD -o eth1 -j ACCEPT
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
