@@ -17,31 +17,36 @@
 # @Desc      :   Test SSH link
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    module_list=$(lsmod | grep -w 0 | awk '{print $1}' | grep -vE "Module|virtio|net_failover")
-    module_used_list=$(lsmod | grep -vw 0 | awk '{print $1}' | grep -vE "Module|virtio|net_failover")
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    else
+        module_list=$(lsmod | grep -w 0 | awk '{print $1}' | grep -vE "Module|virtio|net_failover")
+        module_used_list=$(lsmod | grep -vw 0 | awk '{print $1}' | grep -vE "Module|virtio|net_failover")
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     for mod in ${module_list}; do
-        modprobe -r ${mod}
+        modprobe -r "${mod}"
         CHECK_RESULT $? 0 0 "Failed to delete ${mod}"
-        lsmod | grep -w ${mod}
+        lsmod | grep -w "${mod}"
         CHECK_RESULT $? 1 0 "Failed to delete ${mod}"
-        modprobe ${mod}
+        modprobe "${mod}"
         CHECK_RESULT $? 0 0 "Failed to load ${mod}"
-        lsmod | grep -w ${mod}
+        lsmod | grep -w "${mod}"
         CHECK_RESULT $? 0 0 "Failed to load ${mod}"
     done
 
     for mod in ${module_used_list}; do
-        modprobe ${mod}
+        modprobe "${mod}"
         CHECK_RESULT $? 0 0 "Failed to load ${mod}"
-        lsmod | grep -w ${mod}
+        lsmod | grep -w "${mod}"
         CHECK_RESULT $? 0 0 "Failed to load ${mod}"
     done
     LOG_INFO "End to run test."

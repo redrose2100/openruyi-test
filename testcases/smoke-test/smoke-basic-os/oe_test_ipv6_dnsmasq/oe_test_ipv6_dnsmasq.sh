@@ -17,15 +17,20 @@
 # @Desc      :   Test the basic functions of dnsmasq
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "dnsmasq bind-utils"
-    cp /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
-    sed -i 's/#port=5353/port=53/' /etc/dnsmasq.conf
-    echo "address=/lvs-test.com/127.0.0.1
-address=/lvs-test.com/::1" >>/etc/dnsmasq.d/lvs.test.conf
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    else
+        DNF_INSTALL "dnsmasq bind-utils"
+        cp /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
+        sed -i 's/#port=5353/port=53/' /etc/dnsmasq.conf
+        echo "address=/lvs-test.com/127.0.0.1
+        address=/lvs-test.com/::1" >>/etc/dnsmasq.d/lvs.test.conf
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -44,7 +49,7 @@ function post_test() {
     systemctl stop dnsmasq
     mv -f /etc/dnsmasq.conf.bak /etc/dnsmasq.conf
     rm -rf /etc/dnsmasq.d/lvs.test.conf
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

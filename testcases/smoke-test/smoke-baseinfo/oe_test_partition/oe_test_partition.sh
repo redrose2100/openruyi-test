@@ -21,12 +21,16 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start testing..."
-    lsblk | grep "/boot$"
-    CHECK_RESULT $? 0 0 "No boot partition"
-    lsblk | grep "/$"
-    CHECK_RESULT $? 0 0 "No / partition"
-    lsblk | grep "SWAP"
-    CHECK_RESULT $? 0 0 "No swap partition"
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+    else
+        lsblk | grep "/boot$"
+        CHECK_RESULT $? 0 0 "No boot partition"
+        lsblk | grep "/$"
+        CHECK_RESULT $? 0 0 "No / partition"
+        lsblk | grep "SWAP"
+        CHECK_RESULT $? 0 0 "No swap partition"
+    fi
     lsblk --help
     CHECK_RESULT $? 0 0 "lsblk -h info error"
     lsblk -t | grep SCHED

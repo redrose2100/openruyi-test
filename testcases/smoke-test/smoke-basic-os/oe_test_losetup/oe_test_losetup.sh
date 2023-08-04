@@ -17,11 +17,16 @@
 # @Desc      :   Test the basic functions of losetup
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    touch floppy.img
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    else
+        touch floppy.img
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
