@@ -18,6 +18,9 @@
         },
         {
             "name": "oe_test_javapackages-local"
-        }
+        },
+	{
+	    "name": "oe_test_guava"
+	}
     ]
 }
