@@ -45,6 +45,9 @@
         },
         {
             "name": "oe_test_acl_dir_read"
+        },
+        {
+            "name": "oe_test_acl_file_authorize"
         }
     ]
 }
