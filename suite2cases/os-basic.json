@@ -765,8 +765,11 @@
 	{
 	    "name": "oe_test_lsscsi_1"	
 	},
-	{
+	{	
 	    "name": "oe_test_seq"
+	},
+	{	
+	    "name": "oe_test_lsscsi_2"
 	}
     ]
 }
