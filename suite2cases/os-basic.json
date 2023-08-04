@@ -768,8 +768,11 @@
 	{	
 	    "name": "oe_test_seq"
 	},
-	{	
+	{
 	    "name": "oe_test_lsscsi_2"
+	},
+	{
+	    "name": "oe_test_librhsm"
 	}
     ]
 }
