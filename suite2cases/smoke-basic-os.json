@@ -792,6 +792,9 @@
         },
         {
              "name": "oe_test_mke2fs"
+        },
+        {
+             "name": "oe_test_g++"
         }
 
     ]
