@@ -103,7 +103,10 @@
         },
         {
             "name": "oe_test_hpsa"
-        }
+        },
+        {
+            "name": "oe_test_bnx2fc"
+        },
         {
             "name": "oe_test_qla2xxx"
         }
