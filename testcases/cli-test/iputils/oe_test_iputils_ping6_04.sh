@@ -21,25 +21,27 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL "iputils"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ping6 -4 "${NODE2_IPV6}" -c 3 2>&1 |grep "ping6"
+    ping6 -4 "${NODE2_IPV6}" -c 3 2>&1 | grep "ping6"
     CHECK_RESULT $? 0 0 "ping6 -4 execute failed"
-    ping6 -b "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -b "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -b execute failed"
-    ping6 -R "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -R "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -R execute failed"
-    ping6 -T tsonly "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -T tsonly "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -T execute failed"
-    ping6 -6 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -6 "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -6 execute failed"
-    ping6 -F 15 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -F 15 "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -F execute failed"
-    ping6 -N name "${NODE2_IPV6}" -c 3 |grep "0 received"
+    ping6 -N name "${NODE2_IPV6}" -c 3 | grep "0 received"
     CHECK_RESULT $? 0 0 "ping6 -N execute failed"
     LOG_INFO "End to run test."
 }
@@ -47,6 +49,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start to restore the test environment."
     DNF_REMOVE "$@"
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

@@ -20,26 +20,24 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "kmod"
+    DNF_INSTALL "kmod kernel-$(uname -r)"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if ! df -h / |grep overlay; then
-        lsmod | grep ipvlan
-        CHECK_RESULT $? 1 0 "ipvlan is not loaded: failed!"
-        modprobe ipvlan
-        CHECK_RESULT $? 0 0 "Modprobe ipvlan: failed!"
-        lsmod | grep ipvlan
-        CHECK_RESULT $? 0 0 "Load ipvlan: failed!"
-        modinfo ipvlan | grep -E "filename|alias|description|author|license|srcversion|depends|retpoline|intree|name|vermagic|sig_id|signer|sig_key|sig_hashalgo|signature"
-        CHECK_RESULT $? 0 0 "Display ipvlan mode info: failed!"
-        rmmod ipvlan
-        CHECK_RESULT $? 0 0 "Remove ipvlan mode: failed!"
-        lsmod | grep ipvlan
-        CHECK_RESULT $? 1 0 "ipvlan is not loaded after lsmod: failed!"
-    fi
+    lsmod | grep ipvlan
+    CHECK_RESULT $? 1 0 "ipvlan is not loaded: failed!"
+    modprobe ipvlan
+    CHECK_RESULT $? 0 0 "Modprobe ipvlan: failed!"
+    lsmod | grep ipvlan
+    CHECK_RESULT $? 0 0 "Load ipvlan: failed!"
+    modinfo ipvlan | grep -E "filename|alias|description|author|license|srcversion|depends|retpoline|intree|name|vermagic|sig_id|signer|sig_key|sig_hashalgo|signature"
+    CHECK_RESULT $? 0 0 "Display ipvlan mode info: failed!"
+    rmmod ipvlan
+    CHECK_RESULT $? 0 0 "Remove ipvlan mode: failed!"
+    lsmod | grep ipvlan
+    CHECK_RESULT $? 1 0 "ipvlan is not loaded after lsmod: failed!"
     LOG_INFO "End to run test."
 }
 
