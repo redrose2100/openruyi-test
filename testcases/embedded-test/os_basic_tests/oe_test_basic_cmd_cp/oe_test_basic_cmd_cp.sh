@@ -18,7 +18,7 @@
 # @Desc      :   File system common command test-cp
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -31,6 +31,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+
+    export LANG="en_CN.UTF-8"
 
     cp test1 /home
     CHECK_RESULT $? 0 0 "run cp test1 /home fail"

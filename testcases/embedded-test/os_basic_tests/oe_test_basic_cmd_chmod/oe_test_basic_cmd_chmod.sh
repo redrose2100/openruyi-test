@@ -31,6 +31,8 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
+    export LANG="en_CN.UTF-8"
+
     ls -l /tmp | grep "test01" | awk '{print $1}' | grep "drwxrwxrwx"
     CHECK_RESULT $? 1 0 "dir default mod is drwxrwxrwx"
     per01=$(ls -l /tmp/test01 | grep "test02" | awk '{print $1}')

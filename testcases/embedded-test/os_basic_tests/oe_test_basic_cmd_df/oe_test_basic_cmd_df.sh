@@ -17,10 +17,12 @@
 # @Desc      :   File system common command test-df
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
+
+    export LANG="en_CN.UTF-8"
 
     df | grep "Filesystem" | grep "Mounted on"
     CHECK_RESULT $? 0 0 "check df title fail"

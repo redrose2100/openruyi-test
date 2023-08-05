@@ -30,6 +30,8 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
+    export LANG="en_CN.UTF-8"
+
     mkdir /tmp/test1
     rmdir /tmp/test1 && ls /tmp/test1
     CHECK_RESULT $? 0 1 "rmdir test1 fail"

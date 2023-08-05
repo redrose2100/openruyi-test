@@ -17,7 +17,7 @@
 # @Desc      :   File system common command test-mkdir
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -32,6 +32,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+
+    export LANG="en_CN.UTF-8"
 
     mkdir /tmp/test1 /tmp/test2
     test -d /tmp/test1 && test -d /tmp/test2

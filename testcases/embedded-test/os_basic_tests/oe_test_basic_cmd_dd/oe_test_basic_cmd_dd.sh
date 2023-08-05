@@ -22,6 +22,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start to run test."
 
+    export LANG="en_CN.UTF-8"
+
     dd if=/dev/zero of=test bs=1M count=100
     CHECK_RESULT $? 0 0 "run dd if=/dev/zero fail"
     ls -l test | grep "104857600"
