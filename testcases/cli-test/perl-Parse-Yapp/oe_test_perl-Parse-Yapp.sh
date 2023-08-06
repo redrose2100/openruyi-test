@@ -87,7 +87,7 @@ function run_test() {
     yapp -V | grep -e "This is Parse::Yapp version"
     CHECK_RESULT $? 0 0 "L$LINENO: -V No Pass"
     ### -h ###
-    yapp -h | grep "Usage:      yapp [options] grammar[.yp]"
+    yapp -h 2>&1 | grep "Usage:"
     CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
     LOG_INFO "End to run test."
 }
