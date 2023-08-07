@@ -15,6 +15,9 @@
         },
         {
             "name":"oe_test_iSulad_container01"
+        },
+        {
+            "name":"oe_test_iSulad_container02"
         }
     ]
 }
