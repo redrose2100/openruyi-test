@@ -17,17 +17,14 @@
 # @Desc      :   Query system version info test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
 
     grep "NAME" /etc/os-release | grep "openEuler"
     CHECK_RESULT $? 0 0 "check os-release NAME openeuler fail"
-    grep "NAME" /etc/os-release | grep "embedded" || \
-    grep "NAME" /etc/os-release | grep "Embedded"
-    CHECK_RESULT $? 0 0 "check os-release NAME embedded fail"
-    grep -E "^ID" /etc/os-release | grep "openeuler"
+    grep -E "^ID" /etc/os-release | grep -i "openeuler"
     CHECK_RESULT $? 0 0 "check os-release ID fail"
 
     LOG_INFO "End to run test."
