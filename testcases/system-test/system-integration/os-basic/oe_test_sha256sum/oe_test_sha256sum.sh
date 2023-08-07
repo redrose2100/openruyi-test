@@ -17,11 +17,11 @@
 # @Desc      :   Command test-md5sum 
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    sha256sum --help | grep "Usage: sha256sum"
+    LANG=C sha256sum --help | grep "Usage: sha256sum"
     CHECK_RESULT $? 0 0 "sha256sum --help exec failed"
     echo "test1234" >testfile
     CHECK_RESULT $? 0 0 "check create file fail"
