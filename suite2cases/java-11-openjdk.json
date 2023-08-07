@@ -27,6 +27,9 @@
         },
         {
             "name": "oe_test_openjdk11_rmid"
+        },
+        {
+            "name": "oe_test_openjdk11_unpack200"
         }
     ]
 }
