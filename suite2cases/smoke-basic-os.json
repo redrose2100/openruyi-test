@@ -795,6 +795,9 @@
         },
         {
              "name": "oe_test_g++"
+        },
+        {
+             "name": "oe_test_binutils-objcopy"
         }
 
     ]
