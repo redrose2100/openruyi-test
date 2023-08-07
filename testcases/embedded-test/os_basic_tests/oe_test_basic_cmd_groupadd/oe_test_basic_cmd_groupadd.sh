@@ -17,7 +17,7 @@
 # @Desc      :   Create User Group test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -47,7 +47,7 @@ function run_test() {
     grep -w testgroup2 /etc/group | grep 9999
     CHECK_RESULT $? 0 0 "check testgroup2 fail"
 
-    groupadd --help 2>&1 | grep 'Usage: groupadd'
+    LANG=C groupadd --help 2>&1 | grep 'Usage: groupadd'
     CHECK_RESULT $? 0 0 "check groupadd help fail"
 
     LOG_INFO "End to run test."
@@ -63,4 +63,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
