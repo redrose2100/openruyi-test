@@ -771,8 +771,11 @@
 	{	
 	    "name": "oe_test_lsscsi_2"
 	},
-	{
+	{	
 	    "name": "oe_test_xargs"
+	},
+	{	
+	    "name": "oe_test_lsscsi_3"
 	}
     ]
 }
