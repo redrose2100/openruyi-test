@@ -28,30 +28,27 @@ function pre_test() {
     echo -e 'alias bond0 bonding \noptions bond0 miimon=100 mode=1 fail_over_mac=1' >/etc/modprobe.d/modprobe.conf
     cp /etc/rc.d/rc.local /etc/rc.d/rc.local.bak
     echo -e "ifenslave bond0 ${NODE1_NIC}" >>/etc/rc.d/rc.local
-    DNF_INSTALL "kmod"
+    DNF_INSTALL "kmod NetworkManager kernel-$(uname -r)"
+    systemctl start NetworkManager
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if ! df -h / |grep overlay; then
-        modprobe bonding
-        CHECK_RESULT $? 0 0 "Load bond module: failed!"
-        nmcli c reload
-        CHECK_RESULT $? 0 0 "Restart net: failed!"
-        ip a | grep "bond0"
-        CHECK_RESULT $? 0 0 "Set bond0: failed!"
-    fi
+    modprobe bonding
+    CHECK_RESULT $? 0 0 "Load bond module: failed!"
+    nmcli c reload
+    CHECK_RESULT $? 0 0 "Restart net: failed!"
+    ip a | grep "bond0"
+    CHECK_RESULT $? 0 0 "Set bond0: failed!"
     ip netns add name1
     CHECK_RESULT $? 0 0 "Add the macvlan device name1: failed!"
-    if ! df -h / |grep overlay; then
-        ip link add link bond0 name bond0_local type macvlan
-        CHECK_RESULT $? 0 0 "Add the macvlan device bond0_local: failed!"
-        ip link set bond0_local up
-        CHECK_RESULT $? 0 0 "Set bond0_local up : failed!"
-        ip link set bond0_local netns name1
-        CHECK_RESULT $? 0 0 "Set bond0_local netns name1: failed!"
-    fi
+    ip link add link bond0 name bond0_local type macvlan
+    CHECK_RESULT $? 0 0 "Add the macvlan device bond0_local: failed!"
+    ip link set bond0_local up
+    CHECK_RESULT $? 0 0 "Set bond0_local up : failed!"
+    ip link set bond0_local netns name1
+    CHECK_RESULT $? 0 0 "Set bond0_local netns name1: failed!"
     LOG_INFO "End to run test."
 }
 
@@ -63,6 +60,7 @@ function post_test() {
     ip netns delete name1
     nmcli c reload
     modprobe -r bonding
+    systemctl stop NetworkManager
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
