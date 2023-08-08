@@ -1,0 +1,68 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/criu",
+    "cases": [
+        {
+            "name": "oe_test_criu_3.16"
+        },
+        {
+            "name": "oe_test_criu_base"
+        },
+        {
+            "name": "oe_test_criu_base_dump_01"
+        },
+        {
+            "name": "oe_test_criu_base_dump_02"
+        },
+        {
+            "name": "oe_test_criu_base_dump_03"
+        },
+        {
+            "name": "oe_test_criu_base_dump_04"
+        },
+        {
+            "name": "oe_test_criu_base_dump_05"
+        },
+        {
+            "name": "oe_test_criu_base_pre-dump_01"
+        },
+        {
+            "name": "oe_test_criu_base_pre-dump_02"
+        },
+        {
+            "name": "oe_test_criu_base_pre-dump_03"
+        },
+        {
+            "name": "oe_test_criu_base_pre-dump_04"
+        },
+        {
+            "name": "oe_test_criu_base_pre-dump_05"
+        },
+        {
+            "name": "oe_test_criu_base_restore_01"
+        },
+        {
+            "name": "oe_test_criu_base_restore_02"
+        },
+        {
+            "name": "oe_test_criu_base_restore_03"
+        },
+        {
+            "name": "oe_test_criu_base_restore_04"
+        },
+        {
+            "name": "oe_test_criu_base_restore_05"
+        },
+        {
+            "name": "oe_test_criu_base_check_01"
+        },
+        {
+            "name": "oe_test_criu_base_check_02"
+        },
+        {
+            "name": "oe_test_criu_base_page-server"
+        },
+        {
+            "name": "oe_test_criu_base_service"
+        }
+   ]
+}
