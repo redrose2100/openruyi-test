@@ -1,0 +1,8 @@
+{
+  "path": "$OET_PATH/testcases/cli-test/GraphicsMagick",
+  "cases": [
+    {
+      "name": "oe_test_GraphicsMagick"
+    }
+  ]
+}
