@@ -28,10 +28,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if ! df -h / |grep overlay; then
-        ebtables --concurrent -L | grep "Bridge"
-        CHECK_RESULT $? 0 0 "Failed to execute ebtables"
-    fi
+    ebtables --concurrent -L | grep "Bridge"
+    CHECK_RESULT $? 0 0 "Failed to execute ebtables"
     LOG_INFO "End to run test."
 }
 

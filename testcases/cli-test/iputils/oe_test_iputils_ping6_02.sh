@@ -21,31 +21,33 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL "iputils"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ping6 -I "${NODE1_IPV4}" "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -I "${NODE1_IPV4}" "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -I execute failed"
-    ping6 -i 2 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -i 2 "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -i execute failed"
-    ping6 -L "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -L "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -L execute failed"
-    ping6 -l 2 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -l 2 "${NODE2_IPV6}" -c 3 | grep "received"
     CHECK_RESULT $? 0 0 "ping6 -l execute failed"
-    ping6 -m 2 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -m 2 "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -m execute failed"
-    ping6 -M dont "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -M dont "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -M execute failed"
-    ping6 -n "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -n "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -n execute failed"
-    ping6 -O "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -O "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -O execute failed"
-    ping6 -p 100 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -p 100 "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -p execute failed"
-    ping6 -q "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -q "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -q execute failed"
     LOG_INFO "End to run test."
 }
@@ -53,6 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start to restore the test environment."
     DNF_REMOVE "$@"
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

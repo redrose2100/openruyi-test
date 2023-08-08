@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "diffutils"
     local=$(localectl status | grep System | awk -F "=" '{print $2}')
-    localectl set-locale LANG=zh_CN.utf8    
+    localectl set-locale LANG=zh_CN.utf8
     #shellcheck source=/dev/null
     source /etc/locale.conf
     LOG_INFO "End to prepare the test environment."
@@ -33,12 +33,12 @@ function run_test() {
     LOG_INFO "Start to run test."
     cmp --version
     CHECK_RESULT $? 0 0 "The version information cannot be queried"
-    cat > /opt/file1 << EOF
+    cat >/opt/file1 <<EOF
 aaa
 bbb
 ccc
 EOF
-    cat > /opt/file2 << EOF
+    cat >/opt/file2 <<EOF
 aaa
 bbb
 ccd 
@@ -47,9 +47,9 @@ EOF
     cp /opt/file1 /opt/file3
     cmp /opt/file1 /opt/file3
     CHECK_RESULT $? 0 0 "The two files have the same content,but the detection fails"
-    cmp /opt/file1 /opt/file2 | grep "char"
+    cmp /opt/file1 /opt/file2 | grep "不同"
     CHECK_RESULT $? 0 0 "The contents of the files are different,but no difference is detected"
-    cmp -l file1 file2 | grep "byte"
+    cmp -l file1 file2 | grep "结束"
     CHECK_RESULT $? 1 0 "Unable to display details"
     LOG_INFO "End to run test."
 }
