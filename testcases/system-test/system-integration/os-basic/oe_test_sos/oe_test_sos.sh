@@ -55,9 +55,9 @@ EOF
 }
 function post_test(){
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    rm -rf /var/tmp/sosreport-*.tar*
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
-
+main "$@"
