@@ -33,7 +33,8 @@ function run_test() {
     systemctl status NetworkManager | grep 'Active: active'
     CHECK_RESULT $?
     if df -h / | grep overlay; then
-        LOG_INFO "The current environment is Docker."
+        ip a | grep "${NODE1_NIC}"	   
+        CHECK_RESULT $?	
     else
         nmcli connection show | grep "${NODE1_NIC}"
         CHECK_RESULT $?
