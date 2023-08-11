@@ -1,0 +1,12 @@
+@chapter Authors
+
+
+The FFmpeg developers.@url{http://source.ffmpeg.org}
+@math {(a + b)(a + b) = a^2 + 2ab + b^2}
+For details about the authorship, see the Git history of the project
+(git://source.ffmpeg.org/ffmpeg), e.g. by typing the command
+@command{git log} in the FFmpeg source directory, or browsing the
+online repository at @url{http://source.ffmpeg.org}.
+
+Maintainers for the specific components are listed in the file
+@file{MAINTAINERS} in the source code tree.
