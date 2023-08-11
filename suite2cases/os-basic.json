@@ -779,6 +779,9 @@
 	},
 	{
 	    "name": "oe_test_uniq"
+	},
+        {
+	    "name": "oe_test_lsattr"
 	}
     ]
 }
