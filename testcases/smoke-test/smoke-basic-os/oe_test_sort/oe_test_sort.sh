@@ -35,7 +35,7 @@ EOF
 
 function run_test() {
     LOG_INFO "Start testing..."
-    if df -h / | grep overlay; then
+    if locale | grep LC_COLLATE | grep POSIX; then
         sort sort_test.txt | head -1 | grep aa
         CHECK_RESULT $? 0 0 "sort faild"
         sort -d sort_test.txt | head -3 | grep "66"
