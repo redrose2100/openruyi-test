@@ -776,6 +776,9 @@
 	},
 	{	
 	    "name": "oe_test_lsscsi_3"
+	},
+	{
+	    "name": "oe_test_uniq"
 	}
     ]
 }
