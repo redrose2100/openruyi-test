@@ -17,11 +17,13 @@
 # @Desc      :   Service update testing 
 # #############################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC2034
 source "common/common_lib.sh"
 source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    EXECUTE_T="360m"
     package_install
     search_all_services 
     select_services
