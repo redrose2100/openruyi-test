@@ -21,6 +21,9 @@
         },
         {
             "name":"oe_test_iSulad_container03"
+        },
+        {
+            "name":"oe_test_iSulad_container04"
         }
     ]
 }
