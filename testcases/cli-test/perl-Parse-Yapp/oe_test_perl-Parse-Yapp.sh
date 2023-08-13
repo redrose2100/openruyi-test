@@ -41,6 +41,9 @@ Expr:     NUM
        ;
 %%
 
+$parser = ""
+$message = ""
+
 sub _Error {
     my ($parser, $message) = @_;
     die "Syntax error: $message\n";
