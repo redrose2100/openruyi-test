@@ -61,7 +61,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: -v No Pass"
     ### -s ###
     yapp -s mygrammar.yp
-    cat mygrammar.pm | grep "standalone parser"
+    grep iso mygrammar.pm
+    grep "standalone parser" < mygrammar.pm
     CHECK_RESULT $? 0 0 "L$LINENO: -s No Pass"
     ### -n ###
     yapp -n mygrammar.yp
@@ -73,7 +74,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: -o No Pass"
     ### -t ###
     yapp -t mygrammar.output mygrammar.yp
-    cat mygrammar.pm | grep "Conflicts"
+    grep iso mygrammar.pm
+    grep "Conflicts" < mygrammar.pm
     CHECK_RESULT $? 0 0 "L$LINENO: -t No Pass"
     ### -b ###
     yapp -b '/usr/local/bin/perl -w' -o mygrammar2.pl mygrammar.yp
