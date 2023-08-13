@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+# shellcheck disable=SC2154
 
 # Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
@@ -40,9 +41,6 @@ Expr:     NUM
        | Expr '/' Expr
        ;
 %%
-
-$parser = ""
-$message = ""
 
 sub _Error {
     my ($parser, $message) = @_;
