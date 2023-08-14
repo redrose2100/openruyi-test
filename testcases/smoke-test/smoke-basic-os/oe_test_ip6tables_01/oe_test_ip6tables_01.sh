@@ -45,7 +45,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to show rule OUTPUT eth0"
     ip6tables -A FORWARD -i eth1 -j ACCEPT
     CHECK_RESULT $? 0 0 "Failed to add rule FORWARD INPUT"
-    ip6tables -vL | grep -A 20 FORWARD | awk '{print $5}' | grep -w eth1
+    ip6tables -vL | grep -A 20 FORWARD | awk '{print $5} {print $6}' | grep -w eth1
     CHECK_RESULT $? 0 0 "Failed to show rule FORWARD INPUT"
     ip6tables -A FORWARD -o eth1 -j ACCEPT
     CHECK_RESULT $? 0 0 "Failed to add rule FORWARD OUTPUT"
