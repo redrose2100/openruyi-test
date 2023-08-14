@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_fc-cache"
+        },
+        {
+            "name": "oe_test_fc-cat"
         }
     ]
 }
