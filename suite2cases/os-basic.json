@@ -785,6 +785,9 @@
 	},
         {
 	    "name": "oe_test_indent"
+	},
+	{
+	    "name": "oe_test_xzmore"
 	}
     ]
 }
