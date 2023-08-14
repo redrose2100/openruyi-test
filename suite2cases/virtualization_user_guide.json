@@ -1,0 +1,9 @@
+{
+    "path": "${OET_PATH}/testcases/doc-test/virtualization/virtualization_user_guide",
+    "machine type": "physical",
+    "cases": [
+        {
+            "name": "oe_test_virtualization_user_guide"
+        }
+    ]
+}
