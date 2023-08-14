@@ -782,6 +782,9 @@
 	},
         {
 	    "name": "oe_test_lsattr"
+	},
+	{
+	    "name": "oe_test_xzmore"
 	}
     ]
 }
