@@ -788,6 +788,9 @@
 	},
 	{
 	    "name": "oe_test_xzmore"
+	},
+	{
+	    "name": "oe_test_bzless"
 	}
     ]
 }
