@@ -5,6 +5,9 @@
             "name": "oe_test_fc-list"
         },
         {
+            "name": "oe_test_fc-cat"
+        },
+        {
             "name": "oe_test_fc-cache"
         }
     ]
