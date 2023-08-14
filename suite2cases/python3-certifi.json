@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/python3-certifi",
+    "cases": [
+        {
+            "name": "oe_test_python3-certifi"
+        }
+    ]
+}
+

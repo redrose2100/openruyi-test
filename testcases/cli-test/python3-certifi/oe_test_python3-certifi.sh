@@ -12,16 +12,16 @@
 # #############################################
 # @Author    :   pengrui
 # @Contact   :   pengrui@uniontech.com
-# @Date      :   2023.8.10
+# @Date      :   2023.8.14
 # @License   :   Mulan PSL v2
-# @Desc      :   python-certifi formatting test
+# @Desc      :   python3-certifi formatting test
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
 
-cat > /tmp/python-certifi.py << EOF
+cat > /tmp/python3-certifi.py << EOF
 import certifi
 t=certifi.where()
 print(t)
@@ -36,16 +36,16 @@ function run_test() {
     LOG_INFO "Start testing..."
     rpm -qa | grep python3-certifi
     CHECK_RESULT $? 0 0 "Return value error"
-    cd /tmp && python3 python-certifi.py > certifi_test
+    cd /tmp && python3 python3-certifi.py > certifi_test
     test -f /tmp/certifi_test
-    CHECK_RESULT $? 0 0 "compile python-certifi fail"    
+    CHECK_RESULT $? 0 0 "compile python3-certifi fail"    
     grep "certifi/cacert.pem" /tmp/certifi_test
     CHECK_RESULT $? 0 0 "certifi_test file error"   
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf /tmp/python-certifi.py /tmp/certifi_test
+    rm -rf /tmp/python3-certifi.py /tmp/certifi_test
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
