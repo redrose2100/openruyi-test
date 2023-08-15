@@ -23,15 +23,20 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     Default_LANG=$LANG
     export LANG=en_US.UTF-8
+    rpm -qa |grep gpg-pubkey && rpm -e gpg-pubkey
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+    rpm --import "$(rpm -qa |grep gpg-keys |xargs rpm -ql |grep -i euler)"
+    CHECK_RESULT $? 0 0 "Failed to import gpgkey"
     yumdownloader nano | grep "nano"
     CHECK_RESULT $? 0 0 "Failed to download nano pkg"
     rpm --checksig "$(ls nano*)" | grep "digests signatures OK"
     CHECK_RESULT $? 0 0 "Failed to check RPM signature"
+    rpm -e gpg-pubkey
+    CHECK_RESULT $? 0 0 "Failed to delete gpgkey"
     rpm -ivh nano* | grep "installing..."
     CHECK_RESULT $? 0 0 "Failed to install rpm pkg"
     rpm -ev nano | grep "nano"
