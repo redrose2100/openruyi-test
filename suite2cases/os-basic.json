@@ -794,6 +794,9 @@
 	},
 	{
 	    "name": "oe_test_true"
+        },
+	{
+	    "name": "oe_test_xzless"
         }
     ]
 }
