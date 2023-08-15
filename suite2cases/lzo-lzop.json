@@ -3,7 +3,9 @@
     "cases": [
         {
             "name": "oe_test_lzo-lzop"
+        },
+        {
+            "name": "oe_test_lzo-lzop_01"
         }
-
     ]
 }
