@@ -8,6 +8,9 @@
             "name": "oe_test_fc-cat"
         },
         {
+            "name": "oe_test_fc-conflist"
+        },
+        {
             "name": "oe_test_fc-cache"
         }
     ]
