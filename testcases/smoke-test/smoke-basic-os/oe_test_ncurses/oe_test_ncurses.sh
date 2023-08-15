@@ -27,7 +27,7 @@ function pre_test() {
 spawn ssh -o StrictHostKeyChecking=no 127.0.0.1
 expect {
     \"password\" {send \"NODE1_PASSWORD\r\";exp_continue}
-    \"Users\" {send \"\rexport TERM=vt100\r\";exp_continue}
+    \"#\" {send \"\rexport TERM=vt100\r\";exp_continue}
     \"export\" {send \"\recho \\\$TERM\r\";exp_continue}
     \"echo\" {send \"\rexit\n\"}
 }
