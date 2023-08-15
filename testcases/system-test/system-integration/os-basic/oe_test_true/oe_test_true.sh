@@ -27,7 +27,7 @@ function run_test()
 {
     LOG_INFO "Start to run test."
     true > /tmp/test.txt
-    more /tmp/test.txt | grep 1111
+    grep "1111" /tmp/test.txt
     CHECK_RESULT $? 0 1 "true function error"
     LOG_INFO "End to run test."
 }
