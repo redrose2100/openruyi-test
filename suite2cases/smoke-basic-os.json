@@ -793,6 +793,9 @@
         {
              "name": "oe_test_mke2fs"
         },
+	{
+	    "name": "oe_test_acpid_002"
+	},
         {
              "name": "oe_test_g++"
         },
