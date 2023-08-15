@@ -37,7 +37,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "lsblk -t info error"
     lsblk -m | grep MODE
     CHECK_RESULT $? 0 0 "lsblk -m info error"
-    lsblk -b | grep "MOUNTPOINTS"
+    lsblk -b | grep "MOUNTPOINT"
     CHECK_RESULT $? 0 0 "lsblk -b info error"
     LOG_INFO "Finish test!"
 }
