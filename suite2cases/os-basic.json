@@ -791,6 +791,9 @@
 	},
 	{
 	    "name": "oe_test_bzless"
-	}
+	},
+	{
+	    "name": "oe_test_true"
+        }
     ]
 }
