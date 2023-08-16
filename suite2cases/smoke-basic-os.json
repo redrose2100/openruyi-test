@@ -801,7 +801,10 @@
         },
         {
              "name": "oe_test_binutils-objcopy"
-        }
+        },
+	{
+	     "name":"oe_test_brotli_002"
+	}
 
 
     ]
