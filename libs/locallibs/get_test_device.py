@@ -85,15 +85,8 @@ def get_test_disk(node=1):
         [str]: 磁盘名称
     """
     if os.environ.get("NODE" + str(node) + "LOCALTION") == "local":
-        used_disk = subprocess.getoutput(
-            "lsblk -l | grep -e '/.*\|\[.*\]' | awk '{print $1}' | tr -d '[0-9]' | uniq | sed -e ':a;N;$!ba;s/\\n/ /g'"
-        )
-
-        test_disk = subprocess.getoutput(
-            "lsblk -n | grep -v '└─.*\|"
-            + used_disk.replace(" ", "\|")
-            + "' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'"
-        )
+        used_disks = set(subprocess.getoutput("lsblk -lno NAME | grep -e '/.*' | awk '{print $1}'"))
+        partitions = set(subprocess.getoutput("lsblk -lno PKNAME | grep -e '/.*' | awk '{print $1}'"))
     else:
         conn = ssh_cmd.pssh_conn(
             os.environ.get("NODE" + str(node) + "_IPV4"),
@@ -101,18 +94,18 @@ def get_test_disk(node=1):
             os.environ.get("NODE" + str(node) + "_SSH_PORT"),
             os.environ.get("NODE" + str(node) + "_USER"),
         )
-        used_disk = ssh_cmd.pssh_cmd(
-            conn,
-            "lsblk -l | grep -e '/.*\|\[.*\]' | awk '{print $1}' | tr -d '[0-9]' | uniq | sed -e ':a;N;$!ba;s/\\n/ /g'",
-        )[1]
-        test_disk = ssh_cmd.pssh_cmd(
-            conn,
-            "lsblk -n | grep -v '└─.*\|"
-            + used_disk.replace(" ", "\|")
-            + "' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'",
-        )[1]
+        used_disks = set(ssh_cmd.pssh_cmd(conn, "lsblk -lno NAME | grep -e '/.*' | awk '{print $1}'")[1].split())
+        partitions = set(ssh_cmd.pssh_cmd(conn, "lsblk -lno PKNAME | grep -e '/.*' | awk '{print $1}'")[1].split())
 
-    return test_disk
+    all_disks = set(subprocess.getoutput("lsblk -lno NAME | grep -v '^loop\|^ram\|^sr' | awk '{print $1}'").split())
+    test_disks = list(all_disks - used_disks)
+
+    # 排除已被分区的磁盘
+    for partition in partitions:
+        if partition in test_disks:
+            test_disks.remove(partition)
+
+    return " ".join(test_disks)
 
 
 if __name__ == "__main__":
