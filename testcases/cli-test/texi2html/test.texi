@@ -9,9 +9,37 @@
 @top
 
 @contents
-
+@heading this is header of info
 @chapter Introduction
-
+@xml
+<msg>
+      <sender ="小明" />
+      <groupid = 112221 />
+      <type = test/>
+      <content = "你吃过没" />
+</msg>
+@end xml
+@ifxml
+ifxml_example
+@end ifxml
+@ifinfo
+ifinfo_example
+@end ifinfo
+@ifdocbook
+ifdocbook_example
+@end ifdocbook
+@ifhtml
+ifhtml_example
+@end ifhtml
+@ifplaintext
+ifplaintext_example
+@end ifplaintext
+@iftex
+iftex_example
+@end iftex
+@html
+html_example
+@end html
 This text is concerned with the development @emph{of} FFmpeg itself. Information
 on using the FFmpeg libraries in other programs can be found elsewhere, e.g. in:
 @itemize @bullet
@@ -45,19 +73,16 @@ external programs read the @file{LICENSE} file in the source tree and
 consult @url{https://ffmpeg.org/legal.html}.
 
 @section Contributing code
-
 All proposed code changes should be submitted for review to
 @url{mailto:ffmpeg-devel@@ffmpeg.org, the development mailing list}, as
 described in more detail in the @ref{Submitting patches} chapter. The code
 should comply with the @ref{Development Policy} and follow the @ref{Coding Rules}.
 The developer making the commit and the author are responsible for their changes
 and should try to fix issues their commit causes.
-
+@footnote{here is a simple footnote1}
 @anchor{Coding Rules}
 @chapter Coding Rules
-
 @section C language features
-
 FFmpeg is programmed in the ISO C99 language, extended with:
 @itemize @bullet
 @item
@@ -82,7 +107,6 @@ complex numbers;
 @item
 mixed statements and declarations.
 @end itemize
-
 @section Code formatting conventions
 
 There are the following guidelines regarding the indentation in files:

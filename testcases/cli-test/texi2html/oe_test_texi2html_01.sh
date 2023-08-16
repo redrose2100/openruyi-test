@@ -101,7 +101,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run testcase:oe_test_texi2html."
     ### -h ###
-    texi2html -h | grep -E "Usage: texi2html  \[OPTIONS\] TEXINFO-FILE"
+    texi2html -h | grep -E "Usage: texi2html"
     CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
     ### -version ###
     texi2html -version | grep -E "5.0"
@@ -120,20 +120,20 @@ function run_test() {
     ### -xml ###
     texi2html -xml test.texi && find . -name "test.xml" | grep test.xml
     CHECK_RESULT $? 0 0 "L$LINENO: -xml No Pass"
-    ### -ifdockbook ###
-    texi2html -ifdocbook test.texi && find . -name "test.html" | grep test.html
+    ### -ifdocbook ###
+    texi2html -ifdocbook test && grep "ifdocbook_example" test.html
     CHECK_RESULT $? 0 0 "L$LINENO: -ifdocbook No Pass"
     rm -f test.html
     ### -ifhtml ###
-    texi2html -ifhtml test.texi && find . -name "test.html" | grep test.html
+    texi2html -ifhtml test && grep "ifhtml_example" test.html
     CHECK_RESULT $? 0 0 "L$LINENO: -ifhtml No Pass"
     rm -f test.html
     ### -ifinfo ###
-    texi2html -ifinfo test.texi && find . -name "test.html" | grep test.html
+    texi2html -ifinfo test && grep "ifinfo_example" test.html
     CHECK_RESULT $? 0 0 "L$LINENO: -ifinfo No Pass"
     rm -f test.html
     ### -ifplaintext ###
-    texi2html -ifplaintext test.texi && find . -name "test.html" | grep test.html
+    texi2html -ifplaintext test && grep "ifplaintext_example" test.html
     CHECK_RESULT $? 0 0 "L$LINENO: -ifplaintext No Pass"
     
     LOG_INFO "End to run test."

@@ -103,9 +103,9 @@ function run_test() {
     LOG_INFO "Start to run testcase:oe_test_texi2html."
 
     ### --l2h ###
-    texi2html -l2h test && find . -name "test.html" | grep "test.html"
+    texi2html -l2h -verbose test 2>l2h.log && grep "l2h: finished from html (no error)" l2h.log
     CHECK_RESULT $? 0 0 "L$LINENO: --l2h No Pass"
-    rm -f test.html
+    rm -f test.html l2h.log
     ### --internal-links ###
     texi2html -internal-links=links.txt test && find . -name "links.txt" | grep "links.txt"
     CHECK_RESULT $? 0 0 "L$LINENO: -internal-links No Pass"

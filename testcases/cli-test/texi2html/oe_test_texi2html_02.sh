@@ -104,11 +104,11 @@ function run_test() {
     LOG_INFO "Start to run testcase:oe_test_texi2html."
 
     ### -iftex ###
-    texi2html -iftex test.texi && find . -name "test.html" | grep test.html
+    texi2html -iftex test && grep "iftex_example" test.html
     CHECK_RESULT $? 0 0 "L$LINENO: -iftex No Pass"
     rm -f test.html
     ### -ifxml ###
-    texi2html -ifxml test.texi && find . -name "test.html" | grep test.html
+    texi2html -ifxml test && grep "ifxml_example" test.html
     CHECK_RESULT $? 0 0 "L$LINENO: -ifxml No Pass"
     LOG_INFO "End to run test."
     ### -force|F ###
@@ -143,7 +143,7 @@ function post_test() {
     DNF_REMOVE "$@"
     rm -f test.html prefix.texi prefixC.html
     rm -f forceTest.texi headersTest.texi codingTest.texi warnTest.texi output.texi
-    rm -f forceTest.html headersTest.html codingTest.html warnTest.html changeOp.html
+    rm -f forceTest.html cssTest.html headersTest.html codingTest.html warnTest.html changeOp.html
     LOG_INFO "End to restore the test environment."
 }
 

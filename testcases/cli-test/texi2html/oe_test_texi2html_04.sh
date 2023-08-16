@@ -102,48 +102,42 @@ function run_test() {
     LOG_INFO "Start to run testcase:oe_test_texi2html."
 
 
-    ### -program=s ###
-    texi2html -program=s test && find . -name "test.txt" | grep "test.txt"
-    CHECK_RESULT $? 0 0 "L$LINENO: -program=s No Pass"
-    rm -f test.txt
-    ### -paragraph-indent ###
-    texi2html -paragraph-indent=1000 test && find . -name "test.html" | grep "test.html"
-    CHECK_RESULT $? 0 0 "L$LINENO: -paragraph-indent No Pass"
+    ### -css-ref ###
+    texi2html -css-ref=default.css test && grep "default.css" test.html
+    CHECK_RESULT $? 0 0 "L$LINENO: -css-ref No Pass"
     rm -f test.html
-    ### -paragraph-indent ###
-    texi2html -paragraph-indent=none test && find . -name "test.html" | grep "test.html"
-    CHECK_RESULT $? 0 0 "L$LINENO: -paragraph-indent No Pass"
+    ### -conf-dir ###
+    texi2html -conf-dir=example.conf test && find . -name "test.html" | grep "test.html"
+    CHECK_RESULT $? 0 0 "L$LINENO: -conf-dir No Pass"
     rm -f test.html
-    ### -paragraph-indent ###
-    texi2html -paragraph-indent=asis test && find . -name "test.html" | grep "test.html"
-    CHECK_RESULT $? 0 0 "L$LINENO: -paragraph-indent No Pass"
+    ### --split=s ###
+    texi2html -split=section test && find . -name "test" | grep "test"
+    CHECK_RESULT $? 0 0 "L$LINENO: -split=section No Pass"
+    rm -rf test
+    ### --split=s ###
+    texi2html -split=chapter test && find . -name "test" | grep "test"
+    CHECK_RESULT $? 0 0 "L$LINENO: -split=chapter No Pass"
+    rm -rf test
+    ### --split=s ###
+    texi2html -split=node test && find . -name "test" | grep "test"
+    CHECK_RESULT $? 0 0 "L$LINENO: -split=node No Pass"
+    rm -rf test
+    ### --split=s ###
+    texi2html -split=s test && find . -name "test.html" | grep "test.html"
+    CHECK_RESULT $? 0 0 "L$LINENO: -split=s No Pass"
     rm -f test.html
-    ### -output-indent ###
-    texi2html -output-indent=1000 test && find . -name "test.html" | grep "test.html"
-    CHECK_RESULT $? 0 0 "L$LINENO: -output-indent No Pass"
+    ### --init-file=s ###
+    texi2html -init-file=newtexi2html test && find . -name "test.html" | grep "test.html"
+    CHECK_RESULT $? 0 0 "L$LINENO: -init-file=s No Pass"
     rm -f test.html
-    ### -number-sections ###
-    texi2html -number-sections test && find . -name "test.html" | grep "test.html"
-    CHECK_RESULT $? 0 0 "L$LINENO: -number-sections No Pass"
-    rm -f test.html
-    ### -number-footnotes ###
-    texi2html -number-footnotes test && find . -name "test.html" | grep "test.html"
-    CHECK_RESULT $? 0 0 "L$LINENO: -number-footnotes No Pass"
-    rm -f test.html
-    ### -node-files ###
-    texi2html -node-files test && find . -name "Development-Policy.html" | grep "Development-Policy.html"
-    CHECK_RESULT $? 0 0 "L$LINENO: -number-sections No Pass"
-    rm -f test.html Coding-Rules.html Criteria-for-Point-Releases.html Development-Policy.html 
-    rm -f Regression-tests.html Release-process.html Submitting-patches.html
-    ### -no-validate|no-pointer-validate ###
-    texi2html -no-validate test && find . -name "test.html" | grep "test.html"
-    CHECK_RESULT $? 0 0 "L$LINENO: -no-validate|no-pointer-validate No Pass"
-    rm -f test.html
-    ### -macro-expand ###
-    texi2html -macro-expand=macro test && find . -name "macro" | grep "macro"
-    CHECK_RESULT $? 0 0 "L$LINENO: -macro-expand No Pass"
-    rm -f test.html macro
-
+    ### --I=s ###
+    texi2html -I=include includeTest && grep "authorship" includeTest.html
+    CHECK_RESULT $? 0 0 "L$LINENO: -I=s No Pass"
+    rm -f includeTest.html
+    ### --P=s ###
+    texi2html -P=include preinclude/includeTest && grep "authorship" includeTest.html
+    CHECK_RESULT $? 0 0 "L$LINENO: -P=s No Pass"
+    rm -f includeTest.html
 
     LOG_INFO "End to run test."
 }
