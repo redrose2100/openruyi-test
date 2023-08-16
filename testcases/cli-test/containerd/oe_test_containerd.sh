@@ -46,7 +46,7 @@ function post_test() {
     ctr task kill nginx-container
     ctr c rm nginx-container
     ctr images rm docker.io/library/nginx:latest
-    ps -ef | grep -v 'grep' |grep 'containerd' |grep -v 'oe_test_containerd' |awk '{print $2}' | xargs -I {} kill -9 {}
+    ps -ef | grep -v 'grep' | grep -v mugen |grep 'containerd' |grep -v 'oe_test_containerd' |awk '{print $2}' | xargs -I {} kill -9 {}
     DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
