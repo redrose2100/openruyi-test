@@ -797,6 +797,9 @@
         },
 	{
 	    "name": "oe_test_xzless"
-        }
+        },
+	{
+	    "name": "oe_test_zgrep_002"
+	}
     ]
 }
