@@ -1,0 +1,53 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   lixiang_yewu
+# @Contact   :   lixiang_yewu@cmss.chinamobile.com
+# @Date      :   2023-08-17
+# @License   :   Mulan PSL v2
+# @Desc      :   Command test for various awk operations
+# ############################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+
+    # Test 1: Concatenate specific fields and print
+    echo "John:Smith:30" | awk -F ':' '{print "Name: " $1 ", Age: " $3}'
+
+    # Test 2: Calculate total from a column
+    echo -e "10\n20\n30" | awk '{total += $1} END {print "Total: " total}'
+
+    # Test 3: Print lines longer than a specific length
+    echo -e "apple\nbanana\ncherry" | awk 'length($0) > 5'
+
+    # Test 4: Using BEGIN and END blocks for initialization and finalization
+    echo -e "Alice 25\nBob 30\nCarol 28" | awk 'BEGIN {print "Name\tAge"} {print $1 "\t" $2} END {print "End of report"}'
+
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start environment cleanup."
+    export LANG=${OLD_LANG}
+    LOG_INFO "Finish environment cleanup!"
+}
+
+main "$@"

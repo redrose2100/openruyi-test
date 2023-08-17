@@ -83,6 +83,9 @@
             "name": "oe_test_awk"
         },
         {
+            "name": "oe_test_awk_002"
+        },
+        {
             "name": "oe_test_sdiff"
         },
         {
