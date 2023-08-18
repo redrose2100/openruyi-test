@@ -20,9 +20,8 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start to prepare the test environment"
-    DNF_INSTALL "linuxdoc-tools"
-	DNF_INSTALL "texinfo"
+	LOG_INFO "Start to prepare the test environment"
+	DNF_INSTALL "linuxdoc-tools texinfo"
 	cat<<EOF >test.sgml
 <!doctype linuxdoc system>
 <article>
@@ -41,8 +40,8 @@ EOF
 }
 
 function run_test() {
-    LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools."
-    ### -B info ##
+	LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools."
+	### -B info ##
 	linuxdoc -B info test.sgml && find . -name "test.info"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B info No Pass"
 	rm -f test.info
@@ -82,14 +81,14 @@ function run_test() {
 	linuxdoc -B info test.sgml --tabsize=4 && find . -name "test.info"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B info --tabsize No Pass"
 	rm -f test.info
-    LOG_INFO "End to run testcase:oe_test_linuxdoc-tools."
+	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+	LOG_INFO "Start to restore the test environment."
+	DNF_REMOVE "$@"
 	rm -f test.sgml
-    LOG_INFO "End to restore the test environment."
+	LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
