@@ -40,23 +40,7 @@ EOF
 }
 
 function run_test() {
-    LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools."
-	### -B lyx --include ##
-	linuxdoc -B lyx test.sgml --include=a && find . -name "test.lyx"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx --include No Pass"
-	rm -f test.lyx
-	### -B lyx -i ##
-	linuxdoc -B lyx test.sgml -i a && find . -name "test.lyx"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx -i No Pass"
-	rm -f test.lyx
-	### -B lyx --pass ##
-	linuxdoc -B lyx test.sgml --pass=a && find . -name "test.lyx"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx --pass No Pass"
-	rm -f test.lyx
-	### -B lyx -P ##
-	linuxdoc -B lyx test.sgml -P a && find . -name "test.lyx"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx -P No Pass"
-	rm -f test.lyx
+	LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools_11."
 	### -B rtf ##
 	linuxdoc -B rtf test.sgml && find . -name "test.rtf"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf No Pass"
@@ -77,7 +61,31 @@ function run_test() {
 	linuxdoc -B rtf test.sgml --language=en && find . -name "test.rtf"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --language No Pass"
 	rm -f test.rtf
-    LOG_INFO "End to run testcase:oe_test_linuxdoc-tools."
+	### -B rtf --charset ##
+	linuxdoc -B rtf test.sgml --charset=utf-8 && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --charset No Pass"
+	rm -f test.rtf
+	### -B rtf -c ##
+	linuxdoc -B rtf test.sgml -c utf-8 && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -c No Pass"
+	rm -f test.rtf
+	### -B rtf --style ##
+	linuxdoc -B rtf test.sgml --style=a && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --style No Pass"
+	rm -f test.rtf
+	### -B rtf -S ##
+	linuxdoc -B rtf test.sgml -S a && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -S No Pass"
+	rm -f test.rtf
+	### -B rtf --tabsize ##
+	linuxdoc -B rtf test.sgml --tabsize=4 && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --tabsize No Pass"
+	rm -f test.rtf
+	### -B rtf -t ##
+	linuxdoc -B rtf test.sgml -t 4 && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -t No Pass"
+	rm -f test.rtf
+	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools_11."
 }
 
 function post_test() {

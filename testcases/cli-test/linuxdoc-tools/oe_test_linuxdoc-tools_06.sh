@@ -40,7 +40,7 @@ EOF
 }
 
 function run_test() {
-	LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools."
+	LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools_06."
 	### -B latex ##
 	linuxdoc -B latex test.sgml && find . -name "test.tex"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B latex No Pass"
@@ -81,7 +81,11 @@ function run_test() {
 	linuxdoc -B latex test.sgml --tabsize=4 && find . -name "test.tex"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B latex --tabsize No Pass"
 	rm -f test.tex
-	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools."
+	### -B latex -t ##
+	linuxdoc -B latex test.sgml -t 4 && find . -name "test.tex"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B latex -t No Pass"
+	rm -f test.tex
+	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools_06."
 }
 
 function post_test() {

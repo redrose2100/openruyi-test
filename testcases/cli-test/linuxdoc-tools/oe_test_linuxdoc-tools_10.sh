@@ -40,31 +40,7 @@ EOF
 }
 
 function run_test() {
-    LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools."
-	### -B lyx --charset ##
-	linuxdoc -B lyx test.sgml --charset=utf-8 && find . -name "test.lyx"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx --charset No Pass"
-	rm -f test.lyx
-	### -B lyx -c ##
-	linuxdoc -B lyx test.sgml -c utf-8 && find . -name "test.lyx"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx -c No Pass"
-	rm -f test.lyx
-	### -B lyx --style ##
-	linuxdoc -B lyx test.sgml --style=a && find . -name "test.lyx"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx --style No Pass"
-	rm -f test.lyx
-	### -B lyx -S ##
-	linuxdoc -B lyx test.sgml -S a && find . -name "test.lyx"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx -S No Pass"
-	rm -f test.lyx
-	### -B lyx --tabsize ##
-	linuxdoc -B lyx test.sgml --tabsize=4 && find . -name "test.lyx"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx --tabsize No Pass"
-	rm -f test.lyx
-	### -B lyx -t ##
-	linuxdoc -B lyx test.sgml -t 4 && find . -name "test.lyx"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx -t No Pass"
-	rm -f test.lyx
+    LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools_10."
 	### -B lyx --debug ##
 	linuxdoc -B lyx test.sgml --debug && find . -name "test.lyx"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx --debug No Pass"
@@ -80,15 +56,31 @@ function run_test() {
 	### -B lyx -D ##
 	linuxdoc -B lyx test.sgml -D version=1.0 && find . -name "test.lyx"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx -D No Pass"
-	rm -f test.lyx	
-    LOG_INFO "End to run testcase:oe_test_linuxdoc-tools."
+	rm -f test.lyx
+	### -B lyx --include ##
+	linuxdoc -B lyx test.sgml --include=a && find . -name "test.lyx"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx --include No Pass"
+	rm -f test.lyx
+	### -B lyx -i ##
+	linuxdoc -B lyx test.sgml -i a && find . -name "test.lyx"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx -i No Pass"
+	rm -f test.lyx
+	### -B lyx --pass ##
+	linuxdoc -B lyx test.sgml --pass=a && find . -name "test.lyx"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx --pass No Pass"
+	rm -f test.lyx
+	### -B lyx -P ##
+	linuxdoc -B lyx test.sgml -P a && find . -name "test.lyx"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B lyx -P No Pass"
+	rm -f test.lyx
+	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools_10."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+	LOG_INFO "Start to restore the test environment."
+	DNF_REMOVE "$@"
 	rm -f test.sgml
-    LOG_INFO "End to restore the test environment."
+	LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

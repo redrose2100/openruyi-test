@@ -40,35 +40,7 @@ EOF
 }
 
 function run_test() {
-    LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools."
-	### -B txt --language ##
-	linuxdoc -B txt test.sgml --language=en && find . -name "test.txt"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --language No Pass"
-	rm -f test.txt
-	### -B txt --charset ##
-	linuxdoc -B txt test.sgml --charset=utf-8 && find . -name "test.txt"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --charset No Pass"
-	rm -f test.txt
-	### -B txt -c ##
-	linuxdoc -B txt test.sgml -c utf-8 && find . -name "test.txt"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -c No Pass"
-	rm -f test.txt
-	### -B txt --style ##
-	linuxdoc -B txt test.sgml --style=a && find . -name "test.txt"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --style No Pass"
-	rm -f test.txt
-	### -B txt -S ##
-	linuxdoc -B txt test.sgml -S a && find . -name "test.txt"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -S No Pass"
-	rm -f test.txt
-	### -B txt --tabsize ##
-	linuxdoc -B txt test.sgml --tabsize=4 && find . -name "test.txt"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --tabsize No Pass"
-	rm -f test.txt
-	### -B txt -t ##
-	linuxdoc -B txt test.sgml -t 4 && find . -name "test.txt"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -t No Pass"
-	rm -f test.txt
+    LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools_14."
 	### -B txt --debug ##
 	linuxdoc -B txt test.sgml --debug && find . -name "test.txt"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --debug No Pass"
@@ -81,7 +53,51 @@ function run_test() {
 	linuxdoc -B txt test.sgml --define=version=1.0 && find . -name "test.txt"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --define No Pass"
 	rm -f test.txt
-    LOG_INFO "End to run testcase:oe_test_linuxdoc-tools."
+	### -B txt -D ##
+	linuxdoc -B txt test.sgml -D version=1.0 && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -D No Pass"
+	rm -f test.txt	
+	### -B txt --include ##
+	linuxdoc -B txt test.sgml --include=a && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --include No Pass"
+	rm -f test.txt
+	### -B txt -i ##
+	linuxdoc -B txt test.sgml -i a && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -i No Pass"
+	rm -f test.txt
+	### -B txt --pass ##
+	linuxdoc -B txt test.sgml --pass=test.sgml && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --pass No Pass"
+	rm -f test.txt
+	### -B txt -P ##
+	linuxdoc -B txt test.sgml -P test.sgml && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -P No Pass"
+	rm -f test.txt
+	### -B txt --manpage ##
+    linuxdoc -B txt --manpage test.sgml && find . -name "test.man"
+    CHECK_RESULT $? 0 0 "L$LINENO: -B txt --manpage No Pass"
+    rm -f test.man
+	### -B txt -m ##
+    linuxdoc -B txt -m test.sgml && find . -name "test.man"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --m No Pass"
+	rm -f test.man
+	### -B txt --filter ##
+	linuxdoc -B txt --filter test.sgml && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --filter No Pass"
+	rm -f test.txt
+	### -B txt -f ##
+	linuxdoc -B txt -f test.sgml && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -f No Pass"
+	rm -f test.txt
+	### -B txt --blanks ##
+	linuxdoc -B txt --blanks=1 test.sgml && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --blanks No Pass"
+	rm -f test.txt
+	### -B txt -b 1 ##
+	linuxdoc -B txt -b 1 test.sgml && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -b No Pass"
+	rm -f test.txt
+	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools_14."
 }
 
 function post_test() {

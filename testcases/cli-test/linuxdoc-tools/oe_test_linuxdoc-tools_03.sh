@@ -40,7 +40,11 @@ EOF
 }
 
 function run_test() {
-	LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools."
+	LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools_03."
+	### -B html --split ##
+	linuxdoc -B html test.sgml --split=0 && find . -name "test.html"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B html --split No Pass"
+	rm -f test.html
 	### -B html -s ##
 	linuxdoc -B html test.sgml -s 1 && find . -name "test.html"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B html -s No Pass"
@@ -85,7 +89,7 @@ function run_test() {
 	linuxdoc -B html test.sgml -F b && find . -name "test.html"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B html -F No Pass"
 	rm -f test.html
-	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools."
+	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools_03."
 }
 
 function post_test() {

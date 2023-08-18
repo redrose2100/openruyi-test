@@ -42,9 +42,6 @@
         },
 		{
             "name": "oe_test_linuxdoc-tools_14"
-        },
-		{
-            "name": "oe_test_linuxdoc-tools_15"
         }
     ]
 }

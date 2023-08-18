@@ -40,31 +40,7 @@ EOF
 }
 
 function run_test() {
-    LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools."
-	### -B rtf --charset ##
-	linuxdoc -B rtf test.sgml --charset=utf-8 && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --charset No Pass"
-	rm -f test.rtf
-	### -B rtf -c ##
-	linuxdoc -B rtf test.sgml -c utf-8 && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -c No Pass"
-	rm -f test.rtf
-	### -B rtf --style ##
-	linuxdoc -B rtf test.sgml --style=a && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --style No Pass"
-	rm -f test.rtf
-	### -B rtf -S ##
-	linuxdoc -B rtf test.sgml -S a && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -S No Pass"
-	rm -f test.rtf
-	### -B rtf --tabsize ##
-	linuxdoc -B rtf test.sgml --tabsize=4 && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --tabsize No Pass"
-	rm -f test.rtf
-	### -B rtf -t ##
-	linuxdoc -B rtf test.sgml -t 4 && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -t No Pass"
-	rm -f test.rtf
+	LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools_12."
 	### -B rtf --debug ##
 	linuxdoc -B rtf test.sgml --debug && find . -name "test.rtf"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --debug No Pass"
@@ -80,8 +56,32 @@ function run_test() {
 	### -B rtf -D ##
 	linuxdoc -B rtf test.sgml -D version=1.0 && find . -name "test.rtf"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -D No Pass"
-	rm -f test.rtf	
-    LOG_INFO "End to run testcase:oe_test_linuxdoc-tools."
+	rm -f test.rtf
+	### -B rtf --include ##
+	linuxdoc -B rtf test.sgml --include=a && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --include No Pass"
+	rm -f test.rtf
+	### -B rtf -i ##
+	linuxdoc -B rtf test.sgml -i a && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -i No Pass"
+	rm -f test.rtf
+	### -B rtf --pass ##
+	linuxdoc -B rtf test.sgml --pass=a && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --pass No Pass"
+	rm -f test.rtf
+	### -B rtf -P ##
+	linuxdoc -B rtf test.sgml -P a && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -P No Pass"
+	rm -f test.rtf
+	### -B rtf --twosplit ##
+	linuxdoc -B rtf test.sgml --twosplit && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --twosplit No Pass"
+	rm -f test.rtf
+	### -B rtf -2 ##
+	linuxdoc -B rtf test.sgml -2 && find . -name "test.rtf"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -2 No Pass"
+	rm -f test.rtf
+	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools_12."
 }
 
 function post_test() {

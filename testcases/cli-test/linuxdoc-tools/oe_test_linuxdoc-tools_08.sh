@@ -40,19 +40,7 @@ EOF
 }
 
 function run_test() {
-	LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools."
-	### -B latex -o ##
-	linuxdoc -B latex test.sgml -o tex && find . -name "test.tex"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B latex -o No Pass"
-	rm -f test.tex
-	### -B latex --bibtex ##
-	linuxdoc -B latex --bibtex  test.sgml && find . -name "test.tex"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B latex --bibtex No Pass"
-	rm -f test.tex
-	### -B latex -b ##
-	linuxdoc -B latex -b test.sgml && find . -name "test.tex"
-    CHECK_RESULT $? 0 0 "L$LINENO: -B latex -b No Pass"
-	rm -f test.tex
+	LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools_08."
 	### -B latex --makeindex ##
     linuxdoc -B latex --makeindex  test.sgml && find . -name "test.tex"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B latex --makeindex No Pass"
@@ -81,7 +69,27 @@ function run_test() {
 	linuxdoc -B latex --dvips=dvi2ps test.sgml && find . -name "test.tex"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B latex --dvips No Pass"
 	rm -f test.tex
-	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools."
+	### -B latex -s ##
+	linuxdoc -B latex -s dvi2ps test.sgml && find . -name "test.tex"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B latex -s No Pass"
+	rm -f test.tex
+	### -B latex --latex ##
+	linuxdoc -B latex --latex=latex test.sgml && find . -name "test.tex"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B latex --latex No Pass"
+	rm -f test.tex
+	### -B latex -x ##
+	linuxdoc -B latex -x latex test.sgml && find . -name "test.tex"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B latex -x No Pass"
+	rm -f test.tex
+	### -B latex --verbosity ##
+	linuxdoc -B latex --verbosity=1 test.sgml && find . -name "test.tex"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B latex --verbosity No Pass"
+	rm -f test.tex
+	### -B latex -V ##
+	linuxdoc -B latex -V 1 test.sgml && find . -name "test.tex"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B latex -V No Pass"
+	rm -f test.tex
+	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools_08."
 }
 
 function post_test() {

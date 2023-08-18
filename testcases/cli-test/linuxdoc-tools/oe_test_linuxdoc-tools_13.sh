@@ -40,31 +40,7 @@ EOF
 }
 
 function run_test() {
-    LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools."
-	### -B rtf --include ##
-	linuxdoc -B rtf test.sgml --include=a && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --include No Pass"
-	rm -f test.rtf
-	### -B rtf -i ##
-	linuxdoc -B rtf test.sgml -i a && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -i No Pass"
-	rm -f test.rtf
-	### -B rtf --pass ##
-	linuxdoc -B rtf test.sgml --pass=a && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --pass No Pass"
-	rm -f test.rtf
-	### -B rtf -P ##
-	linuxdoc -B rtf test.sgml -P a && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -P No Pass"
-	rm -f test.rtf
-	### -B rtf --twosplit ##
-	linuxdoc -B rtf test.sgml --twosplit && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf --twosplit No Pass"
-	rm -f test.rtf
-	### -B rtf -2 ##
-	linuxdoc -B rtf test.sgml -2 && find . -name "test.rtf"
-	CHECK_RESULT $? 0 0 "L$LINENO: -B rtf -2 No Pass"
-	rm -f test.rtf
+	LOG_INFO "Start to run testcase:oe_test_linuxdoc-tools_13."
 	### -B txt ##
 	linuxdoc -B txt test.sgml && find . -name "test.txt"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B txt No Pass"
@@ -81,7 +57,35 @@ function run_test() {
 	linuxdoc -B txt test.sgml -p a4 && find . -name "test.txt"
 	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -p No Pass"
 	rm -f test.txt
-    LOG_INFO "End to run testcase:oe_test_linuxdoc-tools."
+	### -B txt --language ##
+	linuxdoc -B txt test.sgml --language=en && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --language No Pass"
+	rm -f test.txt
+	### -B txt --charset ##
+	linuxdoc -B txt test.sgml --charset=utf-8 && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --charset No Pass"
+	rm -f test.txt
+	### -B txt -c ##
+	linuxdoc -B txt test.sgml -c utf-8 && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -c No Pass"
+	rm -f test.txt
+	### -B txt --style ##
+	linuxdoc -B txt test.sgml --style=a && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --style No Pass"
+	rm -f test.txt
+	### -B txt -S ##
+	linuxdoc -B txt test.sgml -S a && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -S No Pass"
+	rm -f test.txt
+	### -B txt --tabsize ##
+	linuxdoc -B txt test.sgml --tabsize=4 && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt --tabsize No Pass"
+	rm -f test.txt
+	### -B txt -t ##
+	linuxdoc -B txt test.sgml -t 4 && find . -name "test.txt"
+	CHECK_RESULT $? 0 0 "L$LINENO: -B txt -t No Pass"
+	rm -f test.txt
+	LOG_INFO "End to run testcase:oe_test_linuxdoc-tools_13."
 }
 
 function post_test() {
