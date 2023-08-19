@@ -18,6 +18,12 @@
         },
         {
             "name": "oe_test_texi2html_06"
+        },
+        {
+            "name": "oe_test_texi2html_07"
+        },
+        {
+            "name": "oe_test_texi2html_08"
         }
     ]
 }
