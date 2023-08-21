@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_gdb_recovery_database"
+        },
+        {
+            "name": "oe_test_gdb-breakpoints"
         }
     ]
 }
