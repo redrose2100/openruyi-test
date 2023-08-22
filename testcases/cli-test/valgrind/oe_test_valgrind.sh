@@ -17,10 +17,10 @@
 # @Desc      :   Command test valgrind
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "valgrind glibc-devel glibc-debuginfo"
+    DNF_INSTALL "valgrind glibc-devel glibc-debuginfo gcc-c++"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -50,7 +50,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf valgrind_test*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
