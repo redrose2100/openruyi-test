@@ -150,7 +150,6 @@
 	    },
         {
             "name": "oe_test_gpgcheck"
-            }
-
+        }
     ]
 }
