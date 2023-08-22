@@ -21,6 +21,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    fi
     DNF_INSTALL rsyslog
     systemctl start rsyslog
     old_id=$(pgrep rsyslog)
@@ -34,26 +38,26 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if df -h / | grep overlay; then
-        LOG_INFO "The current environment is Docker."
-    else
-        ln -sf /usr/share/zoneinfo/NZ /etc/localtime
-        CHECK_RESULT $? 0 0 "Failed to execute cp"
-        date | grep "$old_timezone"
-        CHECK_RESULT $? 0 1 "Time zone changed"
-        SLEEP_WAIT 900
-        pgrep rsyslog | grep "$old_id"
-        CHECK_RESULT $? 0 1 "Pid not changed"
-        date | grep -i NZ
-        CHECK_RESULT $? 0 0 "Time zone not changed"
-        grep "timezone changed" /var/log/messages
-        CHECK_RESULT $? 0 0 "/var/log/messages not logged"
-    fi
+    ln -sf /usr/share/zoneinfo/NZ /etc/localtime
+    CHECK_RESULT $? 0 0 "Failed to execute cp"
+    date | grep "$old_timezone"
+    CHECK_RESULT $? 0 1 "Time zone changed"
+    SLEEP_WAIT 900
+    pgrep rsyslog | grep "$old_id"
+    CHECK_RESULT $? 0 1 "Pid not changed"
+    date | grep -i NZ
+    CHECK_RESULT $? 0 0 "Time zone not changed"
+    grep "timezone changed" /var/log/messages
+    CHECK_RESULT $? 0 0 "/var/log/messages not logged"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    fi
     rm -rf /etc/localtime
     timedatectl set-timezone "$old_zone"
     mv -f /var/log/messages.bak /var/log/messages
