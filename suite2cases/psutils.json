@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/psutils",
+    "cases": [
+        {
+            "name": "oe_test_psutils_01"
+        },
+        {
+            "name": "oe_test_psutils_02"
+        }
+    ]
+}
