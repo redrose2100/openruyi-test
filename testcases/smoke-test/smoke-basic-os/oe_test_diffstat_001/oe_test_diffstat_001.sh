@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL diffstat
+    DNF_INSTALL "diffstat diffutils"
     mkdir diff_test1 diff_test2
     LOG_INFO "End to prepare the test environment."
 }
@@ -40,9 +40,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf diff_test1 diff_test2
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

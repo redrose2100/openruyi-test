@@ -17,7 +17,13 @@
 # @Desc      :   Test subprocess.Popen
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL hostname
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -30,7 +36,7 @@ function run_test() {
         expect ">>>" {send "exit()\r"}
         expect eof
 EOF
-    grep $(hostname) ./testlog
+    grep "$(hostname)" ./testlog
     CHECK_RESULT $? 0 0 "Failed to execute preexec_fn=os.setsid"
     LOG_INFO "End to run test."
 }
@@ -38,6 +44,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf testlog
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
