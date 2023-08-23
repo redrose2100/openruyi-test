@@ -16,7 +16,7 @@
 #@Desc      	:   Aide init database
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -26,14 +26,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    aide --init | grep "AIDE initialized database at /var/lib/aide/aide.db.new.gz"
+    aide --init | grep "initialized database" | grep "/var/lib/aide/aide.db.new.gz"
     CHECK_RESULT $? 0 0 "Aide init datebase: failed!"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /var/lib/aide
     LOG_INFO "End to restore the test environment."
 }

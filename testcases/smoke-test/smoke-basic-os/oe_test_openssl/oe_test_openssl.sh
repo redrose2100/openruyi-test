@@ -28,7 +28,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL openssl
+    DNF_INSTALL "openssl diffutils"
     LOG_INFO "End of environmental preparation!"
 }
 
