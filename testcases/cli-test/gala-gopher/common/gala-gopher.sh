@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   gala-gopher common function
 # #############################################
-# shellcheck disable=SC2002,SC2009,SC2148,SC2162,SC2181,SC1091,SC2164,SC2010
+# shellcheck disable=SC2002,SC2009,SC2148,SC2162,SC2181,SC1091,SC2164,SC2010,SC2034,SC2103,SC2086,SC2126,SC2010,SC2188,SC2162
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 GOPHER_CONF_PATH="/etc/gala-gopher/gala-gopher.conf"
 
