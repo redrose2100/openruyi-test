@@ -56,7 +56,7 @@ function run_test() {
     #TODO大量指标未覆盖
     process_metric_wr="ns_ext4_read ns_ext4_write ns_ext4_flush ns_ext4_open"
     while read line; do
-        cat taskprobe.txt | grep proc_"$metric"
+        cat taskprobe.txt | grep proc_"$line"
         expect_eq $? 0 || echo "proc:$line not exist" >> fail_log
     done < metrics/process_metric_wr
 }
