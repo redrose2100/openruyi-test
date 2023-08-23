@@ -34,8 +34,8 @@ function run_test() {
 
     curl "${NODE1_IPV4}":8888 > ioprobe.txt
     while read line; do
-        cat ioprobe.txt | grep block_"$metric"
-        [ $? -eq 0 ] && echo "block:$metric" >> fail_log
+        cat ioprobe.txt | grep block_"$line"
+        [ $? -eq 0 ] && echo "block:$line" >> fail_log
     done < metrics/block_metric
     check_log
 }

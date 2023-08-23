@@ -43,8 +43,8 @@ function run_test() {
     else
         # check stack_probe
         ls "$GOPHER_CONF_PATH".bak || cp "$GOPHER_CONF_PATH" "$GOPHER_CONF_PATH".bak
-        line=$(grep -nr stackprobe "${gala_path}" | grep command | awk -F: '{print $1}')
-        sed -i '$((line + 2))s/off/on/g' "${gala_path}"
+        line=$(grep -nr stackprobe "${GOPHER_CONF_PATH}" | grep command | awk -F: '{print $1}')
+        sed -i '$((line + 2))s/off/on/g' "${GOPHER_CONF_PATH}"
         systemctl restart gala-gopher
         ps aux | grep "extend_probes\/stackprobe" | grep -v grep
         CHECK_RESULT $? 0 0
@@ -54,6 +54,7 @@ function run_test() {
         sed -i 's/oncpu = .*;/oncpu = true;/g' "${conf_path}"
         sed -i 's/offcpu = .*;/offcpu = true;/g' "${conf_path}"
         sed -i 's/memleak = .*;/memleak = true;/g' "${conf_path}"
+	stackprobe_path=/opt/gala-gopher/extend_probes/stackprobe
         stdbuf -oL "$stackprobe_path" > stackprobe.log 2>&1 &
     fi
     SSH_CMD "iperf -c ${NODE1_IPV4} -i 1 -t 10" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
@@ -76,7 +77,7 @@ function run_test() {
         SSH_CMD "iperf -c ${NODE1_IPV4} -i 1 -t 5 -p $((5001 + i))" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     done
 
-    for metric in "oncpu offcpu mem"; do
+    for metric in oncpu offcpu mem; do
         grep 'curl post post to http://localhost:4040' /var/log/gala-gopher/debug/gopher.log | grep gala-gopher-"$metric"
         CHECK_RESULT $? 0 0
     done

@@ -14,7 +14,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test gala-gopher guassdb
 # #############################################
-# shellcheck disable=SC2002,SC2009,SC2148,SC2162,SC2181,SC1091,SC2164,SC2010,SC2034,SC2103,SC2086,SC2126,SC2010,SC2188,SC2162
+# shellcheck disable=SC2002,SC2009,SC2148,SC2162,SC2181,SC1091,SC2164,SC2010,SC2034,SC2103,SC2086,SC2126,SC2010,SC2188,SC2162/
 source common/gala-gopher.sh
 
 function pre_test() {
@@ -48,6 +48,7 @@ EOF
     CHECK_RESULT $? 0 0
 
     sleep 60
+    gauss_port=5432
     curl "$ETS_LOCAL_IP":8888 > gaussdb.txt
     cat gaussdb.txt | grep sli_rtt_nsec | grep 'POSTGRE' | grep "$gauss_port"
     expect_eq $? 0
