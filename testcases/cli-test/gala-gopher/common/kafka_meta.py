@@ -5,7 +5,7 @@ def main():
     consumer = KafkaConsumer(
         'gala_gopher_event',
         group_id="group3",
-        bootstrap_servers=["9.82.229.223:9092"]
+        bootstrap_servers=["ip:9092"]
     )
     for msg in consumer:
         print("in")

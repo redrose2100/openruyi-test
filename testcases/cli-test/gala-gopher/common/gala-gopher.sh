@@ -27,7 +27,7 @@ function start_gopher() {
 
 function clean_gopher() {
     systemctl stop gala-gopher
-    #yum remove -y gala-gopher
+    yum remove -y gala-gopher
 }
 
 function get_unused_port() {
