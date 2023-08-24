@@ -34,6 +34,7 @@ function run_test() {
     pip3 config set global.index-url http://mirrors.tools.huawei.com/pypi/simple/
     pip3 config set global.trusted-host mirrors.tools.huawei.com
     pip3 install kafka kafka-python
+    sed -i "s/ip/${NODE1_IPV4}/g" ./common/kafka_meta.py
     stdbuf -oL python ./common/kafka_meta.py &> kafka.txt &
 
     # start iperf
