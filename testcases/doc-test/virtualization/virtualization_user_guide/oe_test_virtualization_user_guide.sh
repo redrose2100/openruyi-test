@@ -96,13 +96,25 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to config env variables for testuser"
     su - testuser -c "source ~/.bashrc"
     CHECK_RESULT $? 0 0 "Failed to take effect the configuration"
-    sed -i "/<\/domain>/i\<seclabel type='dynamic' model='dac' relabel='yes'/>" openEulerVM.xml
-    CHECK_RESULT $? 0 0 "Failed to edit openEulerVM.xml cfg file"
+    if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
+        sed -i "/<\/domain>/i\<seclabel type='dynamic' model='dac' relabel='yes'/>" openEulerVM.xml
+        CHECK_RESULT $? 0 0 "Failed to edit openEulerVM.xml cfg file"
+    fi
 
     # Manage virtual machines
     wget -c -P /mnt https://repo.openeuler.org/"${openeulerversion}"/ISO/"${NODE1_FRAME}"/"${openeulerversion}"-"${NODE1_FRAME}"-dvd.iso
     mv openEuler-image.qcow2 /mnt
-    sed -i "s/openEuler-22.03-LTS-aarch64-dvd.iso/${openeulerversion}-${NODE1_FRAME}-dvd.iso/" openEulerVM.xml
+    if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
+        sed -i "s/openEuler-22.03-LTS-aarch64-dvd.iso/${openeulerversion}-${NODE1_FRAME}-dvd.iso/" openEulerVM.xml
+    else
+        sed -i "28a<disk type='file' device='cdrom'> \
+      <driver name='qemu' type='raw'/> \
+      <source file='/mnt/${openeulerversion}-${NODE1_FRAME}-dvd.iso'/> \
+      <target dev='sdb' bus='scsi'/> \
+      <readonly/> \
+      <boot order='2'/> \
+    </disk>" openEulerVM.xml
+    fi
     virsh create openEulerVM.xml | grep "Domain openEulerVM created from openEulerVM.xml"
     CHECK_RESULT $? 0 0 "Failed to create a openEulerVM"
     virsh save openEulerVM openEulerVM.bak | grep "Domain openEulerVM saved to openEulerVM.bak"
@@ -222,8 +234,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "sVirt defense is not enabled for the QEMU process on the openEulerVM"
 
     virsh destroy openEulerVM
-    virsh undefine openEulerVM --nvram | grep "Domain openEulerVM has been undefined"
-    CHECK_RESULT $? 0 0 "Failed to undefine the openEulerVM"
+    if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
+        virsh undefine openEulerVM --nvram | grep "Domain openEulerVM has been undefined"
+        CHECK_RESULT $? 0 0 "Failed to undefine the openEulerVM"
+    else
+        virsh undefine openEulerVM | grep "Domain openEulerVM has been undefined"
+        CHECK_RESULT $? 0 0 "Failed to undefine the openEulerVM"
+    fi
     LOG_INFO "End to run test."
 }
 

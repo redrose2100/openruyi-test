@@ -36,13 +36,13 @@ n
 p
 1
 
-+100M
++350M
 Y
 n
 p
 2
 
-+100M
++350M
 Y
 w
 diskEof"

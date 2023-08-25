@@ -15,12 +15,13 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test rename file on fs fail
 #####################################
+# shellcheck disable=SC1091,SC2224
 
 source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    point_list=($(CREATE_FS))
+    point_list=("$(CREATE_FS "$@")")
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -28,14 +29,14 @@ function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         var=${point_list[$i]}
-        echo "test" > $var/testfile1
-        mv $var/testfile1 2>&1 | grep "missing destination file operand"
+        echo "test" > "$var"/testfile1
+        mv "$var"/testfile1 2>&1 | grep "missing destination file operand"
         CHECK_RESULT $? 0 0 "The cmd lacks parameter was executed succeed on unexpect on $var."
-        mv $var/testfile1 $var/testaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 2>&1 | grep "File name too long"
+        mv "$var"/testfile1 "$var"/testaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 2>&1 | grep "File name too long"
         CHECK_RESULT $? 0 0 "File can be moved when length of file name is more than 255 on $var."
-        mv $var/testfile1 $var/testfile2 $var/testfile3 2>&1 | grep "is not a directory"
+        mv "$var"/testfile1 "$var"/testfile2 "$var"/testfile3 2>&1 | grep "mv: target '$var/testfile3'"
         CHECK_RESULT $? 0 0 "The cmd with blank space parameter was executed succeed on unexpect on $var."
-        mv $var/testfile1 $var/{'a':1,'b':2} 2>&1 | grep "is not a directory"
+        mv "$var"/testfile1 "$var"/{'a':1,'b':2} 2>&1 | grep "mv: target '$var/b:2'"
         CHECK_RESULT $? 0 0 "The cmd with dict parameter was executed succeed on unexpect on $var."
     done
     LOG_INFO "End to run test."
@@ -43,9 +44,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
+    list=${point_list[*]}
     REMOVE_FS "$list"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

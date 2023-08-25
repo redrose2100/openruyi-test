@@ -44,7 +44,7 @@ function run_test() {
     kubernetes_ver=$(kubeadm config images list | grep "kube-apiserver" | awk -F ":" '{print $NF}')
     for image in $(kubeadm config images list | awk -F "/" '{print $NF}'); do
         isula pull registry.cn-hangzhou.aliyuncs.com/google_containers/"$image"
-        isula tag registry.cn-hangzhou.aliyuncs.com/google_containers/"$image" k8s.gcr.io/"$image"
+        isula tag registry.cn-hangzhou.aliyuncs.com/google_containers/"$image" "$(kubeadm config images list | grep "$image")"
         isula rmi registry.cn-hangzhou.aliyuncs.com/google_containers/"$image"
     done
     kubeadm init --apiserver-advertise-address="${NODE1_IPV4}" --kubernetes-version "$kubernetes_ver" --pod-network-cidr=10.244.0.0/16 --upload-certs --cri-socket=/var/run/isulad.sock | grep "initialized successfully"

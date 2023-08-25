@@ -15,15 +15,16 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test chmod
 #####################################
+# shellcheck disable=SC1091,SC2010,SC2207
 
 source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
     cur_date=$(date +%Y%m%d%H%M%S)
-    point_list=($(CREATE_FS))
-    user="test"$cur_date
-    useradd $user
+    point_list=($(CREATE_FS "$@"))
+    user="test""$cur_date"
+    useradd "$user"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -31,35 +32,35 @@ function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         var=${point_list[$i]}
-        mkdir -p $var/tmp/test01/test02/test03
-        per01=$(ls -l $var/tmp | grep "test01" | awk '{print $1}')
-        per02=$(ls -l $var/tmp/test01 | grep "test02" | awk '{print $1}')
+        mkdir -p "$var/tmp/test01/test02/test03"
+        per01=$(ls -l "$var"/tmp | grep "test01" | awk '{print $1}')
+        per02=$(ls -l "$var"/tmp/test01 | grep "test02" | awk '{print $1}')
         [[ "$per01" =~ "drwxr-xr-x" ]]
         CHECK_RESULT $? 0 0 "Check access of $var/tmp failed when creating defualt."
-        chmod 777 $var/tmp/test01
-        per03=$(ls -l $var/tmp | grep "test01" | awk '{print $1}')
-        per04=$(ls -l $var/tmp/test01 | grep "test02" | awk '{print $1}')
+        chmod 777 "$var"/tmp/test01
+        per03=$(ls -l "$var"/tmp | grep "test01" | awk '{print $1}')
+        per04=$(ls -l "$var"/tmp/test01 | grep "test02" | awk '{print $1}')
         [[ "$per03" =~ "drwxrwxrwx" ]]
         CHECK_RESULT $? 0 0 "Check access of $var/tmp failed."
         [ "$per02" == "$per04" ]
         CHECK_RESULT $? 0 0 "Check access of $var/tmp/test01 failed."
-        chmod u-x $var/tmp/test01/test02
-        per07=$(ls -l $var/tmp/test01 | grep "test02" | awk '{print $1}')
+        chmod u-x "$var"/tmp/test01/test02
+        per07=$(ls -l "$var"/tmp/test01 | grep "test02" | awk '{print $1}')
         [[ "$per07" =~ "drw-r-xr-x" ]]
         CHECK_RESULT $? 0 0 "Check access of $var/tmp/test01/test02 failed."
-        chmod a-r $var/tmp/test01/test02/test03
-        per08=$(ls -l $var/tmp/test01/test02 | grep "test03" | awk '{print $1}')
+        chmod a-r "$var"/tmp/test01/test02/test03
+        per08=$(ls -l "$var"/tmp/test01/test02 | grep "test03" | awk '{print $1}')
         [[ "$per08" =~ "d-wx--x--x" ]]
         CHECK_RESULT $? 0 0 "Check access of $var/tmp/test01/test02/test03 failed."
-        chmod o-x $var/tmp/test01/test02/test03
-        per09=$(ls -l $var/tmp/test01/test02 | grep "test03" | awk '{print $1}')
+        chmod o-x "$var"/tmp/test01/test02/test03
+        per09=$(ls -l "$var"/tmp/test01/test02 | grep "test03" | awk '{print $1}')
         [[ "$per09" =~ "d-wx--x---" ]]
         CHECK_RESULT $? 0 0 "Check access of $var/tmp/test01/test02/test03 failed."
-        su - $user -c "cd $var/tmp/test01/test02/test03"
+        su - "$user" -c "cd $var/tmp/test01/test02/test03"
         CHECK_RESULT $? 0 1 "Successfully accessed $var/tmp/test01/test02/test03 using $user"
-        chmod -R 777 $var/tmp/test01
-        per05=$(ls -l $var/tmp/ | grep "test01" | awk '{print $1}')
-        per06=$(ls -l $var/tmp/test01 | grep "test02" | awk '{print $1}')
+        chmod -R 777 "$var"/tmp/test01
+        per05=$(ls -l "$var"/tmp/ | grep "test01" | awk '{print $1}')
+        per06=$(ls -l "$var"/tmp/test01 | grep "test02" | awk '{print $1}')
         [[ "$per05" =~ "drwxrwxrwx" ]]
         CHECK_RESULT $? 0 0 "Check access of $var/tmp failed."
         [[ "$per06" =~ "drwxrwxrwx" ]]
@@ -72,11 +73,11 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
+    list=${point_list[*]}
     REMOVE_FS "$list"
-    userdel $user
+    userdel -r "$user"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
 

@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dd if=/dev/zero of=/tmp/test_dirty_page_file bs=10K count=100
+    dd if=/dev/zero of=/tmp/test_dirty_page_file bs=10M count=100
     dirty1=$(grep Dirty /proc/meminfo | awk '{print $2}')
     sync
     SLEEP_WAIT 2
@@ -29,6 +29,12 @@ function run_test() {
     [[ $dirty1 -gt $dirty2 ]]
     CHECK_RESULT $? 0 0 "The dirty page doesn't writeback after executing sync."
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    rm -f /tmp/test_dirty_page_file
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
