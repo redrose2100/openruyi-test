@@ -807,6 +807,9 @@
 	},
 	{
 	     "name": "oe_test_ebtables_002"
+	},
+	{
+	     "name":"oe_test_lzo_002"
 	}
 
 
