@@ -9,7 +9,9 @@
         },
         {
             "name": "oe_test_gdb-bt"
+        },
+        {
+            "name": "oe_test_gdb-list"
         }
-
     ]
 }
