@@ -14,7 +14,7 @@
 # @Contact   :   chengweibin@uniontech.com
 # @Date      :   2023-08-25
 # @License   :   Mulan PSL v2
-# @Desc      :   test sysstat package
+# @Desc      :   test sysstat packages
 # ############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
