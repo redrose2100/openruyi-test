@@ -801,6 +801,9 @@
         },
         {
             "name": "oe_test_sysstat_01"
+        },
+        {
+            "name": "oe_test_sysstat_02"
         }
     ]
 }
