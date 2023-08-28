@@ -12,6 +12,10 @@
         },
         {
             "name": "oe_test_gdb-list"
+        },
+        {
+            "name": "oe_test_gdb-watch"
         }
+
     ]
 }
