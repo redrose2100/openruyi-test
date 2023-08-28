@@ -61,7 +61,7 @@ function run_test() {
     ### set --add-mr
     dsconf localhost backend index set --attr name --add-mr ordering example | grep  "Index successfully updated" 
     CHECK_RESULT $? 0 0 "Check: backend index set --add-mrx No Pass" 
-    ### set --add-mr
+    ### set --del-mr
     dsconf localhost backend index set --attr name --del-mr ordering example | grep  "Index successfully updated" 
     CHECK_RESULT $? 0 0 "Check: backend index set --add-mr No Pass" 
     ### set --reindex
