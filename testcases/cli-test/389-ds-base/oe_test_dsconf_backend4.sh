@@ -102,9 +102,6 @@ function run_test() {
     ### set --exclude-from-export
     #dsconf localhost backend config set --exclude-from-export 16777216 | grep  "Successfully updated database configuration" 
     #CHECK_RESULT $? 0 0 "Check: backend config set --exclude-from-export No Pass" 
-    ### set --import-cachesize
-    #dsconf localhost backend config set --import-cachesize entrydn entryid dncomp parentid numSubordinates tombstonenumsubordinates entrysn| grep  "Successfully updated database configuration" 
-    #CHECK_RESULT $? 0 0 "Check: backend config set --import-cachesize No Pass" 
     ### set --pagedlookthroughlimit
     dsconf localhost backend config set --pagedlookthroughlimit 0 | grep  "Successfully updated database configuration" 
     CHECK_RESULT $? 0 0 "Check: backend config set --pagedlookthroughlimit No Pass" 
