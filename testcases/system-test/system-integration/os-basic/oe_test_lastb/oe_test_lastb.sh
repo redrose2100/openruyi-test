@@ -17,18 +17,18 @@
 # @Desc      :   Command test-lastb
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
     lastb |grep -i btmp
-    CHECK_RESULT $? 0 0 "display failed"
+    CHECK_RESULT $? 0 0 "default option result failed "
     lastb -n 5
-    CHECK_RESULT $? 0 0 "display failed"
-    lastb -h |grep "用法"
-    CHECK_RESULT $? 0 0 "display failed"
+    CHECK_RESULT $? 0 0 "-n option result failed"
+    lastb -h |grep -E "Usage|用法"
+    CHECK_RESULT $? 0 0 "-h option result failed"
     lastb -V |grep -i lastb
-    CHECK_RESULT $? 0 0 "display failed"
+    CHECK_RESULT $? 0 0 "-V option result failed"
     LOG_INFO "End to run test."
 }
 
