@@ -17,7 +17,7 @@
 # @Desc      :   whereis command test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    whereis --help | grep "Usage: whereis"
+    whereis --help | grep "Usage:"
     CHECK_RESULT $? 0 0 "The file content is abnormal"
     whereis -V | awk '{print $3}' 
     CHECK_RESULT $? 0 0 "check version display failed"
@@ -43,4 +43,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

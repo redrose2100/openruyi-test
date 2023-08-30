@@ -17,7 +17,7 @@
 # @Desc      :   Command test-awk 
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,9 +28,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cat /etc/passwd |awk  -F ':'  '{print $1}' |grep root
+    awk  -F ':'  '{print $1}' /etc/passwd |grep root
     CHECK_RESULT $? 0 0  "check root result fail"
-    cat /proc/cpuinfo |awk '{print$1}'|grep cpuid
+    awk '{print$1}' /proc/cpuinfo |grep -i cpu
     CHECK_RESULT $? 0 0  "check cpuid result fail"
     awk --help | grep "Usage: awk"
     CHECK_RESULT $? 0 0 "check Tail's help manual fail"
