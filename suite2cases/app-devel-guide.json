@@ -1,0 +1,30 @@
+{
+    "path": "$OET_PATH/testcases/doc-test/app-devel-guide",
+    "machine type": "Kvm",
+    "cases": [
+        {
+            "name": "oe_test_use_gcc_create_dynamic_link_library"
+        },
+        {
+            "name": "oe_test_use_gcc_create_static_link_library"
+        },
+        {
+            "name": "oe_test_use_gcc_compile_c_program"
+        },
+        {
+            "name": "oe_test_use_make_compile"
+        },
+        {
+            "name": "oe_test_jdk_compile_without_pkg"
+        },
+        {
+            "name": "oe_test_jdk_compile_with_pkg"
+        },
+        {
+            "name": "oe_test_local_build_rpm"
+        },
+        {
+            "name": "oe_test_prepare_dev_env"
+        }
+    ]
+}
