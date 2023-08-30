@@ -22,7 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    repo_version=$(grep openeulerversion /etc/openEuler-latest | awk -F '=' '{print'$NF'}')
+    repo_version=$(grep openeulerversion /etc/openEuler-latest | awk -F '=' '{print'"$NF"'}')
     jdk_version=$(dnf search openjdk-devel | awk -F '-' 'NR==2{print $2}')
     jdk_name=java-"$jdk_version"-openjdk-devel.${NODE1_FRAME}
     dnf list installed | grep "$jdk_name" && DNF_REMOVE "$jdk_name"
@@ -36,10 +36,10 @@ function run_test() {
     echo "
 [osrepo]
 name=osrepo
-baseurl=http://repo.openeuler.org/""$repo_version""/OS/""${NODE1_FRAME}""/
+baseurl=http://repo.openeuler.org/"$repo_version"/OS/"${NODE1_FRAME}"/
 enabled=1
 gpgcheck=1
-gpgkey=http://repo.openeuler.org/""$repo_version""/OS/""${NODE1_FRAME}""/RPM-GPG-KEY-openEuler
+gpgkey=http://repo.openeuler.org/"$repo_version"/OS/"${NODE1_FRAME}"/RPM-GPG-KEY-openEuler
     " >>/etc/yum.repos.d/local_repo
     CHECK_RESULT $? 0 0 "Failed to set repo!"
     dnf clean all
