@@ -18,12 +18,12 @@
 # @Desc      :   Compiling Java programs without packages using JDK
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     jdk_version=$(dnf search openjdk-devel | awk -F '-' 'NR==2{print $2}')
     jdk_name=java-$jdk_version-openjdk-devel.${NODE1_FRAME}
-    DNF_INSTALL $jdk_name
+    DNF_INSTALL "$jdk_name"
     cp ../common/HelloWorld.java .
     LOG_INFO "End to prepare the test environment!"
 }
@@ -42,7 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     rm -rf ./HelloWorld*
-    DNF_REMOVE $jdk_name
+    DNF_REMOVE
     LOG_INFO "End environment cleanup."
 }
 

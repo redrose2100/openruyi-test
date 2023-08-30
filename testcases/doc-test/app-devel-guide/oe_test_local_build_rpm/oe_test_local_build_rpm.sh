@@ -17,7 +17,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Building RPM software packages locally
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
@@ -40,7 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     rm -rf ~/rpmbuild
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End environment cleanup."
 }
 

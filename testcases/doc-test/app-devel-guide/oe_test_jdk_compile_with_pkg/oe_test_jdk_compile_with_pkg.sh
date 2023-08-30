@@ -18,12 +18,12 @@
 # @Desc      :   Compiling Java programs with packages using JDK
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     jdk_version=$(dnf search openjdk-devel | awk -F '-' 'NR==2{print $2}')
     jdk_name=java-$jdk_version-openjdk-devel.${NODE1_FRAME}
-    DNF_INSTALL $jdk_name
+    DNF_INSTALL "$jdk_name"
     mkdir -p Test/my/example Hello/world/developers Hi/openos/openeuler
     cp ../common/Test.java Test/my/example/
     cp ../common/Hello.java Hello/world/developers/
@@ -45,7 +45,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     rm -rf ./Test ./Hello ./Hi
-    DNF_REMOVE $jdk_name
+    DNF_REMOVE
     LOG_INFO "End environment cleanup."
 }
 

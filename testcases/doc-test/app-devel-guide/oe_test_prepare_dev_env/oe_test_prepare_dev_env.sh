@@ -17,14 +17,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Prepare the development environment
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disbale=SC2012
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    repo_version=$(grep openeulerversion /etc/openEuler-latest | awk -F '=' {print'$NF'})
+    repo_version=$(grep openeulerversion /etc/openEuler-latest | awk -F '=' '{print'$NF'}')
     jdk_version=$(dnf search openjdk-devel | awk -F '-' 'NR==2{print $2}')
     jdk_name=java-"$jdk_version"-openjdk-devel.${NODE1_FRAME}
-    dnf list installed | grep $jdk_name && DNF_REMOVE $jdk_name
+    dnf list installed | grep "$jdk_name" && DNF_REMOVE "$jdk_name"
     dnf list installed | grep "rpm-build" && DNF_REMOVE "rpm-build"
     wget https://download.jetbrains.com/idea/ideaIC-2018.3.6.tar.gz?_gl=1*v7yw3v*_ga*MTcwODc3NTgzLjE2OTIyMzk3NDU.*_ga_9J976DJZ68*MTY5MzM4NTgzMi4zLjEuMTY5MzM4NTkwOS4wLjAuMA..&_ga=2.235897538.2144001725.1693378868-170877583.1692239745
     tar xf ideaIC-2018.3.6.tar.gz
@@ -35,19 +36,19 @@ function run_test() {
     echo "
 [osrepo]
 name=osrepo
-baseurl=http://repo.openeuler.org/"$repo_version"/OS/"${NODE1_FRAME}"/
+baseurl=http://repo.openeuler.org/""$repo_version""/OS/""${NODE1_FRAME}""/
 enabled=1
 gpgcheck=1
-gpgkey=http://repo.openeuler.org/$repo_version/OS/"${NODE1_FRAME}"/RPM-GPG-KEY-openEuler
+gpgkey=http://repo.openeuler.org/""$repo_version""/OS/""${NODE1_FRAME}""/RPM-GPG-KEY-openEuler
     " >>/etc/yum.repos.d/local_repo
     CHECK_RESULT $? 0 0 "Failed to set repo!"
     dnf clean all
     CHECK_RESULT $? 0 0 "Clearing cache failed"
     dnf makecache
     CHECK_RESULT $? 0 0 "Failed to create cache"
-    dnf install -y $jdk_name
+    dnf install -y "$jdk_name"
     CHECK_RESULT $? 0 0 "Failed to install jdk"
-    java -version 2>&1 | grep $jdk_version
+    java -version 2>&1 | grep "$jdk_version"
     CHECK_RESULT $? 0 0 "JDK version error"
     dnf clean all
     CHECK_RESULT $? 0 0 "Clearing cache failed"
@@ -56,12 +57,12 @@ gpgkey=http://repo.openeuler.org/$repo_version/OS/"${NODE1_FRAME}"/RPM-GPG-KEY-o
     dnf install -y rpm-build
     CHECK_RESULT $? 0 0 "Failed to install rpm!"
     rpm_build_version=$(rpm -qa | grep rpm-build | awk -F '-' '{print $3}')
-    rpmbuild --version | grep $rpm_build_version
+    rpmbuild --version | grep "$rpm_build_version"
     CHECK_RESULT $? 0 0 "rpm-build version error!"
     which java | grep /usr/bin/java
     CHECK_RESULT $? 0 0 "Java path error!"
     java_path1=$(ls -la /usr/bin/java | awk -F '-> ' '{print $2}')
-    actual_path=$(ls -la $java_path1 | awk -F '-> ' '{print $2}' | awk -F '/jre' '{print $1}')
+    actual_path=$(ls -la "$java_path1" | awk -F '-> ' '{print $2}' | awk -F '/jre' '{print $1}')
     export JAVA_HOME=$actual_path
     CHECK_RESULT $? 0 0 "Set java_home path error!"
     export PATH=$JAVA_HOME/bin:$PATH
@@ -80,7 +81,7 @@ gpgkey=http://repo.openeuler.org/$repo_version/OS/"${NODE1_FRAME}"/RPM-GPG-KEY-o
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf /etc/yum.repos.d/local_repo ~/.ssh
+    rm -rf /etc/yum.repos.d/local_repo ~/.ssh ideaIC-2018.3.6*
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

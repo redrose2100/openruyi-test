@@ -18,7 +18,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Using gcc to create and use dynamic link libraries
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL "gcc"
@@ -60,7 +60,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     rm -rf /home/code math.out add.o sub.o
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End environment cleanup."
 }
 
