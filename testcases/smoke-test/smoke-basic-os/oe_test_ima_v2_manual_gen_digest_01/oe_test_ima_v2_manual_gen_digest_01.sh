@@ -16,13 +16,13 @@
 #@Desc      	:   Generate and check digest files and TLV files
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     mkdir -p /tmp/test/test1
     touch /tmp/test/doc.txt
-    DNF_INSTALL digest-list-tools
+    DNF_INSTALL "digest-list-tools selinux-policy-targeted"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -42,7 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /tmp/test /tmp/0-metadata_list-compact-test /tmp/0-metadata_list-compact_tlv-test
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
