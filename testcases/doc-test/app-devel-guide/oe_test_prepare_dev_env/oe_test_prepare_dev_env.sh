@@ -36,10 +36,10 @@ function run_test() {
     echo "
 [osrepo]
 name=osrepo
-baseurl=http://repo.openeuler.org/"$repo_version"/OS/"${NODE1_FRAME}"/
+baseurl=http://repo.openeuler.org/""$repo_version""/OS/""${NODE1_FRAME}""/
 enabled=1
 gpgcheck=1
-gpgkey=http://repo.openeuler.org/"$repo_version"/OS/"${NODE1_FRAME}"/RPM-GPG-KEY-openEuler
+gpgkey=http://repo.openeuler.org/""$repo_version""/OS/""${NODE1_FRAME}""/RPM-GPG-KEY-openEuler
     " >>/etc/yum.repos.d/local_repo
     CHECK_RESULT $? 0 0 "Failed to set repo!"
     dnf clean all
