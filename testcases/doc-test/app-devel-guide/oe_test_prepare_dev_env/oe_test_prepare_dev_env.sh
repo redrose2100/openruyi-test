@@ -17,7 +17,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Prepare the development environment
 # ############################################
-# shellcheck disable=SC2012,SC2027,SC2086
+# shellcheck disable=SC2012,SC2027,SC1078,SC1079
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
