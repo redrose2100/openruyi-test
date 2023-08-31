@@ -1,0 +1,9 @@
+build_targets:
+-    os_variant: openEuler:22.09
+     ground_projects:
+     - openEuler:22.09-BaseOS-0913-2230
+     flag:
+          build: true
+          publish: true
+snapshot_id: ''
+build_id: ''
