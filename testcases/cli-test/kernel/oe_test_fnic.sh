@@ -22,7 +22,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)
-    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/scsi/fnic/fnic.ko
+    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/scsi/fnic/fnic.ko.xz
     CHECK_RESULT $? 0 0 "file does not exist"
     modinfo fnic |grep -i version
     CHECK_RESULT $? 0 0 "Information display failed"
