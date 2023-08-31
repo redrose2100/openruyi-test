@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/mkfs",
+    "cases": [
+        {
+            "name": "oe_test_mkfs_001"
+        }
+    ]
+}
