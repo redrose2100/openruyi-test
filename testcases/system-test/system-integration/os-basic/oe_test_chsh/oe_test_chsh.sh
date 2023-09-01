@@ -17,17 +17,17 @@
 # @Desc      :   Command test-chsh
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "util-linux-user"
+    DNF_INSTALL "util-linux-user zsh"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    chsh -h |grep "用法"
+    chsh -h |grep -E "Usage|用法"
     CHECK_RESULT $? 0 0 "Failed to check the display of help information"
     chsh -l |grep bin
     CHECK_RESULT $? 0 0 "Failed to check shell list"
@@ -39,11 +39,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     chsh -s /bin/bash
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
-
-
-
