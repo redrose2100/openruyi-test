@@ -22,7 +22,6 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "curl"
     vers=$(rpm -qa | grep "^curl" | awk -F - '{print $2}')
-
     LOG_INFO "End to prepare the test environment."
 }
 
