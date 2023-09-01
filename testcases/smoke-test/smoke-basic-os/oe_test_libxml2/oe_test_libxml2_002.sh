@@ -98,7 +98,11 @@ xmlFreeDoc(doc);
 return 0;
 }
 EOF
-    DNF_INSTALL "libxml2 libxml2-devel gcc-c++"
+    if dnf list | grep libxml2-devel;then
+        DNF_INSTALL "libxml2-devel gcc-c++"
+    else
+        DNF_INSTALL "libxml2 gcc-c++"
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
