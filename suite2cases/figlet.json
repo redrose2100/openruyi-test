@@ -9,6 +9,9 @@
         },
 	{
 	    "name": "oe_test_figlet_02"
+	},
+	{
+	    "name": "oe_test_figlet_03"
         }
     ]
 }
