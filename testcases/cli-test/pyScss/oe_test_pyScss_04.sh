@@ -22,8 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "python3-scss"
-    ver=$(rpm -qi python3-scss | grep -oP 'Version\s+:\s+\K[\d.]+')
-    echo '$bg-color: #FFF;.container {background-color: $bg-color;}' > tmp.scss
+    echo "$bg-color: #FFF;.container {background-color: $bg-color;}" > tmp.scss
     mkdir dir
     LOG_INFO "End to prepare the test environment."
 }
@@ -55,7 +54,7 @@ function run_test(){
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf tmp.scss tmp.css dir
     LOG_INFO "End to restore the test environment."
 }

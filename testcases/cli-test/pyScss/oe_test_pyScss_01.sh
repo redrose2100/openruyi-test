@@ -39,13 +39,13 @@ function run_test(){
     CHECK_RESULT $? 0 0 "Check less2scss --version failed"
     less2scss tmp
     CHECK_RESULT $? 0 0 "Check less2scss [file] failed"
-    echo '$orig-color: #000000;' > tmp.scss
+    echo "$orig-color: #000000;" > tmp.scss
     CHECK_RESULT $? 0 0
-    less2scss tmp -f && cat tmp.scss | grep '$link-color: #428bca;'
+    less2scss tmp -f && grep "$link-color: #428bca;" tmp.scss
     CHECK_RESULT $? 0 0 "Check less2scss [file] -f failed"
-    echo '$orig-color: #000000;' > tmp.scss
+    echo "$orig-color: #000000;" > tmp.scss
     CHECK_RESULT $? 0 0
-    less2scss tmp --force && cat tmp.scss | grep '$link-color: #428bca;'
+    less2scss tmp --force && grep "$link-color: #428bca;" tmp.scss
     CHECK_RESULT $? 0 0 "Check less2scss [file] --force failed"
     pyscss -h | grep "Usage: pyscss"
     CHECK_RESULT $? 0 0 "Check pyscss -h failed"
@@ -54,7 +54,7 @@ function run_test(){
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf tmp tmp.scss
     LOG_INFO "End to restore the test environment."
 }
