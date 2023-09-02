@@ -12,7 +12,7 @@
 # ##################################
 # @Author    :   huangjiayi
 # @Contact   :   1960887351@qq.com
-# @Date      :   2023/7/12
+# @Date      :   2023/8/27
 # @License   :   Mulan PSL v2
 # @Desc      :   Test "pyScss" command
 # ##################################
@@ -21,54 +21,42 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-    pip3 install pyScss
+    DNF_INSTALL "python3-scss"
+    ver=$(rpm -qi python3-scss | grep -oP 'Version\s+:\s+\K[\d.]+')
+    echo '$bg-color: #FFF;.container {background-color: $bg-color;}' > tmp.scss
+    mkdir dir
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){
     LOG_INFO "Start to run test."
-    python -mscss --suffix STRING &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --suffix failed"
-    python -mscss --time &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --time failed"
-    python -mscss --debug-info &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --debug-info failed"
-    python -mscss --no-debug-info &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --no-debug-info failed"
-    python -mscss -t NAME &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -t failed"
-    python -mscss --style NAME &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --style failed"
-    python -mscss -C &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -C failed"
-    python -mscss --no-compress &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --no-compress failed"
-    python -mscss -h | grep "Converts Scss files to CSS."
-    CHECK_RESULT $? 0 0 "Check pyScss -h failed"
-    python -mscss --help | grep "Converts Scss files to CSS."
-    CHECK_RESULT $? 0 0 "Check pyScss --help failed"
+    pyscss --help | grep "Usage: pyscss"
+    CHECK_RESULT $? 0 0 "Check pyscss --help failed"
+    pyscss tmp.scss | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss [file] failed"
+    (pyscss -i & echo exit) | grep 'Bye!'
+    CHECK_RESULT $? 0 0 "Check pyscss -i failed"
+    (pyscss --interactive & echo exit) | grep 'Bye!'
+    CHECK_RESULT $? 0 0 "Check pyscss --interactive failed"
+    pyscss tmp.scss -r | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss -r failed"
+    pyscss tmp.scss --recursive | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --recursive failed"
+    pyscss tmp.scss -o tmp.css && cat tmp.css | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss -o failed"
+    pyscss tmp.scss --output tmp.css && cat tmp.css | grep '.container{background-color:#fff}'   
+    CHECK_RESULT $? 0 0 "Check pyscss --output failed"
+    pyscss tmp.scss -s STRING | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss -s failed"
+    pyscss tmp.scss --suffix STRING | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --suffix failed"
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
-    pip3 uninstall -y pyScss
+    DNF_REMOVE
+    rm -rf tmp.scss tmp.css dir
     LOG_INFO "End to restore the test environment."
 }
 

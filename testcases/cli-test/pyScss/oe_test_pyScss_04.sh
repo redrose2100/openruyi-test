@@ -12,7 +12,7 @@
 # ##################################
 # @Author    :   huangjiayi
 # @Contact   :   1960887351@qq.com
-# @Date      :   2023/7/12
+# @Date      :   2023/8/27
 # @License   :   Mulan PSL v2
 # @Desc      :   Test "pyScss" command
 # ##################################
@@ -21,50 +21,42 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-    pip3 install pyScss
+    DNF_INSTALL "python3-scss"
+    ver=$(rpm -qi python3-scss | grep -oP 'Version\s+:\s+\K[\d.]+')
+    echo '$bg-color: #FFF;.container {background-color: $bg-color;}' > tmp.scss
+    mkdir dir
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){
     LOG_INFO "Start to run test."
-    python -mscss --assets-url URL &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --assets-url failed"
-    python -mscss -F PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -F failed"
-    python -mscss --fonts-root PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --fonts-root failed"
-    python -mscss -f PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -f failed"
-    python -mscss --fonts-url PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --fonts-url failed"
-    python -mscss --images-root=PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --images-root failed"
-    python -mscss --images-url=PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --images-url failed"
-    python -mscss --cache-root=PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --cache-root failed"
+    pyscss tmp.scss -I dir | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss -I failed"
+    pyscss tmp.scss --load-path dir | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --load-path failed"
+    pyscss tmp.scss -S dir | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss -S failed"
+    pyscss tmp.scss --static-root dir | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --static-root failed"
+    pyscss tmp.scss -A dir | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss -A failed"
+    pyscss tmp.scss --assets-root dir | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --assets-root failed"
+    pyscss tmp.scss -a URL | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss -A failed"
+    pyscss tmp.scss --assets-url URL | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --assets-url failed"
+    pyscss tmp.scss -F PATH | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss -F failed"
+    pyscss tmp.scss --fonts-root PATH | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --fonts-root failed"
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
-    pip3 uninstall -y pyScss
+    DNF_REMOVE
+    rm -rf tmp.scss tmp.css dir
     LOG_INFO "End to restore the test environment."
 }
 

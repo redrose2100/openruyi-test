@@ -12,7 +12,7 @@
 # ##################################
 # @Author    :   huangjiayi
 # @Contact   :   1960887351@qq.com
-# @Date      :   2023/7/12
+# @Date      :   2023/8/27
 # @License   :   Mulan PSL v2
 # @Desc      :   Test "pyScss" command
 # ##################################
@@ -21,54 +21,42 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-    pip3 install pyScss
+    DNF_INSTALL "python3-scss"
+    ver=$(rpm -qi python3-scss | grep -oP 'Version\s+:\s+\K[\d.]+')
+    echo '$bg-color: #FFF;.container {background-color: $bg-color;}' > tmp.scss
+    mkdir dir
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){
     LOG_INFO "Start to run test."
-    python -mscss -v | grep "pyScss v1.4.0"
-    CHECK_RESULT $? 0 0 "Check pyScss -v failed"
-    python -mscss --version | grep "pyScss v1.4.0"
-    CHECK_RESULT $? 0 0 "Check pyScss --version failed"
-    python -mscss -sass &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -sass failed"
-    python -mscss -I PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -I failed"
-    python -mscss --load-path PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --load-path failed"
-    python -mscss -S PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -S failed"
-    python -mscss --static-root PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --static-root failed"
-    python -mscss -A PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -A failed"
-    python -mscss --assets-root PATH &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --assets-root failed"
-    python -mscss -a URL &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -a failed"
+    pyscss tmp.scss --time | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --time failed"
+    pyscss tmp.scss --debug-info | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --debug-info failed"
+    pyscss tmp.scss --no-debug-info | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --no-debug-info failed"
+    pyscss tmp.scss -t NAME | grep '.container {'
+    CHECK_RESULT $? 0 0 "Check pyscss -t failed"
+    pyscss tmp.scss --style NAME | grep '.container {'
+    CHECK_RESULT $? 0 0 "Check pyscss --style failed"
+    pyscss tmp.scss -C | grep '.container {'
+    CHECK_RESULT $? 0 0 "Check pyscss -C failed"
+    pyscss tmp.scss --no-compress | grep '.container {'
+    CHECK_RESULT $? 0 0 "Check pyscss --no-compress failed"
+    pyscss -v | grep "pyScss v$ver"
+    CHECK_RESULT $? 0 0 "Check pyscss -v failed"
+    pyscss --version | grep "pyScss v$ver"
+    CHECK_RESULT $? 0 0 "Check pyscss --version failed"
+    pyscss tmp.scss --sass | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --sass failed"
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
-    pip3 uninstall -y pyScss
+    DNF_REMOVE
+    rm -rf tmp.scss tmp.css dir
     LOG_INFO "End to restore the test environment."
 }
 

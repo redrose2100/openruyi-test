@@ -12,7 +12,7 @@
 # ##################################
 # @Author    :   huangjiayi
 # @Contact   :   1960887351@qq.com
-# @Date      :   2023/7/12
+# @Date      :   2023/8/27
 # @License   :   Mulan PSL v2
 # @Desc      :   Test "pyScss" command
 # ##################################
@@ -21,63 +21,41 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-    echo -e "p {\n  // currentColor is not actually a SCSS color value, but should be left alone\n  background-image: linear-gradient(to top, transparent, currentColor);\n}" > current-color.scss
-    mkdir tmp_dir
-    pip3 install pyScss
+    DNF_INSTALL "python3-scss"
+    ver=$(rpm -qi python3-scss | grep -oP 'Version\s+:\s+\K[\d.]+')
+    echo "@link-color: #428bca;" > tmp
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){
     LOG_INFO "Start to run test."
-    python -mscss < current-color.scss | grep "currentColor"
-    CHECK_RESULT $? 0 0 "Check pyScss -m failed"
-    expect<<EOF
-    spawn python -mscss -i
-    expect "Welcome to pyScss v1.4.0" {send "exit\n"}
-    expect eof
-EOF
-    CHECK_RESULT $? 0 0 "Check pyScss -i failed"
-    expect<<EOF
-    spawn python -mscss --interactive
-    expect "Welcome to pyScss v1.4.0" {send "exit\n"}
-    expect eof
-EOF
-    CHECK_RESULT $? 0 0 "Check pyScss --interactive failed"
-    python -mscss -w tmp_dir &
+    less2scss -h | grep "Usage: less2scss"
+    CHECK_RESULT $? 0 0 "Check less2scss -h failed"
+    less2scss --help | grep "Usage: less2scss"
+    CHECK_RESULT $? 0 0 "Check less2scss --help failed"
+    less2scss -v | grep "pyScss v$ver"
+    CHECK_RESULT $? 0 0 "Check less2scss -v failed"
+    less2scss --version | grep "pyScss v$ver"
+    CHECK_RESULT $? 0 0 "Check less2scss --version failed"
+    less2scss tmp
+    CHECK_RESULT $? 0 0 "Check less2scss [file] failed"
+    echo '$orig-color: #000000;' > tmp.scss
     CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -w failed"
-    python -mscss --watch tmp_dir &
+    less2scss tmp -f && cat tmp.scss | grep '$link-color: #428bca;'
+    CHECK_RESULT $? 0 0 "Check less2scss [file] -f failed"
+    echo '$orig-color: #000000;' > tmp.scss
     CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --watch failed"
-    python -mscss -r &
-    CHECK_RESULT $? 0 0 
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -r failed"
-    python -mscss --recursive &
-    CHECK_RESULT $? 0 0 
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --recursive failed"
-    python -mscss -o output &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -o failed"
-    python -mscss --output output &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss --output failed"
-    python -mscss -s STRING &
-    CHECK_RESULT $? 0 0
-    kill -9 "$(pgrep -f scss)"
-    CHECK_RESULT $? 0 0 "Check pyScss -s failed"
+    less2scss tmp --force && cat tmp.scss | grep '$link-color: #428bca;'
+    CHECK_RESULT $? 0 0 "Check less2scss [file] --force failed"
+    pyscss -h | grep "Usage: pyscss"
+    CHECK_RESULT $? 0 0 "Check pyscss -h failed"
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
-    rm -rf current-color.scss tmp_dir output
-    pip3 uninstall -y pyScss
+    DNF_REMOVE
+    rm -rf tmp tmp.scss
     LOG_INFO "End to restore the test environment."
 }
 

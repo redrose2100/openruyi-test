@@ -23,37 +23,30 @@ function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "python3-scss"
     ver=$(rpm -qi python3-scss | grep -oP 'Version\s+:\s+\K[\d.]+')
-    echo "@link-color: #428bca;" > tmp
+    echo '$bg-color: #FFF;.container {background-color: $bg-color;}' > tmp.scss
+    mkdir dir
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){
-    LOG_INFO "Start to run test."
-    less2scss -h | grep "Usage: less2scss"
-    CHECK_RESULT $? 0 0 "Check less2scss -h failed"
-    less2scss --help | grep "Usage: less2scss"
-    CHECK_RESULT $? 0 0 "Check less2scss --help failed"
-    less2scss -v | grep "pyScss v$ver"
-    CHECK_RESULT $? 0 0 "Check less2scss -v failed"
-    less2scss --version | grep "pyScss v$ver"
-    CHECK_RESULT $? 0 0 "Check less2scss --version failed"
-    less2scss tmp
-    CHECK_RESULT $? 0 0 "Check less2scss [file] failed"
-    echo '$orig-color: #000000;' > tmp.scss
-    CHECK_RESULT $? 0 0
-    less2scss tmp -f && cat tmp.scss | grep '$link-color: #428bca;'
-    CHECK_RESULT $? 0 0 "Check less2scss [file] -f failed"
-    echo '$orig-color: #000000;' > tmp.scss
-    CHECK_RESULT $? 0 0
-    less2scss tmp --force && cat tmp.scss | grep '$link-color: #428bca;'
-    CHECK_RESULT $? 0 0 "Check less2scss [file] --force failed"
+    LOG_INFO "Start to run test."    
+    pyscss tmp.scss -f URL | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss -f failed"
+    pyscss tmp.scss --fonts-url URL | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --fonts-url failed"
+    pyscss tmp.scss --images-root PATH | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --images-root failed"
+    pyscss tmp.scss --images-url PATH | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --images-url failed"
+    pyscss tmp.scss --cache-root PATH | grep '.container{background-color:#fff}'
+    CHECK_RESULT $? 0 0 "Check pyscss --cache-root failed"
     LOG_INFO "End to run test."
 }
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf tmp tmp.scss
+    rm -rf tmp.scss tmp.css dir
     LOG_INFO "End to restore the test environment."
 }
 
