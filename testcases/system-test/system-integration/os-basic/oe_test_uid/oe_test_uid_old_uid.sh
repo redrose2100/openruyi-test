@@ -17,7 +17,7 @@
 # @Desc      :   old uid function test
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
   LOG_INFO "Start to prepare the test environment."
@@ -28,14 +28,14 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
   useradd -u 1009 test2 >uid.log 2>&1
-  grep "并不唯一" uid.log
+  grep -E "not unique|并不唯一" uid.log
   CHECK_RESULT $? 0 0 "Created successfully"
   userdel -rf test1
   useradd -u 1009 test2
   CHECK_RESULT $? 0 0 "Creation failed, uid is unique"
   useradd -u 1010 test1
   usermod -u 1010 test2 >uid.log 2>&1
-  grep "已经存在" uid.log
+  grep -E "already exists|已经存在" uid.log
   CHECK_RESULT $? 0 0 "Modification successfully"
   userdel -rf test1
   usermod -u 1010 test2
@@ -47,6 +47,7 @@ function post_test() {
   LOG_INFO "Start to restore the test environment."
   userdel -rf test1
   userdel -rf test2
+  rm -rf uid.log
   LOG_INFO "Finish restoring the test environment."
 }
 

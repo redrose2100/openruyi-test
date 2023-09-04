@@ -27,9 +27,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    python3 -c "import kmod;km = kmod.Kmod();km.modprobe('snd_seq');print([(m.name, m.size) for m in km.loaded()])"
+    python3 -c "import kmod;km = kmod.Kmod();km.modprobe('udf');print([(m.name, m.size) for m in km.loaded()])"
     CHECK_RESULT $? 0 0 "Error,Fail to modprobe"
-    python3 -c "import kmod;km = kmod.Kmod();km.rmmod('snd_seq');print([(m.name, m.size) for m in km.loaded()])"
+    python3 -c "import kmod;km = kmod.Kmod();km.rmmod('udf');print([(m.name, m.size) for m in km.loaded()])"
     CHECK_RESULT $? 0 0 "Error, Fail to rm"
     LOG_INFO "End to run test."
 }
