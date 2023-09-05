@@ -22,6 +22,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL acpid
+    max_attempts=20
+    attempt=1
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -32,9 +34,18 @@ function run_test() {
 event=button/power
 action=/sbin/shutdown -h now
 EOF
-    systemctl restart acpid 
+    systemctl restart acpid    
     systemctl status acpid | grep running  
     CHECK_RESULT $? 0 0 "Start Service failure"
+    while [ $attempt -le $max_attempts ]
+    do
+    if 'grep acpid /var/log/messages | grep loaded'; then
+        break
+    else
+        sleep 1
+    fi
+    attempt=$((attempt+1))
+    done
     grep acpid /var/log/messages | grep "loaded"
     CHECK_RESULT $? 0 0 "load Service failure"
     LOG_INFO "End to run test."
@@ -47,4 +58,3 @@ function post_test() {
 }
 
 main "$@"
-
