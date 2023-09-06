@@ -19,8 +19,8 @@
 # shellcheck disable=SC2034,SC2154,SC1091
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
-source "${OET_PATH}"/libs/locallibs/configure_repo.sh
 source ./compile.conf
+source "${OET_PATH}"/libs/locallibs/configure_repo.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,19 +28,28 @@ function pre_test() {
     export LANG=en_US.UTF-8
     EXECUTE_T="600m"
     test -z "${test_repo}" || official_repo=${test_repo}
-    DNF_INSTALL "rpm-build make python3-gssapi"
     mv -f /etc/yum.repos.d/*.repo ./
     if [ "${test_mode}" == "update" ]; then
         cfg_openEuler_repo
         cfg_openEuler_update_test_repo
-        sed -i '/source\//!b;n;cenabled=0' /etc/yum.repos.d/"${openeulerversion}".repo
-        sed -i '/update_.\{8\}\/source\//!b;n;cenabled=1' /etc/yum.repos.d/"${openeulerversion}".repo
+        sed -i '/source\//!b;n;cenabled=0' /etc/yum.repos.d/"${version_info}".repo
+        sed -i '/update_.\{8\}\/source\//!b;n;cenabled=1' /etc/yum.repos.d/"${version_info}".repo
         dnf list --available --repo="${version_info}_source_${test_update_repo}" | grep oe | awk '{print $1}' | awk -F. '{print $1}' >source_list
     else
         cfg_openEuler_repo
-        sed -i '/source\/.*/!b;n;cenabled=0' /etc/yum.repos.d/"${openeulerversion}".repo
-        sed -i '/update\/.*/!b;n;cenabled=0' /etc/yum.repos.d/"${openeulerversion}".repo
-        sed -i '/openEuler-.\{,14\}\/source\//!b;n;cenabled=1' /etc/yum.repos.d/"${openeulerversion}".repo
+        sed -i '/source\/.*/!b;n;cenabled=0' /etc/yum.repos.d/"${version_info}".repo
+        sed -i '/update\/.*/!b;n;cenabled=0' /etc/yum.repos.d/"${version_info}".repo
+        sed -i "/.*${version_info}\/source\//!b;n;cenabled=1" /etc/yum.repos.d/"${version_info}".repo
+        if [ "${test_time}" ]; then
+            sed -i "s/${version_info}\//${version_info}\/${test_time}\//g" /etc/yum.repos.d/"${version_info}".repo
+        else
+            LOG_INFO "Nothing to do."
+        fi
+        if [ "${test_repo_source}" ]; then
+            sed -i "/name=${version_info}_source.*/!b;n;cbaseurl=${test_repo_source}" /etc/yum.repos.d/"${version_info}".repo
+        else
+            LOG_INFO "Nothing to do."
+        fi
         dnf list --available --repo="${version_info}_source" | grep oe | awk '{print $1}' | awk -F. '{print $1}' | grep -vE "kernel|gcc|glibc" >source_list.bak
         shuf -n"${test_pkg_num}" source_list.bak >source_list
         sed -i "1i kernel\ngcc\nglibc" source_list
@@ -50,6 +59,7 @@ function pre_test() {
     else
         LOG_INFO "Test all software packages"
     fi
+    DNF_INSTALL "rpm-build make python3-gssapi"
     useradd compileuser
     mkdir /home/compileuser/source
     LOG_INFO "End to prepare the test environment."
@@ -65,11 +75,11 @@ function run_test() {
             CHECK_RESULT $? 0 0 "yumdownloader \"${source_name}\".src failed"
             su - compileuser -c "rpm -ivh /home/compileuser/source/${source_name}* >>/dev/null 2>&1"
             CHECK_RESULT $? 0 0 "install \"${source_name}\" failed"
-            yum builddep --assumeno /home/compileuser/rpmbuild/SPECS/"${source_name}".spec 2>&1 | grep "root" && rpm -ivh /home/compileuser/source/"${source_name}"*
-            yum builddep --assumeno /home/compileuser/rpmbuild/SPECS/"${source_name}".spec 2>&1 | sed '/Upgrading:/,+100000d' | sed '/Installing dependencies:/,+100000d' | grep -v "Operation aborted." | grep Installing: -A 10000 | grep oe | awk '{print $1}' >dep_list
-            yum builddep -y /home/compileuser/rpmbuild/SPECS/"${source_name}".spec >builddep.log
+            yum builddep --assumeno /home/compileuser/rpmbuild/SPECS/*.spec 2>&1 | grep "root" && rpm -ivh /home/compileuser/source/"${source_name}"*
+            yum builddep --assumeno /home/compileuser/rpmbuild/SPECS/*.spec 2>&1 | sed '/Upgrading:/,+100000d' | sed '/Installing dependencies:/,+100000d' | grep -v "Operation aborted." | grep Installing: -A 10000 | grep oe | awk '{print $1}' >dep_list
+            yum builddep -y /home/compileuser/rpmbuild/SPECS/*.spec >builddep.log
             CHECK_RESULT $? 0 0 "install builddep \"${source_name}\" failed"
-            su - compileuser -c "rpmbuild -ba /home/compileuser/rpmbuild/SPECS/${source_name}.spec >${source_name}.log 2>&1"
+            su - compileuser -c "rpmbuild -ba /home/compileuser/rpmbuild/SPECS/*.spec >${source_name}.log 2>&1"
             CHECK_RESULT $? 0 0 "rpmbuild \"${source_name}\" failed"
         fi
         tail -n 1 /home/compileuser/"${source_name}".log | grep "xit 0"
@@ -84,7 +94,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf /home/compileuser/rpmbuild /home/compileuser/source /home/compileuser/*.log source_list builddep.log source_list.bak /etc/yum.repos.d/"${openeulerversion}".repo
+    rm -rf /home/compileuser/rpmbuild /home/compileuser/source /home/compileuser/*.log source_list builddep.log source_list.bak /etc/yum.repos.d/"${version_info}".repo
     mv -f ./*.repo /etc/yum.repos.d/
     export LANG=${OLD_LANG}
     userdel -rf compileuser

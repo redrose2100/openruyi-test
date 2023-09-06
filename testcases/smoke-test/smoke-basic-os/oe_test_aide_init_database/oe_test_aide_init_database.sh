@@ -26,7 +26,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    aide --init | grep "initialized database" | grep "/var/lib/aide/aide.db.new.gz"
+    aide --init | grep -C 5 "initialized database" | grep "/var/lib/aide/aide.db.new.gz"
     CHECK_RESULT $? 0 0 "Aide init datebase: failed!"
     LOG_INFO "End to run test."
 }

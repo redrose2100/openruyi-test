@@ -21,6 +21,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL "bc wget"
     LOG_INFO "End to prepare the test environment."
 }
@@ -38,6 +40,7 @@ function run_test() {
     rm -rf openEuler-22.03-LTS-aarch64-dvd.iso*
     timeout 30 wget --limit-rate=1M https://repo.openeuler.org/openEuler-22.03-LTS/ISO/aarch64/openEuler-22.03-LTS-aarch64-dvd.iso
     CHECK_RESULT $? 0 1 "Failed to execute wget --limit"
+    SLEEP_WAIT 3
     ISO_SIZE=$(stat openEuler-22.03-LTS-aarch64-dvd.iso | grep -i Size: | awk '{print $2}')
     DOWNLOAD=$(echo "$ISO_SIZE/1024/30" | bc)
     test "$DOWNLOAD" -le 1024
@@ -62,6 +65,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
     rm -rf openEuler-22.03-LTS-aarch64-dvd.iso* wget-log* test.tar.gz
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 
