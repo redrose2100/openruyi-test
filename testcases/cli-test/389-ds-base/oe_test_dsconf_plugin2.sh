@@ -1,0 +1,596 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more detaitest -f.
+
+# #############################################
+# @Author    :   tanxin
+# @Contact   :   njutanx@163.com
+# @Date      :   2023/8/29
+# @License   :   Mulan PSL v2
+# @Desc      :   Test dirsrv-snmp.service restart
+# #############################################
+
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "389-ds-base"
+    dscreate create-template 389_ds_test.inf
+    dscreate from-file 389_ds_test.inf
+    dsconf localhost backend create --suffix dc=example,dc=com --be-name example
+    LOG_INFO "End of environmental preparation!"
+}
+
+function run_test() {
+    LOG_INFO "Start to run testcase:oe_test_dsconf_backend."
+    ### plugin automember show -h
+dsconf localhost plugin automember show -h | grep "usage: dsconf instance plugin automember show"
+CHECK_RESULT $? 0 0 "Check: plugin automember show -h No Pass"
+
+### plugin automember enable -h
+dsconf localhost plugin automember enable -h | grep "usage: dsconf instance plugin automember enable"
+CHECK_RESULT $? 0 0 "Check: plugin automember enable -h No Pass"
+
+### plugin automember disable -h
+dsconf localhost plugin automember disable -h | grep "usage: dsconf instance plugin automember disable"
+CHECK_RESULT $? 0 0 "Check: plugin automember disable -h No Pass"
+
+### plugin automember status -h
+dsconf localhost plugin automember status -h | grep "usage: dsconf instance plugin automember status"
+CHECK_RESULT $? 0 0 "Check: plugin automember status -h No Pass"
+
+### plugin automember list -h
+dsconf localhost plugin automember list -h | grep "usage: dsconf instance plugin automember list"
+CHECK_RESULT $? 0 0 "Check: plugin automember list -h No Pass"
+
+### plugin automember list definitions -h
+dsconf localhost plugin automember list definitions -h | grep "usage: dsconf instance plugin automember list definitions"
+CHECK_RESULT $? 0 0 "Check: plugin automember list definitions -h No Pass"
+
+### plugin automember list regexes -h
+dsconf localhost plugin automember list regexes -h | grep "usage: dsconf instance plugin automember list regexes"
+CHECK_RESULT $? 0 0 "Check: plugin automember list regexes -h No Pass"
+
+### plugin automember definition -h
+dsconf localhost plugin automember definition -h | grep "usage: dsconf instance plugin automember definition"
+CHECK_RESULT $? 0 0 "Check: plugin automember definition -h No Pass"
+
+### plugin automember definition DEFNAME add -h
+dsconf localhost plugin automember definition DEFNAME add -h | grep "usage: dsconf instance plugin automember definition DEFNAME add"
+CHECK_RESULT $? 0 0 "Check: plugin automember definition DEFNAME add -h No Pass"
+
+### plugin automember definition DEFNAME set -h
+dsconf localhost plugin automember definition DEFNAME set -h | grep "usage: dsconf instance plugin automember definition DEFNAME set"
+CHECK_RESULT $? 0 0 "Check: plugin automember definition DEFNAME set -h No Pass"
+
+### plugin automember definition DEFNAME delete -h
+dsconf localhost plugin automember definition DEFNAME delete -h | grep "usage: dsconf instance plugin automember definition DEFNAME delete"
+CHECK_RESULT $? 0 0 "Check: plugin automember definition DEFNAME delete -h No Pass"
+
+### plugin automember definition DEFNAME show -h
+dsconf localhost plugin automember definition DEFNAME show -h | grep "usage: dsconf instance plugin automember definition DEFNAME show"
+CHECK_RESULT $? 0 0 "Check: plugin automember definition DEFNAME show -h No Pass"
+
+### plugin automember definition DEFNAME regex -h
+dsconf localhost plugin automember definition DEFNAME regex -h | grep "usage: dsconf instance plugin automember definition DEFNAME regex"
+CHECK_RESULT $? 0 0 "Check: plugin automember definition DEFNAME regex -h No Pass"
+
+### plugin automember definition DEFNAME regex REGEXNAME add -h
+dsconf localhost plugin automember definition DEFNAME regex REGEXNAME add -h | grep "usage: dsconf instance plugin automember definition DEFNAME regex REGEXNAME add"
+CHECK_RESULT $? 0 0 "Check: plugin automember definition DEFNAME regex REGEXNAME add -h No Pass"
+
+### plugin automember definition DEFNAME regex REGEXNAME set -h
+dsconf localhost plugin automember definition DEFNAME regex REGEXNAME set -h | grep "usage: dsconf instance plugin automember definition DEFNAME regex REGEXNAME set"
+CHECK_RESULT $? 0 0 "Check: plugin automember definition DEFNAME regex REGEXNAME set -h No Pass"
+
+### plugin automember definition DEFNAME regex REGEXNAME delete -h
+dsconf localhost plugin automember definition DEFNAME regex REGEXNAME delete -h | grep "usage: dsconf instance plugin automember definition DEFNAME regex REGEXNAME delete"
+CHECK_RESULT $? 0 0 "Check: plugin automember definition DEFNAME regex REGEXNAME delete -h No Pass"
+
+### plugin automember definition DEFNAME regex REGEXNAME show -h
+dsconf localhost plugin automember definition DEFNAME regex REGEXNAME show -h | grep "usage: dsconf instance plugin automember definition DEFNAME regex REGEXNAME show"
+CHECK_RESULT $? 0 0 "Check: plugin automember definition DEFNAME regex REGEXNAME show -h No Pass"
+
+### plugin automember fixup -h
+dsconf localhost plugin automember fixup -h | grep "usage: dsconf instance plugin automember fixup"
+CHECK_RESULT $? 0 0 "Check: plugin automember fixup -h No Pass"
+
+### plugin referential-integrity -h
+dsconf localhost plugin referential-integrity -h | grep "usage: dsconf instance plugin referential-integrity"
+CHECK_RESULT $? 0 0 "Check: plugin referential-integrity -h No Pass"
+
+### plugin referential-integrity show -h
+dsconf localhost plugin referential-integrity show -h | grep "usage: dsconf instance plugin referential-integrity show"
+CHECK_RESULT $? 0 0 "Check: plugin referential-integrity show -h No Pass"
+
+### plugin referential-integrity enable -h
+dsconf localhost plugin referential-integrity enable -h | grep "usage: dsconf instance plugin referential-integrity enable"
+CHECK_RESULT $? 0 0 "Check: plugin referential-integrity enable -h No Pass"
+
+### plugin referential-integrity disable -h
+dsconf localhost plugin referential-integrity disable -h | grep "usage: dsconf instance plugin referential-integrity disable"
+CHECK_RESULT $? 0 0 "Check: plugin referential-integrity disable -h No Pass"
+
+### plugin referential-integrity status -h
+dsconf localhost plugin referential-integrity status -h | grep "usage: dsconf instance plugin referential-integrity status"
+CHECK_RESULT $? 0 0 "Check: plugin referential-integrity status -h No Pass"
+
+### plugin referential-integrity set -h
+dsconf localhost plugin referential-integrity set -h | grep "usage: dsconf instance plugin referential-integrity set"
+CHECK_RESULT $? 0 0 "Check: plugin referential-integrity set -h No Pass"
+
+### plugin referential-integrity config-entry -h
+dsconf localhost plugin referential-integrity config-entry -h | grep "usage: dsconf instance plugin referential-integrity config-entry"
+CHECK_RESULT $? 0 0 "Check: plugin referential-integrity config-entry -h No Pass"
+
+### plugin referential-integrity config-entry add -h
+dsconf localhost plugin referential-integrity config-entry add -h | grep "usage: dsconf instance plugin referential-integrity config-entry add"
+CHECK_RESULT $? 0 0 "Check: plugin referential-integrity config-entry add -h No Pass"
+
+### plugin referential-integrity config-entry set -h
+dsconf localhost plugin referential-integrity config-entry set -h | grep "usage: dsconf instance plugin referential-integrity config-entry set"
+CHECK_RESULT $? 0 0 "Check: plugin referential-integrity config-entry set -h No Pass"
+
+### plugin referential-integrity config-entry show -h
+dsconf localhost plugin referential-integrity config-entry show -h | grep "usage: dsconf instance plugin referential-integrity config-entry show"
+CHECK_RESULT $? 0 0 "Check: plugin referential-integrity config-entry show -h No Pass"
+
+### plugin root-dn -h
+dsconf localhost plugin root-dn -h | grep "usage: dsconf instance plugin root-dn"
+CHECK_RESULT $? 0 0 "Check: plugin root-dn -h No Pass"
+
+### plugin root-dn show -h
+dsconf localhost plugin root-dn show -h | grep "usage: dsconf instance plugin root-dn show"
+CHECK_RESULT $? 0 0 "Check: plugin root-dn show -h No Pass"
+
+### plugin root-dn enable -h
+dsconf localhost plugin root-dn enable -h | grep "usage: dsconf instance plugin root-dn enable"
+CHECK_RESULT $? 0 0 "Check: plugin root-dn enable -h No Pass"
+
+### plugin root-dn disable -h
+dsconf localhost plugin root-dn disable -h | grep "usage: dsconf instance plugin root-dn disable"
+CHECK_RESULT $? 0 0 "Check: plugin root-dn disable -h No Pass"
+
+### plugin root-dn status -h
+dsconf localhost plugin root-dn status -h | grep "usage: dsconf instance plugin root-dn status"
+CHECK_RESULT $? 0 0 "Check: plugin root-dn status -h No Pass"
+
+### plugin root-dn set -h
+dsconf localhost plugin root-dn set -h | grep "usage: dsconf instance plugin root-dn set"
+CHECK_RESULT $? 0 0 "Check: plugin root-dn set -h No Pass"
+
+### plugin usn -h
+dsconf localhost plugin usn -h | grep "usage: dsconf instance plugin usn"
+CHECK_RESULT $? 0 0 "Check: plugin usn -h No Pass"
+
+### plugin usn show -h
+dsconf localhost plugin usn show -h | grep "usage: dsconf instance plugin usn show"
+CHECK_RESULT $? 0 0 "Check: plugin usn show -h No Pass"
+
+### plugin usn enable -h
+dsconf localhost plugin usn enable -h | grep "usage: dsconf instance plugin usn enable"
+CHECK_RESULT $? 0 0 "Check: plugin usn enable -h No Pass"
+
+### plugin usn disable -h
+dsconf localhost plugin usn disable -h | grep "usage: dsconf instance plugin usn disable"
+CHECK_RESULT $? 0 0 "Check: plugin usn disable -h No Pass"
+
+### plugin usn status -h
+dsconf localhost plugin usn status -h | grep "usage: dsconf instance plugin usn status"
+CHECK_RESULT $? 0 0 "Check: plugin usn status -h No Pass"
+
+### plugin usn global -h
+dsconf localhost plugin usn global -h | grep "usage: dsconf instance plugin usn global"
+CHECK_RESULT $? 0 0 "Check: plugin usn global -h No Pass"
+
+### plugin usn cleanup -h
+dsconf localhost plugin usn cleanup -h | grep "usage: dsconf instance plugin usn cleanup"
+CHECK_RESULT $? 0 0 "Check: plugin usn cleanup -h No Pass"
+
+### plugin account-policy -h
+dsconf localhost plugin account-policy -h | grep "usage: dsconf instance plugin account-policy"
+CHECK_RESULT $? 0 0 "Check: plugin account-policy -h No Pass"
+
+### plugin account-policy show -h
+dsconf localhost plugin account-policy show -h | grep "usage: dsconf instance plugin account-policy show"
+CHECK_RESULT $? 0 0 "Check: plugin account-policy show -h No Pass"
+
+### plugin account-policy enable -h
+dsconf localhost plugin account-policy enable -h | grep "usage: dsconf instance plugin account-policy enable"
+CHECK_RESULT $? 0 0 "Check: plugin account-policy enable -h No Pass"
+
+### plugin account-policy disable -h
+dsconf localhost plugin account-policy disable -h | grep "usage: dsconf instance plugin account-policy disable"
+CHECK_RESULT $? 0 0 "Check: plugin account-policy disable -h No Pass"
+
+### plugin account-policy status -h
+dsconf localhost plugin account-policy status -h | grep "usage: dsconf instance plugin account-policy status"
+CHECK_RESULT $? 0 0 "Check: plugin account-policy status -h No Pass"
+
+### plugin account-policy set -h
+dsconf localhost plugin account-policy set -h | grep "usage: dsconf instance plugin account-policy set"
+CHECK_RESULT $? 0 0 "Check: plugin account-policy set -h No Pass"
+
+### plugin account-policy  config-entry -h
+dsconf localhost plugin account-policy config-entry -h | grep "usage: dsconf instance plugin account-policy config-entry"
+CHECK_RESULT $? 0 0 "Check: plugin account-policy  config-entry -h No Pass"
+
+### plugin account-policy config-entry add -h
+dsconf localhost plugin account-policy config-entry add -h | grep "usage: dsconf instance plugin account-policy config-entry add"
+CHECK_RESULT $? 0 0 "Check: plugin account-policy config-entry add -h No Pass"
+
+### plugin account-policy config-entry set -h
+dsconf localhost plugin account-policy config-entry set -h | grep "usage: dsconf instance plugin account-policy config-entry set"
+CHECK_RESULT $? 0 0 "Check: plugin account-policy config-entry set -h No Pass"
+
+### plugin account-policy config-entry show -h
+dsconf localhost plugin account-policy config-entry show -h | grep "usage: dsconf instance plugin account-policy config-entry show"
+CHECK_RESULT $? 0 0 "Check: plugin account-policy config-entry show -h No Pass"
+
+### plugin account-policy config-entry delete -h
+dsconf localhost plugin account-policy config-entry delete -h | grep "usage: dsconf instance plugin account-policy config-entry delete"
+CHECK_RESULT $? 0 0 "Check: plugin account-policy config-entry delete -h No Pass"
+
+### plugin attr-uniq -h
+dsconf localhost plugin attr-uniq -h | grep "usage: dsconf instance plugin attr-uniq"
+CHECK_RESULT $? 0 0 "Check: plugin attr-uniq -h No Pass"
+
+### plugin attr-uniq list -h
+dsconf localhost plugin attr-uniq list -h | grep "usage: dsconf instance plugin attr-uniq list"
+CHECK_RESULT $? 0 0 "Check: plugin attr-uniq list -h No Pass"
+
+### plugin attr-uniq add -h
+dsconf localhost plugin attr-uniq add -h | grep "usage: dsconf instance plugin attr-uniq add"
+CHECK_RESULT $? 0 0 "Check: plugin attr-uniq add -h No Pass"
+
+### plugin attr-uniq set -h
+dsconf localhost plugin attr-uniq set -h | grep "usage: dsconf instance plugin attr-uniq set"
+CHECK_RESULT $? 0 0 "Check: plugin attr-uniq set -h No Pass"
+
+### plugin attr-uniq show -h
+dsconf localhost plugin attr-uniq show -h | grep "usage: dsconf instance plugin attr-uniq show"
+CHECK_RESULT $? 0 0 "Check: plugin attr-uniq show -h No Pass"
+
+### plugin attr-uniq delete -h
+dsconf localhost plugin attr-uniq delete -h | grep "usage: dsconf instance plugin attr-uniq delete"
+CHECK_RESULT $? 0 0 "Check: plugin attr-uniq delete -h No Pass"
+
+### plugin attr-uniq enable -h
+dsconf localhost plugin attr-uniq enable -h | grep "usage: dsconf instance plugin attr-uniq enable"
+CHECK_RESULT $? 0 0 "Check: plugin attr-uniq enable -h No Pass"
+
+### plugin attr-uniq disable -h
+dsconf localhost plugin attr-uniq disable -h | grep "usage: dsconf instance plugin attr-uniq disable"
+CHECK_RESULT $? 0 0 "Check: plugin attr-uniq disable -h No Pass"
+
+### plugin attr-uniq status -h
+dsconf localhost plugin attr-uniq status -h | grep "usage: dsconf instance plugin attr-uniq status"
+CHECK_RESULT $? 0 0 "Check: plugin attr-uniq status -h No Pass"
+
+### plugin dna -h
+dsconf localhost plugin dna -h | grep "usage: dsconf instance plugin dna"
+CHECK_RESULT $? 0 0 "Check: plugin dna -h No Pass"
+
+### plugin dna show -h
+dsconf localhost plugin dna show -h | grep "usage: dsconf instance plugin dna show"
+CHECK_RESULT $? 0 0 "Check: plugin dna show -h No Pass"
+
+### plugin dna enable -h
+dsconf localhost plugin dna enable -h | grep "usage: dsconf instance plugin dna enable"
+CHECK_RESULT $? 0 0 "Check: plugin dna enable -h No Pass"
+
+### plugin dna disable -h
+dsconf localhost plugin dna disable -h | grep "usage: dsconf instance plugin dna disable"
+CHECK_RESULT $? 0 0 "Check: plugin dna disable -h No Pass"
+
+### plugin dna status -h
+dsconf localhost plugin dna status -h | grep "usage: dsconf instance plugin dna status"
+CHECK_RESULT $? 0 0 "Check: plugin dna status -h No Pass"
+
+### plugin dna list -h
+dsconf localhost plugin dna list -h | grep "usage: dsconf instance plugin dna list"
+CHECK_RESULT $? 0 0 "Check: plugin dna list -h No Pass"
+
+### plugin dna list configs -h
+dsconf localhost plugin dna list configs -h | grep "usage: dsconf instance plugin dna list configs"
+CHECK_RESULT $? 0 0 "Check: plugin dna list configs -h No Pass"
+
+### plugin dna list shared-configs -h
+dsconf localhost plugin dna list shared-configs -h | grep "usage: dsconf instance plugin dna list shared-configs"
+CHECK_RESULT $? 0 0 "Check: plugin dna list shared-configs -h No Pass"
+
+### plugin dna config -h
+dsconf localhost plugin dna config -h | grep "usage: dsconf instance plugin dna config"
+CHECK_RESULT $? 0 0 "Check: plugin dna config -h No Pass"
+
+### plugin dna config NAME add -h
+dsconf localhost plugin dna config NAME add -h | grep "usage: dsconf instance plugin dna config NAME add"
+CHECK_RESULT $? 0 0 "Check: plugin dna config NAME add -h No Pass"
+
+### plugin dna config NAME set -h
+dsconf localhost plugin dna config NAME set -h | grep "usage: dsconf instance plugin dna config NAME set"
+CHECK_RESULT $? 0 0 "Check: plugin dna config NAME set -h No Pass"
+
+### plugin dna config NAME show -h
+dsconf localhost plugin dna config NAME show -h | grep "usage: dsconf instance plugin dna config NAME show"
+CHECK_RESULT $? 0 0 "Check: plugin dna config NAME show -h No Pass"
+
+### plugin dna config NAME delete -h
+dsconf localhost plugin dna config NAME delete -h | grep "usage: dsconf instance plugin dna config NAME delete"
+CHECK_RESULT $? 0 0 "Check: plugin dna config NAME delete -h No Pass"
+
+### plugin dna config NAME shared-config-entry -h
+dsconf localhost plugin dna config NAME shared-config-entry -h | grep "usage: dsconf instance plugin dna config NAME shared-config-entry"
+CHECK_RESULT $? 0 0 "Check: plugin dna config NAME shared-config-entry -h No Pass"
+
+### plugin dna config NAME shared-config-entry HOSTNAME PORT set  -h
+dsconf localhost plugin dna config NAME shared-config-entry HOSTNAME PORT set  -h | grep "usage: dsconf instance plugin dna config NAME shared-config-entry HOSTNAME PORT set"
+CHECK_RESULT $? 0 0 "Check: plugin dna config NAME shared-config-entry HOSTNAME PORT set  -h No Pass"
+
+### plugin dna config NAME shared-config-entry HOSTNAME PORT add -h
+dsconf localhost plugin dna config NAME shared-config-entry HOSTNAME PORT add -h | grep "usage: dsconf instance plugin dna config NAME shared-config-entry HOSTNAME PORT add"
+CHECK_RESULT $? 0 0 "Check: plugin dna config NAME shared-config-entry HOSTNAME PORT add -h No Pass"
+
+### plugin dna config NAME shared-config-entry HOSTNAME PORT show -h
+dsconf localhost plugin dna config NAME shared-config-entry HOSTNAME PORT show -h | grep "usage: dsconf instance plugin dna config NAME shared-config-entry HOSTNAME PORT show"
+CHECK_RESULT $? 0 0 "Check: plugin dna config NAME shared-config-entry HOSTNAME PORT show -h No Pass"
+
+### plugin dna config NAME shared-config-entry HOSTNAME PORT delete -h
+dsconf localhost plugin dna config NAME shared-config-entry HOSTNAME PORT delete -h | grep "usage: dsconf instance plugin dna config NAME shared-config-entry HOSTNAME PORT delete"
+CHECK_RESULT $? 0 0 "Check: plugin dna config NAME shared-config-entry HOSTNAME PORT delete -h No Pass"
+
+### plugin linked-attr -h
+dsconf localhost plugin linked-attr -h | grep "usage: dsconf instance plugin linked-attr"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr -h No Pass"
+
+### plugin linked-attr show -h
+dsconf localhost plugin linked-attr show -h | grep "usage: dsconf instance plugin linked-attr show"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr show -h No Pass"
+
+### plugin linked-attr enable -h
+dsconf localhost plugin linked-attr enable -h | grep "usage: dsconf instance plugin linked-attr enable"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr enable -h No Pass"
+
+### plugin linked-attr disable -h
+dsconf localhost plugin linked-attr disable -h | grep "usage: dsconf instance plugin linked-attr disable"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr disable -h No Pass"
+
+### plugin linked-attr status -h
+dsconf localhost plugin linked-attr status -h | grep "usage: dsconf instance plugin linked-attr status"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr status -h No Pass"
+
+### plugin linked-attr fixup -h
+dsconf localhost plugin linked-attr fixup -h | grep "usage: dsconf instance plugin linked-attr fixup"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr fixup -h No Pass"
+
+### plugin linked-attr list -h
+dsconf localhost plugin linked-attr list -h | grep "usage: dsconf instance plugin linked-attr list"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr list -h No Pass"
+
+### plugin linked-attr config -h
+dsconf localhost plugin linked-attr config -h | grep "usage: dsconf instance plugin linked-attr config"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr config -h No Pass"
+
+### plugin linked-attr config NAME add -h
+dsconf localhost plugin linked-attr config NAME add -h | grep "usage: dsconf instance plugin linked-attr config NAME add"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr config NAME add -h No Pass"
+
+### plugin linked-attr config NAME set -h
+dsconf localhost plugin linked-attr config NAME set -h | grep "usage: dsconf instance plugin linked-attr config NAME set"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr config NAME set -h No Pass"
+
+### plugin linked-attr config NAME show -h
+dsconf localhost plugin linked-attr config NAME show -h | grep "usage: dsconf instance plugin linked-attr config NAME show"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr config NAME show -h No Pass"
+
+### plugin linked-attr config NAME delete -h
+dsconf localhost plugin linked-attr config NAME delete -h | grep "usage: dsconf instance plugin linked-attr config NAME delete"
+CHECK_RESULT $? 0 0 "Check: plugin linked-attr config NAME delete -h No Pass"
+
+### plugin managed-entries show -h
+dsconf localhost plugin managed-entries show -h | grep "usage: dsconf instance plugin managed-entries show"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries show -h No Pass"
+
+### plugin managed-entries enable -h
+dsconf localhost plugin managed-entries enable -h | grep "usage: dsconf instance plugin managed-entries enable"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries enable -h No Pass"
+
+### plugin managed-entries disable -h
+dsconf localhost plugin managed-entries disable -h | grep "usage: dsconf instance plugin managed-entries disable"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries disable -h No Pass"
+
+### plugin managed-entries status -h
+dsconf localhost plugin managed-entries status -h | grep "usage: dsconf instance plugin managed-entries status"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries status -h No Pass"
+
+### plugin managed-entries set -h
+dsconf localhost plugin managed-entries set -h | grep "usage: dsconf instance plugin managed-entries set"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries set -h No Pass"
+
+### plugin managed-entries list -h
+dsconf localhost plugin managed-entries list -h | grep "usage: dsconf instance plugin managed-entries list"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries list -h No Pass"
+
+### plugin managed-entries list configs -h
+dsconf localhost plugin managed-entries list configs -h | grep "usage: dsconf instance plugin managed-entries list configs"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries list configs -h No Pass"
+
+### plugin managed-entries list templates -h
+dsconf localhost plugin managed-entries list templates -h | grep "usage: dsconf instance plugin managed-entries list templates"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries list templates -h No Pass"
+
+### plugin managed-entries config -h
+dsconf localhost plugin managed-entries config -h | grep "usage: dsconf instance plugin managed-entries config"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries config -h No Pass"
+
+### plugin managed-entries config NAME add -h
+dsconf localhost plugin managed-entries config NAME add -h | grep "usage: dsconf instance plugin managed-entries config NAME add"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries config NAME add -h No Pass"
+
+### plugin managed-entries config NAME set -h
+dsconf localhost plugin managed-entries config NAME set -h | grep "usage: dsconf instance plugin managed-entries config NAME set"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries config NAME set -h No Pass"
+
+### plugin managed-entries config NAME show -h
+dsconf localhost plugin managed-entries config NAME show -h | grep "usage: dsconf instance plugin managed-entries config NAME show"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries config NAME show -h No Pass"
+
+### plugin managed-entries config NAME delete -h
+dsconf localhost plugin managed-entries config NAME delete -h | grep "usage: dsconf instance plugin managed-entries config NAME delete"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries config NAME delete -h No Pass"
+
+### plugin managed-entries template -h
+dsconf localhost plugin managed-entries template -h | grep "usage: dsconf instance plugin managed-entries template"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries template -h No Pass"
+
+### plugin managed-entries template DN add -h
+dsconf localhost plugin managed-entries template DN add -h | grep "usage: dsconf instance plugin managed-entries template DN add"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries template DN add -h No Pass"
+
+### plugin managed-entries template DN set -h
+dsconf localhost plugin managed-entries template DN set -h | grep "usage: dsconf instance plugin managed-entries template DN set"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries template DN set -h No Pass"
+
+### plugin managed-entries template DN show -h
+dsconf localhost plugin managed-entries template DN show -h | grep "usage: dsconf instance plugin managed-entries template DN show"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries template DN show -h No Pass"
+
+### plugin managed-entries template DN delete -h
+dsconf localhost plugin managed-entries template DN delete -h | grep "usage: dsconf instance plugin managed-entries template DN delete"
+CHECK_RESULT $? 0 0 "Check: plugin managed-entries template DN delete -h No Pass"
+
+### plugin pass-through-auth -h
+dsconf localhost plugin pass-through-auth -h | grep "usage: dsconf instance plugin pass-through-auth"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth -h No Pass"
+
+### plugin pass-through-auth show -h
+dsconf localhost plugin pass-through-auth show -h | grep "usage: dsconf instance plugin pass-through-auth show"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth show -h No Pass"
+
+### plugin pass-through-auth enable -h
+dsconf localhost plugin pass-through-auth enable -h | grep "usage: dsconf instance plugin pass-through-auth enable"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth enable -h No Pass"
+
+### plugin pass-through-auth disable -h
+dsconf localhost plugin pass-through-auth disable -h | grep "usage: dsconf instance plugin pass-through-auth disable"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth disable -h No Pass"
+
+### plugin pass-through-auth list -h
+dsconf localhost plugin pass-through-auth list -h | grep "usage: dsconf instance plugin pass-through-auth list"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth list -h No Pass"
+
+### plugin pass-through-auth url -h
+dsconf localhost plugin pass-through-auth url -h | grep "usage: dsconf instance plugin pass-through-auth url"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth url -h No Pass"
+
+### plugin pass-through-auth url add -h
+dsconf localhost plugin pass-through-auth url add -h | grep "usage: dsconf instance plugin pass-through-auth url add"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth url add -h No Pass"
+
+### plugin pass-through-auth url modify -h
+dsconf localhost plugin pass-through-auth url modify -h | grep "usage: dsconf instance plugin pass-through-auth url modify"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth url modify -h No Pass"
+
+### plugin pass-through-auth url delete -h
+dsconf localhost plugin pass-through-auth url delete -h | grep "usage: dsconf instance plugin pass-through-auth url delete"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth url delete -h No Pass"
+
+### plugin pass-through-auth pam-config -h
+dsconf localhost plugin pass-through-auth pam-config -h | grep "usage: dsconf instance plugin pass-through-auth pam-config"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth pam-config -h No Pass"
+
+### plugin pass-through-auth pam-config NAME add -h
+dsconf localhost plugin pass-through-auth pam-config NAME add -h | grep "usage: dsconf instance plugin pass-through-auth pam-config NAME add"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth pam-config NAME add -h No Pass"
+
+### plugin pass-through-auth pam-config NAME show -h
+dsconf localhost plugin pass-through-auth pam-config NAME show -h | grep "usage: dsconf instance plugin pass-through-auth pam-config NAME show"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth pam-config NAME show -h No Pass"
+
+### plugin pass-through-auth pam-config NAME delete -h
+dsconf localhost plugin pass-through-auth pam-config NAME delete -h | grep "usage: dsconf instance plugin pass-through-auth pam-config NAME delete"
+CHECK_RESULT $? 0 0 "Check: plugin pass-through-auth pam-config NAME delete -h No Pass"
+
+### plugin retro-changelog -h
+dsconf localhost plugin retro-changelog -h | grep "usage: dsconf instance plugin retro-changelog"
+CHECK_RESULT $? 0 0 "Check: plugin retro-changelog -h No Pass"
+
+### plugin retro-changelog show -h
+dsconf localhost plugin retro-changelog show -h | grep "usage: dsconf instance plugin retro-changelog show"
+CHECK_RESULT $? 0 0 "Check: plugin retro-changelog show -h No Pass"
+
+### plugin retro-changelog enable -h
+dsconf localhost plugin retro-changelog enable -h | grep "usage: dsconf instance plugin retro-changelog enable"
+CHECK_RESULT $? 0 0 "Check: plugin retro-changelog enable -h No Pass"
+
+### plugin retro-changelog disable -h
+dsconf localhost plugin retro-changelog disable -h | grep "usage: dsconf instance plugin retro-changelog disable"
+CHECK_RESULT $? 0 0 "Check: plugin retro-changelog disable -h No Pass"
+
+### plugin retro-changelog status -h
+dsconf localhost plugin retro-changelog status -h | grep "usage: dsconf instance plugin retro-changelog status"
+CHECK_RESULT $? 0 0 "Check: plugin retro-changelog status -h No Pass"
+
+### plugin retro-changelog set -h
+dsconf localhost plugin retro-changelog set -h | grep "usage: dsconf instance plugin retro-changelog set"
+CHECK_RESULT $? 0 0 "Check: plugin retro-changelog set -h No Pass"
+
+### plugin posix-winsync -h
+dsconf localhost plugin posix-winsync -h | grep "usage: dsconf instance plugin posix-winsync"
+CHECK_RESULT $? 0 0 "Check: plugin posix-winsync -h No Pass"
+
+### plugin posix-winsync show -h
+dsconf localhost plugin posix-winsync show -h | grep "usage: dsconf instance plugin posix-winsync show"
+CHECK_RESULT $? 0 0 "Check: plugin posix-winsync show -h No Pass"
+
+### plugin posix-winsync enable -h
+dsconf localhost plugin posix-winsync enable -h | grep "usage: dsconf instance plugin posix-winsync enable"
+CHECK_RESULT $? 0 0 "Check: plugin posix-winsync enable -h No Pass"
+
+### plugin posix-winsync disable -h
+dsconf localhost plugin posix-winsync disable -h | grep "usage: dsconf instance plugin posix-winsync disable"
+CHECK_RESULT $? 0 0 "Check: plugin posix-winsync disable -h No Pass"
+
+### plugin posix-winsync status -h
+dsconf localhost plugin posix-winsync status -h | grep "usage: dsconf instance plugin posix-winsync status"
+CHECK_RESULT $? 0 0 "Check: plugin posix-winsync status -h No Pass"
+
+### plugin posix-winsync set -h
+dsconf localhost plugin posix-winsync set -h | grep "usage: dsconf instance plugin posix-winsync set"
+CHECK_RESULT $? 0 0 "Check: plugin posix-winsync set -h No Pass"
+
+### plugin posix-winsync fixup -h
+dsconf localhost plugin posix-winsync fixup -h | grep "usage: dsconf instance plugin posix-winsync fixup"
+CHECK_RESULT $? 0 0 "Check: plugin posix-winsync fixup -h No Pass"
+
+### plugin list -h
+dsconf localhost plugin list -h | grep "usage: dsconf instance plugin list"
+CHECK_RESULT $? 0 0 "Check: plugin list -h No Pass"
+
+### plugin show -h
+dsconf localhost plugin show -h | grep "usage: dsconf instance plugin show"
+CHECK_RESULT $? 0 0 "Check: plugin show -h No Pass"
+
+### plugin set -h
+dsconf localhost plugin set -h | grep "usage: dsconf instance plugin set"
+CHECK_RESULT $? 0 0 "Check: plugin set -h No Pass"
+    LOG_INFO "End to run testcase:oe_test_dsconf_backend."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    echo "Yes I am sure" | dsconf localhost backend delete example
+    dsctl localhost remove --do-it
+    rm -rf 389_ds_test.inf
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
