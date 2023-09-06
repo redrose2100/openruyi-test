@@ -48,7 +48,7 @@
             "name":"oe_test_dsconf_plugin2"
         },
         {
-            "name":"oe_test_dsconf_pwpolicy"
+            "name":"oe_test_dsconf_pwpolicy_localpwp"
         }
         
     ]
