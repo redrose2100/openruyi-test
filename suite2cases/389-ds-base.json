@@ -1,0 +1,55 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/389-ds-base",
+    "cases": [
+        {
+            "name": "oe_test_service_dirsrv-snmp"
+        },
+        {
+            "name": "oe_test_target_dirsrv"
+        },
+        {
+            "name":"oe_test_dsconf_389_ds_base"
+        },
+        {
+            "name":"oe_test_dsconf_backend1"
+        },
+        {
+            "name":"oe_test_dsconf_backend2"
+        },
+        {
+            "name":"oe_test_dsconf_backend3"
+        },
+        {
+            "name":"oe_test_dsconf_backend4"
+        },
+        {
+            "name":"oe_test_dsconf_backend5"
+        },
+        {
+             "name":"oe_test_dsconf_backup"
+        },
+        {
+             "name":"oe_test_dsconf_chaining1"
+        },
+        {
+             "name":"oe_test_dsconf_chaining2"
+        },
+        {
+             "name":"oe_test_dsconf_config"
+        },
+        {
+             "name":"oe_test_dsconf_directory_monitor"
+        },
+        {
+
+            "name":"oe_test_dsconf_plugin1"
+        },
+        {
+            "name":"oe_test_dsconf_plugin2"
+        },
+        {
+            "name":"oe_test_dsconf_pwpolicy"
+        }
+        
+    ]
+}
