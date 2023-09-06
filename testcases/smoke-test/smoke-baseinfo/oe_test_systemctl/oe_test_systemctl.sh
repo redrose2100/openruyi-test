@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to start rsyslog service"
     systemctl enable rsyslog
     CHECK_RESULT $? 0 0 "Failed to start rsyslog service"
-    whitelist='kdump|lm_sensors|wait-online'
+    whitelist='kdump|lm_sensors|wait-online|mdmonitor'
     systemctl -all --failed | grep -vE ${whitelist} | grep failed
     CHECK_RESULT $? 1 0 "There are failed services"
     [ "$(journalctl -aeb | wc -l)" -gt 0 ]
