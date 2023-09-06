@@ -2,14 +2,22 @@
     "path": "$OET_PATH/testcases/cli-test/389-ds-base",
     "cases": [
         {
-            "name": "oe_test_service_dirsrv-snmp"
+            "name": "oe_test_dsconf_schema_01"
         },
         {
-            "name": "oe_test_target_dirsrv"
+            "name": "oe_test_dsconf_schema_02"
+        },
+        {
+            "name": "oe_test_dsconf_schema_03"
+        },
+        {
+            "name": "oe_test_dsconf_schema_04"
+        },
+        {
+            "name": "oe_test_dsconf_repl-conflict_01"
+        },
+        {
+            "name": "oe_test_dsconf_repl-conflict_02"
         }
-        
-
-
-        
     ]
 }
