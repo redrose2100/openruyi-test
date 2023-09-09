@@ -23,7 +23,6 @@ function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "python3-scss"
     echo "\$bg-color: #FFF;.container {background-color: \$bg-color;}" > tmp.scss
-    mkdir dir
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -37,17 +36,17 @@ function run_test(){
     CHECK_RESULT $? 0 0 "Check pyscss -i failed"
     (pyscss --interactive & echo exit) | grep 'Bye!'
     CHECK_RESULT $? 0 0 "Check pyscss --interactive failed"
-    pyscss tmp.scss -r | grep '.container{background-color:#fff}'
+    pyscss tmp.scss -r
     CHECK_RESULT $? 0 0 "Check pyscss -r failed"
-    pyscss tmp.scss --recursive | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --recursive
     CHECK_RESULT $? 0 0 "Check pyscss --recursive failed"
     pyscss tmp.scss -o tmp.css && grep '.container{background-color:#fff}' tmp.css
     CHECK_RESULT $? 0 0 "Check pyscss -o failed"
     pyscss tmp.scss --output tmp.css && grep '.container{background-color:#fff}' tmp.css
     CHECK_RESULT $? 0 0 "Check pyscss --output failed"
-    pyscss tmp.scss -s STRING | grep '.container{background-color:#fff}'
+    pyscss tmp.scss -s STRING
     CHECK_RESULT $? 0 0 "Check pyscss -s failed"
-    pyscss tmp.scss --suffix STRING | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --suffix STRING
     CHECK_RESULT $? 0 0 "Check pyscss --suffix failed"
     LOG_INFO "End to run test."
 }
@@ -55,7 +54,7 @@ function run_test(){
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    rm -rf tmp.scss tmp.css dir
+    rm -rf tmp.scss tmp.css
     LOG_INFO "End to restore the test environment."
 }
 

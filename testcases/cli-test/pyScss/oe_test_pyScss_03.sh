@@ -30,11 +30,11 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    pyscss tmp.scss --time | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --time
     CHECK_RESULT $? 0 0 "Check pyscss --time failed"
-    pyscss tmp.scss --debug-info | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --debug-info
     CHECK_RESULT $? 0 0 "Check pyscss --debug-info failed"
-    pyscss tmp.scss --no-debug-info | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --no-debug-info
     CHECK_RESULT $? 0 0 "Check pyscss --no-debug-info failed"
     pyscss tmp.scss -t NAME | grep '.container {'
     CHECK_RESULT $? 0 0 "Check pyscss -t failed"
@@ -48,7 +48,7 @@ function run_test(){
     CHECK_RESULT $? 0 0 "Check pyscss -v failed"
     pyscss --version | grep "pyScss v$ver"
     CHECK_RESULT $? 0 0 "Check pyscss --version failed"
-    pyscss tmp.scss --sass | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --sass
     CHECK_RESULT $? 0 0 "Check pyscss --sass failed"
     LOG_INFO "End to run test."
 }

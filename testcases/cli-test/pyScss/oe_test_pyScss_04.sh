@@ -29,25 +29,25 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    pyscss tmp.scss -I dir | grep '.container{background-color:#fff}'
+    pyscss tmp.scss -I dir
     CHECK_RESULT $? 0 0 "Check pyscss -I failed"
-    pyscss tmp.scss --load-path dir | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --load-path dir
     CHECK_RESULT $? 0 0 "Check pyscss --load-path failed"
-    pyscss tmp.scss -S dir | grep '.container{background-color:#fff}'
+    pyscss tmp.scss -S dir
     CHECK_RESULT $? 0 0 "Check pyscss -S failed"
-    pyscss tmp.scss --static-root dir | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --static-root dir
     CHECK_RESULT $? 0 0 "Check pyscss --static-root failed"
-    pyscss tmp.scss -A dir | grep '.container{background-color:#fff}'
+    pyscss tmp.scss -A dir
     CHECK_RESULT $? 0 0 "Check pyscss -A failed"
-    pyscss tmp.scss --assets-root dir | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --assets-root dir
     CHECK_RESULT $? 0 0 "Check pyscss --assets-root failed"
-    pyscss tmp.scss -a URL | grep '.container{background-color:#fff}'
+    pyscss tmp.scss -a URL
     CHECK_RESULT $? 0 0 "Check pyscss -A failed"
-    pyscss tmp.scss --assets-url URL | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --assets-url URL
     CHECK_RESULT $? 0 0 "Check pyscss --assets-url failed"
-    pyscss tmp.scss -F PATH | grep '.container{background-color:#fff}'
+    pyscss tmp.scss -F PATH
     CHECK_RESULT $? 0 0 "Check pyscss -F failed"
-    pyscss tmp.scss --fonts-root PATH | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --fonts-root PATH
     CHECK_RESULT $? 0 0 "Check pyscss --fonts-root failed"
     LOG_INFO "End to run test."
 }

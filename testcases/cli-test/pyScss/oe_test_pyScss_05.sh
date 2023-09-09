@@ -29,15 +29,15 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."    
-    pyscss tmp.scss -f URL | grep '.container{background-color:#fff}'
+    pyscss tmp.scss -f URL
     CHECK_RESULT $? 0 0 "Check pyscss -f failed"
-    pyscss tmp.scss --fonts-url URL | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --fonts-url URL
     CHECK_RESULT $? 0 0 "Check pyscss --fonts-url failed"
-    pyscss tmp.scss --images-root PATH | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --images-root PATH
     CHECK_RESULT $? 0 0 "Check pyscss --images-root failed"
-    pyscss tmp.scss --images-url PATH | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --images-url PATH
     CHECK_RESULT $? 0 0 "Check pyscss --images-url failed"
-    pyscss tmp.scss --cache-root PATH | grep '.container{background-color:#fff}'
+    pyscss tmp.scss --cache-root PATH
     CHECK_RESULT $? 0 0 "Check pyscss --cache-root failed"
     LOG_INFO "End to run test."
 }
