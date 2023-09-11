@@ -64,7 +64,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf aspell6-en-2020.12.07-0
     export "LANG=${OLD_LANG}"
     LOG_INFO "End to restore the test environment."
