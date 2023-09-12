@@ -20,7 +20,8 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
-
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "gcc-c++"
 cat > /tmp/helloworld.cpp << EOF
 /* helloworld.cpp */
 #include <iostream>
@@ -30,8 +31,6 @@ std::cout << "hello, world" << std::endl;
 return(0);
 }
 EOF
-
-    LOG_INFO "Start environment preparation."
     LOG_INFO "End of environmental preparation!"
 }
 
