@@ -30,17 +30,17 @@ function run_test() {
     rpm -qa | grep e2fsprogs
     CHECK_RESULT $? 0 0 "Return value error"
     cd /tmp && dd if=/dev/zero of=/tmp/dumpe2fs_100k bs=1k count=100
-    mke2fs /tmp/dumpe2fs_100k -F
+    mke2fs -I 128 /tmp/dumpe2fs_100k -F
     file /tmp/dumpe2fs_100k > /tmp/dumpe2fs_100k_test1
     grep "ext2 filesystem data" /tmp/dumpe2fs_100k_test1
     CHECK_RESULT $? 0 0 "compile dumpe2fs_100k_test1 fail"    
     dumpe2fs /tmp/dumpe2fs_100k > /tmp/dumpe2fs_100k_test2
     grep "Filesystem volume name" /tmp/dumpe2fs_100k_test2
     CHECK_RESULT $? 0 0 "compile dumpe2fs_100k_test2 fail"   
-    dumpe2fs /tmp/100k  |grep -i "inode size" > /tmp/dumpe2fs_100k_test3
+    dumpe2fs /tmp/dumpe2fs_100k  |grep -i "inode size" > /tmp/dumpe2fs_100k_test3
     grep "128" /tmp/dumpe2fs_100k_test3
     CHECK_RESULT $? 0 0 "compile dumpe2fs_100k_test3 fail"
-    dumpe2fs /tmp/100k  |grep -i "block size" > /tmp/dumpe2fs_100k_test4
+    dumpe2fs /tmp/dumpe2fs_100k  |grep -i "block size" > /tmp/dumpe2fs_100k_test4
     grep "1024" /tmp/dumpe2fs_100k_test4
     CHECK_RESULT $? 0 0 "compile dumpe2fs_100k_test4 fail"
 }
