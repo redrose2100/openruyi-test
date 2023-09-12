@@ -33,6 +33,7 @@ event=button/power
 action=/sbin/shutdown -h now
 EOF
     systemctl restart acpid 
+    SLEEP_WAIT 3
     systemctl status acpid | grep running  
     CHECK_RESULT $? 0 0 "Start Service failure"
     grep acpid /var/log/messages | grep "loaded"

@@ -30,7 +30,7 @@ function run_test() {
     rpm -qa | grep dosfstools
     CHECK_RESULT $? 0 0 "Return value error"
     cd /tmp && dd if=/dev/zero of=/tmp/100k bs=1k count=100
-    mke2fs /tmp/100k
+    mke2fs -I 128 /tmp/100k
     file /tmp/100k > /tmp/100k_test1
     grep "ext2 filesystem data" /tmp/100k_test1
     CHECK_RESULT $? 0 0 "compile 100k_test1 fail"    
