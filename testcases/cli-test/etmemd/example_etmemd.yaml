@@ -1,10 +1,13 @@
 [project]
 name=test
+scan_type=page
 loop=1
 interval=1
 sleep=1
+sysmem_threshold=50
+swapcache_high_wmark=10
+swapcache_low_wmark=6
 
-#slide
 [engine]
 name=slide
 project=test
@@ -17,6 +20,8 @@ type=name
 value=sshd
 T=1
 max_threads=1
+swap_threshold=10g
+swap_flag=yes
 
 [task]
 project=test
