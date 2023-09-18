@@ -16,17 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Enable source, disable source
 # #############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start executing testcase."
     reponame=$(dnf repolist | grep "repo id" -A 1 | grep -v "repo id" | awk '{print$1}')
     dnf config-manager --set-disable "${reponame}"
     CHECK_RESULT $?
-    CHECK_RESULT $(grep ${reponame} -A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}') 0
+    CHECK_RESULT "$(grep "${reponame} "-A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}')" 0
     dnf config-manager --set-enable "${reponame}"
     CHECK_RESULT $?
-    CHECK_RESULT $(grep ${reponame} -A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}') 0
+    CHECK_RESULT "$(grep "${reponame}" -A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}')" 1
     LOG_INFO "End of testcase execution."
 }
 
-main $@
+main "$@"
