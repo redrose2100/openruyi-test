@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Verify the httpd service status
 # #############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
 	LOG_INFO "Start environment preparation."
 	DNF_INSTALL httpd
@@ -39,8 +39,9 @@ function run_test() {
 
 function post_test() {
 	LOG_INFO "start environment cleanup."
-	DNF_REMOVE
+	systemctl stop httpd
+	DNF_REMOVE "$@"
 	LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
