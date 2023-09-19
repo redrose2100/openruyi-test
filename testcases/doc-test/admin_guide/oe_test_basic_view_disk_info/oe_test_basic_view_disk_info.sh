@@ -16,14 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   View disk information
 # ############################################
-source ../common/disk_lib.sh
-function pre_test() {
-    check_free_disk
-    LOG_INFO "Loading data is complete!"
-}
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    fdisk -l | grep ${local_disk}
+    fdisk -l | grep Disk
     CHECK_RESULT $?
 
     fdisk -v | grep "fdisk"
@@ -31,4 +27,4 @@ function run_test() {
     LOG_INFO "End of testcase execution!"
 }
 
-main $@
+main "$@"
