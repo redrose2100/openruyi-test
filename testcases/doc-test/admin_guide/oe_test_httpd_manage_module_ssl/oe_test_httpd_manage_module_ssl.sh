@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Management module and ssl
 # #############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "httpd"
@@ -43,9 +43,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    systemctl stop httpd
     sed -i "s/LoadModule asis_module modules\/mod_asis.so/#LoadModule asis_module modules\/mod_asis.so/g" /etc/httpd/conf.modules.d/00-optional.conf
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
