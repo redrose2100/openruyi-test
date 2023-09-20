@@ -17,6 +17,7 @@
 # @Desc      :   Test network.service restart
 # #############################################
 
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
