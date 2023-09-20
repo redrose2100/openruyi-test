@@ -3,6 +3,15 @@
     "cases": [
         {
             "name": "oe_test_service_vdo"
+        },
+        {
+            "name": "oe_test_vdo_1"
+        },
+        {
+            "name": "oe_test_vdo_2"
+        },
+        {
+            "name": "oe_test_vdo_3"
         }
     ]
 }
