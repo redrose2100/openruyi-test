@@ -16,20 +16,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   检查内核是否打开HUNG TASK相关开关
 # ############################################
+
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test()
 {
     LOG_INFO "Start testing..."
-    grep -w CONFIG_DETECT_HUNG_TASK=y /boot/config-`uname -r`
+    grep -w CONFIG_DETECT_HUNG_TASK=y /boot/config-"$(uname -r)"
     CHECK_RESULT $? 0 0 "DETECT_HUNG_TASK ERROR"
 
-    grep -w CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=120 /boot/config-`uname -r`
+    grep -w CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=120 /boot/config-"$(uname -r)"
     CHECK_RESULT $? 0 0 "DETECT_HUNG_TASK_TIMEOUT ERROR"
 
-    grep -w CONFIG_BOOTPARAM_HUNG_TASK_PANIC_VALUE=0 /boot/config-`uname -r`
-    CHECK_RESULT $? 0 0 "BOOTPARAM_HUNG_TASK_PANIC_VALUE ERROR"
+    grep -w CONFIG_BOOTPARAM_HUNG_TASK_PANIC=y /boot/config-"$(uname -r)"
+    CHECK_RESULT $? 0 1 "BOOTPARAM_HUNG_TASK_PANIC_VALUE ERROR"
     LOG_INFO "Finish test!"
 }
 
-main $@
+main "$@"
