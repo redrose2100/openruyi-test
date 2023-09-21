@@ -36,7 +36,7 @@ function pre_test() {
 # 测试点的执行
 function run_test() {
     # step 1: 查看/etc/sysmonitor/iodelay配置文件，观察DALAY_VALUE默认配置
-    delay_value=$(grep DELAY_VALUE "${IODELAY_CONF}")
+    delay_value=$(grep DELAY_VALUE "${IODELAY_CONF}" | awk -F\" '{print $2}')
     [ "$delay_value" -eq 500 ] || oe_err "default check failed"
     # step 2: 配置DALAY_VALU的值为空\注释掉该配置，reload sysmonitor
     # sysmonitor reload成功，sysmonitor日志中没有io delay monitor: configuration illegal日志
