@@ -29,7 +29,7 @@ function pre_test() {
     SSH_CMD "systemctl start smb;systemctl enable smb;systemctl stop firewalld;
 	setsebool samba_export_all_ro on;setsebool samba_export_all_rw on;chmod 755 /home/testsamba" \
         ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_INSTALL cifs-utils samba-client
+    DNF_INSTALL "cifs-utils samba-client"
     systemctl stop firewalld
     LOG_INFO "Environmental preparation is over."
 }
