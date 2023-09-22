@@ -14,27 +14,26 @@
 # @Contact   :   liuyafei@uniontech.com
 # @Date      :   2023/07/13
 # @License   :   Mulan PSL v2
-# @Desc      :   Huawei fnic  module
+# @Desc      :   Huawei fnic module
 # #############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    kernel_name=$(uname -r)
-    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/scsi/fnic/fnic.ko
-    CHECK_RESULT $? 0 0 "file does not exist"
+    modinfo fnic | grep name
+    CHECK_RESULT $? 0 0 "Module fnic not found"
     modinfo fnic |grep -i version
     CHECK_RESULT $? 0 0 "Information display failed"
     modprobe fnic
     CHECK_RESULT $? 0 0 "Module not loaded"
-    lsmod | grep fnic
+    lsmod | grep ^fnic
     CHECK_RESULT $? 0 0 "Module loaded failed"
-    rmmod fnic
+    modprobe -r fnic
     CHECK_RESULT $? 0 0 "Module uninstall failed"
-    lsmod | grep fnic
-    CHECK_RESULT $? 1 0 "Module loaded"
-    dmesg |grep fnic
+    lsmod | grep ^fnic
+    CHECK_RESULT $? 1 0 "Module uninstall failed"
+    dmesg | grep fnic
     CHECK_RESULT $? 0 0 "Failed to detect information"
 }
 

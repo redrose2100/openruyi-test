@@ -21,21 +21,21 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    kernel_name=$(uname -r)
-    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/scsi/huawei/hifc/hifc.ko
-    CHECK_RESULT $? 0 0 "file does not exist"
-    modinfo hifc |grep -i version
+    modinfo hifc | grep name
+    CHECK_RESULT $? 0 0 "Module hifc not found"
+    modinfo hifc | grep -i version
     CHECK_RESULT $? 0 0 "Information display failed"
     modprobe hifc
     CHECK_RESULT $? 0 0 "Module not loaded"
-    lsmod | grep hifc
+    lsmod | grep ^hifc
     CHECK_RESULT $? 0 0 "Module loaded failed"
-    rmmod hifc
+    modprobe -r hifc
     CHECK_RESULT $? 0 0 "Module uninstall failed"
-    lsmod | grep hifc
-    CHECK_RESULT $? 1 0 "Module loaded"
+    lsmod | grep ^hifc
+    CHECK_RESULT $? 1 0 "Module uninstall failed"
     dmesg |grep hifc
     CHECK_RESULT $? 0 0 "Failed to detect information"
 }
 
 main "$@"
+

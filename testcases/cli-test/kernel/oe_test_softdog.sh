@@ -17,21 +17,21 @@
 # @Desc      :   softdog模块加载、卸载
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
-    modinfo softdog |grep softdog
+    modinfo softdog | grep softdog
     CHECK_RESULT $? 0 0 "Description Module information failed to be displayed"
-    lsmod | grep  softdog
+    lsmod | grep ^softdog
     CHECK_RESULT $? 0 1 "Default uninstallation"
     modprobe softdog
-    CHECK_RESULT $? 0 0 "Module start"
-    lsmod | grep  softdog
-    CHECK_RESULT $? 0 0 "softdog found"
-    rmmod  softdog
-    CHECK_RESULT $? 0 0 "softdog remove failure"
-    lsmod | grep  softdog
-    CHECK_RESULT $? 0 1 "softdog stop"
+    CHECK_RESULT $? 0 0 "Module load failed"
+    lsmod | grep ^softdog
+    CHECK_RESULT $? 0 0 "softdog load failed"
+    modprobe -r softdog
+    CHECK_RESULT $? 0 0 "softdog remove failed"
+    lsmod | grep ^softdog
+    CHECK_RESULT $? 0 1 "softdog remove failed"
     dmesg | grep "softdog" | grep -Ei 'error|fail'
     CHECK_RESULT $? 1 0 "error message was reported"
 }

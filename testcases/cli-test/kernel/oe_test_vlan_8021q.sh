@@ -17,20 +17,20 @@
 # @Desc      :   Test内核-支持vlan_8021q模块
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start testing..."
-    modinfo 8021q |grep version
+    modinfo 8021q | grep version
     CHECK_RESULT $? 0 0 "Failed to view information"
     modprobe 8021q
-    lsmod | grep  8021q
+    lsmod | grep ^8021q
     CHECK_RESULT $? 0 0 "Module loading failed"
-    rmmod  8021q
-    lsmod | grep  8021q
+    modprobe -r 8021q
+    lsmod | grep ^8021q
     CHECK_RESULT $? 0 1 "Module uninstallation failed"
     LOG_INFO "Finish test!"
 }
 
-
 main "$@"
+

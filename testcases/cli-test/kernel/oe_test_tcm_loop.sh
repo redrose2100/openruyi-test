@@ -21,19 +21,17 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    kernel_name=$(uname -r)
-    test -f /lib/modules/"${kernel_name}"/kernel/drivers/target/loopback/tcm_loop.ko
-    CHECK_RESULT $? 0 0 "file does not exist"
-    modinfo tcm_loop |grep -i name
-    CHECK_RESULT $? 0 0 "Information display failed"
+    modinfo tcm_loop | grep name
+    CHECK_RESULT $? 0 0 "Module tcm_loop not found"
     modprobe tcm_loop
     CHECK_RESULT $? 0 0 "Module not loaded"
-    lsmod | grep tcm_loop
+    lsmod | grep ^tcm_loop
     CHECK_RESULT $? 0 0 "Module loaded failed"
-    rmmod tcm_loop
+    modprobe -r tcm_loop
     CHECK_RESULT $? 0 0 "Module uninstall failed"
-    lsmod | grep tcm_loop
-    CHECK_RESULT $? 1 0 "Module loaded"
+    lsmod | grep ^tcm_loop
+    CHECK_RESULT $? 1 0 "Module uninstall failed"
 }
 
 main "$@"
+

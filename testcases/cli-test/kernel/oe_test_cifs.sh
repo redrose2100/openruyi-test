@@ -22,16 +22,16 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     modinfo cifs | grep cifs
     CHECK_RESULT $? 0 0 "Description Module information failed to be displayed"
-    lsmod | grep -w cifs
+    lsmod | grep ^cifs
     CHECK_RESULT $? 0 1 "Default installation"
     modprobe cifs
     CHECK_RESULT $? 0 0 "Module loading failure"
-    lsmod | grep -w cifs
-    CHECK_RESULT $? 0 0 "cifs not found"
+    lsmod | grep ^cifs
+    CHECK_RESULT $? 0 0 "cifs module not found"
     modprobe -r cifs
-    CHECK_RESULT $? 0 0 "cifs remove failure"
-    lsmod | grep -w cifs
-    CHECK_RESULT $? 0 1 "cifs exist"
+    CHECK_RESULT $? 0 0 "cifs module remove failure"
+    lsmod | grep ^cifs
+    CHECK_RESULT $? 0 1 "cifs module remove failure"
     dmesg | grep "cifs" | grep -Ei 'error|fail'
     CHECK_RESULT $? 1 0 "error message was reported"
 }

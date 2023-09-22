@@ -21,19 +21,18 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    kernel_name=$(uname -r)
-    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/scsi/libfc/libfc.ko.xz
-    CHECK_RESULT $? 0 0 "file does not exist"
-    modinfo libfc |grep -i version
+    modinfo libfc | grep name
+    CHECK_RESULT $? 0 0 "Module libfc not found"
+    modinfo libfc | grep -i version
     CHECK_RESULT $? 0 0 "Information display failed"
     modprobe libfc
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep libfc
     CHECK_RESULT $? 0 0 "Module loaded failed"
-    rmmod libfc
+    modprobe -r libfc
     CHECK_RESULT $? 0 0 "Module uninstall failed"
     lsmod | grep libfc
-    CHECK_RESULT $? 1 0 "Module loaded"
+    CHECK_RESULT $? 1 0 "Module uninstall failed"
 }
 
 main "$@"
