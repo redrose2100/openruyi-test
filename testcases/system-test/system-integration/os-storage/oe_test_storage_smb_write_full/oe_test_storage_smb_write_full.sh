@@ -63,7 +63,7 @@ function run_test() {
     CHECK_RESULT $?
     SSH_CMD "dd if=/dev/zero of=/home/testsamba/test bs=1k" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     CHECK_RESULT $? 1
-    dd if=/dev/zero of=/home/client/test1 bs=1M count=2
+    dd if=/dev/zero of=/home/client/test1 bs=1M count=2 oflag=sync
     CHECK_RESULT $? 1
     SSH_CMD "rm -rf /home/testsamba/test" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     CHECK_RESULT $?
