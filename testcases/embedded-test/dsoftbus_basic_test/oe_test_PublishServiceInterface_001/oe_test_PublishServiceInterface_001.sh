@@ -16,7 +16,7 @@
 #@Desc      	:   Test dsoftbus interface
 #####################################
 
-source ../comm_lib_single.sh
+source ../common/comm_lib_single.sh
 
 function pre_test()
 {
