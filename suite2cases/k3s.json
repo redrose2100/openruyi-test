@@ -3,7 +3,8 @@
     "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_k3s_deployment_guide"
+            "name": "oe_test_k3s_deployment_guide",
+            "machine num": 2
         }
     ]
 }

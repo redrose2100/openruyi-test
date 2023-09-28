@@ -15,6 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Close swap and reboot
 #####################################
+# shellcheck disable=SC1091
 
 source ../common_lib/fsio_lib.sh
 
@@ -26,11 +27,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ssh_cmd_node "sed -i '\\\/dev\\\/mapper\\\/openeuler-swap/d' /etc/fstab"
+    ssh_cmd_node "sed -i '/openeuler-swap/d' /etc/fstab"
     CHECK_RESULT $? 0 0 "Delete mount swap on /etc/fstab failed."
     REMOTE_REBOOT 2
     REMOTE_REBOOT_WAIT 2
-    ssh_cmd_node "free -m | grep -i 'swap' | awk '{print $4}' | grep 0"
+    ssh_cmd_node "free -m | grep -i 'swap' | awk '{print \$4}' | grep -w 0"
     CHECK_RESULT $? 0 0 "Close swap failed."
     LOG_INFO "End to run test."
 }
@@ -44,4 +45,3 @@ function post_test() {
 }
 
 main "$@"
-
