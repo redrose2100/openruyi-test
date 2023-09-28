@@ -15,20 +15,21 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Create lvm to make swab
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to prepare the database config."
     free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
-    disk_name="/dev/"$free_disk
+    disk_name="/dev/""$free_disk"
     free_swap=$(free -m | grep -i "swap" | awk '{print $4}')
     LOG_INFO "Finish to prepare the database config."
 }
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    fdisk ${disk_name} <<diskEof
+    fdisk "${disk_name}" <<diskEof
 n
 p
 1
@@ -42,15 +43,16 @@ diskEof
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mkswap ${dm_name}
-    swapon ${dm_name}
+    mkswap "${dm_name}"
+    swapon "${dm_name}"
     cur_free_swap=$(free -m | grep -i "swap" | awk '{print $4}')
     [[ $cur_free_swap -gt $free_swap ]]
     CHECK_RESULT $? 0 0 "The new device doesn't add to swap."
-    swapon -v | grep ${dm_name}
+    swapon -v | grep "${dm_name}"
     CHECK_RESULT $? 0 0 "Check swap device failed."
-    swapoff ${dm_name}
+    swapoff "${dm_name}"
     CHECK_RESULT $? 0 0 "Remove swap device failed."
+    SLEEP_WAIT 3
     cur_free_swap=$(free -m | grep -i "swap" | awk '{print $4}')
     [[ $cur_free_swap -eq $free_swap ]]
     CHECK_RESULT $? 0 0 "The new device doesn't add to swap."
@@ -59,7 +61,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    fdisk ${disk_name} <<diskEof
+    fdisk "${disk_name}" <<diskEof
 d
 
 w
@@ -68,4 +70,3 @@ diskEof
 }
 
 main "$@"
-

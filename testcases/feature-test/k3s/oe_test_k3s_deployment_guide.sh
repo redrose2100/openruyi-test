@@ -44,7 +44,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     INSTALL_K3S_SKIP_DOWNLOAD=true k3s-install.sh | grep "Starting k3s"
     CHECK_RESULT $? 0 0 "Failed to start the k3s-server"
-    SLEEP_WAIT 15
+    SLEEP_WAIT 30
     kubectl get nodes | grep "Ready"
     CHECK_RESULT $? 0 0 "Failed to deploy the k3s-server"
     server_k3s_token=$(awk -F ":" '{print $NF}' /var/lib/rancher/k3s/server/node-token)
@@ -53,7 +53,7 @@ function run_test() {
     systemctl restart k3s.service
     systemctl status k3s.service | grep "active (running)"
     CHECK_RESULT $? 0 0 "Failed to restart the k3s-server"
-    SLEEP_WAIT 15
+    SLEEP_WAIT 30
     kubectl get nodes | grep "openeuler"
     CHECK_RESULT $? 0 0 "Failed to deploy the k3s-agent"
     kubectl apply -f deployment.yml | grep "deployment.apps/nginx-deployment created"

@@ -41,16 +41,17 @@ n
 p
 1
 
-100000
++350M
 Y
 n
 p
 2
 
-200000
++350M
 Y
 w
 diskEof
+        SLEEP_WAIT 2
         echo y | mdadm -C -v /dev/md0 -l 1 -n 2 "${disk_name}"1 "${disk_name}"2
         CHECK_RESULT $? 0 0 "Create md failed."
         mdadm -Ds | grep /dev/md0
