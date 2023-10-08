@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Public function
 #####################################
-
+# shellcheck disable=SC1091
 source "${OET_PATH}"/conf/mugen.env
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 

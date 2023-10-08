@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Test QUERY_BEDEPEND pkgname dbname  with lacking parameters
 #####################################
-
+# shellcheck disable=SC1091
 source ../../common_lib/pkgship_lib.sh
 
 function pre_test() {

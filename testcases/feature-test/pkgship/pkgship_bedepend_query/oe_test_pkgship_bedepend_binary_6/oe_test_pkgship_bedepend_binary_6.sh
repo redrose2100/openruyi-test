@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test pkgship bedepend dbName pkgName
 #####################################
-
+# shellcheck disable=SC1091
 source ../../common_lib/pkgship_lib.sh
 
 function pre_test() {
