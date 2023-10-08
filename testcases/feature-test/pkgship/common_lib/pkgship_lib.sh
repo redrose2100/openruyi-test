@@ -16,8 +16,8 @@
 #@Desc          :   Public function
 #####################################
 
-source ${OET_PATH}/conf/mugen.env
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/conf/mugen.env
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 export LANG=en_US.UTF-8
 export SYS_CONF_PATH=/etc/pkgship
@@ -29,26 +29,13 @@ export ES_CONF_PATH=/etc/elasticsearch
 function MODIFY_CONF() {
     # $1:modified parameter config
     # $2:modified parameter value
-    sed -i "s#$(grep $1 ${SYS_CONF_PATH}/conf.yaml)#  $1: $2#g" ${SYS_CONF_PATH}/conf.yaml
+    sed -i "s#$(grep "$1" ${SYS_CONF_PATH}/conf.yaml)#  $1: $2#g" ${SYS_CONF_PATH}/conf.yaml
 }
-
-# function ADD_CONF() {
-#     # Add a new db config on file
-#     file=$1
-#     dbNameNew=$2
-#     src_db_file_new=$3
-#     bin_db_file_new=$4
-#     priorityNew=$5
-#     echo "- dbName: $dbNameNew" >>$file
-#     echo "  src_db_file: $src_db_file_new" >>$file
-#     echo "  bin_db_file: $bin_db_file_new" >>$file
-#     echo "  priority: $priorityNew" >>$file
-# }
 
 function INIT_CONF() {
     conf_file=$1
-    chown pkgshipuser:pkgshipuser $conf_file
-    pkgship init -filepath $conf_file >/dev/null
+    chown pkgshipuser:pkgshipuser "$conf_file"
+    pkgship init -filepath "$conf_file" >/dev/null
 }
 
 function MODIFY_INI() {
@@ -64,13 +51,13 @@ function ACT_SERVICE() {
     cur_system=$(cat /proc/1/cgroup)
     cur_user=$(whoami)
 
-    ps -ef | egrep "elasticsearch" | grep -v grep >/dev/null
+    ps -ef | grep "elasticsearch" | grep -v grep >/dev/null
     [[ $? -eq 1 ]] && {
         bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh elasticsearch
         sleep 2
     }
 
-    ps -ef | egrep "redis" | grep -v grep >/dev/null
+    ps -ef | grep "redis" | grep -v grep >/dev/null
     [[ $? -eq 1 ]] && {
         bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh redis
         sleep 2
@@ -108,18 +95,6 @@ function ACT_SERVICE() {
 
     sleep 2
 }
-
-# function CHECK_INIT() {
-#     # CHeck if init db success: 1. Check cmd display; 2. Check db msg
-#     # $1: pkgship init cmd display
-#     # $2: db namef
-#     result=$1
-#     dbName=$2
-#     echo "$result" | grep "Database initialize success" >/dev/null
-#     CHECK_RESULT $? 0 0 "Database initialize failed."
-#     pkgship list $dbName | grep $dbName >/dev/null
-#     CHECK_RESULT $? 0 0 "Query list after initialize failed."
-# }
 
 function CHECK_LOCAL_REPO() {
     if [[ -e ${SYS_CONF_PATH}/repo ]]; then
@@ -172,13 +147,13 @@ function REVERT_ENV() {
     ACT_SERVICE stop
     rm -f ${YUM_PATH}/pkgship_yum.repo ${YUM_PATH}/pkgship_elasticsearch.repo ${LOG_PATH}/pkgship/*
     SLEEP_WAIT 10
-    for i in $(ps -ef | egrep "pkgship|uwsgi|elasticsearch|redis|dnf" | grep -Ev "nohup|mugen.sh|oe_test|grep" | awk '{print $2}'); do
-        kill -9 $i
+    for i in $(ps -ef | grep "pkgship|uwsgi|elasticsearch|redis|dnf" | grep -Ev "nohup|mugen.sh|oe_test|grep" | awk '{print $2}'); do
+        kill -9 "$i"
     done
     dnf clean all
     dnf makecache
     SLEEP_WAIT 10
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ${SYS_CONF_PATH}
 }
 
@@ -186,7 +161,7 @@ function QUERY_LIST() {
     # option: -s
     dbName=$1
     option=$2
-    pkgship list $dbName $option
+    pkgship list "$dbName" "$dbName"
 }
 
 function QUERY_PKGINFO() {
@@ -194,7 +169,7 @@ function QUERY_PKGINFO() {
     pkgName=$1
     dbName=$2
     option=$3
-    pkgship pkginfo $pkgName $dbName $option
+    pkgship pkginfo "$pkgName" "$dbName" "$dbName"
 }
 
 function QUERY_INSTALLDEP() {
@@ -202,9 +177,9 @@ function QUERY_INSTALLDEP() {
     dbName=$2
     level=$3
     if [[ $level == "" ]]; then
-        pkgship installdep $pkgName -dbs $dbName
+        pkgship installdep "$pkgName" -dbs "$dbName"
     else
-        pkgship installdep $pkgName -dbs $dbName -level $level
+        pkgship installdep "$pkgName" -dbs "$dbName" -level "$level"
     fi
 }
 
@@ -213,9 +188,9 @@ function QUERY_BUILDDEP() {
     dbName=$2
     level=$3
     if [[ $level == "" ]]; then
-        pkgship builddep $pkgName -dbs $dbName
+        pkgship builddep "$pkgName" -dbs "$dbName"
     else
-        pkgship builddep $pkgName -dbs $dbName -level $level
+        pkgship builddep "$pkgName" -dbs "$dbName" -level "$level"
     fi
 }
 
@@ -224,7 +199,7 @@ function QUERY_SELFDEPEND() {
     pkgName=$1
     dbName=$2
     option=$3
-    pkgship selfdepend $pkgName -dbs $dbName $option
+    pkgship selfdepend "$pkgName" -dbs "$dbName" "$dbName"
 }
 
 function QUERY_BEDEPEND() {
@@ -232,7 +207,7 @@ function QUERY_BEDEPEND() {
     dbName=$1
     pkgName=$2
     option=$3
-    pkgship bedepend $dbName $pkgName $option
+    pkgship bedepend "$dbName" "$pkgName" "$option"
 }
 
 function GET_RANDOM_PKGNAME() {
@@ -240,7 +215,7 @@ function GET_RANDOM_PKGNAME() {
     sqliteName=$1
 
     # Get all pkg name
-    sqlite3 ../../common_lib/sqlite/$sqliteName "select name from packages;" &>pkg_list.txt
+    sqlite3 ../../common_lib/sqlite/"$sqliteName" "select name from packages;" &>pkg_list.txt
     # Get count
 
     count=$(cat pkg_list.txt | wc -l)
@@ -268,7 +243,7 @@ function CONCURRENCY_THREAD() {
         echo ""
     done >&3
 
-    for j in $(seq 0 $concurrency_num); do
+    for j in $(seq 0 "$concurrency_num"); do
         # Get an exec
         read -u3
         {
@@ -292,18 +267,18 @@ function CONCURRENCY_THREAD() {
 function INSTALL_STRESS() {
     wget -P /opt/ https://fossies.org/linux/privat/old/stress-1.0.4.tar.gz
     tar -zxvf /opt/stress-1.0.4.tar.gz -C /opt/
-    cd /opt/stress-1.0.4
+    cd /opt/stress-1.0.4 || exit
     ./configure
     make >/dev/null
     make check >/dev/null
     make install >/dev/null
-    cd -
+    cd - || exit
 }
 
 function CLEAN_STRESS() {
-    cd /opt/stress-1.0.4
+    cd /opt/stress-1.0.4 || exit
     make clean >/dev/null
-    cd -
+    cd - || exit
     rm -rf /opt/stress-1.0.4.tar.gz /opt/stress-1.0.4
 }
 
@@ -321,14 +296,14 @@ function GET_DNF_BUILDDEPLIST() {
     repo="openEuler-Source"
     type="builddep"
     dep=()
-    dep=$(GET_SINGLEDEP $pkg $repo $type)
-    dnf builddep $pkg --disablerepo=fedora-Binary --installroot=/home --releasever=1 --assumeno >dnf_builddep_result
+    dep=$(GET_SINGLEDEP "$pkg" "$repo" "$type")
+    dnf builddep "$pkg" --disablerepo=fedora-Binary --installroot=/home --releasever=1 --assumeno >dnf_builddep_result
     count=1
     [[ $query_level == $count ]] && {
         for ele in ${dep[@]}; do
             find=$(grep $ele dnf_builddep_result)
             [[ $find =~ $ele ]] && {
-                echo $ele
+                echo "$ele"
             }
         done
         rm -f dnf_builddep_result
@@ -349,7 +324,7 @@ function GET_DNF_BUILDDEPLIST() {
     for ele in ${dep[@]}; do
         find=$(grep $ele dnf_builddep_result)
         [[ $find =~ $ele ]] && {
-            echo $ele
+            echo "$ele"
         }
     done
     rm -f dnf_builddep_result
@@ -360,13 +335,13 @@ function GET_SINGLEDEP() {
     repo=$2
     type=$3
     if [[ $type == "installdep" ]]; then
-        level=$(dnf deplist $pkg --repo=$repo | grep provider | cut -d ':' -f 2 | cut -d '-' -f 1 | sort | uniq)
+        level=$(dnf deplist "$pkg" --repo="$repo" | grep provider | cut -d ':' -f 2 | cut -d '-' -f 1 | sort | uniq)
     else
-        level=$(dnf deplist $pkg --repo=$repo | grep dependency | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq)
+        level=$(dnf deplist "$pkg" --repo="$repo" | grep dependency | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq)
     fi
 
     if [[ "$level"x != ""x ]]; then
-        echo $level
+        echo "$level"
         return 0
     else
         return 1
@@ -382,21 +357,21 @@ function GET_INSTALLDEP() {
     start_line=$(sed -n '/^Source/=' installdep.txt)
     end_line=$(wc -l installdep.txt | awk '{print $1}')
     sed -i "${start_line},${end_line}d" installdep.txt
-    grep "openeuler-lts" installdep.txt | grep -v "$pkgname" | awk '{print $1}' | sort | uniq | grep -Ev "openeuler-lts|=" >${filename}
+    grep "openeuler-lts" installdep.txt | grep -v "$pkgname" | awk '{print $1}' | sort | uniq | grep -Ev "openeuler-lts|=" >"${filename}"
     rm -f installdep.txt
 }
 
 function GET_DNF_REPOQUERY() {
     pkg=$1
     repo=${2-"openEuler-Binary"}
-    dnf repoquery --whatrequires=$pkg --repo=$repo | cut -d ':' -f 1 >./dnf_repoquery
+    dnf repoquery --whatrequires="$pkg" --repo="$repo" | cut -d ':' -f 1 >./dnf_repoquery
     [[ -f ./expect_repoquery ]] && {
         rm -f ./expect_repoquery
     }
 
     touch ./expect_repoquery
     cat ./dnf_repoquery | while read line; do
-        echo ${line%-*} >>./expect_repoquery
+        echo "${line%-*}" >>./expect_repoquery
     done
     SLEEP_WAIT 2
 }
@@ -404,10 +379,10 @@ function GET_DNF_REPOQUERY() {
 function COMPARE_DNF() {
     expect=$1
     actual=$2
-    grep -Ev "^$=|[#;]" $expect >./expect_grep_deal
-    grep -Ev "^$=|[#;]" $actual >./actual_grep_deal
+    grep -Ev "^$=|[#;]" "$expect" >./expect_grep_deal
+    grep -Ev "^$=|[#;]" "$actual" >./actual_grep_deal
     while read line; do
-        id=$(echo $line | cut -d"^" -f1)
+        id=$(echo "$line" | cut -d"^" -f1)
         grep -q "$id" ./expect_grep_deal
         [[ $? == 1 ]] && {
             printf 1
@@ -422,17 +397,17 @@ function COMPARE_DNF() {
 function CHECK_COMPARE() {
     testlog=$1
     dbname=$2
-    grep -q "\[INFO\] The data comparison is successful, and the generated file" $testlog
+    grep -q "\[INFO\] The data comparison is successful, and the generated file" "$testlog"
     CHECK_RESULT $? 0 0 "Execute compare build command failed."
-    compare_dir=$(tail -n 1 $testlog | cut -d '(' -f 2 | cut -d ')' -f 1)
-    ls ${compare_dir} | grep -q "compare.csv"
+    compare_dir=$(tail -n 1 "$testlog" | cut -d '(' -f 2 | cut -d ')' -f 1)
+    ls "${compare_dir}" | grep -q "compare.csv"
     CHECK_RESULT $? 0 0 "Check file number failed."
-    first_row=$(wc -l ${compare_dir}/${dbname}.csv | awk '{print $1}')
-    cmp_row=$(wc -l ${compare_dir}/compare.csv | awk '{print $1}')
+    first_row=$(wc -l "${compare_dir}"/"${dbname}".csv | awk '{print $1}')
+    cmp_row=$(wc -l "${compare_dir}"/compare.csv | awk '{print $1}')
     if [[ $cmp_row -lt $first_row ]]; then
         CHECK_RESULT 1 0 0 "Check compare file failed."
     fi
-    printf ${compare_dir}
+    printf "${compare_dir}"
 }
 
 function COMPARE_BUILD_PKG() {
@@ -443,15 +418,15 @@ function COMPARE_BUILD_PKG() {
 
     # check file info
     if [[ $type -eq "install" ]]; then
-        QUERY_INSTALLDEP $pkgname $dbname 1 >expect
+        QUERY_INSTALLDEP "$pkgname" "$dbname" 1 >expect
     else
-        QUERY_BUILDDEP $pkgname $dbname 1 >expect
+        QUERY_BUILDDEP "$pkgname" "$dbname" 1 >expect
     fi
-    cat expect | grep $dbname | grep -v $dbname | awk '{print $1}' | sort | uniq >expect_cmp
-    grep "^$pkgname->" ${compare_dir}/${dbname}.csv | cut -d ',' -f 1 >actual
+    cat expect | grep "$dbname" | grep -v "$dbname" | awk '{print $1}' | sort | uniq >expect_cmp
+    grep "^$pkgname->" "${compare_dir}"/"${dbname}".csv | cut -d ',' -f 1 >actual
     CHECK_RESULT $? 0 0 "Get data in ${dbname} failed."
     cat actual | while read line; do
-        grep -q "$line" ${compare_dir}/compare.csv
+        grep -q "$line" "${compare_dir}"/compare.csv
         [[ $? == 1 ]] && {
             CHECK_RESULT 1 0 0 "Check package $dbname in compare.csv failed."
             return 1
@@ -461,7 +436,7 @@ function COMPARE_BUILD_PKG() {
     sed -i "s/$pkgname->//g" actual
     cat actual | sort | uniq >actual_cmp
     code=$(COMPARE_DNF actual_cmp expect_cmp)
-    CHECK_RESULT $code 0 0 "Check package $pkgname in $dbname failed."
+    CHECK_RESULT "$code" 0 0 "Check package $pkgname in $dbname failed."
 }
 
 path=$(pwd)

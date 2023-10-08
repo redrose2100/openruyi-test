@@ -18,15 +18,16 @@
 
 function inject_full_inode() {
     test_dir=$1
-    mkdir -p /boot/$test_dir/testSpace
+    mkdir -p /boot/"$test_dir"/testSpace
     i=0
-    while [[ "$?" == "0" ]]; do
+    while [[ "$exitcode" == "0" ]]; do
         i=$((i + 1))
-        touch /boot/$test_dir/testSpace/testsFile$i
+        touch /boot/"$test_dir"/testSpace/testsFile$i
+        exitcode=$?
     done
 }
 
 function inject_full_inode_clean() {
     test_dir=$1
-    rm -rf /boot/$test_dir/testSpace
+    rm -rf /boot/"$test_dir"/testSpace
 }

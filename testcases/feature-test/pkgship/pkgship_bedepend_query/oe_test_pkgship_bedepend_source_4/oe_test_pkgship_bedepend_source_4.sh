@@ -42,12 +42,12 @@ function run_test() {
     # Get ramdom package to search
     for i in {1..5}; do
         pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.03_src.sqlite)
-        LOG_INFO "Check random package: "$pkg_name
-        result=$(QUERY_BEDEPEND openeuler-lts $pkg_name -build)
+        LOG_INFO "Check random package: ""$pkg_name"
+        result=$(QUERY_BEDEPEND openeuler-lts "$pkg_name" -build)
         if [[ "$result" =~ "openeuler-lts" ]]; then
             CHECK_RESULT 0
         else
-            CHECK_RESULT 1 0 0 "Check bedepend result of $pkg_name failed."
+            CHECK_RESULT 1 0 0 "Check bedepend result of "$pkg_name" failed."
         fi
     done
 

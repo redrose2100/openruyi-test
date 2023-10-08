@@ -31,26 +31,26 @@ function run_test() {
     QUERY_BEDEPEND openeuler-lts PyPAM-help "-install -b" | grep -v "=" >./actual_value1
     GET_DNF_REPOQUERY PyPAM-help
     code=$(COMPARE_DNF ./actual_value1 ./expect_repoquery)
-    CHECK_RESULT $code 0 0 "Check bedepend result of PyPAM failed."
+    CHECK_RESULT "$code" 0 0 "Check bedepend result of PyPAM failed."
 
     QUERY_BEDEPEND openeuler-lts openhpi "-install -b" | grep -v "=" >./actual_value2
     GET_DNF_REPOQUERY openhpi
     code=$(COMPARE_DNF ./actual_value2 ./expect_repoquery)
-    CHECK_RESULT $code 0 0 "Check bedepend result of openhpi failed."
+    CHECK_RESULT "$code" 0 0 "Check bedepend result of openhpi failed."
 
     QUERY_BEDEPEND openeuler-lts Judy "-install -b" | grep -v "=" >./actual_value3
     GET_DNF_REPOQUERY Judy
     code=$(COMPARE_DNF ./actual_value3 ./expect_repoquery)
-    CHECK_RESULT $code 0 0 "Check bedepend result of Judy failed."
+    CHECK_RESULT "$code" 0 0 "Check bedepend result of Judy failed."
     
     # Get ramdom package to search
     for i in {1..5}; do
         pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.09_bin.sqlite)
-        LOG_INFO "Check random package: "$pkg_name
-        QUERY_BEDEPEND openeuler-lts $pkg_name "-install -b" | grep -v "=" >./actual_value
+        LOG_INFO "Check random package: ""$pkg_name"
+        QUERY_BEDEPEND openeuler-lts "$pkg_name" "-install -b" | grep -v "=" >./actual_value
         GET_DNF_REPOQUERY $pkg_name
         code=$(COMPARE_DNF ./actual_value ./expect_repoquery)
-        CHECK_RESULT $code 0 0 "Check bedepend result of $pkg_name failed."
+        CHECK_RESULT "$code" 0 0 "Check bedepend result of "$pkg_name" failed."
     done
 
     LOG_INFO "End to run test."
