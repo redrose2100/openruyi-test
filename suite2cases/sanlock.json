@@ -24,6 +24,15 @@
         },
         {
             "name": "oe_test_sanlock_sanlk_resetd"
+        },
+	{
+            "name": "oe_test_service_sanlk-resetd"
+        },
+        {
+            "name": "oe_test_service_sanlock"
+        },
+        {
+            "name": "oe_test_service_wdmd"
         }
     ]
 }
