@@ -29,6 +29,7 @@ function pre_test() {
     cd /data/mariadb || exit
     mkdir data tmp run log
     chown -R mysql:mysql /data
+    chown -R mysql:mysql /var/log/mariadb/
     cd - || exit
     rm -rf /var/lib/mysql/*
     DNF_INSTALL mariadb-server
