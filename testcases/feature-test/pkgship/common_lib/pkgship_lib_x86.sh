@@ -51,6 +51,7 @@ function ACT_SERVICE() {
     cur_system=$(cat /proc/1/cgroup)
     cur_user=$(whoami)
 
+    # shellcheck disable=SC2009
     ps -ef | grep "elasticsearch" | grep -v grep >/dev/null
     [[ $? -eq 1 ]] && {
         bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh elasticsearch

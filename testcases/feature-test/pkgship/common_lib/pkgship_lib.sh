@@ -51,13 +51,13 @@ function ACT_SERVICE() {
     cur_system=$(cat /proc/1/cgroup)
     cur_user=$(whoami)
 
-    ps -ef | grep "elasticsearch" | grep -v grep >/dev/null
+    pgrep "elasticsearch" >/dev/null
     [[ $? -eq 1 ]] && {
         bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh elasticsearch
         sleep 2
     }
 
-    ps -ef | grep "redis" | grep -v grep >/dev/null
+    pgrep "redis" >/dev/null
     [[ $? -eq 1 ]] && {
         bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh redis
         sleep 2
