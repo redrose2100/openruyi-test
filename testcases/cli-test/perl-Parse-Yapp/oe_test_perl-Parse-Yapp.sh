@@ -51,45 +51,35 @@ EOF
 }
 
 function run_test() {
-    LOG_INFO "Start to run testcase:oe_test_perl-Parse-Yapp."
-    ### -m ###
+    LOG_INFO "Start to run test."
     yapp -m grammar mygrammar.yp
     find . -name grammar.pm | grep grammar.pm
     CHECK_RESULT $? 0 0 "L$LINENO: -m No Pass"
-    ### -v ###
     yapp -v mygrammar.yp
     find . -name mygrammar.output | grep -e mygrammar.output
     CHECK_RESULT $? 0 0 "L$LINENO: -v No Pass"
-    ### -s ###
     yapp -s mygrammar.yp
     grep iso mygrammar.pm
     grep "standalone parser" < mygrammar.pm
     CHECK_RESULT $? 0 0 "L$LINENO: -s No Pass"
-    ### -n ###
     yapp -n mygrammar.yp
     find . -name mygrammar.pm | grep mygrammar.pm
     CHECK_RESULT $? 0 0 "L$LINENO: -n No Pass"
-    ### -o ###
     yapp -o mygrammar.pl mygrammar.yp
     find . -name mygrammar.pl | grep mygrammar.pl
     CHECK_RESULT $? 0 0 "L$LINENO: -o No Pass"
-    ### -t ###
     yapp -t mygrammar.output mygrammar.yp
     grep iso mygrammar.pm
     grep "Conflicts" < mygrammar.pm
     CHECK_RESULT $? 0 0 "L$LINENO: -t No Pass"
-    ### -b ###
     yapp -b '/usr/local/bin/perl -w' -o mygrammar2.pl mygrammar.yp
     find . -name mygrammar2.pl | grep mygrammar2.pl
     CHECK_RESULT $? 0 0 "L$LINENO: -b No Pass"
-    ### grammar ###
     yapp mygrammar
     find . -name mygrammar.pm | grep mygrammar.pm
     CHECK_RESULT $? 0 0 "L$LINENO: grammar No Pass"
-    ### -V ###
     yapp -V | grep -e "This is Parse::Yapp version"
     CHECK_RESULT $? 0 0 "L$LINENO: -V No Pass"
-    ### -h ###
     yapp -h 2>&1 | grep "Usage:"
     CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
     LOG_INFO "End to run test."
