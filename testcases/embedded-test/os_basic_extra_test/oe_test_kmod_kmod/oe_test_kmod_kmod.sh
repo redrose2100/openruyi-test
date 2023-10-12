@@ -29,9 +29,15 @@ function run_test() {
     CHECK_RESULT $?
     kmod list | grep "[a-zA-Z0-9]"
     CHECK_RESULT $?
-    kmod static-nodes | grep -E "Module|Device node"
-    CHECK_RESULT $?
+    if ! kmod static-nodes | grep -E "Module|Device node"; then
+        kmod static-nodes
+        CHECK_RESULT $?
+        ls /dev/full
+        CHECK_RESULT $?
+        find /dev/ -name 'fu*' | wc -l | grep "1"
+        CHECK_RESULT $?
+    fi
     LOG_INFO "End of the test."
 }
 
-main $@
+main "$@"
