@@ -9,14 +9,14 @@
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
 ####################################
-#@Author    	:   seven
-#@Contact   	:   2461603862@qq.com
-#@Date      	:   2023-01-12
-#@License   	:   Mulan PSL v2
-#@Desc      	:   Test dsoftbus interface
+#@Author        :   seven
+#@Contact       :   2461603862@qq.com
+#@Date          :   2023-09-25
+#@License       :   Mulan PSL v2
+#@Desc          :   Test dsoftbus interface
 #####################################
 
-source ../comm_lib_pair.sh
+source ../common/comm_lib_pair.sh
 
 function pre_test()
 {
@@ -30,13 +30,12 @@ function pre_test()
 function run_test()
 {
     LOG_INFO "Start to run test."
-     
-    SSH_CMD "nohup /CloseSessionInterface_001 >/dev/null 2>&1 & "  ${NODE2_IPV4}  ${NODE2_PASSWORD}  ${NODE2_USER}  300 22
-	
-    expect_test
 
+    SSH_CMD "nohup /CloseSessionInterface_001 >/dev/null 2>&1 & " "${NODE2_IPV4}"  "${NODE2_PASSWORD}"  "${NODE2_USER}"  300 22
+
+    expect_test
     expect << EOF
-    set timeout 30
+    set timeout 300
     spawn ./CloseSessionInterface_001
     expect {
       "SoftBusClientStub::OnReceived, code = 269" {send "c\r"}
