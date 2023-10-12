@@ -11,12 +11,12 @@
 ####################################
 #@Author    	:   seven
 #@Contact   	:   2461603862@qq.com
-#@Date      	:   2023-01-12
+#@Date      	:   2023-09-25
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Test dsoftbus interface
 #####################################
 
-source ../comm_lib_single.sh
+source ../common/comm_lib_single.sh
 
 function pre_test()
 {
@@ -31,7 +31,14 @@ function run_test()
 {
     LOG_INFO "Start to run test."
     
-    ./UnPublishServiceInterface_001
+    expect << EOF
+    set timeout 300
+    spawn  ./UnPublishServiceInterface_001
+    expect {
+      "This interface test failed" { exit 1 }
+      timeout { exit 1 }
+      }
+EOF
     CHECK_RESULT $? 0 0 "Failed to execute the UnPublishServiceInterface_001 test case."
 
     LOG_INFO "End to run test."
@@ -47,4 +54,3 @@ function post_test()
 }
 
 main "$@"
-
