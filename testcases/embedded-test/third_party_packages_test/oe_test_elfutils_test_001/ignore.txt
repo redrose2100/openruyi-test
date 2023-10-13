@@ -168,3 +168,8 @@ run-readelf-dw-form-indirect.sh         # bunzip2: command not found
 run-strip-largealign.sh         # bunzip2: command not found
 run-arsymtest.sh                # aarch64-openeuler-linux-nm: command not found
 run-backtrace-native.sh         # expected symname 'raise' got '(null)'
+run-dwfl-report-offline-memory.sh       # bunzip2: command not found
+run-dwfl-report-offline-memory.sh       # bunzip2: command not found
+run-addr2line-C-test.sh                 # bunzip2: command not found
+run-readelf-arm-flags.sh       # bunzip2: command not found
+run-readelf-Dd.sh              # bunzip2: command not found
