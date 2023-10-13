@@ -16,12 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of fakechroot command
 # ############################################
+# shellcheck disable=SC1091
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL fakechroot
     cp ./common/hello.sh ./
     chmod 777 hello.sh
     LOG_INFO "End of environmental preparation!"
@@ -48,7 +48,7 @@ function run_test() {
     env --debug | grep "USER=" 
     CHECK_RESULT $? 0 0 "Check env --debug failed"
 
-    env --help | fgrep "Usage: env [OPTION]"
+    env --help | grep -F "Usage: env [OPTION]"
     CHECK_RESULT $? 0 0 "Check env --help failed"
 
     env --version | grep "env (GNU coreutils) [[:digit:]]"
@@ -59,7 +59,6 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
     rm -rf hello.sh
     LOG_INFO "Finish restore the test environment."
 }
