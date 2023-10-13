@@ -804,6 +804,9 @@
         },
         {
             "name": "oe_test_sysstat_03"
+        },
+        {
+            "name": "oe_test_isula-build_build_image"
         }
     ]
 }
