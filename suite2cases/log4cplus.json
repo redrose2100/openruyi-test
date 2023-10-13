@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/log4cplus",
+    "cases": [
+        {
+            "name": "oe_test_log4cplus"
+        }
+    ]
+}
