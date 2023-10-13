@@ -1,0 +1,78 @@
+\input texinfo @c -*- texinfo -*-
+@documentencoding UTF-8
+
+@settitle TestExample Documentation
+@titlepage
+@center @titlefont{TestExample Documentation}
+@end titlepage
+
+@top
+
+@contents
+@heading this is header of info
+@chapter Introduction
+@xml
+<msg>
+      <sender ="xiaoming" />
+      <groupid = 112221 />
+      <type = test/>
+      <content = "haveyoueat" />
+</msg>
+@end xml
+@ifxml
+ifxml_example
+@end ifxml
+@ifinfo
+ifinfo_example
+@end ifinfo
+@ifdocbook
+ifdocbook_example
+@end ifdocbook
+@ifhtml
+ifhtml_example
+@end ifhtml
+@ifplaintext
+ifplaintext_example
+@end ifplaintext
+@iftex
+iftex_example
+@end iftex
+@html
+html_example
+@end html
+@section Contributing code
+@footnotestyle end
+@footnote{here is a simple footnote1}
+@anchor{Coding Rules}
+@chapter Coding Rules
+@section C language features
+@section Code formatting conventions
+@section Comments
+@node name
+@section Naming conventions
+@section Miscellaneous conventions
+@anchor{Development Policy}
+@chapter Development Policy
+@section Patches/Committing
+@example
+this is @'e example
+@end example
+@section Code
+@section Documentation/Other
+@chapter New codecs or formats checklist
+@chapter Patch submission checklist
+@chapter Patch review process
+@anchor{Regression tests}
+@chapter Regression tests
+@section Adding files to the fate-suite dataset
+@section Visualizing Test Coverage
+this is Visualizing
+@section Using Valgrind
+@heading this is head
+@anchor{Release process}
+@chapter Release process
+@anchor{liaoyuankun}
+@section Criteria for Point Releases
+@section Release Checklist
+@bye
+
