@@ -32,7 +32,7 @@ function pre_test() {
     export bindir=/bin/
     export SKIP_KNOWN_BUGS=1
 
-    pushd ./tmp_test/testsuite
+    pushd ./tmp_test/testsuite || CHECK_RESULT 1 0 1 "pushd ./tmp_test/testsuite fail"
     #cpio case
     sed -i 's/optional FEATURE_LS_SORTFILES FEATURE_LS_TIMESTAMPS/optional FEATURE_LS_SORTFILES FEATURE_LS_TIMESTAMPS CONFIG_BZCAT/g' cpio.tests
     sed -i '/testing "cpio extracts in existing directory"/i\optional CONFIG_BZCAT' cpio.tests
@@ -56,9 +56,12 @@ function pre_test() {
     sed -i '/144/a \ \ -o x"`busybox du -l .`" = x"145\t." \\' du/du-l-works
 
     # fix hostname -s
-    sed -i 's/x$(busybox hostname -s)/x$(busybox hostname -s) || test x$(hostname) = x$(busybox hostname -s)/g' hostname/hostname-s-works
+    sed -i "s/x\$(busybox hostname -s)/x\$(busybox hostname -s) || test x\$(hostname) = x\$(busybox hostname -s)/g" hostname/hostname-s-works
 
-    popd
+    # fix date timezone
+    sed -i 's/busybox date/date/g' date/date-timezone
+
+    popd || CHECK_RESULT 1 0 1 "popd ./tmp_test/testsuite fail"
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -67,28 +70,28 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    pushd ./tmp_test/testsuite
+    pushd ./tmp_test/testsuite || CHECK_RESULT 1 0 1 "pushd ./tmp_test/testsuite fail"
 
     chmod -R 777 ./
     ./runtest > tmp_log.log 2>&1
 
     ignoreFail=("FAIL: unzip (subdir only)" "FAIL: start-stop-daemon with both -x and -a" )
 
-    while read line; do
+    while read -r line; do
         echo "$line"
         if [[ $line =~ ":" ]]; then
             resuleTitle=${line%:*}
-            if [[ "${ignoreFail[*]}" =~ "${line}" ]]; then
+            if echo "${ignoreFail[*]}" | grep "${line}"; then
                 continue
             else
-                echo ${resuleTitle} | grep -q "FAIL"
+                echo "${resuleTitle}" | grep -q "FAIL"
                 CHECK_RESULT $? 0 1 "run busybox testcase fail info: $line"
             fi
         fi
 
     done < tmp_log.log
 
-    popd
+    popd || CHECK_RESULT 1 0 1 "popd ./tmp_test/testsuite fail"
 
     LOG_INFO "End to run test."
 }
