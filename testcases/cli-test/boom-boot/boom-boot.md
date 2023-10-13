@@ -1,0 +1,4 @@
+| **测试套** | **用例名** | **测试级别** | **测试类型** | **用例描述** | **节点数** | **预支条件** | **操作步骤** | **预期结果** | **是否自动化** | **备注** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| boom-boot | oe_test_boom-boot | 单元测试 | 功能测试 | boom-boot在标准输出上打印，验证boom-boot命令的参数用法 | 1 | 安装源码包boom-boot：<br />dnf install -y boom-boot<br /> | boom-boot命令的用法：     <br /> 1、-h,--help：显示boom-boot的帮助信息<br />执行命令：boom -h &#124; grep "usage: boom"<br />或者boom --help &#124; grep "usage: boom"<br />2、-b BOOT_ID, --boot-id BOOT_ID：设置boot_id<br />执行命令：boom -b 1 profile show<br />3、--boot-dir：设置boot文件路径<br />执行命令：boom --boot-dir ./ profile show<br />4、--noheadings：不设置标题<br />执行命令：boom --noheadings profile show<br />5、-H：<br />执行命令：boom -H profile show | 1、输出boom-boot的帮助信息<br />2、命令执行成功<br />3、命令执行成功<br />4、命令执行成功<br />5、命令执行成功 | 是 |  |
+
