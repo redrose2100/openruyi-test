@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test strongswan command 
 # #############################################
+# shellcheck disable=SC2046
+# shellcheck disable=SC1083
 
-source "../common/common_lib.sh"
+source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -29,7 +31,7 @@ function pre_test() {
     podman run -itd --name vpn --env-file ./test_file/vpn.env -p 700:700/udp -p 4700:4700/udp -d --privileged docker.io/hwdsl2/ipsec-vpn-server:latest
     pgrep -f "strongswan" && strongswan stop
     SLEEP_WAIT 3 "rm -rf strongswan_test*.log"
-    log_time=$(date '+%Y-%m-%d %T')
+ #   log_time=$(date '+%Y-%m-%d %T')
     grep "shared" /etc/strongswan/ipsec.conf || cat ./test_file/ipsec_add.conf >> /etc/strongswan/ipsec.conf
     LOG_INFO "End to prepare the test environment."
 }
@@ -58,18 +60,18 @@ function run_test() {
     grep "Reloading strongSwan IPsec configuration" strongswan_test_reload.log
     CHECK_RESULT $? 0 0 "Failed to check the reload"
     SLEEP_WAIT 3
-    connectionname=`strongswan statusall|grep "Connections" -A 1|tail -n 1|awk -F: {'print $1'}`
-    strongswan up $connectionname &
+    connectionname=$(strongswan statusall|grep "Connections" -A 1|tail -n 1|awk -F: {'print $1'})
+    strongswan up "$connectionname" &
     pgrep -f "strongswan up"
     CHECK_RESULT $? 0 0 "Failed to check the up"
     SLEEP_WAIT 3
     strongswan down shared>strongswan_test_down.log
     grep "closed successfully" strongswan_test_down.log
     CHECK_RESULT $? 0 0 "Failed to check the down"
-    strongswan route $connectionname >strongswan_test_route.log
+    strongswan route "$connectionname" >strongswan_test_route.log
     grep "'shared' routed" strongswan_test_route.log
     CHECK_RESULT $? 0 0 "Failed to check the route"
-    strongswan unroute $connectionname >strongswan_test_unroute.log
+    strongswan unroute "$connectionname" >strongswan_test_unroute.log
     grep "trap policy 'shared' unrouted" strongswan_test_unroute.log
     CHECK_RESULT $? 0 0 "Failed to check the unroute"
     LOG_INFO "End to run test."
@@ -81,7 +83,7 @@ function post_test() {
     pgrep -f "starter" && strongswan stop
     SLEEP_WAIT 3 "podman stop -all"
     podman rm -f $(podman ps -qa)
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
