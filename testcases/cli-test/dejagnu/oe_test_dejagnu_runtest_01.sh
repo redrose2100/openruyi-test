@@ -73,7 +73,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option : --mail (to one host)"
     runtest CALC=common/calc -v --mail ${mailAddress1},${mailAddress2} --srcdir common --outdir tmp 
     SLEEP_WAIT 3
-    grep "To: ${anotherUser}@$(hostname), ${USER}@$(hostname)" /var/spool/mail/${USER} && grep "To: ${anotheruser}@$(hostname), ${USER}@$(hostname)" /var/spool/mail/${anotherUser}
+    grep "To: ${anotherUser}@$(hostname), ${USER}@$(hostname)" /var/spool/mail/${USER} && grep "To: ${anotherUser}@$(hostname), ${USER}@$(hostname)" /var/spool/mail/${anotherUser}
     CHECK_RESULT $? 0 0 "Failed option : --mail (to multihost)"
     LOG_INFO "End to run test."
 }
@@ -81,6 +81,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE
+    userdel -rf ${anotherUser}
     rm -rf tmp *.sum *.log /var/spool/mail/{${USER},${anotherUser}}
     LOG_INFO "Finish environment cleanup!"
 }

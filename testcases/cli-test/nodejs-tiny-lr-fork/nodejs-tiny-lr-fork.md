@@ -1,0 +1,3 @@
+| 测试套 | 用例名 | 测试级别 | 测试类型 | 用例描述 | 节点数 | 预置条件 | 操作步骤 | 预期输出 | 是否自动化 | 备注  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| nodejs-tiny-lr-fork | oe\_test\_tiny_lr | 模块测试 | 功能测试 | 测试nodejs-tiny-lr-fork软件包tiny_lr命令相关功能 | 1   | 1.安装nodejs-tiny-lr-fork软件包 | 1.  测试-v 执行命令tiny-lr -v 0.0.1<br>2.  测试--version 执行命令tiny-lr --version 0.0.1<br>3.  测试-p 执行命令tiny-lr -p 25555<br>4.  测试--port 执行命令tiny-lr --port 25555<br>5.  测试--pid 执行命令tiny-lr --pid pid.info<br>6. 测试update-livereload 执行update-livereload命令 | 1.  打印版本信息<br>2.  打印版本信息<br>3.  有"Listening on 25555"相关的信息打印<br>4.  有"Listening on 25555"相关的信息打印<br>5.  生成pid.info文件<br>6. 无报错，且返回值为0 | 是   |     |

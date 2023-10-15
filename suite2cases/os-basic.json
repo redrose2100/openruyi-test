@@ -14,10 +14,112 @@
             "name": "oe_test_who"
         },
         {
+            "name": "oe_test_dircolors"
+        },
+        {
+            "name": "oe_test_factor"
+        },
+        {
+            "name": "oe_test_csplit"
+        },
+        {
+            "name": "oe_test_expand"
+        },
+        {
+            "name": "oe_test_ctags"
+        },
+        {
+            "name": "oe_test_envsubst"
+        },
+        {
+            "name": "oe_test_expr"
+        },
+        {
+            "name": "oe_test_fold"
+        },
+        {
+            "name": "oe_test_comm"
+        },
+        {
+            "name": "oe_test_look"
+        },
+        {
+            "name": "oe_test_whereis"
+        },
+        {
+            "name": "oe_test_base32"
+        },
+        {
+            "name": "oe_test_catman"
+        },
+        {
+            "name": "oe_test_cal"
+        },
+        {
+            "name": "oe_test_autoscan"
+        },
+        {
+            "name": "oe_test_base64"
+        },
+        {
+            "name": "oe_test_sha256sum"
+        },
+        {
+            "name": "oe_test_dmraid"
+        },
+        {
+            "name": "oe_test_c++"
+        },
+        {
+            "name": "oe_test_md5sum"
+        },
+        {
             "name": "oe_test_tail"
         },
         {
+            "name": "oe_test_systool"
+        },
+        {
             "name": "oe_test_awk"
+        },
+        {
+            "name": "oe_test_sdiff"
+        },
+        {
+            "name": "oe_test_diff3"
+        },
+        {
+            "name": "oe_test_fuse"
+        },
+        {
+            "name": "oe_test_zstd"
+        },
+        {
+            "name": "oe_test_auditctl"
+        },
+        {
+            "name": "oe_test_accessdb"
+        },
+        {
+            "name": "oe_test_cksum"
+        },
+        {
+            "name": "oe_test_paste"
+        },
+        {
+            "name": "oe_test_chgrp"
+        },
+        {
+            "name": "oe_test_cut"
+        },
+        {
+            "name": "oe_test_bsdcat"
+        },
+        {
+            "name": "oe_test_b2sum"
+        },
+        {
+            "name": "oe_test_ulimit"
         },
         {
             "name": "oe_test_versioninfo"
@@ -147,6 +249,9 @@
         },
         {
             "name": "oe_test_server_git_install"
+        },
+        {
+            "name": "oe_test_sos"
         },
         {
             "name": "oe_test_reboot",
@@ -486,23 +591,215 @@
         {
             "name": "oe_test_patch"
         },
-	{
-	    "name": "oe_test_exiv2"
-	},
-	{
-	    "name": "oe_test_json-c"
-	},
+        {
+            "name": "oe_test_exiv2"
+        },
+        {
+            "name": "oe_test_json-c"
+        },
         {
             "name": "oe_test_whoami"
         },
+        {
+            "name": "oe_test_lz4"
+        },
+        {
+            "name": "oe_test_zlib"
+        },
+        {
+            "name": "oe_test_brotli"
+        },
+        {
+            "name": "oe_test_net_mtr"
+        },
+        {
+            "name": "oe_test_gsettings"
+        },
+        {
+            "name": "oe_test_pcre_use"
+        },
+        {
+            "name": "oe_test_ACL_dir"
+        },
+        {
+            "name": "oe_test_du"
+        },
+        {
+            "name": "oe_test_ar"
+        },
+        {
+            "name": "oe_test_vim"
+        },
+        {
+            "name": "oe_test_basename"
+        },
+        {
+            "name": "oe_test_groff"
+        },
+        {
+            "name": "oe_test_whatis"
+        },
+        {
+            "name": "oe_test_auditc_01"
+        },
+        {
+            "name": "oe_test_gmp"
+        },
+        {
+            "name": "oe_test_libffi"
+        },
+        {
+            "name": "oe_test_libunistring"
+        },
 	{
-	    "name": "oe_test_lz4"
+	    "name": "oe_test_shred"
+	},
+        {
+            "name": "oe_test_expect"
+        },
+        {
+            "name": "oe_test_xmlsec"
+        },
+        {
+            "name": "oe_test_tcl"
+        },
+        {
+            "name": "oe_test_disk_io_sched"
+    	},
+        {
+            "name": "oe_test_lsusb"
+    	},
+        {
+            "name": "oe_test_lastb"
+    	},
+        {
+            "name": "oe_test_aureport"
+    	},
+        {
+            "name": "oe_test_chsh"
+    	},
+        {
+            "name": "oe_test_lua"
+    	},
+        {
+            "name": "oe_test_server_fontconfig"
+    	},
+        {
+            "name": "oe_test_server_libtasn1"
+    	},
+        {
+            "name": "oe_test_count_gperftools_function"
+    	},
+        {
+            "name": "oe_test_split"
+        },
+        {
+            "name": "oe_test_popd_001"
+        },
+        {
+            "name": "oe_test_glibc"
+        },
+        {
+            "name": "oe_test_cairo"
+        },
+        {
+            "name": "oe_test_c_stat"
+        },
+        {
+            "name": "oe_test_chroot"
+        },
+        {
+            "name": "oe_test_history"
+        },
+	{
+	    "name": "oe_test_virt-what"
+	},
+        {
+            "name":"oe_test_gcc_01"
+        },
+	{
+	    "name": "oe_test_locate_001"
 	},
 	{
-	    "name": "oe_test_zlib"
+	    "name": "oe_test_bzcmp"
 	},
 	{
-	    "name": "oe_test_brotli"
+	    "name": "oe_test_unlink"
+	},
+	{
+	    "name": "oe_test_xzcmp"
+	},
+	{
+	    "name": "oe_test_zgrep"
+	},
+	{
+	    "name": "oe_test_server_subversion"
+	},
+	{
+	    "name": "oe_test_auditctl_02"
+	},
+	{
+	    "name": "oe_test_bunzip2"
+	},
+	{
+	    "name": "oe_test_zipdetails"
+        },
+	{
+	    "name": "oe_test_zcat"
+	},
+	{
+	    "name": "oe_test_libsecret"
+	},
+	{
+	    "name": "oe_test_namei"
+	},
+	{
+	    "name": "oe_test_rev"	
+	},
+	{
+	    "name": "oe_test_uid_old_uid"	
+	},
+	{
+	    "name": "oe_test_python3-kmod"	
+	},
+	{
+	    "name": "oe_test_lsscsi_1"	
+	},
+	{	
+	    "name": "oe_test_seq"
+	},
+	{	
+	    "name": "oe_test_lsscsi_2"
+	},
+	{	
+	    "name": "oe_test_xargs"
+	},
+	{	
+	    "name": "oe_test_lsscsi_3"
+	},
+	{
+	    "name": "oe_test_uniq"
+	},
+        {
+	    "name": "oe_test_lsattr"
+	},
+        {
+	    "name": "oe_test_indent"
+	},
+	{
+	    "name": "oe_test_xzmore"
+	},
+	{
+	    "name": "oe_test_bzless"
+	},
+	{
+	    "name": "oe_test_true"
+        },
+	{
+	    "name": "oe_test_xzless"
+        },
+	{
+	    "name": "oe_test_zgrep_002"
 	}
     ]
 }

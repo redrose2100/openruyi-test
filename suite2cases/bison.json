@@ -1,0 +1,8 @@
+{
+    "path": "${OET_PATH}/testcases/cli-test/bison",
+    "cases": [
+        {
+            "name": "oe_test_bison"
+        }
+    ]
+}

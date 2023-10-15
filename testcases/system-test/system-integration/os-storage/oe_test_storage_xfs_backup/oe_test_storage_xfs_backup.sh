@@ -30,7 +30,7 @@ p
 
 +20M
 w" | fdisk "/dev/${local_disk}"
-    mkfs.xfs -f "/dev/${local_disk1}"
+    mkfs.xfs -f "/dev/${local_disk}1"
     udevadm settle
     LOG_INFO "Environmental preparation is over."
 }
@@ -38,7 +38,7 @@ w" | fdisk "/dev/${local_disk}"
 function run_test() {
     LOG_INFO "Start executing testcase."
     mkdir /home/data /home/backup
-    mount "/dev/${local_disk1}" /home/data
+    mount "/dev/${local_disk}1" /home/data
     echo "test" >/home/data/test
     echo "backup_data
 1
@@ -51,9 +51,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     umount /home/data
     rm -rf /home/data /home/backup
-    echo "d
-
-w" | fdisk "/dev/${local_disk}"
+    dd if=/dev/zero of=/dev/${local_disk} bs=1M count=1
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup."
 }

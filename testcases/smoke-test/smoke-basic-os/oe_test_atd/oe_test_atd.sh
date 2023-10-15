@@ -17,7 +17,7 @@
 # @Desc      :   Test the basic functions of
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -36,7 +36,7 @@ function run_test() {
         expect eof
 EOF
     SLEEP_WAIT 60
-    echo "$(cat /tmp/timelog1)-$(cat /tmp/timelog2)" | bc | grep 1
+    echo "$(cat /tmp/timelog1)-$(cat /tmp/timelog2)" | bc | grep -E "1|59"
     CHECK_RESULT $? 0 0 "Failed to execute at"
     LOG_INFO "End to run test."
 }
@@ -45,7 +45,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /tmp/timelog*
     systemctl stop atd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

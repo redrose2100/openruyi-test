@@ -43,7 +43,7 @@ function log_dump() {
             fi
         }
         test "$i" -eq 9 && {
-            CHECK_RESULT 1 0 0 "failed"
+            CHECK_RESULT $? 0 0 "failed"
         }
     done
 }

@@ -37,14 +37,10 @@ function run_test() {
         CHECK_RESULT $?
         sudo firewall-cmd --zone=home --change-interface="$NODE1_NIC"
         CHECK_RESULT $?
-        sudo firewall-cmd --remove-service=http --zone=home
-        CHECK_RESULT $?
     elif ! sudo firewall-cmd --get-active-zones | grep public; then
         sudo firewall-cmd --add-service=http --zone=public
         CHECK_RESULT $?
         sudo firewall-cmd --zone=public --change-interface="$NODE1_NIC"
-        CHECK_RESULT $?
-        sudo firewall-cmd --remove-service=http --zone=public
         CHECK_RESULT $?
     fi
     SSH_CMD "curl http://$NODE1_IPV4" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"

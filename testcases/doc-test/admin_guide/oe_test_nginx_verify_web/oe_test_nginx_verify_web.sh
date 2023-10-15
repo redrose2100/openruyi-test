@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Verify that the web service is successfully built
 # #############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "nginx net-tools firewalld"
@@ -33,15 +33,16 @@ function run_test() {
     CHECK_RESULT $?
     firewall-cmd --query-port=80/tcp | grep yes
     CHECK_RESULT $?
-    SSH_CMD "curl http://${NODE1_IPV4}" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "curl http://${NODE1_IPV4}" "${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    systemctl stop nginx
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

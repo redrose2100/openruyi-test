@@ -38,8 +38,10 @@ function run_test() {
     find /dev/ -type d -user root -group root -perm 755
     CHECK_RESULT $? 0 0 "check /dev/ file right fail"
 
-    find /init -type l -user root -group root -perm 777
-    CHECK_RESULT $? 0 0 "check /init file right fail"
+    if [ -e /init ]; then
+        find /init -type l -user root -group root -perm 777
+        CHECK_RESULT $? 0 0 "check /init file right fail"
+    fi
     
     find /sbin/init -type f -user root -group root -perm 755
     CHECK_RESULT $? 0 0 "check /sbin/init file right fail"

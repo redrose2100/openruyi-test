@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "colm colm-devel"
+    DNF_INSTALL "colm colm-devel gcc"
     touch mu.txt
     cat >zjl.c <<EOF
 #include<stdio.h>

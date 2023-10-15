@@ -1,0 +1,8 @@
+{
+  "path": "$OET_PATH/testcases/cli-test/gdk_pixbuf2",
+  "cases": [
+    {
+      "name": "oe_test_gdk_pixbuf2"
+    }
+  ]
+}

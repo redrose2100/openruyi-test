@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/procps-ng-pwdx",
+    "cases": [
+        {
+            "name": "oe_test_procps-ng-pwdx"
+	}
+
+    ]
+}

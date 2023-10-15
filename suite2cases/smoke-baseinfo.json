@@ -23,10 +23,13 @@
             "name": "oe_test_system_level"
         },
         {
-            "name": "oe_test_service"
+            "name": "oe_test_systemctl"
         },
         {
             "name": "oe_test_ssh"
+        },
+        {
+            "name": "oe_test_rpm_suffix_name"
         }
     ]
 }

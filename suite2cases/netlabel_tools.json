@@ -3,6 +3,15 @@
     "cases": [
         {
             "name": "oe_test_service_netlabel"
+        },
+        {
+            "name": "oe_test_netlabel_tools_netlabelctl_01"
+        },
+        {
+            "name": "oe_test_netlabel_tools_netlabelctl_02"
+        },
+        {
+            "name": "oe_test_netlabel_tools_netlabelctl_03"
         }
     ]
 }

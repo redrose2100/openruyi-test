@@ -105,6 +105,51 @@
         },
         {
             "name": "oe_test_security_test_FUN339"
+        },
+        {
+            "name": "oe_test_user_management_id"
+        },
+        {
+            "name": "oe_test_user_management_groupmod"
+        },
+        {
+            "name": "oe_test_ACL_setfacl_test_mode"
+        },
+        {
+            "name": "oe_test_openssl_RSA_key"
+        },
+        {
+            "name": "oe_test_chage"
+        },
+        {
+            "name": "oe_test_authselect"
+        },
+        {
+            "name": "oe_test_authselect_01"
+        },
+        {
+            "name": "oe_test_authselect_02"
+        },
+        {
+            "name": "oe_test_non-interactive-account"
+        },
+        {
+            "name": "oe_test_AccessControl_01"
+        },
+        {
+            "name": "oe_test_UserMgmt_username_and_UID"
+        },
+        {
+            "name": "oe_test_sm3_encryption_test"
+        },
+        {
+            "name": "oe_test_acl_formats"
+	    },
+        {
+            "name": "oe_test_hdf5"
+	    },
+        {
+            "name": "oe_test_gpgcheck"
         }
     ]
 }

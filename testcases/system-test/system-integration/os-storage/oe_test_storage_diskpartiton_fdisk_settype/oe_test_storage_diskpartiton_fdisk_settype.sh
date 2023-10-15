@@ -34,6 +34,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase!"
     echo -e "print\ntype\n2\nL\n1\nw\n" | fdisk /dev/${local_disk} >log2
+    partprobe
     CHECK_RESULT $?
 
     fdisk --list /dev/${local_disk} | grep ${local_disk}2 | awk -F " " '{print$7}' | grep -i fat

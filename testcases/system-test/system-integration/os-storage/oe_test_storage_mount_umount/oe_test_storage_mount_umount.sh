@@ -28,12 +28,12 @@ p
 
 +20M
 w" | fdisk /dev/"${local_disk}"
-    mkfs.xfs -f /dev/"${local_disk1}"
+    mkfs.xfs -f /dev/"${local_disk}1"
     sleep 2
     udevadm settle
     mkdir /tmp/data
     cp /etc/fstab /etc/fstab.bak
-    echo "/dev/${local_disk1} /tmp/data xfs defaults 0 0" >>/etc/fstab
+    echo "/dev/${local_disk}1 /tmp/data xfs defaults 0 0" >>/etc/fstab
     LOG_INFO "Environmental preparation is over."
 }
 

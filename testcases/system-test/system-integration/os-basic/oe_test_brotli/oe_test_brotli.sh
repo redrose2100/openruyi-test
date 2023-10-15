@@ -25,13 +25,20 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    brotli -V
+    CHECK_RESULT $? 0 0 "check brotli version error"
     touch test.tar
     ls test.tar 
     CHECK_RESULT $? 0 0 "check test.tar after touch error"
     brotli -q 11 -j -f  test.tar
-    CHECK_RESULT $? 0 0 "excute brotli error"
-    ls test.tar.br
+    CHECK_RESULT $? 0 0 "excute brotli -q error"
+    test -e test.tar.br
     CHECK_RESULT $? 0 0 "check test.tar.br file error"
+    rm -rf test.tar
+    brotli -d test.tar.br
+    CHECK_RESULT $? 0 0 "excute brotli -d error"
+    test -e test.tar
+    CHECK_RESULT $? 0 0 "check test.tar file error" 
     LOG_INFO "End to run test."
 
 }

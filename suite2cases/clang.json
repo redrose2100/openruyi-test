@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_clang_03"
-        }
+        },
+	{
+	    "name": "oe_test_clang_04"
+	}
     ]
 }

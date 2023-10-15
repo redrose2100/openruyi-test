@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/system-test/compile-test",
+    "cases": [
+        {
+            "name": "oe_test_compile"
+        }
+    ]
+}

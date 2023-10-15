@@ -17,10 +17,12 @@
 # @Desc      :   Test unbound-anchor.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    [ -f /etc/resolv.conf-bak ] || cp /etc/resolv.conf /etc/resolv.conf-bak
+    echo "nameserver 127.0.0.1" > /etc/resolv.conf
     systemctl start unbound-anchor.service
     LOG_INFO "End of environmental preparation!"
 }
@@ -29,6 +31,12 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_oneshot unbound-anchor.service 'inactive (dead)'
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    [ -f /etc/resolv.conf-bak ] && \cp /etc/resolv.conf-bak /etc/resolv.conf 
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

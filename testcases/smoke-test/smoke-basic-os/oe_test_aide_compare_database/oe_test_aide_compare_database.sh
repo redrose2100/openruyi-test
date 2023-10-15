@@ -17,11 +17,11 @@
 # @Desc      :   Test aide compare database
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL aide
+    DNF_INSTALL "aide diffutils"
     sed -i '88,176s/^/#/g' /etc/aide.conf
     echo "database_new=file:@@{DBDIR}/aide.db.new.gz" >>/etc/aide.conf
     LOG_INFO "End to prepare the test environment."
@@ -43,7 +43,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testlog /var/log/aide/aide.log /var/lib/aide/aide*
     LOG_INFO "End to restore the test environment."
 }

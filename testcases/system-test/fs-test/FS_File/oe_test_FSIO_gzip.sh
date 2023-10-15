@@ -33,6 +33,10 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Compress file by gzip in $var failed."
         gzip -l $var/testFile.gz | grep testFile
         CHECK_RESULT $? 0 0 "Check gzip file in $var failed."
+        gzip -L $var/testFile.gz
+        CHECK_RESULT $? 0 0 "Check gzip file version in $var failed."
+        gzip -t $var/testFile.gz
+        CHECK_RESULT $? 0 0 "test gzip file by gzip in $var failed."
         gzip -dv $var/testFile.gz
         CHECK_RESULT $? 0 0 "Decompress file by gzip in $var failed."
     done

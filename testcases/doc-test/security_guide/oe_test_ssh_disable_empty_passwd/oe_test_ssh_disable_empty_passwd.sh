@@ -32,7 +32,7 @@ function run_test() {
     useradd testuser
     CHECK_RESULT $? 0 0 "add testuser failed"
     passwd -d testuser
-    passwd -S testuser 2>&1 | grep "Empty password"
+    LANG=C passwd -S testuser 2>&1 | grep "Empty password"
     CHECK_RESULT $? 0 0 "testuser password is not empty"
     expect <<EOF
         set timeout 15

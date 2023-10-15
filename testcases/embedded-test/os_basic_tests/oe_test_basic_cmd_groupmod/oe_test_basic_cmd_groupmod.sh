@@ -17,7 +17,7 @@
 # @Desc      :   Modity User Group test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -54,7 +54,7 @@ function run_test() {
     grep -w testgroup2 /etc/group | grep testuser1
     CHECK_RESULT $? 0 0 "check testgroup2 fail"
 
-    groupmod --help 2>&1 | grep Usage
+    LANG=C groupmod --help 2>&1 | grep Usage
     CHECK_RESULT $? 0 0 "check groupmod help fail"
 
     LOG_INFO "End to run test."
@@ -69,4 +69,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

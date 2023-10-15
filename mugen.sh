@@ -189,7 +189,7 @@ function run_test_case() {
 
     case_path=($(find ${suite_path} -name "${test_case}.*" | sed -e "s#/${test_case}.\(sh\|py\)##"))
     test ${#case_path[@]} -gt 1 && {
-        LOG_ERROR "Multiple identical test case scripts have been found under the test suite. Please check your use case scripts."
+        LOG_ERROR "Multiple identical test case scripts have been found under the test suite. Please check your use case scripts. Test suite path:${suite_path}"
         return 1
     }
 
@@ -309,17 +309,13 @@ function run_all_cases() {
 
     local this_copy=false
     if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" && ${NODE1_COPY_ALL}x == "true"x ]]; then
-        SFTP put --node 1 --remotedir /mugen_re/ --localdir ${OET_PATH}/testcases/
-        if [ $? -ne 0 ]; then
-            LOG_ERROR "Copy all testcases to remote fail."
-            return 1
-        fi
-        COPY_DONE="yes"
         local this_copy=true
     fi
 
     for test_suite in ${test_suites[*]}; do
         run_test_suite "$test_suite"
+        COPY_DONE="no"
+        local this_copy=true
     done
 
     if $this_copy; then
@@ -424,11 +420,11 @@ while getopts "c:af:r:dxb:s" option; do
         echo -e "The test script download function has been discarded."
         ;;
     a)
-        if echo "$@" | grep -q -e ' -a * -x *$\| -x * -a *$\| -ax *$\| -xa *$'; then
+        if echo "$@" | grep -q -e '-a * -x *$\| -x * -a *$\| -ax *$\| -xa *$'; then
             COMMAND_X="yes"
-        elif echo "$@" | grep -q -e ' -a * -s *$\| -s * -a *$\| -as *$\| -sa *$'; then
+        elif echo "$@" | grep -q -e '-a * -s *$\| -s * -a *$\| -as *$\| -sa *$'; then
             COMMAND_S="yes"
-        elif echo "$@" | grep -q -e ' -a * -b *$\| -b * -a *$\| -ab *$\| -ba *$'; then
+        elif echo "$@" | grep -q -e '-a * -b *$\| -b * -a *$\| -ab *$\| -ba *$'; then
             ret=$(build_all)
             exit $ret
         elif ! echo "$@" | grep -q -e '-a *$'; then

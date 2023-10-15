@@ -30,6 +30,9 @@
         },
         {
             "name": "oe_test_service_systemd-ask-password-plymouth"
+        },
+        {
+            "name": "oe_test_service_plymouth-switch-root-initramfs"
         }
     ]
 }
