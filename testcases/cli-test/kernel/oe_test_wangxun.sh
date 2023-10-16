@@ -16,71 +16,34 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   内核-驱动-网讯网卡驱动
 # ############################################
-source "$OET_PATH/libs/locallibs/common_lib.sh"
 
-function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
-    kopath1=$(find /lib/modules/$(uname -r)/kernel/drivers/net/ -name ngbe)
-    kopath2=$(find /lib/modules/$(uname -r)/kernel/drivers/net/ -name txgbe)   
-    LOG_INFO "End to prepare the test environment."
-}
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test()
 {
     LOG_INFO "Start testing..."
-    cd $kopath1
-    test -e ngbe.ko
-    if [ $? -ne 0 ];then
-    cp ngbe.ko.xz /home
-    xz -d ngbe.ko.xz
-    fi
-    modinfo ngbe.ko | grep "name:" | grep "ngbe"
+    modinfo ngbe | grep "name:" | grep "ngbe"
     CHECK_RESULT $? 0 0 "Module ngbe not found" 
-    insmod ngbe.ko
-    CHECK_RESULT $? 0 0 "insmod ngbe.ko failed"
+    modprobe ngbe
+    CHECK_RESULT $? 0 0 "modprobe ngbe failed"
     lsmod | grep ngbe
     CHECK_RESULT $? 0 0 "lsmod failed"
-    rmmod ngbe
-    CHECK_RESULT $? 0 0 "rmmod ngbe failed"
+    modprobe -r ngbe
+    CHECK_RESULT $? 0 0 "unload ngbe failed"
     lsmod | grep ngbe
     CHECK_RESULT $? 0 1 "ngbe info exist"
 
-    cd $kopath2
-    test -e txgbe.ko
-    if [ $? -ne 0 ];then
-    cp txgbe.ko.xz /home
-    xz -d txgbe.ko.xz
-    fi
-    modinfo txgbe.ko | grep "name:" | grep "txgbe"
+    modinfo txgbe | grep "name:" | grep "txgbe"
     CHECK_RESULT $? 0 0 "Module txgbe not found" 
-    insmod txgbe.ko
-    CHECK_RESULT $? 0 0 "insmod txgbe.ko failed"
+    modprobe txgbe
+    CHECK_RESULT $? 0 0 "modprobe txgbe failed"
     lsmod | grep txgbe
     CHECK_RESULT $? 0 0 "lsmod failed"
-    rmmod txgbe
-    CHECK_RESULT $? 0 0 "rmmod txgbe failed"
+    modprobe -r txgbe
+    CHECK_RESULT $? 0 0 "unload txgbe failed"
     lsmod | grep txgbe
     CHECK_RESULT $? 0 1 "txgbe info exist"
     LOG_INFO "Finish test!"
 }
 
-function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    cd /home
-    test -e ngbe.ko.xz
-    if [ $? -ne 1 ];then
-    rm -rf ngbe.ko.xz
-    cd /$kopath1
-    xz ngbe.ko
-    fi
-    cd /home
-    test -e txgbe.ko.xz
-    if [ $? -ne 1 ];then
-    rm -rf txgbe.ko.xz
-    cd /$kopath2
-    xz txgbe.ko
-    fi
-    LOG_INFO "End to restore the test environment."
-}
-
-main $@
+main "$@"
