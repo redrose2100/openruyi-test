@@ -29,7 +29,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    lscpu | grep "^CPU(s)" | egrep '[0-9]'
+    lscpu | grep "^CPU(s)" | grep -E '[0-9]'
     CHECK_RESULT $?
 
     lscpu | grep "Vendor ID"
@@ -43,26 +43,26 @@ function run_test() {
         CHECK_RESULT $?
 
     else
-        grep $(lscpu | grep "^Vendor ID" | awk -F " " '{print$3}') /proc/cpuinfo
+        grep "$(lscpu | grep "^Vendor ID" | awk -F " " '{print$3}')" /proc/cpuinfo
         CHECK_RESULT $?
     fi
     if [[ "$(dmidecode -s system-product-name)" =~ "KVM" ]]; then
-        cpu_num1=$(lshw -c cpu | grep 'description' | wc -l)
+        cpu_num1=$(lshw -c cpu | grep -c 'description')
         cpu_num2=$(lscpu | grep "^CPU(s):" | awk -F ' ' '{print $2}')
-        CHECK_RESULT "${cpu_num1}" "${cpu_num2}"
+        cpu_num3=$(lshw -c cpu | grep -iw "cores" |awk '{print $2}'| awk -F '=' '{print$2}')
+        [ "${cpu_num1}" -eq "${cpu_num2}" ] || [ "${cpu_num3}" -eq "${cpu_num2}" ]
+        CHECK_RESULT $?
     fi
     Disk_name=$(lshw -c disk | grep 'logical name' | grep -v 'sr0' | grep -v 'cdrom' | awk -F ': ' 'NR==1{print $2}')
     Disk_size=$(lshw -c disk | grep "$Disk_name$" -A 5 | grep 'size:' | awk -F ': ' '{print $2}' | awk -F 'GiB' '{print $1}')
-    fdisk -l "${Disk_name}" | grep Disk | grep 'TiB'
-    if [ $? -eq 0 ]; then
+    if fdisk -l "${Disk_name}" | grep Disk | grep 'TiB'; then
         tmp_disk=$(fdisk -l "${Disk_name}" | grep Disk | grep TiB | awk -F ' ' '{print $3}')
         Disk_size2=$(echo "${tmp_disk}" | awk '{printf("%0.0f\n",$1*1024)}')
         [ "${Disk_size2}" -lt $((Disk_size + 20)) ] && [ "${Disk_size2}" -gt $((Disk_size - 20)) ]
         CHECK_RESULT $?
     else
         tmp_disk=$(fdisk -l "${Disk_name}" | grep Disk | grep GiB | awk -F ' ' '{print $3}')
-        echo "${tmp_disk}" | grep '\.'
-        if [ $? -eq 0 ]; then
+        if echo "${tmp_disk}" | grep '\.';then
             Disk_size2=$(echo "${tmp_disk}" | awk -F '.' '{print $1}')
         else
             Disk_size2="${tmp_disk}"
@@ -76,8 +76,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     export LANG=${OLD_LANG}
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

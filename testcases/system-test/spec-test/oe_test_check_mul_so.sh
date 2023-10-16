@@ -27,7 +27,7 @@ function pre_test() {
     EXECUTE_T="600m"
     DNF_INSTALL rpm-build
     mkdir /root/source
-    dnf list --available --repo="source" | grep oe | awk '{print $1}' | awk -F. '{print $1}' >pack_list
+    dnf list --available --repo="source" | grep oe | awk '{print $1}' | awk -F '.src' '{print $1}' >pack_list
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,8 +35,16 @@ function run_test() {
     LOG_INFO "Start to run test."
     while read -r pack_name; do
         yumdownloader --source --destdir /root/source "$pack_name" >>/dev/null 2>&1
-        rpm -ivh /root/source/"${pack_name}"* >>/dev/null 2>&1
-	rm -rf /root/rpmbuild/SOURCE
+        if [[ "clang12 compiler-rt12 libomp12 llvm12 llvm-mlir12" =~ ${pack_name} ]]; then
+            test -d /root/rpmbuild/SPECS/ && mv /root/rpmbuild/SPECS/ /root
+            rpm -ivh /root/source/"${pack_name}"* >>/dev/null 2>&1
+            mv /root/rpmbuild/SPECS/*.spec /root/rpmbuild/SPECS/"${pack_name}"12.spec
+            test -d /root/SPECS && cp /root/SPECS/* /root/rpmbuild/SPECS/
+            test -d /root/SPECS && rm -rf /root/SPECS
+        else
+            rpm -ivh /root/source/"${pack_name}"* >>/dev/null 2>&1
+        fi
+        rm -rf /root/rpmbuild/SOURCES
     done <pack_list
     find /root/rpmbuild/SPECS/ -name '*.spec' -print0 | xargs -0 grep -wn cp | grep -E 'buildroot|RPM_BUILD_ROOT' | grep -F '*' | grep -w so | grep libdir | grep "cp -. ...libdir" >spec_check_result
     test -s spec_check_result
