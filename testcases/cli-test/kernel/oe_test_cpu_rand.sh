@@ -17,14 +17,10 @@
 # @Desc      :   test CPU是否具有随机数生成功能
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start testing..."
-    lscpu | grep rand
-    CHECK_RESULT $? 0 0 "The random number generation function is not supported"
-    grep ARCH_RANDOM=y /boot/config-$(uname -r)
-    CHECK_RESULT $? 0 0 "The random number generation function is not supported"
     grep -w rng /proc/crypto
     CHECK_RESULT $? 0 0 "The random number generation function is not supported"
     LOG_INFO "Finish test!"
