@@ -770,6 +770,36 @@
 	},
 	{	
 	    "name": "oe_test_lsscsi_2"
+	},
+	{	
+	    "name": "oe_test_xargs"
+	},
+	{	
+	    "name": "oe_test_lsscsi_3"
+	},
+	{
+	    "name": "oe_test_uniq"
+	},
+        {
+	    "name": "oe_test_lsattr"
+	},
+        {
+	    "name": "oe_test_indent"
+	},
+	{
+	    "name": "oe_test_xzmore"
+	},
+	{
+	    "name": "oe_test_bzless"
+	},
+	{
+	    "name": "oe_test_true"
+        },
+	{
+	    "name": "oe_test_xzless"
+        },
+	{
+	    "name": "oe_test_zgrep_002"
 	}
     ]
 }

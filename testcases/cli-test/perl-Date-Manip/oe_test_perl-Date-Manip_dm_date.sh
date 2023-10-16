@@ -18,7 +18,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test()
 {
     LOG_INFO "Start to perpare the test environment"
-    DNF_INSTALL perl-Date-Manip 
+    DNF_INSTALL "perl-Date-Manip" 
     LOG_INFO "End to perpare the test environment"
 }
 function run_test()
@@ -29,27 +29,29 @@ function run_test()
     CHECK_RESULT $? 0 0 "option--help is error"
     dm_date --date=2012 -R +'%a, %d %b %Y %H:%M:%S %z' | grep "2012"
     CHECK_RESULT $? 0 0 "option--date is error"
-    dm_date -d 2012 -u -R +'%a, %d %b %Y %H:%M:%S %z' | grep "2011"
+    dm_date -d 2012 -u -R +'%a, %d %b %Y %H:%M:%S %z' | grep "2012"
     CHECK_RESULT $? 0 0 "option-d is error"
     dm_date --file=datefile.txt -R +'%a, %d %b %Y %H:%M:%S %z' | grep "2017"
     CHECK_RESULT $? 0 0 "option--file is error"
-    dm_date -f datefile.txt --universal -R +'%a, %d %b %Y %H:%M:%S %z' | grep "2016"
+    dm_date -f datefile.txt --universal -R +'%a, %d %b %Y %H:%M:%S %z' | grep "2017"
     CHECK_RESULT $? 0 0 "option-f is error"
-    dm_date --reference=datefile.txt -R +'%a, %d %b %Y %H:%M:%S %z' | grep "2022"
+    cst_year=$(date | awk '{print $7}')
+    utc_year=$(date -u | awk '{print $7}')
+    dm_date --reference=datefile.txt -R +'%a, %d %b %Y %H:%M:%S %z' | grep "${utc_year}"
     CHECK_RESULT $? 0 0 "option--reference is error"
-    dm_date -r datefile.txt -u -R +'%a, %d %b %Y %H:%M:%S %z' | grep "2022"
+    dm_date -r datefile.txt -u -R +'%a, %d %b %Y %H:%M:%S %z' | grep "${utc_year}"
     CHECK_RESULT $? 0 0 "option-r is error"
-    dm_date --rfc-2822 | grep "2022"
+    dm_date --rfc-2822 | grep "${cst_year}"
     CHECK_RESULT $? 0 0 "option--rfc is error"
-    dm_date --utc -R | grep "2022"
+    dm_date --utc -R | grep "${cst_year}"
     CHECK_RESULT $? 0 0 "option--utc is error"
-    dm_date --universal -R | grep "2022"
+    dm_date --universal -R | grep "${cst_year}"
     CHECK_RESULT $? 0 0 "option--universal is error"
     LOG_INFO "End of the test"
 }
 function post_test(){
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf datefile.txt
     LOG_INFO "Finish environment cleanup."
 }

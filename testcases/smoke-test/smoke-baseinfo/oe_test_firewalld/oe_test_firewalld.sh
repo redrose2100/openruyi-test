@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "firewalld iptables" 
+    DNF_INSTALL "firewalld iptables kernel-$(uname -r)"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -29,27 +29,19 @@ check_iptables() {
     case $1 in
     mangle)
         iptables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
-	if ! df -h / |grep overlay; then
-            ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
-	fi
+        ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
         ;;
     nat)
         iptables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
-	if ! df -h / |grep overlay; then
-            ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
-	fi
+        ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 INPUT | grep -C 10 OUTPUT | grep -C 10 POSTROUTING || return 1
         ;;
     filter)
         iptables -t "$1" -L -w | grep -C 20 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT || return 1
-	if ! df -h / |grep overlay; then
-            ip6tables -t "$1" -L -w | grep -C 20 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT || return 1
-	fi
+        ip6tables -t "$1" -L -w | grep -C 20 INPUT | grep -C 10 FORWARD | grep -C 10 OUTPUT || return 1
         ;;
     raw)
         iptables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 OUTPUT || return 1
-	if ! df -h / |grep overlay; then
-            ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 OUTPUT || return 1
-	fi
+        ip6tables -t "$1" -L -w | grep -C 20 PREROUTING | grep -C 10 OUTPUT || return 1
         ;;
     esac
     return 0

@@ -25,7 +25,7 @@ function pre_test() {
         LOG_INFO "The current environment is Docker."
         exit 0
     else
-        DNF_INSTALL grub2-tools
+        DNF_INSTALL "grub2-tools diffutils"
     fi
     LOG_INFO "End to prepare the test environment."
 }

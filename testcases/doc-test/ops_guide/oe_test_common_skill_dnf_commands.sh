@@ -93,8 +93,13 @@ EOF
     CHECK_RESULT $? 0 0 "Failed to list the available pkgs"
     dnf list --installed | grep -v "arch\|x86_64\|src" | grep "Installed"
     CHECK_RESULT $? 0 0 "Failed to list the installed pkgs"
-    dnf list --updates | grep "Available Upgrades"
-    CHECK_RESULT $? 0 0 "Failed to list the updatable pkgs"
+    if dnf repolist | grep update; then
+        dnf list --updates | grep "Available Upgrades"
+        CHECK_RESULT $? 0 0 "Failed to list the updatable pkgs"
+    else
+        dnf list --updates
+        CHECK_RESULT $? 0 0 "Failed to list the updatable pkgs"
+    fi
     dnf list --recent
     CHECK_RESULT $? 0 0 "Failed to list the recently changed pkgs"
     dnf info dnf | grep "Description"

@@ -23,12 +23,12 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     for ((i = 1; i < 10; i ++)); do
-        systemctl stop sshd
+        /etc/init.d/sshd stop
         CHECK_RESULT $? 0 0 "stop sshd fail"
-        systemctl start sshd
+        /etc/init.d/sshd start
         CHECK_RESULT $? 0 0 "start sshd fail"
 	SLEEP_WAIT 2
-        systemctl restart sshd
+        /etc/init.d/sshd restart
         CHECK_RESULT $? 0 0 "restart sshd fail"
         SLEEP_WAIT 2
     done
@@ -39,7 +39,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    systemctl restart sshd
+    /etc/init.d/sshd restart
 
     LOG_INFO "End to restore the test environment."
 }

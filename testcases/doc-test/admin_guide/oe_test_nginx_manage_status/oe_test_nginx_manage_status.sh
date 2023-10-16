@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Manage nginx and verify service status
 # #############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start executing testcase."
     DNF_INSTALL nginx
@@ -36,8 +36,8 @@ function run_test() {
     CHECK_RESULT $?
     systemctl reload nginx
     CHECK_RESULT $?
-    master_pid=$(ps -ef | grep nginx | grep master | awk '{print$2}')
-    kill -HUP ${master_pid}
+    master_pid=$(pgrep -f "nginx: master")
+    kill -HUP "${master_pid}"
     CHECK_RESULT $?
     systemctl status nginx | grep running
     CHECK_RESULT $?
@@ -58,8 +58,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    systemctl stop nginx
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

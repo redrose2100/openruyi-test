@@ -17,7 +17,13 @@
 # @Desc      :   Test the basic functions of dbus-monitor
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL dbus
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -31,8 +37,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 $(pgrep dbus-monitor)
+    kill -9 "$(pgrep dbus-monitor)"
     rm -rf testlog
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

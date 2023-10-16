@@ -21,29 +21,31 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL "iputils"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ping6 -Q 10 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -Q 10 "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -Q execute failed"
-    ping6 -s 10 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -s 10 "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -s execute failed"
-    ping6 -S 20 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -S 20 "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -S execute failed"
-    ping6 -t 5 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -t 5 "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -t execute failed"
-    ping6 -U "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -U "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -U execute failed"
-    ping6 -v "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -v "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -v execute failed"
-    ping6 -V "${NODE2_IPV6}" -c 3 |grep "ping from iputils"
+    ping6 -V "${NODE2_IPV6}" -c 3 | grep "ping from iputils"
     CHECK_RESULT $? 0 0 "ping6 -V execute failed"
-    ping6 -w 5 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -w 5 "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -w execute failed"
-    ping6 -W 5 "${NODE2_IPV6}" -c 3 |grep "3 received"
+    ping6 -W 5 "${NODE2_IPV6}" -c 3 | grep "3 received"
     CHECK_RESULT $? 0 0 "ping6 -W execute failed"
     LOG_INFO "End to run test."
 }
@@ -51,6 +53,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start to restore the test environment."
     DNF_REMOVE "$@"
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

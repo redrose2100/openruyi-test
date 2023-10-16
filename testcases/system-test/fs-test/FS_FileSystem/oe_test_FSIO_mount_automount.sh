@@ -15,6 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test umount fs when file is opened
 #####################################
+# shellcheck disable=SC1091
 
 source ../common_lib/fsio_lib.sh
 
@@ -37,12 +38,12 @@ n
 p
 3
 
-+100M
++350M
 w
 diskEof"
     ssh_cmd_node "mkfs.ext3 ${test_disk}1"
     ssh_cmd_node "mkfs.ext4 ${test_disk}2"
-    ssh_cmd_node "mkfs.xfs ${test_disk}3"
+    ssh_cmd_node "mkfs.xfs -f ${test_disk}3"
     ssh_cmd_node "mkdir /mnt/test_ext3 /mnt/test_ext4 /mnt/test_xfs"
     ssh_cmd_node "mount ${test_disk}1 /mnt/test_ext3"
     ssh_cmd_node "mount ${test_disk}2 /mnt/test_ext4"

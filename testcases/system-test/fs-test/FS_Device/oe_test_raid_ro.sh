@@ -36,25 +36,26 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     for fs in ${FS_TYPE[@]}; do
-        fdisk "${disk_name}" << diskEof
+        fdisk "${disk_name}" <<diskEof
 n
 p
 1
 
-100000
++350M
 Y
 n
 p
 2
 
-200000
++350M
 Y
 w
 diskEof
+        SLEEP_WAIT 2
         echo y | mdadm -C -v /dev/md0 -l 1 -n 2 "${disk_name}"1 "${disk_name}"2
         CHECK_RESULT $? 0 0 "Create md failed."
         mdadm -Ds | grep /dev/md0
-        CHECK_RESULT $? 0 0 "Check md failed."      
+        CHECK_RESULT $? 0 0 "Check md failed."
         if [[ "$fs" == "xfs" ]]; then
             mkfs -t "$fs" -f /dev/md0
         else
@@ -70,14 +71,14 @@ diskEof
         umount /dev/md0
         mdadm --stop /dev/md0
         mdadm --misc --zero-superblock "${disk_name}"1 "${disk_name}"2
-        fdisk "${disk_name}" << diskEof
+        fdisk "${disk_name}" <<diskEof
 d
 
 d
 
 w
 diskEof
-    done 
+    done
     LOG_INFO "End to run test."
 }
 
@@ -89,4 +90,3 @@ function post_test() {
 }
 
 main "$@"
-

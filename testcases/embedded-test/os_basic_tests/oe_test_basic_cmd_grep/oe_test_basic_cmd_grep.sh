@@ -27,7 +27,7 @@ function run_test() {
     grep -n id /proc/cpuinfo
     CHECK_RESULT $? 0 0 "check grep -n fail"
 
-    ps -aux | grep auditd
+    pgrep auditd
     CHECK_RESULT $? 0 0 "check grep whih | fail "
 
     ls /tmp/test && rm -rf /tmp/test
@@ -41,7 +41,7 @@ function run_test() {
     grep -r 'ssh_config' /etc/ssh
     CHECK_RESULT $? 0 0 "check grep -r fail"
 
-    grep --help 2>&1 | grep "Usage"
+    LANG=C grep --help 2>&1 | grep "Usage"
     CHECK_RESULT $? 0 0 "check grep help fail"
 
     LOG_INFO "End to run test."
@@ -55,4 +55,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

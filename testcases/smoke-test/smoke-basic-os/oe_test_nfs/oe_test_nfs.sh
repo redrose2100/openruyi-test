@@ -36,7 +36,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "nfs-utils nfs4-acl-tools"
+    DNF_INSTALL "nfs-utils nfs4-acl-tools diffutils"
     useradd $test_user
     mkdir $server_dir $client_dir
     test -f /etc/exports && cp /etc/exports .

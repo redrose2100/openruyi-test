@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpd strace mod_ssl"
+    DNF_INSTALL "httpd strace mod_ssl openssl"
     expect <<EOF
         spawn openssl genrsa -des3 -out server.key 2048
         expect "pass" { send "${NODE1_PASSWORD}\r" }

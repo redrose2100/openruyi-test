@@ -28,24 +28,23 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    if df -h / | grep overlay; then
-        LOG_INFO "The current environment is Docker."
-        exit 0
-    else
-        DNF_INSTALL openssl
-    fi
+    DNF_INSTALL "openssl diffutils"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    openssl enc -des3 -pbkdf2 -pass pass:abc123 -in /etc/fstab -out $encry_file
-    CHECK_RESULT $?
-    diff /etc/fstab $encry_file && return 1
-    openssl enc -d -des3 -pbkdf2 -pass pass:abc123 -in $encry_file -out $decry_file
-    CHECK_RESULT $?
-    diff /etc/fstab $decry_file
-    CHECK_RESULT $?
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+    else
+        openssl enc -des3 -pbkdf2 -pass pass:abc123 -in /etc/fstab -out $encry_file
+        CHECK_RESULT $?
+        diff /etc/fstab $encry_file && return 1
+        openssl enc -d -des3 -pbkdf2 -pass pass:abc123 -in $encry_file -out $decry_file
+        CHECK_RESULT $?
+        diff /etc/fstab $decry_file
+        CHECK_RESULT $?
+    fi
     openssl req -newkey rsa:2048 -nodes -keyout rsa_private.key -x509 -out cert.crt -subj "/C=CN/O=openeuler/OU=oec"
     CHECK_RESULT $?
     openssl x509 -in cert.crt -noout -text | grep "CN" | grep "openeuler" | grep "oec"

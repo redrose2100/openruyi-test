@@ -30,6 +30,12 @@
         },
         {
             "name": "oe_test_openjdk11_unpack200"
+        },
+        {
+            "name": "oe_test_openjdk11_jfr_jinfo"
+        },
+        {
+            "name": "oe_test_openjdk11_jcmd_jstat"
         }
     ]
 }

@@ -793,9 +793,22 @@
         {
              "name": "oe_test_mke2fs"
         },
+	{
+	    "name": "oe_test_acpid_002"
+	},
         {
              "name": "oe_test_g++"
-        }
+        },
+        {
+             "name": "oe_test_binutils-objcopy"
+        },
+	{
+	     "name": "oe_test_ebtables_002"
+	},
+	{
+	     "name":"oe_test_lzo_002"
+	}
+
 
     ]
 }
