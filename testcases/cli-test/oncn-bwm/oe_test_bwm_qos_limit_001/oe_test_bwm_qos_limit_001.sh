@@ -12,7 +12,7 @@
 
 # ##################################
 # @Author    :   wangtingting 
-# @Contact   :   wangting199711@126.com
+# @Contact   :   wangting199611@126.com
 # @Date      :   2023/10/12
 # @Desc      :   bwmcli 基本命令测试
 # ##################################
