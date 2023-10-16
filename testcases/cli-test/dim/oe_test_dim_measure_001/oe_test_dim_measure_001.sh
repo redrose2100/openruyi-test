@@ -10,7 +10,7 @@
 
 # ##################################
 # @Author    :   wangtingting 
-# @Contact   :   wangting199711@126.com
+# @Contact   :   wangting199611@126.com
 # @Date      :   2023/10/12
 # @Desc      :   dim measure 基本功能测试
 # ##################################
