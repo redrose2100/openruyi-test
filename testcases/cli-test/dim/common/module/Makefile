@@ -27,5 +27,5 @@ clean:
 install:
     echo "the current path is $(CURDIR)"
     if [ -e $(name).ko ]; then cp $(name).ko $(BINDIR); fi;
-
+    
 endif
