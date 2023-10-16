@@ -14,7 +14,7 @@
 # @Author    :   wangtingting 
 # @Contact   :   wangting199611@126.com
 # @Date      :   2023/10/12
-# @Desc      :   bwmcli 基本命令测试
+# @Desc      :   bwmcli test
 # ##################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
