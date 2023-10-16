@@ -14,7 +14,7 @@
 # @Author    :   wangtingting 
 # @Contact   :   wangting199611@126.com
 # @Date      :   2023/10/12
-# @Desc      :   带宽抢占功能测试 
+# @Desc      :   qos test
 # ##################################
 
 source ../common/comlib.sh
