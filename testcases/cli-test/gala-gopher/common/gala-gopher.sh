@@ -103,18 +103,6 @@ function start_kafka() {
 }
 EOF
     }
-    httpproxy="/etc/systemd/system/docker.service.d/"
-    mkdir -p "${httpproxy}"
-    ls "${httpproxy}"/http-proxy.conf || {
-        touch "${httpproxy}"/http-proxy.conf
-        cat > "${httpproxy}"/http-proxy.conf << EOF
-[Service]
-Environment="HTTP_PROXY=http://peulerosweb:EulerOS_123@proxyhk.huawei.com:8080"
-Environment="HTTPS_PROXY=http://peulerosweb:EulerOS_123@proxyhk.huawei.com:8080"
-Environment="http_proxy=http://peulerosweb:EulerOS_123@proxyhk.huawei.com:8080"
-Environment="NO_PROXY=127.0.0.1,localhost,10.0.0.0/8,rnd-dockerhub.huawei.com,9.81.3.101:80,10.183.203.145:5000,mydockerhub.inhuawei.com,9.41.111.111:5000,my.csp-edge.com:5000,my.csp-edge.com,10.183.203.145,10.175.102.71,test.csp-edge.com,harbot.inhuawei.com"
-EOF
-    }
     systemctl daemon-reload
     systemctl restart docker
     #下载kafka
@@ -149,16 +137,6 @@ function start_gauss_server() {
 "insecure-registries":["hub.oepkgs.net"]
 }
 EOF
-    httpproxy="/etc/systemd/system/docker.service.d/"
-    mkdir -p "${httpproxy}"
-    touch "${httpproxy}"/http-proxy.conf
-    cat > "${httpproxy}"/http-proxy.conf << EOF
-[Service]
-Environment="HTTP_PROXY=http://peulerosweb:EulerOS_123@proxyhk.huawei.com:8080"
-Environment="HTTPS_PROXY=http://peulerosweb:EulerOS_123@proxyhk.huawei.com:8080"
-Environment="http_proxy=http://peulerosweb:EulerOS_123@proxyhk.huawei.com:8080"
-Environment="NO_PROXY=127.0.0.1,localhost,10.0.0.0/8,rnd-dockerhub.huawei.com,9.81.3.101:80,10.183.203.145:5000,mydockerhub.inhuawei.com,9.41.111.111:5000,my.csp-edge.com:5000,my.csp-edge.com,10.183.203.145,10.175.102.71,test.csp-edge.com,harbot.inhuawei.com"
-EOF
     systemctl daemon-reload
     systemctl restart docker
     docker pull hub.oepkgs.net/a-ops/opengauss:3.0.0
@@ -192,7 +170,7 @@ function clean_gauss_server() {
 
 function start_gauss_client() {
     SSH_CMD "rpm -q java || yum install -y java" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SSH_CMD "wget -q http://9.82.1.253/Public_Software_Tools/Aops/gala-gopher/benchmarksql-5.0.tar.gz" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "whet https://sourceforge.net/projects/benchmarksql/files/benchmarksql-5.0.zip" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "tar -xf benchmarksql-5.0.tar.gz" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "sed -i 's/9.82.*5432/${NODE1_IPV4}:5432/' benchmarksql-5.0/run/props.pg" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
