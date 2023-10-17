@@ -27,7 +27,7 @@ function pre_test() {
     DNF_INSTALL imageTailor wget
     mv /opt/imageTailor /home/
     mkdir -p /home/imageTailor/repos/euler_base/
-    wget https://repo.openeuler.org/"${oeversion}"/ISO/"$(arch)"/"${oeversion}"-everything-"$(arch)"-dvd.iso -P /home
+    wget --no-check-certificate https://repo.openeuler.org/"${oeversion}"/ISO/"$(arch)"/"${oeversion}"-everything-"$(arch)"-dvd.iso -P /home
     ls /home/"${oeversion}"-everything-"$(arch)"-dvd.iso
     CHECK_RESULT $? 0 0
     mount /home/"${oeversion}"-everything-"$(arch)"-dvd.iso /mnt
