@@ -16,7 +16,7 @@
 #@Desc          :   kmesh test public functions
 ####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 #load ebpf
 progs="ma_ops ma_redirect"
