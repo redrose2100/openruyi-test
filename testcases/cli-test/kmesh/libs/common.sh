@@ -58,9 +58,8 @@ function start_kmesh()
     kmesh-daemon -enable-kmesh=true -enable-ads=false -config-file "$(pwd)"/conf/test_conf.json > tmp_kmesh_daemon.log &
     sleep 3
     
-    grep "command StartServer successful" tmp_kmesh_daemon.log
+    cat tmp_kmesh_daemon.log | grep "command StartServer successful"
     CHECK_RESULT $? 0 0 "kmesh-daemon start failed"
-    cat tmp_kmesh_daemon.log
 }
 
 # load kmesh config and check
@@ -71,7 +70,7 @@ function load_kmesh_config()
     sleep 2
     
     curl http://127.0.0.1:15200/bpf/kmesh/maps --connect-timeout 5 > tmp_kmesh_conf_read.log
-    grep "stenerConfigs\|routeConfigs\|clusterConfigs" tmp_kmesh_conf_read.log
+    cat tmp_kmesh_conf_read.log | grep "stenerConfigs\|routeConfigs\|clusterConfigs"
     CHECK_RESULT $? 0 0 "check kmesh conf failed"
 }
 
@@ -84,20 +83,19 @@ function curl_test()
     CHECK_RESULT $? 0 0 "curl fortio server failed"
     pkill bpftool
     
-    err_num=$(grep " ERR: " tmp_bpftool_prog_trace.log | wc -l)
+    err_num=$(cat tmp_bpftool_prog_trace.log | grep " ERR: " | wc -l)
     CHECK_RESULT "$err_num" 0 0 "check kmesh-daemon log failed"
 
     # check fortio server log
-    grep "GET /fortio/" tmp_fortio_server.log
+    cat tmp_fortio_server.log | grep "GET /fortio/"
     CHECK_RESULT $? 0 0 "check fortio server log failed"
 }
 
 # environment cleanup
 # end the fortio and kmesh-daemon process
-# remove fortio
+# remove fortio Kmesh
 function cleanup()
-{
-    rm -rf tmp*.log
+{    
     pkill fortio
     pkill kmesh-daemon
     sleep 2
@@ -106,6 +104,7 @@ function cleanup()
     rm -rf /mnt/kmesh_cgroup2
     yum remove -y fortio
     DNF_REMOVE
+    rm -rf tmp*.log
 }
 
 # check enable mda
