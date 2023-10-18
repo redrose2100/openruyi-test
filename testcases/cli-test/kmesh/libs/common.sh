@@ -31,8 +31,8 @@ function env_init()
     mkdir /mnt/kmesh_cgroup2
     mount -t cgroup2 none /mnt/kmesh_cgroup2/
 
-    wget -P ../pkg https://gitee.com/openeuler/Kmesh/blob/master/test/testcases/kmesh/pkg/fortio-1.38.1-1.$(arch).rpm
-    yum localinstall -y ../pkg/fortio-*$(arch).rpm
+    wget -P ../pkg https://gitee.com/openeuler/Kmesh/blob/master/test/testcases/kmesh/pkg/fortio-1.38.1-1."$(arch)".rpm
+    yum localinstall -y ../pkg/fortio-*"$(arch)".rpm
     insmod /lib/modules/kmesh/kmesh.ko
     lsmod | grep kmesh
     CHECK_RESULT $? 0 0 "insmod kmesh.ko failed"
@@ -85,7 +85,7 @@ function curl_test()
     pkill bpftool
     
     err_num=$(grep " ERR: " tmp_bpftool_prog_trace.log | wc -l)
-    CHECK_RESULT $err_num 0 0 "check kmesh-daemon log failed"
+    CHECK_RESULT "$err_num" 0 0 "check kmesh-daemon log failed"
 
     # check fortio server log
     grep "GET /fortio/" tmp_fortio_server.log
