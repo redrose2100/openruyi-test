@@ -15,7 +15,7 @@
 # @Date      :   2023/10/12
 # @Desc      :   kmesh route test
 # ##################################
-# shellcheck disable=SC1091,SC2002
+# shellcheck disable=SC1091,SC2002,SC2034
 source ../libs/common.sh
 
 function pre_test() {
