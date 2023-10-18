@@ -29,7 +29,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     mkdir /sys/fs/cgroup/net_cls/{offline,online}
-    bwmcli -e ${NODE1_NIC}
+    bwmcli -e "${NODE1_NIC}"
     bwmcli -s /sys/fs/cgroup/net_cls/offline -1
     bwmcli -s /sys/fs/cgroup/net_cls/online 0
     bwmcli -s bandwidth 30mb,50mb
@@ -43,7 +43,7 @@ function run_test() {
     wait_client_stop 50051 20
     off_bdw=$(cat offline.log | grep sender | awk '{print $(NF-3)}')
     diff=$(get_diff 50 "$off_bdw")
-    if [ $diff -gt 10 ];then
+    if [ "$diff" -gt 10 ];then
         CHECK_RESULT $? 0 1 "qos test failed."
     fi
 
@@ -53,7 +53,7 @@ function run_test() {
     wait_client_stop 50052 20
     off_bdw=$(cat offline1.log | grep sender | awk '{print $(NF-3)}')
     diff=$(get_diff 50 "$off_bdw")
-    if [ $diff -gt 10 ];then
+    if [ "$diff" -gt 10 ];then
         CHECK_RESULT $? 0 1 "qos test failed."
     fi
     target_bdw=$(bwmcli -p stats | grep offline_target_bandwidth | awk -F ': ' '{print $2}')
@@ -70,12 +70,12 @@ function run_test() {
 
     off_bdw_before=$(get_avg offline2.log 8 8)
     diff_before=$(get_diff 50 "$off_bdw_before")
-    if [ $diff_before -gt 10 ];then
+    if [ "$diff_before" -gt 10 ];then
         CHECK_RESULT $? 0 1 "qos test failed."
     fi
     off_bdw_after=$(get_avg offline2.log 30 8)
     diff_after=$(get_diff 30 "$off_bdw_after")
-    if [ $diff_after -gt 10 ];then
+    if [ "$diff_after" -gt 10 ];then
         CHECK_RESULT $? 0 1 "qos test failed."
     fi
 
@@ -84,7 +84,7 @@ function run_test() {
     wait_client_stop 50052 20
     on_bdw=$(cat online.log | grep sender | awk '{print $(NF-3)}')
     diff=$(get_diff 60 "$on_bdw")
-    if [ $diff -gt 10 ];then
+    if [ "$diff" -gt 10 ];then
         CHECK_RESULT $? 0 1 "qos test failed."
     fi
 
@@ -94,7 +94,7 @@ function run_test() {
     wait_client_stop 50052 20
     off_bdw=$(cat offline3.log | grep sender | awk '{print $(NF-3)}')
     diff=$(get_diff 30 "$off_bdw")
-    if [ $diff -gt 10 ];then
+    if [ "$diff" -gt 10 ];then
         CHECK_RESULT $? 0 1 "qos test failed."
     fi
 
