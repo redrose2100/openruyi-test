@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   oncn-bwm command line test public functions
 ####################################
+# shellcheck disable=SC2116,SC2004,SC2143,SC2009,SC2002
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function deploy_client() {
