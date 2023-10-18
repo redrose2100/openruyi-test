@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   kmesh test public functions
 ####################################
-# shellcheck disable=SC2068,SC2126,SC2119,SC2010
+# shellcheck disable=SC2068,SC2126,SC2119,SC2010,SC2002
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 #load ebpf
@@ -38,20 +38,6 @@ function env_init()
     CHECK_RESULT $? 0 0 "insmod kmesh.ko failed"
 }
 
-# start fortio server
-# default localhost:8080
-# if you want to change ip or port, must input all, follows ip:port 
-# cmd is same as the fortio server function
-function start_fortio_server()
-{
-    fortio server $@ > tmp_fortio_server.log 2>&1 &
-    sleep 0.2
-    echo "$@" > tmp_fortio_cmd.log
-    ip_port=$(grep -oE "[0-9]+.[0-9]+.[0-9]+.[0-9]+:[0-9]+" tmp_fortio_cmd.log) || ip_port="127.0.0.1:8080"
-    grep "http://${ip_port}/fortio/" tmp_fortio_server.log
-    CHECK_RESULT $? 0 0 "fortio server start failed"
-}
-
 # start kmesh-daemon
 function start_kmesh()
 {
@@ -72,6 +58,20 @@ function load_kmesh_config()
     curl http://127.0.0.1:15200/bpf/kmesh/maps --connect-timeout 5 > tmp_kmesh_conf_read.log
     cat tmp_kmesh_conf_read.log | grep "stenerConfigs\|routeConfigs\|clusterConfigs"
     CHECK_RESULT $? 0 0 "check kmesh conf failed"
+}
+
+# start fortio server
+# default localhost:8080
+# if you want to change ip or port, must input all, follows ip:port 
+# cmd is same as the fortio server function
+function start_fortio_server()
+{
+    fortio server $@ > tmp_fortio_server.log 2>&1 &
+    sleep 0.2
+    echo "$@" > tmp_fortio_cmd.log
+    ip_port=$(grep -oE "[0-9]+.[0-9]+.[0-9]+.[0-9]+:[0-9]+" tmp_fortio_cmd.log) || ip_port="127.0.0.1:8080"
+    grep "http://${ip_port}/fortio/" tmp_fortio_server.log
+    CHECK_RESULT $? 0 0 "fortio server start failed"
 }
 
 # use bpftool trace test result
