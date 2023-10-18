@@ -21,7 +21,8 @@ source ../libs/common.sh
 
 function pre_test() {
     DNF_INSTALL Kmesh
-    yum localinstall -y ../pkg/fortio-*$(arch).rpm
+    wget -P ../pkg https://gitee.com/openeuler/Kmesh/blob/master/test/testcases/kmesh/pkg/fortio-1.38.1-1.$(arch).rpm
+    yum localinstall -y ../pkg/fortio-*"$(arch)".rpm
 }
 
 function run_test() {
