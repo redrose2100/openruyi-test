@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   oncn-bwm command line test public functions
 ####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function deploy_client() {
     local remote_ip=${1}
@@ -46,7 +46,8 @@ function wait_client_stop() {
 function get_diff() {
     local x=${1}
     local y=${2}
-
+    
+    # shellcheck disable=SC2086
     diff=$(awk 'BEGIN{print '$x'-'$y'}' | sed 's/-//')
     if [ "$diff" != "" ]; then
         echo "$diff" | xargs printf "%.*f\n" 0
