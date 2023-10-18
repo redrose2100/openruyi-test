@@ -13,7 +13,7 @@
 # @Date      :   2023/10/12
 # @Desc      :   dim measure test
 # ##################################
-
+# shellcheck disable=SC2002,SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
