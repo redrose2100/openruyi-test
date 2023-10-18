@@ -38,7 +38,7 @@ function run_test() {
     
     # curl header is end-user:jason route to 11466
     # else route to 11488    
-    for ((i=0;i<10;i++))
+    for i in $(seq 0 9)
     do
 	    curl --header "end-user:jason" -v http://127.0.0.1:23333 >> tmp_trace1.log 2>&1
 	    curl -v http://127.0.0.1:23333 >> tmp_trace2.log 2>&1
