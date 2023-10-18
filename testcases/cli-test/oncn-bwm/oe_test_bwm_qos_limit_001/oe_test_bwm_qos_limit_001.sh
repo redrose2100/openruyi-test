@@ -25,9 +25,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    bwmcli -e ${NODE1_NIC} -e lo
+    bwmcli -e "${NODE1_NIC}" -e lo
     CHECK_RESULT $? 0 0 "CHECK bwmcli -e FAILED"
-    bwmcli -d ${NODE1_NIC} -d lo
+    bwmcli -d "${NODE1_NIC}" -d lo
     CHECK_RESULT $? 0 0 "CHECK bwmcli -d FAILED"
 
     mkdir /sys/fs/cgroup/net_cls/offline
