@@ -15,7 +15,7 @@
 # @Date      :   2023/10/12
 # @Desc      :   bwmcli test
 # ##################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
