@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   kmesh test public functions
 ####################################
-
+# shellcheck disable=SC2068,SC2126,SC2119,SC2010
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 #load ebpf
