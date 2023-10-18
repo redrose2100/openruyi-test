@@ -40,7 +40,7 @@ function run_test() {
     # round robin
     curl -v http://127.0.0.1:23333 > tmp_trace.log 2>&1
     curl -v http://127.0.0.1:23333 >> tmp_trace.log 2>&1
-    grep 'Server: 1' tmp_trace.log && grep 'Server: 2' tmp_trace.log
+    cat tmp_trace.log | grep 'Server: 1' && cat tmp_trace.log | grep 'Server: 2'
     CHECK_RESULT $? 0 0 "bad balancing" 
 
     LOG_INFO "Finish test!"
