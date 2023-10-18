@@ -15,7 +15,7 @@
 # @Date      :   2023/10/12
 # @Desc      :   kmesh l7 filter test
 # ##################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2002
 source ../libs/common.sh
 
 function pre_test() {
