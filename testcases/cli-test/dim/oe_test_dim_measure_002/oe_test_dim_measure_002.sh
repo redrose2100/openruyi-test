@@ -24,11 +24,11 @@ function run_test() {
 
     gcc ../common/proc/dim_proc.c -o dim_proc 
     gcc ../common/proc/dim_proc_new.c -o dim_proc_new
-    make -C /lib/modules/$(uname -r)/build M=$(pwd)/../common/module modules
+    make -C /lib/modules/"$(uname -r)"/build M="$(pwd)"/../common/module modules
 
     mkdir -p /etc/dim/digest_list
     dim_gen_baseline dim_proc -o /etc/dim/digest_list/dim_proc.hash
-    dim_gen_baseline /usr/lib/modules/$(uname -r)/kernel/drivers/block/kvdo.ko -o /etc/dim/digest_list/kvdo.hash
+    dim_gen_baseline /usr/lib/modules/"$(uname -r)"/kernel/drivers/block/kvdo.ko -o /etc/dim/digest_list/kvdo.hash
     echo "measure obj=BPRM_TEXT path=$(pwd)/dim_proc" > /etc/dim/policy
     echo "measure obj=MODULE_TEXT name=kvdo" >> /etc/dim/policy
 
@@ -74,7 +74,7 @@ function post_test() {
     pkill -9 dim_proc
     rmmod kvdo dim_monitor dim_core
     rm -rf /etc/dim/
-    make -C /lib/modules/$(uname -r)/build M=$(pwd)/../common/module clean
+    make -C /lib/modules/"$(uname -r)"/build M="$(pwd)"/../common/module clean
     rm -rf dim_proc*
 }
 
