@@ -48,18 +48,6 @@ function start_kmesh()
     CHECK_RESULT $? 0 0 "kmesh-daemon start failed"
 }
 
-# load kmesh config and check
-function load_kmesh_config()
-{
-    kmesh-cmd -config-file="$(pwd)"/conf/test_conf.json > tmp_kmesh_cmd.log &
-    CHECK_RESULT $? 0 0 "kmesh-cmd start failed"
-    sleep 2
-    
-    curl http://127.0.0.1:15200/bpf/kmesh/maps --connect-timeout 5 > tmp_kmesh_conf_read.log
-    cat tmp_kmesh_conf_read.log | grep "stenerConfigs\|routeConfigs\|clusterConfigs"
-    CHECK_RESULT $? 0 0 "check kmesh conf failed"
-}
-
 # start fortio server
 # default localhost:8080
 # if you want to change ip or port, must input all, follows ip:port 
@@ -70,8 +58,20 @@ function start_fortio_server()
     sleep 0.2
     echo "$@" > tmp_fortio_cmd.log
     ip_port=$(grep -oE "[0-9]+.[0-9]+.[0-9]+.[0-9]+:[0-9]+" tmp_fortio_cmd.log) || ip_port="127.0.0.1:8080"
-    grep "http://${ip_port}/fortio/" tmp_fortio_server.log
+    cat tmp_fortio_server.log | grep "http://${ip_port}/fortio/"
     CHECK_RESULT $? 0 0 "fortio server start failed"
+}
+
+# load kmesh config and check
+function load_kmesh_config()
+{
+    kmesh-cmd -config-file="$(pwd)"/conf/test_conf.json > tmp_kmesh_cmd.log &
+    CHECK_RESULT $? 0 0 "kmesh-cmd start failed"
+    sleep 2
+    
+    curl http://127.0.0.1:15200/bpf/kmesh/maps --connect-timeout 5 > tmp_kmesh_conf_read.log
+    cat tmp_kmesh_conf_read.log | grep "stenerConfigs\|routeConfigs\|clusterConfigs"
+    CHECK_RESULT $? 0 0 "check kmesh conf failed"
 }
 
 # use bpftool trace test result
