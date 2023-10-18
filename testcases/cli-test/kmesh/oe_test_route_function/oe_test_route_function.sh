@@ -44,7 +44,7 @@ function run_test() {
 	    curl -v http://127.0.0.1:23333 >> tmp_trace2.log 2>&1
     done
 
-    grep 'Server: 1' tmp_trace1.log && grep 'Server: 2' tmp_trace2.log && grep 'Server: 2' tmp_trace1.log || grep 'Server: 1' tmp_trace2.log || echo 'OK'
+    cat tmp_trace1.log | grep 'Server: 1' && cat tmp_trace2.log | grep 'Server: 2' && cat tmp_trace1.log | grep 'Server: 2' || cat tmp_trace2.log | grep 'Server: 1' || echo 'OK'
     CHECK_RESULT "$_" OK 0 "bad route"
 
     LOG_INFO "Finish test!"
