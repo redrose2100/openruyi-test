@@ -30,10 +30,8 @@ function run_test() {
     start_fortio_server -http-port 127.0.0.1:11466 -echo-server-default-params="header=server:1"
     start_fortio_server -http-port 127.0.0.1:11488 -echo-server-default-params="header=server:2"
 
-    # start kmesh-daemon
+    # start kmesh-daemon and use kmesh-cmd load conf and check conf load ok
     start_kmesh
-
-    # use kmesh-cmd load conf and check conf load ok
     load_kmesh_config
     
     # curl header is end-user:jason route to 11466
