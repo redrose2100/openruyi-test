@@ -26,9 +26,9 @@ function run_test() {
     mkdir -p /etc/dim/digest_list
     dim_gen_baseline /usr/bin/bash -o /etc/dim/digest_list/bash.hash
     CHECK_RESULT $? 0 0 "dim_gen_baseline failed."
-    dim_gen_baseline /usr/lib/modules/$(uname -r)/kernel/drivers/block/kvdo.ko -o /etc/dim/digest_list/kvdo.hash
+    dim_gen_baseline /usr/lib/modules/"$(uname -r)"/kernel/drivers/block/kvdo.ko -o /etc/dim/digest_list/kvdo.hash
     CHECK_RESULT $? 0 0 "dim_gen_baseline failed."
-    dim_gen_baseline -k $(uname -r) /boot/vmlinuz-$(uname -r) -o /etc/dim/digest_list/kernel.hash
+    dim_gen_baseline -k "$(uname -r)" /boot/vmlinuz-"$(uname -r)" -o /etc/dim/digest_list/kernel.hash
     CHECK_RESULT $? 0 0 "dim_gen_baseline failed."
 
     echo "measure obj=BPRM_TEXT path=/usr/bin/bash" > /etc/dim/policy
