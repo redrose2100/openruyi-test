@@ -15,7 +15,7 @@
 # @Date      :   2023/10/12
 # @Desc      :   bandwidth qos test 
 # ##################################
-
+# shellcheck disable=SC1091,SC2002,SC2035
 source ../common/comlib.sh
 
 function pre_test() {
