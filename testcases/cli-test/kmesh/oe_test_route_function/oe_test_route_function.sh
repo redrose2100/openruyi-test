@@ -46,7 +46,7 @@ function run_test() {
     done
 
     grep 'Server: 1' tmp_trace1.log && grep 'Server: 2' tmp_trace2.log && grep 'Server: 2' tmp_trace1.log || grep 'Server: 1' tmp_trace2.log || echo 'OK'
-    CHECK_RESULT $_ OK 0 "bad route"
+    CHECK_RESULT $? OK 0 "bad route"
 
     LOG_INFO "Finish test!"
 }
