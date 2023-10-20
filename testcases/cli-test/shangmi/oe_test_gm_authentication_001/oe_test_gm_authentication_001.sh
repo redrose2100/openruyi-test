@@ -1,4 +1,4 @@
-!/usr/bin/bash
+#!/usr/bin/bash
 
 # Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
@@ -15,7 +15,7 @@
 # @Date      :   2023/10/12
 # @Desc      :   user identity authentication sm test
 # ##################################
-
+# shellcheck disable=SC2002
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
