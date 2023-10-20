@@ -15,7 +15,7 @@
 # @Date      :   2023/10/12
 # @Desc      :   ssh sm test
 # ##################################
-
+# shellcheck disable=SC1091
 source lib.sh
 
 function pre_test() {
