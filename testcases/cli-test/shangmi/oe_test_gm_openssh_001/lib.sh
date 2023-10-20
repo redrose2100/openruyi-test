@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2034,SC2129
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 ssh_server_conf="/etc/ssh/sshd_config"
