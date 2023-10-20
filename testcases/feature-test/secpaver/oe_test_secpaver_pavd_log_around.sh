@@ -35,7 +35,7 @@ function run_test() {
     SLEEP_WAIT 10  "ps -ef | grep /usr/bin/pavd |grep -v grep" 1 20 1
     ls /var/log/secpaver/
     CHECK_RESULT "$?" 0 0 "Error in log dir."
-    ls /var/log/secpaver/ | grep "pavd-"
+    ls /var/log/secpaver/pavd-*
     CHECK_RESULT "$?" 0 0 "Error in log around."
 }
 
