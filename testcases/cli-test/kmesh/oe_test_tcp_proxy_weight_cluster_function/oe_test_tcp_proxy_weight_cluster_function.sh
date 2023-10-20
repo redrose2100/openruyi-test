@@ -46,9 +46,9 @@ function run_test() {
     a=$(grep -c 'Server: 1' tmp_trace.log)
     b=$(grep -c 'Server: 2' tmp_trace.log)
     if [ "$a" -gt 70 ] && [ "$a" -lt 90 ] && [ "$b" -lt 30 ] && [ "$b" -gt 10 ];then
-	result=0
+        result=0
     else
-	result=1
+        result=1
     fi
     CHECK_RESULT $result 0 0 "bad tcp weighted cluster select"
 
