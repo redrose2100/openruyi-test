@@ -16,7 +16,7 @@
 # @Date      :   2023/10/12
 # @Desc      :   openssl sm test
 # ##################################
-
+# shellcheck disable=SC1091,SC2035
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
