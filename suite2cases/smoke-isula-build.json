@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test/smoke-isula-build",
+    "cases": [
+        {
+            "name": "oe_test_isula-build_build_image"
+        }
+    ]
+}
