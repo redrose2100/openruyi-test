@@ -1,0 +1,21 @@
+Test Run By bje on Sat Nov 14 21:04:30 AEDT 2015
+
+                === gdb tests ===
+
+Running ./gdb.t00/echo.exp ...
+PASS:   Echo test
+Running ./gdb.all/help.exp ...
+PASS:   help add-symbol-file
+PASS:   help aliases
+PASS:   help breakpoint "bre" abbreviation
+FAIL:   help run "r" abbreviation
+Running ./gdb.t10/crossload.exp ...
+PASS:   m68k-elf (elf-big) explicit format; loaded
+XFAIL:  mips-ecoff (ecoff-bigmips) "ptype v_signed_char" signed C types
+
+                === gdb Summary ===
+
+# of expected passes            5
+# of expected failures          1
+# of unexpected failures        1
+/usr/latest/bin/gdb version 4.6.5 -q
