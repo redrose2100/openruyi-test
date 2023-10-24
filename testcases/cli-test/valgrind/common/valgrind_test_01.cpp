@@ -1,0 +1,35 @@
+#include <iostream>
+#include <cstring>
+
+void test01() {
+  char* p = new char[8];
+}
+
+void test02() {
+  static char* p = new char[8];
+}
+
+class Object {
+public:
+  Object() { _p = new char[8]; }
+  ~Object() { if(_p) delete _p; }
+private:
+  char* _p = nullptr;
+};
+
+void test03() {
+  Object* obj = new Object();
+};
+
+void test04() {
+  char* data = new char[8];
+  static char* p = data + 1;
+}
+
+int main() {
+  test01(); // definitely lost
+  test02(); // still reachable
+  test03(); // indirectly lost
+  test04(); // possibly lost
+  return 0;
+}
