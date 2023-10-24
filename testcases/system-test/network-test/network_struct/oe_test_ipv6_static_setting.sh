@@ -1,0 +1,60 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+####################################
+#@Author    	:   meitingli
+#@Contact   	:   244349477@qq.com
+#@Date      	:   2021-08-18
+#@License   	:   Mulan PSL v2
+#@Desc      	:   Set static ipv6
+#####################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the database config."
+
+    DNF_INSTALL net-tools
+    test_nic=$(TEST_NIC 1 | awk '{print $1}')
+    ipv="fe80:250:250:250:250:250:250:222/64"
+    cp /etc/sysconfig/network /etc/sysconfig/network.bak
+    test -f /etc/sysconfig/network-scripts/ifcfg-${test_nic} && mv /etc/sysconfig/network-scripts/ifcfg-${test_nic} /etc/sysconfig/network-scripts/ifcfg-${test_nic}.bak
+    cp /etc/sysconfig/network-scripts/ifcfg-${NODE1_NIC} /etc/sysconfig/network-scripts/ifcfg-${test_nic}
+    sed -i 's/${NODE1_NIC}/${test_nic}/g' /etc/sysconfig/network-scripts/ifcfg-${test_nic}
+    sed -i 's/UUID/#UUID/g' /etc/sysconfig/network-scripts/ifcfg-${test_nic}
+
+
+    LOG_INFO "End to prepare the database config."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+
+    systemctl restart NetworkManager
+    CHECK_RESULT $? 0 0 "Restart network failed."
+    ifconfig -a $test_nic | grep "inet6"
+    CHECK_RESULT $? 0 0 "Check ipv6 failed."
+
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+
+    rm -f /etc/sysconfig/network /etc/sysconfig/network-scripts/ifcfg-${test_nic}
+    mv /etc/sysconfig/network.bak /etc/sysconfig/network
+    test -f /etc/sysconfig/network-scripts/ifcfg-${test_nic}.bak && mv /etc/sysconfig/network-scripts/ifcfg-${test_nic}.bak /etc/sysconfig/network-scripts/ifcfg-${test_nic}
+    systemctl restart NetworkManager
+    DNF_REMOVE
+
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
