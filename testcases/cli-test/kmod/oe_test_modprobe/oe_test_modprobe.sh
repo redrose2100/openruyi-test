@@ -44,7 +44,7 @@ function run_test() {
     modprobe -r dm_cache
     CHECK_RESULT $?
     modprobe -f dm_cache
-    CHECK_RESULT $?
+    CHECK_RESULT $? 1
     modprobe -r -f dm_cache
     CHECK_RESULT $?
     lsmod | grep dm_cache
@@ -55,10 +55,10 @@ function run_test() {
     CHECK_RESULT $?
     modprobe --show-config | grep "alias symbol:"
     CHECK_RESULT $?
-    dmPath=$(find /usr/lib/modules/ -name dm-log.ko)
-    modprobe --show-modversions $dmPath | grep "[0-9]"
+    dmPath=$(find /usr/lib/modules/ -name dm-log.ko.xz)
+    modprobe --show-modversions "$dmPath" | grep "[0-9]"
     CHECK_RESULT $?
-    modprobe --dump-modversions $dmPath | grep "[0-9]"
+    modprobe --dump-modversions "$dmPath" | grep "[0-9]"
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }

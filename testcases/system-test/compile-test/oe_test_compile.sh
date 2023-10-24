@@ -32,9 +32,7 @@ function pre_test() {
     if [ "${test_mode}" == "update" ]; then
         cfg_openEuler_repo
         cfg_openEuler_update_test_repo
-        sed -i '/source\//!b;n;cenabled=0' /etc/yum.repos.d/"${version_info}".repo
-        sed -i '/update_.\{8\}\/source\//!b;n;cenabled=1' /etc/yum.repos.d/"${version_info}".repo
-        dnf list --available --repo="${version_info}_source_${test_update_repo}" | grep oe | awk '{print $1}' | awk -F. '{print $1}' >source_list
+        dnf list --available --repo="${version_info}_source_${test_update_repo}" | grep oe | awk '{print $1}' | awk -F '.src' '{print $1}' >source_list
     else
         cfg_openEuler_repo
         sed -i '/source\/.*/!b;n;cenabled=0' /etc/yum.repos.d/"${version_info}".repo
@@ -50,7 +48,7 @@ function pre_test() {
         else
             LOG_INFO "Nothing to do."
         fi
-        dnf list --available --repo="${version_info}_source" | grep oe | awk '{print $1}' | awk -F. '{print $1}' | grep -vE "kernel|gcc|glibc" >source_list.bak
+        dnf list --available --repo="${version_info}_source" | grep oe | awk '{print $1}' | awk -F '.src' '{print $1}' | grep -vE "kernel|gcc|glibc" >source_list.bak
         shuf -n"${test_pkg_num}" source_list.bak >source_list
         sed -i "1i kernel\ngcc\nglibc" source_list
     fi
