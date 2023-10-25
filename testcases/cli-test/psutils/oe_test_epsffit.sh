@@ -35,7 +35,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # test epsffit -v
-    test "$(epsffit -v 2>&1 | awk 'NR==1{print$2}')" == "$version"
+    test "$(epsffit --version 2>&1 | awk 'NR==1{print$2}')" == "$version"
     CHECK_RESULT $? 0 0 "epsffit -v execution failed."
 
     # test espffit llx lly urx ury
