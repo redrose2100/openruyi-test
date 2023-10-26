@@ -134,7 +134,7 @@ function CHECK_YUM() {
 }
 
 function INSTALL_ENV() {
-    ps -ef | grep -E 'dnf|yum' | grep -Ev 'grep|bash' | awk '{print $2}' | xargs kill -9
+    pgrep -l "dnf|yum" | grep -Ev "grep|bash" | awk '{print $1}' | xargs kill -9
     dnf remove elasticsearch redis pkgship wget net-tools diffutils tar -y
     dnf clean all
     DNF_INSTALL "pkgship wget net-tools diffutils tar"
@@ -147,7 +147,7 @@ function REVERT_ENV() {
     ACT_SERVICE stop
     rm -f ${YUM_PATH}/pkgship_yum.repo ${YUM_PATH}/pkgship_elasticsearch.repo ${LOG_PATH}/pkgship/*
     SLEEP_WAIT 10
-    for i in $(ps -ef | grep "pkgship|uwsgi|elasticsearch|redis|dnf" | grep -Ev "nohup|mugen.sh|oe_test|grep" | awk '{print $2}'); do
+    for i in $(pgrep -l "pkgship|uwsgi|elasticsearch|redis|dnf" | grep -Ev "nohup|mugen.sh|oe_test|grep" | awk '{print $1}'); do
         kill -9 "$i"
     done
     dnf clean all
