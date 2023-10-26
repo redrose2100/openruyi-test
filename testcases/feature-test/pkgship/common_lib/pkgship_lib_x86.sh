@@ -51,14 +51,13 @@ function ACT_SERVICE() {
     cur_system=$(cat /proc/1/cgroup)
     cur_user=$(whoami)
 
-    # shellcheck disable=SC2009
-    ps -ef | grep "elasticsearch" | grep -v grep >/dev/null
+    ps -aux | grep "elasticsearch" | grep -v grep >/dev/null
     [[ $? -eq 1 ]] && {
         bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh elasticsearch
         sleep 2
     }
 
-    ps -ef | grep "redis" | grep -v grep >/dev/null
+    pgrep "redis" >/dev/null
     [[ $? -eq 1 ]] && {
         bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh redis
         sleep 2
@@ -135,7 +134,7 @@ function CHECK_YUM() {
 }
 
 function INSTALL_ENV() {
-    ps -ef | grep -E 'dnf|yum' | grep -Ev 'grep|bash' | awk '{print $2}' | xargs kill -9
+    ps -aux | grep -E 'dnf|yum' | grep -Ev 'grep|bash' | awk '{print $2}' | xargs kill -9
     dnf remove elasticsearch redis pkgship wget net-tools diffutils tar -y
     dnf clean all
     DNF_INSTALL "pkgship wget net-tools diffutils tar"
@@ -149,7 +148,7 @@ function REVERT_ENV() {
     ACT_SERVICE stop
     rm -f ${YUM_PATH}/pkgship_yum.repo ${YUM_PATH}/pkgship_elasticsearch.repo ${LOG_PATH}/pkgship/*
     SLEEP_WAIT 10
-    for i in $(ps -ef | grep "pkgship|uwsgi|elasticsearch|redis|dnf" | grep -Ev "nohup|mugen.sh|oe_test|grep" | awk '{print $2}'); do
+    for i in $(ps -aux | grep "pkgship|uwsgi|elasticsearch|redis|dnf" | grep -Ev "nohup|mugen.sh|oe_test|grep" | awk '{print $2}'); do
         kill -9 "$i"
     done
     dnf clean all
