@@ -144,6 +144,7 @@ function INSTALL_ENV() {
     bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh elasticsearch
 }
 
+
 function REVERT_ENV() {
     ACT_SERVICE stop
     rm -f ${YUM_PATH}/pkgship_yum.repo ${YUM_PATH}/pkgship_elasticsearch.repo ${LOG_PATH}/pkgship/*
