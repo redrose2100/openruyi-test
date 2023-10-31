@@ -236,7 +236,7 @@ function run_test_case() {
     pushd "$case_path" >/dev/null || return 1
 
     local time_out
-    time_out=$(grep -w --fixed-strings EXECUTE_T ${test_case}.* 2>/dev/null | awk -F '=' '{print $NF}' | tr -d '"')
+    time_out=$(grep -w --fixed-strings TIMEOUT ${test_case}.* 2>/dev/null | awk -F '=' '{print $NF}' | tr -d '"')
     test -n "$time_out" && local TIMEOUT=$time_out
 
     local script_type
