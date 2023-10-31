@@ -73,6 +73,7 @@ function post_test() {
     userdel -r mysql
     groupdel mysql
     rm -rf testlog
+    rm -rf /var/lib/mysql/* /data/mariadb
     LOG_INFO "Finish environment cleanup."
 }
 
