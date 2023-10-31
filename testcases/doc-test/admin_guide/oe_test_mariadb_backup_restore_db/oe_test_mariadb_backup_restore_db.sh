@@ -80,7 +80,7 @@ expect eof
     CHECK_RESULT $?
     grep "CREATE DATABASE .* `db1`" alldb.sql
     CHECK_RESULT $?
-    grep "CREATE TABLE `tb1`" alldb.sql
+    grep "CREATE TABLE \`tb1\`" alldb.sql
     CHECK_RESULT $?
     grep "CREATE DATABASE .* `db2`" alldb.sql
     CHECK_RESULT $?
