@@ -149,6 +149,7 @@ expect eof
     userdel -r mysql
     groupdel mysql
     rm -rf db1.sql db1tb1.sql alldb.sql data tmp run testlog*
+    rm -rf /var/lib/mysql/* /data/mariadb /var/log/mariadb/
     LOG_INFO "Finish environment cleanup."
 }
 
