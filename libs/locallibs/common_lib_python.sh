@@ -18,22 +18,22 @@
 
 function LOG_INFO() {
     message=${*-"Developer does not write the log messages."}
-    python3 ${OET_PATH}/libs/locallibs/mugen_log.py --level 'info' --message "$message"
+    python3 "${OET_PATH}"/libs/locallibs/mugen_log.py --level 'info' --message "$message"
 }
 
 function LOG_WARN() {
     message=${*-"Developer does not write the log messages."}
-    python3 ${OET_PATH}/libs/locallibs/mugen_log.py --level 'warn' --message "$message"
+    python3 "${OET_PATH}"/libs/locallibs/mugen_log.py --level 'warn' --message "$message"
 }
 
 function LOG_DEBUG() {
     message=${*-"Developer does not write the log messages."}
-    python3 ${OET_PATH}/libs/locallibs/mugen_log.py --level 'debug' --message "$message"
+    python3 "${OET_PATH}"/libs/locallibs/mugen_log.py --level 'debug' --message "$message"
 }
 
 function LOG_ERROR() {
     message=${*-"Developer does not write the log messages."}
-    python3 ${OET_PATH}/libs/locallibs/mugen_log.py --level 'error' --message "$message"
+    python3 "${OET_PATH}"/libs/locallibs/mugen_log.py --level 'error' --message "$message"
 }
 
 function SSH_CMD() {
@@ -44,7 +44,7 @@ function SSH_CMD() {
     timeout=${5-300}
     connport=${6-22}
 
-    bash ${OET_PATH}/libs/locallibs/sshcmd.sh -c "$cmd" -i "$remoteip" -u "$remoteuser" -p "$remotepasswd" -t "$timeout" -o "$connport"
+    bash "${OET_PATH}"/libs/locallibs/sshcmd.sh -c "$cmd" -i "$remoteip" -u "$remoteuser" -p "$remotepasswd" -t "$timeout" -o "$connport"
     ret=$?
     test $ret -ne 0 && LOG_ERROR "Failed in remote CMD operation:$ret"
     return $ret
@@ -56,29 +56,29 @@ function SSH_SCP() {
     remotepasswd=${3-openEuler12#$}
     connport=${4-22}
 
-    bash ${OET_PATH}/libs/locallibs/sshscp.sh -p "$remotepasswd" -o "$connport" -s "$src" -d "$dest"
+    bash "${OET_PATH}"/libs/locallibs/sshscp.sh -p "$remotepasswd" -o "$connport" -s "$src" -d "$dest"
     ret=$?
     test $ret -ne 0 && LOG_ERROR "Failed in remote SCP operation: $ret"
     return $ret
 }
 
 function P_SSH_CMD() {
-    python3 ${OET_PATH}/libs/locallibs/ssh_cmd.py "$@"
+    python3 "${OET_PATH}"/libs/locallibs/ssh_cmd.py "$@"
 }
 
 function SFTP() {
-    python3 ${OET_PATH}/libs/locallibs/sftp.py "$@"
+    python3 "${OET_PATH}"/libs/locallibs/sftp.py "$@"
 }
 
 function TEST_NIC() {
     id=${1-1}
-    python3 ${OET_PATH}/libs/locallibs/get_test_device.py \
+    python3 "${OET_PATH}"/libs/locallibs/get_test_device.py \
         --device nic --node "$id"
 }
 
 function TEST_DISK() {
     id=${1-1}
-    python3 ${OET_PATH}/libs/locallibs/get_test_device.py \
+    python3 "${OET_PATH}"/libs/locallibs/get_test_device.py \
         --device disk --node "$id"
 }
 
@@ -88,8 +88,8 @@ function DNF_INSTALL() {
     #多节点初始系统环境相同，本地和远端安装的包，在任何节点不不应该存在
     [ -z "$tmpfile" ] && tmpfile=""
 
-    tmpfile2=$(python3 ${OET_PATH}/libs/locallibs/rpm_manage.py \
-        install --pkgs "$pkgs" --node $node --tempfile "$tmpfile")
+    tmpfile2=$(python3 "${OET_PATH}"/libs/locallibs/rpm_manage.py \
+        install --pkgs "$pkgs" --node "$node" --tempfile "$tmpfile")
 
     [ -z "$tmpfile" ] && tmpfile=$tmpfile2
 }
@@ -104,24 +104,24 @@ function DNF_REMOVE() {
         return 0
     fi
 
-    [ $mode -ne 0 ] && {
+    [ "$mode" -ne 0 ] && {
         tmpf=$tmpfile
         tmpfile=""
     }
 
     if [ "$node" == 0 ]; then
-        node_num=$(python3 ${OET_PATH}/libs/locallibs/read_conf.py node-num)
+        node_num=$(python3 "${OET_PATH}"/libs/locallibs/read_conf.py node-num)
 
-        for node_id in $(seq 1 $node_num); do
-            python3 ${OET_PATH}/libs/locallibs/rpm_manage.py \
-                remove --node $node_id --pkgs "$pkg_list" --tempfile "$tmpfile"
+        for node_id in $(seq 1 "$node_num"); do
+            python3 "${OET_PATH}"/libs/locallibs/rpm_manage.py \
+                remove --node "$node_id" --pkgs "$pkg_list" --tempfile "$tmpfile"
         done
     else
-        python3 ${OET_PATH}/libs/locallibs/rpm_manage.py \
-            remove --node $node --pkgs "$pkg_list" --tempfile "$tmpfile"
+        python3 "${OET_PATH}"/libs/locallibs/rpm_manage.py \
+            remove --node "$node" --pkgs "$pkg_list" --tempfile "$tmpfile"
     fi
 
-    [ $mode -ne 0 ] && {
+    [ "$mode" -ne 0 ] && {
         tmpfile=$tmpf
     }
 }
@@ -130,14 +130,14 @@ function GET_FREE_PORT() {
     ip=${1-""}
     start_port=${2-1000}
     end_port=${3-10000}
-    python3 ${OET_PATH}/libs/locallibs/free_port.py \
+    python3 "${OET_PATH}"/libs/locallibs/free_port.py \
         get --ip "$ip" --start "$start_port" --end "$end_port"
 }
 
 function IS_FREE_PORT() {
     port=$1
     ip=${2-""}
-    python3 ${OET_PATH}/libs/locallibs/free_port.py \
+    python3 "${OET_PATH}"/libs/locallibs/free_port.py \
         check --port "$port" --ip "$ip"
 }
 
@@ -145,9 +145,9 @@ function REMOTE_REBOOT() {
     node=${1-2}
     waittime=${2-""}
     if [ "$waittime"x != ""x ]; then
-        python3 ${OET_PATH}/libs/locallibs/remote_reboot.py "reboot" --node $node --waittime $waittime
+        python3 "${OET_PATH}"/libs/locallibs/remote_reboot.py "reboot" --node "$node" --waittime "$waittime"
     else
-        python3 ${OET_PATH}/libs/locallibs/remote_reboot.py "reboot" --node $node
+        python3 "${OET_PATH}"/libs/locallibs/remote_reboot.py "reboot" --node "$node"
     fi
 }
 
@@ -155,9 +155,9 @@ function REMOTE_REBOOT_WAIT() {
     node=${1-2}
     waittime=${2-""}
     if [ "$waittime"x != ""x ]; then
-        python3 ${OET_PATH}/libs/locallibs/remote_reboot.py "wait" --node $node --waittime $waittime
+        python3 "${OET_PATH}"/libs/locallibs/remote_reboot.py "wait" --node "$node" --waittime "$waittime"
     else
-        python3 ${OET_PATH}/libs/locallibs/remote_reboot.py "wait" --node $node
+        python3 "${OET_PATH}"/libs/locallibs/remote_reboot.py "wait" --node "$node"
     fi
 }
 
@@ -165,5 +165,11 @@ function SLEEP_WAIT() {
     wait_time=$1
     cmd=$2
     mode=${3-1}
-    python3 ${OET_PATH}/libs/locallibs/sleep_wait.py --time $wait_time --cmd "$cmd" --mode $mode
+    python3 "${OET_PATH}"/libs/locallibs/sleep_wait.py --time "$wait_time" --cmd "$cmd" --mode "$mode"
+}
+
+function CHECK_ENV() {
+    suite_json=$1
+    test_case=$2
+    python3 "${OET_PATH}"/libs/locallibs/check_environment.py --suite_file "$suite_json" --case "$test_case"
 }
