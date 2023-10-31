@@ -70,6 +70,7 @@ function post_test() {
     rm -rf test.txt ib_sdipGMuTI
     mysql -e "use test45;DROP TABLE mytexttable;DROP DATABASE test45"
     DNF_REMOVE
+    rm -rf /var/lib/mysql/*
     LOG_INFO "Finish environment cleanup."
 }
 
