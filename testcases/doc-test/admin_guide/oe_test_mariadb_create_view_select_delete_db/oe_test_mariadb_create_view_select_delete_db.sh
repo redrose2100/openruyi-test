@@ -26,7 +26,6 @@ function pre_test() {
     groupadd mysql
     useradd -g mysql mysql
     echo ${NODE1_PASSWORD} | passwd --stdin mysql
-    test -d /data || mkdir data
     test -d /data/mariadb || mkdir -p /data/mariadb
     cd /data/mariadb || exit
     mkdir data tmp run log
