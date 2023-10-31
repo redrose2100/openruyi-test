@@ -1,17 +1,19 @@
 TARGET = UnPublishServiceInterface_001
-OBJECTS = softbus_UnPublishServiceInterface_001.o
+SRC = dsoftbus_UnPublishServiceInterface_001.c  ../common/dsoftbus_common.c
+OBJ = ${SRC:.c=.o}
 
-LIBS = -lsoftbus_client.z -lsyspara.z -ldeviceauth_sdk.z -lsec_shared.z -lsoftbus_utils.z
-CFLAGS=-Wall
+LIBS = -lsoftbus_client.z -ldeviceauth_sdk.z  -lsyspara.z  -lcjson -lboundscheck
+
+CFLAGS = -Wall -g -I../common
 
 .PHNOY:all
 all: ${TARGET}
-obj: ${OBJECTS}
 
-${TARGET} : ${OBJECTS} Makefile
-	${CC} -o ${TARGET} ${OBJECTS} ${LIBS}
-%.o: %.c
-	${CC} ${CFLAGS} -c $< 
+${TARGET} : ${OBJ}
+	${CC}  ${CFLAGS}  ${LIBS} $^ -o $@
+${OBJ}:%.o:%.c
+	${CC} ${CFLAGS} ${LIBS} -c $< -o $@
+
 .PHNOY: clean
 clean:
-	-rm -rf ${TARGET} ${OBJECTS}
+	-rm -rf ${TARGET} ${OBJ}
