@@ -13,6 +13,10 @@
         {
             "name": "oe_test_service_ipmievd",
             "machine type": "physical"
+        },
+        {
+            "name": "oe_test_service_ipmitool",
+            "machine type": "physical"
         }
     ]
 }
