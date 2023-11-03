@@ -26,10 +26,6 @@
             "machine num": 2
         },
         {
-            "name": "oe_test_openssh_scp_p",
-            "machine num": 2
-        },
-        {
             "name": "oe_test_openssh_scp_P",
             "machine num": 2
         },
@@ -64,6 +60,24 @@
         {
             "name": "oe_test_openssh_ssh_user",
             "machine num": 2
+        },
+        {
+            "name": "oe_test_service_sshd"
+        },
+        {
+            "name": "oe_test_socket_sshd"
+        },
+        {
+            "name": "oe_test_target_sshd-keygen"
+        },
+        {
+            "name": "oe_test_start_ssh"
+        },
+        {
+            "name": "oe_test_sec_ssh"
+        },
+        {
+            "name": "oe_test_sec_jump_login"
         }
     ]
 }

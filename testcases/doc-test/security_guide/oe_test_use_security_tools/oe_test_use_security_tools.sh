@@ -41,6 +41,7 @@ function run_test() {
 806@rm -f@/tmp/rm_test
 807@touch @/tmp/touch_test" >>/etc/openEuler_security/usr-security.conf
     systemctl restart openEuler-security.service
+    SLEEP_WAIT 10
     CHECK_RESULT $?
     grep 'size 2' /tmp/m_test && grep 'size 2048' /tmp/sm_test && grep 'key key2value2' /tmp/M_test && grep 'key key2value2' /tmp/M_test && ls /tmp/touch_test
     CHECK_RESULT $?
@@ -48,6 +49,7 @@ function run_test() {
     CHECK_RESULT $? 0 1
     grep '807@touch @/tmp/touch_test' /var/log/openEuler-security.log
     CHECK_RESULT $?
+    SLEEP_WAIT 1
     systemctl status httpd | grep running
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."

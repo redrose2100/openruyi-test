@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -21,20 +21,19 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     grep "testgroup:" /etc/group && groupdel testgroup
+    groupadd testgroup
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    groupadd testgroup
     grep "testgroup:" /etc/group
     CHECK_RESULT $?
     groupdel testgroup
     CHECK_RESULT $?
     grep "testgroup:" /etc/group
     CHECK_RESULT $? 1 0
-
-    groupdel --help
+    groupdel --help | grep "Usage: groupdel"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

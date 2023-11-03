@@ -33,7 +33,7 @@ function run_test() {
     mkdir /sftp
     chown root:root /sftp
     chmod 755 /sftp
-    ls -l / | grep sftp | grep "root root" | grep 'drwxr-xr-x'
+    ls -d /sftp && stat -c "%G %U %A" /sftp |grep "root root drwxr-xr-x"
     CHECK_RESULT $?
     useradd -g sftpgroup -s /sbin/nologin sftpuser
     grep "^sftpuser" /etc/passwd | grep "/sbin/nologin"
@@ -45,7 +45,7 @@ EOF
     mkdir /sftp/sftpuser
     chown root:root /sftp/sftpuser
     chmod 755 /sftp/sftpuser
-    ls -l /sftp | grep sftpuser | grep "root root" | grep 'drwxr-xr-x'
+    ls -d /sftp && stat -c "%G %U %A" /sftp |grep "root root drwxr-xr-x"
     CHECK_RESULT $?
     sed -i 's/Subsystem sftp \/usr\/libexec\/openssh\/sftp-server -l INFO -f AUTH/Subsystem sftp internal-sftp -l INFO -f AUTH/g' /etc/ssh/sshd_config
     echo -e "Match Group sftpgroup\\n    ChrootDirectory /sftp/%u\\n    ForceCommand internal-sftp" >>/etc/ssh/sshd_config
@@ -89,7 +89,7 @@ EOF
         }
         expect eof
 EOF
-    grep "stat remote file: No such file or directory" /home/sftpuser/testlog1
+    grep "No such file or directory" /home/sftpuser/testlog1
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }

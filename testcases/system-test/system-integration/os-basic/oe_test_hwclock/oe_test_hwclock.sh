@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -18,11 +18,16 @@
 # ############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-function run_test() {
-    LOG_INFO "Start to run test."
+function pre_test() {
+    LOG_INFO "Start to pre test."
     time=$(date "+%Y-%m-%d %H:%M:%S")
     time_D=$(date +"%y-%m-%d")
     time_HMS=$(date +"%H:")
+    LOG_INFO "End to pre test."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
     hwclock --systohc
     CHECK_RESULT $?
     hwclock | grep "${time_D}" | grep "${time_HMS}"

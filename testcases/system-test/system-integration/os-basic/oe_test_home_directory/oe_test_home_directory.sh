@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -23,14 +23,14 @@ function pre_test() {
     grep "testuser:" /etc/passwd && userdel -rf testuser
     grep "testuser:" /etc/group && groupdel testuser
     test -d /home/new_test && rm -rf /home/new_test
+    useradd testuser
+    mkdir /home/new_test -p
+    touch /home/testuser/testfile.txt
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    useradd testuser
-    mkdir /home/new_test -p
-    touch /home/testuser/testfile.txt
     grep testuser /etc/passwd | awk -F: '{print $6}' | grep "/home/testuser"
     CHECK_RESULT $?
     usermod -d /home/new_test testuser

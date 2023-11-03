@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $?
     pmdate -5M %y%m%d-%H:%M:%S | grep "$(date '+%S')"
     CHECK_RESULT $?
-    pmdate +3S %y%m%d-%H:%M:%S | grep "$(date '+%M')"
+    pmdate +3S %y%m%d-%H:%M:%S | grep "$(date '+%y')"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

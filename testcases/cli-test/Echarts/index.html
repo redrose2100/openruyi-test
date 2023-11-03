@@ -1,0 +1,6 @@
+<!doctype html><html>
+<head>    <meta charset="UTF-8" />    <title>echarts-demo</title>    <script type="text/javascript" src="echarts/dist/echarts.min.js"></script>    <style type="text/css">        html,        body {            margin: 0;            padding: 0;        }
+        #container {            width: 1000px;            margin: 0 auto;            background: #fafafc;            height: 400px;        }    </style></head>
+<body>    <div id="container"></div>    <script type="text/javascript">        var myChart = echarts.init(document.getElementById("container"));        var option = {            title: {                text: "销售额"            },            tooltip: {},            legend: {                data: ["销量"]            },            xAxis: {                data: ["1", "2", "3", "4"]            },            yAxis: {},            series: [{                name: 'mobile季度销量',                type: 'line',                data: [190, 220, 230, 250]            }]        };        myChart.setOption(option);
+    </script></body>
+</html>

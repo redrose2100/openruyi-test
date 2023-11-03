@@ -1,0 +1,13 @@
+<bibliography><title>Bibliography Example</title> 
+  <bibliodiv><title>References</title>
+    <biblioentry>
+      <title>Document Title</title>
+      <author><firstname>J.</firstname><surname>Doe</surname></author>
+      <pubsnumber>DEX000567325</pubsnumber>
+    </biblioentry>
+  </bibliodiv>
+  <bibliodiv><title>Bibtex References</title>
+    <bibliomixed><?bibtex bibfiles="ref" bibstyle="ieeetr"?></bibliomixed>
+  </bibliodiv>
+</bibliography>
+  

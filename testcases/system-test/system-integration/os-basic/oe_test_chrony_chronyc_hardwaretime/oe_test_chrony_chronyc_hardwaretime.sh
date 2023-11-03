@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -30,7 +30,7 @@ function run_test() {
     systemctl status chronyd | grep running
     CHECK_RESULT $?
 
-    SLEEP_WAIT 5 "chronyc ntpdata | grep 'Local address' | grep ${NODE1_IPV4} ; echo 'dfgfgfd'"
+    SLEEP_WAIT 5 "chronyc ntpdata | grep 'Local address'"
     CHECK_RESULT $?
 
     chronyc sourcestats | grep "Name/IP Address"

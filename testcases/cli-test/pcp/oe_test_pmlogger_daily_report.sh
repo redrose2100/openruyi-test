@@ -15,48 +15,55 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   (pcp-zeroconf) pmlogger_daily_report - write Performance Co-Pilot daily summary reports
 #####################################
-
+#shellcheck disable=SC2154,SC1091
 source "common/common_pcp.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
+    mkdir -p /var/log/pcp/ba
+    mkdir -p /usr/libexec/pcp/bin/
+    touch pmlogger_daily_report
+    chmod 744 pmlogger_daily_report
+    DNF_INSTALL "pcp-zeroconf"
+    mv pmlogger_daily_report  rm -rf /usr/libexec/pcp/bin/pmlogger_daily_report
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     /usr/libexec/pcp/bin/pmlogger_daily_report -a yesterday
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "-a option check failed" 
     test -d /var/log/pcp/sa
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "/var/log/pcp/sa check failed"
     /usr/libexec/pcp/bin/pmlogger_daily_report -f momo.txt
-    CHECK_RESULT $?
-    /usr/libexec/pcp/bin/pmlogger_daily_report -h $host_name
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "-f option check failed"
+    /usr/libexec/pcp/bin/pmlogger_daily_report -h "${host_name}"
+    CHECK_RESULT $? 0 0 "-h option check failed"
     /usr/libexec/pcp/bin/pmlogger_daily_report -l dailyReport.txt
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "-l option check failed"
     grep 'pmlogger_daily_report' dailyReport.txt
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "dailyReport.txt check failed"
     /usr/libexec/pcp/bin/pmlogger_daily_report -p
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "-p option check failed"
     /usr/libexec/pcp/bin/pmlogger_daily_report -o /var/log/pcp/ba/
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "-o option check failed"
     test -d /var/log/pcp/ba
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "/var/log/pcp/ba check failed"
     /usr/libexec/pcp/bin/pmlogger_daily_report -t 30
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "-t option check failed"
     /usr/libexec/pcp/bin/pmlogger_daily_report -AV
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "-AV option check failed"
     grep "REPORTDIR=/var/log/pcp/sa" /var/log/pcp/pmlogger/pmlogger_daily_report.log
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "pmlogger_daily_report.log check failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/log/pcp/ba momo.txt dailyReport.txt
-    DNF_REMOVE
+    rm -rf /usr/libexec/pcp/bin/pmlogger_daily_report
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -27,12 +27,13 @@ import paramiko
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
+
 import mugen_log
 
 NODE_DATA = {"ID": 1}
 
 
-def write_conf(ip, password, port=22, user="root"):
+def write_conf(ip, password, port=22, user="root", run_remote=False, copy_all=True):
     """写入测试环境的配置
 
     Args:
@@ -41,6 +42,10 @@ def write_conf(ip, password, port=22, user="root"):
         port (int, optional): 测试环境ssh端口号. Defaults to 22.
         user (str, optional): 测试环境用户名. Defaults to "root".
     """
+    if ip is None:
+        mugen_log.logging("error", "必要参数ip存在缺失.")
+        sys.exit(1)
+
     if not os.path.exists("/etc/mugen"):
         OET_PATH = os.environ.get("OET_PATH")
         if OET_PATH is None:
@@ -76,13 +81,24 @@ def write_conf(ip, password, port=22, user="root"):
 
     if subprocess.getstatusoutput("ip a | grep " + ip)[0] == 0:
         NODE_DATA["LOCALTION"] = "local"
+    elif run_remote:
+        NODE_DATA["LOCALTION"] = "local"
     else:
         NODE_DATA["LOCALTION"] = "remote"
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
     try:
-        ssh.connect(ip, port, user, password)
+        if password:
+            ssh.connect(ip, port, user, password)
+        else:
+            key_file = '/root/.ssh/id_rsa'
+            if os.path.exists(key_file):
+                pkey = paramiko.RSAKey.from_private_key_file(key_file)
+                ssh.connect(ip, port, user, pkey=pkey)
+            else:
+                print('配置免密，请先创建互信！')
+                sys.exit(1)
     except paramiko.ssh_exception.NoValidConnectionsError as e:
         mugen_log.logging("error", e)
         sys.exit(1)
@@ -102,14 +118,21 @@ def write_conf(ip, password, port=22, user="root"):
     stdin, stdout, stderr = ssh.exec_command("hostnamectl | grep 'Virtualization: kvm'")
     if stdout.read().decode("utf-8").strip("\n") == "":
         NODE_DATA.update({"MACHINE": "physical"})
+    elif run_remote:
+        NODE_DATA.update({"MACHINE": "physical"})
     else:
         NODE_DATA["MACHINE"] = "kvm"
+
+    stdin, stdout, stderr = ssh.exec_command(
+        "ip a | grep 'inet6' | grep -v 'scope host' | awk '{print $2}' | awk -F '/' '{print $1}' | head -n 1"
+    )
+    NODE_DATA["IPV6"] = stdout.read().decode("utf-8").strip("\n")
 
     stdin, stdout, stderr = ssh.exec_command("uname -m")
     NODE_DATA["FRAME"] = stdout.read().decode("utf-8").strip("\n")
 
     stdin, stdout, stderr = ssh.exec_command(
-        " ip route | grep " + ip + " | awk '{print $3}' | sort -u"
+        " ip route | grep " + ip + " | grep -v default | awk '{print $3}' | sort -u"
     )
     NODE_DATA["NIC"] = stdout.read().decode("utf-8").strip("\n")
 
@@ -136,11 +159,21 @@ def write_conf(ip, password, port=22, user="root"):
         NODE_DATA["BMC_USER"] = ""
         NODE_DATA["BMC_PASSWORD"] = ""
 
-    ENV_DATA["NODE"].append(NODE_DATA)
+    if run_remote :
+        NODE_DATA.update({"ID": 1})
+        if copy_all:
+            NODE_DATA["COPY_ALL"]="true"
+        for change_node in ENV_DATA["NODE"]:
+            change_node.update({"ID": change_node["ID"] + 1})
+        ENV_DATA["NODE"].insert(0, NODE_DATA)
+    else:
+        ENV_DATA["NODE"].append(NODE_DATA)
 
     with open(conf_path, "w") as f:
         f.write(json.dumps(ENV_DATA, indent=4))
         mugen_log.logging("info", "配置文件加载完成...")
+
+    sys.exit(0)
 
 
 if __name__ == "__main__":
@@ -149,6 +182,14 @@ if __name__ == "__main__":
     parser.add_argument("--password", type=str, default=None)
     parser.add_argument("--port", type=int, default=22)
     parser.add_argument("--user", type=str, default="root")
+    parser.add_argument("--run_remote", action='store_true')
+    parser.add_argument("--put_all", action='store_true')
+
     args = parser.parse_args()
 
-    write_conf(args.ip, args.password, args.port, args.user)
+    if not args.run_remote:
+        args.put_all = False
+    if not args.password:
+        args.password = ""
+
+    write_conf(args.ip, args.password, args.port, args.user, args.run_remote, args.put_all)

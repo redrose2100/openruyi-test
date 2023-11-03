@@ -38,12 +38,12 @@ EOF
     usermod -g wheel testuser
     groups testuser | grep "testuser : wheel"
     CHECK_RESULT $? 0 0 "usermod -g wheel testuser failed"
-    su testuser -c "echo ${NODE1_PASSWORD} | sudo -S ls /etc" 2>&1 | grep 'testuser is not in the sudoers file.  This incident will be reported.'
+    su testuser -c "echo ${NODE1_PASSWORD} | sudo -S ls /etc" 2>&1 | grep 'testuser is not in the sudoers file'
     CHECK_RESULT $? 0 1 "use sudo failed"
     sed -i '/wheel/s/^/#&/g' /etc/sudoers
     grep "^#%wheel" /etc/sudoers
     CHECK_RESULT $? 0 0 "grep #%wheel failed"
-    su testuser -c "echo ${NODE1_PASSWORD} | sudo -S ls /etc" 2>&1 | grep 'testuser is not in the sudoers file.  This incident will be reported.' 
+    su testuser -c "echo ${NODE1_PASSWORD} | sudo -S ls /etc" 2>&1 | grep 'testuser is not in the sudoers file' 
     CHECK_RESULT $? 0 0 "use sudo failed"
     LOG_INFO "Finish testcase execution."
 }

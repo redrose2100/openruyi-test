@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/pki-tools",
+    "cases": [
+        {
+            "name": "oe_test_pki-core"
+        }
+
+      ]
+}
+

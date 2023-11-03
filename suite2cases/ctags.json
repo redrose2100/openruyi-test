@@ -1,0 +1,8 @@
+{
+  "path": "$OET_PATH/testcases/cli-test/ctags",
+  "cases": [
+    {
+      "name": "oe_test_ctags"
+    }
+  ]
+}

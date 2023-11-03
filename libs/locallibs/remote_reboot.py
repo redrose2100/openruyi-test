@@ -67,6 +67,7 @@ def reboot_wait(node=2, wait_time=None):
                 os.environ.get("NODE" + str(node) + "_PASSWORD"),
                 os.environ.get("NODE" + str(node) + "_SSH_PORT"),
                 os.environ.get("NODE" + str(node) + "_USER"),
+                log_level="warn",
             )
             if conn:
                 if ssh_cmd.pssh_cmd(conn, "ls")[1]:
@@ -104,7 +105,7 @@ def remote_reboot(node=2, wait_time=None):
     )
     exitcode, error_output = ssh_cmd.pssh_cmd(conn, "reboot")
     ssh_cmd.pssh_close(conn)
-    if exitcode != -1:
+    if exitcode != -1 and exitcode != 0:
         mugen_log.logging("error", error_output)
         sys.exit(exitcode)
 

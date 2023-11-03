@@ -7,7 +7,7 @@
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
-# See the Mulan PSL v2 for more detaitest -f.
+# See the Mulan PSL v2 for more details.
 
 # #############################################
 # @Author    :   huangrong
@@ -17,25 +17,25 @@
 # @Desc      :   Test bacula-sd.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL bacula-client
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "bacula-client"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     test_execution bacula-sd.service
     test_reload bacula-sd.service
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

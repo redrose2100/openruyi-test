@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -18,13 +18,17 @@
 # ############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+function pre_test(){
+    LOG_INFO "Start to pre test."
+    localhost=$(hostname)
+    LOG_INFO "Start to pre test."
+}
 function run_test() {
     LOG_INFO "Start to run test."
     hostnamectl status
     CHECK_RESULT $?
-    localhost=$(hostnamectl status | sed -n 1p | cut -d ":" -f2)
     hostnamectl set-hostname my_host
-    hostnamectl status | grep "my_host"
+    hostnamectl | grep hostname | grep "my_host"
     CHECK_RESULT $?
     hostnamectl set-hostname "Tester's notebook" --pretty
     hostnamectl status | grep "Pretty hostname" | grep "Tester's notebook"
@@ -51,8 +55,26 @@ function run_test() {
 EOF
     grep -iE "fail|errot" testlog
     CHECK_RESULT $? 1
-    SSH_CMD "hostnamectl status" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | tail -n 10 | grep new_host
+    expect <<-EOF
+    spawn hostnamectl status -H root@${NODE2_IPV4}
+    log_file testlog1
+    expect {
+        "Are you sure you want to continue connecting*"
+        {
+            send "yes\r"
+            expect "*\[P|p]assword:"
+            send "${NODE2_PASSWORD}\r"
+        }
+        "*\[P|p]assword:"
+        {
+            send "${NODE2_PASSWORD}\r"
+        }
+    }
+    expect eof
+EOF
+    grep new_host testlog1
     CHECK_RESULT $?
+
     LOG_INFO "End to run test."
 }
 
@@ -75,7 +97,7 @@ function post_test() {
     }
     expect eof
 EOF
-    rm -f testlog
+    rm -rf testlog*
     LOG_INFO "End to restore the test environment."
 }
 

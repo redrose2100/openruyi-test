@@ -19,11 +19,31 @@
 
 source "../common/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    P_SSH_CMD --cmd "cp /etc/chrony.conf /etc/chrony.conf_bak;sed -i 's/^pool/#pool/' /etc/chrony.conf;sed -i 's/^#allow.*/allow all/' /etc/chrony.conf;sed -i 's/^#local.*/local/' /etc/chrony.conf;systemctl restart chronyd.service;systemctl stop firewalld.service" --node 2
+    cp /etc/chrony.conf /etc/chrony.conf_bak
+    sed -i 's/^pool.*/server '${NODE2_IPV4}' iburst minpoll 3 maxpoll 3/' /etc/chrony.conf
+    sed -i 's/^#allow.*/allow all/' /etc/chrony.conf
+    sed -i 's/^#local/local/' /etc/chrony.conf
+    systemctl restart chronyd.service
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
-    test_oneshot chrony-wait.service 'inactive (dead)'
+    test_execution chrony-wait.service
     test_reload chrony-wait.service
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    systemctl stop chrony-wait.service
+    \cp -f /etc/chrony.conf_bak /etc/chrony.conf
+    systemctl restart chronyd.service
+    P_SSH_CMD --cmd "\cp -f /etc/chrony.conf_bak /etc/chrony.conf;systemctl restart chronyd.service;systemctl start firewalld.service" --node 2
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

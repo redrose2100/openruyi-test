@@ -18,23 +18,40 @@
 # #############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-
+version=`uname -r | awk -F '-' {'print $1'}`
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL opencc
+    if [ $version == 5.10.0 ];then
+    cp /usr/share/opencc/HKVariantsRev.ocd2 /usr/share/opencc/HKVariantsRev.ocd2-bak
+    elif [ $version == 4.19.90 ];then
     cp /usr/share/opencc/HKVariantsRev.ocd /usr/share/opencc/HKVariantsRev.ocd-bak
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    opencc_dict -i /usr/share/opencc/HKVariantsRev.ocd -o /tmp/HKVariantsRev.txt-old -f ocd -t text
+    if [ $version == 5.10.0 ];then
+    opencc_dict -i /usr/share/opencc/HKVariantsRev.ocd2 -o /tmp/HKVariantsRev.txt-old -f ocd2 -t ocd2
+    CHECK_RESULT $?
+    test -f /tmp/HKVariantsRev.txt-old
     CHECK_RESULT $?
     sed -i 's/臺/臺\ 台/g' /tmp/HKVariantsRev.txt-old
     sed -i 's/纔/才\ 纔/g' /tmp/HKVariantsRev.txt-old
-    opencc_dict -i /tmp/HKVariantsRev.txt-old -o /usr/share/opencc/HKVariantsRev.ocd -f text -t ocd
+    opencc_dict -i /tmp/HKVariantsRev.txt-old -o /usr/share/opencc/HKVariantsRev.ocd2 -f ocd2 -t ocd2
     CHECK_RESULT $?
-    echo "臺" | opencc -c hk2s | opencc -c s2hk | grep '臺'
+    elif [ $version == 4.19.90 ];then
+    opencc_dict -i /usr/share/opencc/HKVariantsRev.ocd -o /tmp/HKVariantsRev.txt-old -f ocd -t text
+    CHECK_RESULT $?
+    test -f /tmp/HKVariantsRev.txt-old
+    CHECK_RESULT $?
+    sed -i 's/臺/臺\ 台/g' /tmp/HKVariantsRev.txt-old
+    sed -i 's/纔/才\ 纔/g' /tmp/HKVariantsRev.txt-old
+    opencc_dict -i /tmp/HKVariantsRev.txt-old -o /usr/share/opencc/HKVariantsRev.ocd2 -f ocd -t text
+    fi
+
+    echo "臺" | opencc -c hk2s | opencc -c s2hk | grep '台'
     CHECK_RESULT $?
     echo "台" | opencc -c hk2s | opencc -c s2hk | grep '台'
     CHECK_RESULT $?
@@ -44,6 +61,10 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE 1
     rm -rf /tmp/HKVariantsRev.txt-old
+    if [ $version == 5.10.0 ];then
+    cp /usr/share/opencc/HKVariantsRev.ocd2-bak /usr/share/opencc/HKVariantsRev.ocd2
+    if [ $version == 5.10.0 ];then
+    cp /usr/share/opencc/HKVariantsRev.ocd-bak /usr/share/opencc/HKVariantsRev.ocd
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

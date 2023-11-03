@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -29,7 +29,6 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl status chronyd | grep running
     CHECK_RESULT $?
-    rm -rf testlog
     expect -d <<ENF0
     spawn chronyc
     log_file testlog
@@ -51,7 +50,7 @@ ENF0
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf testlog
+    rm -rf ./testlog
     systemctl stop chronyd
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."

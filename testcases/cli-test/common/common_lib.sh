@@ -42,6 +42,7 @@ function test_restart() {
     CHECK_RESULT $? 0 0 "${service} stop failed"
     systemctl start "${service}"
     CHECK_RESULT $? 0 0 "${service} start failed"
+    SLEEP_WAIT 5
     systemctl status "${service}" | grep "Active: active"
     CHECK_RESULT $? 0 0 "${service} start failed"
 }
@@ -60,14 +61,15 @@ function test_enabled() {
     service=$1
     state=$(systemctl is-enabled "${service}")
     if [ "${state}" == "enabled" ]; then
-        symlink_file=$(systemctl disable "${service}" 2>&1 | awk '{print $2}' | awk '{print substr($0,1,length($0)-1)}')
+	symlink_file=$(systemctl disable "${service}" 2>&1 | grep "Removed" | awk '{print $2}' | 
+		awk '{print substr($0,1,length($0)-1)}')
         find ${symlink_file}
         CHECK_RESULT $? 0 1 "${service} disable failed"
         systemctl enable "${service}"
         find ${symlink_file}
         CHECK_RESULT $? 0 0 "${service} enable failed"
     elif [ "${state}" == "disabled" ]; then
-        symlink_file=$(systemctl enable "${service}" 2>&1 | awk '{print $3}')
+	symlink_file=$(systemctl enable "${service}" 2>&1 | grep "Created symlink" | awk '{print $3}')
         find ${symlink_file}
         CHECK_RESULT $? 0 0 "${service} enable failed"
         systemctl disable "${service}"

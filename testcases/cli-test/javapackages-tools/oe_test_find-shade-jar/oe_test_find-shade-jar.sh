@@ -22,6 +22,7 @@ source "../common/common_javapackages-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
+    DNF_INSTALL objectweb-asm3
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -31,7 +32,6 @@ function run_test() {
     CHECK_RESULT $?
     find-jar easymock | grep "/usr/share/java/easymock.jar"
     CHECK_RESULT $?
-
     mkdir -p com/example/shade/log4j lib
     shade-jar org.apache.log4j com.example.shaded.log4j /usr/share/java/log4j.jar lib/shaded-log4j.jar
     CHECK_RESULT $?
@@ -43,7 +43,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
+    DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

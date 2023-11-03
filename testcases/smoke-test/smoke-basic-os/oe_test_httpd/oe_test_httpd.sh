@@ -22,6 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "httpd curl"
+    getenforce | grep Enforcing && setenforce 0
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -31,7 +32,7 @@ function run_test() {
     CHECK_RESULT $?
     curl -o index.html localhost
     CHECK_RESULT $?
-    grep -q "openEuler" index.html
+    grep -q "Test Page" index.html
     CHECK_RESULT $?
     LOG_INFO "Finish test!"
 }
@@ -41,6 +42,7 @@ function post_test() {
     systemctl stop httpd
     rm -rf index.html
     DNF_REMOVE
+    getenforce | grep Enforcing || setenforce 1
     LOG_INFO "Finish environment cleanup!"
 }
 

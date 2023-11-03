@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -18,11 +18,15 @@
 # ############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-function run_test() {
-    LOG_INFO "Start to run test."
-    #500M
+function pre_test() {
+    LOG_INFO "Start to pre test."
     testfile1=myfile$(date +%Y%m%d)
     testfile2=mycpfile$(date +%Y%m%d)
+    LOG_INFO "Start to pre test."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
     for i in $(seq 1 10); do
         dd if=/dev/urandom of=${testfile1} bs=1M count=500
         CHECK_RESULT $?
@@ -48,7 +52,7 @@ function run_test() {
         rm -rf ${testfile1}.zip
         zip ${testfile1}.zip ${testfile1}
         CHECK_RESULT $?
-        ls ${testfile1}.zip
+        test -f ${testfile1}.zip
         CHECK_RESULT $?
     done
 

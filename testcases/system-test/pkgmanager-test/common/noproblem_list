@@ -1,0 +1,5 @@
+#! /usr/bin/bash
+# shellcheck disable=SC2034
+
+kernel_noproblem="Error! echo"
+python3-perf_noproblem="warning: /etc/tuned/profile_mode saved as /etc/tuned/profile_mode.rpmsave"

@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -29,6 +29,8 @@ function run_test() {
     systemctl enable --now tuned
     tuned-adm active | grep 'Current active profile' | grep -iE 'virtual-guest|throughput-performance'
     CHECK_RESULT $?
+    systemctl restart tuned
+    sleep 1
     tuned-adm verify | grep succeeded
     CHECK_RESULT $?
     LOG_INFO "End to run test."

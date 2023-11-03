@@ -18,11 +18,11 @@
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-origin_file="/etc/openEuler-release"
+origin_file="/etc/os-release"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL lzop
+    DNF_INSTALL "lzop diffutils"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -45,8 +45,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf test test.lzo
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

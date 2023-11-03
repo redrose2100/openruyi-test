@@ -19,11 +19,29 @@
 
 source "../common/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    if ! lsmod | grep bluetooth; then
+        LOG_INFO "The environment does not support testing"
+        exit 0
+    else
+        DNF_INSTALL bluez
+        hciconfig
+    fi
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution bluetooth-mesh.service
     test_reload bluetooth-mesh.service
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

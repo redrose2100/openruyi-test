@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -18,11 +18,15 @@
 # ############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+function pre_test(){
+    LOG_INFO "Start to pre test."
+    id_num=$(id | grep -iE 'uid|gid' | awk -F "=" '{print$2}' | awk -F '(' '{print$1}')
+    LOG_INFO "Start to pre test."
+}
 function run_test() {
     LOG_INFO "Start to run test."
     id | grep -iE 'uid|gid'
     CHECK_RESULT $?
-    id_num=$(id | grep -iE 'uid|gid' | awk -F "=" '{print$2}' | awk -F '(' '{print$1}')
     id -g | grep "${id_num}"
     CHECK_RESULT $?
     id -G | grep "${id_num}"

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- books.xml. An example of set. All the books have an @id except one -->
+
+<!DOCTYPE set PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<set lang="en" id="a_set" xmlns:xi="http://www.w3.org/2001/XInclude">
+<title>Set Title</title>
+  <set>
+      <xi:include href="test.inclue1.xml"/>   <!-- book #1 -->
+      <xi:include href="test.inclue2.xml"/>   <!-- book #2 -->
+  </set>
+</set>

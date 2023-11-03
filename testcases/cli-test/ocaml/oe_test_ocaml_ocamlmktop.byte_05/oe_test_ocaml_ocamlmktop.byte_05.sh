@@ -20,6 +20,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL ocaml
     cp ../a.c ../example.ml ../hello.ml ./
     LOG_INFO "End to prepare the test environment."
@@ -46,7 +48,7 @@ function run_test() {
     CHECK_RESULT $?
     ocamlmktop.byte -version example.ml | grep $ocaml_version
     CHECK_RESULT $?
-    ocamlmktop.byte -v a.c | grep -E "version|Standard library directory"
+    ocamlmktop.byte -v | grep -E "version|Standard library directory"
     CHECK_RESULT $?
     ocamlmktop.byte -verbose a.c 2>&1 | grep "gcc"
     CHECK_RESULT $?
@@ -55,6 +57,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    export LANG=${OLD_LANG}
     DNF_REMOVE
     rm -rf ./a* ./example* ./hello*
     LOG_INFO "End to restore the test environment."

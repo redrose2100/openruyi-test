@@ -1,0 +1,44 @@
+#!/usr/bin/bash
+
+#Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   xiechangyan1
+# @Contact   :   xiechangyan@uniontech.com
+# @Date      :   2023-03-24
+# @License   :   Mulan PSL v2
+# @Desc      :   Use lua case
+# ############################################
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function run_test() {
+    LOG_INFO "Start to run test."
+    lua -v
+    CHECK_RESULT $? 0 0 "please reinstall lua"
+    lua -e'a=666' -e 'print(a)' | grep 666
+    CHECK_RESULT $? 0 0 "please Check grammar"
+    cat >  hello.lua << EOF
+#!/bin/lua
+print("Hello World!")
+EOF
+    CHECK_RESULT $? 0 0 "Fail to create hello.lua"
+    lua hello.lua |grep "Hello World!"
+    CHECK_RESULT $? 0 0 "check file hello.lua"
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    rm hello.lua
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"

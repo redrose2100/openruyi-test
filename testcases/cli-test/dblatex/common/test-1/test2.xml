@@ -1,0 +1,24 @@
+<para>
+   A bibliography (<sgmltag>bibliography</sgmltag>) can be written and put anywhere in the document. It appears as a chapter or a section and is composed by several divisions (<sgmltag>bibliodiv</sgmltag>) displayed as sections or subsections.
+  </para>
+  <section><title>Using Bibliography Entries</title>
+  <para>
+   The writer selects information that describes each bibliography entry (<sgmltag>biblioentry</sgmltag>), and chooses the presentation order. The titles and authors are displayed first.
+  </para>
+  
+<example><title>A Bibliography</title>
+  <programlisting>
+<![CDATA[<bibliography><title>Bibliography Example</title> 
+  <bibliodiv><title>References</title>
+    <biblioentry>
+      <title>Document title</title>
+      <author><firstname>J.</firstname><surname>Doe</surname></author>
+      <pubsnumber>DEX000567325</pubsnumber>
+    </biblioentry>
+  </bibliodiv>
+  <bibliodiv><title>White papers</title>
+    <biblioentry>
+      <title>Technical notes</title>
+      <authorgroup>
+        <author><firstname>J.</firstname><surname>Doe</surname></author>
+        <author><firstname>R.</firstname><surname>Marion</surname>
