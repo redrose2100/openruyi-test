@@ -22,7 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     echo "AAA" > /tmp/test.txt
-    bzip2 -c test.txt > /tmp/test.bz2
+    bzip2 -c /tmp/test.txt > /tmp/test.bz2
     LOG_INFO "End to prepare the test environment."
 }
 
