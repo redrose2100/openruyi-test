@@ -184,5 +184,5 @@ function start_gauss_client() {
 function clean_gauss_client() {
     SSH_CMD "ps aux | grep -v grep | grep runBenchmark | awk '{print $2}' | xargs kill -9" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "cd benchmarksql-5.0/run;sh runDatabaseDestroy.sh props.pg" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SSH_CMD "rm -rf benchmarksql-5.0.tar.gz" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "rm -rf benchmarksql-5.0.zip" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 }
