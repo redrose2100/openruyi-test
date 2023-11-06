@@ -192,6 +192,9 @@
         },
 	{
             "name": "oe_test_FSIO_create_squashfs"
+	},
+	{
+            "name": "oe_test_FSIO_mount_tmpfs"
 	}
     ]
 }
