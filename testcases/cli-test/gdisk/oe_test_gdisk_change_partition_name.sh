@@ -16,7 +16,7 @@
 # #############################################
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
-.common_lib.sh
+source ./common_lib.sh
 
 function pre_test() {
 	DNF_INSTALL gdisk
