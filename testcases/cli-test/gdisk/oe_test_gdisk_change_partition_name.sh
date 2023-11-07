@@ -14,6 +14,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   gdisk change partition name test
 # #############################################
+#shellcheck disable=SC2120
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "${OET_PATH}"/testcases/cli-test/gdisk/common_lib.sh
