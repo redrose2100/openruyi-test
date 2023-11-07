@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/gdisk",
+    "cases": [
+        {
+            "name": "oe_test_gdisk_change_partition_name"
+        }
+
+    ]
+}
