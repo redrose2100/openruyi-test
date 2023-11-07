@@ -25,7 +25,7 @@ function pre_test() {
 }
 
 function run_test() {
-	create_partition
+	create_partition "$@"
 	lsblk | grep "${unused_disk#/dev/}1"
 	CHECK_RESULT $?
 	expect <<-END
@@ -45,7 +45,7 @@ function run_test() {
 		exit
 	END
 	grep "8300 test_name" gdisk_file
-	delete_partition
+	delete_partition "$@"
 	lsblk | grep "${unused_disk#/dev/}1"
 	CHECK_RESULT $? 0 1
 }
