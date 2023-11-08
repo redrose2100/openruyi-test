@@ -19,11 +19,9 @@
 
 import sys
 import os
-import json
-import socket
 import subprocess
 import argparse
-import paramiko
+
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
