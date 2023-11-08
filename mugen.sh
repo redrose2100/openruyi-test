@@ -51,7 +51,7 @@ function usage() {
     -s: runing test case at remote NODE1
     -m: Modify the configuration file that comes with the test case
     \n
-    Example: 
+    Example:
         run all cases:
           normal mode:
             bash mugen.sh -a
@@ -69,7 +69,7 @@ function usage() {
             bash mugen.sh -f test_suite -r test_case
           debug mode:
             bash mugen.sh -f test_suite -r test_case -x
-        
+
         run at remote:
           normal mode:
             bash mugen.sh -a -s
@@ -82,7 +82,7 @@ function usage() {
         \n
 	configure env of test framework:
 	    bash mugen.sh -c --ip \$ip --password \$passwd --user \$user --port \$port\n
-          if want run at remote should add --run_remote 
+          if want run at remote should add --run_remote
           if want run at remote copy all testcase once add --put_all
     \n
     configure env of test case:
@@ -163,7 +163,7 @@ function exec_case() {
     exec 2>&7 7>&-
 
     test "$ret_code"x == "143"x && {
-        cmd_pid=$(pgrep "$cmd")
+        cmd_pid=$(pgrep -f "$cmd")
         if [ -n "$cmd_pid" ]; then
             for pid in ${cmd_pid}; do
                 pstree -p "$pid" | grep -o '([0-9]*)' | tr -d '()' | xargs kill -9
