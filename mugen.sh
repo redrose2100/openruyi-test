@@ -76,9 +76,9 @@ function usage() {
             bash mugen.sh -f test_suite -s
             bash mugen.sh -f test_suite -r test_case -s
           debug mode:
-            bash mugen.sh -a -s
-            bash mugen.sh -f test_suite -s
-            bash mugen.sh -f test_suite -r test_case -s
+            bash mugen.sh -a -s -x
+            bash mugen.sh -f test_suite -s -x
+            bash mugen.sh -f test_suite -r test_case -s -x
         \n
 	configure env of test framework:
 	    bash mugen.sh -c --ip \$ip --password \$passwd --user \$user --port \$port\n
