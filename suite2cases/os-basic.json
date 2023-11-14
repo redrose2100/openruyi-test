@@ -803,6 +803,9 @@
 	},
 	{
 	    "name": "oe_test_fdupes"
+	},
+	{
+	    "name": "oe_test_enchant2"
 	}
     ]
 }
