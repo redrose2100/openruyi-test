@@ -25,6 +25,9 @@
 	},
         {
 	    "name": "oe_test_jpegoptim_08"
-        }    
+        },
+	{
+	    "name": "oe_test_jpegoptim_09"
+        }	    
     ]
 }
