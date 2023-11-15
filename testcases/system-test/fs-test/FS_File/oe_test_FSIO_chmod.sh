@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-chmod
 # ############################################
+# shellcheck disable=SC1091,SC2010
 
 source ../common_lib/fsio_lib.sh
 
@@ -23,42 +24,42 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     cur_date=$(date +%Y%m%d%H%M%S)
     testdir="test01"$cur_date
-    ls /tmp/$testdir && rm -rf /tmp/$testdir
+    ls /tmp/"$testdir" && rm -rf /tmp/"$testdir"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to test."
-    mkdir -p /tmp/$testdir/test02/test03
-    touch /tmp/$testdir/test02/test02.txt
-    touch /tmp/$testdir/test02/test03/test03.txt
+    mkdir -p /tmp/"$testdir"/test02/test03
+    touch /tmp/"$testdir"/test02/test02.txt
+    touch /tmp/"$testdir"/test02/test03/test03.txt
     per01=$(ls -l /tmp | grep "$testdir" | awk '{print $1}')
-    per02=$(ls -l /tmp/$testdir | grep "test02" | awk '{print $1}')
+    per02=$(ls -l /tmp/"$testdir" | grep "test02" | awk '{print $1}')
     [[ "$per01" =~ "drwxr-xr-x" ]]
     CHECK_RESULT $? 0 0 "The access of /tmp is error."
-    chmod 777 /tmp/$testdir
+    chmod 777 /tmp/"$testdir"
     per03=$(ls -l /tmp | grep "$testdir" | awk '{print $1}')
-    per04=$(ls -l /tmp/$testdir | grep "test02" | awk '{print $1}')
+    per04=$(ls -l /tmp/"$testdir" | grep "test02" | awk '{print $1}')
     [[ "$per03" =~ "drwxrwxrwx" ]]
     CHECK_RESULT $? 0 0 "The access of /tmp is error."
     [ "$per02" == "$per04" ]
     CHECK_RESULT $? 0 0 "The access of /tmp/$testdir is error."
-    chmod +x /tmp/$testdir/test02/test03/test03.txt
-    per08=$(ls -l /tmp/$testdir/test02/test03 | grep "test03.txt" | awk '{print $1}')
-    [[ "$per08" =~ "-rwxr-xr-x." ]]
+    chmod +x /tmp/"$testdir"/test02/test03/test03.txt
+    per08=$(ls -l /tmp/"$testdir"/test02/test03 | grep "test03.txt" | awk '{print $1}')
+    [[ "$per08" =~ "-rwxr-xr-x" ]]
     CHECK_RESULT $? 0 0 "The access of /tmp/$testdir/test02/test03/test03.txt is error."
-    chmod u-x /tmp/$testdir/test02/test03/test03.txt
-    per09=$(ls -l /tmp/$testdir/test02/test03 | grep "test03.txt" | awk '{print $1}')
+    chmod u-x /tmp/"$testdir"/test02/test03/test03.txt
+    per09=$(ls -l /tmp/"$testdir"/test02/test03 | grep "test03.txt" | awk '{print $1}')
     [[ "$per09" =~ "-rw-r-xr-x" ]]
     CHECK_RESULT $? 0 0 "The access of /tmp/$testdir/test02/test03/test03.txt is error."
-    chmod o-w /tmp/$testdir/test02/test03/test03.txt
-    per10=$(ls -l /tmp/$testdir/test02/test03 | grep "test03.txt" | awk '{print $1}')
+    chmod o-w /tmp/"$testdir"/test02/test03/test03.txt
+    per10=$(ls -l /tmp/"$testdir"/test02/test03 | grep "test03.txt" | awk '{print $1}')
     [[ "$per10" =~ "-rw-r-xr-x" ]]
     CHECK_RESULT $? 0 0 "The access of /tmp/$testdir/test02/test03/test03.txt is error."
-    chmod -R 777 /tmp/$testdir
+    chmod -R 777 /tmp/"$testdir"
     per05=$(ls -l /tmp/ | grep "$testdir" | awk '{print $1}')
-    per06=$(ls -l /tmp/$testdir | grep "test02" | awk '{print $1}')
-    per07=$(ls -l /tmp/$testdir/test02/ | grep "test02.txt" | awk '{print $1}')
+    per06=$(ls -l /tmp/"$testdir" | grep "test02" | awk '{print $1}')
+    per07=$(ls -l /tmp/"$testdir"/test02/ | grep "test02.txt" | awk '{print $1}')
     [[ "$per05" =~ "drwxrwxrwx" ]]
     CHECK_RESULT $? 0 0 "The access of /tmp is error."
     [[ "$per06" =~ "drwxrwxrwx" ]]
@@ -72,9 +73,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf /tmp/$testdir
+    rm -rf /tmp/"$testdir"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
-
+main "$@"
