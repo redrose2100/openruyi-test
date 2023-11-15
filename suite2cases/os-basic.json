@@ -809,6 +809,9 @@
 	},
         {
 	    "name": "oe_test_hexdump"
+	},
+        {
+	    "name": "oe_test_logsave"
 	}
     ]
 }
