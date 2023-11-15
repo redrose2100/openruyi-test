@@ -812,6 +812,9 @@
 	},
         {
 	    "name": "oe_test_logsave"
-	}
+	},
+	{
+            "name": "oe_test_brotli_003"
+        }
     ]
 }
