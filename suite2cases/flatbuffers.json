@@ -6,6 +6,9 @@
 	},
 	{
 	    "name": "oe_test_flatbuffers_01"
+	},
+	{
+	    "name": "oe_test_flatbuffers_02"
         }
     ]
 }
