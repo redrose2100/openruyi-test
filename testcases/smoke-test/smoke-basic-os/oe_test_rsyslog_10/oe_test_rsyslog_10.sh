@@ -28,7 +28,7 @@ function pre_test() {
     DNF_INSTALL rsyslog
     systemctl start rsyslog
     old_id=$(pgrep rsyslog)
-    old_timezone=$(date | awk '{print $6}')
+    old_timezone=$(date | awk '{print $4}')
     old_zone=$(timedatectl | grep "Time zone" | awk '{print $3}')
     rm -rf /etc/localtime
     cp -f /var/log/messages /var/log/messages.bak
