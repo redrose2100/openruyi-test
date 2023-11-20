@@ -32,6 +32,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Optimize graphic error reporting"
     jpegoptim --csv common/test.jpg
     CHECK_RESULT $? 0 0 "Jpegoptim - h execution failed"
+    mkdir -p common/test
     jpegoptim -s -m60 --dest=common/test   common/*.jpg |grep "OK"
     CHECK_RESULT $? 0 0 "View version error"
     LOG_INFO "End to run test."
@@ -40,6 +41,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
+    rm -rf  common/test
     LOG_INFO "End to restore the test environment."
 }
 
