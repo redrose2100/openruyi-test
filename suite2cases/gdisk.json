@@ -3,7 +3,9 @@
     "cases": [
         {
             "name": "oe_test_gdisk_change_partition_name"
-        }
-
+        },
+	{
+	    "name": "oe_test_gdisk_verify_disk"
+	}
     ]
 }
