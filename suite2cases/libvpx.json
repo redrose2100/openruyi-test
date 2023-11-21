@@ -30,6 +30,9 @@
         },
         {
             "name": "oe_test_decode_to_md5"
+        },
+        {
+            "name": "oe_test_libvpx"
         }
     ]
 }
