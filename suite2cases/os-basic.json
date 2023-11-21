@@ -815,6 +815,9 @@
 	},
 	{
             "name": "oe_test_brotli_003"
-        }
+        },
+	{
+	    "name": "oe_test_libidn"
+	}
     ]
 }
