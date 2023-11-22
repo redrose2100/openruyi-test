@@ -6,6 +6,12 @@
         },
 	{
 	    "name": "oe_test_gdisk_verify_disk"
+	},
+	{
+	    "name": "oe_test_gdisk_check_partition_info"
+	},
+	{
+	    "name": "oe_test_gdisk_change_partition_type_code"
 	}
     ]
 }
