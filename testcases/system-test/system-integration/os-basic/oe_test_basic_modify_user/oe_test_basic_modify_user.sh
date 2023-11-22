@@ -17,36 +17,38 @@
 # @Desc      :   Modify User test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    grep -w testuser1 /etc/passwd && userdel testuser1
+    grep -w testuser /etc/passwd && userdel testuser
+    grep -w testuser /etc/group && groupdel testuser
     grep -w testgroup1 /etc/group && groupdel testgroup1
-    useradd -u 555 testuser
-    groupmod -g 555 testuser
-    groupadd -g 72 testgroup1
+    useradd -u 1015 testuser
+    groupmod -g 1015 testuser
+    groupadd -g 1072 testgroup1
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    usermod -u 666 testuser
-    grep -w testuser /etc/passwd | awk -F : '{print$3}' | grep 666
-    CHECK_RESULT $?
-    usermod -g 72 testuser
-    CHECK_RESULT $?
-    grep testuser /etc/passwd | awk -F : '{print$4}' | grep 72
-    CHECK_RESULT $?
-    usermod --help | grep Usage
-    CHECK_RESULT $?
+    usermod -u 1016 testuser
+    grep -w testuser /etc/passwd | awk -F : '{print$3}' | grep 1016
+    CHECK_RESULT $? 0 0 "check user id from /etc/passwd error"
+    usermod -g 1072 testuser
+    CHECK_RESULT $? 0 0 "modify group id error"
+    grep testuser /etc/passwd | awk -F : '{print$4}' | grep 1072
+    CHECK_RESULT $? 0 0 "check group id from /etc/passwd error"
+    usermod --help | grep -E "用法|Usage"
+    CHECK_RESULT $? 0 0 "check --help msg error" 
     LOG_INFO "End of testcase execution!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -r testuser
+    groupdel testuser
     groupdel testgroup1
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
