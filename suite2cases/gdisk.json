@@ -12,6 +12,9 @@
 	},
 	{
 	    "name": "oe_test_gdisk_change_partition_type_code"
+	},
+	{
+	    "name": "oe_test_gdisk_create_partition"
 	}
     ]
 }
