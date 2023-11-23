@@ -14,7 +14,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   gdisk change partition name test
 # #############################################
-#shellcheck disable=SC2120
+#shellcheck disable=SC2120,SC2119
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "${OET_PATH}"/testcases/cli-test/gdisk/common_lib.sh
@@ -26,7 +26,7 @@ function pre_test() {
 }
 
 function run_test() {
-	create_partition "$@"
+	create_partition
 	lsblk | grep "${unused_disk#/dev/}1"
 	CHECK_RESULT $?
 	expect <<-END
@@ -46,7 +46,7 @@ function run_test() {
 		exit
 	END
 	grep "8300 test_name" gdisk_file
-	delete_partition "$@"
+	delete_partition
 	lsblk | grep "${unused_disk#/dev/}1"
 	CHECK_RESULT $? 0 1
 }

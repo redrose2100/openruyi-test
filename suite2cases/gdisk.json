@@ -15,6 +15,9 @@
 	},
 	{
 	    "name": "oe_test_gdisk_create_partition"
+	},
+	{
+	    "name": "oe_test_gdisk_create_partition_128"
 	}
     ]
 }
