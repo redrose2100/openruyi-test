@@ -36,6 +36,9 @@
 	},
 	{
 	    "name": "oe_test_sgdisk_check_partition_info"
+	},
+	{
+	    "name": "oe_test_sgdisk_create_partition"
 	}
     ]
 }
