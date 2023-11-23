@@ -24,6 +24,9 @@
 	},
 	{
 	    "name": "oe_test_sgdisk_backup_and_restore"
+	},
+	{
+	    "name": "oe_test_sgdisk_change_disk_guid"
 	}
     ]
 }
