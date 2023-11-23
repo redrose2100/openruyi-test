@@ -21,6 +21,9 @@
 	},
 	{
 	    "name": "oe_test_gdisk_sort_partition"
+	},
+	{
+	    "name": "oe_test_sgdisk_backup_and_restore"
 	}
     ]
 }
