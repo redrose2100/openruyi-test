@@ -39,6 +39,9 @@
 	},
 	{
 	    "name": "oe_test_sgdisk_create_partition"
+	},
+	{
+	    "name": "oe_test_sgdisk_sort_partition"
 	}
     ]
 }
