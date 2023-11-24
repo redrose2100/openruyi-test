@@ -6,6 +6,9 @@
 		},
 		{
 		    "name": "oe_test_flex_debugging"
+		},
+		{
+		    "name": "oe_test_flex_filetest"
 		}
 	]
 }
