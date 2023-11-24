@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Run bzip2 testsuite
 #####################################
-
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
 # 测试点的执行
