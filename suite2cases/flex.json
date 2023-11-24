@@ -3,6 +3,9 @@
 	"cases": [
 		{
 		    "name": "oe_test_flex_analyzer"
+		},
+		{
+		    "name": "oe_test_flex_debugging"
 		}
 	]
 }
