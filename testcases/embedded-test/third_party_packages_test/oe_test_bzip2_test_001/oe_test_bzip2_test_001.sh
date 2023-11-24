@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -9,20 +9,20 @@
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
 ####################################
-#@Author    	:   s-c-c
+#@Author    	:   wangshan
 #@Contact   	:   123456789@qq.com
 #@Date      	:   2023-11-24 14:39:43
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Run bzip2 testsuite
 #####################################
 
-source ../comm_lib.sh
+source  ../comm_lib.sh
 
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run bzip2 test."
 
-    pushd ./tmp_test
+    pushd ./tmp_test || exit
 
     chmod +x bzip2 sample*
 
@@ -57,7 +57,7 @@ function run_test() {
     ${CAPLIBNAME[0]} --help
     CHECK_RESULT $? 0 0 "run ${CAPLIBNAME[0]} --help failed!"
 
-    popd
+    popd || exit
 
     LOG_INFO "End to run bzip2 test."
 }
