@@ -16,27 +16,27 @@
 #@Desc      	:   Run bzip2 testsuite
 #####################################
 
-source  ../comm_lib.sh
+source ../comm_lib.sh
 
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run bzip2 test."
+    bzip2 --help || exit
 
     pushd ./tmp_test || exit
+    chmod +x sample*
 
-    chmod +x bzip2 sample*
-
-    ./bzip2 -1 <sample1.ref >sample1.rb2
+    bzip2 -1 <sample1.ref >sample1.rb2
     CHECK_RESULT $? 0 0 "run sample1.ref failed!"
-    ./bzip2 -2 <sample2.ref >sample2.rb2
+    bzip2 -2 <sample2.ref >sample2.rb2
     CHECK_RESULT $? 0 0 "run sample2.ref failed!"
-    ./bzip2 -3 <sample3.ref >sample3.rb2
+    bzip2 -3 <sample3.ref >sample3.rb2
     CHECK_RESULT $? 0 0 "run sample3.ref failed!"
-    ./bzip2 -d <sample1.bz2 >sample1.tst
+    bzip2 -d <sample1.bz2 >sample1.tst
     CHECK_RESULT $? 0 0 "run sample1.bz2 failed!"
-    ./bzip2 -d <sample2.bz2 >sample2.tst
+    bzip2 -d <sample2.bz2 >sample2.tst
     CHECK_RESULT $? 0 0 "run sample2.bz2 failed!"
-    ./bzip2 -ds <sample3.bz2 >sample3.tst
+    bzip2 -ds <sample3.bz2 >sample3.tst
     CHECK_RESULT $? 0 0 "run sample3.bz2 failed!"
 
     cmp sample1.bz2 sample1.rb2
@@ -52,12 +52,7 @@ function run_test() {
     cmp sample3.tst sample3.ref
     CHECK_RESULT $? 0 0 "run cmp sample3.tst sample3.ref failed!"
 
-    CAPLIBNAME=($(find / -name "bzip2"))
-
-    ${CAPLIBNAME[0]} --help
-    CHECK_RESULT $? 0 0 "run ${CAPLIBNAME[0]} --help failed!"
-
-    popd || exit
+    popd || return
 
     LOG_INFO "End to run bzip2 test."
 }
