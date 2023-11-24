@@ -1,0 +1,8 @@
+{
+	"path": "${OET_PATH}"/testcases/cli-test/flex",
+	"cases": [
+		{
+		    "name": "oe_test_flex_analyzer"
+		}
+	]
+}
