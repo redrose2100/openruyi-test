@@ -12,6 +12,9 @@
 		},
 		{
 		    "name": "oe_test_flex_scanner"
+		},
+		{
+		    "name": "oe_test_flex_generated_code"
 		}
 	]
 }
