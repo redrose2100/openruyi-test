@@ -9,6 +9,9 @@
 		},
 		{
 		    "name": "oe_test_flex_filetest"
+		},
+		{
+		    "name": "oe_test_flex_scanner"
 		}
 	]
 }
