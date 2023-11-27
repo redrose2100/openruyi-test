@@ -15,6 +15,9 @@
 	},
 	{
 	    "name": "oe_test_thrift_generate_javacode"
+	},
+	{
+	    "name": "oe_test_thrift_generate_jscode"
 	}
     ]
 }
