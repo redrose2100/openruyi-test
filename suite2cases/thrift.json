@@ -6,5 +6,9 @@
         },
 	{
 	    "name": "oe_test_thrift_generate_cppcode"
+	},
+	{
+	    "name": "oe_test_thrift_generate_pycode"
 	}
     ]
+}
