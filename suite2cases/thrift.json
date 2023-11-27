@@ -21,6 +21,9 @@
 	},
 	{
 	    "name": "oe_test_thrift_generate_htmlcode"
+	},
+	{
+	    "name": "oe_test_thrift_generate_phpcode"
 	}
     ]
 }
