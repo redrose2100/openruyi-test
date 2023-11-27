@@ -24,6 +24,12 @@
 	},
 	{
 	    "name": "oe_test_thrift_generate_phpcode"
+	},
+	{
+	    "name": "oe_test_thrift_generate_xmlcode"
+	},
+	{
+	    "name": "oe_test_thrift_generate_rbcode"
 	}
     ]
 }
