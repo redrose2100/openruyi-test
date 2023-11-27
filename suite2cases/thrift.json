@@ -3,6 +3,8 @@
     "cases": [
         {
             "name": "oe_test_thrift_version"
-        }
+        },
+	{
+	    "name": "oe_test_thrift_generate_cppcode"
+	}
     ]
-}
