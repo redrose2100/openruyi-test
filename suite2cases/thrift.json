@@ -30,6 +30,9 @@
 	},
 	{
 	    "name": "oe_test_thrift_generate_rbcode"
+	},
+	{
+	    "name": "oe_test_thrift_generate_luacode"
 	}
     ]
 }
