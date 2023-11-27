@@ -9,6 +9,9 @@
 	},
 	{
 	    "name": "oe_test_thrift_generate_pycode"
+	},
+	{
+	    "name": "oe_test_thrift_generate_gocode"
 	}
     ]
 }
