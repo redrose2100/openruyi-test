@@ -12,6 +12,9 @@
 	},
 	{
 	    "name": "oe_test_thrift_generate_gocode"
+	},
+	{
+	    "name": "oe_test_thrift_generate_javacode"
 	}
     ]
 }
