@@ -15,14 +15,16 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Run bzip2 testsuite
 #####################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2181
 source ../comm_lib.sh
 
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run bzip2 test."
     pushd ./tmp_test || exit
-    if [ ! "$(bzip2 --help)" -eq "0" ]; then
+
+    bzip2 --help
+    if [ ! $? -eq 0 ]; then
         LOG_WARN "The bzip2 file does not exist."
     else
         chmod +x sample*
