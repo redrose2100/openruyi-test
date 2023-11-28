@@ -22,9 +22,7 @@ source ../comm_lib.sh
 function run_test() {
     LOG_INFO "Start to run bzip2 test."
     pushd ./tmp_test || exit
-
-    bzip2 --help
-    if [ ! $? -eq 0 ]; then
+    if ! "$(bzip2 --help)"; then
         LOG_WARN "The bzip2 file does not exist."
     else
         chmod +x sample*
