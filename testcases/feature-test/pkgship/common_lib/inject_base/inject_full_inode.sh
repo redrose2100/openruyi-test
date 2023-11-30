@@ -20,6 +20,7 @@ function inject_full_inode() {
     test_dir=$1
     mkdir -p /boot/"$test_dir"/testSpace
     i=0
+    exitcode=0
     while [[ "$exitcode" == "0" ]]; do
         i=$((i + 1))
         touch /boot/"$test_dir"/testSpace/testsFile$i
