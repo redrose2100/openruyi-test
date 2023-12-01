@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     DNF_INSTALL thrift
-    cp ../common/test.thrift .
+    cp ./common/test.thrift .
 }
 
 function run_test() {
@@ -35,6 +35,7 @@ function run_test() {
 function post_test() {
     DNF_REMOVE
     rm -rf gen-*
+    rm -f test.thrift
 }
 
 main "$@"

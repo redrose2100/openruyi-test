@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     DNF_INSTALL thrift
-    cp ../common/test.thrift .
+    cp ./common/test.thrift .
 }
 
 function run_test() {
@@ -28,13 +28,14 @@ function run_test() {
     CHECK_RESULT $? 0
     ls -l gen-py
     CHECK_RESULT $? 0
-    ls gen-py/HelloService.py
+    ls gen-py/test/HelloService.py
     CHECK_RESULT $? 0
 }
 
 function post_test() {
     DNF_REMOVE
     rm -rf gen-*
+    rm -f test.thrift
 }
 
 main "$@"
