@@ -1,0 +1,23 @@
+#: ../extract.xml.h:1
+msgid "<big>hello, i am xml1</big>"
+msgstr ""
+
+#: ../extract.xml.h:2
+msgid "<big>hello, i am xml2</big>"
+msgstr "<big>hello, i am xml__2</big>"
+
+#: ../extract.xml.h:3
+msgid "<big>hello, i am xml3</big>"
+msgstr "<big>hello, i am xml__3</big>"
+
+#: ../extract.xml.h:4
+msgid "<big>hello, i am xml4</big>"
+msgstr ""
+
+#: ../extract.xml.h:5
+#, fuzzy
+msgid "<big>hello, i am xml5</big>"
+msgstr "<big>hello, i am xml__2</big>"
+
+#~ msgid "<big>hello, i am xml7</big>"
+#~ msgstr "<big>hello, i am xml__7</big>"

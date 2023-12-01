@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2022 Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -20,23 +20,25 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environment preparation."
+    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "diffutils"
     local=$(localectl status | grep System | awk -F "=" '{print $2}')
-    localectl set-locale LANG=zh_CN.utf8    
-    LOG_INFO "End of environmental preparation!"
+    localectl set-locale LANG=zh_CN.utf8
+    #shellcheck source=/dev/null
+    source /etc/locale.conf
+    LOG_INFO "End to prepare the test environment."
 
 }
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     cmp --version
     CHECK_RESULT $? 0 0 "The version information cannot be queried"
-    cat > /opt/file1 << EOF
+    cat >/opt/file1 <<EOF
 aaa
 bbb
 ccc
 EOF
-    cat > /opt/file2 << EOF
+    cat >/opt/file2 <<EOF
 aaa
 bbb
 ccd 
@@ -45,18 +47,22 @@ EOF
     cp /opt/file1 /opt/file3
     cmp /opt/file1 /opt/file3
     CHECK_RESULT $? 0 0 "The two files have the same content,but the detection fails"
-    cmp /opt/file1 /opt/file2 | grep "不同"
-    CHECK_RESULT $? 0 0 "The contents of the files are different,but no difference is detected"
-    cmp -l file1 file2 | grep "结束"
-    CHECK_RESULT $? 1 0 "Unable to display details"
-    LOG_INFO "Finish test!"
+    if locale | grep LC_COLLATE | grep UTF-8; then
+        cmp /opt/file1 /opt/file2 | grep "不同"
+        CHECK_RESULT $? 0 0 "The contents of the files are different,but no difference is detected"
+        cmp -l file1 file2 | grep "结束"
+        CHECK_RESULT $? 1 0 "Unable to display details"
+    fi
+    LOG_INFO "End to run test."
 }
 function post_test() {
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "start to restore the test environment."
     rm -rf /opt/file{1,2,3}
-    DNF_REMOVE
-    localectl set-locale LANG=${local}
-    LOG_INFO "Finish environment cleanup!"
+    DNF_REMOVE "$@"
+    localectl set-locale LANG="${local}"
+    #shellcheck source=/dev/null
+    source /etc/locale.conf
+    LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

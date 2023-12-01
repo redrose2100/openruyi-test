@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+   <book id="bk102">
+      <author>SFR</author>
+      <title>XML TEST</title>
+      <genre>Computer</genre>
+      <price>100</price>
+      <publish_date>2022-8-26</publish_date>
+      <description>An in-depth look at creating applications 
+      with XML.</description>
+   </book>

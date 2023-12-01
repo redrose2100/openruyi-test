@@ -15,35 +15,39 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test soft link file
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
     cur_date=$(date +%Y%m%d%H%M%S)
-    file="testFile"$cur_date
-    echo "test file" >/tmp/$file
+    file="testFile""$cur_date"
+    echo "test file" >/tmp/"$file"
+    Default_LANG="$LANG"
+    export LANG=en_US.UTF-8
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    soft_link="testSoft"$cur_date
-    ln -s /tmp/$file /tmp/$soft_link
-    inode1=$(stat /tmp/$file | grep Inode | cut -d : -f 3 | awk '{print $1}')
-    inode2=$(stat /tmp/$soft_link | grep Inode | cut -d : -f 3 | awk '{print $1}')
-    [[ $inode1 -ne $inode2 ]]
+    soft_link="testSoft""$cur_date"
+    ln -s /tmp/"$file" /tmp/"$soft_link"
+    inode1=$(stat /tmp/"$file" | grep Inode | cut -d : -f 3 | awk '{print $1}')
+    inode2=$(stat /tmp/"$soft_link" | grep Inode | cut -d : -f 3 | awk '{print $1}')
+    [[ "$inode1"x != "$inode2"x ]]
     CHECK_RESULT $? 0 0 "Check inode failed."
-    grep "test" /tmp/$soft_link
+    grep "test" /tmp/"$soft_link"
     CHECK_RESULT $? 0 0 "The sort link file has some errors."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f /tmp/$soft_link /tmp/$file
+    rm -f /tmp/"$soft_link" /tmp/"$file"
+    export LANG="$Default_LANG"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
 

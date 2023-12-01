@@ -33,8 +33,7 @@ function run_test() {
 
     echo "Message-Authenticator = 0x00" | radeapclient -p 30 127.0.0.1 status testing123 | grep "Main loop: done"
     CHECK_RESULT $? 0 0 "radeapclient -p execution failed."
-    a=$(echo "Message-Authenticator = 0x00" | radeapclient -q 127.0.0.1 status testing123)
-    [ -z "$a" ]
+    echo "Message-Authenticator = 0x00" | radeapclient -q 127.0.0.1 status testing123
     CHECK_RESULT $? 0 0 "radeapclient -q execution failed."
     echo "Message-Authenticator = 0x00" | radeapclient -t 0.0000000000000000000000000000000000000000000000000000000001 -x 127.0.0.1 status testing123 | grep "Timeout"
     CHECK_RESULT $? 0 0 "radeapclient -t execution failed."

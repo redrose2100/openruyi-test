@@ -16,22 +16,22 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Date command line test
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start prepare the test environment!"
-    time=$(date "+%Y-%m-%d %H:%M:%S")
-    year=$(echo ${time} | awk '{print$1}' | cut -d "-" -f1)
+    time="$(date "+%Y-%m-%d %H:%M:%S")"
+    year="$(echo "${time}" | awk '{print$1}' | cut -d "-" -f1)"
     LOG_INFO "End of prepare the test environment!"
 }
 function run_test() {
     LOG_INFO "Start executing testcase!" 
-    date | grep ${year} | grep -i 'cst'
+    date | grep "${year}"
     CHECK_RESULT $?
     date01=$(date | awk -F ' ' '{print $1,$2,$3}')
     date -d 2020.01-01 | grep "Wed Jan  1 00:00:00 CST 2020."
     date02=$(date | awk -F ' ' '{print $1,$2,$3}')
     [ "$date01" == "$date02" ]
-    CHECK_RESULT $? $date01 $date02
+    CHECK_RESULT $? "$date01" "$date02"
     date -s "10:30:00" | grep "10:30:00"
     CHECK_RESULT $?
     date -s "2015-02-04 10:30:00" | grep "10:30:00" | grep 2015 | grep -i feb | grep -i wed
@@ -47,4 +47,4 @@ function run_test() {
     LOG_INFO "End of testcase execution!"
 }
 
-main $@
+main "$@"

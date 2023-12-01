@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/pcp-gui",
+    "cases": [
+        {
+            "name": "oe_test_pmdumptext_001"
+        },
+	{
+	    "name": "oe_test_pmdumptext_002"
+	},
+	{
+	    "name": "oe_test_pmdumptext_003"
+	}
+    ]
+}

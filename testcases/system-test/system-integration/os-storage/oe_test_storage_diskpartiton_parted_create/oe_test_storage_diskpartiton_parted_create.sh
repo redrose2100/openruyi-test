@@ -20,7 +20,6 @@ source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
     check_free_disk 
-    mkfs.ext4 -F /dev/${local_disk}
     LOG_INFO "Loading data is complete!"
 }
 
@@ -45,7 +44,8 @@ expect eof
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    echo -e "m\np\nd\nw\n" | fdisk /dev/${local_disk}
+    echo -e "d\nw\n" | fdisk /dev/${local_disk}
+    dd if=/dev/zero of=/dev/${local_disk} bs=1M count=1
     LOG_INFO "Finish environment cleanup."
 }
 

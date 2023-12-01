@@ -973,6 +973,13 @@
             "add disk": [
                 2
             ]
-        }
+        },
+	{
+            "name": "oe_test_storage_btrfs_001"
+        },
+	{
+	    "name": "oe_test_storage_btrfs_002"
+	}
+
     ]
 }

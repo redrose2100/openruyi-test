@@ -21,7 +21,6 @@ source ../common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
     check_free_disk
-    local_disk="${local_disk1}"
     LOG_INFO "Loading data is complete!"
 }
 

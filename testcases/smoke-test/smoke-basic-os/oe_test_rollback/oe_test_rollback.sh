@@ -17,33 +17,33 @@
 # @Desc      :   yum rollback
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "git" 
+    DNF_INSTALL "zenity"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    ID=$(yum history list | grep "install git" | awk 'NR==1 {print $1}')
+    ID=$(yum history list | grep "install zenity" | awk 'NR==1 {print $1}')
     CHECK_RESULT $? 0 0 "install fail"
-    yum history undo $ID -y
+    yum history undo "$ID" -y
     CHECK_RESULT $? 0 0 "remove fail"
-    rpm -qa | grep -w git
+    rpm -qa | grep -w zenity
     CHECK_RESULT $? 0 1 "remove fail"
-    yum history redo $ID -y
+    yum history redo "$ID" -y
     CHECK_RESULT $? 0 0 "install fail"
-    rpm -qa | grep -w git
+    rpm -qa | grep -w zenity
     CHECK_RESULT $? 0 0 "install fail"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

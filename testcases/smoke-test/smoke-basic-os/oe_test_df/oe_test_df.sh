@@ -1,6 +1,6 @@
 #!/usr/bin/bash
-  
-# Copyright (c) 2021 Huawei Technologies Co.,Ltd.ALL rights reserved.
+
+# Copyright (c) 2023 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -16,20 +16,35 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-df
 # ############################################
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
-    LOG_INFO "Start testing..."
-    df | grep '/boot/efi'
-    CHECK_RESULT $? 0 0 "df display error"
+    LOG_INFO "Start to run test."
+    if ! df -h / |grep overlay; then
+        df | grep '/boot'
+        CHECK_RESULT $? 0 0 "df display error"
+    fi
     df | grep 'G'
     CHECK_RESULT $? 1 0 "df default display error"
     df -h | grep -E 'G|M|K'
     CHECK_RESULT $? 0 0 "df -h didn't find G|M|K"
     df --help
     CHECK_RESULT $? 0 0 "df --help error"
-    LOG_INFO "Finish test!"
+    res1=$(df -i | grep Inodes | awk '{ print$2 }')
+    [[ "$res1" == "Inodes" ]]
+    CHECK_RESULT $? 0 0 "df -i error"
+    res2=$(df --total | awk '{ print$1 }' | tail -1)
+    [[ "$res2" == "total" ]]
+    CHECK_RESULT $? 0 0 "df --total error"
+    res3=$(df | grep devtmpfs |awk '{ print$2 }' |awk '{a=$1/1024}{if($1%1024!=0){a=a+1}}{printf("%d\n",a~/./?int(a):a)}')
+    res4=$(df -m | grep devtmpfs |awk '{ print$2 }')
+    [[ "$res3" == "$res4" ]]
+    CHECK_RESULT $? 0 0 "df -m error"
+    res5=$(df --type=tmpfs | awk '{ print$1 }' | head -2 | tail -1)
+    [[ "$res5" == "tmpfs" ]]
+    CHECK_RESULT $? 0 0 "df --type error"
+    LOG_INFO "End to run test."
 }
 
-main $@
+main "$@"
 

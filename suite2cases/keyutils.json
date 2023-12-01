@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_keyutils-keyctl"
-        }
+        },
+	{
+	    "name": "oe_test_keyutils-libs"
+	}
     ]
 }

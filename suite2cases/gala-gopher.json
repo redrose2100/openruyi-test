@@ -1,0 +1,41 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/gala-gopher",
+    "cases": [
+        {
+            "name": "oe_test_service_gopher"
+        },
+	{
+	    "name": "oe_test_galagopher_tcpprobe"
+	},
+	{
+	    "name": "oe_test_galagopher_stackprobe"
+	},
+        {
+            "name": "oe_test_galagopher_endpoint"
+        },
+        {
+            "name": "oe_test_galagopher_ioprobe"
+        },
+        {
+            "name": "oe_test_galagopher_jvmprobe"
+        },
+        {
+            "name": "oe_test_galagopher_redis"
+        },
+        {
+            "name": "oe_test_galagopher_system_info"
+        },
+        {
+            "name": "oe_test_galagopher_taskprobe"
+        },
+        {
+            "name": "oe_test_galagopher_tprofiling"
+        },
+        {
+            "name": "oe_test_galagopher_docker"
+        },
+        {
+            "name": "oe_test_galagopher_guassdb"
+        }
+    ]
+}

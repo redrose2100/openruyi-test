@@ -35,6 +35,7 @@ NODE_ITEM = [
     "SSH_PORT",
     "NIC",
     "IPV4",
+    "IPV6",
     "MAC",
     "HOST_IP",
     "HOST_USER",
@@ -125,11 +126,28 @@ def node_num():
 
     return sorted(node_list)[-1]
 
+def node_type():
+    """获取环境节点类型
+
+    Returns:
+        [str]: 节点类型
+    """
+    node_type = "kvm"
+    env_data = parse_json()
+
+    node_type_list = list()
+    for node_data in env_data["NODE"]:
+        node_type_list.append(node_data["MACHINE"])
+
+    for node_type in node_type_list:
+        if node_type == "physical":
+            break
+    return node_type
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="manual to this script")
     parser.add_argument(
-        "operation", type=str, choices=["env-var", "node-num"], default=None
+        "operation", type=str, choices=["env-var", "node-num", "node-type"], default=None
     )
     args = parser.parse_args()
 
@@ -137,3 +155,5 @@ if __name__ == "__main__":
         print(read_configure())
     elif args.operation == "node-num":
         print(node_num())
+    elif args.operation == "node-type":
+        print(node_type())

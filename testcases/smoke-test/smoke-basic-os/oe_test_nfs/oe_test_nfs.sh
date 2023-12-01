@@ -17,13 +17,18 @@
 # @Desc      :   nfs test
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    test_user=nfs_test_$$
-    server_dir=/home/nfs_server_$$
-    client_dir=/home/nfs_client_$$
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+        exit 0
+    else
+        test_user=nfs_test_$$
+        server_dir=/home/nfs_server_$$
+        client_dir=/home/nfs_client_$$
+    fi
     LOG_INFO "End to config params of the case."
 }
 
@@ -31,16 +36,17 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "nfs-utils nfs4-acl-tools"
+    DNF_INSTALL "nfs-utils nfs4-acl-tools diffutils"
     useradd $test_user
     mkdir $server_dir $client_dir
     test -f /etc/exports && cp /etc/exports .
+    echo "$server_dir *(rw,sync,no_root_squash)" >>/etc/exports
+    exportfs -avr
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    echo "$server_dir *(rw,sync,no_root_squash)" >>/etc/exports
     systemctl restart nfs-server
     CHECK_RESULT $?
     systemctl status nfs-server | grep 'Active: active'
@@ -78,9 +84,9 @@ function post_test() {
     userdel -r $test_user
     rm -f /tmp/error.log
     test -f exports && mv exports /etc/exports
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

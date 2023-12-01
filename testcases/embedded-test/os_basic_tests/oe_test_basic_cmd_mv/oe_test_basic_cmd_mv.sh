@@ -68,6 +68,34 @@ function run_test() {
     mv --help 2>&1 | grep "Usage"
     CHECK_RESULT $? 0 0 "check mv help fail"
 
+    # /tmp/test1
+    mkdir -p /tmp/test
+    touch /tmp/test/testfile1
+    echo 'test' > /tmp/test/testfile1
+    inode1=$(stat /tmp/test/testfile1 | grep Inode | cut -d : -f 3 | awk '{print $1}')
+    mv /tmp/test/testfile1 /tmp/test/testfile2
+    inode3=$(stat /tmp/test/testfile2 | grep Inode | cut -d : -f 3 | awk '{print $1}')
+    CHECK_RESULT "$inode1" "$inode3" 0 "Check inode failed."
+    grep -q "test" /tmp/test/testfile2
+    CHECK_RESULT $? 0 0 "The file info of /tmp/test/testfile2 is false."
+    touch /tmp/test/testfile3
+    echo "cover" >/tmp/test/testfile3
+    grep -q "cover" /tmp/test/testfile3
+    CHECK_RESULT $? 0 0 "The file info of /tmp/test/testfile3 is false."
+    mv -f /tmp/test/testfile2 /tmp/test/testfile3
+    grep -q "test" /tmp/test/testfile3
+    CHECK_RESULT $? 0 0 "The file info of /tmp/test/testfile3 is false."
+    touch /tmp/test/testfile4
+    echo "new" >/tmp/test/testfile4
+    grep -q "new" /tmp/test/testfile4
+    CHECK_RESULT $? 0 0 "The file info of /tmp/test/testfile4 is false."
+    mv -u /tmp/test/testfile3 /tmp/test/testfile4
+    grep -q "new" /tmp/test/testfile4
+    CHECK_RESULT $? 0 0 "The file info of /tmp/test/testfile4 is false."
+    mv -fb /tmp/test/testfile3 /tmp/test/testfile4
+    grep -q "new" /tmp/test/testfile4~
+    CHECK_RESULT $? 0 0 "The file info of -fb /tmp/test/testfile4 is false."
+
     LOG_INFO "End to run test."
 }
 
@@ -79,4 +107,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

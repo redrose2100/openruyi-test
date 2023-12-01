@@ -19,29 +19,40 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
-function run_test() {
-	LOG_INFO "Start executing testcase."
-	ls /var/log
-	CHECK_RESULT $?
-	tail -f /var/log/messages >/tmp/log 2>&1 &
-	row01=$(cat /tmp/log | wc -l)
-	SLEEP_WAIT 1
-	systemctl restart sshd
-	SLEEP_WAIT 4
-	row02=$(cat /tmp/log | wc -l)
-	[[ $row01 == "${row02}" ]] && ((exec_result++))
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL rsyslog
+    LOG_INFO "End to prepare the test environment."
+}
 
-	grep sshd /var/log/messages >/dev/null
-	CHECK_RESULT $?
-	LOG_INFO "Finish testcase execution."
+function run_test() {
+    LOG_INFO "Start executing testcase."
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+    else
+        ls /var/log
+        CHECK_RESULT $?
+        tail -f /var/log/messages >/tmp/log 2>&1 &
+        row01=$(< /tmp/log wc -l)
+        SLEEP_WAIT 1
+        systemctl restart sshd
+        SLEEP_WAIT 4
+        row02=$(< /tmp/log wc -l)
+        [[ $row01 == "${row02}" ]] && ((exec_result++))
+
+        grep sshd /var/log/messages >/dev/null
+        CHECK_RESULT $?
+    fi
+    LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
-	LOG_INFO "start environment cleanup."
-	pid=$(ps -ef | grep "tail" | grep -v grep | awk '{print $2}')
-	kill -9 "${pid}"
-	rm -rf /tmp/log
-	LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "start environment cleanup."
+    pid=$(pgrep -f "tail")
+    kill -9 "${pid}"
+    rm -rf /tmp/log
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

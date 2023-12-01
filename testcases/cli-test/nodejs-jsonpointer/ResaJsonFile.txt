@@ -1,0 +1,10 @@
+Emp ID: 101
+Emp Name: Mike
+Emp Address: 123 California, USA
+Designation: Editor
+----------------------------------
+Emp ID: 102
+Emp Name: Jacob
+Emp Address: 456 Log Angelis, USA
+Designation: Chief Editor
+----------------------------------

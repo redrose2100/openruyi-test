@@ -28,19 +28,25 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     numactl -s | grep policy
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "numactl -s failed"
+    numactl -H | grep "available: [0-9] nodes"
+    CHECK_RESULT $? 0 0 "numactl -H failed"
+    numactl -C 0-1 top -n 1
+    CHECK_RESULT $? 0 0 "numactl -C failed"
+    numastat | grep -E "numa_hit|numa_miss|numa_foreign|interleave_hit|local_node|local_node"
+    CHECK_RESULT $? 0 0 "numastat command failed"
     numactl --physcpubind 0 --membind 0 numactl -H
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "numactl --physcpubind 0 --membind 0 numactl -H test failed"
     systemctl restart numad
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "systemctl restart numad failed"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop numad
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

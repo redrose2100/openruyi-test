@@ -1,0 +1,12 @@
+{
+    "path": "${OET_PATH}/testcases/system-test/pkgmanager-test",
+    "cases": [
+        {
+            "name": "oe_test_pkg_manager01"
+        },
+        {
+            "name": "oe_test_pkg_manager02"
+        }
+    ]
+}
+

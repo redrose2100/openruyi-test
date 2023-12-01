@@ -1,0 +1,14 @@
+# file: testfileA
+# owner: root
+# group: root
+user::rwx
+group::r--
+other::---
+
+# file: testfileB
+# owner: root
+# group: root
+user::rwx
+group::r--
+other::---
+

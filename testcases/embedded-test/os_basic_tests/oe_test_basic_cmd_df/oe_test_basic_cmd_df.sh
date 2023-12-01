@@ -17,7 +17,7 @@
 # @Desc      :   File system common command test-df
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -34,10 +34,20 @@ function run_test() {
     df -h | grep -E 'G|M|K'
     CHECK_RESULT $? 0 0 "df -h didn't find G|M|K"
 
-    df --help 2>&1 | grep "Usage"
+    LANG=C df --help 2>&1 | grep "Usage"
     CHECK_RESULT $? 0 0 "check df helf fail"
+
+    res1=$(df -i | grep Inodes|awk '{ print$2 }')
+    [[ "$res1" == "Inodes" ]]
+    CHECK_RESULT $? 0 0 "df -i error"
+    res2=$(df --total | awk '{ print$1 }'|tail -1)
+    [[ $res2 == "total" ]]
+    CHECK_RESULT $? 0 0 "df --total error"
+    res3=$(df --type=tmpfs |awk '{ print$1 }'|head -2|tail -1)
+    [[ $res3 == "tmpfs" ]]
+    CHECK_RESULT $? 0 0 "df --type error"
 
     LOG_INFO "End to run test."
 }
 
-main $@
+main "$@"

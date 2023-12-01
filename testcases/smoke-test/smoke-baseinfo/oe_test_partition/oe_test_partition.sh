@@ -17,17 +17,29 @@
 # @Desc      :   View partition information
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
-    LOG_INFO "Start to run test."
-    lsblk | grep "/boot$"
-    CHECK_RESULT $? 0 0 "No boot partition"
-    lsblk | grep "/$"
-    CHECK_RESULT $? 0 0 "No / partition"
-    lsblk | grep "SWAP"
-    CHECK_RESULT $? 0 0 "No swap partition"
-    LOG_INFO "End to run test."
+    LOG_INFO "Start testing..."
+    if df -h / | grep overlay; then
+        LOG_INFO "The current environment is Docker."
+    else
+        lsblk | grep "/boot$"
+        CHECK_RESULT $? 0 0 "No boot partition"
+        lsblk | grep "/$"
+        CHECK_RESULT $? 0 0 "No / partition"
+        lsblk | grep "SWAP"
+        CHECK_RESULT $? 0 0 "No swap partition"
+    fi
+    lsblk --help
+    CHECK_RESULT $? 0 0 "lsblk -h info error"
+    lsblk -t | grep SCHED
+    CHECK_RESULT $? 0 0 "lsblk -t info error"
+    lsblk -m | grep MODE
+    CHECK_RESULT $? 0 0 "lsblk -m info error"
+    lsblk -b | grep "MOUNTPOINT"
+    CHECK_RESULT $? 0 0 "lsblk -b info error"
+    LOG_INFO "Finish test!"
 }
 
 main "$@"

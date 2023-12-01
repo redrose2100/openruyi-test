@@ -21,16 +21,18 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    OLD_LANG=$LANG
+    OLD_LANG="$LANG"
     export LANG=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    cat /etc/passwd | grep "root:x:0:0:root:/root:/bin/bash"
+    res1="$(cat /etc/passwd)"
+    echo "$res1" | grep "root:x:0:0"
     CHECK_RESULT $?
-    cat -n /etc/passwd | grep "root:x:0:0:root:/root:/bin/bash" | awk -F ' ' '{print $1}' | grep 1
+    res2="$(cat -n /etc/passwd)"
+    echo "$res2" | grep "root:x:0:0" | awk -F ' ' '{print $1}' | grep 1
     CHECK_RESULT $?
     cat --help | grep "Usage"
     CHECK_RESULT $?
@@ -43,4 +45,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/yasm",
+    "cases": [
+        {
+            "name": "oe_test_yasm_01"
+        }
+    ]
+}

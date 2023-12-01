@@ -60,10 +60,10 @@ function run_test() {
     CHECK_RESULT $?
     pg_receivewal -? | grep "Usage:"
     CHECK_RESULT $?
-    su - postgres -c "pg_receivewal -D /var/lib/pgsql/pg_receivewal -h 192.168.122.149 -U sstest -w -p 5432 &"
+    su - postgres -c "pg_receivewal -D /var/lib/pgsql/pg_receivewal -h ${NODE1_IPV4} -U sstest -w -p 5432 &"
     CHECK_RESULT $?
-    kill -9 $(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal -h 192.168.122.149 -U sstest -w -p 5432')
-    CHECK_RESULT $?
+    kill -9 $(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal -h ${NODE1_IPV4} -U sstest -w -p 5432')
+    CHECK_RESULT $?    
     LOG_INFO "End to run test."
 }
 
