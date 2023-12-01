@@ -92,6 +92,9 @@
             "name": "oe_test_audit_augenrules"
         },
         {
+            "name": "oe_test_audit_autrace"
+        },        
+	{
             "name": "oe_test_aulastlog"
         }
     ]
