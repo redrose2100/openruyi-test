@@ -21,6 +21,14 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    rpm -qi cyrus-sasl &>/dev/null
+    if [ $? -eq 0 ]; then
+        echo "cyrus-sasl is installed, proceeding with uninstallation"
+        yum remove cyrus-sasl -y
+        echo "cyrus-sasl successfully uninstalled"
+    else
+        echo "cyrus-sasl is not installed, no need to uninstall"
+    fi
     DNF_INSTALL pcs
     LOG_INFO "End of environmental preparation!"
 }
