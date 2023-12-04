@@ -17,13 +17,13 @@
 # @Desc      :   File system common command test-gzip
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     current_path=$(
-        cd "$(dirname $0)" || exit 1
+        cd "$(dirname "$0")" || exit 1
         pwd
     )
     cd /tmp || exit 1
@@ -38,6 +38,10 @@ function run_test() {
 
     test -f test11
     CHECK_RESULT $? 1 0 "check test11 fail"
+    gzip -L test11.gz
+    CHECK_RESULT $? 0 0 "Check gzip file version failed."
+    gzip -t test11.gz
+    CHECK_RESULT $? 0 0 "test gzip file by gzip failed."
     gzip -d test11.gz
     CHECK_RESULT $? 0 0 "run gzip -d fail"
     test -f test11
@@ -52,9 +56,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -rf /tmp/test11
-    cd ${current_path} || exit 1
+    cd "${current_path}" || exit 1
 
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
