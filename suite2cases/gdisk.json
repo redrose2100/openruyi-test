@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/cli-test/gdisk",
+    "add disk": [30],
     "cases": [
         {
             "name": "oe_test_gdisk_change_partition_name"

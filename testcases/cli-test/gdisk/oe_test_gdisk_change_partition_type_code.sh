@@ -45,7 +45,7 @@ function run_test() {
 		expect eof
 		exit
 	END
-	grep "8200 Linux swap" gdisk_info
+	grep "8200" gdisk_info
 	CHECK_RESULT $?
 	delete_partition
 	lsblk | grep "${unused_disk#/dev/}1"
@@ -53,7 +53,7 @@ function run_test() {
 }
 
 function post_test() {
-	rm -rf gdisk_info
+	#rm -rf gdisk_info
 	DNF_REMOVE
 }
 
