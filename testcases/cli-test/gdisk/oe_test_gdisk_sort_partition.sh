@@ -50,7 +50,7 @@ function run_test() {
 		expect eof
 		exit
 	END
-	No=$(grep "8300 test_name" gdisk_info | tail -n 1 | awk '{print $1}')
+	No=$(grep "Linux filesystem" gdisk_info | tail -n 1 | awk '{print $1}')
 	CHECK_RESULT "$No" 1
 	for i in $(seq 1 2); do
 		delete_partition "$i"

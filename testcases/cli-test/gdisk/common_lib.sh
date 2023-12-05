@@ -61,6 +61,7 @@ function create_partition() {
         expect eof
         exit
 END
+    ((++i))
     done
 }
 
@@ -71,7 +72,7 @@ function delete_partition() {
     expect "*help):"
     send "d\r"
     expect {
-        "Paratition number*):"
+        "Partition number*):"
         {
             send "$partition_num\r"
             expect "*help):"
