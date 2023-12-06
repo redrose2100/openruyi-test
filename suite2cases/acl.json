@@ -51,6 +51,9 @@
         },
         {
             "name": "oe_test_acl_default_inherit_fun01"
+        },
+        {
+            "name": "oe_test_acl_default_inherit_fun02"
         }
     ]
 }
