@@ -29,17 +29,17 @@ function pre_test() {
 function run_test() {
 	create_partition 128 10M
 	partprobe
-	num=$(lsblk | grep "${unused_disk#/dev/}1")
+	num=$(lsblk | grep -c "${unused_disk#/dev/}")
 	CHECK_RESULT "$num" 129
 	for i in $(seq 1 128); do
-		echo y | mkfs.ext4 "${unused_disk}1"
+		echo y | mkfs.ext4 "${unused_disk}$i"
 		CHECK_RESULT $?
 		mkdir "mount_tmp_$i"
 		mount "${unused_disk}$i" "mount_tmp_$i"
 		CHECK_RESULT $?
 		touch "mount_tmp_$i/testfile"
 		CHECK_RESULT $?
-		echo 123 > "mount_tmp_$i/testfile"
+		echo 123 >"mount_tmp_$i/testfile"
 		CHECK_RESULT $?
 		CHECK_RESULT "$(cat "mount_tmp_$i/testfile")" 123
 		rm -rf "mount_tmp_$i/testfile"
@@ -59,4 +59,3 @@ function post_test() {
 }
 
 main "$@"
-
