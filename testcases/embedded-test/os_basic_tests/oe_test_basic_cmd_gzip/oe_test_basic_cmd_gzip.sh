@@ -30,6 +30,12 @@ function pre_test() {
     touch test11
     gzip -9 test11
 
+    mkdir -p /tmp/test1/test2/test3
+    echo "test file1" >/tmp/test1/testfile1
+    echo "test file2" >/tmp/test1/test2/testfile2
+    echo "test file3" >/tmp/test1/test2/test3/testfile3
+    echo "test homefile" >/tmp/testfile
+
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -48,6 +54,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check test11 fail"
     gzip --help 2>&1 | grep "Usage"
     CHECK_RESULT $? 0 0 "check gzip help fail"
+    
+    zip -r /tmp/test.zip /tmp/test1
+    zip -d /tmp/test.zip /tmp/test1/testfile1 |grep "deleting"
+    CHECK_RESULT $? 0 0 "delete /tmp/test1/testfile1 failed in /test.zip"
+    zip -m /tmp/testfile /tmp/test.zip |grep "adding"
+    CHECK_RESULT $? 0 0 "add /testfile failed in /test.zip"
+    zip -j /tmp/test1.zip /tmp/test1
+    CHECK_RESULT $? 0 1 "-j does not support compressing directories"
 
     LOG_INFO "End to run test."
 }
@@ -55,7 +69,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -rf /tmp/test11
+    rm -rf /tmp/test*
     cd "${current_path}" || exit 1
 
     LOG_INFO "End to restore the test environment."
