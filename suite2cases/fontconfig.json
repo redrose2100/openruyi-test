@@ -14,6 +14,9 @@
             "name": "oe_test_fc-conflist"
         },
         {
+            "name": "oe_test_fc-pattern"
+        },
+        {
             "name": "oe_test_fc-cache"
         }
     ]
