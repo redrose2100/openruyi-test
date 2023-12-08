@@ -99,6 +99,9 @@
 	},
 	{
 	    "name": "oe_test_openssl_speed"
+	},
+        {
+	    "name": "oe_test_openssl_cryptographic_services"
 	}
     ]
 }
