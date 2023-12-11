@@ -17,13 +17,13 @@
 # @Desc      :   File system common command test-tar
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     current_path=$(
-        cd "$(dirname $0)" || exit 1
+        cd "$(dirname "$0")" || exit 1
         pwd
     )
     cd /tmp || exit 1
@@ -41,6 +41,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check tar file fail"
     tar -xvf test.tar | grep "test"
     CHECK_RESULT $? 0 0 "check unpack tar fail"
+    tar -czf "/tmp/test/testTar.tar.gz" test.tar
+    CHECK_RESULT $? 0 0 "Compress file failed."
+    tar -xzvf "/tmp/test/testTar.tar.gz" |grep test.tar
+    CHECK_RESULT $? 0 0 "Check files  failed."
+    tar -cjf "/tmp/test/testTar.tar.bz2" test.tar
+    CHECK_RESULT $? 0 0 "Compress file failed."
+    tar -xjvf "/tmp/test/testTar.tar.bz2" | grep test.tar
+    CHECK_RESULT $? 0 0 "Check files failed."
     tar --help 2>&1 | grep -i "Usage"
     CHECK_RESULT $? 0 0 "check tar help fail"
 
@@ -51,9 +59,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -rf /tmp/test /tmp/test.tar
-    cd ${current_path} || exit 1
+    cd "${current_path}" || exit 1
 
      LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

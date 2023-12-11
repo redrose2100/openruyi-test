@@ -48,6 +48,12 @@
         },
         {
             "name": "oe_test_acl_file_authorize"
+        },
+        {
+            "name": "oe_test_acl_default_inherit_fun01"
+        },
+        {
+            "name": "oe_test_acl_default_inherit_fun02"
         }
     ]
 }

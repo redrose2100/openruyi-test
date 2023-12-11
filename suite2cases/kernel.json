@@ -112,7 +112,18 @@
         },
         {
             "name": "oe_test_tcm_loop"
-        }
+        },
+        {
+            "name": "oe_test_libcxgbi"
+        },
+        {
+            "name": "oe_test_libsas"
+        },
+        {
+            "name": "oe_test_qedf"
+        },
+
+
     ]
 }
 

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<BEAKER_TEST>
+  <package timestamp="2023-07-17 15:30:36 CST">unknown</package>
+  <pkgnotinstalled timestamp="2023-07-17 15:30:36 CST">unknown</pkgnotinstalled>
+  <beakerlib_rpm timestamp="2023-07-17 15:30:36 CST">beakerlib-1.18.1-2.oe2203sp1.noarch</beakerlib_rpm>
+  <testname timestamp="2023-07-17 15:30:36 CST">unknown</testname>
+  <starttime timestamp="2023-07-17 15:30:36 CST">2023-07-17 15:30:36 CST</starttime>
+  <endtime timestamp="2023-07-17 15:30:36 CST">2023-07-17 15:30:36 CST</endtime>
+  <hostname timestamp="2023-07-17 15:30:36 CST">localhost</hostname>
+  <arch timestamp="2023-07-17 15:30:36 CST">x86_64</arch>
+  <hw_cpu timestamp="2023-07-17 15:30:36 CST">4 x 13th Gen Intel(R) Core(TM) i7-13700HX</hw_cpu>
+  <hw_ram timestamp="2023-07-17 15:30:36 CST">15456 MB</hw_ram>
+  <hw_hdd timestamp="2023-07-17 15:30:36 CST">17.51 GB</hw_hdd>
+  <log starttime="2023-07-17 15:30:36 CST" endtime="2023-07-17 15:30:36 CST"><phase name="Test" type="FAIL" result="PASS" score="0" starttime="2023-07-17 15:30:36 CST" endtime="2023-07-17 15:30:36 CST"><pkgdetails timestamp="2023-07-17 15:30:36 CST" sourcerpm="setup-2.13.9.1-1.oe2203sp1.src.rpm">setup-2.13.9.1-1.oe2203sp1.noarch</pkgdetails><test timestamp="2023-07-17 15:30:36 CST" message="Checking for the presence of setup rpm ">PASS</test><message timestamp="2023-07-17 15:30:36 CST" severity="LOG">Package versions:</message><message timestamp="2023-07-17 15:30:36 CST" severity="LOG">  setup-2.13.9.1-1.oe2203sp1.noarch</message><test timestamp="2023-07-17 15:30:36 CST" message="File /etc/passwd should exist ">PASS</test><test timestamp="2023-07-17 15:30:36 CST" message="File '/etc/passwd' should contain 'root' ">PASS</test></phase><message timestamp="2023-07-17 15:30:36 CST" severity="LOG">JOURNAL XML: /var/tmp/beakerlib-KmKH0GC/journal.xml</message><message timestamp="2023-07-17 15:30:36 CST" severity="LOG">JOURNAL TXT: /var/tmp/beakerlib-KmKH0GC/journal.txt</message></log>
+</BEAKER_TEST>
