@@ -17,7 +17,9 @@
 #####################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
-source "./common/lib/util.sh"
+current_dir=$(cd "$(dirname "\$0")" && pwd)
+source "${current_dir}/common/lib/util.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "bird tar"
