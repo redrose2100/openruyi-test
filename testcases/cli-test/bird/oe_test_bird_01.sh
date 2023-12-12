@@ -57,21 +57,11 @@ function run_test() {
     bird -c ./data/bird.conf -u testdemo -g testdemo
     SLEEP_WAIT 2
     result1=$(ps -ef | grep "bird -c" | grep -v "grep")
-    if [[ $result1 == testdemo* ]]; then
-	echo "aa" | grep "aa"
-    else
-	echo "aa" | grep "bb"
-    fi
     CHECK_RESULT $? 0 0 "check bird -u failed"
     kill -9 $(pgrep "bird -c")
     bird -c ./data/bird.conf -u testdemo -g testdemo
     SLEEP_WAIT 2
     result2=$(ps -ef | grep "bird -c" | grep -v "grep")
-    if [[ $result1 == testdemo* ]]; then
-	echo "aa" | grep "aa"
-    else
-	echo "aa" | grep "bb"
-    fi
     CHECK_RESULT $? 0 0 "check bird -g failed"
     kill -9 $(pgrep "bird -c")
     LOG_INFO "End to run test."
