@@ -16,6 +16,8 @@
 #@Desc          :   Public function
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC2086
+
 source "${OET_PATH}"/conf/mugen.env
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -170,7 +172,7 @@ function QUERY_LIST() {
     # option: -s
     dbName=$1
     option=$2
-    pkgship list "$dbName" "$dbName"
+    pkgship list $dbName $option
 }
 
 function QUERY_PKGINFO() {
@@ -178,7 +180,7 @@ function QUERY_PKGINFO() {
     pkgName=$1
     dbName=$2
     option=$3
-    pkgship pkginfo "$pkgName" "$dbName" "$dbName"
+    pkgship pkginfo $pkgName $dbName $option
 }
 
 function QUERY_INSTALLDEP() {
@@ -186,9 +188,9 @@ function QUERY_INSTALLDEP() {
     dbName=$2
     level=$3
     if [[ $level == "" ]]; then
-        pkgship installdep "$pkgName" -dbs "$dbName"
+        pkgship installdep $pkgName -dbs $dbName
     else
-        pkgship installdep "$pkgName" -dbs "$dbName" -level "$level"
+        pkgship installdep $pkgName -dbs $dbName -level $level
     fi
 }
 
@@ -208,7 +210,7 @@ function QUERY_SELFDEPEND() {
     pkgName=$1
     dbName=$2
     option=$3
-    pkgship selfdepend "$pkgName" -dbs "$dbName" "$dbName"
+    pkgship selfdepend "$pkgName" -dbs "$dbName" "$option"
 }
 
 function QUERY_BEDEPEND() {
@@ -358,16 +360,26 @@ function GET_SINGLEDEP() {
     fi
 }
 
+# input parameter to get result
+function send_command() {
+    para=$1
+    QUERY_LIST $para | grep "Request parameter error"
+    CHECK_RESULT $? 0 0 "The message is error when para=$para."
+    
+    QUERY_LIST $para -s | grep "Request parameter error"
+    CHECK_RESULT $? 0 0 "The message is error when para=$para with -s."
+}
+
 function GET_INSTALLDEP() {
     pkgname=$1
     filename=$2
     dbname=${3-""}
     level=${4-""}
-    QUERY_INSTALLDEP "$pkgname" "$dbname" "$level" >installdep.txt
+    QUERY_INSTALLDEP $pkgname $dbname $level >installdep.txt
     start_line=$(sed -n '/^Source/=' installdep.txt)
     end_line=$(wc -l installdep.txt | awk '{print $1}')
     sed -i "${start_line},${end_line}d" installdep.txt
-    grep "openeuler-lts" installdep.txt | grep -v "$pkgname" | awk '{print $1}' | sort | uniq | grep -Ev "openeuler-lts|=" >"${filename}"
+    grep "openeuler-lts" installdep.txt | grep -v $pkgname | awk '{print $1}' | sort | uniq | grep -Ev "openeuler-lts|=" >${filename}
     rm -rf installdep.txt
 }
 
@@ -410,13 +422,14 @@ function CHECK_COMPARE() {
     grep -q "\[INFO\] The data comparison is successful, and the generated file" "$testlog"
     CHECK_RESULT $? 0 0 "Execute compare build command failed."
     compare_dir=$(tail -n 1 "$testlog" | cut -d '(' -f 2 | cut -d ')' -f 1)
-    ls "${compare_dir}"/*compare.csv*
+    test -e "${compare_dir}"/compare.csv
     CHECK_RESULT $? 0 0 "Check file number failed."
     first_row=$(wc -l "${compare_dir}"/"${dbname}".csv | awk '{print $1}')
     cmp_row=$(wc -l "${compare_dir}"/compare.csv | awk '{print $1}')
     if [[ $cmp_row -lt $first_row ]]; then
         CHECK_RESULT 1 0 0 "Check compare file failed."
     fi
+    echo "${compare_dir}"
 }
 
 function COMPARE_BUILD_PKG() {
@@ -427,12 +440,12 @@ function COMPARE_BUILD_PKG() {
 
     # check file info
     str="install"
-    if [[ $type -eq $str ]]; then
+    if [ "$type" = "$str" ]; then
         QUERY_INSTALLDEP "$pkgname" "$dbname" 1 >expect
     else
         QUERY_BUILDDEP "$pkgname" "$dbname" 1 >expect
     fi
-    grep -v "$dbname" expect | awk '{print $1}' | sort | uniq >expect_cmp
+    grep  "$dbname" expect | awk '{print $1}' | grep -v "$dbname" | grep -v "$pkgname"| sort | uniq >expect_cmp
     grep "^$pkgname->" "${compare_dir}"/"${dbname}".csv | cut -d ',' -f 1 >actual
     CHECK_RESULT $? 0 0 "Get data in ${dbname} failed."
     while read -r line; do
