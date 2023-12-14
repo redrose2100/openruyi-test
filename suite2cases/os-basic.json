@@ -824,6 +824,9 @@
 	},
 	{
 	   "name": "oe_test_dirname"
+	},
+	{
+	    "name": "oe_test_tty"
 	}
     ]
 }
