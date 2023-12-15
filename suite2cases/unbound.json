@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_service_unbound"
+        },
+        {
+            "name": "oe_test_unbound-control"
         }
     ]
 }
