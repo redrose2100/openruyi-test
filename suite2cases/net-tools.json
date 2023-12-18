@@ -15,6 +15,9 @@
         },
         {
             "name": "oe_test_net-tools_iptunnel"
+        },
+        {
+            "name": "oe_test_net-tools_netstat_02"
         }
     ]
 }
