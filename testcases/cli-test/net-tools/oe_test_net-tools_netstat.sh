@@ -17,7 +17,8 @@
 # @Desc      :   Test netstat command function
 # #############################################
 
-source "../common/common_lib.sh"
+#source "../common/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -27,9 +28,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    netstat --help | grep "usage: netstat"
+    #netstat --help | grep "usage: netstat"
+    netstat --help 
     CHECK_RESULT $?
-    netstat -V | grep "net-tools" | grep [0-9]
+    #netstat -V | grep "net-tools" | grep [0-9]
+    netstat -V | grep "net-tools" 
     CHECK_RESULT $?
     netstat -a
     CHECK_RESULT $? 0 0 "Show all sockets fail"
@@ -45,12 +48,24 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Display summary statistics for each protocol fail"
     netstat -l
     CHECK_RESULT $? 0 0 "Show only listening sockets fail"
+    netstat -at | grep tcp
+    CHECK_RESULT $? 0 0 "list all tcp ports fail"
+    netstat -au | grep udp
+    CHECK_RESULT $? 0 0 "list all udp ports fail"
+    netstat -ax | grep unix
+    CHECK_RESULT $? 0 0 "list all unix ports fail"
+    netstat -lt | grep tcp
+    CHECK_RESULT $? 0 0 "listening to tcp port fail"
+    netstat -lu | grep udp
+    CHECK_RESULT $? 0 0 "listening to udp port fail"
+    netstat -lx | grep unix
+    CHECK_RESULT $? 0 0 "listening to unix port fail"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
