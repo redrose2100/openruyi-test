@@ -827,6 +827,9 @@
 	},
 	{
 	    "name": "oe_test_tty"
+	},
+	{
+           "name": "oe_test_get_module"
 	}
     ]
 }
