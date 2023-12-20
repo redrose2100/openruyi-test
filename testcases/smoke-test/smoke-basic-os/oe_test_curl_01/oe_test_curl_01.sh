@@ -32,6 +32,11 @@ anon_root=/var/ftp/pub/
 local_root=/var/ftp/pub/" >>/etc/vsftpd/vsftpd.conf
     getenforce | grep Enforcing && setenforce 0
     systemctl status firewalld | grep running && systemctl stop firewalld
+    systemctl status iptables | grep running && systemctl stop iptables
+    iptables -F
+    iptables -X
+    iptables -t nat -F
+    iptables -t nat -X
     chmod 777 /var/ftp/ -R
     systemctl restart vsftpd
     useradd example
