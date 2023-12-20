@@ -29,6 +29,7 @@ function config_params() {
         server_dir=/home/nfs_server_$$
         client_dir=/home/nfs_client_$$
     fi
+    systemctl stop firewalld || cd .
     LOG_INFO "End to config params of the case."
 }
 
