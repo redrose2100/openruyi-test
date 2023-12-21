@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL "iSulad syscontainer-tools lxcfs-tools lxcfs tar"
+    sed -i '/runc/s/runc/lcr/' /etc/isulad/daemon.json
     if [[ ${NODE1_FRAME} == "aarch64" ]]; then
         wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/aarch64/openEuler-docker.aarch64.tar.xz
         image_name="openEuler-docker.aarch64.tar.xz"
@@ -30,7 +31,7 @@ function pre_test() {
         image_name="openEuler-docker.x86_64.tar.xz"
     fi
     systemctl start lxcfs
-    systemctl start isulad
+    systemctl restart isulad
     mkdir /opt/rootfs
     cp "$image_name" /opt/rootfs
     xz -d /opt/rootfs/"$image_name"
@@ -67,3 +68,4 @@ function post_test() {
 }
 
 main "$@"
+
