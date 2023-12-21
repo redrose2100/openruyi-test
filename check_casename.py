@@ -65,8 +65,33 @@ def check_one_suite(cases_names, case_path, suitename):
                 print("\trepeat patch name:%s"%one_path)
     return repeat_case
 
+def get_all_testcase(local_dir):
+    """获取testcase列表
+
+    Args:
+        local_dir ([str]): 本地目录
+
+    Returns:
+        [list]: 文件列表
+    """
+    all_file = list()
+
+    local_dir = os.path.normpath(local_dir)
+
+    dir_files = os.listdir(local_dir)
+    for d_f in dir_files:
+        _name = os.path.join(local_dir, d_f)
+        if os.path.isdir(_name):
+            all_file.extend(get_all_testcase(_name))
+        else:
+            if not d_f.endswith(".json"):
+               continue
+            all_file.append(_name)
+
+    return all_file
+
 def check_testcase():
-    suitecase_list = os.listdir(os.path.join(curr_path, suitecase_path))
+    suitecase_list = get_all_testcase(os.path.join(curr_path, suitecase_path))
     ret = 0
     for one_suite in suitecase_list:
         with open(os.path.join(curr_path, suitecase_path, one_suite), "r") as f:
