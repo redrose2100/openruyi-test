@@ -29,7 +29,6 @@ function config_params() {
         server_dir=/home/nfs_server_$$
         client_dir=/home/nfs_client_$$
     fi
-    systemctl stop firewalld || cd .
     LOG_INFO "End to config params of the case."
 }
 
@@ -37,6 +36,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
+    systemctl stop firewalld || cd .
     DNF_INSTALL "nfs-utils nfs4-acl-tools diffutils"
     useradd $test_user
     mkdir $server_dir $client_dir
@@ -87,6 +87,7 @@ function post_test() {
     test -f exports && mv exports /etc/exports
     DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
+    systemctl start firewalld || cd .
     LOG_INFO "Finish environment cleanup!"
 }
 
