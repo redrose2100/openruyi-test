@@ -21,6 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    uname -r | grep ^5.10 && LOG_INFO "zram.service removed in version 5.10" &&exit 0
     DNF_INSTALL anaconda-core 
     sed -i "s/MAX_RAM_ON=2097152/MAX_RAM_ON=4097152/g" /usr/libexec/anaconda/zramswapon
     systemctl start zram.service
