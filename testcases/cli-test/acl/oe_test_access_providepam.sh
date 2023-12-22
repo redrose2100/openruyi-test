@@ -19,6 +19,12 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "systemd-pam"
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
   LOG_INFO "Start to run test."
   rpm -qa|grep pam
@@ -26,6 +32,12 @@ function run_test() {
   test -e  /usr/lib64/security/pam_systemd.so
   CHECK_RESULT $? 0 0 "pam_systemd.so not exist"
   LOG_INFO "End of the test"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
