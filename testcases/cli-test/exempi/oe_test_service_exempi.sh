@@ -39,10 +39,13 @@ function run_test() {
 EOF
     test -f test.xmp
     CHECK_RESULT $? 0 0 "Create test.xmp file fail"
-    exempi -o test.xml test.xmp
-    test -f test.xml
+    exempi -o test.xml test.xmp && test -f test.xml
     CHECK_RESULT $? 0 0 "Create test.xml file fail"
     exempi -x test.xml | grep "dump_xmp for file test.xml"
+    CHECK_RESULT $? 0 0 "Execution failed"
+    exempi -R test.xml
+    CHECK_RESULT $? 0 0 "Execution failed"
+    exempi -x -p test.xml |grep "dump_xmp for file test.xml"
     CHECK_RESULT $? 0 0 "Execution failed"
     LOG_INFO "Finish test!"
 }
