@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/system-test/system-integration/os-basic/tldr",
+    "path": "$OET_PATH/testcases/cli-test/tldr",
     "cases": [
         {
             "name": "oe_test_tldr"
