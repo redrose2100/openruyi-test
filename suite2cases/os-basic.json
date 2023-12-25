@@ -833,6 +833,9 @@
 	},
 	{
 	   "name": "oe_test_gzexe"
+	},
+	{
+	   "name": "oe_test_strings"
 	}
     ]
 }
