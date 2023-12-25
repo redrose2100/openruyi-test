@@ -27,9 +27,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    sudo modprobe zram num_devices=2
+    modprobe zram num_devices=2
     CHECK_RESULT $?
-    sudo zramctl --find --size 2GB
+    zramctl --find --size 2GB
     CHECK_RESULT $?
     zramctl
     CHECK_RESULT $?
