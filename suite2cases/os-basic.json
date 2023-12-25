@@ -830,6 +830,9 @@
 	},
 	{
            "name": "oe_test_get_module"
+	},
+	{
+	   "name": "oe_test_gzexe"
 	}
     ]
 }
