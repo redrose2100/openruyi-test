@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    sudo modprobe zram num_devices={{2}}
+    sudo modprobe zram num_devices=2
     CHECK_RESULT $?
     sudo zramctl --find --size 2GB
     CHECK_RESULT $?
@@ -39,7 +39,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     modprobe -r zram
-    lsmod | grep -i zram
     LOG_INFO "Finish environment cleanup!"
 }
 
