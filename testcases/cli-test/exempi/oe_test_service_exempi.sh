@@ -44,6 +44,14 @@ EOF
     CHECK_RESULT $? 0 0 "Create test.xml file fail"
     exempi -x test.xml | grep "dump_xmp for file test.xml"
     CHECK_RESULT $? 0 0 "Execution failed"
+    exempi -R test.xml
+    CHECK_RESULT $? 0 0
+    if [[ $(uname -r) =~ "5.10" ]]; then
+        exempi -x -p test.xml |grep "dump_xmp for file test.xml"
+        CHECK_RESULT $? 0 0
+    fi
+    exempi -g property test.xmp
+    CHECK_RESULT $? 0 0
     LOG_INFO "Finish test!"
 }
 function post_test() {
