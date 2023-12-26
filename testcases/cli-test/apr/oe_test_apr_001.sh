@@ -91,7 +91,7 @@ apr_terminate();        //结束
 return APR_SUCCESS;
 }
 EOF
-    DNF_INSTALL "apr-util-devel"
+    DNF_INSTALL "apr-util-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 
