@@ -17,11 +17,12 @@
 # @Desc      :   Test zram.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL anaconda-core 
+    uname -r | grep ^5.10 && LOG_INFO "zram.service removed in version 5.10" && exit 0
     sed -i "s/MAX_RAM_ON=2097152/MAX_RAM_ON=4097152/g" /usr/libexec/anaconda/zramswapon
     systemctl start zram.service
     LOG_INFO "End of environmental preparation!"
@@ -37,7 +38,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i "s/MAX_RAM_ON=4097152/MAX_RAM_ON=2097152/g" /usr/libexec/anaconda/zramswapon
-    DNF_REMOVE
+    DNF_REMOVE anaconda-core 
     LOG_INFO "Finish environment cleanup!"
 }
 
