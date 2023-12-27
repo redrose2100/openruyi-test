@@ -20,7 +20,7 @@ set +e
     sysmonitor_list=/etc/sysmonitor
     tmp_dir=$(pwd)/monitor_tmp
 
-    object_path="$ETS_PATH"/testcases/bin/TestEL_MONITORALARM/sysmonitor-alarm
+    
     DIR_NAME=$(dirname "$0")
     BASE_NAME=$(basename "$0")
     MESSAGES_LOG=/var/log/sysmonitor.log
