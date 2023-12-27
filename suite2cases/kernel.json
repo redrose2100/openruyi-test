@@ -121,6 +121,9 @@
         },
         {
             "name": "oe_test_qedf"
+        },
+        {
+            "name": "oe_test_qedi"
         }
     ]
 }
