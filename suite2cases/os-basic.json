@@ -836,6 +836,9 @@
 	},
 	{
 	   "name": "oe_test_strings"
-	}
+	},
+        {
+           "name": "oe_test_zramctl"
+        }
     ]
 }
