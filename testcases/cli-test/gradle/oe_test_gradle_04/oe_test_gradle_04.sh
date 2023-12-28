@@ -16,7 +16,7 @@
 #@Desc      	:   verification gradle‘s command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL gradle
@@ -36,10 +36,14 @@ END
     CHECK_RESULT $? 0 0 "Check gradle base --scan failed"
     gradle build | grep "BUILD SUCCESSFUL"
     CHECK_RESULT $? 0 0 "Check gradle build failed."
+    test -d build
+    CHECK_RESULT $? 0 0 "Failed to generate the directory of build."
     gradle check | grep "BUILD SUCCESSFUL"
     CHECK_RESULT $? 0 0 "Check gradle check failed."
     gradle clean | grep "BUILD SUCCESSFUL"
     CHECK_RESULT $? 0 0 "Check gradle clean failed."
+    test -d build
+    CHECK_RESULT $? 1 0 "Test failed, we hope clean the directory of build."
     gradle -q help task base
     CHECK_RESULT $? 0 0 "Check gradle -q help task base failed."
     gradle dependencyInsight --dependency someDep | grep "BUILD SUCCESSFUL"
@@ -50,6 +54,8 @@ END
     CHECK_RESULT $? 0 0 "Check gradle assemble failed."
     gradle jar | grep "BUILD SUCCESSFUL"
     CHECK_RESULT $? 0 0 "Check gradle jar failed."
+    test -f build/libs/oe_test_gradle_04.jar
+    CHECK_RESULT $? 0 0 "Failed to generate the jar."
     gradle testClasses | grep "BUILD SUCCESSFUL"
     CHECK_RESULT $? 0 0 "Check gradle testClasses failed."
     LOG_INFO "End to run test."
@@ -57,7 +63,7 @@ END
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $(ls | grep -vE "\.sh") .gradle/
+    rm -rf build build.gradle .gradle/
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
