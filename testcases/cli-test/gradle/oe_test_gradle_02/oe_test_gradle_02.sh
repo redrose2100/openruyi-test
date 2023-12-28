@@ -16,37 +16,45 @@
 #@Desc      	:   verification gradle‘s command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL gradle
     mkdir subdir
     cat >./subdir/myproject.gradle <<EOF
 task hello << {
-    println "using build file '$buildFile.name' in '$buildFile.parentFile.name'."
+    println "using build file 'myproject.gradle' in 'subdir'."
 }
 EOF
     cat >./subdir/build.gradle <<EOF
 task hello << {
-    println "using build file '$buildFile.name' in '$buildFile.parentFile.name'."
+    println "using build file 'build.gradle' in 'subdir'."
 }
 EOF
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    gradle tasks init | grep "BUILD SUCCESSFUL"
+    gradle tasks init | grep "[0-9] actionable tasks: [0-9] executed"
     CHECK_RESULT $? 0 0 "Check gradle tasks init failed"
-    gradle tasks wrapper | grep "BUILD SUCCESSFUL"
+    test -f build.gradle -a -f gradlew.bat -a -f settings.gradle -a -f gradlew -a -d gradle
+    CHECK_RESULT $? 0 0 "Failed to generate these four files and the directory of gradle."
+    rm -rf build.gradle gradlew.bat settings.gradle gradlew gradle .gradle/
+    gradle tasks wrapper | grep "[0-9] actionable tasks: [0-9] executed"
     CHECK_RESULT $? 0 0 "Check gradle tasks wrapper failed."
+    test -f gradlew.bat -a -f gradlew -a -d gradle
+    CHECK_RESULT $? 0 0 "Failed to generate the directory of gradle and these two files."
+    rm -rf gradlew.bat gradlew gradle .gradle/
     cp -f ../common/build.gradle ./
     gradle -m build | grep "BUILD SUCCESSFUL"
     CHECK_RESULT $? 0 0 "Check gradle -m build failed."
     gradle build --profile | grep "BUILD SUCCESSFUL"
     CHECK_RESULT $? 0 0 "Check gradle build --profile failed."
-    gradle -q -b subdir/myproject.gradle hello | grep "using build file '.name' in '.parentFile.name'."
+    test -d build/reports/profile/
+    CHECK_RESULT $? 0 0 "Failed to generate the directory of profile."
+    gradle -q -b subdir/myproject.gradle hello | grep "using build file 'myproject.gradle' in 'subdir'."
     CHECK_RESULT $? 0 0 "Check gradle -q -b failed."
-    gradle -q -p subdir hello | grep "using build file '.name' in '.parentFile.name'."
+    gradle -q -p subdir hello | grep "using build file 'build.gradle' in 'subdir'."
     CHECK_RESULT $? 0 0 "Check gradle -q -p failed."
     gradle base | grep "Task"
     CHECK_RESULT $? 0 0 "Check gradle base failed."
@@ -59,7 +67,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $(ls | grep -vE "\.sh") .gradle/
+    rm -rf build subdir .gradle/ build.gradle
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
