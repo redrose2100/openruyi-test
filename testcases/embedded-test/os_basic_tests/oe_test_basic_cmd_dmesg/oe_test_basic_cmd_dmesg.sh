@@ -17,12 +17,12 @@
 # @Desc      :   Query boot information-dmesg
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    dmesg | grep -iE "Booting Linux on physical CPU|smpboot"
+    dmesg | grep -iE "Booting Linux on physical CPU|smpboot|SBI"
     CHECK_RESULT $? 0 0 "check dmesg one time fail"
 
     dmesg | grep -iE "Booting Linux on physical CPU|smpboot|systemd" >/dev/null
@@ -31,4 +31,5 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
-main $@
+main "$@"
+
