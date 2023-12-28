@@ -1,5 +1,9 @@
 #!/bin/bash
 set +e
+# 启动sysmonitor
+yum install -y sysmonitor-kmod &> /dev/null
+systemctl restart rsyslog
+
 # shellcheck disable=SC2034
 {
     MONITOR_CONFIG=/etc/sysconfig/sysmonitor
@@ -19,8 +23,7 @@ set +e
     sysmonitor_conf=/etc/sysconfig/sysmonitor
     sysmonitor_list=/etc/sysmonitor
     tmp_dir=$(pwd)/monitor_tmp
-
-    object_path="$ETS_PATH"/testcases/bin/TestEL_MONITORALARM/sysmonitor-alarm
+    
     DIR_NAME=$(dirname "$0")
     BASE_NAME=$(basename "$0")
     MESSAGES_LOG=/var/log/sysmonitor.log
@@ -37,9 +40,7 @@ set +e
     FD_ERR_INFO="Found unknown characters in the fdsize limit of service ${MEM_FD_PROCESS}"
     #process monitor end
 }
-# 启动sysmonitor
-yum install -y sysmonitor-kmod &> /dev/null
-systemctl restart rsyslog
+
 
 function init() {
     monitor_restart
