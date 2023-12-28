@@ -839,6 +839,9 @@
 	},
         {
            "name": "oe_test_zramctl"
+	},
+        {
+           "name": "oe_test_znew"
         }
     ]
 }
