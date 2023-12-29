@@ -15,6 +15,9 @@
 	},    
         {
 	    "name": "oe_test_pigz_04"
+	},
+	{
+	    "name": "oe_test_pigz_05"
 	}
     ]
 }
