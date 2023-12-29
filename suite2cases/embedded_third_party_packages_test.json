@@ -54,6 +54,9 @@
         },
         {
             "name": "oe_test_zlib_test_001"
+        },
+        {
+            "name": "oe_test_gzip_test_001"
         }
     ]
 }
