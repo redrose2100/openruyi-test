@@ -36,6 +36,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Return value error"
     sed --v
     CHECK_RESULT $? 0 0 "Version is error"
+    sed --help | grep "用法"
+    CHECK_RESULT $? 0 0 "sed --help fail"
     sed -i '1i testline' /tmp/test_sed
     grep testline /tmp/test_sed
     CHECK_RESULT $? 0 0 "set testline fail"    
@@ -44,9 +46,18 @@ function run_test() {
     CHECK_RESULT $? 1 0 "delete firstline fail"
     sed -n '1p' /tmp/test_sed
     CHECK_RESULT $? 0 0 "lookup firstline error"   
+    sed -n '2,+3p' /tmp/test_sed
+    CHECK_RESULT $? 0 0 "print 2~3 fail"
     sed -i 's/aaaa/eeee/' /tmp/test_sed
     grep eeee /tmp/test_sed
     CHECK_RESULT $? 0 0 "replace aaaa fail"
+    sed '1,4d' /tmp/test_sed
+    grep dddd /tmp/test_sed
+    CHECK_RESULT $? 0 0 "sed '1,4d'execute fail"
+    sed -i '1,4d' /tmp/test_sed
+    grep dddd /tmp/testsed
+    CHECK_RESULT $? 0 1 "sed -i '1,4d' execute fail"
+    LOG_INFO "Finished test!"
 }
 
 function post_test() {
@@ -55,4 +66,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
