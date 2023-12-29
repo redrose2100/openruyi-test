@@ -28,10 +28,16 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     yumdownloader tcllib
+    rpm -qip tcllib*.rpm | grep Name
+    CHECK_RESULT $? 0 0 "Failed to execute rpm -qip"
     rpm -ivh tcllib*.rpm
     CHECK_RESULT $? 0 0 "Failed to execute rpm -ivh"
     rpm -qa | grep -v help | grep tcllib
     CHECK_RESULT $? 0 0 "Failed to execute rpm -qa"
+    rpm -qi tcllib
+    CHECK_RESULT $? 0 0 "Failed to execute rpm -qi"
+    rpm -ql tcllib
+    CHECK_RESULT $? 0 0 "Failed to execute rpm -ql"
     rpm -e "$(rpm -qa tcllib)"
     CHECK_RESULT $? 0 0 "Failed to execute rpm -e"
     rpm -qa | grep -v help | grep tcllib
