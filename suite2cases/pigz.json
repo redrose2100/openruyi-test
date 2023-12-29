@@ -12,6 +12,9 @@
         },
         {
             "name": "oe_resr_pigz_03"
-	}    
+	},    
+        {
+	    "name": "oe_test_pigz_04"
+	}
     ]
 }
