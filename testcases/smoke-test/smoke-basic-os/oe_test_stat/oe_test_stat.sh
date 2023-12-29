@@ -21,8 +21,14 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
+    stat --help | grep "用法"
+    CHECK_RESULT $? 0 0 "Failed to execute stat --help"
+    stat --version | grep "Copyright (C)"
+    CHECK_RESULT $? 0 0 "Failed to execute stat --version"
     stat -c %D /etc/passwd | grep -iE "[-0-9]|[a-z]"
-    CHECK_RESULT $? 0 0 "Failed to execute stat"
+    CHECK_RESULT $? 0 0 "Failed to execute stat -c"
+    stat --format "%Z" /etc/passwd
+    CHECK_RESULT $? 0 0 "Failed to execute stat --format"
     LOG_INFO "End to run test."
 }
 
