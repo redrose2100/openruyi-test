@@ -3,6 +3,9 @@
   "cases": [
     {
       "name": "oe_test_systools"
+    },
+    {
+      "name": "oe_test_systool_002"
     }
   ]
 }
