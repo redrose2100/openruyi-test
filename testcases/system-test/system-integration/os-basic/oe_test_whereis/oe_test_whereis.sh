@@ -34,6 +34,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check version display failed"
     whereis -b pwd |grep pwd
     CHECK_RESULT $? 0 0 "check pwd display failed"
+    whereis -l | grep "/usr/bin"
+    CHECK_RESULT $? 0 0 "check -l failed"
+    whereis -f openssl
+    CHECK_RESULT $? 0 0 "Failed to terminate the parameter list"
+    whereis -u vi
+    CHECK_RESULT $? 0 0 " log search failed"
     LOG_INFO "End to run test."
 }
 
