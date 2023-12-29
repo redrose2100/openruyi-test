@@ -1,0 +1,8 @@
+{
+  "path": "$OET_PATH/testcases/cli-test/pmix",
+  "cases": [
+    {
+      "name": "oe_test_pmix"
+    }
+  ]
+}
