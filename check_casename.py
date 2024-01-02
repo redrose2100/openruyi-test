@@ -69,6 +69,9 @@ def check_testcase():
     suitecase_list = os.listdir(os.path.join(curr_path, suitecase_path))
     ret = 0
     for one_suite in suitecase_list:
+        if not os.path.isfile(os.path.join(curr_path, suitecase_path, one_suite)):
+            # 处理路径是目录的情况
+            continue
         with open(os.path.join(curr_path, suitecase_path, one_suite), "r") as f:
             case_info = json.load(f)
             case_path = os.path.join(curr_path, "/".join(case_info["path"].split("/")[1:]))
