@@ -279,9 +279,12 @@ function CONCURRENCY_THREAD() {
 }
 
 function INSTALL_STRESS() {
-    wget -P /opt/ https://fossies.org/linux/privat/old/stress-1.0.4.tar.gz
-    tar -zxvf /opt/stress-1.0.4.tar.gz -C /opt/
-    cd /opt/stress-1.0.4 || exit
+    wget -P /opt/ https://fossies.org/linux/privat/old
+    stress="$(grep '"stress-*' /opt/old | awk -F '"' '{print $4}')"
+    wget -P /opt/ https://fossies.org/linux/privat/old/$stress
+    tar -zxvf /opt/$stress -C /opt/
+    stress_dir=$(echo $stress | awk -F '.tar' '{print $1}')
+    cd /opt/$stress_dir || exit
     ./configure
     make >/dev/null
     make check >/dev/null
@@ -290,10 +293,10 @@ function INSTALL_STRESS() {
 }
 
 function CLEAN_STRESS() {
-    cd /opt/stress-1.0.4 || exit
+    cd /opt/$stress_dir || exit
     make clean >/dev/null
     cd - || exit
-    rm -rf /opt/stress-1.0.4.tar.gz /opt/stress-1.0.4
+    rm -rf /opt/stress-* /opt/old
 }
 
 function CPU_STRESS() {
