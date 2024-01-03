@@ -24,7 +24,7 @@ function pre_test() {
     ACT_SERVICE
     INIT_CONF ../../common_lib/openEuler.yaml
 
-    LOG_INFO "Finish to prepare the database config."
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {

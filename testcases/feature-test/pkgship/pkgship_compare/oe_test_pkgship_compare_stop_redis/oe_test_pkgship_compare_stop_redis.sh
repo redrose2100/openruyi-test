@@ -30,7 +30,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    for i in $(pgrep -l "redis" | grep -Ev "bash|grep|mugen.sh" | awk '{print $1}'); do
+    for i in $(pgrep -f -a "redis" | grep -Ev "bash|grep|mugen.sh" | awk '{print $1}'); do
         kill -9 "$i" 
     done
     pkgship compare -t install -dbs openeuler1 fedora 

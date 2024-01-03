@@ -22,9 +22,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     ACT_SERVICE
+    if [ "${NODE1_FRAME}" = "x86_64" ]; then
+        sed -i "s/aarch64/x86_64/g" ./conf.yaml
+    fi
     INIT_CONF ./conf.yaml
 
-    LOG_INFO "Finish to prepare the database config."
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
@@ -47,6 +50,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     REVERT_ENV
+    if [ "${NODE1_FRAME}" = "x86_64" ]; then
+        sed -i "s/x86_64/aarch64/g" ./conf.yaml
+    fi
 
     LOG_INFO "End to restore the test environment."
 }
