@@ -16,7 +16,7 @@
 #@Desc      	:   Start ipsec servier by systemctl
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -29,15 +29,15 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    SLEEP_WAIT 2 "systemctl start ipsec.service"
+    SLEEP_WAIT 15 "systemctl start ipsec.service"
     CHECK_RESULT $? 0 0 "Start ipsec.service failed."
     systemctl status ipsec.service | grep "active"
     CHECK_RESULT $? 0 0 "Check ipsec.service start status failed."
-    SLEEP_WAIT 2 "systemctl stop ipsec.service"
+    SLEEP_WAIT 15 "systemctl stop ipsec.service"
     CHECK_RESULT $? 0 0 "Stop ipsec.service failed."
     systemctl status ipsec.service | grep "inactive"
     CHECK_RESULT $? 0 0 "Check ipsec.service stop status failed."
-    SLEEP_WAIT 2 "systemctl restart ipsec.service"
+    SLEEP_WAIT 15 "systemctl restart ipsec.service"
     CHECK_RESULT $? 0 0 "Restart ipsec.service failed."
     systemctl status ipsec.service | grep "active"
     CHECK_RESULT $? 0 0 "Check ipsec.service restart status failed."
@@ -48,7 +48,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE
+    DNF_REMOVE ""
 
     LOG_INFO "End to restore the test environment."
 }
