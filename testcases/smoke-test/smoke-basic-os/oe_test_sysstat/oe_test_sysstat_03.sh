@@ -32,7 +32,7 @@ function run_test() {
     dd if=/dev/zero of=/tmp/test.img bs=1M count=1000 &
     CHECK_RESULT $? 0 0 "dd command failed"
     iostat 1 2 >> testfile.txt
-    cat < testfile.txt | grep vda
+    cat < testfile.txt | grep "vda\|sda"
     CHECK_RESULT $? 0 0 "iostat 1 2 failed"
     LOG_INFO "Finish test!"
 }
