@@ -29,6 +29,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     date +%M >/tmp/timelog1
+    path="/var/spool/at"
+    mkdir -p "${path}"
+    touch "${path}/.SEQ"
     expect <<EOF
         spawn at now+1 minutes
         expect "at>" { send "date +%M >/tmp/timelog2\r" }
