@@ -15,21 +15,18 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Create bridge for docker
 #####################################
+# shellcheck source=/dev/null
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source ../common/docker.conf
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL "docker bridge-utils net-tools"
-    frame="aarch64"
-    if [[ ${NODE1_FRAME} -eq ${frame} ]]; then
-        wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/aarch64/openEuler-docker.aarch64.tar.xz
-        image_name="openEuler-docker.aarch64.tar.xz"
-    else
-        wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/x86_64/openEuler-docker.x86_64.tar.xz
-        image_name="openEuler-docker.x86_64.tar.xz"
-    fi
-    docker load -i $image_name
+    image_file="openEuler-docker.${NODE1_FRAME}.tar.xz"
+    docker_path="${docker_path}/${NODE1_FRAME}/${image_file}"
+    wget "${docker_path}"
+    docker load -i "${image_file}"
     LOG_INFO "Finish to prepare the database config."
 }
 
@@ -53,7 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     docker rmi "$(docker images -q)"
-    rm -f $image_name
+    rm -rf "${image_file}"
     ifconfig docker0 down
     brctl delbr docker0
     DNF_REMOVE "$@"
