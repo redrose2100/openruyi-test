@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   TLDR tool testing
 # #############################################
+shellcheck disable=SC2140
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
