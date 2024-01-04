@@ -22,6 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     pwd=`pwd`
+    DNF_INSTALL gcc
     mkdir c_stat_test && cd c_stat_test
     LOG_INFO "End to prepare the test environment."
 }
@@ -67,6 +68,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     cd $pwd && rm -rf c_stat_test/
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

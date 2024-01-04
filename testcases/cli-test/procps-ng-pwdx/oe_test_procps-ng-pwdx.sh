@@ -19,6 +19,9 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    DNF_INSTALL gcc
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -32,7 +35,7 @@ EOF
     CHECK_RESULT $? 0 0 "Error, Fail to create test.c"
     gcc test.c -o test
     CHECK_RESULT $? 0 0 "Error,Check if gcc is installed ？"
-    ./test
+    ./test &
     PID=$(pgrep test |awk '{print $1}')
     CHECK_RESULT $? 0 0 "Error, Fail to get PID"
     pwdx "$PID"
@@ -44,6 +47,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf test.c test
     kill -9 "$PID"
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
