@@ -23,7 +23,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     pushd ./tmp_test/tests/ || exit
-    /bin/sh run-all
+    sh run-all >log 2>&1
     CHECK_RESULT $? 0 0 "run bash testcase fail"
     popd || exit
 
@@ -31,4 +31,3 @@ function run_test() {
 }
 
 main "$@"
-
