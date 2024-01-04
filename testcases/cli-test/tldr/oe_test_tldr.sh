@@ -29,7 +29,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     tldr -h |grep -i usage
     CHECK_RESULT $? 0 0 "Failed to view help information"
-    tldr ls |grep -E "列出|List"
+    tldr ls |grep -E ""列出"|List"
     CHECK_RESULT $? 0 0 "Failed to view usage instructions"
     tldr pwd |grep -i print
     CHECK_RESULT $? 0 0 "Failed to view information"
