@@ -829,7 +829,7 @@
 	    "name": "oe_test_tty"
 	},
 	{
-           "name": "oe_test_get_module"
+        "name": "oe_test_get_module"
 	},
 	{
 	   "name": "oe_test_gzexe"
@@ -837,11 +837,14 @@
 	{
 	   "name": "oe_test_strings"
 	},
-        {
-           "name": "oe_test_zramctl"
+    {
+        "name": "oe_test_zramctl"
 	},
-        {
-           "name": "oe_test_znew"
-        }
+    {
+        "name": "oe_test_znew"
+     },
+     {
+        "name":"oe_test_pv"
+    }
     ]
 }
