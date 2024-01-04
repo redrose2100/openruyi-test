@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "format check fail"   
     ausearch -m ADD_USER
     CHECK_RESULT $? 0 0 "AVC check fail"
-    uid=$(id -u uuos1)
+    uid=$(id -u uos1)
     ausearch -ua "$uid"
     CHECK_RESULT $? 0 0 "ua check fail"   
     ausearch -f /home/uos1/testfile
