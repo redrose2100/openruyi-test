@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "cairo-devel"
+    DNF_INSTALL "cairo-devel gcc"
     pwd=`pwd`
     mkdir cairo_test/ && cd cairo_test/
     LOG_INFO "End to prepare the test environment."

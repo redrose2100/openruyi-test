@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "pcre pcre-devel"
+    DNF_INSTALL "pcre pcre-devel gcc"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -54,6 +54,7 @@ function post_test() {
     sed '2,$d' /etc/ld.so.conf
     rm -f $(realpath pcre.c) && rm -f $(realpath a.out)
     export LANG=${OLD_LANG}
+    DNF_REMOVE
     LOG_INFO "End to clean the test environment."
 }
 
