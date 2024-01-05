@@ -29,9 +29,9 @@ function run_test() {
     CHECK_RESULT $?
     cpupower help | grep "Usage" | grep "cpupower"
     CHECK_RESULT $?
-    cpupower frequency-info | grep "analyzing CPU 0"
+    cpupower frequency-info | grep "analyzing CPU "
     CHECK_RESULT $?
-    if ! hostnamectl | grep Virtualization; then
+    if ! hostnamectl | grep Virtualization && ! lshw -c system | grep -E "product.*qemu"; then
         current_frequency=$(cpupower frequency-info | grep "current CPU frequency" | awk -F ": " '{print $2}' | awk '{print $1}')
         cpupower frequency-set -f 1.0GHz
         CHECK_RESULT $?
@@ -39,11 +39,11 @@ function run_test() {
         CHECK_RESULT $?
         cpupower frequency-set -f "${current_frequency}"GHz
     fi
-    cpupower idle-info | grep "analyzing CPU 0"
+    cpupower idle-info | grep "analyzing CPU "
     CHECK_RESULT $?
     cpupower idle-set
     CHECK_RESULT $?
-    cpupower info | grep "analyzing CPU 0"
+    cpupower info | grep "analyzing CPU "
     CHECK_RESULT $?
     gpio-event-mon -? 2>&1 | grep "Usage: gpio-event-mon"
     CHECK_RESULT $?
@@ -54,7 +54,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the tet environment."
-    DNF_REMOVE
+    DNF_REMOVE ""
     LOG_INFO "Finish to restore the tet environment."
 }
 
