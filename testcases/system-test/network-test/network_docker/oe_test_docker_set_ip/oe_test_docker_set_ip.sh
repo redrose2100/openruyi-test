@@ -15,21 +15,20 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Set ip for docker
 #####################################
+# shellcheck disable=SC2154
+# shellcheck source=/dev/null
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source ../common/docker.conf
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL docker
-    frame="aarch64"
-    if [[ ${NODE1_FRAME} -eq ${frame} ]]; then
-        wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/aarch64/openEuler-docker.aarch64.tar.xz
-        image_name="openEuler-docker.aarch64.tar.xz"
-    else
-        wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/x86_64/openEuler-docker.x86_64.tar.xz
-        image_name="openEuler-docker.x86_64.tar.xz"
-    fi
-    docker load -i $image_name
+    DNF_INSTALL "docker net-tools bridge-utils"
+    image_name=$(echo "${version}" | awk '{print tolower($0)}')
+    image_file="openEuler-docker.${NODE1_FRAME}.tar.xz"
+    docker_path="${docker_path}/${NODE1_FRAME}/${image_file}"
+    wget "${docker_path}"
+    docker load -i "$image_file"
     docker network create docker_bridge
     new_ip=$(echo "${NODE1_IPV4}" | cut -d '.' -f 1).0.0.8
     subnet=$(echo "${NODE1_IPV4}" | cut -d '.' -f 1).0.0.0
@@ -39,7 +38,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    docker run -itd --net testnet --ip "${new_ip}" --name "test_docker" "openeuler-20.03-lts-sp1"
+    docker run -itd --net testnet --ip "${new_ip}" --name "test_docker" "${image_name}"
     CHECK_RESULT $? 0 0 "Check docker created failed."
     docker ps -a | grep "test_docker"
     CHECK_RESULT $? 0 0 "Check test_docker created failed."
@@ -53,8 +52,11 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     docker rm -f "$docker_id"
     docker network rm testnet
+    docker network rm docker_bridge
     docker rmi "$(docker images -q)"
-    rm -f $image_name
+    rm -rf "$image_file"
+    ifconfig docker0 down
+    brctl delbr docker0
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
