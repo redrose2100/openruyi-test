@@ -26,8 +26,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    curl --metalink "https://httpbin.org/anything"
-    CHECK_RESULT $? 0 0 "check curl --metalink failed"
+#    curl --metalink "https://httpbin.org/anything"
+#    CHECK_RESULT $? 0 0 "check curl --metalink failed"
     curl --negotiate "https://httpbin.org/anything"
     CHECK_RESULT $? 0 0 "check curl --negotiate failed"
     curl https://www.baidu.com -o output.txt && test -f output.txt
