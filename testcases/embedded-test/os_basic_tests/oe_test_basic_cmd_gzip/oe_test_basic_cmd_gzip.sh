@@ -55,13 +55,15 @@ function run_test() {
     gzip --help 2>&1 | grep "Usage"
     CHECK_RESULT $? 0 0 "check gzip help fail"
     
-    zip -r /tmp/test.zip /tmp/test1
-    zip -d /tmp/test.zip /tmp/test1/testfile1 |grep "deleting"
-    CHECK_RESULT $? 0 0 "delete /tmp/test1/testfile1 failed in /test.zip"
-    zip -m /tmp/testfile /tmp/test.zip |grep "adding"
-    CHECK_RESULT $? 0 0 "add /testfile failed in /test.zip"
-    zip -j /tmp/test1.zip /tmp/test1
-    CHECK_RESULT $? 0 1 "-j does not support compressing directories"
+    if zip -h; then
+        zip -r /tmp/test.zip /tmp/test1
+        zip -d /tmp/test.zip /tmp/test1/testfile1 |grep "deleting"
+        CHECK_RESULT $? 0 0 "delete /tmp/test1/testfile1 failed in /test.zip"
+        zip -m /tmp/testfile /tmp/test.zip |grep "adding"
+        CHECK_RESULT $? 0 0 "add /testfile failed in /test.zip"
+        zip -j /tmp/test1.zip /tmp/test1
+        CHECK_RESULT $? 0 1 "-j does not support compressing directories"
+    fi
 
     LOG_INFO "End to run test."
 }

@@ -23,6 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     pwd=`pwd`
     mkdir glibc_test && cd glibc_test
+    DNF_INSTALL gcc
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -51,6 +52,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     cd $pwd && rm -rf glibc_test/
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
