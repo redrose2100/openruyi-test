@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/bash-completion
 
 # Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
@@ -13,7 +13,7 @@
 #@Contact   	:   wang_shan001@hoperun.com
 #@Date      	:   2023-11-24 14:39:43
 #@License   	:   Mulan PSL v2
-#@Desc      	:   Run bash testsuite
+#@Desc      	:   Run bash-completion testsuite
 #####################################
 # shellcheck disable=SC1091
 source ../comm_lib.sh
@@ -22,9 +22,15 @@ source ../comm_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
 
-    pushd ./tmp_test/tests/ || exit
-    sh run-all >log 2>&1
-    CHECK_RESULT $? 0 0 "run bash testcase fail"
+    declare -A allTests
+    getCasesFromFile allTests testcases.txt
+
+    pushd ./tmp_test/completions/ || exit
+    export LANG=en_US.UTF-8
+    for file in "${!allTests[@]}"; do
+        bash -O extglob -n ./"$file"
+        CHECK_RESULT $? 0 0 "run bash-completion test ${file} fail"
+    done
     popd || exit
 
     LOG_INFO "End to run test."
