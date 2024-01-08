@@ -65,7 +65,7 @@ devices {
 }
 
 function clear_env() {
-    P_SSH_CMD --node 2 --cmd "dnf remove -y scsi-target-utils; echo -e 'd\nw\n' | fdisk ${remote_disk}"
+    P_SSH_CMD --node 2 --cmd "echo -e 'd\nw\n' | fdisk ${remote_disk}; dnf remove -y scsi-target-utils"
     iscsiadm -m node --logoutall=all
     multipath -F
     DNF_REMOVE
