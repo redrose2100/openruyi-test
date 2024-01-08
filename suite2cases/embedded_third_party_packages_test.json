@@ -57,6 +57,9 @@
         },
         {
             "name": "oe_test_gzip_test_001"
+        },
+        {
+            "name": "oe_test_bash-completion_test_001"
         }
     ]
 }
