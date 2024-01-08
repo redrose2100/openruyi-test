@@ -4,18 +4,18 @@ CURDIR=${shell pwd}
 all:copycommon makemake subdirs
 
 copycommon:
-	cp -r $${OET_PATH}/testcases/embedded-test/common_libs/* ./
+	cp -r ${OET_PATH}/testcases/embedded-test/common_libs/* ./
 
 makemake:
 	yum install libtool -y
 	sh ./common.sh -d "make" "openEuler-22.03-LTS"
 	cd ./tmp_extract/make* && \
-	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
+	./configure --host=${CROSS_COMPILE%-} --build=$(gcc -dumpmachine) && \
 	make && \
 	cp ./make ${CURDIR}
 	sh ./common.sh -d "dejagnu" "openEuler-22.03-LTS"
 	cd ./tmp_extract/dejagnu* && \
-	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) --prefix=${CURDIR}/dejagnu && \
+	./configure --host=${CROSS_COMPILE%-} --build=$(gcc -dumpmachine) --prefix=${CURDIR}/dejagnu && \
 	make install
 	tar -cf dejagnu.tar ./dejagnu
 	sh ./common.sh -r all
