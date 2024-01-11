@@ -1,0 +1,15 @@
+{
+  "path": "$OET_PATH/testcases/cli-test/mc",
+  "cases": [
+    {
+      "name": "oe_test_mcdiff_01"
+    },
+  ]
+}
+
+
+
+
+
+
+

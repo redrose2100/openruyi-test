@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/sysstat",
+    "cases": [
+	{
+            "name": "oe_test_sysstat_iostat"
+	}	
+    ]
+}

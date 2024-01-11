@@ -1,0 +1,14 @@
+{
+    "path": "${OET_PATH}/testcases/feature-test/pkgship/pkgship_selfdepend_query",
+    "cases": [
+        {
+            "name": "oe_test_pkgship_selfdepend_binary_1"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_binary_2"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_fail_2"
+        }
+    ]
+}
