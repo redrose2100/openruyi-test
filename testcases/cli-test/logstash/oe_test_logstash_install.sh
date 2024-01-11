@@ -23,16 +23,17 @@ function pre_test() {
   LOG_INFO "Start to prepare the test environment."
   DNF_INSTALL "java-1.8.0-openjdk expect"
   mkdir /tmp/test
-  cp ./common/logstash-6.6.1.tar.gz /tmp/test
+  wget -P /tmp/test https://gitee.com/sunqingwei811/package/repository/archive/master.zip
   LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
-  tar -xvf /tmp/test/logstash-6.6.1.tar.gz -C /tmp/test
+  unzip /tmp/test/master.zip -d /tmp/test
   CHECK_RESULT $? 0 0 "Unzip file failed"
-  cp ./common/test.sh /tmp/test/logstash-6.6.1/bin
-  cd /tmp/test/logstash-6.6.1/bin || return
+  cp ./common/test.sh /tmp/test/package-master/logstash-6.6.1/bin
+  cd /tmp/test/package-master/logstash-6.6.1/bin || return
+  chmod 777 logstash
   bash test.sh
   grep '\"message\"' test.log | grep '\"hello world\"'
   CHECK_RESULT $? 0 0 "Test failed"
