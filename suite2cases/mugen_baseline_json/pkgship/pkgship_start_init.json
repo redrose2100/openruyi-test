@@ -1,0 +1,12 @@
+{
+    "path": "${OET_PATH}/testcases/feature-test/pkgship/pkgship_start_init",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_pkgship_help"
+        },
+        {
+            "name": "oe_test_pkgship_install_service_check"
+        }
+    ]
+}
