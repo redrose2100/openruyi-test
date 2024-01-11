@@ -17,7 +17,7 @@
 # @Desc      :   Test lz4 compression and decompression
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -27,15 +27,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    lz4 big_file big_file.lz4
-    CHECK_RESULT $? 0 0 "Failed to execute lz4"
+    lz4 --help
+    CHECK_RESULT $? 0 0 "Failed to execute lz4 --help"
+    lz4 -V
+    CHECK_RESULT $? 0 0 "Failed to execute lz4 -V"
+    lz4 -q big_file big_file.lz4
+    CHECK_RESULT $? 0 0 "Failed to execute lz4 -q"
     test -f big_file.lz4
     CHECK_RESULT $? 0 0 "Failed to compress file"
     rm -rf big_file
     lz4 -d big_file.lz4 big_file_decode
     CHECK_RESULT $? 0 0 "Failed to execute lz4 -d"
     SLEEP_WAIT 3
-    ls -lh | grep big_file_decode | grep 10M
+    find . -type f -name "big_file_decode" -size +10M
     CHECK_RESULT $? 0 0 "Failed to decompress file"
     LOG_INFO "End to run test."
 }
