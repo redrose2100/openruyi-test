@@ -48,6 +48,9 @@
         },
         {
             "name": "oe_test_tidy_pretty_print_options"
+        },
+        {
+            "name": "oe_test_tidy_output"
         }
     ]
 }
