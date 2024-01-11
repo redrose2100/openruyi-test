@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   gaoshuaishuai
 # @Contact   :   gaoshuaishuai@uniontech.com
-# @Date      :   2023/12/03
+# @Date      :   2024/01/09
 # @License   :   Mulan PSL v2
 # @Desc      :   test squashfs-tools 
 # ############################################
@@ -22,16 +22,19 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL squashfs-tools
-  mkdir test
+  path=/tmp/test_squashfs-tools
+  mkdir "${path}"
+  kernel=$(uname -r)
   LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
-  cp common/initrd.img test
-  xz -dc test/initrd.img | cpio -id
-  CHECK_RESULT $? 0 0 "Initrd.img decompression failed"   
-  mksquashfs test/ squashtest.squashfs
+  cp /boot/initramfs-"${kernel}".img "${path}"
+  cd "${path}" || exit 1
+  zcat "${path}"/initramfs-"${kernel}".img | cpio -id
+  CHECK_RESULT $? 0 0 "Initrd.img decompression failed"
+  mksquashfs "${path}" squashtest.squashfs
   CHECK_RESULT $? 0 0 "Mksqueshfs production failed"
   LOG_INFO "End of the test."
 }
@@ -39,7 +42,7 @@ function run_test() {
 function post_test() {
   LOG_INFO "start environment cleanup."
   DNF_REMOVE "$@"
-  rm -rf test/
+  rm -rf "${path}"
   LOG_INFO "Finish environment cleanup!"
 }
 
