@@ -8,7 +8,6 @@ all:
 	sh ../common.sh -c "sed*" "init.cfg"
 	sh ../common.sh -c "sed*" "test-driver"
 	sh ../common.sh -r
-	rm -rf ./rpmbuild
 clean:
 	sh ../common.sh -r "all"
 
