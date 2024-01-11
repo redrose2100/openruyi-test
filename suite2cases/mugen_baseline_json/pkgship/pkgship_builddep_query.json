@@ -1,0 +1,23 @@
+{
+    "path": "${OET_PATH}/testcases/feature-test/pkgship/pkgship_builddep_query",
+    "cases": [
+        {
+            "name": "oe_test_pkgship_builddep_02"
+        },
+        {
+            "name": "oe_test_pkgship_builddep_04"
+        },
+        {
+            "name": "oe_test_pkgship_builddep_07"
+        },
+        {
+            "name": "oe_test_pkgship_builddep_08"
+        },
+        {
+            "name": "oe_test_pkgship_builddep_09"
+        },
+        {
+            "name": "oe_test_pkgship_builddep_10"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/cloud-init",
+    "cases": [
+        {
+            "name": "oe_test_target_cloud-config"
+        },
+        {
+            "name": "oe_test_target_cloud-init"
+        }
+    ]
+}
