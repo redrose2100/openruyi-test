@@ -17,7 +17,7 @@
 # @Desc      :   Command test lz4
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "lz4"
@@ -26,18 +26,30 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cat > lz4_test.txt << EOF
-testlz4
+    cat > lz4_test1 << EOF
+testlz4 test1
 EOF
-    lz4 -m lz4_test.txt
+    cat > lz4_test2 << EOF
+testlz4 test2
+EOF
+    lz4 -m lz4_test1 lz4_test2
     CHECK_RESULT $? 0 0 "compress file error"
-    ls | grep "lz4_test.txt.lz4"
-    CHECK_RESULT $? 0 0 "check compile file error"
-    rm -rf lz4_test.txt
-    lz4 -dm lz4_test.txt.lz4
+    ls lz4_test1.lz4
+    CHECK_RESULT $? 0 0 "check compress -m file1 error"
+    ls lz4_test2.lz4
+    CHECK_RESULT $? 0 0 "check compresss -m file2 error"
+
+    rm -rf lz4_test1
+    lz4 -d -m lz4_test1.lz4
+    ls lz4_test1
     CHECK_RESULT $? 0 0 "decompress file error"
-    ls lz4_test.txt
-    CHECK_RESULT $? 0 0 "check decompress result error"
+
+    rm -rf lz4_test2.lz4
+    lz4 --rm -m lz4_test2 
+    ls lz4_test2.lz4
+    CHECK_RESULT $? 0 0 "check --rm file1 compress error"
+    ls lz4_test2.txt
+    CHECK_RESULT $? 0 1 "check --rm file1 exist error"
     lz4 -h
     CHECK_RESULT $? 0 0 "view help msg error"
     LOG_INFO "End to run test."
@@ -45,8 +57,8 @@ EOF
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf lz4_test.txt*
-    DNF_REMOVE
+    rm -rf lz4_test*
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
