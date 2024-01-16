@@ -13,6 +13,6 @@
         {
             "name": "oe_test_ndisc6_tcpspray",
             "machine num": 2
-        },
+        }
     ]
 }
