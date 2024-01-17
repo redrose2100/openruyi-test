@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of b43-tools command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -28,34 +28,34 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    b43-asm -h 2>&1 | fgrep "Usage: b43-asm INPUT_FILE OUTPUT_FILE [OPTIONS]"
+    b43-asm -h 2>&1 | grep -F "Usage: b43-asm INPUT_FILE OUTPUT_FILE [OPTIONS]"
     CHECK_RESULT $? 0 0 "Check b43-asm -h failed"
 
-    b43-asm --help 2>&1 | fgrep "Usage: b43-asm INPUT_FILE OUTPUT_FILE [OPTIONS]"
+    b43-asm --help 2>&1 | grep -F "Usage: b43-asm INPUT_FILE OUTPUT_FILE [OPTIONS]"
     CHECK_RESULT $? 0 0 "Check b43-asm --help failed"
 
-    b43-dasm -h 2>&1 | fgrep "Usage: b43-dasm INPUT_FILE OUTPUT_FILE [OPTIONS]"
+    b43-dasm -h 2>&1 | grep -F "Usage: b43-dasm INPUT_FILE OUTPUT_FILE [OPTIONS]"
     CHECK_RESULT $? 0 0 "Check b43-dasm -h failed"
 
-    b43-dasm --help 2>&1 | fgrep "Usage: b43-dasm INPUT_FILE OUTPUT_FILE [OPTIONS]"
+    b43-dasm --help 2>&1 | grep -F "Usage: b43-dasm INPUT_FILE OUTPUT_FILE [OPTIONS]"
     CHECK_RESULT $? 0 0 "Check b43-dasm --help failed"
 
-    b43-beautifier -h | fgrep "Usage: b43-beautifier [OPTIONS]"
+    b43-beautifier -h | grep -F "Usage: b43-beautifier [OPTIONS]"
     CHECK_RESULT $? 0 0 "Check b43-beautifier -h failed"
 
-    b43-beautifier --help | fgrep "Usage: b43-beautifier [OPTIONS]"
+    b43-beautifier --help | grep -F "Usage: b43-beautifier [OPTIONS]"
     CHECK_RESULT $? 0 0 "Check b43-beautifier --help failed"
 
-    b43-fwdump -h | fgrep "Usage: b43-fwdump [OPTIONS]"
+    b43-fwdump -h | grep -F "Usage: b43-fwdump [OPTIONS]"
     CHECK_RESULT $? 0 0 "Check b43-beautifier -h failed"
 
-    b43-fwdump --help | fgrep "Usage: b43-fwdump [OPTIONS]"
+    b43-fwdump --help | grep -F "Usage: b43-fwdump [OPTIONS]"
     CHECK_RESULT $? 0 0 "Check b43-beautifier --help failed"
 
-    ssb-sprom -h | fgrep "Usage: ssb-sprom [OPTION]"
+    ssb-sprom -h | grep -F "Usage: ssb-sprom [OPTION]"
     CHECK_RESULT $? 0 0 "Check b43-beautifier -h failed"
 
-    ssb-sprom --help | fgrep "Usage: ssb-sprom [OPTION]"
+    ssb-sprom --help | grep -F "Usage: ssb-sprom [OPTION]"
     CHECK_RESULT $? 0 0 "Check b43-beautifier --help failed"
 
     ssb-sprom -v | grep "Licensed under the GNU/GPL version"
@@ -69,7 +69,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restore the test environment."
 }
 
