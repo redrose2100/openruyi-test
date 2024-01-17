@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    sndfile-info  common/test.wav | grep '周延英'
+    sndfile-info  common/test.wav | grep 'Length'
     CHECK_RESULT $? 0 0 "Error, The test.wav file does not exist"
     sndfile-convert common/test.wav common/test.flac
     CHECK_RESULT $? 0 0 "Error, Please reinstall libsndfile"
