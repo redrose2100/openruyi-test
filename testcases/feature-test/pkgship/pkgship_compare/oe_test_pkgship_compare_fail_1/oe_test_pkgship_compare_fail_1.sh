@@ -38,7 +38,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Query build compare unexpectly when stop server."
 
     ACT_SERVICE
-    for i in $(pgrep -l "elasticsearch" | grep -Ev "bash|grep|mugen.sh" | awk '{print $1}'); do
+    for i in $(pgrep -a -f "elasticsearch" | grep -Ev "bash|grep|mugen.sh" | awk '{print $1}'); do
         kill -9 "$i" 
     done    
 
