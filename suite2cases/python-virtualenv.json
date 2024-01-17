@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/python-virtualenv",
+    "cases": [
+        {
+            "name": "oe_test_python-virtualenv"
+        }
+    ]
+}
+
