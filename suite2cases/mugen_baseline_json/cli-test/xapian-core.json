@@ -40,7 +40,6 @@
         },
         {
             "name": "oe_test_xapian-core_xapian-progsrv"
-        },
-
+        }
     ]
 }
