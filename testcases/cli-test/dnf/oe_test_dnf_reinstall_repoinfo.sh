@@ -16,13 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test "dnf reinstall" & "dnf repoinfo" & "dnf repolist" & "dnf repoquery" & "dnf search" & "dnf upgrade-minimal" command, Test "--repo=<repoid>, --repoid=<repoid>" & "--version" option, Install the same package by two dnf at the same time
 # ##################################
-
+# shellcheck disable=SC1091
 source "common/common_dnf.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     DNF_INSTALL tree
+    add_low_repo
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -65,6 +66,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
+    delete_low_repo
     DNF_REMOVE 1 "tree sysstat"
     LOG_INFO "Finish restoring the test environment."
 }

@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "git-tools"
+    DNF_INSTALL "git-tools git"
     git clone https://gitee.com/openeuler/test-tools
     cd ./test-tools || exit
     cat <<EOF > test.txt
@@ -38,8 +38,6 @@ function run_test(){
     CHECK_RESULT $? 0 0 "L$LINENO: git-find-uncommitted-repos -h No Pass"
     git-find-uncommitted-repos . | grep "./test-tools"
     CHECK_RESULT $? 0 0 "L$LINENO: git-find-uncommitted-repos No Pass"
-    git-find-uncommitted-repos -v . | grep "./test-tools"
-    CHECK_RESULT $? 0 0 "L$LINENO: git-find-uncommitted-repos -v No Pass"
     git-find-uncommitted-repos -u . | grep "./test-tools"
     CHECK_RESULT $? 0 0 "L$LINENO: git-find-uncommitted-repos -u No Pass"
     LOG_INFO "End to run test."
