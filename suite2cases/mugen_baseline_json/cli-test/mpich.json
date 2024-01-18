@@ -3,7 +3,7 @@
     "cases": [
         {
             "name": "oe_test_mpich_mpiexec_01"
-        },
+        }
     ]
 }
 

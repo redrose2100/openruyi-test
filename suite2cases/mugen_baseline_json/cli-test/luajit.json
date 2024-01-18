@@ -3,6 +3,6 @@
     "cases": [
         {
             "name": "oe_test_luajit_print"
-        },
+        }
     ]
 }
