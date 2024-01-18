@@ -16,7 +16,7 @@
 #@Desc      	:   uniqueness of uid
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -26,12 +26,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    useradd root 2>&1 | grep -e "useradd: user 'root' already exists"
+    useradd root 2>&1 | grep -E 'useradd: user '\''root'\'' already exists|useradd：用户“root”已存在'
     CHECK_RESULT $? 0 0 "add root failed"
-    useradd test 2>&1 | grep -e "useradd: user 'test' already exists"
+    useradd test 2>&1 | grep -E 'useradd: user '\''test'\'' already exists|useradd：用户“test”已存在'
     CHECK_RESULT $? 0 0 "add user failed"
     #CHECK_RESULT $(cat /etc/passwd | awk -F ":" '{a[$3]++}END{for(i in a){if(a[i]!=1){print i,a[i]}}}' | wc -l) 0 0 "print failed"
-    [[ $(cat /etc/passwd | awk -F ":" '{print $3}' | sort | uniq -d | wc -l) == 0 ]]
+    [[ $(awk -F ":" '{print $3}' /etc/passwd | sort | uniq -d | wc -l) == 0 ]]
     CHECK_RESULT $? 0 0 "uid is not unique"
     LOG_INFO "End to run test."
 }

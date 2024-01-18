@@ -16,10 +16,12 @@
 #@Desc      	:   least length of passwd
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=${LANG}
+    export LANG=en_US.UTF-8
     sed -i 's/password    requisite     pam_pwquality.so try_first_pass local_users_only/password    requisite     pam_pwquality.so minlen=8 minclass=3 enforce_for_root try_first_pass local_users_only retry=3 dcredit=0 ucredit=0 lcredit=0 ocredit=0\npassword    required      pam_pwhistory.so use_authtok remember=5 enforce_for_root/g' /etc/pam.d/system-auth
     # sed -i 's/password    required      pam_deny.so/password    required      pam_deny.so minlen=8 enforce_for_root try_first_pass local_users_only retry=3/g' /etc/pam.d/system-auth
     useradd test
@@ -50,6 +52,7 @@ function post_test() {
     sed -i '/password    required      pam_pwhistory.so use_authtok remember=5 enforce_for_root/d' /etc/pam.d/system-auth
     rm -rf testlog
     userdel -rf test
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

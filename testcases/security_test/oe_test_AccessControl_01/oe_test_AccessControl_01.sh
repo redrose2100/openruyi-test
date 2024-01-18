@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   AccessControl_私有数据隔离保护
 # ############################################
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 
 function pre_test(){
@@ -36,14 +36,14 @@ function run_test() {
     su - normal_737709 -c "cd /home/normal_737709"
     CHECK_RESULT $? 0 0 "su - normal_737709 failed !"
 
-    su - adm_737709 -c "cd /root" 2>&1 |grep "权限不够"
+    su - adm_737709 -c "cd /root" 2>&1 |grep "Permission denied\|权限不够"
     CHECK_RESULT $? 0 0 "cd root  adm Permission isolation failure"
-    su - adm_737709 -c "cd /home/normal_737709" 2>&1 |grep "权限不够"
+    su - adm_737709 -c "cd /home/normal_737709" 2>&1 |grep "Permission denied\|权限不够"
     CHECK_RESULT $? 0 0 "cd /home/normal_737709 adm Permission isolation failure"
 
-    su - normal_737709 -c "cd /root" 2>&1 |grep "权限不够"
+    su - normal_737709 -c "cd /root" 2>&1 |grep "Permission denied\|权限不够"
     CHECK_RESULT $? 0 0 "cd /root normal Permission isolation failure"
-    su - normal_737709 -c "cd /home/adm_737709" 2>&1 |grep "权限不够"
+    su - normal_737709 -c "cd /home/adm_737709" 2>&1 |grep "Permission denied\|权限不够"
     CHECK_RESULT $? 0 0 "cd /home/adm_737709 normal Permission isolation failure"
     LOG_INFO "Finish test!"
 }
@@ -54,4 +54,4 @@ function post_test(){
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

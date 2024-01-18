@@ -16,10 +16,12 @@
 #@Desc      	:   check custom dictionary words for weak password
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=${LANG}
+    export LANG=en_US.UTF-8
     id normal && userdel -rf normal
     useradd normal
     cp -r /usr/share/cracklib /usr/share/cracklib-bak
@@ -50,6 +52,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    export LANG=${OLD_LANG}
     rm -rf ./dictionary.txt
     rm -rf /usr/share/cracklib
     mv /usr/share/cracklib-bak /usr/share/cracklib

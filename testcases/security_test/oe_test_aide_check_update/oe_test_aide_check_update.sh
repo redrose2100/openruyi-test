@@ -18,7 +18,7 @@
 # @Desc      :   Install ADIDE, AIDE integrity check, AIDE library update
 # #############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL aide
@@ -27,19 +27,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    aide --init | grep "Number of entries"
+    aide --init | grep -i "Number of entries"
     CHECK_RESULT $? 0 0 "exec 'aide --init' failed"
     mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz -f
-    aide --check | grep "Number of entries:"
+    aide --check | grep -i "Number of entries:"
     CHECK_RESULT $? 0 0 "exec 'aide --check' failed"
-    aide --update | grep "New AIDE database written to /var/lib/aide/aide.db.new.gz"
+    aide --update | grep -i "New AIDE database written to /var/lib/aide/aide.db.new.gz"
     CHECK_RESULT $? 0 0 "exec 'aide --update' failed"
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /var/lib/aide/aide.db.*
     LOG_INFO "Finish environment cleanup!"
 }
