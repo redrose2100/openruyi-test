@@ -8,6 +8,15 @@
             "name": "oe_test_pkgship_compare_build_2"
         },
         {
+            "name": "oe_test_pkgship_compare_build_fail_1"
+        },
+        {
+            "name": "oe_test_pkgship_compare_build_fail_2"
+        },
+        {
+            "name": "oe_test_pkgship_compare_build_fail_3"
+        },
+        {
             "name": "oe_test_pkgship_compare_build_fail_4"
         },
         {
@@ -24,6 +33,15 @@
         },
         {
             "name": "oe_test_pkgship_compare_install_2"
+        },
+        {
+            "name": "oe_test_pkgship_compare_install_fail_1"
+        },
+        {
+            "name": "oe_test_pkgship_compare_install_fail_2"
+        },
+        {
+            "name": "oe_test_pkgship_compare_install_fail_3"
         },
         {
             "name": "oe_test_pkgship_compare_install_fail_4"
