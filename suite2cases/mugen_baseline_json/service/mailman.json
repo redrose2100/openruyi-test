@@ -2,7 +2,7 @@
     "path": "$OET_PATH/testcases/cli-test/mailman",
     "cases": [
         {
-            "name": "oe_test_service_mailman3-digest"
+            "name": "oe_test_service_mailman3-digests"
         }
     ]
 }
