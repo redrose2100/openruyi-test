@@ -29,6 +29,12 @@ function run_test() {
     LOG_INFO "Start to run test."
     service sshd status | grep running
     CHECK_RESULT $? 0 0 "Service not started"
+    service sshd stop
+    service sshd status | grep dead
+    CHECK_RESULT $? 0 0 "service not stop"
+    service sshd restart 
+    service sshd status | grep running
+    CHECK_RESULT $? 0 0 "service not started"
     LOG_INFO "End to run test."
 }
 
