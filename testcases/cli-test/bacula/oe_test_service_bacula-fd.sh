@@ -17,7 +17,7 @@
 # @Desc      :   Test bacula-fd.service restart
 # #############################################
 
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
