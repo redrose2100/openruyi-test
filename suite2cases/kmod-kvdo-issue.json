@@ -1,5 +1,5 @@
 {
-    "path": "${OET_PATH}/testcases/cli-test/kmod-kvdo-issue",
+    "path": "${OET_PATH}/testcases/cli-test/kmod-kvdo",
     "disk size": 130,
     "machine num": 2,
     "cases": [

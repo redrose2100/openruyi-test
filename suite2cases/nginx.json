@@ -2,6 +2,9 @@
   "path": "$OET_PATH/testcases/cli-test/nginx",
   "cases": [
     {
+      "name": "oe_test_nginx_cli"
+    },
+    {
       "name": "oe_test_service_nginx"
     },
     {
