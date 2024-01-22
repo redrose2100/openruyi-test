@@ -90,7 +90,9 @@
         },
         {
             "name": "oe_test_bacula_bsmtp_01"
+        },
+        {
+            "name": "oe_test_bacula_client"
         }
-
     ]
 }
