@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_python3-devel"
+        },
+        {
+            "name": "oe_test_python3-devel_01"
         }
     ]
 }
