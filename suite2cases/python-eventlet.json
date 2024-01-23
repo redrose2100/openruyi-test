@@ -3,8 +3,9 @@
     "cases": [
         {
             "name": "oe_test_python-eventlet"
+        },
+        {
+            "name": "oe_test_eventlet"
         }
-
-      ]
+    ]
 }
-

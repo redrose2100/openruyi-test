@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_poppler"
+        },
+        {
+            "name": "oe_test_pdfinfo"
         }
     ]
 }
