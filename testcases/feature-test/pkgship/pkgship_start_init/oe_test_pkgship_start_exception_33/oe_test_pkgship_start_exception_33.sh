@@ -19,12 +19,12 @@
 source ../../common_lib/pkgship_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start to restore the test environment."
+    LOG_INFO "Start to prepare the test environment."
 
     cp -p "${SYS_CONF_PATH}"/package.ini "${SYS_CONF_PATH}"/package.ini.bak
     ACT_SERVICE stop
 
-    LOG_INFO "End to restore the test environment."
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
@@ -33,7 +33,7 @@ function run_test() {
     MODIFY_INI database_port 65537
     systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code."
     CHECK_RESULT $? 0 0 "Check pkgship.service failed when database_port = 65537."
-        journalctl -u pkgship -n 20 | grep "\[ERROR\] Elasticsearch connection FAILED,the following reason may cause failed" >/dev/null
+    journalctl -u pkgship -n 20 | grep "\[ERROR\] Elasticsearch connection FAILED,the following reason may cause failed" >/dev/null
     CHECK_RESULT $? 0 0 "Check start by systemctl when database_port = 65537."
     ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] Elasticsearch connection FAILED,the following reason may cause failed\""
