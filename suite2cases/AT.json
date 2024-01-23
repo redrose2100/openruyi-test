@@ -17,9 +17,6 @@
             "name": "oe_test_partition"
         },
         {
-            "name": "oe_test_selinux"
-        },
-        {
             "name": "oe_test_system_level"
         },
         {

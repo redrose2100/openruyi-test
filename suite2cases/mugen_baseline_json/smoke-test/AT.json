@@ -17,9 +17,6 @@
             "name": "oe_test_partition"
         },
         {
-            "name": "oe_test_selinux"
-        },
-        {
             "name": "oe_test_system_level"
         },
         {
@@ -105,9 +102,6 @@
         },
         {
             "name": "oe_test_logrotate_002"
-        },
-        {
-            "name": "oe_test_log_001"
         },
         {
             "name": "oe_test_logrotate_001"
@@ -605,9 +599,6 @@
             "name": "oe_test_unalias_001"
         },
         {
-            "name": "oe_test_procps-ng-uptime"
-        },
-        {
             "name": "oe_test_time_01"
         },
         {
@@ -798,6 +789,18 @@
         },
         {
             "name": "oe_test_od"
+        },
+        {
+            "name": "oe_test_nmap_001"
+        },
+        {
+            "name": "oe_test_sysstat_01"
+        },
+        {
+            "name": "oe_test_sysstat_02"
+        },
+        {
+            "name": "oe_test_sysstat_03"
         }
     ]
 }
