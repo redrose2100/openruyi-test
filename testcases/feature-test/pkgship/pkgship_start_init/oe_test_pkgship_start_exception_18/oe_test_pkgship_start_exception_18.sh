@@ -19,12 +19,12 @@
 source ../../common_lib/pkgship_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start to restore the test environment."
+    LOG_INFO "Start to prepare the test environment."
 
     cp -p "${SYS_CONF_PATH}"/package.ini "${SYS_CONF_PATH}"/package.ini.bak
     ACT_SERVICE stop
     
-    LOG_INFO "End to restore the test environment."
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
