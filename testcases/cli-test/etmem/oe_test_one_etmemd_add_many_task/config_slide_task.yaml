@@ -1,0 +1,8 @@
+[task]
+project=slide_test
+engine=slide
+name=dbus
+type=pid
+value=867
+max_threads=5
+T=1

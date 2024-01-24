@@ -1,0 +1,7 @@
+[Unit]
+Description=etmemd server daemon
+[Service]
+Type=forking
+PIDFile=/run/etmemd.pid
+ExecStart=/usr/bin/etmemd -l -0 -s service-sock -m
+ExecStop=sh /bin/stop.sh
