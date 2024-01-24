@@ -21,7 +21,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     version_id=`cat /etc/os-release  | grep "VERSION_ID" | awk -F "=" {'print$NF'} | awk -F "\"" {'print$2'}`
     if [ ${version_id} = "20.03" ];then
-	exit 0
+	exit 1
     fi
     rm -rf /var/lib/mysql/*
     DNF_INSTALL mysql-server
