@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_socket_uuidd"
+        },
+        {
+            "name": "oe_test_libuuid"
         }
     ]
 }

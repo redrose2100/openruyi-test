@@ -1,8 +1,0 @@
-{
-  "path": "$OET_PATH/testcases/cli-test/cpp_httplib",
-  "cases": [
-    {
-      "name": "oe_test_cpp_httplib"
-    }
-  ]
-}
