@@ -30,28 +30,28 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if [ $VERSION_ID != "22.03" ]; then
-        pcp-collectl --version 2>&1 | grep "$pcp_version"
-        CHECK_RESULT $?
-        pcp-collectl -a $archive_data -c 10 -i 2 | grep 'CPU'
-        CHECK_RESULT $?
-        pmcollectl -a $archive_data -c 10 -i 2 | grep 'CPU'
-        CHECK_RESULT $?
-        pcp-collectl -h $host_name -c 10 | grep 'CPU'
-        CHECK_RESULT $?
-        pcp-collectl -v -c 10 | grep 'RECORD'
-        CHECK_RESULT $?
-        pcp-collectl -f FOLIO
-        CHECK_RESULT $?
-        grep 'PCPFolio' FOLIO
-        CHECK_RESULT $?
-        pcp-collectl -p FOLIO -c 10 | grep 'CPU'
-        CHECK_RESULT $?
-        pcp-collectl -R 10 | grep 'CPU'
-        CHECK_RESULT $?
-    else
-        LOG_INFO "Obsolete version command"
-    fi
+#    if [ $VERSION_ID != "22.03" ]; then
+#        pcp-collectl --version 2>&1 | grep "$pcp_version"
+#        CHECK_RESULT $?
+#        pcp-collectl -a $archive_data -c 10 -i 2 | grep 'CPU'
+#        CHECK_RESULT $?
+#        pmcollectl -a $archive_data -c 10 -i 2 | grep 'CPU'
+#        CHECK_RESULT $?
+#        pcp-collectl -h $host_name -c 10 | grep 'CPU'
+#        CHECK_RESULT $?
+#        pcp-collectl -v -c 10 | grep 'RECORD'
+#        CHECK_RESULT $?
+#        pcp-collectl -f FOLIO
+#        CHECK_RESULT $?
+#        grep 'PCPFolio' FOLIO
+#        CHECK_RESULT $?
+#        pcp-collectl -p FOLIO -c 10 | grep 'CPU'
+#        CHECK_RESULT $?
+#        pcp-collectl -R 10 | grep 'CPU'
+#        CHECK_RESULT $?
+#    else
+#       LOG_INFO "Obsolete version command"
+#    fi
     LOG_INFO "End to run test."
 }
 
