@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/testNG",
+    "path": "$OET_PATH/testcases/cli-test/testng",
     "cases": [
         {
             "name": "oe_test_testNG_annotations_assert"

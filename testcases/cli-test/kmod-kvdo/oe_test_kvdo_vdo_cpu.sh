@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   View the CPU load of the indexw kernel thread when the VDO volume is not in use
 # #############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "vdo kmod-kvdo"

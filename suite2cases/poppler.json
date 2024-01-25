@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_pdfinfo"
+        },
+        {
+            "name": "oe_test_pdfinfo_01"
         }
     ]
 }

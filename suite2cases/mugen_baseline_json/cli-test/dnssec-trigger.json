@@ -1,5 +1,5 @@
 {
-    "path": "${OET_PATH}/testcases/cli-test/dnssec-triggerd",
+    "path": "${OET_PATH}/testcases/cli-test/dnssec-trigger",
     "cases": [
         {
             "name": "oe_test_dnssec-trigger-control-setup"

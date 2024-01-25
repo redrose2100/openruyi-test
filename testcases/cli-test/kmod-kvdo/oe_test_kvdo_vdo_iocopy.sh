@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   High load reads and writes on VOD volumes
 # #############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 

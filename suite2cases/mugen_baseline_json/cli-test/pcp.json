@@ -1,6 +1,18 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/pcp-system-tools",
+    "path": "$OET_PATH/testcases/cli-test/pcp",
     "cases": [
+        {
+            "name": "oe_test_pcp2json_03"
+        },
+        {
+            "name": "oe_test_pcp2json_04"
+        },
+        {
+            "name": "oe_test_pcp2xml_03"
+        },
+        {
+            "name": "oe_test_pcp2xml_04"
+        },
         {
             "name": "oe_test_pmrep_04"
         },
