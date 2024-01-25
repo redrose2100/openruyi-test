@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -10,12 +10,13 @@
 # See the Mulan PSL v2 for more details.
 
 # #############################################
-# @Author    :   liliqi
-# @Contact   :   liliqi@uniontech.com
-# @Date      :   2024.01.20
+# @Author    :   zuohanxu
+# @Contact   :   zuohanxu@uniontech.com
+# @Date      :   2023/08.17
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command python3-devel
 # ############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -26,13 +27,13 @@ function pre_test() {
 }
 
 function run_test() {
-    python3-config --prefix | grep "/usr"
+    python3-config | grep Usage
+    CHECK_RESULT $? 0 0 "python3-config command execution failure"
+    python3-config --includes | grep "/usr/include/python3"
     CHECK_RESULT $? 0 0 "header file location display failed"
-    python3-config --extension-suffix | grep "python-310"
+    python3-config --ldflags | grep "/usr/lib64"
     CHECK_RESULT $? 0 0 "python parameter display failure"
-    python3-config --configdir  | grep "/usr/lib64"
-    CHECK_RESULT $? 0 0 "python parameter display failure"
-    python3-config --cflags  | grep "/usr/include/python3"
+    python3-config --libs | grep ldl
     CHECK_RESULT $? 0 0 "library file list fails to be displayed"
 
 }

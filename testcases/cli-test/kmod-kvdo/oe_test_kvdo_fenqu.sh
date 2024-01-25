@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Partition on the VOD volume, write data to the partition, restart and check whether the data is lost
 # #############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     SSH_CMD "dnf install -y vdo kmod-kvdo" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
