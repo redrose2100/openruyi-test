@@ -72,6 +72,24 @@
         },
         {
             "name": "oe_test_expat_test_001"
+        },
+        {
+            "name": "oe_test_grep_test_001"
+        },
+        {
+            "name": "oe_test_libcap-ng_test_001"
+        },
+        {
+            "name": "oe_test_libaio_test_001"
+        },
+        {
+            "name": "oe_test_libcgroup_test_001"
+        },
+        {
+            "name": "oe_test_python3_test_001"
+        },
+        {
+            "name": "oe_test_tcl_test_001"
         }
     ]
 }
