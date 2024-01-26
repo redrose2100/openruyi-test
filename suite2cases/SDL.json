@@ -1,10 +1,8 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/libsdl2",
+    "path": "$OET_PATH/testcases/cli-test/SDL",
     "cases": [
         {
             "name": "oe_test_libsdl1.2"
         }
-
     ]
 }
-

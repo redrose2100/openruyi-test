@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_iproute_tc_02"
+        },
+        {
+            "name": "oe_test_netns"
         }
     ]
 }

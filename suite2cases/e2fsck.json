@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/e2fsck",
-    "cases": [
-        {
-          "name": "oe_test_e2fsck_repair"
-        }
-    ]
-}

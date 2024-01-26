@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Repair file system integrity
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 

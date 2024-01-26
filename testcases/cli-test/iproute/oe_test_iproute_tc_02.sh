@@ -12,10 +12,11 @@
 # #############################################
 # @Author    :   zuohanxu
 # @Contact   :   zuohanxu@uniontech.com
-# @Date      :   2023/06.06
+# @Date      :   2023/06.12
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-iproute_tc
 # ############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -26,22 +27,22 @@ function pre_test() {
 }
 
 function run_test() {
-    tc qdisc ls |grep "$Net"
-    CHECK_RESULT $? 0 0 "queue status display failure"
-    tc qdisc show dev "$Net" |grep qdisc
-    CHECK_RESULT $? 0 0 "The NIC status fails to be displayed"
-    tc qdisc add dev "$Net" root netem delay 100ms
-    CHECK_RESULT $? 0 0 "Failed to delay setting for 100 milliseconds"
-    tc qdisc del dev "$Net" root netem delay 100ms
-    CHECK_RESULT $? 0 0 "Failed to delete the 100ms delay setting"
-    tc qdisc add dev "$Net" root netem delay 100ms 10ms
-    CHECK_RESULT $? 0 0 "Failed to set the delay value with volatility"
-    tc qdisc del dev "$Net" root netem delay 100ms 10ms
-    CHECK_RESULT $? 0 0 "Failed to delete a delay value setting with volatility"
-    tc qdisc add dev "$Net" root netem delay 100ms 10ms 30%
-    CHECK_RESULT $? 0 0 "set 30% packets, the delay fails"
-    tc qdisc del dev "$Net" root netem delay 100ms 10ms 30%
-    CHECK_RESULT $? 0 0 "Deleting 30% packets fails. Procedure"
+    tc qdisc add dev "$Net" root netem loss 1%
+    CHECK_RESULT $? 0 0 "add netem loss 1% fail"
+    tc qdisc del dev "$Net" root netem loss 1%
+    CHECK_RESULT $? 0 0 "del netem loss 1% fail"
+    tc qdisc add dev "$Net" root netem loss 1% 30%
+    CHECK_RESULT $? 0 0 "add netem loss 1%-3% fail"
+    tc qdisc del dev "$Net" root netem loss 1% 30%
+    CHECK_RESULT $? 0 0 "del netem loss 1%-3% fail"
+    tc qdisc add dev "$Net" root netem duplicate 1%
+    CHECK_RESULT $? 0 0 "add netem duplicate 1% fail"
+    tc qdisc del dev "$Net" root netem duplicate 1%
+    CHECK_RESULT $? 0 0 "del netem duplicate 1% fail"
+    tc qdisc add dev "$Net" root netem corrupt 0.2%
+    CHECK_RESULT $? 0 0 "add netem corrupt 0.2% fail"
+    tc qdisc del dev "$Net" root netem corrupt 0.2%
+    CHECK_RESULT $? 0 0 "del netem corrupt 0.2% fail"
 }
 
 function post_test() {
