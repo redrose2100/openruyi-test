@@ -124,6 +124,9 @@
         },
         {
             "name": "oe_test_qedi"
+        },
+        {
+            "name": "oe_test_pcie"
         }
     ]
 }

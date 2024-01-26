@@ -32,16 +32,22 @@ function run_test() {
     lscpu | grep "^CPU(s)" | grep -E '[0-9]'
     CHECK_RESULT $?
 
-    lscpu | grep "Vendor ID"
-    CHECK_RESULT $?
+    if [ "$NODE1_FRAME"x != "riscv64"x ]; then
+        lscpu | grep "Vendor ID"
+        CHECK_RESULT $?
+    fi
 
-    lshw -c cpu | grep "capacity" | grep "Hz"
-    CHECK_RESULT $?
+    if ! lshw -c system | grep product | grep qemu; then
+        lshw -c cpu | grep "capacity" | grep "Hz"
+        CHECK_RESULT $?
+    fi
 
     if [ "$NODE1_FRAME"x == "aarch64"x ]; then
         grep "0x48" /proc/cpuinfo
         CHECK_RESULT $?
-
+    elif [ "$NODE1_FRAME"x == "riscv64"x ]; then
+        grep "hart" /proc/cpuinfo
+        CHECK_RESULT $?
     else
         grep "$(lscpu | grep "^Vendor ID" | awk -F " " '{print$3}')" /proc/cpuinfo
         CHECK_RESULT $?

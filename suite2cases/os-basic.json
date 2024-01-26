@@ -842,6 +842,13 @@
 	},
         {
            "name": "oe_test_znew"
+        },
+        {
+           "name": "oe_test_zegrep"
+        },
+        {
+           "name": "oe_test_arp"
         }
+
     ]
 }

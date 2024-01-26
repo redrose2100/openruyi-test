@@ -15,6 +15,9 @@
         },
         {
             "name": "oe_test_pyScss_05"
+        },
+        {
+            "name": "oe_test_python3-scss"
         }
-   ]
+    ]
 }

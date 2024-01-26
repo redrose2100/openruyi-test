@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_arptables"
+        },
+        {
+            "name": "oe_test_arptables_function"
         }
     ]
 }

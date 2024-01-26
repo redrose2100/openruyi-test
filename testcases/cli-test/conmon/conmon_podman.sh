@@ -18,7 +18,8 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
-    DNF_INSTALL "conmon podman docker-runc podman-docker tar"
+    DNF_INSTALL "conmon podman runc podman-docker tar"
+    touch -c /etc/containers/registries.conf
     echo -e "[registries.search]
 registries = ['docker.io']
 
@@ -33,5 +34,5 @@ registries = []
 function clear_env() {
     podman rm -all
     podman rmi -f -all
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 }

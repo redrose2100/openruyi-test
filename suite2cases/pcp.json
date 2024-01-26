@@ -134,6 +134,96 @@
         },
         {
             "name": "oe_test_service_pmwebd"
+        },
+        {
+            "name": "oe_test_pcp2json_01"
+        },
+        {
+            "name": "oe_test_pcp2json_02"
+        },
+        {
+            "name": "oe_test_pcp2json_03"
+        },
+        {
+            "name": "oe_test_pcp2json_04"
+        },
+        {
+            "name": "oe_test_pcp2json_05"
+        },
+        {
+            "name": "oe_test_pcp2xml_01"
+        },
+        {
+            "name": "oe_test_pcp2xml_02"
+        },
+        {
+            "name": "oe_test_pcp2xml_03"
+        },
+        {
+            "name": "oe_test_pcp2xml_04"
+        },
+        {
+            "name": "oe_test_pmdumptext_001"
+        },
+        {
+            "name": "oe_test_pmdumptext_002"
+        },
+        {
+            "name": "oe_test_pmdumptext_003"
+        },
+        {
+            "name": "oe_test_pcp-pmda-elasticsearch"
+        },
+        {
+            "name": "oe_test_pmrep_01"
+        },
+        {
+            "name": "oe_test_pmrep_02"
+        },
+        {
+            "name": "oe_test_pmrep_03"
+        },
+        {
+            "name": "oe_test_pmrep_04"
+        },
+        {
+            "name": "oe_test_pmrep_05"
+        },
+        {
+            "name": "oe_test_pmrep_06"
+        },
+        {
+            "name": "oe_test_pcp_collectl"
+        },
+        {
+            "name": "oe_test_pcp_dmcache"
+        },
+        {
+            "name": "oe_test_dstat_01"
+        },
+        {
+            "name": "oe_test_dstat_02"
+        },
+        {
+            "name": "oe_test_dstat_03"
+        },
+        {
+            "name": "oe_test_pcp_free"
+        },
+        {
+            "name": "oe_test_pcp-pidstat_01"
+        },
+        {
+            "name": "oe_test_pcp-pidstat_02_pcp-ipcs"
+        },
+        {
+            "name": "oe_test_pcp-iostat"
+        },
+        {
+            "name": "oe_test_pcp-mpstat_pcp-numastat"
+        },
+        {
+            "name": "oe_test_pcp-uptime_pcp-verify"
         }
     ]
 }

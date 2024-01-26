@@ -6,8 +6,6 @@
         },
         {
             "name": "oe_test_service_packagekit"
-        },
-	{
         }
     ]
 }

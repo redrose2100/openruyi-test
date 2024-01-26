@@ -14,6 +14,9 @@
             "name": "oe_test_pkgship_bedepend_binary_4"
         },
         {
+            "name": "oe_test_pkgship_bedepend_binary_5"
+        },
+        {
             "name": "oe_test_pkgship_bedepend_binary_6"
         },
         {

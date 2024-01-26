@@ -60,6 +60,18 @@
         },
         {
             "name": "oe_test_bash-completion_test_001"
+        },
+        {
+            "name": "oe_test_sed_test_001"
+        },
+        {
+            "name": "oe_test_tar_test_001"
+        },
+        {
+            "name": "oe_test_ethtool_test_001"
+        },
+        {
+            "name": "oe_test_expat_test_001"
         }
     ]
 }

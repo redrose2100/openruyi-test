@@ -1,8 +1,0 @@
-{
-    "path": "${OET_PATH}/testcases/cli-test/lesscpy",
-    "cases": [
-        {
-            "name": "oe_test_lesscpy"
-        }
-    ]
-}
