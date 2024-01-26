@@ -16,6 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   system common command ip netns
 # ############################################
+# shellcheck disable=SC1090
+
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
