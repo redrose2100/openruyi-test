@@ -17,7 +17,7 @@
 # @Desc      :   test libx11
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
@@ -73,7 +73,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  DNF_REMOVE
+  DNF_REMOVE "$@"
   rm -rf /tmp/test
   LOG_INFO "Finish environment cleanup!"
 }
