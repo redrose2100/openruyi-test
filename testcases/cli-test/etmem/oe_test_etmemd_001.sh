@@ -28,7 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     nohup etmemd -s etmemd_socket -l 0 &
-    etmem obj add -f ${OET_PATH}/testcases/cli-test/etmemd/example_etmemd.yaml -s etmemd_socket
+    etmem obj add -f "${OET_PATH}"/testcases/cli-test/etmemd/example_etmemd.yaml -s etmemd_socket
     CHECK_RESULT $? 0 0 "Failed to add project"
     etmem project show -s etmemd_socket | grep "project\: test"
     CHECK_RESULT $? 0 0 "Project query failure"
@@ -38,7 +38,7 @@ function run_test() {
     etmem project stop -n test -s etmemd_socket
     etmem project show -s etmemd_socket | grep "false"
     CHECK_RESULT $? 0 0 "Task stop failure"
-    etmem obj del -f ${OET_PATH}/testcases/cli-test/etmemd/example_etmemd.yaml -s etmemd_socket
+    etmem obj del -f "${OET_PATH}"/testcases/cli-test/etmemd/example_etmemd.yaml -s etmemd_socket
     CHECK_RESULT $? 0 0 "Failed to del project"
     LOG_INFO "End to run test."
 }
