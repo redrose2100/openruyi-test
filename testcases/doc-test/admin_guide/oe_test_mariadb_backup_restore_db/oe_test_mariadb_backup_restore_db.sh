@@ -78,35 +78,35 @@ expect eof
     CHECK_RESULT $? 1
     mysqldump -uroot -p${NODE1_PASSWORD} --all-databases >alldb.sql
     CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db1`" alldb.sql
+    grep 'CREATE DATABASE .* `db1`' alldb.sql
     CHECK_RESULT $?
-    grep "CREATE TABLE `tb1`" alldb.sql
+    grep 'CREATE TABLE `tb1`' alldb.sql
     CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db2`" alldb.sql
+    grep 'CREATE DATABASE .* `db2`' alldb.sql
     CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db3`" alldb.sql
+    grep 'CREATE DATABASE .* `db3`' alldb.sql
     CHECK_RESULT $?
 
     mysqldump -uroot -p${NODE1_PASSWORD} --databases db1 >db1.sql
-    grep "CREATE TABLE `tb1`" db1.sql
+    grep 'CREATE TABLE `tb1`' db1.sql
     CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db1`" db1.sql
+    grep 'CREATE DATABASE .* `db1`' db1.sql
     CHECK_RESULT $?
 
     mysqldump -uroot -p${NODE1_PASSWORD} db1 tb1 >db1tb1.sql
     CHECK_RESULT $?
-    grep "CREATE TABLE `tb1`" db1tb1.sql
+    grep 'CREATE TABLE `tb1`' db1tb1.sql
     CHECK_RESULT $?
 
     rm -rf db1.sql
     mysqldump -uroot -p${NODE1_PASSWORD} -d db1 >db1.sql
-    grep "CREATE TABLE `tb1`" db1.sql
+    grep 'CREATE TABLE `tb1`' db1.sql
     CHECK_RESULT $?
 
     rm -rf db1.sql
     mysqldump -uroot -p${NODE1_PASSWORD} -t db1 >db1.sql
     CHECK_RESULT $?
-    grep "INSERT INTO `tb1`" db1.sql
+    grep 'INSERT INTO `tb1`' db1.sql
     CHECK_RESULT $?
 
     mysql -uroot -p${NODE1_PASSWORD} -t db3 <db1.sql
