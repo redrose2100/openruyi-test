@@ -848,6 +848,9 @@
         },
         {
            "name": "oe_test_arp"
+        },
+        {
+           "name": "oe_test_strace"
         }
 
     ]
