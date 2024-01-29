@@ -90,6 +90,7 @@ function post_test() {
     groupdel mysql
     rm -rf testlog
     DNF_REMOVE
+    rm -rf /var/lib/mysql/* /data/mariadb /var/log/mariadb/
     LOG_INFO "Finish environment cleanup."
 }
 
