@@ -17,7 +17,7 @@
 # @Desc      :   verification etmem command
 # ############################################
 
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
