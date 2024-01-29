@@ -46,6 +46,7 @@ function post_test() {
     systemctl reload postgresql.service
     systemctl stop postgresql.service
     DNF_REMOVE 1 "postgresql-server" 
+    rm -rf /var/lib/pgsql/*
     LOG_INFO "Finish environment cleanup!"
 }
 
