@@ -16,7 +16,7 @@
 #@Desc          :   minimap2 test
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
@@ -41,7 +41,7 @@ function run_test()
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf test.sam
     rm -rf MT-human-ont.mmi
     LOG_INFO "End to restore the test environment."
