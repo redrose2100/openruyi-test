@@ -75,7 +75,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     rm -rf use ./*sql test.txt
-    mysql -e "DROP database mysqlslap;use test45;DROP TABLE mytexttable;DROP DATABASE test45"
+    mysql -e "DROP database mysqlslap;use test45;DROP TABLE mytable;DROP DATABASE test45"
     systemctl stop mysqld
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
