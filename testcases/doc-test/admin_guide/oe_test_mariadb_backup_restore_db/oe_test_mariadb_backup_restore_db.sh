@@ -78,7 +78,7 @@ expect eof
     CHECK_RESULT $? 1
     mysqldump -uroot -p${NODE1_PASSWORD} --all-databases >alldb.sql
     CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db1`" alldb.sql
+    grep "CREATE DATABASE .* \`db1\`" alldb.sql
     CHECK_RESULT $?
     grep "CREATE TABLE `tb1`" alldb.sql
     CHECK_RESULT $?
