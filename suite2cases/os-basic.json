@@ -851,7 +851,9 @@
         },
         {
            "name": "oe_test_strace"
-        }
-
+        },
+	{
+          "name": "oe_test_tac"
+	}
     ]
 }
