@@ -45,7 +45,7 @@ function run_test() {
 
     # # Get random package name
     for i in {1..5}; do
-        pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.09_bin.sqlite)
+        pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.03_bin_list)
         LOG_INFO "CHECK installdep for package:""$pkg_name"
         GET_INSTALLDEP "$pkg_name" actual_value "openeuler-lts" 1
         dnf install "$pkg_name" --installroot=/home --repo=openEuler-Binary --releasever 1 --assumeno | tail -n +9 | awk '{print $1}' | grep -Ev "Transaction|=|Install|Total" >./expect_value2
