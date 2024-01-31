@@ -47,7 +47,7 @@ function run_test() {
     
     # Get ramdom package to search
     for i in {1..5}; do
-        pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.09_bin.sqlite)
+        pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.03_bin_list)
         LOG_INFO "Check random package: ""$pkg_name"
         pkgship bedepend openeuler-lts "$pkg_name" -w -b | grep -v "=" >./actual_value
         GET_DNF_REPOQUERY "$pkg_name"

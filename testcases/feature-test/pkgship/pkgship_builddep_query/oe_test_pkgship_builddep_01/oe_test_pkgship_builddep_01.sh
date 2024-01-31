@@ -42,7 +42,7 @@ function run_test() {
 
     # Get random package name to search
     for i in {1..5}; do
-        pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.09_src.sqlite)
+        pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.03_src_list)
         LOG_INFO "Check builddep for package: $pkg_name"
         pkgship builddep "$pkg_name" &>./actual_value"$i"
         GET_DNF_BUILDDEPLIST "$pkg_name" 10000 >./expect_value"$i"

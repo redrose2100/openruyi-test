@@ -222,21 +222,13 @@ function QUERY_BEDEPEND() {
 }
 
 function GET_RANDOM_PKGNAME() {
-    # $1: sqliteName
     sqliteName=$1
-
-    # Get all pkg name
-    sqlite3 ../../common_lib/sqlite/"$sqliteName" "select name from packages;" &>pkg_list.txt
-    # Get count
-
-    count=$(wc -l pkg_list.txt |awk '{print $1}')
-    # Get a randome in 1~count
+    cp ../../common_lib/sqlite/$sqliteName ./
+    count=$(wc -l $sqliteName | awk '{print $1}')
     random=$((RANDOM % count + 1))
-
-    pkg=$(head -n $random pkg_list.txt | tail -n 1)
+    pkg=$(head -n $random $sqliteName | tail -n 1)
     echo "$pkg"
-
-    rm -rf pkg_list.txt
+    rm -rf $sqliteName
 }
 
 function CONCURRENCY_THREAD() {

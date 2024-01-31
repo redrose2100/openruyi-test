@@ -41,7 +41,7 @@ function run_test() {
 
     # Get random package
     for i in {1..5}; do
-        pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.03_bin.sqlite)
+        pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.03_bin_list)
         LOG_INFO "Check self depend for package: ""$pkg_name"
         pkgship selfdepend "$pkg_name" -dbs -b | grep -q "openeuler-lts"
         CHECK_RESULT $? 0 0 "Check the self depend of binary $pkg_name for number '$i'failed."
