@@ -30,6 +30,12 @@ function run_test()
     LOG_INFO "Start testing..."
     fdupes /tmp | grep $'/tmp/1.txt\n/tmp/2.txt'
     CHECK_RESULT $? 0 0 "fdupes function error"
+    fdupes -r /tmp | grep $'/tmp/1.txt\n/tmp/2.txt'
+    CHECK_RESULT $? 0 0 "fdupes function error"
+    fdupes -n /tmp | grep $'/tmp/1.txt\n/tmp/2.txt'
+    CHECK_RESULT $? 0 0 "fdupes function error"
+    fdupes -S /tmp | grep $'/tmp/1.txt\n/tmp/2.txt'
+    CHECK_RESULT $? 0 0 "fdupes function error"
     fdupes -dN /tmp | grep -
     CHECK_RESULT $? 0 0 "fdupes function error"
     LOG_INFO "Finish test!"
