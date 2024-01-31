@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT "$code" 0 0 "Check failed for lshw."
 
     for i in {1..5}; do
-        pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.09_src.sqlite)
+        pkg_name=$(GET_RANDOM_PKGNAME openEuler_20.03_src_list)
         LOG_INFO "Check random package: $pkg_name"
         QUERY_PKGINFO "$pkg_name" openeuler-lts -s >./actual_result
         dnf deplist "$pkg_name" --repo=openEuler-Source | grep dependency | awk '{print $2}' | sort >./dnf_result
