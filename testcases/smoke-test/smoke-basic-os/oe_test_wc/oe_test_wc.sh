@@ -39,6 +39,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Return word error"
     wc -c /tmp/test_wc | grep "46"
     CHECK_RESULT $? 0 0 "Error number of bytes returned"
+    wc -m /tmp/test_wc | grep "46"
+    CHECK_RESULT $? 0 0 "Error number of character returned"
+    wc -L /tmp/test_wc | grep "15"
+    CHECK_RESULT $? 0 0 "Error number of newline returned"
+    LOG_INFO "Finished test!"
 }
 
 function post_test() {
@@ -47,4 +52,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
