@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/espeak-ng",
+    "cases": [
+        {
+            "name": "oe_test_espeak_ng"
+        }
+    ]
+}
