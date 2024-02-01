@@ -17,7 +17,7 @@
 # @Desc      :   Initialize path when switching users with Su
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     grep "^test:" /etc/passwd && userdel -rf test
@@ -33,7 +33,7 @@ ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}
 EOF
     echo "echo \$PATH" >/tmp/path.sh
-    su - test -c "bash /tmp/path.sh" | grep '/home/test/.local/bin:/home/test/bin'
+    su - test -c "bash /tmp/path.sh" | grep '/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin'
     CHECK_RESULT $? 0 0 "check PATH failed"
     LOG_INFO "Finish testcase execution."
 }
