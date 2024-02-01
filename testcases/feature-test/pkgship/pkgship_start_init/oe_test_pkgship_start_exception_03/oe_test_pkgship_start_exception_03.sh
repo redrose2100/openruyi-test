@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -11,30 +11,31 @@
 ####################################
 #@Author    	:   yanglijin/limeiting
 #@Contact   	:   1050472997@qq.com/244349477@qq.com
-#@Date      	:   2021-02-19
+#@Date      	:   2024-01-23
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Pkgship items normal function test
 #####################################
-
+# shellcheck disable=SC1091
 source ../../common_lib/pkgship_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start to prepare the database config."
+    LOG_INFO "Start to prepare the test environment."
 
-    cp -p ${SYS_CONF_PATH}/package.ini ${SYS_CONF_PATH}/package.ini.bak
+    cp -p "${SYS_CONF_PATH}"/package.ini "${SYS_CONF_PATH}"/package.ini.bak
     ACT_SERVICE stop
     
-    LOG_INFO "End to prepare the database config."
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    echo >${SYS_CONF_PATH}/package.ini
-    systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
+    echo >"${SYS_CONF_PATH}"/package.ini
+    systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code."
+    CHECK_RESULT $? 0 0 "Check pkgship.service failed."
     journalctl -u pkgship -n 20 | grep "\[ERROR\]"
-    ACT_SERVICE stop
     CHECK_RESULT $? 0 0 "Check start by systemctl failed."
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep '\[ERROR\]'"
     CHECK_RESULT $? 0 0 "Check start by pkgshipd failed."
     
@@ -44,12 +45,12 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -f ${SYS_CONF_PATH}/package.ini
-    mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
+    rm -rf "${SYS_CONF_PATH}"/package.ini
+    mv "${SYS_CONF_PATH}"/package.ini.bak "${SYS_CONF_PATH}"/package.ini
     REVERT_ENV
     
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
-
+main "$@"
