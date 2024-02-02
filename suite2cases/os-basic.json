@@ -857,6 +857,9 @@
 	},
 	{
           "name": "oe_test_lshw"
+	},
+	{
+          "name": "oe_test_csplit_01"
 	}
     ]
 }
