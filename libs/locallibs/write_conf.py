@@ -86,68 +86,96 @@ def write_conf(ip, password, port=22, user="root", run_remote=False, copy_all=Tr
     else:
         NODE_DATA["LOCALTION"] = "remote"
 
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
-    try:
-        if password:
-            ssh.connect(ip, port, user, password)
-        else:
-            key_file = '/root/.ssh/id_rsa'
-            if os.path.exists(key_file):
-                pkey = paramiko.RSAKey.from_private_key_file(key_file)
-                ssh.connect(ip, port, user, pkey=pkey)
+    # TODO 项目中所有的LOCALTION应改为LOCATION
+    if NODE_DATA["LOCALTION"] == "remote":
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+        try:
+            if password:
+                ssh.connect(ip, port, user, password)
             else:
-                print('配置免密，请先创建互信！')
-                sys.exit(1)
-    except paramiko.ssh_exception.NoValidConnectionsError as e:
-        mugen_log.logging("error", e)
-        sys.exit(1)
+                key_file = '/root/.ssh/id_rsa'
+                if os.path.exists(key_file):
+                    pkey = paramiko.RSAKey.from_private_key_file(key_file)
+                    ssh.connect(ip, port, user, pkey=pkey)
+                else:
+                    print('配置免密，请先创建互信！')
+                    sys.exit(1)
+        except paramiko.ssh_exception.NoValidConnectionsError as e:
+            mugen_log.logging("error", e)
+            sys.exit(1)
 
-    if os.path.exists(conf_path):
-        stdin, stdout, stderr = ssh.exec_command(
-            "ip a | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | awk -F '/' '{print $1}'"
-        )
-        for remote_ip in stdout.read().decode("utf-8").strip("\n").split("\n"):
-            exitcode, output = subprocess.getstatusoutput(
-                "grep " + remote_ip + " " + conf_path
+        if os.path.exists(conf_path):
+            stdin, stdout, stderr = ssh.exec_command(
+                "ip a | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | awk -F '/' '{print $1}'"
             )
-            if exitcode == 0:
-                mugen_log.logging("warn", ip + "和已录入到配置文件中的" + remote_ip + "是同一台机器.")
-                sys.exit(0)
+            for remote_ip in stdout.read().decode("utf-8").strip("\n").split("\n"):
+                exitcode, output = subprocess.getstatusoutput(
+                    "grep " + remote_ip + " " + conf_path
+                )
+                if exitcode == 0:
+                    mugen_log.logging("warn", ip + "和已录入到配置文件中的" + remote_ip + "是同一台机器.")
+                    sys.exit(0)
 
-    stdin, stdout, stderr = ssh.exec_command("hostnamectl | grep 'Virtualization: kvm'")
-    if stdout.read().decode("utf-8").strip("\n") == "":
-        NODE_DATA.update({"MACHINE": "physical"})
-    elif run_remote:
-        NODE_DATA.update({"MACHINE": "physical"})
+        stdin, stdout, stderr = ssh.exec_command("hostnamectl | grep 'Virtualization: kvm'")
+        if stdout.read().decode("utf-8").strip("\n") == "":
+            NODE_DATA.update({"MACHINE": "physical"})
+        elif run_remote:
+            NODE_DATA.update({"MACHINE": "physical"})
+        else:
+            NODE_DATA["MACHINE"] = "kvm"
+
+        stdin, stdout, stderr = ssh.exec_command(
+            "ip a | grep 'inet6' | grep -v 'scope host' | awk '{print $2}' | awk -F '/' '{print $1}' | head -n 1"
+        )
+        NODE_DATA["IPV6"] = stdout.read().decode("utf-8").strip("\n")
+
+        stdin, stdout, stderr = ssh.exec_command("uname -m")
+        NODE_DATA["FRAME"] = stdout.read().decode("utf-8").strip("\n")
+
+        stdin, stdout, stderr = ssh.exec_command(
+            " ip route | grep " + ip + " | grep -v default | awk '{print $3}' | sort -u"
+        )
+        NODE_DATA["NIC"] = stdout.read().decode("utf-8").strip("\n")
+
+        stdin, stdout, stderr = ssh.exec_command(
+            "cat /sys/class/net/" + NODE_DATA["NIC"] + "/address"
+        )
+        NODE_DATA["MAC"] = stdout.read().decode("utf-8").strip("\n")
+
+        ssh.close()
     else:
-        NODE_DATA["MACHINE"] = "kvm"
+        exitcode, output = subprocess.getstatusoutput("hostnamectl | grep 'Virtualization: kvm'")
+        if output.strip("\n") == "":
+            NODE_DATA.update({"MACHINE": "physical"})
+        elif run_remote:
+            NODE_DATA.update({"MACHINE": "physical"})
+        else:
+            NODE_DATA["MACHINE"] = "kvm"
 
-    stdin, stdout, stderr = ssh.exec_command(
-        "ip a | grep 'inet6' | grep -v 'scope host' | awk '{print $2}' | awk -F '/' '{print $1}' | head -n 1"
-    )
-    NODE_DATA["IPV6"] = stdout.read().decode("utf-8").strip("\n")
+        exitcode, output = subprocess.getstatusoutput(
+            "ip a | grep 'inet6' | grep -v 'scope host' | awk '{print $2}' | awk -F '/' '{print $1}' | head -n 1"
+        )
+        NODE_DATA["IPV6"] = output.strip("\n")
 
-    stdin, stdout, stderr = ssh.exec_command("uname -m")
-    NODE_DATA["FRAME"] = stdout.read().decode("utf-8").strip("\n")
+        exitcode, output = subprocess.getstatusoutput("uname -m")
+        NODE_DATA["FRAME"] = output.strip("\n")
 
-    stdin, stdout, stderr = ssh.exec_command(
-        " ip route | grep " + ip + " | grep -v default | awk '{print $3}' | sort -u"
-    )
-    NODE_DATA["NIC"] = stdout.read().decode("utf-8").strip("\n")
+        exitcode, output = subprocess.getstatusoutput(
+            " ip route | grep " + ip + " | grep -v default | awk '{print $3}' | sort -u"
+        )
+        NODE_DATA["NIC"] = output.strip("\n")
 
-    stdin, stdout, stderr = ssh.exec_command(
-        "cat /sys/class/net/" + NODE_DATA["NIC"] + "/address"
-    )
-    NODE_DATA["MAC"] = stdout.read().decode("utf-8").strip("\n")
+        exitcode, output = subprocess.getstatusoutput(
+            "cat /sys/class/net/" + NODE_DATA["NIC"] + "/address"
+        )
+        NODE_DATA["MAC"] = output.strip("\n")
 
     NODE_DATA["IPV4"] = ip
     NODE_DATA["USER"] = user
     NODE_DATA["PASSWORD"] = password
     NODE_DATA["SSH_PORT"] = port
-
-    ssh.close()
-
+    
     if NODE_DATA["MACHINE"] == "kvm":
         NODE_DATA["HOST_IP"] = ""
         NODE_DATA["HOST_USER"] = ""
