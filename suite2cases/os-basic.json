@@ -854,6 +854,9 @@
         },
 	{
           "name": "oe_test_tac"
+	},
+	{
+          "name": "oe_test_lshw"
 	}
     ]
 }
