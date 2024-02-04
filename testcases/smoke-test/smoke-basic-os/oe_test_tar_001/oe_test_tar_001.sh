@@ -23,31 +23,32 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL tar
+    DNF_INSTALL "tar"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    mkdir /tmp/test
+    mkdir -p /tmp/test
     dd if=/dev/zero of=/tmp/test/test count=1 bs=512
     tar -cf test.tar /tmp/test/test
     ls test.tar
-    CHECK_RESULT $?
-
+    CHECK_RESULT $? 0 0 "tar -cf execute fail"
     tar -tvf test.tar | grep "test"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "tar -tvf execute fail"
     tar --help | grep "Usage"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "tar --help execute fail"
+    tar --usage
+    CHECK_RESULT $? 0 0 "tar --usage execute fail"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/test test.tar
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
