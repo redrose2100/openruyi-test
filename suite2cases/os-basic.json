@@ -858,5 +858,9 @@
 	{
           "name": "oe_test_lshw"
 	}
+	,
+        {
+          "name": "oe_test_zipnote"
+        }
     ]
 }
