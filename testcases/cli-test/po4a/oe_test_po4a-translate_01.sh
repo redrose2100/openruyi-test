@@ -18,13 +18,13 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
-function pre_test()
-{
+function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL "po4a"
     mkdir tmp
-    echo "hello world" > tmp/master.txt
+    echo "hello world" >tmp/master.txt
     po4a-gettextize -f text -m tmp/master.txt -p tmp/translation_Esp.po
     sed -i 's/msgstr ""/msgstr "Hola, Mundo"/g' tmp/translation_Esp.po
     version=$(rpm -qa po4a | awk -F "-" '{print$2}')
@@ -32,13 +32,12 @@ function pre_test()
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start to run test."
 
     po4a-translate -h | grep -Pz "Usage:\n.*po4a-translate"
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-translated -h"
-    
+
     po4a-translate --help | grep -Pz "Usage:\n.*po4a-translate"
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-translate --help"
 
@@ -47,17 +46,17 @@ function run_test()
 
     test "$(po4a-translate --version 2>&1 | awk 'NR==1{print $3}' | awk '{sub(/\.$/, ""); print $1}')" == "$version"
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-translate --version"
-    
+
     test "$(po4a-translate -V 2>&1 | awk 'NR==1{print $3}' | awk '{sub(/\.$/, ""); print $1}')" == "$version"
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-translate -V"
 
     po4a-translate -f text -m tmp/master.txt -p --debug 2>&1 | grep "debug"
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-translate -f text -m master.en -p --debug"
-    
+
     po4a-translate -f text -m tmp/master.txt -p tmp/translation_Esp.po -l tmp/result_1.txt --verbose
     grep "Hola, Mundo" tmp/result_1.txt
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-translate -f text -m tmp/master.txt -p tmp/translation_Esp.po -l tmp/result_1.txt --verbose"
-    
+
     po4a-translate --format text --master tmp/master.txt --po tmp/translation_Esp.po --localized tmp/result_2.txt --verbose
     grep "Hola, Mundo" tmp/result_2.txt
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-translate -f text -m tmp/master.txt -p tmp/translation_Esp.po -l tmp/result_2.txt --verbose"
@@ -65,7 +64,7 @@ function run_test()
     po4a-translate -f text -m tmp/master.txt -p tmp/translation_Esp.po -l tmp/result_3.txt -o tabs=split
     grep "Hola, Mundo" tmp/result_3.txt
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-translate -f text -m tmp/master.txt -p tmp/translation_Esp.po -l tmp/result_3.txt -o tabs=split"
-    
+
     po4a-translate --format text --master tmp/master.txt --po tmp/translation_Esp.po --localized tmp/result_4.txt --option tabs=split
     grep "Hola, Mundo" tmp/result_4.txt
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-translate -f text -m tmp/master.txt -p tmp/translation_Esp.po -l tmp/result_4.txt -o tabs=split"
@@ -73,12 +72,11 @@ function run_test()
     LOG_INFO "End to run test."
 }
 
-function post_test()
-{
+function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp
     DNF_REMOVE "$@"
-
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

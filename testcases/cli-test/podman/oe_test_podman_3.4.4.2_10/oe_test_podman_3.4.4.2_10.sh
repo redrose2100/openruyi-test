@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
-
+# shellcheck disable=SC1091
 source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,29 +28,33 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(podman create --cpuset-cpus 1 alpine ls)
-    podman inspect $ID | grep -i '"CpuSetCpus": "1"'
-    CHECK_RESULT $? 0 0 'check "CpuSetCpus": "1" test failed'
+    if lscpu | grep -i cpu: | grep 1; then
+        LOG_INFO "Insufficient number of CPUs."
+    else
+        ID=$(docker create --cpuset-cpus 1 alpine ls)
+        docker inspect "$ID" | grep -i '"CpuSetCpus": "1"'
+        CHECK_RESULT $? 0 0 "check docker inspect $ID | grep -i CpuSetCpus failed"
+    fi
     ID=$(podman create --cpuset-mems 0 alpine ls)
-    podman inspect $ID | grep -i '"CpuSetMems": "0"'
+    podman inspect "$ID" | grep -i '"CpuSetMems": "0"'
     CHECK_RESULT $? 0 0 'check "CpuSetMems": "0" test failed'
     ID=$(podman create alpine ls)
-    podman inspect $ID | grep -i alpine
-    CHECK_RESULT $? 0 0 'check podman inspect $ID | grep -i alpine failed'
+    podman inspect "$ID" | grep -i alpine
+    CHECK_RESULT $? 0 0 "check podman inspect $ID | grep -i alpine failed"
     ID=$(podman create --device /dev/dm-0 alpine ls)
-    podman inspect $ID | grep -i '"PathOnHost": "/dev/dm-0"'
+    podman inspect "$ID" | grep -i '"PathOnHost": "/dev/dm-0"'
     CHECK_RESULT $? 0 0 'check "PathOnHost": "/dev/dm-0" test failed'
     ID=$(podman create --device-read-bps=/dev/:1mb alpine ls)
-    podman inspect $ID | grep -A 5 -i "BlkioDeviceReadBps"
+    podman inspect "$ID" | grep -A 5 -i "BlkioDeviceReadBps"
     CHECK_RESULT $? 0 0 'check BlkioDeviceReadBps test failed'
     ID=$(podman create --device-read-iops=/dev/:1000 alpine ls)
-    podman inspect $ID | grep -A 5 -i "BlkioDeviceReadIOps"
+    podman inspect "$ID" | grep -A 5 -i "BlkioDeviceReadIOps"
     CHECK_RESULT $? 0 0 'check BlkioDeviceReadIOps test failed'
     ID=$(podman create --device-write-bps=/dev/:1mb alpine ls)
-    podman inspect $ID | grep -A 5 -i "BlkioDeviceWriteBps"
+    podman inspect "$ID" | grep -A 5 -i "BlkioDeviceWriteBps"
     CHECK_RESULT $? 0 0 'check BlkioDeviceWriteBps test failed'
     ID=$(podman create --device-write-iops=/dev/:1000 alpine ls)
-    podman inspect $ID | grep -A 5 -i "BlkioDeviceWriteIOps"
+    podman inspect "$ID" | grep -A 5 -i "BlkioDeviceWriteIOps"
     CHECK_RESULT $? 0 0 'check BlkioDeviceWriteBps test failed'
     LOG_INFO "End to run test."
 }
@@ -58,7 +62,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
     LOG_INFO "End to restore the test environment."
 }
 

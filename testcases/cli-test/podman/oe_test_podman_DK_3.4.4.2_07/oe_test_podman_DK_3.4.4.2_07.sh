@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
-
+# shellcheck disable=SC1091
 source "../common/common_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,23 +28,26 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     docker stop postgres
-    docker wait --latest | grep [0-9]
+    docker wait --latest | grep "[0-9]"
     CHECK_RESULT $? 0 0 'check docker wait --latest | grep [0-9] failed'
-    docker wait --interval 250 postgres | grep [0-9]
+    docker wait --interval 250 postgres | grep "[0-9]"
     CHECK_RESULT $? 0 0 'check docker wait --interval 250 postgres | grep [0-9] failed'
     docker start postgres
     docker kill -l
     CHECK_RESULT $? 0 0 'check docker kill -l failed'
+    SLEEP_WAIT 3
     docker ps -a | grep "Exited"
     CHECK_RESULT $? 0 0 'check docker ps -a | grep "Exited" failed'
     docker start postgres
     docker kill -a
     CHECK_RESULT $? 0 0 'check docker kill -a failed'
+    SLEEP_WAIT 3
     docker ps -a | grep "Exited"
     CHECK_RESULT $? 0 0 'check docker ps -a | grep "Exited" failed'
     docker start postgres
-    docker kill -s KILL $(docker ps -q)
-    CHECK_RESULT $? 0 0 'check docker kill -s KILL $(docker ps -q) failed'
+    docker kill -s KILL "$(docker ps -q)"
+    CHECK_RESULT $? 0 0 "check docker kill failed"
+    SLEEP_WAIT 3
     docker ps -a | grep "Exited"
     CHECK_RESULT $? 0 0 'check docker ps -a | grep "Exited" failed'
     docker start postgres

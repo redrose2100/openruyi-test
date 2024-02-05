@@ -21,79 +21,32 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL rdate
+    DNF_INSTALL "rdate xinetd"
+    sed -i 's/disable.*/disable = no/g' /etc/xinetd.d/time-stream
+    systemctl start xinetd
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run testcase."
-    for ((i = 1; i <= 10; i ++))
-      do rdate -p time.nist.gov 2>&1 | grep "time.nist.gov"
-      if [[ $? -eq 0 ]]; then   
-         break
-      else
-         if [[ $i == 10 ]]; then
-            CHECK_RESULT $? 0 1 "Failed option: -p"
-         fi
-      fi
-    done    
-    for ((i = 1; i <= 10; i ++))
-      do rdate -s time.nist.gov
-      if [[ $? -eq 0  ]]; then
-         break
-      else
-         if [[ $i == 10 ]]; then
-            CHECK_RESULT $? 0 1 "Failed option: -s"
-         fi
-      fi
-    done
-    for ((i = 1; i <= 10; i ++))
-      do rdate -u time.nist.gov 2>&1 | grep "time.nist.gov"
-      if [[ $? -eq 0 ]]; then
-         break
-      else
-         if [[ $i == 10 ]];then
-            CHECK_RESULT $? 0 1 "Failed option: -u"
-         fi
-      fi
-    done
-    for ((i = 1; i <= 10; i ++))
-      do rdate -a time.nist.gov 2>&1 | grep "time.nist.gov"
-      if [[ $? -eq 0 ]]; then
-         break
-      else
-         if [[ $i == 10 ]];then
-            CHECK_RESULT $? 0 1 "Failed option: -a"
-         fi
-      fi
-    done
-    for ((i = 1; i <= 10; i ++))
-      do rdate -l time.nist.gov 2>&1 | grep "time.nist.gov"
-      if [[ $? -eq 0 ]]; then
-         break
-      else
-         if [[ $i == 10 ]];then
-            CHECK_RESULT $? 0 1 "Failed option: -l"
-         fi
-      fi
-    done
-    for ((i = 1; i <= 10; i ++))
-      do rdate -t 10 time.nist.gov 2>&1 | grep "time.nist.gov"
-      if [[ $? -eq 0 ]]; then
-         break
-      else
-         if [[ $i == 10 ]];then
-            CHECK_RESULT $? 0 1 "Failed option: -t"
-         fi
-      fi
-    done
+    rdate -p "${NODE1_IPV4}" | grep "\[${NODE1_IPV4}\]"
+    CHECK_RESULT $? 0 0 'Failed option: -p'
+    rdate -s "${NODE1_IPV4}" 2>&1 | grep -i "[a-z]"
+    CHECK_RESULT $? 0 1 'Failed option: -s'
+    rdate -l "${NODE1_IPV4}" | grep rdate
+    CHECK_RESULT $? 0 0 'Failed option: -l'
+    rdate -u -t 1 "${NODE1_IPV4}" 2>&1 | grep "1 seconds"
+    CHECK_RESULT $? 0 0 'Failed option: -t'
+    rdate -a "${NODE1_IPV4}" | grep "$(date +"%Y")"
+    CHECK_RESULT $? 0 0 'Failed option: -a'
     LOG_INFO "End to run testcase."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE 
-    LOG_INFO "End to restore the test environment." 
+    systemctl stop xinetd
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
