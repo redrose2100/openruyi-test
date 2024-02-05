@@ -127,6 +127,9 @@
         },
         {
             "name": "oe_test_pcie"
+        },
+        {
+            "name": "oe_test_acpi"
         }
     ]
 }
