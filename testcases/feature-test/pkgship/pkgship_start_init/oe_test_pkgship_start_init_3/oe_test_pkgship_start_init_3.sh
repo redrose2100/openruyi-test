@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -11,20 +11,23 @@
 ####################################
 #@Author    	:   yanglijin/limeiting
 #@Contact   	:   1050472997@qq.com/244349477@qq.com
-#@Date      	:   2021-02-20
+#@Date      	:   2024-01-20
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Pkgship items normal function test
 #####################################
-
+# shellcheck disable=SC1091
 source ../../common_lib/pkgship_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start to prepare the database config."
+    LOG_INFO "Start to prepare the test environment."
 
-    mv ${SYS_CONF_PATH}/package.ini ${SYS_CONF_PATH}/package.ini.bak
-    cp -p ./package.ini ${SYS_CONF_PATH}/package.ini
-    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/package.ini
-    chown pkgshipuser:pkgshipuser conf.txt
+    mv "${SYS_CONF_PATH}"/package.ini "${SYS_CONF_PATH}"/package.ini.bak
+    if [ "${NODE1_FRAME}" = "x86_64" ]; then
+        sed -i "s/aarch64/x86_64/g" ./conf.txt
+    fi
+    cp -p ./package.ini "${SYS_CONF_PATH}"/package.ini
+    chown pkgshipuser:pkgshipuser "${SYS_CONF_PATH}"/package.ini conf.txt
+    ACT_SERVICE
 
     LOG_INFO "Finish to prepare the test environment."
 }
@@ -32,13 +35,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ACT_SERVICE
     pkgship init -filepath conf.txt >/dev/null
-    SLEEP_WAIT 5
     pkgship dbs | grep "\['openeuler-2009', 'fedora'\]"
     CHECK_RESULT $? 0 0 "database init failed."
-    
-    ACT_SERVICE stop
 
     LOG_INFO "End to run test."
 }
@@ -46,11 +45,15 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -f /home/pkgshipuser/uwsgi.txt ${SYS_CONF_PATH}/package.ini
-    mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
+    rm -rf /home/pkgshipuser/uwsgi.txt "${SYS_CONF_PATH}"/package.ini
+    mv "${SYS_CONF_PATH}"/package.ini.bak "${SYS_CONF_PATH}"/package.ini
+    if [ "${NODE1_FRAME}" = "x86_64" ]; then
+        sed -i "s/x86_64/aarch64/g" ./conf.txt
+    fi
     REVERT_ENV
+
     
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

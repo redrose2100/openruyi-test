@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -11,34 +11,39 @@
 ####################################
 #@Author    	:   Li, Meiting
 #@Contact   	:   244349477@qq.com
-#@Date      	:   2021-02-20
+#@Date      	:   2024-01-20
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test pkgship list command
 #####################################
-
+# shellcheck disable=SC1091
 source ../../common_lib/pkgship_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
+    if [ "${NODE1_FRAME}" = "x86_64" ]; then
+        sed -i "s/aarch64/x86_64/g" ./conf.yaml
+    fi
     ACT_SERVICE
-    INIT_CONF ./conf.yaml 
+    INIT_CONF ./conf.yaml
 
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start to run test. Execute cmd: pkgship list"
+    LOG_INFO "Start to run test."
 
     pkgship dbs | grep "\['abc', 'fedora', 'openeuler', 'test'\]"
     CHECK_RESULT $? 0 0 "Check dbs failed."
-    
+
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    if [ "${NODE1_FRAME}" = "x86_64" ]; then
+        sed -i "s/x86_64/aarch64/g" ./conf.yaml
+    fi
     REVERT_ENV
 
     LOG_INFO "End to restore the test environment."

@@ -15,9 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Public function
 #####################################
-# shellcheck disable=SC1091
-# shellcheck disable=SC2086
-
+# shellcheck disable=SC1091,SC2086,SC2012
 source "${OET_PATH}"/conf/mugen.env
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -376,6 +374,19 @@ function GET_INSTALLDEP() {
     sed -i "${start_line},${end_line}d" installdep.txt
     grep "openeuler-lts" installdep.txt | grep -v $pkgname | awk '{print $1}' | sort | uniq | grep -Ev "openeuler-lts|=" >${filename}
     rm -rf installdep.txt
+}
+
+function check_file_access() {
+    file_name=$1
+    expect_owner=$2
+    expect_group=$3
+    expect_code=$4
+    ls -ld $file_name | awk '{print $3}' | grep $expect_owner
+    CHECK_RESULT $? 0 0 "Check owner for $file_name failed."
+    ls -ld $file_name | awk '{print $4}' | grep $expect_group
+    CHECK_RESULT $? 0 0 "Check group for $file_name failed."
+    echo "obase=8;ibase=2;$(ls -ld $file_name | awk '{print $1}' | sed 's/^[a-zA-Z-]//' | tr 'x|r|w' '1' | tr '-' '0')" | bc | grep $expect_code
+    CHECK_RESULT $? 0 0 "Check access for $file_name failed."
 }
 
 function GET_DNF_REPOQUERY() {

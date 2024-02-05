@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -11,19 +11,19 @@
 ####################################
 #@Author    	:   Li, Meiting
 #@Contact   	:   244349477@qq.com
-#@Date      	:   2021-02-20
+#@Date      	:   2024-01-20
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Pkgship items normal function test
 #####################################
-
+# shellcheck disable=SC1091
 source  ../../common_lib/pkgship_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    cp -p ${SYS_CONF_PATH}/conf.yaml ${SYS_CONF_PATH}/conf.yaml.bak
-    cp -p  ../../common_lib/openEuler.yaml ${SYS_CONF_PATH}/conf.yaml 
-    chown pkgshipuser:pkgshipuser ${SYS_CONF_PATH}/conf.yaml
+    cp -p "${SYS_CONF_PATH}"/conf.yaml "${SYS_CONF_PATH}"/conf.yaml.bak
+    cp -p  ../../common_lib/openEuler.yaml "${SYS_CONF_PATH}"/conf.yaml 
+    chown pkgshipuser:pkgshipuser "${SYS_CONF_PATH}"/conf.yaml
     ACT_SERVICE
 
     LOG_INFO "End to prepare the test environment."
@@ -32,7 +32,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    mv ${SYS_CONF_PATH}/repo/openEuler-20.09/bin/repodata/openEuler-20.09-bin-filelists.sqlite.bz2 ${SYS_CONF_PATH}/repo/openEuler-20.09/bin/repodata/openEuler-20.09-bin-filelists.sqlite.bz2.bak
+    mv "${SYS_CONF_PATH}"/repo/openEuler-20.03/bin/repodata/openEuler-20.03-bin-filelists.sqlite.bz2 "${SYS_CONF_PATH}"/repo/openEuler-20.03/bin/repodata/openEuler-20.03-bin-filelists.sqlite.bz2.bak
     CHECK_RESULT $? 0 0 "Move bin filelist failed."
     pkgship init | grep "initialize failed"
     CHECK_RESULT $? 0 0 "Initialize pkgship unexpectly."
@@ -43,13 +43,12 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
  
-    rm -f ${SYS_CONF_PATH}/conf.yaml
-    mv ${SYS_CONF_PATH}/conf.yaml.bak ${SYS_CONF_PATH}/conf.yaml
-    mv ${SYS_CONF_PATH}/repo/openEuler-20.09/bin/repodata/openEuler-20.09-bin-filelists.sqlite.bz2.bak ${SYS_CONF_PATH}/repo/openEuler-20.09/bin/repodata/openEuler-20.09-bin-filelists.sqlite.bz2   
-    
+    rm -rf "${SYS_CONF_PATH}"/conf.yaml
+    mv "${SYS_CONF_PATH}"/conf.yaml.bak "${SYS_CONF_PATH}"/conf.yaml
+    mv "${SYS_CONF_PATH}"/repo/openEuler-20.03/bin/repodata/openEuler-20.03-bin-filelists.sqlite.bz2.bak "${SYS_CONF_PATH}"/repo/openEuler-20.03/bin/repodata/openEuler-20.03-bin-filelists.sqlite.bz2   
     REVERT_ENV
     
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
