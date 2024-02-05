@@ -17,11 +17,12 @@
 # @Desc      :   Test hivexsh
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    export LANG=en_US.UTF-8
     DNF_INSTALL hivex
     cp ./common/minimal ./
     LOG_INFO "End to prepare the test environment."
@@ -57,7 +58,8 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf minimal modified_01
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    unset LANG
     LOG_INFO "End to restore the test environment."
 }
 

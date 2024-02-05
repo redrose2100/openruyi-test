@@ -15,12 +15,13 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Test "dnf check-update" & "dnf check" command, Install the different package by two dnf at the same time
 ###################################
-
+# shellcheck disable=SC1091
 source "common/common_dnf.sh"
-
+disable_list=$(dnf repolist enabled|grep -v "^OS\|everything\|EPOL"|awk '{print $1}'|awk -F "repo" '{print $1}'|grep -Ev '^$'|xargs)
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
+    dnf config-manager --set-disable "$disable_list"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -51,6 +52,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start restore the test environment."
+    dnf config-manager --set-enable "$disable_list"
     clear_env
     DNF_REMOVE 1 "vim tree"
     LOG_INFO "End of restore the test environment."
