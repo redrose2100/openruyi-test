@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -11,11 +11,11 @@
 ####################################
 #@Author    	:   Li, Meiting
 #@Contact   	:   244349477@qq.com
-#@Date      	:   2021-02-20
+#@Date      	:   2024-01-20
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Pkgship items normal function test
 #####################################
-
+# shellcheck disable=SC1091
 source ../../common_lib/pkgship_lib.sh
 
 function pre_test() {
@@ -31,7 +31,6 @@ function run_test() {
 
     pkgship init -filepath error1.yaml | grep "The initialized database name cannot contain uppercase characters"
     CHECK_RESULT $? 0 0 "The error msg is error while priority of fedora is false."
-
     pkgship init -filepath error2.yaml | grep "There is a duplicate initialization configuration database nam"
     CHECK_RESULT $? 0 0 "The error msg is error while dbname is duolicate."
 
@@ -46,4 +45,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

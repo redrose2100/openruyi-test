@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -11,17 +11,17 @@
 ####################################
 #@Author    	:   yanglijin/limeiting
 #@Contact   	:   1050472997@qq.com/244349477@qq.com
-#@Date      	:   2021-02-20
+#@Date      	:   2024-01-20
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Pkgship items normal function test
 #####################################
-
+# shellcheck disable=SC1091
 source ../../common_lib/pkgship_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
-    cp -p ${SYS_CONF_PATH}/package.ini ${SYS_CONF_PATH}/package.ini.bak
+    cp -p "${SYS_CONF_PATH}"/package.ini "${SYS_CONF_PATH}"/package.ini.bak
+    
     ACT_SERVICE
 
     LOG_INFO "End to prepare the test environment."
@@ -52,11 +52,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -f ${SYS_CONF_PATH}/package.ini
-    mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
+    rm -rf "${SYS_CONF_PATH}"/package.ini "${LOG_PATH}"/pkgship
+    mv "${SYS_CONF_PATH}/"package.ini.bak "${SYS_CONF_PATH}"/package.ini
     REVERT_ENV
-
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
