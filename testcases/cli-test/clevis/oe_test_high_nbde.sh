@@ -20,7 +20,8 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function config_params() {
     LOG_INFO "Start loading data!"
-    TEST_DISK="/dev/$(TEST_DISK 1)"
+    DISK_NAME=$(TEST_DISK 1|awk '{print $1}')
+    TEST_DISK="/dev/$DISK_NAME"
     LOG_INFO "Loading data is complete!"
 }
 
@@ -34,8 +35,10 @@ function pre_test() {
     ls /etc/systemd/system/tangd.socket.d && rm -rf /etc/systemd/system/tangd.socket.d
     SOCKET_CONTENT='[Socket]\nListenStream=\nListenStream=8009'
     mkdir /etc/systemd/system/tangd.socket.d
-    echo -e ${SOCKET_CONTENT} > /etc/systemd/system/tangd.socket.d/override.conf
+    echo -e "${SOCKET_CONTENT}" > /etc/systemd/system/tangd.socket.d/override.conf
     UUID=$(uuidgen)
+    echo 'hello' | clevis encrypt tang '{"url":"http://127.0.0.1:8009","adv":"adv.jws"}' >secert.jwe
+    luks_num=$(cat secert.jwe)
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -48,7 +51,7 @@ function run_test() {
     mkfs.ext4 /dev/mapper/test_encrypted -F
     mount /dev/mapper/test_encrypted /mnt/test_encrypted
     CHECK_RESULT $? 0 0 "Disk mount failed"
-    cryptsetup luksHeaderBackup ${TEST_DISK}1 --header-backup-file /tmp/header.bin
+    cryptsetup luksHeaderBackup "${TEST_DISK}1" --header-backup-file /tmp/header.bin
     CHECK_RESULT $? 0 0 "Backup luksHeader information failed"
     SLEEP_WAIT 2
     systemctl enable tangd.socket
@@ -58,10 +61,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to display the 'Listen' property of tangd.socket"
     systemctl start tangd.socket
     CHECK_RESULT $? 0 0 "Failed to start tangd.socket service"
-    SSH_CMD "systemctl enable tangd.socket;mkdir /etc/systemd/system/tangd.socket.d" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "systemctl enable tangd.socket;mkdir /etc/systemd/system/tangd.socket.d" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     P_SSH_CMD --node 2 --cmd "echo -e [Socket]\\\nListenStream=\\\nListenStream=8009 > /etc/systemd/system/tangd.socket.d/override.conf"
     SSH_CMD "systemctl daemon-reload;systemctl show tangd.socket -p Listen | grep 8009;
-    		systemctl start tangd.socket;systemctl stop firewalld;setenforce 0" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    		systemctl start tangd.socket;systemctl stop firewalld;setenforce 0" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     curl http://127.0.0.1:8009/adv -o adv.jws
     SLEEP_WAIT 1
     expect -c"
@@ -76,7 +79,7 @@ function run_test() {
 	}
     "
     CHECK_RESULT $? 0 0 "luksmeta init failed"
-    echo $luks_num | luksmeta save -d ${TEST_DISK}1 -s 0 -u $UUID
+    echo "$luks_num" | luksmeta save -d "${TEST_DISK}1" -s 0 -u "$UUID"
     expect -c"
 	set timeout 120
         spawn clevis luks bind -d ${TEST_DISK}1 sss '{\"t\":1,\"pins\":{\"tang\":[{\"url\":\"http://127.0.0.1:8009\"},{\"url\":\"http://${NODE2_IPV4}:8009\"}]}}'
@@ -116,13 +119,13 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     umount /mnt/test_encrypted
     cryptsetup close test_encrypted
-    mkfs.ext4 ${TEST_DISK}1 -F
+    mkfs.ext4 "${TEST_DISK}1" -F
     echo -e "d\n\nw"| fdisk "${TEST_DISK}"
     DNF_REMOVE
     rm -rf secert.jwe adv.jws sec.jwe input-plain.txt /etc/systemd/system/tangd.socket.d /mnt/test_encrypted1 /var/db/tang /tmp/header.bin
     DNF_REMOVE 2 "tang"
-    SSH_CMD "rm -rf /etc/systemd/system/tangd.socket.d /var/db/tang" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    mkfs.ext4 ${TEST_DISK} -F
+    SSH_CMD "rm -rf /etc/systemd/system/tangd.socket.d /var/db/tang" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    mkfs.ext4 "${TEST_DISK}" -F
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

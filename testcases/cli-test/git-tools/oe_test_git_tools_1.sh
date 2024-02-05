@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "git-tools"
+    DNF_INSTALL "git-tools git"
     git clone https://gitee.com/openeuler/test-tools
     cd ./test-tools || exit
     git branch test1

@@ -31,41 +31,41 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
     boom -help | grep "usage: boom"
     CHECK_RESULT $? 0 0 "L$LINENO: -help No Pass"
-    boom entry show -b 1 
+    boom -b 1 entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -b No Pass"
-    boom entry show --boot-id 1
+    boom --boot-id 1 entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --boot-id No Pass"
-    boom entry show --bootid 1 
+    boom --bootid 1 entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --bootid No Pass"
-    boom profile show --boot-dir /boot/ 
+    boom --boot-dir /boot/ profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --boot-dir No Pass"
-    boom entry show -B /path/to/btrfs/subvolume 
+    boom -B /path/to/btrfs/subvolume entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -B No Pass"
-    boom entry show --btrfs-subvolume /path/to/btrfs/subvolume 
+    boom --btrfs-subvolume /path/to/btrfs/subvolume entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --btrfs-subvolume No Pass"
-    boom entry show --btrfssubvolume /path/to/btrfs/subvolume 
+    boom --btrfssubvolume /path/to/btrfs/subvolume entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --btrfssubvolume No Pass"
-    boom profile show --btrfs-opts "boom-opts" 
+    boom --btrfs-opts "boom-opts" profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --btrfs-opts No Pass"
-    boom profile show --btrfsopts "boom-opts" 
+    boom --btrfsopts "boom-opts" profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --btrfsopts No Pass"
-    boom profile show -c ./ 
+    boom -c ./ profile show
     CHECK_RESULT $? 0 0 "L$LINENO: -c No Pass"
-    boom profile show --config ./ 
+    boom --config ./ profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --config No Pass"
-    boom profile show --debug "profile" 
+    boom --debug "profile" profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --debug  No Pass"
-    boom profile show -H 
+    boom -H profile show
     CHECK_RESULT $? 0 0 "L$LINENO: -H No Pass"
-    boom entry show -L /dev/openeuler/root 
+    boom -L /dev/openeuler/root entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -L No Pass"
-    boom entry show --root-lv /dev/openeuler/root 
+    boom --root-lv /dev/openeuler/root entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --root-lv No Pass"
-    boom entry show --rootlv /dev/openeuler/root 
+    boom --rootlv /dev/openeuler/root entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --rootlv No Pass"
-    boom profile show --lvm-opts "profile" 
+    boom --lvm-opts "profile" profile show
     CHECK_RESULT $? 0 0 "L$LINENO:  --lvm-opts No Pass"
-    boom profile show --lvmopts "profile" 
+    boom --lvmopts "profile" profile show
     CHECK_RESULT $? 0 0 "L$LINENO:  --lvmopts No Pass"
     LOG_INFO "End to run test."
 }
@@ -77,3 +77,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
+

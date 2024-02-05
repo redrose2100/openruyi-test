@@ -17,12 +17,13 @@
 #@Desc      	:   command test help2man
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
 
+    export LANG=en_US.UTF-8
     DNF_INSTALL "help2man"
 
     LOG_INFO "End to prepare the test environment."
@@ -35,7 +36,7 @@ function run_test()
     help2man --help | grep "Usage: help2man"
     CHECK_RESULT $? 0 0 "log message: Failed to run command: help2man --help"
 
-    help2man --version | egrep -o "GNU help2man [0-9.]{1,}"
+    help2man --version | grep -E -o "GNU help2man [0-9.]{1,}"
     CHECK_RESULT $? 0 0 "log message: Failed to run command: help2man --version"
 
     help2man -n example echo | grep "echo \\\- example"
@@ -94,8 +95,9 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./additional.h2m ./help2man.1 
+    unset LANG
 
     LOG_INFO "End to restore the test environment."
 }

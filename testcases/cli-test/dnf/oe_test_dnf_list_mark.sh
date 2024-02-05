@@ -16,12 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test "dnf list" & "dnf mark" command
 # ##################################
-
+# shellcheck disable=SC1091
 source "common/common_dnf.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
+    add_low_repo
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -61,6 +62,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
+    delete_low_repo
     DNF_REMOVE 1 vim-common
     LOG_INFO "Finish restoring the test environment."
 }
