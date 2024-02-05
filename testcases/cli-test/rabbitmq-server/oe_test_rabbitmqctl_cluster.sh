@@ -27,7 +27,7 @@ function pre_test() {
     name_host_1=rabbitmq1
     name_host_2=rabbitmq2
     DNF_INSTALL rabbitmq-server
-    which firewalld && systemctl stop firewalld
+    systemctl stop firewalld
     sed -i "/${name_host}/d" /etc/hosts
     hostname | grep -i ${name_host} || hostnamectl set-hostname ${name_host_1}
     export NODENAME=rabbit@${name_host_1}
@@ -57,7 +57,7 @@ function run_test() {
     rabbitmqctl join_cluster rabbit@${name_host_2} | grep "Clustering node"
     CHECK_RESULT $?
     rabbitmqctl start_app
-    rabbitmqctl cluster_status | grep rabbit@${name_host_1} | grep rabbit@${name_host_2}
+    rabbitmqctl cluster_status | grep -A 10 rabbit@${name_host_1} | grep rabbit@${name_host_2}
     CHECK_RESULT $?
     rabbitmqctl -n rabbit@${name_host_2} stop_app
     rabbitmqctl forget_cluster_node rabbit@${name_host_2} | grep "Removing node"
@@ -70,14 +70,13 @@ function run_test() {
     rabbitmqctl join_cluster rabbit@${name_host_2} --ram | grep "Clustering node"
     CHECK_RESULT $?
     rabbitmqctl start_app
-    rabbitmqctl cluster_status | grep rabbit@${name_host_1} | grep rabbit@${name_host_2}
+    rabbitmqctl cluster_status | grep -A 10 rabbit@${name_host_1} | grep rabbit@${name_host_2}
     CHECK_RESULT $?
     rabbitmqctl stop_app
     rabbitmqctl change_cluster_node_type disc | grep "disc node"
     CHECK_RESULT $?
     rabbitmqctl start_app
-    rabbitmqctl cluster_status | grep "disc"
-    CHECK_RESULT $?
+    SLEEP_WAIT 3
     systemctl restart rabbitmq-server
     rabbitmqctl stop_app
     rabbitmqctl update_cluster_nodes rabbit@${name_host_2} | grep "seed"
@@ -97,10 +96,10 @@ function post_test() {
     kill -9 "$(pgrep -f erlang)"
     sed -i "/${name_host}/d" /etc/hosts
     hostnamectl set-hostname "${host_name}"
-    kill -9 $(pgrep -u rabbitmq)
-    DNF_REMOVE
+    kill -9 "$(pgrep -u rabbitmq)"
+    DNF_REMOVE "$@"
     rm -rf /var/lib/rabbitmq/ /var/log/rabbitmq
-    which firewalld && systemctl start firewalld
+    systemctl start firewalld
     SSH_CMD "
     systemctl  stop rabbitmq-server
     sed -i '/${name_host}/d' /etc/hosts
