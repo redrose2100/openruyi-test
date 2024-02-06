@@ -73,9 +73,9 @@ main() {
     mkdir -p ./tmp_test
     for opt in "$@"; do
         if [[ $opt == "-d" ]]; then
-            downloadFromGitee $2 $3 $6
+            downloadFromGitee "$2" "$3" "$6"
             if [ -z $6 ]; then
-                extractPackage $2 $4 $5
+                extractPackage "$2" "$4" "$5"
             fi
             return 0
         elif [[ $opt == "-r" ]]; then
@@ -89,10 +89,10 @@ main() {
             fi
             return 0
         elif [[ $opt == "-c" ]]; then
-            copyFiles $2 $3 $4
+            copyFiles "$2" "$3" "$4"
             return 0
         elif [[ $opt == "-s" ]]; then
-            downloadSource $2 $3
+            downloadSource "$2" "$3"
             return 0
         else
             return 1
@@ -101,4 +101,4 @@ main() {
     
 }
 
-main $@
+main "$@"
