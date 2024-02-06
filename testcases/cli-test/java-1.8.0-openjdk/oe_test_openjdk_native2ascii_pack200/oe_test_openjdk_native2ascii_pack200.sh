@@ -17,9 +17,11 @@
 # @Desc      :   verification openjdk‘s command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL java-1.8.0-openjdk*
     cp ../common/Hello.java .
     LOG_INFO "End to prepare the test environment."
@@ -66,8 +68,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Need't to restore the tet environment."
-    DNF_REMOVE
-    rm -rf Hello.* *.txt
+    DNF_REMOVE "$@"
+    rm -rf Hello.* ./*.txt
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 
