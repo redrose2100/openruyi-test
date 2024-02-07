@@ -57,6 +57,10 @@ EOF
     CHECK_RESULT $? 0 0 "Create hello file fail"
     ./hello | grep "Hello, World!"
     CHECK_RESULT $? 0 0 "Execution failed"
+    yasm --version
+    CHECK_RESULT $? 0 0 "check version failed"
+    yasm --help
+    CHECK_RESULT $? 0 0 "check options failed"
     LOG_INFO "Finish test!"
 }
 function post_test() {
