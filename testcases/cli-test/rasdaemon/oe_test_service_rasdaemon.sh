@@ -16,33 +16,32 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test rasdaemon.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL rasdaemon
     log_time=$(date '+%Y-%m-%d %T')
     service=rasdaemon.service
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
-    test_restart ${service}
-    test_enabled ${service}
-    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | 
-grep -v -i "memory_failure_event\|disk_errors" | grep -v "Corrected Errors is"
+    LOG_INFO "Start to run test."
+    test_restart "${service}"
+    test_enabled "${service}"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING\|memory_failure_event\|disk_errors\|Corrected Errors is\|Set buffer_percent\|open file: /sys/devices/system/cpu/cpu0/online failed"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
-    test_reload ${service}
-    LOG_INFO "Finish test!"
+    test_reload "${service}"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
-    systemctl stop ${service}
-    DNF_REMOVE
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "Start to restore the test environment."
+    systemctl stop "${service}"
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

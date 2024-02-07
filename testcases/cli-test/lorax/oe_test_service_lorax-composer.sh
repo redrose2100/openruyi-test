@@ -16,29 +16,36 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test lorax-composer.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "lorax-composer python3-devel"
+    if rpm -ql cyrus-sasl; then
+        flag=true
+        dnf remove -y cyrus-sasl
+    fi
     pip3 install rpmfluff pycdlib ansible_runner
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     test_execution lorax-composer.service
     test_reload lorax-composer.service
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "Start to restore the test environment."
     systemctl stop lorax-composer.service
     pip3 uninstall rpmfluff pycdlib ansible_runner -y
-    DNF_REMOVE
-    LOG_INFO "Finish environment cleanup!"
+    if [ "${flag}" = "true" ]; then
+        dnf install -y cyrus-sasl
+    fi
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
