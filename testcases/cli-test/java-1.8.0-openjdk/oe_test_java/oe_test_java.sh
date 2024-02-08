@@ -17,13 +17,15 @@
 # @Desc      :   Use java case
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL "java-1.8.0-openjdk java-1.8.0-openjdk-devel"
-    pwd=`pwd`
-    mkdir java_test && cd java_test
+    pwd=$(pwd)
+    mkdir java_test && cd java_test ||exit
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -47,8 +49,9 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    cd $pwd && rm -rf java_test
-    DNF_REMOVE
+    cd "$pwd" && rm -rf java_test
+    DNF_REMOVE "$@"
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 
