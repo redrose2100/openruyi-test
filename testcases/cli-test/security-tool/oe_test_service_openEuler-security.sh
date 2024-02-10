@@ -17,7 +17,14 @@
 # @Desc      :   Test openEuler-security.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    service=openEuler-security.service
+    systemctl restart "${service}"
+    systemctl stop "${service}"
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -26,12 +33,12 @@ function run_test() {
     systemctl status "${service}" | grep "Active" | grep -v "${status}"
     CHECK_RESULT $? 0 1 "There is an error for the status of ${service}"
     symlink_file=$(systemctl enable "${service}" 2>&1 | awk '{print $3}')
-    find ${symlink_file}
+    find "${symlink_file}"
     CHECK_RESULT $? 0 0 "${service} enable failed"
     systemctl disable "${service}"
-    find ${symlink_file}
+    find "${symlink_file}"
     CHECK_RESULT $? 0 1 "${service} disable failed"
-    journalctl -u "${service}" | grep -i "fail\|error" | grep -v "net.ipv4.icmp_ignore_bogus_error_responses"
+    journalctl -u "${service}" | grep -i "fail\\|error" | grep -v "net.ipv4.icmp_ignore_bogus_error_responses"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload openEuler-security.service
     LOG_INFO "Finish test!"
