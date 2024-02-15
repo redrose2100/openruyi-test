@@ -31,14 +31,14 @@ int main()
     ZZIP_DIR* dir = zzip_dir_open("/tmp/test.zip", 0);
     if (!dir)
     {
-        printf("Failed to open the directory\n");
+        printf("Failed to open the directory\\n");
         return -1;
     }
 
     ZZIP_DIRENT dirent;
     while(zzip_dir_read(dir, &dirent))
     {
-        printf("%s\n", dirent.d_name);
+        printf("%s\\n", dirent.d_name);
     }
 
     zzip_dir_close(dir);
