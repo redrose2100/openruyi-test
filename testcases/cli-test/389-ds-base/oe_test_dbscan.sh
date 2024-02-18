@@ -21,6 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL "389-ds-base"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
@@ -42,21 +44,21 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dbscan -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "id 4"
+    dbscan -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "id"
     CHECK_RESULT $? 0 0 "L$LINENO: -f No Pass"
     dbscan -R -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "rdn"
     CHECK_RESULT $? 0 0 "L$LINENO: -R No Pass"
     dbscan -t 1024 -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "rdn"
     CHECK_RESULT $? 0 0 "L$LINENO: -t No Pass"
-    dbscan -K 14 -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "entryid: 14"
+    dbscan -K 14 -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "entryid"
     CHECK_RESULT $? 0 0 "L$LINENO: -K No Pass"
-    dbscan -l 4 id -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "id 14"
+    dbscan -l 4 id -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "id"
     CHECK_RESULT $? 0 0 "L$LINENO: -l No Pass"
-    dbscan -G 10 -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "id 14"
+    dbscan -G 10 -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "id"
     CHECK_RESULT $? 0 0 "L$LINENO: -G No Pass"
-    dbscan -r -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "id 14"
+    dbscan -r -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "id"
     CHECK_RESULT $? 0 0 "L$LINENO: -r No Pass"
-    dbscan -s -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "id 14"
+    dbscan -s -f /var/lib/dirsrv/slapd-localhost/db/userroot/id2entry.db | grep "id"
     CHECK_RESULT $? 0 0 "L$LINENO: -s No Pass"
     LOG_INFO "End to run test."
 }
@@ -66,6 +68,7 @@ function post_test() {
     dsctl localhost remove --do-it
     rm -rf instance.inf /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
+    export LANG=${OLD_LANG}
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

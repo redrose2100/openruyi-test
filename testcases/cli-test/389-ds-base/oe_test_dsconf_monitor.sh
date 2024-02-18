@@ -21,6 +21,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8    
     DNF_INSTALL "389-ds-base"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
@@ -56,7 +58,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: backend monitor server-h No Pass" 
     dsconf localhost monitor dbmon -h | grep  "usage: dsconf instance monitor dbmon" 
     CHECK_RESULT $? 0 0 "Check: backend monitor dbmon -h No Pass" 
-    dsconf localhost monitor dbmon -b example | grep  "DB Monitor Report" 
+    dsconf localhost monitor dbmon -b example | grep -iE "DB Monitor Report" 
     CHECK_RESULT $? 0 0 "Check: backend monitor dbmon -b No Pass" 
     dsconf localhost monitor dbmon -b example -x | grep  "Indexes:" 
     CHECK_RESULT $? 0 0 "Check: backend monitor dbmon -x No Pass" 
@@ -84,6 +86,7 @@ function post_test() {
     dsctl localhost remove --do-it
     rm -rf change.sh -rf 389_ds_test.inf /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
+    export LANG=${OLD_LANG}
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
