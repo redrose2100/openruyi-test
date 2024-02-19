@@ -16,6 +16,7 @@
 #@Desc      	:   Check ipsec auto list cmd
 #####################################
 
+# shellcheck disable=SC1091
 source "./common/common_lib.sh"
 
 function pre_test() {

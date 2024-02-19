@@ -15,7 +15,7 @@
 # @Desc          :   Public function
 #####################################
 
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function SET_CONF() {
     DNF_INSTALL libreswan
@@ -47,6 +47,6 @@ function REVERT_CONF() {
     rm -f /etc/ipsec.d/test-vm.secrets
     SSH_CMD "systemctl restart firewalld
             rm -f /etc/ipsec.d/test-vm.secrets" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_REMOVE "$@"
+    DNF_REMOVE
 }
 
