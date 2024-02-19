@@ -27,23 +27,23 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    smidump -f xsd IF-MIB 2>&1 | grep -e "xsd" result.xsd
+    smidump -f xsd IF-MIB 2>&1 | grep -e "xsd"
     CHECK_RESULT $? 0 0 "L$LINENO: -f xsd No Pass"
     smidump -f xsd --xsd-schema-url=test IF-MIB 2>&1 | grep -e "test"
     CHECK_RESULT $? 0 0 "L$LINENO: -f xsd --xsd-schema-url=string No Pass"
     smidump -f xsd --xsd-container IF-MIB 2>&1 | grep -e "container"
     CHECK_RESULT $? 0 0 "L$LINENO: -f xsd --xsd-container No Pass"
-    smidump -f xsd --xsd-nest-augments IF-MIB 2>&1 | grep -e "xsd" result.xsd
+    smidump -f xsd --xsd-nest-augments IF-MIB 2>&1 | grep -e "xsd"
     CHECK_RESULT $? 0 0 "L$LINENO: -f xsd --xsd-nest-augments No Pass"
-    smidump -f xsd  --xsd-nest-subtables IF-MIB 2>&1 | grep -e "xsd" result.xsd
+    smidump -f xsd  --xsd-nest-subtables IF-MIB 2>&1 | grep -e "xsd"
     CHECK_RESULT $? 0 0 "L$LINENO: -f xsd --xsd-nest-subtables No Pass"
     smidump -f yang IF-MIB 2>&1 | grep -e "module IF-MIB"
     CHECK_RESULT $? 0 0 "L$LINENO: -f yang No Pass"
     smidump -f yang --yang-smi-extensions IF-MIB 2>&1 | grep -e "module IF-MIB"
     CHECK_RESULT $? 0 0 "L$LINENO: -f yang --yang-smi-extensions No Pass"
-    smidump -f yang --yang-no-notifications IF-MIB 2>&1 && grep -e "module IF-MIB"
+    smidump -f yang --yang-no-notifications IF-MIB 2>&1 | grep -e "module IF-MIB"
     CHECK_RESULT $? 0 0 "L$LINENO: -f yang --yang-no-notifications No Pass"
-    smidump -f yang --yang-indent=4 IF-MIB 2>&1 && grep -e "module IF-MIB"
+    smidump -f yang --yang-indent=4 IF-MIB 2>&1 | grep -e "module IF-MIB"
     CHECK_RESULT $? 0 0 "L$LINENO: -f yang --yang-indent=number No Pass"
     LOG_INFO "End to run test."
 
