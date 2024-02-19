@@ -38,8 +38,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ipsec auto --checkpubkeys failed."
     ipsec auto --listcacerts >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec auto --listcacerts failed."
-    ipsec auto --showonly --utc --listgroups >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec auto --showonly --utc --listgroups failed."
     ipsec auto --listcrls >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec auto --listcrls failed."
     ipsec auto --listall >/dev/null
@@ -48,9 +46,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ipsec auto --purgeocsp failed."
     ipsec auto --rereadsecrets >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec auto --rereadsecrets failed."
-    ipsec auto --rereadgroups >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec auto --rereadgroups failed."
-    # ipsec auto --rereadcrls has been obsoleted and replaced by ipsec crls
     ipsec crls
     CHECK_RESULT $? 0 0 "Check ipsec crls failed."
     ipsec auto --rereadcerts

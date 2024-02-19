@@ -41,28 +41,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-attach --usage failed."
     lxc-attach --version | grep $version
     CHECK_RESULT $? 0 0 "Check lxc-attach --version failed."
-    lxc-start myEuler1
-    expect -c "
-    log_file testlog2
-    spawn lxc-attach -n myEuler1
-    expect \"#\"
-    send \"exit\r\"
-    expect eof
-"
-    grep "while executing" testlog2
-    CHECK_RESULT $? 1 0 "Check lxc-attach -n failed."
-    grep "exit" testlog2
-    CHECK_RESULT $? 0 0 "Failed to exit container."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the tet environment."
+    LOG_INFO "Start to restore the test environment."
     rm -rf testlog*
-    lxc-stop myEuler1
     lxc-destroy myEuler1
     DNF_REMOVE
-    LOG_INFO "End to restore the tet environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

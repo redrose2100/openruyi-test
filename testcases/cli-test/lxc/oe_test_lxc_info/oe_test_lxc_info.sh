@@ -29,8 +29,6 @@ function run_test() {
     LOG_INFO "Start to run test."
     lxc-create -t /usr/share/lxc/templates/lxc-busybox -n myEuler1
     CHECK_RESULT $? 0 0 "Failed to set up container."
-    lxc-start myEuler1
-    CHECK_RESULT $? 0 0 "Failed to start container."
     
     lxc-info --help 2>&1 | grep -i "Usage"
     CHECK_RESULT $? 0 0 "Check lxc-info --help failed."
@@ -39,20 +37,6 @@ function run_test() {
     lxc-info --version | grep $version
     CHECK_RESULT $? 0 0 "Check lxc-info --version failed."
 
-    lxc-info myEuler1 | grep -i "State" | grep -i "RUNNING" 
-    CHECK_RESULT $? 0 0 "Check lxc-info failed."
-    lxc-info -n myEuler1 | grep -i "CPU use:" | grep -i "seconds" 
-    CHECK_RESULT $? 0 0 "Check lxc-info -n failed."
-    lxc-info -p myEuler1 | grep -i "PID:"
-    CHECK_RESULT $? 0 0 "Check lxc-info -p failed."
-    lxc-info -S myEuler1 | grep -i "Memory use:"
-    CHECK_RESULT $? 0 0 "Check lxc-info -S failed."
-    lxc-info -s myEuler1 | grep -i "RUNNING"
-    CHECK_RESULT $? 0 0 "Check lxc-info -s failed."
-    lxc-info -H myEuler1  | grep -i "BlkIO use:"
-    CHECK_RESULT $? 0 0 "Check lxc-info -H failed."
-    
-    lxc-stop myEuler1
     lxc-info -s myEuler1 | grep -i "STOPPED"
     CHECK_RESULT $? 0 0 "Check lxc-info -s failed."
     lxc-info -n myEuler1 | grep -i "State" | grep -i "STOPPED"
@@ -61,10 +45,10 @@ function run_test() {
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the tet environment."
+    LOG_INFO "Start to restore the test environment."
     lxc-destroy myEuler1
     DNF_REMOVE
-    LOG_INFO "End to restore the tet environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

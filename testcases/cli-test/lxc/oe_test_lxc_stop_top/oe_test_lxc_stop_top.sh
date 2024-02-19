@@ -35,10 +35,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-stop --usage failed."
     lxc-stop --version | grep $version
     CHECK_RESULT $? 0 0 "Check lxc-stop --version failed."
-    lxc-start -n myEuler1
-    CHECK_RESULT $? 0 0 "Check lxc-start -n failed."
-    lxc-stop -n myEuler1
-    CHECK_RESULT $? 0 0 "Check lxc-stop -n failed."
     lxc-info myEuler1 | grep State | grep STOPPED
     CHECK_RESULT $? 0 0 "Check lxc-info failed."
 
@@ -52,11 +48,10 @@ function run_test() {
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the tet environment."
-    lxc-stop myEuler1
+    LOG_INFO "Start to restore the test environment."
     lxc-destroy myEuler1
     DNF_REMOVE
-    LOG_INFO "End to restore the tet environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

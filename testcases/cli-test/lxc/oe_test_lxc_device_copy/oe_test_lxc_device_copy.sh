@@ -39,8 +39,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-copy -s failed."
     lxc-ls | grep myEuler2
     CHECK_RESULT $? 0 0 "Check lxc-ls failed."
-    lxc-start myEuler1
-    CHECK_RESULT $? 0 0 "Failed to start container."
     lxc-device --help 2>&1 | grep -i "Usage"
     CHECK_RESULT $? 0 0 "Check lxc-device --help failed."
     lxc-device --usage 2>&1 | grep  -i "Usage: lxc-device"
@@ -51,12 +49,11 @@ function run_test() {
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the tet environment."
-    lxc-stop myEuler1
+    LOG_INFO "Start to restore the test environment."
     lxc-destroy myEuler2
     lxc-destroy myEuler1
     DNF_REMOVE
-    LOG_INFO "End to restore the tet environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

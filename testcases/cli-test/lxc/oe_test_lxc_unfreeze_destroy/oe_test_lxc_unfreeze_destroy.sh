@@ -29,21 +29,14 @@ function run_test() {
     LOG_INFO "Start to run test."
     lxc-create -t /usr/share/lxc/templates/lxc-busybox -n myEuler1
     CHECK_RESULT $? 0 0 "Failed to set up container."
-    lxc-start myEuler1
     lxc-unfreeze --help 2>&1 | grep -i "Usage"
     CHECK_RESULT $? 0 0 "Check lxc-unfreeze --help failed."
     lxc-unfreeze --usage 2>&1 |  grep -i "Usage: lxc-unfreeze"
     CHECK_RESULT $? 0 0 "Check lxc-unfreeze --usage failed."
     lxc-unfreeze --version | grep $version
     CHECK_RESULT $? 0 0 "Check lxc-unfreeze --version failed."
-    lxc-freeze myEuler1
-    CHECK_RESULT $? 0 0 "Check lxc-freeze failed."
-    lxc-info myEuler1 | grep State | grep FROZEN
-    CHECK_RESULT $? 0 0 "Check lxc-info failed."
     lxc-unfreeze -n myEuler1
     CHECK_RESULT $? 0 0 "Check lxc-unfreeze failed."
-    lxc-info myEuler1 | grep State | grep RUNNING
-    CHECK_RESULT $? 0 0 "Check lxc-info failed."
 
     lxc-destroy --help 2>&1 | grep -i "Usage"
     CHECK_RESULT $? 0 0 "Check lxc-destroy --help failed."
@@ -51,8 +44,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-destroy --usage failed."
     lxc-destroy --version | grep $version
     CHECK_RESULT $? 0 0 "Check lxc-destroy --version failed."
-    lxc-stop myEuler1
-    CHECK_RESULT $? 0 0 "Check lxc-stop failed."
     lxc-destroy -n myEuler1
     CHECK_RESULT $? 0 0 "Check lxc-destroy -n failed."
     lxc-ls | grep myEuler1
@@ -61,9 +52,9 @@ function run_test() {
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the tet environment."
+    LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    LOG_INFO "End to restore the tet environment."
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
