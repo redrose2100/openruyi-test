@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of librabbitmq command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -74,8 +74,8 @@ function post_test() {
     rabbitmq-plugins disable rabbitmq_management
     rm -rf privkey.pem pubkey.pem cert.pem *.out info* rabbitmqadmin
     systemctl stop rabbitmq-server
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

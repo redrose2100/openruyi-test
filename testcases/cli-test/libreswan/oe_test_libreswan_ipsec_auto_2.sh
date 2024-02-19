@@ -16,7 +16,7 @@
 #@Desc      	:   Check ipsec auto list cmd
 #####################################
 
-source ./common/common_lib.sh
+source "./common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
