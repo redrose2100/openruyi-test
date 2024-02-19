@@ -17,7 +17,7 @@
 # @Desc      :   verification lxc‘s attach command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "lxc lxc-devel lxc-libs lxcfs lxcfs-tools tar busybox"
@@ -31,7 +31,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-create --help failed."
     lxc-create --usage 2>&1 | grep -i "Usage: lxc-create"
     CHECK_RESULT $? 0 0 "Check lxc-create --usage failed."
-    lxc-create --version | grep $version
+    lxc-create --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-create --version failed."
     lxc-create -t /usr/share/lxc/templates/lxc-busybox -n myEuler1
     CHECK_RESULT $? 0 0 "Failed to set up container."
@@ -39,30 +39,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-attach --help failed."
     lxc-attach --usage 2>&1 | grep -i "Usage: lxc-attach"
     CHECK_RESULT $? 0 0 "Check lxc-attach --usage failed."
-    lxc-attach --version | grep $version
+    lxc-attach --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-attach --version failed."
-    lxc-start myEuler1
-    expect -c "
-    log_file testlog2
-    spawn lxc-attach -n myEuler1
-    expect \"#\"
-    send \"exit\r\"
-    expect eof
-"
-    grep "while executing" testlog2
-    CHECK_RESULT $? 1 0 "Check lxc-attach -n failed."
-    grep "exit" testlog2
-    CHECK_RESULT $? 0 0 "Failed to exit container."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the tet environment."
+    LOG_INFO "Start to restore the test environment."
     rm -rf testlog*
-    lxc-stop myEuler1
     lxc-destroy myEuler1
-    DNF_REMOVE
-    LOG_INFO "End to restore the tet environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

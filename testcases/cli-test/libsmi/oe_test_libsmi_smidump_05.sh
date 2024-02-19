@@ -25,13 +25,14 @@ function pre_test() {
     cp /usr/share/mibs/ietf/IF-MIB IF-MIB
     LOG_INFO "End to prepare the test environment"
 }
+
 function run_test() {
     LOG_INFO "Start to run test."
     smidump -f svg IF-MIB 2>&1 | grep -e "//SVG - Learning By Coding"
     CHECK_RESULT $? 0 0 "L$LINENO: -f svg No Pass"
-    smidump -f svg --svg-width=100 IF-MIB 2>&1 && grep -e 'width="100"'
+    smidump -f svg --svg-width=100 IF-MIB 2>&1 | grep -e 'width="100"'
     CHECK_RESULT $? 0 0 "L$LINENO: -f svg --svg-width=number No Pass"
-    smidump -f svg --svg-height=700 IF-MIB 2>&1 && grep -e 'height="700"'
+    smidump -f svg --svg-height=700 IF-MIB 2>&1 | grep -e 'height="700"'
     CHECK_RESULT $? 0 0 "L$LINENO: -f svg --svg-height=number No Pass"
     smidump -f svg --svg-show-deprecated IF-MIB 2>&1 | grep -e "deprecated"
     CHECK_RESULT $? 0 0 "L$LINENO: -f svg --svg-show-deprecated No Pass"
@@ -45,12 +46,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: -f  tree --tree-no-conformance No Pass"
     smidump -f tree --tree-no-leafs IF-MIB 2>&1 | grep -e "internet"
     CHECK_RESULT $? 0 0 "L$LINENO: -f  tree --tree-no-leafs No Pass"
-    smidump -f tree --tree-full-root IF-MIB 2>&1 | grep -e "internet" result.tree
+    smidump -f tree --tree-full-root IF-MIB >result.tree 2>&1 && grep -e "internet" result.tree
     CHECK_RESULT $? 0 0 "L$LINENO: -f  tree --tree-full-root No Pass"
-    smidump -f tree --tree-compact IF-MIB 2>&1 | grep -e "internet" result.tree
+    smidump -f tree --tree-compact IF-MIB >result.tree 2>&1 && grep -e "internet" result.tree
     CHECK_RESULT $? 0 0 "L$LINENO: -f  tree --tree-compact No Pass"
     LOG_INFO "End to run test."
 }
+
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
