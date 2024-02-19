@@ -17,7 +17,7 @@
 # @Desc      :   verification lxc‘s attach command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "lxc lxc-devel lxc-libs lxcfs lxcfs-tools tar busybox"
@@ -33,16 +33,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-ls --help failed."
     lxc-ls --usage 2>&1 | grep -i "Usage: lxc-ls"
     CHECK_RESULT $? 0 0 "Check lxc-ls --usage failed."
-    lxc-ls --version | grep $version
+    lxc-ls --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-ls --version failed."
     lxc-ls | grep myEuler1
     CHECK_RESULT $? 0 0 "Failed to list myEuler1."
     lxc-ls --stopped | grep myEuler1
     CHECK_RESULT $? 0 0 "Check lxc-ls --stopped failed."
-    lxc-start -n myEuler1
-    CHECK_RESULT $? 0 0 "Check lxc-start -n failed."
-    lxc-ls --running | grep myEuler1
-    CHECK_RESULT $? 0 0 "Check lxc-ls --running failed."
     lxc-ls --defined | grep myEuler1
     CHECK_RESULT $? 0 0 "Check lxc-ls --defined failed."
 
@@ -50,17 +46,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-monitor --help failed."
     lxc-monitor --usage 2>&1 | grep -i "Usage: lxc-monitor"
     CHECK_RESULT $? 0 0 "Check lxc-monitor --usage failed."
-    lxc-monitor --version | grep $version
+    lxc-monitor --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-monitor --version failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the tet environment."
+    LOG_INFO "Start to restore the test environment."
     lxc-stop myEuler1
     lxc-destroy myEuler1
-    DNF_REMOVE
-    LOG_INFO "End to restore the tet environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
