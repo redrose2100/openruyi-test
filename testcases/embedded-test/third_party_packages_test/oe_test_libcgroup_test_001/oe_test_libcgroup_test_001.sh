@@ -44,7 +44,7 @@ function run_test() {
       cat tmp.log >failed.log
     done <../../ignore.txt
 
-    failed_num=$(wc -l <failed.log)
+    failed_num=$(wc -l < failed.log)
     CHECK_RESULT "${failed_num}" 0 0 "libcgroup gtest failed!!!"
   fi
   popd || return

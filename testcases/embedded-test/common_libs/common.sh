@@ -35,7 +35,7 @@ function extractPackage() {
     downloadName=$1
     packageName=$2
     extractType=$3
-    pushd tmp_download || echo tmp_download not existed! && exit 1
+    pushd tmp_download || exit 1
     if [[ -z "${packageName}" ]]; then
         getPackageName "${downloadName}"
     fi

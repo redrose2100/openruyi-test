@@ -90,6 +90,15 @@
         },
         {
             "name": "oe_test_tcl_test_001"
+        },
+        {
+            "name": "oe_test_libgcrypt_test_001"
+        },
+        {
+            "name": "oe_test_asio_test_001"
+        },
+        {
+            "name": "oe_test_gdb_test_001"
         }
     ]
 }
