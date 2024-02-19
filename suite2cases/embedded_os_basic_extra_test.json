@@ -78,6 +78,12 @@
         },
         {
             "name": "oe_test_iptables_cli_test"
+        },
+        {
+            "name": "oe_test_cronie_test_001"
+        },
+        {
+            "name": "oe_test_cracklib_test_001"
         }
     ]
 }
