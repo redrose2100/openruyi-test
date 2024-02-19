@@ -33,14 +33,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-start --help failed."
     lxc-start --usage 2>&1 | grep -i "Usage: lxc-start"
     CHECK_RESULT $? 0 0 "Check lxc-start --usage failed."
-    lxc-start --version | grep $version
+    lxc-start --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-start --version failed."
 
     lxc-snapshot --help 2>&1 | grep -i "Usage"
     CHECK_RESULT $? 0 0 "Check lxc-snapshot --help failed."
     lxc-snapshot --usage 2>&1 |  grep -i "Usage: lxc-snapshot"
     CHECK_RESULT $? 0 0 "Check lxc-snapshot --usage failed."
-    lxc-snapshot --version | grep $version
+    lxc-snapshot --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-snapshot --version failed."
     lxc-snapshot -L myEuler1
     CHECK_RESULT $? 0 0 "Check lxc-snapshot -L failed."

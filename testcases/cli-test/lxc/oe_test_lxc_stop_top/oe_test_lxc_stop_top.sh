@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-stop --help failed."
     lxc-stop --usage 2>&1 | grep -i "Usage: lxc-stop"
     CHECK_RESULT $? 0 0 "Check lxc-stop --usage failed."
-    lxc-stop --version | grep $version
+    lxc-stop --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-stop --version failed."
     lxc-info myEuler1 | grep State | grep STOPPED
     CHECK_RESULT $? 0 0 "Check lxc-info failed."
@@ -42,7 +42,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-top --help failed."
     lxc-top --usage 2>&1 | grep -i "Usage: lxc-top"
     CHECK_RESULT $? 0 0 "Check lxc-top --usage failed."
-    lxc-top --version | grep $version
+    lxc-top --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-top --version failed."
     LOG_INFO "End to run test."
 }

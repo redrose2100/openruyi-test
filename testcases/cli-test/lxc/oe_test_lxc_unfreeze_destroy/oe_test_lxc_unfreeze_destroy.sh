@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-unfreeze --help failed."
     lxc-unfreeze --usage 2>&1 |  grep -i "Usage: lxc-unfreeze"
     CHECK_RESULT $? 0 0 "Check lxc-unfreeze --usage failed."
-    lxc-unfreeze --version | grep $version
+    lxc-unfreeze --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-unfreeze --version failed."
     lxc-unfreeze -n myEuler1
     CHECK_RESULT $? 0 0 "Check lxc-unfreeze failed."
@@ -42,7 +42,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-destroy --help failed."
     lxc-destroy --usage 2>&1 |  grep -i "Usage: lxc-destroy"
     CHECK_RESULT $? 0 0 "Check lxc-destroy --usage failed."
-    lxc-destroy --version | grep $version
+    lxc-destroy --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-destroy --version failed."
     lxc-destroy -n myEuler1
     CHECK_RESULT $? 0 0 "Check lxc-destroy -n failed."

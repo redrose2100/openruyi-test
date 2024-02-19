@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-copy --help failed." 
     lxc-copy --usage 2>&1 | grep -i "Usage: lxc-copy"
     CHECK_RESULT $? 0 0 "Check lxc-copy --usage failed."
-    lxc-copy --version | grep $version
+    lxc-copy --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-copy --version failed."
     lxc-copy -s -n myEuler1 -N myEuler2
     CHECK_RESULT $? 0 0 "Check lxc-copy -s failed."
@@ -43,7 +43,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-device --help failed."
     lxc-device --usage 2>&1 | grep  -i "Usage: lxc-device"
     CHECK_RESULT $? 0 0 "Check lxc-device --usage failed."
-    lxc-device --version | grep $version
+    lxc-device --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-device --version failed."
     LOG_INFO "End to run test."
 }

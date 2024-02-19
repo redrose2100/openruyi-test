@@ -34,7 +34,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-info --help failed."
     lxc-info --usage 2>&1 | grep -i "Usage: lxc-info"
     CHECK_RESULT $? 0 0 "Check lxc-info --usage failed."
-    lxc-info --version | grep $version
+    lxc-info --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-info --version failed."
 
     lxc-info -s myEuler1 | grep -i "STOPPED"

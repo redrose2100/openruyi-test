@@ -34,7 +34,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-autostart --help failed."
     lxc-autostart --usage 2>&1 | grep -i "Usage: lxc-autostart"
     CHECK_RESULT $? 0 0 "Check lxc-autostart --usage failed."
-    lxc-autostart --version | grep $version
+    lxc-autostart --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-autostart --version failed."
     lxc-autostart -L
     CHECK_RESULT $? 0 0 "Check lxc-autostart -L failed."
@@ -43,7 +43,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-cgroup --help failed."
     lxc-cgroup --usage 2>&1 | grep -i "Usage: lxc-cgroup"
     CHECK_RESULT $? 0 0 "Check lxc-cgroup --usage failed."
-    lxc-cgroup --version | grep $version
+    lxc-cgroup --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-cgroup --version failed."
     LOG_INFO "End to run test."
 }

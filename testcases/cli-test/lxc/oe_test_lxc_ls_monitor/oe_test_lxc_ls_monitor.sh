@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-ls --help failed."
     lxc-ls --usage 2>&1 | grep -i "Usage: lxc-ls"
     CHECK_RESULT $? 0 0 "Check lxc-ls --usage failed."
-    lxc-ls --version | grep $version
+    lxc-ls --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-ls --version failed."
     lxc-ls | grep myEuler1
     CHECK_RESULT $? 0 0 "Failed to list myEuler1."
@@ -46,7 +46,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-monitor --help failed."
     lxc-monitor --usage 2>&1 | grep -i "Usage: lxc-monitor"
     CHECK_RESULT $? 0 0 "Check lxc-monitor --usage failed."
-    lxc-monitor --version | grep $version
+    lxc-monitor --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-monitor --version failed."
     LOG_INFO "End to run test."
 }
