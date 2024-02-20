@@ -84,6 +84,9 @@
         },
         {
             "name": "oe_test_cracklib_test_001"
+        },
+        {
+            "name": "oe_test_pciutils_cli_test"
         }
     ]
 }

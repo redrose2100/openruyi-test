@@ -116,6 +116,9 @@ main() {
         elif [[ $opt == "-s" ]]; then
             downloadSource "$2" "$3"
             return 0
+        elif [[ $opt == "-g" ]]; then
+            downloadFromGitee "$2" "$3" "$6"
+            return 0
         else
             return 1
         fi
