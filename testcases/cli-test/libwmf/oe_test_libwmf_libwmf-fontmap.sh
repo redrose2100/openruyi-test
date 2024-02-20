@@ -22,15 +22,15 @@ function pre_test(){
 }
 function run_test(){
     LOG_INFO "Start to run test"
-    libwmf-fontmap --map=test /common 
-    cat /common | grep "xml version"
+    libwmf-fontmap --map=test ./common/ant.wmf 
+    grep "xml version" test
     CHECK_RESULT $? 0 0 "common libwmf-fontmap error"
     LOG_INFO "End of test"
 }
 function post_test(){
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf test*
     LOG_INFO "Finish environment cleanup!"
 }
-main"$@"
+main "$@"

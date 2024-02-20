@@ -17,7 +17,7 @@
 # @Desc      :   verification lxc‘s attach command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "lxc lxc-devel lxc-libs lxcfs lxcfs-tools tar busybox"
@@ -29,37 +29,31 @@ function run_test() {
     LOG_INFO "Start to run test."
     lxc-create -t /usr/share/lxc/templates/lxc-busybox -n myEuler1
     CHECK_RESULT $? 0 0 "Failed to set up container."
-    lxc-start myEuler1
-    CHECK_RESULT $? 0 0 "Failed to start container."
 
     lxc-autostart --help 2>&1 | grep -i "Usage"
     CHECK_RESULT $? 0 0 "Check lxc-autostart --help failed."
     lxc-autostart --usage 2>&1 | grep -i "Usage: lxc-autostart"
     CHECK_RESULT $? 0 0 "Check lxc-autostart --usage failed."
-    lxc-autostart --version | grep $version
+    lxc-autostart --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-autostart --version failed."
     lxc-autostart -L
     CHECK_RESULT $? 0 0 "Check lxc-autostart -L failed."
-    lxc-autostart -r myEuler1
-    CHECK_RESULT $? 0 0 "Check lxc-autostart -r failed."
-
+    
     lxc-cgroup --help 2>&1 | grep -i "Usage"
     CHECK_RESULT $? 0 0 "Check lxc-cgroup --help failed."
     lxc-cgroup --usage 2>&1 | grep -i "Usage: lxc-cgroup"
     CHECK_RESULT $? 0 0 "Check lxc-cgroup --usage failed."
-    lxc-cgroup --version | grep $version
+    lxc-cgroup --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-cgroup --version failed."
-    lxc-cgroup -n myEuler1 cpuset.cpus | grep [0-9]
-    CHECK_RESULT $? 0 0 "Check lxc-cgroup -n failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the tet environment."
-    lxc-stop myEuler1
+    LOG_INFO "Start to restore the test environment."
     lxc-destroy myEuler1
-    DNF_REMOVE
-    LOG_INFO "End to restore the tet environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
+

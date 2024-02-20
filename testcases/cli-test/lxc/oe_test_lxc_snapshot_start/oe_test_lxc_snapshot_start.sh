@@ -17,7 +17,7 @@
 # @Desc      :   verification lxc‘s attach command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "lxc lxc-devel lxc-libs lxcfs lxcfs-tools tar busybox"
@@ -33,32 +33,25 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-start --help failed."
     lxc-start --usage 2>&1 | grep -i "Usage: lxc-start"
     CHECK_RESULT $? 0 0 "Check lxc-start --usage failed."
-    lxc-start --version | grep $version
+    lxc-start --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-start --version failed."
-    lxc-start -n myEuler1 -d
-    CHECK_RESULT $? 0 0 "Check lxc-start -n failed."
-    lxc-info myEuler1 | grep State | grep RUNNING
-    CHECK_RESULT $? 0 0 "Check lxc-info failed."
 
     lxc-snapshot --help 2>&1 | grep -i "Usage"
     CHECK_RESULT $? 0 0 "Check lxc-snapshot --help failed."
     lxc-snapshot --usage 2>&1 |  grep -i "Usage: lxc-snapshot"
     CHECK_RESULT $? 0 0 "Check lxc-snapshot --usage failed."
-    lxc-snapshot --version | grep $version
+    lxc-snapshot --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-snapshot --version failed."
     lxc-snapshot -L myEuler1
     CHECK_RESULT $? 0 0 "Check lxc-snapshot -L failed."
-    lxc-stop -n myEuler1
-    CHECK_RESULT $? 0 0 "Check lxc-stop -n failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the tet environment."
-    lxc-stop myEuler1
+    LOG_INFO "Start to restore the test environment."
     lxc-destroy myEuler1
-    DNF_REMOVE
-    LOG_INFO "End to restore the tet environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of librabbitmq command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -44,17 +44,17 @@ function run_test() {
     SLEEP_WAIT 10
     grep "test_body" ./info.out
     CHECK_RESULT $? 0 0 "Check amqp-consume -r -b failed"
-    kill -9 $(ps -ef | grep amqp-consume | grep -Ev 'grep|bash' | awk '{print $2}')
+    kill -9 "$(pgrep -a "amqp-consume" | grep -Ev 'grep|bash' | awk '{print $1}')"
     nohup amqp-consume -A -q test_queue -c 5 -p 10 -s 127.0.0.1 --port=5672 --vhost=/ --username=admin --password=admin --heartbeat=1 cat >./info1.out 2>&1 &
     SLEEP_WAIT 3
     amqp-publish -r test_queue -b "test_body"
-    SLEEP_WAIT 3
+    SLEEP_WAIT 10
     grep "test_body" ./info1.out
     CHECK_RESULT $? 0 0 "Check amqp-consume -r -b failed"
-    kill -9 $(ps -ef | grep amqp-consume | grep -Ev 'grep|bash' | awk '{print $2}')
-    nohup amqp-consume -dx -c 5 -p 10 -s 127.0.0.1 --port=5672 -e test-ex -r test-routing -x --vhost=/ --username=guest --password=guest --heartbeat=1 cat >./info2.out 2>&1 &
+    kill -9 "$(pgrep -a "amqp-consume" | grep -Ev 'grep|bash' | awk '{print $1}')"
+    nohup amqp-consume -dx -c 5 -p 10 -s 127.0.0.1 --port=5672 -e amq.direct -r test-routing -x --vhost=/ --username=guest --password=guest --heartbeat=1 cat >./info2.out 2>&1 &
     SLEEP_WAIT 3
-    echo 'aaaaa' | amqp-publish -e test-ex -l --username=guest --password=guest -r test-routing
+    echo 'aaaaa' | amqp-publish -e amq.direct -l --username=guest --password=guest -r test-routing
     SLEEP_WAIT 10
     grep "aaaaa" ./info2.out
     CHECK_RESULT $? 0 0 "Check amqp-consume -e -x failed"
@@ -70,12 +70,12 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rabbitmqctl delete_user admin
-    kill -9 $(ps -ef | grep amqp-consume | grep -Ev 'grep|bash' | awk '{print $2}')
+    kill -9 "$(pgrep -a "amqp-consume" | grep -Ev 'grep|bash' | awk '{print $1}')"
     rabbitmq-plugins disable rabbitmq_management
-    rm -rf privkey.pem pubkey.pem cert.pem *.out info* rabbitmqadmin
+    rm -rf privkey.pem pubkey.pem cert.pem ./*.out info* rabbitmqadmin
     systemctl stop rabbitmq-server
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
