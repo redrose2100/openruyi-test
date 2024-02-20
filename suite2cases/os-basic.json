@@ -864,6 +864,9 @@
 	,
         {
           "name": "oe_test_zipnote"
+        },
+	{
+	  "name": "oe_test_join"
         }
     ]
 }
