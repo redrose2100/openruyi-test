@@ -21,13 +21,15 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "setools-console"
+    DNF_INSTALL "setools-console policycoreutils-python-utils"
+    local_LANG=$LANG
+    export LANG=en_US.UTF-8
     LOG_INFO "End of environmental preparation."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    semanage login -l | grep "__default__" | grep "unconfined_u"
+    semanage login -l | grep -C 3 "__default__" | grep "unconfined_u"
     CHECK_RESULT $? 0 0 "Check user mapping failed"
     seinfo -u | grep -e "guest_u" -e "root" -e "staff_u" -e "sysadm_u" -e "system_u" -e "unconfined_u" -e "user_u" -e "xguest_u"
     CHECK_RESULT $? 0 0 "Check selinux users failed"
@@ -38,7 +40,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    export LANG=${local_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
