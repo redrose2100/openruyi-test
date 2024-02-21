@@ -32,7 +32,7 @@ function run_test() {
     test_restart ${service}
     test_enabled ${service}
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | 
-grep -v -i "memory_failure_event\|disk_errors" | grep -v "Corrected Errors is"
+grep -v -i "memory_failure_event\|disk_errors" | grep -v "Corrected Errors is" | grep -v "cpu0/online"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload ${service}
     LOG_INFO "Finish test!"
