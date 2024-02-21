@@ -867,6 +867,9 @@
         },
 	{
 	  "name": "oe_test_join"
-        }
+        },
+	{
+	  "name": "oe_test_genisoimage"
+	}
     ]
 }
