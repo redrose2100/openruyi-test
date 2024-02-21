@@ -16,22 +16,26 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test isulad.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL iSulad
+    log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution isulad.service
+    test_restart isulad.service
+    test_enabled isulad.service
+    journalctl --since "${log_time}" -u isulad.service | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARN\|home\/lkp\/rpmbuild\/BUILD"
+    CHECK_RESULT $? 0 1 "There is an error message for the log of isulad.service"
     systemctl start isulad.service
     sed -i 's\ExecStart=/usr/bin/isulad\ExecStart=/usr/bin/isulad --log-level=ERROR\g' /usr/lib/systemd/system/isulad.service
     systemctl daemon-reload
-    systemctl reload isulad.service
+    systemctl reload isulad.service 2>&1 | grep "Job type reload is not applicable"
     CHECK_RESULT $? 0 0 "isulad.service reload failed"
     systemctl status isulad.service | grep "Active: active"
     CHECK_RESULT $? 0 0 "isulad.service reload causes the service status to change"
@@ -43,7 +47,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/bin/isulad --log-level=ERROR\ExecStart=/usr/bin/isulad\g' /usr/lib/systemd/system/isulad.service
     systemctl daemon-reload
     systemctl reload isulad.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
