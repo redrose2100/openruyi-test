@@ -16,11 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test samba.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
     host_name=$(hostname)
     hostname OE-TESTD
     echo "${NODE1_IPV4} TESTAD.LOCAL" >>/etc/hosts
@@ -46,44 +46,62 @@ EOF
     sed -i 's/nameserver/#nameserver/' /etc/resolv.conf 
     echo "nameserver 127.0.0.1" >> /etc/resolv.conf
     flag=false
-    if [ $(getenforce | grep Enforcing) ]; then
+    if getenforce | grep Enforcing; then
         setenforce 0
         flag=true
     fi
-    LOG_INFO "End of environmental preparation!"
+    log_time=$(date '+%Y-%m-%d %T')
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
-    test_execution samba.service
-    sed -i 's\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS -d 10\' /usr/lib/systemd/system/samba.service
+    LOG_INFO "Start to run test."
+    systemctl restart samba.service
+    CHECK_RESULT $? 0 0 "samba.service restart failed"
+    SLEEP_WAIT 5
+    systemctl status samba.service | grep "Active: active"
+    CHECK_RESULT $? 0 0 "samba.service restart failed"
+    systemctl stop samba.service
+    CHECK_RESULT $? 0 0 "samba.service stop failed"
+    SLEEP_WAIT 5
+    systemctl status samba.service | grep "code=exited, status=127"
+    CHECK_RESULT $? 0 0 "samba.service stop failed"
+    systemctl start samba.service
+    CHECK_RESULT $? 0 0 "samba.service start failed"
+    SLEEP_WAIT 5
+    systemctl status samba.service | grep "Active: active"
+    CHECK_RESULT $? 0 0 "samba.service start failed"
+    test_enabled samba.service
+    journalctl --since "${log_time}" -u samba.service | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING\|Failed with result"
+    CHECK_RESULT $? 0 1 "There is an error message for the log of samba.service"
+    sed -i "s\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS -d 10\g" /usr/lib/systemd/system/samba.service
     systemctl daemon-reload
     systemctl reload samba.service
     CHECK_RESULT $? 0 0 "samba.service reload failed"
     systemctl status samba.service | grep "Active: active"
     CHECK_RESULT $? 0 0 "samba.service reload causes the service status to change"
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
-    sed -i 's\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS -d\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS\' /usr/lib/systemd/system/samba.service
+    LOG_INFO "Start to restore the test environment."
+    sed -i "s\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS -d\/usr/sbin/samba --foreground --no-process-group $SAMBAOPTIONS\g" /usr/lib/systemd/system/samba.service
     systemctl daemon-reload
     systemctl reload samba.service
     systemctl stop samba.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     sed -i '/nameserver 127.0.0.1/d' /etc/resolv.conf
     sed -i 's/#nameserver/nameserver/' /etc/resolv.conf 
-    hostname ${host_name}
+    hostname "${host_name}"
     sed -i "/TESTAD/d" /etc/hosts
     systemctl start firewalld
-    if [ ${flag} = 'true' ]; then
+    if [ "${flag}" = "true" ]; then
         setenforce 1
     fi
     rm -rf  /etc/samba/smb.conf /var/lib/samba/private/* /var/lib/samba/sysvol/*  
     mv -f /etc/krb5.bak /etc/krb5.conf
     mv -f /etc/samba/smb.conf_bak /etc/samba/smb.conf
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "Finish to restore the test environment."
 }
 
 main "$@"

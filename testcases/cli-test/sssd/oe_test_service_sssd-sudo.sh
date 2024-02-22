@@ -16,18 +16,20 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test sssd-sudo.service restart
 # #############################################
-
-source "../common/common_lib.sh"
+# shellcheck disable=SC1091
+source "common/common.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
+    openldap_server_pre
+    openldap_client_pre
     DNF_INSTALL sssd
     service=sssd-sudo.service
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     systemctl restart "${service}" 2>&1 | grep "it is configured to refuse manual start/stop"
     CHECK_RESULT $? 0 0 "Check ${service} failed"
     systemctl start "${service}" 2>&1 | grep "it is configured to refuse manual start/stop"
@@ -36,13 +38,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "${service} stop failed"
     systemctl is-enabled "${service}" | grep "indirect"
     CHECK_RESULT $? 0 0 "${service} is not indirect"
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
-    DNF_REMOVE
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    openldap_server_post
+    openldap_client_post
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
