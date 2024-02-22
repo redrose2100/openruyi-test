@@ -47,21 +47,22 @@ function run_test() {
     CHECK_RESULT $?
     systemctl start httpd
     CHECK_RESULT $?
+    SLEEP_WAIT 5
     systemctl status httpd | grep "running"
     CHECK_RESULT $?
-    semanage port -a -t http_port_t -p tcp $rdport
+    semanage port -a -t http_port_t -p tcp "$rdport"
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    semanage port --delete -t ssh_port_t -p tcp $rdport
+    semanage port --delete -t ssh_port_t -p tcp "$rdport"
     semanage fcontext -d -t httpd_sys_content_t "/srv/www1(/.*)?"
     setsebool -P httpd_can_network_connect_db off
     systemctl stop httpd
     rm -rf /var/www/html/index1.html /srv/www1
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
