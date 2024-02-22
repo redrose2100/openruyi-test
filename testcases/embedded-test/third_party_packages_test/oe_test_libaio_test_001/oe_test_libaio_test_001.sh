@@ -32,24 +32,43 @@ function run_test() {
   mkdir /testdir
   echo "test" >/testdir/rwfile
   chmod 600 /testdir/rwfile
-  ./runtests.sh cases/2.p cases/3.p cases/4.p cases/5.p cases/6.p cases/7.p cases/11.p \
-    cases/12.p cases/13.p cases/14.p cases/15.p cases/16.p cases/17.p cases/18.p cases/19.p cases/20.p cases/21.p cases/22.p cases/23.p
-  CHECK_RESULT $? 0 0 "libaio test step 1 failed!!!"
+  for case_num in 2 3 4 5 6 7 11 12 13 14 15 16 17 18 19 20 21 22
+  do
+    ./runtests.sh "cases/${case_num}.p "| tee "${case_num}.log"
+  done
   # step 2 enospc test
   LOG_INFO "Start exec step 2"
   mkdir testdir.ext2 testdir.enospc
   dd if=/dev/zero bs=1M count=10 of=ext2.img
   mke2fs -F -b 4096 ext2.img
   mount -o loop -t ext2 ext2-enospc.img testdir.enospc
-  ./runtests.sh cases/10.p
-  CHECK_RESULT $? 0 0 "libaio test step 2 failed!!!"
+  ./runtests.sh cases/10.p | tee "10.log"
   umount testdir.enospc
   # step 3 ext2 test
   LOG_INFO "Start exec step 3"
   mount -o loop -t ext2 ext2.img testdir.ext2
-  ./runtests.sh cases/8.p
-  CHECK_RESULT $? 0 0 "libaio test step 3 failed!!!"
+  ./runtests.sh cases/8.p | tee "8.log"
+
   umount testdir.ext2
+  # result check
+  shopt -s nullglob
+  logs=(*.log)
+  printf '%s\n' "${logs[@]}" > logs_file.txt
+  while read -r line; do
+    if [ -z "${line}" ];then
+      continue
+    fi
+    grep -v "${line}.log" logs_file.txt >tmp.log
+    cat tmp.log > logs_file.txt
+  done <../ignore.txt
+
+  while read -r log_file; do
+    if [ -z "${log_file}" ];then
+      continue
+    fi
+    failed_num=$(grep "Pass:" "${log_file}"|awk '{print $NF}')
+    CHECK_RESULT "${failed_num}" 0 0 "libaio cases/${log_file%%.log}.p test failed!!!"
+  done <./logs_file.txt
   popd || return
   LOG_INFO "End to run test."
 }
