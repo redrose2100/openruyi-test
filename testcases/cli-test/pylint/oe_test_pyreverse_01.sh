@@ -33,36 +33,36 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: -help No Pass"
     pyreverse --filter-mode PUB_ONLY string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: --filter-mode No Pass"
+    rm -rf classes.dot
     pyreverse -f PUB_ONLY string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: -f No Pass"
+    rm -rf classes.dot
     pyreverse --class pylint.checkers.classes.ClassChecker pylint
     find . -name "pylint.checkers.classes.ClassChecker.dot" | grep "pylint.checkers.classes.ClassChecker.dot"
-    rm -rf pylint.checkers.classes.ClassChecker.dot
     CHECK_RESULT $? 0 0 "L$LINENO: -class No Pass"
+    rm -rf pylint.checkers.classes.ClassChecker.dot
     pyreverse -c pylint.checkers.classes.ClassChecker pylint
     find . -name "pylint.checkers.classes.ClassChecker.dot" | grep "pylint.checkers.classes.ClassChecker.dot"
-    rm -rf pylint.checkers.classes.ClassChecker.dot
     CHECK_RESULT $? 0 0 "L$LINENO: -c No Pass"
+    rm -rf pylint.checkers.classes.ClassChecker.dot
     pyreverse --show-ancestors 1 string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: --show-ancestors No Pass"
+    rm -rf classes.dot
     pyreverse -a 1 string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: -a No Pass"
+    rm -rf classes.dot
     pyreverse --all-ancestors string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: --all-ancestors No Pass"
+    rm -rf classes.dot
     pyreverse -A string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: -A No Pass"
+    rm -rf classes.dot 
     LOG_INFO "End to run test."
 }
 function post_test() {
