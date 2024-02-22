@@ -23,6 +23,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     User=$(semanage login -l | grep "__default__" | awk '{print $2}')
     Range=$(semanage login -l | grep "__default__" | awk '{print $3}')
+    DNF_INSTALL policycoreutils-python-utils
     LOG_INFO "End of environmental preparation."
 }
 
@@ -64,8 +65,9 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rfZ example
-    semanage login -m -s $User -r $Range __default__
+    semanage login -m -s "$User" -r "$Range" __default__
     rm -rf testlog
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

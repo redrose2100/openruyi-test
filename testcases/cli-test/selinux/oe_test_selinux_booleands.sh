@@ -21,8 +21,10 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "setroubleshoot-server"
-    DNF_INSTALL "setroubleshoot-server" 2
+    DNF_INSTALL "setroubleshoot-server policycoreutils-python-utils"
+    DNF_INSTALL "setroubleshoot-server policycoreutils-python-utils" 2
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -42,10 +44,10 @@ function run_test() {
     CHECK_RESULT $?
     semanage boolean -l | grep httpd_use_cifs | grep on
     CHECK_RESULT $?
-    SSH_CMD "setsebool -P httpd_use_nfs on;setsebool -P httpd_use_cifs on" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    SSH_CMD "semanage boolean -l | grep httpd_use_nfs | grep on" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    P_SSH_CMD --node 2 --cmd "setsebool -P httpd_use_nfs on;setsebool -P httpd_use_cifs on"
+    P_SSH_CMD --node 2 --cmd "semanage boolean -l | grep httpd_use_nfs | grep on"
     CHECK_RESULT $?
-    SSH_CMD "semanage boolean -l | grep httpd_use_cifs| grep on" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    P_SSH_CMD --node 2 --cmd "semanage boolean -l | grep httpd_use_cifs| grep on"
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
@@ -54,9 +56,10 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     setsebool httpd_use_nfs off
     setsebool httpd_use_cifs off
-    SSH_CMD "setsebool -P httpd_use_nfs off;setsebool -P httpd_use_cifs off" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_REMOVE
+    P_SSH_CMD --node 2 --cmd "setsebool -P httpd_use_nfs off;setsebool -P httpd_use_cifs off"
+    DNF_REMOVE "$@"
     DNF_REMOVE 2 "setroubleshoot-server"
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

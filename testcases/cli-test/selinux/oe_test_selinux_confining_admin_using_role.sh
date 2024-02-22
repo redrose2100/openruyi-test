@@ -26,6 +26,9 @@ function pre_test() {
 ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}
 EOF
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    DNF_INSTALL policycoreutils-python-utils
     LOG_INFO "End of environmental preparation."
 }
 
@@ -73,6 +76,8 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rfZ example
     rm -rf testlog /etc/sudoers.d/example
+    export LANG=${OLD_LANG}
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

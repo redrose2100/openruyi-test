@@ -31,6 +31,7 @@ EOF
 ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}
 EOF
+    DNF_INSTALL policycoreutils-python-utils
     LOG_INFO "End of environmental preparation."
 }
 
@@ -87,6 +88,7 @@ EOF1
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
     userdel -rf example
     userdel -rfZ test
     rm -rf testlog
