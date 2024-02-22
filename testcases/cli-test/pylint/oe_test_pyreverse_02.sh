@@ -29,44 +29,44 @@ function run_test() {
     LOG_INFO "Start to run test."
     pyreverse --show-associated 1 string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: --show-associated No Pass"
+    rm -rf classes.dot
     pyreverse -s 1 string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: -s No Pass"
+    rm -rf classes.dot
     pyreverse --all-associated string
     find . -name "classes.dot" | grep "classes.dot"
+    CHECK_RESULT $? 0 0 "L$LINENO: --all-associated No Pass"
     rm -rf classes.dot
-    CHECK_RESULT $? 0 0 "L$LINENO: ----all-associated No Pass"
     pyreverse -S string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: -S No Pass"
+    rm -rf classes.dot
     pyreverse --show-builtin string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: --show-builtin No Pass"
+    rm -rf classes.dot
     pyreverse -b string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: -b No Pass"
+    rm -rf classes.dot
     pyreverse --module-names y string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: --module-names No Pass"
+    rm -rf classes.dot    
     pyreverse -m y string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: -m No Pass"
+    rm -rf classes.dot   
     pyreverse --only-classnames string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: --only-classnames No Pass"
+    rm -rf classes.dot   
     pyreverse -k string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: -k No Pass"
+    rm -rf classes.dot   
     LOG_INFO "End to run test."
 }
 function post_test() {
