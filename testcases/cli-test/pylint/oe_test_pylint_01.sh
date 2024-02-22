@@ -37,8 +37,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: pylint -E No Pass"
     pylint_version=$(rpm -qa pylint | awk -F- '{print $2}' | awk -F. '{print $1$2$3}')
     if [ "$pylint_version" -lt 2122 ]; then
-        pylint --py3k ./common/test.py | grep "Your code has been rated at"
-        CHECK_RESULT $? 0 0 "L$LINENO: pylint --py3k No Pass"
+        pylint --py-version 3 ./common/test.py | grep "Your code has been rated at"
+        CHECK_RESULT $? 0 0 "L$LINENO: pylint --py-version 3 No Pass"
     else
         LOG_INFO "This version does not have this parameter."
     fi
