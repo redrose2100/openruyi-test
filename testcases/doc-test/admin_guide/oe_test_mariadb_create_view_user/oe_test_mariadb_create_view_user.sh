@@ -70,8 +70,8 @@ function post_test() {
     spawn mysql -u root -p 
     expect {
         \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
-        expect \"Maria*\" { send \"DROP USER 'userexample1'@'localhost';\r\"}
-        expect \"Maria*\" { send \"DROP USER 'userexample2'@'${NODE1_IPV4}';\r\"}
+        expect \"Maria*\" { send \"DROP USER 'userexample1@localhost';\r\"}
+        expect \"Maria*\" { send \"DROP USER 'userexample2@${NODE1_IPV4}';\r\"}
         expect \"Maria*\" { send \"exit\r\"}
 }
 }
