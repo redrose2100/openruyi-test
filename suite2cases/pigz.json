@@ -30,6 +30,9 @@
 	},
         {
 	    "name": "oe_test_pigz_09"
+	},
+        {
+	    "name" :"oe_test_pigz_10"
 	}
     ]
 }
