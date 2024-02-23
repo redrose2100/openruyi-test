@@ -102,6 +102,9 @@
         },
         {
             "name": "oe_test_lua_test_001"
+        },
+        {
+            "name": "oe_test_audit_test_001"
         }
     ]
 }
