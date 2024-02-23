@@ -871,5 +871,9 @@
         {
 	  "name": "oe_test_genisoimage"
 	}
+	,
+        {
+          "name": "oe_test_zfgrep"
+        }
     ]
 }
