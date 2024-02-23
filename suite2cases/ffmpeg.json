@@ -3,6 +3,9 @@
   "cases": [
     {
       "name": "oe_test_ffmpeg"
+    },
+    {
+      "name": "oe_test_ffmpeg_01"
     }
   ]
 }
