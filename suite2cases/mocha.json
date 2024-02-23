@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_mocha"
+	},
+	{
+	    "name": "oe_test_mocha_01"
         }
     ]
 }
