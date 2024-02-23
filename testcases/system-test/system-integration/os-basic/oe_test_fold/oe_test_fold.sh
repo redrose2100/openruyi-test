@@ -40,6 +40,12 @@ EOF
     CHECK_RESULT $? 0 0 "Error, please check 'fold test'"
     fold -b testfile 
     CHECK_RESULT $? 0 0 "Error, please check 'fold test'"
+    fold -c testfile 
+    CHECK_RESULT $? 0 0 "Error, please check 'fold test'"
+    fold -s testfile 
+    CHECK_RESULT $? 0 0 "Error, please check 'fold test'"
+    fold --version | grep "GNU coreutils"
+    CHECK_RESULT $? 0 0 "No such file or directory"
     LOG_INFO "End to run test."
 }
 
