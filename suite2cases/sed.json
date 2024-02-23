@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/sed",
+    "cases": [
+        {
+            "name": "oe_test_sed_01"
+        }
+    ]
+}
