@@ -29,6 +29,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Unable to view version number information"
     lsattr -R testdir/testfile  |grep -w e
     CHECK_RESULT $? 0 0 "Unable to view attribute information"
+    lsattr  testdir |grep -w e
+    CHECK_RESULT $? 0 0 "Unable to view attribute information"
+    lsattr -d testdir  |grep -w e
+    CHECK_RESULT $? 0 0 "Unable to view attribute information"
+    lsattr -a testdir  |grep -w testfile
+    CHECK_RESULT $? 0 0 "No such file or directory"
     LOG_INFO "End to run test."
 }
 
