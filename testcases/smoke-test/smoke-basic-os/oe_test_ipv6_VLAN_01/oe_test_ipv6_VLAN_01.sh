@@ -19,6 +19,17 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if [ `arch`  == "x86_64" ]; then
+        systemctl stop systemd-udevd-control.socket  
+        systemctl stop systemd-udevd-kernel.socket
+        systemctl stop systemd-udevd.service
+    fi
+    LOG_INFO "End to prepare the test environment."
+}
+
+
 function run_test() {
     LOG_INFO "Start to run test."
     ip link add dev vlan.1 link ${NODE1_NIC} type vlan id 1
@@ -31,5 +42,17 @@ function run_test() {
     CHECK_RESULT $? 0 1 "Succeed to show VLAN"
     LOG_INFO "End to run test."
 }
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+        if [ `arch`  == "x86_64" ]; then
+        systemctl restart systemd-udevd-control.socket  
+        systemctl restart systemd-udevd-kernel.socket
+        systemctl restart systemd-udevd.service
+    fi
+    LOG_INFO "End to restore the test environment."
+}
+
+
 
 main "$@"
