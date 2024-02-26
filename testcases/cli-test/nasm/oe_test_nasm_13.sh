@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of nasm command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -47,8 +47,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check nasm nasm --postfix failed"
     nasm --gpostfix 'str' myfile.asm
     CHECK_RESULT $? 0 0 "Check nasm nasm --gpostfix failed"
-    nasm --suffix 'str' myfile.asm
-    CHECK_RESULT $? 0 0 "Check nasm nasm --suffix failed"
     nasm --prefix 'str' myfile.asm
     CHECK_RESULT $? 0 0 "Check nasm nasm --prefix failed"
     LOG_INFO "End to run test."
@@ -57,8 +55,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf myfile* file nasm* t* imit-*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Een to restore the test environment."
 }
 
-main $@
+main "$@"

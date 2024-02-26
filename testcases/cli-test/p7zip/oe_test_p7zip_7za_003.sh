@@ -21,14 +21,16 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL 'p7zip tar'
     # create test files
     echo 1 > file1
     echo 2 > file2
     echo 3 > filename_case_test
     echo 4 > Filename_Case_Test
-    ln -sf $PWD/file1 $PWD/file1_link_s
-    ln -f $PWD/file1 $PWD/file1_link_h
+    ln -sf "$PWD"/file1 "$PWD"/file1_link_s
+    ln -f "$PWD"/file1 "$PWD"/file1_link_h
     mkdir tmp_empty_dir
     tar -cvf archive.tar file1 file2 tmp_empty_dir
     LOG_INFO "End of environmental preparation!"
@@ -57,7 +59,7 @@ function run_test() {
     7za x -spe archive.tar tmp_empty_dir
     CHECK_RESULT $? 0 0 "test failed with -spe"
     # -spf use fully qualified file paths
-    7za a archive7.7z -spf $PWD/file1 $PWD/file2 && 7za l archive7.7z | grep -Poz ".*$PWD/file1\n.*$PWD/file2"
+    7za a archive7.7z -spf "$PWD"/file1 "$PWD"/file2 && 7za l archive7.7z | grep -Poz ".*$PWD/file1\n.*$PWD/file2"
     CHECK_RESULT $? 0 0 "test failed with -spf"
     # -ssc[-] set sensitive case mode
     7za a -ssc archive8.tar filename_case_test Filename_Case_Test && tar -tvf archive8.tar | grep -Poz ".*Filename_Case_Test\n.*filename_case_test"
@@ -67,8 +69,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf file* archive* tmp_* File*
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 

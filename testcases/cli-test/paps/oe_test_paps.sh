@@ -21,6 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL paps
     touch test.txt
     echo yes >>./test.txt
@@ -66,8 +68,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm test.txt 
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment." 
 }
 

@@ -31,13 +31,15 @@ function run_test() {
     CHECK_RESULT $?
     echo '只有' | opencc -c s2t | grep '只有'
     CHECK_RESULT $?
-    echo '可是只有他才能完成这个任务' | opencc -c s2t | grep '可是隻有他才能完成這個任務'
+    echo '可是只有他才能完成这个任务' | opencc -c s2t | grep '可是只有他才能完成這個任務'
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
+
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE 1
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
+
 main "$@"

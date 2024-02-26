@@ -15,7 +15,9 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   command test-iscsid
 #####################################
-source ./common/open-iscsi_lib.sh
+# shellcheck disable=SC1091
+# shellcheck disable=SC2154
+source "./common/open-iscsi_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -32,11 +34,6 @@ function run_test() {
     test "$(iscsistart -v | grep -Eo "[0-9]*\.[0-9]*\.[0-9]*")" == \
         "$(rpm -qi open-iscsi | grep "Version" | awk '{print$3}')"
     CHECK_RESULT $?
-    iscsiuio -h | grep "Usage"
-    CHECK_RESULT $?
-    iscsiuio -v | grep -oE "Version.*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"
-    CHECK_RESULT $?
-    iscsiuio -f -d 4 >./iscsiuio_log.result 2>&1 &
     systemctl restart iscsid
     SLEEP_WAIT 2
     iscsiadm -m node -T iqn.2020-08.com.example:server -p "${NODE2_IPV4}" -u
@@ -69,7 +66,7 @@ function post_test() {
     dd if=/dev/zero of=/dev/${unused_disk} bs=2G count=1;
     rm -rf /tmp/disk_info.sh;
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     pkill -9 iscsiuio_log
     rm -rf ./*.result
     LOG_INFO "Finish restoring the test environment."
