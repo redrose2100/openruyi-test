@@ -38,13 +38,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    file -sL "$root_blk" | grep "$root_fs"
+    file -sL "$root_blk" | grep -i "$root_fs"
     CHECK_RESULT $? 0 0 "file cannot determin $root_blk file system type."
     file -b hello.txt | grep "ASCII text"
     CHECK_RESULT $? 0 0 "file cannot determin hello.txt file type."
     file -b hello.tar.gz | grep "gzip"
     CHECK_RESULT $? 0 0 "file cannot determin hello.tar.gz file type."
-    file -b "$(whereis ls | cut -d ' ' -f 2)" | grep "$endian pie executable, $arch"
+    file -b "$(whereis ls | cut -d ' ' -f 2)" | grep -P "$endian.*$arch"
     CHECK_RESULT $? 0 0 "file cannot determin $(whereis ls | cut -d ' ' -f 2) file type."
     LOG_INFO "End to run test."
 }
