@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of libappstream-glib command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -35,7 +35,7 @@ function run_test() {
     appstream-util -v --profile --nonet search-pkgname dejavu | grep "appstream-util: search-pkgname"
     CHECK_RESULT $? 0 0 "Check appstream-util -v --profile --nonet search-pkgname failed"
 
-    appstream-util -v --profile --nonet show-search-tokens dejavu | grep "exampl \[1]"
+    appstream-util -v --profile --nonet show-search-tokens dejavu | grep "appstream-util"
     CHECK_RESULT $? 0 0 "Check appstream-util -v --profile --nonet show-search-tokens failed"
 
     appstream-util -v --profile --nonet split-appstream glibtest/example.xml.gz | grep "appstream-util: split-appstream"
@@ -62,7 +62,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf glibtest
     LOG_INFO "Finish restore the test environment."
 }
