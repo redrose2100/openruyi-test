@@ -22,6 +22,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "sysstat"
+    device_name=$(lsblk -nr -o NAME|head -n 1)
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -32,7 +33,7 @@ function run_test() {
     dd if=/dev/zero of=/tmp/test.img bs=1M count=1000 &
     CHECK_RESULT $? 0 0 "dd command failed"
     iostat 1 2 >> testfile.txt
-    cat < testfile.txt | grep vda
+    cat < testfile.txt | grep "${device_name}"
     CHECK_RESULT $? 0 0 "iostat 1 2 failed"
     LOG_INFO "Finish test!"
 }
