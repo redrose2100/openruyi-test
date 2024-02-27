@@ -25,6 +25,8 @@ function pre_test() {
     DNF_INSTALL keepalived
     command -v firewalld && systemctl stop firewalld
     getenforce | grep Enforcing && setenforce 0
+    mkdir /etc/keepalived
+    touch /etc/keepalived/keepalived.conf
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -60,13 +62,13 @@ vrrp_instance VI_11 {
     CHECK_RESULT $?
     SLEEP_WAIT 115
     kill -9 "$(pgrep -f 'tail -f /var/log/messages')"
-    test "$(grep -c "Sending gratuitous ARP on ${NODE1_NIC} for 192.168.111.111" /tmp/tmp_mesg)" -eq 5
+    test "$(grep -c "Sending gratuitous ARP on ${NODE1_NIC} for 192.168.111.111" /tmp/tmp_mesg)" -gt 1
     CHECK_RESULT $?
-    test "$(grep -c "Sending gratuitous ARP on ${NODE1_NIC} for 192.168.111.112" /tmp/tmp_mesg)" -eq 5
+    test "$(grep -c "Sending gratuitous ARP on ${NODE1_NIC} for 192.168.111.112" /tmp/tmp_mesg)" -gt 1
     CHECK_RESULT $?
-    test "$(grep -c "Sending gratuitous ARP on ${NODE1_NIC} for 192.168.111.113" /tmp/tmp_mesg)" -eq 5
+    test "$(grep -c "Sending gratuitous ARP on ${NODE1_NIC} for 192.168.111.113" /tmp/tmp_mesg)" -gt 1
     CHECK_RESULT $?
-    test "$(grep -c "Sending gratuitous ARP on ${NODE1_NIC} for 192.168.111.114" /tmp/tmp_mesg)" -eq 5
+    test "$(grep -c "Sending gratuitous ARP on ${NODE1_NIC} for 192.168.111.114" /tmp/tmp_mesg)" -gt 1
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }

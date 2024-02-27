@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Autofs is a program that can automatically load the specified directory as needed.
 #####################################
+# shellcheck disable=SC1091
 
 source "common/common_autofs.sh"
 
@@ -36,17 +37,17 @@ function run_test() {
     CHECK_RESULT $?
     automount -p /tmp/automount_pid $map_name
     CHECK_RESULT $?
-    test $(cat /tmp/automount_pid) -eq $(pgrep -f automount_pid)
+    test "$(cat /tmp/automount_pid)" -eq "$(pgrep -f automount_pid)"
     CHECK_RESULT $?
-    kill -9 $(pgrep -f automount_pid)
+    kill -9 "$(pgrep -f automount_pid)"
     CHECK_RESULT $?
     automount -M 20 $map_name
     CHECK_RESULT $?
-    kill -9 $(pgrep -f 'automount -M')
+    kill -9 "$(pgrep -f 'automount -M')"
     CHECK_RESULT $?
     automount -d $map_name
     CHECK_RESULT $?
-    kill -9 $(pgrep -f 'automount -d')
+    kill -9 "$(pgrep -f 'automount -d')"
     CHECK_RESULT $?
     automount -m -v $map_name | grep "autofs dump map information"
     CHECK_RESULT $?

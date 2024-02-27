@@ -15,7 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   pg_archivecleanup oid2name
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/lib.sh
 
 function pre_test() {
@@ -37,7 +37,7 @@ function run_test() {
     oid2name -? | grep "Usage:"
     CHECK_RESULT $?
 
-    pg_walfile=$(ls /var/lib/pgsql/data/pg_wal | grep "0000")
+    pg_walfile=$(find /var/lib/pgsql/data/pg_wal -name "*0000*"|awk -F '/' '{print $NF}')
     su - postgres -c "pg_archivecleanup -d /var/lib/pgsql/data/pg_wal ${pg_walfile}"
     CHECK_RESULT $?
     su - postgres -c "pg_archivecleanup -d /var/lib/pgsql/data/pg_wal ${pg_walfile} -n"

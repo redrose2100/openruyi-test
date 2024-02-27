@@ -21,6 +21,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8    
     DNF_INSTALL "389-ds-base"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
@@ -41,7 +43,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: chaining link-get -h No Pass" 
     dsconf localhost chaining link-set -h | grep  "usage: dsconf instance chaining link-set" 
     CHECK_RESULT $? 0 0 "Check: chaining link-set -h No Pass" 
-    dsconf localhost chaining link-set --conn-bind-limit 200 link1 | grep  "Successfully updated database chaining link" 
+    dsconf localhost chaining link-set --conn-bind-limit 200 link1 | grep -iE "Successfully updated database chaining link" 
     CHECK_RESULT $? 0 0 "Check: chaining link-set --conn-bind-limit No Pass" 
     dsconf localhost chaining link-get -h | grep  "usage: dsconf instance chaining link-get" 
     CHECK_RESULT $? 0 0 "Check: chaining link-get -h No Pass" 
@@ -57,7 +59,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: chaining monitor  No Pass" 
     dsconf localhost chaining link-delete -h | grep  "usage: dsconf instance chaining link-delete" 
     CHECK_RESULT $? 0 0 "Check: chaining link-delete -h No Pass" 
-    dsconf localhost chaining link-delete link1 | grep  "Successfully deleted database link" 
+    dsconf localhost chaining link-delete link1 | grep -iE "Successfully deleted database link" 
     CHECK_RESULT $? 0 0 "Check: chaining link-delete -h No Pass" 
     LOG_INFO "End to run test."
 }
@@ -68,6 +70,7 @@ function post_test() {
     dsctl localhost remove --do-it
     rm -rf 389_ds_test.inf /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
+    export LANG=${OLD_LANG}
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
