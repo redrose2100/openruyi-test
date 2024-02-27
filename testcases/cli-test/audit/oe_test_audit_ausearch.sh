@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command audit ausearch
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -32,8 +32,9 @@ function run_test() {
     ausearch --format csv
     CHECK_RESULT $? 0 0 "format check fail"   
     ausearch -m ADD_USER
-    CHECK_RESULT $? 0 0 "AVC check fail"   
-    ausearch -ua uos1
+    CHECK_RESULT $? 0 0 "AVC check fail"
+    uid=$(id -u uos1)
+    ausearch -ua "$uid"
     CHECK_RESULT $? 0 0 "ua check fail"   
     ausearch -f /home/uos1/testfile
     CHECK_RESULT $? 0 0 "ausearch -f fail"  
