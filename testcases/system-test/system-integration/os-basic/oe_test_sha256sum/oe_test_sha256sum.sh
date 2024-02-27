@@ -28,6 +28,8 @@ function run_test() {
     sha256sum  testfile  > testfile.sha256sum  
     test -e testfile.sha256sum
     CHECK_RESULT $? 0 0 "The testfile.sha256sum is not exit "  
+    sha256sum -c testfile.sha256sum
+    CHECK_RESULT $? 0 0 "sha256sum check failed."
     LOG_INFO "End to run test."
 }
 
