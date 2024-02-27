@@ -4,7 +4,11 @@
 #
 # chkconfig: 2345 55 25
 
-NEW_IP=$(echo "${NODE1_IPV4}" | cut -d '.' -f 1-3).120
+head_ip=$(echo "${NODE1_IPV4}" | cut -d '.' -f 1)
+((head_ip++))
+ip=$(echo "${NODE1_IPV4}" | cut -d '.' -f 2-4)
+NEW_IP="$head_ip.$ip"
+
 TAP_DEV_NUM=0
 DESC="TAP config"
 
