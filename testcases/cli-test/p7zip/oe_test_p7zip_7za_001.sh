@@ -21,6 +21,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL 'p7zip tar'
     echo 1 > file1
     echo 2 > file2
@@ -73,8 +75,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf file* testfiles archive.tar tmp
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 
