@@ -17,10 +17,14 @@
 #@Desc      :   Test "netdata" command
 ###################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
-    addr=`pwd`
+    addr=$(
+           cd "$(dirname "$0")" || exit 1
+	   pwd
+          )
     name="/test.txt"
 }
 
@@ -49,12 +53,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: -d"
     netdata -h 2>&1 | grep "SYNOPSIS"
     CHECK_RESULT $? 0 0 "Failed option: -h"
-    netdata -P $addr$name 2>&1
+    netdata -P "$addr"$name 2>&1
     CHECK_RESULT $? 0 0 "Failed option: -P"
-    exc=`cat test.txt`
-    res=`ps -ef | grep "netdata -D" | grep -v grep | awk '{print $2}'`
-    CHECK_RESULT $? exc res "Failed option: -P"
-    netdata -i $NODE1_IPV4 2>&1
+    exc=$(cat test.txt)
+    pgrep -a "netdata" | awk -F " " '{print$1}' 2>&1 | grep "${exc}"
+    CHECK_RESULT $? 0 0 "Failed option: -P"
+    netdata -i "$NODE1_IPV4" 2>&1
     CHECK_RESULT $? 0 0 "Failed option: -i IP" 
     netdata -p 19999 2>&1
     CHECK_RESULT $? 0 0 "Failed option: -p"
@@ -79,6 +83,7 @@ function run_test() {
     netdata -W simple-pattern pattern string | grep "RESULT"
     CHECK_RESULT $? 0 0 "Failed option: -W simple-pattern pattern string"
     ./killpid.sh &
+    SLEEP_WAIT 2
     netdata -D 2>&1 
     CHECK_RESULT $? 0 0 "Failed option: -D"
     LOG_INFO "End to run testcase:oe_test_netdata."
@@ -86,7 +91,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE 
+    DNF_REMOVE "$@" 
+    kill -9 "$(pgrep -f "netdata")"
     rm  test.txt
     LOG_INFO "End to restore the test environment." 
 }

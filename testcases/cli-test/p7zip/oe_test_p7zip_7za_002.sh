@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test p7zip
 # #############################################
-
+# shellcheck disable=SC2046
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL 'p7zip tar'
     # create test files
     echo 1 > file1
@@ -40,7 +42,7 @@ function run_test() {
     7za a archive1.tar -ssw file1 file2 && tar -tvf archive.tar | grep -Pzo '.*file1\n.*file2'
     CHECK_RESULT $? 0 0 "test failed with -ssw"
     # -stl : set archive timestamp from the most recently modified file
-    7za a archive2.tar -stl file1 file2 && test `stat --format="%Y" archive2.tar` -eq `stat --format="%Y" file2`
+    7za a archive2.tar -stl file1 file2 && test $(stat --format="%Y" archive2.tar) -eq $(stat --format="%Y" file2)
     CHECK_RESULT $? 0 0 "test failed with -stl"
     # -stm{HexMask} : set CPU thread affinity mask (hexadecimal number)
     7za a archive3.tar -stm1 file1 file2 && tar -tvf archive.tar | grep -Pzo '.*file1\n.*file2'
@@ -73,8 +75,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf file* archive* tmp
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 

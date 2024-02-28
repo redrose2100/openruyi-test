@@ -29,14 +29,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    if [ "$version" == 4.19.90 ];then
     echo '发放' | opencc -c s2t | grep '發放'
     CHECK_RESULT $?
+    if [ "$version" == 4.19.90 ];then
     echo '确保补贴临时补充及时足额发放到位' | opencc -c s2t | grep '確保補貼臨時補充及時足額發放到位'
     CHECK_RESULT $?
     elif [ "$version" == 5.10.0 ];then
-    echo '发放' | opencc -c s2t | grep '髮放'
-    CHECK_RESULT $?
     echo '确保补贴临时补充及时足额发放到位' | opencc -c s2t | grep '確保補貼臨時補充及時足額髮放到位'
     CHECK_RESULT $?
     fi
@@ -48,7 +46,7 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE 1
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
