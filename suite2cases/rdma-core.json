@@ -5,7 +5,8 @@
             "name": "oe_test_service_srp_daemon"
         },
         {
-            "name": "oe_test_socket_ibacm"
+            "name": "oe_test_socket_ibacm",
+            "machine type": "physical"
         }
     ]
 }
