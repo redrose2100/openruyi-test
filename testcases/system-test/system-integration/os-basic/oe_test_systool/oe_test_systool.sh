@@ -17,7 +17,7 @@
 # @Desc      :   Command test-systool  
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -33,17 +33,20 @@ function run_test() {
     CHECK_RESULT $? 0 0  "check systool result fail"
     systool --help | grep "Usage: systool"
     CHECK_RESULT $? 0 0 "check systool's help manual fail"
+    systool -c net -v |grep 'Class Device = "lo"'
+    CHECK_RESULT $? 0 0 "Querying network devices fail"
+    systool -b scsi -c scsi_host |grep 'Class = "scsi_host"'
+    CHECK_RESULT $? 0 0 "Failed to query the information and attributes of the SCSI host"
+    systool -c net -p /sys/class/net/lo/ |grep 'Class = "net"'
+    CHECK_RESULT $? 0 0 "Failed to query the specified network interface"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     export LANG=${OLD_LANG}
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
-
-
-
