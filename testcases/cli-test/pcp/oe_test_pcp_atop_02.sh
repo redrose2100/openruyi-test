@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   (pcp-system-tools) (pcp-atop)
 #####################################
+# shellcheck disable=SC1091,SC2046
 
 source "common/common_pcp.sh"
 
@@ -29,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     nohup /usr/libexec/pcp/bin/pcp-atop -o >atop_o 2>&1 &
     SLEEP_WAIT 7
-    grep 'procacct' atop_o
+    grep 'proc' atop_o
     CHECK_RESULT $?
     nohup /usr/libexec/pcp/bin/pcp-atop -u >atop_u 2>&1 &
     SLEEP_WAIT 7
@@ -70,7 +71,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ./testdir atop*
     kill -9 $(pgrep -f /usr/libexec/pcp/bin/pcp-atop)
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -18,6 +18,7 @@
 ###################################
 
 # shellcheck disable=SC1091
+# shellcheck disable=SC2046
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
@@ -92,7 +93,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@" 
-    kill -9 "$(pgrep -f "netdata")"
+    kill -9 $(pgrep -l "netdata")
     rm  test.txt
     LOG_INFO "End to restore the test environment." 
 }

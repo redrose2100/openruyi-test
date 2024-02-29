@@ -15,43 +15,45 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   pcp testing(pmval)
 #####################################
+# shellcheck disable=SC1091,SC2154
 
 source "common/common_pcp.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}')
+    DNF_INSTALL pcp-system-tools
+    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}' | awk -F " " '{print $1}')
     metric_name=disk.dev.write
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    pmval -L -s 10 $metric_name | grep 'samples'
+    pmval -L -s 10 "$metric_name" | grep 'samples'
     CHECK_RESULT $?
     pmval --container=busybox vfs.inodes.count -s 10 | grep 'interval'
     CHECK_RESULT $?
-    pmval --derived=/var/lib/pcp/config/pmieconf/dm -s 10 $metric_name | grep 'count / sec'
+    pmval --derived=/var/lib/pcp/config/pmieconf/dm -s 10 "$metric_name" | grep 'count / sec'
     CHECK_RESULT $?
-    pmval -a $archive_data -d -s 10 $metric_name | grep 'start'
+    pmval -a "$archive_data" -d -s 10 "$metric_name" | grep 'start'
     CHECK_RESULT $?
-    pmval -f 3 -s 10 $metric_name | grep 'host'
+    pmval -f 3 -s 10 "$metric_name" | grep 'host'
     CHECK_RESULT $?
     pmval -i "'1 minute','5 minute'" -s 10 kernel.all.load | grep 'kernel.all.load'
     CHECK_RESULT $?
-    pmval -r -s 10 $metric_name | grep 'cumulative counter'
+    pmval -r -s 10 "$metric_name" | grep 'cumulative counter'
     CHECK_RESULT $?
-    pmval -v -s 10 $metric_name | grep 'count / sec'
+    pmval -v -s 10 "$metric_name" | grep 'count / sec'
     CHECK_RESULT $?
-    pmval -w 5 -s 10 $metric_name | grep 'metric'
+    pmval -w 5 -s 10 "$metric_name" | grep 'metric'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -15,45 +15,47 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   pcp testing(pmevent)
 #####################################
+# shellcheck disable=SC1091,SC2154
 
 source "common/common_pcp.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}')
+    DNF_INSTALL pcp-system-tools
+    archive_data=$(pcp -h "${host_name}" | grep 'primary logger:' | awk -F: '{print $NF}' | awk -F " " '{print $1}')
     metric_name=disk.dev.write
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    pmevent -L -s 10 $metric_name | grep 'interval'
+    pmevent -L -s 10 "$metric_name" | grep 'interval'
     CHECK_RESULT $?
     pmevent --container=busybox vfs.inodes.count -s 10 | grep 'metric'
     CHECK_RESULT $?
-    pmevent --derived=/var/lib/pcp/config/pmieconf/dm -s 10 $metric_name | grep 'metric'
+    pmevent --derived=/var/lib/pcp/config/pmieconf/dm -s 10 "$metric_name" | grep 'metric'
     CHECK_RESULT $?
-    pmevent -a $archive_data -d -s 10 $metric_name | grep 'metric'
+    pmevent -a "$archive_data" -d -s 10 "$metric_name" | grep 'metric'
     CHECK_RESULT $?
-    pmevent -a $archive_data -f 3 -s 10 $metric_name | grep 'metric'
+    pmevent -a "$archive_data" -f 3 -s 10 "$metric_name" | grep 'metric'
     CHECK_RESULT $?
-    pmevent -a $archive_data -i '' -s 10 $metric_name | grep 'metric'
+    pmevent -a "$archive_data" -i '' -s 10 "$metric_name" | grep 'metric'
     CHECK_RESULT $?
-    pmevent -a $archive_data -r -s 10 $metric_name | grep 'metric'
+    pmevent -a "$archive_data" -r -s 10 "$metric_name" | grep 'metric'
     CHECK_RESULT $?
-    pmevent -a $archive_data -v -s 10 $metric_name | grep 'metric'
+    pmevent -a "$archive_data" -v -s 10 "$metric_name" | grep 'metric'
     CHECK_RESULT $?
-    pmevent -a $archive_data -w 3 -s 10 $metric_name | grep 'metric'
+    pmevent -a "$archive_data" -w 3 -s 10 "$metric_name" | grep 'metric'
     CHECK_RESULT $?
-    pmevent -a $archive_data -x 50 -s 10 $metric_name | grep 'metric'
+    pmevent -a "$archive_data" -x 50 -s 10 "$metric_name" | grep 'metric'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
