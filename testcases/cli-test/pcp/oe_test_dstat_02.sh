@@ -22,7 +22,7 @@ source "common/common_pcp-system-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    disk_name=$(lsblk | grep 'disk' | awk '{print $1}')
+    disk_name=$(lsblk | grep 'disk' | awk '{print $1}' | tail -n 1)
     LOG_INFO "End to prepare the test environment."
 }
 
