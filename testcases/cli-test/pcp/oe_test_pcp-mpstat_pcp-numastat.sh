@@ -22,7 +22,7 @@ source "common/common_pcp-system-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}')
+    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}' | awk -F " " '{print $1}')
     OLD_PATH=$PATH
     export PATH=/usr/libexec/pcp/bin/:$PATH
     LOG_INFO "End to prepare the test environment."
@@ -33,15 +33,15 @@ function run_test() {
     SLEEP_WAIT 60
     pcp-mpstat --version 2>&1 | grep "$pcp_version"
     CHECK_RESULT $?
-    pcp-mpstat -a "$archive_data" -s 10 -t 2 | grep 'CPU'
+    pcp-mpstat -a "$archive_data" -s 15 -t 2 | grep 'CPU'
     CHECK_RESULT $?
-    pcp-mpstat -a "$archive_data" -u -s 10 | grep '%usr'
+    pcp-mpstat -a "$archive_data" -u -s 15 | grep '%usr'
     CHECK_RESULT $?
-    pcp-mpstat -a "$archive_data" -A -s 10 | grep '%nice'
+    pcp-mpstat -a "$archive_data" -A -s 15 | grep '%nice'
     CHECK_RESULT $?
-    pcp-mpstat -a "$archive_data" -P ON -s 10 | grep '%sys'
+    pcp-mpstat -a "$archive_data" -P ON -s 15 | grep '%sys'
     CHECK_RESULT $?
-    pcp-mpstat -a "$archive_data" -I SUM -s 10 | grep 'intr/s'
+    pcp-mpstat -a "$archive_data" -I SUM -s 15 | grep 'intr/s'
     CHECK_RESULT $?
     pcp-numastat --help 2>&1 | grep 'Usage'
     CHECK_RESULT $?
@@ -55,7 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    PATH="${OLD_PATH}"
+    PATH=${OLD_PATH}
     LOG_INFO "End to restore the test environment."
 }
 

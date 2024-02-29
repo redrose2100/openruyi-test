@@ -22,8 +22,8 @@ source "common/common_pcp-system-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}')
-    disk_name=$(lsblk | grep 'disk' | awk '{print $1}')
+    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}' | awk -F " " '{print $1}')
+    disk_name=$(lsblk | grep 'disk' | awk '{print $1}' | tail -n 1)
     OLD_PATH=$PATH
     export PATH=/usr/libexec/pcp/bin/:$PATH
     LOG_INFO "End to prepare the test environment."
@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $?
     pcp-iostat -a "$archive_data" -A 10min -s 10 | grep 'rrqm/s'
     CHECK_RESULT $?
-    pcp-iostat -a "$archive_data" -G sum -s 10 | grep 'sum(.*)'
+    pcp-iostat -a "$archive_data" -G sum -s 30 | grep 'sum(.*)'
     CHECK_RESULT $?
     pcp-iostat -h "$host_name" -s 10 | grep 'wrqm/s'
     CHECK_RESULT $?
@@ -44,7 +44,7 @@ function run_test() {
     CHECK_RESULT $?
     pcp-iostat -a "$archive_data" -P 1 -s 10 | grep 'w/s'
     CHECK_RESULT $?
-    pcp-iostat -a "$archive_data" -R "$disk_name" -s 10 | grep "$disk_name"
+    pcp-iostat -a "$archive_data" -R "$disk_name" -s 30 | grep "$disk_name"
     CHECK_RESULT $?
     pcp-iostat -a "$archive_data" -S @00 -T @23 -s 10 | grep 'rkB/s'
     CHECK_RESULT $?

@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   pcp testing(pmlogger_daily)
 #####################################
+# shellcheck disable=SC1091,SC2046,SC2154
 
 source "common/common_pcp.sh"
 
@@ -44,14 +45,19 @@ function run_test() {
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_daily -M
     CHECK_RESULT $?
+    if [ "$version" == 4.19.90 ];then
     /usr/libexec/pcp/bin/pmlogger_daily -N | grep "rm -f /var/lib/pcp/tmp/pmlogger/primary"
     CHECK_RESULT $?
+    elif [ "$version" == 5.10.0 ];then
+    /usr/libexec/pcp/bin/pmlogger_daily -N | grep "rm -f rm -f /var/log/pcp/pmlogger/.NeedRewrite"
+    CHECK_RESULT $?
+    fi
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     kill -9 $(pgrep -f /usr/libexec/pcp/bin/pmlogger)
     LOG_INFO "End to restore the test environment."
 }

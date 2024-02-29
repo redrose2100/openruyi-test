@@ -15,33 +15,34 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   pcp testing(pmlogcheck,pmlogmv)
 #####################################
+# shellcheck disable=SC1091,SC2154
 
 source "common/common_pcp.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}')
+    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}' | awk -F " " '{print $1}')
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    pmlogcheck -l $archive_data 2>&1 | grep 'Log Label'
+    pmlogcheck -l "$archive_data" 2>&1 | grep 'Log Label'
     CHECK_RESULT $?
-    pmlogcheck -n /var/lib/pcp/pmns/root $archive_data 2>&1 | grep 'PMID'
+    pmlogcheck -n /var/lib/pcp/pmns/root "$archive_data" 2>&1 | grep 'PMID'
     CHECK_RESULT $?
-    pmlogcheck -S @00 -T @23 $archive_data
+    pmlogcheck -S @00 -T @23 "$archive_data"
     CHECK_RESULT $?
-    pmlogcheck -v $archive_data 2>&1 | grep 'meta'
+    pmlogcheck -v "$archive_data" 2>&1 | grep 'meta'
     CHECK_RESULT $?
-    pmlogcheck -w $archive_data
+    pmlogcheck -w "$archive_data"
     CHECK_RESULT $?
-    pmlogcheck -Z Africa/Sao_Tome $archive_data | grep 'TZ=Africa/Sao_Tome'
+    pmlogcheck -Z Africa/Sao_Tome "$archive_data" | grep 'TZ=Africa/Sao_Tome'
     CHECK_RESULT $?
-    pmlogcheck -z $archive_data | grep 'local timezone'
+    pmlogcheck -z "$archive_data" | grep 'local timezone'
     CHECK_RESULT $?
-    pmlogmv -NV $archive_data /var/log/pcp/pmlogger_new/$host_name/ 2>&1 | grep 'link'
+    pmlogmv -NV "$archive_data" /var/log/pcp/pmlogger_new/"$host_name"/ 2>&1 | grep 'ln'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
@@ -49,7 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f pmlogcheck_*.log
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
