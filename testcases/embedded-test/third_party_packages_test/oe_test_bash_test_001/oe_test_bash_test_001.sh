@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Run bash testsuite
 #####################################
-# shellcheck disable=SC1091,SC2013
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
 # 测试点的执行
@@ -26,17 +26,18 @@ function run_test() {
     getCasesFromFile ignoreFail ignore.txt
 
     pushd ./tmp_test/tests/ || exit
-
+    
     sed -i "s/echo \$x ; sh \$x ; rm/sh \$x ; echo \$? \$x ;rm/g" run-all
     BUILD_DIR=$(pwd)/../ PATH=$(pwd):$PATH THIS_SH=/bin/bash /bin/sh run-all declare -r SHELLOPTS="braceexpand:hashall:interactive-comments" >tmp_bash_log 2>&1
     grep "[0-9] run-" tmp_bash_log >resultfile
     while IFS= read -r line; do
         testresult=${line%%' '*}
-        testName=${line##*' '}
+        testName="${line##*' '}"
         [[ ${ignoreFail[$testName]} -eq 1 ]] && continue
         if [ "${testresult}" -eq 1 ]; then
             CHECK_RESULT 1 0 0 "run bash testcase $testName fail"
-            cp tmp_bash_log /tmp
+            testname2=$(grep -B 1 "$testName$" resultfile | sed "/$testName/d" | awk '{print $2}')
+            sed -n "/$testname2$/,/$testName$/p" tmp_bash_log
         fi
     done <"resultfile"
     popd || exit
