@@ -590,9 +590,6 @@
             "name": "oe_test_unalias_001"
         },
         {
-            "name": "oe_test_procps-ng-uptime"
-        },
-        {
             "name": "oe_test_time_01"
         },
         {
