@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -19,17 +19,20 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start to prepare the database config."
+    LOG_INFO "Start to prepare the test environment."
     frame="aarch64"
-    [[ ${NODE1_FRAME} -eq ${frame} ]] && {
+    [[ "${NODE1_FRAME}" = "${frame}" ]] && {
         LOG_INFO "tunctl doesn't support aarch64."
         exit 0
     }
     cp ./config_tap.sh /etc/init.d/config_tap && chmod 777 /etc/init.d/config_tap
-    wget http://li.nux.ro/download/nux/misc/el7/x86_64/tunctl-1.5-12.el7.nux.x86_64.rpm
-    dnf install tunctl-1.5-12.el7.nux.x86_64.rpm -y
+    path="http://li.nux.ro/download/nux/misc/el7/x86_64/"
+    wget "$path"
+    tunctl=$(grep -oE "tunctl-.*.rpm" index.html | head -n 1 | awk -F'"' '{print $1}')
+    wget "$path/$tunctl"
+    rpm -ivh "$tunctl"
     DNF_INSTALL "net-tools"
-    LOG_INFO "End to prepare the database config."
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
@@ -58,9 +61,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     ip tuntap del dev tap0 mod tap
-    rm -f /etc/init.d/config_tap tunctl-1.5-12.el7.nux.x86_64.rpm
+    rpm -e tunctl
+    rm -rf /etc/init.d/config_tap "$tunctl" index.html
     DNF_REMOVE "$@"
-    dnf remove tunctl -y
     LOG_INFO "End to restore the test environment."
 }
 
