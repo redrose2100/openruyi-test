@@ -46,7 +46,7 @@ int main()
 }
 EOF
 
-    DNF_INSTALL "zziplib zziplib-devel zziplib-help"
+    DNF_INSTALL "gcc zziplib zziplib-devel zziplib-help"
     LOG_INFO "End of environmental preparation!"
 }
 
