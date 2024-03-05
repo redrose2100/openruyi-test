@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Return value error"
     sed --v
     CHECK_RESULT $? 0 0 "Version is error"
-    sed --help | grep "用法"
+    sed --help | grep -iE "用法|Usage"
     CHECK_RESULT $? 0 0 "sed --help fail"
     sed -i '1i testline' /tmp/test_sed
     grep testline /tmp/test_sed

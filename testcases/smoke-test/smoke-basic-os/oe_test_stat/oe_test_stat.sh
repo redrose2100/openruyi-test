@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    stat --help | grep "用法"
+    stat --help | grep -iE "用法|Usage"
     CHECK_RESULT $? 0 0 "Failed to execute stat --help"
     stat --version | grep "Copyright (C)"
     CHECK_RESULT $? 0 0 "Failed to execute stat --version"

@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dmesg --help | grep "用法"
+    dmesg --help | grep -iE "用法|Usage"
     CHECK_RESULT $? 0 0 "Failed to execute dmesg --help"
     dmesg -V
     CHECK_RESULT $? 0 0 "Failed to execute dmesg -V"
