@@ -84,7 +84,9 @@ function run_test() {
     CHECK_RESULT $?
     sleep 1
     tcpdump -nne -i "${node1_net_card2}" host 192.0.2.2 | grep VRRP >tcpdump_pack &
+    SLEEP_WAIT 3
     tcpdump -nne -i "${node1_net_card3}" host 192.0.2.2 | grep VRRP >tcpdump_pack2 &
+    SLEEP_WAIT 3
     SLEEP_WAIT 30
     kill -9 "$(pgrep -f 'tcpdump -nne -i')"
     (grep "192.0.2.2 > 192.0.2.1: VRRPv2" tcpdump_pack >/dev/null && grep "192.0.2.1 > 192.0.2.2: VRRPv2" tcpdump_pack >/dev/null) ||
@@ -94,9 +96,9 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    kill -9 "$(pgrep -f keepalived.conf)"
+    pgrep -f keepalived.conf | xargs kill -9
     rm -rf /run/keepalived.pid tcpdump_pack2 tcpdump_pack
-    DNF_REMOVE 1
+    DNF_REMOVE "$@"
     rm -rf /etc/keepalived/
     ip -6 route del default nexthop via 2001:db8:1::1 nexthop via 2001:db8:2::1
     ip addr del 2001:db8::1/128 dev lo
@@ -120,14 +122,19 @@ function post_test() {
     ip addr del 2001:db8::2/128 dev lo;
     ip addr del 2001:db8::ff/128 dev lo;
     ip addr del 192.0.2.255/32 dev lo;" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
-    SSH_CMD "ip addr del 203.0.113.1/26 dev ${node2_net_card2}
-    ip addr del 203.0.113.65/26 dev ${node2_net_card3}
-    ip addr del 203.0.113.129/26 dev ${node2_net_card4}
-    ip addr del 203.0.113.193/26 dev ${node2_net_card5}
-    ip addr del 2001:db8:1::1/64 dev ${node2_net_card2}
-    ip addr del 2001:db8:2::1/64 dev ${node2_net_card3}
-    ip addr del 2001:db8:3::1/64 dev ${node2_net_card4}
-    ip addr del 2001:db8:4::1/64 dev ${node2_net_card5}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "rm -rf /run/keepalived.pid;
+    dnf -y remove keepalived;
+    rm -rf /etc/keepalived/;
+    sysctl -qw net/ipv4/ip_forward=0
+    sysctl -qw net.ipv6.conf.all.forwarding=0
+    ip addr del 203.0.113.1/26 dev ${node2_net_card2};
+    ip addr del 203.0.113.65/26 dev ${node2_net_card3};
+    ip addr del 203.0.113.129/26 dev ${node2_net_card4};
+    ip addr del 203.0.113.193/26 dev ${node2_net_card5};
+    ip addr del 2001:db8:1::1/64 dev ${node2_net_card2};
+    ip addr del 2001:db8:2::1/64 dev ${node2_net_card3};
+    ip addr del 2001:db8:3::1/64 dev ${node2_net_card4};
+    ip addr del 2001:db8:4::1/64 dev ${node2_net_card5};" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
     LOG_INFO "Finish environment cleanup!"
 }

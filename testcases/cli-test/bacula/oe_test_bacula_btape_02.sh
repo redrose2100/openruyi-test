@@ -24,7 +24,7 @@ function pre_test() {
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
-    tar -zxvf common/test.tar.gz 
+    tar -zxvf common/test.tar.gz
     mkdir tmp
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database
@@ -33,9 +33,9 @@ function pre_test() {
     sed -i 's\dbuser = "bacula"\dbuser = "root"\g' /etc/bacula/bacula-dir.conf
     systemctl start bacula-dir.service bacula-sd.service bacula-fd.service
     expect <<EOF
-    spawn bconsole
     exp_internal 1
     set timeout -1
+    spawn bconsole
     expect "Enter a period to cancel a command." {send "mount\n"}
     expect "Select Storage resource" {send "1\n"}
     expect "Enter autochanger drive" {send "0\n"}
@@ -85,7 +85,7 @@ EOF
   AlwaysOpen = no;
   Maximum Concurrent Jobs = 5
 
-}' >> /etc/bacula/bacula-sd.conf
+}' >>/etc/bacula/bacula-sd.conf
     mt -f /dev/nst0 rewind
     tar cvf /dev/nst0 .
     mt -f /dev/nst0 rewind
@@ -95,50 +95,50 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    expect <<EOF > tmp/1.txt
+    expect <<EOF >tmp/1.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "qfill\n"}
-    expect "1000" {send "1000\n"}
+    expect "1000" {send "10\n"}
     expect "blocks=" {send "q\n"}
 EOF
-    grep 'End of File mark' tmp/1.txt 
+    grep 'End of File mark' tmp/1.txt
     CHECK_RESULT $? 0 0 "test btape qfill failed"
-    expect <<EOF > tmp/2.txt
+    expect <<EOF >tmp/2.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "qfill\n"}
-    expect "1000" {send "1000\n"}
+    expect "1000" {send "10\n"}
     expect "blocks=" {send "bsf\n"}
     expect ".*" {send "q\n"}
 EOF
-    grep 'Backspaced.*file' tmp/2.txt 
+    grep 'Backspaced.*file' tmp/2.txt
     CHECK_RESULT $? 0 0 "test btape bsf failed"
-    expect <<EOF > tmp/3.txt
+    expect <<EOF >tmp/3.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "qfill\n"}
-    expect "1000" {send "1000\n"}
+    expect "1000" {send "10\n"}
     expect "blocks=" {send "bsr\n"}
     expect ".*" {send "q\n"}
 EOF
-    grep 'Backspaced.*record' tmp/3.txt 
+    grep 'Backspaced.*record' tmp/3.txt
     CHECK_RESULT $? 0 0 "test btape bsr failed"
-    expect <<EOF > tmp/4.txt
+    expect <<EOF >tmp/4.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "qfill\n"}
-    expect "1000" {send "1000\n"}
+    expect "1000" {send "10\n"}
     expect "blocks=" {send "cap\n"}
     expect ".*" {send "q\n"}
 EOF
-    grep 'Device status: EOD ONLINE IM_REP_EN' tmp/4.txt 
+    grep 'Device status: EOD ONLINE IM_REP_EN' tmp/4.txt
     CHECK_RESULT $? 0 0 "test btape cap failed"
-    expect <<EOF > tmp/5.txt
+    expect <<EOF >tmp/5.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
@@ -146,18 +146,18 @@ EOF
     expect "Enter length to read" {send "10\n"}
     expect "Read of 10 bytes" {send "q\n"}
 EOF
-    grep 'Success' tmp/5.txt 
+    grep 'Success' tmp/5.txt
     CHECK_RESULT $? 0 0 "test btape rr failed"
-    expect <<EOF > tmp/6.txt
+    expect <<EOF >tmp/6.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "wr\n"}
     expect "Wrote block to device" {send "q\n"}
 EOF
-    grep 'Wrote one record' tmp/6.txt 
+    grep 'Wrote one record' tmp/6.txt
     CHECK_RESULT $? 0 0 "test btape wr failed"
-    expect <<EOF > tmp/7.txt
+    expect <<EOF >tmp/7.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
@@ -165,34 +165,34 @@ EOF
     expect "Wrote block to device" {send "rb\n"}
     expect ".*" {send "q\n"}
 EOF
-    grep 'Onstream' tmp/7.txt 
+    grep 'Onstream' tmp/7.txt
     CHECK_RESULT $? 0 0 "test btape rb failed"
-    expect <<EOF > tmp/8.txt
+    expect <<EOF >tmp/8.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "fsf\n"}
     expect "Forward spaced" {send "q\n"}
 EOF
-    grep 'Forward spaced .* file' tmp/8.txt 
+    grep 'Forward spaced .* file' tmp/8.txt
     CHECK_RESULT $? 0 0 "test btape fsf failed"
-    expect <<EOF > tmp/9.txt
+    expect <<EOF >tmp/9.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "fsr\n"}
     expect "Forward spaced" {send "q\n"}
 EOF
-    grep 'Forward spaced .* record' tmp/9.txt 
+    grep 'Forward spaced .* record' tmp/9.txt
     CHECK_RESULT $? 0 0 "test btape fsr failed"
-    expect <<EOF > tmp/10.txt
+    expect <<EOF >tmp/10.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "eod\n"}
     expect "Moved" {send "q\n"}
 EOF
-    grep 'Moved to end of medium' tmp/10.txt 
+    grep 'Moved to end of medium' tmp/10.txt
     CHECK_RESULT $? 0 0 "test btape eod failed"
     LOG_INFO "End to run test."
 }
@@ -207,7 +207,7 @@ function post_test() {
     /usr/libexec/bacula/drop_mysql_database
     systemctl stop mysqld
     rm -rf config/ /var/lib/mysql/* /tmp/test1 /tmp/test2 tmp/ /var/spool/bacula/
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

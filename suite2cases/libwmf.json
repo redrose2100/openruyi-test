@@ -33,13 +33,6 @@
         },
         {
             "name": "oe_test_libwmf_wmf2svg_02"
-        },
-        {
-            "name": "oe_test_libwmf_wmf2x_01"
-        },
-        {
-            "name": "oe_test_libwmf_wmf2x_02"
         }
-
     ]
 }

@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Resource Restriction - Configure the Cgroup path
 # #############################################
+# shellcheck disable=SC1091
 
 source "./common/common_lib.sh"
 
@@ -27,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    container_names=$(isula run -tid --cgroup-parent /cgroup123 --system-container busybox)
+    container_names=$(isula run -tid --cgroup-parent /cgroup123 busybox)
     container_pid=$(isula inspect -f "{{json .State.Pid}}" "${container_names}")
     grep "cgroup123" /proc/"${container_pid}"/cgroup
     CHECK_RESULT $? 0 0 "configure the Cgroup path failed"
