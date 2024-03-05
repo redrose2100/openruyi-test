@@ -16,22 +16,23 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   lvm2 command test
 # ############################################
+# shellcheck disable=SC1091,SC2154
 source ./common/disk_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL lvm2
     check_free_disk
-    version_id=$(cat /etc/os-release | grep "VERSION_ID" | awk -F "=" {'print$NF'} | awk -F "\"" {'print$2'})
+    version_id=$(grep "VERSION_ID" /etc/os-release | awk -F "=" '{print$NF}' | awk -F "\"" '{print$2}')
     LOG_INFO "End to prepare the test environment!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvcreate -y /dev/${local_disk} /dev/${local_disk1}
+    pvcreate -y /dev/"${local_disk}" /dev/"${local_disk1}"
     CHECK_RESULT $?
     pvs | grep "/dev/${local_disk}" && pvs | grep "/dev/${local_disk1}"
     CHECK_RESULT $?
-    vgcreate test /dev/${local_disk} /dev/${local_disk1}
+    vgcreate test /dev/"${local_disk}" /dev/"${local_disk1}"
     CHECK_RESULT $?
     lvcreate -L 50MB -n lv1 test | grep 'Logical volume "lv1" created'
     CHECK_RESULT $?
@@ -39,23 +40,23 @@ function run_test() {
     CHECK_RESULT $?
     pvmove -t 2>&1 | grep "TEST MODE: Metadata will NOT be updated and volumes will not be (de)activated"
     CHECK_RESULT $?
-    if [${version_id} = "22.03"]; then
-        pvmove --devices /dev/${local_disk}
+    if [ "${version_id}" = "22.03" ]; then
+        pvmove --devices /dev/"${local_disk}"
         CHECK_RESULT $?
     fi
     touch /etc/lvm/profile/my.profile
     CHECK_RESULT $?
-    pvmove --commandprofile my /dev/${local_disk}
+    pvmove --commandprofile my /dev/"${local_disk}"
     CHECK_RESULT $?
     SLEEP_WAIT 5
-    pvmove --driverloaded y /dev/${local_disk1} /dev/${local_disk} | grep "Moved: 100.00%"
+    pvmove --driverloaded y /dev/"${local_disk1}" /dev/"${local_disk}" | grep "Moved: 100.00%"
     CHECK_RESULT $?
-    pvmove --nolocking /dev/${local_disk} /dev/${local_disk1} | grep "Moved: 100.00%"
+    pvmove --nolocking /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved: 100.00%"
     CHECK_RESULT $?
-    pvmove --lockopt /dev/${local_disk} /dev/${local_disk1} | grep "Moved: 100.00%"
+    pvmove --lockopt /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved: 100.00%"
     CHECK_RESULT $?
-    if [${version_id} = "22.03"]; then
-        pvmove --journal my /dev/${local_disk} /dev/${local_disk1} | grep "Moved: 100.00%"
+    if [ "${version_id}" = "22.03" ]; then
+        pvmove --journal my /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved: 100.00%"
         CHECK_RESULT $?
     fi
     LOG_INFO "End executing testcase!"
@@ -63,11 +64,11 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     vgremove -f test
-    pvremove -f /dev/${local_disk}
-    pvremove -f /dev/${local_disk1}
+    pvremove -f /dev/"${local_disk}"
+    pvremove -f /dev/"${local_disk1}"
     rm -rf /etc/lvm/profile/my.profile
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

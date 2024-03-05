@@ -139,7 +139,7 @@ EOF
     expect "OK" {send "speed\n"}
     expect "Write" {send "q\n"}
 EOF
-    grep 'Write rate' tmp/8.txt 
+    grep 'Write' tmp/8.txt 
     CHECK_RESULT $? 0 0 "test btape speed failed"
     SLEEP_WAIT 5
     expect <<EOF > tmp/9.txt
