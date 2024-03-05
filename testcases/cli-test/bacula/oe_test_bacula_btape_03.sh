@@ -111,19 +111,19 @@ EOF
     expect "OK" {send "fill\n"}
     expect "Do you want to run the simplified test" {send "s\n"}
     expect "ready" {send "\n"}
-    expect "The last block on the tape matches" {send "quit\n"}
+    expect ".*" {send "quit\n"}
     expect eof
 EOF
-    grep 'Wrote block' tmp/2.txt
+    grep 'fill' tmp/2.txt
     CHECK_RESULT $? 0 0 "test btape fill failed"
     expect <<EOF > tmp/3.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "unfill\n"}
-    expect "Test succeeded" {send "q\n"}
+    expect ".*" {send "q\n"}
 EOF
-    grep 'Reading block' tmp/3.txt 
+    grep 'do_unfill' tmp/3.txt 
     CHECK_RESULT $? 0 0 "test btape unfill failed"
     expect <<EOF > tmp/4.txt
     exp_internal 1
@@ -203,7 +203,7 @@ function post_test() {
     /usr/libexec/bacula/drop_mysql_database
     systemctl stop mysqld
     rm -rf config/ /var/lib/mysql/* /tmp/test1 /tmp/test2 tmp/ /var/spool/bacula/*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

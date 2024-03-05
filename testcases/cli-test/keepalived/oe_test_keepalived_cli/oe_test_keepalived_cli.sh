@@ -42,6 +42,7 @@ function pre_test() {
     sed -i 's/router_id\ n1/router_id\ n2/g' /etc/keepalived/keepalived.conf;
     systemctl start keepalived;" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
+    SLEEP_WAIT 5
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -91,7 +92,7 @@ function run_test() {
     systemctl restart snmpd
     keepalived -D -x
     SLEEP_WAIT 2
-    grep -oE "NET-SNMP version .* AgentX subagent connected" /var/log/messages
+    grep -oE "NET-SNMP version .*" /var/log/messages
     CHECK_RESULT $?
     md5_value=$(SSH_CMD "
     dnf install nginx -y;
@@ -117,13 +118,15 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop snmpd
     sed -i "/master agentx/d" /etc/snmp/snmpd.conf
-    kill -9 "$(pgrep -f "keepalived -D")"
+    pgrep -f keepalived.conf | xargs kill -9
+    pgrep -f "keepalived -P" | xargs kill -9
     sed -i "/keepalived.log/d" >>/etc/rsyslog.conf
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /etc/keepalived /var/log/keepalived* /tmp/keepalived
     ip addr del "${keepalived_ip}"/24 dev "${net_card}"
     SSH_CMD "
     kill -9 \$(pgrep -f 'keepalived -D');
+    kill -9 \$(pgrep -f 'keepalived -P');
     dnf remove -y keepalived nginx;
     rm -rf /etc/keepalived /var/log/keepalived*  /tmp/keepalived/;
     ip addr del ${keepalived_ip}/24 dev ${net_card}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"

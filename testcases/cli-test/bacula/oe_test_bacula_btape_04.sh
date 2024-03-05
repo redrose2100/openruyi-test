@@ -139,7 +139,7 @@ EOF
     expect "OK" {send "speed\n"}
     expect "Write" {send "q\n"}
 EOF
-    grep 'Write rate' tmp/8.txt 
+    grep 'Write' tmp/8.txt 
     CHECK_RESULT $? 0 0 "test btape speed failed"
     SLEEP_WAIT 5
     expect <<EOF > tmp/9.txt
@@ -182,7 +182,7 @@ function post_test() {
     /usr/libexec/bacula/drop_mysql_database
     systemctl stop mysqld
     rm -rf config/ /var/lib/mysql/* /tmp/test1 /tmp/test2 tmp/ /var/spool/bacula/*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

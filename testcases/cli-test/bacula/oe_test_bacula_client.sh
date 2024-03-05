@@ -27,9 +27,10 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-  bacula-fd  -c /etc/bacula/bacula-fd.conf
+  bacula-fd -c /etc/bacula/bacula-fd.conf
   CHECK_RESULT $? 0 0 "Executed successfully"
-  lsof -i:9102 | grep "bacula-fd" 
+  SLEEP_WAIT 5
+  lsof -i:9102 | grep "bacula-fd"
   CHECK_RESULT $? 0 0 "process exit"
   test -e /var/run/bacula-fd.9102.pid
   CHECK_RESULT $? 0 0 "pid not exist"
