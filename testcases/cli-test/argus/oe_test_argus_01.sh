@@ -15,7 +15,7 @@
 # @Desc      :   Test argus
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -34,54 +34,61 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check argus -w failed"
     rm -f package.argus && SLEEP_WAIT 1
     argus -A -F ./data/argus.conf -w package.argus -d
+    curl -s www.openeuler.org > /dev/null
     SLEEP_WAIT 10
     ra -r package.argus  | grep "StartTime"
     CHECK_RESULT $? 0 0 "Check argus -A failed"
-    kill -9 $(pgrep -f "argus -A -F")
+    kill -9 "$(pgrep -f 'argus -A -F')"
     rm -f package.argus && SLEEP_WAIT 1
     argus -b -F ./data/argus.conf -w package.argus -d
+    curl -s www.openeuler.org > /dev/null
     SLEEP_WAIT 10
     ra -r package.argus  | grep "StartTime"
     CHECK_RESULT $? 0 0 "Check argus -b failed"
-    kill -9 $(pgrep -f "argus -b -F")
+    kill -9 "$(pgrep -f 'argus -b -F')"
     rm -f package.argus && SLEEP_WAIT 1
     argus -B 127.0.0.1 -F ./data/argus.conf -w package.argus -d
+    curl -s www.openeuler.org > /dev/null
     SLEEP_WAIT 10
     ra -r package.argus  | grep "StartTime"
     CHECK_RESULT $? 0 0 "Check argus -B failed"
-    kill -9 $(pgrep -f "argus -B")
+    kill -9 "$(pgrep -f 'argus -B')"
     rm -f package.argus && SLEEP_WAIT 1
     mkdir tmp
     rootpath=$(pwd)
-    argus -c ${rootpath}/tmp -F ./data/argus.conf -w package.argus -d
+    argus -c "${rootpath}"/tmp -F ./data/argus.conf -w package.argus -d
+    curl -s www.openeuler.org > /dev/null
     SLEEP_WAIT 10
     test -f ./tmp/package.argus
     CHECK_RESULT $? 0 0 "Check argus -c failed"
-    kill -9 $(pgrep -f "argus -c")
+    kill -9 "$(pgrep -f 'argus -c')"
     rm -rf tmp && SLEEP_WAIT 1
     argus -C -F ./data/argus.conf -w package.argus -d
+    curl -s www.openeuler.org > /dev/null
     SLEEP_WAIT 10
     ra -r package.argus  | grep "StartTime"
     CHECK_RESULT $? 0 0 "Check argus -C failed"
-    kill -9 $(pgrep -f "argus -C -F")
+    kill -9 "$(pgrep -f 'argus -C -F')"
     rm -f package.argus && SLEEP_WAIT 1
     argus -F ./data/argus.conf -w package.argus -d
+    curl -s www.openeuler.org > /dev/null
     SLEEP_WAIT 10
     ra -r package.argus  | grep "StartTime"
     CHECK_RESULT $? 0 0 "Check argus -d failed"
-    kill -9 $(pgrep -f "argus -F")
+    kill -9 "$(pgrep -f 'argus -F')"
     rm -f package.argus && SLEEP_WAIT 1
-    argus -e `hostname` -F ./data/argus.conf -w package.argus -d
+    argus -e "$(hostname)" -F ./data/argus.conf -w package.argus -d
+    curl -s www.openeuler.org > /dev/null
     SLEEP_WAIT 10
     ra -r package.argus  | grep "StartTime"
     CHECK_RESULT $? 0 0 "Check argus -e failed"
-    kill -9 $(pgrep -f "argus -e")
+    kill -9 "$(pgrep -f 'argus -e')"
     rm -f package.argus && SLEEP_WAIT 1
     LOG_INFO "End to run test."
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./data
     LOG_INFO "End to restore the test environment."
 }
