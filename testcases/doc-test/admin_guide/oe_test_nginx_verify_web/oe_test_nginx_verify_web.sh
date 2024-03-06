@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $?
     firewall-cmd --query-port=80/tcp | grep yes
     CHECK_RESULT $?
-    SSH_CMD "curl http://${NODE1_IPV4}" "${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}"
+    SSH_CMD "curl http://${NODE1_IPV4}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
