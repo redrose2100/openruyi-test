@@ -22,13 +22,18 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "etmem"
+    export ETM_CONF="${OET_PATH}/testcases/cli-test/etmem/example_etmemd.yaml"
+    # only 600 mode file could be read properly by etmem.
+    chmod 600 "$ETM_CONF"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    nohup etmemd -s etmemd_socket -l 0 &
-    etmem obj add -f "${OET_PATH}"/testcases/cli-test/etmemd/example_etmemd.yaml -s etmemd_socket
+    etmemd -s etmemd_socket -l 0 &
+    export ETMEMD_PID=$!
+    LOG_INFO "run etmemd with pid: $ETMEMD_PID"
+    etmem obj add -f "$ETM_CONF" -s etmemd_socket
     CHECK_RESULT $? 0 0 "Failed to add project"
     etmem project show -s etmemd_socket | grep "project\: test"
     CHECK_RESULT $? 0 0 "Project query failure"
@@ -38,13 +43,14 @@ function run_test() {
     etmem project stop -n test -s etmemd_socket
     etmem project show -s etmemd_socket | grep "false"
     CHECK_RESULT $? 0 0 "Task stop failure"
-    etmem obj del -f "${OET_PATH}"/testcases/cli-test/etmemd/example_etmemd.yaml -s etmemd_socket
+    etmem obj del -f "$ETM_CONF" -s etmemd_socket
     CHECK_RESULT $? 0 0 "Failed to del project"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    kill -9 "$ETMEMD_PID"
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
