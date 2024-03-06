@@ -36,7 +36,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl status chronyd | grep running
     CHECK_RESULT $?
-    CHECK_RESULT "$(ethtool -T ${local_eth1} | grep -iE "Capabilities|PTP|Hardware" | wc -l)" 4
+    CHECK_RESULT "$(ethtool -T ${local_eth1} | grep -E "Capabilities|PTP|Hardware" | wc -l)" 4
     LOG_INFO "End to run test."
 }
 
