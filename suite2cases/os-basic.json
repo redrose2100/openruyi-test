@@ -877,6 +877,10 @@
         },
 	{
 	  "name": "oe_test_bzgrep"
+	},
+	{
+	  "name": "oe_test_ipcs"
 	}
+
     ]
 }
