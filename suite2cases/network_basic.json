@@ -1,6 +1,7 @@
 {
     "path": "${OET_PATH}/testcases/system-test/network-test/network_basic",
     "machine num": 2,
+    "add network interface": 1,
     "cases": [
         {
             "name": "oe_test_act_arp"
@@ -26,7 +27,8 @@
             "name": "oe_test_check_route"
         },
         {
-            "name": "oe_test_ethtool_config"
+            "name": "oe_test_ethtool_config",
+	    "add network interface": 1
         },
         {
             "name": "oe_test_ethtool_info"
