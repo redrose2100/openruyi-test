@@ -539,13 +539,13 @@ while getopts "c:af:r:dxb:s:m" option; do
         statistic_result
         ;;
     x)
-        echo "$@" | grep -q -e '^ [a-Z0-9-_]-x *$' && {
+        echo "$@" | grep -q -e '^ [a-zA-Z0-9_-]-x *$' && {
             LOG_ERROR "The -x parameter must be used in combination with -a, -f, and -r."
             exit 1
         }
         ;;
     s)
-        echo "$@" | grep -q -e '^ [a-Z0-9-_]-x *$' && {
+        echo "$@" | grep -q -e '^ [a-Z0-9_-]-x *$' && {
             LOG_ERROR "The -s parameter must be used in combination with -a, -f, and -r."
             exit 1
         }
