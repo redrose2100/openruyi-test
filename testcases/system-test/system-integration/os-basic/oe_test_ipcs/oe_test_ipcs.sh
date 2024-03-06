@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2023 Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   yangyuangan
+# @Contact   :   yangyuangan@uniontech.com
+# @Date      :   2024.3.6
+# @License   :   Mulan PSL v2
+# @Desc      :   ipcs formatting test
+# ############################################
+
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function run_test() {
+    LOG_INFO "Start to run test."
+    ipcs |grep -E "Message Queues|消息队列"
+    CHECK_RESULT $? 0 0 "ipcs default print error"
+    ipcs |grep -E "Shared Memory Segments|共享内存段"
+    CHECK_RESULT $? 0 0 "ipcs default print error"
+    ipcs |grep -E "Semaphore Arrays|信号量数组"
+    CHECK_RESULT $? 0 0 "ipcs default print error"
+}
+
+main "$@"
