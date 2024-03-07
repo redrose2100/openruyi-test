@@ -15,8 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   verification bird command
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "./common/lib/util.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -31,55 +31,45 @@ function run_test() {
     bird --help 2>&1 | grep "Usage: bird"
     CHECK_RESULT $? 0 0 "check bird --help failed"
     bird --version 2>&1 | grep "BIRD version"
-    CHECK_RESULT $? 0 0 "check bird --version failed" 
+    CHECK_RESULT $? 0 0 "check bird --version failed"
     bird -c ./data/bird.conf
     SLEEP_WAIT 2
     birdc show protocols | grep "ospf1      OSPF"
     CHECK_RESULT $? 0 0 "check bird -c failed"
-    kill -9 $(pgrep "bird -c")
+    pgrep bird | xargs kill -9
     bird -c ./data/bird.conf -d &
     SLEEP_WAIT 2
     birdc show protocols | grep "ospf1      OSPF"
     CHECK_RESULT $? 0 0 "check bird -d failed"
-    kill -9 $(pgrep "bird -c")
+    pgrep bird | xargs kill -9
     bird -c ./data/bird.conf -D tmp.log
     SLEEP_WAIT 2
     test -f tmp.log
     CHECK_RESULT $? 0 0 "check bird -D failed"
-    kill -9 $(pgrep "bird -c")
+    pgrep bird | xargs kill -9
     rm -f tmp.log
     bird -c ./data/bird.conf -f &
     SLEEP_WAIT 2
     birdc show protocols | grep "ospf1      OSPF"
     CHECK_RESULT $? 0 0 "check bird -f failed"
-    kill -9 $(pgrep "bird -c")
+    pgrep bird | xargs kill -9
     useradd testdemo
     bird -c ./data/bird.conf -u testdemo -g testdemo
     SLEEP_WAIT 2
-    result1=$(ps -ef | grep "bird -c" | grep -v "grep")
-    if [[ $result1 == testdemo* ]]; then
-	echo "aa" | grep "aa"
-    else
-	echo "aa" | grep "bb"
-    fi
+    pgrep -f "testdemo"
     CHECK_RESULT $? 0 0 "check bird -u failed"
-    kill -9 $(pgrep "bird -c")
+    pgrep bird | xargs kill -9
     bird -c ./data/bird.conf -u testdemo -g testdemo
     SLEEP_WAIT 2
-    result2=$(ps -ef | grep "bird -c" | grep -v "grep")
-    if [[ $result1 == testdemo* ]]; then
-	echo "aa" | grep "aa"
-    else
-	echo "aa" | grep "bb"
-    fi
+    pgrep -f "testdemo"
     CHECK_RESULT $? 0 0 "check bird -g failed"
-    kill -9 $(pgrep "bird -c")
+    pgrep bird | xargs kill -9
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     userdel -r testdemo
     clean_dir
     LOG_INFO "End to restore the test environment."

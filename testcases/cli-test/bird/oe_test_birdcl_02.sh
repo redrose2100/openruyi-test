@@ -15,8 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   verification birdcl command
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "./common/lib/util.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -27,7 +27,7 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdcl
     expect "bird>" {send "disable ospf1\n"}
     expect "bird>" {send "enable ospf1\n"}
@@ -37,7 +37,7 @@ EOF
     grep "ospf1: enabled" tmp.txt
     CHECK_RESULT $? 0 0 "check birdcl enable failed"
     rm -f tmp.txt
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdcl
     expect "bird>" {send "restart ospf1\n"}
     send "quit\n"
@@ -46,7 +46,7 @@ EOF
     grep "ospf1: restarted" tmp.txt
     CHECK_RESULT $? 0 0 "check birdcl restart failed"
     rm -f tmp.txt
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdcl
     expect "bird>" {send "reload ospf1\n"}
     send "quit\n"
@@ -55,7 +55,7 @@ EOF
     grep "ospf1: reloading" tmp.txt
     CHECK_RESULT $? 0 0 "check birdcl reload failed"
     rm -f tmp.txt
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdcl
     expect "bird>" {send "restrict\n"}
     send "quit\n"
@@ -64,7 +64,7 @@ EOF
     grep "Access restricted" tmp.txt
     CHECK_RESULT $? 0 0 "check birdcl restrict failed"
     rm -f tmp.txt
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdcl
     expect "bird>" {send "configure\n"}
     send "quit\n"
@@ -73,7 +73,7 @@ EOF
     grep "Reconfigured" tmp.txt
     CHECK_RESULT $? 0 0 "check birdcl configure failed"
     rm -f tmp.txt
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdcl
     expect "bird>" {send "down\n"}
     send "quit\n"
@@ -87,8 +87,8 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    kill -9 $(pgrep "bird -c")
+    DNF_REMOVE "$@"
+    pgrep bird | xargs kill -9
     clean_dir
     LOG_INFO "End to restore the test environment."
 }
