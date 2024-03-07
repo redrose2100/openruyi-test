@@ -27,7 +27,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     nohup powertop --time=time in seconds >nohup.out 2>&1 &
-    SLEEP_WAIT 2
+    SLEEP_WAIT 5
     nopid=$(pgrep -f "powertop --time")
     kill -9 $nopid
     grep "wakeups/second" nohup.out
