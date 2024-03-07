@@ -111,6 +111,12 @@
         },
         {
             "name": "oe_test_bash_test_001"
+	},
+	{
+	    "name": "oe_test_sudo_test_001"
+        },
+        {
+            "name": "oe_test_gawk_test_001"
         }
     ]
 }

@@ -32,7 +32,7 @@ tcltest=${src_path}/unix/tcltest
 if [ -f "${tcltest}" ]; then
   \cp -r "${src_path}"/library "${exec_path}"
   \cp -r "${src_path}"/tests "${exec_path}"
-  \cp " ${tcltest}" "${exec_path}"
+  \cp "${tcltest}" "${exec_path}"
 else
   echo "tcltest build failed"
   exit 1
