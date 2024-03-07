@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check curl --cacert failed"
     curl --capath /etc/pki/tls/certs/ https://httpbin.com/
     CHECK_RESULT $? 0 0 "check curl --capath failed"
-    curl --connect-timeout 1 https://httpbin.com/anything
+    curl --connect-timeout 10 https://httpbin.com/anything
     CHECK_RESULT $? 0 0 "check curl --connect-timeoutfailed"
     curl -C - https://www.baidu.com
     CHECK_RESULT $? 0 0 "check curl -C failed"
