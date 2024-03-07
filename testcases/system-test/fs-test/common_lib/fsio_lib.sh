@@ -83,7 +83,7 @@ function GET_CONSOLE() {
 
 function CREATE_VG() {
     cur_date=$(date +%Y%m%d%H%M%S)
-    free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
+    free_disk=$(lsblk -n -o name,type,model |grep -v 'Virtual' | grep disk | awk '{print $1}' | tail -n 1)
     disk_name="/dev/"$free_disk
     pvcreate $disk_name -f &>/dev/null
     if [[ "$?" -eq "0" ]]; then
