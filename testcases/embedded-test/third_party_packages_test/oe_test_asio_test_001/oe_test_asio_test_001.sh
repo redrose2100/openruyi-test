@@ -45,7 +45,7 @@ function run_test() {
     ((total++))
   done < ./success_list
   LOG_INFO "exec ${total}, success ${success},failed ${failed}, pass rate $(echo "${success}" "${failed}" | awk '{printf "%.2f", $1/($1 + $2) * 100 }')%"
-  CHECK_RESULT "${failed}" 0 0 "libcgroup gtest failed!!!"
+  CHECK_RESULT "${failed}" 0 0 "asio test failed!!!"
   popd || return
   LOG_INFO "End to run test."
 }

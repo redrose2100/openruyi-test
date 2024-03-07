@@ -25,7 +25,7 @@ function pre_test() {
     return
   else
     lib_tcl_so_num=$(find /usr -name "libtcl${tcl_version}.so.*" | sort | head -n 1)
-    if [ -n "${lib_tcl_so}" ]; then
+    if [ -n "${lib_tcl_so_num}" ]; then
       ln -s "${lib_tcl_so_num}" "$(dirname "${lib_tcl_so_num}")/libtcl${tcl_version}.so"
     else
       LOG_ERROR "libtcl${tcl_version}.so must be provided"
