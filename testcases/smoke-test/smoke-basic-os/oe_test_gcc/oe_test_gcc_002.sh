@@ -70,7 +70,7 @@ function run_test() {
     grep "test g++" ${path1}/main.txt
     CHECK_RESULT $? 0 0 "main.txt file fails"
     ldd main >lddmain.txt
-    grep "linux-vdso.so.1" ${path1}/lddmain.txt
+    grep "linux-vdso.so.1" ${path1}/lddmain.txt || grep "linux-vdso64.so.1" ${path1}/lddmain.txt
     CHECK_RESULT $? 0 0 "lddmain.txt file fails"
 
 }
