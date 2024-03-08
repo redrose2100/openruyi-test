@@ -28,13 +28,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    route add -net ${new_route} netmask 255.255.255.0 gw "${sysgw}"
+    route add -net "${new_route}" netmask 255.255.255.0 gw "${sysgw}"
     CHECK_RESULT $? 0 0 "Add route failed."
-    route -n | grep -q ${new_route}
+    route -n | grep -q "${new_route}"
     CHECK_RESULT $? 0 0 "Check ${new_route} added failed."
-    route del -net ${new_route} netmask 255.255.255.0
+    route del -net "${new_route}" netmask 255.255.255.0
     CHECK_RESULT $? 0 0 "Delete route failed."
-    route -n | grep ${new_route}
+    route -n | grep "${new_route}"
     CHECK_RESULT $? 1 0 "Check ${new_route} deleted failed."
     LOG_INFO "End to run test."
 }

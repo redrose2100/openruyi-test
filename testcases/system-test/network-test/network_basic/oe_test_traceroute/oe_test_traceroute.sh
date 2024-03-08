@@ -26,9 +26,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    traceroute -4 "${NODE2_IPV4}" | grep "traceroute to "${NODE2_IPV4}""
+    traceroute -4 "${NODE2_IPV4}" | grep "traceroute to ${NODE2_IPV4}"
     CHECK_RESULT $? 0 0 "Check traceroute failed."
-    traceroute -m 10 www.baidu.com  | grep "traceroute to www.baidu.com"
+    traceroute -m 10 www.baidu.com | grep "traceroute to www.baidu.com"
     CHECK_RESULT $? 0 0 "Check traceroute url failed."
     LOG_INFO "End to run test."
 }
