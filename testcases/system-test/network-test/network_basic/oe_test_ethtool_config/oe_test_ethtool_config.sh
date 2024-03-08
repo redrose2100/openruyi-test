@@ -36,7 +36,9 @@ function run_test() {
         ethtool -s "${test_nic}" autoneg off && ethtool "${test_nic}" | grep -q "Auto-negotiation: off"
         CHECK_RESULT $? 0 0 "Set ${test_nic}: autoneg off failed."
         ethtool -s "${test_nic}" duplex half && ethtool "${test_nic}" | grep -q "Duplex: Half"
+        CHECK_RESULT $? 0 0 "Set ${test_nic}: duplex half failed."
         ethtool -s "${test_nic}" duplex full && ethtool "${test_nic}" | grep -q "Duplex: Full"
+        CHECK_RESULT $? 0 0 "Set ${test_nic}: duplex full failed."
     else
         ethtool -s "${test_nic}" autoneg on && ethtool "${test_nic}" | grep -q "Auto-negotiation: on"
         CHECK_RESULT $? 0 0 "Set ${test_nic}: autoneg on failed."

@@ -40,7 +40,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    P_SSH_CMD --node 2 --cmd "mv /etc/hostname.bak /etc/hostname"
+    P_SSH_CMD --node 2 --cmd "mv -f /etc/hostname.bak /etc/hostname"
     REMOTE_REBOOT 2 60
     REMOTE_REBOOT_WAIT 2 60
     LOG_INFO "End to restore the test environment."

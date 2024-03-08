@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL net-tools
     sysgw=$(route -n | grep "0.0.0.0" | head -n 1 | awk '{print $2}')
-    new_route="172.16.128.0"
+    new_route=$(echo "${NODE1_IPV4}" | cut -d '.' -f 1-3).0
     LOG_INFO "End to prepare the test environment."
 }
 

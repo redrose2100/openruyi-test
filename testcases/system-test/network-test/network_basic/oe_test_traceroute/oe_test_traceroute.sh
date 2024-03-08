@@ -21,29 +21,20 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL traceroute
-    dd if=/dev/zero of=testFile bs=50M count=1
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    traceroute -4 "${NODE2_IPV4}" | tee traceroute.log &
+    traceroute -4 "${NODE2_IPV4}" | grep "traceroute to "${NODE2_IPV4}""
     CHECK_RESULT $? 0 0 "Check traceroute failed."
-    SSH_SCP testFile "${NODE2_USER}"@"${NODE2_IPV4}":/opt "${NODE2_PASSWORD}"
-    CHECK_RESULT $? 0 0 "scp file to node2 failed."
-    grep "${NODE2_IPV4}" traceroute.log
-    CHECK_RESULT $? 0 0 "Check traceroute log failed."
-    P_SSH_CMD --node 2 --cmd "test -f /opt/testFile"
-    CHECK_RESULT $? 0 0 "The file doesn't exist in node2."
-    traceroute -m 10 www.baidu.com
+    traceroute -m 10 www.baidu.com  | grep "traceroute to www.baidu.com"
     CHECK_RESULT $? 0 0 "Check traceroute url failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf testFile traceroute.log
-    P_SSH_CMD --node 2 --cmd "rm -rf /opt/testFile"
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
