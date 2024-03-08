@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "yaji yaji-devel"
+  DNF_INSTALL "yajl yajl-devel"
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -30,15 +30,16 @@ function run_test() {
   gcc test.c -o test -lyajl
   test -e test
   CHECK_RESULT $? 0 0 "test not exist"
-  ./test 2>&1 | grep -i '{"name":"Alice","age":30}'
-  CHECK_RESULT $? 0 0 "yaji failure"
+  ./test >> result.json 2>&1
+  grep -i '{"name":"Alice","age":30}' result.json
+  CHECK_RESULT $? 0 0 "yajl failure"
   LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  DNF_REMOVE
-  rm -rf test
+  DNF_REMOVE "$@"
+  rm -rf test result.json
   LOG_INFO "Finish environment cleanup!"
 }
 
