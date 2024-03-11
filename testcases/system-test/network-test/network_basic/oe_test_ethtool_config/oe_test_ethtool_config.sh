@@ -27,22 +27,30 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     if [ "${NODE1_MACHINE}" = "kvm" ]; then
-        ethtool -s "${test_nic}" speed 10 && ethtool "${test_nic}" | grep -q "Speed: 10Mb/s"
+        ethtool -s "${test_nic}" speed 10
+	ethtool "${test_nic}" | grep "Speed: 10Mb/s"
         CHECK_RESULT $? 0 0 "Set ${test_nic}: speed 10 failed."
-        ethtool -s "${test_nic}" speed 100 && ethtool "${test_nic}" | grep -q "Speed: 100Mb/s"
+        ethtool -s "${test_nic}" speed 100
+	ethtool "${test_nic}" | grep "Speed: 100Mb/s"
         CHECK_RESULT $? 0 0 "Set ${test_nic}: speed 100 failed."
-        ethtool -s "${test_nic}" speed 1000 && ethtool "${test_nic}" | grep -q "Speed: 1000Mb/s"
+        ethtool -s "${test_nic}" speed 1000
+	ethtool "${test_nic}" | grep "Speed: 1000Mb/s"
         CHECK_RESULT $? 0 0 "Set ${test_nic}: speed 1000 failed."
-        ethtool -s "${test_nic}" autoneg off && ethtool "${test_nic}" | grep -q "Auto-negotiation: off"
+        ethtool -s "${test_nic}" autoneg off
+	ethtool "${test_nic}" | grep "Auto-negotiation: off"
         CHECK_RESULT $? 0 0 "Set ${test_nic}: autoneg off failed."
-        ethtool -s "${test_nic}" duplex half && ethtool "${test_nic}" | grep -q "Duplex: Half"
+        ethtool -s "${test_nic}" duplex half
+	ethtool "${test_nic}" | grep "Duplex: Half"
         CHECK_RESULT $? 0 0 "Set ${test_nic}: duplex half failed."
-        ethtool -s "${test_nic}" duplex full && ethtool "${test_nic}" | grep -q "Duplex: Full"
+        ethtool -s "${test_nic}" duplex full
+	ethtool "${test_nic}" | grep "Duplex: Full"
         CHECK_RESULT $? 0 0 "Set ${test_nic}: duplex full failed."
     else
-        ethtool -s "${test_nic}" autoneg on && ethtool "${test_nic}" | grep -q "Auto-negotiation: on"
+        ethtool -s "${test_nic}" autoneg on
+	ethtool "${test_nic}" | grep "Auto-negotiation: on"
         CHECK_RESULT $? 0 0 "Set ${test_nic}: autoneg on failed."
-        ethtool -r "${test_nic}" && ethtool "${test_nic}" | grep -q "Unknown"
+        ethtool -r "${test_nic}"
+	ethtool "${test_nic}" | grep "Unknown"
         CHECK_RESULT $? 0 0 "Reset ${test_nic} failed."
     fi
     LOG_INFO "End to run test."

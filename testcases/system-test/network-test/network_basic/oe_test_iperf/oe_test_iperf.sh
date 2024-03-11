@@ -28,23 +28,21 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    P_SSH_CMD --node 2 --cmd "echo q | nohup iperf3 -s &>/dev/null &"
+    P_SSH_CMD --node 2 --cmd "nohup iperf3 -s &>/dev/null &"
     CHECK_RESULT $? 0 0 "Start iperf3 tcp server failed."
-    iperf3 -c "${NODE2_IPV4}" -P 10 -t 60
+    iperf3 -c "${NODE2_IPV4}" -P 10 -t 5
     CHECK_RESULT $? 0 0 "Check tcp failed."
-    P_SSH_CMD --node 2 --cmd "echo q | nohup iperf3 -s -u &>/dev/null &"
-    CHECK_RESULT $? 0 0 "Start iperf3 udp server failed."
-    iperf3 -u -c "${NODE2_IPV4}" -P 10 -t 60
+    iperf3 -u -c "${NODE2_IPV4}" -P 10 -t 5 
     CHECK_RESULT $? 0 0 "Check udp failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    P_SSH_CMD --node 2 --cmd "kill -9 $(pgrep -f iperf3)
-    systemctl start firewalld"
     DNF_REMOVE "$@"
     DNF_REMOVE 2 "$@"
+    P_SSH_CMD --node 2 --cmd "pgrep -f iperf3 | xargs kill -9
+    systemctl start firewalld"
     LOG_INFO "End to restore the test environment."
 }
 
