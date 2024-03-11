@@ -28,7 +28,7 @@ function pre_test() {
     ./configure
     make && make install
     cd - || exit
-    rm -rf aespipe*
+    rm -rf aespipe-v*
     mkdir -p /var/lib/amanda/.gnupg
     touch /var/lib/amanda/.gnupg/am_key.gpg
     mkdir -p ~/.gnupg/
