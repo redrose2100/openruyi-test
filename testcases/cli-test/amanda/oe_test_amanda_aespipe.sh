@@ -24,11 +24,11 @@ function pre_test() {
     DNF_INSTALL "amanda openssl wget"
     wget https://loop-aes.sourceforge.net/aespipe-latest.tar.bz2
     tar -xvf aespipe-latest.tar.bz2
-    cd aespipe* || exit
+    cd aespipe-v* || exit
     ./configure
     make && make install
     cd - || exit
-    rm -rf aespipe-v*
+    rm -rf aespipe*
     mkdir -p /var/lib/amanda/.gnupg
     touch /var/lib/amanda/.gnupg/am_key.gpg
     mkdir -p ~/.gnupg/
