@@ -25,28 +25,51 @@ function pre_test() {
     test -d /tmp/test01 && rm -rf /tmp/test01
     mkdir -p /tmp/test01/test02/test03
 
+    mkdir -p /tmp/test02/test03
+    touch /tmp/test02/test02.txt
+    touch /tmp/test02/test03/test03.txt
+
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ls -l /tmp | grep "test01" | awk '{print $1}' | grep "drwxrwxrwx"
+    output1=$(ls -l /tmp)
+    echo "$output1" | grep "test01" | awk '{print $1}' | grep "drwxrwxrwx"
     CHECK_RESULT $? 1 0 "dir default mod is drwxrwxrwx"
-    per01=$(ls -l /tmp/test01 | grep "test02" | awk '{print $1}')
+    output2=$(ls -l /tmp/test01)
+    per01=$(echo "$output2" | grep "test02" | awk '{print $1}')
 
     chmod 777 /tmp/test01
-    ls -l /tmp | grep "test01" | awk '{print $1}' | grep "drwxrwxrwx"
+    output3=$(ls -l /tmp)
+    echo "$output3" | grep "test01" | awk '{print $1}' | grep "drwxrwxrwx"
     CHECK_RESULT $? 0 0 "after chmod check /tmp/test01 mod fail"
-    per02=$(ls -l /tmp/test01 | grep "test02" | awk '{print $1}')
+    output4=$(ls -l /tmp/test01)
+    per02=$(echo "$output4"  | grep "test02" | awk '{print $1}')
     [ "$per01" == "$per02" ]
     CHECK_RESULT $? 0 0 "check chmod only change one dir fail"
 
     chmod -R 777 /tmp/test01
-    ls -l /tmp/ | grep "test01" | awk '{print $1}' | grep "drwxrwxrwx"
+    output5=$(ls -l /tmp)
+    echo "$output5" | grep "test01" | awk '{print $1}' | grep "drwxrwxrwx"
     CHECK_RESULT $? 0 0 "check chmod -R change test01 mod fail"
-    ls -l /tmp/test01 | grep "test02" | awk '{print $1}' | grep "drwxrwxrwx"
+    output6=$(ls -l /tmp/test01)
+    echo "$output6" | grep "test02" | awk '{print $1}' | grep "drwxrwxrwx"
     CHECK_RESULT $? 0 0 "check chmod -R change test02 mod fail"
+
+    chmod +x /tmp/test02/test03/test03.txt
+    output7=$(ls -l /tmp/test02/test03)
+    echo "$output7" | grep "test03.txt" | awk '{print $1}' | grep "rwxr-xr-x"
+    CHECK_RESULT $? 0 0 "The access of /tmp/test02/test03/test03.txt is error."
+    chmod u-x /tmp/test02/test03/test03.txt
+    output8=$(ls -l /tmp/test02/test03)
+    echo "$output8" | grep "test03.txt" | awk '{print $1}' | grep "rw-r-xr-x"
+    CHECK_RESULT $? 0 0 "The access of /tmp/test02/test03/test03.txt is error."
+    chmod o-w /tmp/test02/test03/test03.txt
+    output9=$(ls -l /tmp/test02/test03)
+    echo "$output9"  | grep "test03.txt" | awk '{print $1}' | grep "rw-r-xr-x"
+    CHECK_RESULT $? 0 0 "The access of /tmp/test02/test03/test03.txt is error."
 
     chmod --help 2>&1 | grep "Usage"
     CHECK_RESULT $? 0 0 "check chmod help fail"
@@ -57,9 +80,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -rf /tmp/test01
+    rm -rf /tmp/test01 /tmp/test02
 
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

@@ -16,10 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   isula-build test common
 # ############################################
-# shellcheck disable=SC2034,SC2119,SC1091,SC2154
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2068,SC2034,SC2119,SC1091,SC2154
+source ../common/prepare_isulad.sh
 
-function pre_isula_build_env() {
+function pre_test() {
+    LOG_INFO "Start environment preparation."
     DNF_INSTALL "isula-build docker-runc iSulad"
 
     if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then
@@ -36,10 +37,37 @@ function pre_isula_build_env() {
 
     isula-build ctr-img load -i ../common/openEuler-docker."${NODE1_FRAME}".tar.xz
     images_name=$(isula-build ctr-img images | grep "docker.io/library/openeuler" | awk '{print$1}')
+    LOG_INFO "Environmental preparation is over."
 }
 
-function clean_isula_build_env() {
+function run_test() {
+    LOG_INFO "Start executing testcase."
+    cat > Dockerfile << EOF
+FROM "${images_name}":latest
+RUN touch build_test
+EOF
+    isula-build ctr-img build -f Dockerfile -o isulad:openeulerbase:latest .
+    CHECK_RESULT $? 0 0 "isula-build build failed"
+
+    con_id=$(isula run -itd openeulerbase:latest bash)
+    CHECK_RESULT $? 0 0 "isula run failed"
+
+    isula rm -f "${con_id}"
+    isula rmi openeulerbase
+
+    isula-build ctr-img rm openeulerbase "${images_name}"
+    CHECK_RESULT $? 0 0 "isula-build rm images failed"
+    LOG_INFO "End of testcase execution."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    rm -rf Dockerfile
     rm -rf ../common/openEuler-docker."${NODE1_FRAME}".tar.xz
     isula-build ctr-img rm -a
     DNF_REMOVE
+    LOG_INFO "Finish environment cleanup."
 }
+
+main $@
+
