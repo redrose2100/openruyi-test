@@ -21,7 +21,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL iptables-nft
+    DNF_INSTALL 'iptables-nft nftables'
     LOG_INFO "End of environmental preparation!"
 }
 

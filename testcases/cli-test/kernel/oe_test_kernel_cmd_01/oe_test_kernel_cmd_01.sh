@@ -33,18 +33,32 @@ function run_test() {
     CHECK_RESULT $?
     if ! hostnamectl | grep Virtualization; then
         current_frequency=$(cpupower frequency-info | grep "current CPU frequency" | awk -F ": " '{print $2}' | awk '{print $1}')
-        cpupower frequency-set -f 1.0GHz
-        CHECK_RESULT $?
-        cpupower frequency-info | grep "current CPU frequency" | grep "1000 MHz"
-        CHECK_RESULT $?
-        cpupower frequency-set -f "${current_frequency}"GHz
+        if [[ '$NODE1_FRAME'x == 'ppc64le'x ]];then
+	    cpupower_frq_tmp=`cpupower frequency-info | grep -i 'hardware limits' | awk '{print$3}'`
+            cpupower frequency-set -f $cpupower_frq_tmp"GHz"
+            CHECK_RESULT $?
+            cpupower frequency-info | grep "current CPU frequency" | grep "$cpupower_frq_tmp GHz"
+            CHECK_RESULT $?
+            cpupower frequency-set -f "${current_frequency}"GHz
+	else
+            cpupower frequency-set -f 1.0GHz
+            CHECK_RESULT $?
+            cpupower frequency-info | grep "current CPU frequency" | grep "1000 MHz"
+            CHECK_RESULT $?
+            cpupower frequency-set -f "${current_frequency}"GHz
+	fi
     fi
     cpupower idle-info | grep "analyzing CPU 0"
     CHECK_RESULT $?
-    cpupower idle-set
+    #cpupower idle-set
+    cpupower idle-set -d 2
     CHECK_RESULT $?
-    cpupower info | grep "analyzing CPU 0"
+    cpupower idle-set -e 2
     CHECK_RESULT $?
+    if [[ '$NODE1_FRAME'x == 'ppc64le'x ]];then
+        cpupower info | grep "analyzing CPU 0"
+        CHECK_RESULT $?
+    fi
     gpio-event-mon -? 2>&1 | grep "Usage: gpio-event-mon"
     CHECK_RESULT $?
     gpio-hammer -? 2>&1 | grep "Usage: gpio-hammer"

@@ -19,11 +19,23 @@
 
 source "../common/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL iprutils
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution iprinit.service
     test_reload iprinit.service
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

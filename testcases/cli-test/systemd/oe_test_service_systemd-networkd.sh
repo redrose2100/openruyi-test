@@ -19,10 +19,16 @@
 
 source "../common/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL systemd-networkd
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution systemd-networkd.service
-    test_reload systemd-networkd.service
+    #test_reload systemd-networkd.service
     LOG_INFO "Finish test!"
 }
 

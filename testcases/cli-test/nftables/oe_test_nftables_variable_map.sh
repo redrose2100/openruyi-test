@@ -22,6 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
+    DNF_INSTALL nftables
     table_name=sec011
     chain_name=sec011_chain
     map_name=sec011_map

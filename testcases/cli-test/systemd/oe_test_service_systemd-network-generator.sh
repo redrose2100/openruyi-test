@@ -28,7 +28,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_oneshot "${service}" 'inactive (dead)'
+    #test_oneshot "${service}" 'inactive (dead)'
+    test_execution systemd-network-generator.service
+    test_reload systemd-network-generator.service
     LOG_INFO "Finish test!"
 }
 

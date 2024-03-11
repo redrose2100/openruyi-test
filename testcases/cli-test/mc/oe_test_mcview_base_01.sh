@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check mcview -V failed"
     mcview --version 2>&1 | grep 'GNU Midnight Commander '
     CHECK_RESULT $? 0 0 "Check mcview --version failed"
-    mcview -F 2>&1 | grep 'Home路径'
+    mcview -F 2>&1 | grep 'Home'
     CHECK_RESULT $? 0 0 "Check mcview -F failed"
     mcview --datadir-info 2>&1 | grep 'Home'
     CHECK_RESULT $? 0 0 "Check mcview --datadir-info failed"

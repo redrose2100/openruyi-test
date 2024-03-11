@@ -33,7 +33,8 @@ function run_test() {
     unzip checkSo.zip
     test -e checkSo
     CHECK_RESULT $? 0 0 "Decompression failure"
-    yum download struts
+    #yum download struts
+    echo y | yum reinstall --downloadonly --downloaddir ./ struts
     cd checkSo/;chmod 755 *
     ./main.sh /tmp/test/struts*.rpm | grep 'unpack file /checkSo/tmp_unzip/struts';testtime=$(date)
     CHECK_RESULT $? 0 0 "Execution failure"

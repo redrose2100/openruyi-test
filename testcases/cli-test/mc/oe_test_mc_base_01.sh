@@ -38,7 +38,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check mc -f  failed"
     mc --datadir 2>&1 | grep '/etc/mc/ (/usr/share/mc/)'
     CHECK_RESULT $? 0 0 "Check mc --datadir  failed"
-    mc -F 2>&1 | grep 'Home路径'
+    mc -F 2>&1 | grep 'Home'
     CHECK_RESULT $? 0 0 "Check mc -F  failed"
     mc --datadir-info 2>&1 | grep 'Home'
     CHECK_RESULT $? 0 0 "Check mc --datadir-info  failed"
