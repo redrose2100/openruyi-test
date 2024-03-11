@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    systemctl start NetworkManager
+    systemctl restart NetworkManager
     CHECK_RESULT $? 0 0 "Start NetworkManager service failed."
     systemctl status NetworkManager | grep "active"
     CHECK_RESULT $? 0 0 "Check NetworkManager service status failed."
@@ -29,6 +29,12 @@ function run_test() {
     systemctl status NetworkManager | grep "inactive"
     CHECK_RESULT $? 0 0 "Check  NetworkManager service status failed."
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    systemctl start NetworkManager
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
