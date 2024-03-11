@@ -26,7 +26,7 @@ function pre_test(){
 }
 EOF
 
-    DNF_INSTALL "shared-mime-info"
+    DNF_INSTALL "shared-mime-info xdg-utils"
     LOG_INFO "End of environmental preparation!"
 }
 

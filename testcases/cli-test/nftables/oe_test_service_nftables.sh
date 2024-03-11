@@ -21,6 +21,7 @@ source "../common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
+    DNF_INSTALL nftables
     test_execution nftables.service
     systemctl start nftables.service
     sed -i 's\ExecStart=/sbin/nft -f /etc/sysconfig/nftables.conf\ExecStart=/sbin/nft -c list tables\g' /usr/lib/systemd/system/nftables.service

@@ -21,6 +21,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL nftables
     nft add table inet example_table
     nft add chain inet example_table example_chain { type filter hook input priority 0 \; policy accept \; }
     LOG_INFO "End to prepare the test environment."

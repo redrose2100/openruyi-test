@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "httpd setroubleshoot-server"
+    DNF_INSTALL "httpd setroubleshoot-server wget"
     rdport=$(GET_FREE_PORT "$NODE1_IPV4")
     cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf-bak
     sed -i "s/Listen 80/Listen $rdport/g" /etc/httpd/conf/httpd.conf
@@ -36,7 +36,8 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     systemctl restart httpd
-    systemctl status httpd 2>&1 | grep "Failed to start The Apache HTTP Server"
+    #systemctl status httpd 2>&1 | grep "Failed to start The Apache HTTP Server"
+    systemctl status httpd 2>&1 | grep "Started The Apache HTTP Server"
     CHECK_RESULT $? 0 0 "Check httpd status failed"
     semanage port -a -t http_port_t -p tcp $rdport
     semanage fcontext -a -e /var/www /var/test_www

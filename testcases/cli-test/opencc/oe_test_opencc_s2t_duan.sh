@@ -35,7 +35,7 @@ function run_test() {
     echo '确保补贴临时补充及时足额发放到位' | opencc -c s2t | grep '確保補貼臨時補充及時足額發放到位'
     CHECK_RESULT $?
     elif [ "$version" == 5.10.0 ];then
-    echo '确保补贴临时补充及时足额发放到位' | opencc -c s2t | grep '確保補貼臨時補充及時足額髮放到位'
+    echo '确保补贴临时补充及时足额发放到位' | opencc -c s2t | grep '確保補貼臨時補充及時足額發放到位'
     CHECK_RESULT $?
     fi
     echo '困难' | opencc -c s2t | grep '困難'
