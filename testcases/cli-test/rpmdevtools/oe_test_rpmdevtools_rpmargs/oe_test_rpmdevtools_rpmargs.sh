@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "rpmdevtools"
+    DNF_INSTALL "rpmdevtools dnf-plugins-core"
     pkg_name=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
     pkg_arch=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $2}')
     yumdownloader ${pkg_name}
@@ -51,7 +51,11 @@ function run_test() {
     rpmdev-checksig ${pkg_name}*.rpm | grep "${pkg_name}.*.rpm: RSA/SHA1"
     CHECK_RESULT $? 0 0 "Failed command:rpmdev-checksig"
 
-    rpmdev-cksum ${pkg_name}*rpm | head -n 1 | awk '{print $3}' | grep "${pkg_name}.*rpm"
+    if [[ "$NODE1_FRAME"x == "ppc64le"x ]];then
+        rpmdev-checksig ${pkg_name}*.rpm | grep "${pkg_name}.*.rpm: MISSING KEY"
+    else
+        rpmdev-checksig ${pkg_name}*.rpm | grep "${pkg_name}.*.rpm: RSA/SHA1"
+    fi
     CHECK_RESULT $? 0 0 "Failed command: rpmdev-cksum"
 
     rpmdev-diff -v | grep 'rpmdev-diff version'
