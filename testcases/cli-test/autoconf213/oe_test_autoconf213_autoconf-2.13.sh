@@ -52,7 +52,7 @@ function run_test() {
     autoconf-2.13 -l test-macro/acconfig.h 2>&1
     CHECK_RESULT $? 0 0 "Error: autoconf-2.13 [-l] run failed."
     test -f configure
-    CECK_RESULT $? 0 0 "Error: [-l] configure file failed to generate."
+    CHECK_RESULT $? 0 0 "Error: [-l] configure file failed to generate."
     # with custom MACRO [-m dir] [--macrodir=dir]
     rm -rf configure
     autoconf-2.13 -m test-macro 2>&1
