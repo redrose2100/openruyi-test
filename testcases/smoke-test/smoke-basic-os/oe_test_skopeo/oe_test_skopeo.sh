@@ -28,7 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     for ((i = 0; i < 60; i++)); do
-        if skopeo list-tags --tls-verify=false docker://docker.io/nginx; then
+        if skopeo list-tags --tls-verify=false docker://docker.io/debian; then
             flag_result=1
             break
         fi
@@ -37,7 +37,7 @@ function run_test() {
     CHECK_RESULT $flag_result 1
     flag_result=0
     for ((i = 0; i < 60; i++)); do
-        if skopeo inspect --tls-verify=false docker://docker.io/nginx; then
+        if skopeo inspect --tls-verify=false docker://docker.io/debian:sid; then
             flag_result=1
             break
         fi
@@ -48,7 +48,7 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE ""
     LOG_INFO "Finish environment cleanup!"
 }
-main $@
+main "$@"

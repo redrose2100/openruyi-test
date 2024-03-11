@@ -23,17 +23,17 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "groovy18 tar"
-    tar -xvf common/data.tar.gz > /dev/null
+    tar -xvf common/data.tar.gz >/dev/null
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    grape18 install  com.jcraft jzlib 1.1.3 | grep "SUCCESSFUL"
+    grape18 install com.jcraft jzlib 1.1.3 | grep "SUCCESSFUL"
     CHECK_RESULT $? 0 0 "Check grape install failed"
-    grape18 list  | grep "com.jcraft"
+    grape18 list | grep "com.jcraft"
     CHECK_RESULT $? 0 0 "Check grape list failed"
-    grape18 resolve  com.jcraft jzlib 1.1.3 | grep "jzlib-1.1.3.jar"
+    grape18 resolve com.jcraft jzlib 1.1.3 | grep "jzlib-1.1.3.jar"
     CHECK_RESULT $? 0 0 "Check grape resolve failed"
     grape18 --help | grep "usage: grape"
     CHECK_RESULT $? 0 0 "Check grape --help failed"
@@ -43,11 +43,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check grape -v failed"
     grape18 --version | grep "Groovy Version:"
     CHECK_RESULT $? 0 0 "Check grape --version failed"
-    grape18 -D=name="jack" list | grep "jzlib"
+    grape18 -D name="jack" list | grep "jzlib"
     CHECK_RESULT $? 0 0 "Check grape -D failed"
     grape18 --define=name="jack" list | grep "jzlib"
     CHECK_RESULT $? 0 0 "Check grape --define failed"
-    grape18 uninstall  com.jcraft jzlib 1.1.3 | grep "Deleting jzlib-1.1.3"
+    grape18 uninstall com.jcraft jzlib 1.1.3 | grep "Deleting jzlib-1.1.3"
     CHECK_RESULT $? 0 0 "Check grape uninstall failed"
     LOG_INFO "End to run test."
 }

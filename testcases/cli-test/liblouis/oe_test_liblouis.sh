@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "liblouis liblouis-devel liblouis-help liblouis-utils python2-louis python3-louis"
+    DNF_INSTALL "liblouis liblouis-devel liblouis-help liblouis-utils python3-louis"
     echo '123' > input.txt
     LOG_INFO "Finish preparing the test environment."
 }
@@ -43,8 +43,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
     rm -rf input.txt
-    DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

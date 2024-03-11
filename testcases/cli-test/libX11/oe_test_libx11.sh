@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "libX11 libX11-devel"
+  DNF_INSTALL "libX11 libX11-devel gcc"
   mkdir /tmp/test
   cat > /tmp/test/test.c <<EOF
 #include <stdio.h>

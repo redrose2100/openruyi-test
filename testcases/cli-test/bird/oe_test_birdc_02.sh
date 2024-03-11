@@ -15,8 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   verification birdc command
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "./common/lib/util.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,7 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     # test enable
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdc
     expect "bird>" {send "disable ospf1\n"}
     expect "bird>" {send "enable ospf1\n"}
@@ -39,7 +39,7 @@ EOF
     CHECK_RESULT $? 0 0 "check birdc enable failed"
     rm -f tmp.txt
     # test restart
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdc
     expect "bird>" {send "restart ospf1\n"}
     send "quit\n"
@@ -49,7 +49,7 @@ EOF
     CHECK_RESULT $? 0 0 "check birdc restart failed"
     rm -f tmp.txt
     # test reload
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdc
     expect "bird>" {send "reload ospf1\n"}
     send "quit\n"
@@ -59,7 +59,7 @@ EOF
     CHECK_RESULT $? 0 0 "check birdc reload failed"
     rm -f tmp.txt
     # test restrict
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdc
     expect "bird>" {send "restrict\n"}
     send "quit\n"
@@ -69,7 +69,7 @@ EOF
     CHECK_RESULT $? 0 0 "check birdc restrict failed"
     rm -f tmp.txt
     # test configure
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdc
     expect "bird>" {send "configure\n"}
     send "quit\n"
@@ -79,7 +79,7 @@ EOF
     CHECK_RESULT $? 0 0 "check birdc configure failed"
     rm -f tmp.txt
     # test down
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdc
     expect "bird>" {send "down\n"}
     send "quit\n"
@@ -93,8 +93,8 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    kill -9 $(pgrep "bird -c")
+    DNF_REMOVE "$@"
+    pgrep bird | xargs kill -9
     clean_dir
     LOG_INFO "End to restore the test environment."
 }

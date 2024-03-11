@@ -33,30 +33,30 @@
 #       ppsctl [-bBfFac] <ppsdev>
 ####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "pps-tools kernel-source"
+    DNF_INSTALL "pps-tools kernel-source gcc kernel-devel"
     CRTDIR=$(
-        cd "$(dirname $0)" || exit 1
+        cd "$(dirname "$0")" || exit 1
         pwd
     )
     mkdir pps_client
-    cd ./pps_client
-    cp $(find / -name pps-ktimer.c) pps-ktimer1.c
+    cd ./pps_client || exit 1
+    cp "$(find / -name pps-ktimer.c)" pps-ktimer1.c
     cp pps-ktimer1.c pps-ktimer2.c
     sed -i 's/PPS_CAPTUREASSERT/PPS_CAPTURECLEAR/g' pps-ktimer2.c
     sed -i 's/PPS_OFFSETASSERT/PPS_OFFSETCLEAR/g' pps-ktimer2.c
-    echo 'obj-m+=pps-ktimer1.o
+    echo "obj-m+=pps-ktimer1.o
 obj-m+=pps-ktimer2.o
 
 all:
-	make -C /lib/modules/$(shell uname -r)/build M=`pwd` modules' >Makefile
+	make -C \$(shell find /lib/modules/ -name \"build\") M=$(pwd) modules" >Makefile
     make
     insmod pps-ktimer1.ko
-    insmod pps-ktimer2.ko 
-    cd $CRTDIR
+    insmod pps-ktimer2.ko
+    cd "$CRTDIR" || exit 1
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -112,7 +112,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rmmod pps-ktimer1 pps-ktimer2
     rm -rf pps_client ppstest_log* ppswatch_log*
     LOG_INFO "End to restore the test environment."

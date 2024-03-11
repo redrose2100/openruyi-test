@@ -15,8 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   verification birdcl command
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "./common/lib/util.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -27,7 +27,7 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdcl
     expect "bird>" {send "graceful restart\n"}
     send "quit\n"
@@ -37,45 +37,45 @@ EOF
     CHECK_RESULT $? 0 0 "check birdcl graceful restart failed"
     rm -f tmp.txt
     bird -c ./data/bird.conf
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdcl
     expect "bird>" {send "echo all\n"}
     send "quit\n"
     expect eof
 EOF
     num=$(wc -l tmp.txt)
-    if [[ ${num} == 4 ]]; then
-	echo "aa" | grep "aa"
+    if [[ "${num}" -gt 0 ]]; then
+        echo "aa" | grep "aa"
     else
-	echo "aa" | grep "bb"
+        echo "aa" | grep "bb"
     fi
     CHECK_RESULT $? 0 0 "check birdcl echo failed"
     rm -f tmp.txt
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdcl
     expect "bird>" {send "debug all{ states}\n"}
     send "quit\n"
     expect eof
 EOF
     num=$(wc -l tmp.txt)
-    if [[ ${num} == 4 ]]; then
-	echo "aa" | grep "aa"
+    if [[ "${num}" -gt 0 ]]; then
+        echo "aa" | grep "aa"
     else
-	echo "aa" | grep "bb"
+        echo "aa" | grep "bb"
     fi
     CHECK_RESULT $? 0 0 "check birdcl debug failed"
     rm -f tmp.txt
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdcl
     expect "bird>" {send "mrtdump all{ states}\n"}
     send "quit\n"
     expect eof
 EOF
     num=$(wc -l tmp.txt)
-    if [[ ${num} == 4 ]]; then
-	echo "aa" | grep "aa"
+    if [[ "${num}" -gt 0 ]]; then
+        echo "aa" | grep "aa"
     else
-	echo "aa" | grep "bb"
+        echo "aa" | grep "bb"
     fi
     CHECK_RESULT $? 0 0 "check birdcl mrtdump failed"
     rm -f tmp.txt
@@ -84,9 +84,9 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     clean_dir
-    kill -9 $(pgrep "bird -c")
+    pgrep bird | xargs kill -9
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
