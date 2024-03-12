@@ -21,40 +21,46 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL nmap
+    DNF_INSTALL nmap 2
     sudo systemctl start firewalld
-    source_ip=$(echo "${NODE1_IPV4%\.*\.*}.0.0")
+    source_ip=${NODE1_IPV4%\.*\.*}.0.0
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    sudo firewall-cmd --zone=public --add-rich-rule 'rule family=ipv4 source address='$source_ip'/16 accept'
+    sudo firewall-cmd --zone=public --add-rich-rule 'rule family=ipv4 source address='"$source_ip"'/16 accept'
     CHECK_RESULT $?
     nc -l -p 5555 >/tmp/tmp_log 2>&1 &
+    SLEEP_WAIT 2
     SSH_CMD "echo test | nc ${NODE1_IPV4} 5555" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 0
 
     grep 'test' /tmp/tmp_log
     CHECK_RESULT $?
 
-    sudo firewall-cmd --zone=public --remove-rich-rule 'rule family=ipv4 source address='$source_ip'/16 accept'
+    sudo firewall-cmd --zone=public --remove-rich-rule 'rule family=ipv4 source address='"$source_ip"'/16 accept'
     CHECK_RESULT $?
     nc -l -p 5555 >/tmp/tmp_log 2>&1 &
+    SLEEP_WAIT 2
     SSH_CMD "echo test | nc ${NODE1_IPV4} 5555" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 1
 
-    sudo firewall-cmd --zone=public --add-rich-rule 'rule family=ipv4 source address='$source_ip'/16 accept'
+    sudo firewall-cmd --zone=public --add-rich-rule 'rule family=ipv4 source address='"$source_ip"'/16 accept'
     CHECK_RESULT $?
     nc -l -p 5555 >/tmp/tmp_log 2>&1 &
+    SLEEP_WAIT 2
     SSH_CMD "echo test | nc ${NODE1_IPV4} 5555" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 0
 
     grep 'test' /tmp/tmp_log
     CHECK_RESULT $?
 
-    sudo firewall-cmd --zone=public --add-rich-rule 'rule family=ipv4 source address='$source_ip'/16 drop'
+    sudo firewall-cmd --zone=public --add-rich-rule 'rule family=ipv4 source address='"$source_ip"'/16 drop'
     CHECK_RESULT $?
     nc -l -p 5555 >/tmp/tmp_log 2>&1 &
+    SLEEP_WAIT 2
     SSH_CMD "echo test | nc ${NODE1_IPV4} 5555" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 1
 
@@ -63,13 +69,13 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    sudo firewall-cmd --zone=public --remove-rich-rule 'rule family=ipv4 source address='$source_ip'/16 accept'
-    sudo firewall-cmd --zone=public --remove-rich-rule 'rule family=ipv4 source address='$source_ip'/16 drop'
+    sudo firewall-cmd --zone=public --remove-rich-rule 'rule family=ipv4 source address='"$source_ip"'/16 accept'
+    sudo firewall-cmd --zone=public --remove-rich-rule 'rule family=ipv4 source address='"$source_ip"'/16 drop'
     sudo firewall-cmd --reload
     sudo systemctl start firewalld
     rm -rf /tmp/tmp_log
-    kill -9 $(pgrep -f 'nc -l -p 5555')
-    DNF_REMOVE
+    kill -9 "$(pgrep -f 'nc -l -p 5555')"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
