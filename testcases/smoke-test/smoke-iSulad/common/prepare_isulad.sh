@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   prepare isulad
 # ############################################
-
+# shellcheck disable=SC2068,SC2034,SC2119,SC1091,SC2154
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_isulad_env() {
