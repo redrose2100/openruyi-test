@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   prepare isulad
 # ############################################
-# shellcheck disable=SC2068,SC2034,SC2119,SC1091,SC2154
+
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_isulad_env() {
@@ -51,29 +51,4 @@ function clean_isulad_env() {
     test -z "$(isula images -q)"
     rm -rf ../common/openEuler-docker.${NODE1_FRAME}.tar.xz
     CHECK_RESULT $?
-}
-
-function pre_isula_build_env() {
-    DNF_INSTALL "isula-build docker-runc iSulad"
-
-    if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then
-        os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | tr '()' '- ' | sed s/[[:space:]]//g)
-    else
-        if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "LTS"; then
-            os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | awk -F ' ' '{print$1"-"$2}')
-        else
-            os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}')
-        fi
-    fi
-    wget --no-check-certificate -q -P ../common/ \
-        https://repo.openeuler.org/openEuler-"${os_version}"/docker_img/"${NODE1_FRAME}"/openEuler-docker."${NODE1_FRAME}".tar.xz
-
-    isula-build ctr-img load -i ../common/openEuler-docker."${NODE1_FRAME}".tar.xz
-    images_name=$(isula-build ctr-img images | grep "docker.io/library/openeuler" | awk '{print$1}')
-}
-
-function clean_isula_build_env() {
-    rm -rf ../common/openEuler-docker."${NODE1_FRAME}".tar.xz
-    isula-build ctr-img rm -a
-    DNF_REMOVE
 }
