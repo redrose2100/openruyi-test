@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   isula-build test common
 # ############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC2068,SC2034,SC2119,SC1091,SC2154
 source ../common/prepare_isulad.sh
 
 function pre_test() {
