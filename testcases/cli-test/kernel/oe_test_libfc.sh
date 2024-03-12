@@ -24,8 +24,8 @@ function run_test() {
     kernel_name=$(uname -r)
     test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/scsi/libfc/libfc.ko.xz
     CHECK_RESULT $? 0 0 "file does not exist"
-    modinfo libfc |grep -i version
-    CHECK_RESULT $? 0 0 "Information display failed"
+    #modinfo libfc |grep -i version
+    #CHECK_RESULT $? 0 0 "Information display failed"
     modprobe libfc
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep libfc

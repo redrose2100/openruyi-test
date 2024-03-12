@@ -21,7 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    mkdir -p "/tmp/test_rocksdb_java" && cd "/tmp/test_rocksdb_java"
+    #mkdir -p "/tmp/test_rocksdb_java" && cd "/tmp/test_rocksdb_java"
+    mkdir -p "/tmp/test_rocksdb_java"
     DNF_INSTALL "rocksdb rocksdbjni java-1.8.0-openjdk-devel"
     LOG_INFO "End to prepare the test environment."
 }
@@ -39,8 +40,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /tmp/test_rocksdb_java
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
