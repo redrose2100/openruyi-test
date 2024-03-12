@@ -17,39 +17,39 @@
 # @Desc      :   Test groovy
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "groovy18 tar"
-    tar -xvf common/data.tar.gz > /dev/null
+    tar -xvf common/data.tar.gz >/dev/null
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     groovy18c -d classes -cp ./lib/zipfs.jar ./data/Script.groovy
-    ls ./classes | grep Script.class
+    test -f ./classes/Script.class
     CHECK_RESULT $? 0 0 "Check groovy18c -cp failed"
     rm -rf classes
     groovy18c -d classes --sourcepath data/ ./data/Script.groovy
-    ls ./classes | grep Script.class
+    test -f ./classes/Script.class
     CHECK_RESULT $? 0 0 "Check groovy18c --sourcepath failed"
     rm -rf classes
     groovy18c --temp classes ./data/Script.groovy
-    ls  | grep Script.class
+    test -f ./Script.class
     CHECK_RESULT $? 0 0 "Check groovy18c --temp failed"
     rm -f Script.class
     groovy18c -d classes -Jname=jack ./data/Script.groovy
-    ls ./classes | grep Script.class
+    test -f ./classes/Script.class
     CHECK_RESULT $? 0 0 "Check groovy18c -J failed"
     rm -rf classes
-    groovy18c --baseScript ./classes/Script.class ./data/Person.groovy
-    ls | grep Person.class
+    groovy18c --baseScript ./classes/Script.class ./data/Person.groovy || groovy18c --basescript ./classes/Script.class ./data/Person.groovy
+    test -f ./Person.class
     CHECK_RESULT $? 0 0 "Check groovy18c --baseScript failed"
     rm -f Person.class
     groovy18c -b ./classes/Script.class ./data/Person.groovy
-    ls | grep Person.class
+    test -f ./Person.class
     CHECK_RESULT $? 0 0 "Check groovy18c -b failed"
     rm -f Person.class
     LOG_INFO "End to run test."
@@ -57,7 +57,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./data
     LOG_INFO "End to restore the test environment."
 }

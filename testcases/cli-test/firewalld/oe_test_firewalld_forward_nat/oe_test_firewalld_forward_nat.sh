@@ -32,6 +32,9 @@ function pre_test() {
     zone1=$(sudo firewall-cmd --get-zone-of-interface="$NODE1_NIC")
     zone2=$(sudo firewall-cmd --get-zone-of-interface="$net_card2")
     cp /etc/sysctl.conf /etc/sysctl.conf.bak
+    sudo ip addr add 192.168.100.10/24 dev "$NODE1_NIC"
+    SSH_CMD "ip addr add 192.168.100.20/24 dev $NODE2_NIC" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -44,7 +47,8 @@ function run_test() {
     sudo ifconfig "$net_card2" up
     SSH_CMD "sudo ifconfig $remote_net_card2 192.168.100.2/24;sudo ifconfig $remote_net_card2 up;sudo route add default  gw 192.168.100.1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SLEEP_WAIT 2
-    SSH_CMD "ping baidu.com -I $remote_net_card2 -c 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "ping baidu.com -I $NODE2_NIC -c 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+
     CHECK_RESULT $? 0 1
     echo net.ipv4.ip_forward=1 >>/etc/sysctl.conf
     sysctl -p
@@ -61,7 +65,7 @@ function run_test() {
     CHECK_RESULT $?
 
     SLEEP_WAIT 2
-    SSH_CMD "ping baidu.com -I $remote_net_card2 -c 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "ping baidu.com -I $NODE2_NIC -c 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
@@ -70,17 +74,18 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     sudo firewall-cmd --direct --passthrough ipv4 -t nat -D POSTROUTING -o"$NODE1_NIC" -j MASQUERADE -s 192.168.100.0/24
     sudo firewall-cmd --zone=external --remove-masquerade
-    if [ ! -z "$zone1" ]; then
+    if [ -n "$zone1" ]; then
         sudo firewall-cmd --zone="$zone1" --change-interface="$NODE1_NIC"
     fi
-    if [ ! -z "$zone2" ]; then
+    if [ -n "$zone2" ]; then
         sudo firewall-cmd --zone="$zone2" --change-interface="$net_card2"
     else
         sudo firewall-cmd --zone=internal --remove-interface="$net_card2"
     fi
     sudo ip addr del 192.168.100.1 dev "$net_card2"
-    DNF_REMOVE 
-    SSH_CMD "sudo ip addr del 192.168.100.2 dev $remote_net_card2;sudo route del default  gw 192.168.100.1;sleep 2;sudo dnf remove -y net-tools" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    sudo ip addr del 192.168.100.10/24 dev "$NODE1_NIC"
+    DNF_REMOVE "$@"
+    SSH_CMD "sudo ip addr del 192.168.100.2 dev $remote_net_card2;sudo ip addr del 192.168.100.20/24 dev $NODE2_NIC;sudo route del default  gw 192.168.100.1;sleep 2;sudo dnf remove -y net-tools" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     mv /etc/sysctl.conf.bak /etc/sysctl.conf
     sudo firewall-cmd --reload
     systemctl restart firewalld
