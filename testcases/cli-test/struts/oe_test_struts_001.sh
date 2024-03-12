@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "struts"
     mkdir /tmp/test
-    cd /tmp/test
+    cd /tmp/test || exit
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,10 +35,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Decompression failure"
     #yum download struts
     echo y | yum reinstall --downloadonly --downloaddir ./ struts
-    cd checkSo/;chmod 755 *
+    cd checkSo/ || exit;chmod 755 *
     ./main.sh /tmp/test/struts*.rpm | grep 'unpack file /checkSo/tmp_unzip/struts';testtime=$(date)
     CHECK_RESULT $? 0 0 "Execution failure"
-    [[ `cat JarResult.log |wc -l` -eq 0 ]]
+    [[ $(cat JarResult.log |wc -l) -eq 0 ]]
     CHECK_RESULT $? 0 0 "Execution failure2"
     cat NonJarResult.log | grep "$testtime"
     CHECK_RESULT $? 0 0 "Execution failure3"
@@ -47,7 +47,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /tmp/test
     unset testtime
     LOG_INFO "End to restore the test environment."

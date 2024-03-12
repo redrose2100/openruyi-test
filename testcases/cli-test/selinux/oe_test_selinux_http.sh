@@ -39,12 +39,12 @@ function run_test() {
     #systemctl status httpd 2>&1 | grep "Failed to start The Apache HTTP Server"
     systemctl status httpd 2>&1 | grep "Started The Apache HTTP Server"
     CHECK_RESULT $? 0 0 "Check httpd status failed"
-    semanage port -a -t http_port_t -p tcp $rdport
+    semanage port -a -t http_port_t -p tcp "$rdport"
     semanage fcontext -a -e /var/www /var/test_www
     restorecon -Rv /var/
     chmod 777 -R /var/test_www
     systemctl restart httpd
-    wget localhost:$rdport/index.html
+    wget localhost:"$rdport"/index.html
     CHECK_RESULT $? 0 0 "Check wget failed"
     LOG_INFO "Finish testcase execution."
 }
@@ -53,9 +53,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     mv -f /etc/httpd/conf/httpd.conf-bak /etc/httpd/conf/httpd.conf
     semanage fcontext -d -e /var/www /var/test_www
-    semanage port --delete -t ssh_port_t -p tcp $rdport
+    semanage port --delete -t ssh_port_t -p tcp "$rdport"
     systemctl stop httpd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /var/test_www index.html /home/http_status.txt
     LOG_INFO "Finish environment cleanup!"
 }

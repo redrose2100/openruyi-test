@@ -31,17 +31,17 @@ function run_test() {
     CHECK_RESULT $?
     SLEEP_WAIT 5 "lsmod | grep faulty && modprobe -r faulty" 2
     CHECK_RESULT $?
-    insmod -p $raid0Path
+    insmod -p "$raid0Path"
     CHECK_RESULT $?
     lsmod | grep raid0
     CHECK_RESULT $?
-    insmod -p $faultyPath
+    insmod -p "$faultyPath"
     CHECK_RESULT $?
     lsmod | grep faulty
     CHECK_RESULT $?
-    insmod $raid0Path
+    insmod "$raid0Path"
     CHECK_RESULT $? 1
-    insmod $faultyPath
+    insmod "$faultyPath"
     CHECK_RESULT $? 1
     LOG_INFO "End of the test."
 }

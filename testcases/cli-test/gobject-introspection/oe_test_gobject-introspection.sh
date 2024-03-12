@@ -40,8 +40,7 @@ int main() {
 EOF
     CHECK_RESULT $? 0 0 "File creation failed"
     conf=$(pkg-config --cflags --libs gobject-introspection-1.0)
-    #gcc -o test test.c "$conf"
-    gcc -o test test.c $conf
+    gcc -o test test.c "$conf"
     CHECK_RESULT $? 0 0 "Compilation failed"
     test -f test
     CHECK_RESULT $? 0 0 "File generation failed"

@@ -17,7 +17,7 @@
 # @Desc      :   Test zerofree
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
@@ -48,7 +48,7 @@ function run_test() {
     zerofreed_n_sparsed_size="$(du ./images/zerofreed_n_sparsed.img | awk '{print $1}')"
     [ "$sparsed_size" -eq "$zerofreed_n_sparsed_size" ]
     CHECK_RESULT $? 0 0 "Failed to achieve expect result, option: -n"
-    zerofree -v ./images/fs.img | grep -E '*/*/*'
+    zerofree -v ./images/fs.img | grep -E '/*/'
     CHECK_RESULT $? 0 0 "Failed to use option: -v"
     cp --sparse=always ./images/fs.img ./images/zerofreed_sparsed.img
     CHECK_RESULT $? 0 0 "Failed to achieve expect result, option: -v"

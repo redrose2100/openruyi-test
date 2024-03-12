@@ -33,9 +33,9 @@ function run_test() {
     CHECK_RESULT $?
     if ! hostnamectl | grep Virtualization; then
         current_frequency=$(cpupower frequency-info | grep "current CPU frequency" | awk -F ": " '{print $2}' | awk '{print $1}')
-        if [[ '$NODE1_FRAME'x == 'ppc64le'x ]];then
-	    cpupower_frq_tmp=`cpupower frequency-info | grep -i 'hardware limits' | awk '{print$3}'`
-            cpupower frequency-set -f $cpupower_frq_tmp"GHz"
+        if [[ "$NODE1_FRAME"x == "ppc64le"x ]];then
+		cpupower_frq_tmp=$(cpupower frequency-info | grep -i 'hardware limits' | awk '{print$3}')
+            cpupower frequency-set -f "${cpupower_frq_tmp}"GHz
             CHECK_RESULT $?
             cpupower frequency-info | grep "current CPU frequency" | grep "$cpupower_frq_tmp GHz"
             CHECK_RESULT $?
@@ -55,7 +55,7 @@ function run_test() {
     CHECK_RESULT $?
     cpupower idle-set -e 2
     CHECK_RESULT $?
-    if [[ '$NODE1_FRAME'x == 'ppc64le'x ]];then
+    if [[ "$NODE1_FRAME"x == "ppc64le"x ]];then
         cpupower info | grep "analyzing CPU 0"
         CHECK_RESULT $?
     fi
@@ -68,7 +68,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the tet environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish to restore the tet environment."
 }
 

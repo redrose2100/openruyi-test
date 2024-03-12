@@ -45,7 +45,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "file cannot determin hello.txt file type."
     file -b hello.tar.gz | grep "gzip"
     CHECK_RESULT $? 0 0 "file cannot determin hello.tar.gz file type."
-    if [[ '$NODE1_FRAME'x == 'ppc64le'x ]];then
+    if [[ "$NODE1_FRAME"x == "ppc64le"x ]];then
         file -b "$(whereis ls | cut -d ' ' -f 2)" | grep -P "$endian.*64-bit PowerPC"
     else
         file -b "$(whereis ls | cut -d ' ' -f 2)" | grep -P "$endian.*$arch"

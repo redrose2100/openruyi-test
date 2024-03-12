@@ -17,13 +17,13 @@
 # @Desc      :   Test dbus-org.freedesktop.login1.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution dbus-org.freedesktop.login1.service
     #test_reload dbus-org.freedesktop.login1.service
-    if [[ '$NODE1_FRAME' == 'ppc64le'x ]];then
+    if [[ "$NODE1_FRAME" == 'ppc64le'x ]];then
         systemctl reload dbus-org.freedesktop.login1.service
         CHECK_RESULT $? 0 0 "dbus-org.freedesktop.login1.service reload failed"
         systemctl status dbus-org.freedesktop.login1.service | grep "Active: active"
