@@ -120,6 +120,9 @@
         },
         {
             "name": "oe_test_libfastjson_test_001"
+	},
+	{
+            "name": "oe_test_libsemanage_test_001"
         }
     ]
 }
