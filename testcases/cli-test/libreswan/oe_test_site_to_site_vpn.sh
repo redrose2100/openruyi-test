@@ -21,8 +21,8 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "libreswan net-tools"
-    DNF_INSTALL "libreswan net-tools" 2
+    DNF_INSTALL "libreswan net-tools firewalld"
+    DNF_INSTALL "libreswan net-tools firewalld" 2
     systemctl start firewalld
     LOG_INFO "End of environmental preparation!"
 }
@@ -56,7 +56,7 @@ function run_test() {
     P_SSH_CMD --cmd  "ifconfig ${NODE2_NIC} | grep netmask >/tmp/right_mask.txt" --node 2
     CHECK_RESULT $?
     SSH_SCP ${NODE2_USER}@${NODE2_IPV4}:/tmp/right_mask.txt /tmp ${NODE2_PASSWORD}
-    P_SSH_CMD --cmd  "ip -6 route show dev ${NODE1_NIC}>/tmp/right6_mask.txt" --node 2
+    P_SSH_CMD --cmd  "ip -6 route show dev ${NODE2_NIC}>/tmp/right6_mask.txt" --node 2
     CHECK_RESULT $?
     SSH_SCP ${NODE2_USER}@${NODE2_IPV4}:/tmp/right6_mask.txt /tmp ${NODE2_PASSWORD}
     right_mask=$(cat /tmp/right_mask.txt | awk '{print $4}')
@@ -83,11 +83,12 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop ipsec
+    systemctl stop firewalld
     firewall-cmd --remove-service="ipsec"
     firewall-cmd --runtime-to-permanent
-    P_SSH_CMD --cmd  "systemctl stop ipsec;firewall-cmd --remove-service=ipsec;firewall-cmd --runtime-to-permanent" --node 2
+    P_SSH_CMD --cmd  "systemctl stop ipsec;systemctl stop firewalld;firewall-cmd --remove-service=ipsec;firewall-cmd --runtime-to-permanent" --node 2
     DNF_REMOVE
-    DNF_REMOVE 2 "net-tools libreswan"
+    DNF_REMOVE 2 "net-tools libreswan firewalld"
     rm -rf /tmp/*.txt /etc/ipsec.d/* /var/lib/ipsec/nss/*.db
     P_SSH_CMD --cmd  "rm -rf /tmp/*.txt /etc/ipsec.d/* /var/lib/ipsec/nss/*.db" --node 2
     LOG_INFO "Finish environment cleanup!"

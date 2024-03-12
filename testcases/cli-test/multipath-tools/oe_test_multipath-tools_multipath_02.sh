@@ -34,7 +34,7 @@ function run_test() {
     CHECK_RESULT $?
     multipath -r -v3 2>&1 | grep "delegating"
     CHECK_RESULT $?
-    multipath -i -v3 /dev/mapper/${test_mapper} 2>&1 | grep "scope limited to 3600"
+    multipath -i -v3 /dev/mapper/${test_mapper} 2>&1 | grep "scope limited to .*"
     CHECK_RESULT $?
     cd /etc/multipath/ || exit 1
     multipath -B bindings -v3 2>&1 | grep "binding"

@@ -17,6 +17,13 @@
 # @Desc      :   Display current configuration information
 # #############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    dnf install "dnf-command(config-manager)" -y
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase."
     dnf config-manager --dump
@@ -28,6 +35,12 @@ function run_test() {
     dnf config-manager --dump "${repoid}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    dnf remove "dnf-command(config-manager)" -y
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main $@

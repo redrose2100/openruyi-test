@@ -33,7 +33,11 @@ function run_test() {
     lshw -c memory | grep "bank" -A 5 | grep "description:"
     CHECK_RESULT $?
 
-    lshw -c memory | grep "firmware" -A 5 | grep "vendor"
+    if [ "$NODE1_FRAME"x == "ppc64le"x ];then
+        lshw -c memory |grep vendor |uniq
+    else
+        lshw -c memory | grep "firmware" -A 5 | grep "vendor"
+    fi
     CHECK_RESULT $?
     if [[ "$(dmidecode -s system-product-name)" =~ "KVM" ]]; then
         lshw -c memory | grep "bank" -A 5 | grep "size"
