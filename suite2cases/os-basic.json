@@ -877,6 +877,18 @@
         },
 	{
 	  "name": "oe_test_bzgrep"
+	},
+        	{
+	  "name": "oe_test_ipcs"
+	},
+	{
+	  "name": "oe_test_nl"
+	},
+        {
+	  "name": "oe_test_nice"
+	},
+        {
+	  "name": "oe_test_libuv"
 	}
     ]
 }
