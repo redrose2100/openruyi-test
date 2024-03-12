@@ -23,7 +23,7 @@ function pre_test(){
     LOG_INFO "Start environment preparation."
     mkdir -p /tmp/test
     path=/tmp/test
-    cat > ${path}/test.c  <<EOF
+    cat > "$path"/test.c  <<EOF
 #include<stdio.h>
 int main(void)
 {
@@ -39,25 +39,25 @@ EOF
 function run_test() {
     LOG_INFO "Start testing..."
     fream=$(arch)
-    cd ${path}&&gcc --print-file-name=plugin > ${path}/test1
-    grep /usr/lib/gcc/"${fream}"-linux-gnu/*/plugin ${path}/test1
+    cd "$path" && gcc --print-file-name=plugin > "$path"/test1
+    grep /usr/lib/gcc/"$fream"-linux-gnu/*/plugin "$path"/test1
     CHECK_RESULT $? 0 0 "directory file error"
-    ls /usr/lib/gcc/"${fream}"-linux-gnu/*/plugin/ > ${path}/test2
-    grep "annobin.so" ${path}/test2
+    ls /usr/lib/gcc/"$fream"-linux-gnu/*/plugin/ > "$path"/test2
+    grep "annobin.so" "$path"/test2
     CHECK_RESULT $? 0 0 "Library files fails"
     gcc -fplugin=annobin test.c
-    ./a.out > ${path}/test3
-    grep "Hello，world!" ${path}/test3
+    ./a.out > "$path"/test3
+    grep "Hello，world!" "$path"/test3
     CHECK_RESULT $? 0 0 "executable file fails"
-    rm ${path}/a.out
+    rm "$path"/a.out
     gcc -fplugin=annobin -fplugin-arg-annobin-verbose test.c
-    test -f ${path}/a.out
+    test -f "$path"/a.out
     CHECK_RESULT $? 0 0 "a.out file fails"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf ${path}
+    rm -rf "$path"
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
