@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "firewalld nc"
     sudo systemctl start firewalld
     source_ip=$(echo "${NODE1_IPV4%\.*\.*}.0.0")
     LOG_INFO "End of environmental preparation!"
@@ -66,7 +67,7 @@ function post_test() {
     sudo firewall-cmd --zone=public --remove-rich-rule 'rule family=ipv4 source address='$source_ip'/16 accept'
     sudo firewall-cmd --zone=public --remove-rich-rule 'rule family=ipv4 source address='$source_ip'/16 drop'
     sudo firewall-cmd --reload
-    sudo systemctl start firewalld
+    sudo systemctl stop firewalld
     rm -rf /tmp/tmp_log
     kill -9 $(pgrep -f 'nc -l -p 5555')
     DNF_REMOVE

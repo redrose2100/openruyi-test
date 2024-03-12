@@ -32,7 +32,7 @@ function run_test()
 {
     LOG_INFO "Start testing..."
     cd /home
-    xzcmp 1.txt.xz 2.txt.xz|grep "不同"
+    xzcmp 1.txt.xz 2.txt.xz|grep -E "不同|differ"
     CHECK_RESULT $? 0 0 "bzcmp function error" 
     LOG_INFO "Finish test!"
 }

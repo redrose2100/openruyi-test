@@ -20,10 +20,17 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    grep -c id /proc/cpuinfo
-    CHECK_RESULT $?
-    grep -n id /proc/cpuinfo
-    CHECK_RESULT $?
+    if [ "$NODE1_FRAME" == "ppc64le" ];then 
+        grep -c processor /proc/cpuinfo
+        CHECK_RESULT $?
+        grep -n processor /proc/cpuinfo
+        CHECK_RESULT $?
+    else
+        grep -c id /proc/cpuinfo
+        CHECK_RESULT $?
+        grep -n id /proc/cpuinfo
+        CHECK_RESULT $?
+    fi
     ps -aux | grep "root"
     CHECK_RESULT $?
     grep --help | grep "Usage"

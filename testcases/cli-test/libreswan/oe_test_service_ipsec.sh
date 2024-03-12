@@ -31,7 +31,11 @@ function run_test() {
     systemctl start ipsec.service
     sed -i 's\ExecStart=/usr/libexec/ipsec/pluto\ExecStart=/usr/libexec/ipsec/pluto --debug\g' /usr/lib/systemd/system/ipsec.service
     systemctl daemon-reload
-    systemctl reload ipsec.service
+    if [ "$NODE1_FRAME" == "ppc64le" ];then
+        systemctl restart ipsec.service
+    else
+        systemctl reload ipsec.service
+    fi
     CHECK_RESULT $? 0 0 "ipsec.service reload failed"
     systemctl status ipsec.service | grep "Active: active"
     CHECK_RESULT $? 0 0 "ipsec.service reload causes the service status to change"
