@@ -29,7 +29,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL zerofree
     mkdir ./testmnt ./images
-    dd if=/dev/zero of=./images/fs.img bs=1M count=1024
+    dd if=/dev/zero of=./images/fs.img bs=5M count=1024
     mkfs.ext3 -F ./images/fs.img
     mount ./images/fs.img ./testmnt
     yes abcdefghijklmnopqrstuvwxyz0123456789 >./testmnt/largefile
