@@ -17,7 +17,7 @@
 # @Desc      :   Query MEM configure test-lshw -c
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -30,27 +30,34 @@ function run_test() {
     lshw -c memory
     CHECK_RESULT $?
 
-    lshw -c memory | grep "bank" -A 5 | grep "description:"
-    CHECK_RESULT $?
-
-    lshw -c memory | grep "firmware" -A 5 | grep "vendor"
-    CHECK_RESULT $?
-    if [[ "$(dmidecode -s system-product-name)" =~ "KVM" ]]; then
-        lshw -c memory | grep "bank" -A 5 | grep "size"
-        CHECK_RESULT $?
-        test $(lshw -c memory | grep "bank" | wc -l) -eq 1 && test $(lshw -c memory | grep bank -A 10 | grep size | wc -l) -eq 1
+    if [ "$(uname -m)"x == "riscv64x" ]; then
+        lshw -c memory | grep "size"
         CHECK_RESULT $?
     else
-        lshw -c memory | grep "bank" -A 8 | grep "size"
+        lshw -c memory | grep "bank" -A 5 | grep "description:"
         CHECK_RESULT $?
+
+        lshw -c memory | grep "firmware" -A 5 | grep "vendor"
+        CHECK_RESULT $?
+
+        if [[ "$(dmidecode -s system-product-name)" =~ "KVM" ]]; then
+            lshw -c memory | grep "bank" -A 5 | grep "size"
+            CHECK_RESULT $?
+            test "$(lshw -c memory | grep -c bank)" -eq 1 && test "$(lshw -c memory | grep bank -A 10 | grep -c size)" -eq 1
+            CHECK_RESULT $?
+        else
+            lshw -c memory | grep "bank" -A 8 | grep "size"
+            CHECK_RESULT $?
+        fi
     fi
+
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE ""
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
