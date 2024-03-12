@@ -27,9 +27,9 @@ function pre_test() {
     fi
     mkdir -p /amanda /amanda/vtapes/slot{1,2,3,4} /amanda/holding /amanda/state/{curinfo,log,index} /etc/amanda/MyConfig
     cp ./common/amanda.conf /etc/amanda/MyConfig
-    echo "localhost /etc simple-gnutar-local" > /etc/amanda/MyConfig/disklist
+    echo "localhost /etc simple-gnutar-local" >/etc/amanda/MyConfig/disklist
     cp ./common/backup-pubkey.pem /var/lib/amanda/backup-pubkey.pem
-    su - amandabackup -c "echo "MyConfig" > /var/lib/amanda/.am_passphrase"
+    su - amandabackup -c "echo \"MyConfig\" > /var/lib/amanda/.am_passphrase"
     chown -R amandabackup.disk /amanda /etc/amanda
     su - amandabackup -c "amdump MyConfig"
     LOG_INFO "End to prepare the test environment."
@@ -48,16 +48,18 @@ function run_test() {
     su - amandabackup -c "amgpgcrypt" 2>&1 | grep "gpg-agent"
     CHECK_RESULT $? 0 0 "Check amgpgcrypt failed"
     su - amandabackup -c "amtape MyConfig show"
-    export logdir=$(amgetconf MyConfig logdir) && export log=$(ls -1t $logdir/log.*.[0-9] | head -1)
+    logdir=$(amgetconf MyConfig logdir)
+    log=$(find "$logdir" -name "log.*.[0-9]" | head -1)
+    export logdir && export log
     su - amandabackup -c "amtoc -a $log"
     CHECK_RESULT $? 0 0 "Check amtoc failed"
-    su - amandabackup -c "amtape MyConfig show" 2>&1 | grep "scanning all 4 slots" 
+    su - amandabackup -c "amtape MyConfig show" 2>&1 | grep "scanning all 4 slots"
     CHECK_RESULT $? 0 0 "Check amtape failed"
-    nohup amcrypt-ossl > tmp.txt 2>&1 &
+    nohup amcrypt-ossl >tmp.txt 2>&1 &
     SLEEP_WAIT 2
-    grep "would be better" tmp.txt
+    grep -E "would be better|Salted" tmp.txt
     CHECK_RESULT $? 0 0 "Check amcrypt-ossl failed"
-    nohup amcrypt-ossl-asym > tmp.txt 2>&1 &
+    nohup amcrypt-ossl-asym >tmp.txt 2>&1 &
     SLEEP_WAIT 2
     grep "would be better" tmp.txt
     CHECK_RESULT $? 0 0 "Check amcrypt-ossl-asym failed"
@@ -66,8 +68,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf /amanda /etc/amanda tmp.txt
+    DNF_REMOVE "$@"
+    rm -rf /amanda /etc/amanda tmp.txt /var/lib/amanda
     LOG_INFO "End to restore the test environment."
 }
 
