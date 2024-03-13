@@ -17,7 +17,7 @@
 # @Desc      :   File system common command test-grep
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start executing testcase!"
     if [ "$NODE1_FRAME" == "ppc64le" ];then 

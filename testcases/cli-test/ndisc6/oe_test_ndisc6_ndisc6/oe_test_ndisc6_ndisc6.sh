@@ -16,7 +16,7 @@
 # @Desc      :   The usage of commands in ndisc6 package
 # ############################################
 
-source "$OET_PATH/testcases/cli-test/ndisc6/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/ndisc6/common/common_ndisc6.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
