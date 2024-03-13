@@ -21,10 +21,10 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "amanda openssl"
+    DNF_INSTALL "amanda openssl make"
     wget https://loop-aes.sourceforge.net/aespipe-latest.tar.bz2
     tar -xvf aespipe-latest.tar.bz2
-    cd aespipe-v2.4f || exit
+    cd aespipe-v2.4* || exit
     ./configure
     make && make install
     cd - || exit
