@@ -16,18 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test iftop GUI
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL iftop
-    DNF_INSTALL bind-utils
-    DNF_INSTALL ipcalc
+    DNF_INSTALL "iftop bind-utils ipcalc"
+    # net_name=$(ip addr|grep "UP group default"|awk -F ":" '{print $2}')
     ipv4_target_addr=$(host huawei.com | grep 'has address' | awk '{print $4}')
-    ipv4_target_network=$(ipcalc -n $ipv4_target_addr/24 | cut -d '=' -f2)
-    ipv6_target_addr=$(host huawei.com | grep 'IPv6' | awk '{print $5}')
-    ipv6_target_network=$(ipcalc -n $ipv6_target_addr/64 | cut -d '=' -f2)
+    ipv4_target_network=$(ipcalc -n "$ipv4_target_addr"/24 | cut -d '=' -f2)
+    ip_vir4=$(ip addr | grep 22 | grep inet | grep "global dynamic" | awk '{print $2}' | awk -F "/" '{print $1}')
+    ip_vir6=$(ip addr | grep 64 | grep inet6 | grep "scope link" | awk '{print $2}' | awk -F "/" '{print $1}')
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -42,9 +41,11 @@ function run_test() {
         expect eof
 EOF
     ls ./opt_b
-    CHECK_RESULT  $? 0 0 "Failed to use option: -b"
+    CHECK_RESULT $? 0 0 "Failed to use option: -b"
     rm -f ./opt_b
-    ping $ipv4_target_addr -c 100 > /dev/null 2>&1 &
+    ping "$ipv4_target_addr" -c 100 >/dev/null 2>&1 &
+    SLEEP_WAIT 2
+    kill -9 "$(pgrep -f 'iftop -b')"
     expect <<EOF
         spawn iftop -n -F $ipv4_target_network/24
         expect "$ipv4_target_addr" {
@@ -53,14 +54,16 @@ EOF
         send "q"
         expect eof
 EOF
+    SLEEP_WAIT 1
     ls ./opt_F
     CHECK_RESULT $? 0 0 "Failed to use option: -F"
     rm -f ./opt_F
     pkill -f 'ping'
-    ping -6 $ipv6_target_addr -c 100 > /dev/null 2>&1 &
+    kill -9 "$(pgrep -f 'iftop -n -F')"
+    ping -6 "$ip_vir6"/64 -c 100 >/dev/null 2>&1 &
     expect <<EOF
-        spawn iftop -G $ipv6_target_network
-        expect "$ipv6_target_addr" {
+        spawn iftop -G $ip_vir6
+        expect "$ip_vir4" {
             exec touch ./opt_G
         }
         send "q"
@@ -355,9 +358,9 @@ EOF
         send "q"
         expect eof
 EOF
-    ls ./gui_2  
-    CHECK_RESULT $? 0 0 "Failed to use GUI key: 2"  
-    rm -f ./gui_2  
+    ls ./gui_2
+    CHECK_RESULT $? 0 0 "Failed to use GUI key: 2"
+    rm -f ./gui_2
     expect <<EOF
         spawn iftop
         send "3"  
@@ -367,10 +370,10 @@ EOF
         send "q"
         expect eof
 EOF
-        ls ./gui_3  
-        CHECK_RESULT $? 0 0 "Failed to use GUI key: 3"  
-        rm -f ./gui_3  
-        expect <<EOF
+    ls ./gui_3
+    CHECK_RESULT $? 0 0 "Failed to use GUI key: 3"
+    rm -f ./gui_3
+    expect <<EOF
         spawn iftop
         send "o"  
         expect "Order frozen" {
@@ -379,15 +382,15 @@ EOF
         send "q"
         expect eof
 EOF
-    ls ./gui_o  
-    CHECK_RESULT $? 0 0 "Failed to use GUI key: o"  
-    rm -f ./gui_o  
+    ls ./gui_o
+    CHECK_RESULT $? 0 0 "Failed to use GUI key: o"
+    rm -f ./gui_o
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
