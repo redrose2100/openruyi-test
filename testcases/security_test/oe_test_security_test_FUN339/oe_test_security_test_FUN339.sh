@@ -18,6 +18,12 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL iptables
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test()
 {
     LOG_INFO "Start to run test."
@@ -38,4 +44,9 @@ function run_test()
     LOG_INFO "End to run test."
 }
 
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
+}
 main "$@"

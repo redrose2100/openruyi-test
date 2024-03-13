@@ -23,7 +23,7 @@ function pre_test() {
     Default_LANG=$LANG
     export LANG=en_US.UTF-8
     rm -rf ./*.rpm
-    DNF_INSTALL "createrepo"
+    DNF_INSTALL "createrepo dnf-plugins-core"
     rpm -qa |grep gpg-pubkey || rpm --import "$(rpm -qa |grep gpg-keys |xargs rpm -ql |grep -i euler)"
     yumdownloader libatomic
     wget https://rpmfind.net/linux/centos/8-stream/BaseOS/"$(arch)"/os/Packages/libatomic-8.5.0-20.el8."$(arch)".rpm

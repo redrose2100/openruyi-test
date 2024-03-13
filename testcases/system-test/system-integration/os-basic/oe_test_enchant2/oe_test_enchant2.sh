@@ -31,10 +31,11 @@ function run_test()
     CHECK_RESULT $? 0 0 "check command fail" 
     enchant-lsmod-2 | grep hunspell    
     CHECK_RESULT $? 0 0 "Language module detection failed"
-    enchant-2 -h | grep Usage
+    enchant-2 -h >/tmp/enchant_Usage.txt 2>&1
+    grep Usage < /tmp/enchant_Usage.txt
     CHECK_RESULT $? 0 0 "check command fail"
     echo "there is a testj" > /tmp/test.txt
-    enchant-2 -d en_US -a  test.txt | grep test
+    enchant-2 -d en_US -a  /tmp/test.txt | grep test
     CHECK_RESULT $? 0 0 "check spelling failed"
     LOG_INFO "Finish test!"
 }
@@ -42,6 +43,8 @@ function run_test()
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE "$@"
+    rm -rf /tmp/test.txt
+    rm -rf /tmp/enchant_Usage.txt
     LOG_INFO "Finish environment cleanup!"
 }
 
