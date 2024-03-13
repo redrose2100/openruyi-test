@@ -16,12 +16,19 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Display current configuration information
 # #############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    dnf install "dnf-command(config-manager)" -y
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase."
     dnf config-manager --dump
     CHECK_RESULT $?
-    num_id=$(dnf repolist | dnf repolist | grep "repo id" -A 5 | wc -l)
+    num_id=$(dnf repolist |wc -l)
     test "${num_id}" -gt 1
     CHECK_RESULT $?
     repoid=$(dnf repolist | grep "repo id" -A 1 | grep -v "repo id" | awk -F ' ' '{print$1}')
@@ -30,4 +37,10 @@ function run_test() {
     LOG_INFO "End of testcase execution."
 }
 
-main $@
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    dnf remove "dnf-command(config-manager)" -y
+    LOG_INFO "Finish environment cleanup!"
+}
+
+main "$@"
