@@ -21,7 +21,11 @@ source ../common/prepare_isulad.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "isula-build docker-runc iSulad"
+    if yum list | grep -q "docker-runc"; then
+        DNF_INSTALL "isula-build docker-runc iSulad"
+    else
+        DNF_INSTALL "isula-build runc iSulad"
+    fi
 
     if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then
         os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | tr '()' '- ' | sed s/[[:space:]]//g)
@@ -35,6 +39,7 @@ function pre_test() {
     wget --no-check-certificate -q -P ../common/ \
         https://repo.openeuler.org/openEuler-"${os_version}"/docker_img/"${NODE1_FRAME}"/openEuler-docker."${NODE1_FRAME}".tar.xz
 
+    systemctl restart isula-build
     isula-build ctr-img load -i ../common/openEuler-docker."${NODE1_FRAME}".tar.xz
     images_name=$(isula-build ctr-img images | grep "docker.io/library/openeuler" | awk '{print$1}')
     LOG_INFO "Environmental preparation is over."
