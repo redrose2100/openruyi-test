@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Query CPU configure test-lscpu
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $?
     lshw -c cpu | grep "capacity" | grep "Hz"
     CHECK_RESULT $?
-    if [ ${NODE1_FRAME}x == "aarch64"x ]; then
+    if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
         grep "0x48" /proc/cpuinfo
         CHECK_RESULT $?
     elif [ "$NODE1_FRAME"x == "ppc64le"x ]; then
@@ -51,7 +51,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE 
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

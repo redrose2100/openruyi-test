@@ -20,7 +20,7 @@ source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL "dump lvm2" 
+    DNF_INSTALL dump
     point_list=($(CREATE_FS "ext3 ext4"))
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         mnt_point=${point_list[$i]}
@@ -56,7 +56,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list=$(echo ${point_list[@]})
     REMOVE_FS "$list"
-    DNF_REMOVE
+    DNF_REMOVE dump
     rm -rf /tmp/*.bak.gz 
     LOG_INFO "End to restore the test environment."
 }

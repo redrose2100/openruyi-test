@@ -40,7 +40,7 @@ function run_test() {
         CHECK_RESULT $?
     fi
 
-    ps -aux | grep auditd
+    pgrep auditd -a
     CHECK_RESULT $?
 
     grep --help | grep "Usage"
@@ -64,4 +64,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

@@ -17,7 +17,7 @@
 # @Desc      :   Test ipsec.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/libreswan/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -47,7 +47,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/libexec/ipsec/pluto --debug\ExecStart=/usr/libexec/ipsec/pluto\g' /usr/lib/systemd/system/ipsec.service
     systemctl daemon-reload
     systemctl reload ipsec.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

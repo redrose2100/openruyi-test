@@ -42,7 +42,7 @@ function run_test() {
     if [[ "$(dmidecode -s system-product-name)" =~ "KVM" ]]; then
         lshw -c memory | grep "bank" -A 5 | grep "size"
         CHECK_RESULT $?
-        test $(lshw -c memory | grep "bank" | wc -l) -eq 1 && test $(lshw -c memory | grep bank -A 10 | grep size | wc -l) -eq 1
+        test $(lshw -c memory | grep "bank" -c) -eq 1 && test $(lshw -c memory | grep bank -A 10 | grep size -c) -eq 1
         CHECK_RESULT $?
     else
         lshw -c memory | grep "bank" -A 8 | grep "size"
@@ -53,8 +53,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

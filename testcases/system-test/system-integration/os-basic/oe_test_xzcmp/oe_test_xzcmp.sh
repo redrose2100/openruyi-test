@@ -20,7 +20,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    cd /home
+    cd /home || exit 
     echo "sdfasd1223123" > 1.txt
     xz 1.txt
     echo "223424435rrte" > 2.txt
@@ -31,7 +31,7 @@ function pre_test() {
 function run_test()
 {
     LOG_INFO "Start testing..."
-    cd /home
+    cd /home || exit 
     xzcmp 1.txt.xz 2.txt.xz|grep -E "不同|differ"
     CHECK_RESULT $? 0 0 "bzcmp function error" 
     LOG_INFO "Finish test!"

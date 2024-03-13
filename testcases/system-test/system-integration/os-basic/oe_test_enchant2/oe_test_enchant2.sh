@@ -32,7 +32,7 @@ function run_test()
     enchant-lsmod-2 | grep hunspell    
     CHECK_RESULT $? 0 0 "Language module detection failed"
     enchant-2 -h >/tmp/enchant_Usage.txt 2>&1
-    cat /tmp/enchant_Usage.txt |grep -i Usage
+    grep Usage < /tmp/enchant_Usage.txt
     CHECK_RESULT $? 0 0 "check command fail"
     echo "there is a testj" > /tmp/test.txt
     enchant-2 -d en_US -a  /tmp/test.txt | grep test

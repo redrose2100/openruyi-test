@@ -83,9 +83,8 @@ function GET_CONSOLE() {
 
 function CREATE_VG() {
     cur_date=$(date +%Y%m%d%H%M%S)
-    disks=$(TEST_DISK)
-    disk_list=($disks)
-    disk_name="/dev/${disk_list[0]}"
+    free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
+    disk_name="/dev/"$free_disk
     pvcreate $disk_name -f &>/dev/null
     if [[ "$?" -eq "0" ]]; then
         vggroup="test_vggroup"$cur_date

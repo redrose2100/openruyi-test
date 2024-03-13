@@ -16,7 +16,7 @@
 #@Desc      	:   Take the test ls command as an example
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -28,7 +28,7 @@ function run_test()
 {
     LOG_INFO "Start to run test."
     
-    iptables -A INPUT -p tcp -s ${NODE1_IPV4} --dport 22 -j DROP
+    iptables -A INPUT -p tcp -s "${NODE1_IPV4}" --dport 22 -j DROP
     CHECK_RESULT $? 0 0 "add failed"
     iptables -D INPUT 1
     CHECK_RESULT $? 0 0 "delete failed"
@@ -40,7 +40,7 @@ function run_test()
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

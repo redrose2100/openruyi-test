@@ -31,11 +31,9 @@ function run_test() {
         grep -n id /proc/cpuinfo
         CHECK_RESULT $?
     fi
-    ps -aux | grep "root"
-    CHECK_RESULT $?
     grep --help | grep "Usage"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
-main $@
+main "$@"

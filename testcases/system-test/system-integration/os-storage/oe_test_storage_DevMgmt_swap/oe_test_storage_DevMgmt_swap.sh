@@ -35,23 +35,23 @@ w
 HGG
     mkfs.ext4 -F /dev/${local_disk1}
     SLEEP_WAIT 3
-    value=`lsblk | grep openeuler-swap |awk '{print $1}' |cut -c 3-`
-    openeuler=`lsblk | grep openeuler | sed -n '$p' |  awk -F "└─" {'print $2'} | awk -F " " {'print $1'} | awk -F "-" {'print  $1'}`
+    value=$(lsblk | grep openeuler-swap |awk '{print $1}' |cut -c 3-)
+    openeuler=$(lsblk | grep openeuler | sed -n '$p' |  awk -F "└─" {'print $2'} | awk -F " " {'print $1'} | awk -F "-" {'print  $1'})
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    swapon /dev/mapper/${value}
-    swapoff -v /dev/mapper/${value}
+    swapon /dev/mapper/"${value}"
+    swapoff -v /dev/mapper/"${value}"
     CHECK_RESULT $?
-    lvresize -f /dev/${openeuler}/swap -L -100M
+    lvresize -f /dev/"${openeuler}"/swap -L -100M
     CHECK_RESULT $?
-    lsblk | grep ${value} | awk '{print$4}' | grep G
+    lsblk | grep "${value}" | awk '{print$4}' | grep G
     CHECK_RESULT $?
-    mkswap /dev/mapper/${value}
+    mkswap /dev/mapper/"${value}"
     CHECK_RESULT $?
-    swapon -v /dev/mapper/${value}
+    swapon -v /dev/mapper/"${value}"
 
     CHECK_RESULT $(grep -c dm /proc/swaps) 1
 

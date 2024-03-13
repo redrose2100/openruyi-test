@@ -17,7 +17,8 @@
 # @Desc      :   Verify support for hardware timestamps
 # ############################################
 
-source ../common/net_lib.sh
+source "$OET_PATH/testcases/system-test/system-integration/os-basic/common/net_lib.sh"
+
 function config_params() {
     LOG_INFO "Start loading data!"
     get_free_eth 1
@@ -36,7 +37,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl status chronyd | grep running
     CHECK_RESULT $?
-    CHECK_RESULT "$(ethtool -T ${local_eth1} | grep -E "Capabilities|PTP|Hardware" | wc -l)" 4
+    CHECK_RESULT "$(ethtool -T "${local_eth1}" | grep -E "Capabilities|PTP|Hardware" | wc -l)" 4
     LOG_INFO "End to run test."
 }
 
