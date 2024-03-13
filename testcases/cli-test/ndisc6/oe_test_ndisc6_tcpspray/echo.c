@@ -67,4 +67,5 @@ int main()
                 printf("\n\n\n");
         }
         close(server_fd);
+}
 

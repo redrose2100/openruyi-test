@@ -30,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     awk  -F ':'  '{print $1}' /etc/passwd |grep root
     CHECK_RESULT $? 0 0  "check root result fail"
-    awk '{print$1}' /proc/cpuinfo |grep -i cpu
+    awk '{print$1}' /proc/cpuinfo |grep -iE "cpu|hart"
     CHECK_RESULT $? 0 0  "check cpuid result fail"
     awk --help | grep "Usage: awk"
     CHECK_RESULT $? 0 0 "check Tail's help manual fail"
