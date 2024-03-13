@@ -16,8 +16,8 @@
 #@Desc      	:   verification bird command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
-source "./common/lib/util.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/testcases/cli-test/bird/common/lib/util.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "bird tar"
@@ -26,38 +26,38 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    pushd ./data
+    pushd ./data || exit
     bird -l
     SLEEP_WAIT 2
-    ls | grep "bird.ctl"
+    ls "*bird.ctl*"
     CHECK_RESULT $? 0 0 "check bird -l failed"
-    kill -9 $(pgrep "bird -l")
+    kill -9 "$(pgrep -f "bird -l")"
     rm -f bird.ctl
-    popd
+    popd || exit
     bird -p
     CHECK_RESULT $? 0 0 "check bird -p failed"
     bird -c ./data/bird.conf -P pid.file
     SLEEP_WAIT 2
     grep -e "[0-9]*" pid.file
     CHECK_RESULT $? 0 0 "check bird -P failed"
-    kill -9 $(cat pid.file)
+    kill -9 "$(cat pid.file)"
     rm -f pid.file
     bird -c ./data/bird.conf -R
     birdc show pro | grep "ospf1      OSPF"
     CHECK_RESULT $? 0 0 "check bird -R failed"
-    kill -9 $(pgrep "bird -l")
+    kill -9 "$(pgrep -f "bird -l")"
     bird -c ./data/bird.conf -s tmp.socket
     SLEEP_WAIT 2
-    ls | grep "tmp.socket"
+    ls "*tmp.socket*"
     CHECK_RESULT $? 0 0 "check bird -s failed"
-    kill -9 $(pgrep "bird -c")
+    kill -9 "$(pgrep -f "bird -c")"
     rm -f tmp.socket
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./sim_*
     clean_dir
     LOG_INFO "End to restore the test environment."
