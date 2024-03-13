@@ -16,8 +16,8 @@
 #@Desc      	:   verification birdcl command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
-source "./common/lib/util.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/testcases/cli-test/bird/common/lib/util.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "bird tar"
@@ -66,7 +66,7 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    num=$(wc -l tmp.txt)
+    num=$(wc -l <tmp.txt)
     if [[ $num == 4 ]]; then
 	echo "aa" | grep "aa"
     else
@@ -91,7 +91,7 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    grep "ospf1: disabled" tmp.txt
+    grep "ospf1: already disabled" tmp.txt
     CHECK_RESULT $? 0 0 "check birdcl disable failed"
     rm -f tmp.txt
     LOG_INFO "End to run test."
@@ -99,9 +99,9 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     clean_dir
-    kill -9 $(pgrep "bird -c")
+    kill -9 "$(pgrep -f "bird -c")"
     rm -rf ./sim_*
     LOG_INFO "End to restore the test environment."
 }
