@@ -51,7 +51,8 @@ function run_test() {
     P_SSH_CMD --cmd  "ipsec showhostkey --right --ckaid ${right_ckaid} --nssdir /etc/ipsec.d/  | grep rightrsasigkey > /tmp/rsa.txt" --node 2
     CHECK_RESULT $?
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/rsa.txt /tmp "${NODE2_PASSWORD}"
-    right_rsa=$(awk -F "rightrsasigkey=" '{print $2}' | sed 's/^[ \t]*//g' < /tmp/rsa.txt)
+    awk -F "rightrsasigkey=" '{print $2}' /tmp/rsa.txt >/tmp/rsa_tmp.txt
+    right_rsa=$(sed 's/^[ \t]*//g' /tmp/rsa_tmp.txt)
  
     P_SSH_CMD --cmd  "ifconfig ${NODE2_NIC} | grep netmask >/tmp/right_mask.txt" --node 2
     CHECK_RESULT $?
