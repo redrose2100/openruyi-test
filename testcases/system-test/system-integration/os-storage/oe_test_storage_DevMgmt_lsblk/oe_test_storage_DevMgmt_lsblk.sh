@@ -22,7 +22,7 @@ function config_params() {
     LOG_INFO "Start loading data!"
     check_free_disk
     new_uuid=12d59867-ff81-40d8-a7e7-45e971d31255
-    value=`lsblk | grep openeuler-swap |awk '{print $1}' |cut -c 3-`
+    value=$(lsblk | grep openeuler-swap |awk '{print $1}' |cut -c 3-)
     LOG_INFO "Loading data is complete!"
 }
 

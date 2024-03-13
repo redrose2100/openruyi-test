@@ -43,7 +43,7 @@ function run_test() {
         grep "$(lscpu |grep  'Model name' |awk -F ':' '{print $NF}' |sed 's/^[[:space:]]*//; s/[[:space:]]*$//')" /proc/cpuinfo
         CHECK_RESULT $?
     else
-        grep $(lscpu | grep "GenuineIntel" | awk -F " " '{print$3}') /proc/cpuinfo
+        grep "$(lscpu | grep "GenuineIntel" | awk -F " " '{print$3}')" /proc/cpuinfo
         CHECK_RESULT $?
     fi
     LOG_INFO "End fo test result detection!"
