@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   swap management
 # ############################################
-source ../common/storage_disk_lib.sh
+source "$OET_PATH/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh"
 function config_params() {
     LOG_INFO "Start loading data!"
     check_free_disk
@@ -25,7 +25,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    fdisk "/dev/${local_disk}" <<HGG
+    fdisk /dev/"${local_disk}" <<HGG
 n
 p
 1
@@ -33,10 +33,10 @@ p
 +1G
 w
 HGG
-    mkfs.ext4 -F /dev/${local_disk1}
+    mkfs.ext4 -F /dev/"${local_disk1}"
     SLEEP_WAIT 3
     value=$(lsblk | grep openeuler-swap |awk '{print $1}' |cut -c 3-)
-    openeuler=$(lsblk | grep openeuler | sed -n '$p' |  awk -F "└─" {'print $2'} | awk -F " " {'print $1'} | awk -F "-" {'print  $1'})
+    openeuler=$(lsblk | grep openeuler | sed -n '$p' |  awk -F "└─" '{print $2}' | awk -F " " '{print $1}' | awk -F "-" '{print  $1}')
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -53,7 +53,7 @@ function run_test() {
     CHECK_RESULT $?
     swapon -v /dev/mapper/"${value}"
 
-    CHECK_RESULT $(grep -c dm /proc/swaps) 1
+    CHECK_RESULT "$(grep -c dm /proc/swaps)" 1
 
     pvcreate -y "/dev/${local_disk1}"
     SLEEP_WAIT 3
@@ -72,7 +72,7 @@ function run_test() {
     CHECK_RESULT $?
     swapon -v /dev/vg0/lv_test
     CHECK_RESULT $?
-    CHECK_RESULT $(grep -c dm /proc/swaps) 2
+    CHECK_RESULT "$(grep -c dm /proc/swaps)" 2
 
     dd if=/dev/zero of=/swapfile bs=1024 count=65536
     mkswap /swapfile

@@ -48,10 +48,11 @@ function run_test() {
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/key.txt /tmp "${NODE2_PASSWORD}"
     right_ckaid=$(cat /tmp/key.txt)
 
-    P_SSH_CMD --cmd  "ipsec showhostkey --right --ckaid "${right_ckaid}" --nssdir /etc/ipsec.d/  | grep rightrsasigkey > /tmp/rsa.txt" --node 2
+    P_SSH_CMD --cmd  "ipsec showhostkey --right --ckaid ${right_ckaid} --nssdir /etc/ipsec.d/  | grep rightrsasigkey > /tmp/rsa.txt" --node 2
     CHECK_RESULT $?
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/rsa.txt /tmp "${NODE2_PASSWORD}"
-    right_rsa=$(cat /tmp/rsa.txt | awk -F "rightrsasigkey=" '{print $2}' | sed 's/^[ \t]*//g')
+    awk -F "rightrsasigkey=" '{print $2}' /tmp/rsa.txt >/tmp/rsa_tmp.txt
+    right_rsa=$(sed 's/^[ \t]*//g' /tmp/rsa_tmp.txt)
  
     P_SSH_CMD --cmd  "ifconfig ${NODE2_NIC} | grep netmask >/tmp/right_mask.txt" --node 2
     CHECK_RESULT $?
@@ -59,8 +60,8 @@ function run_test() {
     P_SSH_CMD --cmd  "ip -6 route show dev ${NODE2_NIC}>/tmp/right6_mask.txt" --node 2
     CHECK_RESULT $?
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/right6_mask.txt /tmp "${NODE2_PASSWORD}"
-    right_mask=$(cat /tmp/right_mask.txt | awk '{print $4}')
-    right6_mask=$(cat /tmp/right6_mask.txt | awk '{print $1}')
+    right_mask=$(awk '{print $4}' < /tmp/right_mask.txt)
+    right6_mask=$(awk '{print $1}' < /tmp/right6_mask.txt)
  
     echo -e "conn mysubnet\\n     also=mytunnel\\n     leftsubnet=${left_mask}/24\\n     rightsubnet=${right_mask}/24\\n     
     auto=start\\n\\nconn mysubnet6\\n     also=mytunnel\\n     leftsubnet=${left6_mask}\\n     rightsubnet=${right6_mask}\\n     
