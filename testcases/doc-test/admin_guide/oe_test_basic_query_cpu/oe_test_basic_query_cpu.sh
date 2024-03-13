@@ -16,23 +16,43 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Query CPU configure test-lscpu
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL lshw
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase!"
     lscpu | grep "^CPU(s)" | grep -E '[0-9]'
     CHECK_RESULT $?
-    lscpu | grep "Vendor ID"
+    if [ "$NODE1_FRAME"x == "ppc64le"x ]; then
+        lscpu | grep -i 'Model'
+    else
+        lscpu | grep "Vendor ID"
+    fi
     CHECK_RESULT $?
     lshw -c cpu | grep "capacity" | grep "Hz"
     CHECK_RESULT $?
-    if [ ${NODE1_FRAME}x == "aarch64"x ]; then
+    if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
         grep "0x48" /proc/cpuinfo
         CHECK_RESULT $?
+    elif [ "$NODE1_FRAME"x == "ppc64le"x ]; then
+        grep "$(lscpu |grep  'Model name' |awk -F ':' '{print $NF}' |sed 's/^[[:space:]]*//; s/[[:space:]]*$//')" /proc/cpuinfo
+        CHECK_RESULT $?
     else
-        grep $(lscpu | grep "GenuineIntel" | awk -F " " '{print$3}') /proc/cpuinfo
+        grep "$(lscpu | grep "GenuineIntel" | awk -F " " '{print$3}')" /proc/cpuinfo
         CHECK_RESULT $?
     fi
     LOG_INFO "End fo test result detection!"
 }
 
-main $@
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
+}
+
+main "$@"
