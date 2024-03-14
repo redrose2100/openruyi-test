@@ -14,7 +14,7 @@
 # @Contact   :   wulei@uniontech.com
 # @Date      :   2024-01-11
 # @License   :   Mulan PSL v2
-# @Desc      :   libgit2 basic function
+# @Desc      :   libgit2 basic function.
 # ############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
