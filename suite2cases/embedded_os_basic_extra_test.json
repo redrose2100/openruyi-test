@@ -90,6 +90,15 @@
         },
         {
             "name": "oe_test_libtool_test_001"
+        },
+        {
+            "name": "oe_test_strace_test_001"
+        },
+        {
+            "name": "oe_test_squashfs-tools_test_001"
+        },
+        {
+            "name": "oe_test_libpwquality_test_001"
         }
     ]
 }
