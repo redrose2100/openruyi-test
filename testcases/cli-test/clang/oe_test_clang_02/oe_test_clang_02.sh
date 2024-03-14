@@ -15,12 +15,12 @@
 #@License       :   Mulan PSL v2
 #@Desc      	:   verification clang‘s command
 #####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL clang
+    DNF_INSTALL "clang clang-tools-extra"
     cp -r ../common ./tmp
-    cd ./tmp
+    cd ./tmp || exit
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
@@ -50,7 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ./tmp
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
