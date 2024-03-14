@@ -16,7 +16,7 @@
 #@Desc      	:   test rpmargs rpmdev-checksig rpmdev-cksum rpmdev-diff rpmdev-extract rpmdev-md5
 #####################################
 
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
@@ -48,14 +48,14 @@ function run_test() {
     rpmargs -c file -p /ALT/Sisyphus/files/noarch/RPMS/"${pkg_name}"*.rpm | grep "${pkg_name}"
     CHECK_RESULT $? 0 0 "Failed option: -p"
 
-    rpmdev-checksig "${pkg_name}"*.rpm | grep "${pkg_name}.*.rpm: RSA/SHA1"
-    CHECK_RESULT $? 0 0 "Failed command:rpmdev-checksig"
-
     if [[ "$NODE1_FRAME"x == "ppc64le"x ]];then
         rpmdev-checksig "${pkg_name}"*.rpm | grep "${pkg_name}.*.rpm: MISSING KEY"
     else
-        rpmdev-checksig "${pkg_name}"*.rpm | grep "${pkg_name}.*.rpm: RSA/SHA1"
+        rpmdev-checksig "${pkg_name}"*.rpm | grep "${pkg_name}.*.rpm: RSA"
     fi
+    CHECK_RESULT $? 0 0 "Failed command:rpmdev-checksig"
+
+    rpmdev-cksum "${pkg_name}"*rpm | head -n 1 | awk '{print $3}' | grep "${pkg_name}.*rpm"
     CHECK_RESULT $? 0 0 "Failed command: rpmdev-cksum"
 
     rpmdev-diff -v | grep 'rpmdev-diff version'

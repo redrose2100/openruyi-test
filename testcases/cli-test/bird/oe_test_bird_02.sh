@@ -15,8 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   verification bird command
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "./common/lib/util.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -26,38 +26,38 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    pushd ./data
+    pushd ./data || exit 1
     bird -l
     SLEEP_WAIT 2
-    ls | grep "bird.ctl"
+    find ./ -name "*bird.ctl*"
     CHECK_RESULT $? 0 0 "check bird -l failed"
-    kill -9 $(pgrep "bird -l")
+    pgrep bird | xargs kill -9
     rm -f bird.ctl
-    popd
+    popd || exit 1
     bird -p
     CHECK_RESULT $? 0 0 "check bird -p failed"
     bird -c ./data/bird.conf -P pid.file
     SLEEP_WAIT 2
     grep -e "[0-9]*" pid.file
     CHECK_RESULT $? 0 0 "check bird -P failed"
-    kill -9 $(cat pid.file)
+    pgrep bird | xargs kill -9
     rm -f pid.file
     bird -c ./data/bird.conf -R
     birdc show pro | grep "ospf1      OSPF"
     CHECK_RESULT $? 0 0 "check bird -R failed"
-    kill -9 $(pgrep "bird -l")
+    pgrep bird | xargs kill -9
     bird -c ./data/bird.conf -s tmp.socket
     SLEEP_WAIT 2
-    ls | grep "tmp.socket"
+    find ./ -name "*tmp.socket*"
     CHECK_RESULT $? 0 0 "check bird -s failed"
-    kill -9 $(pgrep "bird -c")
+    pgrep bird | xargs kill -9
     rm -f tmp.socket
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./sim_*
     clean_dir
     LOG_INFO "End to restore the test environment."

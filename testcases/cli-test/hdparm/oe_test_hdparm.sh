@@ -22,13 +22,14 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL hdparm
+    lsblk >>lsblk.txt
+    dev=$(sed -n "2, 1p" lsblk.txt | awk '{print $1}')
+    hdparm -b /dev/"$dev" || exit 1
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    lsblk >> lsblk.txt
-    dev=$(sed -n "2, 1p" lsblk.txt |awk '{print $1}')
     hdparm -h | grep -i "Usage"
     CHECK_RESULT $? 0 0 "hdparm -h fail"
     hdparm -a /dev/"$dev" | grep -i /dev/"$dev"
