@@ -17,7 +17,7 @@
 # @Desc      :   Rust language tools cargo
 # ##############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    cargo -h | grep "USAGE"
+    cargo -h | grep -i "USAGE"
     CHECK_RESULT $? 0 0 "Help information printing failed"
     cargo -V | grep -E "[0-9]"
     CHECK_RESULT $? 0 0 "Failed to output the version information"
@@ -52,7 +52,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf ../hello*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
