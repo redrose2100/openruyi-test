@@ -47,6 +47,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /tmp/timelog*
+    rm -rf /var/spool/at
     systemctl stop atd
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
