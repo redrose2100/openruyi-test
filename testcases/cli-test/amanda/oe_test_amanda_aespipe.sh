@@ -24,7 +24,7 @@ function pre_test() {
     DNF_INSTALL "amanda openssl make"
     wget https://loop-aes.sourceforge.net/aespipe-latest.tar.bz2
     tar -xvf aespipe-latest.tar.bz2
-    cd aespipe-v2.4* || exit
+    cd aespipe-v* || exit
     ./configure
     make && make install
     cd - || exit
