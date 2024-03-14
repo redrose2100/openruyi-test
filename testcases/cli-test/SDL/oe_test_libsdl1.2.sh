@@ -41,7 +41,7 @@ int main(void)
 }
 EOF
 
-    DNF_INSTALL "SDL SDL-devel"
+    DNF_INSTALL "SDL SDL-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 
