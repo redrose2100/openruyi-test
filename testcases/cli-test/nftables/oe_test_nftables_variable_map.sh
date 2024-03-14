@@ -30,18 +30,19 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL nftables
     nft add table ip $table_name
-    nft add chain ip $table_name $chain_name { type filter hook input priority 0 \; }
+    nft add chain ip $table_name $chain_name "{ type filter hook input priority 0 ; }"
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
     LOG_INFO "Start executing testcase."
-    nft add map ip $table_name $map_name { type ipv4_addr : verdict \; }
+    nft add map ip $table_name $map_name "{ type ipv4_addr : verdict ; }"
     nft add rule $table_name $chain_name ip saddr vmap @${map_name}
-    nft add element ip $table_name $map_name { ${NODE1_IPV4} : accept ,${NODE2_IPV4} : drop}
+    nft add element ip $table_name $map_name "{ ${NODE1_IPV4} : accept ,${NODE2_IPV4} : drop}"
     nft list ruleset | grep "${NODE2_IPV4} : drop"
     CHECK_RESULT $? 0 0 "exec 'nft add element ip' failed"
-    nft delete element ip $table_name $map_name { ${NODE2_IPV4} }
+    nft delete element ip $table_name $map_name "{ ${NODE2_IPV4} }"
     nft list ruleset | grep "${NODE2_IPV4} : drop"
     CHECK_RESULT $? 0 1 "exec 'nft delete element ip' failed"
     LOG_INFO "Finish testcase execution."
@@ -50,6 +51,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     nft delete table ip $table_name
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

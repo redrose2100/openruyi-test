@@ -24,15 +24,21 @@ function config_params() {
     LOG_INFO "Start to config params of the case."
     table_name=sec009
     chain_name=sec009_chain
-    nft add table inet $table_name
-    nft add chain inet $table_name $chain_name { type filter hook input priority 0 \; policy accept \; }
     LOG_INFO "End to config params of the case."
+}
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL nftables
+    nft add table inet $table_name
+    nft add chain inet $table_name $chain_name "{ type filter hook input priority 0 ; policy accept ; }"
+    LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    nft add set inet $table_name individual_set { type ipv4_addr \; }
-    nft add set inet $table_name multi_set { type ipv4_addr \; flags interval \; }
+    nft add set inet $table_name individual_set "{ type ipv4_addr ; }"
+    nft add set inet $table_name multi_set "{ type ipv4_addr ; flags interval ; }"
     nft add rule inet $table_name $chain_name ip saddr @individual_set drop
     nft list table inet $table_name | grep individual_set
     CHECK_RESULT $? 0 0 "exec add individual_set failed"
@@ -41,11 +47,11 @@ function run_test() {
     nft list table inet $table_name | grep multi_set
     CHECK_RESULT $? 0 0 "exec add multi_set failed"
 
-    nft add element inet $table_name individual_set { 192.0.2.1, 192.0.2.2}
+    nft add element inet $table_name individual_set "{ 192.0.2.1, 192.0.2.2}"
     nft list table inet $table_name | grep "192.0.2.1"
     CHECK_RESULT $? 0 0 "exec add element individual_set failed"
     
-    nft add element inet $table_name multi_set { 192.0.2.0-192.0.2.255 }
+    nft add element inet $table_name multi_set "{ 192.0.2.0-192.0.2.255 }"
     nft list table inet $table_name | grep "192.0.2.0/24"
     CHECK_RESULT $? 0 0 "exec add element multi_set failed"
     LOG_INFO "Finish testcase execution."
@@ -54,6 +60,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     nft delete table inet $table_name
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

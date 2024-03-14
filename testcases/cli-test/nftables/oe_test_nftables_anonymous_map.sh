@@ -30,6 +30,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL nftables
     nft add table inet $table_name
     nft add chain inet $table_name $tcp_chain
     nft add rule inet $table_name $tcp_chain counter
@@ -44,19 +45,21 @@ function run_test() {
     nft add rule inet $table_name $udp_chain counter
     nft --handle list chain inet $table_name $udp_chain | grep "chain $udp_chain"
     CHECK_RESULT $? 0 0 "exec 'nft add rule inet $table_name $udp_chain counter' failed"
-    nft add chain inet $table_name incoming_traffic { type filter hook input priority 0 \; }
+    nft add chain inet $table_name incoming_traffic "{ type filter hook input priority 0 ; }"
     nft --handle list chain inet $table_name incoming_traffic | grep "chain incoming_traffic"
     CHECK_RESULT $? 0 0 "exec 'nft add chain inet $table_name incoming_traffic' failed"
-    nft add rule inet $table_name incoming_traffic ip protocol vmap {tcp : jump $tcp_chain, udp : jump $udp_chain }
+    nft add rule inet $table_name incoming_traffic ip protocol vmap "{tcp : jump $tcp_chain, udp : jump $udp_chain }"
     nft list table inet $table_name | grep "ip protocol vmap { tcp : jump tcp_packets_010, udp : jump udp_packets_010 }"
     CHECK_RESULT $? 0 0 "exec 'nft add rule inet $table_name incoming_traffic ip protocol vmap {tcp : jump $tcp_chain, udp : jump $udp_chain }' failed"
-    CHECK_RESULT $(nft list table inet $table_name | grep "counter packets" | wc -l) 2 0 "add tcp && udp failed"
+    counter_packets=$(nft list table inet $table_name | grep -c "counter packets")
+    CHECK_RESULT "$counter_packets" 2 0 "add tcp && udp failed"
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     nft delete table inet $table_name
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

@@ -20,6 +20,12 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL nftables
+    LOG_INFO "End of environmental preparation!"
+}
+
 function config_params() {
     LOG_INFO "Start to config params of the case."
     table_name=sec008
@@ -34,7 +40,7 @@ function run_test() {
     nft list tables | grep $table_name
     CHECK_RESULT $? 0 0 "exec 'nft add table' failed"
 
-    nft add chain inet $table_name $chain_name { type filter hook input priority 0 \; policy accept \; }
+    nft add chain inet $table_name $chain_name "{ type filter hook input priority 0 ; policy accept ; }"
     nft list chains | grep $chain_name
     CHECK_RESULT $? 0 0 "exec 'nft add chain' failed"
 
@@ -42,7 +48,7 @@ function run_test() {
     nft list table inet $table_name | grep 22
     CHECK_RESULT $? 0 0 "exec 'nft add rule' failed"
     
-    nft add rule inet $table_name $chain_name tcp dport { 80, 443 } accept
+    nft add rule inet $table_name $chain_name tcp dport "{ 80, 443 }" accept
     nft list table inet $table_name | grep "80, 443"
     CHECK_RESULT $? 0 0 "exec 'nft list table inet $table_name $chain_name tcp dport { 80, 443 } accept' failed"
     LOG_INFO "Finish testcase execution."
@@ -51,6 +57,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     nft delete table inet $table_name
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
