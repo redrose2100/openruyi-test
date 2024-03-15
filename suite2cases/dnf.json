@@ -66,6 +66,9 @@
         },
         {
             "name": "oe_test_dnf_repeat-upgrade-downgrade"
-        }
+        },
+	{
+            "name":"oe_test_dnf_deplist"
+	}
     ]
 }

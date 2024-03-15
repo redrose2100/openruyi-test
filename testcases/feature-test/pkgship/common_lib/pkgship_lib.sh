@@ -15,9 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Public function
 #####################################
-# shellcheck disable=SC1091
-# shellcheck disable=SC2086
-
+# shellcheck disable=SC1091,SC2086,SC2012
 source "${OET_PATH}"/conf/mugen.env
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -53,13 +51,13 @@ function ACT_SERVICE() {
     cur_system=$(cat /proc/1/cgroup)
     cur_user=$(whoami)
 
-    pgrep "elasticsearch" >/dev/null
+    pgrep -f "elasticsearch" >/dev/null
     [[ $? -eq 1 ]] && {
         bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh elasticsearch
         sleep 2
     }
 
-    pgrep "redis" >/dev/null
+    pgrep -f "redis" >/dev/null
     [[ $? -eq 1 ]] && {
         bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh redis
         sleep 2
@@ -145,7 +143,7 @@ function CHECK_YUM() {
 }
 
 function INSTALL_ENV() {
-    pgrep -l "dnf|yum" | grep -Ev "grep|bash" | awk '{print $1}' | xargs kill -9
+    pgrep -f -a "dnf|yum" | grep -Ev "grep|bash" | awk '{print $1}' | xargs kill -9
     dnf remove elasticsearch redis pkgship wget net-tools diffutils tar -y
     dnf clean all
     DNF_INSTALL "pkgship wget net-tools diffutils tar"
@@ -158,7 +156,7 @@ function REVERT_ENV() {
     ACT_SERVICE stop
     rm -rf ${YUM_PATH}/pkgship_yum.repo ${YUM_PATH}/pkgship_elasticsearch.repo ${LOG_PATH}/pkgship/*
     SLEEP_WAIT 10
-    for i in $(pgrep -l "pkgship|uwsgi|elasticsearch|redis|dnf" | grep -Ev "nohup|mugen.sh|oe_test|grep" | awk '{print $1}'); do
+    for i in $(pgrep -f -a "pkgship|uwsgi|elasticsearch|redis|dnf" | grep -Ev "nohup|mugen.sh|oe_test|grep" | awk '{print $1}'); do
         kill -9 "$i"
     done
     dnf clean all
@@ -222,21 +220,13 @@ function QUERY_BEDEPEND() {
 }
 
 function GET_RANDOM_PKGNAME() {
-    # $1: sqliteName
     sqliteName=$1
-
-    # Get all pkg name
-    sqlite3 ../../common_lib/sqlite/"$sqliteName" "select name from packages;" &>pkg_list.txt
-    # Get count
-
-    count=$(wc -l pkg_list.txt |awk '{print $1}')
-    # Get a randome in 1~count
+    cp ../../common_lib/sqlite/$sqliteName ./
+    count=$(wc -l $sqliteName | awk '{print $1}')
     random=$((RANDOM % count + 1))
-
-    pkg=$(head -n $random pkg_list.txt | tail -n 1)
+    pkg=$(head -n $random $sqliteName | tail -n 1)
     echo "$pkg"
-
-    rm -rf pkg_list.txt
+    rm -rf $sqliteName
 }
 
 function CONCURRENCY_THREAD() {
@@ -384,6 +374,19 @@ function GET_INSTALLDEP() {
     sed -i "${start_line},${end_line}d" installdep.txt
     grep "openeuler-lts" installdep.txt | grep -v $pkgname | awk '{print $1}' | sort | uniq | grep -Ev "openeuler-lts|=" >${filename}
     rm -rf installdep.txt
+}
+
+function check_file_access() {
+    file_name=$1
+    expect_owner=$2
+    expect_group=$3
+    expect_code=$4
+    ls -ld $file_name | awk '{print $3}' | grep $expect_owner
+    CHECK_RESULT $? 0 0 "Check owner for $file_name failed."
+    ls -ld $file_name | awk '{print $4}' | grep $expect_group
+    CHECK_RESULT $? 0 0 "Check group for $file_name failed."
+    echo "obase=8;ibase=2;$(ls -ld $file_name | awk '{print $1}' | sed 's/^[a-zA-Z-]//' | tr 'x|r|w' '1' | tr '-' '0')" | bc | grep $expect_code
+    CHECK_RESULT $? 0 0 "Check access for $file_name failed."
 }
 
 function GET_DNF_REPOQUERY() {

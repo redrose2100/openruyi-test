@@ -17,10 +17,11 @@
 # @Desc      :   verify the uasge of fakechroot command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    export LANG=en_US.UTF-8
     DNF_INSTALL fakechroot
     cp ./common/hello.sh ./
     chmod 777 hello.sh
@@ -48,7 +49,7 @@ function run_test() {
     env --debug | grep "USER=" 
     CHECK_RESULT $? 0 0 "Check env --debug failed"
 
-    env --help | fgrep "Usage: env [OPTION]"
+    env --help | grep -F "Usage: env [OPTION]"
     CHECK_RESULT $? 0 0 "Check env --help failed"
 
     env --version | grep "env (GNU coreutils) [[:digit:]]"
@@ -59,8 +60,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf hello.sh
+    unset LANG
     LOG_INFO "Finish restore the test environment."
 }
 

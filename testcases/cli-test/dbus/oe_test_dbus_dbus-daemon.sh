@@ -45,9 +45,11 @@ function run_test() {
     dbus-daemon --session --nofork &
     pgrep -f "dbus-daemon --session --nofork"
     CHECK_RESULT $? 0 0 "Check dbus-daemon --session --nofork failed."
+    pgrep "dbus" |xargs kill -9
     dbus-daemon --session --fork --address=unix:abstract=/tmp/dbus-123456 --print-address | grep "/tmp/dbus-123456"
     CHECK_RESULT $? 0 0 "Check dbus-daemon --session --fork --address=unix:abstract=/tmp/dbus-123456 --print-address failed."
     dbus-daemon --session --fork --nopidfile &
+    SLEEP_WAIT 1
     pgrep -f "dbus-daemon --session --fork --nopidfile"
     CHECK_RESULT $? 0 0 "Check dbus-daemon --session --fork --nopidfile failed."
     LOG_INFO "End to run test."
@@ -55,7 +57,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 "$(pgrep -f "dbus-daemon --")"
+    pgrep "dbus" |xargs kill -9
+    systemctl stop dbus
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

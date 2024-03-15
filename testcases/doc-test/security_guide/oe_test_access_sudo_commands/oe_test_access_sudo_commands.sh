@@ -18,9 +18,11 @@
 # @Desc      :   Verify restrictions on sudo commands
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    OLD_LANG=${LANG}
+    export LANG=en_US.UTF-8
     grep "^testuser:" /etc/passwd && userdel -rf testuser
     LOG_INFO "End of environmental preparation!"
 }
@@ -50,6 +52,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start cleanning environment."
+    export LANG=${OLD_LANG}
     sed -i 's/#%wheel/%wheel/g' /etc/sudoers
     userdel -rf testuser
     groupdel testuser

@@ -1,9 +1,0 @@
-{
-    "path": "\"${OET_PATH}\"/testcases/cli-test/keepalived-cli",
-    "machine num": 2,
-    "cases": [
-        {
-            "name": "oe_test_keepalived_cli"
-        }
-    ]
-}

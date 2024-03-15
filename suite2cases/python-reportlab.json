@@ -2,7 +2,7 @@
     "path": "$OET_PATH/testcases/cli-test/python-reportlab",
     "cases": [
         {
-            "name": "oe_test_python-reportlab"
+            "name": "oe_test_python3-reportlab"
         }
     ]
 }

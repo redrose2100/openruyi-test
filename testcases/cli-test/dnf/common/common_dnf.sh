@@ -16,13 +16,60 @@
 #@Desc          :   Public class
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function deploy_env() {
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
 }
 
-function clear_env() {
+
+function add_low_repo() {
+    touch /etc/yum.repos.d/openEuler_update.repo
+    dnf repolist|grep "^LOW_OS"
+    result_value=$?
+    if ((result_value !="0"));then
+        echo "
+[LOW_OS]
+name=LOW_OS
+baseurl=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/OS/\$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/OS/\$basearch/RPM-GPG-KEY-openEuler
+" >>/etc/yum.repos.d/openEuler_update.repo
+    fi
+
+    dnf repolist|grep "^update"
+    result_value=$?
+    if ((result_value !="0"));then
+        echo "
+[update]
+name=update
+baseurl=https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS-SP3/update/\$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS-SP3/OS/\$basearch/RPM-GPG-KEY-openEuler
+" >>/etc/yum.repos.d/openEuler_update.repo
+    fi
+    dnf repolist|grep "^debuginfo"
+    result_value=$?
+    if ((result_value !="0"));then
+        echo "
+[debuginfo]
+name=debuginfo
+baseurl=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/debuginfo/\$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/debuginfo/\$basearch/RPM-GPG-KEY-openEuler
+" >>/etc/yum.repos.d/openEuler_update.repo
+    fi
+}
+
+function delete_low_repo() {
+    rm -rf /etc/yum.repos.d/openEuler_update.repo
+}
+
+
+function clear_env() { 
     export LANG=${OLD_LANG}
 }

@@ -69,6 +69,27 @@
         },
         {
             "name": "oe_test_proc_start_kill"
+        },
+        {
+            "name": "oe_test_net-tools_test_001"
+        },
+        {
+            "name": "oe_test_initscripts_test_001"
+        },
+        {
+            "name": "oe_test_iptables_cli_test"
+        },
+        {
+            "name": "oe_test_cronie_test_001"
+        },
+        {
+            "name": "oe_test_cracklib_test_001"
+        },
+        {
+            "name": "oe_test_pciutils_cli_test"
+        },
+        {
+            "name": "oe_test_libtool_test_001"
         }
     ]
 }

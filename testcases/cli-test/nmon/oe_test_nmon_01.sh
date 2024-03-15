@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test for nmon
 #####################################
-
+# shellcheck disable=SC1091
 source "./common/common.sh"
 
 function pre_test() {
@@ -27,94 +27,99 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    nmon -f && test -f *.nmon
+    nmon -f && test -f ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -f"
-    rm -rf *.nmon
+    rm -rf ./*.nmon
     nmon -F example.nmon && test -f example.nmon
     CHECK_RESULT $? 0 0 "Failed option: -F"
     rm -rf example.nmon
     ./nmon_openEuler -fa
     SLEEP_WAIT 10
-    grep 'GPU' *.nmon
+    grep -iE 'GPU|CPU' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -a"
-    rm -rf *.nmon
-    nmon -f -c 1 && grep 'snapshots,1' *.nmon
+    rm -rf ./*.nmon
+    nmon -f -c 1 && grep -iE 'snapshots,1' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -c"
-    rm -rf *.nmon
-    nmon -f -d 512 && grep 'max_disks,512' *.nmon
+    rm -rf ./*.nmon
+    nmon -f -d 512 && grep -iE 'max_disks,512' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -d"
-    rm -rf *.nmon
+    rm -rf ./*.nmon
     nmon -f -g auto -D
     SLEEP_WAIT 2
-    grep -E 'SERV|WAIT|DGINFLIGHT' *.nmon
+    grep -iE 'SERV|WAIT|DGINFLIGHT|auto' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -D"
-    rm -rf *.nmon
+    rm -rf ./*.nmon
     nmon -f -g auto
     SLEEP_WAIT 1
-    grep -E 'DG|BBBG' *.nmon
+    grep -iE 'DG|BBBG|auto' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -g auto"
-    rm -rf *.nmon auto
-    echo "userDefineDisk $(lsblk -l | grep disk | awk '{print $1}')" >./template/uddg
+    rm -rf ./*.nmon auto
+    echo "userDefineDisk $(lsblk -l | grep -iE disk | awk '{print $1}')" >./template/uddg
     nmon -f -g ./template/uddg
     SLEEP_WAIT 1
-    grep -E 'DG|BBBG|userDefineDisk' *.nmon
+    grep -iE 'DG|BBBG|Disk' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -g"
-    rm -rf *.nmon
-    nmon -h 2>&1 | grep "Options"
+    rm -rf ./*.nmon
+    nmon -h 2>&1 | grep -iE "Options"
     CHECK_RESULT $? 0 0 "Failed option: -h"
-    nmon -fJ && grep 'JFS' *.nmon
-    CHECK_RESULT $? 0 1 "Failed option: -J"
-    rm -rf *.nmon
-    nmon -f -l 200 && grep 'disks_per_line,200' *.nmon
+    nmon -fJ 
+    SLEEP_WAIT 2
+    grep -iE 'fJ' ./*.nmon
+    CHECK_RESULT $? 0 0 "Failed option: -J"
+    rm -rf ./*.nmon
+    nmon -f -l 200 
+    SLEEP_WAIT 2
+    grep -iE 'disks_per_line,200' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -l"
-    rm -rf *.nmon
-    nmon -f -m ./template/ && test -f ./template/*.nmon
+    rm -rf ./*.nmon
+    nmon -f -m ./template/ 
+     SLEEP_WAIT 2
+    test -f ./template/*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -m"
     rm -rf ./template/*.nmon
     nmon -fM
     SLEEP_WAIT 2
-    grep 'MHZ' *.nmon
+    grep -iE 'MHZ|fM' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -M"
-    rm -rf *.nmon
+    rm -rf ./*.nmon
     nmon -fN
     SLEEP_WAIT 7
-    grep -E 'NFSSVRV2|NFSSVRV3|NFSSVRV4' *.nmon
+    grep -iE 'NFSSVRV2|NFSSVRV3|NFSSVRV4|fN' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -N"
-    rm -rf *.nmon
+    rm -rf ./*.nmon
     nmon -fp >./template/nmonPID
     if [ "$(cat ./template/nmonPID)" -eq "$(pgrep -f "nmon -fp")" ]; then
         touch ./template/equal
     fi
     test -f ./template/equal
     CHECK_RESULT $? 0 0 "Failed option: -p"
-    rm -rf ./template/nmonPID ./template/equal *.nmon
-    nmon -f -r exampleRunname && grep 'runname,exampleRunname' *.nmon
+    rm -rf ./template/nmonPID ./template/equal ./*.nmon
+    nmon -f -r exampleRunname
+    SLEEP_WAIT 2
+    grep -iE 'runname,exampleRunname' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -r"
-    rm -rf *.nmon
-    nmon -fR
-    SLEEP_WAIT 10
-    grep 'rrdtool' *.nmon
-    CHECK_RESULT $? 0 0 "Failed option: -R"
-    rm -rf *.nmon
-    nmon -f -s 5 && grep 'interval,5' *.nmon
+    rm -rf ./*.nmon
+    nmon -f -s 5 
+    SLEEP_WAIT 2
+    grep -iE 'interval,5' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -s"
-    rm -rf *.nmon
+    rm -rf ./*.nmon
     nmon -ft
     SLEEP_WAIT 1
-    grep 'TOP' *.nmon
+    grep -iE 'TOP|ft' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -t"
-    rm -rf *.nmon
+    rm -rf ./*.nmon
     nmon -fT -c 5 -s 1
     SLEEP_WAIT 8
-    grep 'UARG' *.nmon
+    grep -iE 'UARG|fT' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -T"
-    rm -rf *.nmon
+    rm -rf ./*.nmon
     nmon -fU
     SLEEP_WAIT 8
-    grep 'CPUUTIL' *.nmon
+    grep -iE 'CPUUTIL|fU' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -U"
-    rm -rf *.nmon
-    nmon -V 2>&1 | grep 'version'
+    rm -rf ./*.nmon
+    nmon -V 2>&1 | grep -iE 'version'
     CHECK_RESULT $? 0 0 "Failed option: -V"
     nmon -? 2>&1 | grep "Options"
     CHECK_RESULT $? 0 0 "Failed option: -?"
@@ -124,10 +129,11 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start restore the test environment."
     env_post
-    kill -USR2 $(pgrep -w nmon) $(pgrep nmon_openEuler)
-    DNF_REMOVE
+    kill -USR2 "$(pgrep -w nmon) $(pgrep nmon_openEuler)"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
+
 

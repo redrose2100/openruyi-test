@@ -16,13 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test podman.service restart
 # #############################################
-
-source "../common/common_lib.sh"
+# shellcheck disable=SC1091
+source "../../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL podman
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
@@ -33,10 +33,10 @@ function run_test() {
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "Start to restore the test environment."
     systemctl stop podman.service
-    DNF_REMOVE
-    LOG_INFO "Finish environment cleanup!"
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

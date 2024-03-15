@@ -16,26 +16,30 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test cockpit.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL cockpit
-    LOG_INFO "End of environmental preparation!"
+    log_time=$(date '+%Y-%m-%d %T')
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
-    test_execution cockpit.service
+    LOG_INFO "Start to run test."
+    test_restart cockpit.service
+    test_enabled cockpit.service
+    journalctl --since "${log_time}" -u cockpit.service | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING\|Error generating temporary dummy cert using sscg, falling back to openssl"    
+    CHECK_RESULT $? 0 1 "There is an error message for the log of cockpit.service "
     test_reload cockpit.service
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
-    DNF_REMOVE
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

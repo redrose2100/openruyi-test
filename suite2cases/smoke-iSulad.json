@@ -33,6 +33,9 @@
         },
         {
             "name": "oe_test_iSula_pause_resume_001"
+        },
+        {
+            "name": "oe_test_isula-build_build_image"
         }
     ]
 }

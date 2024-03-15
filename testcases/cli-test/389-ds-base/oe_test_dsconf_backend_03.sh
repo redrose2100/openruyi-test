@@ -21,6 +21,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8    
     DNF_INSTALL "389-ds-base"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
@@ -51,37 +53,37 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: backend vlv-index --just-names  No Pass" 
     dsconf localhost backend vlv-index edit-search -h | grep  "usage: dsconf instance backend vlv-index edit-search" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index edit-search -h  No Pass"
-    dsconf localhost backend vlv-index edit-search --name my_vlv_search --search-base "dc=example,dc=com" example| grep  "Successfully updated VLV search entry" 
+    dsconf localhost backend vlv-index edit-search --name my_vlv_search --search-base "dc=example,dc=com" example| grep -iE  "Successfully updated VLV search entry" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index edit-search --search-base  No Pass" 
-    dsconf localhost backend vlv-index edit-search --name my_vlv_search --search-scope 0 example| grep  "Successfully updated VLV search entry" 
+    dsconf localhost backend vlv-index edit-search --name my_vlv_search --search-scope 0 example| grep -iE  "Successfully updated VLV search entry" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index edit-search --search-scope  No Pass" 
-    dsconf localhost backend vlv-index edit-search --name my_vlv_search --search-filter "(objectClass=top)" example| grep  "Successfully updated VLV search entry" 
+    dsconf localhost backend vlv-index edit-search --name my_vlv_search --search-filter "(objectClass=top)" example| grep -iE "Successfully updated VLV search entry" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index edit-search --search-scope  No Pass" 
     dsconf localhost backend vlv-index add-index -h | grep  "usage: dsconf instance backend vlv-index add-index" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index add-index -h  No Pass"
-    dsconf localhost backend vlv-index  add-index --parent-name my_vlv_search --index-name my_vlv_index --sort "sn givenName" example| grep  "Successfully created new VLV index entry" 
+    dsconf localhost backend vlv-index  add-index --parent-name my_vlv_search --index-name my_vlv_index --sort "sn givenName" example| grep -iE "Successfully created new VLV index entry" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index add-index --parent-name --index-name --sort  No Pass" 
     dsconf localhost backend vlv-index reindex -h | grep  "usage: dsconf instance backend vlv-index reindex" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index reindex -h  No Pass"
-    dsconf localhost backend vlv-index reindex --parent-name my_vlv_search example| grep  "Successfully reindexed VLV indexes" 
+    dsconf localhost backend vlv-index reindex --parent-name my_vlv_search example| grep -iE "Successfully reindexed VLV indexes" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index reindex -h  No Pass"
-    dsconf localhost backend vlv-index reindex --index-name my_vlv_index --parent-name my_vlv_search example| grep  "Successfully reindexed VLV indexes" 
+    dsconf localhost backend vlv-index reindex --index-name my_vlv_index --parent-name my_vlv_search example| grep -iE "Successfully reindexed VLV indexes" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index reindex -h  No Pass"
-    dsconf localhost backend vlv-index  del-index --parent-name my_vlv_search --index-name my_vlv_index --sort "sn givenName"  example| grep  "Successfully deleted VLV index entry" 
+    dsconf localhost backend vlv-index  del-index --parent-name my_vlv_search --index-name my_vlv_index --sort "sn givenName"  example| grep -iE  "Successfully deleted VLV index entry" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index del-index --parent-name --index-name --sort  No Pass" 
     dsconf localhost backend vlv-index del-search -h | grep  "usage: dsconf instance backend vlv-index del-search" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index del-search -h  No Pass" 
-    dsconf localhost backend vlv-index del-search --name my_vlv_search example | grep  "Successfully deleted VLV search and its indexes" 
+    dsconf localhost backend vlv-index del-search --name my_vlv_search example | grep -iE "Successfully deleted VLV search and its indexes" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index --just-names  No Pass" 
     dsconf localhost backend attr-encrypt -h | grep  "usage: dsconf instance backend attr-encrypt" 
     CHECK_RESULT $? 0 0 "Check: backend attr-encrypt -h  No Pass" 
-    dsconf localhost backend attr-encrypt --add-attr name example  | grep  "Successfully added encrypted attribute" 
+    dsconf localhost backend attr-encrypt --add-attr name example  | grep -iE "Successfully added encrypted attribute" 
     CHECK_RESULT $? 0 0 "Check: backend attr-encrypt --add-attr  No Pass" 
     dsconf localhost backend attr-encrypt --list example  | grep  "cn: name" 
     CHECK_RESULT $? 0 0 "Check: backend attr-encrypt --list  No Pass" 
     dsconf localhost backend attr-encrypt --list --just-names example  | grep  "name" 
     CHECK_RESULT $? 0 0 "Check: backend attr-encrypt --just-names  No Pass" 
-    dsconf localhost backend attr-encrypt --del-attr  name example | grep  "Successfully deleted encrypted attribute" 
+    dsconf localhost backend attr-encrypt --del-attr  name example | grep -iE "Successfully deleted encrypted attribute" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index --just-names  No Pass" 
     LOG_INFO "End to run test."
 }
@@ -92,6 +94,7 @@ function post_test() {
     dsctl localhost remove --do-it
     rm -rf 389_ds_test.inf /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
+    export LANG=${OLD_LANG}
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

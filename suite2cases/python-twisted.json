@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/oe_test_python-twisted",
+    "path": "$OET_PATH/testcases/cli-test/python-twisted",
     "cases": [
         {
             "name": "oe_test_python-twisted"

@@ -15,9 +15,15 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Compress and run isula
 #####################################
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2034
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function config_params() {
+    LOG_INFO "Start to config params of the case."
+    EXECUTE_T="60m"
+    LOG_INFO "End to config params of the case."
+}
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."

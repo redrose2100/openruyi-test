@@ -3,6 +3,10 @@
     "cases": [
         {
             "name": "oe_test_service_atd"
+        },
+        {
+            "name": "oe_test_atd_01"
         }
+
     ]
 }

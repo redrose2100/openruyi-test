@@ -49,6 +49,10 @@ function run_test() {
     CHECK_RESULT $?
     lsmod | grep dm_cache
     CHECK_RESULT $? 1
+    modprobe -n dm_cache
+    CHECK_RESULT $?
+    lsmod | grep dm_cache
+    CHECK_RESULT $? 1
     modprobe -D dm_log | grep "insmod"
     CHECK_RESULT $?
     modprobe -c | grep "alias symbol"

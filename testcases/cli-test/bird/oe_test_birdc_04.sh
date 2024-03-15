@@ -15,8 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   verification birdc command
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "./common/lib/util.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,7 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     # test graceful restart
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdc
     expect "bird>" {send "graceful restart\n"}
     send "quit\n"
@@ -38,7 +38,7 @@ EOF
     CHECK_RESULT $? 0 0 "check birdc graceful restart failed"
     rm -f tmp.txt
     # test echo
-    expect <<EOF > tmp.txt
+    expect <<EOF >tmp.txt
     spawn birdc
     expect "bird>" {send "echo all\n"}
     send "quit\n"
@@ -46,9 +46,9 @@ EOF
 EOF
     num=$(wc -l tmp.txt)
     if [[ ${num} == 4 ]]; then
-	echo "aa" | grep "aa"
+        echo "aa" | grep "aa"
     else
-	echo "aa" | grep "bb"
+        echo "aa" | grep "bb"
     fi
     CHECK_RESULT $? 0 0 "check birdc echo failed"
     LOG_INFO "End to run test."
@@ -56,8 +56,8 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    kill -9 $(pgrep "bird -c")
+    DNF_REMOVE "$@"
+    pgrep bird | xargs kill -9
     clean_dir
     LOG_INFO "End to restore the test environment."
 }

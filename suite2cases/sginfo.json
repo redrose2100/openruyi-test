@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/sginfo",
-    "cases": [
-        {
-            "name": "oe_test_sginfo_func"
-        }
-    ]
-}

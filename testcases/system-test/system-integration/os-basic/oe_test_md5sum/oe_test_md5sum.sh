@@ -17,7 +17,7 @@
 # @Desc      :   Command test-md5sum 
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -31,6 +31,8 @@ function run_test() {
     md5sum  testfile1  > testfile1.md5  
     test -f testfile1.md5
     CHECK_RESULT $? 0 0 "The testfile1.md5 is not exit "  
+    md5sum -c testfile1.md5
+    CHECK_RESULT $? 0 0 "md5sum check failed"
     LOG_INFO "End to run test."
 }
 

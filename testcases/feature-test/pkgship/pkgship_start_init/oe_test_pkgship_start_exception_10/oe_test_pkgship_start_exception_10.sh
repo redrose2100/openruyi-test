@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -11,40 +11,43 @@
 ####################################
 #@Author    	:   Li, Meiting
 #@Contact   	:   244349477@qq.com
-#@Date      	:   2021-02-19
+#@Date      	:   2024-01-23
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Pkgship items normal function test
 #####################################
-
+# shellcheck disable=SC1091
 source ../../common_lib/pkgship_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start to prepare the database config."
+    LOG_INFO "Start to prepare the test environment."
 
-    cp -p ${SYS_CONF_PATH}/package.ini ${SYS_CONF_PATH}/package.ini.bak
+    cp -p "${SYS_CONF_PATH}"/package.ini "${SYS_CONF_PATH}"/package.ini.bak
     ACT_SERVICE stop
     
-    LOG_INFO "End to prepare the database config."
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    # Set log_level as empty
     MODIFY_INI log_level ""
-    systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
+    systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code."
+    CHECK_RESULT $? 0 0 "Check start pkgship.service failed when set log_level=''."
     journalctl -u pkgship -n 20 | grep "\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
     log_level"
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when set log_level=''."
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
     log_level\""
     CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when set log_level=''."
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
 
-    # Delete log_level
-    sed -i '/log_level/d' ${SYS_CONF_PATH}/package.ini
-    systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code." &&
+    sed -i '/log_level/d' "${SYS_CONF_PATH}"/package.ini
+    systemctl start pkgship 2>&1 | grep "Job for pkgship.service failed because the control process exited with error code."
+    CHECK_RESULT $? 0 0 "Check start pkgship.service failed when delete log_level."
     journalctl -u pkgship -n 20 | grep "\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters: log_level"
     CHECK_RESULT $? 0 0 "Check start by systemctl failed when delete log_level."
+    ACT_SERVICE stop
     su pkgshipuser -c "pkgshipd start 2>&1 | grep \"\[ERROR\] The value of below config names is None in: /etc/pkgship/package.ini, Please check these parameters:
     log_level\""
     CHECK_RESULT $? 0 0 "Check start by pkgshipd failed when delete log_level."
@@ -55,11 +58,12 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -f ${SYS_CONF_PATH}/package.ini
-    mv ${SYS_CONF_PATH}/package.ini.bak ${SYS_CONF_PATH}/package.ini
+    su pkgshipuser -c "pkgshipd stop >/dev/null"
+    rm -rf "${SYS_CONF_PATH}"/package.ini
+    mv "${SYS_CONF_PATH}"/package.ini.bak "${SYS_CONF_PATH}"/package.ini
     REVERT_ENV
     
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

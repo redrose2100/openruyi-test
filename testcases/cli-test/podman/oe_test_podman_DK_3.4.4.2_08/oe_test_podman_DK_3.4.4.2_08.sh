@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
-
+# shellcheck disable=SC1091
 source "../common/common_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -35,37 +35,35 @@ function run_test() {
     docker ps -a | grep -i "Created"
     CHECK_RESULT $? 0 0 'check docker ps -a | grep -i "Created" failed'
     ID=$(docker create --annotation HELLO=WORLD alpine)
-    test -z ${ID}
-    CHECK_RESULT $? 0 0 'check ID failed'
-    docker inspect $ID | grep '"HELLO": "WORLD"'
-    CHECK_RESULT $? 0 0 'check docker inspect $ID | grep failed'
+    docker inspect "$ID" | grep '"HELLO": "WORLD"'
+    CHECK_RESULT $? 0 0 "check docker inspect $ID | grep failed"
     docker create --attach STDIN alpine ls
     CHECK_RESULT $? 0 0 'check docker create --attach STDIN alpine ls failed'
     docker ps -a | grep ls
     CHECK_RESULT $? 0 0 'check docker ps -a | grep ls faield'
-    ID=$(docker create --blkio-weight 15 alpine ls)
-    docker inspect $ID | grep '"BlkioWeight": 15'
-    CHECK_RESULT $? 0 0 'check docker inspect BlkioWeight failed'
-    ID=$(docker create --blkio-weight-device /dev/:15 fedora ls)
-    docker inspect $ID | grep '"weight": 15'
-    CHECK_RESULT $? 0 0 'check docker inspect weight failed'
+    podman_version=$(rpm -qa podman | awk -F- '{print $2}' | awk -F. '{print $1$2$3}')
+    if [ "$podman_version" -gt 400 ]; then
+        ID=$(docker create --blkio-weight 15 alpine ls)
+        docker inspect "$ID" | grep '"BlkioWeight": 15'
+        CHECK_RESULT $? 0 0 'check "BlkioWeight": 15 test failed'
+        ID=$(docker create --blkio-weight-device /dev/:15 fedora ls)
+        docker inspect "$ID" | grep '"weight": 15'
+        CHECK_RESULT $? 0 0 'check "weight": 15 test failed'
+    else
+        LOG_INFO "This version does not have this parameter."
+    fi
     ID=$(docker create --cap-add net_admin alpine ls)
-    test -z ${ID}
-    CHECK_RESULT $? 0 0 'check test -z ${ID} failed'
-    docker inspect $ID | grep -A 1 "CapAdd" | grep "net_admin"
-    CHECK_RESULT $? 0 0 'check docker inspect $ID | grep -A 1 "CapAdd" | grep "net_admin" failed'
+    docker inspect "$ID" | grep -A 1 "Add" | grep -i "net_admin"
+    CHECK_RESULT $? 0 0 'check net_admin test failed'
     ID=$(docker create --cap-drop net_admin alpine ls)
-    test -z ${id}
-    CHECK_RESULT $? 0 0 'check test -z ${ID}-2 failed'
-    docker inspect $ID | grep -A 1 "CapDrop" | grep "net_admin"
-    CHECK_RESULT $? 0 0 'check docker inspect $ID | grep -A 1 "CapDrop" | grep "net_admin" failed'
+    docker inspect "$ID" | grep -iA 1 "Drop" | grep -i "net_admin"
+    CHECK_RESULT $? 0 0 'check CapDrop test failed'
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
     LOG_INFO "End to restore the test environment."
 }
 

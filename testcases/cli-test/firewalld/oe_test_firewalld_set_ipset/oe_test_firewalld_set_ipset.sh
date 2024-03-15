@@ -24,7 +24,7 @@ function pre_test() {
     DNF_INSTALL httpd
     sudo systemctl start httpd
     sudo systemctl start firewalld
-    source_ip=$(echo "${NODE1_IPV4%\.*\.*}.0.0")
+    source_ip=${NODE1_IPV4%\.*\.*}.0.0
     set_name="testipset"
     LOG_INFO "End of environmental preparation!"
 }
@@ -57,6 +57,7 @@ EOL
     sudo firewall-cmd --reload
     systemctl restart firewalld
     CHECK_RESULT $?
+    SLEEP_WAIT 5
     SSH_CMD "ping  $NODE1_IPV4 -c 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 1
     LOG_INFO "Finish testcase execution."
@@ -70,7 +71,7 @@ function post_test() {
     sudo systemctl start firewalld
     rm -rf iplist.txt
     sudo systemctl stop httpd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

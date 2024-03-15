@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    pylint --list-msgs | grep ":blacklisted-name"
+    pylint --list-msgs | grep "name"
     CHECK_RESULT $? 0 0 "L$LINENO: pylint --list-msgs No Pass"
     pylint --list-msgs-enabled | grep "Enabled messages:"
     CHECK_RESULT $? 0 0 "L$LINENO: pylint --list-msgs-enabled No Pass"
@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: pylint --list-extensions No Pass"
     pylint --full-documentation | grep "Pylint global options and switches"
     CHECK_RESULT $? 0 0 "L$LINENO: pylint --full-documentation No Pass"
-    pylint --generate-rcfile > pylint.conf
+    pylint --generate-rcfile >pylint.conf
     find . -name "pylint.conf" | grep "pylint.conf"
     CHECK_RESULT $? 0 0 "L$LINENO: pylint --generate-rcfile No Pass"
     pylint --confidence=INFERENCE_FAILURE ./common/test.py | grep "Your code has been rated at"

@@ -20,7 +20,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "dbus dbus-tools"
+    DNF_INSTALL "dbus dbus-tools dbus-x11"
+    eval "$(dbus-launch --sh-syntax)"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -52,6 +53,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
+    pgrep "dbus" |xargs kill -9
+    systemctl stop dbus
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

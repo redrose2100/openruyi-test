@@ -49,7 +49,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 "$(pgrep -f "dbus-monitor")"
+    pgrep "dbus" |xargs kill -9
+    systemctl stop dbus
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

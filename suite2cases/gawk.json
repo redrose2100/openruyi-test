@@ -3,6 +3,12 @@
   "cases": [
     {
       "name": "oe_test_gawk"
+    },
+    {
+      "name": "oe_test_gawk01"
+    },
+    {
+      "name": "oe_test_gawk02"
     }
   ]
 }

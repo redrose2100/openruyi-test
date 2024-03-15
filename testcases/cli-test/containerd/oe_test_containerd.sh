@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   containerd command validation
 # ############################################
+# shellcheck disable=SC1090,SC2009
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -46,11 +47,9 @@ function post_test() {
     ctr task kill nginx-container
     ctr c rm nginx-container
     ctr images rm docker.io/library/nginx:latest
-    ps -ef | grep -v 'grep' |grep 'containerd' |grep -v 'oe_test_containerd' |awk '{print $2}' | xargs -I {} kill -9 {}
-    DNF_REMOVE
+    ps -ef | grep -v 'grep' | grep 'containerd' | grep -v 'oe_test_containerd' | grep -v "mugen.sh" | awk '{print $2}' | xargs -I {} kill -9 {}
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
 main "$@"
-
-

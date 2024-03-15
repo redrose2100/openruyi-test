@@ -20,7 +20,8 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function config_params() {
     LOG_INFO "Start loading data!"
-    TEST_DISK="/dev/$(TEST_DISK 1)"
+    DISK_NAME=$(TEST_DISK 1|awk '{print $1}')
+    TEST_DISK="/dev/$DISK_NAME"
     LOG_INFO "Loading data is complete!"
 }
 
@@ -51,10 +52,10 @@ function post_test() {
     umount /mnt/test_encrypted
     cryptsetup close test_encrypted
     rm -rf /mnt/test_encrypted
-    mkfs.ext4 ${TEST_DISK}1 -F
+    mkfs.ext4 "${TEST_DISK}"1 -F
     echo -e "d\n\nw" | fdisk "${TEST_DISK}"
-    DNF_REMOVE
-    mkfs.ext4 ${TEST_DISK} -F
+    DNF_REMOVE "$@"
+    mkfs.ext4 "${TEST_DISK}" -F
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

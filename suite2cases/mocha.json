@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/mocha",
+    "cases": [
+        {
+            "name": "oe_test_mocha"
+	},
+	{
+	    "name": "oe_test_mocha_01"
+        },
+        {
+	    "name": "oe_test_mocha_02"	
+	},
+        {
+	    "name": "oe_test_mocha_03"
+	},
+	{
+	    "name": "oe_test_mocha_04"
+	} 
+    ]
+}

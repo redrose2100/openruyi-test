@@ -35,11 +35,11 @@ function run_test() {
     ping_pid=$(pgrep -f "ping -q www.baidu.com")
     cgclassify -g cpu:test "$ping_pid"
     CHECK_RESULT $? 0 0 "Failed to execute cgclassify"
-    grep "$ping_pid" /sys/fs/cgroup/cpu/test/tasks
+    grep "$ping_pid" /sys/fs/cgroup/cpu/test/tasks || grep -r "$ping_pid" /sys/fs/cgroup/test/cgroup.threads
     CHECK_RESULT $? 0 0 "Failed to display pid"
     kill -9 "$ping_pid"
-    wc -l /sys/fs/cgroup/cpu/test/tasks | grep 0
-    CHECK_RESULT $? 0 0 "File is not empty"
+    grep "$ping_pid" /sys/fs/cgroup/cpu/test/tasks || grep -r "$ping_pid" /sys/fs/cgroup/test/cgroup.threads
+    CHECK_RESULT $? 0 1 "File is not empty"
     LOG_INFO "End to run test."
 }
 

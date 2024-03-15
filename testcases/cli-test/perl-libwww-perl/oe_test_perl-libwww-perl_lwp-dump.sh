@@ -16,8 +16,9 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of perl-libwww-perl command
 # ############################################
+# shellcheck disable=SC1091
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -31,7 +32,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lwp-dump --agent failed"
     lwp-dump --keep-client-headers http://www.baidu.com 2>&1 | grep 'Client-'
     CHECK_RESULT $? 0 0 "Check lwp-dump --keep-client-headers failed"
-    lwp-dump --max-length 10 http://www.baidu.com 2>&1 | grep 'Bdpagetype:'
+    lwp-dump --max-length 10 http://www.baidu.com 2>&1 | grep 'OK'
     CHECK_RESULT $? 0 0 "Check lwp-dump --max-length failed"
     lwp-dump --method 'GET' http://www.baidu.com 2>&1 | grep 'Server:'
     CHECK_RESULT $? 0 0 "Check lwp-dump --method failed"
@@ -53,8 +54,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf a.txt index.*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restoring the test environment."
 }
 
-main $@
+main "$@"

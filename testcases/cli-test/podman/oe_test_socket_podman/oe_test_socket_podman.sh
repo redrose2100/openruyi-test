@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test podman.socket restart
 # #############################################
-
-source "../common/common_lib.sh"
+# shellcheck disable=SC1091
+source "../../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."

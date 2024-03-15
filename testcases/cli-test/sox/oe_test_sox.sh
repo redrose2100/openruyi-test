@@ -31,13 +31,19 @@ function run_test() {
   CHECK_RESULT $? 0 0 "sox failure"
   test -e  output.wav
   CHECK_RESULT $? 0 0 "output.wav not exist"
+  sox output.wav -d
+  CHECK_RESULT $? 0 0 "output.wav play failure"
+  sox output.wav output2.wav trim 10 20
+  CHECK_RESULT $? 0 0 "Cropping audio failed"
+  test -e  output2.wav
+  CHECK_RESULT $? 0 0 "output.wav not exist"
   LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
   DNF_REMOVE "$@"
-  rm -rf  output.wav
+  rm -rf  output*.wav
   LOG_INFO "Finish environment cleanup!"
 }
 

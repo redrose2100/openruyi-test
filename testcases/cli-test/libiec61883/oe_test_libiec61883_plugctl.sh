@@ -18,7 +18,7 @@
 # @Desc      :   TEST plugctl
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 # Installation Preparation of test objects, tools required for testing, etc
 function pre_test() {
@@ -34,13 +34,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     plugctl -h | grep "plugctl:"
     CHECK_RESULT $? 0 0 "option: -h error"
-    plugctl oMPR.data_rate
+    plugctl oMPR
     CHECK_RESULT $? 0 0 "plugctl read error"
-    plugctl oMPR.data_rate="test"
+    plugctl oMPR="test"
     CHECK_RESULT $? 0 0 "plugctl write error"
-    plugctl -p 1 oMPR.data_rate
+    plugctl -p 1 oMPR
     CHECK_RESULT $? 0 0 "option: -p error"
-    plugctl -n 1 oMPR.data_rate
+    plugctl -n 1 oMPR
     CHECK_RESULT $? 0 0 "option: -n error"
     LOG_INFO "End to run test."
 }
@@ -49,7 +49,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /dev/raw1394
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

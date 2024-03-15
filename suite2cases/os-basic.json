@@ -842,6 +842,51 @@
 	},
         {
            "name": "oe_test_znew"
-        }
+        },
+        {
+           "name": "oe_test_zegrep"
+        },
+        {
+           "name": "oe_test_arp"
+        },
+        {
+           "name": "oe_test_strace"
+        },
+	{
+          "name": "oe_test_tac"
+	},
+	{
+          "name": "oe_test_lshw"
+	},
+	{
+          "name": "oe_test_csplit_01"
+	}
+	,
+        {
+          "name": "oe_test_zipnote"
+        },
+	{
+	  "name": "oe_test_join"
+        },
+        {
+	  "name": "oe_test_genisoimage"
+	}
+	,
+        {
+          "name": "oe_test_zfgrep"
+        },
+	{
+	  "name": "oe_test_bzgrep"
+	},
+	{
+	  "name": "oe_test_ipcs"
+	},
+	{
+	  "name": "oe_test_nl"
+	},
+        {
+	  "name": "oe_test_nice"
+	}
+
     ]
 }

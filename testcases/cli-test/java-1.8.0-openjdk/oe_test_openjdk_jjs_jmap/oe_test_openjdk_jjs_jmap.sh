@@ -17,9 +17,11 @@
 # @Desc      :   verification openjdk‘s command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL java-1.8.0-openjdk*
     LOG_INFO "End to prepare the test environment."
 }
@@ -71,7 +73,7 @@ function run_test() {
     echo "println(arguments[0]); 
 println(arguments[1]); 
 println(arguments[2]);" >run.js
-    CHECK_RESULT $(jrunscript run.js arg1 arg2 arg3 | grep -icE 'arg1|arg2|arg3') 3
+    CHECK_RESULT "$(jrunscript run.js arg1 arg2 arg3 | grep -icE 'arg1|arg2|arg3')" 3
 
     expect -c "
     log_file testlog
@@ -91,8 +93,9 @@ println(arguments[2]);" >run.js
 
 function post_test() {
     LOG_INFO "Need't to restore the tet environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testlog* run.js
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

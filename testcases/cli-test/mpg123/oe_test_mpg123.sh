@@ -17,26 +17,28 @@
 #@Desc          :   mpg123 is a audio player/decoder
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
-function pre_test()
-{
+function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL mpg123
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start to run test."
-    mpg123 mess.mp3 2>&1 | grep "Decoding of mess.mp3 finished."
-    CHECK_RESULT $? 0 0 "mpg123 player failed"
-    mpg123 -v mess.mp3 2>&1 | grep "Decoding of mess.mp3 finished."
-    CHECK_RESULT $? 0 0 "mpg123 player verbosity failed"
-    mpg123 -q mess.mp3
-    CHECK_RESULT $? 0 0 "mpg123 player quiet failed"
+    if lspci | grep -i audio; then
+        mpg123 mess.mp3 2>&1 | grep "Decoding of mess.mp3 finished."
+        CHECK_RESULT $? 0 0 "mpg123 player failed"
+        mpg123 -v mess.mp3 2>&1 | grep "Decoding of mess.mp3 finished."
+        CHECK_RESULT $? 0 0 "mpg123 player verbosity failed"
+        mpg123 -q mess.mp3
+        CHECK_RESULT $? 0 0 "mpg123 player quiet failed"
+    else
+        LOG_INFO "Environment not supported."
+    fi
     mpg123 -w mess.wav mess.mp3
-    ls mess.wav | grep mess.wav
+    test -f mess.wav
     CHECK_RESULT $? 0 0 "convert mp3 to wav failed"
     mpg123-id3dump -n mess.mp3 2>&1 | grep "APIC type(6, media) mime(image/jpeg) size(19726)"
     CHECK_RESULT $? 0 0 "dump ID3 meta failed"
@@ -45,11 +47,10 @@ function run_test()
     LOG_INFO "End to run test."
 }
 
-function post_test()
-{
+function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf mess.wav mess.mp3.media.jpeg
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

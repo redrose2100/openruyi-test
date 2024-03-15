@@ -17,7 +17,7 @@
 # @Desc      :   verification lxc‘s attach command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "lxc lxc-devel lxc-libs lxcfs lxcfs-tools tar busybox"
@@ -33,30 +33,27 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-copy --help failed." 
     lxc-copy --usage 2>&1 | grep -i "Usage: lxc-copy"
     CHECK_RESULT $? 0 0 "Check lxc-copy --usage failed."
-    lxc-copy --version | grep $version
+    lxc-copy --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-copy --version failed."
     lxc-copy -s -n myEuler1 -N myEuler2
     CHECK_RESULT $? 0 0 "Check lxc-copy -s failed."
     lxc-ls | grep myEuler2
     CHECK_RESULT $? 0 0 "Check lxc-ls failed."
-    lxc-start myEuler1
-    CHECK_RESULT $? 0 0 "Failed to start container."
     lxc-device --help 2>&1 | grep -i "Usage"
     CHECK_RESULT $? 0 0 "Check lxc-device --help failed."
     lxc-device --usage 2>&1 | grep  -i "Usage: lxc-device"
     CHECK_RESULT $? 0 0 "Check lxc-device --usage failed."
-    lxc-device --version | grep $version
+    lxc-device --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-device --version failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the tet environment."
-    lxc-stop myEuler1
+    LOG_INFO "Start to restore the test environment."
     lxc-destroy myEuler2
     lxc-destroy myEuler1
-    DNF_REMOVE
-    LOG_INFO "End to restore the tet environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

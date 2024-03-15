@@ -15,12 +15,13 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   test all oe repos
 ###################################
-
+# shellcheck disable=SC1091
 source "common/common_dnf.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
+    add_low_repo
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -44,6 +45,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    delete_low_repo
     clear_env
     LOG_INFO "Finish restoring the test environment."
 }

@@ -17,7 +17,7 @@
 # @Desc      :   Test cgget and cgset
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -30,9 +30,9 @@ function run_test() {
     LOG_INFO "Start to run test."
     cgget -g cpu:test | grep -A 10 test | grep cpu
     CHECK_RESULT $? 0 0 "Failed to execute cgget"
-    cgset -r cpu.shares=2048 test
+    cgset -r cpu.shares=2048 test || cgset -r cpu.weight=200 test
     CHECK_RESULT $? 0 0 "Failed to execute cgset"
-    cgget -g cpu:test | grep "cpu.shares: 2048"
+    cgget -g cpu:test | grep "cpu.shares: 2048" || cgget -g cpu:test | grep "200"
     CHECK_RESULT $? 0 0 "Failed to display cpu.shares"
     LOG_INFO "End to run test."
 }
@@ -40,7 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     cgdelete -g cpu:test
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

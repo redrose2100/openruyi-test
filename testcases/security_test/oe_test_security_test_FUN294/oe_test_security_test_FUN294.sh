@@ -16,11 +16,13 @@
 #@Desc      	:   Only root can specify a user name
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     useradd test
+    OLD_LANG=${LANG}
+    export LANG=en_US.UTF-8
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -43,6 +45,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     userdel -rf test
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment"
-    DNF_INSTALL "pylint"
+    DNF_INSTALL "pylint bc"
     LOG_INFO "End to prepare the test environment"
 }
 
@@ -35,8 +35,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: pylint --init-hook <code> No Pass"
     pylint -E ./common/test_error.py | grep "Module test"
     CHECK_RESULT $? 0 0 "L$LINENO: pylint -E No Pass"
-    pylint --py3k ./common/test.py | grep "Your code has been rated at"
-    CHECK_RESULT $? 0 0 "L$LINENO: pylint --py3k No Pass"
+    pylint_version=$(rpm -qa pylint | awk -F- '{print $2}' | awk -F. '{print $1$2$3}')
+    if [ "$pylint_version" -lt 2122 ]; then
+        pylint --py3k ./common/test.py | grep "Your code has been rated at"
+        CHECK_RESULT $? 0 0 "L$LINENO: pylint --py3k No Pass"
+    else
+        LOG_INFO "This version does not have this parameter."
+    fi
     pylint -v ./common/test.py | grep "Module test"
     CHECK_RESULT $? 0 0 "L$LINENO: pylint -v No Pass"
     pylint --verbose ./common/test.py | grep "Module test"

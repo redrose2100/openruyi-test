@@ -18,26 +18,25 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
-function pre_test()
-{
+function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL "po4a"
     version=$(rpm -qa po4a | awk -F "-" '{print$2}')
     mkdir tmp
-    echo "hello world" > tmp/master.txt
-    echo "Hola, Mundo" > tmp/translation_esp.txt
+    echo "hello world" >tmp/master.txt
+    echo "Hola, Mundo" >tmp/translation_esp.txt
 
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start to run test."
-    
+
     po4a-gettextize --help | grep -Pz "Usage:\n.*po4a-gettextize"
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize --help"
-    
+
     po4a-gettextize -h | grep -Pz "Usage:\n.*po4a-gettextize"
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize -h"
 
@@ -46,7 +45,7 @@ function run_test()
 
     test "$(po4a-gettextize --version 2>&1 | awk 'NR==1{print $3}' | awk '{sub(/\.$/, ""); print $1}')" == "$version"
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize --version"
-    
+
     test "$(po4a-gettextize -V 2>&1 | awk 'NR==1{print $3}' | awk '{sub(/\.$/, ""); print $1}')" == "$version"
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize -V"
 
@@ -56,7 +55,7 @@ function run_test()
     po4a-gettextize -f text -m tmp/master.txt -l tmp/translation_esp.txt -p tmp/translation_esp_01.po --verbose
     grep -Pz 'msgid "hello world"\nmsgstr "Hola, Mundo"' tmp/translation_esp_01.po
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize -f text -m tmp/master.txt -l tmp/translation_esp.txt -p tmp/translation_esp_01.po"
-    
+
     po4a-gettextize --format text --master tmp/master.txt --localized tmp/translation_esp.txt --po tmp/translation_esp_011.po --verbose
     grep -Pz 'msgid "hello world"\nmsgstr "Hola, Mundo"' tmp/translation_esp_011.po
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize -f text -m tmp/master.txt -l tmp/translation_esp.txt -p tmp/translation_esp_011.po"
@@ -64,12 +63,12 @@ function run_test()
     LOG_INFO "End to run test."
 }
 
-function post_test()
-{
+function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -rf tmp
     DNF_REMOVE "$@"
+    export LANG=${OLD_LANG}
 
     LOG_INFO "End to restore the test environment."
 }

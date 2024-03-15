@@ -15,59 +15,52 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   verification ipvsadm‘s TUN_rr model
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091,SC2154
+source ../common/common_ipvs.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     echo "1" >/proc/sys/net/ipv4/ip_forward
-    VIP=$(echo ${NODE1_IPV4} | cut -d '.' -f 1-3).100
-    DNF_INSTALL "ipvsadm httpd net-tools"
-    systemctl start httpd
-    systemctl stop firewalld
-    ip addr add $VIP/22 dev ${NODE2_NIC}
-    ifconfig tunl0 $VIP broadcast $VIP netmask 255.255.255.255 up
-    route add -host $VIP dev tunl0
-    ipvsadm
-    ipvsadm -C
-    ipvsadm -A -t $VIP:80 -s lc
-    ipvsadm -a -t $VIP:80 -r ${NODE2_IPV4}:80 -g
-    ipvsadm -a -t $VIP:80 -r ${NODE3_IPV4}:80 -g
+    lsmod | grep ipip || modprobe ipip
+    build_env
+    ip addr add "$ipvs_vip"/24 dev tunl0
+    ipvsadm -A -t "$ipvs_vip":80 -s lc
+    ipvsadm -a -t "$ipvs_vip":80 -r "$ipvs_ip2":80 -g
+    ipvsadm -a -t "$ipvs_vip":80 -r "$ipvs_ip3":80 -g
     SLEEP_WAIT 10
-    ipvsadm-save -n >/etc/sysconfig/ipvsadm
+    ipvsadm-save >/etc/sysconfig/ipvsadm
     SLEEP_WAIT 10
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    SSH_SCP ../common/LVS_TUN_RIP_config.sh ${NODE2_USER}@${NODE2_IPV4}:/tmp/LVS_TUN_RIP_config.sh ${NODE2_PASSWORD}
-    SSH_CMD "bash -x /tmp/LVS_TUN_RIP_config.sh start" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    SSH_SCP ../common/LVS_TUN_RIP_config.sh ${NODE3_USER}@${NODE3_IPV4}:/tmp/LVS_TUN_RIP_config.sh ${NODE3_PASSWORD}
-    SSH_CMD "bash -x /tmp/LVS_TUN_RIP_config.sh start" ${NODE3_IPV4} ${NODE3_PASSWORD} ${NODE3_USER}
-    SSH_SCP ../common/GET_CURL_RESULT.sh ${NODE4_USER}@${NODE4_IPV4}:/tmp/GET_CURL_RESULT.sh ${NODE4_PASSWORD}
-    SSH_CMD "bash -x /tmp/GET_CURL_RESULT.sh" ${NODE4_IPV4} ${NODE4_PASSWORD} ${NODE4_USER}
-    SSH_SCP ${NODE4_USER}@${NODE4_IPV4}:/tmp/result_curl.txt ./result_curl.txt ${NODE4_PASSWORD}
-    CHECK_RESULT "$(grep -cE "${NODE2_IPV4}" ./result_curl.txt)" 3
-    CHECK_RESULT "$(grep -cE "${NODE3_IPV4}" ./result_curl.txt)" 3
+    SFTP put --localdir ./../common --localfile LVS_TUN_RIP_config.sh --remotedir /tmp --node 2
+    P_SSH_CMD --node 2 --cmd "
+    sed -i 's/ipvs_vip/$ipvs_vip/g' /tmp/LVS_TUN_RIP_config.sh;
+    sed -i 's/ipvs_eth/$NODE2_NIC/g' /tmp/LVS_TUN_RIP_config.sh;
+    sed -i 's/serveripvs_ip/$ipvs_ip2/g' /tmp/LVS_TUN_RIP_config.sh;
+    bash -x /tmp/LVS_TUN_RIP_config.sh start;"
+    SFTP put --localdir ./../common --localfile LVS_TUN_RIP_config.sh --remotedir /tmp --node 3
+    P_SSH_CMD --node 3 --cmd "
+    sed -i 's/ipvs_vip/$ipvs_vip/g' /tmp/LVS_TUN_RIP_config.sh;
+    sed -i 's/ipvs_eth/$NODE3_NIC/g' /tmp/LVS_TUN_RIP_config.sh;
+    sed -i 's/serveripvs_ip/$ipvs_ip3/g' /tmp/LVS_TUN_RIP_config.sh;
+    bash -x /tmp/LVS_TUN_RIP_config.sh start;"
+    SFTP put --localdir ./../common --localfile GET_CURL_RESULT.sh --remotedir /tmp --node 4
+    P_SSH_CMD --node 4 --cmd "
+    sed -i 's/ipvs_vip/$ipvs_vip/g' /tmp/GET_CURL_RESULT.sh;
+    bash -x /tmp/GET_CURL_RESULT.sh;"
+    SFTP get --localdir ./ --remotefile result_curl.txt --remotedir /tmp --node 4
+    CHECK_RESULT "$(grep -cE "${ipvs_ip2}" ./result_curl.txt)" 3
+    CHECK_RESULT "$(grep -cE "${ipvs_ip3}" ./result_curl.txt)" 3
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    systemctl start firewalld
-    systemctl stop httpd
-    echo "0" >/proc/sys/net/ipv4/ip_forward
-    SLEEP_WAIT 2
-    ipvsadm -C
-    rm -rf ./result_curl.txt /etc/sysconfig/ipvsadm
-    route del -host $VIP dev tunl0
-    ifconfig tunl0 $VIP broadcast $VIP netmask 255.255.255.255 down
-    ip addr del $VIP/22 dev ${NODE2_NIC}
-    DNF_REMOVE
-    SSH_CMD "bash -x /tmp/LVS_TUN_RIP_config.sh stop" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    SSH_CMD "bash -x /tmp/LVS_TUN_RIP_config.sh stop" ${NODE3_IPV4} ${NODE3_PASSWORD} ${NODE3_USER}
-    SSH_CMD "rm -rf /tmp/GET_CURL_RESULT.sh /tmp/result_curl.txt" ${NODE4_IPV4} ${NODE4_PASSWORD} ${NODE4_USER}
+    clean_tun_env
+    clean_env
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

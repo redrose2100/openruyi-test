@@ -14,6 +14,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc          :   verification ansible's commnd
 #####################################
+# shellcheck disable=SC1091
 source ../common/common_lib.sh
 
 function pre_test() {

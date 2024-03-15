@@ -170,8 +170,8 @@ function clean_gauss_server() {
 
 function start_gauss_client() {
     SSH_CMD "rpm -q java || yum install -y java" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SSH_CMD "whet https://sourceforge.net/projects/benchmarksql/files/benchmarksql-5.0.zip" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SSH_CMD "tar -xf benchmarksql-5.0.tar.gz" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "wget https://sourceforge.net/projects/benchmarksql/files/benchmarksql-5.0.zip" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "unzip benchmarksql-5.0.zip" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "sed -i 's/9.82.*5432/${NODE1_IPV4}:5432/' benchmarksql-5.0/run/props.pg" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
     SSH_CMD "cd benchmarksql-5.0/run;sh runDatabaseBuild.sh props.pg" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
@@ -184,5 +184,5 @@ function start_gauss_client() {
 function clean_gauss_client() {
     SSH_CMD "ps aux | grep -v grep | grep runBenchmark | awk '{print $2}' | xargs kill -9" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "cd benchmarksql-5.0/run;sh runDatabaseDestroy.sh props.pg" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SSH_CMD "rm -rf benchmarksql-5.0.tar.gz" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "rm -rf benchmarksql-5.0.zip" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 }

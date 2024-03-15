@@ -19,26 +19,31 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    lsblk >>lsblk.txt
+    dev=$(sed -n "2, 1p" lsblk.txt | awk '{print $1}')
+    hdparm -b /dev/"$dev" || exit 1
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
-    lsblk >> lsblk.txt
-    dev=$(sed -n "2, 1p" lsblk.txt |awk '{print $1}')
     hdparm -h | grep -i "Usage"
     CHECK_RESULT $? 0 0 "hdparm -h fail"
-    hdparm -a /dev/$dev | grep -i /dev/$dev
+    hdparm -a /dev/"$dev" | grep -i /dev/"$dev"
     CHECK_RESULT $? 0 0 "hdparm -a system fail"
-    hdparm -b /dev/$dev | grep -i /dev/$dev
+    hdparm -b /dev/"$dev" | grep -i /dev/"$dev"
     CHECK_RESULT $? 0 0 "hdparm -b system fail"
-    hdparm -c /dev/$dev | grep -i "IO_support"
+    hdparm -c /dev/"$dev" | grep -i "IO_support"
     CHECK_RESULT $? 0 0 "hdparm -c system fail"
-    hdparm -m /dev/$dev | grep -i "multcount"
+    hdparm -m /dev/"$dev" | grep -i "multcount"
     CHECK_RESULT $? 0 0 "hdparm -m system fail"
-    hdparm -V /dev/$dev | grep -i "hdparm"
+    hdparm -V /dev/"$dev" | grep -i "hdparm"
     CHECK_RESULT $? 0 0 "hdparm -V system fail"
-    hdparm -r /dev/$dev | grep -i "readonly"
+    hdparm -r /dev/"$dev" | grep -i "readonly"
     CHECK_RESULT $? 0 0 "hdparm -r system fail"
-    hdparm -I /dev/$dev | grep -i "Capabilities"
+    hdparm -I /dev/"$dev" | grep -i "Capabilities"
     CHECK_RESULT $? 0 0 "hdparm -I system fail"
     LOG_INFO "Finish test!"
 }

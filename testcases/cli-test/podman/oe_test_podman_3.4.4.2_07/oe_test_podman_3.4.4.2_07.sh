@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
-
+# shellcheck disable=SC1091
 source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,23 +28,26 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     podman stop postgres
-    podman wait --latest | grep [0-9]
+    podman wait --latest | grep "[0-9]"
     CHECK_RESULT $? 0 0 'check podman wait --latest | grep [0-9] failed'
-    podman wait --interval 250 postgres | grep [0-9]
+    podman wait --interval 250 postgres | grep "[0-9]"
     CHECK_RESULT $? 0 0 'check podman wait --interval 250 postgres | grep [0-9] failed'
     podman start postgres
     podman kill -l
     CHECK_RESULT $? 0 0 'check podman kill -l failed'
+    SLEEP_WAIT 3
     podman ps -a | grep "Exited"
     CHECK_RESULT $? 0 0 'check podman ps -a | grep "Exited" failed'
     podman start postgres
     podman kill -a
     CHECK_RESULT $? 0 0 'check podman kill -a failed'
+    SLEEP_WAIT 3
     podman ps -a | grep "Exited"
     CHECK_RESULT $? 0 0 'check podman ps -a | grep "Exited" failed'
     podman start postgres
-    podman kill -s KILL $(podman ps -q)
+    podman kill -s KILL "$(podman ps -q)"
     CHECK_RESULT $? 0 0 'check podman kill -s KILL failed'
+    SLEEP_WAIT 3
     podman ps -a | grep "Exited"
     CHECK_RESULT $? 0 0 'check podman ps -a | grep "Exited" failed'
     podman start postgres

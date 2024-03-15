@@ -21,6 +21,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8    
     DNF_INSTALL "389-ds-base"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
@@ -38,25 +40,25 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: plugin memberof -h No Pass" 
     dsconf localhost plugin memberof show -h | grep  "usage: dsconf instance plugin memberof show" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof show -h No Pass" 
-    dsconf localhost plugin memberof show | grep  "dn: cn=MemberOf Plugin,cn=plugins,cn=config" 
+    dsconf localhost plugin memberof show | grep -iE "dn: cn=MemberOf Plugin,cn=plugins,cn=config" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof show No Pass" 
     dsconf localhost plugin memberof disable -h | grep  "usage: dsconf instance plugin memberof disable" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof disable -h No Pass" 
     dsconf localhost plugin memberof enable
-    dsconf localhost plugin memberof disable | grep  "Disabled plugin 'MemberOf Plugin'" 
+    dsconf localhost plugin memberof disable | grep -iE "Disabled plugin 'MemberOf Plugin'" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof disable dn No Pass" 
     dsconf localhost plugin memberof enable -h | grep  "usage: dsconf instance plugin memberof enable" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof enable -h No Pass" 
-    dsconf localhost plugin memberof enable | grep  "Enabled plugin 'MemberOf Plugin'" 
+    dsconf localhost plugin memberof enable | grep -iE  "Enabled plugin 'MemberOf Plugin'" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof enable dn No Pass" 
     dsconf localhost plugin memberof status -h | grep  "usage: dsconf instance plugin memberof status" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof enable -h No Pass" 
-    dsconf localhost plugin memberof status | grep  "Plugin 'MemberOf Plugin' is enabled" 
+    dsconf localhost plugin memberof status | grep -iE "Plugin 'MemberOf Plugin' is enabled" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof status dn No Pass" 
     dsconf localhost plugin memberof set -h | grep  "usage: dsconf instance plugin memberof set" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof set -h No Pass" 
-    dsconf localhost plugin memberof set --attr "memberOf1" | grep  "Successfully changed the cn=MemberOf1 Plugin,cn=plugins,cn=config" 
-    dsconf localhost plugin memberof set --attr "memberOf" | grep  "Successfully changed the cn=MemberOf Plugin,cn=plugins,cn=config" 
+    dsconf localhost plugin memberof set --attr "memberOf1" | grep -iE "Successfully changed the cn=MemberOf1 Plugin,cn=plugins,cn=config" 
+    dsconf localhost plugin memberof set --attr "memberOf" | grep -iE "Successfully changed the cn=MemberOf Plugin,cn=plugins,cn=config" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof set --attr No Pass"
     dsconf localhost plugin memberof config-entry -h | grep  "usage: dsconf instance plugin memberof config-entry" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof config-entry -h No Pass"
@@ -76,7 +78,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: plugin memberof config-entry delete -h No Pass"
     dsconf localhost plugin memberof fixup -h | grep  "usage: dsconf instance plugin memberof fixup" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof fixup -h No Pass"
-    dsconf localhost plugin memberof config-entry delete dc=example,dc=com | grep  "Successfully deleted the dc=example,dc=com" 
+    dsconf localhost plugin memberof config-entry delete dc=example,dc=com | grep -iE "Successfully deleted the dc=example,dc=com" 
     CHECK_RESULT $? 0 0 "Check: plugin memberof config-entry delete dn  No Pass"
     LOG_INFO "End to run test."
 }
@@ -87,6 +89,7 @@ function post_test() {
     dsctl localhost remove --do-it
     rm -rf 389_ds_test.inf -rf /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
+    export LANG=${OLD_LANG}
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

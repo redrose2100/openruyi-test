@@ -17,9 +17,6 @@
             "name": "oe_test_partition"
         },
         {
-            "name": "oe_test_selinux"
-        },
-        {
             "name": "oe_test_system_level"
         },
         {
@@ -218,7 +215,7 @@
             "name": "oe_test_wc"
         },
         {
-            "name": "oe_test_chroncy_001"
+            "name": "oe_test_chrony_001"
         },
         {
             "name": "oe_test_diffstat_001"
@@ -258,6 +255,9 @@
         },
         {
             "name": "oe_test_bc"
+        },
+        {
+            "name": "oe_test_bc_01"
         },
         {
             "name": "oe_test_bridge-utils_01"
@@ -792,6 +792,12 @@
         },
         {
             "name": "oe_test_od"
+        },
+        {
+            "name": "oe_test_od_001"
+        },
+        {
+            "name": "oe_test_top"
         },
         {
             "name": "oe_test_nmap_001"
