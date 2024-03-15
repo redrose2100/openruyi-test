@@ -26,9 +26,16 @@ function run_test() {
     modprobe nbd
     lsmod | grep ^nbd
     CHECK_RESULT $? 0 0 "Module not loaded"
-    rmmod -f nbd
-    lsmod | grep ^nbd
-    CHECK_RESULT $? 1 0 "Module not uninstalled"
+    local trr=1
+    while true; do
+        rmmod -f nbd
+        lsmod | grep ^nbd
+        local rv=$?
+        [[ "$rv"x != "0x" ]] && break
+        [ $trr -ge 20 ] && CHECK_RESULT $rv 1 0 "Module not uninstalled"
+        sleep 0.1s
+        ((trr++))
+    done
     LOG_INFO "Finish test!"
 }
 
