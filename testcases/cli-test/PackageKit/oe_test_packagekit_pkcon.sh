@@ -27,6 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
+    pkcon remove git -y
     pkcon install git -y
     CHECK_RESULT $? 0 0 "pkcon install fail"
     rpm -qa git | grep git

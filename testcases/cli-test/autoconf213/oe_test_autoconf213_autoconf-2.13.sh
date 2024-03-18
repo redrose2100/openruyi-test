@@ -25,7 +25,7 @@ function pre_test() {
     dir=$(pwd)
     # test_macro
     cd common || exit
-    cp configure_autoconf.in configure.in
+    #cp configure_autoconf.in configure.in
     cp -r /usr/share/autoconf-2.13 test-macro
     LOG_INFO "End to prepare the test environment."
 }
@@ -69,7 +69,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf test-macro configure.in configure
     cd "$dir" || exit
     LOG_INFO "End to restore the test environment."
