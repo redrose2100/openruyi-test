@@ -55,9 +55,27 @@ function run_test() {
     if [[ "$(dmidecode -s system-product-name)" =~ "KVM" ]]; then
         cpu_num1=$(lshw -c cpu | grep -c 'description')
         cpu_num2=$(lscpu | grep "^CPU(s):" | awk -F ' ' '{print $2}')
-        cpu_num3=$(lshw -c cpu | grep -iw "cores" |awk '{print $2}'| awk -F '=' '{print$2}')
+        cpu_num3=$(lshw -c cpu | grep -iw "cores" | awk '{print $2}' | awk -F '=' '{print$2}')
         [ "${cpu_num1}" -eq "${cpu_num2}" ] || [ "${cpu_num3}" -eq "${cpu_num2}" ]
         CHECK_RESULT $?
+    else
+        if [ "$NODE1_FRAME"x == "aarch64"x ]; then
+            lscpu | grep -i model | grep -i kunpeng
+            CHECK_RESULT $?
+            lspci | grep -i huawei
+            CHECK_RESULT $?
+            dmidecode -t processor | grep -i version | grep -i kunpeng
+            CHECK_RESULT $?
+        else
+            lscpu | grep -i model | grep -ci intel | grep 2
+            CHECK_RESULT $?
+            lspci | grep -i intel
+            CHECK_RESULT $?
+            dmidecode -t processor | grep -i version | grep -i intel
+            CHECK_RESULT $?
+            grep -i model /proc/cpuinfo | grep -i intel
+            CHECK_RESULT $?
+        fi
     fi
     Disk_name=$(lshw -c disk | grep 'logical name' | grep -v 'sr0' | grep -v 'cdrom' | awk -F ': ' 'NR==1{print $2}')
     Disk_size=$(lshw -c disk | grep "$Disk_name$" -A 5 | grep 'size:' | awk -F ': ' '{print $2}' | awk -F 'GiB' '{print $1}')
@@ -68,7 +86,7 @@ function run_test() {
         CHECK_RESULT $?
     else
         tmp_disk=$(fdisk -l "${Disk_name}" | grep Disk | grep GiB | awk -F ' ' '{print $3}')
-        if echo "${tmp_disk}" | grep '\.';then
+        if echo "${tmp_disk}" | grep '\.'; then
             Disk_size2=$(echo "${tmp_disk}" | awk -F '.' '{print $1}')
         else
             Disk_size2="${tmp_disk}"
