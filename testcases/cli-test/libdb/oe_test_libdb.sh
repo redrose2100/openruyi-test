@@ -23,7 +23,7 @@ function pre_test(){
     LOG_INFO "Start environment preparation."
     mkdir /tmp/test
     path=/tmp/test
-    DNF_INSTALL "libdb libdb-devel"
+    DNF_INSTALL "libdb libdb-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 

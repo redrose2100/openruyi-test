@@ -17,7 +17,7 @@
 # @Desc      :   Test the basic functions of lldpad
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,21 +28,21 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    lldpad -v | grep $lldpad_ver
+    lldpad -v | grep -iE "$lldpad_ver|Copyright"
     CHECK_RESULT $? 0 0 "Failed to execute lldpad -v"
     lldpad -h 2>&1 | grep "usage:"
     CHECK_RESULT $? 0 0 "Failed to execute lldpad -h"
     lldpad -d
     CHECK_RESULT $? 0 0 "Failed to execute lldpad -d"
-    ps -aux | grep lld
+    pgrep -f lldpad
     CHECK_RESULT $? 0 0 "Failed to display lld"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 $(pgrep lldpad)
-    DNF_REMOVE
+    kill -9 "$(pgrep lldpad)"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

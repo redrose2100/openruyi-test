@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "libmicrohttpd libmicrohttpd-devel libmicrohttpd-help"
+  DNF_INSTALL "libmicrohttpd libmicrohttpd-devel libmicrohttpd-help gcc"
   mkdir /tmp/test
   cat > /tmp/test/test.c <<EOF
 #include <microhttpd.h>
@@ -96,7 +96,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  DNF_REMOVE
+  DNF_REMOVE "$@"
   rm -rf /tmp/test
   LOG_INFO "Finish environment cleanup!"
 }
