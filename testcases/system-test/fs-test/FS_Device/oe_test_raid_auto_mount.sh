@@ -22,9 +22,8 @@ source "$OET_PATH/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL mdadm 2
-    disks=$(TEST_DISK 2)
-    disk_list=("$disks")
-    test_disk="/dev/${disk_list[0]}"    
+    disk=$(TEST_DISK 2|awk '{print $1}')
+    test_disk="/dev/${disk}"    
     ssh_cmd_node "mkdir /mnt/test_md"
     LOG_INFO "Finish to prepare the database config."
 }
