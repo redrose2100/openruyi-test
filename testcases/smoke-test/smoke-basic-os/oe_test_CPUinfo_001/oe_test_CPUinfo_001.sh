@@ -66,6 +66,8 @@ function run_test() {
             CHECK_RESULT $?
             dmidecode -t processor | grep -i version | grep -i kunpeng
             CHECK_RESULT $?
+            lshw -class processor | grep -i kunpeng
+            CHECK_RESULT $?
         else
             lscpu | grep -i model | grep -ci intel | grep 2
             CHECK_RESULT $?
@@ -74,6 +76,8 @@ function run_test() {
             dmidecode -t processor | grep -i version | grep -i intel
             CHECK_RESULT $?
             grep -i model /proc/cpuinfo | grep -i intel
+            CHECK_RESULT $?
+            lshw -class processor | grep -i intel
             CHECK_RESULT $?
         fi
     fi
