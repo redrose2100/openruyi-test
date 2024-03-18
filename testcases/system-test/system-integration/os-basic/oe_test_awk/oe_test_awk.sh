@@ -34,6 +34,12 @@ function run_test() {
     CHECK_RESULT $? 0 0  "check cpuid result fail"
     awk --help | grep "Usage: awk"
     CHECK_RESULT $? 0 0 "check Tail's help manual fail"
+    awk -F: '{print NF}' /etc/passwd
+    CHECK_RESULT $? 0 0  "check count the number of rows per row after segmentation result fail"
+    awk '{print NR}' /etc/passwd
+    CHECK_RESULT $? 0 0  "check print line numbers result fail"
+    awk 'NR==1 {print $0}' /etc/passwd
+    CHECK_RESULT $? 0 0  "check specify line content result fail"
     LOG_INFO "End to run test."
 }
 
