@@ -21,6 +21,22 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL nasm
+    cat >test.asm <<EOL
+section .data
+msg db "Hello, world!", 0Ah
+section .text
+global _start
+_start:
+mov rax, 1
+mov rdi, 1
+mov rsi, msg
+mov rdx, 14
+syscall
+mov rax, 60
+xor rdi, rdi
+syscall
+EOL
+    LOG_INFO "End to prepare the test environment."
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -40,7 +56,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf your_program your_file.o
+    rm -rf your_program your_file.o test.asm
     DNF_REMOVE "$@"
     LOG_INFO "Een to restore the test environment."
 }
