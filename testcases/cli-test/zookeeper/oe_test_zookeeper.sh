@@ -42,6 +42,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
+    bash /opt/zookeeper/bin/zkServer.sh stop
     DNF_REMOVE 1 "apache-zookeeper"
     rm -rf /home/zookeeper/dataDir
     mv /opt/zookeeper/conf/zoo.cfg.bak /opt/zookeeper/conf/zoo.cfg
