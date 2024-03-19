@@ -64,7 +64,7 @@ bt full
 info f
 info registers
 EOF
-    grep "rax" /tmp/test.log
+    grep "fpcr" /tmp/test.log
     CHECK_RESULT $? 0 0 "certifi_test file error"   
 }
 
