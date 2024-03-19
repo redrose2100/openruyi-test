@@ -17,7 +17,7 @@
 # @Desc      :   Test argus.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -26,8 +26,8 @@ function pre_test() {
         dnf remove -y  cyrus-sasl
         flag=1      
     fi
-    network_card=$(ip a | grep 172.168 | awk  '{print $9}')
-    echo "#ARGUS_INTERFACE=$network_card" >> /etc/argus.conf
+    network_card=$(ip -o link show | awk -F': ' '$2 !~ /lo/ {print $2; exit}')
+    echo "ARGUS_INTERFACE=$network_card" >> /etc/argus.conf
     sed -i "s\argus.pid\argus.$network_card.0.pid\g" /usr/lib/systemd/system/argus.service
     systemctl daemon-reload
     LOG_INFO "End to prepare the test environment."
@@ -48,7 +48,7 @@ function post_test() {
     if [ "${flag}" == "1" ]; then
         dnf install -y cyrus-sasl
     fi
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
