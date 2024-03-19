@@ -17,19 +17,19 @@
 # @Desc      :   system monitor share total
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
     sudo ipcs -m | grep "Shared Memory Segments"
     CHECK_RESULT $?
-    ps -eo 'stat,pid,comm,args,pcpu' | sed -n 1p | awk -F " " {'print$1'} | grep "STAT"
+    ps -eo 'stat,pid,comm,args,pcpu' | sed -n 1p | awk -F " " '{print$1}' | grep "STAT"
     CHECK_RESULT $?
-    ps -eo 'pcpu,pid,comm,args' | sort -rk1 | sed -n 1p | awk -F " " {'print$1'} | grep "%CPU"
+    ps -eo 'pcpu,pid,comm,args' | sort -rk1 | sed -n 1p | awk -F " " '{print$1}' | grep "%CPU"
     CHECK_RESULT $?
-    ps -eo 'pmem,pid,comm,args' | sort -rk1 | sed -n 1p | awk -F " " {'print$1'} | grep "%MEM"
+    ps -eo 'pmem,pid,comm,args' | sort -rk1 | sed -n 1p | awk -F " " '{print$1}' | grep "%MEM"
     CHECK_RESULT $?
-    grep  '\[mq-deadline\] kyber bfq none' /sys/block/vda/queue/scheduler
+    grep  '\[mq-deadline\] kyber bfq none' /sys/block/vda/queue/scheduler || grep  '\[mq-deadline\] kyber bfq none' /sys/block/sr0/queue/scheduler
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
