@@ -27,14 +27,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    pkcon install git -y
-    CHECK_RESULT $? 0 0 "pkcon install fail"
-    rpm -qa git | grep git
-    CHECK_RESULT $? 0 0 "package not installed"
-    pkcon remove git -y
-    CHECK_RESULT $? 0 0 "pkcon remove fail"
-    rpm -qa git | grep git
-    CHECK_RESULT $? 1 0 "package installed"
+    if rpm -qa git | grep git;then
+        pkcon remove git -y
+        CHECK_RESULT $? 0 0 "pkcon remove fail"
+        rpm -qa git | grep git
+        CHECK_RESULT $? 1 0 "package installed"
+	pkcon install git -y
+        CHECK_RESULT $? 0 0 "pkcon install fail"
+	rpm -qa git | grep git
+        CHECK_RESULT $? 0 0 "package not installed"
+    else
+        pkcon install git -y
+        CHECK_RESULT $? 0 0 "pkcon install fail"
+        rpm -qa git | grep git
+        CHECK_RESULT $? 0 0 "package not installed"
+        pkcon remove git -y
+        CHECK_RESULT $? 0 0 "pkcon remove fail"
+        rpm -qa git | grep git
+        CHECK_RESULT $? 1 0 "package installed"
+    fi
     pkcon search gcc
     CHECK_RESULT $? 0 0 "pkcon search fail"
 }
