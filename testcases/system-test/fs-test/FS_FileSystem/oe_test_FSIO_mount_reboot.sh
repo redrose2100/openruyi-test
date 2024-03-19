@@ -21,7 +21,8 @@ source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    test_disk="/dev/"$(TEST_DISK 2)
+    disk=$(TEST_DISK 2|awk '{print $1}')
+    test_disk="/dev/${disk}" 
     ssh_cmd_node "fdisk $test_disk << diskEof
 n
 p
