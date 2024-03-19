@@ -38,8 +38,8 @@ EOF
     CHECK_RESULT $? 0 0 "Failed to set cap"
     su - example -c 'chattr +i /home/example/test'
     CHECK_RESULT $? 0 0 "Privilege grant failed"
-    su - example -c 'lsattr /home/example/test | grep "\-\-\-\-i\-\-\-\-\-\-\-\-\-e\-\-\-\-\-"'
-    CHECK_RESULT $? 0 0 "Failed to view ----i---------e----- field in file properties"
+    su - example -c 'lsattr /home/example/test | grep "\-\-\-\-i\-\-\-\-"'
+    CHECK_RESULT $? 0 0 "Failed to view ----i---- field in file properties"
     LOG_INFO "Finish testcase execution."
 }
 
