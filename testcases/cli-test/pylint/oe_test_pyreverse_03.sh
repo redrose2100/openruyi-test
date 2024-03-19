@@ -29,24 +29,24 @@ function run_test() {
     LOG_INFO "Start to run test."
     pyreverse --output dot string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: --output No Pass"
-    pyreverse --output dot string
-    find . -name "classes.dot" | grep "classes.dot"
     rm -rf classes.dot
+    pyreverse -o dot string
+    find . -name "classes.dot" | grep "classes.dot"
     CHECK_RESULT $? 0 0 "L$LINENO: -o No Pass"
+    rm -rf classes.dot 
     pyreverse --ignore CVS string
     find . -name "classes.dot" | grep "classes.dot"
-    rm -rf classes.dot
     CHECK_RESULT $? 0 0 "L$LINENO: --ignore No Pass"
+    rm -rf classes.dot
     pyreverse --project none string
     find . -name "classes_none.dot" | grep "classes_none.dot"
-    rm -rf classes_none.dot
     CHECK_RESULT $? 0 0 "L$LINENO: --project No Pass"
+    rm -rf classes_none.dot
     pyreverse -p none string
     find . -name "classes_none.dot" | grep "classes_none.dot"
-    rm -rf classes_none.dot
     CHECK_RESULT $? 0 0 "L$LINENO: -p No Pass"
+    rm -rf classes_none.dot
     LOG_INFO "End to run test."
 }
 function post_test() {

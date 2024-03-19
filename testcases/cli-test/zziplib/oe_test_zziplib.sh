@@ -60,7 +60,7 @@ function run_test() {
     ./example > example.txt
     grep "11.txt" /tmp/example.txt    
     CHECK_RESULT $? 0 0 "execute example.txt fail"
-    unzzip -l test.zip > example1.txt
+    unzip -l test.zip > example1.txt
     grep "11.txt" /tmp/example1.txt
     CHECK_RESULT $? 0 0 "execute example1.txt fail"
 }
