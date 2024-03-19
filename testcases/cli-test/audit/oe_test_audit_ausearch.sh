@@ -30,19 +30,20 @@ function pre_test() {
 function run_test() {
     LOG_INFO "start to run test."
     ausearch --format csv
-    CHECK_RESULT $? 0 0 "format check fail"   
+    CHECK_RESULT $? -1 1 "format check fail"
     ausearch -m ADD_USER
-    CHECK_RESULT $? 0 0 "AVC check fail"
+    CHECK_RESULT $? -1 1 "AVC check fail"
     uid=$(id -u uos1)
     ausearch -ua "$uid"
-    CHECK_RESULT $? 0 0 "ua check fail"   
+    CHECK_RESULT $? -1 1 "ua check fail"
     ausearch -f /home/uos1/testfile
-    CHECK_RESULT $? 0 0 "ausearch -f fail"  
+    CHECK_RESULT $? -1 1 "ausearch -f fail"
     ausearch -k testfile_audit
-    CHECK_RESULT $? 0 0 "testfile_audit check fail"   
-    ausearch -sv yes 
+    CHECK_RESULT $? -1 1 "testfile_audit check fail"
+    ausearch -sv yes
+    CHECK_RESULT $? -1 1 "sv yes check fail"
     ausearch -sv no
-    CHECK_RESULT $? 0 0 "sv check fail"  
+    CHECK_RESULT $? -1 1 "sv no check fail"
     LOG_INFO "End to run test."
 }
 
