@@ -17,7 +17,7 @@
 #失败原因结论:这个issue中已经做出解答，whois功能正常。本issue中提到的问题，出现的原因是在某些内网中，43端口的信息会被网关所丢弃，无法建立链接所导致的。可以查看链接https://gitee.com/src-openeuler/whois/issues/I6568Z
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
@@ -41,7 +41,7 @@ function run_test(){
     CHECK_RESULT $? 0 0 "test whois -g failed"
     whois -t domain baidu | grep "domain:"
     CHECK_RESULT $? 0 0 "test whois -t failed"
-    whois -v domain baidu | grep "A short decription related to the object"
+    whois -v domain baidu | grep "A short description related to the object"
     CHECK_RESULT $? 0 0 "test whois -v failed"
     whois -q sources | grep "RIPE:3:N:0-0"
     CHECK_RESULT $? 0 0 "test whois -q failed"
@@ -50,7 +50,7 @@ function run_test(){
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
