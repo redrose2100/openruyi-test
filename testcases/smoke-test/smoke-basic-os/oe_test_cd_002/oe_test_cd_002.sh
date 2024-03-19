@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     current_path=$(
-        cd "$(dirname $0)" || exit 1
+        cd "$(dirname "$0")" || exit 1
         pwd
     )
     test -d example && rm -rf example
@@ -32,26 +32,32 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     mkdir example
-    cd example
+    cd example || exit
     CHECK_RESULT $?
     pwd | grep "example"
     CHECK_RESULT $?
+    (
     cd ..
     CHECK_RESULT $?
     pwd | grep "${current_path}"
     CHECK_RESULT $?
-    cd -
+    cd - || exit
     CHECK_RESULT $?
     pwd | grep "example"
     CHECK_RESULT $?
+    cd / || exit
+    CHECK_RESULT $?
+    pwd | grep "^/$"
+    CHECK_RESULT $?
+    )
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    cd "${current_path}"
+    cd "${current_path}" || exit
     rm -rf example
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
