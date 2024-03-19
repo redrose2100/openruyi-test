@@ -34,7 +34,7 @@ function run_test()
     enchant-2 -h | grep Usage
     CHECK_RESULT $? 0 0 "check command fail"
     echo "there is a testj" > /tmp/test.txt
-    enchant-2 -d en_US -a  test.txt | grep test
+    enchant-2 -d en_US -a  /tmp/test.txt | grep test
     CHECK_RESULT $? 0 0 "check spelling failed"
     LOG_INFO "Finish test!"
 }
