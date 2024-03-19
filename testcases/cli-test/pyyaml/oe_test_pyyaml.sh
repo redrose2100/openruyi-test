@@ -17,7 +17,7 @@
 # @Desc      :   pyyaml function verification
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "python3-pyyaml"
@@ -32,14 +32,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "file does not exist"
     grep 'school: zhang' generate.yaml
     CHECK_RESULT $? 0 0 "Keyword not matched"
-    python3 test2.py |grep students |grep a | grep b
+    python3 test2.py |grep students && python3 test2.py|grep a && python3 test2.py | grep b
     CHECK_RESULT $? 0 0 "Conversion to dictionary failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -f generate.yaml
     LOG_INFO "End to restore the test environment."
 }
