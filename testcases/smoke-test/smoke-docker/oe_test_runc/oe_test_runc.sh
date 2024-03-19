@@ -14,21 +14,29 @@
 # @Contact   :   geyaning@uniontech.com
 # @Date      :   2022-11-30
 # @License   :   Mulan PSL v2
-# @Desc      :   runc-package test 
+# @Desc      :   runc-package test
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "docker-runc"
+    if yum list | grep -q "docker-runc"; then
+        DNF_INSTALL "docker-runc"
+    else
+        DNF_INSTALL "runc"
+    fi
     mkdir -p /opt/runctest/
+    current_path=$(
+        cd "$(dirname "$0")" || exit 1
+        pwd
+    )
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    cd /opt/runctest
+    cd /opt/runctest || exit 1
     mkdir rootfs
     cp -ap /bin/ rootfs/
     cp -ap /lib/ rootfs/
@@ -45,9 +53,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    cd "$current_path" || exit 1
     rm -rf /opt/runctest
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

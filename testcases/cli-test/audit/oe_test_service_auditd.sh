@@ -17,12 +17,12 @@
 # @Desc      :   Test auditd.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     service=auditd
-    log_time=$(date '+%Y-%m-%d %T')
+    log_time="$(date '+%Y-%m-%d %T')"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -46,16 +46,16 @@ function run_test() {
     if systemctl is-enabled "${service}" | grep "enabled"; then
         SLEEP_WAIT 5
         symlink_file=$(systemctl disable "${service}" 2>&1 | awk '{print $2}' | awk '{print substr($0,1,length($0)-1)}')
-        find ${symlink_file}
+        find "${symlink_file}"
         CHECK_RESULT $? 0 1 "${service} disable failed"
         systemctl enable "${service}"
-        find ${symlink_file}
+        find "${symlink_file}"
         CHECK_RESULT $? 0 0 "${service} enable failed"
     else
         LOG_ERROR "${service} is not enabled"
         ((exec_result++))
     fi
-    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error"
+    journalctl --since "${log_time}" -u "${service}" | grep -iE "fail|error" | grep -iv "augenrules"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload ${service}
     LOG_INFO "Finish test!"

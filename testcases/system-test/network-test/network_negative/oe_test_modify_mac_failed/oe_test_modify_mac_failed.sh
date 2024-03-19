@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL net-tools
-    test_nic=$(TEST_NIC 1)
+    test_nic=$(TEST_NIC 1 | awk '{print $1}')
     ifconfig "$test_nic" down
     LOG_INFO "End to prepare the database config."
 }

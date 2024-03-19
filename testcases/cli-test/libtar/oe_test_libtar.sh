@@ -16,17 +16,17 @@
 #@Desc      	:   Basic functional check of libtar package
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL 'libtar libtar-devel'
+    DNF_INSTALL 'libtar libtar-devel gcc'
     touch 1.txt 2.txt
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    gcc -o tartest tartest.c -I$HOME/local/include -ltar
+    gcc -o tartest tartest.c "-I$HOME/local/include" -ltar
     CHECK_RESULT $? 0 0 'Compilation failed'
     test -e tartest
     CHECK_RESULT $? 0 0 'Failed to generate file'
@@ -36,14 +36,14 @@ function run_test() {
     ./tartest untar
     CHECK_RESULT $? 0 0 'Package decompression failed'
     test -e test -a -e test/1.txt -a -e test/2.txt
-    CHECK_RESULT $? 0 0 '’Incorrect file after decompression'
+    CHECK_RESULT $? 0 0 'Incorrect file after decompression'
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf 1.txt 2.txt test tartest tartest.tar
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

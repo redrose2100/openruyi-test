@@ -16,13 +16,14 @@
 # @Desc      	:   the test of novnc package
 ####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
     vncConnPort=$(GET_FREE_PORT "" 5900 5950)
-    vncConnName=:$(expr ${vncConnPort} - 5900)
+    vncConnName=:$(("${vncConnPort}" - 5900))
     novncLisPort=$(GET_FREE_PORT)
+    echo "$vncConnPort" "$vncConnName" "$novncLisPort"
     LOG_INFO "End to config params of the case."
 }
 
@@ -52,25 +53,40 @@ function run_test() {
                 send "y\\r"
             }
         }
+        expect {
+            "Password:" {
+                send "${NODE1_PASSWORD}\\r"
+            }
+        }
+        expect {
+            "Verify:" {
+                send "${NODE1_PASSWORD}\\r"
+            }
+        } 
+        expect {
+            "y/n*" {
+                send "y\\r"
+            }
+        }
         expect eof
 EOF
 
-    IS_FREE_PORT ${vncConnPort} ""
+    IS_FREE_PORT "${vncConnPort}" ""
     CHECK_RESULT $? 1 0 "vnc server doesn't start up"
 
     # --listen --vnc --web
-    novnc_server --listen ${novncLisPort} --vnc localhost:${vncConnPort} --web /usr/share/novnc &
+    novnc_server --listen "${novncLisPort}" --vnc localhost:"${vncConnPort}" --web /usr/share/novnc &
     SLEEP_WAIT 3
-    curl http://localhost:${novncLisPort}/vnc.html | grep '<title>noVNC</title>'
+    curl http://localhost:"${novncLisPort}"/vnc.html | grep '<title>noVNC</title>'
     CHECK_RESULT $? 0 0 "novnc_server listen Test --listen --vnc --web FAILED."
-    kill -9 $(lsof -i:${novncLisPort} -t)
+    kill -9 "$(lsof -i:"${novncLisPort}" -t)"
 
     # --record
-    novnc_server --listen ${novncLisPort} --vnc localhost:${vncConnPort} --record novnc_record > novnc_log.txt 2>&1 &
+    novnc_server --listen "${novncLisPort}"--vnc localhost:"${vncConnPort}" --record novnc_record >novnc_log.txt 2>&1 &
     SLEEP_WAIT 3
     grep 'Recording to' novnc_log.txt
     CHECK_RESULT $? 0 0 "novnc_server record Test --listen --vnc --record FAILED."
-    kill -9 $(lsof -i:${novncLisPort} -t)
+    kill -9 "$(lsof -i:"${novncLisPort}" -t)"
 
     # openssl to create cert and key
     echo -e "CN\nProvince\nCity\nOpenEuler\nsigQA\nlocalhost\nroot@localhost\n" |
@@ -79,26 +95,26 @@ EOF
     CHECK_RESULT $? 0 0 "openssl fail to create self.pem"
 
     # --cert --key
-    novnc_server --listen ${novncLisPort} --vnc localhost:${vncConnPort} --cert ./self.pem --key ./self.pem &
+    novnc_server --listen "${novncLisPort}" --vnc localhost:"${vncConnPort}" --cert ./self.pem --key ./self.pem &
     SLEEP_WAIT 3
-    curl --cacert self.pem https://localhost:${novncLisPort}/vnc.html | grep '<title>noVNC</title>'
+    curl --cacert self.pem https://localhost:"${novncLisPort}"/vnc.html | grep '<title>noVNC</title>'
     CHECK_RESULT $? 0 0 "novnc_server cert and key Test --listen --vnc --cert --key FAILED."
-    kill -9 $(lsof -i:${novncLisPort} -t)
+    kill -9 "$(lsof -i:"${novncLisPort}" -t)"
 
     # --ssl-only
-    novnc_server --listen ${novncLisPort} --vnc localhost:${vncConnPort} --cert ./self.pem --key ./self.pem --ssl-only &
+    novnc_server --listen "${novncLisPort}" --vnc localhost:"${vncConnPort}" --cert ./self.pem --key ./self.pem --ssl-only &
     SLEEP_WAIT 3
-    curl http://localhost:${novncLisPort}/vnc.html 2>&1 | grep 'Recv failure'
+    curl http://localhost:"${novncLisPort}"/vnc.html 2>&1 | grep 'Recv failure'
     CHECK_RESULT $? 0 0 "novnc_server ssl-only Test --listen --vnc --cert --key --ssl-only FAILED."
-    kill -9 $(lsof -i:${novncLisPort} -t)
+    kill -9 "$(lsof -i:"${novncLisPort}" -t)"
 
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    vncserver -kill ${vncConnName}
-    DNF_REMOVE
+    vncserver -kill "${vncConnName}"
+    DNF_REMOVE "$@"
     rm -rf self.pem novnc_log.txt
     LOG_INFO "End to restore the test environment."
 }

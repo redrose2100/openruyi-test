@@ -30,6 +30,9 @@
         },
         {
             "name": "oe_test_rpm_suffix_name"
-        }
+        },
+	{
+            "name": "oe_test_cpu_model_name"
+	}
     ]
 }
