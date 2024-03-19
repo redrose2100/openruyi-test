@@ -29,6 +29,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environmental preparation."
     systemctl stop runlevel1.target
+    systemctl isolate multi-user.target
     LOG_INFO "End of environmental preparation!"
 }
 
