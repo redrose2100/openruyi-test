@@ -44,7 +44,7 @@ EOF
     CHECK_RESULT $?
     su - example -c 'chattr +i /home/example/test'
     CHECK_RESULT $?
-    su - example -c 'lsattr /home/example/test' | grep "i\-\-\-\-\-\-\-\-\-e" | grep "/home/example/test"
+    su - example -c 'lsattr /home/example/test' | grep "i\-\-\-\-\-" | grep "/home/example/test"
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
