@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of mc command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check mcedit -V failed"
     mcdiff --version 2>&1 | grep 'GNU Midnight Commander '
     CHECK_RESULT $? 0 0 "Check mcedit --version failed"
-    mcedit -F 2>&1 | grep 'Home路径'
+    mcedit -F 2>&1 | grep 'Home'
     CHECK_RESULT $? 0 0 "Check mcedit -F failed"
     mcedit --datadir-info 2>&1 | grep 'Home'
     CHECK_RESULT $? 0 0 "Check mcedit --datadir-info failed"
@@ -52,8 +52,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restore the test environment."
 }
 
-main $@
+main "$@"

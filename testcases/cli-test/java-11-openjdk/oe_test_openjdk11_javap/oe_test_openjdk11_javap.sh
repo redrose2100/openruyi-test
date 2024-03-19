@@ -29,7 +29,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     javac Hello.java
-    javap -help | grep -i "用法:"
+    javap -help | grep -i "Usage"
     CHECK_RESULT $? 0 0 "javap -help failed"
     javap -version 2>&1 | grep "[0-9]"
     CHECK_RESULT $? 0 0 "javap -version failed"
