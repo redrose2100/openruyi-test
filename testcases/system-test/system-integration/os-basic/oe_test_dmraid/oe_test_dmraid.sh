@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to version "
     num1=$(dmraid -s)
     num2="no raid disks"
-    if [ "$num1" == "$num2" ]
+    if [ "$num1" = "$num2" ]
     then
       echo "raid不存在"
     else
