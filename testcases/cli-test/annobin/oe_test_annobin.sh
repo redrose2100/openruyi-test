@@ -40,9 +40,9 @@ function run_test() {
     LOG_INFO "Start testing..."
     fream=$(arch)
     cd "$path" && gcc --print-file-name=plugin > "$path"/test1
-    grep "/usr/lib/gcc/$fream-linux-gnu/*/plugin" "$path"/test1
+    grep "/usr/lib/gcc/$fream-linux-gnu/" "$path"/test1 |grep plugin
     CHECK_RESULT $? 0 0 "directory file error"
-    ls "/usr/lib/gcc/$fream-linux-gnu/*/plugin/" > "$path"/test2
+    ls "/usr/lib/gcc/$fream-linux-gnu/"*"/plugin/" > "$path"/test2
     grep "annobin.so" "$path"/test2
     CHECK_RESULT $? 0 0 "Library files fails"
     gcc -fplugin=annobin test.c
