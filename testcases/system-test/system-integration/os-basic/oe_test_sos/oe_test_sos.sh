@@ -39,6 +39,9 @@ expect <<EOF
             "\退\出" {
                 send "\\r"
             }
+            "quit" {
+                send "\\r"
+            }
         }
         expect {
             "]:" {

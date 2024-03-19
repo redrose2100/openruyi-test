@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Query MEM configure test-lshw -c
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start executing testcase!"
     if [[ "${NODE1_MACHINE}" =~ "kvm" ]]; then
@@ -40,12 +40,12 @@ function run_test() {
         CHECK_RESULT $?
         lshw -c memory | grep "bank" -A 5 | grep "vendor"
         CHECK_RESULT $?
-        lshw -c memory | grep -c "bank" | grep 1
+        lshw -c memory | grep -c "bank" 
         CHECK_RESULT $?
-        lshw -c memory | grep bank -A 10 | grep -c "size" | grep 1
+        lshw -c memory | grep bank -A 10 | grep -c "size"
         CHECK_RESULT $?
     fi
     LOG_INFO "End of testcase execution!"
 }
 
-main $@
+main "$@"

@@ -17,6 +17,13 @@
 # @Desc      :   Enable source, disable source
 # #############################################
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    dnf install "dnf-command(config-manager)" -y
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase."
     reponame=$(dnf repolist | grep "repo id" -A 1 | grep -v "repo id" | awk '{print$1}')
@@ -27,6 +34,12 @@ function run_test() {
     CHECK_RESULT $?
     CHECK_RESULT "$(grep "${reponame}" -A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}')" 1
     LOG_INFO "End of testcase execution."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    dnf remove "dnf-command(config-manager)" -y
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
