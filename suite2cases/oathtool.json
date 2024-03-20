@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/oathtool",
+    "cases": [
+        {
+            "name": "oe_test_oathtool"
+        }
+    ]
+}

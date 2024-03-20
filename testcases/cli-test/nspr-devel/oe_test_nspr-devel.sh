@@ -20,9 +20,9 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
+  LOG_INFO "Start to prepare the test environment."
   DNF_INSTALL nspr-devel
-  LOG_INFO "End of environmental preparation!"
+  LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
@@ -31,7 +31,7 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Compiler option error in NSPR library"
   nspr-config --libs |grep lnspr4
   CHECK_RESULT $? 0 0 "Error in obtaining linker options for NSPR library"
-  nspr-config --version |grep 35
+  test "$(nspr-config --version)" = "$(rpm -q nspr-devel | awk -F'-' '{print $3}')"
   CHECK_RESULT $? 0 0 "Error in obtaining version information of NSPR library"
   nspr-config --prefix |grep usr
   CHECK_RESULT $? 0 0 "Error getting installation path for NSPR library"
@@ -39,9 +39,9 @@ function run_test() {
 }
 
 function post_test() {
-  LOG_INFO "start environment cleanup."
+  LOG_INFO "Start to restore the test environment."
   DNF_REMOVE "$@"
-  LOG_INFO "Finish environment cleanup!"
+  LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
