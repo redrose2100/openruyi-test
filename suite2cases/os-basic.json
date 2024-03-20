@@ -892,6 +892,9 @@
 	},
 	{
 	  "name": "oe_test_systemd_analyze"
+	},
+	{
+	  "name": "oe_test_ul_001"
 	}
 
     ]
