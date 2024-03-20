@@ -18,6 +18,9 @@
 	},
 	{
 	    "name": "oe_test_mocha_05"
-	}	
+	},
+        {
+	    "name": "oe_test_mocha_06"
+	}
     ]
 }
