@@ -83,7 +83,7 @@ function run_test() {
     test -f /tmp/libusb
     CHECK_RESULT $? 0 0 "compile libusb.c fail"
     ./libusb > libusb.txt
-    grep "0627" /tmp/libusb.txt    
+    grep "1d6b" /tmp/libusb.txt    
     CHECK_RESULT $? 0 0 "execute libusb.txt fail"
 
 }

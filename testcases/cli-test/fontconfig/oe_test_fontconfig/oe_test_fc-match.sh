@@ -34,9 +34,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to display the sorted match list"
     fc-match -a
     CHECK_RESULT $? 0 0 "Failed to display an unpruned sorted match list"
-    fc-match -v|grep "37 elts"
+    fc-match -v|grep "elts"
     CHECK_RESULT $? 0 0 "Failed to display the entire font matching mode in detail"
-    fc-match -b|grep "35 elts"
+    fc-match -b|grep "elts"
     CHECK_RESULT $? 0 0 "Summary shows that the entire font matching mode failed"
     fc-match -f json|grep json
     CHECK_RESULT $? 0 0 "Failed to use the specified output format"

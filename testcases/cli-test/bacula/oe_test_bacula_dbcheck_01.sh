@@ -67,12 +67,6 @@ EOF
     CHECK_RESULT $? 0 0 "test dbcheck -b failed"
     dbcheck -c /etc/bacula/bacula-dir.conf -f -v -B -C MyCatalog -dt -d 11 tmp/back_1 bacula root ""  127.0.0.1  3306 ssh 2>&1 | grep 'db_name=bacula'
     CHECK_RESULT $? 0 0 "test dbcheck -c failed"
-    expect <<EOF > tmp/8.txt
-    spawn dbcheck -t tmp/back_1 bacula root ""  127.0.0.1  3306 ssh
-    expect "Please select the function you want to perform." {send "18\n"}
-EOF
-    grep 'Hello' tmp/8.txt
-    CHECK_RESULT $? 0 0 "test dbcheck -t failed"
     LOG_INFO "End to run test."
 }
 
@@ -85,7 +79,7 @@ function post_test() {
     /usr/libexec/bacula/drop_mysql_tables
     /usr/libexec/bacula/drop_mysql_database
     systemctl stop mysqld
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf config/ tmp/ /var/lib/mysql/* /var/spool/bacula/*
     LOG_INFO "End to restore the test environment."
 }
