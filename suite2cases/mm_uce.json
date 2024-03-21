@@ -21,6 +21,9 @@
     },
     {
       "name": "oe_test_mm_uce_coredump_tmpfs"
+    },
+    {
+      "name": "oe_test_mm_uce_coredump_ext4"
     }
   ]
 }
