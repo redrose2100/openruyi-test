@@ -33,6 +33,9 @@ function run_test() {
     if [ "$(uname -m)"x == "riscv64x" ]; then
         lshw -c memory | grep "size"
         CHECK_RESULT $?
+    elif [ "$NODE1_FRAME" == "ppc64le" ]; then
+        lshw -c memory |grep vendor |uniq
+        CHECK_RESULT $?
     else
         lshw -c memory | grep "bank" -A 5 | grep "description:"
         CHECK_RESULT $?
