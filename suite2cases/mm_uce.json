@@ -15,6 +15,9 @@
     },
     {
       "name": "oe_test_mm_uce_putuser"
+    },
+    {
+      "name": "oe_test_mm_uce_coredump_pipefs"
     }
   ]
 }
