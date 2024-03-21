@@ -17,7 +17,8 @@
 # @Desc      :   The usage of commands in podman package
 # ############################################
 
-source "../common/common_podman.sh"
+source "${OET_PATH}/testcases/cli-test/podman/common/common_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
@@ -29,32 +30,32 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     ID=$(podman create -t -i --name myctr alpine ls)
-    podman inspect $ID | grep '"Name": "myctr"'
+    podman inspect "$ID" | grep '"Name": "myctr"'
     CHECK_RESULT $?
     ID=$(podman create --hostname localhost alpine ls)
-    podman inspect $ID | grep '"Hostname": "localhost"'
+    podman inspect "$ID" | grep '"Hostname": "localhost"'
     CHECK_RESULT $?
     ID=$(podman create --image-volume bind alpine ls)
-    podman inspect $ID | grep -i bind
+    podman inspect "$ID" | grep -i bind
     CHECK_RESULT $?
-    ID=$(podman create --builtin-volume tmpfs alpine ls)
-    podman inspect $ID | grep -i tmpfs
+    ID=$(podman create --image-volume tmpfs alpine ls)
+    podman inspect "$ID" | grep -i tmpfs
     CHECK_RESULT $?
-    ID=$(podman create --ip ${NODE1_IPV4} alpine ls)
-    podman inspect $ID | grep -i ip
+    ID=$(podman create --ip "${NODE1_IPV4}" alpine ls)
+    podman inspect "$ID" | grep -i ip
     CHECK_RESULT $?
     ID=$(podman create --ipc host alpine ls)
-    podman inspect $ID | grep '"IpcMode": "host"'
+    podman inspect "$ID" | grep '"IpcMode": "host"'
     CHECK_RESULT $?
     ID=$(podman create --kernel-memory 1g alpine ls)
-    podman inspect $ID | grep '"KernelMemory": 1073741824'
+    podman inspect "$ID" | grep '"KernelMemory": 1073741824'
     CHECK_RESULT $?
     ID=$(podman create --label com.example.key=value alpine ls)
-    podman inspect $ID | grep '"com.example.key": "value"'
+    podman inspect "$ID" | grep '"com.example.key": "value"'
     CHECK_RESULT $?
     echo "com.example.key=value" >./a
     ID=$(podman create --label-file ./a alpine ls)
-    podman inspect $ID | grep '"com.example.key": "value"'
+    podman inspect "$ID" | grep '"com.example.key": "value"'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
@@ -62,7 +63,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 
