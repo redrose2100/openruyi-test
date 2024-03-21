@@ -41,7 +41,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     cd ../../ && rm -rf /tmp/tar_test tmp test.tar 
     LOG_INFO "Finish environment cleanup!"
 }
