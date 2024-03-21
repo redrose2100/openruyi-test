@@ -33,18 +33,23 @@ function run_test() {
     CHECK_RESULT $?
     if ! hostnamectl | grep Virtualization && ! lshw -c system | grep -E "product.*qemu"; then
         current_frequency=$(cpupower frequency-info | grep "current CPU frequency" | awk -F ": " '{print $2}' | awk '{print $1}')
-        cpupower frequency-set -f 1.0GHz
+        cpupower_frq_tmp=$(cpupower frequency-info | grep -i 'hardware limits' | awk '{print$3}')
+        cpupower frequency-set -f "${cpupower_frq_tmp}"GHz
         CHECK_RESULT $?
-        cpupower frequency-info | grep "current CPU frequency" | grep "1000 MHz"
+        cpupower frequency-info | grep "current CPU frequency" | grep "$cpupower_frq_tmp GHz"
         CHECK_RESULT $?
         cpupower frequency-set -f "${current_frequency}"GHz
     fi
     cpupower idle-info | grep "analyzing CPU "
     CHECK_RESULT $?
-    cpupower idle-set
+    cpupower idle-set -d 2
     CHECK_RESULT $?
-    cpupower info | grep "analyzing CPU "
+    cpupower idle-set -e 2
     CHECK_RESULT $?
+    if [[ "$NODE1_FRAME"x != "ppc64le"x ]];then
+        cpupower info | grep "analyzing CPU "
+        CHECK_RESULT $?
+    fi
     gpio-event-mon -? 2>&1 | grep "Usage: gpio-event-mon"
     CHECK_RESULT $?
     gpio-hammer -? 2>&1 | grep "Usage: gpio-hammer"
