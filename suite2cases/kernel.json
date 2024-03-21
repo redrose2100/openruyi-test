@@ -133,6 +133,9 @@
         },
         {
             "name": "oe_test_uio"
+        },
+        {
+            "name": "oe_test_ntb"
         }
     ]
 }
