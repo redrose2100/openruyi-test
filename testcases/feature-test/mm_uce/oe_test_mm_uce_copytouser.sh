@@ -36,7 +36,6 @@ function pre_test() {
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
-    echo $(pwd)
     do_mm_uce_test copytouser -c 5
     check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result
     CHECK_RESULT $? 0 0 "mm_uce copy_to_user failed" 1
