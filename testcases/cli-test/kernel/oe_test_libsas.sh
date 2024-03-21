@@ -22,12 +22,12 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)
-    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/scsi/libsas
+    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/scsi/libsas/libsas.ko*
     CHECK_RESULT $? 0 0 "file does not exist"
-    modinfo libsas |grep -i version
+    modinfo libsas |grep -i vermagic
     CHECK_RESULT $? 0 0 "Information display failed"
     modprobe libsas
-    CHECK_RESUdLT $? 0 0 "Module not loaded"
+    CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep libsas
     CHECK_RESULT $? 0 0 "Module loaded failed"
     rmmod libsas
