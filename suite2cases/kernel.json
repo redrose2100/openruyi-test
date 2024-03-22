@@ -136,6 +136,9 @@
         },
         {
             "name": "oe_test_ntb"
+        },
+        {
+            "name": "oe_test_clk"
         }
     ]
 }
