@@ -17,7 +17,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    DNF_INSTALL "dim_tools dim"
+    DNF_INSTALL "dim_tools dim gcc"
     modprobe dim_monitor
 }
 
@@ -72,7 +72,7 @@ function run_test() {
 }
 
 function post_test() {
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     pkill -9 dim_proc
     rmmod kvdo dim_monitor dim_core
     rm -rf /etc/dim/
