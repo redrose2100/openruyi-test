@@ -16,10 +16,10 @@
 #@Desc      	:   Basic function check of openblas package
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL openblas
+    DNF_INSTALL "openblas gcc"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -39,7 +39,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf sampleblas
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
