@@ -101,7 +101,7 @@ expect eof
     expect -c "
     set timeout 30
     log_file testlog
-    spawn mysql_secure_installation mysql_secure_installation --defaults-file=/etc/my.cnf
+    spawn mysql_secure_installation --defaults-file=/etc/my.cnf
     expect {
         \"Enter password for user root*\" { send \"${NODE1_PASSWORD}\r\";
         expect \"*Press y|Y for Yes, any other key for No*\" { send \"No\r\"}
@@ -201,7 +201,7 @@ expect eof
     expect -c "
     set timeout 30
     log_file testlog
-    spawn mysql_secure_installation ----ssl-cert=server-cert.pem
+    spawn mysql_secure_installation --ssl-cert=server-cert.pem
     expect {
         \"Enter password for user root*\" { send \"${NODE1_PASSWORD}\n\";
         expect \"*Press y|Y for Yes, any other key for No*\" { send \"No\n\"}
