@@ -35,6 +35,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "java Hello failed"
     java -version 2>&1 | grep 'openjdk version "11.0.19'
     CHECK_RESULT $? 0 0 "java -version failed"
+    printf('test')
 
     mkdir testjava
     javac -g ./Hello.java -d testjava/
