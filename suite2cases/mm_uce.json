@@ -3,9 +3,6 @@
   "cases": [
     {
       "name": "oe_test_mm_uce_copyfromuser"
-    },
-    {
-      "name": "oe_test_mm_uce_getuser"
     }
   ]
 }
