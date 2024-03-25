@@ -1,6 +1,7 @@
 #!/bin/bash
 
 GHES_REC="Hardware error from APEI Generic Hardware Error Source"
+HARDWARE_ERROR="[Hardware Error]"
 MEMORY_FAILURE="Memory failure"
 RECOVERED_ACTION="Recovered"
 SIGBUS='signal 7'
@@ -84,7 +85,6 @@ function do_copyonwrite()
 	user_mm_uce_test --copyonwrite  -c $count
 }
 
-
 function do_getuser()
 {
 	user_mm_uce_test --getuser -c $count
@@ -109,7 +109,7 @@ function do_coredump_action()
 function set_coredump_tmpfs_path()
 {
 	path=$(mount|grep -E "\<tmpfs\>"|awk -F" " '{print $3}'|head -n 1) 
-	echo "$path/%e-%p-%t-%c.core">/proc/sys/kernel/core_pattern   
+	echo "$path/core.%e-%p-%t-%c">/proc/sys/kernel/core_pattern   
 }
 
 function set_coredump_pipefs_path()
@@ -124,8 +124,8 @@ function set_coredump_pipefs_path()
 function set_coredump_ext4_path()
 {
 	path=$(mount|grep -E "\<ext4\>"|awk -F" "  '{print $3}'|head -n 1)
-	[ -z "$path" ] && usage && exit 1
-	echo "$path/%e-%p-%c-%t.core">/proc/sys/kernel/core_pattern   
+	[ -z "$path" ] && echo "no ext4 fs" && exit 1
+	echo "$path/core.%e-%p-%c-%t">/proc/sys/kernel/core_pattern   
 }
 
 function clean_corefile()
@@ -222,23 +222,30 @@ function check_ghes_rec_result()
 	{
 		echo -e "<<< OS/kernel version is as follows >>>\n"
 		uname -a
-	} >> "$LOG"
+	} >> "${LOG}"
 
-	cat /etc/os-release >> $LOG
-	echo -e "\n<<< dmesg information is as follows >>>\n" >> $LOG
+	cat /etc/os-release >> "${LOG}"
+	ARCH=$(uname -m)
+	echo -e "\n<<< dmesg information is as follows >>>\n" >> "${LOG}"
 	while [ $time -lt $timeout ]
 	do
-		dmesg -c >> $LOG 2>&1
-		if grep -q "$GHES_REC" $LOG
+		dmesg -c >> "${LOG}" 2>&1
+		if [ "${ARCH}" == "aarch64" ]; then
+                     einj_error="${GHES_REC}"  
+		elif [ "${ARCH}" == "x86_64" ];then
+                     einj_error="${HARDWARE_ERROR}"  
+		fi
+
+		if grep -q "${einj_error}" "${LOG}"
 		then
-			echo -e "\nGHES record is OK\n" |tee -a $LOG
+			echo -e "\nGHES record is OK\n" |tee -a "${LOG}"
 			echo 0 >> $TMP_DIR/error.$$
 			return
 		fi
 		sleep $sleep
 		time=$((time + sleep))
 	done
-	echo -e "\nGHES record is not expected\n" |tee -a $LOG
+	echo -e "\nGHES record is not expected\n" |tee -a "${LOG}"
 	echo 1 > $TMP_DIR/error.$$
 	return 1
 }
@@ -249,20 +256,20 @@ function check_memory_failure_recover_result()
 	local sleep=5
 	local time=0
 
-	echo -e "\n<<< dmesg information is as follows >>>\n" >> $LOG
+	echo -e "\n<<< dmesg information is as follows >>>\n" >> "${LOG}"
 	while [ $time -lt $timeout ]
 	do
-		dmesg -c >> $LOG 2>&1
-		if grep "${MEMORY_FAILURE}" $LOG|grep -w "${RECOVERED_ACTION}"
+		dmesg -c >> "${LOG}" 2>&1
+		if grep "${MEMORY_FAILURE}" "${LOG}"|grep -w "${RECOVERED_ACTION}"
 		then
-			echo -e "\nMemory Failure record is OK\n" |tee -a $LOG
+			echo -e "\nMemory Failure record is OK\n" |tee -a "${LOG}"
 			echo 0 >> $TMP_DIR/error.$$
 			return
 		fi
 		sleep $sleep
 		time=$((time + sleep))
 	done
-	echo -e "\nMemory Failure record is not expected\n" |tee -a $LOG
+	echo -e "\nMemory Failure record is not expected\n" |tee -a "${LOG}"
 	echo 1 > $TMP_DIR/error.$$
 	return 1
 }
@@ -275,16 +282,16 @@ function check_sigbus_result()
 
 	while [ $time -lt $timeout ]
 	do
-		if grep "${SIGBUS}" $LOG
+		if grep "${SIGBUS}" "${LOG}"
 		then
-			echo -e "\nSigbus record is OK\n" |tee -a $LOG
+			echo -e "\nSigbus record is OK\n" |tee -a "${LOG}"
 			echo 0 >> $TMP_DIR/error.$$
 			return
 		fi
 		sleep $sleep
 		time=$((time + sleep))
 	done
-	echo -e "\nSigbus record is not expected\n" |tee -a $LOG
+	echo -e "\nSigbus record is not expected\n" |tee -a "${LOG}"
 	echo 1 > $TMP_DIR/error.$$
 	return 1
 }
