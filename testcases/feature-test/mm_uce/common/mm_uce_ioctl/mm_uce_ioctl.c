@@ -16,6 +16,7 @@
 #include <linux/slab.h>
 #include <linux/uaccess.h>
 #include <linux/mm.h> 
+#include <linux/io.h>
 
 #define CREATE_TRACE_POINTS
 #include "mm_uce_trace_event.h"

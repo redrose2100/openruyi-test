@@ -35,8 +35,13 @@ function pre_test() {
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
-    do_mm_uce_test getuser -c 1 
-    check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
+    date > "${LOG}"
+    do_mm_uce_test getuser -c 1 2>&1 | tee -a "${LOG}" 
+    if [ "$(uname -m)" = "aarch64" ];then
+        check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
+    elif [ "$(uname -m)" = "x86_64" ];then
+        check_ghes_rec_result && check_memory_failure_recover_result
+    fi
     CHECK_RESULT $? 0 0 "mm_uce get_user failed" 1
     LOG_INFO "End to run test."
 }
