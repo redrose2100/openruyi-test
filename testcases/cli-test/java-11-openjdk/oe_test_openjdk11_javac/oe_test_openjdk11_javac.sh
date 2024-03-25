@@ -20,6 +20,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    echo "test1"
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "java-11-openjdk*"
     cp ../../java-1.8.0-openjdk/common/Hello.java . || exit
@@ -35,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "java Hello failed"
     java -version 2>&1 | grep 'openjdk version "11.0.19'
     CHECK_RESULT $? 0 0 "java -version failed"
-    printf('test')
+    echo "test2"
 
     mkdir testjava
     javac -g ./Hello.java -d testjava/
