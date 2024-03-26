@@ -39,7 +39,10 @@
         },
         {
             "name": "oe_test_df"
-        },
+	 },
+	 {
+	     "name": "oe_test_docker_001"
+	 },
         {
             "name": "oe_test_file_001"
         },
