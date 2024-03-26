@@ -35,14 +35,14 @@
             "name": "oe_test_dateinfo_001"
         },
         {
+            "name": "oe_test_docker_001"
+        },
+        {
             "name": "oe_test_dd_001"
         },
         {
             "name": "oe_test_df"
-	},
-	{
-	     "name": "oe_test_docker_001"
-	},
+        },
         {
             "name": "oe_test_file_001"
         },
@@ -69,9 +69,6 @@
         },
         {
             "name": "oe_test_httpd"
-        },
-        {
-            "name": "oe_test_hostid"
         },
         {
             "name": "oe_test_iscsi"
@@ -105,9 +102,6 @@
         },
         {
             "name": "oe_test_ls_001"
-        },
-        {
-            "name": "oe_test_ls_002"
         },
         {
             "name": "oe_test_lsscsi"
@@ -453,9 +447,6 @@
         },
         {
             "name": "oe_test_nmap"
-        },
-        {
-            "name": "oe_test_nmap_001"
         },
         {
             "name": "oe_test_normal_tcpdump_03"
