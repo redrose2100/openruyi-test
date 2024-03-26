@@ -109,6 +109,9 @@
         {
             "name": "oe_test_lsscsi"
         },
+	{
+            "name": "oe_test_lspci"
+	},
         {
             "name": "oe_test_lzo"
         },
