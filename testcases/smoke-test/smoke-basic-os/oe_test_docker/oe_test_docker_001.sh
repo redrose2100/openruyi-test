@@ -17,9 +17,9 @@
 # @Desc      :   Test the basic functions of sshd
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
-function config_params() {
+function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,7 +29,7 @@ function run_test() {
     systemctl status docker | grep running
     CHECK_RESULT $? 0 0 "Failed to check docker"
     systemctl restart docker
-    CHECK_RESULT $? 0 0 "Failed to restart sshd"
+    CHECK_RESULT $? 0 0 "Failed to restart docker"
     systemctl status docker | grep running
     CHECK_RESULT $? 0 0 "Failed to check docker"
     systemctl enable docker |grep enable
