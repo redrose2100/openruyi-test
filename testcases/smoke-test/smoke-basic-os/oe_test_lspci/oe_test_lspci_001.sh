@@ -42,4 +42,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
