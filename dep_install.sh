@@ -25,17 +25,17 @@ usage() {
 }
 
 common_dep(){
-    yum install expect psmisc make iputils python3-six python3-paramiko -y
+    apt install expect psmisc make iputils python3-six python3-paramiko -y
 }
 
 qemu_dep(){
     echo "install qemu"
-    yum install bridge-utils -y
+    apt install bridge-utils -y
     qemu-system-aarch64 --version && qemu-system-arm --version
     if [ $? -eq 0 ]; then
         return 0
     fi
-    yum install qemu-system-aarch64 qemu-system-arm -y
+    apt install qemu-system-aarch64 qemu-system-arm -y
     if [ $? -ne 0 ]; then
         echo "ERROR: qemu not install, you need install it youself."
         return 1
