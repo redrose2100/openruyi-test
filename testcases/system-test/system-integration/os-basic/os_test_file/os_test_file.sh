@@ -1,6 +1,5 @@
 #! /usr/bin/bash
-
-# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -12,7 +11,7 @@
 # #############################################
 # @Author    :   ut003399
 # @Contact   :   yangjing@uniontech.com
-# @Date      :   2023-03-26
+# @Date      :   2024-03-26
 # @License   :   Mulan PSL v2
 # @Desc      :   Use file case
 # ############################################
