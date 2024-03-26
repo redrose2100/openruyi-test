@@ -144,12 +144,15 @@
         },
         {
             "name": "oe_test_acl_formats"
-	    },
+	},
         {
             "name": "oe_test_hdf5"
-	    },
+	},
         {
             "name": "oe_test_gpgcheck"
+        },
+        {
+            "name": "oe_test_passwd_set_minimum_interval"
         }
     ]
 }
