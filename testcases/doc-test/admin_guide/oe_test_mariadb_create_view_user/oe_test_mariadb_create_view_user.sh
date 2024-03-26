@@ -55,11 +55,11 @@ function run_test() {
 }
 expect eof
 "
-    cat < testlog | grep "SHOW GRANTS FOR" -A 10 | grep "GRANT USAGE ON" | grep userexample1 | grep localhost
+    grep "SHOW GRANTS FOR" -A 10 testlog | grep "GRANT USAGE ON" | grep userexample1 | grep localhost
     CHECK_RESULT $?
-    cat < testlog | grep "SELECT USER" -A 10 | grep userexample1 | grep localhost
+    grep "SELECT USER" -A 10 testlog | grep userexample1 | grep localhost
     CHECK_RESULT $?
-    cat < testlog | grep "SELECT USER" -A 10 | grep userexample2 | grep "${NODE1_IPV4}"
+    grep "SELECT USER" -A 10 testlog | grep userexample2 | grep "${NODE1_IPV4}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }

@@ -59,11 +59,11 @@ function run_test() {
 }
 expect eof
 "
-    cat < testlog | grep -v changed | grep -w "Database" -A 5 | grep -w databaseexample
+    grep -v changed testlog | grep -w "Database" -A 5 | grep -w databaseexample
     CHECK_RESULT $?
-    cat < testlog | grep "USE databaseexample" -A 2 | grep "Database changed"
+    grep "USE databaseexample" -A 2 testlog | grep "Database changed"
     CHECK_RESULT $?
-    CHECK_RESULT "$(cat < testlog | grep -v changed | grep -w "Database" -A 5 | grep -wc databaseexample)" 1
+    CHECK_RESULT "$(grep -v changed testlog | grep -w "Database" -A 5 | grep -wc databaseexample)" 1
     LOG_INFO "End of testcase execution."
 }
 

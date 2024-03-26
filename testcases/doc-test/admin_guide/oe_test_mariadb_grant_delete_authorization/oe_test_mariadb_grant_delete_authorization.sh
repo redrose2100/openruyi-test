@@ -50,7 +50,7 @@ function pre_test() {
 }
 expect eof
 "
-    cat < testlog | grep "SELECT USER" -A 10 | grep -w userexample | grep localhost
+    grep "SELECT USER" -A 10 testlog | grep -w userexample | grep localhost
     rm -rf testlog
     LOG_INFO "Environmental preparation is over."
 }
@@ -70,7 +70,7 @@ function run_test() {
 }
 expect eof
 "
-    cat < testlog | grep "SHOW GRANTS FOR" -A 10 | grep -w userexample | grep localhost | grep SELECT | grep INSERT
+    grep "SHOW GRANTS FOR" -A 10 testlog | grep -w userexample | grep localhost | grep SELECT | grep INSERT
     CHECK_RESULT $?
     rm -rf testlog
     expect -c "
@@ -87,9 +87,9 @@ expect eof
 expect eof
 "
     CHECK_RESULT $?
-    cat < testlog | grep "SHOW GRANTS FOR" -A 10 | grep -w userexample | grep localhost | grep SELECT
+    grep "SHOW GRANTS FOR" -A 10 testlog | grep -w userexample | grep localhost | grep SELECT
     CHECK_RESULT $?
-    cat < testlog | grep "SHOW GRANTS FOR" -A 10 | grep -w userexample | grep localhost | grep SELECT | grep INSERT
+    grep "SHOW GRANTS FOR" -A 10 testlog | grep -w userexample | grep localhost | grep SELECT | grep INSERT
     CHECK_RESULT $? 1
     LOG_INFO "End of testcase execution."
 }

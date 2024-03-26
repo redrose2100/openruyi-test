@@ -74,13 +74,13 @@ function run_test() {
 }
 expect eof
 "
-    cat < testlog | grep ">\ SELECT USER" -A 10 | grep -w userexample1 | grep localhost
+    grep ">\ SELECT USER" -A 10 testlog | grep -w userexample1 | grep localhost
     CHECK_RESULT $? 1
-    cat < testlog | grep ">\ SELECT USER" -A 10 | grep -w userexample2 | grep localhost
+    grep ">\ SELECT USER" -A 10 testlog | grep -w userexample2 | grep localhost
     CHECK_RESULT $?
-    cat < testlog | grep "ERROR 1133"
+    grep "ERROR 1133" testlog
     CHECK_RESULT $? 1
-    cat < testlog | grep ">\ SELECT USER" -A 10 | grep -w userexample | grep localhost
+    grep ">\ SELECT USER" -A 10 testlog | grep -w userexample | grep localhost
     CHECK_RESULT $? 1
     LOG_INFO "End of testcase execution."
 }
