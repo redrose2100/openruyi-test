@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   MARIADB software compatibility
 # #############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "net-tools mariadb-server"
@@ -53,10 +53,10 @@ function run_test() {
     SSH_CMD "dnf -y install mariadb-server expect" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     SSH_CMD "systemctl start mariadb;systemctl stop firewalld" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     cp ../common/mariadb_remote .
-    sed -i s/local_ip/${NODE1_IPV4}/g mariadb_remote
-    sed -i s/local_password/${NODE1_PASSWORD}/g mariadb_remote
-    SSH_SCP ./mariadb_remote ${NODE2_USER}@${NODE2_IPV4}:/opt/mugen ${NODE2_PASSWORD}
-    SSH_CMD "expect /opt/mugen/mariadb_remote" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    sed -i "s/local_ip/${NODE1_IPV4}/g" mariadb_remote
+    sed -i "s/local_password/${NODE1_PASSWORD}/g" mariadb_remote
+    SSH_SCP ./mariadb_remote ${NODE2_USER}@${NODE2_IPV4}:/opt/ ${NODE2_PASSWORD}
+    SSH_CMD "expect /opt/mariadb_remote" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
@@ -65,7 +65,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/lib/mysql  mariadb_remote
     SSH_CMD "yum remove mariadb-server expect -y;rm -rf /opt/mugen/mariadb_remote /root/testlog" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
