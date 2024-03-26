@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# shellcheck disable=SC2012
+# shellcheck disable=SC2012,SC2086
 
 function downloadFromGitee() {
     downloadName=$1
@@ -51,7 +51,7 @@ function extractPackage() {
         return 1
     fi
     # 规避因代码规范导致指定包名模糊匹配问题，例如 packageName=python3/Python*.tar.xz
-    packageName="$(ls "${packageName}"|tail -n 1)"
+    packageName="$(ls ${packageName}|tail -n 1)"
     if [[ -z "${extractType}" ]]; then
         if echo "${packageName}" | grep -q ".tar."; then
             extractType="tar"

@@ -99,6 +99,12 @@
         },
         {
             "name": "oe_test_libpwquality_test_001"
+	},
+	{
+	    "name": "oe_test_curl_test_001"
+        },
+        {
+            "name": "oe_test_rpcbind_test_001"
         }
     ]
 }

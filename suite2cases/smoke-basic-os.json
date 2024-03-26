@@ -446,6 +446,9 @@
             "name": "oe_test_nmap"
         },
         {
+            "name": "oe_test_nmap_001"
+        },
+        {
             "name": "oe_test_normal_tcpdump_03"
         },
         {
@@ -648,6 +651,9 @@
         },
 	{
 	    "name": "oe_test_find"
+	},
+        {
+	    "name": "oe_test_find_001"
 	},
 	{
 	    "name": "oe_test_source"

@@ -8,9 +8,6 @@
             "name": "oe_test_baseinfo"
         },
         {
-            "name": "oe_test_cockpit"
-        },
-        {
             "name": "oe_test_firewalld"
         },
         {
@@ -30,6 +27,9 @@
         },
         {
             "name": "oe_test_rpm_suffix_name"
-        }
+        },
+	{
+            "name": "oe_test_cpu_model_name"
+	}
     ]
 }

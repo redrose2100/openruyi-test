@@ -886,6 +886,12 @@
 	},
         {
 	  "name": "oe_test_nice"
+	},
+        {
+	  "name": "oe_test_libuv"
+	},
+	{
+	  "name": "oe_test_systemd_analyze"
 	}
 
     ]

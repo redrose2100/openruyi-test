@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "gcc-c++ gdb"
     cat > /tmp/add.c << EOF
 #include <stdio.h>
 int add(int x,int y)
@@ -46,7 +47,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Return value error"
     cd /tmp && gcc -g add.c
     test -f /tmp/a.out
-    CHECK_RESULT $? 0 0 "compile add.c fail"    
+    CHECK_RESULT $? 0 0 "compile add.c fail"
     gdb /tmp/a.out<< EOF >>/tmp/add.log 2>&1
 help
 list 4

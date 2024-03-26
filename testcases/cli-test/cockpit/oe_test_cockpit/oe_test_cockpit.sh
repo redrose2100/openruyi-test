@@ -17,7 +17,7 @@
 # @Desc      :   Test cockpit
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -40,14 +40,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to restart cockpit service"
     systemctl disable cockpit
     CHECK_RESULT $? 0 0 "Failed to disbale cockpit service"
-    curl https://localhost:9090/cockpit/login --user root:${NODE1_PASSWORD} -k | grep csrf-token
+    curl https://localhost:9090/cockpit/login --user root:"${NODE1_PASSWORD}" -k | grep csrf-token
     CHECK_RESULT $? 0 0 "Cockpit service function failed"
     LOG_INFO "End to run test."
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop cockpit
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
