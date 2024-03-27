@@ -46,6 +46,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     rpm -qa | grep gtk
     CHECK_RESULT $? 0 0 "Return value error"
+    dnf install gcc -y
     cd /tmp && gcc -o gtk+_test gtk+_test.c $(pkg-config --cflags --libs gtk+)
     test -f /tmp/gtk+_test
     CHECK_RESULT $? 0 0 "compile gtk+_test.c fail"    
@@ -55,6 +56,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/gtk+_test.c /tmp/gtk+_test
     DNF_REMOVE "$@"
+    dmf remove gcc -y
     LOG_INFO "Finish environment cleanup!"
 }
 
