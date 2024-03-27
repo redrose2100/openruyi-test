@@ -38,6 +38,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "invalid option: --tcp"
     netstat --programs | grep "Active Internet connections (w/o servers)"
     CHECK_RESULT $? 0 0 "invalid option: --programs"
+    netstat -lntup | grep "Active Internet connections (only servers)"
+    CHECK_RESULT $? 0 0 "invalid option: -lntup"
     LOG_INFO "End to run test."
 }
 
