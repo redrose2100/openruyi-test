@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   pengrui
 # @Contact   :   pengrui@uniontech.com
-# @Date      :   2023.8.15
+# @Date      :   2024.3.27
 # @License   :   Mulan PSL v2
 # @Desc      :   gtk+_test formatting test
 # ############################################
@@ -38,7 +38,7 @@ return 0;
 EOF
 
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "gtk3 gtk3-devel gtk+ gtk+-devel"
+    DNF_INSTALL "gtk3 gtk3-devel gtk+ gtk+-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -46,7 +46,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     rpm -qa | grep gtk
     CHECK_RESULT $? 0 0 "Return value error"
-    cd /tmp && gcc -o gtk+_test gtk+_test.c $(pkg-config --cflags --libs gtk+)
+    cd /tmp && gcc -o gtk+_test gtk+_test.c "$(pkg-config --cflags --libs gtk+)"
     test -f /tmp/gtk+_test
     CHECK_RESULT $? 0 0 "compile gtk+_test.c fail"    
 }
@@ -59,4 +59,3 @@ function post_test() {
 }
 
 main "$@"
-
