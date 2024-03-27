@@ -38,7 +38,7 @@ return 0;
 EOF
 
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "gtk3 gtk3-devel gtk+ gtk+-devel"
+    DNF_INSTALL "gcc gtk3 gtk3-devel gtk+ gtk+-devel"
     LOG_INFO "End of environmental preparation!"
 }
 
