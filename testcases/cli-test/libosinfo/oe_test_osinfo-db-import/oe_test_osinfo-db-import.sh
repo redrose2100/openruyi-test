@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "osinfo-db-tools"
+    DNF_INSTALL "osinfo-db-tools wget" 
     pwd=`pwd`
     LOG_INFO "Finish preparing the test environment."
 }
@@ -32,17 +32,17 @@ function run_test() {
     osinfo-db-import --local osinfo-db-20230308.tar.xz
     CHECK_RESULT $? 0 0 "Failed to import data"
     mkdir testdir
-    cd testdir
+    cd testdir || exit
     osinfo-db-export
     CHECK_RESULT $? 0 0 "Failed to export data"
-    test -e osinfo-db-$(date +%Y%m%d).tar.xz
+    test -e osinfo-db-"$(date +%Y%m%d)".tar.xz
     CHECK_RESULT $? 0 0 "Export file does not exist"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    cd $pwd
+    cd $pwd || exit
     rm -rf testdir osinfo-db-20230308.tar.xz
     DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
