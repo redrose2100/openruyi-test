@@ -17,7 +17,7 @@
 # @Desc      :   Test net-snmp function
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 dir_conf=/etc/snmp/snmpd.conf
 
 function pre_test() {
@@ -46,9 +46,9 @@ access notConfigGroup "" any noauth exact systemview systemview none' >> "${dir_
     CHECK_RESULT $? 0 0 "Get hostname fail"
     snmpget -v 2c -c public localhost SNMPv2-MIB::sysName.0
     CHECK_RESULT $? 0 0 "Check SNMPv2-MIB::sysName.0 information fail"
-#    snmpset -v 2c -c public localhost SNMPv2-MIB::sysName.0 s 'test'
+#   snmpset -v 2c -c public localhost SNMPv2-MIB::sysName.0 s 'test'
     snmpwalk -v 2c -c public localhost sysName | grep "STRING: test"
-#    CHECK_RESULT $? 0 0 "Set SNMPv2-MIB::sysName.0 fail"
+#   CHECK_RESULT $? 0 0 "Set SNMPv2-MIB::sysName.0 fail"
     mv -f snmpd.conf "${dir_conf}"
     LOG_INFO "Finish test!"
 }
