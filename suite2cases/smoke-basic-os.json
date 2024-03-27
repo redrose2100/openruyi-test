@@ -731,6 +731,9 @@
             "name": "oe_test_IPVLAN_07"
         },
         {
+            "name": "oe_test_manpath"
+        },
+        {
             "name": "oe_test_mpstat_01"
         },
         {
