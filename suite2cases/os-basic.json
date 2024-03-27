@@ -670,6 +670,9 @@
             "name": "oe_test_lsusb"
     	},
         {
+            "name": "oe_test_last"
+    	},
+        {
             "name": "oe_test_lastb"
     	},
         {
