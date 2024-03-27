@@ -38,7 +38,7 @@ return 0;
 EOF
 
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "gtk3 gtk3-devel gtk+ gtk+-devel"
+    DNF_INSTALL "gtk3 gtk3-devel gtk+ gtk+-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -55,7 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/gtk+_test.c /tmp/gtk+_test
-    DNF_REMOVE "$@"
+    DNF_REMOVE "gtk3 gtk3-devel gtk+ gtk+-devel gcc"
     LOG_INFO "Finish environment cleanup!"
 }
 
