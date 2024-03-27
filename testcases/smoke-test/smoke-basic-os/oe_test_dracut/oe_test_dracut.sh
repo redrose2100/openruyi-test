@@ -29,7 +29,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     if ! df -h / |grep overlay; then
-        dracut
+        dracut /boot/initramfs-"${kernel_ver}".img
         CHECK_RESULT $? 0 0 "Failed to execute dracut"
         test -f /boot/initramfs-"${kernel_ver}".img
         CHECK_RESULT $? 0 0 "Failed to check dracut"
