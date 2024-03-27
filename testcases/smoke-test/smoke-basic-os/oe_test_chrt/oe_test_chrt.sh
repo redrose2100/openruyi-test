@@ -19,19 +19,33 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    ping -q www.baidu.com &
+    SLEEP_WAIT 3
+    test_pid=$(pgrep -f ping | tail -n 1)
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     if ! df -h / |grep overlay; then
-        chrt -f -p 10 11
+        chrt -f -p 10 "${test_pid}"
         CHECK_RESULT $? 0 0 "Failed to execute chrt"
-        chrt -p 11 | grep pid
+        chrt -p "${test_pid}" | grep pid
         CHECK_RESULT $? 0 0 "Failed to execute chrt"
-        chrt -r -p 10 11
+        chrt -r -p 10 "${test_pid}"
         CHECK_RESULT $? 0 0 "Failed to execute chrt"
-        chrt -p 11 | grep pid
+        chrt -p "${test_pid}" | grep pid
         CHECK_RESULT $? 0 0 "Failed to execute chrt"
     fi
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    pgrep "ping" |xargs kill -9
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

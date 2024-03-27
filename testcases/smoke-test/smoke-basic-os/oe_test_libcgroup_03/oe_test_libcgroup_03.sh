@@ -38,6 +38,7 @@ function run_test() {
     grep "$ping_pid" /sys/fs/cgroup/cpu/test/tasks || grep -r "$ping_pid" /sys/fs/cgroup/test/cgroup.threads
     CHECK_RESULT $? 0 0 "Failed to display pid"
     kill -9 "$ping_pid"
+    SLEEP_WAIT 3
     grep "$ping_pid" /sys/fs/cgroup/cpu/test/tasks || grep -r "$ping_pid" /sys/fs/cgroup/test/cgroup.threads
     CHECK_RESULT $? 0 1 "File is not empty"
     LOG_INFO "End to run test."

@@ -17,7 +17,7 @@
 # @Desc      :   The usage of commands in podman package
 # ############################################
 
-source "../common/common_podman.sh"
+source "${OET_PATH}/testcases/cli-test/podman/common/common_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
@@ -40,7 +40,7 @@ function run_test() {
     CHECK_RESULT $?
     podman images --digests | grep "DIGEST"
     CHECK_RESULT $?
-    podman images --format=json | grep "\"digest\":"
+    podman images --format=json | grep -i "\"digest\":"
     CHECK_RESULT $?
     podman images --no-trunc | grep "sha256"
     CHECK_RESULT $?
@@ -51,10 +51,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    podamn stop postgres2
-    podamn rm postgres2
+    podman stop postgres2
+    podman rm postgres2
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

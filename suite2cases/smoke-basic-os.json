@@ -68,6 +68,9 @@
             "name": "oe_test_httpd"
         },
         {
+            "name": "oe_test_hostid"
+        },
+        {
             "name": "oe_test_iscsi"
         },
         {
@@ -99,6 +102,9 @@
         },
         {
             "name": "oe_test_ls_001"
+        },
+        {
+            "name": "oe_test_ls_002"
         },
         {
             "name": "oe_test_lsscsi"

@@ -17,7 +17,8 @@
 # @Desc      :   The usage of commands in podman package
 # ############################################
 
-source "../common/common_podman.sh"
+source "${OET_PATH}/testcases/cli-test/podman/common/common_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
@@ -29,32 +30,33 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     ID=$(podman create --log-driver=k8s-file alpine ls)
-    podman inspect $ID | grep -i driver
+    podman inspect "$ID" | grep -i driver
     CHECK_RESULT $?
     ID=$(podman create --log-opt max-size=10mb alpine ls)
-    podman inspect $ID | grep -i log
+    podman inspect "$ID" | grep -i log
     CHECK_RESULT $?
     ID=$(podman create --memory 5MB alpine ls)
-    podman inspect $ID | grep '"Memory": 5242880'
+    podman inspect "$ID" | grep '"Memory": 5242880'
     CHECK_RESULT $?
     ID=$(podman create --memory-reservation 5g alpine ls)
-    podman inspect $ID | grep '"MemoryReservation": 5368709120'
+    podman inspect "$ID" | grep '"MemoryReservation": 5368709120'
     CHECK_RESULT $?
     ID=$(podman create --memory 2g --memory-swap 4g alpine ls)
-    podman inspect $ID | grep '"MemorySwap": 4294967296'
+    podman inspect "$ID" | grep '"MemorySwap": 4294967296'
     CHECK_RESULT $?
     ID=$(podman create --memory-swappiness 4 alpine ls)
-    podman inspect $ID | grep '"MemorySwappiness": 4'
+    podman inspect "$ID" | grep '"MemorySwappiness": 4'
     CHECK_RESULT $?
     touch /tmp/host || exit 1
+    mkdir -p /tmp/host
     ID=$(podman create --mount type=bind,source=/tmp/host,destination=/tmp/container alpine ls)
-    podman inspect $ID | grep '"source": "/tmp/host"'
+    podman inspect "$ID" | grep "/tmp/host"
     CHECK_RESULT $?
     ID=$(podman create --name example alpine ls)
-    podman inspect $ID | grep '"Name": "example"'
+    podman inspect "$ID" | grep '"Name": "example"'
     CHECK_RESULT $?
     ID=$(podman create --net bridge alpine ls)
-    podman inspect $ID | grep '"NetworkMode": "bridge"'
+    podman inspect "$ID" | grep '"NetworkMode": "bridge"'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
@@ -62,7 +64,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh") /tmp/host
+    find . -type f ! -name '*.sh' -exec rm -f {} +
+    rm -rf /tmp/host
     LOG_INFO "End to restore the test environment."
 }
 
