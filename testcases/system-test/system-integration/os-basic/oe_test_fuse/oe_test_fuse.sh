@@ -17,7 +17,7 @@
 # @Desc      :   fuse function verification  
 # ############################################
 
-"${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
