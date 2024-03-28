@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verification openjdk11
 # ############################################
-
+#111111111111111111111111111111111111111111
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
