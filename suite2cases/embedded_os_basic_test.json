@@ -144,6 +144,9 @@
         },
         {
             "name": "oe_test_basic_cmd_shopt"
+        },
+        {
+            "name": "oe_test_basic_cmd_echo"
         }
     ]
 }
