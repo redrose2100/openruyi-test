@@ -901,6 +901,9 @@
 	},
 	{
 	  "name": "oe_test_ul_001"
+	},
+	{
+	  "name": "oe_test_mkfifo"
 	}
     ]
 }
