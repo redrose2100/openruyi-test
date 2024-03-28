@@ -49,7 +49,7 @@ access notConfigGroup "" any noauth exact systemview systemview none' >> "${dir_
 #   snmpset -v 2c -c public localhost SNMPv2-MIB::sysName.0 s 'test'
     snmpwalk -v 2c -c public localhost sysName | grep "STRING: test"
 #   CHECK_RESULT $? 0 0 "Set SNMPv2-MIB::sysName.0 fail"
-    mv -f snmpd.conf "${dir_conf}"
+
     LOG_INFO "Finish test!"
 }
 
