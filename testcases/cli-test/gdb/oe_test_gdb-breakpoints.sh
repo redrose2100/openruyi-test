@@ -10,9 +10,9 @@
 # See the Mulan PSL v2 for more details.
 
 # #############################################
-# @Author    :   pengrui
-# @Contact   :   pengrui@uniontech.com
-# @Date      :   2023.8.21
+# @Author    :   panjuncheng
+# @Contact   :   panjuncheng@uniontech.com
+# @Date      :   2024.3.28
 # @License   :   Mulan PSL v2
 # @Desc      :   gdb-breakpoints formatting test
 # ############################################
@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL gdb
+    DNF_INSTALL gdb 
 cat > /tmp/test.c << EOF
 #include <stdio.h>
 int add(int a,int b)
