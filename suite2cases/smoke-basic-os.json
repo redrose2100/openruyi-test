@@ -88,6 +88,9 @@
         {
             "name": "oe_test_localectl_001"
         },
+        {
+            "name": "oe_test_logname"
+        },
 	{
 	    "name": "oe_test_logrotate_002"
 	},
