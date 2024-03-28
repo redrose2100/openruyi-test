@@ -46,16 +46,16 @@ access notConfigGroup "" any noauth exact systemview systemview none' >> "${dir_
     CHECK_RESULT $? 0 0 "Get hostname fail"
     snmpget -v 2c -c public localhost SNMPv2-MIB::sysName.0
     CHECK_RESULT $? 0 0 "Check SNMPv2-MIB::sysName.0 information fail"
-#   snmpset -v 2c -c public localhost SNMPv2-MIB::sysName.0 s 'test'
+    snmpset -v 2c -c public localhost SNMPv2-MIB::sysName.0 s 'test'
     snmpwalk -v 2c -c public localhost sysName | grep "STRING: test"
-#   CHECK_RESULT $? 0 0 "Set SNMPv2-MIB::sysName.0 fail"
+    CHECK_RESULT $? 0 1 "Set SNMPv2-MIB::sysName.0 fail"
 
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
