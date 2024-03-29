@@ -31,11 +31,11 @@ function run_test() {
     smartctl -h
     CHECK_RESULT $?
     disk_name=$(lsblk|grep disk|awk '{print $1}')
-    smartctl -a /dev/$disk_name
+    smartctl -a /dev/"$disk_name"
     CHECK_RESULT $?
-    smartctl -H /dev/$disk_name
+    smartctl -H /dev/"$disk_name"
     CHECK_RESULT $?
-    smartctl -A /dev/$disk_name
+    smartctl -A /dev/"$disk_name"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
