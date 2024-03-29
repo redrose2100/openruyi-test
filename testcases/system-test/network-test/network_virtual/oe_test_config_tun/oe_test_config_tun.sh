@@ -26,11 +26,17 @@ function pre_test() {
         exit 0
     }
     cp ./config_tap.sh /etc/init.d/config_tap && chmod 777 /etc/init.d/config_tap
-    path="http://li.nux.ro/download/nux/misc/el7/x86_64/"
-    wget "$path"
-    tunctl=$(grep -oE "tunctl-.*.rpm" index.html | head -n 1 | awk -F'"' '{print $1}')
-    wget "$path/$tunctl"
-    rpm -ivh "$tunctl"
+    if [[ "${NODE1_FRAME}" = "riscv64" ]]; then
+        file="https://download.opensuse.org/repositories/openSUSE:/Factory:/RISCV/standard/riscv64/tunctl-1.5-28.1.riscv64.rpm"
+        wget "$file"
+        rpm install ./tunctl-1.5-28.1.riscv64.rpm
+    else
+        path="http://li.nux.ro/download/nux/misc/el7/x86_64/"
+        wget "$path"
+        tunctl=$(grep -oE "tunctl-.*.rpm" index.html | head -n 1 | awk -F'"' '{print $1}')
+        wget "$path/$tunctl"
+        rpm -ivh "$tunctl"
+    fi
     DNF_INSTALL "net-tools"
     LOG_INFO "End to prepare the test environment."
 }
@@ -62,7 +68,11 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     ip tuntap del dev tap0 mod tap
     rpm -e tunctl
-    rm -rf /etc/init.d/config_tap "$tunctl" index.html
+    if [[ "${NODE1_FRAME}" = "riscv64" ]]; then
+        rm -rf ./tunctl-1.5-28.1.riscv64.rpm
+    else
+        rm -rf "$tunctl" index.html /etc/init.d/config_tap
+    fi
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
