@@ -37,12 +37,6 @@ function run_test() {
     CHECK_RESULT $?
     smartctl -A /dev/$disk_name
     CHECK_RESULT $?
-#    semanage login -m -s sysadm_u  test
-#    CHECK_RESULT $? 0 0 "modify selinux user of test fail"
-#    semanage login -d test
-#    CHECK_RESULT $? 0 0 "delete selinux user of test fail"
-#    semanage login -l |grep test
-#    CHECK_RESULT $? 0 1 "selinux login user should not exit"
     LOG_INFO "End to run test."
 }
 
