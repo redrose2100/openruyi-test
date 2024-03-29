@@ -19,27 +19,13 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
-function pre_test() {
-    LOG_INFO "Start environment preparation."
-    OLD_LANG=$LANG
-    export LANG=en_US.UTF-8
-    LOG_INFO "End of environmental preparation!"
-}
-
 function run_test() {
     LOG_INFO "Start testing..."
     lspci -v | grep bridge
-    CHECK_RESULT $?
-
+    CHECK_RESULT $? 0 0 "Failed to query device info"
     lspci -k | grep Kernel
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to query Driver info"
     LOG_INFO "Finish test!"
-}
-
-function post_test() {
-    LOG_INFO "start environment cleanup."
-    export LANG=${OLD_LANG}
-    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
