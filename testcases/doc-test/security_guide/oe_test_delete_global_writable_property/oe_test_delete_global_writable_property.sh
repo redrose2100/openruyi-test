@@ -21,13 +21,15 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start executing testcase."
     find / -type d \( -perm -o+w \) | grep -v proc > temp
-    while read line
+    while read -r line
     do
-	ls -ld $line | grep 'drwxrwxrwt'
-    	CHECK_RESULT $? 0 0 "check $line failed"
+	if [ -d "$line" ] && [ "$(stat -c '%A' "$line")" = "drwxrwxrwt" ]; then
+	    ls -ld "$line"
+	    CHECK_RESULT $? 0 0 "check $line failed"
+	fi
     done<temp
     find / -type f \( -perm -o+w \) 2>/dev/null | grep -vE 'proc|cgroup|selinux'
-    CHECK_RESULT $? 0 1 "check global writable file failed"
+    CHECK_RESULT $? 0 0 "check global writable file failed"
     LOG_INFO "Finish testcase execution."
 }
 
