@@ -74,6 +74,9 @@
             "name": "oe_test_iscsi"
         },
         {
+            "name": "oe_test_getpid"
+        },
+        {
             "name": "oe_test_journalctl"
         },
         {
@@ -404,7 +407,7 @@
             "name": "oe_test_less"
         },
         {
-            "name": "oe_test_libcgroup_01"
+            "name": "oe_test_group_01"
         },
         {
             "name": "oe_test_libcgroup_02"
