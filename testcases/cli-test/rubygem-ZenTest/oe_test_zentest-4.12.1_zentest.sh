@@ -15,9 +15,19 @@
 # @Desc      :   Test zentest
 # #############################################
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+GEM_PACKAGES=" rubygem-test-unit rubygem-ZenTest rubygem-minitest rubygem-rails "
+OTHER_DEPENDENCES=" tar nodejs bc gcc libyaml-devel ruby-devel "
+SOURCE_URL="https://gems.ruby-china.com/"
+ORIGIN_SOURCE="https://rubygems.org/"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "rubygem-ZenTest tar rubygem-minitest rubygem-test-unit nodejs ruby-devel rubygem-rails bc"
+    # remove
+    sudo dnf autoremove gem
+    sudo rm -rf /usr/share/gems
+    # install
+    DNF_INSTALL "${GEM_PACKAGES} ${OTHER_DEPENDENCES}"
+    gem sources --add ${SOURCE_URL} --remove ${ORIGIN_SOURCE}
+    bundle config mirror.${ORIGIN_SOURCE} ${SOURCE_URL}
     yum groupinstall "Development Tools" -y
     tar -xvf ./common/data.tar.gz >/dev/null
     LOG_INFO "End to prepare the test environment."
