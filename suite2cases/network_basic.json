@@ -59,6 +59,9 @@
         },
         {
             "name": "oe_test_wget"
+        },
+        {
+            "name": "oe_test_check_nslookup"
         }
     ]
 }
