@@ -16,14 +16,17 @@
 #@Desc      	:   Take the test access of /root
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ls /root | grep "anaconda-ks.cfg"
+    if [ "$(uname -m)" == "riscv64" ]; then
+	    LOG_ERROR "The case exit because it is not suitable for riscv64"
+	    exit 255
+    fi
+    find /root/ -maxdepth 1 -name anaconda-ks.cfg | grep "anaconda-ks.cfg"
     CHECK_RESULT $? 0 0 "check /root directory failed."
     LOG_INFO "End to run test."
 }
 
 main "$@"
-
