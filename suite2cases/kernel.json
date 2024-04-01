@@ -139,6 +139,9 @@
         },
         {
             "name": "oe_test_clk"
+        },
+        {
+            "name": "oe_test_mfd"
         }
     ]
 }
