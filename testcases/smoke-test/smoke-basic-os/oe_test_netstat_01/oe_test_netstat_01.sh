@@ -16,7 +16,7 @@
 #@Desc          :   Check the status of current net by netstat
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -32,6 +32,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "invalid option: -g"
     netstat -jjj | grep "invalid option"
     CHECK_RESULT $? 1 0 "invalid option:-jjj"
+    netstat -u | grep "Active Internet connections (w/o servers)"
+    CHECK_RESULT $? 0 0 "invalid option: -u"
+    netstat --tcp | grep tcp
+    CHECK_RESULT $? 0 0 "invalid option: --tcp"
+    netstat --programs | grep "Active Internet connections (w/o servers)"
+    CHECK_RESULT $? 0 0 "invalid option: --programs"
+    netstat -lntup | grep "Active Internet connections (only servers)"
+    CHECK_RESULT $? 0 0 "invalid option: -lntup"
     LOG_INFO "End to run test."
 }
 

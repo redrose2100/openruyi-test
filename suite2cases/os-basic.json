@@ -670,6 +670,9 @@
             "name": "oe_test_lsusb"
     	},
         {
+            "name": "oe_test_last"
+    	},
+        {
             "name": "oe_test_lastb"
     	},
         {
@@ -892,7 +895,15 @@
 	},
 	{
 	  "name": "oe_test_systemd_analyze"
+	},
+	{
+	  "name": "oe_test_readlink"
+	},
+	{
+	  "name": "oe_test_ul_001"
+	},
+	{
+	  "name": "oe_test_lscpu"
 	}
-
     ]
 }
