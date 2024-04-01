@@ -28,9 +28,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
+    SERVERTOOL_FILE=$(find / -name "servertool" 2>/dev/null)
+    [ -z "$SERVERTOOL_FILE" ]
+    CHECK_RESULT $? 1 0 "servertool not found"
+    unpack200_path=$(find /usr/lib/jvm/ -name unpack200 | head -n 1)
     expect -c "
     log_file testlog
-    spawn servertool
+    spawn -noecho $SERVERTOOL_FILE
     expect \"*>\"
     send \"help\r\"
     expect \"*>\"
@@ -38,10 +42,10 @@ function run_test() {
     expect eof
 "
     cat < testlog | grep -q "while executing"
-    CHECK_RESULT $? 0 0 "not found while executing"
-    unpack200 -help | grep "Usage"
+    CHECK_RESULT $? 1 0 "not found while executing"
+    $unpack200_path -help | grep "Usage"
     CHECK_RESULT $? 0 0 "unpack200  -help failed"
-    unpack200 --version | grep "[0-9]"
+    $unpack200_path --version | grep "[0-9]"
     CHECK_RESULT $? 0 0 "unpack200 --version failed"
     LOG_INFO "Finish test!"
 }
