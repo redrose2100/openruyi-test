@@ -16,13 +16,20 @@
 #@Desc      	:   Take the test access of /root
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ls /root | grep "anaconda-ks.cfg"
+    touch /root/test_access.tmp
+    ls /root | grep "test_access.tmp"
     CHECK_RESULT $? 0 0 "check /root directory failed."
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to clean the test environment."
+    rm -f /root/test_access.tmp
+    LOG_INFO "End to clean the test environment."
 }
 
 main "$@"
