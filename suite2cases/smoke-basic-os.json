@@ -831,6 +831,9 @@
         },
 	{
 	     "name":"oe_test_lzo_002"
+	},
+	{
+	    "name": "oe_test_lsirq"
 	}
     ]
 }
