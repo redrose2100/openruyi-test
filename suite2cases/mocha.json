@@ -27,6 +27,9 @@
 	},
 	{
 	    "name": "oe_test_mocha_08"
+	},
+	{
+	    "name": "oe_test_mocha_09"
 	}
     ]
 }
