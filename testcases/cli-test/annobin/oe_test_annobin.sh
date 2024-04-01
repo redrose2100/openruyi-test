@@ -46,18 +46,18 @@ function run_test() {
     grep "annobin.so" ${path}/test2
     CHECK_RESULT $? 0 0 "Library files fails"
     gcc -fplugin=annobin test.c
-    ./a.out > ${path}/test3
-    grep "Hello，world!" ${path}/test3
+    ./a.out > "$path"/test3
+    grep "Hello，world!" "$path"/test3
     CHECK_RESULT $? 0 0 "executable file fails"
-    rm ${path}/a.out
+    rm "$path"/a.out
     gcc -fplugin=annobin -fplugin-arg-annobin-verbose test.c
-    test -f ${path}/a.out
+    test -f "$path"/a.out
     CHECK_RESULT $? 0 0 "a.out file fails"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf ${path}
+    rm -rf "$path"
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }

@@ -16,7 +16,8 @@
 # @Desc      :   The usage of commands in ndisc6 package
 # ############################################
 
-source "../common/common_ndisc6.sh"
+source "$OET_PATH/testcases/cli-test/ndisc6/common/common_ndisc6.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
@@ -25,18 +26,18 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ndisc6 -1 -r 3 -w 1000 ${NODE2_IPV6} ${NODE2_NIC[0]} | grep -i "${NODE2_MAC}"
+    ndisc6 -1 -r 3 -w 1000 "${NODE2_IPV6}" "${NODE1_NIC[0]}" | grep -i "${NODE2_MAC}"
     CHECK_RESULT $?
-    ndisc6 -m -r 3 -w 1000 ${NODE2_IPV6} ${NODE2_NIC[0]} | grep -i "${NODE2_MAC}"
+    ndisc6 -m -r 3 -w 1000 "${NODE2_IPV6}" "${NODE1_NIC[0]}" | grep -i "${NODE2_MAC}"
     CHECK_RESULT $?
-    ndisc6 -n -r 3 -w 1000 ${NODE2_IPV6} ${NODE2_NIC[0]} | grep -i "${NODE2_MAC}"
+    ndisc6 -n -r 3 -w 1000 "${NODE2_IPV6}" "${NODE1_NIC[0]}" | grep -i "${NODE2_MAC}"
     CHECK_RESULT $?
-    ndisc6 -q -r 3 -w 1000 ${NODE2_IPV6} ${NODE2_NIC[0]} | grep -i "${NODE2_MAC}"
+    ndisc6 -q -r 3 -w 1000 "${NODE2_IPV6}" "${NODE1_NIC[0]}" | grep -i "${NODE2_MAC}"
     CHECK_RESULT $?
     ndisc6_version=$(rpm -qa ndisc6 | awk -F '-' '{print $2}')
     ndisc6 -V | grep "${ndisc6_version}"
     CHECK_RESULT $?
-    ndisc6 -v -r 3 -w 1000 ${NODE2_IPV6} ${NODE2_NIC[0]} | grep -i "${NODE2_MAC}"
+    ndisc6 -v -r 3 -w 1000 "${NODE2_IPV6}" "${NODE1_NIC[0]}" | grep -i "${NODE2_MAC}"
     CHECK_RESULT $?
     ndisc6 -h | grep "ndisc6"
     CHECK_RESULT $?
