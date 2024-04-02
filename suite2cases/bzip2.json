@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_bzip2"
-        }
+        },
+	{
+	    "name": "oe_test_bzip2_01"
+	}
     ]
 }
