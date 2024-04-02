@@ -904,6 +904,9 @@
 	},
 	{
 	  "name": "oe_test_lscpu"
+	},
+	{
+	  "name": "oe_test_readelf"
 	}
 	,
         {
