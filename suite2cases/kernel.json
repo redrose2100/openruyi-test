@@ -142,6 +142,9 @@
         },
         {
             "name": "oe_test_mfd"
+        },
+        {
+            "name": "oe_test_bcma"
         }
     ]
 }
