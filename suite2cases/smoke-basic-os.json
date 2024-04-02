@@ -185,6 +185,9 @@
             "name": "oe_test_tar_001"
         },
         {
+            "name": "oe_test_tar_002"
+        },
+        {
             "name": "oe_test_touch_001"
         },
         {
