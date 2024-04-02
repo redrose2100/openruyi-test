@@ -192,6 +192,9 @@
             "name": "oe_test_server_openssh_secure"
         },
         {
+            "name": "oe_test_netscript_cfg"
+        },
+        {
             "name": "oe_test_server_openssh_restart"
         },
         {
