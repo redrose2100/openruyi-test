@@ -915,5 +915,9 @@
         {
           "name": "oe_test_yumdownloader"
         }
+	,
+	 {
+            "name": "oe_test_fallocate"
+        }
     ]
 }
