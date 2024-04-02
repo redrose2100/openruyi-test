@@ -133,6 +133,18 @@
         },
         {
             "name": "oe_test_uio"
+        },
+        {
+            "name": "oe_test_ntb"
+        },
+        {
+            "name": "oe_test_clk"
+        },
+        {
+            "name": "oe_test_mfd"
+        },
+        {
+            "name": "oe_test_bcma"
         }
     ]
 }
