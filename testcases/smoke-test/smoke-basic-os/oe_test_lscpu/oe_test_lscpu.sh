@@ -1,0 +1,39 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2024 Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   xionglinhui
+# @Contact   :   xionglinhui@uniontech.com
+# @Date      :   2024-03-26
+# @License   :   Mulan PSL v2
+# @Desc      :   test lscpu
+# ############################################
+
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function run_test() {
+    LOG_INFO "Start testing..."
+    lscpu
+    CHECK_RESULT $? 0 0 "lscpu execute fail"
+    lscpu --help | grep -E "用法|Usage"
+    CHECK_RESULT $? 0 0 "lscpu --help execute fail"
+    lscpu -V | grep -i lscpu
+    CHECK_RESULT $? 0 0 "lscpu --version execute fail"
+    lscpu -a -e | grep ONLINE
+    CHECK_RESULT $? 0 0 "-a -e argument execute fail"
+    lscpu -x
+    CHECK_RESULT $? 0 0 "-x argument execute fail"
+    lscpu -p
+    CHECK_RESULT $? 0 0 "-p argument execute fail"
+    LOG_INFO "Finish test!"
+}
+
+main "$@"
