@@ -4,7 +4,6 @@ all:
 	cd ./tmp_extract/libidn2* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) --disable-static && \
 	make && \
-	make -C doc html && \
 	sed -i 's/check-TESTS:/#check-TESTS:/g' tests/Makefile && \
 	make -j1 -C tests check
 	sh ../common.sh -c "libidn2*" "test-driver"
