@@ -919,5 +919,9 @@
 	 {
             "name": "oe_test_fallocate"
         }
+	 ,
+         {
+            "name": "oe_test_xzgrep"
+        }
     ]
 }
