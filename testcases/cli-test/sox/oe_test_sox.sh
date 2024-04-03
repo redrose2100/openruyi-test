@@ -36,7 +36,7 @@ function run_test() {
   sox output.wav output2.wav trim 10 20
   CHECK_RESULT $? 0 0 "Cropping audio failed"
   test -e  output2.wav
-  CHECK_RESULT $? 0 0 "output.wav not exist"
+  CHECK_RESULT $? 0 0 "output2.wav not exist"
   LOG_INFO "End of the test."
 }
 
