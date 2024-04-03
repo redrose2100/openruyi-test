@@ -145,6 +145,9 @@
         },
         {
             "name": "oe_test_bcma"
+        },
+        {
+            "name": "oe_test_ceph"
         }
     ]
 }
