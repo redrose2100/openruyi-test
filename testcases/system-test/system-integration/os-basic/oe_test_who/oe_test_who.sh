@@ -17,16 +17,16 @@
 # @Desc      :   Command test-who -b/-s
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
-    who | grep $(users | awk '{print$1}')
+    who | grep "$(users | awk '{print$1}')"
     CHECK_RESULT $?
 
     who -b | grep "system boot"
     CHECK_RESULT $?
 
-    who -s | grep pts
+    who -s | grep "$(users | awk '{print$1}')"
     CHECK_RESULT $?
 
     who --help | grep "Usage"
