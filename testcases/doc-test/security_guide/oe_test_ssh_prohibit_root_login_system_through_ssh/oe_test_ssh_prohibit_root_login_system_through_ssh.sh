@@ -25,11 +25,15 @@ function run_test() {
     expect -c "
         set timeout 30
         log_file testlog1
-        spawn ssh root@$NODE2_IPV4
+        spawn ssh -o StrictHostKeyChecking=no root@$NODE2_IPV4
         expect {
             \"*assword*\" {
                 send \"$NODE2_PASSWORD\\r\"
-                }
+            }
+            \"*(yes/no)*\" {
+              send \"yes\\r\"
+              exp_continue
+            }
         }
         expect {
             \"*root*\" {
