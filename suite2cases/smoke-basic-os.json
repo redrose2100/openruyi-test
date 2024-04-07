@@ -5,6 +5,9 @@
             "name": "oe_test_acl_001"
         },
         {
+            "name": "oe_test_arch"
+        },
+        {
             "name": "oe_test_basic_ssh_001"
         },
         {
