@@ -922,6 +922,9 @@
 	 ,
          {
             "name": "oe_test_xzgrep"
-        }
+        },
+	{
+	  "name": "oe_test_fgrep"
+	}
     ]
 }
