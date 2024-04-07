@@ -20,7 +20,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
-LOG_INFO "Start testing..."
+    LOG_INFO "Start testing..."
     disk=$(lsblk -o NAME,TYPE | grep disk | awk 'NR==1{print $1}')
     sfdisk -d /dev/"${disk}" | grep "label"
     CHECK_RESULT $? 0 0 "Label not found"
