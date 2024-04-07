@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0  "Exhaustive Simple entire font matching mode failed"
     fc-list -f :lang=cn
     CHECK_RESULT $? 0 0  "Failed to print the Chinese font"
-    fc-list -V|grep "fontconfig version"
+    fc-list -V
     CHECK_RESULT $? 0 0  "Description Failed to view the version information"
     fc-list -h
     CHECK_RESULT $? 0 0  "Description Failed to view the help information"
