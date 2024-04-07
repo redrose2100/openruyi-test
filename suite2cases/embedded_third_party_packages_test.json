@@ -126,6 +126,12 @@
         },
         {
             "name": "oe_test_libgpg-error_test_001"
+        },
+        {
+            "name": "oe_test_libidn2_test_001"
+        },
+        {
+            "name": "oe_test_bzip2_test_001"
         }
     ]
 }
