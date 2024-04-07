@@ -20,7 +20,9 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL enchant2  
+    DNF_INSTALL enchant2
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -31,7 +33,7 @@ function run_test()
     CHECK_RESULT $? 0 0 "check command fail" 
     enchant-lsmod-2 | grep hunspell    
     CHECK_RESULT $? 0 0 "Language module detection failed"
-    enchant-2 -h | grep Usage
+    enchant-2 -h 2>&1 | grep Usage
     CHECK_RESULT $? 0 0 "check command fail"
     echo "there is a testj" > /tmp/test.txt
     enchant-2 -d en_US -a  /tmp/test.txt | grep test
@@ -42,6 +44,7 @@ function run_test()
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE "$@"
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 

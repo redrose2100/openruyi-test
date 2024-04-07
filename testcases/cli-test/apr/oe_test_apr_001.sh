@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    mkdir -p ~/apr &&cd ~/apr
+    mkdir -p ~/apr && cd ~/apr || return
     cat > /root/apr/test  <<EOF
 hello apr ...
 EOF
@@ -49,7 +49,7 @@ buf = apr_palloc(pool, MEM_ALLOC_SIZE); //给buf分配空间
 rv = apr_file_open(&fin, "/root/apr/test", APR_READ | APR_BUFFERED, APR_OS_DEFAULT, pool);       //打开可读文件
 if (rv == APR_SUCCESS) {
 strcpy(buf, "fileread_open succeed!");
-printf("this is a test:%s\n", buf);
+printf("this is a test:%s\\n", buf);
 }
 apr_file_lock(fin, APR_FLOCK_SHARED);   //读锁,允许其他读者进线程对它读，但不能有写者对它操作
 /*
@@ -59,7 +59,7 @@ apr_file_lock(fin, APR_FLOCK_SHARED);   //读锁,允许其他读者进线程对�
 rv = apr_file_open(&fout, "/root/apr/test", APR_WRITE | APR_BUFFERED | APR_CREATE | APR_TRUNCATE, APR_OS_DEFAULT, pool);
 if (rv == APR_SUCCESS) {
 strcpy(buf, "filewrite_open succeed!");
-printf("this is a test:%s\n", buf);
+printf("this is a test:%s\\n", buf);
 }
 apr_file_lock(fout, APR_FLOCK_EXCLUSIVE);       //写锁，不允许其他进程对此文件操作
 /*
@@ -80,9 +80,9 @@ apr_file_close(fin);
 apr_file_copy("/root/apr/test", "/root/apr/test_bak", APR_OS_DEFAULT, pool);
 apr_file_remove("/root/apr/test", pool);
 apr_file_info_get(&finfo, APR_FINFO_NAME, fout);        //获取文件信息方法1：通过文件对象
-printf("file name is:%s\n", finfo.fname);
+printf("file name is:%s\\n", finfo.fname);
 apr_stat(&finfo,"/root/apr/test_bak", APR_FINFO_SIZE, pool);     //获取文件信息方法2：通过文件路径
-printf("file size is:%d bytes\n", finfo.size);
+printf("file size is:%d bytes\\n", finfo.size);
 //关闭文件test_write.c
 apr_file_unlock(fout);
 apr_file_close(fout);
@@ -91,7 +91,7 @@ apr_terminate();        //结束
 return APR_SUCCESS;
 }
 EOF
-    DNF_INSTALL "apr-util-devel"
+    DNF_INSTALL "apr-util-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -99,19 +99,19 @@ function run_test() {
     LOG_INFO "Start testing..."
     rpm -qa | grep apr-util-devel
     CHECK_RESULT $? 0 0 "Return value error"
-    cd ~/apr && gcc test_apr.c -o test_apr -I /usr/include/apr-1 -L /usr/lib64 -l apr-1   
+    cd ~/apr && gcc test_apr.c -o test_apr -I /usr/include/apr-1 -L /usr/lib64 -l apr-1
     ./test_apr > apr_test
     test -f /root/apr/apr_test -a -f /root/apr/test_apr -a -f /root/apr/test_bak
     CHECK_RESULT $? 0 0 "Generate test fail "
     grep "this is a test:fileread_open succeed!" /root/apr/apr_test
-    CHECK_RESULT $? 0 0 "information is error"   
+    CHECK_RESULT $? 0 0 "information is error"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /root/apr/
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
