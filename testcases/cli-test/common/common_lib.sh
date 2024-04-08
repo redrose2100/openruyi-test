@@ -17,11 +17,11 @@
 # @Desc      :   common function library for service restart of the base images
 # #############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function test_execution() {
     service=$1
-    log_time=$(date '+%Y-%m-%d %T')
+    log_time="$(date '+%Y-%m-%d %T')"
     test_restart "${service}"
     test_enabled "${service}"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
@@ -59,21 +59,20 @@ function test_oneshot() {
 
 function test_enabled() {
     service=$1
-    state=$(systemctl is-enabled "${service}")
+    state="$(systemctl is-enabled "${service}")"
     if [ "${state}" == "enabled" ]; then
-	symlink_file=$(systemctl disable "${service}" 2>&1 | grep "Removed" | awk '{print $2}' | 
-		awk '{print substr($0,1,length($0)-1)}')
-        find ${symlink_file}
+	symlink_file="$(systemctl disable "${service}" 2>&1 | grep "Removed" | awk '{print $2}' | awk '{print substr($0,1,length($0)-1)}' | tr -d '"' | head -n 1)"
+        find "${symlink_file}"
         CHECK_RESULT $? 0 1 "${service} disable failed"
         systemctl enable "${service}"
-        find ${symlink_file}
+        find "${symlink_file}"
         CHECK_RESULT $? 0 0 "${service} enable failed"
     elif [ "${state}" == "disabled" ]; then
-	symlink_file=$(systemctl enable "${service}" 2>&1 | grep "Created symlink" | awk '{print $3}')
-        find ${symlink_file}
+	symlink_file="$(systemctl enable "${service}" 2>&1 | grep "Created symlink" | awk '{print $3}' | tr -d '"' | head -n 1)"
+        find "${symlink_file}"
         CHECK_RESULT $? 0 0 "${service} enable failed"
         systemctl disable "${service}"
-        find ${symlink_file}
+        find "${symlink_file}"
         CHECK_RESULT $? 0 1 "${service} disable failed"
     elif [ "${state}" == "masked" ]; then
         LOG_INFO "Unit is masked, ignoring."
