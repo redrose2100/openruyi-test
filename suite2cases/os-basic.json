@@ -192,6 +192,9 @@
             "name": "oe_test_server_openssh_secure"
         },
         {
+            "name": "oe_test_netscript_cfg"
+        },
+        {
             "name": "oe_test_server_openssh_restart"
         },
         {
@@ -904,6 +907,25 @@
 	},
 	{
 	  "name": "oe_test_lscpu"
+	},
+	{
+	  "name": "oe_test_lsmem_1"
 	}
+	,
+        {
+          "name": "oe_test_yumdownloader"
+        }
+	,
+	 {
+            "name": "oe_test_fallocate"
+        }
+	 ,
+         {
+            "name": "oe_test_xzgrep"
+        }
+        ,
+        {
+            "name": "oe_test_sfdisk"
+        }
     ]
 }

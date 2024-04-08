@@ -139,6 +139,18 @@
         },
         {
             "name": "oe_test_clk"
+        },
+        {
+            "name": "oe_test_mfd"
+        },
+        {
+            "name": "oe_test_bcma"
+        },
+        {
+            "name": "oe_test_extcon"
+        },
+        {
+            "name": "oe_test_tee"
         }
     ]
 }
