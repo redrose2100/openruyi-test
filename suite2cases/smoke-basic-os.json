@@ -837,7 +837,10 @@
 	},
 	{
 	    "name": "oe_test_lsirq"
-	}
+	},
+    {
+        "name": "oe_test_nproc"
+    }
     ]
 }
 
