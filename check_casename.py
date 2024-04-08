@@ -78,6 +78,7 @@ def check_testcase():
             cases_names = case_info["cases"]
             if len(check_one_suite(cases_names, case_path, one_suite)) > 0:
                 ret = 1
+                break
     return ret          
 
 def main():
