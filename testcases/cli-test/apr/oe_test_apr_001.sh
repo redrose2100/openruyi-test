@@ -19,9 +19,10 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    mkdir -p ~/apr &&cd ~/apr
+    mkdir -p /root/apr &&cd /root/apr || exit 
     cat > /root/apr/test  <<EOF
 hello apr ...
 EOF
@@ -91,7 +92,7 @@ apr_terminate();        //结束
 return APR_SUCCESS;
 }
 EOF
-    DNF_INSTALL "apr-util-devel"
+    DNF_INSTALL "apr-util-devel gcc gcc-c++"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -99,7 +100,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     rpm -qa | grep apr-util-devel
     CHECK_RESULT $? 0 0 "Return value error"
-    cd ~/apr && gcc test_apr.c -o test_apr -I /usr/include/apr-1 -L /usr/lib64 -l apr-1   
+    cd /root/apr && gcc test_apr.c -o test_apr -I /usr/include/apr-1 -L /usr/lib64 -l apr-1   
     ./test_apr > apr_test
     test -f /root/apr/apr_test -a -f /root/apr/test_apr -a -f /root/apr/test_bak
     CHECK_RESULT $? 0 0 "Generate test fail "
@@ -110,8 +111,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /root/apr/
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
