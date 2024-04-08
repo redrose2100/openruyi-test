@@ -62,6 +62,7 @@ function run_test() {
     iscsiadm -m discovery -t st -p ${local_addr}
     iscsiadm -m node -p ${local_addr} -l
     CHECK_RESULT $?
+    lsmod | grep dm_multipath || modprobe dm_multipath
     systemctl restart multipathd
     CHECK_RESULT $?
     multipath -v2
@@ -92,6 +93,7 @@ function post_test() {
     test -f initiatorname.iscsi && mv initiatorname.iscsi /etc/iscsi/initiatorname.iscsi
     rm -rf $lun1 $lun2
     test ${firewall_status} -eq 1 && systemctl restart firewalld
+    lsmod | grep dm_multipath && modprobe -r dm_multipath
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }

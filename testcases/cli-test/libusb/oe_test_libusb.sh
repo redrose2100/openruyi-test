@@ -17,7 +17,7 @@
 # @Desc      :   libusb formatting test
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start environment preparation."    
@@ -71,7 +71,7 @@ int main() {
 }
 EOF
 
-    DNF_INSTALL "libusb libusb-devel"
+    DNF_INSTALL "libusb libusb-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 

@@ -10,32 +10,44 @@
 # See the Mulan PSL v2 for more detaitest -f.
 
 # #############################################
-# @Author    :   zhangpanting
-# @Contact   :   1768492250@qq.com
-# @Date      :   2023/05/04
+# @Author    :   libeibei
+# @Contact   :   libeibei@uniontech.com
+# @Date      :   2024/4/3
 # @License   :   Mulan PSL v2
-# @Desc      :   Test biometric-authentication.service restart
+# @Desc      :   Test zfgrep function
 # #############################################
 
-source "../common/common_lib.sh"
+
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL biometric-auth
+    cat << EOF > /tmp/testfile.txt
+line 1
+Line 2
+LIne 3
+LINe 4
+LINE 5
+EOF
+    xz /tmp/testfile.txt
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test() {
-    LOG_INFO "Start to run test."
-    test_execution biometric-authentication.service
-    LOG_INFO "End to run test."
+function run_test()
+{
+    LOG_INFO "Start testing..."
+    cd /tmp || exit
+    xzgrep "line" testfile.txt.xz
+    CHECK_RESULT $? 0 0 "xzgrep function error"
+    line=$(xzgrep -i "LINE" testfile.txt.xz| wc -l)
+    CHECK_RESULT "${line}" 5 0 "xzgrep function error"
+    LOG_INFO "Finish test!"
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    systemctl stop biometric-authentication.service
-    DNF_REMOVE
-    LOG_INFO "End to restore the test environment."
+    LOG_INFO "start environment cleanup."
+    rm -rf /tmp/testfile.txt.xz
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

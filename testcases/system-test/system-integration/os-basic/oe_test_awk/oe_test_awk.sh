@@ -36,10 +36,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check Tail's help manual fail"
     awk -F: '{print NF}' /etc/passwd
     CHECK_RESULT $? 0 0  "check count the number of rows per row after segmentation result fail"
+    awk -F: '{print $NF}' /etc/passwd
+    CHECK_RESULT $? 0 0  "check the last column of each row after segmentation result fail"
     awk '{print NR}' /etc/passwd
     CHECK_RESULT $? 0 0  "check print line numbers result fail"
     awk 'NR==1 {print $0}' /etc/passwd
     CHECK_RESULT $? 0 0  "check specify line content result fail"
+    awk 'BEGIN{FS=":"}{print $NF, $1}' /etc/passwd
+    CHECK_RESULT $? 0 0  "check the last and first columns of each row after colon splitting result fail"
+    awk -F: 'BEGIN{OFS=" >>> "}{print $NF, $1}' /etc/passwd
+    CHECK_RESULT $? 0 0  "check the printed delimiters result fail"
     LOG_INFO "End to run test."
 }
 

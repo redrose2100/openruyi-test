@@ -21,21 +21,22 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
     DNF_INSTALL junit
-    java_version=$(rpm -qa java* | grep java-.*-openjdk | awk -F '-' '{print $2}')
-    DNF_INSTALL java-${java_version}-devel
+    java_version=$(rpm -qa java* | grep "java-.*-openjdk" -m1 | awk -F '-' '{print $2}')
+    DNF_INSTALL java-"${java_version}"-devel
 }
 
 function clear_env() {
-    DNF_REMOVE
-    rm -rf $(ls | grep -vE ".xml|.java|.sh|expect_result*")
+    DNF_REMOVE "$@"
+    shopt -s extglob
+    rm -rf "!(*.xml|*.java|*.sh|expect_result*)"
 }
 
 function compile_java() {
-    params=$(ls | grep ".java")
-    javac -classpath /usr/share/java/*:/usr/share/java/hamcrest/*: -d . $params
+    params=$(find . -regex ".*\.java")
+    javac -classpath /usr/share/java/*:/usr/share/java/hamcrest/*: -d . "$params"
 }
 
 function execute_java() {
     java_script=${1-"TestRunner"}
-    java -classpath /usr/share/java/*:/usr/share/java/hamcrest/*: ${java_script}
+    java -classpath /usr/share/java/*:/usr/share/java/hamcrest/*: "${java_script}"
 }
