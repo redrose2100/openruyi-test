@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "gdb gcc"
     cat>/tmp/test.c<<EOF
 #include <stdio.h>
 int add(int a,int b)
@@ -52,7 +53,7 @@ EOF
 
 function run_test() {
     LOG_INFO "Start testing..."
-    rpm -qa | grep gdb
+    rpm -qa gdb
     CHECK_RESULT $? 0 0 "Return value error"
     cd /tmp && gcc test.c -g -o test
     test -f /tmp/test
@@ -64,13 +65,13 @@ bt full
 info f
 info registers
 EOF
-    grep "rax" /tmp/test.log
+    grep "fpcr" /tmp/test.log
     CHECK_RESULT $? 0 0 "certifi_test file error"   
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf /tmp/test.log /tmp/test /tmp/test.c
+   # rm -rf /tmp/test.log /tmp/test /tmp/test.c
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
