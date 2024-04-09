@@ -36,7 +36,8 @@ Linux
 EOF
     csplit --help | grep "Usage: csplit"
     CHECK_RESULT $? 0 0 "please check csplit language"
-    csplit /tmp/testfile 2
+    cd /tmp
+	csplit /tmp/testfile 2
     CHECK_RESULT $? 0 0 "Error, please check 'csplit test'"
     grep "hello Linux!" /tmp/xx00
     CHECK_RESULT $? 0 0 "Error, please check 'csplit test'"
