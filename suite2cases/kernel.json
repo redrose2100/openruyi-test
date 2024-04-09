@@ -151,6 +151,9 @@
         },
         {
             "name": "oe_test_tee"
+        },
+        {
+            "name": "oe_test_regmap_01"
         }
     ]
 }
