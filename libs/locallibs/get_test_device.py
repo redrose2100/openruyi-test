@@ -84,6 +84,7 @@ def get_test_disk(node=1):
     Returns:
         [str]: 磁盘名称
     """
+    used_disk=""
     if os.environ.get("NODE" + str(node) + "LOCALTION") == "local":
         used_disk = subprocess.getoutput(
             "lsblk -l | grep -e '/.*\|\[.*\]' | awk '{print $1}' | tr -d '[0-9]' | uniq | sed -e ':a;N;$!ba;s/\\n/ /g'"
