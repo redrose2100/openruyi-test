@@ -16,20 +16,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test systemd-network-generator.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
     service=systemd-network-generator.service
     systemctl start "${service}"
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
-    test_oneshot "${service}" 'inactive (dead)'
-    LOG_INFO "Finish test!"
+    LOG_INFO "Start to run test."
+    test_execution "${service}"
+    test_reload "${service}"
+    LOG_INFO "End to run test."
 }
 
 main "$@"

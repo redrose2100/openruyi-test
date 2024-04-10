@@ -88,6 +88,9 @@
         {
             "name": "oe_test_localectl_001"
         },
+        {
+            "name": "oe_test_logname"
+        },
 	{
 	    "name": "oe_test_logrotate_002"
 	},
@@ -99,6 +102,9 @@
         },
         {
             "name": "oe_test_logrotate_003"
+        },
+        {
+            "name": "oe_test_lsns"
         },
         {
             "name": "oe_test_ls_001"
@@ -731,6 +737,9 @@
             "name": "oe_test_IPVLAN_07"
         },
         {
+            "name": "oe_test_manpath"
+        },
+        {
             "name": "oe_test_mpstat_01"
         },
         {
@@ -818,7 +827,13 @@
 	     "name": "oe_test_ebtables_002"
 	},
 	{
+            "name": "oe_test_lscpu"
+        },
+	{
 	     "name":"oe_test_lzo_002"
+	},
+	{
+	    "name": "oe_test_lsirq"
 	}
     ]
 }

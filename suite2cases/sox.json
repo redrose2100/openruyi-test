@@ -6,6 +6,9 @@
         },
         {
    	    "name": "oe_test_sox01"
+        },
+	{
+	    "name": "oe_test_sox02"
         }
     ]
 }
