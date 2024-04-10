@@ -568,5 +568,8 @@
         {
             "name": "oe_test_whatis"
         }
+        {
+            "name": "oe_test_logsave"
+        }
     ]
 }
