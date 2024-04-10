@@ -17,26 +17,26 @@
 # @Desc      :   Command test-catman
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
-    export LANG=en_US.UTF-8    
+    export LANG=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    catman 1|grep "ab"
+    catman 1|grep "man"
     CHECK_RESULT $? 0 0 "failed to process Section 1"
     catman -d|grep man
     CHECK_RESULT $? 0 0  "description Failed to print debugging information"
-    catman -C 1|grep -E "ab.*aio"
+    catman -C 1 |grep "Updating cat files for section"
     CHECK_RESULT $? 0 0  "failed to set the file using this user"
-    catman -M /home/
+    catman -M catman -M /var/cache/man/index.db
     CHECK_RESULT $? 0 0  "failed to set path"
-    catman -V|grep catman    
+    catman -V|grep catman
     CHECK_RESULT $? 0 0  "check version fail"
     catman -?|grep catman
     CHECK_RESULT $? 0 0  "check help message fail"
