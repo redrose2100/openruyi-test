@@ -23,7 +23,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL rsyslog
     systemctl start rsyslog
-    cp -f /run/log/imjournal.state /run/log/imjournal.state.bak
+    if [ "$(uname -m)" == "riscv64" ]; then
+        cp -f /var/run/log/imjournal.state /var/run/log/imjournal.state.bak
+    else
+        cp -f /run/log/imjournal.state /run/log/imjournal.state.bak
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -32,17 +36,25 @@ function run_test() {
     systemctl stop rsyslog
     CHECK_RESULT $? 0 0 "Failed to stop service"
     SLEEP_WAIT 3
-    echo "" >/run/log/imjournal.state
+    if [ "$(uname -m)" == "riscv64" ]; then
+        echo "" >/var/run/log/imjournal.state
+    else
+        echo "" >/run/log/imjournal.state
+    fi
     systemctl start rsyslog
     CHECK_RESULT $? 0 0 "Failed to start service"
     SLEEP_WAIT 5
     main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
     grep rsyslog /var/log/messages | grep "$main_pid"
     CHECK_RESULT $? 0 0 "Log not recorded"
-    rm -rf /run/log/imjournal.state
+    if [ "$(uname -m)" == "riscv64" ]; then
+        rm -rf /var/run/log/imjournal.state
+    else
+        rm -rf /run/log/imjournal.state
+    fi
     systemctl restart rsyslog
     CHECK_RESULT $? 0 0 "Failed to restart service"
-    SLEEP_WAIT 5
+    SLEEP_WAIT 15
     main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
     grep rsyslog /var/log/messages | grep "$main_pid"
     CHECK_RESULT $? 0 0 "The pid not recorded"
@@ -51,7 +63,11 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    mv -f /run/log/imjournal.state.bak /run/log/imjournal.state
+    if [ "$(uname -m)" == "riscv64" ]; then
+        mv -f /var/run/log/imjournal.state.bak /var/run/log/imjournal.state
+    else
+        mv -f /run/log/imjournal.state.bak /run/log/imjournal.state
+    fi
     systemctl restart rsyslog
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
