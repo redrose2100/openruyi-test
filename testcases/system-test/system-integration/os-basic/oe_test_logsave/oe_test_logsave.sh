@@ -26,7 +26,7 @@ function run_test() {
     grep logsave log.txt
     CHECK_RESULT $? 0 0 "File view failed"
     logsave -a log.txt df -h
-    grep home log.txt
+    grep 挂载点 log.txt
     CHECK_RESULT $? 0 0 "File view failed"
     logsave -c log.txt ps aux
     grep usr log.txt
