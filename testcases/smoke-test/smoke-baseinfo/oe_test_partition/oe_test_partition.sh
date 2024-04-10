@@ -28,8 +28,10 @@ function run_test() {
         CHECK_RESULT $? 0 0 "No boot partition"
         lsblk | grep "/$"
         CHECK_RESULT $? 0 0 "No / partition"
-        lsblk | grep "SWAP"
-        CHECK_RESULT $? 0 0 "No swap partition"
+	if [ "$(uname -m)" != "riscv64" ]; then
+            lsblk | grep "SWAP"
+            CHECK_RESULT $? 0 0 "No swap partition"
+	fi
     fi
     lsblk --help
     CHECK_RESULT $? 0 0 "lsblk -h info error"
