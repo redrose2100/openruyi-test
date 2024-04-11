@@ -16,35 +16,34 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test keyutils api
 # #############################################
-
-source "../common/common_lib.sh"
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "keyutils gcc make"
+    DNF_INSTALL "keyutils gcc make keyutils-libs-devel"
     cp -arf /etc/request-key.conf /etc/request-key.conf.bak
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    pushd ./common
+    pushd ./common || exit
     make
     test -f test_key || exit 1
     echo 'create user mtk:* *   /bin/keyctl instantiate %k %c %S' >>/etc/request-key.conf
     ./test_key user mtk:key1 "Payload data" >tmp.log 2>&1
-    key_id=$(cat tmp.log | awk '{print $NF}')
-    grep ${key_id} /proc/keys
+    key_id=$(awk '{print $NF}'< tmp.log)
+    grep "${key_id}" /proc/keys
     CHECK_RESULT $? 0 0 "import key error"
     make clean
-    popd
+    popd || exit
     LOG_INFO "Finish testing!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     mv -f /etc/request-key.conf.bak /etc/request-key.conf
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
