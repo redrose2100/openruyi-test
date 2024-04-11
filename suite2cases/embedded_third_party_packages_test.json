@@ -135,6 +135,9 @@
         },
         {
             "name": "oe_test_libpng_test_001"
+        },
+        {
+            "name": "oe_test_libtiff_test_001"
         }
     ]
 }
