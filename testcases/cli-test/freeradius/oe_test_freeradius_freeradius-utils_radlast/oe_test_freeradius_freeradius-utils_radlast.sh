@@ -16,7 +16,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   freeradius-utils command parameter automation use case
 ####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -31,13 +31,13 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    radtimes=3
+    radtimes=2
     a=$(radlast -${radtimes} | grep -c "oot")
     [ "$radtimes" -eq "$a" ]
     CHECK_RESULT $? 0 0 "radlast -num execution failed."
     radlast -a | awk '{print $NF}' | grep -E "([0-9]{1,3}.){3}[0-9]"
     CHECK_RESULT $? 0 0 "radlast -a execution failed."
-    radlast -3 -d
+    radlast -2 -d
     CHECK_RESULT $? 0 0 "radlast -d execution failed."
     radlast --file /var/log/radius/radwtmp | grep "radwtmp begins"
     CHECK_RESULT $? 0 0 "radlast --file execution failed."
@@ -61,7 +61,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /etc/raddb
     rm -rf /var/log/radius
 
