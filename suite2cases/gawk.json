@@ -12,6 +12,9 @@
     },
     {
       "name": "oe_test_gawk03"
+    },
+    {	
+      "name": "oe_test_gawk04"
     }
   ]
 }
