@@ -21,8 +21,13 @@ source "../common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution import-state.service
-    test_reload import-state.service
+    if [ "$(uname -m)" == "riscv64" ]; then
+	    systemctl start pcscd.socket
+    	    systemctl reload pcscd.socket
+    else
+    	    test_execution pcscd.socket
+       	    test_reload pcscd.socket					
+    fi
     LOG_INFO "Finish test!"
 }
 
