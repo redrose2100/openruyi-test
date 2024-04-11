@@ -17,10 +17,11 @@
 # @Desc      :   gperftools-功能验证
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "gperftools"
+    DNF_INSTALL "gperftools gcc-c++ pprof"
     LOG_INFO "End of environmental preparation!"
 
 }
@@ -73,7 +74,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf main* test.cpp
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 
 }
