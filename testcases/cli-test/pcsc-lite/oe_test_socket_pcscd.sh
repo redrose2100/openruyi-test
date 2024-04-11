@@ -27,15 +27,20 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution pcscd.socket
-    test_reload pcscd.socket
+    if [ "$(uname -m)" == "riscv64" ]; then
+	    systemctl start pcscd.socket
+	    systemctl reload pcscd.socket
+    else
+    	    test_execution pcscd.socket
+    	    test_reload pcscd.socket
+    fi
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop pcscd.socket
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
