@@ -17,7 +17,7 @@
 # @Desc      :   Test sassc
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -32,26 +32,26 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: help"
     sassc -v | grep '[0-9]' 
     CHECK_RESULT $? 0 0 "Failed option: -v"
-    cat test/tmp.css | sassc -s | grep 'width: auto; }' 
+    sassc -s < test/tmp.css | grep 'width: auto; }' 
     CHECK_RESULT $? 0 0 "Failed option: -s"
-    cat test/tmp.css | sassc -t compressed | grep 'body{width:auto}' 
+    sassc -t compressed < test/tmp.css | grep 'body{width:auto}' 
     CHECK_RESULT $? 0 0 "Failed option: -t"
-    cat test/tmp.css | sassc -l | grep '\/\* line' 
+    sassc -l < test/tmp.css | grep '\/\* line' 
     CHECK_RESULT $? 0 0 "Failed option: -l"
-    cat test/tmp.css | sassc -I test/ | grep ' width: auto; }' 
+    sassc -I test/ < test/tmp.css | grep ' width: auto; }' 
     CHECK_RESULT $? 0 0 "Failed option: -I"
-    cat test/tmp.css | sassc -P test/ | grep ' width: auto; }' 
+    sassc -P test/ < test/tmp.css | grep ' width: auto; }' 
     CHECK_RESULT $? 0 0 "Failed option: -P"
-    cat test/tmp.css | sassc -m inline | grep ' sourceMappingURL' 
+    sassc -minline < test/tmp.css | grep ' sourceMappingURL' 
     CHECK_RESULT $? 0 0 "Failed option: -m"
-    cat test/tmp.css | sassc -p 1 | grep ' 32.4 px' 
+    sassc -p 1 < test/tmp.css | grep ' 32.4 px' 
     CHECK_RESULT $? 0 0 "Failed option: precision"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf test/
     LOG_INFO "End to restore the test environment."
 }
