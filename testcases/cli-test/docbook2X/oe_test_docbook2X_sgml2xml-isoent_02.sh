@@ -17,11 +17,11 @@
 # @Desc      :   verify the uasge of docbook2X command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL docbook2X docbook-dtds
+    DNF_INSTALL "docbook2X docbook-dtds"
     cp -r common doctest
     LOG_INFO "End of environmental preparation!"
 }
@@ -64,7 +64,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf doctest
     LOG_INFO "Finish restore the test environment."
 }
