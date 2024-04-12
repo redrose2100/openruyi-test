@@ -97,7 +97,7 @@ main() {
             downloadFromGitee "$2" "$3" "$6"
             if [ -z "$6" ]; then
                 if [ -z "$5" ]; then
-                    extractPackage "$2" "" "$4"
+                    extractPackage "$2" "$4" ""
                 else
                     extractPackage "$2" "$4" "$5"
                 fi

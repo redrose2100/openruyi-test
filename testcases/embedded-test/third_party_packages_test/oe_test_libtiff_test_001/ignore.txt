@@ -1,0 +1,11 @@
+# bash ignore casename[#reason]
+tiffcp-thumbnail.sh      #tools/.libs/lt-thumbnail' does not exist
+tiffcp-split.sh          #tools/.libs/lt-tiffsplit' does not exist
+tiffcp-split-join.sh     #tools/.libs/lt-tiffsplit' does not exist
+tiff2ps-PS1.sh           #测试镜像diff: invalid option -- 'I'
+tiff2ps-PS2.sh           #测试镜像diff: invalid option -- 'I'
+tiff2ps-PS3.sh           #测试镜像diff: invalid option -- 'I'
+tiff2ps-EPS1.sh          #测试镜像diff: invalid option -- 'I'
+testfax4.sh              #tools/.libs/lt-tiffcmp' does not exist
+testfax3_bug_513.sh      #tools/.libs/lt-tiffcmp' does not exist
+testdeflatelaststripextradata.sh   #tools/.libs/lt-tiffcmp' does not exist
