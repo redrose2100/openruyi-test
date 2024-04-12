@@ -23,7 +23,7 @@ function pre_test() {
   LOG_INFO "Start environmental preparation."
   mkdir /tmp/test
   path=/tmp/test
-  DNF_INSTALL "libexif libexif-devel"
+  DNF_INSTALL "libexif libexif-devel gcc"
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -39,7 +39,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  DNF_REMOVE "$@"  
+  DNF_REMOVE "$@"
   rm -rf ${path}
   LOG_INFO "Finish environment cleanup!"
 }

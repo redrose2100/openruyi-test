@@ -97,6 +97,9 @@
         {
             "name": "oe_test_aulast"
         },
+        {
+            "name": "oe_test_ausyscall"
+        },
 	{
             "name": "oe_test_aulastlog"
         }

@@ -5,6 +5,9 @@
             "name": "oe_test_acl_001"
         },
         {
+            "name": "oe_test_arch"
+        },
+        {
             "name": "oe_test_basic_ssh_001"
         },
         {
@@ -834,6 +837,9 @@
 	},
 	{
 	    "name": "oe_test_lsirq"
+	},
+	{
+	    "name": "oe_test_pidwait"
 	}
     ]
 }

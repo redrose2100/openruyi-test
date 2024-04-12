@@ -16,12 +16,12 @@
 #@Desc          :   Test hyperscan simplegrep
 ##############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "hyperscan hyperscan-devel libstdc++*"
+    DNF_INSTALL "hyperscan hyperscan-devel libstdc++* gcc"
     cp -r /usr/include /usr/include_bak
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,13 +29,13 @@ function pre_test()
 function run_test() {
     LOG_INFO "Start testing..."
     cp /usr/include/hs/* /usr/include
-    cd /usr/share/doc/hyperscan/examples
+    cd /usr/share/doc/hyperscan/examples || return
     gcc -o simplegrep simplegrep.c -lhs -lstdc++ -lm
     test -e simplegrep
     CHECK_RESULT $? 0 0 "Compilation failure"
     ./simplegrep '[f|F]ile' pcapscan.cc | wc -l | grep 46
     CHECK_RESULT $? 0 0 "Query failure"
-    grep '[f|F]ile' pcapscan.cc | wc -l | grep 33
+    grep -c -E '[fF]ile' pcapscan.cc | grep 33
     CHECK_RESULT $? 0 0 "Query failure2"
     LOG_INFO "Finish test!"
 }
@@ -43,7 +43,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     mv -f /usr/include_bak /usr/include
     LOG_INFO "End to restore the test environment."
 }

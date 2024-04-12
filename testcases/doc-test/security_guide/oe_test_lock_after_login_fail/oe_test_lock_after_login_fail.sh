@@ -48,39 +48,49 @@ function run_test() {
                 send "\\r"
             }
         }
+        expect {
+            "*Enter file in which to save the key*"{
+                send "\\r"
+            }
+        }
+        expect {
+            "*y/n*" {
+                send "y\\r"
+            }
+        }
         expect eof
 EOF
-    ls -l /root/.ssh | grep id_rsa
+    ls -l /root/.ssh/*id_rsa*
     CHECK_RESULT $? 0 0 "grep id_rsa failed"
     expect <<EOF
         set timeout 15
-        spawn ssh-copy-id -i /root/.ssh/id_rsa.pub ${NODE2_USER}@${NODE2_IPV4}
+        spawn ssh-copy-id -i /root/.ssh/id_rsa.pub "${NODE2_USER}"@"${NODE2_IPV4}"
         expect {
             "*yes/no*" {
                 send "yes\\r"
             }
         }
         expect {
-            "password" {
+            "*password*" {
                 send "${NODE2_PASSWORD}\\r"
             }
         }
         expect eof
 EOF
-    SSH_SCP ${NODE2_USER}@${NODE2_IPV4}:/root/.ssh/authorized_keys /home ${NODE2_PASSWORD}
+    scp "${NODE2_USER}"@"${NODE2_IPV4}":/root/.ssh/authorized_keys /home "${NODE2_PASSWORD}"
     grep ssh-rsa /home/authorized_keys
     CHECK_RESULT $? 0 0 "grep ssh-rsa failed"
     expect <<EOF
         set timeout 15
         log_file testlog
-        spawn ssh ${NODE2_USER}@${NODE2_IPV4}
+        spawn ssh "${NODE2_USER}"@"${NODE2_IPV4}"
         expect {
             "*yes/no*" {
                 send "yes\\r"
             }
         }
         expect {
-            "password" {
+            "*password*" {
                 send "${NODE2_PASSWORD}\\r"
             }
         }
@@ -94,7 +104,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start cleanning environment."
-    SSH_CMD "rm -rf /root/.ssh/authorized_keys" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "rm -rf /root/.ssh/authorized_keys" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -rf /root/.ssh/id_rsa /root/.ssh/id_rsa.pub /home/authorized_keys testlog
     LOG_INFO "Finish environment cleanup!"
 }

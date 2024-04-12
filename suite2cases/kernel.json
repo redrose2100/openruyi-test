@@ -148,6 +148,15 @@
         },
         {
             "name": "oe_test_ceph"
+        },
+        {
+            "name": "oe_test_extcon"
+        },
+        {
+            "name": "oe_test_tee"
+        },
+        {
+            "name": "oe_test_regmap_01"
         }
     ]
 }
