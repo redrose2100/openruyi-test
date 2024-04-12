@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   pengrui
 # @Contact   :   pengrui@uniontech.com
-# @Date      :   2024/04/03
+# @Date      :   2024/04/12
 # @License   :   Mulan PSL v2
 # @Desc      :   Kernel CEPH testing
 # #############################################
@@ -30,12 +30,19 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep ceph
     CHECK_RESULT $? 0 0 "Module loaded failed"
-    rmmod ceph
+    rmmod ceph libceph
     CHECK_RESULT $? 0 0 "Module uninstall failed"
     lsmod | grep -w ceph
     CHECK_RESULT $? 1 0 "Module loaded"
     dmesg |grep ceph
     CHECK_RESULT $? 0 0 "Failed to detect information"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    rmmod ceph libceph 
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
