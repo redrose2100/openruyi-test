@@ -23,6 +23,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "jpegoptim"
+    mkdir -p /tmp/test_jpe
+    path=/tmp/test_jpe
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -32,13 +34,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Optimize graphic error reporting"
     jpegoptim --csv common/test.jpg
     CHECK_RESULT $? 0 0 "Jpegoptim - h execution failed"
-    jpegoptim -s -m60 --dest=common/test   common/*.jpg |grep "OK"
+    jpegoptim -s -m60 --dest="${path}"   common/*.jpg |grep "OK"
     CHECK_RESULT $? 0 0 "View version error"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    rm -rf ${path}
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
