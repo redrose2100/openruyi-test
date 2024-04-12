@@ -62,7 +62,7 @@ function test_enabled() {
     state="$(systemctl is-enabled "${service}")"
     if [ "${state}" == "enabled" ]; then
 	symlink_file="$(systemctl disable "${service}" 2>&1 | grep "Removed" | awk '{print $2}' | awk '{print substr($0,1,length($0)-1)}' | tr -d '"' | head -n 1)"
-        find ${symlink_file}"
+        find "${symlink_file}"
         CHECK_RESULT $? 0 1 "${service} disable failed"
         systemctl enable "${service}"
         find "${symlink_file}"
