@@ -51,6 +51,9 @@
         },
         {
             "name": "oe_test_sqlite_create_06"
-        }
+        },
+        {
+            "name": "oe_test_sqlite_create_07"
+        }        
     ]
 }
