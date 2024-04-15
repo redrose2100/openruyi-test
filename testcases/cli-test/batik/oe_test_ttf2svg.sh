@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "batik"
+  DNF_INSTALL "batik javapackages-tools"
   tff_filename=$(find /usr/share -name "*.ttf" |tail -1)
   ls ./example.svg && rm -rf ./example.svg
   LOG_INFO "End of environmental preparation!"
