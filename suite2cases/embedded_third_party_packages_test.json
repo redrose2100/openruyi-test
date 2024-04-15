@@ -138,6 +138,9 @@
         },
         {
             "name": "oe_test_libtiff_test_001"
+        },
+        {
+            "name": "oe_test_libunistring_test_001"
         }
     ]
 }
