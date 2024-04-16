@@ -33,6 +33,7 @@ function package_install() {
 
 function search_all_services() {
     while read -r package; do
+        rpm -ql "${package}" > /dev/null || echo "${package}" >> failed_install
         rpm -ql "${package}" | grep "/lib/systemd/system/" | grep -v "@" | grep -E "\.service$|\.target$|\.socket$" | awk -F '/' '{print $NF}' >> all_services
     done < update_list
 }
