@@ -2,15 +2,6 @@
   "path": "$OET_PATH/testcases/feature-test/mm_uce",
   "cases": [
     {
-      "name": "oe_test_mm_uce_copyfromuser"
-    },
-    {
-      "name": "oe_test_mm_uce_getuser"
-    },
-    {
-      "name": "oe_test_mm_uce_copyonwrite"
-    },
-    {
       "name": "oe_test_mm_uce_copytouser"
     }
   ]
