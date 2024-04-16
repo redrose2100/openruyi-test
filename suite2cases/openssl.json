@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/cli-test/openssl",
+
     "cases": [
         {
             "name": "oe_test_openssl_concurrent_operations"
@@ -102,6 +103,9 @@
 	},
         {
 	    "name": "oe_test_openssl_cryptographic_services"
+	},
+	{
+	    "oe_test_openssl_ctr"
 	}
     ]
 }
