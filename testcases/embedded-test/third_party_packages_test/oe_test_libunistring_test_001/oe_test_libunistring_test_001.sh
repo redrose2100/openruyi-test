@@ -31,7 +31,7 @@ function run_test() {
     find . -type f -exec sed -i 's/relink_command=/#relink_command=/g' {} +
     while read -r line; do
         ((total++))
-        outStr=$(../test-driver --test-name "$line" --log-file "$line".log --trs-file "$line".trs -- ./"$line")
+        outStr=$(EXEEXT='' srcdir='.' LOCALE_FR='fr_FR' LOCALE_ZH_CN='none' LOCALE_FR_UTF8='none' LOCALE_JA='none' ../test-driver --test-name "$line" --log-file "$line".log --trs-file "$line".trs -- ./"$line")
         echo "Output: $outStr"
         outResult=${outStr%%:*}
         if [[ "${outResult}" != "PASS" && "${outResult}" != "SKIP" && "${outResult}" != "XFAIL" && ${ignoreFail[$line]} -ne 1 ]]; then
