@@ -17,6 +17,7 @@
 #include <linux/uaccess.h>
 #include <linux/mm.h> 
 #include <linux/io.h>
+#include <asm-generic/io.h>
 
 #define CREATE_TRACE_POINTS
 #include "mm_uce_trace_event.h"
