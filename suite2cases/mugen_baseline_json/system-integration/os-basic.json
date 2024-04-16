@@ -567,6 +567,12 @@
         },
         {
             "name": "oe_test_whatis"
+        },
+        {
+            "name": "oe_test_ip"
+        },
+        {
+            "name": "oe_test_free"
         }
     ]
 }
