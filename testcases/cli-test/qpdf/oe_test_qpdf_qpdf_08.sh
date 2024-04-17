@@ -17,7 +17,7 @@
 #@Desc      	:   Test qpdf
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
@@ -38,7 +38,7 @@ function run_test()
     CHECK_RESULT $? 0 0 "qpdf --deterministic-id running failed"
     qpdf --static-id ./common/infile.pdf output5.pdf && test -f output5.pdf
     CHECK_RESULT $? 0 0 "qpdf --static-id running failed"
-    qpdf --static-aes-iv --static-id --encrypt test123 test123 128 -- ./common/infile.pdf output6.pdf && test -f output6.pdf
+    qpdf --static-aes-iv --static-id --encrypt test123 test123 256 -- ./common/infile.pdf output6.pdf && test -f output6.pdf
     CHECK_RESULT $? 0 0 "qpdf --static-aes-iv running failed"
     qpdf --qdf --no-original-object-ids ./common/infile.pdf output7.pdf && test -f output7.pdf
     CHECK_RESULT $? 0 0 "qpdf --no-original-object-ids running failed"
@@ -55,8 +55,8 @@ function run_test()
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE  
-    rm -rf *.pdf
+    DNF_REMOVE "$@" 
+    rm -rf '*.pdf'
     LOG_INFO "End to restore the test environment."
 }
 
