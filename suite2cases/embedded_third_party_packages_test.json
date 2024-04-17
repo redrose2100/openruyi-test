@@ -141,6 +141,9 @@
         },
         {
             "name": "oe_test_libunistring_test_001"
+        },
+        {
+            "name": "oe_test_libunwind_test_001"
         }
     ]
 }

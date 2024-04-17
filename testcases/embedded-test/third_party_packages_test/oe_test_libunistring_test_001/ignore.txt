@@ -1,11 +1,9 @@
+# bash ignore casename
 test-btowc1.sh
-test-c-strcase.sh                          lt-test-c-strncasecmp' does not exist
+test-c-strcase.sh    #lt-test-c-strncasecmp' does not exist
 test-iswdigit.sh 
-test-mbrtowc3.sh                           Skipping test: no traditional japanese locale is supported
 test-striconveha 
 unicase/test-locale-language.sh 
-unicase/test-ulc-casecmp2.sh               Skipping test: no french Unicode locale is supported（/usr/bin/localedef）
-unicase/test-ulc-casecoll2.sh              Skipping test: no french Unicode locale is supported（/usr/bin/localedef）
 test-u16-conv-to-enc 
 test-u16-strconv-from-enc
 test-u16-strconv-to-enc
@@ -15,24 +13,17 @@ test-u32-strconv-to-enc
 test-u8-conv-from-enc
 test-u8-strconv-from-enc
 test-u8-strconv-to-enc
-unigbrk/test-ulc-grapheme-breaks.sh        .libs/lt-test-ulc-grapheme-breaks' does not exist
+unigbrk/test-ulc-grapheme-breaks.sh        #.libs/lt-test-ulc-grapheme-breaks' does not exist
 test-ulc-possible-linebreaks
 test-ulc-width-linebreaks
-unistdio/test-u16-vasnprintf2.sh           lt-test-u16-vasnprintf2' does not exist
-unistdio/test-u16-vasnprintf3.sh           Skipping test: no french Unicode locale is supported（/usr/bin/localedef）
-unistdio/test-u32-vasnprintf2.sh  .libs/lt-test-u32-vasnprintf2' does not exist
-unistdio/test-u32-vasnprintf3.sh  Skipping test: no french Unicode locale is supported（/usr/bin/localedef）
-unistdio/test-u8-vasnprintf2.sh   .libs/lt-test-u8-vasnprintf2' does not exist
-unistdio/test-u8-vasnprintf3.sh   Skipping test: no french Unicode locale is supported（/usr/bin/localedef）
-unistdio/test-ulc-vasnprintf2.sh  .libs/lt-test-ulc-vasnprintf2' does not exist
-unistdio/test-ulc-vasnprintf3.sh  Skipping test: no french Unicode locale is supported（/usr/bin/localedef）
+unistdio/test-u16-vasnprintf2.sh  #lt-test-u16-vasnprintf2' does not exist
+unistdio/test-u32-vasnprintf2.sh  #.libs/lt-test-u32-vasnprintf2' does not exist
+unistdio/test-u8-vasnprintf2.sh   #.libs/lt-test-u8-vasnprintf2' does not exist
+unistdio/test-ulc-vasnprintf2.sh  #.libs/lt-test-ulc-vasnprintf2' does not exist
 test-wcrtomb.sh
-test-btowc2.sh   Skipping test: no french Unicode locale is supported（/usr/bin/localedef）
 test-iconv   
 test-iswxdigit.sh
 test-mbrtowc1.sh
-test-mbrtowc4.sh
-test-mbsinit.sh
 test-setlocale1.sh
 test-striconveh
 unicase/test-ulc-casecmp1.sh
@@ -41,4 +32,3 @@ test-u16-conv-from-enc
 test-u32-conv-to-enc
 test-u8-conv-to-enc
 uniwbrk/test-ulc-wordbreaks.sh
-test-mbrtowc2.sh   Skipping test: no french Unicode locale is supported（/usr/bin/localedef）
