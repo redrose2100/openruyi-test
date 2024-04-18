@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    sysget update
+    echo -e '4\n' | sysget update
     CHECK_RESULT $? 0 0 "Sysget update execution error"
     sysget search emacs 
     CHECK_RESULT $? 0 0 "Search for specific package failed"

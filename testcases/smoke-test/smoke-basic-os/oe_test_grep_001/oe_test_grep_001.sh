@@ -28,12 +28,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    grep -c id /proc/cpuinfo
-    CHECK_RESULT $?
-    grep -n id /proc/cpuinfo
-    CHECK_RESULT $?
+    if [ "$NODE1_FRAME"x == "ppc64le"x ];then
+        grep -c processor /proc/cpuinfo
+        CHECK_RESULT $?
+        grep -n processor /proc/cpuinfo
+        CHECK_RESULT $?
+    else
+        grep -c id /proc/cpuinfo
+        CHECK_RESULT $?
+        grep -n id /proc/cpuinfo
+        CHECK_RESULT $?
+    fi
 
-    ps -aux | grep auditd
+    pgrep auditd -a
     CHECK_RESULT $?
 
     grep --help | grep "Usage"
@@ -57,4 +64,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

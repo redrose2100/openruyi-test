@@ -16,13 +16,17 @@
 #@Desc      	:   Take the test access of /proc
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     ls -l /proc
     CHECK_RESULT $? 0 0 "The file under /proc is error."
-    grep -i "CPU" /proc/cpuinfo
+    if [ "$(uname -m)" == "riscv64" ]; then
+	    grep -i "processor" /proc/cpuinfo
+    else
+	    grep -i "CPU" /proc/cpuinfo
+    fi
     CHECK_RESULT $? 0 0 "Check cpu info failed."
     LOG_INFO "End to run test."
 }

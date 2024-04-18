@@ -16,41 +16,46 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test gala-gopher.service restart
 # #############################################
-
-source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
+# shellcheck disable=SC1091
+source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "gala-gopher kafka"
     systemctl stop firewalld
+    if rpm -ql cyrus-sasl; then
+        flag=true
+        DNF_REMOVE 1 "cyrus-sasl"
+    fi
+    DNF_INSTALL "kafka gala-gopher"
     cp /opt/kafka/config/server.properties /opt/kafka/config/server.properties-bak
     cp /etc/gala-gopher/gala-gopher.conf /etc/gala-gopher/gala-gopher.conf-bak
-    echo "listeners=PLAINTEXT://${NODE1_IPV4}:9092" >> /opt/kafka/config/server.properties
-    /opt/kafka/bin/zookeeper-server-start.sh /opt/kafka/config/zookeeper.properties >/dev/null 2>&1 &
-    SLEEP_WAIT 60
-    /opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties >/dev/null 2>&1 &
-    sed -i 's/kafka_broker = .*/kafka_broker = "'"${NODE1_IPV4}"':9092";/' /etc/gala-gopher/gala-gopher.conf     
-    SLEEP_WAIT 30
+    sed -i 's/#listeners=PLAINTEXT:\/\/:9092/listeners=PLAINTEXT:\/\/'"${NODE1_IPV4}"':9092/g' /opt/kafka/config/server.properties
+    cd /opt/kafka/bin/ || exit 0
+    ./zookeeper-server-start.sh  -daemon /opt/kafka/config/zookeeper.properties >/dev/null 2>&1 &
+    SLEEP_WAIT 300
+    ./kafka-server-start.sh -daemon /opt/kafka/config/server.properties >/dev/null 2>&1 &
+    SLEEP_WAIT 5
+    sed -i 's/"localhost:9092"/"'"${NODE1_IPV4}"':9092"/g' /etc/gala-gopher/gala-gopher.conf
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution gala-gopher.service
-    systemctl restart gala-gopher.service
-    systemctl status gala-gopher.service
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop gala-gopher.service
+    pgrep -f -a "kafka-server-start|zookeeper-server-start" | awk '{print $1}' | xargs kill -9
+    systemctl start firewalld
     mv -f /opt/kafka/config/server.properties-bak /opt/kafka/config/server.properties
     mv -f /etc/gala-gopher/gala-gopher.conf-bak /etc/gala-gopher/gala-gopher.conf
-    pgrep -f zookeeper | xargs kill -9
-    rm -rf /tmp/kafka-logs
-    systemctl start firewalld
     DNF_REMOVE "$@"
+    if [ "${flag}" = "true" ]; then
+        DNF_INSTALL "cyrus-sasl"
+    fi
     LOG_INFO "End to restore the test environment."
 }
 

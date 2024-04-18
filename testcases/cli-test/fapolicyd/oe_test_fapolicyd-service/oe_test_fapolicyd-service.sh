@@ -16,7 +16,7 @@
 #@Desc          :   Start fapolicydb servive
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -34,6 +34,7 @@ function run_test() {
     CHECK_RESULT "$(systemctl status fapolicyd |grep Active |awk '{print $2}')" "active" 0 "fapolicyd status after start"
     CHECK_RESULT "$(systemctl is-enabled fapolicyd)" "enabled" 0 "fapolicyd self-start status after enable"
 
+    sleep 3
     systemctl stop fapolicyd
     CHECK_RESULT $? 0 0 "stop fapolicyd"
     CHECK_RESULT "$(systemctl status fapolicyd |grep Active |awk '{print $2}')" "inactive" 0 "fapolicyd status after stop"
@@ -42,7 +43,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

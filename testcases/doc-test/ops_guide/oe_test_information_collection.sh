@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     Default_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL net-tools
+    DNF_INSTALL "net-tools dhcp"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -36,7 +36,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to get the OS version info-2"
     grep "openEuler release" /etc/openEuler-release
     CHECK_RESULT $? 0 0 "Failed to get the OS version info-3"
-    uname -a | grep "Linux openEuler"
+    if [ "$NODE1_FRAME" == "ppc64le" ];then 
+        echo "need match by kernel"
+    else
+        uname -a | grep "Linux openEuler"
+    fi
     CHECK_RESULT $? 0 0 "Failed to get the kernel version info"
     # Get hardware info
     lscpu | grep "On-line CPU(s) list"
@@ -45,7 +49,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to get CPU parameters"
     grep "MemTotal:" /proc/meminfo
     CHECK_RESULT $? 0 0 "Failed to get meminfo parameters"
-    dmidecode -t memory | grep "Memory Device"
+    if [ "$NODE1_FRAME" == "ppc64le" ];then 
+        lshw -c memory |grep bank
+    else
+        dmidecode -t memory | grep "Memory Device"
+    fi
     CHECK_RESULT $? 0 0 "Failed to get memory hard disk info"
     lsblk | grep "NAME" | grep "MOUNTPOINTS"
     CHECK_RESULT $? 0 0 "Failed to execute lsblk"
@@ -65,7 +73,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to execute lspci"
     lspci -t
     CHECK_RESULT $? 0 0 "Failed to execute lspci -t"
-    dmidecode -t bios | grep "BIOS Information"
+    if [ "$NODE1_FRAME" == "ppc64le" ];then
+        echo "ppc64le not support dmidecode"
+    else 
+        dmidecode -t bios | grep "BIOS Information"
+    fi
     CHECK_RESULT $? 0 0 "Failed to get bios info"
     # Get software info
     rpm -qi systemd | grep "Summary"

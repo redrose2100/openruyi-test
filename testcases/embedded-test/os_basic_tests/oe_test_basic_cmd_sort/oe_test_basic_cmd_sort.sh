@@ -34,6 +34,7 @@ wc
    aa
 xY
 Yx
+88
 EOF
 
     LOG_INFO "End to prepare the test environment."
@@ -43,15 +44,22 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     res=$(sort sort_test.txt | head -1)
-    CHECK_RESULT $res aa 0 "sort faild"
+    CHECK_RESULT "$res" aa 0 "sort faild"
     sort -c sort_test.txt
     CHECK_RESULT $? 1 0 "sort -c faild"
     sort -d sort_test.txt | head -1 | grep "aa"
     CHECK_RESULT $? 0 0 "sort -d faild"
     sort -g sort_test.txt | head -3 | grep "Yx"
     CHECK_RESULT $? 0 0 "sort -g faild"
-    sort -f sort_test.txt | head -8 | grep "xY"
+    sort -f sort_test.txt | head -8 | grep "aa"
     CHECK_RESULT $? 0 0 "sort -f faild"
+    sort -b sort_test.txt | head -9 | grep "aa"
+    CHECK_RESULT $? 0 0 "sort -b faild"
+    sort -r sort_test.txt | head -10 | grep "88"
+    CHECK_RESULT $? 0 0 "sort -r faild"
+    res1=$(sort -u sort_test.txt | grep -c "88")
+    [[ "$res1" == "1" ]]
+    CHECK_RESULT $? 0 0 "sort -u faild"
     sort --help 2>&1 | grep "Usage:"
     CHECK_RESULT $? 0 0 "sort help faild"
 
@@ -67,4 +75,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

@@ -21,8 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    mkdir -p /tmp/test
-    path=/tmp/test
+    mkdir -p /tmp/test_anno
+    path=/tmp/test_anno
     cat > ${path}/test.c  <<EOF
 #include<stdio.h>
 int main(void)
@@ -32,17 +32,17 @@ return 0;
 }
 EOF
 
-    DNF_INSTALL "annobin"
+    DNF_INSTALL "annobin gcc"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    fream=$(arch)
     cd ${path}&&gcc --print-file-name=plugin > ${path}/test1
-    grep /usr/lib/gcc/"${fream}"-linux-gnu/7.3.0/plugin ${path}/test1
+    path1=$(cat /tmp/test_anno/test1)
+    grep "${path1}" ${path}/test1
     CHECK_RESULT $? 0 0 "directory file error"
-    ls /usr/lib/gcc/"${fream}"-linux-gnu/7.3.0/plugin/ > ${path}/test2
+    ls "${path1}" > ${path}/test2
     grep "annobin.so" ${path}/test2
     CHECK_RESULT $? 0 0 "Library files fails"
     gcc -fplugin=annobin test.c

@@ -17,7 +17,6 @@
 # @Desc      :   File system common command test-df
 # ############################################
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
-
 function run_test() {
     LOG_INFO "Start to run test."
     if ! df -h / |grep overlay; then
@@ -43,6 +42,10 @@ function run_test() {
     res5=$(df --type=tmpfs | awk '{ print$1 }' | head -2 | tail -1)
     [[ "$res5" == "tmpfs" ]]
     CHECK_RESULT $? 0 0 "df --type error"
+    df -T | grep -E 'ext4|tmpfs|devtmpfs'
+    CHECK_RESULT $? 0 0 "df -T didn't find ext4|tmpfs|devtmpfs"
+    df --sync | grep -E '%'
+    CHECK_RESULT $? 0 0 "df --sync didn't find %"
     LOG_INFO "End to run test."
 }
 

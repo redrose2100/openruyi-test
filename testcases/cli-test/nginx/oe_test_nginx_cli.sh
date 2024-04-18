@@ -90,7 +90,7 @@ function run_test() {
     curl localhost:81 2>&1 | grep "hello"
     CHECK_RESULT 0
     nginx -p /root/
-    test "$(pgrep -f nginx | grep -c master)" -eq 2
+    test "$(pgrep -f nginx -a | grep -c master)" -eq 2
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }

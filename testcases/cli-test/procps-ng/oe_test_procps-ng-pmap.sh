@@ -1,4 +1,4 @@
-﻿#!/usr/bin/bash
+#!/usr/bin/bash
 
 # Copyright (c) 2022 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "gcc"
     cat > /home/test_procps-ng-pmap.c << EOF
 int main(void)
 {
@@ -37,7 +38,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Compilation failed"
     /home/test_procps-ng-pmap &
     sleep 5
-    pid=$(ps -ef | grep "/home/test_procps-ng-pmap" | awk 'NR==1' | awk -F " " '{print $2}')
+    pid=$(pgrep -f "/home/test_procps-ng-pmap")
     pmap "$pid" | grep -E "total *[0-9]*K"
     CHECK_RESULT $? 0 0 "Pmap execution failed"
     pmap -x "$pid" | grep "Address"
@@ -54,8 +55,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     kill -9 "$pid"
     rm -rf /home/test_procps-ng-pmap.c /home/test_procps-ng-pmap
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-

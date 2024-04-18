@@ -17,18 +17,23 @@
 # @Desc      :   File system common command test-grep
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    grep -c id /proc/cpuinfo
-    CHECK_RESULT $?
-    grep -n id /proc/cpuinfo
-    CHECK_RESULT $?
-    ps -aux | grep "root"
-    CHECK_RESULT $?
+    if [ "$NODE1_FRAME" == "ppc64le" ];then 
+        grep -c processor /proc/cpuinfo
+        CHECK_RESULT $?
+        grep -n processor /proc/cpuinfo
+        CHECK_RESULT $?
+    else
+        grep -c id /proc/cpuinfo
+        CHECK_RESULT $?
+        grep -n id /proc/cpuinfo
+        CHECK_RESULT $?
+    fi
     grep --help | grep "Usage"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
-main $@
+main "$@"

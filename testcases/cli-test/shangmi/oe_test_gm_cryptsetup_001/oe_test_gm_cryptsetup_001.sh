@@ -29,10 +29,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    
+    if [ "$NODE1_FRAME" == "ppc64le" ];then
+        cipher="aes-xts-plain64"
+    else
+        cipher="sm4-xts-plain64"
+    fi
     echo "Huawei12#$
 Huawei12#$
-" | cryptsetup -c sm4-xts-plain64 --key-size=256 --hash sm3 luksFormat /dev/loop5
+" | cryptsetup -c $cipher --key-size=256 --hash sm3 luksFormat /dev/loop5
     CHECK_RESULT $? 0 0 "luks2 model failed"
 
     echo "Huawei12#$
@@ -50,7 +54,7 @@ Huawei12#$
 
     echo "Huawei12#$
 Huawei12#$
-" | cryptsetup plainOpen -c sm4-xts-plain64 --key-size=256 --hash sm3 /dev/loop6 plaindisk
+" | cryptsetup plainOpen -c $cipher --key-size=256 --hash sm3 /dev/loop6 plaindisk
     CHECK_RESULT $? 0 0 "plain model failed"
 
     mkfs.ext4 /dev/mapper/plaindisk

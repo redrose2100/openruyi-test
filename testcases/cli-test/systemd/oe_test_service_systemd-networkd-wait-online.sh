@@ -16,19 +16,26 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test systemd-networkd-wait-online.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL systemd-networkd
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     test_execution systemd-networkd-wait-online.service
     test_reload systemd-networkd-wait-online.service
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "Start environment cleanup."
+    LOG_INFO "Start to restore the test environment."
     systemctl stop systemd-networkd-wait-online.service
-    LOG_INFO "Finish environment cleanup!"
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 main "$@"

@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# shellcheck disable=SC2012
+# shellcheck disable=SC2012,SC2086
 
 function downloadFromGitee() {
     downloadName=$1
@@ -8,7 +8,7 @@ function downloadFromGitee() {
         downloadBranch="openEuler-22.03-LTS"
     fi
     giteeName="src-openeuler"
-    if [[ "$3"x != ""x ]]; then  
+    if [[ "$3"x != ""x ]]; then
         giteeName=$3
     fi
 
@@ -26,7 +26,7 @@ function downloadSource() {
 function getPackageName() {
     local package_name=$1
     if [[ -z $packageName ]]; then
-        packageName=$(find ./ -name "*$package_name*.tar.*")
+        packageName=$(find ./ -name "*$downloadName*.tar.*" -regex ".*\.tar\.[a-zA-Z0-9]+")
     fi
     if [[ -z $packageName ]]; then
         packageName=$(find ./ -name "*$package_name*.zip")
@@ -51,7 +51,7 @@ function extractPackage() {
         return 1
     fi
     # 规避因代码规范导致指定包名模糊匹配问题，例如 packageName=python3/Python*.tar.xz
-    packageName="$(ls "${packageName}"|tail -n 1)"
+    packageName="$(ls ${packageName} | tail -n 1)"
     if [[ -z "${extractType}" ]]; then
         if echo "${packageName}" | grep -q ".tar."; then
             extractType="tar"
@@ -96,10 +96,10 @@ main() {
         if [[ $opt == "-d" ]]; then
             downloadFromGitee "$2" "$3" "$6"
             if [ -z "$6" ]; then
-                if [ -z "$5" ];then
-                  extractPackage "$2" "" "$4"
+                if [ -z "$5" ]; then
+                    extractPackage "$2" "$4" ""
                 else
-                  extractPackage "$2" "$4" "$5"
+                    extractPackage "$2" "$4" "$5"
                 fi
 
             fi
@@ -127,7 +127,7 @@ main() {
             return 1
         fi
     done
-    
+
 }
 
 main "$@"

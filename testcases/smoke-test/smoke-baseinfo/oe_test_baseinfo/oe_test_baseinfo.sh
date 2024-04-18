@@ -37,7 +37,8 @@ function run_test() {
     grep -iE "name|version" /etc/os-release | grep openEuler
     CHECK_RESULT $? 0 0 "/etc/os-release file view failed"
     if ! df -h / |grep overlay; then
-        old_zone=$(timedatectl | grep "Time zone" | awk '{print $3}')
+        timedatectl set-timezone Asia/Shanghai
+	old_zone=$(timedatectl | grep "Time zone" | awk '{print $3}')
         timedatectl | grep "$(date | awk '{print$1}')"
         CHECK_RESULT $? 0 0 "Failed command: timedatectl"
         timedatectl list-timezones | grep Tokyo

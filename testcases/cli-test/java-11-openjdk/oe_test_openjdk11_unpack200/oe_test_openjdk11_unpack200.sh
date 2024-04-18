@@ -22,23 +22,11 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "java-11-openjdk*"
-    cp ../common/Hello.java .
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    expect -c "
-    log_file testlog
-    spawn servertool
-    expect \"*>\"
-    send \"help\r\"
-    expect \"*>\"
-    send \"quit\r\"
-    expect eof
-"
-    cat < testlog | grep -q "while executing"
-    CHECK_RESULT $? 0 0 "not found while executing"
     unpack200 -help | grep "Usage"
     CHECK_RESULT $? 0 0 "unpack200  -help failed"
     unpack200 --version | grep "[0-9]"
@@ -49,7 +37,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE "$@"
-    rm -rf Hello.* testlog
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -17,10 +17,11 @@
 # @Desc      :   Ar command test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "binutils"
     touch a b a.c b.c c.c d.c
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     ar rv one.bak a b
     CHECK_RESULT $? 0 0 "check one.bak creation fail"
-    ar rv two.bak *.c
+    ar rv two.bak ./*.c
     CHECK_RESULT $? 0 0 "check two.bak creation fail"
     ar t two.bak |grep -E "[a.c|b.c|c.c|d.c]"
     CHECK_RESULT $? 0 0 "check file fail"
@@ -40,8 +41,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf a b *.c *.bak
+    DNF_REMOVE "$@"
+    rm -rf a b ./*.c ./*.bak
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

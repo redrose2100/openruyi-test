@@ -17,10 +17,11 @@
 # @Desc      :   gdb-bt formatting test
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL gdb
     cat>/tmp/test.c<<EOF
 #include <stdio.h>
 int add(int a,int b)
@@ -64,7 +65,11 @@ bt full
 info f
 info registers
 EOF
-    grep "rax" /tmp/test.log
+    if [ "$(uname -m)"x == "riscv64x" ]; then
+        grep "gp" /tmp/test.log
+    else
+        grep "rax" /tmp/test.log
+    fi
     CHECK_RESULT $? 0 0 "certifi_test file error"   
 }
 

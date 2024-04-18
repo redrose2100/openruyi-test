@@ -23,10 +23,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
     logsave log.txt ls -l
-    grep logsave log.txt
+    grep Log log.txt
     CHECK_RESULT $? 0 0 "File view failed"
     logsave -a log.txt df -h
-    grep home log.txt
+    grep 文件系统 log.txt
     CHECK_RESULT $? 0 0 "File view failed"
     logsave -c log.txt ps aux
     grep usr log.txt

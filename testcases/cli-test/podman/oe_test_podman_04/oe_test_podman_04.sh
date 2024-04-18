@@ -17,7 +17,7 @@
 # @Desc      :   The usage of commands in podman package
 # ############################################
 
-source "../common/common_podman.sh"
+source "${OET_PATH}/testcases/cli-test/podman/common/common_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
@@ -46,7 +46,7 @@ function run_test() {
     CHECK_RESULT $?
     podman rm postgres2
     CHECK_RESULT $?
-    podman ps -aq | grep "$(ls /run/runc/ | cut -b 1-12)"
+    podman ps -aq | grep "$(find /run/runc/ -maxdepth 1 -type f -exec basename {} \; | cut -b 1-12)"
     CHECK_RESULT $?
     podman ps --no-trunc | grep "$(ls /run/runc/)"
     CHECK_RESULT $?

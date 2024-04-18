@@ -29,6 +29,9 @@
             "name": "oe_test_diff3"
         },
         {
+            "name": "oe_test_bzdiff"
+        },
+        {
             "name": "oe_test_fuse"
         },
         {
@@ -564,6 +567,9 @@
         },
         {
             "name": "oe_test_whatis"
+        },
+        {
+            "name": "oe_test_logsave"
         }
     ]
 }

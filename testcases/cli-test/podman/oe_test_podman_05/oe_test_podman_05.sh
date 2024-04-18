@@ -17,7 +17,8 @@
 # @Desc      :   The usage of commands in podman package
 # ############################################
 
-source "../common/common_podman.sh"
+source "${OET_PATH}/testcases/cli-test/podman/common/common_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
@@ -38,17 +39,17 @@ function run_test() {
     CHECK_RESULT $?
     podman info | grep -E "host|insecure registries|registries|store"
     CHECK_RESULT $?
-    podman info --debug | grep "debug"
+    podman info --debug | grep "host"
     CHECK_RESULT $?
     podman info --format json | grep "\"host\":"
     CHECK_RESULT $?
-    podman history --format=json $(podman images -q) | grep "#(nop)"
+    podman history --format=json "$(podman images -q)" | grep "#(nop)"
     CHECK_RESULT $?
-    podman history --human $(podman images -q) | grep "B"
+    podman history --human "$(podman images -q)" | grep "B"
     CHECK_RESULT $?
-    podman history --no-trunc $(podman images -q) | grep "$(ls /var/lib/containers/storage/overlay-images/)"
+    podman history --no-trunc "$(podman images -q)" | grep "$(ls /var/lib/containers/storage/overlay-images/)"
     CHECK_RESULT $?
-    podman history -q $(podman images -q) | grep "nop"
+    podman history -q "$(podman images -q)" | grep "nop"
     CHECK_RESULT $? 1
     LOG_INFO "End to run test."
 }
@@ -56,7 +57,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

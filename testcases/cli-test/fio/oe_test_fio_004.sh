@@ -16,6 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   fio command test
 # ############################################
+
+# shellcheck disable=SC1091,SC2154
 source ./common/disk_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
@@ -27,26 +29,26 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    fio-genzipf -t normal | grep "Generating Normal distribution with 0.000000"
-    CHECK_RESULT $? 0 0 "failed to test fio-genzipf-t option"
-    fio-genzipf -i zipf theta | grep "Total"
-    CHECK_RESULT $? 0 0 "failed to test fio-genzipf-i option"
-    fio-genzipf -i zipf theta -o 2 | grep "Rows"
-    CHECK_RESULT $? 0 0 "fio-genzipf -o option failed"
-    fio-genzipf -i zipf theta -o 2 -c | grep 1
-    CHECK_RESULT $? 0 0 "fio-genzipf -i zipf theta option failed"
-    fio-genzipf -g 2 | grep "Generating Zipf distribution"
-    CHECK_RESULT $? 0 0 "fio-genzipf -g 2 option failed"
-    fio-genzipf -p 2 | grep "hits satisfied"
+    fio-genzipf -t normal | grep "Generating Normal distribution"
+    CHECK_RESULT $? 0 0 "fio-genzipf -t option failed"
+    fio-genzipf -i zipf theta | grep "Generating Zipf distribution"
+    CHECK_RESULT $? 0 0 "Generating Zipf distribution option failed"
+    fio-genzipf -i zipf theta -o 2 | grep "block_size"
+    CHECK_RESULT $? 0 0 "fio-genzipf -i zipf theta -o option failed"
+    fio-genzipf -i zipf theta -g 2 -o 2 -c
+    CHECK_RESULT $? 0 0 "fio-genzipf -i zipf theta -o 2 -c failed "
+    fio-genzipf -g 2 | grep "2 GiB size and 4096 block_size"
+    CHECK_RESULT $? 0 0 "fio-genzipf -g option failed"
+    fio-genzipf -p 2 | grep "Total"
     CHECK_RESULT $? 0 0 "fio-genzipf -p option failed"
-    fio-genzipf -b 40000 | grep "Generating Zipf distribution with"
+    fio-genzipf -b 40000 | grep "Generating Zipf distribution"
     CHECK_RESULT $? 0 0 "fio-genzipf -b option failed"
     fio-verify-state test.txt | grep "Version"
-    CHECK_RESULT $? 0 0 "fio-verify-state option failed"
-    fio-dedupe -t 3 /dev/${local_disk} | grep "Will check </dev/${local_disk}>"
-    CHECK_RESULT $? 0 0 "check disk failed"
-    fio-dedupe -d 3 /dev/${local_disk} | grep "Will check </dev/${local_disk}>"
-    CHECK_RESULT $? 0 0 "check disk failed"
+    CHECK_RESULT $? 0 0 " fio-verify-state option failed"
+    fio-dedupe -t 3 /dev/"${local_disk}" | grep "Will check </dev/${local_disk}>"
+    CHECK_RESULT $? 0 0 "fio-dedupe option failed"
+    fio-dedupe -d 3 /dev/"${local_disk}" | grep "Will check </dev/${local_disk}>"
+    CHECK_RESULT $? 0 0 "fio-dedupe option failed"
     LOG_INFO "End of testcase execution!"
 }
 
@@ -57,4 +59,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

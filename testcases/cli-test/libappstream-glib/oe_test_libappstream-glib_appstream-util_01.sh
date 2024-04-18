@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of libappstream-glib command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -35,7 +35,7 @@ function run_test() {
     appstream-util --help | grep -Pz "Usage:[\S\s]*appstream-util \[OPTION…\]"
     CHECK_RESULT $? 0 0 "Check appstream-util --help failed"
 
-    appstream-util --nonet search dejavu 2>&1 | grep "system\/\*/example/font/dejavu/\* (installed)"
+    appstream-util --nonet search dejavu 2>&1 | grep "dejavu/\* (installed)"
     CHECK_RESULT $? 0 0 "Check appstream-util --nonet failed"
 
     appstream-util --verbose --nonet search dejavu 2>&1 | grep "A set of sans-serif font faces"
@@ -62,7 +62,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf glibtest
     LOG_INFO "Finish restore the test environment."
 }

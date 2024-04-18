@@ -26,23 +26,33 @@ function pre_test(){
 }
 
 function run_test() {
-    path=$(which mandb)
-    CHECK_RESULT $path /usr/bin/mandb 0 "there is no executable program"
+    LOG_INFO "Start to run test."
+    which mandb | grep "/usr/bin/mandb"
+    CHECK_RESULT $? 0 0 "there is no executable program"
     mandb -V |grep mandb
     CHECK_RESULT $? 0 0 "version information is incorrect"
     mandb --help |grep -E "Usage|用法"
     CHECK_RESULT $? 0 0 "help information is incorrect"
     mandb -t vi
     CHECK_RESULT $? 0 0 "manual page display error"
+    mandb -u root
+    CHECK_RESULT $? 0 0 "-u  operation failure"
+    mandb -q
+    CHECK_RESULT $? 0 0 "-q  operation failure"
+    mandb -f top
+    CHECK_RESULT $? 0 0 "-f  operation failure"
     mandb -p | grep "/usr/share/man"
     CHECK_RESULT $? 0 0 "-p operation failure"
     mandb -d | grep "/usr/share/man"
     CHECK_RESULT $? 0 0 "-d Operation failure"
+    LOG_INFO "End of the test."
 }
 
 function post_test() {
-    DNF_REMOVE
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
 

@@ -192,6 +192,9 @@
             "name": "oe_test_server_openssh_secure"
         },
         {
+            "name": "oe_test_netscript_cfg"
+        },
+        {
             "name": "oe_test_server_openssh_restart"
         },
         {
@@ -670,6 +673,9 @@
             "name": "oe_test_lsusb"
     	},
         {
+            "name": "oe_test_last"
+    	},
+        {
             "name": "oe_test_lastb"
     	},
         {
@@ -892,7 +898,39 @@
 	},
 	{
 	  "name": "oe_test_systemd_analyze"
-	}
-
+	},
+	{
+	  "name": "oe_test_readlink"
+	},
+	{
+	  "name": "oe_test_ul_001"
+	},
+	{
+	  "name": "oe_test_lscpu"
+	},
+	{
+	  "name": "oe_test_lsmem_1"
+	},
+        {
+          "name": "oe_test_yumdownloader"
+        },
+        {
+          "name": "oe_test_lsmem_2"
+        }
+	,
+	 {
+            "name": "oe_test_fallocate"
+        }
+	 ,
+         {
+            "name": "oe_test_xzgrep"
+        }
+        ,
+        {
+            "name": "oe_test_sfdisk"
+        },
+        {
+            "name": "oe_test_lsmem_3"
+        }
     ]
 }

@@ -17,7 +17,7 @@
 # @Desc      :   Test groovy
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -45,17 +45,17 @@ function run_test() {
     groovy18 --classpath lib/zipfs.jar data/DataTypeTest.groovy | grep "name:张三"
     CHECK_RESULT $? 0 0 "Check groovy18 --classpath failed"
     groovy18 -l -e "println line.reverse()" > data.txt &
-    SLEEP_WAIT 2
+    SLEEP_WAIT 15
     grep "groovy is listening" data.txt
     CHECK_RESULT $? 0 0 "Check groovy18 -l failed"
-    kill -9 $(pgrep -f "groovy18 -l -e")
+    kill -9 "$(pgrep -f "groovy18 -l -e")"
     rm -f data.txt
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./data
     LOG_INFO "End to restore the test environment."
 }

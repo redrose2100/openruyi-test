@@ -12,6 +12,9 @@
         },
         {
             "name": "oe_test_service_cockpit-wsinstance-http"
+        },
+	{
+            "name": "oe_test_cockpit"
         }
     ]
 }

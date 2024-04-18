@@ -17,10 +17,11 @@
 # @Desc      :   gdb-breakpoints formatting test
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test(){
-
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL gdb
 cat > /tmp/test.c << EOF
 #include <stdio.h>
 int add(int a,int b)
@@ -47,7 +48,6 @@ return 0;
 }
 EOF
 
-    LOG_INFO "Start environment preparation."
     LOG_INFO "End of environmental preparation!"
 }
 

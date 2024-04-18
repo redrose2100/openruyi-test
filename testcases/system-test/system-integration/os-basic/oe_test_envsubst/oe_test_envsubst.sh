@@ -22,7 +22,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     OLD_LANG=$LANG
-    export LANG=en_US.UTF-8    
+    export LANG=en_US.UTF-8
+    if [ "$(uname -m)" == "riscv64" ]; then
+       DNF_INSTALL gettext
+    fi    
     LOG_INFO "End of environmental preparation!"
 }
 

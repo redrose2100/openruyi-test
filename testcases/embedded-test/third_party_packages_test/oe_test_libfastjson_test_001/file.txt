@@ -1,0 +1,17 @@
+ucs_copyright_char.test
+test_float.test
+test1.test
+test2.test
+test4.test
+testReplaceExisting.test
+test_parse_int64.test
+test_cast.test
+test_parse.test
+test_locale.test
+test_charcase.test
+test_printbuf.test
+test_obj_iter-del.test
+test_object_object_add_ex.test
+test_many_subobj.test
+test_obj_obj_get_ex-null.test
+chk_version

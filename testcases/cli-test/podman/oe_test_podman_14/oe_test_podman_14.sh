@@ -17,7 +17,7 @@
 # @Desc      :   The usage of commands in podman package
 # ############################################
 
-source "../common/common_podman.sh"
+source "${OET_PATH}/testcases/cli-test/podman/common/common_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
@@ -29,30 +29,30 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     ID=$(podman create --oom-kill-disable alpine ls)
-    podman inspect $ID | grep '"OomKillDisable": true'
+    podman inspect "$ID" | grep '"OomKillDisable": true'
     CHECK_RESULT $?
     ID=$(podman create --oom-score-adj 100 alpine ls)
-    podman inspect $ID | grep '"OomScoreAdj": 100'
+    podman inspect "$ID" | grep '"OomScoreAdj": 100'
     CHECK_RESULT $?
     ID=$(podman create --pid host alpine ls)
-    podman inspect $ID | grep '"PidMode": "host"'
+    podman inspect "$ID" | grep '"PidMode": "host"'
     CHECK_RESULT $?
     ID=$(podman create --pids-limit 3 alpine ls)
-    podman inspect $ID | grep '"PidsLimit": 3'
+    podman inspect "$ID" | grep '"PidsLimit": 3'
     CHECK_RESULT $?
     podman pod create --infra=false
-    ID=$(podman create --pod $(podman pod list -lq) alpine ls)
-    podman rm $ID
+    ID=$(podman create --pod "$(podman pod list -lq)" alpine ls)
+    podman rm "$ID"
     CHECK_RESULT $?
-    podman pod rm $(podman pod list -q)
+    podman pod rm "$(podman pod list -q)"
     ID=$(podman create --privileged alpine ls)
-    podman inspect $ID | grep '"Privileged": true'
+    podman inspect "$ID" | grep '"Privileged": true'
     CHECK_RESULT $?
     ID=$(podman create --publish 23 alpine ls)
-    podman inspect $ID | grep '"containerPort": 23'
+    podman inspect "$ID" | grep -iA 5 "PortBindings" | grep "23"
     CHECK_RESULT $?
     ID=$(podman create --publish-all alpine ls)
-    podman inspect $ID | grep '"PublishAllPorts": false'
+    podman inspect "$ID" | grep '"PublishAllPorts": false'
     CHECK_RESULT $?
     podman create -q alpine ls
     CHECK_RESULT $?
@@ -62,7 +62,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

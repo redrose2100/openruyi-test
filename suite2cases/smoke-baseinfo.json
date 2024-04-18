@@ -8,9 +8,6 @@
             "name": "oe_test_baseinfo"
         },
         {
-            "name": "oe_test_cockpit"
-        },
-        {
             "name": "oe_test_firewalld"
         },
         {

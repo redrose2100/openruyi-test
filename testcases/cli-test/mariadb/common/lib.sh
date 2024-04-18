@@ -16,9 +16,12 @@
 # @Desc      :   mariadb common function
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function mariadb_init() {
+    if [ -d "/var/lib/mysql/mariadb" ]; then
+	rm -rf /var/lib/mysql/mariadb
+    fi
     DNF_INSTALL "mariadb mariadb-server"
     systemctl start mariadb
     mysqladmin -u root password '123456'
@@ -33,6 +36,6 @@ EOF
 
 function mariadb_clear() {
     systemctl stop mariadb
-    rm -f /var/lib/mysql/*
-    DNF_REMOVE
+    rm -rf /var/lib/mysql/*
+    DNF_REMOVE	"mariadb mariadb-server"
 }

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/tpm2-tools",
+    "cases": [
+        {
+            "name": "oe_test_tpm2_tools_save_data_01"
+        }
+    ]
+}

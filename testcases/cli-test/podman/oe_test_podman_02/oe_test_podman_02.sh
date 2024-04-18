@@ -17,7 +17,7 @@
 # @Desc      :   The usage of commands in podman package
 # ############################################
 
-source "../common/common_podman.sh"
+source "${OET_PATH}/testcases/cli-test/podman/common/common_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
@@ -29,9 +29,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     podman pull busybox
-    podman images --filter after=$(podman images -q) | grep $(podman images -q)
+    podman images --filter after="$(podman images -q)" | grep "$(podman images -q)"
     CHECK_RESULT $? 0 1
-    podman images -sort created | grep busybox
+    podman images --sort created | grep busybox
     CHECK_RESULT $?
     podman rmi busybox
     podman images | grep "alpine"
@@ -67,7 +67,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

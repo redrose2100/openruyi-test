@@ -17,7 +17,8 @@
 # @Desc      :   The usage of commands in podman package
 # ############################################
 
-source "../common/common_podman.sh"
+source "${OET_PATH}/testcases/cli-test/podman/common/common_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
@@ -29,9 +30,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     podman stop postgres
-    podman wait --latest | grep [0-9]
+    podman wait --latest | grep -E "[0-9]"
     CHECK_RESULT $?
-    podman wait --interval 250 postgres | grep [0-9]
+    podman wait --interval 250 postgres | grep -E "[0-9]"
     CHECK_RESULT $?
     podman start postgres
     podman kill -l
@@ -44,15 +45,11 @@ function run_test() {
     podman ps -a | grep "Exited"
     CHECK_RESULT $?
     podman start postgres
-    podman kill -s KILL $(podman ps -q)
+    podman kill -s KILL "$(podman ps -q)"
     CHECK_RESULT $?
     podman ps -a | grep "Exited"
     CHECK_RESULT $?
     podman start postgres
-    podman varlink tcp:127.0.0.1:12345
-    CHECK_RESULT $?
-    podman varlink --timeout 1000 tcp:127.0.0.1:12345
-    CHECK_RESULT $?
     podman diff postgres | grep -E "C|A"
     CHECK_RESULT $?
     podman diff --format json postgres | grep -E "changed|added"

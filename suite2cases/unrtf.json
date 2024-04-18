@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/unrtf",
+    "cases": [
+        {
+            "name": "oe_test_unrtf"
+        }
+    ]
+}

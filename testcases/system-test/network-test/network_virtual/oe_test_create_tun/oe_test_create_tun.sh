@@ -25,11 +25,17 @@ function pre_test() {
         LOG_INFO "tunctl doesn't support aarch64."
         exit 0
     }
-    path="http://li.nux.ro/download/nux/misc/el7/x86_64/"
-    wget "$path"
-    tunctl=$(grep -oE "tunctl-.*.rpm" index.html | head -n 1 | awk -F'"' '{print $1}')
-    wget "$path/$tunctl"
-    rpm -ivh "$tunctl"
+    if [[ "${NODE1_FRAME}" = "riscv64" ]]; then
+        file="https://download.opensuse.org/repositories/openSUSE:/Factory:/RISCV/standard/riscv64/tunctl-1.5-28.1.riscv64.rpm"
+        wget "$file"
+        rpm -ivh ./tunctl-1.5-28.1.riscv64.rpm
+    else
+        path="http://li.nux.ro/download/nux/misc/el7/x86_64/"
+        wget "$path"
+        tunctl=$(grep -oE "tunctl-.*.rpm" index.html | head -n 1 | awk -F'"' '{print $1}')
+        wget "$path/$tunctl"
+        rpm -ivh "$tunctl"
+    fi
     DNF_INSTALL "net-tools"
     route_ip=$(echo "${NODE1_IPV4}" | cut -d '.' -f 1-3).0
     head_ip=$(echo "${NODE1_IPV4}" | cut -d '.' -f 1)
@@ -60,7 +66,11 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rpm -e tunctl
     DNF_REMOVE "$@"
-    rm -rf "$tunctl" index.html
+    if [[ "${NODE1_FRAME}" = "riscv64" ]]; then
+        rm -rf ./tunctl-1.5-28.1.riscv64.rpm
+    else
+        rm -rf "$tunctl" index.html
+    fi
     LOG_INFO "End to restore the test environment."
 }
 

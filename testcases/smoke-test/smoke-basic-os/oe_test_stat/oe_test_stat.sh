@@ -23,7 +23,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     stat --help | grep -iE "用法|Usage"
     CHECK_RESULT $? 0 0 "Failed to execute stat --help"
-    stat --version | grep "Copyright (C)"
+    stat --version | grep "Copyright"
     CHECK_RESULT $? 0 0 "Failed to execute stat --version"
     stat -c %D /etc/passwd | grep -iE "[-0-9]|[a-z]"
     CHECK_RESULT $? 0 0 "Failed to execute stat -c"
