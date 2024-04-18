@@ -16,10 +16,12 @@
 # @Desc      :   verify the uasge of mc command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    local_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL mc
     LOG_INFO "Start to prepare the test environment."
 }
@@ -38,7 +40,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check mc -f  failed"
     mc --datadir 2>&1 | grep '/etc/mc/ (/usr/share/mc/)'
     CHECK_RESULT $? 0 0 "Check mc --datadir  failed"
-    mc -F 2>&1 | grep 'Home路径'
+    mc -F 2>&1 | grep 'Home directory'
     CHECK_RESULT $? 0 0 "Check mc -F  failed"
     mc --datadir-info 2>&1 | grep 'Home'
     CHECK_RESULT $? 0 0 "Check mc --datadir-info  failed"
@@ -49,8 +51,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    export LANG=${local_LANG}
     LOG_INFO "Finish restore the test environment."
 }
 
-main $@
+main "$@"
