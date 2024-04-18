@@ -22,6 +22,10 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL ogdi-devel
+  if [ "$(uname -m)" == "riscv64" ]; then
+      sed -i '5d' /usr/bin/ogdi-config
+      sed -i '5i\riscv64 | x86_64 | aarch64 )' /usr/bin/ogdi-config
+  fi
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -44,6 +48,10 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "start environment cleanup."
+  if [ "$(uname -m)" == "riscv64" ]; then
+      sed -i '5d' /usr/bin/ogdi-config
+      sed -i '5i\x86_64 | aarch64 )' /usr/bin/ogdi-config
+  fi
   DNF_REMOVE "$@"
   LOG_INFO "Finish environment cleanup!"
 }
