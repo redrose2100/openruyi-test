@@ -15,9 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   内存UCE错误
 # ############################################
-#OET_PATH=../../../
 
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
 source "${OET_PATH}/testcases/feature-test/mm_uce/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
@@ -36,7 +34,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     date > "${LOG}"
-    do_mm_uce_test cow -c 2 2>&1 | tee -a "${LOG}" 
+    do_mm_uce_test cow -c 2 >> "${LOG}"  2>&1
     check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
     CHECK_RESULT $? 0 0 "mm_uce copy-on-write failed" 1
     LOG_INFO "End to run test."
@@ -51,8 +49,5 @@ function post_test() {
     LOG_INFO "End to clean the test environment."
 }
 
-#pre_test
-#run_test
-#post_test
 main "$@"
 
