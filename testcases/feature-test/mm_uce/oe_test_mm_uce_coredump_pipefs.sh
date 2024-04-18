@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -15,7 +15,6 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   内存UCE错误
 # ############################################
-#OET_PATH=../../../
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 source "${OET_PATH}/testcases/feature-test/mm_uce/common.sh"
@@ -36,7 +35,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     date > "${LOG}"
-    do_mm_uce_test coredump -f pipefs 2>&1 | tee -a "${LOG}"  
+    do_mm_uce_test coredump -f pipefs  >> "${LOG}"  2>&1
     check_ghes_rec_result && check_memory_failure_recover_result
     CHECK_RESULT $? 0 0 "mm_uce coredump pipefs failed" 1
     LOG_INFO "End to run test."
@@ -51,8 +50,5 @@ function post_test() {
     LOG_INFO "End to clean the test environment."
 }
 
-#pre_test
-#run_test
-#post_test
 main "$@"
 
