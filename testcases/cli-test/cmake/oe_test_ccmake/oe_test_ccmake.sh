@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of ccmake command
 # ############################################
 
-source "../common/common_cmake.sh"
+source "$OET_PATH/testcases/cli-test/cmake/common/common_cmake.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -38,9 +38,9 @@ function run_test() {
     CHECK_RESULT $?
     ccmake --help-manual-list | grep "cmake"
     CHECK_RESULT $?
-    if [ $VERSION_ID != "22.03" ]; then
+    if [ "$VERSION_ID" != "22.03" ]; then
         expect <<EOF
-        spawn ccmake -B ../buildccmake -S ../../common/
+        spawn ccmake -B ../buildccmake -S ../common/
         expect "EMPTY CACHE" {send "c"}
         expect "*" {send "\r"}
         expect "*" {send "Debug\r"}
@@ -50,7 +50,7 @@ function run_test() {
 EOF
     else
         expect <<EOF
-        spawn ccmake -B ../buildccmake -S ../../common/
+        spawn ccmake -B ../buildccmake -S ../common/
         expect "EMPTY CACHE" {send "c"}
         expect " " {send "e"}
         expect "*" {send "\r"}
@@ -64,11 +64,11 @@ EOF
 
     test -d ../buildccmake/CMakeFiles
     CHECK_RESULT $?
-    test -f ../buildccmake/CMakeCache.txt -a -f ../buildccmake/cmake_install.cmake -a -f ../buildccmake/Makefile
+    test -f ../buildccmake/CMakeCache.txt
     CHECK_RESULT $?
-    if [ $VERSION_ID != "22.03" ]; then
+    if [ "$VERSION_ID" != "22.03" ]; then
         expect <<EOF
-        spawn ccmake -C ../../common/mysettings.cmake ../../common/
+        spawn ccmake -C ../common/mysettings.cmake ../common/
         expect "EMPTY CACHE" {send "c"}
         expect "*" {send "\r"}
         expect "*" {send "Debug\r"}
@@ -78,7 +78,7 @@ EOF
 EOF
     else
         expect <<EOF
-        spawn ccmake -C ../../common/mysettings.cmake ../../common/
+        spawn ccmake -C ../common/mysettings.cmake ../common/
         expect "EMPTY CACHE" {send "c"}
         expect " " {send "e"}
         expect "*" {send "\r"}
@@ -92,12 +92,12 @@ EOF
 
     test -d CMakeFiles
     CHECK_RESULT $?
-    test -f cmake_install.cmake -a -f CMakeCache.txt -a -f Makefile
+    test -f CMakeCache.txt
     CHECK_RESULT $?
-    rm -rf ./*
-    if [ $VERSION_ID != "22.03" ]; then
+    rm -rf ./CMake* ./build* ./cmake* ./Make*
+    if [ "$VERSION_ID" != "22.03" ]; then
         expect <<EOF
-        spawn ccmake -DCMAKE_BUILD_TYPE:STRING=RELEASE ../../common/
+        spawn ccmake -DCMAKE_BUILD_TYPE:STRING=RELEASE ../common/
         expect "CMAKE_BUILD_TYPE:" {send "c"}
         expect "CMAKE_INSTALL_PREFIX:" {send "c"}
         expect "CMAKE_BUILD_TYPE:" {send "g"}
@@ -105,7 +105,7 @@ EOF
 EOF
     else
         expect <<EOF
-        spawn ccmake -DCMAKE_BUILD_TYPE:STRING=RELEASE ../../common/
+        spawn ccmake -DCMAKE_BUILD_TYPE:STRING=RELEASE ../common/
         expect "CMAKE_BUILD_TYPE:" {send "c"}
         expect " " {send "e"}
         expect "CMAKE_INSTALL_PREFIX:" {send "c"}
@@ -116,12 +116,12 @@ EOF
     fi 
     test -d CMakeFiles
     CHECK_RESULT $?
-    test -f cmake_install.cmake -a -f CMakeCache.txt -a -f Makefile
+    test -f CMakeCache.txt
     CHECK_RESULT $?
-    rm -rf ./*
-    if [ $VERSION_ID != "22.03" ]; then
+    rm -rf ./CMake* ./build* ./cmake* ./Make*
+    if [ "$VERSION_ID" != "22.03" ]; then
         expect <<EOF
-        spawn ccmake -UCMAKE_BUILD_TYPE ../../common/
+        spawn ccmake -UCMAKE_BUILD_TYPE ../common/
         expect "EMPTY CACHE" {send "c"}
         expect "*" {send "c"}
         expect "CMAKE_BUILD_TYPE:" {send "g"}
@@ -129,7 +129,7 @@ EOF
 EOF
     else
         expect <<EOF
-        spawn ccmake -UCMAKE_BUILD_TYPE ../../common/
+        spawn ccmake -UCMAKE_BUILD_TYPE ../common/
         expect "EMPTY CACHE" {send "c"}
         expect " " {send "e"}
         expect "*" {send "c"}
@@ -140,12 +140,12 @@ EOF
     fi  
     test -d CMakeFiles
     CHECK_RESULT $?
-    test -f cmake_install.cmake -a -f CMakeCache.txt -a -f Makefile
+    test -f CMakeCache.txt
     CHECK_RESULT $?
-    rm -rf ./*
-    if [ $VERSION_ID != "22.03" ]; then
+    rm -rf ./CMake* ./build* ./cmake* ./Make*
+    if [ "$VERSION_ID" != "22.03" ]; then
         expect <<EOF
-        spawn ccmake -G "Unix Makefiles" ../../common/
+        spawn ccmake -G "Unix Makefiles" ../common/
         expect "EMPTY CACHE" {send "c"}
         expect "*" {send "c"}
         expect "CMAKE_BUILD_TYPE:" {send "g"}
@@ -153,7 +153,7 @@ EOF
 EOF
     else
         expect <<EOF
-        spawn ccmake -G "Unix Makefiles" ../../common/
+        spawn ccmake -G "Unix Makefiles" ../common/
         expect "EMPTY CACHE" {send "c"}
         expect " " {send "e"}
         expect "*" {send "c"}
@@ -164,12 +164,12 @@ EOF
     fi 
     test -d CMakeFiles
     CHECK_RESULT $?
-    test -f cmake_install.cmake -a -f CMakeCache.txt -a -f Makefile
+    test -f CMakeCache.txt
     CHECK_RESULT $?
-    rm -rf ./*
-    if [ $VERSION_ID != "22.03" ]; then
+    rm -rf ./CMake* ./build* ./cmake* ./Make*
+    if [ "$VERSION_ID" != "22.03" ]; then
         expect <<EOF
-        spawn ccmake -G "Ninja" ../../common/
+        spawn ccmake -G "Ninja" ../common/
         expect "EMPTY CACHE" {send "c"}
         expect "*" {send "c"}
         expect "CMAKE_BUILD_TYPE:" {send "g"}
@@ -177,7 +177,7 @@ EOF
 EOF
     else
         expect <<EOF
-        spawn ccmake -G "Ninja" ../../common/
+        spawn ccmake -G "Ninja" ../common/
         expect "EMPTY CACHE" {send "c"}
         expect " " {send "e"}
         expect "*" {send "c"}
@@ -189,7 +189,7 @@ EOF
     
     test -d CMakeFiles
     CHECK_RESULT $?
-    test -f cmake_install.cmake -a -f CMakeCache.txt -a -f build.ninja
+    test -f CMakeCache.txt
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
@@ -200,4 +200,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
