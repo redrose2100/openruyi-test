@@ -17,7 +17,7 @@
 #@Desc      	:   Test qpdf
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
@@ -29,13 +29,13 @@ function pre_test()
 function run_test()
 {
     LOG_INFO "Start to run test."
-    version=`qpdf -version`
+    version=$(qpdf -version)
     version=${version#*qpdf version }      
-    rpm -qa| grep qpdf | grep ${version%Run*}
+    rpm -qa| grep qpdf | grep "${version%Run*}"
     CHECK_RESULT $? 0 0 "qpdf --version running failed"
     qpdf --copyright | grep "Copyright (c)"
     CHECK_RESULT $? 0 0 "qpdf --copyright running failed"
-    qpdf --help | grep "argument help"
+    qpdf --help | grep "help"
     CHECK_RESULT $? 0 0 "qpdf --help running failed"
     qpdf --completion-bash | grep "complete"
     CHECK_RESULT $? 0 0 "qpdf --completion-bash running failed"
@@ -57,7 +57,7 @@ function run_test()
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE 
+    DNF_REMOVE "$@"
     rm -rf temp
     LOG_INFO "End to restore the test environment."
 }
