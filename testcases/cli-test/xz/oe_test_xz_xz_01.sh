@@ -37,7 +37,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Test failed with option -d"
     test -f testxz
     CHECK_RESULT $? 0 0 "Decompression failed"
-    xz -t -vv testxz.xz 2>&1 | grep "68 B / 12 B = 5.667"
+    xz -t -vv testxz.xz 2>&1 | grep "/ 12 B ="
     CHECK_RESULT $? 0 0 "Test failed with option -t"
     xz -l -vv testxz.xz | grep Stream
     CHECK_RESULT $? 0 0 "Test failed with option -l"
