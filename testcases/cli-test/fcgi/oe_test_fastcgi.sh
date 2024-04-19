@@ -21,7 +21,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "fcgi fcgi-devel spawn-fcgi nginx lsof"
+    DNF_INSTALL "fcgi fcgi-devel spawn-fcgi nginx lsof gcc-c++"
+    setenforce 0
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,11 +36,11 @@ int main(void)
 int count = 0;
 while (FCGI_Accept() >= 0)
 {
-printf("Content-type: text/html\r\n"
-"\r\n"
+printf("Content-type: text/html\\r\\n"
+"\\r\\n"
 "<title>Hello World</title>"
 "<h1>Hello World from FastCGI!</h1>"
-"Request number is: %d\n",
+"Request number is: %d\\n",
 ++count);
 }
 return 0;
@@ -48,7 +49,7 @@ EOF
     CHECK_RESULT $? 0 0 "File creation failed"
     g++ -o fastcgi_demo fastcgi_demo.cpp -lfcgi
     CHECK_RESULT $? 0 0 "Compilation failed"
-    spawn-fcgi -a 127.0.0.1 -p 8081 -f fastcgi_demo
+    spawn-fcgi -a 127.0.0.1 -p 8081 -f "${PWD}"/fastcgi_demo
     lsof -i:8081 | grep -i "fastcgi_d" |grep -i "LISTEN"
     CHECK_RESULT $? 0 0 "The FastCGI program is not listening to port 8081"
     mkdir /usr/share/nginx/html_test
@@ -57,7 +58,7 @@ EOF
     systemctl stop firewalld.service
     cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
     sed -i '0,/html/s/html/html_test/' /etc/nginx/nginx.conf
-    awk '/include \/etc\/nginx\/default\.d\/\*\.conf;/ && !x {print; print "        location /fastcgi_demo.cgi {\n                fastcgi_pass 127.0.0.1:8081;\n                fastcgi_index index.cgi;\n                include fastcgi.conf;\n        }"; x=1; next} 1' /etc/nginx/nginx.conf > temp && mv temp /etc/nginx/nginx.conf
+    awk '/include \/etc\/nginx\/default\.d\/\*\.conf;/ && !x {print; print "        location /fastcgi_demo.cgi {\n                fastcgi_pass 127.0.0.1:8081;\n                fastcgi_index index.cgi;\n                include fastcgi.conf;\n        }"; x=1; next} 1' /etc/nginx/nginx.conf > temp && mv -f temp /etc/nginx/nginx.conf
     CHECK_RESULT $? 0 0 "File modification failed"
     systemctl restart nginx
     systemctl status nginx
@@ -73,6 +74,7 @@ function post_test() {
     rm -rf fastcgi_demo.cpp fastcgi_demo /usr/share/nginx/html_test /etc/nginx/nginx.conf
     mv /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf
     systemctl restart nginx
+    setenforce 1
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
