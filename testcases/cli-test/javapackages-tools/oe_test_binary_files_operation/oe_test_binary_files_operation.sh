@@ -16,12 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of check-binary-files,clean-binary-files,create-jar-links and diff-jars command
 # ############################################
+# shellcheck disable=SC1091,SC2010
 
 source "../common/common_javapackages-tools.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL tar
+    DNF_INSTALL "tar easymock"
     deploy_env
     LOG_INFO "Finish preparing the test environment."
 }
