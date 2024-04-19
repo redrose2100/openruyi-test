@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    jdb -help | grep -i "jdb <选项>"
+    jdb -help | grep -i "jdb <options>"
     CHECK_RESULT $? 0 0 "jdb -help failed"
     javac Hello.java
     CHECK_RESULT $? 0 0 "javac Hello.java failed"
@@ -41,14 +41,14 @@ function run_test() {
     send \"run Hello\r\"
     expect eof
 "
-    cat < testlog | grep -q "命令列表 " 
+    cat < testlog | grep -q "command list" 
     CHECK_RESULT $? 0 0 "no find common list"
-    cat < testlog | grep -q "VM 已启动:"
+    cat < testlog | grep -q "VM Started"
     CHECK_RESULT $? 0 0 "no find VM Start"
     cat < testlog | grep -q  'Hello,world!'
     CHECK_RESULT $? 0 0 "no find Hello,world"
 
-    jdeps -help | grep -i "用法:"
+    jdeps -help | grep -i "Usage"
     CHECK_RESULT $? 0 0 "jdeps -help failed"
     jdeps -version | grep '[0-9]'
     CHECK_RESULT $? 0 0 "jdeps -version failed"
