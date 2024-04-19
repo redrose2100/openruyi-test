@@ -64,7 +64,7 @@ PR_Cleanup();
 return 0;
 }
 EOF
-    DNF_INSTALL "nspr-devel"
+    DNF_INSTALL "nspr-devel g++"
     LOG_INFO "End of environmental preparation!"
 }
 
