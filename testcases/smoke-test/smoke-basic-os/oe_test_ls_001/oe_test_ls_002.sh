@@ -22,6 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     touch test.txt
+    mkdir test001
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -36,14 +37,23 @@ function run_test() {
     TEMP=$(ls -lR /bin)
     [[ $TEMP == *"usr/bin"* ]]
     CHECK_RESULT $? 0 0 "Execution error"
+    TEMP=$(ls -r)
+    [[ $TEMP == *"test"* ]]
+    CHECK_RESULT $? 0 0 "Flashback shows file error"
+    TEMP=$(ls -t)
+    [[ $TEMP == *"test"* ]]
+    CHECK_RESULT $? 0 0 "Error sorting files by time"
+    TEMP=$(ls -F)
+    [[ $TEMP == *"test001/"* ]]
+    CHECK_RESULT $? 0 0 "Command execution check file error"
     LOG_INFO "Finish test!"
-
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     export LANG=${OLD_LANG}
     rm -rf test.txt
+    rm -rf test001
     LOG_INFO "Finish environment cleanup!"
 }
 
