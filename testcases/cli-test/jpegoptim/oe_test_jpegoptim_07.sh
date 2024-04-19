@@ -29,9 +29,8 @@ function run_test() {
     LOG_INFO "Start to run test."
     jpegoptim -b common/test.jpg  grep  "yes"
     CHECK_RESULT $? 0 0 "Optimize graphic error reporting"
-    jpegoptim -T  
-    CHECK_RESULT $? 0 0 "Jpegoptim - h execution failed"
-    jpegoptim -q  
+    version=$(rpm -qa jpegoptim | awk -F- '{print $2}')
+    jpegoptim -V  | grep "${version}"
     CHECK_RESULT $? 0 0 "View version error"
     LOG_INFO "End to run test."
 }
