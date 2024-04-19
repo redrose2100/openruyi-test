@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   POSTGRESQL create run delete
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     systemctl stop firewalld
@@ -24,16 +24,17 @@ function pre_test() {
     setenforce 0
     groupadd mysql
     useradd -g mysql mysql
-    echo ${NODE1_PASSWORD} | passwd --stdin mysql
+    echo "${NODE1_PASSWORD}" | passwd --stdin mysql
     test -d /data/mariadb || mkdir -p /data/mariadb
     cd /data/mariadb || exit
     mkdir data tmp run log
     chown -R mysql:mysql /data
+    chown -R mysql:mysql /var/log/mariadb/
     cd - || exit
     DNF_INSTALL mariadb-server
     rm -rf /var/lib/mysql/*
     systemctl start mariadb
-    mysqladmin -uroot password ${NODE1_PASSWORD}
+    mysqladmin -uroot password "${NODE1_PASSWORD}"
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -76,40 +77,40 @@ expect eof
 "
     grep -iE "error|fail" testlog1
     CHECK_RESULT $? 1
-    mysqldump -uroot -p${NODE1_PASSWORD} --all-databases >alldb.sql
+    mysqldump -uroot -p"${NODE1_PASSWORD}" --all-databases >alldb.sql
     CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db1`" alldb.sql
+    grep "CREATE DATABASE .* $(db1)" alldb.sql
     CHECK_RESULT $?
-    grep "CREATE TABLE `tb1`" alldb.sql
+    grep "CREATE TABLE $(tb1)" alldb.sql
     CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db2`" alldb.sql
+    grep "CREATE DATABASE .* $(db2)" alldb.sql
     CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db3`" alldb.sql
-    CHECK_RESULT $?
-
-    mysqldump -uroot -p${NODE1_PASSWORD} --databases db1 >db1.sql
-    grep "CREATE TABLE `tb1`" db1.sql
-    CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db1`" db1.sql
+    grep "CREATE DATABASE .* $(db3)" alldb.sql
     CHECK_RESULT $?
 
-    mysqldump -uroot -p${NODE1_PASSWORD} db1 tb1 >db1tb1.sql
+    mysqldump -uroot -p"${NODE1_PASSWORD}" --databases db1 >db1.sql
+    grep "CREATE TABLE $(tb1)" db1.sql
     CHECK_RESULT $?
-    grep "CREATE TABLE `tb1`" db1tb1.sql
+    grep "CREATE DATABASE .* $(db1)" db1.sql
     CHECK_RESULT $?
 
-    rm -rf db1.sql
-    mysqldump -uroot -p${NODE1_PASSWORD} -d db1 >db1.sql
-    grep "CREATE TABLE `tb1`" db1.sql
+    mysqldump -uroot -p"${NODE1_PASSWORD}" db1 tb1 >db1tb1.sql
+    CHECK_RESULT $?
+    grep "CREATE TABLE $(tb1)" db1tb1.sql
     CHECK_RESULT $?
 
     rm -rf db1.sql
-    mysqldump -uroot -p${NODE1_PASSWORD} -t db1 >db1.sql
-    CHECK_RESULT $?
-    grep "INSERT INTO `tb1`" db1.sql
+    mysqldump -uroot -p"${NODE1_PASSWORD}" -d db1 >db1.sql
+    grep "CREATE TABLE $(tb1)" db1.sql
     CHECK_RESULT $?
 
-    mysql -uroot -p${NODE1_PASSWORD} -t db3 <db1.sql
+    rm -rf db1.sql
+    mysqldump -uroot -p"${NODE1_PASSWORD}" -t db1 >db1.sql
+    CHECK_RESULT $?
+    grep "INSERT INTO $(tb1)" db1.sql
+    CHECK_RESULT $?
+
+    mysql -uroot -p"${NODE1_PASSWORD}" -t db3 <db1.sql
     CHECK_RESULT $?
     expect -c "
     log_file testlogm
@@ -145,11 +146,11 @@ function post_test() {
 expect eof
 "
     setenforce 1
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     userdel -r mysql
     groupdel mysql
     rm -rf db1.sql db1tb1.sql alldb.sql data tmp run testlog*
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
