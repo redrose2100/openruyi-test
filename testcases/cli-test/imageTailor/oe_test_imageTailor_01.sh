@@ -28,9 +28,9 @@ function pre_test() {
     mv /opt/imageTailor /home/
     mkdir -p /home/imageTailor/repos/euler_base/
     wget --no-check-certificate https://repo.openeuler.org/"${oeversion}"/ISO/"$(arch)"/"${oeversion}"-everything-"$(arch)"-dvd.iso -P /home
-    ls /home/"${oeversion}"-everything-"$(arch)"-dvd.iso
+    ls /mnt/shared/"${oeversion}"-everything-"$(arch)"-dvd.iso
     CHECK_RESULT $? 0 0
-    mount /home/"${oeversion}"-everything-"$(arch)"-dvd.iso /mnt
+    mount /mnt/shared/"${oeversion}"-everything-"$(arch)"-dvd.iso /mnt
     cp -ar /mnt/Packages/* /home/imageTailor/repos/euler_base/
     chmod -R 644 /home/imageTailor/repos/euler_base
     umount /mnt
