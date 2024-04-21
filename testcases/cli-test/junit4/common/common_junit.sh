@@ -32,8 +32,8 @@ function clear_env() {
 }
 
 function compile_java() {
-    params=$(find . -regex ".*\.java")
-    javac -classpath /usr/share/java/*:/usr/share/java/hamcrest/*: -d . "$params"
+    params=$(find . -regex ".*\.java" | tr "\n" " ")
+    javac -classpath /usr/share/java/*:/usr/share/java/hamcrest/*: -d . ${params}
 }
 
 function execute_java() {
