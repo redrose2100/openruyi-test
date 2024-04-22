@@ -21,11 +21,19 @@ source "${OET_PATH}/testcases/feature-test/mm_uce/common.sh"
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    if [ "${NODE1_MACHINE}" != "physical" ]; then
+        LOG_INFO "The environment does not support testing"
+        exit 1
+    fi
     make -C ./common 
     make -C ./common install
     dmesg -c > /dev/null
     load_mm_uce_module
     load_einj_module
+    if do_mm_uce_check;then
+        LOG_INFO "The environment does not support testing"
+	exit 1
+    fi
     enable_tracepoint
     disable_transparent_hugepage
     LOG_INFO "End of environmental preparation!"

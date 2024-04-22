@@ -238,16 +238,16 @@ function check_ghes_rec_result()
                      einj_error="${HARDWARE_ERROR}"  
         fi
 
-        if grep -q "${einj_error}" "${LOG}"
+        if grep -Fq "${einj_error}" "${LOG}"
         then
-            echo -e "\nGHES record is OK\n" |tee -a "${LOG}"
+            echo -e "\nGHES record is OK\n" >> "${LOG}"
             echo 0 >> $TMP_DIR/error.$$
             return
         fi
         sleep $sleep
         time=$((time + sleep))
     done
-    echo -e "\nGHES record is not expected\n" |tee -a "${LOG}"
+    echo -e "\nGHES record is not expected\n" >> -a "${LOG}"
     echo 1 > $TMP_DIR/error.$$
     return 1
 }
@@ -262,9 +262,9 @@ function check_memory_failure_recover_result()
     while [ $time -lt $timeout ]
     do
         dmesg -c >> "${LOG}" 2>&1
-        if grep "${MEMORY_FAILURE}" "${LOG}"|grep -w "${RECOVERED_ACTION}"
+        if grep -Fq "${MEMORY_FAILURE}" "${LOG}"|grep -w "${RECOVERED_ACTION}"
         then
-            echo -e "\nMemory Failure record is OK\n" |tee -a "${LOG}"
+            echo -e "\nMemory Failure record is OK\n" >> "${LOG}"
             echo 0 >> $TMP_DIR/error.$$
             return
         fi
@@ -284,9 +284,9 @@ function check_sigbus_result()
 
     while [ $time -lt $timeout ]
     do
-        if grep "${SIGBUS}" "${LOG}"
+        if grep -Fq "${SIGBUS}" "${LOG}"
         then
-            echo -e "\nSigbus record is OK\n" |tee -a "${LOG}"
+            echo -e "\nSigbus record is OK\n" >> "${LOG}"
             echo 0 >> $TMP_DIR/error.$$
             return
         fi
@@ -306,6 +306,11 @@ function disable_transparent_hugepage()
 function recover_transparent_hugepage()
 {
     echo always | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
+}
+
+function do_mm_uce_check()
+{
+    user_mm_uce_test --check | tee -a "${LOG}"
 }
 
 function do_mm_uce_test()

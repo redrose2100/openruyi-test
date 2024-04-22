@@ -1,4 +1,4 @@
 #!/bin/bash
 # SPDX-License-Identifier: GPL-2.0-only
-source ../common.sh
+source common.sh
 do_mm_uce_test "$@"
