@@ -21,28 +21,29 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function config_params() {
 	LOG_INFO "Start to config params of the case."
+	status_output=$(systemctl status systemd-journald)
 	if ls /run/log/journal/*; then
-		path=run
+		regex="/run/log/journal/[a-zA-Z0-9]+"
 	else
-		path=var
+		regex="/var/log/journal/[a-zA-Z0-9]+"
 	fi
-	folder=$(ls /${path}/log/journal/ | head -n 1)
+	[[ $status_output =~ $regex ]] && path="${BASH_REMATCH[0]}"
 	LOG_INFO "End to config params of the case."
 }
 function run_test() {
 	LOG_INFO "Start to run test."
 	grep Storage /etc/systemd/journald.conf | egrep "Storage=auto|Storage=persistent"
 	CHECK_RESULT $?
-	cp -r /${path}/log/journal/"${folder}" /${path}/log/journal/"${folder}"bak
-	rm -rf /${path}/log/journal/"${folder}"
+	cp -r ${path} ${path}bak
+	rm -rf ${path}
 	systemctl restart systemd-journald.service
-	if [ ! -d "/${path}/log/journal/$folder" ]; then
+	if [ ! -d "${path}" ]; then
 		CHECK_RESULT 0 1
-		cp -r /${path}/log/journal/"${folder}"bak /${path}/log/journal/"${folder}"
+		cp -r ${path}bak ${path}
 	fi
-	check_file=$(ls -la /${path}/log/journal/"${folder}" | grep "^-" | grep "journal" | wc -l)
+	check_file=$(ls -la ${path} | grep "^-" | grep "journal" | wc -l)
 	CHECK_RESULT "${check_file}" 1
-	journalctl --file /${path}/log/journal/"${folder}"/system.journal >systemlog1
+	journalctl --file ${path}/system.journal >systemlog1
 	logsize=$(grep -v ' No entries ' systemlog1 | wc -l)
 	test $((logsize)) -gt 1
 	CHECK_RESULT $?
@@ -51,7 +52,7 @@ function run_test() {
 
 function post_test() {
 	LOG_INFO "Start to restore the test environment."
-	rm -rf /${path}/log/journal/"${folder}"bak systemlog1
+	rm -rf ${path}bak systemlog1
 	LOG_INFO "End to restore the test environment."
 }
 
