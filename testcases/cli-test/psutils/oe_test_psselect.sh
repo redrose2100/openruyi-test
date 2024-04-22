@@ -30,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # test psselect
-    test "$(psselect --version 2>&1 | awk 'NR==1{print$2}')" == "$version"
+    test "$(psselect 2>&1 | awk 'NR==1{print$2}')" == "$version"
     CHECK_RESULT $? 0 0 "psselect -v execution failed."
     psselect -o ./common/a4-11.ps | grep -a -i -E "%%Page: \(\d*[13579]\)"
     CHECK_RESULT $? 0 0 "psselect -o ./common/a4-11.ps execution failed."
