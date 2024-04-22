@@ -808,7 +808,7 @@
 	    "name": "oe_test_zgrep_002"
 	},
 	{
-	    "name": "oe_test_fdupes"
+	    "name": "oe_test_fqupes"
 	},
 	{
 	    "name": "oe_test_enchant2"
