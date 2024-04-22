@@ -17,17 +17,20 @@
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/wireshark/common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL wireshark
+    generate_traffic &
+    WIRESHARK_TRAFFIC_PID=$!
     LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    netCard=$(dumpcap -D | awk -F '.' '{print $2}' | head -1)
-    SLEEP_WAIT 10 "dumpcap -i $netCard -c 2 -w testfile6" 2
+    netCard=$(dumpcap -D | awk -F '.' '{print $2}' | head -1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+    SLEEP_WAIT 10 "dumpcap -i '$netCard' -c 2 -w testfile6" 2
     capinfos testfile6 | grep "Number of packets:.*2"
     CHECK_RESULT $?
     SLEEP_WAIT 5 "dumpcap -i 1 -a duration:5 -w testfile7" 2
@@ -36,9 +39,9 @@ function run_test() {
     SLEEP_WAIT 5 "dumpcap -i 1 -a filesize:1 -w testfile8" 2
     capinfos testfile8 | grep "File size:.*"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "dumpcap -i $netCard -a files:2 -a filesize:1 -w testfile9" 2
-    CHECK_RESULT "$(ls | grep -c 'testfile9_.*')" 2
-    SLEEP_WAIT 5 "dumpcap -i $netCard -a filesize:1 -w testfile10" 2
+    SLEEP_WAIT 5 "dumpcap -i '$netCard' -a files:2 -a filesize:1 -w testfile9" 2
+    CHECK_RESULT "$(find . -name "*" | grep -c 'testfile9_*')" 2
+    SLEEP_WAIT 5 "dumpcap -i '$netCard' -a filesize:1 -w testfile10" 2
     capinfos testfile10 | grep "File name:.*testfile10"
     CHECK_RESULT $?
     expect <<EOF
@@ -47,7 +50,7 @@ function run_test() {
         expect "" {send "\03"}
         expect eof
 EOF
-    ls | grep "testfile11_.*"
+    find . -name "testfile11_*" | grep testfile
     CHECK_RESULT $?
     expect <<EOF
         spawn dumpcap -i 3 -b interval:1 -w testfile12 
@@ -55,31 +58,31 @@ EOF
         expect "" {send "\03"}
         expect eof
 EOF
-    ls | grep "testfile12_.*"
+    find . -name "testfile12_*" | grep testfile
     CHECK_RESULT $?
     expect <<EOF
-        spawn dumpcap -i $netCard -b filesize:2 -w testfile13
+        spawn dumpcap -i "$netCard" -b filesize:2 -w testfile13
         sleep 20
         expect "" {send "\03"}
         expect eof
 EOF
-    ls | grep "testfile13_.*"
+    find . -name "testfile13_*" | grep testfile
     CHECK_RESULT $?
     expect <<EOF
-        spawn dumpcap -i $netCard -b files:2 -a filesize:1 -w testfile14
+        spawn dumpcap -i "$netCard" -b files:2 -a filesize:1 -w testfile14
         sleep 20
         expect "" {send "\03"}
         expect eof
 EOF
-    ls | grep "testfile14_.*"
+    find . -name "testfile14_*" | grep testfile
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "dumpcap -i $netCard -n -c 20 -w testfile15" 2
+    SLEEP_WAIT 5 "dumpcap -i '$netCard' -n -c 20 -w testfile15" 2
     captype testfile15 | grep "testfile15: pcapng"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "dumpcap -i $netCard -P -c 20 -w testfile16" 2
+    SLEEP_WAIT 5 "dumpcap -i '$netCard' -P -c 20 -w testfile16" 2
     captype testfile16 | grep "testfile16: pcap"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "dumpcap -i $netCard --capture-comment \"test dumpcap usage\" -c 20 -w testfile17" 2
+    SLEEP_WAIT 5 "dumpcap -i '$netCard' --capture-comment \"test dumpcap usage\" -c 20 -w testfile17" 2
     capinfos testfile17 | grep "Capture comment:.*test dumpcap usage"
     CHECK_RESULT $?
     LOG_INFO "End of the test."
@@ -87,8 +90,9 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $(ls | grep -v ".sh")
-    DNF_REMOVE
+    rm -rf testfile*
+    close_traffic "$WIRESHARK_TRAFFIC_PID"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
