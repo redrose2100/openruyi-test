@@ -16,7 +16,7 @@
 # @Desc      :   内存UCE错误
 # ############################################
 
-source "${OET_PATH}/testcases/feature-test/mm_uce/common.sh"
+source "${OET_PATH}/testcases/feature-test/mm_uce/common/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
