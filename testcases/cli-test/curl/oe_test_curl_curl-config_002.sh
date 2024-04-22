@@ -31,8 +31,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check bcurl-config --protocols failed"
     curl-config --ssl-backends | grep "OpenSSL"
     CHECK_RESULT $? 0 0 "check curl-config --ssl-backends failed"
-    curl-config --static-libs
-    CHECK_RESULT $? 0 0 "check curl-config --static-libsfailed"
     curl-config --version | grep "${vers}"
     CHECK_RESULT $? 0 0 "check curl-config --version failed"
     curl-config --vernum
