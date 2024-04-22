@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    epylint ./common/test.py | grep "Module test"
+    pylint ./common/test.py | grep "Module test"
     CHECK_RESULT $? 0 0 "L$LINENO: epylint <filename> No Pass"
     LOG_INFO "End to run test."
 }
