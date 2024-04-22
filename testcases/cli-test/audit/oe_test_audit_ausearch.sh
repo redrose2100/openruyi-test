@@ -20,23 +20,26 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    useradd uos1
-    chmod 755 /home/uos1
-    su - uos1 -c "touch /home/uos1/testfile"   
-    auditctl -w /home/uos1/testfile -p rwxa -k testfile_audit
+    USER1=$(< /dev/urandom sed 's/[^a-zA-Z]//g' |strings -n 6 |head -1)
+    useradd "${USER1}"
+    chmod 755 /home/"${USER1}"
+    auditctl -w /home/"${USER1}"/testfile -p rwxa -k testfile_audit_"${USER1}"
+    auditctl -l
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "start to run test."
-    ausearch --format csv
+    ausearch --format csv > test.csv
+    file test.csv |grep -i  "CSV text"
     CHECK_RESULT $? -1 1 "format check fail"
     ausearch -m ADD_USER
     CHECK_RESULT $? -1 1 "AVC check fail"
-    uid=$(id -u uos1)
-    ausearch -ua "$uid"
+    uid=$(id -u "${USER1}")
+    ausearch -ua "$uid" 2>&1  |grep "no matches"
     CHECK_RESULT $? -1 1 "ua check fail"
-    ausearch -f /home/uos1/testfile
+    su - "${USER1}" -c "touch /home/'${USER1}'/testfile"
+    ausearch -f /home/"${USER1}"/testfile
     CHECK_RESULT $? -1 1 "ausearch -f fail"
     ausearch -k testfile_audit
     CHECK_RESULT $? -1 1 "testfile_audit check fail"
@@ -50,8 +53,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    userdel -rf uos1
+    userdel -rf "${USER1}"
     auditctl -D
+    rm -rf test.csv
     LOG_INFO "Finish environment cleanup!"
 }
 
