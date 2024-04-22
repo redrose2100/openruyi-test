@@ -17,7 +17,7 @@
 # @Desc      :   The system log is recorded in a fixed log file
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function config_params() {
 	LOG_INFO "Start to config params of the case."
@@ -32,19 +32,26 @@ function config_params() {
 }
 function run_test() {
 	LOG_INFO "Start to run test."
-	grep Storage /etc/systemd/journald.conf | egrep "Storage=auto|Storage=persistent"
+	grep -E 'Storage=(auto|persistent)' /etc/systemd/journald.conf
 	CHECK_RESULT $?
-	cp -r ${path} ${path}bak
-	rm -rf ${path}
+	cp -r "${path}" "${path}bak"
+	rm -rf "${path}"
 	systemctl restart systemd-journald.service
 	if [ ! -d "${path}" ]; then
 		CHECK_RESULT 0 1
-		cp -r ${path}bak ${path}
+		cp -r "${path}bak" "${path}"
 	fi
-	check_file=$(ls -la ${path} | grep "^-" | grep "journal" | wc -l)
+
+	check_file=0
+	for file in "${path}"/*; do
+	    if [ -f "$file" ] && [[ "$file" == *"journal"* ]]; then
+	        ((check_file++))
+	    fi
+	done
+
 	CHECK_RESULT "${check_file}" 1
-	journalctl --file ${path}/system.journal >systemlog1
-	logsize=$(grep -v ' No entries ' systemlog1 | wc -l)
+	journalctl --file "${path}/system.journal" >systemlog1
+	logsize=$(grep -c -v ' No entries ' systemlog1)
 	test $((logsize)) -gt 1
 	CHECK_RESULT $?
 	LOG_INFO "End to run test."
@@ -52,8 +59,8 @@ function run_test() {
 
 function post_test() {
 	LOG_INFO "Start to restore the test environment."
-	rm -rf ${path}bak systemlog1
+	rm -rf "${path}bak" systemlog1
 	LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
