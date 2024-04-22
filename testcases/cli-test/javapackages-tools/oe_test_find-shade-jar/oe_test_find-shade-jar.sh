@@ -16,13 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of find-jar and shade-jar command
 # ############################################
+# shellcheck disable=SC1091
 
 source "../common/common_javapackages-tools.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    DNF_INSTALL objectweb-asm3
+    DNF_INSTALL "objectweb-asm3 easymock"
     LOG_INFO "Finish preparing the test environment."
 }
 

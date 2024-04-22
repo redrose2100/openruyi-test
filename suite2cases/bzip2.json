@@ -6,6 +6,15 @@
         },
 	{
 	    "name": "oe_test_bzip2_01"
+	},
+	{
+	    "name": "oe_test_bzip2_02"
+	},
+	{
+	    "name": "oe_test_bzip2_03"
+	},
+	{
+	    "name": "oe_test_bzip2_04"
 	}
     ]
 }

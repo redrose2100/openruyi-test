@@ -126,6 +126,24 @@
         },
         {
             "name": "oe_test_libgpg-error_test_001"
+        },
+        {
+            "name": "oe_test_libidn2_test_001"
+        },
+        {
+            "name": "oe_test_bzip2_test_001"
+        },
+        {
+            "name": "oe_test_libpng_test_001"
+        },
+        {
+            "name": "oe_test_libtiff_test_001"
+        },
+        {
+            "name": "oe_test_libunistring_test_001"
+        },
+        {
+            "name": "oe_test_libunwind_test_001"
         }
     ]
 }

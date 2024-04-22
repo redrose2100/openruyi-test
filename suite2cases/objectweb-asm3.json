@@ -3,6 +3,9 @@
   "cases": [
     {
       "name": "oe_test_objectweb-asm3-processor"
+    },
+    {
+      "name": "oe_test_objectweb-asm3-processor_01"
     }
   ]
 }

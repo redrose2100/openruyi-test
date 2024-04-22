@@ -27,16 +27,18 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    pylint -h | grep "Usage"
+    pylint -h | grep "Usage\|usage"
     CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
-    pylint --long-help | grep "Usage"
+    pylint --long-help | grep "Usage\|usage"
     CHECK_RESULT $? 0 0 "L$LINENO: -long-help No Pass"
     pylint --init-hook='import sys; import os; sys.path.append(os.getcwd())' ./common/test.py | grep "Module test"
     CHECK_RESULT $? 0 0 "L$LINENO: pylint --init-hook <code> No Pass"
     pylint -E ./common/test_error.py | grep "Module test"
     CHECK_RESULT $? 0 0 "L$LINENO: pylint -E No Pass"
-    pylint_version=$(rpm -qa pylint | awk -F- '{print $2}' | awk -F. '{print $1$2$3}')
-    if [ "$pylint_version" -lt 2122 ]; then
+    v1=$(rpm -qa pylint | awk -F- '{print $2}' | awk -F. '{print $1}')
+    v2=$(rpm -qa pylint | awk -F- '{print $2}' | awk -F. '{print $2}')
+    v3=$(rpm -qa pylint | awk -F- '{print $2}' | awk -F. '{print $3}')
+    if [ "$v1" -lt 2 ] || [ "$v1" -eq 2 ] && [ "$v2" -lt 12 ] || [ "$v1" -eq 2 ] && [ "$v2" -eq 12 ] && [ "$v3" -lt 2 ]; then
         pylint --py3k ./common/test.py | grep "Your code has been rated at"
         CHECK_RESULT $? 0 0 "L$LINENO: pylint --py3k No Pass"
     else

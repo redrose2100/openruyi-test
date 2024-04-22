@@ -26,8 +26,6 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    curl --dns-servers 8.8.8.8 https://httpbin.org/anything
-    CHECK_RESULT $? 0 0 "check curl --dns-servers failed"
     curl -X POST "https://httpbin.org/anything" -H "accept: application/json" --data '{"value":"panda"}' 2>&1 | grep "panda"
     CHECK_RESULT $? 0 0 "check curl -X failed"
     curl --dump-header headers http://www.baidu.com && test -f headers

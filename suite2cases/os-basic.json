@@ -909,12 +909,31 @@
 	  "name": "oe_test_renice"
 	}
 	,
+	  "name": "oe_test_lscpu"
+	},
+	{
+	  "name": "oe_test_lsmem_1"
+	},
         {
           "name": "oe_test_yumdownloader"
+        },
+        {
+          "name": "oe_test_lsmem_2"
         }
 	,
 	 {
             "name": "oe_test_fallocate"
+        }
+	 ,
+         {
+            "name": "oe_test_xzgrep"
+        }
+        ,
+        {
+            "name": "oe_test_sfdisk"
+        },
+        {
+            "name": "oe_test_lsmem_3"
         }
     ]
 }

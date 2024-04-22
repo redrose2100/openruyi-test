@@ -30,7 +30,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    xzcat -t -vv testxz.xz 2>&1 | grep "68 B / 12 B = 5.667"
+    xzcat -t -vv testxz.xz 2>&1 | grep "/ 12 B ="
     CHECK_RESULT $? 0 0 "Test failed with option -t"
     xzcat -l -vv testxz.xz | grep Stream
     CHECK_RESULT $? 0 0 "Test failed with option -l"

@@ -16,7 +16,17 @@
 #@Desc          :   Runtime firewalld rules in effect
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+  LOG_INFO "Start environmental preparation."
+  pre_fw_status=$(P_SSH_CMD --node 2 --cmd "firewall-cmd --state")
+  if [ "$pre_fw_status" != "running" ];then
+	P_SSH_CMD --node 2 --cmd "systemctl start firewalld.service"
+        SLEEP_WAIT 3 
+  fi 
+  LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -32,6 +42,15 @@ function run_test() {
     sleep 30
     CHECK_RESULT "$(P_SSH_CMD --node 2 --cmd "firewall-cmd --list-rich-rules" |grep -v ^$)" "" 0 "after reboot,runtime firewall rich rule check fail"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    if [ "$pre_fw_status" != "running" ];then
+        P_SSH_CMD --node 2 --cmd "systemctl stop firewalld.service"
+        SLEEP_WAIT 3
+    fi
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

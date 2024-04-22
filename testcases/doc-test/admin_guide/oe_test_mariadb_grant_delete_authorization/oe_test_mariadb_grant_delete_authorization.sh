@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   User authorization / delete user permissions
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     systemctl stop firewalld
@@ -25,17 +25,18 @@ function pre_test() {
     setenforce 0
     groupadd mysql
     useradd -g mysql mysql
-    echo ${NODE1_PASSWORD} | passwd --stdin mysql
+    echo "${NODE1_PASSWORD}" | passwd --stdin mysql
 
     test -d /data/mariadb || mkdir -p /data/mariadb
     cd /data/mariadb || exit
     mkdir data tmp run log
     chown -R mysql:mysql /data
+    chown -R mysql:mysql /var/log/mariadb/
     cd - || exit
     DNF_INSTALL mariadb-server
     rm -rf /var/lib/mysql/*
     systemctl start mariadb
-    mysqladmin -uroot password ${NODE1_PASSWORD}
+    mysqladmin -uroot password "${NODE1_PASSWORD}"
     expect -c "
     set timeout 10
     log_file testlog
@@ -49,7 +50,7 @@ function pre_test() {
 }
 expect eof
 "
-    cat testlog | grep "SELECT USER" -A 10 | grep -w userexample | grep localhost
+    grep "SELECT USER" -A 10 testlog | grep -w userexample | grep localhost
     rm -rf testlog
     LOG_INFO "Environmental preparation is over."
 }
@@ -69,7 +70,7 @@ function run_test() {
 }
 expect eof
 "
-    cat testlog | grep "SHOW GRANTS FOR" -A 10 | grep -w userexample | grep localhost | grep SELECT | grep INSERT
+    grep "SHOW GRANTS FOR" -A 10 testlog | grep -w userexample | grep localhost | grep SELECT | grep INSERT
     CHECK_RESULT $?
     rm -rf testlog
     expect -c "
@@ -86,9 +87,9 @@ expect eof
 expect eof
 "
     CHECK_RESULT $?
-    cat testlog | grep "SHOW GRANTS FOR" -A 10 | grep -w userexample | grep localhost | grep SELECT
+    grep "SHOW GRANTS FOR" -A 10 testlog | grep -w userexample | grep localhost | grep SELECT
     CHECK_RESULT $?
-    cat testlog | grep "SHOW GRANTS FOR" -A 10 | grep -w userexample | grep localhost | grep SELECT | grep INSERT
+    grep "SHOW GRANTS FOR" -A 10 testlog | grep -w userexample | grep localhost | grep SELECT | grep INSERT
     CHECK_RESULT $? 1
     LOG_INFO "End of testcase execution."
 }
@@ -107,11 +108,11 @@ function post_test() {
 expect eof
 "
     setenforce 1
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     userdel -r mysql
     groupdel mysql
     rm -rf testlog
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

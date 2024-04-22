@@ -21,13 +21,13 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "pixman pixman-devel"
+  DNF_INSTALL "gcc pixman pixman-devel"
   LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
-  gcc -o test11 test.c -g `pkg-config --cflags --libs pixman-1`
+  gcc -o test11 test.c -g "$(pkg-config --cflags --libs pixman-1)"
   CHECK_RESULT $? 0 0 "pixman failure"
   ./test11
   test -e aaa-with-watermark.bmp
@@ -37,7 +37,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  DNF_REMOVE
+  DNF_REMOVE "$@"
   rm -rf  aaa-with-watermark.bmp test11
   LOG_INFO "Finish environment cleanup!"
 }

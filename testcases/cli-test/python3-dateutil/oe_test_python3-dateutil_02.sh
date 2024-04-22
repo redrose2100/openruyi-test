@@ -17,7 +17,7 @@
 # @Desc      :   test python3-dateutil
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
@@ -32,7 +32,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 # 计算日期差
-current_date = datetime.now()
+current_date = datetime(2024, 1, 1, 0, 0)
 future_date = current_date + relativedelta(months=2, days=25)
 date_diff = future_date - current_date
 print("Future Date:", future_date)
