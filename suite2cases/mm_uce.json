@@ -1,0 +1,9 @@
+{
+  "path": "$OET_PATH/testcases/feature-test/mm_uce",
+  "cases": [
+    {
+      "name": "oe_test_mm_uce_getuser"
+    }
+  ]
+}
+
