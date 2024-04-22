@@ -18,7 +18,7 @@
 # ############################################
 # shellcheck disable=SC1090
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -29,7 +29,7 @@ function pre_test() {
 function run_test() {
     python3-config --prefix | grep "/usr"
     CHECK_RESULT $? 0 0 "header file location display failed"
-    python3-config --extension-suffix | grep "python-310"
+    python3-config --extension-suffix | grep "python-3"
     CHECK_RESULT $? 0 0 "python parameter display failure"
     python3-config --configdir  | grep "/usr/lib64"
     CHECK_RESULT $? 0 0 "python parameter display failure"
