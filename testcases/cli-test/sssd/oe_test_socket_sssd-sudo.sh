@@ -16,28 +16,31 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test sssd-sudo.socket restart
 # #############################################
-
-source "../common/common_lib.sh"
+# shellcheck disable=SC1091
+source "common/common.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
+    openldap_server_pre
+    openldap_client_pre
     DNF_INSTALL sssd
     service=sssd-sudo.socket
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     test_execution "${service}"
     test_reload "${service}"
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
-    systemctl stop "${service}"
-    DNF_REMOVE
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    openldap_server_post
+    openldap_client_post
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
