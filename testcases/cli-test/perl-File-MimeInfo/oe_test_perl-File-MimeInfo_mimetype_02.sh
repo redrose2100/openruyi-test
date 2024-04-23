@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check mimetype -f failed"
     mimetype --namefile=tmp/1.txt | grep 'data/data.txt: text/plain'
     CHECK_RESULT $? 0 0 "Check mimetype --namefile failed"
-    mimetype --file-compat data/data.txt | grep 'plain text document'
+    mimetype --file-compat data/data.txt | grep 'plain text document\|Plain text document'
     CHECK_RESULT $? 0 0 "Check mimetype --file-compat failed"
     mimetype -F ':' data/data.txt | grep 'data/data.txt: text/plain'
     CHECK_RESULT $? 0 0 "Check mimetype -F failed"
@@ -63,7 +63,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp/ /root/.local/share/applications/ data/
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
