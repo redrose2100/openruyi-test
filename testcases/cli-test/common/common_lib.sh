@@ -86,8 +86,13 @@ function test_enabled() {
 function test_reload() {
     service=$1
     systemctl start "${service}"
-    systemctl reload "${service}" 2>&1 | grep "Job type reload is not applicable"
-    CHECK_RESULT $? 0 0 "Job type reload is not applicable for unit ${service}"
+    if systemctl cat "${service}" | grep -q "ExecReload"; then
+        systemctl reload "${service}"
+        CHECK_RESULT $? 0 0 "reload unit ${service} failed"
+    else 
+        systemctl reload "${service}" 2>&1 | grep "Job type reload is not applicable"
+        CHECK_RESULT $? 0 0 "Job type reload is not applicable for unit ${service}"
+    fi
     if ! systemctl status "${service}" | grep "Active: active"; then
         if systemctl status "${service}" | grep "inactive (dead)"; then
             systemctl status "${service}" | grep "Condition check" | grep "skip"
