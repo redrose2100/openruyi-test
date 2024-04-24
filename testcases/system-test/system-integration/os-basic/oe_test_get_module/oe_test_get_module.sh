@@ -26,8 +26,12 @@ function run_test()
 {
     LOG_INFO "Start to run test."
     modinfo kvm|grep sig
+    CHECK_RESULT $? 0 1 "modinfo function error"
+    modinfo kvm|grep parm
     CHECK_RESULT $? 0 0 "modinfo function error"
     modinfo drm|grep sig
+    CHECK_RESULT $? 0 1 "modinfo function error"
+    modinfo drm|grep parm
     CHECK_RESULT $? 0 0 "modinfo function error"
     modinfo nfnetlink|grep sig
     CHECK_RESULT $? 0 0 "modinfo function error"
