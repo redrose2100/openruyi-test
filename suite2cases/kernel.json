@@ -154,7 +154,11 @@
         },
         {
             "name": "oe_test_regmap_01"
+        },
+        {
+            "name": "oe_test_ceph"
         }
+
     ]
 }
 
