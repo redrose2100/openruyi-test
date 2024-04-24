@@ -932,6 +932,9 @@
         {
             "name": "oe_test_lsmem_3"
         },
+        {
+            "name": "oe_test_lscpu_2"
+        }
 	{
 	    "name": "oe_test_mkfifo"
 	}
