@@ -27,6 +27,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "nproc --help execute fail"
     nproc --version | grep -i nproc
     CHECK_RESULT $? 0 0 "nproc --version execute fail"
+    cpuinfo_count=$(nproc --all)
+    cpuinfo_actual=$(grep -c processor /proc/cpuinfo)
+    if [ $cpuinfo_count == $cpuinfo_actual ]
+    then
+      CHECK_RESULT $?
+    else
+      CHECK_RESULT $?
+    fi
     LOG_INFO "Finish test!"
 }
 
