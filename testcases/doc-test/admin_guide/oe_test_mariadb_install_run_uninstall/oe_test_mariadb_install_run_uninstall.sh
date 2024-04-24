@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Install, run and uninstall
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     systemctl stop firewalld
@@ -25,7 +25,7 @@ function pre_test() {
     setenforce 0
     groupadd mysql
     useradd -g mysql mysql
-    echo ${NODE1_PASSWORD} | passwd --stdin mysql
+    echo "${NODE1_PASSWORD}" | passwd --stdin mysql
 
     test -d /data && rm -rf /data
     mkdir /data
@@ -34,6 +34,7 @@ function pre_test() {
     cd /data/mariadb || exit
     mkdir data tmp run log
     chown -R mysql:mysql /data
+    chown -R mysql:mysql /var/log/mariadb/
     cd - || exit
     LOG_INFO "Environmental preparation is over."
 }
@@ -44,7 +45,7 @@ function run_test() {
     DNF_INSTALL mariadb-server
     CHECK_RESULT $?
     systemctl start mariadb
-    mysqladmin -uroot password $NODE1_PASSWORD
+    mysqladmin -uroot password "${NODE1_PASSWORD}"
     CHECK_RESULT $?
     expect -c "
     log_file testlog
@@ -77,8 +78,8 @@ expect eof
 "
     grep -iE "fail|error" testlog
     CHECK_RESULT $? 1
-    sql_pid=$(ps -ef | grep mysql | grep -v grep | grep -v test | awk '{print $2}')
-    kill -9 ${sql_pid}
+    sql_pid=$(pgrep -f mysql)
+    kill -9 "${sql_pid}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
@@ -89,8 +90,8 @@ function post_test() {
     userdel -r mysql
     groupdel mysql
     rm -rf testlog
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

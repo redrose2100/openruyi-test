@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL gdb
+    DNF_INSTALL "gcc-c++ gdb"
 cat > /tmp/test.c << EOF
 #include <stdio.h>
 int add(int a,int b)

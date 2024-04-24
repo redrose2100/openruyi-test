@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "glog glog-devel"
+    DNF_INSTALL "glog glog-devel gcc-c++"
     LOG_INFO "End to prepare the test environment."
 }
 

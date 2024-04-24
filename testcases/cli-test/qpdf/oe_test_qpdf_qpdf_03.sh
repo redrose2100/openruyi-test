@@ -17,7 +17,7 @@
 #@Desc      	:   Test qpdf
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
@@ -28,26 +28,26 @@ function pre_test()
 function run_test()
 {
     LOG_INFO "Start to run test."
-    qpdf --encrypt 123456 123456 40 --print=y --modify=y --extract=y --annotate=y -- ./common/infile.pdf output1.pdf && test -f output1.pdf
-    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=40 running failed"
+    qpdf --encrypt 123456 123456 256 --print=low --modify=all --extract=y --annotate=y -- ./common/infile.pdf output1.pdf && test -f output1.pdf
+    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=256 running failed"
     qpdf --encrypt 123456 123456 128 --accessibility=y --extract=y --assemble=y --annotate=y --form=y --modify-other=y --cleartext-metadata --use-aes=y --force-V4 -- ./common/infile.pdf output2.pdf && test -f output2.pdf
     CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=128 running failed"
-    qpdf --encrypt 123456 123456 128 --print=full -- ./common/infile.pdf output3.pdf && test -f output3.pdf
-    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=128 --print=full running failed"
-    qpdf --encrypt 123456 123456 128 --print=low -- ./common/infile.pdf output4.pdf && test -f output4.pdf
-    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=128 --print=low running failed"
-    qpdf --encrypt 123456 123456 128 --print=none -- ./common/infile.pdf output5.pdf && test -f output5.pdf
-    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=128 --print=none running failed"
-    qpdf --encrypt 123456 123456 128 --modify=all -- ./common/infile.pdf output6.pdf && test -f output6.pdf
-    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=128 --modify=all running failed"
-    qpdf --encrypt 123456 123456 128 --modify=annotate -- ./common/infile.pdf output7.pdf && test -f output7.pdf
-    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=128 --modify=annotate running failed"
-    qpdf --encrypt 123456 123456 128 --modify=form -- ./common/infile.pdf output8.pdf && test -f output8.pdf
-    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=128 --modify=form running failed"
-    qpdf --encrypt 123456 123456 128 --modify=assembly -- ./common/infile.pdf output9.pdf && test -f output9.pdf
-    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=128 --modify=assembly running failed"
-    qpdf --encrypt 123456 123456 128 --modify=none -- ./common/infile.pdf output10.pdf && test -f output10.pdf
-    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=128 --modify=none running failed"
+    qpdf --encrypt 123456 123456 256 --print=full -- ./common/infile.pdf output3.pdf && test -f output3.pdf
+    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=256 --print=full running failed"
+    qpdf --encrypt 123456 123456 256 --print=low -- ./common/infile.pdf output4.pdf && test -f output4.pdf
+    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=256 --print=low running failed"
+    qpdf --encrypt 123456 123456 256 --print=none -- ./common/infile.pdf output5.pdf && test -f output5.pdf
+    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=256 --print=none running failed"
+    qpdf --encrypt 123456 123456 256 --modify=all -- ./common/infile.pdf output6.pdf && test -f output6.pdf
+    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=256 --modify=all running failed"
+    qpdf --encrypt 123456 123456 256 --modify=annotate -- ./common/infile.pdf output7.pdf && test -f output7.pdf
+    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=256 --modify=annotate running failed"
+    qpdf --encrypt 123456 123456 256 --modify=form -- ./common/infile.pdf output8.pdf && test -f output8.pdf
+    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=256 --modify=form running failed"
+    qpdf --encrypt 123456 123456 256 --modify=assembly -- ./common/infile.pdf output9.pdf && test -f output9.pdf
+    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=256 --modify=assembly running failed"
+    qpdf --encrypt 123456 123456 256 --modify=none -- ./common/infile.pdf output10.pdf && test -f output10.pdf
+    CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=256 --modify=none running failed"
     qpdf --encrypt 123456 123456 256 --force-R5 -- ./common/infile.pdf output11.pdf && test -f output11.pdf
     CHECK_RESULT $? 0 0 "qpdf --encrypt options with key-length=256 running failed"
     LOG_INFO "End to run test."
@@ -56,8 +56,8 @@ function run_test()
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE  
-    rm -rf *.pdf
+    DNF_REMOVE  "$@"
+    rm -rf '*.pdf'
     LOG_INFO "End to restore the test environment."
 }
 

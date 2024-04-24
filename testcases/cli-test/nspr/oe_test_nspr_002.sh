@@ -16,8 +16,9 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-nspr
 # ############################################
+# shellcheck disable=SC2238
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
@@ -64,7 +65,7 @@ PR_Cleanup();
 return 0;
 }
 EOF
-    DNF_INSTALL "nspr-devel"
+    DNF_INSTALL "gcc-c++ nspr-devel"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -85,8 +86,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/test_nspr2 /tmp/test_nspr2.cpp /tmp/test
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

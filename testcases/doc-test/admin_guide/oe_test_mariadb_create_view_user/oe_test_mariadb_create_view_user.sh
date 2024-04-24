@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Create User / View User
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     systemctl stop firewalld
@@ -24,16 +24,17 @@ function pre_test() {
     setenforce 0
     groupadd mysql
     useradd -g mysql mysql
-    echo ${NODE1_PASSWORD} | passwd --stdin mysql
+    echo "${NODE1_PASSWORD}" | passwd --stdin mysql
     test -d /data/mariadb || mkdir -p /data/mariadb
     cd /data/mariadb || exit
     mkdir data tmp run log
     chown -R mysql:mysql /data
+    chown -R mysql:mysql /var/log/mariadb/
     cd - || exit
     rm -rf /var/lib/mysql/*
     DNF_INSTALL mariadb-server
     systemctl start mariadb
-    mysqladmin -uroot password ${NODE1_PASSWORD}
+    mysqladmin -uroot password "${NODE1_PASSWORD}"
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -54,11 +55,11 @@ function run_test() {
 }
 expect eof
 "
-    cat testlog | grep "SHOW GRANTS FOR" -A 10 | grep "GRANT USAGE ON" | grep userexample1 | grep localhost
+    grep "SHOW GRANTS FOR" -A 10 testlog | grep "GRANT USAGE ON" | grep userexample1 | grep localhost
     CHECK_RESULT $?
-    cat testlog | grep "SELECT USER" -A 10 | grep userexample1 | grep localhost
+    grep "SELECT USER" -A 10 testlog | grep userexample1 | grep localhost
     CHECK_RESULT $?
-    cat testlog | grep "SELECT USER" -A 10 | grep userexample2 | grep ${NODE1_IPV4}
+    grep "SELECT USER" -A 10 testlog | grep userexample2 | grep "${NODE1_IPV4}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
@@ -78,11 +79,11 @@ function post_test() {
 expect eof
 "
     setenforce 1
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     userdel -r mysql
     groupdel mysql
     rm -rf testlog
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
