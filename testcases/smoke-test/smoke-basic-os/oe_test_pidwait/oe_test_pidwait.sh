@@ -22,7 +22,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start testing..."
     pidwait
-    CHECK_RESULT $? 0 0 "pidwait execute fail"
+    CHECK_RESULT $? 0 1 "pidwait execute fail"
     pidwait --help | grep -E "用法|Usage"
     CHECK_RESULT $? 0 0 "pidwait --help execute fail"
     pidwait --version | grep -i pidwait
