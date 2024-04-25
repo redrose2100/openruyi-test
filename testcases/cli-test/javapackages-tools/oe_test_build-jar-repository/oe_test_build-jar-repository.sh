@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of build-jar-repository and rebuild-jar-repository command
 # ############################################
+# shellcheck disable=SC1091
 
 source "../common/common_javapackages-tools.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "log4j junit easymock qdox"
     deploy_env
     LOG_INFO "Finish preparing the test environment."
 }

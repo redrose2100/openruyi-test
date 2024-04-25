@@ -18,12 +18,12 @@
 # ############################################
 # shellcheck disable=SC1090
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "iproute"
-    Net=$(nmcli connection show |awk 'NR==2' |awk '{print $1}')
+    Net=$(nmcli connection show |awk 'NR==2' |awk '{print $NF}')
 }
 
 function run_test() {

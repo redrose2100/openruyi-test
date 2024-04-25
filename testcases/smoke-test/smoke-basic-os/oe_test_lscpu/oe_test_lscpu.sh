@@ -27,6 +27,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "lscpu --help execute fail"
     lscpu -V | grep -i lscpu
     CHECK_RESULT $? 0 0 "lscpu --version execute fail"
+    lscpu -a -e | grep ONLINE
+    CHECK_RESULT $? 0 0 "-a -e argument execute fail"
+    lscpu -x
+    CHECK_RESULT $? 0 0 "-x argument execute fail"
+    lscpu -p
+    CHECK_RESULT $? 0 0 "-p argument execute fail"
     LOG_INFO "Finish test!"
 }
 

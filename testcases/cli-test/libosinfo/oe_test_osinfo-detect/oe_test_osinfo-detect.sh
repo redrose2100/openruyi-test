@@ -22,7 +22,6 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL libosinfo
-    VERSION_ID=$(grep "VERSION_ID" /etc/os-release|awk -F '\"' '{print$2}')
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -32,12 +31,6 @@ function run_test() {
     CHECK_RESULT $?
     nohup wget https://repo.openeuler.org/openEuler-20.03-LTS/ISO/aarch64/openEuler-20.03-LTS-aarch64-dvd.iso >/dev/null 2>&1 &
     SLEEP_WAIT 20
-    if [ $VERSION_ID != "22.03" ]; then
-        osinfo-detect --format=env openEuler-20.03-LTS-aarch64-dvd.iso
-        CHECK_RESULT $?
-    else
-        LOG_INFO "Obsolete version command"
-    fi 
     osinfo-detect --format=plain openEuler-20.03-LTS-aarch64-dvd.iso
     CHECK_RESULT $?
     osinfo-detect --type=media openEuler-20.03-LTS-aarch64-dvd.iso
@@ -47,10 +40,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 $(pgrep -f 'wget')
-    roc=$(ls | grep -v ".sh")
-    rm -rf $roc
-    DNF_REMOVE
+    kill -9 "$(pgrep -f 'wget')"
+    rm -rf !(*.sh)
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 

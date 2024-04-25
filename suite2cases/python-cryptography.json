@@ -6,6 +6,9 @@
     },
     {
       "name": "oe_test_python-cryptography"
-    }
+    },
+    {
+      "name": "oe_test_hasher_python3-cryptography"
+    }    
   ]
 }

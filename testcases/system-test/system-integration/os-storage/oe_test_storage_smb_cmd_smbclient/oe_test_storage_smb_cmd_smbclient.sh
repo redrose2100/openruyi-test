@@ -17,19 +17,19 @@
 # @Desc      :   Common Samba command line utilities-smbclient
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     SSH_CMD "yum install -y samba; sed -i '/testsamba/d' /etc/security/opasswd;useradd testsamba;
     (echo ${NODE1_PASSWORD};echo ${NODE1_PASSWORD}) | smbpasswd -a testsamba -s" \
-        ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+        "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "cp -a /etc/samba/smb.conf /etc/samba/smb.conf.bak;echo  \\\" \\\" >> /etc/samba/smb.conf;
     echo  \\\"\\[testsamba\\]\\\" >> /etc/samba/smb.conf;echo  \\\"\\tcomment = public stuff\\\" >> /etc/samba/smb.conf;
-    echo  \\\"\\tpath = /home/testsamba\\\" >> /etc/samba/smb.conf" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    echo  \\\"\\tpath = /home/testsamba\\\" >> /etc/samba/smb.conf" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "systemctl start smb;systemctl enable smb;systemctl stop firewalld;
 	setsebool samba_export_all_ro on;setsebool samba_export_all_rw on;chmod 755 /home/testsamba" \
-        ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_INSTALL cifs-utils
+        "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    DNF_INSTALL "cifs-utils samba-client"
     systemctl stop firewalld
     LOG_INFO "Environmental preparation is over."
 }
@@ -47,9 +47,9 @@ function run_test() {
 	"
     grep -iE "error|fail" testlog
     CHECK_RESULT $? 1
-    smbclient -L ${NODE2_IPV4} -U testsamba%${NODE2_PASSWORD}
+    smbclient -L "${NODE2_IPV4}" -U testsamba%"${NODE2_PASSWORD}"
     CHECK_RESULT $?
-    smbclient -c "ls" //${NODE2_IPV4}/testsamba -U testsamba%${NODE2_PASSWORD}
+    smbclient -c "ls" //"${NODE2_IPV4}"/testsamba -U testsamba%"${NODE2_PASSWORD}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
@@ -57,11 +57,11 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     SSH_CMD "systemctl stop smb; rm -f /etc/samba/smb.conf;mv /etc/samba/smb.conf.bak /etc/samba/smb.conf;
-    yum remove samba -y; userdel -r testsamba; systemctl stop firewalld" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_REMOVE
+    yum remove samba -y; userdel -r testsamba; systemctl stop firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    DNF_REMOVE "$@"
     rm -rf testlog
     systemctl start firewalld
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

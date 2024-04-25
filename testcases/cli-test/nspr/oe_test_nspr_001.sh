@@ -17,7 +17,7 @@
 # @Desc      :   File system common command test-nspr
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
@@ -36,7 +36,7 @@ PR_LogPrint("2021年11月08日 UOS 10:40:35");
 return 0;
 }
 EOF
-    DNF_INSTALL "nspr-devel"
+    DNF_INSTALL "gcc-c++ nspr-devel"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -57,8 +57,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/test_nspr1 /tmp/test_nspr1.cpp /root/nspr_log.log
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

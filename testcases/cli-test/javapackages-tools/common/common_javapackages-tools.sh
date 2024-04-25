@@ -22,12 +22,11 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
     DNF_INSTALL junit
-    java_version=$(rpm -qa java* | grep java-.*-openjdk | awk -F '-' '{print $2}')
+    java_version=$(rpm -qa java* | grep -m1 'java-.*-openjdk' | awk -F '-' '{print $2}')
     DNF_INSTALL "javapackages-tools java-${java_version}-devel xmvn-resolve objectweb-asm3 beust-jcommander log4j"
 }
 
 function clear_env() {
-    roc=$(ls | grep -v ".sh")
-    rm -rf $roc
-    DNF_REMOVE
+    rm -rf !(*.sh)
+    DNF_REMOVE "$@"
 }

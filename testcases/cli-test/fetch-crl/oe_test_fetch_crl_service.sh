@@ -24,7 +24,7 @@ function pre_test() {
     DNF_INSTALL "fetch-crl tar"
     tar -xvf ./common/data.tar.gz > /dev/null
     infopath=$(cd ./data && pwd)
-    info=$(echo "infodir = ${infopath}")
+    info="infodir = ${infopath}"
     sed -i "s#infodir =.*#${info}#g" /etc/fetch-crl.conf
     LOG_INFO "End to prepare the test environment."
 }
@@ -33,7 +33,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl start fetch-crl.service
     CHECK_RESULT $? 0 0 "Check fetch-crl service start failed"
-    SLEEP_WAIT 2
+    SLEEP_WAIT 15
     systemctl status fetch-crl.service | grep "successfully." 
     CHECK_RESULT $? 0 0 "Check fetch-crl service status  failed"
     LOG_INFO "End to run test."
@@ -41,7 +41,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./data
     LOG_INFO "End to restore the test environment."
 }

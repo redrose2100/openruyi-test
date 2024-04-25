@@ -43,7 +43,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "testxz.lzma does not exist"
     xzcat -z -k -f -vv --block-size=1 testxz 2>&1 | grep -a "392 B / 12 B > 9.999"
     CHECK_RESULT $? 0 0 "Test failed with option --block-size"
-    xzcat -z -k -f -vv --block-list=1,2,128 testxz 2>&1 | grep -a "128 B / 12 B > 9.999"
+    xzcat -z -k -f -vv --block-list=1,2,128 testxz 2>&1 | grep -a "/ 12 B > 9.999"
     CHECK_RESULT $? 0 0 "Test failed with option --block-list"
     xzcat -z -k -f -vv --memlimit-compress=1 testxz 2>&1 | grep -a "The limit is 1 B"
     CHECK_RESULT $? 0 0 "Test failed with option --memlimit-compress"

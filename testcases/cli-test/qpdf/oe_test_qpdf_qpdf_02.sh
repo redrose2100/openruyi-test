@@ -17,7 +17,7 @@
 #@Desc      	:   Test qpdf
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
@@ -38,13 +38,13 @@ function run_test()
     CHECK_RESULT $? 0 0 "qpdf --password-is-hex-key running failed"
     qpdf --decrypt --password=123456 --suppress-password-recovery ./common/encrypt.pdf output5.pdf && test -f output5.pdf
     CHECK_RESULT $? 0 0 "qpdf --suppress-password-recovery running failed"
-    qpdf --password-mode=bytes --encrypt 123456 123456 40 -- ./common/infile.pdf output6.pdf && test -f output6.pdf
+    qpdf --password-mode=bytes --encrypt 123456 123456 256 -- ./common/infile.pdf output6.pdf && test -f output6.pdf
     CHECK_RESULT $? 0 0 "qpdf --password-mode=bytes running failed"
-    qpdf --password-mode=hex-bytes --encrypt user-password owner-password 40 -- ./common/infile.pdf output7.pdf && test -f output7.pdf
+    qpdf --password-mode=hex-bytes --encrypt user-password owner-password 256 -- ./common/infile.pdf output7.pdf && test -f output7.pdf
     CHECK_RESULT $? 0 0 "qpdf --password-mode=hex-bytes running failed"
-    qpdf --password-mode=unicode --encrypt user-password owner-password 40 -- ./common/infile.pdf output8.pdf && test -f output8.pdf
+    qpdf --password-mode=unicode --encrypt user-password owner-password 256 -- ./common/infile.pdf output8.pdf && test -f output8.pdf
     CHECK_RESULT $? 0 0 "qpdf --password-mode=unicode running failed"
-    qpdf --password-mode=auto --encrypt user-password owner-password 40 -- ./common/infile.pdf output9.pdf && test -f output9.pdf
+    qpdf --password-mode=auto --encrypt user-password owner-password 256 -- ./common/infile.pdf output9.pdf && test -f output9.pdf
     CHECK_RESULT $? 0 0 "qpdf --password-mode=auto running failed"
     LOG_INFO "End to run test."
 }
@@ -52,8 +52,8 @@ function run_test()
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE 
-    rm -rf *.pdf
+    DNF_REMOVE "$@" 
+    rm -rf '*.pdf'
     LOG_INFO "End to restore the test environment."
 }
 

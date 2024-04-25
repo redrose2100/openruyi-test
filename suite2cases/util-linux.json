@@ -12,6 +12,10 @@
         },
         {
             "name": "oe_test_libuuid"
+        },
+        {
+            "name": "oe_test_unshare"
         }
+
     ]
 }

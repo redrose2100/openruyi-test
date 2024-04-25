@@ -23,7 +23,7 @@ function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL "unrtf"
   mkdir /tmp/test
-  cd test || exit
+  cd /tmp/test || exit
   echo "test" > input.rtf
   LOG_INFO "End of environmental preparation!"
 }
