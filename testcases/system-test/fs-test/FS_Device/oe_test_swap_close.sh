@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ssh_cmd_node "sed -i '/openeuler-swap/d' /etc/fstab"
+    ssh_cmd_node "sed -i '/swap/d' /etc/fstab"
     CHECK_RESULT $? 0 0 "Delete mount swap on /etc/fstab failed."
     REMOTE_REBOOT 2
     REMOTE_REBOOT_WAIT 2
