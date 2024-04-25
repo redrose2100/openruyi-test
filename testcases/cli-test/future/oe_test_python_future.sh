@@ -22,19 +22,19 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "python2-future python3-future"
+    DNF_INSTALL "python3-future"
     LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    python2 << EOF > log1
+    python3 << EOF > log1
 print(1/2)
 exit()
 EOF
     grep '0' log1
     CHECK_RESULT $? 0 0 "Execution failed"
-    python2 << EOF > log2
+    python3 << EOF > log2
 from __future__ import absolute_import, division
 print(1/2)
 exit()
