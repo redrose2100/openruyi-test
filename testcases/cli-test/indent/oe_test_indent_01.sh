@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "indent"
+  DNF_INSTALL "diffutils indent"
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -30,7 +30,7 @@ function run_test() {
     cp common/code.c ./
     indent code.c
     CHECK_RESULT $? 0 0 "The indent command fails to be executed"
-    diff code.c common/result.c
+    diff -Z code.c common/result.c
     CHECK_RESULT $? 0 0 "Indent failure"
     LOG_INFO "End to run test."
 }
