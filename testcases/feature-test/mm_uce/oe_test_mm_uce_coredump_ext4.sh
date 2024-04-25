@@ -25,6 +25,7 @@ function pre_test() {
         LOG_INFO "The environment does not support testing"
         exit 1
     fi
+    DNF_INSTALL "kernel_devel gcc"
     make -C ./common 
     make -C ./common install
     dmesg -c > /dev/null
@@ -54,6 +55,7 @@ function post_test() {
     unload_mm_uce_module
     unload_einj_module
     make -C common uninstall
+    do_mm_uce_cleanlog
     LOG_INFO "End to clean the test environment."
 }
 

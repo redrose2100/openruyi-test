@@ -1,4 +1,8 @@
 #!/bin/bash
+COMMON_LIB="${OET_PATH}"/libs/locallibs/common_lib.sh 
+if [ -f "${COMMON_LIB}" ];then
+    source "${OET_PATH}"/libs/locallibs/common_lib.sh
+fi
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 GHES_REC="Hardware error from APEI Generic Hardware Error Source"
@@ -6,7 +10,7 @@ HARDWARE_ERROR="[Hardware Error]"
 MEMORY_FAILURE="Memory failure"
 RECOVERED_ACTION="Recovered"
 SIGBUS='signal 7'
-LOG=/var/log/mm_uce.log
+LOG=./mm_uce.log
 TMP_DIR=/tmp
 
 function usage()
@@ -310,7 +314,12 @@ function recover_transparent_hugepage()
 
 function do_mm_uce_check()
 {
-    user_mm_uce_test --check | tee -a "${LOG}"
+    user_mm_uce_test --check 2>&1
+}
+
+function do_mm_uce_cleanlog()
+{
+    rm -f "${LOG}"
 }
 
 function do_mm_uce_test()
