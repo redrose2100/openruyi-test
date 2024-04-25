@@ -22,7 +22,7 @@ source ./common/disk_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     check_free_disk
-    DNF_INSTALL fio
+    DNF_INSTALL "fio libaio-devel"
     test -f test.txt || touch test.txt
     LOG_INFO "End to prepare the test environment!"
 }
