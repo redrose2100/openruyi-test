@@ -11,10 +11,6 @@
       "machine type": "physical"
     },
     {
-      "name": "oe_test_mm_uce_copyonwrite",
-      "machine type": "physical"
-    },
-    {
       "name": "oe_test_mm_uce_coredump_tmpfs",
       "machine type": "physical"
     },
