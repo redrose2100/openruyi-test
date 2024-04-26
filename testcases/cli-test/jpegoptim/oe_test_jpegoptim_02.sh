@@ -17,7 +17,7 @@
 # @Desc      :   package jpegoptim test
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -29,7 +29,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     jpegoptim common/*.jpg | grep "OK"
     CHECK_RESULT $? 0 0 "jpegoptim use faild"
-    jpegoptim --max-quality=90 common/2.jpg
+    jpegoptim --max=90 common/2.jpg
     CHECK_RESULT $? 0 0 "Failed to set maximum compression quality"
     jpegoptim -v common/2.jpg
     CHECK_RESULT $? 0 0 "Jpegoptim lossless image beautification failed"
