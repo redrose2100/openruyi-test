@@ -23,6 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
+    rm -f test test1 file
     LOG_INFO "End to prepare the test environment."
 }
 
