@@ -33,7 +33,7 @@
                         <artifactId>core</artifactId>
                         <version>1.3</version>
                         <scope>system</scope>
-                        <systemPath>${basedir}/libs/core.jar</systemPath>
+                        <systemPath>${basedir}/libs/hamcrest-core-1.3.jar</systemPath>
                 </dependency>
         </dependencies>
 
