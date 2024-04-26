@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Use procps-ng-pwdx case
 # ############################################
-# shellcheck disable=SC1090,SC2265
+# shellcheck disable=SC1090,SC2265,SC2086
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -34,18 +34,19 @@ return 0;
 }
 EOF
     CHECK_RESULT $? 0 0 "Error, Fail to create test.c"
-    gcc test.c -o test
+    gcc test.c -o procps_ng_test
     CHECK_RESULT $? 0 0 "Error,Check if gcc is installed ？"
-    ./test &
-    pwdx "$(pgrep -f test)"
+    ./procps_ng_test &
+    process_ids=$(pgrep -f procps_ng_test | tr '\n' ' ')
+    pwdx ${process_ids}
     CHECK_RESULT $? 0 0 "Error, Failed to obtain directory"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf test.c test
-    kill -9 "$(pgrep -f test)"
+    rm -rf test.c procps_ng_test
+    kill -9 ${process_ids}
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
