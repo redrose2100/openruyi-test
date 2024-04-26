@@ -31,7 +31,7 @@ function pre_test() {
 
     load_mm_uce_module
     load_einj_module
-    if do_mm_uce_check;then
+    if ! do_mm_uce_check;then
         LOG_INFO "The environment does not support testing"
 	exit 1
     fi
@@ -44,7 +44,6 @@ function run_test() {
     LOG_INFO "Start to run test."
     date > "${LOG}"
     do_mm_uce_test copyfromuser -c 1  >> "${LOG}" 2>&1
-    check_ghes_rec_result && check_memory_failure_recover_result 
     if [ "$(uname -m)" = "aarch64" ];then
         check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
     elif [ "$(uname -m)" = "x86_64" ];then

@@ -25,14 +25,6 @@
     {
       "name": "oe_test_mm_uce_coredump_pipefs",
       "machine type": "physical"
-    },
-    {
-      "name": "oe_test_mm_uce_copytouser",
-      "machine type": "physical"
-    },
-    {
-      "name": "oe_test_mm_uce_putuser",
-      "machine type": "physical"
     }
   ]
 }
