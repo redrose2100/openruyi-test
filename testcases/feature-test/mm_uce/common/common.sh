@@ -3,7 +3,6 @@ COMMON_LIB="${OET_PATH}"/libs/locallibs/common_lib.sh
 if [ -f "${COMMON_LIB}" ];then
     source "${OET_PATH}"/libs/locallibs/common_lib.sh
 fi
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 GHES_REC="Hardware error from APEI Generic Hardware Error Source"
 HARDWARE_ERROR="[Hardware Error]"
@@ -122,16 +121,21 @@ function set_coredump_pipefs_path()
 {
     pattern=$(cat /proc/sys/kernel/core_pattern)
     if [ "${pattern%"${pattern#?}"}" != "|" ];then
-        echo '|/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h' > /proc/sys/kernel/core_pattern
+        if [ -f /usr/lib/systemd/systemd-coredump ];then
+            echo '|/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h' > /proc/sys/kernel/core_pattern
+	elif [ -e /usr/share/apport/apport ];then
+            echo '|/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E;' > /proc/sys/kernel/core_pattern 
+	fi
     fi
     path="/var/lib/systemd/coredump/"
+    mkdir -p "${path}"
 }
 
 function set_coredump_ext4_path()
 {
     path=$(mount|grep -E "\<ext4\>"|awk -F" "  '{print $3}'|head -n 1)
-    [ -z "$path" ] && echo "no ext4 fs" && exit 1
-    echo "$path/core.%e-%p-%c-%t">/proc/sys/kernel/core_pattern   
+    [ -z "${path}" ] && echo "no ext4 fs" && exit 1
+    echo "${path}/core.%e-%p-%c-%t">/proc/sys/kernel/core_pattern   
 }
 
 function clean_corefile()
@@ -246,7 +250,7 @@ function check_ghes_rec_result()
         then
             echo -e "\nGHES record is OK\n" >> "${LOG}"
             echo 0 >> $TMP_DIR/error.$$
-            return
+            return 0
         fi
         sleep $sleep
         time=$((time + sleep))
@@ -266,11 +270,11 @@ function check_memory_failure_recover_result()
     while [ $time -lt $timeout ]
     do
         dmesg -c >> "${LOG}" 2>&1
-        if grep -Fq "${MEMORY_FAILURE}" "${LOG}"|grep -w "${RECOVERED_ACTION}"
+        if grep -F "${MEMORY_FAILURE}" "${LOG}"|grep -qw "${RECOVERED_ACTION}"
         then
             echo -e "\nMemory Failure record is OK\n" >> "${LOG}"
             echo 0 >> $TMP_DIR/error.$$
-            return
+            return 0
         fi
         sleep $sleep
         time=$((time + sleep))

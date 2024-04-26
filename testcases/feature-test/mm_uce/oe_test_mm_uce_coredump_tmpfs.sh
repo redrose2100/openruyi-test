@@ -29,8 +29,9 @@ function pre_test() {
     make -C ./common 
     make -C ./common install
     dmesg -c > /dev/null
+    load_einj_module
     load_mm_uce_module
-    if do_mm_uce_check;then
+    if ! do_mm_uce_check;then
         LOG_INFO "The environment does not support testing"
 	exit 1
     fi
