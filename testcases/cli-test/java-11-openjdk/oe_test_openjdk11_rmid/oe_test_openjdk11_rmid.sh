@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    rmic -help | grep "用法："
+    rmic -help | grep "用法：\|Usage"
     CHECK_RESULT $? 0 0 "rmic  -help failed"
     rmid -port 1111 -log portlog &
     SLEEP_WAIT 3
