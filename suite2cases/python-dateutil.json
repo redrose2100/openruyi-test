@@ -1,11 +1,14 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/python3-dateutil",
+    "path": "$OET_PATH/testcases/cli-test/python-dateutil",
     "cases": [
         {
             "name": "oe_test_python3-dateutil"
         },
         {
             "name": "oe_test_python3-dateutil_02"
+        },
+        {
+            "name": "oe_parser_test_python3-dateutil"
         }
     ]
 }
