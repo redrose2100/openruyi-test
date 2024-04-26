@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/elfutils",
+    "cases": [
+        {
+            "name": "oe_test_elfutils"
+        }
+
+      ]
+}
+
