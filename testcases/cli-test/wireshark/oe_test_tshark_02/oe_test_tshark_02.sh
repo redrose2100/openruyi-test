@@ -16,52 +16,55 @@
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/wireshark/common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL wireshark
+    generate_traffic &
+    WIRESHARK_TRAFFIC_PID=$!
     LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    netCard=$(tshark -D | awk -F '.' '{print $2}' | head -1)
-    SLEEP_WAIT 5 "tshark -i $netCard -a duration:5 -w tsfile7" 2
+    netCard=$(tshark -D | awk -F '.' '{print $2}' | head -1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+    SLEEP_WAIT 5 "tshark -i '$netCard' -a duration:5 -w tsfile7" 2
     capinfos tsfile7 | grep -E "Capture duration:.*seconds|File name:.*tsfile7"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "tshark -i $netCard -a filesize:3 -w tsfile8" 2
+    SLEEP_WAIT 5 "tshark -i '$netCard' -a filesize:3 -w tsfile8" 2
     capinfos tsfile8 | grep -E "File size:.*bytes|File name:.*tsfile8"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "tshark -i $netCard -a files:3 -a filesize:2 -w tsfile9" 2
-    CHECK_RESULT "$(ls | grep -c 'tsfile9_')" 3
+    SLEEP_WAIT 5 "tshark -i '$netCard' -a files:3 -a filesize:2 -w tsfile9" 2
+    CHECK_RESULT "$(find . -name '*' | grep -c 'tsfile9_')" 3
     capinfos tsfile9_* | grep -E "File size:.*bytes|File name:.*tsfile9_.*"
     CHECK_RESULT $?
     expect <<EOF
-        spawn tshark -i $netCard -b duration:6 -w tsfile10
+        spawn tshark -i "$netCard" -b duration:6 -w tsfile10
         expect eof
 EOF
     capinfos tsfile10_* | grep -E "Capture duration:.*seconds|File name:.*tsfile10_.*"
     CHECK_RESULT $?
     expect <<EOF
-        spawn tshark -i $netCard -b interval:1 -w tsfile11
+        spawn tshark -i "$netCard" -b interval:1 -w tsfile11
         expect eof
 EOF
     capinfos tsfile11_* | grep -E "Capture duration:.*seconds|File name:.*tsfile11_.*"
     CHECK_RESULT $?
     expect <<EOF
-        spawn tshark -i $netCard -b filesize:2 -w tsfile12
+        spawn tshark -i "$netCard" -b filesize:2 -w tsfile12
         expect eof
 EOF
     capinfos tsfile12_* | grep -E "File size:.*bytes|File name:.*tsfile12_.*"
     CHECK_RESULT $?
     expect <<EOF
-        spawn tshark -i $netCard -b files:2 -b filesize:1 -w tsfile13
+        spawn tshark -i "$netCard" -b files:2 -b filesize:1 -w tsfile13
         sleep 5
         expect eof
 EOF
     capinfos tsfile13_* | grep -E "File size:.*bytes|File name:.*tsfile13_.*"
     CHECK_RESULT $?
-    CHECK_RESULT "$(ls | grep -c 'tsfile13_')" 2
+    CHECK_RESULT "$(find . -name '*' | grep -c 'tsfile13_')" 2
     SLEEP_WAIT 5 "tshark -i 1 -c 50 -w anyFile" 2
     capinfos anyFile | grep -E "Number of packets:.*50|File name:.*anyFile"
     CHECK_RESULT $?
@@ -71,13 +74,13 @@ EOF
     capinfos tcpFile1 | grep "File name:.*tcpFile1"
     CHECK_RESULT $?
     SLEEP_WAIT 5 "tshark -r tcpFile1 | grep \"TCP\"" 2
-    SLEEP_WAIT 5 "tshark -i $netCard -n -c 20 -w tsfile14" 2
+    SLEEP_WAIT 5 "tshark -i '$netCard' -n -c 20 -w tsfile14" 2
     capinfos tsfile14 | grep -E "File name:.*tsfile14|Number of packets:.*20"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "tshark -i $netCard -N m -c 20 -w tsfile15" 2
+    SLEEP_WAIT 5 "tshark -i '$netCard' -N m -c 20 -w tsfile15" 2
     capinfos tsfile15 | grep -E "File name:.*tsfile15|Number of packets:.*20"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "tshark -i $netCard -d \"tcp.port==8888,http\" -c 20 -w tsfile16" 2
+    SLEEP_WAIT 5 "tshark -i '$netCard' -d \"tcp.port==8888,http\" -c 20 -w tsfile16" 2
     capinfos tsfile16 | grep "File name:.*tsfile16"
     CHECK_RESULT $?
     captype tsfile16 | grep "tsfile16: pcapng"
@@ -87,8 +90,9 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $(ls | grep -v ".sh")
-    DNF_REMOVE
+    rm -f tsfile* tcpFile* anyFile*
+    close_traffic "$WIRESHARK_TRAFFIC_PID"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
