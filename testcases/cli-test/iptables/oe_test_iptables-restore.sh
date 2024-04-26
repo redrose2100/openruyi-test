@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test iptables-restore function
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -36,7 +36,7 @@ COMMIT" > iptables_rule
     iptables-restore -t iptables_rule
     CHECK_RESULT $? 0 0 "iptables-restore -t exec fail"
     iptables-restore -n iptables_rule
-    iptables -nvL | grep "DROP       icmp"
+    iptables -nvL | grep -E "DROP\s+icmp|DROP\s+1"
     CHECK_RESULT $? 0 0 "iptables-restore -n exec fail"
     LOG_INFO "Finish test!"
 }
@@ -46,7 +46,7 @@ function post_test() {
     iptables-restore -n iptables_bak
     CHECK_RESULT $? 0 0 "Failed to restore environment"
     rm -fr iptables*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
