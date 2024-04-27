@@ -29,7 +29,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "name|age|helloword" >test 
+    echo "name|age|helloword" > ./test
     CHECK_RESULT $? 0 0  "file is created"
     cut -d '|' -f 1 test|grep -w name
     CHECK_RESULT $? 0 0  "cut file fail"
