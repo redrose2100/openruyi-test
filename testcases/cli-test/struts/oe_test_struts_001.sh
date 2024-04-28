@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Execution failure"
     [[ $(wc -l < JarResult.log) -eq 0 ]]
     CHECK_RESULT $? 0 0 "Execution failure2"
-    grep "$testtime" < NonJarResult.log
+    grep "$testtime" NonJarResult.log
     CHECK_RESULT $? 0 0 "Execution failure3"
     LOG_INFO "End to run test."
 }
