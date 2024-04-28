@@ -16,7 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   lvm2 command test
 # ############################################
-source ./common/disk_lib.sh
+# shellcheck disable=SC1091,SC2154
+source "./common/disk_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL lvm2
@@ -26,40 +27,40 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvcreate -y /dev/${local_disk}
+    pvcreate -y /dev/"${local_disk}"
     CHECK_RESULT $?
     pvdisplay | grep "PV UUID"
-    pvcreate -y /dev/${local_disk} --setphysicalvolumesize 30MB | grep "successfully created"
+    pvcreate -y /dev/"${local_disk}" --setphysicalvolumesize 30MB | grep "successfully created"
     CHECK_RESULT $?
-    pvs | sed -n 3p | awk {'print$4'} | grep "30.00m"
+    pvs | grep "30.00m"
     CHECK_RESULT $?
-    pvcreate -y /dev/${local_disk} --dataalignment 10MB | grep "successfully created"
+    pvcreate -y /dev/"${local_disk}" --dataalignment 10MB | grep "successfully created"
     CHECK_RESULT $?
-    pvcreate -y /dev/${local_disk} --metadataignore y | grep "successfully created"
+    pvcreate -y /dev/"${local_disk}" --metadataignore y | grep "successfully created"
     CHECK_RESULT $?
-    pvcreate /dev/${local_disk} -y --metadatatype lvm2 | grep "successfully created"
+    pvcreate /dev/"${local_disk}" -y --metadatatype lvm2 | grep "successfully created"
     CHECK_RESULT $?
-    pvcreate /dev/${local_disk} -y --zero y | grep "successfully created"
+    pvcreate /dev/"${local_disk}" -y --zero y | grep "successfully created"
     CHECK_RESULT $?
-    pvcreate /dev/${local_disk} -y --dataalignmentoffset 1MB | grep "successfully created"
+    pvcreate /dev/"${local_disk}" -y --dataalignmentoffset 1MB | grep "successfully created"
     CHECK_RESULT $?
-    pvcreate /dev/${local_disk} -y --bootloaderareasize 5MB | grep "successfully created"
+    pvcreate /dev/"${local_disk}" -y --bootloaderareasize 5MB | grep "successfully created"
     CHECK_RESULT $?
-    pvcreate /dev/${local_disk} -y --labelsector 3 | grep "successfully created"
+    pvcreate /dev/"${local_disk}" -y --labelsector 3 | grep "successfully created"
     CHECK_RESULT $?
-    pvcreate /dev/${local_disk} -y --pvmetadatacopies 1 | grep "successfully created"
+    pvcreate /dev/"${local_disk}" -y --pvmetadatacopies 1 | grep "successfully created"
     CHECK_RESULT $?
-    pvcreate /dev/${local_disk} -y --metadatasize 10MB | grep "successfully created"
+    pvcreate /dev/"${local_disk}" -y --metadatasize 10MB | grep "successfully created"
     CHECK_RESULT $?
-    pvcreate /dev/${local_disk} -y --metadataignore y | grep "successfully created"
+    pvcreate /dev/"${local_disk}" -y --metadataignore y | grep "successfully created"
     CHECK_RESULT $?
     LOG_INFO "End executing testcase!"
 }
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    pvremove -f /dev/${local_disk}
-    DNF_REMOVE
+    pvremove -f /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
