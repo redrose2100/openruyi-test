@@ -14,26 +14,25 @@
 # @Contact   :   liuyafei@uniontech.com
 # @Date      :   2023/07/21
 # @License   :   Mulan PSL v2
-# @Desc      :   Huawei fnic  module
+# @Desc      :   Huawei hpsa module
 # #############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    kernel_name=$(uname -r)
-    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/scsi/hpsa.ko
-    CHECK_RESULT $? 0 0 "file does not exist"
-    modinfo hpsa |grep -i version
+    modinfo hpsa | grep name
+    CHECK_RESULT $? 0 0 "Module hpsa not found"
+    modinfo hpsa | grep -i version
     CHECK_RESULT $? 0 0 "Information display failed"
     modprobe hpsa
     CHECK_RESULT $? 0 0 "Module not loaded"
-    lsmod | grep hpsa
+    lsmod | grep ^hpsa
     CHECK_RESULT $? 0 0 "Module loaded failed"
-    rmmod hpsa
+    modprobe -r hpsa
     CHECK_RESULT $? 0 0 "Module uninstall failed"
-    lsmod | grep hpsa
-    CHECK_RESULT $? 1 0 "Module loaded"
+    lsmod | grep ^hpsa
+    CHECK_RESULT $? 1 0 "Module uninstall failed"
 }
 
 main "$@"

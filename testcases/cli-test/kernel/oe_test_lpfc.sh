@@ -17,22 +17,22 @@
 # @Desc      :   lpfc模块加载、卸载
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     modinfo lpfc |grep lpfc
     CHECK_RESULT $? 0 0 "Description Module information failed to be displayed"
-    lsmod | grep  lpfc
+    lsmod | grep ^lpfc
     CHECK_RESULT $? 0 1 "Default installation"
     modprobe lpfc
     CHECK_RESULT $? 0 0 "Module loading failure"
-    lsmod | grep  lpfc
-    CHECK_RESULT $? 0 0 "vport_geneve not found"
-    rmmod  lpfc
-    CHECK_RESULT $? 0 0 "vport-geneve remove failure"
-    lsmod | grep  lpfc
-    CHECK_RESULT $? 0 1 "vport_geneve exist"
-    dmesg | grep "vport_geneve" | grep -Ei 'error|fail'
+    lsmod | grep ^lpfc
+    CHECK_RESULT $? 0 0 "lpfc not found"
+    modprobe -r lpfc
+    CHECK_RESULT $? 0 0 "lpfc remove failure"
+    lsmod | grep ^lpfc
+    CHECK_RESULT $? 0 1 "lpfc remove failure"
+    dmesg | grep "lpfc" | grep -Ei 'error|fail'
     CHECK_RESULT $? 1 0 "error message was reported"
 }
 

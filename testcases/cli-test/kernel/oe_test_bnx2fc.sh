@@ -14,26 +14,25 @@
 # @Contact   :   liuyafei@uniontech.com
 # @Date      :   2023/07/21
 # @License   :   Mulan PSL v2
-# @Desc      :   Huawei fnic  module
+# @Desc      :   Test bnx2fc module
 # #############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    kernel_name=$(uname -r)
-    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/scsi/hpsa.ko
-    CHECK_RESULT $? 0 0 "file does not exist"
-    modinfo hpsa |grep -i version
+    modinfo bnx2fc | grep name
+    CHECK_RESULT $? 0 0 "Module bnx2fc not found"
+    modinfo bnx2fc | grep -i version
     CHECK_RESULT $? 0 0 "Information display failed"
-    modprobe hpsa
+    modprobe bnx2fc
     CHECK_RESULT $? 0 0 "Module not loaded"
-    lsmod | grep hpsa
+    lsmod | grep ^bnx2fc
     CHECK_RESULT $? 0 0 "Module loaded failed"
-    rmmod hpsa
+    modprobe -r bnx2fc
     CHECK_RESULT $? 0 0 "Module uninstall failed"
-    lsmod | grep hpsa
-    CHECK_RESULT $? 1 0 "Module loaded"
+    lsmod | grep ^bnx2fc
+    CHECK_RESULT $? 1 0 "Module uninstall failed"
 }
 
 main "$@"

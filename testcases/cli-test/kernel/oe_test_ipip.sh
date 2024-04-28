@@ -17,7 +17,7 @@
 # @Desc      :   Test ipip模块加载、卸载
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -29,11 +29,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep ^ipip
     CHECK_RESULT $? 0 0 "Module not loaded"
-    rmmod ipip
+    modprobe -r ipip
     CHECK_RESULT $? 0 0 "Module uninstall failed"
     lsmod | grep ^ipip
-    CHECK_RESULT $? 1 0 "Module loaded"
+    CHECK_RESULT $? 1 0 "Module uninstall failed"
     LOG_INFO "Finish test!"
 }
 
 main "$@"
+

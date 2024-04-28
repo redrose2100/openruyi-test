@@ -17,11 +17,11 @@
 # @Desc      :   Test 驱动加载_snd-aloop
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start testing..."
-    modinfo snd-aloop |grep name
+    modinfo snd-aloop | grep name
     CHECK_RESULT $? 0 0 "Failed to view module information"
     lsmod | grep ^snd_aloop
     CHECK_RESULT $? 1 0 "Module loaded"
@@ -33,9 +33,10 @@ function run_test() {
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the tet environment."
-    rmmod snd-aloop
-    LOG_INFO "Finish to restore the tet environment."
+    LOG_INFO "Start to restore the test environment."
+    modprobe -r snd-aloop
+    LOG_INFO "Finish to restore the test environment."
 }
 
 main "$@"
+

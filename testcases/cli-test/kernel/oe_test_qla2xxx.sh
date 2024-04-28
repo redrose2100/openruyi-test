@@ -21,15 +21,18 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    modinfo qla2xxx |grep name
+    modinfo qla2xxx | grep name
     CHECK_RESULT $? 0 0 "Failed to view module information"
     modprobe qla2xxx
     lsmod | grep ^qla2xxx
     CHECK_RESULT $? 0 0 "Module not loaded"
-    rmmod -f qla2xxx
+    modprobe -r qla2xxx
     lsmod | grep ^qla2xxx
     CHECK_RESULT $? 1 0 "Module not uninstalled"
+    dmesg | grep "qla2xxx" | grep -Ei 'error|fail'
+    CHECK_RESULT $? 1 0 "qla2xxx error info exist"
     LOG_INFO "End to run test."
 }
 
 main "$@"
+

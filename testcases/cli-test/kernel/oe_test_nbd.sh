@@ -21,14 +21,14 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start testing..."
-    modinfo nbd |grep name
+    modinfo nbd | grep name
     CHECK_RESULT $? 0 0 "Failed to view module information"
     modprobe nbd
     lsmod | grep ^nbd
     CHECK_RESULT $? 0 0 "Module not loaded"
     local trr=1
     while true; do
-        rmmod -f nbd
+        modprobe -r nbd
         lsmod | grep ^nbd
         local rv=$?
         [[ "$rv"x != "0x" ]] && break
@@ -39,10 +39,5 @@ function run_test() {
     LOG_INFO "Finish test!"
 }
 
-function post_test() {
-    LOG_INFO "Start to restore the tet environment."
-    rmmod -f nbd
-    LOG_INFO "Finish to restore the tet environment."
-}
-
 main "$@"
+
