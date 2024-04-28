@@ -16,10 +16,14 @@
 #@Desc      	:   verification etcd‘s command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL etcd
+    if [ "$(uname -m)" == "riscv64" ]; then
+       export ETCD_UNSUPPORTED_ARCH=riscv64
+       sed -i '1i/ETCD_UNSUPPORTED_ARCH=riscv64' /etc/etcd/etcd.conf 
+    fi
     systemctl start etcd
     LOG_INFO "End to prepare the test environment."
 }
@@ -52,15 +56,15 @@ END
     etcdctl lease grant 100 | grep "TTL(100s)"
     CHECK_RESULT $? 0 0 "Check etcdctl lease grant failed."
     Lease=$(etcdctl lease grant 100 | awk '{print $2}')
-    nohup etcdctl lease keep-alive $Lease >result 2>&1 &
+    nohup etcdctl lease keep-alive "$Lease" >result 2>&1 &
     SLEEP_WAIT 10
     grep "keepalived" result
     CHECK_RESULT $? 0 0 "Check etcdctl lease keep-alive failed."
-    etcdctl lease timetolive --keys $Lease | grep "$Lease"
+    etcdctl lease timetolive --keys "$Lease" | grep "$Lease"
     CHECK_RESULT $? 0 0 "Check etcdctl lease timetolive failed."
     etcdctl lease list | grep "$Lease"
     CHECK_RESULT $? 0 0 "Check etcdctl list failed."
-    etcdctl lease revoke $Lease | grep "revoked"
+    etcdctl lease revoke "$Lease" | grep "revoked"
     CHECK_RESULT $? 0 0 "Check etcdctl revoke failed."
     etcdctl lease list | grep "$Lease"
     CHECK_RESULT $? 1 0 "Check etcdctl list failed."
@@ -73,7 +77,10 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop etcd
     rm -rf result etcd_log
-    DNF_REMOVE
+    if [ "$(uname -m)" == "riscv64" ]; then
+        sed -i '1d' /etc/etcd/etcd.conf
+    fi
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

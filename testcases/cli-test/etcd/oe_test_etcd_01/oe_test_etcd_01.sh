@@ -16,10 +16,14 @@
 #@Desc      	:   verification etcd‘s command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL etcd
+    if [ "$(uname -m)" == "riscv64" ]; then
+       export ETCD_UNSUPPORTED_ARCH=riscv64
+       sed -i '1i/ETCD_UNSUPPORTED_ARCH=riscv64' /etc/etcd/etcd.conf 
+    fi
     systemctl start etcd
     version=$(rpm -qa etcd | awk -F "-" '{print$2}')
     LOG_INFO "End to prepare the test environment."
@@ -30,9 +34,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check etcd.service start failed"
     etcd --help 2>&1 | grep -i "Usage:"
     CHECK_RESULT $? 0 0 "Check etcd --help failed."
-    test "$(etcd --version | awk '{print $3}' | head -1)" == $version
+    etcd --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check etcd --version failed."
-    test "$(etcdctl version | awk '{print $3}' | head -1)" == $version
+    etcdctl version | grep "$version"
     CHECK_RESULT $? 0 0 "Check etcdctl version failed."
     etcdctl help | grep -i "USAGE:"
     CHECK_RESULT $? 0 0 "Check etcdctl help failed."
@@ -52,7 +56,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop etcd
-    DNF_REMOVE
+    if [ "$(uname -m)" == "riscv64" ]; then
+        sed -i '1d' /etc/etcd/etcd.conf
+    fi
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

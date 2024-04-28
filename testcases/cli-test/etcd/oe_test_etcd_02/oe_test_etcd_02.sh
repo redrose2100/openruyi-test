@@ -16,10 +16,14 @@
 #@Desc      	:   verification etcd‘s command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL etcd
+    if [ "$(uname -m)" == "riscv64" ]; then
+       export ETCD_UNSUPPORTED_ARCH=riscv64
+       sed -i '1i/ETCD_UNSUPPORTED_ARCH=riscv64' /etc/etcd/etcd.conf 
+    fi
     systemctl start etcd
     LOG_INFO "End to prepare the test environment."
 }
@@ -54,7 +58,10 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop etcd
     rm -rf snapshot.db
-    DNF_REMOVE
+    if [ "$(uname -m)" == "riscv64" ]; then
+        sed -i '1d' /etc/etcd/etcd.conf
+    fi
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

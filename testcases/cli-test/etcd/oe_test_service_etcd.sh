@@ -16,12 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test etcd.service restart
 # #############################################
+# shellcheck disable=SC1091
 
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL etcd
+    if [ "$(uname -m)" == "riscv64" ]; then
+       export ETCD_UNSUPPORTED_ARCH=riscv64
+       sed -i '1i/ETCD_UNSUPPORTED_ARCH=riscv64' /etc/etcd/etcd.conf 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -35,7 +40,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop etcd.service
-    DNF_REMOVE
+    if [ "$(uname -m)" == "riscv64" ]; then
+        sed -i '1d' /etc/etcd/etcd.conf
+    fi
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
