@@ -48,12 +48,12 @@ function run_test() {
     rm -rf openEuler-22.03-LTS-aarch64-dvd.iso*
     wget https://repo.openeuler.org/openEuler-22.03-LTS/ISO/aarch64/openEuler-22.03-LTS-aarch64-dvd.iso &
     CHECK_RESULT $? 0 0 "Failed to execute wget on backgroud"
-    SLEEP_WAIT 5
+    SLEEP_WAIT 15
     kill -9 "$(pgrep wget)"
     CHECK_RESULT $? 0 0 "Failed to kill wget"
     wget -c https://repo.openeuler.org/openEuler-22.03-LTS/ISO/aarch64/openEuler-22.03-LTS-aarch64-dvd.iso &
     CHECK_RESULT $? 0 0 "Failed to execute wget -c"
-    SLEEP_WAIT 5
+    SLEEP_WAIT 15
     kill -9 "$(pgrep wget)"
     CHECK_RESULT $? 0 0 "Failed to kill -9 wget"
     find ./ -name "openEuler-22.03-LTS-aarch64-dvd.iso" | wc -l | grep 1
