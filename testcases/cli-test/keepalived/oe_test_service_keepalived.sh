@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test keepalived.service restart
 # #############################################
-
+#shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL keepalived
     mv /etc/keepalived/keepalived.conf /etc/keepalived/keepalived.bak
-    eth_name=$(ip route | grep "${NODE1_IPV4}" | awk '{print $3}')
+    eth_name=$(ip a | grep "${NODE1_IPV4}" | awk '{print $NF}')
     echo "global_defs {
    notification_email {
        root@localhost

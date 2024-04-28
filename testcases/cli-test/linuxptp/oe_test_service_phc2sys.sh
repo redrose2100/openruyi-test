@@ -16,13 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test phc2sys.service restart
 # #############################################
-
+#shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    eth_name=$(ip route | grep "${NODE1_IPV4}" | awk '{print $3}')
-    if [ "$(ethtool -T ${eth_name} | grep 'PTP Hardware Clock' | awk '{print $4}')" == none ]; then
+    eth_name=$(ip a | grep "${NODE1_IPV4}" | awk '{print $NF}')
+    if [ "$(ethtool -T "${eth_name}" | grep 'PTP Hardware Clock' | awk '{print $4}')" == none ]; then
         LOG_INFO "The environment does not support testing"
         exit 1
     else
