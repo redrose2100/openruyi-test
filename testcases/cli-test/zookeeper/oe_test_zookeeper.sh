@@ -35,7 +35,11 @@ function run_test() {
     echo server.1="$local_ip":8881:7771 >>/opt/zookeeper/conf/zoo.cfg
     bash /opt/zookeeper/bin/zkServer.sh start
     CHECK_RESULT $? 0 0 "don't dispaly STARTED"
-    bash /opt/zookeeper/bin/zkServer.sh status | grep "Mode\:"
+    chmod -R 777 /opt/zookeeper/logs/
+    chmod -R 777 /home/zookeeper/dataDir/
+    systemctl start zookeeper
+    SLEEP_WAIT 15
+    bash /opt/zookeeper/bin/zkServer.sh status | grep "Mode:"
     CHECK_RESULT $? 0 0 "don't dispaly ZooKeeper" 
 }
 
@@ -43,7 +47,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     bash /opt/zookeeper/bin/zkServer.sh stop
-    DNF_REMOVE 1 "apache-zookeeper"
+    DNF_REMOVE "$@"
     rm -rf /home/zookeeper/dataDir
     mv /opt/zookeeper/conf/zoo.cfg.bak /opt/zookeeper/conf/zoo.cfg
     LOG_INFO "End to restore the test environment."
