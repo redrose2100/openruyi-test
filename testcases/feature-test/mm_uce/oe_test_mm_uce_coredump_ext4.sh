@@ -44,6 +44,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     date > "${LOG}"
     do_mm_uce_test coredump -f ext4 >> "${LOG}"  2>&1
+    sleep 1
     check_ghes_rec_result && check_memory_failure_recover_result
     CHECK_RESULT $? 0 0 "mm_uce coredump ext4 failed" 1
     LOG_INFO "End to run test."

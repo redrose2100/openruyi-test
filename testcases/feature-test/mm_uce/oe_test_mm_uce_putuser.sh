@@ -50,6 +50,7 @@ function run_test() {
     elif [ "$(uname -m)" = "aarch64" ];then
         do_mm_uce_test putuser -c 5  >> "${LOG}" 2>&1
     fi
+    sleep 1
     check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
     CHECK_RESULT $? 0 0 "mm_uce put_user failed" 1
     LOG_INFO "End to run test."

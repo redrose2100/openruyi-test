@@ -49,6 +49,7 @@ function run_test() {
     elif [ "$(uname -m)" = "x86_64" ];then
         check_ghes_rec_result && check_memory_failure_recover_result
     fi
+    sleep 1
     CHECK_RESULT $? 0 0 "mm_uce copy_from_user failed" 1
     LOG_INFO "End to run test."
 }

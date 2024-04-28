@@ -44,6 +44,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     date > "${LOG}"
     do_mm_uce_test cow -c 2 >> "${LOG}"  2>&1
+    sleep 1
     check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
     CHECK_RESULT $? 0 0 "mm_uce copy-on-write failed" 1
     LOG_INFO "End to run test."
