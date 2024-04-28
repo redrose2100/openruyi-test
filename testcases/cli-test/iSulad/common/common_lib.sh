@@ -21,12 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function iSulad_install() {
     DNF_INSTALL iSulad
-    sed -i '/registry-mirrors/a\"docker.io"' /etc/isulad/daemon.json
+    sed -i "/registry-mirrors/a\\\"https:\\/\\/docker.io\\\"" /etc/isulad/daemon.json
     systemctl restart isulad
 }
 
 function iSulad_remove() {
     systemctl stop isulad
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /etc/isulad
 }
