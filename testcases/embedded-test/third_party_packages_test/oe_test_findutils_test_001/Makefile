@@ -22,8 +22,7 @@ all:
 	sh ../common.sh -c "findutils*" "locate"
 	sh ../common.sh -c "findutils*" "xargs"
 	sh ../common.sh -c "findutils*" "test-driver"
+	sh ../common.sh -c "findutils*" "init.cfg"
 	sh ../common.sh -r
-
 clean:
 	sh ../common.sh -r "all"
-

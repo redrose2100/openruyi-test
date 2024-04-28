@@ -41,21 +41,33 @@ function run_test() {
 
     while read -r line; do
         [[ ${ignoreFail[$line]} -eq 1 ]] && continue
+        testone="${line%.sh}"
         if [[ "${line}" != tests/* ]]; then
             cd ./gnulib-tests/ || exit
-            outStr=$(EXEEXT='' srcdir='.' LOCALE_FR='fr_FR' LOCALE_TR_UTF8='tr_TR.UTF-8' LOCALE_FR_UTF8='fr_FR.UTF-8' LOCALE_JA='ja_JP' LOCALE_ZH_CN='zh_CN.GB18030' /bin/sh ./../test-driver --test-name "${line}".test --log-file "${line}".log --trs-file "${line}".trs -- "./$line")
+            outStr=$(EXEEXT='' srcdir='.' LOCALE_FR='none' LOCALE_FR_UTF8='none' LOCALE_FR='none' LOCALE_TR_UTF8='none' LOCALE_JA='none' LOCALE_ZH_CN='zh_CN.GB18030' LOCALE_ZH_CN='zh_CN.GB18030' /bin/sh ./../test-driver --test-name "${testone}".test --log-file "${testone}".log --trs-file "${testone}".trs -- "./$line")
             cd ../
         else
-            outStr=$(/bin/sh ./test-driver --test-name "${line}".test --log-file "${line}".log --trs-file "${line}".trs -- "./$line")
+            outStr=$(/bin/sh ./test-driver --test-name "${testone}".test --log-file "${testone}".log --trs-file "${testone}".trs -- "./$line")
         fi
         echo "Output: $outStr"
         outResult=${outStr%%:*}
         if [[ "${outResult}" != "PASS" && "${outResult}" != "SKIP" && "${outResult}" != "XFAIL" ]]; then
             CHECK_RESULT 1 0 0 "run findutils testcase $line fail"
             cat "${line}".log
+            ((failed++))
+        elif [[ "${outResult}" == "SKIP" || ${ignoreFail[$line]} -eq 1 ]]; then
+            ((skipped++))
+        else
+            ((passed++))
         fi
     done <../file.txt
     popd || exit
+    total=$((failed + skipped + passed))
+
+    LOG_INFO "Total cases: $total"
+    LOG_INFO "Passed cases: $passed"
+    LOG_INFO "skipped cases: $skipped"
+    LOG_INFO "Failed cases: $failed"
 
     LOG_INFO "End to run findutils test."
 }

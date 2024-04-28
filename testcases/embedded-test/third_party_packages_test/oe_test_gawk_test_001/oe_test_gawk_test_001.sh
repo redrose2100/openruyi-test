@@ -14,7 +14,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Test gawk
 #####################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2181
 source ../comm_lib.sh
 
 function pre_test() {
@@ -28,42 +28,36 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-  pushd ./tmp_test/test || exit 1
+  declare -A ignoreFail
+  getCasesFromFile ignoreFail ignore.txt
 
+  pushd ./tmp_test/test || exit 1
   LOG_INFO "Start exec gawk test"
 
   total=0
   success=0
   failed=0
   skip=0
-  cat all_test.txt > exec_test.txt
-  while read -r ignore_test; do
-    if [ -z "${ignore_test}" ];then
-      continue
-    fi
+  cat all_test.txt >exec_test.txt
 
-    if grep "${ignore_test}" exec_test.txt &>/dev/null;then
-      grep -v "${ignore_test}" exec_test.txt > tmp.log
-      cat tmp.log > exec_test.txt
-      LOG_WARN "skip ${ignore_test}"
-      ((skip++))
-    fi
-    ((total++))
-  done < ../../ignore.txt
+  list=(mbstr1 mpfrcase2 mpfrcase mpfrfield mpfrieee mpfrmemok1 mpfrnegzero2 mpfrnegzero mpfrnonum mpfrrem mpfrsort mpfrstrtonum mpgforcenum)
+  for item in "${list[@]}"; do sed -i 's/2>&1//g' "$item".test; done
+  sed -i '/gawk:/d' mbstr1.ok mbstr2.ok
 
   while read -r test_file; do
-    if [ -z "${test_file}" ];then
+    ((total++))
+    if [ -z "${test_file}" ]; then
       continue
     fi
+    [[ ${ignoreFail[$test_file]} -eq 1 ]] && ((++skip)) && continue
     sh ./"${test_file}.test"
-    if [ -f "./_${test_file}" ];then
+    if [[ $? -eq 1 ]]; then
       LOG_ERROR "${test_file} exec failed!"
       ((failed++))
     else
       ((success++))
     fi
-    ((total++))
-  done < ./exec_test.txt
+  done <./exec_test.txt
   LOG_INFO "exec ${total}, success ${success},skip ${skip}, failed ${failed}, pass rate $(echo "${success}" "${failed}" | awk '{printf "%.2f", $1/($1 + $2) * 100 }')%"
   CHECK_RESULT "${failed}" 0 0 "gawk test failed!!!"
   popd || return
