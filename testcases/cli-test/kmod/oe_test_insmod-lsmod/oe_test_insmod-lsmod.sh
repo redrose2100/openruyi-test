@@ -25,8 +25,14 @@ function run_test() {
     CHECK_RESULT $?
     insmod -V | grep "kmod version"
     CHECK_RESULT $?
-    raid0Path=$(find /usr/lib/modules/ -name raid0.ko)
-    faultyPath=$(find /usr/lib/modules/ -name faulty.ko)
+    version=`uname -r |awk -F"-" '{print $1}'`
+    if [[ "$version" =~ 4.19.* ]] ;then
+        raid0Path=$(find /usr/lib/modules/ -name raid0.ko)
+        faultyPath=$(find /usr/lib/modules/ -name faulty.ko)
+    else
+        raid0Path=$(find /usr/lib/modules/ -name raid0.ko.xz)
+        faultyPath=$(find /usr/lib/modules/ -name faulty.ko.xz)
+    fi
     SLEEP_WAIT 5 "lsmod | grep raid0 && modprobe -r raid0" 2    
     CHECK_RESULT $?
     SLEEP_WAIT 5 "lsmod | grep faulty && modprobe -r faulty" 2
