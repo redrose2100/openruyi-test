@@ -17,10 +17,11 @@
 # @Desc      :   Test dhcpd6.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL dhcp
     cp /etc/dhcp/dhcpd6.conf /etc/dhcp/dhcpd6.bak
     echo 'default-lease-time 2592000;
 preferred-lifetime 604800;
@@ -47,6 +48,7 @@ function post_test() {
     systemctl stop dhcpd6.service
     mv -f /etc/dhcp/dhcpd6.bak /etc/dhcp/dhcpd6.conf
     ip addr del 2001:db8::1 dev "${NODE1_NIC}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

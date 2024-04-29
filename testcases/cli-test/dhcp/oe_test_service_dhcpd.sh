@@ -17,10 +17,11 @@
 # @Desc      :   Test dhcpd.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL dhcp
     cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.bak
     echo 'ddns-update-style none;
 ignore client-updates;
@@ -49,6 +50,7 @@ function post_test() {
     systemctl stop dhcpd.service
     mv -f /etc/dhcp/dhcpd.bak /etc/dhcp/dhcpd.conf
     ip addr del 192.168.0.1 dev "${NODE1_NIC}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
