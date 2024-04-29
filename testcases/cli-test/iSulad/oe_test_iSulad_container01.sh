@@ -23,7 +23,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL iSulad
     cp /etc/isulad/daemon.json /etc/isulad/daemon.json.bak
-    sed -i "/registry-mirrors/a\\\"https:\\/\\/ariq8blp.mirror.aliyuncs.com\\\"" /etc/isulad/daemon.json
+    if [ "${NODE1_FRAME}" == "riscv64" ]; then
+        sed -i "/registry-mirrors/a\\\"https:\\/\\/docker.io\\\"" /etc/isulad/daemon.json
+    else        
+        sed -i "/registry-mirrors/a\\\"https:\\/\\/ariq8blp.mirror.aliyuncs.com\\\"" /etc/isulad/daemon.json
+    fi
     systemctl restart isulad.service
     LOG_INFO "End to prepare the test environment."
 }
