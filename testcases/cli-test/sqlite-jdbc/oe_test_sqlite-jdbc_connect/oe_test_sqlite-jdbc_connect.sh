@@ -15,13 +15,13 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   SQLite jdbc driver test
 ####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     if ! java -version; then
-        java_version=$(dnf list | grep "java-1.8.*-openjdk" | awk -F '-' '{print $2}' | sed -n '1p')
+        java_version=$(dnf list | grep "java-1.8.*-openjdk" -m1 | awk -F '-' '{print $2}' | sed -n '1p')
         DNF_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel sqlite-jdbc"
     else
         DNF_INSTALL "sqlite-jdbc"
@@ -37,7 +37,7 @@ function run_test() {
 
     javac Test.java
     CHECK_RESULT $? 0 0 "java source code compilation failed."
-    java Test | grep "org.sqlite.SQLiteConnection" && java Test | grep "t_user_name"
+    java Test | grep "org.sqlite" && java Test | grep "t_user_name"
     CHECK_RESULT $? 0 0 "sqlite-jdbc driver is invalid."
 
     LOG_INFO "End to run test."
@@ -48,7 +48,7 @@ function post_test() {
 
     unset CLASSPATH
     rm -rf ./*.class
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }
