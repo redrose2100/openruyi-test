@@ -1,0 +1,2 @@
+normal! 10x
+:wq

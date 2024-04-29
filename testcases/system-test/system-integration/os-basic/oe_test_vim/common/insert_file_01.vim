@@ -1,0 +1,2 @@
+normal! oHappy day.
+:wq

@@ -1,0 +1,2 @@
+normal! yy p
+:wq
