@@ -53,7 +53,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf test.c
+    rm -rf test.c test
     DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
