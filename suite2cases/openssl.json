@@ -102,6 +102,9 @@
 	},
         {
 	    "name": "oe_test_openssl_cryptographic_services"
+	},
+	{
+	    "name": "oe_test_openssl_SM4_OFB_Encryption_and_decryption"
 	}
     ]
 }
