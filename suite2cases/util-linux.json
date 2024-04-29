@@ -15,6 +15,9 @@
         },
         {
             "name": "oe_test_unshare"
+        },
+        {
+            "name": "oe_test_hwclock"
         }
 
     ]
