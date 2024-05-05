@@ -27,34 +27,34 @@ function pre_test() {
         DNF_INSTALL "isula-build runc iSulad"
     fi
 
-    if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then
-        os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | tr '()' '- ' | sed s/[[:space:]]//g)
-    else
-        if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "LTS"; then
-            os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | awk -F ' ' '{print$1"-"$2}')
-        else
-            os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}')
-        fi
-    fi
-    wget --no-check-certificate -q -P ../common/ \
-        https://repo.openeuler.org/openEuler-"${os_version}"/docker_img/"${NODE1_FRAME}"/openEuler-docker."${NODE1_FRAME}".tar.xz
-
+    #if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then
+    #    os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | tr '()' '- ' | sed s/[[:space:]]//g)
+    #else
+    #    if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "LTS"; then
+    #        os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | awk -F ' ' '{print$1"-"$2}')
+    #    else
+    #        os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}')
+    #    fi
+    #fi
+    #wget --no-check-certificate -q -P ../common/ \
+    #    https://repo.openeuler.org/openEuler-"${os_version}"/docker_img/"${NODE1_FRAME}"/openEuler-docker."${NODE1_FRAME}".tar.xz
+    cp ~/24.03_docker_image.tar.gz ../common/
     systemctl restart isula-build
-    isula-build ctr-img load -i ../common/openEuler-docker."${NODE1_FRAME}".tar.xz
-    images_name=$(isula-build ctr-img images | grep "docker.io/library/openeuler" | awk '{print$1}')
+    isula-build ctr-img load -i ../common/24.03_docker_image.tar.gz
+    images_name=qwq
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
     cat > Dockerfile << EOF
-FROM "${images_name}":latest
+FROM "${images_name}"
 RUN touch build_test
 EOF
-    isula-build ctr-img build -f Dockerfile -o isulad:openeulerbase:latest .
+    isula-build ctr-img build -f Dockerfile -o isulad:openeulerbase .
     CHECK_RESULT $? 0 0 "isula-build build failed"
 
-    con_id=$(isula run -itd openeulerbase:latest bash)
+    con_id=$(isula run -itd openeulerbase bash)
     CHECK_RESULT $? 0 0 "isula run failed"
 
     isula rm -f "${con_id}"

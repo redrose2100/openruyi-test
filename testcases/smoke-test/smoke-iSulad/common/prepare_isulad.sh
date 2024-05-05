@@ -29,9 +29,11 @@ function pre_isulad_env() {
     #        os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}')
     #    fi
     #fi
-    wget -P ../common/ https://repo.tarsier-infra.isrc.ac.cn/openEuler-RISC-V/testing/2403LTS-test/v1/24.03_docker_image.tar.gz
+    #wget -P ../common/ https://repo.tarsier-infra.isrc.ac.cn/openEuler-RISC-V/testing/2403LTS-test/v1/24.03_docker_image.tar.gz
+    cp ~/24.03_docker_image.tar.gz ../common/
+    #isula load -i ../common/openEuler-docker.${NODE1_FRAME}.tar.xz
     isula load -i ../common/24.03_docker_image.tar.gz
-    Images_name=$(isula images | grep latest | awk '{print$1}')
+    Images_name=jchzhou/oerv:24.03
     test -n "${Images_name}" || exit 1
 }
 
