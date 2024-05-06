@@ -1,14 +1,21 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-#====================================================================================
-# @
-# @
-# @Create time : 2021/9/23 20:32
-# @FileName    : acc_environment.py
-# @Description : acc管理环境的类封装
-#====================================================================================
-"""
+#!/usr/bin/python3
+
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+####################################
+# @Author    	:   Li Xiaodong
+# @Contact   	:   lixiaodong67@huawei.com
+# @Date      	:   2024-05-06 15:36:43
+# @License   	:   Mulan PSL v2
+# @Desc      	:   add lib for acc enviroment
+#####################################
+
 
 from common_lib.base_lib.base_multi_mode_terminal import MultiModeTerminal
 from common_lib.testengine_lib.engine_global import engine_global
