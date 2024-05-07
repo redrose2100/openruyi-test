@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of socat command
 # ############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2009,SC2035
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -47,7 +47,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check socat -4 failed"
     socat -u open:a.txt tcp-listen:4002,reuseaddr &
     SLEEP_WAIT 5
-    socat -6 tcp:127.0.0.1:4002 open:a.txt,create
+    socat -6 tcp:localhost:4002 open:a.txt,create
     CHECK_RESULT $? 0 0 "Check socat -6 failed"
     socat -U open:a.txt tcp-listen:4003,reuseaddr &
     SLEEP_WAIT 5
@@ -65,8 +65,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     ps -ef | grep "socat -u open" | grep -v grep | awk '{print $2}' | xargs kill -9
     rm -rf *.txt
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
