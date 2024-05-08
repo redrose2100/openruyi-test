@@ -41,7 +41,7 @@ function pre_test() {
     cp ~/24.03_docker_image.tar.gz ../common/
     systemctl restart isula-build
     isula-build ctr-img load -i ../common/24.03_docker_image.tar.gz
-    images_name=qwq
+    images_name=jchzhou/oerv:24.03
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -51,10 +51,10 @@ function run_test() {
 FROM "${images_name}"
 RUN touch build_test
 EOF
-    isula-build ctr-img build -f Dockerfile -o isulad:openeulerbase .
+    isula-build ctr-img build -f Dockerfile -o isulad:openeulerbase:24.03 .
     CHECK_RESULT $? 0 0 "isula-build build failed"
 
-    con_id=$(isula run -itd openeulerbase bash)
+    con_id=$(isula run -itd openeulerbase:24.03 bash)
     CHECK_RESULT $? 0 0 "isula run failed"
 
     isula rm -f "${con_id}"

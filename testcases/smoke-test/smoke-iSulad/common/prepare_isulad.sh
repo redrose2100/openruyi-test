@@ -1,4 +1,4 @@
-opyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+#copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -33,17 +33,18 @@ function pre_isulad_env() {
     cp ~/24.03_docker_image.tar.gz ../common/
     #isula load -i ../common/openEuler-docker.${NODE1_FRAME}.tar.xz
     isula load -i ../common/24.03_docker_image.tar.gz
-    Images_name=jchzhou/oerv:24.03
+    isula tag jchzhou/oerv:24.03 qwq:24.03
+    Images_name=qwq:24.03
     test -n "${Images_name}" || exit 1
 }
 
 function run_isulad_container() {
-    containerId=$(isula run -itd ${Images_name})
+    containerId=$(isula run -itd jchzhou/oerv:24.03)
     CHECK_RESULT $?
     isula inspect -f {{.State.Status}} ${containerId} | grep running
     CHECK_RESULT $?
 }
-
+isula inspect -f {{.State.Status}} 50aa407b3decd2f55ef76ff3244ef17657fee432187735e5bfb1f530ac0d8724
 function clean_isulad_env() {
     isula stop $(isula ps -aq)
     isula rm $(isula ps -aq)
