@@ -16,18 +16,18 @@
 #@Desc          :   Exception scenarios: the public key is empty
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     echo "Hello, world!" >word
     openssl genrsa -out rsakey.pem -passout pass:123123 2048
     CHECK_RESULT $?
-    grep 'BEGIN RSA PRIVATE KEY' rsakey.pem
+    grep 'PRIVATE KEY' rsakey.pem
     CHECK_RESULT $?
     touch rsakey1-pub.pem
     CHECK_RESULT $?
-    openssl rsautl -encrypt -pubin -inkey rsakey1-pub.pem -in word -out wordencp1 2>&1 | grep "unable to load Public Key"
+    openssl rsautl -encrypt -pubin -inkey rsakey1-pub.pem -in word -out wordencp1 2>&1 | grep -E "unable to load Public Key|Could not read public key"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

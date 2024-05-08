@@ -16,35 +16,39 @@
 #@Desc          :   Exception scenarios: the key is incorrect,the public key is incorrect
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     echo "Hello, world!" >word
     openssl genrsa -out rsakey.pem -passout pass:123123 2048
     CHECK_RESULT $?
-    grep 'BEGIN RSA PRIVATE KEY' rsakey.pem
+    grep 'PRIVATE KEY' rsakey.pem
     CHECK_RESULT $?
     openssl rsa -in rsakey.pem -pubout -out rsakey-pub.pem
     CHECK_RESULT $?
     grep 'BEGIN PUBLIC KEY' rsakey-pub.pem
     CHECK_RESULT $?
     echo "999" >error_rsakey-pub.pem
-    openssl rsautl -encrypt -pubin -inkey error_rsakey-pub.pem -in word -out wordencp2 2>&1 | grep "unable to load Public Key"
+    openssl rsautl -encrypt -pubin -inkey error_rsakey-pub.pem -in word -out wordencp2 2>&1 | grep -E "unable to load Public Key|Could not read public key"
     CHECK_RESULT $? 0 0 "Incorrect public key succeeded in encrypting the file"
     openssl rsautl -encrypt -pubin -inkey rsakey-pub.pem -in word -out wordencp2
     CHECK_RESULT $?
     test -f wordencp2
     CHECK_RESULT $?
     echo "999" >error_rsakey.pem
-    openssl rsautl -decrypt -inkey error_rsakey.pem -in wordencp2 -out word_replain2 2>&1 | grep 'unable to load Private Key'
+    openssl rsautl -decrypt -inkey error_rsakey.pem -in wordencp2 -out word_replain2 2>&1 | grep -E 'unable to load Private Key|Could not read private key'
     CHECK_RESULT $? 0 0 "The wrong private key successfully decrypted the file"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f $(ls | grep -v "\.sh\|common")
+    for file in *; do
+        if [[ $file != *.sh && $file != common ]]; then
+            rm -f "$file"
+        fi
+    done
     LOG_INFO "End to restore the test environment."
 }
 
