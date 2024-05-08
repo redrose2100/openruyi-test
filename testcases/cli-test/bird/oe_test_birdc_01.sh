@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   verification birdc command
 #####################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2003,SC2020
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "./common/lib/util.sh"
 function pre_test() {
@@ -66,8 +66,8 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    num=$(wc -l tmp.txt)
-    if [[ "$num" -gt 0 ]]; then
+    num=$(wc -l tmp.txt | tr -d ' tmp.txt')
+    if [[ $(expr "$num") -gt 0 ]]; then
         echo "aa" | grep "aa"
     else
         echo "aa" | grep "bb"

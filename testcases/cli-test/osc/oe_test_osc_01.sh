@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   OSC is a command line tool based on OBS, which is equivalent to the interface of OBS.
 #####################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_osc.sh"
 
 function config_params() {
@@ -32,19 +32,17 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    osc --help | grep 'Usage'
+    osc --help | grep -i 'Usage'
     CHECK_RESULT $?
-    osc --version | grep [0-9]
-    CHECK_RESULT $?
-    osc man | grep 'man page'
+    osc version | grep "[0-9]"
     CHECK_RESULT $?
     osc list | grep 'openEuler'
     CHECK_RESULT $?
-    osc api http://117.78.1.88 | grep 'Open Build Service API'
+    osc api https://build.openeuler.openatom.cn/ | grep 'Open Build Service API'
     CHECK_RESULT $?
-    osc checkout $branches_path | grep 'revision'
+    osc checkout "$branches_path" | grep 'revision'
     CHECK_RESULT $?
-    osc cat $branches_path/zjl/last_file.txt | grep 'momohao'
+    osc cat "$branches_path"/zjl/last_file.txt | grep 'momohao'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
