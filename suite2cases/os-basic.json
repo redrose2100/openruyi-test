@@ -943,6 +943,9 @@
         },
         {
             "name": "oe_test_lspci"
-        }
+        },
+	{
+	    "name": "oe_test_c++_stl"	
+	}
     ]
 }
