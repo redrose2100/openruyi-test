@@ -115,35 +115,35 @@ function run_test() {
       <boot order='2'/> \
     </disk>" openEulerVM.xml
     fi
-    virsh create openEulerVM.xml | grep "Domain openEulerVM created from openEulerVM.xml"
+    virsh create openEulerVM.xml | grep "Domain .*openEulerVM.* created from openEulerVM.xml"
     CHECK_RESULT $? 0 0 "Failed to create a openEulerVM"
-    virsh save openEulerVM openEulerVM.bak | grep "Domain openEulerVM saved to openEulerVM.bak"
+    virsh save openEulerVM openEulerVM.bak | grep "Domain .*openEulerVM.* saved to openEulerVM.bak"
     CHECK_RESULT $? 0 0 "Failed to save the openEulerVM"
     virsh restore openEulerVM.bak | grep "Domain restored from openEulerVM.bak"
     CHECK_RESULT $? 0 0 "Failed to restore the openEulerVM"
-    virsh suspend openEulerVM | grep "Domain openEulerVM suspended"
+    virsh suspend openEulerVM | grep "Domain .*openEulerVM.* suspended"
     CHECK_RESULT $? 0 0 "Failed to suspend the openEulerVM"
-    virsh resume openEulerVM | grep "Domain openEulerVM resumed"
+    virsh resume openEulerVM | grep "Domain .*openEulerVM.* resumed"
     CHECK_RESULT $? 0 0 "Failed to resume the openEulerVM"
     virsh list --all | grep "running"
     CHECK_RESULT $? 0 0 "The state of the openEulerVM is not running"
-    virsh destroy openEulerVM | grep "Domain openEulerVM destroyed"
+    virsh destroy openEulerVM | grep "Domain .*openEulerVM.* destroyed"
     CHECK_RESULT $? 0 0 "Failed to destroy the openEulerVM"
-    virsh define openEulerVM.xml | grep "Domain openEulerVM defined from openEulerVM.xml"
+    virsh define openEulerVM.xml | grep "Domain .*openEulerVM.* defined from openEulerVM.xml"
     CHECK_RESULT $? 0 0 "Failed to define a openEulerVM"
-    virsh start openEulerVM | grep "Domain openEulerVM started"
+    virsh start openEulerVM | grep "Domain .*openEulerVM.* started"
     CHECK_RESULT $? 0 0 "Failed to start the openEulerVM"
-    virsh reboot openEulerVM | grep "Domain openEulerVM is being rebooted"
+    virsh reboot openEulerVM | grep "Domain .*openEulerVM.* is being rebooted"
     CHECK_RESULT $? 0 0 "Failed to reboot the openEulerVM"
     SLEEP_WAIT 30
-    virsh destroy openEulerVM | grep "Domain openEulerVM destroyed"
+    virsh destroy openEulerVM | grep "Domain .*openEulerVM.* destroyed"
     CHECK_RESULT $? 0 0 "Failed to destroy the openEulerVM"
     # Query VM information
     virsh list | grep -v "openEulerVM"
     CHECK_RESULT $? 0 0 "Failed to list of running and paused VMS"
     virsh list --all | grep "openEulerVM"
     CHECK_RESULT $? 0 0 "Failed to list of shut off VMS"
-    virsh start openEulerVM | grep "Domain openEulerVM started"
+    virsh start openEulerVM | grep "Domain .*openEulerVM.* started"
     CHECK_RESULT $? 0 0 "Failed to start the openEulerVM"
     virsh dominfo openEulerVM | grep "UUID"
     CHECK_RESULT $? 0 0 "Failed to query basic VM information"
@@ -235,10 +235,10 @@ function run_test() {
 
     virsh destroy openEulerVM
     if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
-        virsh undefine openEulerVM --nvram | grep "Domain openEulerVM has been undefined"
+        virsh undefine openEulerVM --nvram | grep "Domain .*openEulerVM.* has been undefined"
         CHECK_RESULT $? 0 0 "Failed to undefine the openEulerVM"
     else
-        virsh undefine openEulerVM | grep "Domain openEulerVM has been undefined"
+        virsh undefine openEulerVM | grep "Domain .*openEulerVM.* has been undefined"
         CHECK_RESULT $? 0 0 "Failed to undefine the openEulerVM"
     fi
     LOG_INFO "End to run test."
