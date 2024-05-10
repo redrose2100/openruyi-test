@@ -30,13 +30,14 @@ function run_test() {
     if df -h / | grep overlay; then
         LOG_INFO "The current environment is Docker."
     else
-        iptables-save | grep nat
+        systemctl start iptables
+        iptables-save -t nat | grep nat
         CHECK_RESULT $? 0 0 "Incomplete display nat"
-        iptables-save | grep mangle
+        iptables-save -t mangle | grep mangle
         CHECK_RESULT $? 0 0 "Incomplete display mangle"
-        iptables-save | grep raw
+        iptables-save -t raw | grep raw
         CHECK_RESULT $? 0 0 "Incomplete display raw"
-        iptables-save | grep security
+        iptables-save -t security | grep security
         CHECK_RESULT $? 0 0 "Incomplete display security"
     fi
     iptables-save | grep filter
