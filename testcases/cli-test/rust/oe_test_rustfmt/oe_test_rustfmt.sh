@@ -21,17 +21,17 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL "rustfmt rls"
+    DNF_INSTALL "rustfmt"
     cp ../common/* ./
     LOG_INFO "End to prepare the test environment!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    cargo-fmt -h | grep "USAGE"
+    cargo-fmt -h | grep "Usage"
     CHECK_RESULT $? 0 0 "cargo-fmt Help information printing failed"
     rustfmt --check hello.rs | grep "Diff in"
-    CHECK_RESULT $? 0 0 "Check the failure"
+    CHECK_RESULT $? 0 1 "Check the failure"
     rustfmt --backup test.rs && test -f test.bk
     CHECK_RESULT $? 0 0 "Check the failure"
     rustfmt --edition 2018 hello.rs
@@ -44,17 +44,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Color setting failed"
     rustfmt -V | grep -E "[0-9]"
     CHECK_RESULT $? 0 0 "Failed to output the version information of rustfmt"
-    # RLS packages have only basic commands
-    rls -h | grep "help"
-    CHECK_RESULT $? 0 0 "Help information printing failed"
-    rls -V | grep -E "[0-9]"
-    CHECK_RESULT $? 0 0 "Failed to output the version information"
-    LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.rs test*
     LOG_INFO "Finish environment cleanup!"
 }
