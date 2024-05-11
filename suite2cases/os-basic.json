@@ -934,6 +934,21 @@
         },
 	{
 	  "name": "oe_test_fincore"
+    },
+        {
+            "name": "oe_test_lscpu_2"
+        },
+        {
+            "name": "oe_test_mkfifo"
+        },
+        {
+            "name": "oe_test_lspci"
+        },
+	{
+	    "name": "oe_test_bzcat"
+        },
+	{
+	    "name": "oe_test_zipinfo"
 	}
     ]
 }

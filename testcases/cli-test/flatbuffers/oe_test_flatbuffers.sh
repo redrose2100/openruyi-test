@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL flatbuffers
+  DNF_INSTALL "flatbuffers flatbuffers-compiler"
   LOG_INFO "End of environmental preparation!"
 }
 

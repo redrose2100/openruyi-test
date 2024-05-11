@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "dtc dtc-debuginfo dtc-debugsource dtc-devel dtc-help"
+    DNF_INSTALL dtc
     LOG_INFO "End to prepare the test environment."
 }
 

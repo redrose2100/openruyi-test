@@ -17,7 +17,7 @@
 #@Desc      	:   Take the test rhash command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     #In the openEuler 22.03 LTS system, the version of the rhash is rhash-1.4.2
@@ -34,7 +34,7 @@ function run_test()
     #This test case is conducted in the openEuler 20.03 LTS SP3 environment for the rhash-1.4.0 version
     LOG_INFO "Start to run test."
     # calculate  message digest
-    rhash --edonr512 test1K.data 2>&1 | grep "cd0f7ecf145c769e462cb3d1cda0a7fb5503c11b0e29e0fe9071c27e07a74f2448686a2e54619dcee8ffcbc1012f6b393faf5e40de01f76f8c75689684c161e2  test1K.data"
+    rhash --edonr512 test1K.data 2>&1 | grep "9052ac32582d303e8220b7b1d3b187b2b7a43239bbb708222346db056c852be989d4ffe00df31fe80789a568096a0c4ff6dabcf77419b66bc28db871b49386e2  test1K.data"
     CHECK_RESULT $? 0 0 "error --edonr512"
     LOG_INFO "End to run test."
 }
@@ -43,7 +43,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf test1K.data
-    DNF_REMOVE 
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
