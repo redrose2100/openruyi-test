@@ -21,8 +21,12 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start testing..."
-    pidwait
+    top &
+    pidwait top &
     CHECK_RESULT $? 0 0 "pidwait execute fail"
+    top_pid=$(pgrep top)
+    pidwait_pid=$(pgrep -f 'pidwait top')
+    kill -9 "$top_pid" "$pidwait_pid"
     pidwait --help | grep -E "用法|Usage"
     CHECK_RESULT $? 0 0 "pidwait --help execute fail"
     pidwait --version | grep -i pidwait
