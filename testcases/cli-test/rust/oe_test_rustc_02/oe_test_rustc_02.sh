@@ -23,6 +23,15 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL rust
     cp ../common/* ./
+    arch=$(uname -m)
+    if [ "$arch" == "x86_64" ]; then
+    target_cpu="x86-64"
+    elif [ "$arch" == "riscv64" ]; then
+    target_cpu="generic-rv64"
+    else
+    target_cpu="unknown"
+    fi
+echo "Target-CPU: $target_cpu"
     LOG_INFO "End to prepare the test environment!"
 }
 
@@ -40,7 +49,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to output the cfg information"
     rustc --print target-list hello.rs | grep -E ".*"
     CHECK_RESULT $? 0 0 "Failed to output the target list"
-    rustc --print target-cpus hello.rs | grep "Target CPU"
+    rustc --print target-cpus hello.rs | grep "${Target-CPU}"
     CHECK_RESULT $? 0 0 "Failed to output the target cpus"
     rustc --print target-features hello.rs | grep "features"
     CHECK_RESULT $? 0 0 "Failed to output the target features"
@@ -88,7 +97,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf ./*.rs ./*.rlib hello*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
