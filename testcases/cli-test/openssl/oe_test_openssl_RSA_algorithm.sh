@@ -15,14 +15,15 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Application scenarios: method of generating the private key,public key,and self-shared key(signature certificate) of the RSA algorithm
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "common/common_openssl.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     openssl genrsa -out rsakey.pem
     CHECK_RESULT $?
-    grep 'BEGIN RSA PRIVATE KEY' rsakey.pem
+    grep 'PRIVATE KEY' rsakey.pem
     CHECK_RESULT $?
     openssl rsa -in rsakey.pem -pubout -out rsakey-pub.pem
     CHECK_RESULT $?
