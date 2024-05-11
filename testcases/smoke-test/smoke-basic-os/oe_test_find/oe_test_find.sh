@@ -27,6 +27,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "useradd fail"
     find /home  -group  test1 | grep '/home/test1'
     CHECK_RESULT $? 0 0 "find fail"
+    find / -type f -name ".*"|head -n 5
+    CHECK_RESULT $? 0 0 "find fail"
     find --help | grep "Usage: find"
     CHECK_RESULT $? 0 0 "find fail"
     LOG_INFO "Finish test!"
