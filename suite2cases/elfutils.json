@@ -3,8 +3,9 @@
     "cases": [
         {
             "name": "oe_test_elfutils"
+        },
+        {
+            "name": "oe_test_service_debuginfod"
         }
-
       ]
 }
-
