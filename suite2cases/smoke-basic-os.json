@@ -840,7 +840,10 @@
 	},
 	{
 	    "name": "oe_test_pidwait"
-	}
+	},
+      {
+           "name": "oe_test_nproc"    
+      }
     ]
 }
 
