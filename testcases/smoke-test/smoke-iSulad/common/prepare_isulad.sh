@@ -1,6 +1,4 @@
-#!/usr/bin/bash
-
-# Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
+#copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -22,33 +20,37 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_isulad_env() {
     DNF_INSTALL "iSulad tar wget"
     clean_isulad_env
-    if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then
-        os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | tr '()' '- ' | sed s/[[:space:]]//g)
-    else
-        if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "LTS"; then
-            os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | awk -F ' ' '{print$1"-"$2}')
-        else
-            os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}')
-        fi
-    fi
-    wget -P ../common/ https://repo.openeuler.org/openEuler-${os_version}/docker_img/${NODE1_FRAME}/openEuler-docker.${NODE1_FRAME}.tar.xz
-    isula load -i ../common/openEuler-docker.${NODE1_FRAME}.tar.xz
-    Images_name=$(isula images | grep latest | awk '{print$1}')
+    #if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then
+    #    os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | tr '()' '- ' | sed s/[[:space:]]//g)
+    #else
+    #    if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "LTS"; then
+    #        os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | awk -F ' ' '{print$1"-"$2}')
+    #    else
+    #        os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}')
+    #    fi
+    #fi
+    #wget -P ../common/ https://repo.tarsier-infra.isrc.ac.cn/openEuler-RISC-V/testing/2403LTS-test/v1/24.03_docker_image.tar.gz
+    cp ~/24.03_docker_image.tar.gz ../common/
+    #isula load -i ../common/openEuler-docker.${NODE1_FRAME}.tar.xz
+    isula load -i ../common/24.03_docker_image.tar.gz
+    isula tag jchzhou/oerv:24.03 qwq:24.03
+    Images_name=qwq:24.03
     test -n "${Images_name}" || exit 1
 }
 
 function run_isulad_container() {
-    containerId=$(isula run -itd ${Images_name})
+    containerId=$(isula run -itd jchzhou/oerv:24.03)
     CHECK_RESULT $?
     isula inspect -f {{.State.Status}} ${containerId} | grep running
     CHECK_RESULT $?
 }
-
+isula inspect -f {{.State.Status}} 50aa407b3decd2f55ef76ff3244ef17657fee432187735e5bfb1f530ac0d8724
 function clean_isulad_env() {
     isula stop $(isula ps -aq)
     isula rm $(isula ps -aq)
     isula rmi $(isula images -q)
     test -z "$(isula images -q)"
-    rm -rf ../common/openEuler-docker.${NODE1_FRAME}.tar.xz
+    rm -rf ../common/24.03_docker_image.tar.gz
     CHECK_RESULT $?
 }
+

@@ -43,7 +43,7 @@ function run_test() {
     rustdoc hello.rs --cfg hello
     test -d doc/hello
     CHECK_RESULT $? 0 0 "Failed to pass configuration parameters"
-    rustdoc test.rs --extern doc/
+    rustdoc test.rs --extern doc
     CHECK_RESULT $?
     rustdoc test.rs -C target_feature=+avx
     CHECK_RESULT $?
@@ -59,6 +59,16 @@ function run_test() {
     CHECK_RESULT $?
     rustdoc test.rs --markdown-no-toc
     CHECK_RESULT $?
+    cat << EOF > doc/dark.css
+    body {
+    background-color: #1f1f1f;
+    color: #ffffff;
+    }
+    h1 {
+    color: #ff9900;
+    }
+EOF
+    test -d doc/mycrate
     rustdoc test.rs -e doc/dark.css
     CHECK_RESULT $?
     rustdoc lib.rs --crate-type=lib -W missing-docs 2>&1 | grep "warning"
