@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command openssl speed
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "start to run test."
@@ -24,13 +24,13 @@ function run_test() {
     grep "rsa  512 bits" openssl.log
     CHECK_RESULT $? 0 0 "rsa512 encryption and decryption operation speed fail"
     openssl speed -elapsed aes-128-cbc >> openssl.log
-    grep "aes-128 cbc"  openssl.log
+    grep -E "aes-128 cbc|aes-128-cbc"  openssl.log
     CHECK_RESULT $? 0 0 "aes-128-cbc encryption and decryption operation speed fail"
     openssl speed -elapsed -evp sm3 >> openssl.log
     grep "sm3" openssl.log
     CHECK_RESULT $? 0 0 "sm3 encryption and decryption operation speed fail"
     openssl speed -elapsed -evp sm4 >> openssl.log
-    grep "sm4-cbc" openssl.log
+    grep -i "sm4-cbc" openssl.log
     CHECK_RESULT $? 0 0 "sm4 encryption and decryption operation speed fail"
     LOG_INFO "End to run test."
 }

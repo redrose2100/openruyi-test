@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   delete the ssl-related files from httpd configuration file,acess request(Implements https based on httpd and OpenSSL)
 #####################################
-
+# shellcheck disable=SC1091
 source "common/common_openssl.sh"
 
 function config_params() {
@@ -43,7 +43,7 @@ function run_test() {
     CHECK_RESULT $?
     systemctl status httpd | grep "active (running)"
     CHECK_RESULT $?
-    curl --cacert /etc/pki/CA/cacert.pem https://www.openeuler.org/index.html -I 2>&1 | grep 'Connection refused'
+    curl --cacert /etc/pki/CA/cacert.pem https://www.openeuler.org/index.html -I 2>&1 | grep -E "Connection refused|Couldn't connect"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

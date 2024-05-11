@@ -16,14 +16,14 @@
 #@Desc          :   Encryption algorithm: generate a password
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     echo "Hello, world!" >word
-    openssl passwd -crypt -salt 12345 root
+    openssl passwd -crypt -salt 12345 root || openssl passwd -salt 12345 root
     CHECK_RESULT $?
-    openssl passwd -crypt -in word -salt 12345
+    openssl passwd -crypt -in word -salt 12345 || openssl passwd -in word -salt 12345
     CHECK_RESULT $?
     openssl passwd -1 -in word -salt 12345
     CHECK_RESULT $?

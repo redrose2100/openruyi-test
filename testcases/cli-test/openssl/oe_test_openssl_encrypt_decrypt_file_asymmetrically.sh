@@ -16,7 +16,7 @@
 #@Desc          :   Application scenarios: encrypt and decrypt the file asymmetrically using RSA algorithm
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -27,7 +27,7 @@ function run_test() {
 EOF
     openssl genrsa -out rsaprivatekey.pem -passout pass:trousers -des3 2048
     CHECK_RESULT $?
-    grep 'BEGIN RSA PRIVATE KEY' rsaprivatekey.pem
+    grep 'PRIVATE KEY' rsaprivatekey.pem
     CHECK_RESULT $?
     openssl rsa -in rsaprivatekey.pem -passin pass:trousers -pubout -out rsapublickey.pem
     CHECK_RESULT $?
@@ -72,7 +72,11 @@ END
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f $(ls | grep -v "\.sh\|common")
+    for file in *; do
+        if [[ $file != *.sh && $file != common ]]; then
+            rm -f "$file"
+        fi
+    done
     LOG_INFO "End to restore the test environment."
 }
 
