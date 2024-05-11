@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/rash",
+    "cases": [
+        {
+            "name": "oe_test_utshell_test"
+        }
+    ]
+}
