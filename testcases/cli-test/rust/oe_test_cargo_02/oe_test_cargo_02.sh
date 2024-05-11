@@ -50,7 +50,7 @@ function run_test() {
     mkdir INI && cd INI || exit 1
     cargo init && test -d src
     CHECK_RESULT $? 0 0 "Failed to create a new package"
-    cargo update && test -f Cargo.lock
+    cargo update && test -f ../Cargo.lock
     CHECK_RESULT $? 0 0 "Failed to update file"
     https_code=$(curl -s -w '%{http_code}' https://github.com/rust-lang/crates.io-index -o /dev/null)
     SLEEP_WAIT 3
