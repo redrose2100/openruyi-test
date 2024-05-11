@@ -17,7 +17,7 @@
 # @Desc      :   Access container
 # ############################################
 
-source ../common/prepare_docker.sh
+source "${OET_PATH}/testcases/smoke-test/smoke-docker/common/prepare_docker.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_docker_env
@@ -45,9 +45,9 @@ expect eof
 function post_test() {
     LOG_INFO "start environment cleanup."
     clean_docker_env
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testlog
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
