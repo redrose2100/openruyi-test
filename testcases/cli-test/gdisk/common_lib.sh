@@ -18,7 +18,7 @@
 # #############################################
 
 function get_unused_disk() {
-    disk_list=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:' '{print $2}')
+    disk_list=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}')
     for disk in $disk_list; do
         if [ "$(lsblk | grep -c "${disk#/dev/}")" -eq 1 ]; then
             unused_disk=$disk
