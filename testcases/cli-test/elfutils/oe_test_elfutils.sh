@@ -103,12 +103,12 @@ function run_test() {
     ulimit -c unlimited
     test -f /tmp/elfutils/app_debug
     CHECK_RESULT $? 0 0 "Execution failed"
-    cd /tmp/elfutils/ &&./app
+    cd /tmp/elfutils/ && ./app
     coredumpctl -r -1 -o app.core dump app > dump.txt
     test -f /tmp/elfutils/app.core
     CHECK_RESULT $? 0 0 "Collapse failure"
     cd /tmp/elfutils/ || exit
-    nu=$(sed -n '$p' dump.txt | awk '{print $2}')
+    nu=$(sed -n '$p' dump.txt | awk '{print $3}')
     eu-addr2line -e ./app_debug --core ./app.core "$nu"
     CHECK_RESULT $? 0 0 "Acquisition failed"
 
