@@ -44,9 +44,9 @@ public class RocksJavaTest {
         keys.add(key);
         keys.add("SecondKey".getBytes());
 
-        Map<byte[], byte[]> valueMap = rocksDB.multiGet(keys);
-        for (Map.Entry<byte[], byte[]> entry : valueMap.entrySet()) {
-            System.out.println(new String(entry.getKey()) + ":" + new String(entry.getValue()));
+        List<byte[]> valueList = rocksDB.multiGetAsList(keys);
+        for (int i = 0; i < valueList.size(); i++) {
+            System.out.println(new String(keys.get(i)) + ":" + new String(valueList.get(i)));
         }
 
         /**
@@ -93,7 +93,7 @@ public class RocksJavaTest {
 
         rocksDB = RocksDB.open(dbOptions, dbPath, columnFamilyDescriptors, columnFamilyHandles);
         for (int i = 0; i < columnFamilyDescriptors.size(); i++) {
-            if (new String(columnFamilyDescriptors.get(i).columnFamilyName()).equals(table)) {
+            if (new String(columnFamilyDescriptors.get(i).getName()).equals(table)) {
                 rocksDB.dropColumnFamily(columnFamilyHandles.get(i));
             }
         }
@@ -114,9 +114,9 @@ public class RocksJavaTest {
         handleList.add(columnFamilyHandle);
         handleList.add(columnFamilyHandle);
 
-        Map<byte[], byte[]> multiGet = rocksDB.multiGet(handleList, keys);
-        for (Map.Entry<byte[], byte[]> entry : multiGet.entrySet()) {
-            System.out.println(new String(entry.getKey()) + "--" + new String(entry.getValue()));
+        List<byte[]> valueList = rocksDB.multiGetAsList(handleList, keys);
+        for (int i = 0; i < valueList.size(); i++) {
+            System.out.println(new String(keys.get(i)) + "--" + new String(valueList.get(i)));
         }
 
         rocksDB.delete(columnFamilyHandle, key.getBytes());
