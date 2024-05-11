@@ -62,17 +62,17 @@ function test_enabled() {
     state="$(systemctl is-enabled "${service}")"
     if [ "${state}" == "enabled" ]; then
 	symlink_file="$(systemctl disable "${service}" 2>&1 | grep "Removed" | awk '{print $2}' | awk '{print substr($0,1,length($0)-1)}' | tr -d '"')"
-        find "${symlink_file}"
+        find ${symlink_file}
         CHECK_RESULT $? 0 1 "${service} disable failed"
         systemctl enable "${service}"
-        find "${symlink_file}"
+        find ${symlink_file}
         CHECK_RESULT $? 0 0 "${service} enable failed"
     elif [ "${state}" == "disabled" ]; then
 	symlink_file="$(systemctl enable "${service}" 2>&1 | grep "Created symlink" | awk '{print $3}' | tr -d '"')"
-        find "${symlink_file}"
+        find ${symlink_file}
         CHECK_RESULT $? 0 0 "${service} enable failed"
         systemctl disable "${service}"
-        find "${symlink_file}"
+        find ${symlink_file}
         CHECK_RESULT $? 0 1 "${service} disable failed"
     elif [ "${state}" == "masked" ]; then
         LOG_INFO "Unit is masked, ignoring."
