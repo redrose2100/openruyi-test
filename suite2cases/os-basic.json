@@ -906,6 +906,9 @@
 	  "name": "oe_test_ul_001"
 	},
 	{
+	  "name": "oe_test_renice"
+	},
+	{
 	  "name": "oe_test_lscpu"
 	},
 	{
@@ -931,9 +934,6 @@
         },
         {
             "name": "oe_test_lsmem_3"
-        },
-        {
-            "name": "oe_test_renice"
         }
     ]
 }
