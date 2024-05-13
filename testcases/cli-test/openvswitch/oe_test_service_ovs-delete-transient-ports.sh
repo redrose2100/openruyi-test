@@ -10,11 +10,11 @@
 # See the Mulan PSL v2 for more detaitest -f.
 
 # #############################################
-# @Author: zhangpanting
-# @Contact : 1768492250@qq.com
-# @Date: 2024/4/23
-# @License : Mulan PSL v2
-# @Desc: Test ovs-delete-transient-ports.service restart
+# @Author    :   zhangpanting
+# @Contact   :   1768492250@qq.com
+# @Date      :   2024/5/13
+# @License   :   Mulan PSL v2
+# @Desc      :   Test ovs-delete-transient-ports.service restart
 # #############################################
 # shellcheck disable=SC1091
 source "../common/common_lib.sh"
