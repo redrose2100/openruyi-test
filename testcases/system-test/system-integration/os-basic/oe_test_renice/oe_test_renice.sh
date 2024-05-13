@@ -20,14 +20,14 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare environment."
-    p_nice1=`ps -l |awk '{print $8}' | awk 'NR==2'`
-    pid=`ps -l |awk '{print $4}' | awk 'NR==2'`
-    nice_list=(7 18)
     LOG_INFO "End to prepare environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+    p_nice1=`ps -l |awk '{print $8}' | awk 'NR==2'`
+    pid=`ps -l |awk '{print $4}' | awk 'NR==2'`
+    nice_list=(7 18)
     for nice0 in "${nice_list[@]}";do
         renice -n ${nice0} -p ${pid}
         p_nice2=`ps -l |awk '{print $8}' | awk 'NR==2'`
