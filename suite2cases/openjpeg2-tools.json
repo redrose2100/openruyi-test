@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/openjpeg2-tools",
+    "cases": [
+        {
+            "name": "oe_test_openjpeg2-tools"
+        }
+    ]
+}
