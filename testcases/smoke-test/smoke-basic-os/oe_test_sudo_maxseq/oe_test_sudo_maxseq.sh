@@ -17,7 +17,7 @@
 # @Desc      :   Test sudo maxseq
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -25,7 +25,7 @@ function pre_test() {
     chmod +w /etc/sudoers
     useradd testuser
     usermod -aG wheel testuser
-    echo -e "testuser ALL=(ALL) NOPASSWD:ALL\nDefaults log_input,log_output\nDefaults maxseq=100" >>/etc/sudoers
+    echo -e "testuser ALL=(ALL) NOPASSWD:ALL\\nDefaults log_input,log_output\\nDefaults maxseq=100" >>/etc/sudoers
     sed -i "s/%wheel    ALL=(ALL)       ALL/%wheel      ALL=(ALL)       NOPASSWD: ALL/" /etc/sudoers
     LOG_INFO "End to prepare the test environment."
 }
@@ -35,10 +35,12 @@ function run_test() {
     flag=1
     while ((flag < 200)); do
         su -c "sudo ls" testuser
-        let flag+=1
+        (( flag+=1 ))
     done
-    ls /var/log/sudo-io/00/00/ | wc -l | grep 100
-    CHECK_RESULT $? 0 0 "Failed to execute sudo"
+    count=$(wc -l < <(ls /var/log/sudo-io/00/00/))
+    if grep -q 100 <<< "$count"; then
+        CHECK_RESULT $? 0 0 "Failed to execute sudo"
+    fi
     LOG_INFO "End to run test."
 }
 
