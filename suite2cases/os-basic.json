@@ -907,8 +907,8 @@
 	},
 	{
 	  "name": "oe_test_renice"
-	}
-	,
+	},
+	{
 	  "name": "oe_test_lscpu"
 	},
 	{
