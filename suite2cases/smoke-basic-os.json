@@ -843,6 +843,9 @@
 	},
       {
            "name": "oe_test_nproc"    
+      },
+      {
+           "name": "oe_test_pidof"
       }
     ]
 }
