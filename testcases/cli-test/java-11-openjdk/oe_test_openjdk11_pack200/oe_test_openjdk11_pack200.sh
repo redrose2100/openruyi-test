@@ -29,7 +29,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     javac Hello.java
-    pack200 -help | grep "用法："
+    pack200 -help | grep -iE "用法:|Usage"
     CHECK_RESULT $? 0 0 "pack200  -help failed"
     pack200 --version | grep "[0-9]"
     CHECK_RESULT $? 0 0 "pack200 --version failed"

@@ -67,6 +67,8 @@ info registers
 EOF
     if [ "$(uname -m)"x == "riscv64x" ]; then
         grep "gp" /tmp/test.log
+    elif [ "$(uname -m)" == "armv7l" ] || [ "$(uname -m)" == "aarch64" ]; then
+        grep "cpsr" /tmp/test.log
     else
         grep "rax" /tmp/test.log
     fi

@@ -33,7 +33,7 @@ PRINT A
 PRINT E
 EOF
 
-    DNF_INSTALL "bison flex"
+    DNF_INSTALL "gcc bison flex"
     LOG_INFO "End of environmental preparation!"
 }
 

@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of libfabric command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -30,13 +30,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check fi_info -t failed"
     fi_info --ep_type='FI_EP_MSG' 2>&1 | grep 'provider: sockets'
     CHECK_RESULT $? 0 0 "Check fi_info --ep_type failed"
-    fi_info -f'NAME' 2>&1 | grep 'provider: UDP'
+    fi_info -f'127.0.0.1/32' 2>&1 | grep -i 'provider: UDP'
     CHECK_RESULT $? 0 0 "Check fi_info -f failed"
-    fi_info --fabric='NAME' 2>&1 | grep 'provider: UDP'
+    fi_info --fabric='127.0.0.1/32' 2>&1 | grep -i 'provider: UDP'
     CHECK_RESULT $? 0 0 "Check fi_info --fabric failed"
-    fi_info -a'FI_FORMAT_UNSPEC' 2>&1 | grep 'provider: UDP'
+    fi_info -a'FI_FORMAT_UNSPEC' 2>&1 | grep -i 'provider: UDP'
     CHECK_RESULT $? 0 0 "Check fi_info -a failed"
-    fi_info --addr_format='FI_FORMAT_UNSPEC' 2>&1 | grep 'provider: UDP'
+    fi_info --addr_format='FI_FORMAT_UNSPEC' 2>&1 | grep -i 'provider: UDP'
     CHECK_RESULT $? 0 0 "Check fi_info --addr_format failed"
     fi_info -e 2>&1 | grep '# FI_LOG_LEVEL: String'
     CHECK_RESULT $? 0 0 "Check fi_info -e failed"
@@ -51,8 +51,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-mkfs
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
@@ -31,13 +31,13 @@ function run_test() {
     LOG_INFO "Start executing testcase!"
     umount /mnt
     CHECK_RESULT $?
-    mkfs -t ext3 -F "/dev/${local_disk1}" | grep "done"
+    mkfs -t ext3 -F "/dev/${local_disk1}" | grep -E "done|完成"
     CHECK_RESULT $?
-    mkfs -V -t ext3 -F "/dev/${local_disk1}" | grep "done"
+    mkfs -V -t ext3 -F "/dev/${local_disk1}" | grep -E "done|完成"
     CHECK_RESULT $?
-    lsblk -fs "/dev/${local_disk1}" | grep ${local_disk1}
+    lsblk -fs "/dev/${local_disk1}" | grep "${local_disk1}"
     CHECK_RESULT $?
-    mkfs -h | grep "Usage"
+    mkfs -h | grep -E "Usage|用法"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
@@ -48,4 +48,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

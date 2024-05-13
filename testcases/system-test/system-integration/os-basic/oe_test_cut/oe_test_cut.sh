@@ -17,18 +17,19 @@
 # @Desc      :   Command test-cut 
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
-    export LANG=en_US.UTF-8    
+    export LANG=en_US.UTF-8
+    rm -rf test
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "name|age|helloword" >test 
+    echo "name|age|helloword" > ./test
     CHECK_RESULT $? 0 0  "file is created"
     cut -d '|' -f 1 test|grep -w name
     CHECK_RESULT $? 0 0  "cut file fail"

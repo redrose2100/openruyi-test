@@ -82,9 +82,9 @@ EOF
     kill -9 "$(lsof -i:"${novncLisPort}" -t)"
 
     # --record
-    novnc_server --listen "${novncLisPort}"--vnc localhost:"${vncConnPort}" --record novnc_record >novnc_log.txt 2>&1 &
+    novnc_server --listen "${novncLisPort}" --vnc localhost:"${vncConnPort}" --record novnc_record >novnc_log.txt 2>&1 &
     SLEEP_WAIT 3
-    grep 'Recording to' novnc_log.txt
+    grep 'Navigate to' novnc_log.txt
     CHECK_RESULT $? 0 0 "novnc_server record Test --listen --vnc --record FAILED."
     kill -9 "$(lsof -i:"${novncLisPort}" -t)"
 

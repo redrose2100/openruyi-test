@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of libfabric command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -38,21 +38,21 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check fi_info -P failed"
     fi_info --port=80 2>&1 | grep 'provider:'
     CHECK_RESULT $? 0 0 "Check fi_info --port failed"
-    fi_info -c'FI_MSG' 2>&1 | grep 'provider: UDP'
+    fi_info -c'FI_MSG' 2>&1 | grep -i 'provider: UDP'
     CHECK_RESULT $? 0 0 "Check fi_info -c failed"
-    fi_info --caps='FI_MSG' 2>&1 | grep 'provider: UDP'
+    fi_info --caps='FI_MSG' 2>&1 | grep -i 'provider: UDP'
     CHECK_RESULT $? 0 0 "Check fi_info --caps failed"
-    fi_info --mode='' 2>&1 | grep 'provider: UDP'
+    fi_info --mode='' 2>&1 | grep -i 'provider: UDP'
     CHECK_RESULT $? 0 0 "Check fi_info --mode failed"
-    fi_info -m '' 2>&1 | grep 'provider: UDP'
+    fi_info -m '' 2>&1 | grep -i 'provider: UDP'
     CHECK_RESULT $? 0 0 "Check fi_info -m failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

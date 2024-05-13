@@ -12,42 +12,35 @@
 # #############################################
 # @Author    :   changxuqing
 # @Contact   :   changxuqing@uniontech.com
-# @Date      :   2024/02/24
+# @Date      :   2024/04/29
 # @License   :   Mulan PSL v2
-# @Desc      :   test python3-dateutil
+# @Desc      :   test oniguruma
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "python3-dateutil"
-  LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "oniguruma oniguruma-devel"
+    LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-  cat > date.py << EOF
-from dateutil.relativedelta import relativedelta
-from datetime import datetime
-
-# 计算日期差
-current_date = datetime.now()
-future_date = current_date + relativedelta(months=2, days=25)
-date_diff = future_date - current_date
-print("Future Date:", future_date)
-print("Date Difference:", date_diff)
-EOF
-  python3 date.py |grep "85 days"
-  CHECK_RESULT $? 0 0 "command fail"
-  LOG_INFO "End of the test."
+    LOG_INFO "Start to run test."
+    onig-config --prefix |grep /usr
+    CHECK_RESULT $? 0 0 "prefix fail"
+    onig-config --exec-prefix |grep /usr
+    CHECK_RESULT $? 0 0 "exec-prefix fail"
+    onig-config --libs |grep lonig
+    CHECK_RESULT $? 0 0 "libs fail"
+    LOG_INFO "End of the test."
 }
 
 function post_test() {
-  LOG_INFO "start environment cleanup."
-  rm -rf test.py
-  DNF_REMOVE "$@"
-  LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish restoring the test environment."
 }
 
 main "$@"
+

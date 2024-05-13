@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL "iSulad syscontainer-tools lxcfs-tools lxcfs tar"
+    DNF_INSTALL "iSulad syscontainer-tools lxcfs-tools lxcfs tar lcr"
     sed -i '/runc/s/runc/lcr/' /etc/isulad/daemon.json
     if [[ ${NODE1_FRAME} == "aarch64" ]]; then
         wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/aarch64/openEuler-docker.aarch64.tar.xz

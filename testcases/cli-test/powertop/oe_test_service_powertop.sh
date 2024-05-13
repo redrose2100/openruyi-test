@@ -16,25 +16,26 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test powertop.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
     service=powertop.service
     status='inactive (dead)'
     systemctl start ${service}
-    LOG_INFO "End of environmental preparation!"
+    log_time="$(date '+%Y-%m-%d %T')"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     systemctl status "${service}" | grep "Active" | grep -v "${status}"
     CHECK_RESULT $? 0 1 "There is an error for the status of ${service}"
     test_enabled "${service}"
-    journalctl -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v "modprobe cpufreq_stats failedLoaded"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v "modprobe cpufreq_stats failed"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 main "$@"

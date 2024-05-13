@@ -24,9 +24,15 @@ function config_params() {
     LOG_INFO "Start to config params of the case."
     table_name=sec015
     chain_name=sec015_chain
-    nft add table inet $table_name
-    nft add chain inet $table_name $chain_name { type filter hook input priority 0 \; }
     LOG_INFO "End to config params of the case."
+}
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL nftables
+    nft add table inet $table_name
+    nft add chain inet $table_name $chain_name "{ type filter hook input priority 0 ; }"
+    LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
@@ -35,15 +41,15 @@ function run_test() {
     nft --handle list chain inet $table_name $chain_name | grep $chain_name
     CHECK_RESULT $? 0 0 "exec 'nft add rule inet $table_name $chain_name udp dport 22 accept' failed"
     handle_num=$(nft --handle list chain inet $table_name $chain_name | grep udp | awk -F ' ' '{printf $NF}')
-    nft replace rule inet $table_name $chain_name handle $handle_num tcp dport 22 meta nftrace set 1 accept
+    nft replace rule inet $table_name $chain_name handle "$handle_num" tcp dport 22 meta nftrace set 1 accept
     nft --handle list chain inet $table_name $chain_name | grep 'tcp dport 22 meta nftrace set 1 accept'
     CHECK_RESULT $? 0 0 "exec 'nft replace' failed"
     nft monitor | grep "inet $table_name $chain_name" >monitor_log &
     pid_num=$!
-    SSH_CMD "pwd" ${NODE1_IPV4} ${NODE1_PASSWORD} ${NODE1_USER}
+    SSH_CMD "pwd" "${NODE1_IPV4}" "${NODE1_PASSWORD}" "${NODE1_USER}"
     SLEEP_WAIT 10
     kill -9 $pid_num
-    [ $(cat monitor_log | wc -l) -gt 0 ]
+    [ "$(< monitor_log wc -l)" -gt 0 ]
     CHECK_RESULT $? 0 0 "exec 'nft monitor' failed"
     LOG_INFO "Finish testcase execution."
 }
@@ -52,6 +58,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     nft delete table inet $table_name
     rm -rf monitor_log
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

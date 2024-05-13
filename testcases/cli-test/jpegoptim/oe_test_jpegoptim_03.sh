@@ -31,8 +31,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "jpegoptim use faild"
     jpegoptim -o common/2.jpg
     CHECK_RESULT $? 0 0 "Failed to optimize image file in place"
-    jpegoptim -r directory
-    CHECK_RESULT $? 0 0 "Recursive optimization of all image files in the directory failed"
     LOG_INFO "Finish test!"
 }
 

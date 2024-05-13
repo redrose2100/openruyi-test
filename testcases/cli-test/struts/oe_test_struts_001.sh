@@ -16,14 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test strust function
 # #############################################
-
+# shellcheck disable=SC2002,SC2035
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "struts yum-plugin-*"
+    DNF_INSTALL "struts tar binutils dnf-plugins-core"
     mkdir /tmp/test
     cd /tmp/test || exit
+    old_lc_time=$(locale | grep LC_TIME | awk -F= '{print $2}' | tr -d '"')
+    export LC_TIME=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -34,10 +36,10 @@ function run_test() {
     test -e checkSo
     CHECK_RESULT $? 0 0 "Decompression failure"
     yum download struts
-    cd checkSo/ || exit;chmod 755 ./*
-    ./main.sh /tmp/test/struts*.rpm | grep 'unpack file /checkSo/tmp_unzip/struts';testtime=$(date)
+    cd checkSo/ || exit;chmod 755 *
+    ./main.sh /tmp/test/struts*.rpm | grep 'unpack file /checkSo/tmp_unzip/struts';testtime=$(date '+%a %b')
     CHECK_RESULT $? 0 0 "Execution failure"
-    [[ $(wc -l < JarResult.log) -eq 0 ]]
+    [[ $(cat JarResult.log |wc -l) -eq 0 ]]
     CHECK_RESULT $? 0 0 "Execution failure2"
     grep "$testtime" NonJarResult.log
     CHECK_RESULT $? 0 0 "Execution failure3"
@@ -49,6 +51,7 @@ function post_test() {
     DNF_REMOVE "$@"
     rm -rf /tmp/test
     unset testtime
+    export LC_TIME=${old_lc_time}
     LOG_INFO "End to restore the test environment."
 }
 

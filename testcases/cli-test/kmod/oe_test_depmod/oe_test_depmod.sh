@@ -17,7 +17,13 @@
 # @Desc      :   verify the uasge of depmod command
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "kernel-devel"
+    LOG_INFO "Finish preparing the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -32,18 +38,24 @@ function run_test() {
     depmod --config=./
     CHECK_RESULT $?
     symversPath=$(find / -name Module.symvers)
-    depmod -e -E $symversPath
+    depmod -e -E "$symversPath"
     CHECK_RESULT $?
-    mapPath=$(find / -name System.map)
-    depmod -e -F $mapPath
+    mapPath=$(find / -name "System.map*" | head -n 1)
+    depmod -e -F "$mapPath"
     CHECK_RESULT $?
-    depmod -e -E $symversPath -n
+    depmod -e -E "$symversPath" -n
     CHECK_RESULT $?
-    depmod -e -E $symversPath -v
+    depmod -e -E "$symversPath" -v
     CHECK_RESULT $?
-    depmod -e -E $symversPath -w
+    depmod -e -E "$symversPath" -w
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
 
-main $@
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish restoring the test environment."
+}
+
+main "$@"

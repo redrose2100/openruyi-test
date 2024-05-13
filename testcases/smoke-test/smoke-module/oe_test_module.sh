@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if df -h / | grep overlay; then
         LOG_INFO "The current environment is Docker."
-        exit 0
+        exit 255
     else
         module_list=$(lsmod | grep -w 0 | awk '{print $1}' | grep -vE "Module|virtio|net_failover")
         module_used_list=$(lsmod | grep -vw 0 | awk '{print $1}' | grep -vE "Module|virtio|net_failover")
@@ -41,6 +41,7 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Failed to load ${mod}"
         lsmod | grep -w "${mod}"
         CHECK_RESULT $? 0 0 "Failed to load ${mod}"
+        sleep 1
     done
 
     for mod in ${module_used_list}; do
@@ -48,6 +49,7 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Failed to load ${mod}"
         lsmod | grep -w "${mod}"
         CHECK_RESULT $? 0 0 "Failed to load ${mod}"
+        sleep 1
     done
     LOG_INFO "End to run test."
 }

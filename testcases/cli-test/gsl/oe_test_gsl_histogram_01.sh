@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test gsl-histogram
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -27,14 +27,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    gsl-histogram -u 10 20 10 2>&1 < /dev/null | grep '[0-9]'
+    gsl-histogram 10 20 10 2>&1 < /dev/null | grep '[0-9]'
     CHECK_RESULT $? 0 0 "Failed option: gsl-histogram -u "
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

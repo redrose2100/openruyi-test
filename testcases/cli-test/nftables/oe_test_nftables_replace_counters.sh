@@ -28,8 +28,9 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL nftables
     nft add table inet $table_name
-    nft add chain inet $table_name $chain_name { type filter hook input priority 0 \; policy accept \; }
+    nft add chain inet $table_name $chain_name "{ type filter hook input priority 0 ; policy accept ; }"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -40,7 +41,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "exec 'nft add rule inet $table_name $chain_name tcp dport ssh accept' failed"
     
     handle_num=$(nft --handle list chain inet $table_name $chain_name | grep tcp | awk -F ' ' '{printf $NF}')
-    nft replace rule inet $table_name $chain_name handle $handle_num tcp dport 22 counter accept
+    nft replace rule inet $table_name $chain_name handle "$handle_num" tcp dport 22 counter accept
     nft --handle list chain inet $table_name $chain_name | grep -E 'tcp dport [0-9]+ counter packets [0-9]+ bytes [0-9]+ accept'
     CHECK_RESULT $? 0 0 "exec 'nft replace rule inet $table_name $chain_name handle 2 tcp dport 22 counter accept' failed"
     LOG_INFO "Finish testcase execution."
@@ -49,6 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     nft delete table inet $table_name
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

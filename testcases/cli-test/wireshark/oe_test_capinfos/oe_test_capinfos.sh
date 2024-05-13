@@ -17,10 +17,13 @@
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/wireshark/common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL wireshark
+    generate_traffic &
+    WIRESHARK_TRAFFIC_PID=$!
     version=$(rpm -qa wireshark | awk -F "-" '{print$2}')
     LOG_INFO "Finish preparing the test environment."
 }
@@ -31,8 +34,8 @@ function run_test() {
     CHECK_RESULT $?
     capinfos --version | grep "$version"
     CHECK_RESULT $?
-    netCard=$(dumpcap -D | awk -F '.' '{print $2}' | head -1)
-    SLEEP_WAIT 10 "dumpcap -i $netCard -c 20 -w testfile1" 2
+    netCard=$(dumpcap -D | awk -F '.' '{print $2}' | head -1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+    SLEEP_WAIT 10 "dumpcap -i '$netCard' -c 20 -w testfile1" 2
     test -f testfile1
     CHECK_RESULT $?
     capinfos -t testfile1 | grep -E "File type|Wireshark/... - pcapng"
@@ -43,7 +46,7 @@ function run_test() {
     CHECK_RESULT $?
     capinfos -F testfile1 | grep -Ei "file|Capture"
     CHECK_RESULT $?
-    SLEEP_WAIT 10 "dumpcap -i $netCard --capture-comment \"test dumpcap usage\" -c 20 -w testfile17" 2
+    SLEEP_WAIT 10 "dumpcap -i '$netCard' --capture-comment \"test dumpcap usage\" -c 20 -w testfile17" 2
     test -f testfile17
     CHECK_RESULT $?
     capinfos -k testfile17 | grep "Capture comment:.*test dumpcap usage"
@@ -85,8 +88,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $(ls | grep -v ".sh")
-    DNF_REMOVE
+    rm -f testfile*
+    close_traffic "$WIRESHARK_TRAFFIC_PID"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 

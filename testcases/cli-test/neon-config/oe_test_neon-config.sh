@@ -17,7 +17,7 @@
 # @Desc      :   test neon-config 
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
@@ -29,11 +29,12 @@ function run_test() {
   LOG_INFO "Start to run test."
   neon-config --help |grep print 
   CHECK_RESULT $? 0 0 "Error getting help"
-  neon-config --libs |grep relro 
+  neon-config --libs |grep lneon
   CHECK_RESULT $? 0 0 "Error in obtaining library link information"
   neon-config --cflags |grep neon  
   CHECK_RESULT $? 0 0 "Error getting preprocessor and compiler flags"
-  neon-config --version |grep 30
+  neon_version=$(rpm -qa neon-devel | awk -F- '{print $3}')
+  neon-config --version | grep "${neon_version}"
   CHECK_RESULT $? 0 0 "Error in obtaining neon config version"
   LOG_INFO "End of the test."
 }

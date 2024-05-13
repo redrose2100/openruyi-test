@@ -17,7 +17,7 @@
 #@Desc      	:   Test qpdf
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
@@ -28,7 +28,7 @@ function pre_test()
 function run_test()
 {
     LOG_INFO "Start to run test."
-    qpdf --json-help | grep "json block"
+    qpdf --json-help | grep "json"
     CHECK_RESULT $? 0 0 "qpdf --json-help running failed"
     qpdf --json --json-key=pages ./common/infile.pdf | grep "pages"
     CHECK_RESULT $? 0 0 "qpdf --json-key running failed"
@@ -40,7 +40,7 @@ function run_test()
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE 
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

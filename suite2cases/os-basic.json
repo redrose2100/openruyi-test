@@ -634,6 +634,9 @@
             "name": "oe_test_vim"
         },
         {
+            "name": "oe_test_vim_001"
+        },
+        {
             "name": "oe_test_basename"
         },
         {
@@ -931,6 +934,21 @@
         },
         {
             "name": "oe_test_lsmem_3"
-        }
+        },
+        {
+            "name": "oe_test_lscpu_2"
+        },
+        {
+            "name": "oe_test_mkfifo"
+        },
+        {
+            "name": "oe_test_lspci"
+        },
+	{
+	    "name": "oe_test_bzcat"
+        },
+	{
+	    "name": "oe_test_zipinfo"
+	}
     ]
 }

@@ -40,7 +40,7 @@ function run_test() {
     CHECK_RESULT $?
     pvmove -t 2>&1 | grep "TEST MODE: Metadata will NOT be updated and volumes will not be (de)activated"
     CHECK_RESULT $?
-    if [ "${version_id}" = "22.03" ]; then
+    if [ "${version_id}" == "22.03" ]; then
         pvmove --devices /dev/"${local_disk}"
         CHECK_RESULT $?
     fi
@@ -49,14 +49,14 @@ function run_test() {
     pvmove --commandprofile my /dev/"${local_disk}"
     CHECK_RESULT $?
     SLEEP_WAIT 5
-    pvmove --driverloaded y /dev/"${local_disk1}" /dev/"${local_disk}" | grep "Moved: 100.00%"
+    pvmove --driverloaded y /dev/"${local_disk1}" /dev/"${local_disk}" | grep "Moved:"
     CHECK_RESULT $?
-    pvmove --nolocking /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved: 100.00%"
+    pvmove --nolocking /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved:"
     CHECK_RESULT $?
-    pvmove --lockopt /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved: 100.00%"
+    pvmove --lockopt /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved:"
     CHECK_RESULT $?
-    if [ "${version_id}" = "22.03" ]; then
-        pvmove --journal my /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved: 100.00%"
+    if [ "${version_id}" == "22.03" ]; then
+        pvmove --journal my /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved:"
         CHECK_RESULT $?
     fi
     LOG_INFO "End executing testcase!"

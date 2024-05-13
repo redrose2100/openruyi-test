@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Easymock combined with Maven to simulate the unimplemented interface
 # ############################################
+# shellcheck disable=SC1091
 
 source "../common/common_easymock.sh"
 function pre_test() {
@@ -22,7 +23,9 @@ function pre_test() {
     deploy_env
     DNF_INSTALL maven
     mkdir libs
-    cp -rf "$(rpm -ql junit | grep junit.jar)" "$(rpm -ql easymock | grep easymock.jar)" "$(rpm -ql hamcrest | grep core.jar)" libs
+    cp -rf "$(rpm -ql junit | grep junit.jar)" "$(rpm -ql easymock | grep easymock.jar)" libs
+    wget https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
+    mv hamcrest-core-1.3.jar libs/
     LOG_INFO "End to prepare the test environment."
 }
 

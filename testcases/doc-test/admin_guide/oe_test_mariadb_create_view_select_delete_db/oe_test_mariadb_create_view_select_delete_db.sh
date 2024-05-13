@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Create, view, select, delete database
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     systemctl stop firewalld
@@ -25,18 +25,19 @@ function pre_test() {
     setenforce 0
     groupadd mysql
     useradd -g mysql mysql
-    echo ${NODE1_PASSWORD} | passwd --stdin mysql
+    echo "${NODE1_PASSWORD}" | passwd --stdin mysql
     test -d /data || mkdir data
     test -d /data/mariadb || mkdir -p /data/mariadb
     cd /data/mariadb || exit
     mkdir data tmp run log
     chown -R mysql:mysql /data
+    chown -R mysql:mysql /var/log/mariadb/
     cd - || exit
     DNF_INSTALL mariadb-server
     CHECK_RESULT $?
     rm -rf /var/lib/mysql/*
     systemctl start mariadb
-    mysqladmin -uroot password ${NODE1_PASSWORD}
+    mysqladmin -uroot password "${NODE1_PASSWORD}"
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -58,22 +59,22 @@ function run_test() {
 }
 expect eof
 "
-    cat testlog | grep -v changed | grep -w "Database" -A 5 | grep -w databaseexample
+    grep -v changed testlog | grep -w "Database" -A 5 | grep -w databaseexample
     CHECK_RESULT $?
-    cat testlog | grep "USE databaseexample" -A 2 | grep "Database changed"
+    grep "USE databaseexample" -A 2 testlog | grep "Database changed"
     CHECK_RESULT $?
-    CHECK_RESULT $(cat testlog | grep -v changed | grep -w "Database" -A 5 | grep -w databaseexample | wc -l) 1
+    CHECK_RESULT "$(grep -v changed testlog | grep -w "Database" -A 5 | grep -wc databaseexample)" 1
     LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     setenforce 1
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     userdel -r mysql
     groupdel mysql
     rm -rf testlog
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

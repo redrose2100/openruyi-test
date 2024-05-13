@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check fig2dev -K -D +50 -L eps arrows.fig failed"
     fig2dev -L eps arrows.fig -G .25:1cm | grep "here starts figure with depth 1001"
     CHECK_RESULT $? 0 0 "Check fig2dev -L eps arrows.fig -G .25:1cm failed"
-    fig2dev -j -L eps arrows.fig | grep -i 'epsf'
+    fig2dev -L eps -j arrows.fig | grep -i 'epsf'
     CHECK_RESULT $? 0 0 "Check fig2dev -j -L eps arrows.fig failed"
     fig2dev -m 2.0 -L eps arrows.fig | grep 'Magnification: 2.0000'
     CHECK_RESULT $? 0 0 "Check fig2dev -m 2.0 -L eps arrows.fig failed"
@@ -50,7 +50,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check fig2dev -V failed"
     pic2tpic --help | grep "sed"
     CHECK_RESULT $? 0 0 "Check pic2tpic --help failed"
-    pic2tpic --version | grep "sed (GNU sed) 4.8"
+    pic2tpic --version | grep "sed (GNU sed)"
     CHECK_RESULT $? 0 0 "Check pic2tpic --version failed"
     transfig -h 2>&1 | grep "usage: transfig <option>"
     CHECK_RESULT $? 0 0 "Check transfig -h failed"

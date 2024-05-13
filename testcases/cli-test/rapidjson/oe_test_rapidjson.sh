@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "rapidjson"
+  DNF_INSTALL "rapidjson gcc-c++"
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -37,7 +37,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  DNF_REMOVE
+  DNF_REMOVE "$@"
   rm -rf rapidjsontest
   LOG_INFO "Finish environment cleanup!"
 }

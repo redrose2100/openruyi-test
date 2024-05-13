@@ -16,7 +16,7 @@
 #@Desc          :   node.js is JavaScript running on the server side.
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $?
     node --use-openssl-ca my.js | grep 'Hello,Kitty'
     CHECK_RESULT $?
-    node --v8-options | grep 'Synopsis'
+    node --v8-options | grep 'Options'
     CHECK_RESULT $?
     node --zero-fill-buffers my.js | grep 'Hello,Kitty'
     CHECK_RESULT $?
@@ -42,7 +42,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -f my.js
     LOG_INFO "End to restore the test environment."
 }
