@@ -16,11 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Specifies the unit in which the disk size is displayed
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
-    pvcreate -y /dev/${local_disk}
+    pvcreate -y /dev/"${local_disk}"
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -30,7 +30,7 @@ function run_test() {
     CHECK_RESULT $?
     pvdisplay --units G | grep "PV Size" | grep G
     CHECK_RESULT $?
-    pvdisplay --units s | grep "PV Size" | grep s
+    pvdisplay --units s | grep "PV Size" | grep -i s
     CHECK_RESULT $?
     pvs --units 4m
     CHECK_RESULT $?
@@ -39,8 +39,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    pvremove /dev/${local_disk}
+    pvremove /dev/"${local_disk}"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
