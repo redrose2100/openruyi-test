@@ -65,5 +65,4 @@ function post_test() {
     rm -f ./testfile
     LOG_INFO "End to restore the test environment."
 }
-
 main "$@"
