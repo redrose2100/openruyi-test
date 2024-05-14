@@ -35,17 +35,17 @@ function run_test() {
     isula inspect -f {{.State.Status}} ${container_name} | grep running
     CHECK_RESULT $?
 
-    isula export -o ${Images_name}.tar ${container_name}
+    isula export -o qwq.tar ${container_name}
     CHECK_RESULT $?
 
-    test -f ${Images_name}.tar
+    test -f qwq.tar
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf ${Images_name}.tar
+    rm -rf qwq.tar
     clean_isulad_env
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup."

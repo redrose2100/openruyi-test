@@ -17,24 +17,22 @@
 # @Desc      :   Test derby.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL derby
+    DNF_INSTALL "derby"
     LOG_INFO "End of environmental preparation!"
 }
-
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution derby.service
     test_reload derby.service
     LOG_INFO "Finish test!"
 }
-
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
