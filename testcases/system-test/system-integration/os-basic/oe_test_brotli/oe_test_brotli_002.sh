@@ -14,13 +14,13 @@
 # @Contact   :   huzheyuan@uniontech.com
 # @Date      :   2023-07-28
 # @License   :   Mulan PSL v2
-# @Desc      :   Command test brotli
+# @Desc      :   Command test brotli -v -n
 # ############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    testdir=/tmp/test
+    testdir=/tmp/oe_test-brotli002
     mkdir ${testdir}
     cd ${testdir} || return 
     LOG_INFO "End of environmental preparation!"
@@ -29,13 +29,24 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     touch test.tar
-    brotli --rm test.tar
+    pre_sta=$(stat -c %a test.tar)
+    brotli -n test.tar -o test-n.tar.br
+    after_sta_n=$(stat -c %a test-n.tar.br)
+    brotli --rm test.tar > log.brotli 2>&1
     test -e test.tar
     CHECK_RESULT $? 0 1 "check test.tar  delete faild"
+    after_sta=$(stat -c %a test.tar.br)
+    CHECK_RESULT "${pre_sta}" "${after_sta}" 0 "check test.tar attr without -n failed"
+    CHECK_RESULT "${after_sta}" "${after_sta_n}" 1 "check test.tar attr with -n failed"
+    grep "Compressed" log.brotli 
+    CHECK_RESULT $? 1 0 "check brotli without -v failed"
+
     touch test2.tar 
-    brotli -k  test2.tar
+    brotli -k -v test2.tar > log.brotli-v 2>&1
     test -e test2.tar && test -e test2.tar.br
     CHECK_RESULT $? 0 0 "check test.tar compression successful"
+    grep "Compressed" log.brotli-v
+    CHECK_RESULT $? 0 0 "check brotli -v failed"
     LOG_INFO "End to run test."
 
 }
