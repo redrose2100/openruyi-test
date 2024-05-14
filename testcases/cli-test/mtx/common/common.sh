@@ -17,8 +17,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   mtx common prepare
 # #############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 # Define configuration information
 function common_config_params() {
@@ -30,19 +30,20 @@ function common_config_params() {
 
 # Test environment preparation
 function common_pre() {
-    DNF_INSTALL "mtx rpm-build rpmdevtools git zlib-devel"
+    DNF_INSTALL "mtx rpm-build rpmdevtools git zlib-devel gcc kernel-devel"
     rpmdev-setuptree
     git clone https://gitee.com/src-openeuler/mhvtl.git ./tmp/mhvtl
     cp ./tmp/mhvtl/1.7-0_release.tar.gz ./tmp/mhvtl/build-kernel-module.patch ./tmp/mhvtl/build-mhvtl-module.patch ~/rpmbuild/SOURCES
     rpmbuild -bb ./tmp/mhvtl/*.spec
-    dnf install ~/rpmbuild/RPMS/$(arch)/*.rpm -y
+    dnf install ~/rpmbuild/RPMS/"$(arch)"/*.rpm -y
     systemctl start mhvtl.target
     # waite ....
     SLEEP_WAIT 5s
     # Looking for manipulator equipment
-    PATH_MEDIUMX=$(lsscsi -g | grep ${DRIVER_MEDIUMX} | grep -oE "/dev/sg.*")
+    PATH_MEDIUMX=$(lsscsi -g | grep "${DRIVER_MEDIUMX}" | grep -oE "/dev/sg.*" || exit 1)
     # Looking for drive devices
-    PATH_TAPE="$(lsscsi -g | grep -m 1 ${DRIVER_TAPE} | grep -oE "/dev/st[0-9]*")"
+    PATH_TAPE=$(lsscsi -g | grep -m 1 "${DRIVER_TAPE}" | grep -oE "/dev/st[0-9]*" || exit 1)
+    echo "$PATH_TAPE"
 }
 
 # Test common functions
@@ -56,10 +57,10 @@ function common_test() {
 function common_post() {
     rm -rf ./tmp ~/rpmbuild
     systemctl stop mhvtl.target
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 }
 
 # Drill down to find tape devices
 function common_load() {
-    mtx -f ${PATH_MEDIUMX} next > /dev/null
+    mtx -f "${PATH_MEDIUMX}" next >/dev/null
 }

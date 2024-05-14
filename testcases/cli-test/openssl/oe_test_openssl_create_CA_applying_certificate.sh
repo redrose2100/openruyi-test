@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Encryption algorithm: create a CA and applying for a certificate
 #####################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_openssl.sh"
 
 function config_params() {
@@ -40,10 +40,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f $CA_Path/index* $CA_Path/serial* $CA_Path/private/cakey.pem $CA_Path/cacert.pem $CA_Path/testlog1
+    rm -f "${CA_Path}/index*" "${CA_Path}/serial*" "${CA_Path}/private/cakey.pem" "${CA_Path}/cacert.pem" "${CA_Path}/testlog1"
     mv -f /etc/pki/tls/openssl.cnf.bak /etc/pki/tls/openssl.cnf
     rm -rf /etc/nginx/ssl
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

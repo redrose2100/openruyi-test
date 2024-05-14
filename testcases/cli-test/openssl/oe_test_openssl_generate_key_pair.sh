@@ -16,13 +16,13 @@
 #@Desc          :   Encryption algorithm: generate a key pair
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     openssl genrsa -out server.pri.1024
     CHECK_RESULT $?
-    grep 'BEGIN RSA PRIVATE KEY' server.pri.1024
+    grep 'PRIVATE KEY' server.pri.1024
     CHECK_RESULT $?
     openssl rsa -in server.pri.1024 -pubout | grep 'BEGIN PUBLIC KEY'
     CHECK_RESULT $?
