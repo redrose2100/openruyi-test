@@ -950,7 +950,10 @@
 	{
 	    "name": "oe_test_zipinfo"
 	},
-	{	
+	{
+	    "name": "oe_test_gunzip"
+        },
+        {	
 	    "name": "oe_test_split_01"
 	}
     ]
