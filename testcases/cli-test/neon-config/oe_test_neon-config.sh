@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   gaoshuaishuai
 # @Contact   :   gaoshuaishuai@uniontech.com
-# @Date      :   2024/03/13
+# @Date      :   2024/05/17
 # @License   :   Mulan PSL v2
 # @Desc      :   test neon-config 
 # ############################################
@@ -36,6 +36,10 @@ function run_test() {
   neon_version=$(rpm -qa neon-devel | awk -F- '{print $3}')
   neon-config --version | grep "${neon_version}"
   CHECK_RESULT $? 0 0 "Error in obtaining neon config version"
+  neon-config --prefix | grep usr
+  CHECK_RESULT $? 0 0 "Error in obtaining neon config prefix"
+  neon-config --la-file | grep libneon
+  CHECK_RESULT $? 0 0 "Error in obtaining neon config la-file"  
   LOG_INFO "End of the test."
 }
 
