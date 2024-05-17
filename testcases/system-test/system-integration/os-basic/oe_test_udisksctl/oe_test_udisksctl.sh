@@ -62,13 +62,3 @@ main "$@"
 
 
 
-function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    export LANG=${OLD_LANG}
-    LOG_INFO "start environment cleanup!"
-    rm -rf file.txt
-    LOG_INFO "Finish environment cleanup!"
-
-}
-
-main "$@"
