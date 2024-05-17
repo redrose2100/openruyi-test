@@ -199,19 +199,19 @@ void clear_cache(void* ptr, size_t size) {
         return;
     }
 
-    #if defined(__aarch64__)
     uintptr_t start = (uintptr_t)ptr;
     uintptr_t end = start + size;
     start &= ~(get_cache_line_size() - 1);
-
+    #if defined(__aarch64__)
     while (start < end) {
         asm volatile("dc civac, %0" : : "r"(start) : "memory");
         start += CACHE_LINE_SIZE;
     }
     asm volatile("dsb sy" : : : "memory");
+    #elif defined(__x86_64__)
+    __builtin___clear_cache((char *)start, (char*)start + size);
     #endif
     sleep(1);
-    __builtin___clear_cache(ptr, (char*)ptr + size);
 }
 
 static void *data_alloc_common(int flag)
@@ -226,6 +226,13 @@ static void *data_alloc_common(int flag)
 	srandom(getpid() * time(NULL));
 	for (i = 0; i < pagesize; i++)
 		p[i] = random();
+    
+    /*avoid the start of the page as the injection address. 
+    Just in case some prefetch from preceding address triggered
+    the error. pagesize/4 was an almost arbitrary choice.
+    X86 requires the injection address be on a cache line boundary.
+    So any multiple of cache line size would work to achieve this.*/
+        
 	return p + pagesize / 4;
 }
 
@@ -243,6 +250,7 @@ int do_copyfromuser_test()
 {
     int fd;
     char *vaddr;
+    char * page_aligned_vaddr;
     unsigned long long paddr;
     pid_t pid;
     int ret = 0;
@@ -252,7 +260,8 @@ int do_copyfromuser_test()
         fprintf(stderr, "Failed to allocate memory\n");
         return -1;
     }
-
+    
+    page_aligned_vaddr = (char *)((uintptr_t)vaddr & ~(pagesize - 1));
     pid = getpid();
     char * user_string="hello from userspace!";
 
@@ -264,7 +273,7 @@ int do_copyfromuser_test()
     if(ret != 0)
     {
         fprintf(stderr, "inject address: %p fail\n", (void *)paddr);
-        if (munmap(vaddr, pagesize) == -1) {
+        if (munmap(page_aligned_vaddr, pagesize) == -1) {
             perror("Failed to munmap");
         }    
         return ret;        
@@ -273,18 +282,18 @@ int do_copyfromuser_test()
     fd = open(DEVICE_NAME, O_RDWR);
     if (fd < 0) {
         perror("Failed to open the device");
-        munmap(vaddr, pagesize);
+        munmap(page_aligned_vaddr, pagesize);
         return errno;
     }
     
     clear_cache(vaddr, pagesize);
     if (ioctl(fd, MM_IOCTL_COPY_FROM_USER_CMD, vaddr) == -1) {
         perror("ioctl failed");
-        munmap(vaddr, pagesize);
+        munmap(page_aligned_vaddr, pagesize);
         return errno;
     }
 
-    munmap(vaddr, pagesize);
+    munmap(page_aligned_vaddr, pagesize);
     close(fd);
 
     usleep(100);
@@ -323,7 +332,6 @@ int do_copytouser_test()
         free(buf);
         return -1;
     }
-    //kaddr = kaddr + pagesize/4;
 
     usleep(100);
     paddr =vtop((unsigned long long)kaddr,pid);
@@ -390,6 +398,7 @@ int do_getuser_test()
 {
     int fd;
     char *vaddr;
+    char * page_aligned_vaddr;
     unsigned long long paddr;
     pid_t pid;
     char user_char = 'U'; 
@@ -401,6 +410,8 @@ int do_getuser_test()
         return -1;
     }
 
+    page_aligned_vaddr = (char *)((uintptr_t)vaddr & ~(pagesize - 1));
+
     pid = getpid();
 
     *vaddr = user_char;
@@ -411,7 +422,7 @@ int do_getuser_test()
     if(ret != 0)
     {
         fprintf(stderr, "inject address: %p fail\n", (void *)paddr);
-        if (munmap(vaddr, pagesize) == -1) {
+        if (munmap(page_aligned_vaddr, pagesize) == -1) {
             perror("Failed to munmap");
         }    
         return ret;        
@@ -420,7 +431,7 @@ int do_getuser_test()
     fd = open(DEVICE_NAME, O_RDWR);
     if (fd < 0) {
         perror("Failed to open the device");
-        if (munmap(vaddr, pagesize) == -1) {
+        if (munmap(page_aligned_vaddr, pagesize) == -1) {
             perror("Failed to munmap");
         }    
         return errno;
@@ -429,14 +440,14 @@ int do_getuser_test()
     clear_cache(vaddr, pagesize);
     if (ioctl(fd, MM_IOCTL_GET_USER_CMD, vaddr) == -1) {
   	perror("ioctl MM_IOCTL_GET_USER_CMD failed");
-        if (munmap(vaddr, pagesize) == -1) {
+        if (munmap(page_aligned_vaddr, pagesize) == -1) {
             perror("Failed to munmap");
         }    
 	close(fd);
 	return errno;
     }
 
-    if (munmap(vaddr, pagesize) == -1) {
+    if (munmap(page_aligned_vaddr, pagesize) == -1) {
         perror("Failed to munmap");
     }    
     close(fd);
@@ -543,6 +554,7 @@ clean:
 int do_coredump_test()
 {
     char *vaddr;
+    char * page_aligned_vaddr;
     unsigned long long paddr;
     pid_t pid;
     int ret = 0;
@@ -553,6 +565,7 @@ int do_coredump_test()
         return -1;
     }
 
+    page_aligned_vaddr = (char *)((uintptr_t)vaddr & ~(pagesize - 1));
     pid = getpid();
 
     paddr =vtop((unsigned long long)vaddr,pid);
@@ -562,7 +575,7 @@ int do_coredump_test()
     if(ret != 0)
     {
         fprintf(stderr, "inject address: %p fail\n", vaddr);
-        if (munmap(vaddr, pagesize) == -1) {
+        if (munmap(page_aligned_vaddr, pagesize) == -1) {
             perror("Failed to munmap");
         }    
         return ret;        
@@ -577,6 +590,7 @@ int do_coredump_test()
 int do_copyonwrite_test()
 {
     char *vaddr;
+    char * page_aligned_vaddr;    
     unsigned long long paddr;
     pid_t pid;
     pid_t cow_pid;
@@ -584,6 +598,7 @@ int do_copyonwrite_test()
     int ret = 0;
 
     vaddr = data_alloc_private();
+    page_aligned_vaddr = (char *)((uintptr_t)vaddr & ~(pagesize - 1));
     pid = getpid();
 
     paddr =vtop((unsigned long long)vaddr,pid);
@@ -593,7 +608,7 @@ int do_copyonwrite_test()
     if(ret != 0)
     {
         fprintf(stderr, "inject address: %p fail\n", vaddr);
-        if (munmap(vaddr, pagesize) == -1) {
+        if (munmap(page_aligned_vaddr, pagesize) == -1) {
             perror("Failed to munmap");
         }    
         return ret;        
@@ -609,7 +624,7 @@ int do_copyonwrite_test()
     	child_process = 1;
     	/* force kernel to copy this page */
     	*vaddr = '*';
-        if (munmap(vaddr, pagesize) == -1) {
+        if (munmap(page_aligned_vaddr, pagesize) == -1) {
             perror("child failed to munmap");
         }         
     	exit(0);
@@ -618,7 +633,7 @@ int do_copyonwrite_test()
     fprintf(stderr, "%s: COW parent waiting for pid=%d\n", progname, cow_pid);
     while (wait(&status) != cow_pid);
 
-    munmap(vaddr, pagesize); 
+    munmap(page_aligned_vaddr, pagesize); 
 
     /* Give system a chance to process on possibly deep C-state idle cpus */
     usleep(100);

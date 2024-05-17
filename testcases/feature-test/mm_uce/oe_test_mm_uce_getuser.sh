@@ -26,7 +26,7 @@ function pre_test() {
         LOG_INFO "The environment does not support testing"
         exit 1
     fi
-    DNF_INSTALL "kernel_devel gcc"
+    DNF_INSTALL "kernel-devel gcc"
     make -C ./common 
     make -C ./common install
     dmesg -c > /dev/null
@@ -60,9 +60,16 @@ function post_test() {
     LOG_INFO "Start to clean the test environment."
     unload_mm_uce_module
     unload_einj_module
-    do_mm_uce_cleanlog
     make -C common uninstall
+    do_mm_uce_cleanlog "kernel-devel gcc"
     LOG_INFO "End to clean the test environment."
+    if [ "$(uname -m)" = "aarch64" ];then
+        #in ghes_print_estatus function Not more than 2 messages every 5 seconds
+        sleep 5
+    elif [ "$(uname -m)" = "x86_64" ];then
+        #in mce_notify_irq function Not more than two hardware error messages every minute
+        sleep 60
+    fi
 }
 
 

@@ -60,8 +60,15 @@ function post_test() {
     unload_mm_uce_module
     unload_einj_module
     make -C common uninstall
-    do_mm_uce_cleanlog
+    do_mm_uce_cleanlog "kernel-devel gcc"
     LOG_INFO "End to clean the test environment."
+    if [ "$(uname -m)" = "aarch64" ];then
+        #in ghes_print_estatus function Not more than 2 messages every 5 seconds
+        sleep 5
+    elif [ "$(uname -m)" = "x86_64" ];then
+        #in mce_notify_irq function Not more than two hardware error messages every minute
+        sleep 60
+    fi
 }
 
 

@@ -7,7 +7,8 @@ fi
 GHES_REC="Hardware error from APEI Generic Hardware Error Source"
 HARDWARE_ERROR="[Hardware Error]"
 MEMORY_FAILURE="Memory failure"
-RECOVERED_ACTION="Recovered"
+IGNORED_ACTION="Ignored"
+
 SIGBUS='signal 7'
 LOG=./mm_uce.log
 TMP_DIR=/tmp
@@ -270,7 +271,7 @@ function check_memory_failure_recover_result()
     while [ $time -lt $timeout ]
     do
         dmesg -c >> "${LOG}" 2>&1
-        if grep -F "${MEMORY_FAILURE}" "${LOG}"|grep -qw "${RECOVERED_ACTION}"
+        if grep -F "${MEMORY_FAILURE}" "${LOG}"|grep -qEw "${RECOVERED_ACTION}|${IGNORED_ACTION}"
         then
             echo -e "\nMemory Failure record is OK\n" >> "${LOG}"
             echo 0 >> $TMP_DIR/error.$$
@@ -324,6 +325,7 @@ function do_mm_uce_check()
 function do_mm_uce_cleanlog()
 {
     rm -f "${LOG}"
+    DNF_REMOVE "$@"
 }
 
 function do_mm_uce_test()
