@@ -21,12 +21,19 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ipcs |grep -E "Message Queues|ÏûÏ¢¶ÓÁĞ"
+    ipcs |grep -E "Message Queues|æ¶ˆæ¯é˜Ÿåˆ—"
     CHECK_RESULT $? 0 0 "ipcs default print error"
-    ipcs |grep -E "Shared Memory Segments|¹²ÏíÄÚ´æ¶Î"
+    ipcs |grep -E "Shared Memory Segments|å…±äº«å†…å­˜æ®µ"
     CHECK_RESULT $? 0 0 "ipcs default print error"
-    ipcs |grep -E "Semaphore Arrays|ĞÅºÅÁ¿Êı×é"
+    ipcs |grep -E "Semaphore Arrays|ä¿¡å·é‡æ•°ç»„"
     CHECK_RESULT $? 0 0 "ipcs default print error"
+    ipcs -a |grep -E "æ¶ˆæ¯é˜Ÿåˆ—|Message Queues"
+    CHECK_RESULT $? 0 0 "ipcs -a execution failure"
+    ipcs -all |grep -E "æ¶ˆæ¯é™åˆ¶|Messages Limits"
+    CHECK_RESULT $? 0 0 "ipcs -all execution failure"
+    ipcs -m |grep -E "å…±äº«å†…å­˜æ®µ|Shared Memory Segments"
+    CHECK_RESULT $? 0 0 "ipcs -m execution failure"
 }
 
 main "$@"
+
