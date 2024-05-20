@@ -955,6 +955,9 @@
         },
         {	
 	    "name": "oe_test_split_01"
+	},
+	{
+	   "name": "oe_test_getent"
 	}
     ]
 }
