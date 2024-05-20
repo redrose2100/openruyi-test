@@ -16,11 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test nis-domainname.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
+    if [ "$(uname -m)" == "riscv64" ]; then
+        touch /etc/sysconfig/network
+    fi
     test_execution nis-domainname.service
     test_reload nis-domainname.service
     LOG_INFO "Finish test!"
