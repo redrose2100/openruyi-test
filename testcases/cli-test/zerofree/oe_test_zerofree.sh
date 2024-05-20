@@ -17,7 +17,7 @@
 # @Desc      :   Test zerofree
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH"/testcases/cli-test/common/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
@@ -29,7 +29,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL zerofree
     mkdir ./testmnt ./images
-    dd if=/dev/zero of=./images/fs.img bs=1M count=1024
+    dd if=/dev/zero of=./images/fs.img bs=5M count=1024
     mkfs.ext3 -F ./images/fs.img
     mount ./images/fs.img ./testmnt
     yes abcdefghijklmnopqrstuvwxyz0123456789 >./testmnt/largefile
@@ -48,7 +48,7 @@ function run_test() {
     zerofreed_n_sparsed_size="$(du ./images/zerofreed_n_sparsed.img | awk '{print $1}')"
     [ "$sparsed_size" -eq "$zerofreed_n_sparsed_size" ]
     CHECK_RESULT $? 0 0 "Failed to achieve expect result, option: -n"
-    zerofree -v ./images/fs.img | grep -E '*/*/*'
+    zerofree -v ./images/fs.img | grep -E '/*/'
     CHECK_RESULT $? 0 0 "Failed to use option: -v"
     cp --sparse=always ./images/fs.img ./images/zerofreed_sparsed.img
     CHECK_RESULT $? 0 0 "Failed to achieve expect result, option: -v"
@@ -66,7 +66,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./testmnt ./images
     LOG_INFO "Finish environment cleanup!"
 }

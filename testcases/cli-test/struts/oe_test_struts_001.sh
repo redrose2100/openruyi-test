@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "struts tar binutils"
+    DNF_INSTALL "struts tar binutils dnf-plugins-core"
     mkdir /tmp/test
     cd /tmp/test || exit
     old_lc_time=$(locale | grep LC_TIME | awk -F= '{print $2}' | tr -d '"')
@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Execution failure"
     [[ $(cat JarResult.log |wc -l) -eq 0 ]]
     CHECK_RESULT $? 0 0 "Execution failure2"
-    cat NonJarResult.log | grep "$testtime"
+    grep "$testtime" NonJarResult.log
     CHECK_RESULT $? 0 0 "Execution failure3"
     LOG_INFO "End to run test."
 }
