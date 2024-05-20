@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_nvmet"
+        },
+        {
+            "name": "oe_test_service_nvmf-connect-nbft"
         }
     ]
 }

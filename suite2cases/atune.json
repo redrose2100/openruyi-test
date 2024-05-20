@@ -5,6 +5,9 @@
             "name": "oe_test_service_atuned"
         },
         {
+            "name": "oe_test_service_atune-rest"
+        },
+        {
             "name": "oe_test_service_atune-engine"
         },
         {
