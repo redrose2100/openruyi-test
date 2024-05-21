@@ -20,12 +20,13 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
     con_name='test_con'
+    test_eth1=$(ls /sys/class/net/ | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | grep -v $(ip route | grep ${NODE1_IPV4} | awk '{print$3}') | sed -n 1p)
     LOG_INFO "Loading data is complete!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    nmcli connection add type ethernet con-name ${con_name} ifname ${NODE1_NIC} | grep successfully
+    nmcli connection add type ethernet con-name ${con_name} ifname ${test_eth1} | grep successfully
     CHECK_RESULT $?
 
     nmcli con up ${con_name}
