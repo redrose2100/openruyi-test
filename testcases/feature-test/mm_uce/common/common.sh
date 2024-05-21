@@ -7,6 +7,7 @@ fi
 GHES_REC="Hardware error from APEI Generic Hardware Error Source"
 HARDWARE_ERROR="[Hardware Error]"
 MEMORY_FAILURE="Memory failure"
+RECOVERED_ACTION="Recovered"
 IGNORED_ACTION="Ignored"
 
 SIGBUS='signal 7'
