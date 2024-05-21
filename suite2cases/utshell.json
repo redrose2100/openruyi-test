@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/utshell",
+    "cases": [
+        {
+            "name": "oe_test_utshell_test_01"
+        }
+    ]
+}
