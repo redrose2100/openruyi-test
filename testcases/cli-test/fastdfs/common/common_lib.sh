@@ -15,13 +15,13 @@
 #@Desc          :   verification fastdfs's commnd
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function Pre_Test() {
     DNF_INSTALL "fastdfs* libfdfsclient net-tools"
-    cp /etc/fdfs/client.conf.sample ./client.conf
-    cp /etc/fdfs/storage.conf.sample ./storage.conf
-    cp /etc/fdfs/tracker.conf.sample ./tracker.conf
+    cp /etc/fdfs/client.conf ./client.conf
+    cp /etc/fdfs/storage.conf ./storage.conf
+    cp /etc/fdfs/tracker.conf ./tracker.conf
     mkdir -p /tmp/guochenyang/1 /tmp/guochenyang/2 /tmp/guochenyang/3
     sed -i '/base_path/s/\/home\/yuqing\/fastdfs/\/tmp\/guochenyang\/1/g' ./client.conf
     sed -i '/tracker_server =/d' ./client.conf
@@ -38,6 +38,6 @@ function Pre_Test() {
 
 function Post_Test() {
     rm -rf ./client.conf ./storage.conf ./tracker.conf /tmp/guochenyang
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 }
 main "$@"
