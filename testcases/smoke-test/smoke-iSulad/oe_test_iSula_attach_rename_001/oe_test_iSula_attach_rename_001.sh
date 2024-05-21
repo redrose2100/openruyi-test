@@ -40,7 +40,6 @@ expect eof
 "
     grep -iE 'error|fail' testlog
     CHECK_RESULT $? 1
-    
     if [ $Images_name == busybox ];then
         CHECK_RESULT $(grep -c "exit" testlog) 1
     else
