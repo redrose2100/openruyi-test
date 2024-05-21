@@ -958,9 +958,6 @@
 	},
 	{
 	   "name": "oe_test_getent"
-	},
-	{
-	   "name": "oe_test_udisksctl"
 	}
     ]
 }
