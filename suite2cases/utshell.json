@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_utshell_readarray_01"
+        },
+        {
+            "name": "oe_test_utshell_readarray_02"
         }
     ]
 }
