@@ -3,7 +3,10 @@
     "cases": [
         {
             "name": "oe_test_at_at"
-        }
+        },
+        {
+            "name": "oe_test_at_atrm"
+        }   
     ]
 }
 
