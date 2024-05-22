@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_utshell_test_01"
+        },
+        {
+            "name": "oe_test_utshell_readarray_01"
         }
     ]
 }
