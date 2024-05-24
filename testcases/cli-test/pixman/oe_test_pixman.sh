@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test pixman
 # ############################################
+# shellcheck disable=SC2046
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -27,7 +28,7 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-  gcc -o test11 test.c -g "$(pkg-config --cflags --libs pixman-1)"
+  gcc -o test11 test.c -g $(pkg-config --cflags --libs pixman-1)
   CHECK_RESULT $? 0 0 "pixman failure"
   ./test11
   test -e aaa-with-watermark.bmp
