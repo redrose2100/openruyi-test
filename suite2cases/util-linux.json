@@ -8,6 +8,9 @@
             "name": "oe_test_service_uuidd"
         },
         {
+            "name": "oe_test_util-linux_colrm"
+        },        
+	{
             "name": "oe_test_socket_uuidd"
         },
         {
