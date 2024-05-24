@@ -17,7 +17,8 @@
 # @Desc      :   Save an image to a tar package / tar package saved by docker reload an image
 # ############################################
 
-source ../common/prepare_docker.sh
+
+source "${OET_PATH}/testcases/smoke-test/smoke-docker/common/prepare_docker.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_docker_env
@@ -26,33 +27,34 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker images | grep ${Images_name}
+    docker images | grep "${Images_name}"
     CHECK_RESULT $?
 
-    docker save -o ${Images_name}.tar ${Images_name}:latest
+    EXPORT_IMAGE_NAME=image_history
+    docker save -o "${EXPORT_IMAGE_NAME}.tar" "${Images_name}:${TEST_TAG}"
     CHECK_RESULT $?
 
-    test -f ${Images_name}.tar
+    test -f "${EXPORT_IMAGE_NAME}.tar"
     CHECK_RESULT $?
 
-    Images_id=$(docker images ${Images_name} -q)
-    docker rmi ${Images_id}
-    docker images | grep ${Images_name}
+    Images_id=$(docker images "${Images_name}" -q)
+    docker rmi "${Images_id}"
+    docker images | grep "${Images_name}"
     CHECK_RESULT $? 1
-    docker load -i ${Images_name}.tar
+    docker load -i "${EXPORT_IMAGE_NAME}.tar"
     CHECK_RESULT $?
 
-    docker images | grep ${Images_name}
+    docker images | grep "${Images_name}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf ${Images_name}.tar
+    rm -rf "{EXPORT_IMAGE_NAME}.tar"
     clean_docker_env
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

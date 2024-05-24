@@ -17,7 +17,8 @@
 # @Desc      :   data copy between the container and the host
 # ############################################
 
-source ../common/prepare_docker.sh
+
+source "${OET_PATH}/testcases/smoke-test/smoke-docker/common/prepare_docker.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_docker_env
@@ -31,17 +32,17 @@ function run_test() {
     test -d testdir && rm -rf testdir
     mkdir testdir
     touch testdir/mytest.txt
-    docker cp testdir ${containers_id}:/root
+    docker cp testdir "${containers_id}":/root
     CHECK_RESULT $?
 
-    docker exec -i ${containers_id} /bin/sh >testlog <<EOF
+    docker exec -i "${containers_id}" /bin/sh >testlog <<EOF
 ls /root/testdir
 exit
 EOF
     grep "mytest.txt" testlog
     CHECK_RESULT $?
     test -d root && rm -rf root
-    docker cp ${containers_id}:/root .
+    docker cp "${containers_id}":/root .
     CHECK_RESULT $?
     test -f root/testdir/mytest.txt
     CHECK_RESULT $?
@@ -51,9 +52,9 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     clean_docker_env
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testdir root testlog
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
