@@ -5,6 +5,9 @@
             "name": "oe_test_service_e2scrub_all"
         },
         {
+            "name": "oe_test_e2fsprogs_badblocks"
+        },  
+  	{
             "name": "oe_test_service_e2scrub_reap"
         },
         {
