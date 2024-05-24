@@ -37,7 +37,6 @@ xor rdi, rdi
 syscall
 EOL
     LOG_INFO "End to prepare the test environment."
-    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
@@ -45,6 +44,10 @@ function run_test() {
     nasm -f elf64 test.asm -o your_file.o
     test -f your_file.o
     CHECK_RESULT $? 0 0 "Check nasm -f elf64 failed"
+    if [[ "$NODE1_FRAME"x == "ppc64le"x ]];then
+        echo "Non ppc64le architecture,this function is not supported"
+        exit
+    fi
     ld your_file.o -o your_program
     test -f your_program
     CHECK_RESULT $? 0 0 "Failed to compile assembly code into an executable file"
