@@ -41,7 +41,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     kill -9 "$(pgrep -f 'wget')"
-    rm -rf !(*.sh)
+    find . -type f ! -iname "*.sh" -delete
     DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
