@@ -17,7 +17,7 @@
 # @Desc      :   Test docker.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -31,7 +31,9 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_restart ${service}
     test_enabled ${service}
-    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v "level=warning" | grep -v "level=info"
+    journalctl --since "${log_time}" -u "${service}" \
+        | grep -i "fail\|error"  \
+        | grep -v "level=warning\|level=info\|no OpenTelemetry endpoint: skip plugin"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     systemctl start docker.service
     sed -i 's\dockerd\dockerd --log-level=info\g' /usr/lib/systemd/system/docker.service
@@ -46,7 +48,7 @@ function post_test() {
     sed -i 's\dockerd --log-level=info\dockerd\g' /usr/lib/systemd/system/docker.service
     systemctl daemon-reload
     systemctl reload docker.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
