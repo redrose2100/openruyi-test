@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "gdk-pixbuf2 python"
+  DNF_INSTALL "gdk-pixbuf2 python3-gobject"
   LOG_INFO "End of environmental preparation!"
 }
 
