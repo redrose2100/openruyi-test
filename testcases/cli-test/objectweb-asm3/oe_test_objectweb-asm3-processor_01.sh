@@ -21,14 +21,14 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL objectweb-asm3-processor
+  DNF_INSTALL objectweb-asm3
   LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
   cd /usr/share/java/objectweb-asm3 || exit
-  objectweb-asm3-processor code xml -in asm.jar -out output.xml 
+  objectweb-asm3-processor code xml -in asm.jar -out asm.xml 
   CHECK_RESULT $? 0 0 "Error converting bytecode from code format to XML format"
   objectweb-asm3-processor xml code -in asm.xml -out output.jar 
   CHECK_RESULT $? 0 0 "Error converting bytecode from XML format to code format"
