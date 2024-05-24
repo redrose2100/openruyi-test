@@ -17,7 +17,8 @@
 # @Desc      :   Create container to run simple application
 # ############################################
 
-source ../common/prepare_docker.sh
+
+source "${OET_PATH}/testcases/smoke-test/smoke-docker/common/prepare_docker.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_docker_env
@@ -26,10 +27,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker run ${Images_name} /bin/echo "Hello world" | grep "Hello world"
+    docker run "${Images_name}:${TEST_TAG}" /bin/echo "Hello world" | grep "Hello world"
     CHECK_RESULT $?
 
-    docker ps -l | grep ${Images_name} | grep Hello
+    docker ps -l | grep "${Images_name}" | grep Hello
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
@@ -37,8 +38,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     clean_docker_env
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

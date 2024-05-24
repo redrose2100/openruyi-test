@@ -17,7 +17,8 @@
 # @Desc      :   Execute new commands in the container
 # ############################################
 
-source ../common/prepare_docker.sh
+
+source "${OET_PATH}/testcases/smoke-test/smoke-docker/common/prepare_docker.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_docker_env
@@ -27,14 +28,14 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     run_docker_container
-    docker exec -i ${containers_id} /bin/sh >testlog <<EOF
+    docker exec -i "${containers_id}" /bin/sh >testlog <<EOF
 ls /
 exit
 EOF
     grep -E 'bin|root' testlog
     CHECK_RESULT $?
 
-    docker exec -i ${containers_id} /bin/sh >testlog <<EOF
+    docker exec -i "${containers_id}" /bin/sh >testlog <<EOF
 ls / | grep bin
 exit
 EOF
@@ -46,9 +47,9 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     clean_docker_env
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testlog
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

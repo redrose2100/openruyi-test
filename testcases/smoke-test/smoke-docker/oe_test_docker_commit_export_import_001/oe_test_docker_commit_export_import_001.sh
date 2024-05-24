@@ -17,7 +17,7 @@
 # @Desc      :   Commit / export / import application of container
 # ############################################
 
-source ../common/prepare_docker.sh
+source "${OET_PATH}/testcases/smoke-test/smoke-docker/common/prepare_docker.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_docker_env
@@ -27,34 +27,35 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     run_docker_container
-    docker commit ${containers_id} ${Images_name}:test
+    docker commit "${containers_id}" "${Images_name}:test"
     CHECK_RESULT $?
 
-    docker images | grep ${Images_name} | grep -w test
+    docker images | grep "${Images_name}" | grep -w test
     CHECK_RESULT $?
 
-    docker export ${containers_id} > ${Images_name}.tar
+    EXPORT_IMAGE_NAME=export_test
+    docker export "${containers_id}" > "${EXPORT_IMAGE_NAME}.tar"
     CHECK_RESULT $?
-    test -f ${Images_name}.tar
+    test -f "${EXPORT_IMAGE_NAME}.tar"
     CHECK_RESULT $?
 
     clean_docker_env
 
-    docker images | grep ${Images_name}
+    docker images | grep "${Images_name}"
     CHECK_RESULT $? 1
-    docker import ${Images_name}.tar ${Images_name}:latest
+    docker import "${EXPORT_IMAGE_NAME}.tar" "${Images_name}:${TEST_TAG}"
     CHECK_RESULT $?
-    docker images | grep ${Images_name} | grep latest
+    docker images | grep "${Images_name}" | grep "${TEST_TAG}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    docker rmi $(docker images -q)
-    DNF_REMOVE
-    rm -rf ${Images_name}.tar
+    docker rmi "$(docker images -q)"
+    DNF_REMOVE "$@"
+    rm -rf "${EXPORT_IMAGE_NAME}.tar"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

@@ -22,10 +22,18 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "docker"
+    if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
+    cat > Dockerfile << EOF
+FROM busybox:latest
+RUN touch test
+EOF
+    else
     cat > Dockerfile << EOF
 FROM centos:latest
 RUN touch test
 EOF
+    fi
+
     LOG_INFO "End of environmental preparation!"
 
 }
@@ -41,9 +49,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf Dockerfile
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

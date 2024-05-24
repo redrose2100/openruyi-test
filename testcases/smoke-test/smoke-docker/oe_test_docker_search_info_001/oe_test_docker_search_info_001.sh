@@ -17,7 +17,8 @@
 # @Desc      :   Container information query
 # ############################################
 
-source ../common/prepare_docker.sh
+
+source "${OET_PATH}/testcases/smoke-test/smoke-docker/common/prepare_docker.sh"
 function config_params() {
     LOG_INFO "Start loading data."
     container_name=container_test
@@ -32,17 +33,17 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    containers_id=$(docker run -itd --name=${container_name} ${Images_name})
+    containers_id=$(docker run -itd --name=${container_name} "${Images_name}:${TEST_TAG}" "${DEFAULT_RUN_CMD}")
     CHECK_RESULT $?
 
-    docker inspect -f {{.State.Status}} ${container_name} | grep running
+    docker inspect -f "{{.State.Status}}" "${container_name}" | grep running
     CHECK_RESULT $?
-    docker inspect -f {{.Name}} ${container_name} | grep ${container_name}
+    docker inspect -f "{{.Name}}" "${container_name}" | grep "${container_name}"
     CHECK_RESULT $?
     
-    docker inspect -f {{.State.Status}} ${containers_id} | grep running
+    docker inspect -f "{{.State.Status}}" "${containers_id}" | grep running
     CHECK_RESULT $?
-    docker inspect -f {{.Name}} ${containers_id} | grep ${container_name}
+    docker inspect -f "{{.Name}}" "${containers_id}" | grep "${container_name}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
@@ -50,8 +51,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     clean_docker_env
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
