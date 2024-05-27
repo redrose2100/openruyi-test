@@ -35,7 +35,7 @@ function run_test() {
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "Start environment cleanup."
     sed -i '$d' /etc/abrt/abrt.conf
     systemctl stop abrtd
     DNF_REMOVE
