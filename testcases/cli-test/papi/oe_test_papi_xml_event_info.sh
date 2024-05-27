@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of papi command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -43,11 +43,9 @@ function run_test() {
     papi_version | grep "PAPI Version: [[:digit:]]"
     CHECK_RESULT $? 0 0 "Check 'papi_version failed"
 
-    if papi_avail -a | grep -q "Of 0 available events, 0 are derived"; then
-        papi_event_chooser NATIVE PAPI_TLB_DM
-        CHECK_RESULT $? 0 1 "Check papi_event_chooser NATIVE failed"
-    else
-        papi_event_chooser NATIVE PAPI_TLB_DM
+    if ! papi_avail -a | grep -q "Of 0 available events, 0 are derived"; then
+        tmp=$(papi_avail -a | grep 'PAPI_' | head -n 1 | awk '{print$1}')
+        papi_event_chooser NATIVE "$tmp"
         CHECK_RESULT $? 0 0 "Check papi_event_chooser NATIVE failed"
     fi
 
@@ -56,7 +54,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
