@@ -32,7 +32,7 @@ function run_test() {
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "Start environment cleanup."
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
