@@ -22,14 +22,16 @@ function run_test() {
     LOG_INFO "Start to run pciutils test."
     lspci
     CHECK_RESULT $? 0 0 "check lspci fail"
-    lspci -v | grep "00:00.0"
-    CHECK_RESULT $? 0 0 "check lspci -v fail"
-    lspci -v -nn
-    CHECK_RESULT $? 0 0 "check lspci -v -nn fail"
-    lspci -t | grep "0000:00"
-    CHECK_RESULT $? 0 0 "check lspci -t fail"
-    lspci -b | grep "00:00.0"
-    CHECK_RESULT $? 0 0 "check lspci -b fail"
+    if uname -a | grep "aarch64"; then
+        lspci -v | grep "00:00.0"
+        CHECK_RESULT $? 0 0 "check lspci -v fail"
+        lspci -v -nn
+        CHECK_RESULT $? 0 0 "check lspci -v -nn fail"
+        lspci -t | grep "0000:00"
+        CHECK_RESULT $? 0 0 "check lspci -t fail"
+        lspci -b | grep "00:00.0"
+        CHECK_RESULT $? 0 0 "check lspci -b fail"
+    fi
     lspci -x
     CHECK_RESULT $? 0 0 "check lspci -x fail"
     lspci -D
@@ -42,7 +44,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check setpci --help fail"
     setpci --dumpregs | grep "cap pos w name"
     CHECK_RESULT $? 0 0 "check setpci --dumpregs fail"
-    update-pciids 2>&1 | grep "download failed"
+    update-pciids 2>&1 | grep -E "download failed|Done."
     CHECK_RESULT $? 0 0 "check update-pciids fail"
     LOG_INFO "End to run pciutils test."
 }

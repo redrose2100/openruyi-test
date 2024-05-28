@@ -15,23 +15,24 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   run posix test suite
 #####################################
-
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
-CUR_DATE=`date +'%Y-%m-%d %H:%M:%S'`
+CUR_DATE=$(date +'%Y-%m-%d %H:%M:%S')
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     EXECUTE_T="180m"
+    echo "EXECUTE_T = ${EXECUTE_T}"
 
     MAKEDIR=$(cd .. && pwd)
-    chmod 777 ${MAKEDIR}/make
-    MAKE=${MAKEDIR}/make
+    chmod 777 "${MAKEDIR}"/make
+    MAKE="${MAKEDIR}"/make
 
-    timestap=`stat -c %Y tmp_test/build.log`
-    formart_date=`date '+%Y-%m-%d %H:%M:%S' -d @$timestap`
+    timestap=$(stat -c %Y tmp_test/build.log)
+    formart_date=$(date '+%Y-%m-%d %H:%M:%S' -d @"$timestap")
     date -s "$formart_date"
 
     LOG_INFO "End to prepare the test environment."
@@ -41,26 +42,27 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    pushd tmp_test/
-    pushd posixtestsuite/
+    pushd tmp_test/ || exit 1
+    CHECK_RESULT $? 0 0 "no tmp_test uploaded, all test not run"
+    pushd posixtestsuite/ || exit 1
+    CHECK_RESULT $? 0 0 "no posixtestsuite uploaded, all test not run"
     POSIX_TARGET=./ ${MAKE} run-tests > ../run.log 2>&1
-    popd
+    popd || exit 1
 
     awk -F': ' '{if(($2=="build" && $3!="PASS") || ($2=="link" && $3!="PASS") || (($2=="execution" && $3=="PASS"))) print $1}' build.log >  skip.name
     cat ../ignore.out >> skip.name
     awk -F': ' '{if($2=="execution" && $3!="PASS") print $1}' run.log > fail.name
 
-    while read line || [[ -n $line ]]; do
-        grep -q $line skip.name
-        if [ $? -eq 0 ]; then
+    while read -r line || [[ -n $line ]]; do
+        if grep -q "$line" skip.name; then
             continue
         fi
         # 单独再执行一次
-        ./posixtestsuite/$line.test
+        ./posixtestsuite/"$line".test
         CHECK_RESULT $? 0 0 "run posix testcase fail case name: $line"
     done < fail.name
 
-    popd
+    popd || exit 1
 
     LOG_INFO "End to run test."
 }

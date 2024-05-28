@@ -12,7 +12,7 @@ src_path="$(
   pwd
 )"
 
-DNF_INSTALL "make autoconf unzip"
+dnf install -y  make autoconf unzip
 
 pushd "${src_path}" || exit 1
 autoreconf -vif

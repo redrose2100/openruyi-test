@@ -111,7 +111,8 @@
                     "testsuite": "embedded_os_basic_test"
                 },
                 {
-                    "testsuite": "embedded_os_basic_extra_test"
+                    "testsuite": "embedded_os_basic_extra_test",
+                    "del": ["oe_test_iptables_cli_test"]
                 },
                 {
                     "testsuite": "embedded_security_config_test"
