@@ -29,12 +29,11 @@ import mugen_log
 import ssh_cmd
 
 
-def local_cmd(cmd, conn=None):
+def local_cmd(cmd):
     """本地命令执行
 
     Args:
         cmd ([str]): 需要执行的命令
-        conn ([class], optional): 建立和远端的连接. Defaults to None.
 
     Returns:
         [list]: 命令执行后的返回码，命令执行结果
