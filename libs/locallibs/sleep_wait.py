@@ -6,7 +6,7 @@
 # @License: Mulan PSL v2
 # @Desc   : 命令执行超时
 """
-
+import mugen_log
 import subprocess
 import time
 import os
@@ -16,7 +16,6 @@ import re
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
-import mugen_log
 
 
 def sleep_wait(wait_time, cmd=None, mode=1):
@@ -45,7 +44,6 @@ def sleep_wait(wait_time, cmd=None, mode=1):
             p = subprocess.Popen(
                 cmd,
                 stderr=sys.stderr,
-                close_fds=True,
                 stdout=sys.stdout,
                 text=True,
                 shell=True,
@@ -59,7 +57,7 @@ def sleep_wait(wait_time, cmd=None, mode=1):
             mugen_log.logging("error", "Timeout : " + str(e))
             p.send_signal(2)
             exitcode = 143
-        except KeyboardInterrupt as e:
+        except KeyboardInterrupt:
             mugen_log.logging("error", "KeyboardInterrupt : 使用ctrl c结束了进程.")
             exitcode = 1
         except Exception as e:
