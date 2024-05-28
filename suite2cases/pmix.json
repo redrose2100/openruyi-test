@@ -3,6 +3,9 @@
   "cases": [
     {
       "name": "oe_test_pmix"
+    },
+    {
+      "name": "oe_test_pmix_01"	    
     }
   ]
 }
