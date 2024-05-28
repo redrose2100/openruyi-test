@@ -10,3 +10,4 @@ all:
 .PHONY: clean
 clean:
 	sh ../common.sh -r "all"
+
