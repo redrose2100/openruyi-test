@@ -33,6 +33,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "ipcs -all execution failure"
     ipcs -m |grep -E "共享内存段|Shared Memory Segments"
     CHECK_RESULT $? 0 0 "ipcs -m execution failure"
+    ipcs -h |grep -E "用法|Usage"
+    CHECK_RESULT $? 0 0 "ipcs -h execution failure"
+    ipcs -V |grep ipcs
+    CHECK_RESULT $? 0 0 "ipcs -V execution failure"
+    ipcs -q |grep -E "消息队列|Message Queues"
+    CHECK_RESULT $? 0 0 "ipcs -q execution failure"
 }
 
 main "$@"
