@@ -33,7 +33,7 @@ function run_test() {
     systemctl daemon-reload
     systemctl start tangd.socket
     CHECK_RESULT $? 0 0 "Failed to start tangd.socket service"
-    SLEEP_WAIT 1
+    SLEEP_WAIT 10
     tang-show-keys 8009
     CHECK_RESULT $? 0 0 "Failed to check whether the Tang server advertises the signature key from the new key pair"
     rm -rf /var/db/tang/*
