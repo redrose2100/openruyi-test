@@ -849,6 +849,9 @@
       },
       {
            "name": "oe_test_pidof"
+      },
+      {
+           "name": "oe_test_link"
       }
     ]
 }
