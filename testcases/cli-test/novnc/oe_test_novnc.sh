@@ -52,6 +52,21 @@ function run_test() {
                 send "y\\r"
             }
         }
+        expect {
+            "Password:" {
+                send "${NODE1_PASSWORD}\\r"
+            }
+        }
+        expect {
+            "Verify:" {
+                send "${NODE1_PASSWORD}\\r"
+            }
+        }
+        expect {
+            "y/n*" {
+                send "y\\r"
+            }
+        }
         expect eof
 EOF
 
