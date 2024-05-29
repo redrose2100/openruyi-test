@@ -17,13 +17,13 @@
 # @Desc      :   verify the uasge of rpcsvc-proto command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL rpcgen
+    DNF_INSTALL "rpcgen gcc-c++"
     mkdir rpscvc
-    cd rpscvc
+    cd rpscvc || exit 1
     cp ../common/text.x ./
     LOG_INFO "End of environmental preparation!"
 }
@@ -67,7 +67,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     cd ..
     rm -rf rpscvc
     LOG_INFO "Finish restoring the test environment."
