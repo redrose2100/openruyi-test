@@ -42,23 +42,19 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Error: [--localdir] configure file failed to generate."
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [--localdir] failed to re-config."
-    sed -i 's/Makefilere/Makefile/g' configure.in
-    \cp -f configure.bak configure
-    sed -i 's/Makefile/Makefilere/g' configure.in
+    rm -rf configure
     autoreconf-2.13 -l test-macro/acconfig.h 2>&1
     CHECK_RESULT $? 0 0 "Error: autoreconf-2.13 [-l] run failed."
     test -f configure
     CHECK_RESULT $? 0 0 "Error: [-l] configure file failed to generate."
     diff configure configure.bak | grep "Makefilere"
     CHECK_RESULT $? 0 0 "Error: autoreconf [-l] failed to re-config."
-    sed -i 's/Makefilere/Makefile/g' configure.in
-    \cp -f configure.bak configure
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf configure.in configure configure.bak test-macro
     cd "$dir" || exit
     LOG_INFO "End to restore the test environment."
