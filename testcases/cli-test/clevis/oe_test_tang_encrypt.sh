@@ -24,7 +24,7 @@ function pre_test() {
     ls /etc/systemd/system/tangd.socket.d && rm -rf /etc/systemd/system/tangd.socket.d
     SOCKET_CONTENT='[Socket]\nListenStream=\nListenStream=8009'
     mkdir /etc/systemd/system/tangd.socket.d
-    echo -e ${SOCKET_CONTENT} > /etc/systemd/system/tangd.socket.d/override.conf
+    echo -e "${SOCKET_CONTENT}" > /etc/systemd/system/tangd.socket.d/override.conf
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -33,7 +33,7 @@ function run_test() {
     systemctl daemon-reload
     systemctl start tangd.socket
     CHECK_RESULT $? 0 0 "Failed to start tangd.socket service"
-    SLEEP_WAIT 1
+    SLEEP_WAIT 10
     tang-show-keys 8009
     CHECK_RESULT $? 0 0 "Failed to check whether the Tang server advertises the signature key from the new key pair"
     rm -rf /var/db/tang/*
@@ -48,7 +48,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /etc/systemd/system/tangd.socket.d /var/db/tang
     LOG_INFO "Finish environment cleanup!"
 }
