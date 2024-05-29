@@ -833,6 +833,9 @@
             "name": "oe_test_lscpu"
         },
 	{
+            "name": "oe_test_lsipc"
+        },
+	{
 	     "name":"oe_test_lzo_002"
 	},
 	{
