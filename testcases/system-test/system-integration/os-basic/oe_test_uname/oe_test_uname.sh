@@ -31,6 +31,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Execution failed"
     LANG=C uname --help | grep "Usage"
     CHECK_RESULT $? 0 0 "Execution failed"
+    uname -s | grep "Linux"
+    CHECK_RESULT $? 0 0 "Execution failed"
     LOG_INFO "End to run test."
 }
 
