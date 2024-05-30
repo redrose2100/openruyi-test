@@ -18,6 +18,9 @@
         },
         {
             "name": "oe_test_utshell_exit_01"
+        },
+        {
+            "name": "oe_test_utshell_test_03"
         }
     ]
 }
