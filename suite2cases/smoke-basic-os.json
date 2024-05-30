@@ -852,7 +852,10 @@
       },
       {
            "name": "oe_test_link"
-      }
+      },
+       {
+           "name": "oe_test_lastlog"
+       }
     ]
 }
 
