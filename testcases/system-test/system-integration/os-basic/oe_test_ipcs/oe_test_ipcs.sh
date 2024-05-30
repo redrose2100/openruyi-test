@@ -39,6 +39,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "ipcs -V execution failure"
     ipcs -q |grep -E "消息队列|Message Queues"
     CHECK_RESULT $? 0 0 "ipcs -q execution failure"
+    ipcs -s |grep -E "信号量数组|Semaphore Arrays"
+    CHECK_RESULT $? 0 0 "ipcs -s execution failure"
+    ipcs -t |grep -E "消息队列|Message"
+    CHECK_RESULT $? 0 0 "ipcs -r execution failure"
+    ipcs -p |grep -E "PID"
+    CHECK_RESULT $? 0 0 "ipcs -p execution failure"
 }
 
 main "$@"
