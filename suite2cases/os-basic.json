@@ -961,6 +961,9 @@
 	},
 	{
 	   "name": "oe_test_fincore"
+	},
+	{
+	   "name": "oe_test_udisksctl"
 	}
     ]
 }
