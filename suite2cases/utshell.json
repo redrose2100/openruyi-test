@@ -21,6 +21,9 @@
         },
         {
             "name": "oe_test_utshell_test_03"
+        },
+        {
+            "name": "oe_test_utshell_source_01"
         }
     ]
 }
