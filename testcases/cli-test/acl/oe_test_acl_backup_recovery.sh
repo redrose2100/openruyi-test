@@ -59,7 +59,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf test1
     userdel -rf test2
-    rm -rf testfile testdir
+    rm -rf testfile testdir acl*.txt
     LOG_INFO "Finish environment cleanup!"
 }
 
