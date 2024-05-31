@@ -27,8 +27,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution dbxtool.service
-    test_reload dbxtool.service
+    if [ "$(uname -m)" == "riscv64" ]; then
+		systemctl start dbxtool.service
+		systemctl reload dbxtool.service
+    else
+		test_execution dbxtool.service
+		test_reload dbxtool.service
+    fi
     LOG_INFO "Finish test!"
 }
 
