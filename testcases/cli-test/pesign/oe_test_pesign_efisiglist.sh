@@ -17,13 +17,13 @@
 # @Desc      :   verify the uasge of pesign command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL pesign
     mkdir pesigntest
-    cd pesigntest
+    cd pesigntest || exit
     cp ../common/baidu.zip ./
     unzip baidu.zip
     LOG_INFO "End of environmental preparation!"
@@ -31,6 +31,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    tmp_version=$(yum list installed | grep pesign | tr -s " " | cut -d " " -f 2 | cut -d "-" -f 1)
+    version=$(("$tmp_version" + 0))
+    CHECK_RESULT $? 0 0 "Get pesign version failed" 1
+    if [ "$version" -lt 114 ];
+    then
     efisiglist -? 2>&1 | grep "Usage: efisiglist"
     CHECK_RESULT $? 0 0 "Check efisiglist -? failed"
     efisiglist --help 2>&1 | grep "Usage: efisiglist"
@@ -47,12 +52,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check efisiglist -i -o --certificate failed"
     efisiglist -i test -o test -r -h 741a03a10f3de6b2eb81985d06b70f549e762d2e9a1895c5156ffc5e10ffde32
     CHECK_RESULT $? 0 0 "Check efisiglist -i -o -r failed" && test -f ./test
+    fi
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     cd ..
     rm -rf pesigntest
     LOG_INFO "Finish restore the test environment."
