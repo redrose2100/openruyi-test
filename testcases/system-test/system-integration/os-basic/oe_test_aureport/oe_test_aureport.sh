@@ -16,7 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command aureport
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "audit"
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "start to run test."
@@ -39,6 +45,12 @@ function run_test() {
     aureport --help | grep "usage"
     CHECK_RESULT $? 0 0 "don't dispaly usage"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
