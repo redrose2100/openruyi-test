@@ -12,7 +12,7 @@ src_path="$(
 )"
 pushd "${src_path}" || exit 1
 
-DNF_INSTALL "autoconf autoconf-archive"
+dnf install -y  autoconf autoconf-archive
 
 autoconf -f
 if [ -n "${TARGET_PREFIX}" ]; then

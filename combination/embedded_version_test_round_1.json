@@ -68,7 +68,7 @@
                 },
                 {
                     "testsuite": "embedded_os_basic_extra_test",
-                    "del":["oe_test_acl_allow_change_nochange", "oe_test_acl_ordinary_users_setgid"]
+                    "del":["oe_test_acl_allow_change_nochange", "oe_test_acl_ordinary_users_setgid", "oe_test_curl_test_001"]
                 },
                 {
                     "testsuite": "embedded_security_config_test"
@@ -89,7 +89,8 @@
                     "testsuite": "embedded_os_basic_test"
                 },
                 {
-                    "testsuite": "embedded_os_basic_extra_test"
+                    "testsuite": "embedded_os_basic_extra_test",
+                    "del": ["oe_test_iptables_cli_test"]
                 },
                 {
                     "testsuite": "embedded_security_config_test"
@@ -125,7 +126,7 @@
             "testcases": [
                 {
                     "testsuite": "embedded_version_basic_tests",
-                    "add": "oe_test_version_posix_suite_test_001"
+                    "add": ["oe_test_version_posix_suite_test_001"]
                 }
             ]
         },

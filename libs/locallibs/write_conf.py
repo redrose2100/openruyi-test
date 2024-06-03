@@ -87,7 +87,7 @@ def write_conf(ip, password, port=22, user="root", run_remote=False, copy_all=Tr
         NODE_DATA["LOCALTION"] = "remote"
 
     # TODO 项目中所有的LOCALTION应改为LOCATION
-    if NODE_DATA["LOCALTION"] == "remote":
+    if NODE_DATA["LOCALTION"] == "remote" or run_remote:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
         try:

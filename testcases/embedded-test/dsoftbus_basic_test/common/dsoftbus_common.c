@@ -521,6 +521,8 @@ int ListDevice(int para)
     if (node->status != DEVICE_ONLINE) {
         return -1;
     }
+
+    return 0;
 }
 
 void PublishSuccess(int publishId)

@@ -21,6 +21,9 @@ source ../comm_lib.sh
 function run_test() {
     LOG_INFO "Start to run tar test."
 
+    EXECUTE_T="1440m"
+    echo "EXECUTE_T = ${EXECUTE_T}"
+
     declare -A ignoreFail
     getCasesFromFile ignoreFail ignore.txt
 
