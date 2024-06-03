@@ -42,6 +42,9 @@
         },
         {
             "name": "oe_test_utshell_while_01"
+        },
+        {
+            "name": "oe_test_utshell_unset"
         }
     ]
 }
