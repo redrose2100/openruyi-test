@@ -32,6 +32,9 @@
             "name": "oe_test_utshell_source_01"
         },
         {
+            "name": "oe_test_utshell_hash"
+        },
+        {
             "name": "oe_test_utshell_compgen_01"
         }
     ]
