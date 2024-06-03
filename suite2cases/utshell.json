@@ -30,6 +30,9 @@
         },
         {
             "name": "oe_test_utshell_compgen_01"
+        },
+        {
+            "name": "oe_test_utshell_compgen_02"
         }
     ]
 }
