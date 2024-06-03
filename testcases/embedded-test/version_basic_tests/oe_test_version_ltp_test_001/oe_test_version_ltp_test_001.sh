@@ -15,10 +15,11 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   run ltp test
 #####################################
+# shellcheck disable=SC1091
 
-source ../comm_lib.sh
+source ../../common_libs/comm_lib.sh
 
-CUR_DATE=`date +'%Y-%m-%d %H:%M:%S'`
+CUR_DATE=$(date +'%Y-%m-%d %H:%M:%S')
 CUR_DIR=$(
         cd "$(dirname "$0")" || exit 1
         pwd
@@ -28,14 +29,14 @@ CUR_DIR=$(
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    EXECUTE_T="1440m"
+ #   EXECUTE_T="1440m"
 
     MAKEDIR=$(cd .. && pwd)
-    chmod 777 ${MAKEDIR}/make
-    MAKE=${MAKEDIR}/make
+    chmod 777 "${MAKEDIR}"/make
+  #  MAKE=${MAKEDIR}/make
 
-    timestap=`stat -c %Y tmp_test/allinfo.tar`
-    formart_date=`date '+%Y-%m-%d %H:%M:%S' -d @$timestap`
+    timestap=$(stat -c %Y tmp_test/allinfo.tar)
+    formart_date=$(date '+%Y-%m-%d %H:%M:%S' -d @"$timestap")
     date -s "$formart_date"
 
     # 将头文件等解压到系统根目录，无法恢复
@@ -48,35 +49,35 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    pushd tmp_test
+    pushd tmp_test || exit
 
     mkdir -p run_tmp
     chmod 777 run_tmp
 
-    pushd ltp_run
-    ./runltp -p -q  -l ${CUR_DIR}/tmp_test/run_log \
-                    -o ${CUR_DIR}/tmp_test/run_output \
-                    -C ${CUR_DIR}/tmp_test/run_fail \
-                    -d ${CUR_DIR}/tmp_test/run_tmp \
-                    -S ${CUR_DIR}/skiptest
+    pushd ltp_run || exit
+    ./runltp -p -q  -l "${CUR_DIR}"/tmp_test/run_log \
+                    -o "${CUR_DIR}"/tmp_test/run_output \
+                    -C "${CUR_DIR}"/tmp_test/run_fail \
+                    -d "${CUR_DIR}"/tmp_test/run_tmp \
+                    -S "${CUR_DIR}"/skiptest
     
     # 不设定-d重新跑一下失败的用例
     umount /tmp
-    ./runltp -p -q  -f ${CUR_DIR}/tmp_test/run_fail \
-                    -l ${CUR_DIR}/tmp_test/run_log_1 \
-                    -o ${CUR_DIR}/tmp_test/run_output_1 \
-                    -C ${CUR_DIR}/tmp_test/run_fail_1              
-    popd
+    ./runltp -p -q  -f "${CUR_DIR}"/tmp_test/run_fail \
+                    -l "${CUR_DIR}"/tmp_test/run_log_1 \
+                    -o "${CUR_DIR}"/tmp_test/run_output_1 \
+                    -C "${CUR_DIR}"/tmp_test/run_fail_1              
+    popd || exit
 
-    while read line || [[ -n $line ]]; do
-        grep -q $line ignore.out
-        if [ $? -eq 0 ]; then
+    while read -r line || [[ -n $line ]]; do
+        grep -q "$line" ignore.out
+        if mycmd; then
             continue
         fi
         CHECK_RESULT $? 0 0 "run posix testcase fail case name: $line"
     done < run_fail_1
 
-    popd
+    popd || exit
 
     LOG_INFO "End to run test."
 }
