@@ -12,7 +12,7 @@ src_path=$(
   pwd
 )
 
-DNF_INSTALL "autoconf make"
+dnf install -y autoconf make
 
 pushd "${src_path}" || exit 1
 ./configure --host="${CROSS_COMPILE%-}" --build="$(gcc -dumpmachine)"

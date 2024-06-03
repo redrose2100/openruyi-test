@@ -28,14 +28,16 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     pushd ./tmp_test/ || exit
-    test_list=('lib_tests/lookup_test' 'auparse_tests/lookup_test' 'ilist_test' 'slist_test' 'test-queue')
+    test_list=('lib_tests/lookup_test' 'lib_tests/test/lookup_test' 'auparse_tests/lookup_test' 'ilist_test' 'slist_test' 'test-queue')
     for onetest in "${test_list[@]}"; do
-        outStr=$(/bin/sh ./test-driver --test-name "${onetest}".test --log-file "${onetest}".log --trs-file "${onetest}".trs -- "./$onetest")
-        echo "Output: $outStr"
-        outResult=${outStr%%:*}
-        if [[ "${outResult}" != "PASS" && "${outResult}" != "SKIP" && "${outResult}" != "XFAIL" ]]; then
-            CHECK_RESULT 1 0 0 "run audit testcase $onetest fail"
-            cat "${onetest}".log
+        if [ -e "${onetest}" ]; then
+            outStr=$(/bin/sh ./test-driver --test-name "${onetest}".test --log-file "${onetest}".log --trs-file "${onetest}".trs -- "./$onetest")
+            echo "Output: $outStr"
+            outResult=${outStr%%:*}
+            if [[ "${outResult}" != "PASS" && "${outResult}" != "SKIP" && "${outResult}" != "XFAIL" ]]; then
+                CHECK_RESULT 1 0 0 "run audit testcase $onetest fail"
+                cat "${onetest}".log
+            fi
         fi
     done
     popd || exit

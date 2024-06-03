@@ -170,6 +170,14 @@ def generate_sdk_set_script(sdk_path:str, env_name:str):
                                   f'y\n' \
                                   f'EOF\n' 
         tmp_sdk_path = tmp_sdk_name
+    if os.path.isfile(sdk_path):
+        tmp_sdk_path = os.path.join(TMP_DOWNLOAD_PATH, env_name)
+        tmp_sdk_name = os.path.join(tmp_sdk_path, "sdk")
+        sdk_script = sdk_script + f'sh {sdk_path} <<EOF\n' \
+                                  f'{tmp_sdk_name}\n' \
+                                  f'y\n' \
+                                  f'EOF\n' 
+        tmp_sdk_path = tmp_sdk_name
     sdk_script = sdk_script + f'source_path=$(find {tmp_sdk_path} -name "environment-setup-*")\n' + \
                               'source ${source_path}'
     return sdk_script                

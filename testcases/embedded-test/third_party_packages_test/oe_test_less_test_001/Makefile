@@ -1,5 +1,6 @@
 all:
-	sh ../common.sh -s "https://github.com/gwsw/less.git" "v590"
+	if [[  ${DOWNLOAD_BRANCH}  =~ "22.03" ]]; then download_branch=v590; else download_branch=v633; fi; \
+	sh ../common.sh -s "https://github.com/gwsw/less.git" "$${download_branch}"
 	cp -rR ./tmp_download/* ./tmp_extract/
 	cd ./tmp_extract/less/lesstest && \
 	sed -i "s/CC =/# CC =/g" Makefile && \

@@ -10,7 +10,7 @@ testsuite_path="$(
   cd "${CURRENT_PATH}"/tmp_extract/gdb*/gdb/testsuite || exit 1
   pwd
 )"
-DNF_INSTALL "make"
+dnf install -y  make
 
 # build test
 pushd ${testsuite_path} || exit 1
