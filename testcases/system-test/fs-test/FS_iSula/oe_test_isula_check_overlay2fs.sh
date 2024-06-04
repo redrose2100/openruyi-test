@@ -16,42 +16,54 @@
 #@Desc      	:   check isula overlay2fs
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL iSulad
-    if [[ ${NODE1_FRAME} == "aarch64" ]]; then
-        wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/aarch64/openEuler-docker.aarch64.tar.xz
-        image_name="openEuler-docker.aarch64.tar.xz"
-    else 
-        wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/x86_64/openEuler-docker.x86_64.tar.xz
-        image_name="openEuler-docker.x86_64.tar.xz"
-    fi
+    DNF_INSTALL "lcr iSulad"
+
     systemctl start isulad
-    isula load -i $image_name
-    image_id=$(isula images | grep openeuler-20.03-lts-sp1 | head -n 1 | awk '{print $3}')
-    isula create $image_id
+    echo "Architecture:${NODE1_FRAME}"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        TEST_TAG=24.03
+        TEST_IMAGE=jchzhou/oerv
+        image_name="${TEST_TAG}_docker_image.tar.gz"
+        wget "https://repo.tarsier-infra.isrc.ac.cn/openEuler-RISC-V/testing/2403LTS-test/v1/${image_name}"
+    else
+        TEST_IMAGE=openeuler-20.03-lts-sp1
+        wget "https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/${NODE1_FRAME}/openEuler-docker.${NODE1_FRAME}.tar.xz"
+        image_name="openEuler-docker.${NODE1_FRAME}.tar.xz"
+    fi
+    
+    isula load -i "$image_name"
+    image_id=$(isula images | grep "${TEST_IMAGE}" | head -n 1 | awk '{print $3}')
+    isula create "$image_id"
     mkdir -p /home/isula_dir
     isula_id=$(isula ps -a | grep "Created" | head -n 1 | awk '{print $1}')
-    isula start $isula_id
+    isula start "$isula_id"
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    isula inspect $isula_id | grep cgroup.dir | grep "/isulad"
+    isula inspect "$isula_id" | grep cgroup.dir | grep "/isulad"
     CHECK_RESULT $? 0 0 "The isula doesn't have /home/isula_dir."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    isula stop -f $isula_id
-    isula rm $isula_id
-    isula rmi $(docker images -q)
-    DNF_REMOVE
-    rm -rf /home/isula_dir $image_name
+    containers_ids=$(isula ps -a -q)
+    for container_id in ${containers_ids}; do
+        isula stop -f "${container_id}"
+        isula rm "${container_id}"
+    done
+    images_ids=$(isula images -q)
+    for image_id in ${images_ids}; do
+        isula rmi "${image_id}"
+    done
+    DNF_REMOVE "$@"
+    rm -rf "$image_name"
     systemctl stop isulad
     LOG_INFO "End to restore the test environment."
 }
