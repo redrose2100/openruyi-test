@@ -2,6 +2,9 @@
     "path": "${OET_PATH}/testcases/smoke-test/smoke-basic-os",
     "cases": [
         {
+            "name": "oe_test_head"
+        },
+        {
             "name": "oe_test_acl_001"
         },
         {
