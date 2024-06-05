@@ -27,6 +27,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
+    yasm --version
+    CHECK_RESULT $? 0 0 "check version failed"
+    yasm --help
+    CHECK_RESULT $? 0 0 "check options failed"
     cat >hello.asm<<EOF
 section .data
     hello db 'Hello, World!',0
@@ -52,15 +56,15 @@ EOF
     yasm -f elf64 hello.asm -o hello.o
     test -f hello.o
     CHECK_RESULT $? 0 0 "Create hello.o file fail"
-    ld hello.o -o hello
-    test -f hello
-    CHECK_RESULT $? 0 0 "Create hello file fail"
-    ./hello | grep "Hello, World!"
-    CHECK_RESULT $? 0 0 "Execution failed"
-    yasm --version
-    CHECK_RESULT $? 0 0 "check version failed"
-    yasm --help
-    CHECK_RESULT $? 0 0 "check options failed"
+    diff hello.o compare.o
+    CHECK_RESULT $? 0 0 "hello.o does not match the expected output"
+    if [[ $(uname -m) == "x86_64" ]]; then
+        ld hello.o -o hello
+        test -f hello
+        CHECK_RESULT $? 0 0 "Create hello file fail"
+        ./hello | grep "Hello, World!"
+        CHECK_RESULT $? 0 0 "Execution failed"
+    fi
     LOG_INFO "Finish test!"
 }
 function post_test() {
