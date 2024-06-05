@@ -51,6 +51,9 @@
         },
         {
             "name": "oe_test_utshell_umask"
+        },
+        {
+            "name": "oe_test_utshell_if"
         }
     ]
 }
