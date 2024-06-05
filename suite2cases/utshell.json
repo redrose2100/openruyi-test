@@ -48,6 +48,9 @@
         },
         {
             "name": "oe_test_utshell_until"
+        },
+        {
+            "name": "oe_test_utshell_umask"
         }
     ]
 }
