@@ -65,6 +65,7 @@ EOF
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     echo "hello world" >>/var/log/httpd/access_log
+    echo "hello world" >>/var/log/httpd/error_log
     systemctl restart httpd
     SLEEP_WAIT 20
     SSH_CMD "grep 'apache-access' /var/log/test" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
