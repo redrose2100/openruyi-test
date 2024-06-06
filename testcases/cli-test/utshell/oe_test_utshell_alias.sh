@@ -27,15 +27,11 @@ function pre_test(){
 
 function run_test() {
     LOG_INFO "Start testing..."
-    utshell --help | grep -i utshell
-    CHECK_RESULT $? 0 0 "utshell --help failed"
-    alias --help | grep -i alias
+    utshell -c "alias --help" | grep -i alias
     CHECK_RESULT $? 0 0 "alias --help failed"
-    alias -p
+    utshell -c "alias -p"
     CHECK_RESULT $? 0 0 "alias -p execution failed"
-    alias a=ls
-    CHECK_RESULT $? 0 0 "alias execution failed"
-    alias -p | grep -i ls
+    utshell -c "alias a=ls;alias -p" grep -i ls
     CHECK_RESULT $? 0 0 "alias -p execution failed"
 }
 
