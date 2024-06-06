@@ -51,6 +51,12 @@
         },
         {
             "name": "oe_test_utshell_umask"
+        },
+        {
+            "name": "oe_test_utshell_alias"
+        },
+        {
+            "name": "oe_test_utshell_unalias"
         }
     ]
 }
