@@ -17,7 +17,7 @@
 #####################################
 # shellcheck disable=SC1091,SC3044,SC2039
 
-source "$OET_PATH/testcases/embedded-test/third_party_packages_test/comm_lib.sh"
+source "$OET_PATH/testcases/embedded-test/third_party_packages_extra_test/comm_lib.sh"
 
 
 function pre_test() {
@@ -40,15 +40,21 @@ function run_test() {
     EXE_PREFIX="" ZSTD_BIN="$(which zstd)" DATAGEN_BIN=./datagen ./playTests.sh > playTests.log 2>&1
     test_stat=$?
     
-    # 输出运行日志
-    cat playTests.log
     if [ $test_stat -ne 0 ]; then
+        # 输出错误日志
+        cat playTests.log
         CHECK_RESULT $test_stat 0 0 "run zstd test fail"        
     fi
 
     popd || true
 
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+  LOG_INFO "Start to restore the test environment."
+  rm -rf ./tmp_test
+  LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
