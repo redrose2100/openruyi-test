@@ -57,6 +57,12 @@
         },
         {
             "name": "oe_test_utshell_if"
+        },
+        {
+            "name": "oe_test_utshell_alias"
+        },
+        {
+            "name": "oe_test_utshell_unalias"
         }
     ]
 }
