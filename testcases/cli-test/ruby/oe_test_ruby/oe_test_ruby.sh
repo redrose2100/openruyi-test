@@ -16,13 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ruby command
 # ############################################
-
+# shellcheck disable=SC1091
 source "../common/common_ruby.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL ruby
-    VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
+    RUBY_VERSION=$( ruby -v  | awk '{match($0, /ruby\s*([0-9]+\.[0-9]+\.[0-9]+)\s*/, a); print a[1]}')
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -64,7 +64,7 @@ EOF
     CHECK_RESULT $?
     echo 'matz' >junk
     CHECK_RESULT $?
-    ruby -p -i.bak -e '$_.upcase!' junk
+    ruby -p -i.bak -e "$_.upcase!" junk
     CHECK_RESULT $?
     grep "matz" junk.bak
     CHECK_RESULT $?
@@ -76,11 +76,11 @@ EOF
     CHECK_RESULT $?
     ruby -l -w -e 'x = 10; print (1 + x)' | grep "11"
     CHECK_RESULT $?
-    echo 'matz' | ruby -p -e '$_.tr! "a-z", "A-Z"' | grep "MATZ"
+    echo 'matz' | ruby -p -e "$_.tr! \"a-z\", \"A-Z\"" | grep "MATZ"
     CHECK_RESULT $?
     ruby -r 'prime' ../common/test.rb | grep -E "2, 3, 5, 7|Hello World!"
     CHECK_RESULT $?
-    if [ $VERSION_ID != "22.03" ]; then
+    if [[ "$(printf '%s\n' "$RUBY_VERSION" "2.6.10" | sort -V | head -n1)" != "2.6.10" ]]; then
        ruby -T1 ../common/hello.rb | grep "Hello World!"
        CHECK_RESULT $?
     fi
@@ -106,4 +106,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
