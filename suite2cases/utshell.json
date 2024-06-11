@@ -66,6 +66,9 @@
         },
         {
             "name": "oe_test_utshell_unalias"
+        },
+        {
+            "name": "oe_test_utshell_test_04"
         }
     ]
 }
