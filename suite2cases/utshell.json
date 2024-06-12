@@ -69,6 +69,9 @@
         },
         {
             "name": "oe_test_utshell_test_04"
+        },
+        {
+            "name": "oe_test_utshell_let_01"
         }
     ]
 }
