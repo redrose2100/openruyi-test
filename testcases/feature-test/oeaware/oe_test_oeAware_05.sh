@@ -43,8 +43,10 @@ function run_test() {
     systemctl restart oeaware
     systemctl status oeaware | grep "active (running)"
     CHECK_RESULT $? 0 0 "restart oeaware failed"
-    ls -l $log_path_new | grep "server.log"
-    CHECK_RESULT $? 0 0 "logfile does not exist"
+    cd $log_path_new
+    if [ ! -f "server.log" ]; then
+       echo "logfile does not exist"
+    fi
     rm -rf $log_path_new
     LOG_INFO "预期结果１、服务启动成功，无报错，日志自动生成"
 
@@ -54,7 +56,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

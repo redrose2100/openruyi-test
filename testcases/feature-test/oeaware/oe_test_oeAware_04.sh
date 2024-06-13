@@ -38,7 +38,7 @@ function run_test() {
     LOG_INFO "操作步骤1、修改log_path为存在的路径,重启服务"
     log_path_new='/var/log/oeAware_new'
     mkdir $log_path_new
-    log_path_new1=` echo $log_path_new | sed 's#\/#\\\/#g'`
+    log_path_new1=$( echo $log_path_new | sed 's#\/#\\\/#g')
     sed -i -e '/^log_path: / s/: .*/: '"$log_path_new1"'/' /etc/oeAware/config.yaml
     systemctl daemon-reload
     systemctl restart oeaware

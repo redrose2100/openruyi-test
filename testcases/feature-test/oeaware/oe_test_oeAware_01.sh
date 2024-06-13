@@ -36,7 +36,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     
     LOG_INFO "操作步骤1、查看帮助信息oeawarectl --help"
-    oeawarectl --help | fgrep "usage: oeawarectl [options]"
+    oeawarectl --help | grep -F "usage: oeawarectl [options]"
     CHECK_RESULT $? 0 0 "Failed command: oeawarectl --help"
     LOG_INFO "预期结果１、显示所有参数信息"
     
