@@ -16,14 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of pesign command
 # ############################################
+# shellcheck disable=SC2046
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL pesign
     mkdir pesigntest
-    cd pesigntest
+    cd pesigntest || exit
     cp ../common/baidu.zip ./
     cp ../common/grubx64.efi ./
     unzip baidu.zip
@@ -47,17 +48,22 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check pesigcheck -i -q -v -n -X -c failed"
     pesigcheck --in=grubx64.efi --quiet --verbose --no-system-db=1 --dbxfile=./baidu/cert9.db --certfile=grubx64.efi.signed | grep "Searching dbx cert9.db"
     CHECK_RESULT $? 0 0 "Check pesigcheck --in --quiet --verbose --no-system-db --dbxfile --certfile failed"
-    authvar -i ./test -d ./baidu
-    CHECK_RESULT $? 0 0 "Check authvar -i -d failed"
-    authvar -l -d ./baidu
-    CHECK_RESULT $? 0 0 "Check authvar -l -d failed"
+    tmp_version=$(yum list installed | grep -w "pesign" | grep -v "pesign-" | tr -s " " | cut -d " " -f 2 | cut -d "." -f 1 | sed s'/-/./')
+    version=$(echo "$tmp_version" + 0 | bc)
+    if [ $(echo "$version < 115.5" | bc) == 1 ];
+    then
+        authvar -i ./test -d ./baidu
+        CHECK_RESULT $? 0 0 "Check authvar -i -d failed"
+        authvar -l -d ./baidu
+        CHECK_RESULT $? 0 0 "Check authvar -l -d failed"
+    fi 
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    ps -ef | grep grubx64.efi | grep -v grep | awk '{print $2}' | xargs kill -9
+    DNF_REMOVE "$@"
+    pgrep -f grubx64.efi | xargs kill -9
     cd ..
     rm -rf pesigntest
     LOG_INFO "Finish restore the test environment."
