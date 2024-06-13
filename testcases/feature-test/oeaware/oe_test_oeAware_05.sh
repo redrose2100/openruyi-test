@@ -37,13 +37,13 @@ function run_test() {
     
     LOG_INFO "操作步骤1、修改log_path为不存在的路径,重启服务"
     log_path_new='/var/log/oeAware_new2'
-    log_path_new2=` echo $log_path_new | sed 's#\/#\\\/#g'`
+    log_path_new2=$( echo "${log_path_new//\//\\\/}")
     sed -i -e '/^log_path: / s/: .*/: '"$log_path_new2"'/' /etc/oeAware/config.yaml
     systemctl daemon-reload
     systemctl restart oeaware
     systemctl status oeaware | grep "active (running)"
     CHECK_RESULT $? 0 0 "restart oeaware failed"
-    cd $log_path_new
+    cd $log_path_new || exit
     if [ ! -f "server.log" ]; then
        echo "logfile does not exist"
     fi
