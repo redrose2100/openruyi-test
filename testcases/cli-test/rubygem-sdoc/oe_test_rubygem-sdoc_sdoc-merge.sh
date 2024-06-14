@@ -17,11 +17,12 @@
 # @Desc      :   Test sdoc-merge
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "rubygem-sdoc tar"
+    SDOC_VERSION=$(sdoc -v)
     tar -xvf ./common/data.tar.gz > /dev/null
     LOG_INFO "End to prepare the test environment."
 }
@@ -30,19 +31,27 @@ function run_test() {
     LOG_INFO "Start to run test."
     sdoc-merge -h | grep "Usage: sdoc-merge"
     CHECK_RESULT $? 0 0 "Check sdoc-merge -h failed"
-    pushd ./mergedata
-    sdoc-merge -o tmp1 --title "Ruby v1.9, Rails v2.3.2.1"  rubydemo rails
-    grep -risn "Ruby v1.9, Rails v2.3.2.1" ./tmp1/index.html 
-    CHECK_RESULT $? 0 0 "Check sdoc-merge --title failed"
-    sdoc-merge -o tmp2 -t "Ruby v1.9, Rails v2.3.2.1"  rubydemo rails
-    grep -risn "Ruby v1.9, Rails v2.3.2.1" ./tmp2/index.html 
-    CHECK_RESULT $? 0 0 "Check sdoc-merge -t failed"
-    sdoc-merge -o tmp3 -u "testurldemo xxxx" rails rubydemo
-    grep "testurldemo/files" ./tmp3/index.html 
-    CHECK_RESULT $? 0 0 "Check sdoc-merge -u failed"
-    sdoc-merge -o tmp4 --urls "testurldemo xxxx" rails rubydemo
-    grep "testurldemo/files" ./tmp4/index.html 
-    CHECK_RESULT $? 0 0 "Check sdoc-merge --urls failed"
+    pushd ./mergedata || exit
+    if [[ "$(printf '%s\n' "$SDOC_VERSION" "1.1.0" | sort -V | head -n1)" != "1.1.0" ]]; then
+            sdoc-merge -o tmp1 --title "Ruby v1.9, Rails v2.3.2.1"  rubydemo rails
+            grep -risn "Ruby v1.9, Rails v2.3.2.1" ./tmp1/index.html
+            CHECK_RESULT $? 0 0 "Check sdoc-merge --title failed"
+            sdoc-merge -o tmp2 -t "Ruby v1.9, Rails v2.3.2.1"  rubydemo rails
+            grep -risn "Ruby v1.9, Rails v2.3.2.1" ./tmp2/index.html
+            CHECK_RESULT $? 0 0 "Check sdoc-merge -t failed"
+            sdoc-merge -o tmp3 -u "testurldemo xxxx" rails rubydemo
+            grep "testurldemo/files" ./tmp3/index.html
+            CHECK_RESULT $? 0 0 "Check sdoc-merge -u failed"
+            sdoc-merge -o tmp4 --urls "testurldemo xxxx" rails rubydemo
+            grep "testurldemo/files" ./tmp4/index.html
+            CHECK_RESULT $? 0 0 "Check sdoc-merge --urls failed"
+    else
+            sdoc-merge -o tmp3 -u "testurldemo xxxx" rails rubydemo
+            grep -rn "testurldemo/files" ./tmp3
+            CHECK_RESULT $? 0 0 "Check sdoc-merge -u failed"
+            sdoc-merge -o tmp4 --urls "testurldemo xxxx" rails rubydemo
+            grep -rn "testurldemo/files" ./tmp4
+    fi
     sdoc-merge --op tmpdemo1  rubydemo rails && test -d tmpdemo1
     CHECK_RESULT $? 0 0 "Check sdoc-merge --op failed"
     sdoc-merge -o tmpdemo2  rubydemo rails && test -d tmpdemo2
@@ -51,13 +60,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check sdoc-merge --names failed"
     sdoc-merge -o tmp6 -n "Rubyxxx,Railsxxx"  rubydemo rails && test -d ./tmp6/Rubyxxx && test -d ./tmp6/Railsxxx
     CHECK_RESULT $? 0 0 "Check sdoc-merge -n failed"
-    popd
+    popd || exit
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./data/ ./mergedata/ ./common/*.rb ./common/*.sh
     LOG_INFO "End to restore the test environment."
 }
