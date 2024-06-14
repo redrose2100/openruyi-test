@@ -19,6 +19,12 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+function pre_test(){
+    LOG_INFO "Start environmental preparation."
+    modprobe loop dm_log
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     modinfo --help | grep -E "modinfo|-"
@@ -33,7 +39,7 @@ function run_test() {
     CHECK_RESULT $?
     modinfo -l dm_log | grep "GPL"
     CHECK_RESULT $?
-    modinfo -p raid1 | grep -E "max_queued_requests|int"
+    modinfo -p loop | grep -E "max_loop|max_part"
     CHECK_RESULT $?
     modinfo -n dm_log | grep "dm-log"
     CHECK_RESULT $?
@@ -42,4 +48,4 @@ function run_test() {
     LOG_INFO "End of the test."
 }
 
-main $@
+main "$@"
