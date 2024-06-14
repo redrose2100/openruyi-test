@@ -52,6 +52,10 @@ EOF
     yasm -f elf64 hello.asm -o hello.o
     test -f hello.o
     CHECK_RESULT $? 0 0 "Create hello.o file fail"
+    if [[ "$NODE1_FRAME"x == "ppc64le"x ]];then
+        echo "Non ppc64le architecture,this function is not supported"
+        exit
+    fi
     ld hello.o -o hello
     test -f hello
     CHECK_RESULT $? 0 0 "Create hello file fail"
