@@ -81,6 +81,9 @@
     	},
         {
             "name": "oe_test_utshell_return"
+        },
+        {
+            "name": "oe_test_utshell_compgen_02"
         }
     ]
 }
