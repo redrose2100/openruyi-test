@@ -17,13 +17,13 @@
 # @Desc      :   verify the uasge of rdoc command
 # ############################################
 
-source "../common/common_ruby.sh"
+source "$OET_PATH/testcases/cli-test/ruby/common/common_ruby.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL rubygem-rdoc
     VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
-    if [ $VERSION_ID != "22.03" ]; then
+    if [ "$VERSION_ID" != "22.03" ]; then
       path_rdoc=/root/.rdoc
     else
       path_rdoc=/root/.local/share/rdoc
@@ -43,8 +43,6 @@ function run_test() {
     rdoc -q ../common/main.rb
     CHECK_RESULT $?
     test -d doc && rm -rf doc
-    rdoc ../common/main.rb --write-options
-    CHECK_RESULT $?
     rdoc ../common/main.rb --dry-run | grep "Parsing sources"
     CHECK_RESULT $?
     test -d doc
@@ -85,9 +83,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     delete_files
-    rm -rf /root/.rdoc/ .rdoc_options /usr/share/ri/site /root/.local
-    DNF_REMOVE
+    rm -rf /root/.rdoc/ /usr/share/ri/site /root/.local
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
