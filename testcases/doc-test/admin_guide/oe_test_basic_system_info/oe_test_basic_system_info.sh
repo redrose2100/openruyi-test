@@ -25,9 +25,9 @@ function run_test() {
     CHECK_RESULT $?
     grep 'ID="openEuler"' /etc/os-release
     CHECK_RESULT $?
-    OS_VERSION_bak=${OS_VERSION} | awk '{print$1}'
+    OS_VERSION_bak=$(awk '{print $1}' <<< "${OS_VERSION}")
     CHECK_RESULT $?
-    grep VERSION_ID="${OS_VERSION_bak}" /etc/os-release
+    grep "VERSION_ID=\"${OS_VERSION_bak}\"" /etc/os-release
     CHECK_RESULT $?
     grep PRETTY_NAME="\"openEuler ${OS_VERSION}"\" /etc/os-release
     CHECK_RESULT $?
