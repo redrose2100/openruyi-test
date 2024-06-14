@@ -21,8 +21,6 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "oeAware-manager"
-    systemctl daemon-reload
-    systemctl start oeaware
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -32,7 +30,6 @@ function run_test() {
     mkdir $log_path_new
     log_path_new1="${log_path_new//\//\\\/}"
     sed -i -e '/^log_path: / s/: .*/: '"$log_path_new1"'/' /etc/oeAware/config.yaml
-    systemctl daemon-reload
     systemctl restart oeaware
     systemctl status oeaware | grep "active (running)"
     CHECK_RESULT $? 0 0 "restart oeaware failed"

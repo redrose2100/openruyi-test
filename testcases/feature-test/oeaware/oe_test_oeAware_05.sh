@@ -21,8 +21,6 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "oeAware-manager"
-    systemctl daemon-reload
-    systemctl start oeaware
     LOG_INFO "End to prepare the test environment."
 }
 
