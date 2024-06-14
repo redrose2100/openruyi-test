@@ -30,7 +30,11 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl start tomcat-jsvc.service
     CHECK_RESULT $? 0 0 "tomcat-jsvc.service start failed"
-    SLEEP_WAIT 30
+    if [ "$(uname -m)" == "riscv64" ]; then
+        SLEEP_WAIT 300
+    else
+        SLEEP_WAIT 30
+    fi
     systemctl status tomcat-jsvc.service | grep "Active: active"
     CHECK_RESULT $? 0 0 "tomcat-jsvc.service start failed"
     systemctl stop tomcat-jsvc.service
