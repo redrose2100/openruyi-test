@@ -17,12 +17,12 @@
 # @Desc      :   verify the uasge of irb command
 # ############################################
 
+# shellcheck disable=SC1091
 source "../common/common_ruby.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL ruby-irb
-    VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -38,7 +38,8 @@ function run_test() {
     CHECK_RESULT $?
     irb --back-trace-limit 2 ../common/hello.rb | grep "Hello World"
     CHECK_RESULT $?
-    if [ $VERSION_ID != "22.03" ]; then
+    irb_version=$(irb --version | grep -oP '\d+\.\d+\.\d+')
+    if [[ "$(printf '%s\n' "$irb_version" "1.1.1" | sort -V | head -n1)" != "1.1.1" ]]; then
        irb --irb_debug 3 ../common/hello.rb | grep -E "Tree|preproc|postproc"
        CHECK_RESULT $?
     fi
@@ -68,4 +69,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
