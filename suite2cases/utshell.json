@@ -93,6 +93,9 @@
         },
         {
             "name": "oe_test_utshell_compgen_03"
+        },
+        {
+            "name": "oe_test_utshell_readonly"
         }
     ]
 }
