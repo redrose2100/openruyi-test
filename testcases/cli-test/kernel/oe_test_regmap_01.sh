@@ -27,13 +27,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "file does not exist"
     modprobe regmap-i2c
     CHECK_RESULT $? 0 0 "Information display failed"
-    modinfo  regmap-i2c|grep version
+    modinfo  regmap-i2c|grep vermagic
     CHECK_RESULT $? 0 0 "Module not loaded"
-    lsmod | grep regmap-i2c
+    lsmod | grep regmap_i2c
     CHECK_RESULT $? 0 0 "Module loaded failed"
     rmmod regmap-i2c
     CHECK_RESULT $? 0 0 "Module uninstall failed"
-    lsmod | grep regmap-i2c
+    lsmod | grep regmap_i2c
     CHECK_RESULT $? 1 0 "Module not loaded"
 
 }

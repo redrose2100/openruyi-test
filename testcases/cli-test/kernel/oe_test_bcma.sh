@@ -27,7 +27,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "file does not exist"
     modprobe bcma
     CHECK_RESULT $? 0 0 "Information display failed"
-    modinfo  bcma|grep version
+    modinfo  bcma|grep vermagic
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep bcma
     CHECK_RESULT $? 0 0 "Module loaded failed"
