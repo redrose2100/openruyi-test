@@ -102,6 +102,9 @@
 	},
 	{
             "name": "oe_test_utshell_bind_01"
+        },
+        {
+            "name": "oe_test_utshell_readonly"
         }
     ]
 }
