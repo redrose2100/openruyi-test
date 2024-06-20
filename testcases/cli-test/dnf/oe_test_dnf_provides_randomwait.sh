@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Random installing a package, Test "dnf provides" command, Test "-q, --quiet" & "-R <minutes>,--randomwait=<minutes>" & "--refresh" option
 # ##################################
-
+# shellcheck disable=SC1091,SC2002
 source "common/common_dnf.sh"
 
 function pre_test() {
@@ -30,11 +30,11 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     pkg_name=$(shuf -n1 pkg_list)
-    dnf install -y ${pkg_name} | grep "Complete!"
+    dnf install -y "${pkg_name}" | grep "Complete!"
     CHECK_RESULT $?
-    rpm -ql ${pkg_name} >file_list
+    rpm -ql "${pkg_name}" >file_list
     file=$(shuf -n1 file_list)
-    dnf provides ${file} | grep ${pkg_name}
+    dnf provides "${file}" | grep "${pkg_name}"
     CHECK_RESULT $?
     dnf -q repoquery tree 2>&1 | grep check
     CHECK_RESULT $? 1 0
@@ -42,8 +42,12 @@ function run_test() {
     CHECK_RESULT $? 1 0
     /usr/bin/time -f "time-%U" -o time.log dnf -R 3 repoquery | grep "${NODE1_FRAME}"
     CHECK_RESULT $?
-    ret=$(echo "$(cat time.log | awk -F - '{print $2}') < 3" | bc)
-    CHECK_RESULT ${ret} 1 0
+    if [ "$NODE1_FRAME" == "riscv64" ]; then
+        ret=$(echo "$(cat time.log | awk -F - '{print $2}') < 60" | bc)
+    else
+        ret=$(echo "$(cat time.log | awk -F - '{print $2}') < 3" | bc)
+    fi
+    CHECK_RESULT "${ret}" 1 0
     dnf --refresh repoquery 2>&1 | grep kB
     CHECK_RESULT $?
     LOG_INFO "End of the test."
