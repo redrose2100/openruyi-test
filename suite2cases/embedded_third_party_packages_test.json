@@ -114,6 +114,9 @@
         },
 	{
 	    "name": "oe_test_yajl_test_001"
+	},
+	{
+	    "name": "oe_test_lzo_test_001"
 	}
     ]
 }
