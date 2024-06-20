@@ -21,6 +21,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     SSH_CMD "
     sed -i 's/#Port 22/Port 50000/g' /etc/ssh/sshd_config
+    yum install -y firewalld
     systemctl restart sshd
     systemctl stop firewalld
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
