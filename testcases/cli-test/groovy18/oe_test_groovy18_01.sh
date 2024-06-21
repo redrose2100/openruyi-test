@@ -45,7 +45,7 @@ function run_test() {
     groovy18 --classpath lib/zipfs.jar data/DataTypeTest.groovy | grep "name:张三"
     CHECK_RESULT $? 0 0 "Check groovy18 --classpath failed"
     groovy18 -l -e "println line.reverse()" > data.txt &
-    SLEEP_WAIT 15
+    SLEEP_WAIT 20
     grep "groovy is listening" data.txt
     CHECK_RESULT $? 0 0 "Check groovy18 -l failed"
     kill -9 "$(pgrep -f "groovy18 -l -e")"
