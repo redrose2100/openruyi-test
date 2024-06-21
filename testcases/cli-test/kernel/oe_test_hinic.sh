@@ -22,7 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=`uname -r`
-    test -f /lib/modules/${kernel_name}/kernel/drivers/net/ethernet/huawei/hinic/hinic.ko
+    test -f /lib/modules/${kernel_name}/kernel/drivers/net/ethernet/huawei/hinic/hinic.ko.xz
     CHECK_RESULT $? 0 0 "file does not exist"
     modinfo hinic |grep -i version
     CHECK_RESULT $? 0 0 "Information display failed"
