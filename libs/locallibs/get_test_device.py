@@ -48,7 +48,7 @@ def get_test_nic(node=1):
 
     if os.environ.get("NODE" + str(node) + "_LOCALTION") == "local":
         output = subprocess.getoutput(
-            "lshw -class network | grep -A 5 'description: Ethernet interface' | grep 'logical name:' | awk '{print $NF}' | grep -v '"
+            "lshw -class network | grep -A 5 'description: Ethernet interface' | grep 'logical name:' | awk '{print $NF}''"
             + os.environ.get("NODE" + str(node) + "_NIC")
             + "'"
         ).replace("\n", " ")
