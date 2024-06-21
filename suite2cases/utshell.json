@@ -105,6 +105,9 @@
         },
         {
             "name": "oe_test_utshell_readonly"
+        },
+        {
+            "name": "oe_test_utshell_select"
         }
     ]
 }
