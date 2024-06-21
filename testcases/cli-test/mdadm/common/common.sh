@@ -25,6 +25,6 @@ function check_free_disk() {
     local_disk1=${disk_list[1]}
 }
 
-function version_ge() { 
+function version_ge() {
     test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" == "$1"
 }
