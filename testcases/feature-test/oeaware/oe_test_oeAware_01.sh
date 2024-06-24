@@ -62,7 +62,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Instance running failed"
     oeawarectl -q | grep "thread_collector(available, running)"
     CHECK_RESULT $? 0 0 "Instance running failed"
-    
+
     oeawarectl -d thread_scenario | grep "Instance disabled successfully"
     CHECK_RESULT $? 0 0 "Instance disabled failed"
     oeawarectl -d collector_pmu_sampling | grep "Instance disabled successfully"
@@ -90,7 +90,7 @@ function run_test() {
     oeawarectl -q | grep "thread_collector(available, close)"
     CHECK_RESULT $? 0 0 "Instance close failed"
     LOG_INFO "End to run test."
-    }
+}
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."

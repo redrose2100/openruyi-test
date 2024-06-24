@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "query plugin failed"
     oeawarectl -Q | grep "Generate dependencies graph dep.png"
     CHECK_RESULT $? 0 0 "Failed command: oeawarectl -Q"
-   
+
     oeawarectl --query-dep thread_scenario | grep "Generate dependencies graph dep.png"
     CHECK_RESULT $? 0 0 "Failed command: oeawarectl --query-dep"
 
@@ -44,13 +44,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed command: oeawarectl -r|--remove"
     oeawarectl -q | grep "libthread_scenario.so"
     CHECK_RESULT $? 0 1 "query plugin failed"
-    
+
     oeawarectl -l libthread_scenario.so -t scenario | grep "Plugin loaded successfully"
     CHECK_RESULT $? 0 0 "Failed command: oeawarectl -l|--load"
     oeawarectl -q | grep "libthread_scenario.so"
     CHECK_RESULT $? 0 0 "query plugin failed"
     LOG_INFO "End to run test."
-    }
+}
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
