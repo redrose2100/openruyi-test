@@ -34,7 +34,7 @@ function run_test() {
     systemctl status oeaware | grep "active (running)"
     CHECK_RESULT $? 0 0 "restart oeaware failed"
     LOG_INFO "End to run test."
-    }
+}
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
