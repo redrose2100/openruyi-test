@@ -1,12 +1,8 @@
-- dbname: data1
-  src_db_file: file:///etc/pkgship/repo/data1/src
-  bin_db_file: file:///etc/pkgship/repo/data1/bin
-  priority: 1
 - dbname: fedora
   src_db_file: file:///etc/pkgship/repo/fedora/src
   bin_db_file: file:///etc/pkgship/repo/fedora/bin
-  priority: 2
+  priority: 1
 - dbname: openeuler-lts
   src_db_file: file:///etc/pkgship/repo/openEuler-20.09/src
   bin_db_file: file:///etc/pkgship/repo/openEuler-20.09/bin
-  priority: 3
+  priority: 2
