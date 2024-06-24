@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check bus-daemon --session failed."
     dbus-daemon --session --fork
     CHECK_RESULT $? 0 0 "Check dbus-daemon --session --fork failed."
-    dbus-daemon --session --fork --print-address | grep "abstract="
+    dbus-daemon --session --fork --print-address | grep -E "abstract=|path="
     CHECK_RESULT $? 0 0 "Check dbus-daemon --session --fork --print-address failed."
     dbus-daemon --session --fork --print-pid | grep "^[0-9]"
     CHECK_RESULT $? 0 0 "Check dbus-daemon --session --fork --print-pid failed."
