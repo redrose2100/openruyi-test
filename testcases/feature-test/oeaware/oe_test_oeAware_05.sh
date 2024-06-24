@@ -32,10 +32,8 @@ function run_test() {
     systemctl restart oeaware
     systemctl status oeaware | grep "active (running)"
     CHECK_RESULT $? 0 0 "restart oeaware failed"
-    cd $log_path_new || exit
-    if [ ! -f "server.log" ]; then
-        echo "logfile does not exist"
-    fi
+    test -f $log_path_new/server.log
+    CHECK_RESULT $? 0 0 "logfile does not exist"
     LOG_INFO "End to run test."
 }
 
