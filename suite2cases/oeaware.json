@@ -1,0 +1,21 @@
+{
+    "path": "$OET_PATH/testcases/feature-test/oeaware",
+    "cases": [
+        {
+            "name": "oe_test_oeAware_01"
+        },
+        {
+            "name": "oe_test_oeAware_02"
+        },
+        {
+            "name": "oe_test_oeAware_03"
+        },
+        {
+            "name": "oe_test_oeAware_04"
+        },
+        {
+            "name": "oe_test_oeAware_05"
+        }
+       
+    ]
+}
