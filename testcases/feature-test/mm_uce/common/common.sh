@@ -233,10 +233,8 @@ function check_ghes_rec_result()
     local sleep=5
     local time=0
 
-    {
-        echo -e "<<< OS/kernel version is as follows >>>\n"
-        uname -a
-    } >> "${LOG}"
+    echo -e "<<< OS/kernel version is as follows >>>\n" >> "${LOG}"
+    uname -a  >> "${LOG}"
 
     cat /etc/os-release >> "${LOG}"
 
