@@ -45,12 +45,11 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     date > "${LOG}"
-    if [ "$(uname -m)" = "x86_64" ];then
+    if [ "${NODE1_FRAME}" = "x86_64" ];then
         do_mm_uce_test putuser -c 1  >> "${LOG}" 2>&1
-    elif [ "$(uname -m)" = "aarch64" ];then
+    elif [ "${NODE1_FRAME}" = "aarch64" ];then
         do_mm_uce_test putuser -c 5  >> "${LOG}" 2>&1
     fi
-    sleep 1
     check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
     CHECK_RESULT $? 0 0 "mm_uce put_user failed" 1
     LOG_INFO "End to run test."
@@ -62,14 +61,15 @@ function post_test() {
     unload_mm_uce_module
     unload_einj_module
     make -C common uninstall
-    do_mm_uce_cleanlog "kernel-devel gcc"
+    do_mm_uce_cleanlog
+    DNF_REMOVE "$@"
     enable_transparent_hugepage
-    if [ "$(uname -m)" = "aarch64" ];then
+    if [ "${NODE1_FRAME}" = "aarch64" ];then
         #in ghes_print_estatus function Not more than 2 messages every 5 seconds
-        sleep 5
-    elif [ "$(uname -m)" = "x86_64" ];then
+        SLEEP_WAIT 8
+    elif [ "${NODE1_FRAME}" = "x86_64" ];then
         #in mce_notify_irq function Not more than two hardware error messages every minute
-        sleep 60
+        SLEEP_WAIT 90
     fi    
     LOG_INFO "End to clean the test environment."
 }

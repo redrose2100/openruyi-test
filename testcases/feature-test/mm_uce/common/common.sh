@@ -191,6 +191,8 @@ function load_mm_uce_module
 
 function unload_mm_uce_module
 {
+    sync
+    echo 3 > /proc/sys/vm/drop_caches
     modprobe -r mm_uce_ioctl
 }
 
@@ -298,13 +300,13 @@ function check_sigbus_result()
         then
             echo -e "\nSigbus record is OK\n" >> "${LOG}"
             echo 0 >> $TMP_DIR/error.$$
-            return
+            return 0
         fi
         sleep $sleep
         time=$((time + sleep))
     done
     echo -e "\nSigbus record is not expected\n" >> "${LOG}"
-    echo 1 > $TMP_DIR/error.$$
+    return 1 > $TMP_DIR/error.$$
     return 1
 }
 
@@ -326,7 +328,6 @@ function do_mm_uce_check()
 function do_mm_uce_cleanlog()
 {
     rm -f "${LOG}"
-    DNF_REMOVE "$@"
 }
 
 function do_mm_uce_test()

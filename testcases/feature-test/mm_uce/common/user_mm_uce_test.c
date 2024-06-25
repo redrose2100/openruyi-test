@@ -178,41 +178,46 @@ int inject_mem_uc_simple(unsigned long long addr, int notrigger)
     return 0;
 }
 
-#define CACHE_LINE_SIZE 64
-size_t get_cache_line_size() {
-    static size_t cacheLineSize = 0;
-    if (cacheLineSize) return cacheLineSize;
+#if defined(__aarch64__)
+#define DEFAULT_CACHE_LINE_SIZE 64
+static size_t get_cache_line_size(void)
+{
+        static size_t cachelinesize;
+	FILE *file = NULL;
 
-    FILE* file = fopen("/sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size", "r");
-    if (file && fscanf(file, "%zu", &cacheLineSize) == 1) {
-        fclose(file);
-    } else {
-        cacheLineSize = CACHE_LINE_SIZE;
-    }
+	if (cachelinesize)
+		return cachelinesize;
 
-    return cacheLineSize;
+	file = fopen("/sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size", "r");
+	if (file && fscanf(file, "%zu", &cachelinesize) == 1)
+		fclose(file);
+	else
+		cachelinesize = DEFAULT_CACHE_LINE_SIZE;
+
+	return cachelinesize;
 }
 
-void clear_cache(void* ptr, size_t size) {
-    if (!ptr || size == 0) {
-        fprintf(stderr, "ptr is null or size is zero\n");
-        return;
-    }
+static void clear_cache(void *ptr, size_t size)
+{
+	uintptr_t start = (uintptr_t)ptr;
+	uintptr_t end = start + size;
+	size_t cachelinesize;
 
-    uintptr_t start = (uintptr_t)ptr;
-    uintptr_t end = start + size;
-    start &= ~(get_cache_line_size() - 1);
-    #if defined(__aarch64__)
-    while (start < end) {
-        asm volatile("dc civac, %0" : : "r"(start) : "memory");
-        start += CACHE_LINE_SIZE;
-    }
-    asm volatile("dsb sy" : : : "memory");
-    #elif defined(__x86_64__)
-    __builtin___clear_cache((char *)start, (char*)start + size);
-    #endif
-    sleep(1);
+	if (!ptr || size == 0)
+		return;
+
+	cachelinesize = get_cache_line_size();
+	start &= ~(cachelinesize - 1);
+	while (start < end) {
+		asm volatile("dc civac, %0" : : "r"(start) : "memory");
+		start += cachelinesize;
+	}
+	asm volatile("dsb sy" : : : "memory");
+	sleep(1);
 }
+#elif defined(__x86_64__)
+static inline void clear_cache(void *ptr, size_t size) { }
+#endif
 
 static void *data_alloc_common(int flag)
 {
@@ -334,9 +339,7 @@ int do_copytouser_test()
     }
 
     usleep(100);
-    paddr =vtop((unsigned long long)kaddr,pid);
-    printf("copytouser vaddr = %p paddr = %llx\n", kaddr, paddr);
-    
+
     ret = is_tracepoint_enabled();
     if(ret != 0){
         fprintf(stderr, "please excute '%s -e' enable the mm_uce_trace_event tracepoint\n",
