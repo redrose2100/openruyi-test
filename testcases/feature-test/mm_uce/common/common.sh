@@ -234,13 +234,13 @@ function check_ghes_rec_result()
     local time=0
 
     {
-        echo -e "<<< OS/kernel version is as follows >>>\n";
+        echo -e "OS/kernel version is as follows\n";
         uname -a;
+        cat /etc/os-release;
+        echo -e "\ndmesg information is as follows\n"
     } >> "${LOG}"
 
-    cat /etc/os-release >> "${LOG}"
 
-    echo -e "\n<<< dmesg information is as follows >>>\n" >> "${LOG}"
     while [ $time -lt $timeout ]
     do
         dmesg -c >> "${LOG}" 2>&1
