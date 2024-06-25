@@ -64,14 +64,14 @@ function post_test() {
     make -C common uninstall
     do_mm_uce_cleanlog "kernel-devel gcc"
     enable_transparent_hugepage
-    LOG_INFO "End to clean the test environment."
     if [ "$(uname -m)" = "aarch64" ];then
         #in ghes_print_estatus function Not more than 2 messages every 5 seconds
         sleep 5
     elif [ "$(uname -m)" = "x86_64" ];then
         #in mce_notify_irq function Not more than two hardware error messages every minute
         sleep 60
-    fi
+    fi    
+    LOG_INFO "End to clean the test environment."
 }
 
 main "$@"
