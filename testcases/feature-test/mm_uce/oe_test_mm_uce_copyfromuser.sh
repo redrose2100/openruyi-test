@@ -24,7 +24,7 @@ function pre_test() {
         LOG_INFO "The environment does not support testing"
         exit 1
     fi
-    DNF_INSTALL "kernel_devel gcc"
+    DNF_INSTALL "kernel-devel gcc"
     make -C ./common 
     make -C ./common install
     dmesg -c > /dev/null
