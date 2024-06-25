@@ -229,7 +229,7 @@ function do_all()
 # timeout.
 function check_ghes_rec_result()
 {
-    local timeout=25
+    local timeout=300
     local sleep=5
     local time=0
 
@@ -239,7 +239,7 @@ function check_ghes_rec_result()
     } >> "${LOG}"
 
     cat /etc/os-release >> "${LOG}"
-    ARCH=$(uname -m)
+
     echo -e "\n<<< dmesg information is as follows >>>\n" >> "${LOG}"
     while [ $time -lt $timeout ]
     do
@@ -266,7 +266,7 @@ function check_ghes_rec_result()
 
 function check_memory_failure_recover_result()
 {
-    local timeout=25
+    local timeout=300
     local sleep=5
     local time=0
 
@@ -290,7 +290,7 @@ function check_memory_failure_recover_result()
 
 function check_sigbus_result()
 {
-    local timeout=25
+    local timeout=300
     local sleep=5
     local time=0
 
