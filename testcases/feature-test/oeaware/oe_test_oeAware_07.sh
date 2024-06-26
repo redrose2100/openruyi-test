@@ -27,66 +27,83 @@ function pre_test() {
 function run_test() {
 
     LOG_INFO "Start to run test."
+    arch=$(uname -m)
     \cp -rf /etc/oeAware/config.yaml /etc/oeAware/config_ori.yaml
     sed -i '/enable_list/a\ - name: libthread_collector.so' /etc/oeAware/config.yaml
     systemctl restart oeaware
-    sleep 1s
+    SLEEP_WAIT 1
     oeawarectl -q | grep "thread_collector(available, running)"
     CHECK_RESULT $? 0 0 "restart oeaware failed"
 
     \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
     systemctl restart oeaware
-    sleep 1s
-    sed -i '/enable_list/a\ - name: libthread_scenario.so' /etc/oeAware/config.yaml
-    sed -i '/enable_list/a\ - name: libpmu.so' /etc/oeAware/config.yaml
-    grep "libthread_scenario.so" /etc/oeAware/config.yaml
-    CHECK_RESULT $? 0 0 "modify config file failed"
-    grep "libpmu.so" /etc/oeAware/config.yaml
-    CHECK_RESULT $? 0 0 "modify config file failed"
+    SLEEP_WAIT 1
+    if [ "$arch" == "aarch64" ]; then
+        sed -i '/enable_list/a\ - name: libthread_scenario.so \n - name: libpmu.so' /etc/oeAware/config.yaml
+    else
+        sed -i '/enable_list/a\ - name: libthread_scenario.so \n - name: libthread_collector.so' /etc/oeAware/config.yaml
+    fi
     systemctl restart oeaware
-    sleep 1s
-    run_count=$(oeawarectl -q | grep -wo running | wc -l)
-    if [ "$run_count" -ne 10 ]; then
-        echo "Error: an error occurred during enable"
+    SLEEP_WAIT 1
+    if [ "$arch" == "aarch64" ]; then
+
+        grep "kvm" "${OET_PATH}"/conf/env.json
+        if [ $? -eq 0 ]; then
+
+            oeawarectl -q | grep "pmu_cycles_sampling(available, running)"
+            CHECK_RESULT $? 0 0 "Instance running failed"
+            oeawarectl -q | grep "pmu_cycles_counting(available, running)"
+            CHECK_RESULT $? 0 0 "Instance running failed"
+        else
+            oeawarectl -q | grep "available, close"
+            CHECK_RESULT $? 1 0 "instances enable failed"
+        fi
+    else
+        oeawarectl -q | grep "thread_collector(available, running)"
+        CHECK_RESULT $? 0 0 "Instance running failed"
+        oeawarectl -q | grep "thread_scenario(available, running)"
+        CHECK_RESULT $? 0 0 "Instance running failed"
     fi
 
     \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
     systemctl restart oeaware
-    sleep 10s
-    sed -i '/enable_list/a\ - name: libpmu.so' /etc/oeAware/config.yaml
-    sed -i '/libpmu.so/a\   instances:' /etc/oeAware/config.yaml
-    sed -i '/instances/a\     - collector_pmu_sampling' /etc/oeAware/config.yaml
-    sed -i '/instances/a\     - collector_pmu_counting' /etc/oeAware/config.yaml
-    systemctl restart oeaware
-    sleep 1s
-    oeawarectl -q | grep "collector_pmu_sampling(available, running)"
-    CHECK_RESULT $? 0 0 "Instance running failed"
-    oeawarectl -q | grep "collector_pmu_counting(available, running)"
-    CHECK_RESULT $? 0 0 "Instance running failed"
+    SLEEP_WAIT 10
 
-    \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
-    systemctl restart oeaware
-    sed -i '/enable_list/a\ - name: libpmu.so' /etc/oeAware/config.yaml
-    sed -i '/libpmu.so/a\   instances:' /etc/oeAware/config.yaml
-    sed -i '/instances/a\     - collector_pmu_sampling' /etc/oeAware/config.yaml
-    sed -i '/instances/a\     - collector_pmu_counting' /etc/oeAware/config.yaml
-    sed -i '/instances/a\     - collector_pmu_uncore' /etc/oeAware/config.yaml
-    sed -i '/instances/a\     - collector_spe' /etc/oeAware/config.yaml
-    systemctl restart oeaware
-    sleep 1s
-    oeawarectl -q | grep "collector_pmu_sampling(available, running)"
-    CHECK_RESULT $? 0 0 "Instance running failed"
-    oeawarectl -q | grep "collector_pmu_counting(available, running)"
-    CHECK_RESULT $? 0 0 "Instance running failed"
-    oeawarectl -q | grep "collector_pmu_uncore(available, running)"
-    CHECK_RESULT $? 0 0 "Instance running failed"
-    oeawarectl -q | grep "collector_spe(available, running)"
-    CHECK_RESULT $? 0 0 "Instance running failed"
+    if [ "$arch" == "aarch64" ]; then
+        sed -i '/enable_list/a\ - name: libpmu.so \n   instances:\n     - pmu_cycles_sampling\n     - pmu_cycles_counting' /etc/oeAware/config.yaml
+        systemctl restart oeaware
+        SLEEP_WAIT 1
+        oeawarectl -q | grep "pmu_cycles_sampling(available, running)"
+        CHECK_RESULT $? 0 0 "Instance running failed"
+        oeawarectl -q | grep "pmu_cycles_counting(available, running)"
+        CHECK_RESULT $? 0 0 "Instance running failed"
+
+        \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
+        systemctl restart oeaware
+
+        sed -i '/enable_list/a\ - name: libpmu.so\n   instances:\n     - pmu_cycles_sampling\n     - pmu_cycles_counting\n     - pmu_uncore_counting\n     - pmu_spe_sampling' /etc/oeAware/config.yaml
+        systemctl restart oeaware
+        SLEEP_WAIT 1
+        grep "kvm" "${OET_PATH}"/conf/env.json
+        if [ $? -eq 0 ]; then
+            oeawarectl -q | grep "pmu_cycles_sampling(available, running)"
+            CHECK_RESULT $? 0 0 "Instance running failed"
+            oeawarectl -q | grep "pmu_cycles_counting(available, running)"
+            CHECK_RESULT $? 0 0 "Instance running failed"
+        else
+            oeawarectl -q | grep "available, close"
+            CHECK_RESULT $? 1 0 "instances enable failed"
+        fi
+
+    fi
+
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
+    systemctl restart oeaware
     DNF_REMOVE "$@"
     rm -rf /etc/oeAware/config_ori.yaml
     LOG_INFO "End to restore the test environment."
