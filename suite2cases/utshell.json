@@ -123,7 +123,10 @@
         },
         {
             "name": "oe_test_utshell_shopt"
-        }
+        },
+	{
+	    "name": "oe_test_utshell_for"
+	}
     ]
 }
 
