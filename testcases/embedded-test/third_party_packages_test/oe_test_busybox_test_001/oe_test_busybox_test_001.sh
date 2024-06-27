@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Run busybox testsuite
 #####################################
-
+# shellcheck disable=SC1091,SC2016,SC1003
 source ../comm_lib.sh
 
 # 测试对象、测试需要的工具等安装准备
@@ -43,7 +43,7 @@ function pre_test() {
     sed -i '1i # FEATURE: CONFIG_FEATURE_TOUCH_SUSV3' mv/mv-refuses-mv-dir-to-subdir
 
     # strings case
-    sed -i 's/..\/..\/busybox/..\/..\/testsuite/g' strings/strings-works-like-GNU
+    sed -i 's/\.\.\/\.\.\/busybox/\/bin\/busybox/g' strings/strings-works-like-GNU
 
     # tar case
     sed -i 's/FEATURE_TAR_AUTODETECT LS/FEATURE_TAR_AUTODETECT LS UUDECODE/g' tar.tests

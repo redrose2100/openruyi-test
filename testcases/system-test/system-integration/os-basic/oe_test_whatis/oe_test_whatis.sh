@@ -17,7 +17,7 @@
 # @Desc      :   whatis command test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -27,7 +27,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check display failed after whatis -V"
     whatis man |grep -E "manuals|手册"
     CHECK_RESULT $? 0 0 "check display failed after whatis man"
+    whatis lsattr | grep "lsattr"
+    CHECK_RESULT $? 0 0 "check display failed after whatis ls"
+    whatis -r ^lsat | grep "lsattr"
+    CHECK_RESULT $? 0 0 "check display failed after whatis -r ^lsat"
+    whatis -w lsat* | grep "lsattr"
+    CHECK_RESULT $? 0 0 "check display failed after whatis -w lsat*"
     LOG_INFO "End to run test."
 }
 
-main $@
+main "$@"

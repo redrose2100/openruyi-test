@@ -16,7 +16,7 @@
 # @Desc      :   exrstdattr
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -30,7 +30,11 @@ function run_test() {
     expect <<EOF
        log_file bundle_log
        spawn bundle gem testgem01 --coc
-       expect "" {send "y\\r"}
+       expect ":" {send "\\r"}
+       expect ":" {send "\\r"}
+       expect ":" {send "\\r"}
+       expect ":" {send "\\r"}
+       expect ":" {send "\\r"}
        expect eof
 EOF
     SLEEP_WAIT 5
@@ -50,7 +54,7 @@ EOF
    CHECK_RESULT $? 0 0 "Check gem testgem --mit failed."
    bundle gem testgem05 --no-mit | grep "LICENSE.txt"
    CHECK_RESULT $? 1 0 "Check gem testgem --no-mit failed."
-   bundle gem testgem06 --ci travis | grep "travis.yml"
+   bundle gem testgem06 --ci github | grep -rn "main.yml" .
    CHECK_RESULT $? 0 0 "Check gem testgem --ci failed."
    bundle update --all | grep "Bundle updated!"
    CHECK_RESULT $? 0 0 "Check bundle update --all failed."
@@ -66,7 +70,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf Gemfile testgem* .bundle bundle_log*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

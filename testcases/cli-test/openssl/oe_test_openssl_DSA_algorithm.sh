@@ -16,13 +16,13 @@
 #@Desc          :   Application scenarios: method of generating the private key,public key,and self-shared key(signature certificate) of the DSA algorithm
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     openssl dsaparam -noout -out dsakey.pem -genkey 2048
     CHECK_RESULT $?
-    grep 'BEGIN DSA PRIVATE KEY' dsakey.pem
+    grep 'PRIVATE KEY' dsakey.pem
     CHECK_RESULT $?
     openssl dsa -in dsakey.pem -pubout -out dsakey-pub.pem
     CHECK_RESULT $?

@@ -15,9 +15,15 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Installing StratoVirt & Ready environment
 #####################################
-# shellcheck disable=SC1090,SC1091,SC2010,SC2154
+# shellcheck disable=SC1090,SC1091,SC2010,SC2154,SC2034
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function config_params() {
+    LOG_INFO "Start to config params of the case."
+    EXECUTE_T="60m"
+    LOG_INFO "End to config params of the case."
+}
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -75,7 +81,8 @@ function run_test() {
     mkdir /mnt/rootfs
     sudo mount ./rootfs.ext4 /mnt/rootfs && cd /mnt/rootfs || exit
     CHECK_RESULT $? 0 0 "Failed to mount a file image"
-    wget http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/"${NODE1_FRAME}"/alpine-minirootfs-3.18.0-"${NODE1_FRAME}".tar.gz
+    alpine_minirootfs_pkg=$(curl -s http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/"${NODE1_FRAME}"/ |grep -E '^<a' |awk -F'"' '{print $2}' | grep -E "alpine-minirootfs-[0-9].[0-9]+.[0-9]-${NODE1_FRAME}.tar.gz$" | sort | tail -1)
+    wget http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/"${NODE1_FRAME}"/"${alpine_minirootfs_pkg}"
     CHECK_RESULT $? 0 0 "Failed to get alpine-mini rootfs"
     DNF_INSTALL tar
     tar -zxvf alpine-minirootfs*.tar.gz

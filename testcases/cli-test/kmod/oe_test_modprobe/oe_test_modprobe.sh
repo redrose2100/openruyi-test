@@ -59,11 +59,13 @@ function run_test() {
     CHECK_RESULT $?
     modprobe --show-config | grep "alias symbol:"
     CHECK_RESULT $?
-    dmPath=$(find /usr/lib/modules/ -name dm-log.ko.xz)
-    modprobe --show-modversions "$dmPath" | grep "[0-9]"
-    CHECK_RESULT $?
-    modprobe --dump-modversions "$dmPath" | grep "[0-9]"
-    CHECK_RESULT $?
+    dmPaths=$(find /usr/lib/modules/ -name dm-log.ko.xz)
+    for dmPath in $dmPaths;do
+        modprobe --show-modversions "$dmPath" | grep "[0-9]"
+        CHECK_RESULT $?
+        modprobe --dump-modversions "$dmPath" | grep "[0-9]"
+        CHECK_RESULT $?
+    done
     LOG_INFO "End of the test."
 }
 

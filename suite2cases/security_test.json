@@ -153,6 +153,12 @@
         },
         {
             "name": "oe_test_passwd_set_minimum_interval"
+        },
+        {
+            "name": "oe_test_shadow_file_permission"
+        },
+        {
+            "name": "oe_test_set_max_uid"
         }
     ]
 }

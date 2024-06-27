@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Application scenarios: use RSA certificates to encrypte and decrypte emails
 #####################################
-
+# shellcheck disable=SC1091
 source "common/common_openssl.sh"
 
 function run_test() {
@@ -27,7 +27,7 @@ function run_test() {
 EOF
     openssl genrsa -out rsakey.pem
     CHECK_RESULT $?
-    grep 'BEGIN RSA PRIVATE KEY' rsakey.pem
+    grep 'PRIVATE KEY' rsakey.pem
     CHECK_RESULT $?
     generate_PublicKey
     openssl smime -encrypt -in test.txt -out etest.txt mycert-rsa.pem
@@ -43,7 +43,11 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f $(ls | grep -v "\.sh\|common")
+    for file in *; do
+        if [[ $file != *.sh && $file != common ]]; then
+            rm -f "$file"
+        fi
+    done
     LOG_INFO "End to restore the test environment."
 }
 

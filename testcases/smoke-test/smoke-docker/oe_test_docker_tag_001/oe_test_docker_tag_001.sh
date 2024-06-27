@@ -17,7 +17,8 @@
 # @Desc      :   Tag an image into a library
 # ############################################
 
-source ../common/prepare_docker.sh
+
+source "${OET_PATH}/testcases/smoke-test/smoke-docker/common/prepare_docker.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_docker_env
@@ -26,23 +27,23 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker images | grep ${Images_name}
+    docker images | grep "${Images_name}"
     CHECK_RESULT $?
 
-    docker tag ${Images_name}:latest ${Images_name}:test_tag
+    docker tag "${Images_name}:${TEST_TAG}" "${Images_name}:test_tag"
     CHECK_RESULT $?
 
-    docker images | grep ${Images_name} | grep test_tag
+    docker images | grep "${Images_name}" | grep test_tag
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    docker rmi ${Images_name}:test_tag
+    docker rmi "${Images_name}:test_tag"
     clean_docker_env
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

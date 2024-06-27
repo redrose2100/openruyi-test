@@ -17,7 +17,9 @@
 # @Desc      :   Creating an interactive container
 # ############################################
 
-source ../common/prepare_docker.sh
+
+source "${OET_PATH}/testcases/smoke-test/smoke-docker/common/prepare_docker.sh"
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_docker_env
@@ -28,7 +30,7 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     expect -c "
     log_file testlog
-    spawn docker run -it ${Images_name}
+    spawn docker run -it ${Images_name}:${TEST_TAG} ${DEFAULT_RUN_CMD}
     sleep 5
     expect {
     \"*#*\" {send \"ls\r\"
@@ -49,9 +51,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     clean_docker_env
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testlog
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

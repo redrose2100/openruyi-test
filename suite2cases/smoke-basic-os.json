@@ -2,6 +2,9 @@
     "path": "${OET_PATH}/testcases/smoke-test/smoke-basic-os",
     "cases": [
         {
+            "name": "oe_test_head"
+        },
+        {
             "name": "oe_test_acl_001"
         },
         {
@@ -664,6 +667,9 @@
         {
             "name": "oe_test_systemd_SCEN_15"
         },
+        {
+            "name": "oe_test_uptime"
+        },
 	{
 	    "name": "oe_test_find"
 	},
@@ -833,6 +839,9 @@
             "name": "oe_test_lscpu"
         },
 	{
+            "name": "oe_test_lsipc"
+        },
+	{
 	     "name":"oe_test_lzo_002"
 	},
 	{
@@ -840,7 +849,19 @@
 	},
 	{
 	    "name": "oe_test_pidwait"
-	}
+	},
+      {
+           "name": "oe_test_nproc"    
+      },
+      {
+           "name": "oe_test_echo"    
+      },
+      {
+           "name": "oe_test_pidof"
+      },
+      {
+           "name": "oe_test_link"
+      }
     ]
 }
 

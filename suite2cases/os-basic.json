@@ -949,6 +949,22 @@
         },
 	{
 	    "name": "oe_test_c++_stl"	
+	    "name": "oe_test_zipinfo"
+	},
+	{
+	    "name": "oe_test_gunzip"
+        },
+        {	
+	    "name": "oe_test_split_01"
+	},
+	{
+	   "name": "oe_test_getent"
+	},
+	{
+	   "name": "oe_test_fincore"
+	},
+	{
+	   "name": "oe_test_udisksctl"
 	}
     ]
 }

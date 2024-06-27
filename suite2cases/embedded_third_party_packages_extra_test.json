@@ -1,0 +1,44 @@
+{
+    "path": "$OET_PATH/testcases/embedded-test/third_party_packages_extra_test",
+    "cases": [
+        {
+            "name": "oe_test_libcgroup_test_001"
+        },
+        {
+            "name": "oe_test_libseccomp_test_001"
+        },
+        {
+            "name": "oe_test_python3_test_001"
+        },
+        {
+            "name": "oe_test_lua_test_001"
+        },
+        {
+            "name": "oe_test_libtiff_test_001"
+        },
+        {
+            "name": "oe_test_libpng_test_001"
+        },
+        {
+            "name": "oe_test_bash_test_001"
+        },
+        {
+            "name": "oe_test_libunistring_test_001"
+        },
+        {
+            "name": "oe_test_gdb_test_001"
+        },
+        {
+            "name": "oe_test_tar_test_001"
+        },
+        {
+            "name": "oe_test_libgcrypt_test_001"
+        },
+        {
+            "name": "oe_test_libgpg-error_test_001"
+        },
+        {
+            "name": "oe_test_zstd_test_001"
+        }
+    ]
+}

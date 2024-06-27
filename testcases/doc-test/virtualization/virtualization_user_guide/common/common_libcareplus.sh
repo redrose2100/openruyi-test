@@ -60,6 +60,6 @@ EOF
 
 function clear_env() {
     kill -9 "$(pgrep -f ./foo)"
-    rm -rf foo* bar* patchroot lpmake /tmp/tmp*
+    rm -rf foo* bar* patchroot lpmake /tmp/tmp* testlog
     DNF_REMOVE "$@"
 }

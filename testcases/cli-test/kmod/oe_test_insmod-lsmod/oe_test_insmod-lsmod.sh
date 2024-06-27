@@ -25,9 +25,9 @@ function run_test() {
     CHECK_RESULT $?
     insmod -V | grep "kmod version"
     CHECK_RESULT $?
-    raid0Path=$(find /usr/lib/modules/ -name "raid0.ko*")
-    faultyPath=$(find /usr/lib/modules/ -name "faulty.ko*")
-    SLEEP_WAIT 5 "lsmod | grep raid0 && modprobe -r raid0" 2    
+    raid0Path=/usr/lib/modules/$(uname -r)/kernel/drivers/md/raid0.ko.xz
+    faultyPath=/usr/lib/modules/$(uname -r)/kernel/drivers/md/faulty.ko.xz
+    SLEEP_WAIT 5 "lsmod | grep raid0 && modprobe -r raid0" 2
     CHECK_RESULT $?
     SLEEP_WAIT 5 "lsmod | grep faulty && modprobe -r faulty" 2
     CHECK_RESULT $?

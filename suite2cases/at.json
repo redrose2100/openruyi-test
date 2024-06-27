@@ -1,0 +1,12 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/at",
+    "cases": [
+        {
+            "name": "oe_test_at_at"
+        },
+        {
+            "name": "oe_test_at_atrm"
+        }   
+    ]
+}
+

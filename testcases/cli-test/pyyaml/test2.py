@@ -12,7 +12,7 @@ def get_yaml_data(yaml_file):
     print("类型：", type(file_data))
 # 将字符串转化为字典或列表
     print("***转化yaml数据为字典或列表***")
-    data = yaml.load(file_data, Loader=yaml.FullLoader)
+    data = yaml.safe_load(file_data, Loader=yaml.FullLoader)
     print(data)
     print("类型：", type(data))
     return data

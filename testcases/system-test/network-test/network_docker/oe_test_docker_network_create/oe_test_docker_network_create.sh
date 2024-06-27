@@ -22,9 +22,13 @@ source ../common/docker.conf
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL "docker bridge-utils net-tools"
-    image_file="openEuler-docker.${NODE1_FRAME}.tar.xz"
-    docker_path="${docker_path}/${NODE1_FRAME}/${image_file}"
+    DNF_INSTALL "wget docker bridge-utils net-tools"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        docker_path="${docker_path}/${image_file}"
+    else
+        image_file="openEuler-docker.${NODE1_FRAME}.tar.xz"
+        docker_path="${docker_path}/${NODE1_FRAME}/${image_file}"
+    fi
     wget "${docker_path}"
     docker load -i "${image_file}"
     LOG_INFO "Finish to prepare the database config."
@@ -49,7 +53,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    docker rmi "$(docker images -q)"
+    image_ids=$(docker images -aq)
+    for image_id in $image_ids; do
+        docker rmi "$image_id" 
+    done
     rm -rf "${image_file}"
     ifconfig docker0 down
     brctl delbr docker0

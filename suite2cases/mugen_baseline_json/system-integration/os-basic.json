@@ -570,6 +570,12 @@
         },
         {
             "name": "oe_test_logsave"
+        },
+        {
+            "name": "oe_test_renice"
+        },
+        {
+            "name": "oe_test_fuser"
         }
     ]
 }

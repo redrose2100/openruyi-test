@@ -48,6 +48,9 @@
         },
         {
             "name": "oe_test_target_rpc_pipefs"
+        },
+        {
+            "name": "oe_test_service_fsidd"
         }
     ]
 }

@@ -74,8 +74,8 @@ function copyFiles() {
         findDir=$3
     fi
 
-    findThings=$(find "${findDir}" -name "$2")
-    if [ "$(find "${findDir}" -name "$2" | wc -l)" -gt 1 ]; then
+    findThings=$(find ${findDir} -name "$2")
+    if [ "$(find ${findDir} -name "$2" | wc -l)" -gt 1 ]; then
         for oneThing in ${findThings}; do
             cp -rR "${oneThing}" ./tmp_test/
         done

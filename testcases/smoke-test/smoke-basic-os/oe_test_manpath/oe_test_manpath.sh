@@ -27,6 +27,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "manpath --help execute fail"
     manpath --version | grep -i manpath
     CHECK_RESULT $? 0 0 "manpath --version execute fail"
+    manpath -c | grep "/var/cache/man"
+    CHECK_RESULT $? 0 0 "manpath -c execute fail"
+    manpath -g | grep "man"
+    CHECK_RESULT $? 0 0 "manpath -g execute fail"
+    manpath -d | grep "man"
+    CHECK_RESULT $? 0 0 "manpath -d execute fail"
     LOG_INFO "Finish test!"
 }
 

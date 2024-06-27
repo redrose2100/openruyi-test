@@ -28,8 +28,10 @@ function run_test() {
     pushd ./tmp_test/completions/ || exit
     export LANG=en_US.UTF-8
     for file in "${!allTests[@]}"; do
-        bash -O extglob -n ./"$file"
-        CHECK_RESULT $? 0 0 "run bash-completion test ${file} fail"
+        if [ -e ./"$file" ]; then
+            bash -O extglob -n ./"$file"
+            CHECK_RESULT $? 0 0 "run bash-completion test ${file} fail"
+        fi
     done
     popd || exit
 

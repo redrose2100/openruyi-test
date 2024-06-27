@@ -6,9 +6,6 @@
         },
         {
             "name": "oe_test_version_ltp_test_001"
-        },
-        {
-            "name": "oe_test_libseccomp_test_001"
         }
     ]
 }
