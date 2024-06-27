@@ -17,7 +17,7 @@
 # @Desc      :   Test iftop text mode
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -77,7 +77,7 @@ function run_test() {
     echo 'show-errors: 0' >./tidyrc
     echo '<wrong>hi' | tidy -config ./tidyrc | grep 'Error: <wrong>'
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: show-errors"
-    if [ ${version_id} =  "22.03" ]; then
+    if [ "${version_id}" =  "22.03" ]; then
         # --show-filename
         # 在报告中展示文件名
         tidy --show-filename true sample.html 2>&1 | grep 'sample.html'
@@ -120,7 +120,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf tidyrc sample.html
     export LANG=$OLD_LANG
     LOG_INFO "Finish environment cleanup!"

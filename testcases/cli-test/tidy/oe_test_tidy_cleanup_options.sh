@@ -17,7 +17,7 @@
 # @Desc      :   Test tidy clean options
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -64,14 +64,87 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Failed to use option in configuration: drop-proprietary-attributes"
     # --gdoc
     # 对比清理前后，文件的代码量，判断清理的效果
-    source_code='<html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type"><style type="text/css">ol{margin:0;padding:0}table td,table th{padding:0}.c2{color:#000000;font-weight:400;text-decoration:none;vertical-align:baseline;font-size:26pt;font-family:"Arial";font-style:normal}.c1{padding-top:0pt;padding-bottom:3pt;line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:center}.c0{background-color:#ffffff;max-width:451.4pt;padding:72pt 72pt 72pt 72pt}.title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:"Arial"}p{margin:0;color:#000000;font-size:11pt;font-family:"Arial"}h1{padding-top:20pt;color:#000000;font-size:20pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:14pt;color:#666666;font-size:12pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}</style></head><body class="c0"><p class="c1 title" id="h.1osv7rxmcj4i"><span class="c2">Hello World</span></p></body></html>'
+    source_code='<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>This is title tag</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .content { margin: 20px; }
+        .header, .footer { background-color: #f8f8f8; padding: 10px; }
+        .main { padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>THis is h1 tag</h1>
+        <nav>
+            <ul>
+                <li><a href="#section1">Section 1</a></li>
+                <li><a href="#section2">Section 2</a></li>
+                <li><a href="#section3">Section 3</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="content main">
+        <section id="section1">
+            <h2>Section 1</h2>
+            <p>This is a section tag</p>
+            <ul>
+                <li>Item 1</li>
+                <li>Item 2</li>
+                <li>Item 3</li>
+            </ul>
+        </section>
+        <section id="section2">
+            <h2>Section 2</h2>
+            <p>This is section 2</p>
+            <img src="example.jpg" alt="Example Image">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Header 1</th>
+                        <th>Header 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Data 1</td>
+                        <td>Data 2</td>
+                    </tr>
+                    <tr>
+                        <td>Data 3</td>
+                        <td>Data 4</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section id="section3">
+            <h2>Section 3</h2>
+            <p>This is section 3</p>
+            <form action="/submit" method="post">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </div>
+    <div class="footer">
+        <p>This is a footer tag</p>
+    </div>
+</body>
+</html>
+'
     # 原始 gdoc 文本的代码数量
-    gdoc_char_num=$(echo "${source_code}" | wc -m)
+    gdoc_char_num=${#source_code}
     # 经过 tidy 后的代码数量
-    tidied_char_num=$(echo "${source_code}" | tidy --gdoc true | wc -m)
+    tidied_char_num=$(echo "${source_code}" | tidy -gdoc | wc -m)
     [[ $tidied_char_num -lt $gdoc_char_num ]]
     CHECK_RESULT $? 0 0 "Failed to use option: --gdoc"
-    echo 'gdoc: true' >./tidyrc
+    echo 'gdoc:yes' >./tidyrc
     tidied_char_num=$(echo "${source_code}" | tidy -config ./tidyrc | wc -m)
     [[ $tidied_char_num -lt $gdoc_char_num ]]
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: gdoc"
@@ -103,7 +176,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -f ./tidyrc
     LOG_INFO "Finish environment cleanup!"
 }
