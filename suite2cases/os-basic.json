@@ -964,6 +964,9 @@
 	},
 	{
 	   "name": "oe_test_udisksctl"
+	},
+	{
+	   "name": "oe_test_c++_stl"
 	}
     ]
 }
