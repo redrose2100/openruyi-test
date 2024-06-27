@@ -120,6 +120,9 @@
         },
         {
             "name": "oe_test_utshell_mapfile_02"
+        },
+        {
+            "name": "oe_test_utshell_shopt"
         }
     ]
 }
