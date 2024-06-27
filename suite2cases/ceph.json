@@ -27,6 +27,15 @@
         },
         {
             "name": "oe_test_target_ceph"
+        },
+        {
+            "name": "oe_test_service_ceph-crash"
+        },
+        {
+            "name": "oe_test_target_cephfs-mirror"
+        },
+        {
+            "name": "oe_test_target_ceph-immutable-object-cache"
         }
     ]
 }
