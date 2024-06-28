@@ -21,12 +21,19 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL efivar
+    DNF_INSTALL "efivar efibootmgr"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+    efibootmgr
+    ret=$?
+    if [ $ret -ne 0 ] ;then
+        LOG_WARN "System is not in UEFI mode. Exiting test."
+        LOG_INFO "End to run test."
+        return 0
+    fi
     efivar -l |grep -i "boot"
     CHECK_RESULT $? 0 0 "Failed to read uefi variable"
     uefi_value=$(efivar -l |grep -i "boot" |head -1)
