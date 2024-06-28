@@ -17,7 +17,7 @@
 # @Desc      :   Test abrt-upload-watch.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -38,7 +38,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i '$d' /etc/abrt/abrt.conf
     systemctl stop abrtd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
