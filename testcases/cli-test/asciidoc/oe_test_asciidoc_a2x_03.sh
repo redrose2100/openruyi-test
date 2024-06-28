@@ -17,7 +17,7 @@
 # @Desc      :   Take the test a2x option
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
@@ -27,14 +27,15 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "asciidoc fop"
+    DNF_INSTALL "asciidoc fop docbook-xsl"
     mkdir $TMP_DIR
+    sed -i "s|<xsl:import href=\"/usr/share/sgml/docbook/xsl-stylesheets-1.79.2/common/common.xsl\"/>|<xsl:import href=\"$(find /usr/share -name common.xsl | awk 'NR==1')\"/>|" common/xsl/test.xsl
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    a2x -f xhtml  --xsltproc-opts='--stringparam page.margin.inner 10cm' -D ${TMP_DIR}/ common/test.adoc 2>&1 && \ 
+    a2x -f xhtml  --xsltproc-opts='--stringparam page.margin.inner 10cm' -D ${TMP_DIR}/ common/test.adoc 2>&1 && \
     test -f ${TMP_DIR}/test.html
     CHECK_RESULT $? 0 0 "Check a2x --xsltproc-opts failed"
     a2x -f xhtml --xsl-file=common/xsl/test.xsl -D ${TMP_DIR}/ common/test.adoc 2>&1 && \
@@ -46,7 +47,7 @@ function run_test() {
     a2x -f xhtml --icons-dir=common/icons_test/ -D ${TMP_DIR}/ common/test.adoc 2>&1 && \
     test -f ${TMP_DIR}/test.html
     CHECK_RESULT $? 0 0 "Check a2x --icons-dir failed"
-    for format in "xhtml" "epub" "docbook" "chunked" "htmlhelp" "manpage" 
+    for format in "xhtml" "epub" "docbook" "chunked" "htmlhelp" "manpage"
     do
         a2x -v -f ${format} -D ${TMP_DIR}/ common/test.adoc
         CHECK_RESULT $? 0 0 "Check a2x -f ${format} failed"
@@ -65,17 +66,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check a2x --safe failed"
     a2x -f xhtml -s -D ${TMP_DIR}/ common/test.adoc 2>&1 && \
     test -f ${TMP_DIR}/test.html
-    CHECK_RESULT $? 0 0 "Check a2x -s failed" 
+    CHECK_RESULT $? 0 0 "Check a2x -s failed"
     a2x -f xhtml --skip-asciidoc -D ${TMP_DIR}/ common/test.adoc 2>&1 && \
     test -f ${TMP_DIR}/test.html
-    CHECK_RESULT $? 0 0 "Check a2x --skip-asciidoc failed" 
+    CHECK_RESULT $? 0 0 "Check a2x --skip-asciidoc failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf ${TMP_DIR} 
-    DNF_REMOVE
+    rm -rf ${TMP_DIR}
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
