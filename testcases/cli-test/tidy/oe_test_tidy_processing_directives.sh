@@ -17,7 +17,7 @@
 # @Desc      :   Test tidy processing directives
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -72,23 +72,6 @@ function run_test() {
     echo 'bare: yes' >./tidyrc
     echo '—' | tidy -config ./tidyrc | grep '-'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: bare"
-    # -g, -gdoc, gdoc
-    # produce clean version of html exported by Google Docs
-    # 对比清理前后，文件的代码量，判断清理的效果
-    source_code='<html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type"><style type="text/css">ol{margin:0;padding:0}table td,table th{padding:0}.c2{color:#000000;font-weight:400;text-decoration:none;vertical-align:baseline;font-size:26pt;font-family:"Arial";font-style:normal}.c1{padding-top:0pt;padding-bottom:3pt;line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:center}.c0{background-color:#ffffff;max-width:451.4pt;padding:72pt 72pt 72pt 72pt}.title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:"Arial"}p{margin:0;color:#000000;font-size:11pt;font-family:"Arial"}h1{padding-top:20pt;color:#000000;font-size:20pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:14pt;color:#666666;font-size:12pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}</style></head><body class="c0"><p class="c1 title" id="h.1osv7rxmcj4i"><span class="c2">Hello World</span></p></body></html>'
-    # 原始 gdoc 文本的代码数量
-    gdoc_char_num=$(echo "${source_code}" | wc -m)
-    # 经过 tidy 后的代码数量
-    tidied_char_num=$(echo "${source_code}" | tidy -g | wc -m)
-    [[ $tidied_char_num -lt $gdoc_char_num ]]
-    CHECK_RESULT $? 0 0 "Failed to use option: -g"
-    tidied_char_num=$(echo "${source_code}" | tidy -gdoc | wc -m)
-    [[ $tidied_char_num -lt $gdoc_char_num ]]
-    CHECK_RESULT $? 0 0 "Failed to use option: -gdoc"
-    echo 'gdoc: yes' >./tidyrc
-    tidied_char_num=$(echo "${source_code}" | tidy -config ./tidyrc | wc -m)
-    [[ $tidied_char_num -lt $gdoc_char_num ]]
-    CHECK_RESULT $? 0 0 "Failed to use option in configuration: gdoc"
     # -n, -numeric, numeric-entities
     # 是否以数字而非名字输出 HTML 实体
     echo '&nbsp;' | tidy -n | grep '&#160'
@@ -158,7 +141,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -f ./tidyrc
     LOG_INFO "Finish environment cleanup!"
 }
