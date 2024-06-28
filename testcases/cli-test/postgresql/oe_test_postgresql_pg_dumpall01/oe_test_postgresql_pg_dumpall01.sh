@@ -15,7 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   pg_dumpall
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/lib.sh
 
 function pre_test() {
@@ -36,10 +36,10 @@ function run_test() {
     CHECK_RESULT $?
     su - postgres -c "pg_dumpall -g >/var/lib/pgsql/test.sql"
     CHECK_RESULT $?
-    cat /var/lib/pgsql/test.sql | grep "Roles" | grep "connect testdb"
+    < /var/lib/pgsql/test.sql grep "Roles" | grep "connect testdb"
     CHECK_RESULT $? 1
-    su - postgres -c "pg_dumpall -o > /var/lib/pgsql/test.sql"
-    grep "OID" /var/lib/pgsql/test.sql
+    su - postgres -c "pg_dumpall > /var/lib/pgsql/test.sql"
+    grep "COPY public.test (id, val) FROM stdin;" /var/lib/pgsql/test.sql
     CHECK_RESULT $?
     su - postgres -c "pg_dumpall -O >/var/lib/pgsql/test.sql"
     CHECK_RESULT $?
@@ -47,7 +47,7 @@ function run_test() {
     CHECK_RESULT $?
     su - postgres -c "pg_dumpall -r > /var/lib/pgsql/test.sql"
     CHECK_RESULT $?
-    cat /var/lib/pgsql/test.sql | grep "Roles" | grep "Tablespaces"
+    < /var/lib/pgsql/test.sql grep "Roles" | grep "Tablespaces"
     CHECK_RESULT $? 1
     su - postgres -c "pg_dumpall -s >/var/lib/pgsql/test.sql"
     CHECK_RESULT $?
@@ -57,7 +57,7 @@ function run_test() {
     CHECK_RESULT $?
     su - postgres -c "pg_dumpall -t >/var/lib/pgsql/test.sql"
     CHECK_RESULT $?
-    cat /var/lib/pgsql/test.sql | grep "Roles" | grep "Tablespaces"
+    < /var/lib/pgsql/test.sql grep "Roles" | grep "Tablespaces"
     CHECK_RESULT $? 1
     LOG_INFO "End to run test."
 }
