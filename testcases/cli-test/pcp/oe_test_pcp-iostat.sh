@@ -54,7 +54,7 @@ function run_test() {
     CHECK_RESULT $?
     pcp-iostat -a "$archive_data" -z -s 10 | grep 'avgrq-sz'
     CHECK_RESULT $?
-    pcp-iostat -a "$archive_data" -x dm -s 5 | grep 'avgqu-sz'
+    pcp-iostat -a "$archive_data" -x dm-0 -s 5 | grep 'avgqu-sz'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
