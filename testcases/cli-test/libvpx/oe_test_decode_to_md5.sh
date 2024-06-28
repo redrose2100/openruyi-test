@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test vpxdec of libvpx
 # #############################################
+# shellcheck disable=SC1091
 
 source "../common/common_lib.sh"
 
@@ -37,7 +38,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: vp8cx_set_ref"
     vp9_lossless_encoder 352 288 data/1.ivf tmp/1.ivf | grep 'Processed 1 frames'
     CHECK_RESULT $? 0 0 "Failed option: vp9_lossless_encoder"
-    vp9_spatial_svc_encoder -f 10 -w 352 -h 288 -s 0 -sl 2 -t 10/1 -b 20 -k 1 -r 1 -p 1 -tl 0 -tlm 0 -th 6 -aq 1 -d 8 -sp 5 -bl 1 data/1.mp4 tmp/1.ivf | grep 'Frame cnt and encoding time/FPS'
+    vp9_spatial_svc_encoder -f 10 -w 352 -h 288 -s 0 -sl 2 -t 10/1 -b 20 -k 1 -tl 0 -tlm 0 -th 6 -aq 1 -d 8 -sp 5 -bl 1 data/1.mp4 -o tmp/1.ivf | grep 'Frame cnt and encoding time/FPS'
     CHECK_RESULT $? 0 0 "Failed option: vp8_simple_decoder"
     vp9cx_set_ref 352 288 data/1.ivf tmp/1.ivf 25 30 | grep 'Processed 1 frames.'
     CHECK_RESULT $? 0 0 "Failed option: vp9cx_set_ref"
@@ -49,7 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp data
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
