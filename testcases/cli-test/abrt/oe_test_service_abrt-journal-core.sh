@@ -17,11 +17,11 @@
 # @Desc      :   Test abrt-journal-core.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL abrt-addon-ccpp
+    DNF_INSTALL "abrt-addon-ccpp"
     systemctl start abrtd.service
     LOG_INFO "End of environmental preparation!"
 }
@@ -36,7 +36,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop abrtd.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
