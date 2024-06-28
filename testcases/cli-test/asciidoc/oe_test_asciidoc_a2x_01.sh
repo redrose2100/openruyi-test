@@ -17,7 +17,7 @@
 # @Desc      :   Take the test a2x option
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
@@ -34,7 +34,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    a2x -h | grep "a2x" 
+    a2x -h | grep "a2x"
     CHECK_RESULT $? 0 0 "Check a2x -h failed"
     a2x --help | grep "a2x"
     CHECK_RESULT $? 0 0 "Check a2x --help failed"
@@ -72,8 +72,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf ${TMP_DIR} 
-    DNF_REMOVE
+    rm -rf ${TMP_DIR}
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
