@@ -16,20 +16,22 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Create LV
 # ############################################
+# shellcheck disable=SC1091,SC2154
 source ../common/disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL lvm2
     check_free_disk
-    pvcreate -y /dev/${local_disk} /dev/${local_disk1}
-    vgcreate -y openeulertest /dev/${local_disk} /dev/${local_disk1}
+    pvcreate -y "/dev/${local_disk}" "/dev/${local_disk1}"
+    vgcreate -y openeulertest "/dev/${local_disk}" "/dev/${local_disk1}"
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvdisplay | grep "PV Name" | grep /dev/${local_disk}
+    pvdisplay | grep "PV Name" | grep "/dev/${local_disk}"
     CHECK_RESULT $?
-    pvdisplay | grep "PV Name" | grep /dev/${local_disk1}
+    pvdisplay | grep "PV Name" | grep "/dev/${local_disk1}"
     CHECK_RESULT $?
     vgdisplay | grep "VG Name" | grep openeulertest
     CHECK_RESULT $?
@@ -51,10 +53,11 @@ function post_test() {
     umount /dev/openeulertest/test
     lvremove -y openeulertest/test
     vgremove -y openeulertest
-    pvremove -y /dev/${local_disk} /dev/${local_disk1}
-    mkfs.ext4 /dev/${local_disk1}
-    mkfs.ext4 /dev/${local_disk}
+    pvremove -y "/dev/${local_disk}" "/dev/${local_disk1}"
+    mkfs.ext4 "/dev/${local_disk1}"
+    mkfs.ext4 "/dev/${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
