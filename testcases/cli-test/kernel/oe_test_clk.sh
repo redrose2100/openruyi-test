@@ -22,8 +22,14 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)
-    cd /usr/lib/modules/"${kernel_name}"/kernel/drivers/clk ||return
-    test -f clk-scpi.ko.xz
+    kmod_path="/usr/lib/modules/${kernel_name}/kernel/drivers"
+    test_mod=clk
+    mod_name=clk-scpi
+    if test -f "${kmod_path}/${test_mod}/${mod_name}.ko.xz"; then
+        has_compressed_mod=1
+        xz -dk "${kmod_path}"/"${test_mod}"/*
+    fi
+    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/clk/clk-scpi.ko.xz
     CHECK_RESULT $? 0 0 "file does not exist"
     modprobe clk-scpi
     CHECK_RESULT $? 0 0 "Information display failed"
@@ -31,15 +37,27 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep clk_scpi
     CHECK_RESULT $? 0 0 "Module loaded failed"
-    rmmod clk_scpi
-    CHECK_RESULT $? 0 0 "Module uninstall failed"
+    if [ "$(modprobe --version | grep version | awk '{print $3}')" -gt "29" ]; then
+        modprobe -r --remove-holders "${mod_name}"
+        CHECK_RESULT $? 0 0 "Module uninstall failed"
+    else
+        modprobe -r "${mod_name}"
+        CHECK_RESULT $? 0 0 "Module uninstall failed"
+    fi
     lsmod | grep clk_scpi
     CHECK_RESULT $? 1 0 "Module not loaded"
 
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rmmod clk_scpi 
+    if [ "$(modprobe --version | grep version | awk '{print $3}')" -gt "29" ]; then
+        modprobe -r --remove-holders "${mod_name}"
+    else
+        modprobe -r "${mod_name}"
+    fi
+    if test "${has_compressed_mod}" = "1" ; then
+        rm -f "${kmod_path}"/"${test_mod}"/*.ko
+    fi
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
