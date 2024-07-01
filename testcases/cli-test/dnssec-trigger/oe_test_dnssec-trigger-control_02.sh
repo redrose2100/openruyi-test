@@ -36,7 +36,7 @@ function run_test() {
     SLEEP_WAIT 5
     dnssec-trigger-control stoppanel
     CHECK_RESULT $? 0 0 "Failed to check the stoppanel"
-    SLEEP_WAIT 2
+    SLEEP_WAIT 5
     pgrep -f "dnssec-trigger-control results"
     CHECK_RESULT $? 1 0 "Failed to check the stop dnssec-trigger-control process"
     dnssec-trigger-control status 

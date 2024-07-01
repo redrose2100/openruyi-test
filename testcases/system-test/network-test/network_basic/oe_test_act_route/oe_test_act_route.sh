@@ -34,7 +34,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ${new_route} added failed."
     route del -net "${new_route}" netmask 255.255.255.0
     CHECK_RESULT $? 0 0 "Delete route failed."
-    route -n | grep "${new_route}"
+    route -n | grep "${new_route}\s*${sysgw}"
     CHECK_RESULT $? 1 0 "Check ${new_route} deleted failed."
     LOG_INFO "End to run test."
 }

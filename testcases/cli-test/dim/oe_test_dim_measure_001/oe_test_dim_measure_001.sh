@@ -17,7 +17,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    DNF_INSTALL "dim_tools dim"
+    DNF_INSTALL "dim_tools dim vdo"
     modprobe dim_monitor 
     modprobe kvdo
 }
@@ -25,6 +25,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
+    xz -d /usr/lib/modules/"$(uname -r)"/kernel/drivers/block/kvdo.ko.xz
     mkdir -p /etc/dim/digest_list
     dim_gen_baseline /usr/bin/bash -o /etc/dim/digest_list/bash.hash
     CHECK_RESULT $? 0 0 "dim_gen_baseline failed."
@@ -65,8 +66,9 @@ function run_test() {
 
 function post_test() {
     rmmod dim_monitor dim_core kvdo
+    rm /usr/lib/modules/"$(uname -r)"/kernel/drivers/block/kvdo.ko
     rm -rf /etc/dim/
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 }
 
 main "$@"

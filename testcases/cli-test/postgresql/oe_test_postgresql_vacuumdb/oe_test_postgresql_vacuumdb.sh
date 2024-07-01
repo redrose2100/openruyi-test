@@ -15,7 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   vacuumdb
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/lib.sh
 
 function pre_test() {
@@ -29,27 +29,27 @@ function run_test() {
     LOG_INFO "Start to run test."
     psql testdb -U postgres -h 127.0.0.1 -c "insert into test select generate_series(1,100000),random();"
     psql testdb -U postgres -h 127.0.0.1 -c "delete from test"
-    temp1=$(du /var/lib/pgsql/data/base/$oid | awk '{printf $1}')
+    temp1=$(du /var/lib/pgsql/data/base/"$oid" | awk '{printf $1}')
     su - postgres -c "vacuumdb -a"
     CHECK_RESULT $?
-    temp2=$(du /var/lib/pgsql/data/base/$oid | awk '{printf $1}')
-    [ $temp1 -gt $temp2 ]
+    temp2=$(du /var/lib/pgsql/data/base/"$oid" | awk '{printf $1}')
+    [ "$temp1" -gt "$temp2" ]
     CHECK_RESULT $?
     psql testdb -U postgres -h 127.0.0.1 -c "insert into test select generate_series(1,100000),random();"
     psql testdb -U postgres -h 127.0.0.1 -c "delete from test"
-    temp1=$(du /var/lib/pgsql/data/base/$oid | awk '{printf $1}')
+    temp1=$(du /var/lib/pgsql/data/base/"$oid" | awk '{printf $1}')
     su - postgres -c "vacuumdb -d testdb"
     CHECK_RESULT $?
-    temp2=$(du /var/lib/pgsql/data/base/$oid | awk '{printf $1}')
-    [ $temp1 -gt $temp2 ]
+    temp2=$(du /var/lib/pgsql/data/base/"$oid" | awk '{printf $1}')
+    [ "$temp1" -gt "$temp2" ]
     CHECK_RESULT $?
     su - postgres -c "vacuumdb -e"
     CHECK_RESULT $?
-    temp2=$(du /var/lib/pgsql/data/base/$oid | awk '{printf $1}')
+    temp2=$(du /var/lib/pgsql/data/base/"$oid" | awk '{printf $1}')
     su - postgres -c "vacuumdb -d testdb -f"
     CHECK_RESULT $?
-    temp3=$(du /var/lib/pgsql/data/base/$oid | awk '{printf $1}')
-    [ $temp2 -gt $temp3 ]
+    temp3=$(du /var/lib/pgsql/data/base/"$oid" | awk '{printf $1}')
+    [ "$temp2" -gt "$temp3" ]
     CHECK_RESULT $?
     su - postgres -c "vacuumdb -F -e"
     CHECK_RESULT $?
@@ -60,13 +60,13 @@ function run_test() {
     psql testdb -U postgres -h 127.0.0.1 -c "create table test2 (id int, val numeric);"
     psql testdb -U postgres -h 127.0.0.1 -c "insert into test2 select generate_series(1,1000),random();"
     psql testdb -U postgres -h 127.0.0.1 -c "delete from test2"
-    temp1=$(du /var/lib/pgsql/data/base/$oid | awk '{printf $1}')
+    temp1=$(du /var/lib/pgsql/data/base/"$oid" | awk '{printf $1}')
     su - postgres -c "vacuumdb -d testdb -t test2"
     CHECK_RESULT $?
-    temp2=$(du /var/lib/pgsql/data/base/$oid | awk '{printf $1}')
-    [ $temp1 -gt $temp2 ]
+    temp2=$(du /var/lib/pgsql/data/base/"$oid" | awk '{printf $1}')
+    [ "$temp1" -gt "$temp2" ]
     CHECK_RESULT $?
-    su - postgres -c "vacuumdb -v" 2>&1 | grep "DETAIL"
+    su - postgres -c "vacuumdb -v" 2>&1 | grep "INFO"
     CHECK_RESULT $?
     vacuumdb -V | grep "(PostgreSQL)"
     CHECK_RESULT $?
@@ -74,11 +74,11 @@ function run_test() {
     CHECK_RESULT $?
     psql testdb -U postgres -h 127.0.0.1 -c "insert into test select generate_series(1,100000),random();"
     psql testdb -U postgres -h 127.0.0.1 -c "delete from test"
-    temp1=$(du /var/lib/pgsql/data/base/$oid | awk '{printf $1}')
+    temp1=$(du /var/lib/pgsql/data/base/"$oid" | awk '{printf $1}')
     su - postgres -c "vacuumdb -Z -e"
     CHECK_RESULT $?
-    temp2=$(du /var/lib/pgsql/data/base/$oid | awk '{printf $1}')
-    [ $temp1 -eq $temp2 ]
+    temp2=$(du /var/lib/pgsql/data/base/"$oid" | awk '{printf $1}')
+    [ "$temp1" -eq "$temp2" ]
     CHECK_RESULT $?
     vacuumdb -? | grep "Usage:"
     CHECK_RESULT $?

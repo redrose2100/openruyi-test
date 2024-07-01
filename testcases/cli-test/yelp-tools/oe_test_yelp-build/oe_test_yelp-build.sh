@@ -16,13 +16,13 @@
 #@Desc      	:   yelp build                  
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "yelp-tools yelp"
-    wget https://gitlab.gnome.org/GNOME/yelp-tools/-/blob/master/help/C/yelp-build.page
+    wget https://gitlab.gnome.org/GNOME/yelp-tools/-/raw/master/help/C/yelp-build.page
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -48,7 +48,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf highlight.pack.js index.cache index.epub yelp-build.page C.css yelp-build.html yelp.js
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

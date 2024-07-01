@@ -15,13 +15,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   pg_waldump
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     postgresql_install
-    checkpoint=$(su - postgres -c "pg_controldata" | grep "Prior checkpoint location:" | awk '{printf $4}')
+    checkpoint=$(su - postgres -c "pg_controldata" | grep "Latest checkpoint location:" | awk '{printf $4}')
     WALfile=$(su - postgres -c "pg_controldata" | grep "Latest checkpoint's REDO WAL file:" | awk '{printf $6}')
     LOG_INFO "End to prepare the test environment."
 }

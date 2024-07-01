@@ -15,7 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   pg_dump
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/lib.sh
 
 function pre_test() {
@@ -34,9 +34,9 @@ function run_test() {
     CHECK_RESULT $?
     grep "myschema" /var/lib/pgsql/testfile
     CHECK_RESULT $? 1
-    su - postgres -c "pg_dump -o testdb >testfile"
+    su - postgres -c "pg_dump testdb >testfile"
     CHECK_RESULT $?
-    grep "COPY myschema.test (id, val) WITH OIDS FROM stdin;" /var/lib/pgsql/testfile
+    grep "COPY public.test (id, val) FROM stdin;" /var/lib/pgsql/testfile
     CHECK_RESULT $?
     su - postgres -c "pg_dump -O testdb >testfile"
     CHECK_RESULT $?
@@ -44,15 +44,15 @@ function run_test() {
     CHECK_RESULT $?
     su - postgres -c "pg_dump -s testdb >testfile"
     CHECK_RESULT $?
-    grep "COPY myschema.test (id, val) FROM stdin;" /var/lib/pgsql/testfile
+    grep "COPY public.test (id, val) FROM stdin;" /var/lib/pgsql/testfile
     CHECK_RESULT $? 1
-    su - postgres -c "pg_dump -t myschema.test testdb >testfile"
+    su - postgres -c "pg_dump -t public.test testdb >testfile"
     CHECK_RESULT $?
-    grep "myschema.test" /var/lib/pgsql/testfile
+    grep "public.test" /var/lib/pgsql/testfile
     CHECK_RESULT $?
-    su - postgres -c "pg_dump -T myschema.test >testfile"
+    su - postgres -c "pg_dump -T public.test >testfile"
     CHECK_RESULT $?
-    grep "myschema.test" /var/lib/pgsql/testfile
+    grep "public.test" /var/lib/pgsql/testfile
     CHECK_RESULT $? 1
     su - postgres -c "pg_dump -v testdb -f tempv" 2>&1 | grep "pg_dump: creating"
     CHECK_RESULT $?

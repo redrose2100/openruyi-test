@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in swig package
 # ############################################
+# shellcheck disable=SC2010
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -52,7 +53,7 @@ function run_test() {
     diff example.i example-bak.i >log
     CHECK_RESULT $? 1
     cp -rf example-bak.i example.i
-    swig -java -fakeversion 6 example.i
+    swig -java -fakeversion 6.0.0 example.i
     CHECK_RESULT $?
     grep -i "version 6" example.java
     CHECK_RESULT $?
@@ -66,8 +67,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf $(ls | grep -vE ".sh|example.i") example_im.d
+    DNF_REMOVE "$@"
+    rm -rf "$(ls | grep -vE ".sh|example.i")" example_im.d
     LOG_INFO "End to restore the test environment."
 }
 
