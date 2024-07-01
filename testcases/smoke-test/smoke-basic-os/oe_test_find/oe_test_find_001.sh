@@ -44,6 +44,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "find fail"
     find  /tmp/find_test -maxdepth 1 -type f -mtime +1|grep 'two.txt'
     CHECK_RESULT $? 1 0 "find fail"
+    find /tmp/find_test -empty|grep -E 'two.txt|other_file.txt'
+    CHECK_RESULT $? 0 0 "find fail"
     LOG_INFO "Finish test!"
 }
 
