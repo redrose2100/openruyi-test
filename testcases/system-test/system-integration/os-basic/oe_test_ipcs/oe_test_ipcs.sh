@@ -45,6 +45,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "ipcs -r execution failure"
     ipcs -p |grep -E "PID"
     CHECK_RESULT $? 0 0 "ipcs -p execution failure"
+    ipcs -c |grep -E "拥有者|Owners"
+    CHECK_RESULT $? 0 0 "ipcs -c execution failure"
+    ipcs -l |grep -E "同享内存限制|Shared Memory Limits"
+    CHECK_RESULT $? 0 0 "ipcs -l execution failure"
+    ipcs -u |grep -E "消息状态|Messages Status"
+    CHECK_RESULT $? 0 0 "ipcs -u execution failure"
 }
 
 main "$@"
