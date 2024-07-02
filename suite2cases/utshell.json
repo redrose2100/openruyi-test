@@ -132,6 +132,9 @@
         },
 	{	
             "name": "oe_test_utshell_for"
+	},
+	{
+	    "name": "oe_test_utshell_trap_001"	
 	}
     ]
 }
