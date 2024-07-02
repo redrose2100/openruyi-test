@@ -8,6 +8,9 @@
             "name": "oe_test_utshell_test_01"
         },
         {
+            "name": "oe_test_utshell_type_01"
+        },
+        {
             "name": "oe_test_utshell_readarray_01"
         },
         {
@@ -123,7 +126,13 @@
         },
         {
             "name": "oe_test_utshell_shopt"
-        }
+        },
+        {
+            "name": "oe_test_utshell_enable"
+        },
+	{	
+            "name": "oe_test_utshell_for"
+	}
     ]
 }
 

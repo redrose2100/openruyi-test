@@ -30,14 +30,13 @@ function run_test() {
   export LANG=en_US.UTF-8
   utshell -c "set --help" |grep Options
   CHECK_RESULT $? 0 0 "set --help fail"
-   utshell -c "h=hahaha;set -a h;set| grep h=ha"
+  utshell -c "h=hahaha;set -a h;set| grep h=ha"
   CHECK_RESULT $? 0 0 "set -a h fail"
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
   DNF_REMOVE "$@"
-  rm -rf hello.sh
   LOG_INFO "Finish environment cleanup!"
 }
 
