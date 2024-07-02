@@ -967,6 +967,9 @@
 	},
 	{
 	   "name": "oe_test_c++_stl"
+	},
+	{
+	   "name": "oe_test_c++_stl_001"
 	}
     ]
 }
