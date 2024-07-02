@@ -135,7 +135,11 @@
 	},
         {
             "name" : "oe_test_utshell_cd_02"
+        },
+        {
+            "name" : "oe_test_utshell_true"
         }
     ]
 }
+
 
