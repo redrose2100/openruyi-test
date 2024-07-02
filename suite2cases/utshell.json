@@ -132,7 +132,10 @@
         },
 	{	
             "name": "oe_test_utshell_for"
-	}
+	},
+        {
+            "name" : "oe_test_utshell_cd_02"
+        }
     ]
 }
 
