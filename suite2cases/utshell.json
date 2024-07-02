@@ -129,7 +129,10 @@
         },
         {
             "name": "oe_test_utshell_enable"
-        }
+        },
+	{	
+            "name": "oe_test_utshell_for"
+	}
     ]
 }
 
