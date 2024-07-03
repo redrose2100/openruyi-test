@@ -138,7 +138,10 @@
         },
         {
             "name" : "oe_test_utshell_true"
-        }
+        },
+	{
+	    "name": "oe_test_utshell_trap_001" 
+	}
     ]
 }
 
