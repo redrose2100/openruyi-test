@@ -138,7 +138,10 @@
         },
 	{
 	    "name": "oe_test_utshell_trap_001" 
-	}
+	},
+        {
+            "name": "oe_test_utshell_shift"
+        }
     ]
 }
 
