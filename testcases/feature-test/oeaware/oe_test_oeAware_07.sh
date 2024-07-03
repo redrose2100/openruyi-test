@@ -27,7 +27,6 @@ function pre_test() {
 function run_test() {
 
     LOG_INFO "Start to run test."
-    arch=$(uname -m)
     \cp -rf /etc/oeAware/config.yaml /etc/oeAware/config_ori.yaml
     sed -i '/enable_list/a\ - name: libthread_collector.so' /etc/oeAware/config.yaml
     systemctl restart oeaware
@@ -38,23 +37,28 @@ function run_test() {
     \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
     systemctl restart oeaware
     SLEEP_WAIT 1
-    if [ "$arch" == "aarch64" ]; then
+    if [ "$NODE1_FRAME" == "aarch64" ]; then
         sed -i '/enable_list/a\ - name: libthread_scenario.so \n - name: libpmu.so' /etc/oeAware/config.yaml
     else
-        sed -i '/enable_list/a\ - name: libthread_scenario.so \n - name: libthread_collector.so' /etc/oeAware/config.yaml
+        sed -i '/enable_list/a\ - name: libthread_scenario.so' /etc/oeAware/config.yaml
     fi
     systemctl restart oeaware
     SLEEP_WAIT 1
-    if [ "$arch" == "aarch64" ]; then
+    
+    if [ "$NODE1_FRAME" == "aarch64" ]; then
 
-        
-        if grep "kvm" "${OET_PATH}"/conf/env.json
+        if [ "$NODE1_MACHINE" == "kvm" ]
         then
 
             oeawarectl -q | grep "pmu_cycles_sampling(available, running)"
             CHECK_RESULT $? 0 0 "Instance running failed"
             oeawarectl -q | grep "pmu_cycles_counting(available, running)"
             CHECK_RESULT $? 0 0 "Instance running failed"
+            oeawarectl -q | grep "pmu_spe_sampling(available, close)"
+            CHECK_RESULT $? 0 0 "Instance running failed"
+            oeawarectl -q | grep "pmu_uncore_counting(available, close)"
+            CHECK_RESULT $? 0 0 "Instance running failed"
+
         else
             oeawarectl -q | grep "available, close"
             CHECK_RESULT $? 1 0 "instances enable failed"
@@ -70,13 +74,17 @@ function run_test() {
     systemctl restart oeaware
     SLEEP_WAIT 10
 
-    if [ "$arch" == "aarch64" ]; then
+    if [ "$NODE1_FRAME" == "aarch64" ]; then
         sed -i '/enable_list/a\ - name: libpmu.so \n   instances:\n     - pmu_cycles_sampling\n     - pmu_cycles_counting' /etc/oeAware/config.yaml
         systemctl restart oeaware
         SLEEP_WAIT 1
         oeawarectl -q | grep "pmu_cycles_sampling(available, running)"
         CHECK_RESULT $? 0 0 "Instance running failed"
         oeawarectl -q | grep "pmu_cycles_counting(available, running)"
+        CHECK_RESULT $? 0 0 "Instance running failed"
+        oeawarectl -q | grep "pmu_spe_sampling(available, close)"
+        CHECK_RESULT $? 0 0 "Instance running failed"
+        oeawarectl -q | grep "pmu_uncore_counting(available, close)"
         CHECK_RESULT $? 0 0 "Instance running failed"
 
         \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
@@ -86,7 +94,7 @@ function run_test() {
         systemctl restart oeaware
         SLEEP_WAIT 1
         
-        if grep "kvm" "${OET_PATH}"/conf/env.json
+        if [ "$NODE1_MACHINE" == "kvm" ]
         then
             oeawarectl -q | grep "pmu_cycles_sampling(available, running)"
             CHECK_RESULT $? 0 0 "Instance running failed"
