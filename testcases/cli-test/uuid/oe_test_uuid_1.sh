@@ -34,13 +34,13 @@ function run_test() {
     uuid -v5 ns:URL http://www.baidu.com | grep "-"
     CHECK_RESULT $?
     mac_id=$(uuid | awk -F "-" '{print $5}')
-    uuid -m | grep ${mac_id}
+    uuid -m | grep "${mac_id}"
     CHECK_RESULT $? 1
     uuid -n 10 | wc -l | grep 10
     CHECK_RESULT $?
     uuid -n 10 -1
     CHECK_RESULT $?
-    uuid -F BIN | xxd | grep "RT"
+    uuid -F BIN | xxd | grep "00000000"
     CHECK_RESULT $?
     uuid -F STR | grep "-"
     CHECK_RESULT $?
@@ -50,14 +50,14 @@ function run_test() {
     grep "-" uuid_file
     CHECK_RESULT $?
     id=$(cat uuid_file)
-    uuid -d ${id}
+    uuid -d "${id}"
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf uuid_file
     LOG_INFO "Finish restoring the test environment."
 }
