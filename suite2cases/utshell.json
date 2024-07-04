@@ -11,6 +11,9 @@
             "name": "oe_test_utshell_type_01"
         },
         {
+            "name": "oe_test_utshell_type_02"
+        },
+        {
             "name": "oe_test_utshell_readarray_01"
         },
         {
