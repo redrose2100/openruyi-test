@@ -147,6 +147,9 @@
 	},
         {
             "name": "oe_test_utshell_shift"
+        },
+        {
+            "name": "oe_test_utshell_continue"
         }
     ]
 }
