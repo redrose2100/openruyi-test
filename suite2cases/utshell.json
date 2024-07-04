@@ -122,6 +122,9 @@
             "name": "oe_test_utshell_cd_01"
         },
         {
+            "name": "oe_test_utshell_printf"
+        },
+        {
             "name": "oe_test_utshell_mapfile_01"
         },
         {
