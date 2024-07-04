@@ -153,7 +153,10 @@
         },
 	{
 	    "name": "oe_test_utshell_caller_001"
-	}
+	},
+        {
+            "name": "oe_test_utshell_printf"
+        }
     ]
 }
 
