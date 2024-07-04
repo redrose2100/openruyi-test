@@ -8,7 +8,11 @@
 	    "name": "oe_test_zip_002"
 	},
 	{
-	    "neme": "oe_test_zip_003"
+	    "name": "oe_test_zip_003"
+	},
+	{
+	    "name": "oe_test_zip_004"
 	}
+
     ]
 }
