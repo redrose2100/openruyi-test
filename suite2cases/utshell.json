@@ -150,7 +150,10 @@
         },
         {
             "name": "oe_test_utshell_continue"
-        }
+        },
+	{
+	    "name": "oe_test_utshell_caller_001"
+	}
     ]
 }
 
