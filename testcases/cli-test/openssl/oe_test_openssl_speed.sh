@@ -26,6 +26,12 @@ function run_test() {
     openssl speed -elapsed aes-128-cbc >> openssl.log
     grep -E "aes-128 cbc|aes-128-cbc"  openssl.log
     CHECK_RESULT $? 0 0 "aes-128-cbc encryption and decryption operation speed fail"
+    openssl speed -elapsed -evp aes-192-cbc >> openssl.log
+    grep -E "aes-192 cbc|AES-192-CBC"  openssl.log
+    CHECK_RESULT $? 0 0 "aes-192-cbc encryption and decryption operation speed fail"
+    openssl speed -elapsed -evp aes-256-cbc >> openssl.log
+    grep -E "aes-256 cbc|AES-256-CBC"  openssl.log
+    CHECK_RESULT $? 0 0 "aes-256-cbc encryption and decryption operation speed fail"
     openssl speed -elapsed -evp sm3 >> openssl.log
     grep "sm3" openssl.log
     CHECK_RESULT $? 0 0 "sm3 encryption and decryption operation speed fail"
