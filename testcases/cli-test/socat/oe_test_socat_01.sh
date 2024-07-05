@@ -47,7 +47,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check socat -4 failed"
     socat -u open:a.txt tcp-listen:4002,reuseaddr &
     SLEEP_WAIT 5
-    socat -6 tcp:localhost:4002 open:a.txt,create
+    socat -6 tcp:127.0.0.1:4002 open:a.txt,create
     CHECK_RESULT $? 0 0 "Check socat -6 failed"
     socat -U open:a.txt tcp-listen:4003,reuseaddr &
     SLEEP_WAIT 5
