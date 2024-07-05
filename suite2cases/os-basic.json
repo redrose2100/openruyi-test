@@ -970,6 +970,9 @@
 	},
 	{
 	   "name": "oe_test_fallocate_01"
+	},
+	{
+	   "name": "oe_test_lslocks"
 	}
     ]
 }
