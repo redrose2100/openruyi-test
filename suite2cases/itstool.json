@@ -9,7 +9,9 @@
         },
         {
             "name": "oe_test_itstool_2.0.4"
+        },
+        {
+            "name": "oe_test_itstool_2.0.7"
         }
-
     ]
 }
