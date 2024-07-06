@@ -17,7 +17,7 @@
 # @Desc      :   @Test+TestSuite class test
 # ############################################
 
-source "../common/common_junit.sh"
+source "$OET_PATH/testcases/cli-test/junit/common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -41,4 +41,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

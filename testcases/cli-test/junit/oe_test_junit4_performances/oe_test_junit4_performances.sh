@@ -12,12 +12,12 @@
 # #############################################
 # @Author    :   liujuan
 # @Contact   :   lchutian@163.com
-# @Date      :   2020/5/19
+# @Date      :   2020/05/20
 # @License   :   Mulan PSL v2
-# @Desc      :   Annotation class test
+# @Desc      :   If it has specific performance standard for function and can be contained in the tests,also as a measure of whether the function is implemented or not,then @Test(timeout=xxx)can reach this goal.for example:it can tests the running time of calculating the fipolacci sequence function.
 # ############################################
 
-source "../common/common_junit.sh"
+source "$OET_PATH/testcases/cli-test/junit/common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -29,7 +29,8 @@ function run_test() {
     LOG_INFO "Start to run test."
     compile_java
     CHECK_RESULT $?
-    execute_java
+    execute_java >actual_result
+    diff actual_result expect_result
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
@@ -40,4 +41,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

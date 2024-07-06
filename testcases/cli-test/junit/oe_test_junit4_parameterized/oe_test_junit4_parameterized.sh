@@ -14,10 +14,10 @@
 # @Contact   :   lchutian@163.com
 # @Date      :   2020/05/20
 # @License   :   Mulan PSL v2
-# @Desc      :   Use @RunWith and @Suite nesting the test class
+# @Desc      :   When a text class needs to test multiple sets of data,configure the data,and then choose corresponding value.
 # ############################################
 
-source "../common/common_junit.sh"
+source "$OET_PATH/testcases/cli-test/junit/common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -29,8 +29,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     compile_java
     CHECK_RESULT $?
-    execute_java >actual_result
-    diff actual_result expect_result
+    execute_java
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
@@ -41,4 +40,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

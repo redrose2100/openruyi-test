@@ -14,9 +14,10 @@
 # @Contact   :   lchutian@163.com
 # @Date      :   2020/05/20
 # @License   :   Mulan PSL v2
+# @Desc      :   Use @RunWith and @Suite nesting the test class
 # ############################################
 
-source "../common/common_junit.sh"
+source "$OET_PATH/testcases/cli-test/junit/common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -40,4 +41,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
