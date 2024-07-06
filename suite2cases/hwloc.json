@@ -1,6 +1,5 @@
 {
     "path": "$OET_PATH/testcases/cli-test/hwloc",
-
     "cases": [
         {
             "name": "oe_test_hwloc_base_hwloc-info_01"
@@ -142,6 +141,15 @@
         },
         {
             "name": "oe_test_hwloc_2.7.1_hwloc-gather-topology"
+        },
+        {
+            "name": "oe_test_hwloc_1.11.9_hwloc-assembler"
+        },
+        {
+            "name": "oe_test_hwloc_1.11.9_hwloc-distances_01"
+        },
+        {
+            "name": "oe_test_hwloc_1.11.9_hwloc-distances_02"
         }
     ]
 }
