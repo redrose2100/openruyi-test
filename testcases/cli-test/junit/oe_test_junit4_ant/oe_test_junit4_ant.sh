@@ -17,7 +17,7 @@
 # @Desc      :   Junit+ant integration testing
 # ############################################
 
-source "../common/common_junit.sh"
+source "./../common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."

@@ -17,7 +17,7 @@
 # @Desc      :   Compare the performance of running multiple test classes with placing the test classes in the test suite,and using the TestSuite class from junit and run it.
 # ############################################
 
-source "../common/common_junit.sh"
+source "./../common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."

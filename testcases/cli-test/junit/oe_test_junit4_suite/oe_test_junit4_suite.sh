@@ -17,7 +17,7 @@
 # @Desc      :   Use @RunWith and @Suite nesting the test class
 # ############################################
 
-source "../common/common_junit.sh"
+source "./../common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."

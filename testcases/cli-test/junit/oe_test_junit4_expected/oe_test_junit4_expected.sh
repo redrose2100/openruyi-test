@@ -17,7 +17,7 @@
 # @Desc      :   Use @Test combine its property "expected" to show the exception that we expected;use try/catch,and then use fail() to test if the corresponding operation have thrown the exception;except specifies the exception to be thrown,it can also shows the exception information when the exception to be thrown.
 # ############################################
 
-source "../common/common_junit.sh"
+source "./../common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."

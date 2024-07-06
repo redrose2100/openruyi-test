@@ -17,7 +17,7 @@
 # @Desc      :   When a text class needs to test multiple sets of data,configure the data,and then choose corresponding value.
 # ############################################
 
-source "../common/common_junit.sh"
+source "./../common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
