@@ -9,6 +9,15 @@
         },
         {
             "name": "oe_test_boom_boot_03"
+        },
+        {
+            "name": "oe_test_boom_boot_1.3_01"
+        },
+        {
+            "name": "oe_test_boom_boot_1.3_02"
+        },
+        {
+            "name": "oe_test_boom_boot_1.3_03"
         }
     ]
 }
