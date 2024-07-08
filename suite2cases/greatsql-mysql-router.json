@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/greatsql",
+    "path": "$OET_PATH/testcases/cli-test/greatsql-mysql-router",
     "cases": [
         {
             "name": "oe_test_service_greatsql-mysql-router"
