@@ -22,6 +22,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)
+    mod_name=uio
     test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/uio/uio.ko.xz
     CHECK_RESULT $? 0 0 "file does not exist"
     modinfo uio |grep -i version
@@ -30,7 +31,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep uio
     CHECK_RESULT $? 0 0 "Module loaded failed"
-    rmmod uio
+    if [ "$(modprobe --version | grep version | awk '{print $3}')" -gt "29" ]; then
+        modprobe -r --remove-holders "${mod_name}"
+        CHECK_RESULT $? 0 0 "Module uninstall failed"
+    else
+        modprobe -r "${mod_name}"
+        CHECK_RESULT $? 0 0 "Module uninstall failed"
+    fi   
     CHECK_RESULT $? 0 0 "Module uninstall failed"
     lsmod | grep uio
     CHECK_RESULT $? 1 0 "Module loaded"
@@ -38,7 +45,11 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rmmod uio 
+    if [ "$(modprobe --version | grep version | awk '{print $3}')" -gt "29" ]; then
+        modprobe -r --remove-holders "${mod_name}"
+    else
+        modprobe -r "${mod_name}"
+    fi
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
