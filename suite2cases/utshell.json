@@ -159,7 +159,11 @@
         },
 	{
 	    "name": "oe_test_utshell_caller_002"
-	}
+	},
+        {
+            "name": "oe_test_utshell_pwd"
+        }
+
     ]
 }
 
