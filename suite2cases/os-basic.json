@@ -976,6 +976,9 @@
 	},
 	{
 	    "name": "oe_test_brotli_002"
+	},
+	{
+	    "name": "oe_test_lslocks_2"
 	}
     ]
 }
