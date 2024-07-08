@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/system-test/system-integration/os-basic/oe_test_jinja2",
-    "cases": [
-        {
-            "name": "oe_test_jinja2"
-        }
-    ]
-}
