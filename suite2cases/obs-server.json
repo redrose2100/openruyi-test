@@ -87,6 +87,9 @@
         },
         {
             "name":"oe_test_service_obssourcepublish"
+        },
+        {
+            "name":"oe_test_service_obsredis"
         }
     ]
 }
