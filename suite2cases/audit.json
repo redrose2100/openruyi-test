@@ -102,6 +102,9 @@
         },
 	{
             "name": "oe_test_aulastlog"
+        },
+	{
+            "name": "oe_test_audit_monitor_pipe_file"
         }
     ]
 }
