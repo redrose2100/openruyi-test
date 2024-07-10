@@ -162,6 +162,9 @@
 	},
         {
             "name": "oe_test_utshell_pwd"
+        },
+        {
+            "name": "oe_test_utshell_local"
         }
 
     ]
