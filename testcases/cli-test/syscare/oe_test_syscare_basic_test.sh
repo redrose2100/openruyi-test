@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Pressure load : concurrent operations
 #####################################
+# shellcheck disable=SC1091
 
 source "common/common_syscare.sh"
 
