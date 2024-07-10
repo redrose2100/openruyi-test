@@ -30,9 +30,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     # -v, --version
-    tidy -v | grep 'HTML Tidy for Linux version' | grep '[[:digit:]]*'
+    tidy -v | grep 'HTML Tidy for .*Linux version' | grep '[[:digit:]]*'
     CHECK_RESULT $? 0 0 "Failed to use option: -v"
-    tidy -version | grep 'HTML Tidy for Linux version' | grep '[[:digit:]]*'
+    tidy -version | grep 'HTML Tidy for .*Linux version' | grep '[[:digit:]]*'
     CHECK_RESULT $? 0 0 "Failed to use option: -version"
     # -h, -help, -help-config
     tidy -h | grep -F 'tidy [options...] [file...] [options...] [file...]'
