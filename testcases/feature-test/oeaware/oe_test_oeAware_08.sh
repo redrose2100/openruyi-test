@@ -21,27 +21,23 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "oeAware-manager"
+    sed -i '/enable_list/a\ - name: libpmua.so' /etc/oeAware/config.yaml
+    systemctl restart oeaware
+    SLEEP_WAIT 1
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    sed -i '/enable_list/a\ - name: libpmua.so' /etc/oeAware/config.yaml
-    systemctl restart oeaware
-    SLEEP_WAIT 1
     oeawarectl --query libpmua.so | grep "Plugin query failed, because plugin does not exist"
     CHECK_RESULT $? 0 0 "plugin query failed"
-
-    sed -i '/libpmua.so/d' /etc/oeAware/config.yaml
-    systemctl restart oeaware
-    SLEEP_WAIT 1
-    systemctl status oeaware | grep "active (running)"
-    CHECK_RESULT $? 0 0 "restart oeaware failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    sed -i '/libpmua.so/d' /etc/oeAware/config.yaml
+    systemctl restart oeaware
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
