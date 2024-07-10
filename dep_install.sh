@@ -37,7 +37,7 @@ qemu_dep(){
     fi
     yum install qemu-system-aarch64 qemu-system-arm -y
     if [ $? -ne 0 ]; then
-        echo "ERROR: qemu not install, you need install it youself."
+        echo "ERROR: qemu not install, you need install it yourself."
         return 1
     fi
 }
@@ -58,7 +58,7 @@ check_option(){
             had_g=1
             check_name=${run_name##*/}
             if [[ $check_name == "dep_install.sh" ]]; then
-                echo "ERROR: run with crocess compiliation, must use 'source' to run script"
+                echo "ERROR: run with crocess compilation, must use 'source' to run script"
                 return 1
             fi
         elif [ $had_g -eq 1 ]; then
