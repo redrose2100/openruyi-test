@@ -20,6 +20,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run libtool test."
+
+    if ! libtool --help; then 
+        LOG_WARN "No libtool in this system, not run the test"
+        exit 0
+    fi
+
     libtool --config | grep build_libtool_libs
     CHECK_RESULT $? 0 0 "check libtool --config failed!"
     libtool --features | grep "host:"

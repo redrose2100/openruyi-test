@@ -30,6 +30,9 @@
         },
 	{
             "name": "oe_test_cpu_model_name"
+	},
+	{
+            "name": "oe_test_export"
 	}
     ]
 }

@@ -15,7 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   postgres
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/lib.sh
 
 function pre_test() {
@@ -28,7 +28,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     su - postgres -c "pg_ctl stop"
     CHECK_RESULT $?
-    su - postgres -c 'postgres  -o "-p 5222" &'
+    su - postgres -c 'postgres  "-p 5222" &'
     CHECK_RESULT $?
     su - postgres -c "pg_ctl status" | grep "running (PID"
     CHECK_RESULT $?

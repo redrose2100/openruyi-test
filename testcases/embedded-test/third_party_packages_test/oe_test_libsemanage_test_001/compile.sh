@@ -7,7 +7,7 @@ CURRENT_PATH=$(
   pwd
 )
 
-DNF_INSTALL "make"
+dnf install -y  make
 
 cunit_path="$(
   cd "${CURRENT_PATH}"/tmp_extract/cunit* || exit 1

@@ -17,11 +17,11 @@
 # @Desc      :   Test abrt-vmcore.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL abrt-addon-vmcore
+    DNF_INSTALL "abrt-addon-vmcore"
     systemctl start abrtd.service
     touch /var/crash/test
     LOG_INFO "End of environmental preparation!"
@@ -39,7 +39,7 @@ function post_test() {
     systemctl stop abrt-vmcore.service
     systemctl stop abrtd.service
     rm -rf /var/crash/test
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

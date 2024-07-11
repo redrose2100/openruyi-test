@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $?
     swig -php7 -v example.i | grep "php"
     CHECK_RESULT $?
-    test -f example.php -a -f example_wrap.c -a -f php_example.h && rm -rf example.php example_wrap.c php_example.h
+    test -f example_wrap.c -a -f php_example.h &&  rm -rf example_wrap.c php_example.h
     CHECK_RESULT $?
     swig -python -v example.i | grep "python"
     CHECK_RESULT $?
@@ -67,7 +67,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/python3-requests",
-    "cases": [
-        {
-            "name": "oe_test_python3-requests"
-        }
-    ]
-}

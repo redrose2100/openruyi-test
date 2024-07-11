@@ -12,7 +12,7 @@ src_path="$(
 )"
 pushd "${src_path}"/unix || exit
 
-DNF_INSTALL "make"
+dnf install -y  make
 
 ./configure --host="${CROSS_COMPILE%-}" --build="$(gcc -dumpmachine)" --enable-threads --enable-symbols --enable-dtrace
 

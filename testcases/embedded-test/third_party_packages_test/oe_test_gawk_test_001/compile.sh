@@ -12,7 +12,7 @@ src_path=$(
   pwd
 )
 
-DNF_INSTALL "autoconf make mpfr-devel gmp-devel"
+dnf install -y  autoconf make mpfr-devel gmp-devel
 
 pushd "${src_path}" || exit 1
 autoreconf -fv

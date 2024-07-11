@@ -21,6 +21,12 @@ source ../comm_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
     pushd ./tmp_test/tests/ || exit
+    pushd .libs || exit
+        all_libs=$(ls ./)
+        for one in ${all_libs}; do
+            cp "${one}" lt-"${one}"
+        done
+    popd || return
     while read -r line; do
         onetest=$(echo "$line" | sed -r 's/\.test//g')
         outStr=$(../test-driver --test-name "${onetest}".test --log-file "${onetest}".log --trs-file "${onetest}".trs -- ./"$line")

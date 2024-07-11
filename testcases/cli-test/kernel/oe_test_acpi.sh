@@ -22,7 +22,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)
-    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/acpi/acpi_ipmi.ko
+    mod_name=acpi_ipmi
+    test -f /usr/lib/modules/"${kernel_name}"/kernel/drivers/acpi/acpi_ipmi.ko.xz
     CHECK_RESULT $? 0 0 "file does not exist"
     modinfo acpi_ipmi |grep -i version
     CHECK_RESULT $? 0 0 "Information display failed"
@@ -30,11 +31,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep acpi_ipmi
     CHECK_RESULT $? 0 0 "Module loaded failed"
-    rmmod acpi_ipmi
-    CHECK_RESULT $? 0 0 "Module uninstall failed"
+    if [ "$(modprobe --version | grep version | awk '{print $3}')" -gt "29" ]; then
+        modprobe -r --remove-holders "${mod_name}"
+        CHECK_RESULT $? 0 0 "Module uninstall failed"
+    else
+        modprobe -r "${mod_name}"
+        CHECK_RESULT $? 0 0 "Module uninstall failed"
+    fi    
     lsmod | grep acpi_ipmi
     CHECK_RESULT $? 1 0 "Module loaded"
-
 }
 
 main "$@"

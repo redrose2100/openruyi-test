@@ -26,7 +26,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    su - postgres -c 'oid2name -t test "oid2name"' | grep "Filenode"
+    su - postgres -c "oid2name -t test" | grep "Filenode"
     CHECK_RESULT $?
     su - postgres -c "oid2name -U postgres" | grep "template0"
     CHECK_RESULT $?

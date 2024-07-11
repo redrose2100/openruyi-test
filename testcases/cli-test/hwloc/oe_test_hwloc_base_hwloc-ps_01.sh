@@ -30,10 +30,10 @@ function run_test() {
     hwloc-ps -a | grep 'Machine:0'
     CHECK_RESULT $? 0 0 "hwloc-ps -a failed"
     Pid=$(ps -fC bash | sed '1d' | awk 'NR==1 {print $2}')
-    out=$(hwloc-ps --pid $Pid)
-    echo $out |grep $Pid
+    out=$(hwloc-ps --pid "$Pid")
+    echo "$out" |grep "$Pid"
     CHECK_RESULT $? 0 0 "hwloc-ps --pid failed"
-    hwloc-ps --pid $Pid -c | grep '0x'
+    hwloc-ps --pid "$Pid" -c | grep '0x'
     CHECK_RESULT $? 0 0 "hwloc-ps -c failed"
     hwloc-ps -e -a | grep 'hwloc-ps'
     CHECK_RESULT $? 0 0 "hwloc-ps -e failed"
@@ -55,7 +55,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

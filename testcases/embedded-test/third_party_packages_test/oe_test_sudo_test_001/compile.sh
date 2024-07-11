@@ -11,7 +11,7 @@ src_path="$(
   cd "${CURRENT_PATH}"/tmp_extract/sudo* || exit 1
   pwd
 )"
-DNF_INSTALL "autoconf make"
+dnf install -y  autoconf make
 
 pushd ${src_path} || exit 1
 autoreconf -f

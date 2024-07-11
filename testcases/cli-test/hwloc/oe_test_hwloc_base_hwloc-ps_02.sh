@@ -28,7 +28,7 @@ function pre_test()
 function run_test() {
     LOG_INFO "Start to run test."
     Pid=$(ps -fC bash | sed '1d' | awk 'NR==1 {print $2}')
-    hwloc-ps --pid $Pid --cpuset | grep '0x'
+    hwloc-ps --pid "$Pid" --cpuset | grep '0x'
     CHECK_RESULT $? 0 0 "hwloc-ps --cpuset failed"
     hwloc-ps --get-last-cpu-location -a | grep "hwloc-ps"
     CHECK_RESULT $? 0 0 "hwloc-ps --get-last-cpu-location failed"
@@ -44,7 +44,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

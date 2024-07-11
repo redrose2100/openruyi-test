@@ -17,7 +17,7 @@
 # @Desc      :   Test 驱动加载_snd-aloop
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -34,6 +34,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the tet environment."
+    systemctl stop alsa-state
     rmmod snd-aloop
     LOG_INFO "Finish to restore the tet environment."
 }

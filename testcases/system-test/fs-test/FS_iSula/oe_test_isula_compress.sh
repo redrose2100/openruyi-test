@@ -27,14 +27,21 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL "iSulad gcc"
-    if [[ ${NODE1_FRAME} == "aarch64" ]]; then
-        wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/aarch64/openEuler-docker.aarch64.tar.xz
-        image_name="openEuler-docker.aarch64.tar.xz"
-    else 
-        wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/x86_64/openEuler-docker.x86_64.tar.xz
-        image_name="openEuler-docker.x86_64.tar.xz"
+    DNF_INSTALL "iSulad gcc lcr"
+
+    systemctl start isulad
+    echo "Architecture:${NODE1_FRAME}"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        TEST_TAG=24.03
+        TEST_IMAGE=jchzhou/oerv
+        image_name="${TEST_TAG}_docker_image.tar.gz"
+        wget "https://repo.tarsier-infra.isrc.ac.cn/openEuler-RISC-V/testing/2403LTS-test/v1/${image_name}"
+    else
+        TEST_IMAGE=openeuler-20.03-lts-sp1
+        wget "https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/${NODE1_FRAME}/openEuler-docker.${NODE1_FRAME}.tar.xz"
+        image_name="openEuler-docker.${NODE1_FRAME}.tar.xz"
     fi
+
     cur_path="$(pwd)"
     cd ../common_lib/fault_injection/inject_mem_overloading_malloc || exit
     bash inject_mem_overloading_malloc.sh inject
@@ -46,7 +53,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl start isulad
     isula load -i "$image_name"
-    image_id=$(isula images | grep openeuler-20.03-lts-sp1 | head -n 1 | awk '{print $3}')
+    image_id=$(isula images | grep "${TEST_IMAGE}" | head -n 1 | awk '{print $3}')
     isula run -itd "$image_id"
     CHECK_RESULT $? 0 0 "Run isula failed."
     LOG_INFO "End to run test."
@@ -57,9 +64,15 @@ function post_test() {
     cd ../common_lib/fault_injection/inject_mem_overloading_malloc || exit
     bash inject_mem_overloading_malloc.sh clean
     cd "$cur_path" || exit
-    isula stop -f "$image_id"
-    isula rm "$(isula ps -a -q)"
-    isula rmi "$(isula images -q)"
+    containers_ids=$(isula ps -a -q)
+    for container_id in ${containers_ids}; do
+        isula stop -f "${container_id}"
+        isula rm "${container_id}"
+    done
+    images_ids=$(isula images -q)
+    for image_id in ${images_ids}; do
+        isula rmi "${image_id}"
+    done
     DNF_REMOVE "$@"
     rm -f "$image_name"
     LOG_INFO "End to restore the test environment."

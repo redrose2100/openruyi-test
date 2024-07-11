@@ -16,7 +16,7 @@
 # @Desc      :   Test hwloc-ls
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -28,7 +28,7 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "Start testing..."
-    hwloc-ls --force out.xml && ls | grep "out.xml"
+    hwloc-ls --force out.xml && [ -e "out.xml" ]
     CHECK_RESULT $? 0 0 "hwloc-ls -f failed"
     hwloc-ls --logical | grep "L#0"
     CHECK_RESULT $? 0 0 "hwloc-ls --logical failed"
@@ -42,7 +42,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwloc-ls --cpuset failed"
     hwloc-ls  --silent | grep "depth 0"
     CHECK_RESULT $? 0 0 "hwloc-ls --silent failed"
-    hwloc-ls --cpuset-only | grep "0x00000" 
+    hwloc-ls --cpuset-only | grep "0x00000"
     CHECK_RESULT $? 0 0 "hwloc-ls --cpuset-only failed"
     lstopo ./test_1.xml
     hwloc-ls --input ./test_1.xml | grep "PCI"
@@ -55,8 +55,8 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    rm -f *.xml
-    DNF_REMOVE
+    rm -f ./*.xml
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

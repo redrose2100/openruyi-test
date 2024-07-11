@@ -16,12 +16,16 @@
 #@Desc      	:   Take the test gnome-shell
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL "gnome-shell elinks lynx"
-    OLD_LANG=$LANG
+    if [[ "$(uname -m)" == "riscv64" ]]; then
+        echo "/usr/lib64/mutter-12" > /etc/ld.so.conf.d/mutter-riscv64.conf
+        ldconfig
+    fi
+    OLD_LANG="${LANG}"
     export LANG="en_US.UTF-8"
     LOG_INFO "End to prepare the database config."
 }
@@ -47,8 +51,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    export LANG=${OLD_LANG}
-    DNF_REMOVE
+    export LANG="${OLD_LANG}"
+    DNF_REMOVE "$@" 
     LOG_INFO "End to restore the test environment."
 }
 

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/gcc",
+    "cases": [
+        {
+            "name": "oe_test_libasan"
+        },
+        {
+            "name": "oe_test_liblsan"
+        }
+    ]
+}
