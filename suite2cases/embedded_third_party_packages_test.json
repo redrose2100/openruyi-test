@@ -117,6 +117,9 @@
 	},
 	{
 	    "name": "oe_test_lzo_test_001"
+	},
+	{
+	    "name": "oe_test_http-parser_test_001"
 	}
     ]
 }
