@@ -32,6 +32,7 @@ function run_test() {
     pushd ./
     cd /root
     # 获取补丁制作必备包
+    cp common/redis.patch ./
     redis_src_name=$(ls -lt | grep -E "redis.*src.rpm" | head -n 1 | awk '{print $NF}')
     redis_debuginfo_name=$(ls | grep redis-debuginfo | awk '{print $NF}')
 
