@@ -22,12 +22,26 @@
         {
             "name": "oe_test_oeAware_07"
         },
+	{
+	    "name": "oe_test_oeAware_08"
+	},
         {
-            "name": "oe_test_oeAware_08"
+	    "name": "oe_test_oeAware_09"
+	},
+        {
+	    "name": "oe_test_oeAware_10"
+	},
+        {
+	    "name": "oe_test_oeAware_11"
+	},
+        {
+	    "name": "oe_test_oeAware_12"
+	},
+        {
+	    "name": "oe_test_oeAware_13"
         },
         {
-            "name": "oe_test_oeAware_09"
-        }
-
+	    "name": "oe_test_oeAware_14"
+	}
     ]
 }
