@@ -982,6 +982,9 @@
 	},
 	{
 	    "name": "oe_test_lslogins_1"
+	},
+	{
+	    "name": "oe_test_more"
 	}
     ]
 }
