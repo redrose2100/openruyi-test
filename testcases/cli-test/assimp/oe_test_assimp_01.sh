@@ -16,14 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test assimp
 # #############################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "assimp tar"
     tar -zxvf common/test.tar.gz
-    mkdir tmp 
+    mkdir tmp
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -31,10 +32,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     assimp --help | grep 'assimp <verb> <parameters>'
     CHECK_RESULT $? 0 0 "test assimp help failed"
-    version=$(rpm -qa | grep assimp | awk 'BEGIN {FS="-"}{print $2}' | awk '{sub(/..$/,"")}1')
-    assimp version | grep $version
+    assimp_version=$(rpm -qa | grep -w assimp | awk 'BEGIN {FS="-"}{print $2}' | awk '{sub(/..$/,"")}1' | sort | head -n1)
+    assimp version | grep "$assimp_version"
     CHECK_RESULT $? 0 0 "test assimp version failed"
-    assimp listext | grep '*.3d'
+    assimp listext | grep -w "\*.3d"
     CHECK_RESULT $? 0 0 "test assimp listext failed"
     assimp info test/1.obj | grep 'Memory consumption: '
     CHECK_RESULT $? 0 0 "test assimp info failed"
@@ -56,7 +57,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp test/
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
