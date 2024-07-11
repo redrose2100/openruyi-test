@@ -165,7 +165,10 @@
         },
         {
             "name": "oe_test_utshell_local"
-        }
+        },
+	{
+	    "name": "oe_test_utshell_ps_001"
+	}
 
     ]
 }
