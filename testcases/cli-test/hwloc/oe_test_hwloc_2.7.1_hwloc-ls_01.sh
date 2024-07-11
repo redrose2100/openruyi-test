@@ -28,7 +28,7 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "Start to run test."
-    hwloc-ls --cpukinds 
+    hwloc-ls --cpukinds
     CHECK_RESULT $? 0 0 "hwloc-ls --cpukinds failed"
     hwloc-ls --memattrs | grep "Memory attribute "
     CHECK_RESULT $? 0 0 "hwloc-ls --mematters failed"
@@ -44,7 +44,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwloc-ls --allow failed"
     hwloc-ls -p --flags 2 | grep "Core"
     CHECK_RESULT $? 0 0 "hwloc-ls --flags <n> failed"
-    hwloc-ls out.xml --distances && ls | grep "out.xml"
+    hwloc-ls out.xml --distances && [ -e "out.xml" ]
     CHECK_RESULT $? 0 0 "hwloc-ls --distances failed"
     hwloc-ls -l --distances-transform links | grep "PU"
     CHECK_RESULT $? 0 0 "hwloc-ls --distances-transform failed"
@@ -57,7 +57,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rd out.xml
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -16,7 +16,7 @@
 #@Desc          :   Test hwloc-distances
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -28,24 +28,24 @@ function pre_test()
 function run_test() {
     LOG_INFO "Start testing..."
     hwloc-distances -l -i ./common/distances_test.xml | grep "below Machine L#0"
-    CHECK_RESULT $? 0 0 "hwloc-distances -l  failed" 
+    CHECK_RESULT $? 0 0 "hwloc-distances -l  failed"
     hwloc-distances -p -i ./common/distances_test.xml | grep "below Machine P#0"
-    CHECK_RESULT $? 0 0 "hwloc-distances -p  failed" 
+    CHECK_RESULT $? 0 0 "hwloc-distances -p  failed"
     hwloc-distances -i ./common/distances_test.xml --restrict 0x0000ffff | grep "below Group0 L#0"
     CHECK_RESULT $? 0 0 "hwloc-distances --restrict failed"
     hwloc-distances -i ./common/distances_test.xml --whole-system | grep "below Group0 L#0"
     CHECK_RESULT $? 0 0 "hwloc-distances --whole-system failed"
-    hwloc-distances -i ./common/input_test.xml --verbose | grep "input_test.xml" 
+    hwloc-distances -i ./common/input_test.xml --verbose | grep "input_test.xml"
     CHECK_RESULT $? 0 0 "hwloc-distances -i <XML file> failed"
     hwloc-distances -i /root --verbose | grep "/root"
-    CHECK_RESULT $? 0 0 "hwloc-distances -i <directory> failed"  
+    CHECK_RESULT $? 0 0 "hwloc-distances -i <directory> failed"
     hwloc-distances --input "node:2 2" --verbose | grep "node:2 2"
     CHECK_RESULT $? 0 0 "hwloc-distances --input 'node:2 2' failed"
     hwloc-distances -i ./common/input_test.xml --if fsroot 2>&1 | grep "Not a directory"
-    CHECK_RESULT $? 0 0 "hwloc-distances  --if <format> failed" 
+    CHECK_RESULT $? 0 0 "hwloc-distances  --if <format> failed"
     hwloc-distances --input "node:2 2" -v | grep "assuming"
     CHECK_RESULT $? 0 0 "hwloc-distances -v failed"
-    hwloc-distances --version | grep "hwloc-distances" 
+    hwloc-distances --version | grep "hwloc-distances"
     CHECK_RESULT $? 0 0 "hwloc-distances --version failed"
     LOG_INFO "Finish test!"
 }
@@ -53,7 +53,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
