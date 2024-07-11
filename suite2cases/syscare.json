@@ -6,6 +6,12 @@
         },
         {
             "name": "oe_test_syscare_build_kpatch"
+        },
+        {
+            "name":"oe_test_syscare_build_all_param"
+        },
+        {
+            "name":"oe_test_syscare_build_error_param"
         }
     ]
 }
