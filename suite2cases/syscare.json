@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_syscare_basic_test"
+        },
+        {
+            "name": "oe_test_syscare_build_kpatch"
         }
     ]
 }
