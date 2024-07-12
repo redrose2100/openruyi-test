@@ -168,6 +168,9 @@
         },
 	{
 	    "name": "oe_test_utshell_ps_001"
+	},
+	{
+	    "name": "oe_test_utshell_ps_002"
 	}
 
     ]
