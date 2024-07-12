@@ -1,6 +1,5 @@
-
 #!/usr/bin/bash
-
+  
 # Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -50,7 +49,7 @@ function run_test() {
     # syscare build --patch-requires 依赖为空编译失败
     syscare build --patch-name patch_${target}_${patch_name_0001} --source "${redis_src_name}" --debuginfo "${redis_debuginfo_name}" --patch ${patch_file} --patch-requires
     CHECK_RESULT $? 2
-          
+
     # syscare --jobs -1编译失败
     syscare build --patch-name patch_${target}_${patch_name_0001} --source "${redis_src_name}" --debuginfo "${redis_debuginfo_name}" --patch ${patch_file} --jobs -1
     CHECK_RESULT $? 2
@@ -79,4 +78,3 @@ function post_test() {
 }
 
 main "$@"
-
