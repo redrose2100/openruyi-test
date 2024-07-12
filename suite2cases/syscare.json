@@ -3,6 +3,27 @@
     "cases": [
         {
             "name": "oe_test_syscare_basic_test"
+        },
+<<<<<<< HEAD
+	{
+	    "name":"oe_test_syscare_build_kpatch"
+	},
+	{
+	    "name":"oe_test_syscare_build_all_param"
+	},
+	{
+	    "name":"oe_test_syscare_build_error_param"
+	}
+=======
+        {
+            "name": "oe_test_syscare_build_kpatch"
+        },
+        {
+            "name":"oe_test_syscare_build_all_param"
+        },
+        {
+            "name":"oe_test_syscare_build_error_param"
         }
+>>>>>>> a71355e80bdee4d52fbc47a5cfab6eed7b2f3dec
     ]
 }
