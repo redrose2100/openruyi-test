@@ -27,7 +27,6 @@ function pre_test() {
     patch_name_0001='0001'
     description="this is a syscare patch test"
 }
-
 function run_test() {
     # #编译补丁,带上所有参数
     cp common/redis.patch ./
@@ -47,7 +46,7 @@ function run_test() {
     rm -rf syscare-build*
     popd
     syscare apply "${patch_name}"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 
     syscare status "${patch_name}"
     CHECK_RESULT $?
     syscare accept "${patch_name}"
