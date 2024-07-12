@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Public class
 #####################################
-# shellcheck disable=SC2086
+# shellcheck disable=SC2086,SC2046,SC2010,SC2164,SC2002
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
