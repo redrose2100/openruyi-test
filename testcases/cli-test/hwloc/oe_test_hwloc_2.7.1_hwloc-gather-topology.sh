@@ -28,9 +28,9 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "Start to run test."
-    hwloc-gather-topology --no-cpuid temp1 && ls | grep "temp1"
+    hwloc-gather-topology --no-cpuid temp1 && [ -e "temp1"  ]
     CHECK_RESULT $? 0 0 "hwloc-gather-topology --no-cpuid failed"
-    hwloc-gather-topology --keep temp2 && ls | grep "temp2"
+    hwloc-gather-topology --keep temp2 && [ -e "temp2"  ]
     CHECK_RESULT $? 0 0 "hwloc-gather-topology --keep failed"
     hwloc-gather-topology --version | grep "hwloc-gather-topology"
     CHECK_RESULT $? 0 0 "hwloc-gather-topology --version failed"
@@ -45,7 +45,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf temp*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

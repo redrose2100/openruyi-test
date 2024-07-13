@@ -29,13 +29,13 @@ function run_test() {
     lstopo --logical | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo --logical failed"
     lstopo --logical common/test_fn.console && cat common/test_fn.console
-    CHECK_RESULT $? 0 0 "lstopo --logical failed" 
+    CHECK_RESULT $? 0 0 "lstopo --logical failed"
     lstopo --physical | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo --physical failed"
     lstopo -l --output-format xml | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo --output-format failed"
     touch common/test_fn.xml
-    lstopo -l common/test_fn.xml --force && cat common/test_fn.xml | grep "Machine"
+    lstopo -l common/test_fn.xml --force && grep "Machine" common/test_fn.xml
     CHECK_RESULT $? 0 0 "lstopo --force failed"
     lstopo -l --verbose | grep "local"
     CHECK_RESULT $? 0 0 "lstopo --verbose failed"
@@ -55,7 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -f common/test_fn.*
-    DNF_REMOVE 
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

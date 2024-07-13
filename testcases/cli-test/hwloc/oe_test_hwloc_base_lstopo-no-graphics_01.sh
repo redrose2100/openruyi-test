@@ -28,13 +28,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     lstopo-no-graphics -l | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo-no-graphics -l failed"
-    lstopo-no-graphics -l common/test_fn.console && cat common/test_fn.console | grep "Machine"
+    lstopo-no-graphics -l common/test_fn.console &&  grep "Machine" common/test_fn.console
     CHECK_RESULT $? 0 0 "lstopo-no-graphics -l failed"
     lstopo-no-graphics -p | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo-no-graphics -p failed"
     lstopo-no-graphics -l --of console | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo-no-graphics --of failed"
-    lstopo-no-graphics -l common/test_fn.console -f && cat common/test_fn.console | grep "Machine"
+    lstopo-no-graphics -l common/test_fn.console -f && grep "Machine" common/test_fn.console
     CHECK_RESULT $? 0 0 "lstopo-no-graphics -f failed"
     lstopo-no-graphics -l --only PU | grep "PU"
     CHECK_RESULT $? 0 0 "lstopo-no-graphics -only <type> failed"
@@ -54,7 +54,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -f common/test_fn.console
-    DNF_REMOVE 
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
