@@ -42,6 +42,9 @@
         },
         {
             "name": "oe_test_pyparsing_test_001"
+        },
+        {
+            "name": "oe_test_pyflakes_test_001"
         }
     ]
 }
