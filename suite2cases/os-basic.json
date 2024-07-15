@@ -985,6 +985,9 @@
 	},
 	{
 	    "name": "oe_test_more"
+	},
+	{
+	    "name": "oe_test_column"
 	}
     ]
 }
