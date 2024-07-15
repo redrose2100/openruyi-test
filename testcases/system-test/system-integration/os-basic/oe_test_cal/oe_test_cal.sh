@@ -17,7 +17,7 @@
 # @Desc      :   Command test-cal
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -46,6 +46,10 @@ function run_test() {
     CHECK_RESULT $? 0 0  "check commmand usage fail"
     cal -V|grep util-linux
     CHECK_RESULT $? 0 0  "check version fail"
+    cal 2024 | grep  -i '2024'
+    CHECK_RESULT $? 0 0  "cal 2024 failed" 
+    cal 7 2024 | grep  -i '2024'
+    CHECK_RESULT $? 0 0  "cal 7 2024 failed" 
     LOG_INFO "End to run test."
 }
 
