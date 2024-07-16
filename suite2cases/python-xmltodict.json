@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/python3-xmltodict",
+    "path": "$OET_PATH/testcases/cli-test/python-xmltodict",
     "cases": [
         {
             "name": "oe_test_python3-xmltodict"
