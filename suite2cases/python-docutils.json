@@ -1,5 +1,5 @@
 {
-    "path": "\"${OET_PATH}\"/testcases/cli-test/python-docutils",
+    "path": "${OET_PATH}/testcases/cli-test/python-docutils",
     "cases": [
         {
             "name": "oe_test_python-docutils_rst2html_01"
