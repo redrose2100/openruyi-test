@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/python3-singledispatch",
+    "path": "$OET_PATH/testcases/cli-test/python-singledispatch",
     "cases": [
         {
             "name": "oe_test_python3-singledispatch"
