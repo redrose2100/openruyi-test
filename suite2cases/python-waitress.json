@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/python3-waitress",
+    "path": "$OET_PATH/testcases/cli-test/python-waitress",
     "cases": [
         {
             "name": "oe_test_python3-waitress"
