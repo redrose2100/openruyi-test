@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   oeAware test
 #####################################
+# shellcheck disable=SC1091,SC2154
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -34,8 +35,8 @@ function run_test() {
     source /etc/openEuler-latest
     os_version=${openeulerversion}
     address="https://repo.oepkgs.net/openeuler/rpm/$os_version/extras/$NODE_FRAME/Packages/n/"
-    wget $address
-    software=`cat index.html  | grep numafast | cut -d '>' -f 1 | awk -F '"' '{print$2}'`
+    wget "$address"
+    software=$(grep numafast index.html | cut -d '>' -f 1 | awk -F '"' '{print$2}')
     sed -i '/plugin_list/a\  - name: numafast2\n    description: numafast2' /etc/oeAware/config.yaml
     url="https://repo.oepkgs.net/openeuler/rpm/$os_version/extras/$NODE_FRAME/Packages/n/$software"
     url="${url//\//\\\/}"
