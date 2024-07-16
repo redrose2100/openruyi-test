@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/python3-wrapt",
+    "path": "$OET_PATH/testcases/cli-test/python-wrapt",
     "cases": [
         {
             "name": "oe_test_python3-wrapt"
