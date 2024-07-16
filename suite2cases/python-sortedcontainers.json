@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/python3-sortedcontainers",
+    "path": "$OET_PATH/testcases/cli-test/python-sortedcontainers",
     "cases": [
         {
             "name": "oe_test_python3-sortedcontainers"
