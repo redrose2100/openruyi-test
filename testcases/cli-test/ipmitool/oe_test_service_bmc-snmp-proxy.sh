@@ -22,6 +22,12 @@ source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "ipmitool OpenIPMI bmc-snmp-proxy"
+    if [ "$NODE1_FRAME" == "ppc64le" ]; then
+      if [ -f /etc/sysconfig/ipmi ]; then
+        sed -i 's/IPMI_SI=yes/#&/g' /etc/sysconfig/ipmi
+        systemctl restart ipmi.service
+      fi
+    fi
     systemctl start snmpd.service
     LOG_INFO "End of environmental preparation!"
 }
