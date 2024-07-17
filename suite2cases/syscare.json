@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/syscare",
-    "cases": [
-        {
-            "name": "oe_test_syscare_basic_test"
-        }
-    ]
-}
