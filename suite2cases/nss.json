@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_nss"
+        },
+        {
+            "name": "oe_test_nss-softokn-devel"
         }
     ]
 }
