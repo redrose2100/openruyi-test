@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Pressure load : concurrent operations
 #####################################
-# shellcheck disable=SC2086,SC2010
+# shellcheck disable=SC2086,SC2010,SC1091
 
 source "common/common_syscare.sh"
 
@@ -36,12 +36,12 @@ function run_test() {
     # 获取补丁制作必备包
     redis_src_name=$(ls -lt | grep -E "redis.*src.rpm" | head -n 1 | awk '{print $NF}')
     redis_debuginfo_name=$(ls | grep redis-debuginfo | awk '{print $NF}')
-    syscare build --patch-name patch_${target}_${patch_name_0001} --source ${redis_src_name} --debuginfo ${redis_debuginfo_name} --patch ${patch_file} --patch-arch $(arch) --patch-version 1 --patch-release 1 --patch-description ${description} --patch-requires lvm2 --build-root . --output . --jobs 2 --skip-compiler-check --skip-cleanup --verbose
+    syscare build --patch-name "patch_${target}_${patch_name_0001}" --source "${redis_src_name}" --debuginfo "${redis_debuginfo_name}" --patch "${patch_file}" --patch-arch "$(arch)" --patch-version 1 --patch-release 1 --patch-description "${description}" --patch-requires lvm2 --build-root . --output . --jobs 2 --skip-compiler-check --skip-cleanup --verbose
     CHECK_RESULT $?
     patch_rpm=$(ls | grep ulp_${target}_patch_${target}_${patch_name_0001} | awk '{print $NF}')
     rpm -ivh "${patch_rpm}"
     sleep 1
-    patch_name=$(syscare list | grep patch_${target}_"${patch_name_0001}" | grep redis-server | awk '{print $2}')
+    patch_name=$(syscare list | grep "patch_${target}_${patch_name_0001}" | grep redis-server | awk '{print $2}')
     ls | grep syscare-build
     CHECK_RESULT $?
     rm -rf syscare-build*
@@ -59,8 +59,8 @@ function run_test() {
 function post_test() {
     cd /root || exit
     rm -f "${patch_rpm}"
-    rm -f $(ls | grep ${patch_name_0001} | grep 'src.rpm')
-    rpm -e $(echo "$patch_rpm" | sed 's/.rpm//')
+    rm -f "$(ls | grep "${patch_name_0001}" | grep 'src.rpm')"
+    rpm -e "${patch_rpm%.rpm}"
     cd - || exit
 }
 
