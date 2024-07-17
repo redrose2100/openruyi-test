@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/oathtool",
+    "path": "$OET_PATH/testcases/cli-test/oath-toolkit",
     "cases": [
         {
             "name": "oe_test_oathtool"
