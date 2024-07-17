@@ -11,7 +11,7 @@
 ####################################
 #@Author        :   linmengmeng
 #@Contact       :   linmengmeng@huawei.com
-#@Date          :   2024-07-10
+#@Date          :   2024-07-17
 #@License       :   Mulan PSL v2
 #@Desc          :   Pressure load : concurrent operations
 #####################################
@@ -33,19 +33,18 @@ function run_test() {
     syscare -V
     CHECK_RESULT $?
     syscare save
-    CHECK_RESULT $? 
-    syscare restore 
-    CHECK_RESULT $? 
+    CHECK_RESULT $?
+    syscare restore
+    CHECK_RESULT $?
     syscare build -h
-    CHECK_RESULT $? 
+    CHECK_RESULT $?
     syscare build -V
-    CHECK_RESULT $?     
+    CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
-    
-function post_test() {
-    LOG_INFO "test end" 
-}   
-    
-main "$@"
 
+function post_test() {
+    LOG_INFO "test end"
+}
+
+main "$@"
