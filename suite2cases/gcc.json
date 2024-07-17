@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_libasan"
+        },
+        {
+            "name": "oe_test_liblsan"
         }
     ]
 }
