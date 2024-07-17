@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Pressure load : concurrent operations
 #####################################
-# shellcheck disable=SC2086,SC2010
+# shellcheck disable=SC2086,SC2010,SC1091
 
 source "common/common_syscare.sh"
 
@@ -61,8 +61,8 @@ function run_test() {
 function post_test() {
     cd /root || exit
     rm -f "${patch_rpm}"
-    rm -f $(ls | grep ${patch_name_0001} | grep 'src.rpm')
-    rpm -e $(echo "$patch_rpm" | sed 's/.rpm//')
+    rm -f "$(ls | grep ${patch_name_0001} | grep 'src.rpm')"
+    rpm -e "${patch_rpm%.rpm}"
     cd - || exit
 }
 
