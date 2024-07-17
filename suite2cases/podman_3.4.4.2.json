@@ -23,9 +23,6 @@
             "name": "oe_test_podman_3.4.4.2_08"
         },
         {
-            "name": "oe_test_service_podman"
-        },
-        {
             "name": "oe_test_podman_3.4.4.2_03"
         },
         {
@@ -36,9 +33,6 @@
         },
         {
             "name": "oe_test_podman_3.4.4.2_06"
-        },
-        {
-            "name": "oe_test_socket_podman"
         },
         {
             "name": "oe_test_podman_3.4.4.2_05"

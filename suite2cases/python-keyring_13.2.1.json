@@ -2,9 +2,6 @@
     "path": "$OET_PATH/testcases/cli-test/python-keyring",
     "cases": [
         {
-            "name": "oe_test_keyring"
-        },
-        {
             "name": "oe_test_keyring-python3"
         }
     ]
