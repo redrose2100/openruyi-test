@@ -24,11 +24,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "echo fail"
     readarray myarr<test.log
     CHECK_RESULT $? 0 0 "readarray fail"
-    echo ${myarr[@]} | grep -E "[a-z]"
+    echo "${myarr[@]}" | grep -E "[a-z]"
     CHECK_RESULT $? 0 0 "Failure to Collect Information"
     readarray -n 6 myarr <test.log
     CHECK_RESULT $? 0 0 "readarray fail"
-    echo ${myarr[@]} | grep -E "[a-z]"
+    echo "${myarr[@]}" | grep -E "[a-z]"
     CHECK_RESULT $? 0 0 "failed to test readarray -n 6"
     LOG_INFO "Finish test!"
 }
@@ -39,5 +39,5 @@ function post_test() {
     LOG_INFO "End to clean the test environment."
 }
 
-main $@
+main "$@"
 
