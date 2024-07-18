@@ -21,7 +21,9 @@
         },
         {
             "name": "oe_test_hwclock"
+        },
+        {
+            "name": "oe_test_mkfs_001"
         }
-
     ]
 }
