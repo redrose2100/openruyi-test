@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/ogdi-config",
+    "path": "$OET_PATH/testcases/cli-test/ogdi",
     "cases": [
         {
             "name": "oe_test_ogdi-config"
