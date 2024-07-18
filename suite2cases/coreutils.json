@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/numfmt",
+    "path": "$OET_PATH/testcases/cli-test/coreutils",
     "cases": [
         {
             "name": "oe_test_numfmt"
