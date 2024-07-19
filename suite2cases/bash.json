@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_jobs"
+        },
+        {
+            "name": "oe_test_readarray"
         }
     ]
 }
