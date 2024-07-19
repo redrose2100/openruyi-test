@@ -21,7 +21,8 @@ source "./common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL prometheus2
+    cp fedora.repo /etc/yum.repo.d/fedora.repo
+    DNF_INSTALL "prometheus2 golang-github-prometheus-tsdb"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -55,7 +56,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use command: analyze, with flag: --help."
     CHECK_RESULT "$(tsdb analyze | grep -cE 'Block ID|Duration|Series|Label names|Postings|Postings entries')" 8 0 "Failed to use command: analyze"
     CHECK_RESULT "$(tsdb analyze ./out_of_bench_write/storage | grep -cE 'Block ID|Duration|Series|Label names|Postings|Postings entries')" 8 0 "Failed to use command: analyze, with arg: db path"
-    CHECK_RESULT "$(tsdb analyze --limit=1 | wc -l)" 24 0 "Failed to use command: analyze, with flag: --limit"
+    CHECK_RESULT "$(tsdb analyze --limit=0 | wc -l)" 24 0 "Failed to use command: analyze, with flag: --limit"
     block_id=$(tsdb ls| awk '{if(NR==2) print $1}')
     tsdb analyze ./benchout/storage $block_id | grep "Block ID: ${block_id}"
     CHECK_RESULT $? 0 0 "Failed to use command: analyze, with arg: block id"
@@ -66,6 +67,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf ./benchout
     rm -rf ./out_of_bench_write
+    rm -rf /etc/yum.repo.d/fedora.repo
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }

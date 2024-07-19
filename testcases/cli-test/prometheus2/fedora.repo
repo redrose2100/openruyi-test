@@ -1,0 +1,13 @@
+[fedora-Source]
+name=fedora-Source
+baseurl=https://archives.fedoraproject.org/pub/archive/fedora/linux/releases/38/Everything/source/tree
+enabled=1
+gpgcheck=0
+priority=3
+
+[fedora-Binary]
+name=fedora-Binary
+baseurl=https://archives.fedoraproject.org/pub/archive/fedora/linux/releases/38/Everything/$basearch/os/
+enabled=1
+gpgcheck=0
+priority=4
