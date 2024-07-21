@@ -52,9 +52,9 @@ function run_test()
     grep "hello world" tmp/translation_05.po
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-updatepo -f text -m master.en -p tmp/translation_05.po --msgmerge-opt=--no-wrap"
 
-    po4a-updatepo -f text -m tmp/master.txt -p tmp/translation_06.po --porefs full,nowrap
+    po4a-updatepo -f text -m tmp/master.txt -p tmp/translation_06.po --porefs full
     grep "hello world" tmp/translation_06.po
-    CHECK_RESULT $? 0 0 "Failed to run command: po4a-updatepo -f text -m master.en -p tmp/translation_06.po --porefs full, no-wrap"
+    CHECK_RESULT $? 0 0 "Failed to run command: po4a-updatepo -f text -m master.en -p tmp/translation_06.po --porefs full"
 
 
     LOG_INFO "End to run test."

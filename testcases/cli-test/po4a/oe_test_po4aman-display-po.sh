@@ -25,7 +25,7 @@ function pre_test()
     DNF_INSTALL "po4a"
     mkdir tmp
     echo "hello world" > tmp/master.txt
-    po4a-gettextize -f text -m tmp/master.txt -p tmp/translation_Esp.po
+    po4a-updatepo -f text -m tmp/master.txt -p tmp/translation_Esp.po
     sed -i 's/msgstr ""/msgstr "Hola, Mundo"/g' tmp/translation_Esp.po
 
     LOG_INFO "End to prepare the test environment."
@@ -35,14 +35,14 @@ function run_test()
 {
     LOG_INFO "Start to run test."
 
-    po4aman-display-po -h | grep -Pz "Usage: .*po4aman-display-po"
-    CHECK_RESULT $? 0 0 "Failed to run command: po4aman-display-po -h"
+    po4a-display-man -h | grep -i "Usage: "
+    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-man -h"
 
-    po4aman-display-po -p tmp/translation_Esp.po -m tmp/master.txt | grep "Hola, Mundo"
-    CHECK_RESULT $? 0 0 "Failed to run command: po4aman-display-po -p tmp/translation_Esp.po"
+    po4a-display-man -p tmp/translation_Esp.po -m tmp/master.txt | grep "Hola, Mundo"
+    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-man -p tmp/translation_Esp.po"
 
-    po4aman-display-po -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split | grep "Hola, Mundo"
-    CHECK_RESULT $? 0 0 "Failed to run command: po4aman-display-po -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split"
+    po4a-display-man -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split | grep "Hola, Mundo"
+    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-man -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split"
 
     LOG_INFO "End to run test."
 }
