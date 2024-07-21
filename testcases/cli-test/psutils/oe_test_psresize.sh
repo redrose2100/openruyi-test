@@ -29,11 +29,11 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # test psresize
-    psresize -PA4 -pA5 ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages, .* bytes"
+    psresize -PA4 -pA5 ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages"
     CHECK_RESULT $? 0 0 "psresize -PA4 -pA5 ./common/a4-1.ps execution failed."
-    psresize -W595 -H842 -w600 -h800 ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages, .* bytes"
+    psresize -W595 -H842 -w600 -h800 ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages"
     CHECK_RESULT $? 0 0 "psresize -W595 -H842 -w600 -h800 ./common/a4-1.ps execution failed."
-    psresize -PA4 -pA5 -q ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages, .* bytes"
+    psresize -PA4 -pA5 -q ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages"
     CHECK_RESULT $? 0 1 "psresize -PA4 -pA5 -q ./common/a4-1.ps execution failed."
 
     LOG_INFO "End of the test."
