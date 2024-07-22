@@ -1,6 +1,9 @@
 {
     "path": "$OET_PATH/testcases/cli-test/criu",
     "cases": [
+         {
+            "name": "oe_test_criu_3.15"
+        },
         {
             "name": "oe_test_criu_3.16"
         },
