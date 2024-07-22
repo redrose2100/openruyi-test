@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/scrub",
+    "cases": [
+        {
+            "name": "oe_test_scrub_base_01"
+        }
+    ]
+}
