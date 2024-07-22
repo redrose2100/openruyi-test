@@ -21,6 +21,10 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
+    if [ "${NODE1_FRAME}" != "aarch64" ]; then
+        LOG_INFO "The environment does not support testing"
+        exit 0
+    fi
     kernel_name=$(uname -r)
     cd /usr/lib/modules/"${kernel_name}"/kernel/drivers/clk ||return
     test -f clk-scpi.ko.xz
