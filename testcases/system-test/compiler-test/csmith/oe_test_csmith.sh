@@ -22,7 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "gcc gcc-* make cmake m4"
+    DNF_INSTALL "gcc gcc-* make cmake m4 clang"
     current_path=`pwd`
     git clone https://code.osssc.ac.cn/oepkgs/os-test-framework/csmith.git
     cd csmith
