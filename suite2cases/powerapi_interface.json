@@ -193,6 +193,54 @@
         {
             "name": "oe_test_service_powerapi_51",
             "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_powerapi_52",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_53",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_powerapi_54",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_55",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_56",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_57",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_58",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_59",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_60",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_powerapi_61",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_62",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_63",
+            "machine type": "physical"
         }
 
     ]
