@@ -20,6 +20,7 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "gcc gcc-* make cmake m4 clang"
@@ -29,15 +30,45 @@ function pre_test() {
     make & make install
     export PATH=$PATH:$current_path/csmith/src
     export CSMITH_PATH=$current_path/csmith
+    failed_logs_dir=/tmp/oe_test_csmith/failed_cases/
+    if [ -d "/tmp/os_test_csmith/failed_cases" ]; then
+        rm -rf $failed_logs_dir
+    fi
+    mkdir -p $failed_logs_dir
 
     LOG_INFO "End to prepare the test environment."
 }
 
+
+
 function run_test() {
     LOG_INFO "Start to run test."
-    cd ..
-    bash run_csmith.sh 10 >/tmp/oe_testt_csmith.log
-    CHECK_RESULT $? 0 0 "Failed to run the test csmith_run.sh"
+    for i in `seq 1 100`
+    do
+        cfile="random$i.c"
+        csmith > $cfile
+        gcc $cfile -I/root/csmith/install/include -o random_gcc
+        clang $cfile -I/root/csmith/install/include -o random_clang
+        gcc_checksum=$(./random_gcc)
+        clang_checksum=$(./random_clang)
+        gcc_value=${gcc_checksum:11}
+        clang_value=${clang_checksum:11}
+        if [ $gcc_value = $clang_value ]; then
+           echo "${GREEN}Passed${NONE}"
+           passed=$(($passed + 1))
+        else
+           echo "${RED}Failed${NONE}"
+           cp $cfile $failed_logs_dir
+           failed=$(($failed + 1))
+	      fi
+        total=$(($total + 1))
+        rm -rf $cfile
+        rm -rf random_gcc
+        rm -rf random_clang
+        summary
+    done
+    CHECK_RESULT $total $passed 0 "Failed to run the test csmith_run.sh"
+    ls $failed_logs_dir
     LOG_INFO "End to run test."
 }
 
