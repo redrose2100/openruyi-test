@@ -43,7 +43,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for i in `seq 1 100`
+    for i in `seq 1 1000000`
     do
         cfile="random$i.c"
         csmith > $cfile
@@ -65,7 +65,6 @@ function run_test() {
         rm -rf $cfile
         rm -rf random_gcc
         rm -rf random_clang
-        summary
     done
     CHECK_RESULT $total $passed 0 "Failed to run the test csmith_run.sh"
     ls $failed_logs_dir
