@@ -35,6 +35,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    cd ..
     bash run_csmith.sh 10 >/tmp/oe_testt_csmith.log
     CHECK_RESULT $? 0 0 "Failed to run the test csmith_run.sh"
     LOG_INFO "End to run test."
