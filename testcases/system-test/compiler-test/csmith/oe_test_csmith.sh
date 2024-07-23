@@ -26,16 +26,16 @@ function pre_test() {
     cd /opt/
     git clone https://code.osssc.ac.cn/oepkgs/os-test-framework/csmith.git
     cd csmith
-    make && make install
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/csmith .
-    export PATH=$PATH:/usr/local/csmith
+    make & make install
+    export PATH=$PATH:/opt/csmith/src
+    export CSMITH_PATH=/opt/csmith
 
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    bash csmith_run.sh 10 >/tmp/oe_testt_csmith.log
+    bash run_csmith.sh 10 >/tmp/oe_testt_csmith.log
     CHECK_RESULT $? 0 0 "Failed to run the test csmith_run.sh"
     LOG_INFO "End to run test."
 }
