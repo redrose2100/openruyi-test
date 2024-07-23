@@ -1,0 +1,50 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   honghua
+# @Contact   :   honghua@iscas.ac.cn
+# @Date      :   2024/07/23
+# @License   :   Mulan PSL v2
+# @Desc      :   Compiler csmith
+# ############################################
+# shellcheck disable=SC2034,SC2154,SC1091
+
+source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "gcc gcc-* make cmake m4"
+    cd /opt/
+    git clone https://code.osssc.ac.cn/oepkgs/os-test-framework/csmith.git
+    cd csmith
+    make && make install
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/csmith .
+    export PATH=$PATH:/usr/local/csmith
+
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+    bash csmith_run.sh 10 >/tmp/oe_testt_csmith.log
+    CHECK_RESULT $? 0 0 "Failed to run the test csmith_run.sh"
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    rm -rf csmith
+    DNF_REMOVE
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
