@@ -18,16 +18,16 @@
 # ############################################
 # shellcheck disable=SC2034,SC2154,SC1091
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    export TIMEOUT= "1440m"
+    export TIMEOUT="1440m"
     DNF_INSTALL "gcc gcc-* make cmake m4 clang git"
     git clone https://code.osssc.ac.cn/oepkgs/os-test-framework/csmith.git
     mkdir -p /usr/local/csmith
-    cd csmith
+    cd csmith || exit 255 "failed to git clone csmith"
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/csmith .
     make & make install
     export PATH=$PATH:/usr/local/csmith/
@@ -44,26 +44,26 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for i in `seq 1 1000000`
+    for i in  $(seq 1 1000000)
     do
         cfile="random$i.c"
-        csmith > $cfile
-        gcc $cfile -I/usr/local/csmith/include -o random_gcc
-        clang $cfile -I/usr/local/csmith/include -o random_clang
+        csmith > "$cfile"
+        gcc "$cfile" -I/usr/local/csmith/include -o random_gcc
+        clang "$cfile" -I/usr/local/csmith/include -o random_clang
         gcc_checksum=$(./random_gcc)
         clang_checksum=$(./random_clang)
         gcc_value=${gcc_checksum:11}
         clang_value=${clang_checksum:11}
-        if [ $gcc_value = $clang_value ]; then
+        if [ "$gcc_value" = "$clang_value" ]; then
            echo "${GREEN}Passed${NONE}"
-           passed=$(($passed + 1))
+           ((passed += 1))
         else
            echo "${RED}Failed${NONE}"
            cp $cfile $failed_logs_dir
-           failed=$(($failed + 1))
+           ((failed += 1))
 	      fi
-        total=$(($total + 1))
-        rm -rf $cfile
+        ((total += 1))
+        rm -rf "$cfile"
         rm -rf random_gcc
         rm -rf random_clang
     done
@@ -75,7 +75,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf csmith
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
