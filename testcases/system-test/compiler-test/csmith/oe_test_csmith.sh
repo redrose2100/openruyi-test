@@ -44,7 +44,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for i in `seq 1 10`
+    for i in `seq 1 1000000`
     do
         cfile="random$i.c"
         csmith > $cfile
