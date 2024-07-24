@@ -30,12 +30,12 @@ function pre_test() {
     cd csmith || exit 255 "failed to git clone csmith"
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/csmith .
     make & make install
-    export PATH=$PATH:/usr/local/csmith/
+    export PATH="$PATH":/usr/local/csmith/
     failed_logs_dir=/tmp/oe_test_csmith/failed_cases/
     if [ -d "/tmp/os_test_csmith/failed_cases" ]; then
-        rm -rf $failed_logs_dir
+        rm -rf "$failed_logs_dir"
     fi
-    mkdir -p $failed_logs_dir
+    mkdir -p "$failed_logs_dir"
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -59,7 +59,7 @@ function run_test() {
            ((passed += 1))
         else
            echo "${RED}Failed${NONE}"
-           cp $cfile $failed_logs_dir
+           cp "$cfile" "$failed_logs_dir"
            ((failed += 1))
 	      fi
         ((total += 1))
@@ -67,8 +67,8 @@ function run_test() {
         rm -rf random_gcc
         rm -rf random_clang
     done
-    CHECK_RESULT $total $passed 0 "Failed to run the test csmith_run.sh"
-    ls $failed_logs_dir
+    CHECK_RESULT "$total" "$passed" 0 "Failed to run the test csmith_run.sh"
+    ls "$failed_logs_dir"
     LOG_INFO "End to run test."
 }
 
