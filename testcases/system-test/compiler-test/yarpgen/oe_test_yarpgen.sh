@@ -31,7 +31,7 @@ function pre_test() {
     fi
     mkdir yarpgen_failure_log
     compiler=g++
-    git -b main clone https://gitee.com/redrsoe2100/yarpgen.git
+    git  clone -b main https://gitee.com/redrsoe2100/yarpgen.git
     cd yarpgen || exit 255
     mkdir build
     cd build || exit 255
@@ -101,6 +101,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    cd ..
+    cd ..
+    rm -rf yarpgen
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
