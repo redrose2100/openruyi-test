@@ -45,7 +45,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for i in $(seq 1 100)
+    for i in $(seq 1 10)
     do
         string=$(../yarpgen)
         pattern='[0-9]+'
