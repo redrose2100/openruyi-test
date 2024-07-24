@@ -25,6 +25,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "gcc gcc-* git"
     git clone https://gitee.com/redrsoe2100/jotai-benchmarks.git
+    cd jotai-benchmarks || exit 255
     if [ -d "./anghaLeaves_failure_log" ]; then
         rm -rf anghaLeaves_failure_log
     fi
@@ -51,16 +52,17 @@ function run_test() {
 
     for src in "${anghaleaves_array[@]}"
     do
-        $CC "$src" -o "$src".out &> ./anghaLeaves_failure_log/$(basename "$src").log
+        failed_log="./anghaLeaves_failure_log/\"$(basename \"$src\")\".log"
+        $CC "$src" -o "$src".out &> "$failed_log"
         if [ ! -e "$src".out ]; then
             echo "${RED}Compilation Error${NONE} $src"
             ((failed += 1))
         else
-            "$src".out &>> ./anghaLeaves_failure_log/$(basename "$src").log
-            if "$src".out 0 &>> ./anghaLeaves_failure_log/$(basename "$src").log; then
+            "$src".out &>> "$failed_log"
+            if "$src".out 0 &>> ."$failed_log"; then
                 echo "${GREEN}Passed${NONE} $src"
                 rm -rf "$src".out
-                rm -rf ./anghaLeaves_failure_log/$(basename "$src").log
+                rm -rf "$failed_log"
                 ((passed += 1))
             else
                 echo "${RED}Test Run Failed${NONE} $src"
@@ -71,16 +73,17 @@ function run_test() {
     done
     for src in "${anghamath_array[@]}"
     do
-        $CC "$src" -o "$src".out &> ./anghaMath_failure_log/$(basename "$src").log
+        failed_log="./anghaMath_failure_log/\"$(basename \"$src\")\".log"
+        $CC "$src" -o "$src".out &> "$failed_log"
         if [ ! -e "$src".out ]; then
             echo "${RED}Compilation Error${NONE} $src"
             ((failed += 1))
         else
-            "$src".out &>> ./anghaMath_failure_log/$(basename "$src").log
-            if "$src".out 0 &>> ./anghaMath_failure_log/$(basename "$src").log; then
+            "$src".out &>> "$failed_log"
+            if "$src".out 0 &>> "$failed_log"; then
                 echo "${GREEN}Passed${NONE} $src"
                 rm -rf "$src".out
-                rm -rf ./anghaMath_failure_log/$(basename "$src").log
+                rm -rf "$failed_log"
                 ((passed += 1))
             else
                 echo "${RED}Test Run Failed${NONE} $src"
