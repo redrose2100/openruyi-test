@@ -89,8 +89,8 @@ function run_test() {
         else
             echo "${RED}Test Error${NONE} $dirname"
             echo "Test Error" >> log.txt
-            mkdir ../yarpgen_failure_log/$dirname/
-            mv ./* ../yarpgen_failure_log/$dirname/
+            mkdir ../yarpgen_failure_log/"$dirname"/
+            mv ./* ../yarpgen_failure_log/"$dirname"/
             ((failed += 1))
         fi
         ((total += 1))
