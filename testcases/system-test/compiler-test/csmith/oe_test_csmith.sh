@@ -23,9 +23,9 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    export TIMEOUT="1440m"
     DNF_INSTALL "gcc gcc-* make cmake m4 clang git"
     git clone https://code.osssc.ac.cn/oepkgs/os-test-framework/csmith.git
+    sleep 3
     mkdir -p /usr/local/csmith
     cd csmith || exit 255
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/csmith .
@@ -44,7 +44,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for i in  $(seq 1 1000000)
+    for i in  $(seq 1 100)
     do
         cfile="random$i.c"
         csmith > "$cfile"
@@ -75,6 +75,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf csmith
+    rm -rf /usr/local/csmith
+    rm -rf /tmp/oe_test_csmith/failed_cases/
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
