@@ -21,6 +21,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function config_params(){
     L0G_INFO "Start to config params of the case."
+    # shellcheck disable=SC2034
     EXECUTE_T="600m"
     LOG_INFO "End to config params of the case."
 }
