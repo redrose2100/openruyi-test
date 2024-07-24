@@ -44,11 +44,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for i in $(seq 1 1000000)
+    for _ in $(seq 1 1000000)
     do
         string=$(../yarpgen)
         pattern='[0-9]+'
-        dirname=seed_$(echo $string | grep -oE "$pattern")
+        dirname=seed_$(echo "$string" | grep -oE "$pattern")
         cat init.h func.cpp driver.cpp > test_random.cpp
         optlevel_array=(O0 O3)
         result_array=()
@@ -63,7 +63,8 @@ function run_test() {
             else
                 ./gcc_"$optlevel"_out >> log.txt
                 if ./gcc_"$optlevel"_out &>> log.txt; then
-                    result_array+=($(./gcc_"$optlevel"_out))
+                    mapfile -t result_array < <(./gcc_"$optlevel"_out)
+                    # shellcheck disable=SC2028
                     echo "./gcc_${optlevel}_out : \n" >> log.txt
                     ./gcc_"$optlevel"_out >> log.txt
                 else
@@ -74,15 +75,15 @@ function run_test() {
         done
 
         if [ ${#result_array[@]} == 2 ]; then
-            if [ ${result_array[0]} == ${result_array[1]} ]; then
+            if [ "${result_array[0]}" == "${result_array[1]}" ]; then
                 echo "${GREEN}Passed${NONE} $dirname"
                 rm -rf ./*
                 ((passed += 1))
             else
                 echo "${RED}Output Mismatch${NONE} $dirname"
                 echo "Output Mismatch" >> log.txt
-                mkdir ../yarpgen_failure_log/$dirname/
-                mv ./* ../yarpgen_failure_log/$dirname/
+                mkdir ../yarpgen_failure_log/"$dirname"/
+                mv ./* ../yarpgen_failure_log/"$dirname"/
                 ((failed += 1))
             fi
         else
