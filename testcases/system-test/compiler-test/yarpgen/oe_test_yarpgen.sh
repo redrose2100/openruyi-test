@@ -31,7 +31,7 @@ function pre_test() {
     fi
     mkdir yarpgen_failure_log
     compiler=g++
-    git clone https://gitee.com/redrsoe2100/yarpgen.git
+    git -b main clone https://gitee.com/redrsoe2100/yarpgen.git
     cd yarpgen || exit 255
     mkdir build
     cd build || exit 255
