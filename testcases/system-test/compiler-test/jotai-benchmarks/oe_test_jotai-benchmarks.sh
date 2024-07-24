@@ -42,8 +42,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    anghaleaves_array=($(find benchmarks/anghaLeaves -type f))
-    anghamath_array=($(find benchmarks/anghaMath -type f))
+    anghaleaves_array=()
+    while IFS= read -r -d $'\0' file; do
+        anghaleaves_array+=("$file")
+    done < <(find benchmarks/anghaLeaves -type f -print0)
+    anghamath_array=()
+    while IFS= read -r -d $'\0' file; do
+        anghamath_array+=("$file")
+    done < <(find benchmarks/anghaMath -type f -print0)
 
     for src in "${anghaleaves_array[@]}"
     do
