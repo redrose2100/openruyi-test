@@ -30,7 +30,7 @@ function pre_test() {
     cd csmith || exit 255
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/csmith .
     make & make install
-    export PATH="$PATH":/usr/local/csmith/
+    export PATH=$PATH:/usr/local/csmith/
     failed_logs_dir=/tmp/oe_test_csmith/failed_cases/
     if [ -d "/tmp/os_test_csmith/failed_cases" ]; then
         rm -rf "$failed_logs_dir"
