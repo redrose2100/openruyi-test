@@ -17,8 +17,8 @@
 # @Desc      :   Compiler yarpen
 # ############################################
 
-
 source "$OET_PATH"/libs/locallibs/common_lib.sh
+TIMEOUT="600m"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
@@ -44,7 +44,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for i in $(seq 1 10)
+    for i in $(seq 1 1000000)
     do
         string=$(../yarpgen)
         pattern='[0-9]+'
