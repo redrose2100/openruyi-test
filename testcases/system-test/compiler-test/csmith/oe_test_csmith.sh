@@ -23,13 +23,14 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "gcc gcc-* make cmake m4 clang"
-    current_path=`pwd`
+    export TIMEOUT= "1440m"
+    DNF_INSTALL "gcc gcc-* make cmake m4 clang git"
     git clone https://code.osssc.ac.cn/oepkgs/os-test-framework/csmith.git
+    mkdir -p /usr/local/csmith
     cd csmith
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local/csmith .
     make & make install
-    export PATH=$PATH:$current_path/csmith/src
-    export CSMITH_PATH=$current_path/csmith
+    export PATH=$PATH:/usr/local/csmith/
     failed_logs_dir=/tmp/oe_test_csmith/failed_cases/
     if [ -d "/tmp/os_test_csmith/failed_cases" ]; then
         rm -rf $failed_logs_dir
