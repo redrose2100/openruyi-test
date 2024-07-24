@@ -18,7 +18,12 @@
 # ############################################
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
-TIMEOUT="600m"
+
+function config_params(){
+    L0G_INFO "Start to config params of the case."
+    EXECUTE_T="600m"
+    LOG_INFO "End to config params of the case."
+}
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
