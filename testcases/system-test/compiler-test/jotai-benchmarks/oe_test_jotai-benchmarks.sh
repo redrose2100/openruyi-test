@@ -32,7 +32,9 @@ function pre_test() {
 	  if [ -d "./anghaMath_failure_log" ]; then
         rm -rf anghaMath_failure_log
     fi
-
+    failed=0
+    passed=0
+    total=0
     mkdir anghaLeaves_failure_log
 	  mkdir anghaMath_failure_log
     LOG_INFO "End to prepare the test environment."
@@ -40,15 +42,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    anghaleaves_array=()
-    while IFS= read -r -d $'\0' file; do
-        anghaleaves_array+=("$file")
-    done < <(find benchmarks/anghaLeaves -type f -print0)
-
-    anghamath_array=()
-    while IFS= read -r -d $'\0' file; do
-        anghamath_array+=("$file")
-    done < <(find benchmarks/anghaMath -type f -print0)
+    anghaleaves_array=($(find benchmarks/anghaLeaves -type f))
+    anghamath_array=($(find benchmarks/anghaMath -type f))
 
     for src in "${anghaleaves_array[@]}"
     do
