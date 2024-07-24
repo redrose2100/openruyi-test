@@ -23,7 +23,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params(){
     L0G_INFO "Start to config params of the case."
-    EXECUTE_T="600m"
+    EXECUTE_T="120m"
     LOG_INFO "End to config params of the case."
 }
 
