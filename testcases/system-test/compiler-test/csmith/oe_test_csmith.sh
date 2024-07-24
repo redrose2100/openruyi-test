@@ -48,8 +48,8 @@ function run_test() {
     do
         cfile="random$i.c"
         csmith > $cfile
-        gcc $cfile -I/root/csmith/install/include -o random_gcc
-        clang $cfile -I/root/csmith/install/include -o random_clang
+        gcc $cfile -I/usr/local/csmith/include -o random_gcc
+        clang $cfile -I/usr/local/csmith/include -o random_clang
         gcc_checksum=$(./random_gcc)
         clang_checksum=$(./random_clang)
         gcc_value=${gcc_checksum:11}
