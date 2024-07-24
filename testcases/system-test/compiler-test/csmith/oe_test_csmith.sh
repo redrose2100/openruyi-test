@@ -29,7 +29,7 @@ function config_params(){
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "gcc gcc-* make cmake m4 clang git"
-    git clone https://code.osssc.ac.cn/oepkgs/os-test-framework/csmith.git
+    git clone https://gitee.com/redrsoe2100/csmith.git
     sleep 3
     mkdir -p /usr/local/csmith
     cd csmith || exit 255
