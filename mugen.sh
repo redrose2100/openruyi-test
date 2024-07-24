@@ -31,7 +31,9 @@ else
     export conf_file="${OET_PATH}/conf/mugen.json"
 fi
 
-TIMEOUT="30m"
+if [[ -z "$TIMEOUT" ]]; then
+  TIMEOUT="30m"
+fi
 COMMAND_X="no"
 COMMAND_S="no"
 COPY_DONE="no"
