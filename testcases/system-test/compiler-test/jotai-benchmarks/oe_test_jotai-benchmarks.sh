@@ -19,12 +19,12 @@
 # shellcheck disable=SC2034,SC2154,SC1091
 
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "gcc gcc-*"
-    git clone https://code.osssc.ac.cn/oepkgs/os-test-framework/jotai-benchmarks.git
+    DNF_INSTALL "gcc gcc-* git"
+    git clone https://gitee.com/redrsoe2100/jotai-benchmarks.git
     if [ -d "./anghaLeaves_failure_log" ]; then
         rm -rf anghaLeaves_failure_log
     fi
@@ -57,7 +57,7 @@ function run_test() {
             ((failed += 1))
         else
             "$src".out &>> ./anghaLeaves_failure_log/$(basename "$src").log
-            if ${src}.out 0 &>> ./anghaLeaves_failure_log/$(basename "$src").log; then
+            if "$src".out 0 &>> ./anghaLeaves_failure_log/$(basename "$src").log; then
                 echo "${GREEN}Passed${NONE} $src"
                 rm -rf "$src".out
                 rm -rf ./anghaLeaves_failure_log/$(basename "$src").log
@@ -76,11 +76,11 @@ function run_test() {
             echo "${RED}Compilation Error${NONE} $src"
             ((failed += 1))
         else
-            ${src}.out &>> ./anghaMath_failure_log/$(basename $src).log
-            if ${src}.out 0 &>> ./anghaMath_failure_log/$(basename $src).log; then
+            "$src".out &>> ./anghaMath_failure_log/$(basename "$src").log
+            if "$src".out 0 &>> ./anghaMath_failure_log/$(basename "$src").log; then
                 echo "${GREEN}Passed${NONE} $src"
-                rm -rf ${src}.out
-                rm -rf ./anghaMath_failure_log/$(basename $src).log
+                rm -rf "$src".out
+                rm -rf ./anghaMath_failure_log/$(basename "$src").log
                 ((passed += 1))
             else
                 echo "${RED}Test Run Failed${NONE} $src"
