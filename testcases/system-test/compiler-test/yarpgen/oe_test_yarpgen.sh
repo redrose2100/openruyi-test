@@ -23,6 +23,12 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL "tar git wget cmake gcc gcc-g++ clang"
+    git  clone -b main https://gitee.com/redrsoe2100/yarpgen.git
+    cd yarpgen || exit 255
+    mkdir build
+    cd build || exit 255
+    cmake ..
+    make
     if [ -d "./yarpgen_failure_log" ]; then
         rm -rf yarpgen_failure_log
     fi
@@ -30,13 +36,6 @@ function pre_test() {
         rm -rf testdir
     fi
     mkdir yarpgen_failure_log
-    compiler=g++
-    git  clone -b main https://gitee.com/redrsoe2100/yarpgen.git
-    cd yarpgen || exit 255
-    mkdir build
-    cd build || exit 255
-    cmake ..
-    make
     mkdir testdir && cd testdir || exit 255
 
 
@@ -78,24 +77,24 @@ function run_test() {
             if [ ${result_array[0]} == ${result_array[1]} ]; then
                 echo "${GREEN}Passed${NONE} $dirname"
                 rm -rf ./*
-                passed=$(($passed + 1))
+                ((passed += 1))
             else
                 echo "${RED}Output Mismatch${NONE} $dirname"
                 echo "Output Mismatch" >> log.txt
                 mkdir ../yarpgen_failure_log/$dirname/
                 mv ./* ../yarpgen_failure_log/$dirname/
-                failed=$(($failed + 1))
+                ((failed += 1))
             fi
         else
             echo "${RED}Test Error${NONE} $dirname"
             echo "Test Error" >> log.txt
             mkdir ../yarpgen_failure_log/$dirname/
             mv ./* ../yarpgen_failure_log/$dirname/
-            failed=$(($failed + 1))
+            ((failed += 1))
         fi
-        total=$(($total + 1))
-        summary
+        ((total += 1))
     done
+    CHECK_RESULT "$total" "$passed" 0 "failed to run yarpgen test."
     LOG_INFO "End to run test."
 }
 
