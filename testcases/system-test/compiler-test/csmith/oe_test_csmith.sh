@@ -27,7 +27,7 @@ function pre_test() {
     DNF_INSTALL "gcc gcc-* make cmake m4 clang git"
     git clone https://code.osssc.ac.cn/oepkgs/os-test-framework/csmith.git
     mkdir -p /usr/local/csmith
-    cd csmith || exit 255 "failed to git clone csmith"
+    cd csmith || exit 255
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/csmith .
     make & make install
     export PATH="$PATH":/usr/local/csmith/
