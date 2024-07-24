@@ -54,7 +54,7 @@ function run_test() {
 
     for src in "${anghaleaves_array[@]}"
     do
-        failed_log="./anghaLeaves_failure_log/$(basename $src).log"
+        failed_log=./anghaLeaves_failure_log/$(basename "$src").log
         gcc "$src" -o "$src".out &> "$failed_log"
         if [ ! -e "$src".out ]; then
             echo "${RED}Compilation Error${NONE} $src"
@@ -75,7 +75,7 @@ function run_test() {
     done
     for src in "${anghamath_array[@]}"
     do
-        failed_log="./anghaMath_failure_log/$(basename $src).log"
+        failed_log=./anghaMath_failure_log/$(basename "$src").log
         gcc "$src" -o "$src".out &> "$failed_log"
         if [ ! -e "$src".out ]; then
             echo "${RED}Compilation Error${NONE} $src"
