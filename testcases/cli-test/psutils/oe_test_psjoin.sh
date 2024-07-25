@@ -31,11 +31,11 @@ function run_test() {
     # test psjoin
     psjoin -h 2>&1 | grep -i "usage: psjoin"
     CHECK_RESULT $? 0 0 "psjoin -h execution failed."
-    psjoin -V | grep -i "psjoin (version [[:digit:]]"
+    psjoin --version | grep -i "psjoin (version [[:digit:]]"
     CHECK_RESULT $? 0 0 "psjoin -V execution failed."
     psjoin ./common/a4-1.ps ./common/a4-1.ps | grep -i -a "Pages: 2"
     CHECK_RESULT $? 0 0 "psjoin ./common/a4-1.ps ./common/a4-1.ps execution failed."
-    psjoin --strip | grep -i -a "don't strip"
+    psjoin --nostrip | grep -i -a "don't strip"
     CHECK_RESULT $? 0 0 "psjoin --strip execution failed."
     psjoin --even ./common/a4-1.ps | grep -a -i -E "pages: [1-9]*[02468]$"
     CHECK_RESULT $? 0 0 "psjoin --even ./common/a4-1.ps execution failed."

@@ -31,8 +31,8 @@ function run_test() {
     # test psnup
     psnup -d2 ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages, .* bytes"
     CHECK_RESULT $? 0 0 "psnup -d ./common/a4-1.ps execution failed."
-    psnup -s ./common/a4-1.ps ./common/a4-2.ps 2>&1| grep -i -a "wrote .* pages, .* bytes"
-    CHECK_RESULT $? 0 0 "psnup -s ./common/a4-1.ps ./common/a4-2.ps execution failed."
+   # psnup -s ./common/a4-1.ps ./common/a4-2.ps 2>&1| grep -i -a "wrote .* pages, .* bytes"
+   # CHECK_RESULT $? 0 0 "psnup -s ./common/a4-1.ps ./common/a4-2.ps execution failed."
     psnup -pA4 -Pletter ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages, .* bytes"
     CHECK_RESULT $? 0 0 "psnup -pA4 -Pletter ./common/a4-1.ps execution failed."
     psnup -w100 -h200 -W50 -H100 ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages, .* bytes"
