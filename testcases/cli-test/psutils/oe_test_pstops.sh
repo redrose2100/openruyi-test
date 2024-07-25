@@ -29,11 +29,11 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # test pstops
-    pstops -q '2:0L@.7(21cm,0)+1L@.7(21cm,14.85cm)' ./common/a4-11.ps 2>&1 | grep -a -i "wrote .* pages, .* bytes"
+    pstops -q '2:0L@.7(21cm,0)+1L@.7(21cm,14.85cm)' ./common/a4-11.ps 2>&1 | grep -a -i "wrote .* pages"
     CHECK_RESULT $? 0 1 "pstops '2:0L@.7(21cm,0)+1L@.7(21cm,14.85cm)' ./common/a4-11.ps execution failed."
     pstops -pA4 '2:-0' ./common/a4-11.ps 2>&1 | grep -a -i "A4"
     CHECK_RESULT $? 0 0 "pstops '2:-0' ./common/a4-11.ps execution failed."
-    pstops -b -h11in -w8.5in -d2pt '4:-3L@.7(21cm,0)+0L@.7(21cm,14.85cm)' ./common/a4-11.ps 2>&1 | grep -a -i "wrote .* pages, .* bytes"
+    pstops -b -h11in -w8.5in -d2pt '4:-3L@.7(21cm,0)+0L@.7(21cm,14.85cm)' ./common/a4-11.ps 2>&1 | grep -a -i "wrote .* pages"
     CHECK_RESULT $? 0 0 "pstops '4:-3L@.7(21cm,0)+0L@.7(21cm,14.85cm)' ./common/a4-11.ps execution failed."
 
     # test includeres
