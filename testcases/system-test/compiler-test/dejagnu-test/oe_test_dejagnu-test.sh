@@ -35,7 +35,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cd gcc/testsuite/ || exit 255
+    cd gcc/gcc/testsuite/ || exit 255
     runtest --tool gcc
     CHECK_RESULT 0 0 0 "failed to run gcc testsuite."
     cat gcc.sum
