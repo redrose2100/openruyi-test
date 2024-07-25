@@ -49,16 +49,20 @@ function run_test()
     grep -Pz 'msgid "hello world"\nmsgstr "Hola, Mundo"' tmp/translation_esp_033.po
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize -f text -m tmp/master.txt -l tmp/translation_esp.txt -p tmp/translation_esp_033.po --option tabs=split"
 
-    po4a-gettextize -f text -m tmp/master.txt --msgid-bugs-address "test@test" | grep "Report-Msgid-Bugs-To: test@test"
+    po4a-updatepo -f text -m tmp/master.txt --msgid-bugs-address test@test --po tmp/0.po 
+    grep "Report-Msgid-Bugs-To: test@test" tmp/0.po
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize -f text -m tmp/master.txt --msgid-bugs-address test@test"
 
-    po4a-gettextize -f text -m tmp/master.txt --copyright-holder "my copyright" | grep "Copyright (C) YEAR my copyright"
+    po4a-updatepo -f text -m tmp/master.txt --copyright-holder "my copyright" --po tmp/1.po 
+    grep "Copyright (C) YEAR my copyright" tmp/1.po
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize -f text -m tmp/master.txt --copyright"
 
-    po4a-gettextize -f text -m tmp/master.txt --package-name "a_new_package" | grep "a_new_package"
+    po4a-updatepo -f text -m tmp/master.txt --package-name "a_new_package" --po tmp/2.po 
+    grep "a_new_package" tmp/2.po
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize -f text -m tmp/master.txt --package-name a_new_package"
 
-    po4a-gettextize -f text -m tmp/master.txt --package-version "2.0" | grep "Project-Id-Version: PACKAGE 2.0"
+    po4a-updatepo -f text -m tmp/master.txt --package-version "2.0" --po tmp/3.po 
+    grep "Project-Id-Version: PACKAGE 2.0" tmp/3.po
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize -f text -m tmp/master.txt --package-version 2.0"
 
     LOG_INFO "End to run test."

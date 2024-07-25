@@ -49,7 +49,7 @@ function run_test() {
     test "$(po4a-gettextize -V 2>&1 | awk 'NR==1{print $3}' | awk '{sub(/\.$/, ""); print $1}')" == "$version"
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize -V"
 
-    po4a-gettextize -f text -m --debug 2>&1 | grep "File --debug does not exist"
+    po4a-gettextize -f text -m --debug -l tmp/translation_esp.txt 2>&1 | grep "File --debug does not exist"
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-gettextize -f text -m --debug"
 
     po4a-gettextize -f text -m tmp/master.txt -l tmp/translation_esp.txt -p tmp/translation_esp_01.po --verbose
