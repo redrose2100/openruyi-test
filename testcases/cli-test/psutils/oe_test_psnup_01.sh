@@ -30,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     
     # test psnup
-    test "$(psnup -v 2>&1| grep -i "psnup [[:digit:]]" | awk '{print$2}')" == "$version"
+    test "$(psnup --version 2>&1| grep -i "psnup [[:digit:]]" | awk '{print$2}')" == "$version"
     CHECK_RESULT $? 0 0 "psnup -v execution failed."
     psnup -2 ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages, .* bytes" # -nup 2 page per sheet
     CHECK_RESULT $? 0 0 "psnup -2 ./common/a4-1.ps  execution failed."
