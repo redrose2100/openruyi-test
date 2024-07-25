@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/hugepage",
-    "cases": [
-        {
-            "name": "oe_test_enable_hugepage"
-        }
-    ]
-}
