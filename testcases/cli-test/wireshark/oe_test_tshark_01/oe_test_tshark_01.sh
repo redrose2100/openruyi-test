@@ -57,7 +57,7 @@ EOF
     capinfos tsfile5 | grep -E "Number of packets:.*10|File name:.*tsfile5"
     CHECK_RESULT $?
     SLEEP_WAIT 5 "tshark -i '$netCard' -L | grep \"Data link types of interface\"" 2
-    linkType=l$(tshark -i "$netCard" -L | sed -n '2p' | awk '{print $1}')
+    linkType=$(tshark -i "$netCard" -L | sed -n '2p' | awk '{print $1}')
     SLEEP_WAIT 5 "tshark -i '$netCard' -y $linkType -c 10 -w tsfile6" 2
     capinfos tsfile6 | grep -E "File encapsulation:.*Ethernet|File name:.*tsfile6"
     CHECK_RESULT $?

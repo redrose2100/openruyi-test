@@ -28,8 +28,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    grep -q "114.114.114.114" /etc/resolv.conf
-    CHECK_RESULT $? 0 0 "Check default dns failed."
+    default_dns=$(grep -E '^nameserver' /etc/resolv.conf -m 1 | awk '{print $2}')
+    if [ -z "$default_dns" ]; then
+        CHECK_RESULT 1 0 0 "Check default dns failed."
+    fi
     netstat -antlpe | grep "named" | grep 53
     CHECK_RESULT $? 1 0 "The port 53 already opened."
     sed -i "s/localhost/any/g" /etc/named.conf

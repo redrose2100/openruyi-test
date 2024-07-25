@@ -961,6 +961,30 @@
 	},
 	{
 	   "name": "oe_test_fincore"
+	},
+	{
+	   "name": "oe_test_udisksctl"
+	},
+	{
+	   "name": "oe_test_c++_stl"
+	},
+	{
+	   "name": "oe_test_fallocate_01"
+	},
+	{
+	   "name": "oe_test_lslocks"
+	},
+	{
+	    "name": "oe_test_brotli_002"
+	},
+	{
+	    "name": "oe_test_lslocks_2"
+	},
+	{
+	    "name": "oe_test_lslogins_1"
+	},
+	{
+	    "name": "oe_test_more"
 	}
     ]
 }

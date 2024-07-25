@@ -22,12 +22,28 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "librabbitmq rabbitmq-server"
-    openssl genrsa -out privkey.pem 2048
-    openssl rsa -pubout -in privkey.pem -out pubkey.pem
-    openssl rsa -pubout -in privkey.pem -out cert.pem
+    if grep -q "$(hostname -f)" /etc/hosts ; then
+            :
+    else
+            echo "127.0.0.1   $(hostname -f)" >> /etc/hosts
+    fi
+    cp  rabbitmq.conf /etc/rabbitmq/
+    unzip main.zip >> /dev/null
+    cd tls-gen-main/two_shared_intermediates || exit
+    make 
+    SLEEP_WAIT 50
+    cd result || exit
+    mkdir /etc/rabbitmq/ssl
+    SSL_PATH=/etc/rabbitmq/ssl
+    cp chained_ca_certificate.pem "${SSL_PATH}"/
+    cp server_certificate.pem     "${SSL_PATH}"/
+    cp server_key.pem             "${SSL_PATH}"/
+    chmod 655 -R "${SSL_PATH}"/
     nohup systemctl start rabbitmq-server &
     SLEEP_WAIT 30
     rabbitmq-plugins enable rabbitmq_management
+    rabbitmq-plugins enable rabbitmq_auth_mechanism_ssl
+    SLEEP_WAIT 30
     rabbitmqctl add_user admin admin
     rabbitmqctl set_user_tags admin administrator
     rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
@@ -38,7 +54,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    nohup amqp-consume -A -q test_queue -c 5 -p 10 -u amqp://127.0.0.1:5672 --ssl --cacert=cacert.pem --key=privkey.pem --cert=cert.pem cat >./info.out 2>&1 &
+    nohup amqp-consume -A -q test_queue -c 5 -p 10 -u amqps://"$(hostname -f)":5671 --ssl --cacert=chained_ca_certificate.pem --key=client_key.pem --cert=client_certificate.pem cat >./info.out 2>&1 &
     SLEEP_WAIT 3
     amqp-publish -r test_queue -b "test_body"
     SLEEP_WAIT 10
@@ -72,7 +88,10 @@ function post_test() {
     rabbitmqctl delete_user admin
     kill -9 "$(pgrep -a "amqp-consume" | grep -Ev 'grep|bash' | awk '{print $1}')"
     rabbitmq-plugins disable rabbitmq_management
-    rm -rf privkey.pem pubkey.pem cert.pem ./*.out info* rabbitmqadmin
+    rabbitmq-plugins disable rabbitmq_auth_mechanism_ssl
+    rm -rf ./*.out info* rabbitmqadmin
+    cd ../../../ || exit
+    rm -rf tls-gen-main /etc/rabbitmq
     systemctl stop rabbitmq-server
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

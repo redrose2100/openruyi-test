@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test vpxdec of libvpx
 # #############################################
+# shellcheck disable=SC1091,SC2010
 
 source "../common/common_lib.sh"
 
@@ -35,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: vpxdec --codec"
     vpxdec --codec=vp8 --threads=6 --verbose -o tmp/1_flipuv.i420 data/1.ivf && ls tmp | grep '1_flipuv.i420'
     CHECK_RESULT $? 0 0 "Failed option: vpxdec -o"
-    vpxdec --codec=vp8 --threads=6 --verbose --noblit -o tmp/noblit.vpx data/1.ivf 2>&1| grep 'WebM Project VP8 Decoder v1.7.0'
+    vpxdec --codec=vp8 --threads=6 --verbose --noblit -o tmp/noblit.vpx data/1.ivf 2>&1| grep 'WebM Project VP8 Decoder'
     CHECK_RESULT $? 0 0 "Failed option: vpxdec --noblit"
     vpxdec --codec=vp8 --threads=6 --verbose --progress -o tmp/progress.vpx data/1.ivf 2>&1 | grep '74 decoded frames.*74 showed frames'
     CHECK_RESULT $? 0 0 "Failed option: vpxdec --progress"
@@ -47,7 +48,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: vpxdec --summary "
     vpxdec --codec=vp8 --threads=6 --verbose -o tmp/threads.vpx data/1.ivf && ls tmp | grep 'threads.vpx'
     CHECK_RESULT $? 0 0 "Failed option: vpxdec --threads "
-    vpxdec --codec=vp8 --threads=6  --verbose -o tmp/verbose.vpx data/1.ivf 2>&1 | grep 'WebM Project VP8 Decoder v1.7.0'
+    vpxdec --codec=vp8 --threads=6  --verbose -o tmp/verbose.vpx data/1.ivf 2>&1 | grep 'WebM Project VP8 Decoder'
     CHECK_RESULT $? 0 0 "Failed option: vpxdec --verbose "
     LOG_INFO "End to run test."
 }
@@ -55,7 +56,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp data
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

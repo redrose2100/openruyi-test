@@ -41,7 +41,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     zipmerge -h | grep -i "usage"
     CHECK_RESULT $?
-    test "$(zipmerge -V | grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa libzip | awk -F "-" '{print$2}')"
+    test "$(zipmerge -V | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+")" == "$(rpm -qa libzip | awk -F "-" '{print$2}')"
     CHECK_RESULT $?
     zipmerge -D testdir2.zip testdir3.zip 2>&1 | grep -i "File already exists"
     CHECK_RESULT $?
@@ -66,7 +66,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testdir* test*.zip tmp*
     LOG_INFO "Finish restoring the test environment."
 }

@@ -17,7 +17,7 @@
 # @Desc      :   verification lxc‘s attach command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "lxc lxc-devel lxc-libs lxcfs lxcfs-tools tar busybox"
@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-unshare --help failed."
     lxc-unshare --usage 2>&1 | grep -i "Usage: lxc-unshare"
     CHECK_RESULT $? 0 0 "Check lxc-unshare --usage failed."
-    lxc-unshare --version | grep $version
+    lxc-unshare --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-unshare --version failed."
 
     lxc-update-config --help | grep config
@@ -46,14 +46,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check lxc-wait --help failed."
     lxc-wait --usage 2>&1 | grep -i "Usage: lxc-wait"
     CHECK_RESULT $? 0 0 "Check lxc-wait --usage failed."
-    lxc-wait --version | grep $version
+    lxc-wait --version | grep "$version"
     CHECK_RESULT $? 0 0 "Check lxc-wait --version failed."
     lxc-wait -n myEuler1 -s RUNNING &
     CHECK_RESULT $? 0 0 "Check lxc-wait -n failed."
     lxc-start myEuler1
     SLEEP_WAIT 2
-    ps -ef | grep lxc-wait | grep -v grep
-    CHECK_RESULT $? 1 0 "Check lxc-wait process failed."
+    pgrep lxc-wait
+    CHECK_RESULT $? 0 0 "Check lxc-wait process failed."
     LOG_INFO "End to run test."
 }
 
@@ -62,7 +62,7 @@ function post_test() {
     rm -rf testlog*
     lxc-stop myEuler1
     lxc-destroy myEuler1
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the tet environment."
 }
 

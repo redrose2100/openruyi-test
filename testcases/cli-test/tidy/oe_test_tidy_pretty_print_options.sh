@@ -17,7 +17,7 @@
 # @Desc      :   Test iftop text mode
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -103,7 +103,7 @@ function run_test() {
     echo 'vertical-space: auto' >./tidyrc
     echo '<p>Some text</p>' | tidy -indent -config ./tidyrc | grep '<p>Some text</p></body></html>'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: vertical-space"
-    if [ ${version_id} =  "22.03" ]; then
+    if [ "${version_id}" =  "22.03" ]; then
         # --wrap
         # 指定Tidy用于换行时的右边距，若设置为0则不换行
         echo 'hi' | tidy --wrap 0 | grep '<meta name="generator" content="HTML Tidy for HTML5 for Linux version'
@@ -123,7 +123,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -f ./tidyrc
     export LANG=$OLD_LANG
     LOG_INFO "Finish environment cleanup!"

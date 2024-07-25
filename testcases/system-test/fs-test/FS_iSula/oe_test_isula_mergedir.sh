@@ -16,24 +16,30 @@
 #@Desc      	:   write file on isula MergedDir
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL iSulad
+    DNF_INSTALL "lcr iSulad"
     cur_lang=$LANG
     export LANG=en_US.UTF-8
-    if [[ ${NODE1_FRAME} == "aarch64" ]]; then
-        wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/aarch64/openEuler-docker.aarch64.tar.xz
-        image_name="openEuler-docker.aarch64.tar.xz"
-    else 
-        wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/x86_64/openEuler-docker.x86_64.tar.xz
-        image_name="openEuler-docker.x86_64.tar.xz"
-    fi
+
     systemctl start isulad
-    isula load -i $image_name
-    image_id=$(isula images | grep openeuler-20.03-lts-sp1 | head -n 1 | awk '{print $3}')
-    isula_name=$(isula run -itd $image_id)
+    echo "Architecture:${NODE1_FRAME}"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        TEST_TAG=24.03
+        TEST_IMAGE=jchzhou/oerv
+        image_name="${TEST_TAG}_docker_image.tar.gz"
+        wget "https://repo.tarsier-infra.isrc.ac.cn/openEuler-RISC-V/testing/2403LTS-test/v1/${image_name}"
+    else
+        TEST_IMAGE=openeuler-20.03-lts-sp1
+        wget "https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/${NODE1_FRAME}/openEuler-docker.${NODE1_FRAME}.tar.xz"
+        image_name="openEuler-docker.${NODE1_FRAME}.tar.xz"
+    fi
+
+    isula load -i "$image_name"
+    image_id=$(isula images | grep "${TEST_IMAGE}" | head -n 1 | awk '{print $3}')
+    isula_name=$(isula run -itd "$image_id")
     isula_id=$(isula ps -a | grep "Up" | head -n 1 | awk '{print $1}')
     merge_dir="/var/lib/isulad/storage/overlay/${isula_name}/merged"
     LOG_INFO "Finish to prepare the database config."
@@ -41,24 +47,30 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "testfile" > $merge_dir/opt/testfile
+    echo "testfile" > "$merge_dir/opt/testfile"
     CHECK_RESULT $? 0 0 "Write file to merge_dir failed."
-    isula exec $isula_id cat /opt/testfile
+    isula exec "$isula_id" cat /opt/testfile
     CHECK_RESULT $? 0 0 "Check file in docker failed."
-    isula stop $isula_id
-    ls -l $merge_dir/home 2>&1 | grep "No such file or directory"
-    CHECK_RESULT $? 0 0 "MergedDir exists unexpectly when isula doesn't run."
+    isula stop "$isula_id"
+    ls -l "$merge_dir/home" 2>&1
+    CHECK_RESULT $? 2 0 "MergedDir exists unexpectly when isula doesn't run."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    isula stop -f $isula_id
-    isula rm $(isula ps -a -q)
-    isula rmi $(isula images -q)
-    DNF_REMOVE
-    rm -f $image_name
-    export LANG=$cur_lang
+    containers_ids=$(isula ps -a -q)
+    for container_id in ${containers_ids}; do
+        isula stop -f "${container_id}"
+        isula rm "${container_id}"
+    done
+    images_ids=$(isula images -q)
+    for image_id in ${images_ids}; do
+        isula rmi "${image_id}"
+    done
+    DNF_REMOVE "$@"
+    rm -f "$image_name"
+    export LANG="$cur_lang"
     LOG_INFO "End to restore the test environment."
 }
 

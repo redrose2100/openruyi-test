@@ -1,5 +1,6 @@
 # test_machinetab()删除，由于编译环境和嵌入式镜像不一致
 all:
+	dnf install -y go
 	sh ../common.sh -d "audit" "${DOWNLOAD_BRANCH}"
 	cd ./tmp_extract/audit* && \
 	sed -i '/test_machinetab();/d' ./lib/test/lookup_test.c && \

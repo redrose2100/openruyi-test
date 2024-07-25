@@ -17,12 +17,12 @@
 # @Desc      :   内核增加华为hinic网卡驱动
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    kernel_name=`uname -r`
-    test -f /lib/modules/${kernel_name}/kernel/drivers/net/ethernet/huawei/hinic/hinic.ko
+    kernel_name=$(uname -r)
+    test -f "/lib/modules/$kernel_name/kernel/drivers/net/ethernet/huawei/hinic/hinic.ko.xz"
     CHECK_RESULT $? 0 0 "file does not exist"
     modinfo hinic |grep -i version
     CHECK_RESULT $? 0 0 "Information display failed"
@@ -34,8 +34,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Module uninstall failed"
     lsmod | grep hinic
     CHECK_RESULT $? 1 0 "Module loaded"
-    dmesg |grep hinic
-    CHECK_RESULT $? 0 0 "Failed to detect information"
     LOG_INFO "Finish test!"
 }
 

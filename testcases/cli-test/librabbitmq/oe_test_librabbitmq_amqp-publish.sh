@@ -17,17 +17,33 @@
 # @Desc      :   verify the uasge of librabbitmq command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "librabbitmq rabbitmq-server"
-    openssl genrsa -out privkey.pem 2048
-    openssl rsa -pubout -in privkey.pem -out pubkey.pem
-    openssl rsa -pubout -in privkey.pem -out cert.pem
+    if grep -q "$(hostname -f)" /etc/hosts ; then
+            :
+    else
+            echo "127.0.0.1   $(hostname -f)" >> /etc/hosts
+    fi
+    cp  rabbitmq.conf /etc/rabbitmq/
+    unzip main.zip >> /dev/null
+    cd tls-gen-main/two_shared_intermediates || exit
+    make 
+    SLEEP_WAIT 50
+    cd result || exit
+    mkdir /etc/rabbitmq/ssl
+    SSL_PATH=/etc/rabbitmq/ssl
+    cp chained_ca_certificate.pem "${SSL_PATH}"/
+    cp server_certificate.pem     "${SSL_PATH}"/
+    cp server_key.pem             "${SSL_PATH}"/
+    chmod 655 -R "${SSL_PATH}"/
     nohup systemctl start rabbitmq-server &
     SLEEP_WAIT 30
     rabbitmq-plugins enable rabbitmq_management
+    rabbitmq-plugins enable rabbitmq_auth_mechanism_ssl
+    SLEEP_WAIT 30
     rabbitmqctl add_user admin admin
     rabbitmqctl set_user_tags admin administrator
     rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
@@ -38,7 +54,7 @@ function pre_test() {
     ./rabbitmqadmin declare queue name=test-queue durable=true
     ./rabbitmqadmin declare binding source=test-ex destination=test-queue routing_key=test-routing
     nohup amqp-consume -dx -c 5 -p 10 -s 127.0.0.1 --port=5672 -e test-ex -r test-routing --vhost=/ --username=admin --password=admin --heartbeat=1 cat >./info1.out 2>&1 &
-    nohup amqp-consume -A -q test-queue -c 5 -p 10 -u amqp://127.0.0.1:5672 --ssl --cacert=cacert.pem --key=privkey.pem --cert=cert.pem cat >./info.out 2>&1 &
+    nohup amqp-consume -A -q test-queue -c 5 -p 10 -u amqps://"$(hostname -f)":5671 --ssl --cacert=chained_ca_certificate.pem --key=client_key.pem --cert=client_certificate.pem cat >./info.out 2>&1 &
     SLEEP_WAIT 3
     LOG_INFO "End to prepare the test environment."
 }
@@ -53,7 +69,7 @@ function run_test() {
     SLEEP_WAIT 5
     grep "test_body" ./info.out
     CHECK_RESULT $? 0 0 "Check amqp-consume -r -b -C -t -p -E -H -s --port --vhost --username --password --heartbeat failed"
-    amqp-publish -r test-queue -b "test_body1" -C String -t "OK" -p -E utf-8 -H "key:value" -u amqp://127.0.0.1:5672 --ssl --cacert=cacert.pem --key=privkey.pem --cert=cert.pem
+    amqp-publish -r test-queue -b "test_body1" -C String -t "OK" -p -E utf-8 -H "key:value" -u amqps://"$(hostname -f)":5671 --ssl --cacert=chained_ca_certificate.pem --key=client_key.pem --cert=client_certificate.pem
     SLEEP_WAIT 5
     grep "test_body1" ./info.out
     CHECK_RESULT $? 0 0 "Check amqp-consume -r -b C -t -E -P -E -H -u --ssl --cacert --cert failed"
@@ -70,11 +86,13 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rabbitmqctl delete_user admin
     rabbitmq-plugins disable rabbitmq_management
-    kill -9 $(ps -ef | grep amqp-consume | grep -Ev 'grep|bash' | awk '{print $2}')
-    rm -rf privkey.pem pubkey.pem cert.pem *.out info* rabbitmqadmin
+    kill -9 "$(pgrep -a "amqp-consume" | grep -Ev 'grep|bash' | awk '{print $1}')"
+    rabbitmq-plugins disable rabbitmq_auth_mechanism_ssl
+    cd ../../../ || exit
+    rm -rf tls-gen-main /etc/rabbitmq
     systemctl stop rabbitmq-server
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

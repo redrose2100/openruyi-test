@@ -40,6 +40,13 @@ function run_test() {
   skip=0
   cat all_test.txt >exec_test.txt
 
+  if [ ! -e /usr/lib64/locale/ ]; then
+    del_list=(backbigs1 backsmalls1 commas mbfw1 mbprintf1 mbprintf4 mbprintf5 mbstr1 mbstr2)
+    for one in "${del_list[@]}"; do
+      sed -i "/${one}/d" exec_test.txt
+    done
+  fi
+
   list=(mbstr1 mpfrcase2 mpfrcase mpfrfield mpfrieee mpfrmemok1 mpfrnegzero2 mpfrnegzero mpfrnonum mpfrrem mpfrsort mpfrstrtonum mpgforcenum)
   for item in "${list[@]}"; do sed -i 's/2>&1//g' "$item".test; done
   sed -i '/gawk:/d' mbstr1.ok mbstr2.ok

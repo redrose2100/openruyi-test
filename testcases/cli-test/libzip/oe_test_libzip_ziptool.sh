@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $?
     unzip testdir5.zip -d tmp2 | grep test5
     CHECK_RESULT $? 1
-    ziptool testdir5.zip get_archive_comment | grep "Archive comment:"
+    ziptool testdir5.zip get_archive_comment | grep -i "Archive comment"
     CHECK_RESULT $?
     ziptool testdir5.zip set_archive_comment testabc
     CHECK_RESULT $?
@@ -74,7 +74,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testdir* test*.zip tmp*
     LOG_INFO "Finish restoring the test environment."
 }

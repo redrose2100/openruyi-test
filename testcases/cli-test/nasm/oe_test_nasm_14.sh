@@ -45,11 +45,16 @@ function run_test() {
     nasm -f elf64 test.asm -o your_file.o
     test -f your_file.o
     CHECK_RESULT $? 0 0 "Check nasm -f elf64 failed"
-    ld your_file.o -o your_program
-    test -f your_program
-    CHECK_RESULT $? 0 0 "Failed to compile assembly code into an executable file"
-    ./your_program | grep "Hello, world!"
-    CHECK_RESULT $? 0 0 "your_program cannot be executed"
+    diff your_file.o my_file.o
+    CHECK_RESULT $? 0 0 "your_file.o does not match the expected output"
+
+    if [[ $(uname -m) == "x86_64" ]]; then
+        ld your_file.o -o your_program
+        test -f your_program
+        CHECK_RESULT $? 0 0 "Failed to compile assembly code into an executable file"
+        ./your_program | grep "Hello, world!"
+        CHECK_RESULT $? 0 0 "your_program cannot be executed"
+    fi
 
     LOG_INFO "End to run test."
 }

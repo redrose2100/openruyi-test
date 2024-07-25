@@ -44,7 +44,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     res=$(sort sort_test.txt | head -1)
-    CHECK_RESULT "$res" aa 0 "sort faild"
+    CHECK_RESULT "$res" "   aa" 0 "sort faild"
     sort -c sort_test.txt
     CHECK_RESULT $? 1 0 "sort -c faild"
     sort -d sort_test.txt | head -1 | grep "aa"

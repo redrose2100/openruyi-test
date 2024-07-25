@@ -14,7 +14,7 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format">
 <xsl:import href="http://docbook.sourceforge.net/release/xsl/current/fo/docbook.xsl"/>
-<xsl:import href="/etc/asciidoc/docbook-xsl/common.xsl"/>
+<xsl:import href="/usr/share/sgml/docbook/xsl-stylesheets-1.79.2/common/common.xsl"/>
 
 <xsl:param name="fop1.extensions" select="1" />
 <xsl:param name="variablelist.as.blocks" select="1" />

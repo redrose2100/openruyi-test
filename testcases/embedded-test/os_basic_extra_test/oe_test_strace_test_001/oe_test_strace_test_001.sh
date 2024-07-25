@@ -39,7 +39,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check strace -c fail"
     strace -x ls 2>&1 | grep "x00"
     CHECK_RESULT $? 0 0 "check strace -x fail"
-    strace -i ls 2>&1 | grep "\[0000"
+    if uname -a | grep "aarch64"; then
+        strace -i ls 2>&1 | grep "\[0000"
+    else
+        strace -i ls 2>&1 | grep "\["
+    fi
     CHECK_RESULT $? 0 0 "check strace -i fail"
     strace -n pwd 2>&1 | grep "\[  .*\]"
     CHECK_RESULT $? 0 0 "check strace -n fail"

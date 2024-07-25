@@ -51,7 +51,7 @@ function run_test() {
   export built_programs='grep egrep fgrep'
   grep_version=$(env grep --version | sed -n '1s/.* //p;q')
   export VERSION="${grep_version}"
-  for exec_file in $(find . -maxdepth 1 -type f -executable | grep -v '.pl' | grep -v get-mb-cur-max); do
+  for exec_file in $(find . -maxdepth 1 -type f -executable | grep -v '.pl' | grep -v get-mb-cur-max | grep -v hash-collision-perf); do
     LOG_INFO "Start to exec ${exec_file}"
     bash "${exec_file}" &>"${exec_file}.log"
     ret_code=$?

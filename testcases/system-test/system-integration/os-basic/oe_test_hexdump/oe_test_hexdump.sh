@@ -48,6 +48,9 @@ function run_test() {
     hexdump -d hello.c > a.log 2>&1
     grep 0000000 a.log
     CHECK_RESULT $? 0 0 "File view failed"
+    hexdump -b hello.c > a.log 2>&1
+    grep 043 a.log
+    CHECK_RESULT $? 0 0 "File view failed"
     LOG_INFO "End to run test."
 }
 

@@ -17,13 +17,13 @@
 # @Desc      :   verify the uasge of patchutils command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL patchutils
     mkdir patchutils
-    cd patchutils
+    cd patchutils || exit
     cp ../common/* ./
     diff -Naur 1.txt 2.txt >test1.patch
     diff -Naur 2.txt 3.txt >test2.patch
@@ -36,9 +36,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check combinediff --help  failed"
     combinediff --version | grep "combinediff - patchutils version [[:digit:]]"
     CHECK_RESULT $? 0 0 "Check combinediff --version  failed"
-    combinediff -U 10 -i -w -b -B -q test1.patch test2.patch | grep "@@ -2 +2,3 @@"
+    combinediff -U 10 -i -w -b -B -q test1.patch test2.patch | grep "@@ -1 +1,2 @@"
     CHECK_RESULT $? 0 0 "Check combinediff -U 10 -i -w -b -B -q test1.patch test2.patch  failed"
-    combinediff --unified=10 --ignore-case --ignore-all-space --ignore-space-change --ignore-blank-lines --quiet test1.patch test2.patch | grep "@@ -2 +2,3 @@"
+    combinediff --unified=10 --ignore-case --ignore-all-space --ignore-space-change --ignore-blank-lines --quiet test1.patch test2.patch | grep "@@ -1 +1,2 @@"
     CHECK_RESULT $? 0 0 "Check combinediff --unified=10 --ignore-case --ignore-all-space --ignore-space-change --ignore-blank-lines --quiet test1.patch test2.patch  failed"
     combinediff -p 1 test1.patch test2.patch | grep "@@ -1,2 +1,4 @@"
     CHECK_RESULT $? 0 0 "Check combinediff -p 1 test1.patch test2.patch  failed"
@@ -57,7 +57,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     cd ..
     rm -rf patchutils
     LOG_INFO "Finish restore the test environment."

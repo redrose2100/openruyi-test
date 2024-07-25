@@ -36,7 +36,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     zipcmp -h | grep -i "usage"
     CHECK_RESULT $?
-    test "$(zipcmp -V | grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa libzip | awk -F "-" '{print$2}')"
+    test "$(zipcmp -V | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+")" == "$(rpm -qa libzip | awk -F "-" '{print$2}')"
     CHECK_RESULT $?
     zipcmp -i testdir1.zip testdir2.zip | grep -e "testdir1/testA" -e "testdir2/testa"
     CHECK_RESULT $?
@@ -63,7 +63,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testdir* test*.zip
     LOG_INFO "Finish restoring the test environment."
 }

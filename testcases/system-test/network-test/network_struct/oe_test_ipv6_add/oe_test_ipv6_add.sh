@@ -28,16 +28,21 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    lsmod | grep "ipv6"
-    CHECK_RESULT $? 0 0 "The kernel dosen't have ipv6 mode."
+    target_mod="ipv6"
+    if ! lsmod | grep "$target_mod"; then
+        modinfo -n $target_mod | grep "builtin"
+        CHECK_RESULT $? 0 0 "The kernel dosen't have $target_mod mode."
+    fi
     ifconfig "${test_nic}" inet6 add ${ipv}/64
     CHECK_RESULT $? 0 0 "Add ipv6 failed."
     ifconfig -a "${test_nic}" | grep ${ipv}
     CHECK_RESULT $? 0 0 "Check ipv6 added failed."
     ip link set "${test_nic}" up
-    route=$(ip -6 route show | tail -n 1 | awk '{print $1}' | cut -d '/' -f 1)
-    route -A inet6 add default gw "${route}"1 dev "${test_nic}"
-    CHECK_RESULT $? 0 0 "Add route failed."
+    if ip -6 route show | grep "${test_nic}" | grep default; then
+        route=$(ip -6 route show | grep "${test_nic}" | head -n 1 | awk '{print $1}' | cut -d '/' -f 1)
+        route -A inet6 add default gw "${route}"1 dev "${test_nic}"
+        CHECK_RESULT $? 0 0 "Add route failed."
+    fi
     ping6 ${ipv} -c 4
     CHECK_RESULT $? 0 0 "ping ipv6 failed."
     ip link set "${test_nic}" down

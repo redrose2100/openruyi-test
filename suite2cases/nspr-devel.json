@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/nspr-devel",
-    "cases": [
-        {
-            "name": "oe_test_nspr-devel"
-        }
-    ]
-}
