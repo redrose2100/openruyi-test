@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/system-test/compiler-test/yarpgen",
-    "cases": [
-        {
-            "name": "oe_test_yarpgen"
-        }
-    ]
-}
