@@ -17,7 +17,7 @@
 # @Desc      :   Test fancontrol.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -35,7 +35,7 @@ function pre_test() {
 EOF
     if grep "no sensors were detected" /tmp/sensors_log; then
         LOG_ERROR "The environment does not support testing"
-        exit 1
+        exit 255
     fi
     LOG_INFO "End of environmental preparation!"
 }
@@ -50,7 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop fancontrol.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
