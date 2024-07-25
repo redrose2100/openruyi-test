@@ -17,6 +17,7 @@
 # @Desc      :   Compiler dejagnu
 # ############################################
 # shellcheck disable=SC2034,SC2154,SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params(){
     L0G_INFO "Start to config params of the case."
