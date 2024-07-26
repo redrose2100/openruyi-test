@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -30,7 +30,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "gcc gcc-* make cmake m4 clang git"
     git clone https://gitee.com/redrsoe2100/csmith.git
-    sleep 3
+    SLEEP_WAIT  3
     mkdir -p /usr/local/csmith
     cd csmith || exit 255
     cmake -DCMAKE_INSTALL_PREFIX=/usr/local/csmith .
