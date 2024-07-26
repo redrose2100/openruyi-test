@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -41,8 +41,8 @@ function pre_test() {
     failed=0
     passed=0
     total=0
-    mkdir anghaLeaves_failure_log
-	  mkdir anghaMath_failure_log
+    mkdir angha_leaves_failure_log
+	  mkdir angha_math_failure_log
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -59,7 +59,7 @@ function run_test() {
 
     for src in "${anghaleaves_array[@]}"
     do
-        failed_log=./anghaLeaves_failure_log/$(basename "$src").log
+        failed_log=./angha_leaves_failure_log/$(basename "$src").log
         gcc "$src" -o "$src".out &> "$failed_log"
         if [ ! -e "$src".out ]; then
             echo "${RED}Compilation Error${NONE} $src"
@@ -68,8 +68,7 @@ function run_test() {
             "$src".out &>> "$failed_log"
             if "$src".out 0 &>> ."$failed_log"; then
                 echo "${GREEN}Passed${NONE} $src"
-                rm -rf "$src".out
-                rm -rf "$failed_log"
+                rm -rf "$src".out "$failed_log"
                 ((passed += 1))
             else
                 echo "${RED}Test Run Failed${NONE} $src"
@@ -80,7 +79,7 @@ function run_test() {
     done
     for src in "${anghamath_array[@]}"
     do
-        failed_log=./anghaMath_failure_log/$(basename "$src").log
+        failed_log=./angha_math_failure_log/$(basename "$src").log
         gcc "$src" -o "$src".out &> "$failed_log"
         if [ ! -e "$src".out ]; then
             echo "${RED}Compilation Error${NONE} $src"
@@ -89,8 +88,7 @@ function run_test() {
             "$src".out &>> "$failed_log"
             if "$src".out 0 &>> "$failed_log"; then
                 echo "${GREEN}Passed${NONE} $src"
-                rm -rf "$src".out
-                rm -rf "$failed_log"
+                rm -rf "$src".out "$failed_log"
                 ((passed += 1))
             else
                 echo "${RED}Test Run Failed${NONE} $src"
@@ -106,9 +104,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf jotai-benchmarks
-    rm -rf anghaLeaves_failure_log
-    rm -rf anghaMath_failure_log
+    rm -rf jotai-benchmarks angha_leaves_failure_log angha_math_failure_log
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
