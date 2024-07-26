@@ -55,7 +55,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     mv -f /etc/httpd/conf/httpd.conf-bak /etc/httpd/conf/httpd.conf
     systemctl stop httpd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     if [ "$default_selinux_status" == "Enforcing" ]; then
         setenforce 1
     else

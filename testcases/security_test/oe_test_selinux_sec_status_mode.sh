@@ -51,7 +51,7 @@ function post_test() {
     else
         setenforce 0
     fi
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

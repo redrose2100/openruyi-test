@@ -25,7 +25,7 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     ausearch -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR > selinux_log
     CHECK_RESULT $?
-    test $(grep -c AVC selinux_log) -gt 0
+    test "$(grep -c AVC selinux_log)" -gt 0
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
