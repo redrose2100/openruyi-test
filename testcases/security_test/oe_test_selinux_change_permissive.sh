@@ -15,43 +15,33 @@
 # @modify    :   wangxiaoya@qq.com
 # @Date      :   2022/05/12
 # @License   :   Mulan PSL v2
-# @Desc      :   selinux status and mode
+# @Desc      :   Permanently change to licensing model
 # #############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    default_selinux_status=$(getenforce)
-    setenforce 1
-    DNF_INSTALL "setroubleshoot-server"
+    SSH_CMD "cp /etc/selinux/config /etc/selinux/config-bak" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    getenforce | grep "Enforcing"
-    CHECK_RESULT $?
-    setenforce 0
-    getenforce | grep "Permissive"
-    CHECK_RESULT $?
-    setenforce 1
-    getenforce | grep "Enforcing"
-    CHECK_RESULT $?
-    semanage permissive -a httpd_t
-    CHECK_RESULT $?
-    semanage permissive -d httpd_t
+    SSH_CMD "echo 'SELINUX=permissive
+SELINUXTYPE=targeted'>/etc/selinux/config" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SLEEP_WAIT 1
+    SSH_CMD "reboot &" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    REMOTE_REBOOT_WAIT 2 15
+    SSH_CMD "getenforce | grep Permissive" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    if [ "$default_selinux_status" == "Enforcing" ]; then
-        setenforce 1
-    else
-        setenforce 0
-    fi
-    DNF_REMOVE
+    SSH_CMD "mv -f /etc/selinux/config-bak /etc/selinux/config" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "reboot &" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    REMOTE_REBOOT_WAIT 2 15
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
