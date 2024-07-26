@@ -16,12 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Compiler yarpen
 # ############################################
+# shellcheck disable=SC2034
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function config_params(){
     L0G_INFO "Start to config params of the case."
-    # shellcheck disable=SC2034
     EXECUTE_T="2880m"
     LOG_INFO "End to config params of the case."
 }
@@ -43,8 +43,6 @@ function pre_test() {
     fi
     mkdir yarpgen_failure_log
     mkdir testdir && cd testdir || exit 255
-
-
     LOG_INFO "End to prepare the test environment!"
 }
 
@@ -79,7 +77,6 @@ function run_test() {
                 fi
             fi
         done
-
         if [ ${#result_array[@]} == 2 ]; then
             if [ "${result_array[0]}" == "${result_array[1]}" ]; then
                 echo "${GREEN}Passed${NONE} $dirname"
@@ -107,8 +104,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    cd ..
-    cd ..
+    cd ../..
     rm -rf yarpgen
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
