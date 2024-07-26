@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -29,7 +29,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "dejagnu git gcc gcc-g++ gcc-gfortran"
     git clone https://gitee.com/openeuler/gcc.git
-    sleep 3
+    SLEEP_WAIT 3
     LOG_INFO "End to prepare the test environment."
 }
 
