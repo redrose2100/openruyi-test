@@ -2,6 +2,9 @@
     "path": "$OET_PATH/testcases/cli-test/java-1.8.0-openjdk",
     "cases": [
         {
+            "name": "oe_test_logstash_install"
+        },
+        {
             "name": "oe_test_openjdk_appletviewer_clhsdb"
         },
         {
