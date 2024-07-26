@@ -1,6 +1,7 @@
 {
     "export": {
-        "FIND_TINY_DIR":"/home/openeuler/tmp_image/tiny"
+        "FIND_TINY_DIR":"/home/openeuler/tmp_image/tiny",
+        "OS_RELEASE_NAME":"openeuler"
     },
     "env": [
         {

@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_initial-setup-reconfiguration"
+        },
+        {
+            "name": "oe_test_service_initial-setup"
         }
     ]
 }

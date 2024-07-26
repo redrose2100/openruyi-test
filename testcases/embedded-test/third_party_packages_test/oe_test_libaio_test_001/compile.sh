@@ -11,7 +11,7 @@ src_path="$(
   pwd
 )"
 
-DNF_INSTALL "make"
+dnf install -y  make
 
 pushd "${src_path}" || exit 1
 make

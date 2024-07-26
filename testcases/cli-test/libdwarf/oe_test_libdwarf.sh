@@ -37,6 +37,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Debug information viewing failed"
     dwarfdump -r ls |grep -i debug_aranges
     CHECK_RESULT $? 0 0 "debug_aranges information viewing failed"
+    dwarfdump -i ls |grep -i debug_info    
+    CHECK_RESULT $? 0 0 "debug_info information viewing failed"
+    dwarfdump -I ls |grep -i gnu_debuglink
+    CHECK_RESULT $? 0 0 "gnu_debuglink information viewing failed"
+    dwarfdump -N ls |grep -i debug_ranges    
+    CHECK_RESULT $? 0 0 "debug_ranges information viewing failed"
 }
 
 function post_test() {

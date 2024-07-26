@@ -25,8 +25,13 @@ function pre_test() {
     ipmitool lan print
     ret=$?
     if [ $ret -ne 0 ] ;then
+<<<<<<< HEAD
         LOG_WARN "System has not bmc device. "
         return 0
+=======
+        LOG_WARN "System has not bmc device.The environment does not support testing"
+        exit 255
+>>>>>>> refs/remotes/origin/hwloc
     fi
     LOG_INFO "End of environmental preparation!"
 }

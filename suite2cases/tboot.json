@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/tboot",
+    "cases": [
+        {
+            "name": "oe_test_tboot_lcp2_crtpolelt"
+        },
+        {
+            "name": "oe_test_tboot_tb_polgen"
+        },
+        {
+            "name": "oe_test_tboot_txt-stat"
+        }
+    ]
+}

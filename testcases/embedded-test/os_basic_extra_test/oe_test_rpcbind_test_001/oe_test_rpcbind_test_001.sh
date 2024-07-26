@@ -19,6 +19,15 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
+    need_stop=false
+    if [ ! -e /etc/init.d/rpcbind ]; then
+        LOG_WARN "No rpcbind in system, not run this test"
+        exit 0
+    fi
+    if [[ $(/etc/init.d/rpcbind status) =~ "stopped" ]]; then
+        /etc/init.d/rpcbind start
+        need_stop=true
+    fi
     pgrep rpcbind
     CHECK_RESULT $? 0 0 "Failed to check rpcbind"
     netstat -tulnp | grep rpcbind | grep tcp | grep 111
@@ -27,6 +36,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to execute rpcbind"
     pgrep rpcbind
     CHECK_RESULT $? 0 0 "Failed to display rpcbind"
+    if ${need_stop}; then
+        /etc/init.d/rpcbind stop
+    fi
     LOG_INFO "End to run test."
 }
 

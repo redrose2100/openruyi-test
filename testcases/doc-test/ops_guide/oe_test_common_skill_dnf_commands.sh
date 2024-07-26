@@ -40,6 +40,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to set the OS repository to be available"
     expect <<-EOF
     spawn dnf install tree
+    set timeout 300
     expect "Is this ok"
     send "y\\n"
     expect eof
@@ -68,7 +69,7 @@ EOF
     dnf remove tree -y
     dnf install tree --installroot /tmp -y | grep "Installed"
     CHECK_RESULT $? 0 0 "Failed to set the root directory for installing the RPM pkg"
-    dnf remove tree --installroot /tmp -y | grep "Removed"
+    dnf remove tree --installroot /tmp -y --exclude=setup | grep "Removed"
     CHECK_RESULT $? 0 0 "Failed to set the root directory for uninstalling the RPM pkg"
     dnf install tree --setopt=reposdir=/etc/yum.repos.d/ -y | grep "Installed"
     CHECK_RESULT $? 0 0 "Failed to specify the specific repo repository to install the RPM pkg"

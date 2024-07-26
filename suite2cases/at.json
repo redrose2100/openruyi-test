@@ -6,7 +6,13 @@
         },
         {
             "name": "oe_test_at_atrm"
-        }   
+        },
+        {
+            "name": "oe_test_service_atd"
+        },
+        {
+            "name": "oe_test_atd_01"
+        }
     ]
 }
 

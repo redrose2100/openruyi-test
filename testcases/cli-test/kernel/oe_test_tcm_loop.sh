@@ -22,7 +22,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)
-    test -f /lib/modules/"${kernel_name}"/kernel/drivers/target/loopback/tcm_loop.ko*
+    test -f /lib/modules/"${kernel_name}"/kernel/drivers/target/loopback/tcm_loop.ko.xz
     CHECK_RESULT $? 0 0 "file does not exist"
     modinfo tcm_loop |grep -i name
     CHECK_RESULT $? 0 0 "Information display failed"

@@ -17,13 +17,14 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    DNF_INSTALL "dim_tools dim"
+    DNF_INSTALL "dim_tools dim vdo"
     modprobe dim_monitor
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
+    xz -d /usr/lib/modules/"$(uname -r)"/kernel/drivers/block/kvdo.ko.xz
     gcc ../common/proc/dim_proc.c -o dim_proc 
     gcc ../common/proc/dim_proc_new.c -o dim_proc_new
     make -C /lib/modules/"$(uname -r)"/build M="$(pwd)"/../common/module modules
@@ -72,9 +73,10 @@ function run_test() {
 }
 
 function post_test() {
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     pkill -9 dim_proc
     rmmod kvdo dim_monitor dim_core
+    rm /usr/lib/modules/"$(uname -r)"/kernel/drivers/block/kvdo.ko
     rm -rf /etc/dim/
     make -C /lib/modules/"$(uname -r)"/build M="$(pwd)"/../common/module clean
     rm -rf dim_proc*

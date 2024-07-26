@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/bash",
+    "cases": [
+        {
+            "name": "oe_test_jobs"
+        },
+        {
+            "name": "oe_test_readarray"
+        }
+    ]
+}

@@ -29,7 +29,7 @@ function pre_test()
     echo "[po_directory] tmp/po/
 [type: text] tmp/master.txt esp:tmp/po/translation.esp" > tmp/po4a.cfg
     touch tmp/po/project.pot
-    po4a-gettextize -f text -m tmp/master.txt -p tmp/po/esp.po
+    po4a-updatepo -f text -m tmp/master.txt -p tmp/po/esp.po
     sed -i 's/msgstr ""/msgstr "Hola, Mundo"/g' tmp/po/esp.po
     sed -i 's/Language:/Language: esp/g' tmp/po/esp.po
     sed -i 's/charset=CHARSET/charset=UTF-8/g' tmp/po/esp.po

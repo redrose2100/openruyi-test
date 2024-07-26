@@ -10,6 +10,6 @@ obj-m := $(target).o
 build := kernel_modules
 
 kernel_modules:
-	$(MAKE) -C $(KERNELDIR) M=$(CURRENT_PATH) modules
+	$(MAKE) -C $(KERNELDIR) M=$(CURRENT_PATH) CC="$(CC)" LD="$(LD)" modules
 clean:
-	$(MAKE) -C $(KERNELDIR) M=$(CURRENT_PATH) clean
+	$(MAKE) -C $(KERNELDIR) M=$(CURRENT_PATH) CC="$(CC)" LD="$(LD)" clean

@@ -31,14 +31,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check ifconfig failed!"
     ifconfig -a
     CHECK_RESULT $? 0 0 "check ifconfig -a failed!"
-    ifconfig tunl0 down
-    CHECK_RESULT $? 0 0 "check ifconfig tunl0 down failed!"
-    ifconfig | grep "^tunl0"
-    CHECK_RESULT $? 1 0 "check ifconfig failed!"
-    ifconfig tunl0 up
-    CHECK_RESULT $? 0 0 "check ifconfig tunl0 up failed!"
-    ifconfig | grep "^tunl0"
-    CHECK_RESULT $? 0 0 "check ifconfig failed!"
+    if [[ $(ifconfig -a) =~ "tunl0" ]]; then
+        ifconfig tunl0 down
+        CHECK_RESULT $? 0 0 "check ifconfig tunl0 down failed!"
+        ifconfig | grep "^tunl0"
+        CHECK_RESULT $? 1 0 "check ifconfig failed!"
+        ifconfig tunl0 up
+        CHECK_RESULT $? 0 0 "check ifconfig tunl0 up failed!"
+        ifconfig | grep "^tunl0"
+        CHECK_RESULT $? 0 0 "check ifconfig failed!"
+    fi
 
     iptunnel
     CHECK_RESULT $? 0 0 "check iptunnel failed!"
