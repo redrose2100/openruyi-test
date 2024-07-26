@@ -38,7 +38,7 @@ function run_test() {
     systemctl restart httpd
     systemctl status httpd 2>&1 | grep "Failed to start The Apache HTTP Server"
     CHECK_RESULT $? 0 0 "Check httpd status failed"
-    semanage port -a -t http_port_t -p tcp $rdport
+    semanage port -a -t http_port_t -p tcp "$rdport"
     semanage fcontext -a -e /var/www /var/test_www
     restorecon -Rv /var/
     chmod 777 -R /var/test_www
