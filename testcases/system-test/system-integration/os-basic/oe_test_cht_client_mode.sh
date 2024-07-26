@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     mkdir /tmp/test
-    cd /tmp/test
+    cd /tmp/test || exit 255
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -33,16 +33,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Download failed"
     chmod +x /tmp/test/cht.sh
     /tmp/test/cht.sh pwd > pwd.txt
-    grep 'Show the absolute path of your current working directory' pwd.txt
+    grep "Show the absolute path of your current working directory" pwd.txt
     CHECK_RESULT $? 0 0 "Query pwd failed"
     /tmp/test/cht.sh python string contain > string.txt
-    grep 'https://docs.python.org/reference/expressions'  string.txt
+    grep "https://docs.python.org/reference/expressions"  string.txt
     CHECK_RESULT $? 0 0 "Query string failed"
     /tmp/test/cht.sh python reverse list > reverse.txt
-    grep 'https://www.python.org/dev/peps/pep-0322' reverse.txt
+    grep "https://www.python.org/dev/peps/pep-0322" reverse.txt
     CHECK_RESULT $? 0 0 "Query reverse failed"
     time curl cht.sh > time.txt
-    grep 'real' time.txt
+    grep "real" time.txt
     CHECK_RESULT $? 0 0 "Query time failed"
     LOG_INFO "End of the test."
 }
