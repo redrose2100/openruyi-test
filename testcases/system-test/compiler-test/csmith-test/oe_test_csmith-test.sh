@@ -68,9 +68,7 @@ function run_test() {
            ((failed += 1))
 	      fi
         ((total += 1))
-        rm -rf "$cfile"
-        rm -rf random_gcc
-        rm -rf random_clang
+        rm -rf "$cfile" random_gcc random_clang
     done
     CHECK_RESULT "$total" "$passed" 0 "Failed to run the test csmith_run.sh"
     ls "$failed_logs_dir"
@@ -79,9 +77,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf csmith
-    rm -rf /usr/local/csmith
-    rm -rf /tmp/oe_test_csmith/failed_cases/
+    rm -rf csmith /usr/local/csmith /tmp/oe_test_csmith/failed_cases/
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
