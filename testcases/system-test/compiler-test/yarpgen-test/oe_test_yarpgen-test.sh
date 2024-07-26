@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Compiler yarpen
 # ############################################
-# shellcheck disable=SC2034
+# shellcheck disable=SC2034 disable=SC2028
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
 
@@ -68,7 +68,6 @@ function run_test() {
                 ./gcc_"$optlevel"_out >> log.txt
                 if ./gcc_"$optlevel"_out &>> log.txt; then
                     mapfile -t result_array < <(./gcc_"$optlevel"_out)
-                    # shellcheck disable=SC2028
                     echo "./gcc_${optlevel}_out : \n" >> log.txt
                     ./gcc_"$optlevel"_out >> log.txt
                 else
