@@ -14,7 +14,7 @@
 # @Contact   :   sunqingwei@uniontech.com
 # @Date      :   2023/04/14
 # @License   :   Mulan PSL v2
-# @Desc      :   test cheat.sh Ordinary mode
+# @Desc      :   test cheat.sh client mode
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
@@ -22,27 +22,28 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     mkdir /tmp/test
-    cd /tmp/test
+    cd /tmp/test || exit 255
     LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    curl cht.sh/pwd > pwd.txt
-    grep 'Show the absolute path of your current working directory' pwd.txt
+    curl https://cht.sh/:cht.sh > /tmp/test/cht.sh
+    test -e cht.sh
+    CHECK_RESULT $? 0 0 "Download failed"
+    chmod +x /tmp/test/cht.sh
+    /tmp/test/cht.sh pwd > pwd.txt
+    grep "Show the absolute path of your current working directory" pwd.txt
     CHECK_RESULT $? 0 0 "Query pwd failed"
-    curl cht.sh/~pwd > pwd2.txt
-    grep 'tldr:pwdx' pwd2.txt
-    CHECK_RESULT $? 0 0 "Query ~pwd failed"
-    curl cht.sh/python/random+list+elements > API.txt
-    grep 'https://docs.python.org/library/random.htmlrandom.choice' API.txt
-    CHECK_RESULT $? 0 0 "Query API failed"
-    curl cht.sh/python/random+list+elements\?Q >API-Q.txt
-    grep 'https://docs.python.org/library/random.htmlrandom.choice' API-Q.txt
-    CHECK_RESULT $? 0 1 "Query \?Q failed"
-    curl curl cht.sh/sql+select >sql.txt
-    grep 'The `CASE` statement is the closest to IF in SQL' sql.txt
-    CHECK_RESULT $? 0 0 "Query sql failed"
+    /tmp/test/cht.sh python string contain > string.txt
+    grep "https://docs.python.org/reference/expressions"  string.txt
+    CHECK_RESULT $? 0 0 "Query string failed"
+    /tmp/test/cht.sh python reverse list > reverse.txt
+    grep "https://www.python.org/dev/peps/pep-0322" reverse.txt
+    CHECK_RESULT $? 0 0 "Query reverse failed"
+    time curl cht.sh > time.txt
+    grep "real" time.txt
+    CHECK_RESULT $? 0 0 "Query time failed"
     LOG_INFO "End of the test."
 }
 
