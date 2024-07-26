@@ -40,7 +40,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwloc-calc --nodeset-output failed"
     hwloc-calc --nodeset-input -I pu Machine:0 | grep "0"
     CHECK_RESULT $? 0 0 "hwloc-calc --nodeset-input failed"
-    hwloc-annotate --cu ./common/input.xml output.xml Core:all none && stat output.xml | grep "output.xml" 
+    hwloc-annotate --cu ./common/input.xml output.xml Core:all none && stat output.xml | grep "output.xml"
     CHECK_RESULT $? 0 0 "hwloc-annotate --cu failed"
     hwloc-annotate -h | grep "Usage: hwloc-annotate"
     CHECK_RESULT $? 0 0 "hwloc-annotate -h failed "
@@ -55,7 +55,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf output.xml
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

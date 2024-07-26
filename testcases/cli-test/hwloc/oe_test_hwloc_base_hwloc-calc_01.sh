@@ -16,7 +16,7 @@
 #@Desc          :   Test hwloc-calc_1
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -27,33 +27,33 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "Start testing..."
-    hwloc-calc -i "node:1 2" pu:0-1 | grep "0x00000003" 
+    hwloc-calc -i "node:1 2" pu:0-1 | grep "0x00000003"
     CHECK_RESULT $? 0 0 "hwloc-calc [default] failed"
-    hwloc-calc -i "node:1 2" -N pu Machine:0 | grep "2" 
+    hwloc-calc -i "node:1 2" -N pu Machine:0 | grep "2"
     CHECK_RESULT $? 0 0 "hwloc-calc -N failed"
-    hwloc-calc -i "node:1 2" -I pu Machine:0 | grep "0,1" 
+    hwloc-calc -i "node:1 2" -I pu Machine:0 | grep "0,1"
     CHECK_RESULT $? 0 0 "hwloc-calc -I failed"
-    hwloc-calc -i 'node:2 2' -H pu node:0-1 | grep "PU:0"  
+    hwloc-calc -i 'node:2 2' -H pu node:0-1 | grep "PU:0"
     CHECK_RESULT $? 0 0 "hwloc-calc -H failed"
     hwloc-calc -i "node:1 2" --largest 0x00000002 | grep "PU:1"
     CHECK_RESULT $? 0 0 "hwloc-calc --largest failed"
-    hwloc-calc -l pu:0 | grep "0x00000001" 
+    hwloc-calc -l pu:0 | grep "0x00000001"
     CHECK_RESULT $? 0 0 "hwloc-calc -l failed"
-    hwloc-calc -p pu:0 | grep "0x00000001" 
+    hwloc-calc -p pu:0 | grep "0x00000001"
     CHECK_RESULT $? 0 0 "hwloc-calc -p failed"
-    hwloc-calc --li pu:0 | grep "0x00000001" 
+    hwloc-calc --li pu:0 | grep "0x00000001"
     CHECK_RESULT $? 0 0 "hwloc-calc --li failed"
-    hwloc-calc -i "node:1 2" --lo -I pu Machine:0 | grep "0,1" 
+    hwloc-calc -i "node:1 2" --lo -I pu Machine:0 | grep "0,1"
     CHECK_RESULT $? 0 0 "hwloc-calc --lo failed"
-    hwloc-calc --pi pu:0 | grep "0x00000001" 
-    CHECK_RESULT $? 0 0 "hwloc-calc --pi failed" 
+    hwloc-calc --pi pu:0 | grep "0x00000001"
+    CHECK_RESULT $? 0 0 "hwloc-calc --pi failed"
     LOG_INFO "Finish test!"
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -22,17 +22,27 @@ source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "freeipmi ipmitool"
+<<<<<<< HEAD
+=======
     ipmitool lan print
     ret=$?
     if [ $ret -ne 0 ] ;then
         LOG_WARN "System has not bmc device.The environment does not support testing"
         exit 255
     fi
+>>>>>>> refs/remotes/origin/hwloc
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
+    ipmitool lan print
+    ret=$?
+    if [ $ret -ne 0 ] ;then
+        LOG_WARN "System has not bmc device. Exiting test."
+        LOG_INFO "End to run test."
+        return 0
+    fi
     test_execution ipmiseld.service
     test_reload ipmiseld.service
     LOG_INFO "Finish test!"

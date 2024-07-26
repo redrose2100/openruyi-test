@@ -16,7 +16,7 @@
 #@Desc          :   Test hwloc-distrib
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -45,7 +45,7 @@ function run_test() {
     lstopo tep.xml
     hwloc-distrib -i tep.xml 2 | grep "0x0000000"
     CHECK_RESULT $? 0 0 "hwloc-distrib -i <xml> failed"
-    hwloc-distrib -i / 2 | grep "0x0000000" 
+    hwloc-distrib -i / 2 | grep "0x0000000"
     CHECK_RESULT $? 0 0 "hwloc-distrib -i <directory> failed "
     LOG_INFO "Finish test!"
 }
@@ -54,7 +54,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf tep.xml
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
