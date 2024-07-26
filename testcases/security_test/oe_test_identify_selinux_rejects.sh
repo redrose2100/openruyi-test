@@ -29,8 +29,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     ausearch -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR -ts recent >log1 2>&1
-    grep 'no matches' log1
-    if [ $? -eq 0 ]; then
+
+    # shellcheck disable=SC2091
+    if  grep 'no matches' log1; then
         journalctl -t setroubleshoot > log2
         test -s log2
         CHECK_RESULT $?

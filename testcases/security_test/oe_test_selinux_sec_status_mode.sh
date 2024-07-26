@@ -15,24 +15,43 @@
 # @modify    :   wangxiaoya@qq.com
 # @Date      :   2022/05/12
 # @License   :   Mulan PSL v2
-# @Desc      :   View SELinux logs in audit
+# @Desc      :   selinux status and mode
 # #############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    default_selinux_status=$(getenforce)
+    setenforce 1
+    DNF_INSTALL "setroubleshoot-server"
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    ausearch -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR > selinux_log
+    getenforce | grep "Enforcing"
     CHECK_RESULT $?
-    test $(grep -c AVC selinux_log) -gt 0
+    setenforce 0
+    getenforce | grep "Permissive"
+    CHECK_RESULT $?
+    setenforce 1
+    getenforce | grep "Enforcing"
+    CHECK_RESULT $?
+    semanage permissive -a httpd_t
+    CHECK_RESULT $?
+    semanage permissive -d httpd_t
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf selinux_log
+    if [ "$default_selinux_status" == "Enforcing" ]; then
+        setenforce 1
+    else
+        setenforce 0
+    fi
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

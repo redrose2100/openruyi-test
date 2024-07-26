@@ -15,33 +15,24 @@
 # @modify    :   wangxiaoya@qq.com
 # @Date      :   2022/05/12
 # @License   :   Mulan PSL v2
-# @Desc      :   Permanently change to licensing model
+# @Desc      :   View SELinux logs in audit
 # #############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    SSH_CMD "cp /etc/selinux/config /etc/selinux/config-bak" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    LOG_INFO "End of environmental preparation!"
-}
+
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    SSH_CMD "echo 'SELINUX=permissive
-SELINUXTYPE=targeted'>/etc/selinux/config" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    SLEEP_WAIT 1
-    SSH_CMD "reboot &" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    REMOTE_REBOOT_WAIT 2 15
-    SSH_CMD "getenforce | grep Permissive" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    ausearch -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR > selinux_log
+    CHECK_RESULT $?
+    test "$(grep -c AVC selinux_log)" -gt 0
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    SSH_CMD "mv -f /etc/selinux/config-bak /etc/selinux/config" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    SSH_CMD "reboot &" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    REMOTE_REBOOT_WAIT 2 15
+    rm -rf selinux_log
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
