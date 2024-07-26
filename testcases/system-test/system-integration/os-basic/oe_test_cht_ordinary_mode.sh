@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     mkdir /tmp/test
-    cd /tmp/test
+    cd /tmp/test || exit 255
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -41,7 +41,7 @@ function run_test() {
     grep 'https://docs.python.org/library/random.htmlrandom.choice' API-Q.txt
     CHECK_RESULT $? 0 1 "Query \?Q failed"
     curl curl cht.sh/sql+select >sql.txt
-    grep 'The `CASE` statement is the closest to IF in SQL' sql.txt
+    grep "The `CASE` statement is the closest to IF in SQL" sql.txt
     CHECK_RESULT $? 0 0 "Query sql failed"
     LOG_INFO "End of the test."
 }
