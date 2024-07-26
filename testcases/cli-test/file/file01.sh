@@ -26,7 +26,7 @@ function pre_test() {
             arch="x86-64"
             endian="LSB"
             ;;
-        ppc64*) endian="MSB" ;;
+        ppc64*) endian="LSB" ;;
 	*) endian="LSB" ;;
     esac
     root_blk=$(mount | grep "/ " | cut -d " " -f 1)
@@ -44,7 +44,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "file cannot determin hello.txt file type."
     file -b hello.tar.gz | grep "gzip"
     CHECK_RESULT $? 0 0 "file cannot determin hello.tar.gz file type."
-    file -b "$(whereis ls | cut -d ' ' -f 2)" | grep -P "$endian.*$arch"
+    if [[ "$NODE1_FRAME"x == "ppc64le"x ]];then
+        file -b "$(whereis ls | cut -d ' ' -f 2)" | grep -P "$endian.*64-bit PowerPC"
+    else
+        file -b "$(whereis ls | cut -d ' ' -f 2)" | grep -P "$endian.*$arch"
+    fi
     CHECK_RESULT $? 0 0 "file cannot determin $(whereis ls | cut -d ' ' -f 2) file type."
     LOG_INFO "End to run test."
 }
