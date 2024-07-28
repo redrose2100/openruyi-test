@@ -17,7 +17,8 @@
 # @Desc      :   Test hwloc-gather-topology,hwloc-diff
 # #############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
@@ -35,9 +36,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwloc-diff --refname failed"
     hwloc-diff --version | grep "hwloc-diff"
     CHECK_RESULT $? 0 0 "hwloc-diff --version failed"
-    hwloc-gather-topology --io tep && ls | grep "tep.xml"
+    hwloc-gather-topology --io tep && [ -e "tep.xml" ]
     CHECK_RESULT $? 0 0 "hwloc-gather-topology --io failed"
-    hwloc-gather-topology --dmi tep && ls | grep "tep.output" 
+    hwloc-gather-topology --dmi tep && [ -e "tep.output" ]
     CHECK_RESULT $? 0 0 "hwloc-gather-topology --dmi failed"
     LOG_INFO "Finish test!"
 }
@@ -45,8 +46,8 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    rm -rf *.xml tep*
-    DNF_REMOVE
+    rm -rf ./*.xml tep*
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

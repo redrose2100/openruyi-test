@@ -16,7 +16,7 @@
 #@Desc          :   Test hwloc-calc_2
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -27,7 +27,7 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "Start testing..."
-    hwloc-calc -i "node:1 2" --po -I pu Machine:0 | grep "0,1" 
+    hwloc-calc -i "node:1 2" --po -I pu Machine:0 | grep "0,1"
     CHECK_RESULT $? 0 0 "hwloc-calc --po failed"
     hwloc-calc -i 'node:2 2' --sep "," Mechine:0 | grep '0x'
     CHECK_RESULT $? 0 0 "hwloc-calc --sep <sep> failed"
@@ -46,14 +46,14 @@ function run_test() {
     hwloc-calc -i "node:2 2" pu:0 | grep "0x00000001"
     CHECK_RESULT $? 0 0 "hwloc-calc -i 'node:2 2' failed"
     hwloc-calc --input ./common/input_test.xml --if xml Machine:0 | grep '0x'
-    CHECK_RESULT $? 0 0 "hwloc-calc --if <format> failed"  
+    CHECK_RESULT $? 0 0 "hwloc-calc --if <format> failed"
     LOG_INFO "Finish test!"
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

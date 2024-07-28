@@ -17,7 +17,7 @@
 #@Desc      :   Test hwloc-ps
 ##############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -28,7 +28,8 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "Start to run test."
-    hwloc-ps --version | grep '2.7.1'
+    hwloc_version=$(rpm -qa | grep hwloc | grep -oP '\d+\.\d+\.\d+-\d+' | head -n 1)
+    hwloc-ps --version | grep "${hwloc_version}"
     CHECK_RESULT $? 0 0 "hwloc-ps --version falied"
     hwloc-ps -h | grep "Usage:"
     CHECK_RESULT $? 1 0 "hwloc-ps -h falied"
@@ -40,7 +41,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwloc-ps --uid <uid> falied"
     hwloc-ps -a --short-name | grep 'sshd'
     CHECK_RESULT $? 0 0 "hwloc-ps --short-name  falied"
-    hwloc-ps -a -v | grep "hwloc-ps" 
+    hwloc-ps -a -v | grep "hwloc-ps"
     CHECK_RESULT $? 0 0 "hwloc-ps -v falied"
     hwloc-ps -a --verbose | grep "hwloc-ps"
     CHECK_RESULT $? 0 0 "hwloc-ps --verbose falied"
@@ -56,7 +57,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

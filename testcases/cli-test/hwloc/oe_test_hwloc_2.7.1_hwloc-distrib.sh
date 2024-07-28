@@ -17,7 +17,7 @@
 #@Desc      :   Test hwloc-distrib
 ##############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -30,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     hwloc-distrib 3 --restrict-flags 2 | grep "0x"
     CHECK_RESULT $? 0 0 "hwloc-distrib --restrict-flags <n> failed"
-    test $(hwloc-distrib  --disallowed 3 | wc -l) -eq 3
+    test "$(hwloc-distrib  --disallowed 3 | wc -l)" -eq 3
     CHECK_RESULT $? 0 0 "hwloc-distrib --disallowed failed"
     hwloc-distrib -h | grep "Usage: hwloc-distrib"
     CHECK_RESULT $? 0 0 "hwloc-distrib -h failed"
@@ -42,7 +42,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
