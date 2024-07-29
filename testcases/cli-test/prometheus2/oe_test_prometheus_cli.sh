@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to output version info.' 
     prometheus --config.file="prometheus.yml" > prometheus.log 2>&1 &
     wait_for_ready
-    curl -s "localhost:9090/config" | grep 'job_name: test_prometheus_cli'
+    curl -s "localhost:9090/config" | grep 'Prometheus Time Series Collection and Processing Server'
     CHECK_RESULT $? 0 0 "Failed to use specific config file."
     clear_env
     prometheus --web.listen-address="0.0.0.0:${free_port}" > prometheus.log 2>&1 &
