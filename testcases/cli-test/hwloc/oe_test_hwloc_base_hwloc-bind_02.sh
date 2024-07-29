@@ -16,7 +16,7 @@
 #@Desc          :   Test hwloc-bind
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwloc-bind --taskset failed"
     hwloc-bind --whole-system core:0 echo 'demo' | grep "demo"
     CHECK_RESULT $? 0 0 "hwloc-bind --whole-system failed"
-    hwloc-bind -v hwloc-ps -a | grep 'Machine' 
+    hwloc-bind -v hwloc-ps -a | grep 'Machine'
     CHECK_RESULT $? 0 0 "hwloc-bind -v failed"
     hwloc-bind -q core:0 hwloc-ps -a | grep 'hwloc-ps'
     CHECK_RESULT $? 0 0 "hwloc-bind -q failed"
@@ -53,7 +53,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

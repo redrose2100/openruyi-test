@@ -30,7 +30,7 @@ function env_pre() {
         export ARCH=ARM
         wget -P ~/rpmbuild/SOURCES/ https://cn.download.nvidia.com/XFree86/aarch64/470.74/NVIDIA-Linux-aarch64-470.74.run
     fi
-    dd if=/dev/null of=~/rpmbuild/SOURCES/null
+    touch ~/rpmbuild/SOURCES/null
     rpmbuild -ba --nodebuginfo ~/rpmbuild/SPECS/libnvidia-ml.spec
     rpm -i ~/rpmbuild/RPMS/$NODE1_FRAME/libnvidia-ml-470.74-openEuler.$NODE1_FRAME.rpm
     mv /lib64/libnvidia-ml.so.470.74 /lib64/libnvidia-ml.so

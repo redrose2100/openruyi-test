@@ -17,7 +17,7 @@
 #@Desc      :   Test lstopo-no-graphics
 ##############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -44,7 +44,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "lstopo-no-graphics --allow failed"
     lstopo-no-graphics -p --flags 2 | grep "Core"
     CHECK_RESULT $? 0 0 "lstopo-no-graphics --flags <n> failed"
-    lstopo-no-graphics out.xml --distances && ls | grep "out.xml"
+    lstopo-no-graphics out.xml --distances && [ -e "out.xml" ]
     CHECK_RESULT $? 0 0 "lstopo-no-graphics --distances failed"
     lstopo-no-graphics -l --distances-transform links | grep "PU"
     CHECK_RESULT $? 0 0 "lstopo-no-graphics --distances-transform failed"
@@ -57,7 +57,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf out.xml
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

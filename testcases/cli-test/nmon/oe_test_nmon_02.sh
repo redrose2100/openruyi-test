@@ -16,11 +16,11 @@
 #@Desc      	:   Take the test for nmon
 #####################################
 
-source "./common/common.sh"
+source "${OET_PATH}/testcases/cli-test/nmon/common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb"
+    DNF_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb sysstat"
     env_pre
     LOG_INFO "End of environmental preparation!"
 }
@@ -472,7 +472,7 @@ EOF
 function post_test() {
     LOG_INFO "Start restore the test environment."
     env_post
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
