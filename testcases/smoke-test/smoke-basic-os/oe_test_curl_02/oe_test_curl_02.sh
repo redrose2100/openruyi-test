@@ -51,6 +51,7 @@ EOF
     systemctl status firewalld | grep running && systemctl stop firewalld
     systemctl restart httpd
     touch /var/www/html/example
+    chmod 777 /var/www/html/example
     SLEEP_WAIT 5
     LOG_INFO "End to prepare the test environment."
 }
