@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test/smoke-secDetector",
+    "cases": [
+        {
+            "name": "os_test_secDetector_basic_test"
+        }
+    ]
+}
