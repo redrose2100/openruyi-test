@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test the xmlcatalog can be used regularly
 # ############################################
-# shellcheck disable=SC1091,SP1017
+# shellcheck disable=SC1091,SC1017
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
