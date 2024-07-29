@@ -802,6 +802,12 @@
         {
 	     "name": "oe_test_libxml2_002"
         },
+        {
+	     "name": "oe_test_libxml2_003"
+        },
+        {
+	     "name": "oe_test_libxml2_004"
+        },
 	{
 	    "name": "oe_test_logrotate_004"
 	},
@@ -861,7 +867,10 @@
       },
       {
            "name": "oe_test_link"
-      }
+      },
+      {
+            "name": "oe_test_zlib_001"
+      } 
     ]
 }
 
