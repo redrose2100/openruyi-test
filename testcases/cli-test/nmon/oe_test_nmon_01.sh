@@ -16,7 +16,7 @@
 #@Desc      	:   Take the test for nmon
 #####################################
 # shellcheck disable=SC1091
-source "./common/common.sh"
+source "${OET_PATH}/testcases/cli-test/nmon/common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
