@@ -17,13 +17,13 @@
 # @Desc      :   Test tftp
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "xinetd tftp tftp-server net-tools"
-    ifconfig ${NODE1_NIC} inet6 add 2001:250:250:250:250:250:250:222/64
-    route -A inet6 add default gw 2001:250:250:250::1 dev ${NODE1_NIC}
+    ifconfig "${NODE1_NIC}" inet6 add 2001:250:250:250:250:250:250:222/64
+    route -A inet6 add default gw 2001:250:250:250::1 dev "${NODE1_NIC}"
     SLEEP_WAIT 3
     ping6 -c 3 2001:250:250:250:250:250:250:222
     sed -i 's/flags.*/flags = IPV6/' /etc/xinetd.d/tftp
@@ -35,7 +35,7 @@ function pre_test() {
     systemctl restart xinetd
     systemctl restart tftp
     echo "hello1" >/tmp/tftpboot/hello1.txt
-    chmod 644 /tmp/tftpboot/hello1.txt
+    chmod 777 -R /tmp/tftpboot
     SLEEP_WAIT 3
     systemctl restart xinetd
     systemctl restart tftp
@@ -63,9 +63,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /tmp/tftpboot hello*
     getenforce | grep Permissive && setenforce 1
-    ifconfig ${NODE1_NIC} inet6 del 2001:250:250:250:250:250:250:222/64
-    route -A inet6 del default gw 2001:250:250:250::1 dev ${NODE1_NIC}
-    DNF_REMOVE
+    ifconfig "${NODE1_NIC}" inet6 del 2001:250:250:250:250:250:250:222/64
+    route -A inet6 del default gw 2001:250:250:250::1 dev "${NODE1_NIC}"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
