@@ -90,7 +90,7 @@ def get_test_disk(node=1):
         )
 
         test_disk = subprocess.getoutput(
-            "lsblk -n | grep -v '└─.*\|"
+            "lsblk -n | grep 'disk' | grep -v '└─.*\|"
             + used_disk.replace(" ", "\|")
             + "' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'"
         )
@@ -107,7 +107,7 @@ def get_test_disk(node=1):
         )[1]
         test_disk = ssh_cmd.pssh_cmd(
             conn,
-            "lsblk -n | grep -v '└─.*\|"
+            "lsblk -n | grep 'disk' | grep -v '└─.*\|"
             + used_disk.replace(" ", "\|")
             + "' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'",
         )[1]
