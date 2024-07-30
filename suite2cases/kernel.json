@@ -151,6 +151,9 @@
         },
         {
             "name": "oe_test_radeon"
+        },
+        {
+            "name": "oe_test_target_core_file"
         }
 
     ]
