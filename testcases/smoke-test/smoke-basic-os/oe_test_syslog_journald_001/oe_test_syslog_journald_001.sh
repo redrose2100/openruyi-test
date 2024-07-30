@@ -21,10 +21,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function config_params() {
 	LOG_INFO "Start to config params of the case."
-	if ls /run/log/journal/*; then
-		path=run
-	else
+	if ls /var/log/journal/*; then
 		path=var
+	else
+		path=run
 	fi
 	folder=$(ls /${path}/log/journal/ | head -n 1)
 	LOG_INFO "End to config params of the case."
