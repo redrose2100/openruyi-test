@@ -38,6 +38,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     nmcli con delete "${con_name}"
+    systemctl restart NetworkManager
+    SLEP_WAIT 3
     nmcli con up "${NODE1_NIC}"
     LOG_INFO "Finish environment cleanup."
 }
