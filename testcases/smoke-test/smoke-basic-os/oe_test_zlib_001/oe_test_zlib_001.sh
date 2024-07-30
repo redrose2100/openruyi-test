@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test calls zlib compression and decompression interface
 # ############################################
-# shellcheck disable=SC1091,SC1017
+# shellcheck disable=SC1017
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
