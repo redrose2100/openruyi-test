@@ -266,6 +266,9 @@
             "name": "oe_test_bc"
         },
         {
+            "name": "oe_test_bc_02"
+        },
+        {
             "name": "oe_test_bridge-utils_01"
         },
         {
