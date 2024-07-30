@@ -8,6 +8,9 @@
             "name": "oe_test_service_lxc"
         },
         {
+            "name": "oe_test_service_lxc-monitord"
+        },
+        {
             "name": "oe_test_lxc_create_attach"
         },
         {

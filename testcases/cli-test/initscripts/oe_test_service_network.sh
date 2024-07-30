@@ -16,19 +16,19 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test network.service restart
 # #############################################
-
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC1091
+source "../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
     P_SSH_CMD --cmd "dnf install -y network-scripts" --node 2
     service=network.service
     log_time=$(date '+%Y-%m-%d %T')
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     P_SSH_CMD --cmd "systemctl restart ${service}" --node 2
     CHECK_RESULT $? 0 0 "${service} restart failed"
     SLEEP_WAIT 5
@@ -39,13 +39,13 @@ function run_test() {
     P_SSH_CMD --cmd "systemctl start ${service}
     systemctl reload ${service} 2>&1 | grep 'Job type reload is not applicable'" --node 2
     CHECK_RESULT $? 0 0 "Job type reload is not applicable for unit ${service}"
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "Start to restore the test environment."
     P_SSH_CMD --cmd "dnf remove -y network-scripts" --node 2
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

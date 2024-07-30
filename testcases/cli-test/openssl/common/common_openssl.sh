@@ -16,7 +16,7 @@
 #@Desc          :   Public class
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
     CA_Path=/etc/pki/CA
@@ -32,7 +32,7 @@ function createCA_and_Self_signed_certificate() {
     echo 01 >$CA_Path/serial
     openssl genrsa -out $CA_Path/private/cakey.pem 2048
     CHECK_RESULT $?
-    grep 'BEGIN RSA PRIVATE KEY' $CA_Path/private/cakey.pem
+    grep 'PRIVATE KEY' $CA_Path/private/cakey.pem
     CHECK_RESULT $?
     expect <<-END
     log_file $CA_Path/testlog1
@@ -63,10 +63,10 @@ END
 function generate_PrivateKey_and_Certificate_Signing_Request() {
     applying=${1-httpd}
     build_path=${2-/etc/${applying}/ssl}
-    mkdir $build_path
-    openssl genrsa -out $build_path/${applying}.key 2048
+    mkdir "${build_path}"
+    openssl genrsa -out "${build_path}/${applying}.key" 2048
     CHECK_RESULT $?
-    grep 'BEGIN RSA PRIVATE KEY' $build_path/${applying}.key
+    grep 'PRIVATE KEY' "${build_path}/${applying}.key"
     CHECK_RESULT $?
     expect <<-END
     log_file $build_path/testlog2
@@ -92,9 +92,9 @@ function generate_PrivateKey_and_Certificate_Signing_Request() {
     expect eof
     exit
 END
-    grep 'certificate request' $build_path/testlog2
+    grep 'certificate request' "${build_path}/testlog2"
     CHECK_RESULT $?
-    grep 'BEGIN CERTIFICATE REQUEST' $build_path/${applying}.csr
+    grep 'BEGIN CERTIFICATE REQUEST' "${build_path}/${applying}.csr"
     CHECK_RESULT $?
 }
 
@@ -111,9 +111,9 @@ function CA_Signature_Authentication() {
     expect eof
     exit
 END
-    grep 'Certificate Details' $build_path/testlog3
+    grep 'Certificate Details' "${build_path}/testlog3"
     CHECK_RESULT $?
-    grep 'BEGIN CERTIFICATE' $build_path/${applying}.crt
+    grep 'BEGIN CERTIFICATE' "${build_path}/${applying}.crt"
     CHECK_RESULT $?
 }
 

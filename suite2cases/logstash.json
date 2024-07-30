@@ -1,8 +1,0 @@
-{
-  "path": "$OET_PATH/testcases/cli-test/logstash",
-  "cases": [
-    {
-      "name": "oe_test_logstash_install"
-    }
-  ]
-}

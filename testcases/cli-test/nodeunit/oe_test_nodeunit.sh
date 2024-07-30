@@ -40,6 +40,10 @@ function run_test() {
   CHECK_RESULT $? 0 0 "NodeUnit listing version information error"
   nodeunit -h |grep the
   CHECK_RESULT $? 0 0 "NodeUnit listing help information error"
+  nodeunit test.js -t  |grep OK 
+  CHECK_RESULT $? 0 0 "NodeUnit listing -t error"
+  nodeunit test.js -f  |grep OK 
+  CHECK_RESULT $? 0 0 "NodeUnit listing -t failed"
   LOG_INFO "End of the test."
 }
 

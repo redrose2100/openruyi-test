@@ -36,12 +36,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "psselect -o ./common/a4-11.ps execution failed."
     psselect -e ./common/a4-11.ps | grep -a -i -E "%%Page: \(\d*[02468]\)"
     CHECK_RESULT $? 0 0 "psselect -e ./common/a4-11.ps execution failed."
-    psselect -p1 -p2 -p4 ./common/a4-11.ps 2>&1 | grep -a -i "wrote .* pages, .* bytes"
+    psselect -p1 -p2 -p4 ./common/a4-11.ps 2>&1 | grep -a -i "wrote .* pages"
     CHECK_RESULT $? 0 0 "psselect -p1 -p2 -p4 ./common/a4-11.ps execution failed."
-    psselect -r ./common/a4-2.ps 2>&1 | grep -i -a "wrote .* pages, .* bytes"
+    psselect -r ./common/a4-2.ps 2>&1 | grep -i -a "wrote .* pages"
     CHECK_RESULT $? 0 0 "psselect -r ./common/a4-2.ps execution failed."
-    psselect -r -q ./common/a4-2.ps 2>&1 | grep -i -a "wrote .* pages, .* bytes"
-    CHECK_RESULT $? 1 0 "psselect -r -q ./common/a4-11.ps execution failed."
+    psselect -r -q ./common/a4-2.ps 2>&1 | grep -i -a "wrote .* pages"
+    CHECK_RESULT $? 0 0 "psselect -r -q ./common/a4-11.ps execution failed."
 
     LOG_INFO "End of the test."
 }

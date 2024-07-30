@@ -15,17 +15,18 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Public class integration
 #####################################
+# shellcheck disable=SC2086,SC2010
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function deploy_env() {
     DNF_INSTALL "easymock junit"
-    java_version=$(rpm -qa java* | grep "java-.*-openjdk" | awk -F '-' '{print $2}')
+    java_version=$(rpm -qa java* | grep "java-.*-openjdk" -m1 | awk -F '-' '{print $2}')
     DNF_INSTALL java-${java_version}-devel
 }
 
 function clear_env() {
-    DNF_REMOVE
-    rm -rf $(ls | grep -vE ".sh|.java|.xml|expect_result|main|test")
+    DNF_REMOVE "$@"
+    rm -rf "$(ls | grep -vE '.sh|.java|.xml|expect_result|main|test')"
 }
 
 function compile_java() {

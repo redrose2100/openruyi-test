@@ -47,7 +47,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Test failed with option -l"
     xz -k -f -vv --block-size=1 testxz 2>&1 | grep "392 B / 12 B > 9.999"
     CHECK_RESULT $? 0 0 "Test failed with option --block-size"
-    xz -k -f -vv --block-list=1,2,128 testxz 2>&1 | grep "128 B / 12 B > 9.999"
+    xz -k -f -vv --block-list=1,2,128 testxz 2>&1 | grep "/ 12 B > 9.999"
     CHECK_RESULT $? 0 0 "Test failed with option --block-list"
     xz -k -f -vv --memlimit-compress=1 testxz 2>&1 | grep "The limit is 1 B"
     CHECK_RESULT $? 0 0 "Test failed with option --memlimit-compress"

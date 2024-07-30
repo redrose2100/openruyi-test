@@ -17,10 +17,13 @@
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/wireshark/common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL wireshark
+    generate_traffic &
+    WIRESHARK_TRAFFIC_PID=$!
     version=$(rpm -qa wireshark | awk -F "-" '{print$2}')
     LOG_INFO "Finish preparing the test environment."
 }
@@ -31,11 +34,11 @@ function run_test() {
     CHECK_RESULT $?
     mergecap --version | grep "$version"
     CHECK_RESULT $?
-    netCard=$(dumpcap -D | awk -F '.' '{print $2}' | head -1)
-    SLEEP_WAIT 10 "dumpcap -i $netCard -c 20 -w testfile1" 2
+    netCard=$(dumpcap -D | awk -F '.' '{print $2}' | head -1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+    SLEEP_WAIT 10 "dumpcap -i '$netCard' -c 20 -w testfile1" 2
     capinfos testfile1 | grep "Number of packets:.*20"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "dumpcap -i $netCard -f \"tcp port 22\" -c 20 -w testfile2" 2
+    SLEEP_WAIT 5 "dumpcap -i '$netCard' -f \"tcp port 22\" -c 20 -w testfile2" 2
     capinfos testfile2 | grep -E "Number of packets:.*20|Filter string = tcp port 22"
     CHECK_RESULT $?
     mergecap -a -w mergefile1 testfile1 testfile2
@@ -73,8 +76,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $(ls | grep -v ".sh")
-    DNF_REMOVE
+    rm -f testfile* mergefile* runlog
+    close_traffic "$WIRESHARK_TRAFFIC_PID"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 

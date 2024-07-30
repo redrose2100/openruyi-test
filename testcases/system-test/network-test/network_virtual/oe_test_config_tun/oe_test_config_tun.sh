@@ -26,35 +26,35 @@ function pre_test() {
         exit 0
     }
     cp ./config_tap.sh /etc/init.d/config_tap && chmod 777 /etc/init.d/config_tap
-    path="http://li.nux.ro/download/nux/misc/el7/x86_64/"
-    wget "$path"
-    tunctl=$(grep -oE "tunctl-.*.rpm" index.html | head -n 1 | awk -F'"' '{print $1}')
-    wget "$path/$tunctl"
-    rpm -ivh "$tunctl"
+    if [[ "${NODE1_FRAME}" = "riscv64" ]]; then
+        file="https://download.opensuse.org/repositories/openSUSE:/Factory:/RISCV/standard/riscv64/tunctl-1.5-28.1.riscv64.rpm"
+        wget "$file"
+        rpm -ivh ./tunctl-1.5-28.1.riscv64.rpm
+    else
+        path="http://li.nux.ro/download/nux/misc/el7/x86_64/"
+        wget "$path"
+        tunctl=$(grep -oE "tunctl-.*.rpm" index.html | head -n 1 | awk -F'"' '{print $1}')
+        wget "$path/$tunctl"
+        rpm -ivh "$tunctl"
+    fi
     DNF_INSTALL "net-tools"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    chkconfig --add config_tap
-    CHECK_RESULT $? 0 0 "Add server config_tap failed."
-    chkconfig --level 345 config_tap on
-    CHECK_RESULT $? 0 0 "Set auto start config_tap failed."
-    systemctl start config_tap
+    /etc/init.d/config_tap start
     CHECK_RESULT $? 0 0 "Start config_tap failed."
-    systemctl status config_tap | grep -q "active"
+    /etc/init.d/config_tap status
     CHECK_RESULT $? 0 0 "Check config_tap start failed."
-    systemctl restart config_tap
+    /etc/init.d/config_tap restart
     CHECK_RESULT $? 0 0 "Restart config_tap failed."
-    systemctl status config_tap | grep -q "active"
+    /etc/init.d/config_tap status
     CHECK_RESULT $? 0 0 "Check config_tap restart failed."
-    systemctl stop config_tap
+    /etc/init.d/config_tap stop
     CHECK_RESULT $? 0 0 "Stop config_tap failed."
-    systemctl status config_tap | grep -q "inactive"
+    /etc/init.d/config_tap status
     CHECK_RESULT $? 0 0 "Check config_tap stop failed."
-    chkconfig --del config_tap
-    CHECK_RESULT $? 0 0 "Delete server config_tap failed."
     LOG_INFO "End to run test."
 }
 
@@ -62,7 +62,11 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     ip tuntap del dev tap0 mod tap
     rpm -e tunctl
-    rm -rf /etc/init.d/config_tap "$tunctl" index.html
+    if [[ "${NODE1_FRAME}" = "riscv64" ]]; then
+        rm -rf ./tunctl-1.5-28.1.riscv64.rpm
+    else
+        rm -rf "$tunctl" index.html /etc/init.d/config_tap
+    fi
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

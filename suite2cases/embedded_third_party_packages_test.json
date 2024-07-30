@@ -65,9 +65,6 @@
             "name": "oe_test_sed_test_001"
         },
         {
-            "name": "oe_test_tar_test_001"
-        },
-        {
             "name": "oe_test_ethtool_test_001"
         },
         {
@@ -83,34 +80,16 @@
             "name": "oe_test_libaio_test_001"
         },
         {
-            "name": "oe_test_libcgroup_test_001"
-        },
-        {
-            "name": "oe_test_python3_test_001"
-        },
-        {
             "name": "oe_test_tcl_test_001"
         },
         {
-            "name": "oe_test_libgcrypt_test_001"
-        },
-        {
             "name": "oe_test_asio_test_001"
-        },
-        {
-            "name": "oe_test_gdb_test_001"
-        },
-        {
-            "name": "oe_test_lua_test_001"
         },
         {
             "name": "oe_test_audit_test_001"
         },
         {
             "name": "oe_test_findutils_test_001"
-        },
-        {
-            "name": "oe_test_bash_test_001"
         },
         {
             "name": "oe_test_sudo_test_001"
@@ -125,7 +104,22 @@
             "name": "oe_test_libsemanage_test_001"
         },
         {
-            "name": "oe_test_libgpg-error_test_001"
-        }
+            "name": "oe_test_libidn2_test_001"
+        },
+        {
+            "name": "oe_test_bzip2_test_001"
+        },
+        {
+            "name": "oe_test_libunwind_test_001"
+        },
+	{
+	    "name": "oe_test_yajl_test_001"
+	},
+	{
+	    "name": "oe_test_lzo_test_001"
+	},
+	{
+	    "name": "oe_test_http-parser_test_001"
+	}
     ]
 }

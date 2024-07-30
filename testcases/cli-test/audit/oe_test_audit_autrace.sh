@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8    
-    auditclt -l > audit_rules.bak
+    auditctl -l > audit_rules.bak
     auditctl -D
     LOG_INFO "End of environmental preparation!"
 }
@@ -42,7 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to clean the test environment."
     export LANG=${OLD_LANG}
-    auditclt -R audit_rules.bak
+    auditctl -R audit_rules.bak
     rm -f audit_rules.bak
     LOG_INFO "End to clean the test environment."
 }

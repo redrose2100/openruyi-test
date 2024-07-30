@@ -17,7 +17,15 @@
 # @Desc      :   Test systemtap.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL systemtap
+    LOG_INFO "End of environmental preparation!"
+}
+
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -37,6 +45,7 @@ function post_test() {
     sed -i 's\systemtap-service start -R\systemtap-service start\g' /usr/lib/systemd/system/systemtap.service
     systemctl daemon-reload
     systemctl reload systemtap.service
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

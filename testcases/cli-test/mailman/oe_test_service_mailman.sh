@@ -17,14 +17,18 @@
 # @Desc      :   Test mailman.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "mailman postfix"
-    old_LANG=${LANG}
-    export LANG=en_US.UTF-8
-    expect <<EOF
+    tmp_version=$(yum list installed | grep -w "mailman.noarch" | tr -s " " | cut -d " " -f 2 | cut -c 1)
+    version=$(("$tmp_version" + 0))
+    if [ "$version" -lt 3 ];
+    then
+        old_LANG=${LANG}
+        export LANG=en_US.UTF-8
+        expect <<EOF
         spawn /usr/lib/mailman/bin/newlist mailman
         expect {
             "running the list:" {
@@ -38,30 +42,39 @@ function pre_test() {
         }
         expect eof
 EOF
+    fi 
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution mailman.service
-    systemctl start mailman.service
-    sed -i 's\ExecStart=/usr/lib/mailman/bin/mailmanctl\ExecStart=/usr/lib/mailman/bin/mailmanctl -q\g' /usr/lib/systemd/system/mailman.service
-    systemctl daemon-reload
-    systemctl reload mailman.service
-    CHECK_RESULT $? 0 0 "mailman.service reload failed"
-    systemctl status mailman.service | grep "Active: active"
-    CHECK_RESULT $? 0 0 "mailman.service reload causes the service status to change"
+    if [ "$version" -lt 3 ];
+    then
+        test_execution mailman.service
+        systemctl start mailman.service
+        sed -i 's\ExecStart=/usr/lib/mailman/bin/mailmanctl\ExecStart=/usr/lib/mailman/bin/mailmanctl -q\g' /usr/lib/systemd/system/mailman.service
+        systemctl daemon-reload
+        systemctl reload mailman.service
+        CHECK_RESULT $? 0 0 "mailman.service reload failed"
+        systemctl status mailman.service | grep "Active: active"
+        CHECK_RESULT $? 0 0 "mailman.service reload causes the service status to change"
+    fi
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    sed -i 's\ExecStart=/usr/lib/mailman/bin/mailmanctl -q\ExecStart=/usr/lib/mailman/bin/mailmanctl\g' /usr/lib/systemd/system/mailman.service
-    systemctl daemon-reload
-    systemctl reload mailman.service
+    if [ "$version" -lt 3 ];
+    then
+        sed -i 's\ExecStart=/usr/lib/mailman/bin/mailmanctl -q\ExecStart=/usr/lib/mailman/bin/mailmanctl\g' /usr/lib/systemd/system/mailman.service
+        systemctl daemon-reload
+        systemctl reload mailman.service
+        systemctl stop mailman.service
+        /usr/lib/mailman/bin/rmlist mailman
+    fi
     systemctl stop mailman.service
-    /usr/lib/mailman/bin/rmlist mailman
     export LANG=${old_LANG}
+    DNF_REMOVE "mailman postfix"
     LOG_INFO "Finish environment cleanup!"
 }
 

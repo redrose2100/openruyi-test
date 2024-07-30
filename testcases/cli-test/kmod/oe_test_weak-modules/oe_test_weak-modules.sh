@@ -23,7 +23,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     weak-modules --help
     CHECK_RESULT $?
-    extraPath=$(find / -name extra | awk 'NR==2')
+    extraPath=/usr/share/X11/xkb/types/extra
     echo $extraPath/catch.ko | weak-modules --add-module --no-initramfs
     CHECK_RESULT $?
     echo $extraPath/catch.ko | weak-modules --add-module --verbose
@@ -39,4 +39,4 @@ function run_test() {
     LOG_INFO "End of the test."
 }
 
-main $@
+main "$@"

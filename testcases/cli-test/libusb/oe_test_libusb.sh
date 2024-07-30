@@ -17,7 +17,7 @@
 # @Desc      :   libusb formatting test
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start environment preparation."    
@@ -71,7 +71,7 @@ int main() {
 }
 EOF
 
-    DNF_INSTALL "libusb libusb-devel"
+    DNF_INSTALL "libusb libusb-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -83,7 +83,7 @@ function run_test() {
     test -f /tmp/libusb
     CHECK_RESULT $? 0 0 "compile libusb.c fail"
     ./libusb > libusb.txt
-    grep "0627" /tmp/libusb.txt    
+    grep "1d6b" /tmp/libusb.txt    
     CHECK_RESULT $? 0 0 "execute libusb.txt fail"
 
 }

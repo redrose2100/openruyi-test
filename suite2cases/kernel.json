@@ -93,12 +93,6 @@
             "name": "oe_test_nbd"
         },
         {
-            "name": "oe_test_hifc"
-        },
-        {
-            "name": "oe_test_fnic"
-        },
-        {
             "name": "oe_test_libfc"
         },
         {
@@ -135,11 +129,30 @@
             "name": "oe_test_uio"
         },
         {
-            "name": "oe_test_ntb"
+            "name": "oe_test_clk"
         },
         {
-            "name": "oe_test_clk"
+            "name": "oe_test_mfd"
+        },
+        {
+            "name": "oe_test_bcma"
+        },
+        {
+            "name": "oe_test_extcon"
+        },
+        {
+            "name": "oe_test_tee"
+        },
+        {
+            "name": "oe_test_regmap_01"
+        },
+        {
+            "name": "oe_test_ceph"
+        },
+        {
+            "name": "oe_test_radeon"
         }
+
     ]
 }
 

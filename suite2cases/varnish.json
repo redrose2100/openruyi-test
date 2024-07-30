@@ -6,6 +6,24 @@
         },
         {
             "name": "oe_test_service_varnish"
+        },        
+        {
+            "name": "oe_test_varnish_01"
+        },
+        {
+            "name": "oe_test_varnish_02"
+        },
+        {
+            "name": "oe_test_varnish_03"
+        },
+        {
+            "name": "oe_test_varnish_04"
+        },
+        {
+            "name": "oe_test_varnish_05"
+        },
+        {
+            "name": "oe_test_varnish_06"
         }
     ]
 }

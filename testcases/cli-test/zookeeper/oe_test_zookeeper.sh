@@ -22,30 +22,42 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "apache-zookeeper"
-    cp /opt/zookeeper/conf/zoo.cfg /opt/zookeeper/conf/zoo.cfg.bak
     local_ip=$(hostname -I |awk '{print $1}')
+    data_dir="/home/zookeeper/dataDir"
+
+    sed -i "s|^dataDir=.*|dataDir=$data_dir|g" /opt/zookeeper/conf/zoo.cfg
+    echo server.1="$local_ip":8881:7771 >>/opt/zookeeper/conf/zoo.cfg
+
+    mkdir -p $data_dir
+    echo 1 > ${data_dir}/myid
 }
 
 function run_test() {
     LOG_INFO "start to run test."
-    sed -i 's/^dataDir=.*/dataDir=\/home\/zookeeper\/dataDir/g' /opt/zookeeper/conf/zoo.cfg
-    mkdir -p /home/zookeeper/dataDir
-    echo 1 >  /home/zookeeper/dataDir/myid
-    cat /home/zookeeper/dataDir/myid 
-    echo server.1="$local_ip":8881:7771 >>/opt/zookeeper/conf/zoo.cfg
     bash /opt/zookeeper/bin/zkServer.sh start
-    CHECK_RESULT $? 0 0 "don't dispaly STARTED"
-    bash /opt/zookeeper/bin/zkServer.sh status | grep "Mode\:"
-    CHECK_RESULT $? 0 0 "don't dispaly ZooKeeper" 
+    CHECK_RESULT $? 0 0 "start failed." 1
+    bash /opt/zookeeper/bin/zkServer.sh status
+    CHECK_RESULT $? 0 0 "get status failed." 1
+    bash /opt/zookeeper/bin/zkServer.sh stop
+    CHECK_RESULT $? 0 0 "stop failed." 1
+
+    chown zookeeper:zookeeper -R /opt/zookeeper/
+    chown zookeeper:zookeeper -R /home/zookeeper/
+    systemctl start zookeeper
+    CHEK_RESULT $? 0 0 "start failed." 1
+    systemctl status zookeeper
+    CHECK_RESULT $? 0 0 "get status failed." 1
+    systemctl stop zookeeper
+    CHECK_RESULT $? 0 0 "stop failed." 1
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    bash /opt/zookeeper/bin/zkServer.sh stop
-    DNF_REMOVE 1 "apache-zookeeper"
-    rm -rf /home/zookeeper/dataDir
-    mv /opt/zookeeper/conf/zoo.cfg.bak /opt/zookeeper/conf/zoo.cfg
+    DNF_REMOVE "$@"
+    rm -rf /home/zookeeper/
+    rm -rf /opt/zookeeper/
+    userdel zookeeper
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

@@ -13,7 +13,7 @@
 #@Contact   	:   jianbo.lin@outlook.com
 #@Date      	:   2023-09-13 09:39:43
 #@License   	:   Mulan PSL v2
-#@Desc      	:   test command po4apod-display-po and msguntypot
+#@Desc      	:   test command po4a-display-pod and msguntypot
 #####################################
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
@@ -25,12 +25,12 @@ function pre_test()
     DNF_INSTALL "po4a"
     mkdir tmp
     echo "hello world" > tmp/master.txt
-    po4a-gettextize -f text -m tmp/master.txt -p tmp/translation_Esp.po
+    po4a-updatepo -f text -m tmp/master.txt -p tmp/translation_Esp.po
     sed -i 's/msgstr ""/msgstr "Hola, Mundo"/g' tmp/translation_Esp.po
     echo "hello world old" > tmp/old.txt
-    po4a-gettextize -f text -m tmp/old.txt -p tmp/old.pot
+    po4a-updatepo -f text -m tmp/old.txt -p tmp/old.pot
     echo "hello world new" > tmp/new.txt
-    po4a-gettextize -f text -m tmp/new.txt -p tmp/new.pot
+    po4a-updatepo -f text -m tmp/new.txt -p tmp/new.pot
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -39,15 +39,15 @@ function run_test()
 {
     LOG_INFO "Start to run test."
 
-    # test po4apod-display-po
-    po4apod-display-po -h | grep "Usage : po4apod-display-po"
-    CHECK_RESULT $? 0 0 "Failed to run command: po4apod-display-po -h"
+    # test po4a-display-pod
+    po4a-display-pod -h | grep -i "Usage"
+    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-pod -h"
 
-    po4apod-display-po -p tmp/translation_Esp.po -m tmp/master.txt | grep -i "translated"
-    CHECK_RESULT $? 0 0 "Failed to run command: po4apod-display-po -p tmp/translation_Esp.po -m tmp/master.txt"
+    po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt | grep -i "translated"
+    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt"
 
-    po4apod-display-po -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split | grep -i "translated"
-    CHECK_RESULT $? 0 0 "Failed to run command: po4apod-display-po -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split"
+    po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split | grep -i "translated"
+    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split"
 
     # test msguntypot
     msguntypot -h | grep -Pz "Usage:\n.*msguntypot"

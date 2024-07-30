@@ -17,7 +17,8 @@
 # @Desc      :   Rename container/pause and resume container process
 # ############################################
 
-source ../common/prepare_docker.sh
+
+source "${OET_PATH}/testcases/smoke-test/smoke-docker/common/prepare_docker.sh"
 function config_params() {
     LOG_INFO "Start loading data."
     container_name=container_test
@@ -33,31 +34,31 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker run -itd --name=${container_name} ${Images_name}
+    docker run -itd --name=${container_name} "${Images_name}:${TEST_TAG}" "${DEFAULT_RUN_CMD}"
     CHECK_RESULT $?
 
-    docker rename ${container_name} ${new_name}
+    docker rename "${container_name}" "${new_name}"
     CHECK_RESULT $?
-    docker ps -a | grep ${new_name}
+    docker ps -a | grep "${new_name}"
     CHECK_RESULT $?
-    docker ps -a | grep ${container_name}
+    docker ps -a | grep "${container_name}"
     CHECK_RESULT $? 1
 
-    docker pause ${new_name}
+    docker pause "${new_name}"
     CHECK_RESULT $?
-    docker inspect -f {{.State.Status}} ${new_name} | grep paused
+    docker inspect -f "{{.State.Status}}" "${new_name}" | grep paused
 
-    docker unpause ${new_name}
+    docker unpause "${new_name}"
     CHECK_RESULT $?
-    docker inspect -f {{.State.Status}} ${new_name} | grep running
+    docker inspect -f "{{.State.Status}}" "${new_name}" | grep running
     LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     clean_docker_env
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

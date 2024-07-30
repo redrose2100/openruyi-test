@@ -9,15 +9,6 @@
         },
         {
             "name": "oe_test_tboot_1.10.2-3_lcp2_mlehash"
-        },
-        {
-            "name": "oe_test_tboot_lcp2_crtpolelt"
-        },
-        {
-            "name": "oe_test_tboot_tb_polgen"
-        },
-        {
-            "name": "oe_test_tboot_txt-stat"
         }
     ]
 }

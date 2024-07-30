@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "gobject-introspection gobject-introspection-devel"
+    DNF_INSTALL "gobject-introspection gobject-introspection-devel gcc-c++"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -39,8 +39,7 @@ int main() {
 }
 EOF
     CHECK_RESULT $? 0 0 "File creation failed"
-    conf=$(pkg-config --cflags --libs gobject-introspection-1.0)
-    gcc -o test test.c "$conf"
+    pkg-config --cflags --libs gobject-introspection-1.0 | xargs gcc -o test test.c
     CHECK_RESULT $? 0 0 "Compilation failed"
     test -f test
     CHECK_RESULT $? 0 0 "File generation failed"

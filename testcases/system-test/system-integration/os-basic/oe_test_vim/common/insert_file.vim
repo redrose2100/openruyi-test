@@ -1,0 +1,2 @@
+normal! iGood luck.
+:wq

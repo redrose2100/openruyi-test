@@ -21,15 +21,15 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "java-11-openjdk*"
+    DNF_INSTALL "java-11-openjdk-devel"
     cp ../common/Hello.java .
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    rmic -help | grep "用法："
-    CHECK_RESULT $? 0 0 "rmic  -help failed"
+    LANG= && rmic | grep "Usage:"
+    CHECK_RESULT $? 0 0 "expect usage, failed"
     rmid -port 1111 -log portlog &
     SLEEP_WAIT 3
     rmid -stop -port 1111

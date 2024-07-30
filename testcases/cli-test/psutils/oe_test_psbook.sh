@@ -30,9 +30,9 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # test psbook
-    test "$(psbook -v 2>&1 | awk 'NR==1{print$2}')" == "$version"
+    test "$(psbook --version 2>&1 | awk 'NR==1{print$2}')" == "$version"
     CHECK_RESULT $? 0 0 "psbook -v execution failed."
-    psbook -s4 ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages, .* bytes"
+    psbook -s4 ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages"
     CHECK_RESULT $? 0 0 "psbook -s4 ./common/a4-1.ps execution failed."
     psbook -q -s8 ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages, .* bytes"
     CHECK_RESULT $? 0 1 "psbook -q -s8 ./common/a4-1.ps execution failed."

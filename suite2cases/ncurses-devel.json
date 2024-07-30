@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/ncurses-devel",
-    "cases": [
-        {
-            "name": "oe_test_ncurses-devel"
-	}
-    ]
-}

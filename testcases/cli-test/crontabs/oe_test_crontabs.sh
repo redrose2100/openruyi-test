@@ -38,26 +38,31 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed : status"
     systemctl start crond
     echo "* * * * * /bin/ls" > /var/spool/cron/root
-    CHECK_RESULT $? 0 0 "Failed option: -e"               
+    CHECK_RESULT $? 0 0 "Failed option: -e"
     crontab -u root -l 2>&1 | grep "/bin/ls"
     CHECK_RESULT $? 0 0 "Failed option: -l"
     run-parts --test . 2>&1 | grep "test.sh"
     CHECK_RESULT $? 0 0 "Failed option: run-parts --test"
     run-parts --list . 2>&1 | grep "crontabs.sh"
     CHECK_RESULT $? 0 0 "Failed option: run-parts --list"
-    crontab -x proc /var/spool/cron/root 2>&1 | grep "enabled" 
+    crontab -x proc /var/spool/cron/root 2>&1 | grep "enabled"
     CHECK_RESULT $? 0 0 "Failed option: -x"
-    crontab -u root -l -s 2>&1
-    CHECK_RESULT $? 0 0 "Failed option: -s"
-    crontab -u root -r 2>&1 
+    # 对selinux是否被禁用进行判断
+    setenforce 1 #如果在内核层禁用了selinux,那么这里是无法打开的
+    selinux_status=$(getenforce)
+    if [ "$selinux_status" == "Enforcing" ] || [ "$selinux_status" == "Permissive" ]; then
+        crontab -u root -l -s 2>&1
+        CHECK_RESULT $? 0 0 "Failed option: -s"
+    fi
+    crontab -u root -r 2>&1
     CHECK_RESULT $? 0 0 "Failed option: -r"
-    echo y | crontab -u root -r -i 2>&1 | grep "no" 
+    echo y | crontab -u root -r -i 2>&1 | grep "no"
     CHECK_RESULT $? 0 0 "Failed option: -i"
-    crontab -n $NODE1_IPV4 2>&1 
+    crontab -n "$NODE1_IPV4" 2>&1
     CHECK_RESULT $? 0 0 "Failed option: -n"
     crontab -c 2>&1 | grep "$NODE1_IPV4"
-    CHECK_RESULT $? 0 0 "Failed option: -c"  
-    crontab -V 2>&1 | grep "[[:digit:]]*"  
+    CHECK_RESULT $? 0 0 "Failed option: -c"
+    crontab -V 2>&1 | grep "[[:digit:]]*"
     CHECK_RESULT $? 0 0 "Failed option: -V"
     LOG_INFO "End to run testcase:oe_test_crontabs."
 }

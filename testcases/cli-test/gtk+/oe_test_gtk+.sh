@@ -38,7 +38,7 @@ return 0;
 EOF
 
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "gtk3 gtk3-devel gtk+ gtk+-devel"
+    DNF_INSTALL "gcc gtk3 gtk3-devel gtk+ gtk+-devel"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -46,7 +46,8 @@ function run_test() {
     LOG_INFO "Start testing..."
     rpm -qa | grep gtk
     CHECK_RESULT $? 0 0 "Return value error"
-    cd /tmp && gcc -o gtk+_test gtk+_test.c $(pkg-config --cflags --libs gtk+)
+    read -ra pkg_config_args < <(pkg-config --cflags --libs gtk+)
+    cd /tmp && gcc -o gtk+_test gtk+_test.c $"${pkg_config_args[@]}"
     test -f /tmp/gtk+_test
     CHECK_RESULT $? 0 0 "compile gtk+_test.c fail"    
 }

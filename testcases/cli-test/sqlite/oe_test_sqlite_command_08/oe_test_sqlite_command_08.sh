@@ -15,7 +15,7 @@
 #@Desc      	:   verification sqlite‘s .dump  command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start to run test."
     expect <<-END
@@ -45,6 +45,7 @@ function run_test() {
     send ".quit\n"
     expect eof
 END
+    sed -i '/echo/d' output.txt
     CHECK_RESULT "$(wc -l ./output.txt | grep -cE "25")" 1
     CHECK_RESULT "$(grep -cE "select" ./output.txt)" 1
     CHECK_RESULT "$(wc -l ./output1.txt | grep -cE "24")" 1

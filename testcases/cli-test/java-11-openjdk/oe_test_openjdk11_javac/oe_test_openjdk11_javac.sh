@@ -28,12 +28,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    java -h 2>&1 | grep "用法：java"
+    java -h 2>&1 | grep -iE "用法：java|Usage: java"
     CHECK_RESULT $? 0 0 "java -h failed"
-    javac Hello.java
-    java Hello | grep 'Hello,world!'
+    javac ./Hello.java
+    java -cp ./ Hello | grep 'Hello,world!'
     CHECK_RESULT $? 0 0 "java Hello failed"
-    java -version 2>&1 | grep 'openjdk version "11.0.19'
+    java -version 2>&1 | grep 'openjdk version "11'
     CHECK_RESULT $? 0 0 "java -version failed"
 
     mkdir testjava
@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "javac -g failed"
     find testjava -name Hello.class
     CHECK_RESULT $? 0 0 "not find Hello.class"
-    javac -help 2>&1 | grep "用法: javac"
+    javac -help 2>&1 | grep -iE "用法: javac|Usage: javac"
     CHECK_RESULT $? 0 0 "javac -hellp failed"
     javac -version 2>&1 | grep "[0-9]"
     CHECK_RESULT $? 0 0 "javac -version failed"
@@ -56,5 +56,4 @@ function post_test() {
     rm -rf Hello* testjava
     LOG_INFO "Finish environment cleanup!"
 }
-
 main "$@"

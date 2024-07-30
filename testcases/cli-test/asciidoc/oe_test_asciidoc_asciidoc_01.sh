@@ -17,7 +17,7 @@
 # @Desc      :   Take the test asciidoc option
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
@@ -34,13 +34,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    asciidoc -h manpage | grep "OPTIONS" 
+    asciidoc -h manpage | grep "OPTIONS"
     CHECK_RESULT $? 0 0 "Check asciidoc -h manpage failed"
     asciidoc --help manpage | grep "OPTIONS"
     CHECK_RESULT $? 0 0 "Check asciidoc --help manpage failed"
     asciidoc -h syntax | grep "Syntax"
     CHECK_RESULT $? 0 0 "Check asciidoc -h syntax failed"
-    asciidoc --help syntax | grep "Syntax" 
+    asciidoc --help syntax | grep "Syntax"
     CHECK_RESULT $? 0 0 "Check asciidoc --help syntax failed"
     asciidoc --version | grep "asciidoc $(rpm -qa | grep asciidoc | awk -F '-' '{print $2}')"
     CHECK_RESULT $? 0 0 "Check asciidoc --version failed"
@@ -70,8 +70,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf ${TMP_DIR} 
-    DNF_REMOVE
+    rm -rf ${TMP_DIR}
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

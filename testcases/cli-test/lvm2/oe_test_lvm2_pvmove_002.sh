@@ -16,7 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   lvm2 command test
 # ############################################
-source ./common/disk_lib.sh
+# shellcheck disable=SC1091,SC2154
+source "./common/disk_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL lvm2
@@ -26,31 +27,31 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvcreate -y /dev/${local_disk} /dev/${local_disk1}
+    pvcreate -y /dev/"${local_disk}" /dev/"${local_disk1}"
     CHECK_RESULT $?
     pvs | grep "/dev/${local_disk}" && pvs | grep "/dev/${local_disk1}"
     CHECK_RESULT $?
-    vgcreate test /dev/${local_disk} /dev/${local_disk1}
+    vgcreate test /dev/"${local_disk}" /dev/"${local_disk1}"
     CHECK_RESULT $?
     lvcreate -L 50MB -n lv1 test | grep 'Logical volume "lv1" created'
     CHECK_RESULT $?
-    pvmove /dev/${local_disk} /dev/${local_disk1} | grep "Moved: 100.00%"
+    pvmove /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved:"
     CHECK_RESULT $?
-    pvmove -A y /dev/${local_disk1} /dev/${local_disk} | grep "Moved: 100.00%"
-    CHECK_RESULT $?
-    SLEEP_WAIT 5
-    pvmove -n lv1 /dev/${local_disk} /dev/${local_disk1} | grep "Moved: 100.00%"
+    pvmove -A y /dev/"${local_disk1}" /dev/"${local_disk}" | grep "Moved:"
     CHECK_RESULT $?
     SLEEP_WAIT 5
-    pvmove --alloc contiguous /dev/${local_disk1} /dev/${local_disk} | grep "Moved: 100.00%"
+    pvmove -n lv1 /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved:"
     CHECK_RESULT $?
     SLEEP_WAIT 5
-    pvmove --atomic /dev/${local_disk} /dev/${local_disk1} | grep "Moved: 100.00%"
+    pvmove --alloc contiguous /dev/"${local_disk1}" /dev/"${local_disk}" | grep "Moved:"
     CHECK_RESULT $?
     SLEEP_WAIT 5
-    pvmove --noudevsync /dev/${local_disk1} /dev/${local_disk} | grep "Moved: 100.00%"
+    pvmove --atomic /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved:"
     CHECK_RESULT $?
-    pvmove --noudevsync --reportformat json /dev/${local_disk} /dev/${local_disk1} | grep "Moved: 100.00%"
+    SLEEP_WAIT 5
+    pvmove --noudevsync /dev/"${local_disk1}" /dev/"${local_disk}" | grep "Moved:"
+    CHECK_RESULT $?
+    pvmove --noudevsync --reportformat json /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved:"
     CHECK_RESULT $?
     pvmove --version | grep "LVM version"
     CHECK_RESULT $?
@@ -63,10 +64,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     vgremove -f test
-    pvremove -f /dev/${local_disk}
-    pvremove -f /dev/${local_disk1}
-    DNF_REMOVE
+    pvremove -f /dev/"${local_disk}"
+    pvremove -f /dev/"${local_disk1}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

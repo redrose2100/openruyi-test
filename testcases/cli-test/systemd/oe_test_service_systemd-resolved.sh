@@ -16,30 +16,32 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test systemd-resolved.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL systemd-resolved
     service=systemd-resolved.service
     log_time=$(date '+%Y-%m-%d %T')
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
-    test_restart ${service}
-    test_enabled ${service}
+    LOG_INFO "Start to run test."
+    test_restart "${service}"
+    test_enabled "${service}"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v "Transport endpoint is not connected"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload systemd-resolved.service
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "Start environment cleanup."
-    systemctl stop systemd-resolved.service
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "Start to restore the test environment."
+    systemctl stop "${service}"
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

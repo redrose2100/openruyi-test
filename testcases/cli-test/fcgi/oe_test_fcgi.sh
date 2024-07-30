@@ -15,6 +15,7 @@
 # @License   	:   Mulan PSL v2
 # @Desc      	:   the test of fcgi package
 ####################################
+# shellcheck disable=SC1091
 
 source ./common/common_lib.sh
 
@@ -31,7 +32,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "fcgi libtool tar"
+    DNF_INSTALL "gcc-c++ fcgi libtool tar"
     pre_fcgi
     LOG_INFO "End to prepare the test environment."
 }
@@ -39,16 +40,16 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    cgi-fcgi -connect $connName1 $appPath $serverNum1 | grep "hello, it is a fast cgi application"
+    cgi-fcgi -connect "$connName1" "$appPath" "$serverNum1" | grep "hello, it is a fast cgi application"
     CHECK_RESULT $? 0 0 "cgi-fcgi execute connect command unsuccessfully"
 
-    cgi-fcgi -start -connect $connName2 $appPath $serverNum2
+    cgi-fcgi -start -connect "$connName2" "$appPath" "$serverNum2"
     CHECK_RESULT $? 0 0 "cgi-fcgi execute start command unsuccessfully, maybe the address connName is already in use"
 
-    cgi-fcgi -bind -connect $connName2 | grep "hello, it is a fast cgi application"
+    cgi-fcgi -bind -connect "$connName2" | grep "hello, it is a fast cgi application"
     CHECK_RESULT $? 0 0 "cgi-fcgi execute bind command unsuccessfully"
 
-    cgi-fcgi -f $cmdPath | grep "hello, it is a fast cgi application"
+    cgi-fcgi -f "$cmdPath" | grep "hello, it is a fast cgi application"
     CHECK_RESULT $? 0 0 "cgi-fcgi execute cmdFile command unsuccessfully"
 
     LOG_INFO "End to run test."
@@ -56,7 +57,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf fcgi2-2.4.2 2.4.2.tar.gz cmdFile
     LOG_INFO "End to restore the test environment."
 }

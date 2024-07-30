@@ -28,6 +28,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    arch=$(uname -m)
+    if [ "$arch" == "x86_64" ]; then
+    target_cpu="x86-64"
+    elif [ "$arch" == "riscv64" ]; then
+    target_cpu="generic-rv64"
+    else
+    target_cpu="unknown"
+    fi
     rustc --print crate-name hello.rs | grep "hello"
     CHECK_RESULT $? 0 0 "Failed to output the hello file"
     rustc --print file-names hello.rs | grep "hello"
@@ -40,7 +48,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to output the cfg information"
     rustc --print target-list hello.rs | grep -E ".*"
     CHECK_RESULT $? 0 0 "Failed to output the target list"
-    rustc --print target-cpus hello.rs | grep "Target CPU"
+    rustc --print target-cpus hello.rs | grep -iE "${target_cpu}|cpu"
     CHECK_RESULT $? 0 0 "Failed to output the target cpus"
     rustc --print target-features hello.rs | grep "features"
     CHECK_RESULT $? 0 0 "Failed to output the target features"
@@ -88,7 +96,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf ./*.rs ./*.rlib hello*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

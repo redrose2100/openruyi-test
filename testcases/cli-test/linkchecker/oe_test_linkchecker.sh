@@ -27,11 +27,14 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-  linkchecker  https://gitlab.com
+  linkchecker  https://gitlab.com | grep -i 'Valid: 200 OK'
   CHECK_RESULT $? 0 0 "Test single URL failed."
-  linkchecker -r 2  https://gitlab.com
+  linkchecker -r 2  https://gitlab.com | grep -i 'Valid: 200 OK'
   CHECK_RESULT $? 0 0 "Failed to specify recursion depth"
-  linkchecker -F text/html https://gitlab.com
+  
+  touch linkchecker-out.html
+  chmod 777 linkchecker-out.html
+  linkchecker -F html https://gitlab.com | grep -i 'Valid: 200 OK'
   CHECK_RESULT $? 0 0 "Failed to specify output format as HTML"
   LOG_INFO "End of the test."
 }
@@ -39,6 +42,7 @@ function run_test() {
 function post_test() {
   LOG_INFO "start environment cleanup."
   DNF_REMOVE "$@"
+  rm -f linkchecker-out.html
   LOG_INFO "Finish environment cleanup!"
 }
 

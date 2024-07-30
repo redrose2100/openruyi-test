@@ -25,12 +25,16 @@ function pre_test() {
 function run_test()
 {
     LOG_INFO "Start to run test."
-    get_module kvm|grep coresize
-    CHECK_RESULT $? 0 0 "get_module function error"
-    get_module drm|grep coresize
-    CHECK_RESULT $? 0 0 "get_module function error"
-    get_module nfnetlink|grep coresize
-    CHECK_RESULT $? 0 0 "get_module function error"
+    modinfo kvm|grep sig
+    CHECK_RESULT $? 0 1 "modinfo function error"
+    modinfo kvm|grep parm
+    CHECK_RESULT $? 0 0 "modinfo function error"
+    modinfo drm|grep sig
+    CHECK_RESULT $? 0 1 "modinfo function error"
+    modinfo drm|grep parm
+    CHECK_RESULT $? 0 0 "modinfo function error"
+    modinfo nfnetlink|grep sig
+    CHECK_RESULT $? 0 0 "modinfo function error"
     LOG_INFO "End to run test."
 }
 

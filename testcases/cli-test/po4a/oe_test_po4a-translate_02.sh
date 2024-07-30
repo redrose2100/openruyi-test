@@ -25,7 +25,7 @@ function pre_test()
     DNF_INSTALL "po4a"
     mkdir tmp
     echo "hello world" > tmp/master.txt
-    po4a-gettextize -f text -m tmp/master.txt -p tmp/translation_Esp.po
+    po4a-updatepo -f text -m tmp/master.txt -p tmp/translation_Esp.po
     sed -i 's/msgstr ""/msgstr "Hola, Mundo"/g' tmp/translation_Esp.po
 
     LOG_INFO "End to prepare the test environment."

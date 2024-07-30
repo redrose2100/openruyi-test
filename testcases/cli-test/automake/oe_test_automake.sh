@@ -16,19 +16,20 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   automake package test
 # ############################################
+# shellcheck disable=SC2028
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL 'automake make'
+    DNF_INSTALL "gcc automake make"
     mkdir /tmp/main
     LOG_INFO "End to prepare the test environment!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    cd /tmp/main
+    cd /tmp/main || exit
     echo '#include <stdio.h>
 int main(int argc, char** argv)
 {
@@ -69,7 +70,7 @@ main_SOURCES=main.c' > Makefile.am
 function post_test() {
     LOG_INFO "Start environment cleanup."
     rm -rf /tmp/main
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

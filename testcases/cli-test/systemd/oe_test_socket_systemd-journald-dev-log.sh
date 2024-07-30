@@ -16,32 +16,54 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test systemd-journald-dev-log.socket restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "Start to prepare the test environment."
     systemctl stop systemd-journald-audit.socket
     systemctl stop systemd-journald.socket
     systemctl stop systemd-journald-dev-log.socket
     systemctl stop systemd-journald.service
-    LOG_INFO "End of environmental preparation!"
+    log_time=$(date '+%Y-%m-%d %T')
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
-    test_execution systemd-journald-dev-log.socket
+    LOG_INFO "Start to run test."
+    systemctl restart systemd-journald-dev-log.socket
+    CHECK_RESULT $? 0 0 "systemd-journald-dev-log.socket restart failed"
+    SLEEP_WAIT 5
+    systemctl status systemd-journald-dev-log.socket | grep "Active: active"
+    CHECK_RESULT $? 0 0 "systemd-journald-dev-log.socket restart failed"
+    systemctl stop systemd-journald-dev-log.socket
+    CHECK_RESULT $? 0 0 "systemd-journald-dev-log.socket stop failed"
+    SLEEP_WAIT 5
+    systemctl status systemd-journald-dev-log.socket | grep "Active: inactive"
+    CHECK_RESULT $? 0 0 "systemd-journald-dev-log.socket stop failed"
+    systemctl stop systemd-journald-audit.socket
+    systemctl stop systemd-journald.socket
+    systemctl stop systemd-journald-dev-log.socket
+    systemctl stop systemd-journald.service
+    systemctl start systemd-journald-dev-log.socket
+    CHECK_RESULT $? 0 0 "systemd-journald-dev-log.socket start failed"
+    SLEEP_WAIT 5
+    systemctl status systemd-journald-dev-log.socket | grep "Active: active"
+    CHECK_RESULT $? 0 0 "systemd-journald-dev-log.socket start failed"
+    test_enabled systemd-journald-dev-log.socket
+    journalctl --since "${log_time}" -u systemd-journald-dev-log.socket | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
+    CHECK_RESULT $? 0 1 "There is an error message for the log of systemd-journald-dev-log.socket"
     test_reload systemd-journald-dev-log.socket
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "Start environment cleanup."
+    LOG_INFO "Start to restore the test environment."
     systemctl start systemd-journald-audit.socket
     systemctl start systemd-journald.socket
     systemctl start systemd-journald-dev-log.socket
     systemctl start systemd-journald.service
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/gala-spider",
+    "cases": [
+        {
+            "name": "oe_test_service_gala-spider"
+        },
+        {
+            "name": "oe_test_service_gala-inference"
+        }
+    ]
+}

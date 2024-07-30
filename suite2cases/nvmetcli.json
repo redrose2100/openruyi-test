@@ -3,6 +3,18 @@
     "cases": [
         {
             "name": "oe_test_service_nvmet"
+        },
+        {
+            "name": "oe_test_service_nvmf-connect-nbft"
+        },
+        {
+            "name": "oe_test_service_nvmf-autoconnect"
+        },
+        {
+            "name": "oe_test_service_nvmefc-boot-connections"
+        },
+        {
+            "name": "oe_test_target_nvmf-connect"
         }
     ]
 }

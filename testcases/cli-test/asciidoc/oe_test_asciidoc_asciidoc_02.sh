@@ -17,7 +17,7 @@
 # @Desc      :   Take the test asciidoc option
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
@@ -34,7 +34,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    asciidoc --doctest common/test.adoc 2>&1 
+    asciidoc --doctest common/test.adoc 2>&1
     CHECK_RESULT $? 0 0 "Check asciidoc --doctest failed"
     for doctype in "article" "book" "manpage"
     do
@@ -45,7 +45,7 @@ function run_test() {
     	test -f ${TMP_DIR}/test4.pdf
    	CHECK_RESULT $? 0 0 "Check asciidoc --doctype ${doctype} failed"
     done
-    asciidoc -c common/test.adoc 2>&1 
+    asciidoc -c common/test.adoc 2>&1
     CHECK_RESULT $? 0 0 "Check asciidoc -c failed"
     asciidoc --dump-conf common/test.adoc 2>&1
     CHECK_RESULT $? 0 0 "Check asciidoc --dump-conf failed"
@@ -72,8 +72,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf ${TMP_DIR} 
-    DNF_REMOVE
+    rm -rf ${TMP_DIR}
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

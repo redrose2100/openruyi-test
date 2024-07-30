@@ -5,6 +5,9 @@
             "name": "oe_test_service_fstrim"
         },
         {
+            "name": "oe_test_util-linux_fincore."
+        },
+        {
             "name": "oe_test_service_uuidd"
         },
         {
@@ -12,6 +15,15 @@
         },
         {
             "name": "oe_test_libuuid"
+        },
+        {
+            "name": "oe_test_unshare"
+        },
+        {
+            "name": "oe_test_hwclock"
+        },
+        {
+            "name": "oe_test_mkfs_001"
         }
     ]
 }

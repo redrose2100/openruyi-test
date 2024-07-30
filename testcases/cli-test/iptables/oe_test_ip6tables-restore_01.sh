@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ip6tables-restore function
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -36,7 +36,7 @@ COMMIT" > ip6tables_rule
     ip6tables-restore -t ip6tables_rule
     CHECK_RESULT $? 0 0 "ip6tables-restore -t exec fail"
     ip6tables-restore -n ip6tables_rule
-    ip6tables -nvL | grep "DROP       icmp"
+    ip6tables -nvL | grep -E "DROP\s+icmp|DROP\s+1"
     CHECK_RESULT $? 0 0 "ip6tables-restore -n exec fail"
     LOG_INFO "Finish test!"
 }
@@ -46,7 +46,7 @@ function post_test() {
     ip6tables-restore -n ip6tables_bak
     CHECK_RESULT $? 0 0 "Failed to restore environment"
     rm -fr ip6tables*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -19,6 +19,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL genisoimage
     mkdir /tmp/test
     echo -e "aaabbbcccddd"> /tmp/test/file1
     echo -e "eeefffggghhh"> /tmp/test/file2
@@ -36,8 +37,8 @@ function run_test()
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf /tmp/test
-    rm -rf /tmp/testfile.iso
+    DNF_REMOVE "$@"
+    rm -rf /tmp/test /tmp/testfile.iso
     LOG_INFO "Finish environment cleanup!"
 }
 

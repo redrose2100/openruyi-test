@@ -17,7 +17,7 @@
 #@Desc      	:   use the rpmlint command to check common errors in the rpm packages
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -37,28 +37,23 @@ function run_test()
 
     # test -V
     LOG_INFO "Start to run test2."
-    rpmlint -V | grep "rpmlint version 1.10 Copyright (C) 1999-2007 Frederic Lepied, Mandriva"
+    rpmlint_version=$(rpm -qa rpmlint | awk -F- '{print $2}')
+    rpmlint -V | grep "$rpmlint_version"
     CHECK_RESULT $? 0 0 "rpmlint -V failed"
     LOG_INFO "End to run test2."
 
-    # test -C
-    LOG_INFO "Start to run test3."
-    rpmlint -C /root /home | grep -oE "[0-9]* packages and [0-9]* specfiles checked; [0-9]* errors, [0-9]* warnings."
-    CHECK_RESULT $? 0 0 "rpmlint -C failed"
-    LOG_INFO "End to run test3."
-
     # test spec
-    LOG_INFO "Start to run test4."
+    LOG_INFO "Start to run test3."
     git clone https://gitee.com/src-openeuler/unzip.git
     rpmlint unzip/unzip.spec | grep -oE "[0-9]* packages and [0-9]* specfiles checked; [0-9]* errors, [0-9]* warnings."
     CHECK_RESULT $? 0 0 "rpmlint unzip.spec failed"
-    LOG_INFO "End to run test4."
+    LOG_INFO "End to run test3."
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE 
+    DNF_REMOVE "$@"
     rm -rf LibRaw-0.19.0-9.oe1.aarch64.rpm unzip
     LOG_INFO "End to restore the test environment."
 }

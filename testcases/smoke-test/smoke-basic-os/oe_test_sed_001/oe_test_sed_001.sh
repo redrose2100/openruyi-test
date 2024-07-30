@@ -54,9 +54,15 @@ function run_test() {
     sed '1,4d' /tmp/test_sed
     grep dddd /tmp/test_sed
     CHECK_RESULT $? 0 0 "sed '1,4d'execute fail"
-    sed -i '1,4d' /tmp/test_sed
-    grep dddd /tmp/testsed
-    CHECK_RESULT $? 0 1 "sed -i '1,4d' execute fail"
+    sed -i '4a\ffff' /tmp/test_sed
+    grep ffff /tmp/test_sed
+    CHECK_RESULT $? 0 0 "set ffff fail"
+    sed -i '1c hello' /tmp/test_sed
+    grep eeee /tmp/test_sed
+    CHECK_RESULT $? 0 1 "set hello fail"
+    sed -i '1,5d' /tmp/test_sed
+    grep hello /tmp/testsed
+    CHECK_RESULT $? 0 1 "sed -i '1,5d' execute fail"
     LOG_INFO "Finished test!"
 }
 

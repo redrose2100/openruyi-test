@@ -2,7 +2,13 @@
     "path": "${OET_PATH}/testcases/smoke-test/smoke-basic-os",
     "cases": [
         {
+            "name": "oe_test_head"
+        },
+        {
             "name": "oe_test_acl_001"
+        },
+        {
+            "name": "oe_test_arch"
         },
         {
             "name": "oe_test_basic_ssh_001"
@@ -88,6 +94,9 @@
         {
             "name": "oe_test_localectl_001"
         },
+        {
+            "name": "oe_test_logname"
+        },
 	{
 	    "name": "oe_test_logrotate_002"
 	},
@@ -101,7 +110,13 @@
             "name": "oe_test_logrotate_003"
         },
         {
+            "name": "oe_test_lsns"
+        },
+        {
             "name": "oe_test_ls_001"
+        },
+        {
+            "name": "oe_test_ls_002"
         },
         {
             "name": "oe_test_lsscsi"
@@ -652,6 +667,9 @@
         {
             "name": "oe_test_systemd_SCEN_15"
         },
+        {
+            "name": "oe_test_uptime"
+        },
 	{
 	    "name": "oe_test_find"
 	},
@@ -726,6 +744,9 @@
         },
         {
             "name": "oe_test_IPVLAN_07"
+        },
+        {
+            "name": "oe_test_manpath"
         },
         {
             "name": "oe_test_mpstat_01"
@@ -815,8 +836,32 @@
 	     "name": "oe_test_ebtables_002"
 	},
 	{
+            "name": "oe_test_lscpu"
+        },
+	{
+            "name": "oe_test_lsipc"
+        },
+	{
 	     "name":"oe_test_lzo_002"
-	}
+	},
+	{
+	    "name": "oe_test_lsirq"
+	},
+	{
+	    "name": "oe_test_pidwait"
+	},
+      {
+           "name": "oe_test_nproc"    
+      },
+      {
+           "name": "oe_test_echo"    
+      },
+      {
+           "name": "oe_test_pidof"
+      },
+      {
+           "name": "oe_test_link"
+      }
     ]
 }
 

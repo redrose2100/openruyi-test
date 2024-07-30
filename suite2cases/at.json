@@ -1,0 +1,18 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/at",
+    "cases": [
+        {
+            "name": "oe_test_at_at"
+        },
+        {
+            "name": "oe_test_at_atrm"
+        },
+        {
+            "name": "oe_test_service_atd"
+        },
+        {
+            "name": "oe_test_atd_01"
+        }
+    ]
+}
+

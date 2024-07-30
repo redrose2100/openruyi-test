@@ -16,13 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test radvd.service restart
 # #############################################
-
+#shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL radvd
-    eth_name=$(ip route | grep "${NODE1_IPV4}" | awk '{print $3}')
+    eth_name=$(ip a | grep "${NODE1_IPV4}" | awk '{print $NF}')
     cp /etc/radvd.conf /etc/radvd.bak
     echo "interface ${eth_name}
 {

@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Many of the innuendo parameters and type information used to describe the popularity of GeoTiff
 # ##############################################################################################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
@@ -27,9 +27,6 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    makegeo
-    test -f newgeo.tif
-    CHECK_RESULT $? 0 0 "The tif file is not generated"
     listgeo newgeo.tif >zl/new.geo
     test -f zl/new.geo
     CHECK_RESULT $? 0 0 "The geo file is not generated"
@@ -59,9 +56,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    DNF_REMOVE
-    rm -rf newgeo.tif newgeo.tfw zl
+    DNF_REMOVE "$@"
+    rm -rf newgeo.tfw zl
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

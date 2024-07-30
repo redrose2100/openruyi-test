@@ -17,17 +17,20 @@
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/wireshark/common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "wireshark bc"
+    generate_traffic &
+    WIRESHARK_TRAFFIC_PID=$!
     LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    netCard=$(dumpcap -D | awk -F '.' '{print $2}' | head -1)
-    SLEEP_WAIT 10 "dumpcap -i $netCard -c 20 -w testfile6" 2
+    netCard=$(dumpcap -D | awk -F '.' '{print $2}' | head -1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+    SLEEP_WAIT 10 "dumpcap -i '$netCard' -c 20 -w testfile6" 2
     capinfos testfile6 | grep "Number of packets:.*2"
     CHECK_RESULT $?
     editcap -C 20 testfile6 testfile6_A
@@ -41,9 +44,9 @@ function run_test() {
     CHECK_RESULT $?
     s1=$(capinfos testfile7 | grep "[0-9]:[0-9]" | awk -F ':' '{print $NF}' | head -1)
     e1=$(capinfos testfile7 | grep "[0-9]:[0-9]" | awk -F ':' '{print $NF}' | tail -1)
-    s2=$(echo $s1-0.5 | bc)
-    e2=$(echo $e1-0.5 | bc)
-    capinfos testfile7_A | grep -E $s2"|"$e2
+    s2=$(echo "$s1"-0.5 | bc)
+    e2=$(echo "$e1"-0.5 | bc)
+    capinfos testfile7_A | grep -E "$s2""|""$e2"
     CHECK_RESULT $?
     SLEEP_WAIT 5 "dumpcap -i 1 -a filesize:1 -w testfile8" 2
     capinfos testfile8 | grep "File size:.*bytes"
@@ -60,14 +63,14 @@ function run_test() {
     CHECK_RESULT $?
     capinfos testfile7_B_* | grep -E "Capture duration|11:43"
     CHECK_RESULT $?
-    SLEEP_WAIT 10 "dumpcap -i $netCard -f \"tcp port 22\" -c 20 -w testfile2" 2
+    SLEEP_WAIT 10 "dumpcap -i '$netCard' -f \"tcp port 22\" -c 20 -w testfile2" 2
     captype testfile2 | grep "testfile2: pcapng"
     CHECK_RESULT $?
     editcap -F pcap testfile2 testfile2_D
     CHECK_RESULT $?
     captype testfile2_D | grep "testfile2_D: pcap"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "dumpcap -i $netCard -c 20 -w testfile1" 2
+    SLEEP_WAIT 5 "dumpcap -i '$netCard' -c 20 -w testfile1" 2
     capinfos -E testfile1 | grep "File encapsulation:.*Ethernet"
     CHECK_RESULT $?
     editcap -T ap1394 testfile1 testfile1_B
@@ -79,8 +82,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $(ls | grep -v ".sh")
-    DNF_REMOVE
+    close_traffic "$WIRESHARK_TRAFFIC_PID"
+    rm -f testfile*
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 

@@ -21,35 +21,40 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "chrpath"
-    pwd=`pwd`
+    DNF_INSTALL "gcc chrpath"
     LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cd /usr/bin
-    ldd man | grep 'libman' | grep 'not found'
-    CHECK_RESULT $? 0 1 "Failed to view the dependent original path"
-    chrpath -l man | grep 'PATH=/usr/lib64/man-db'
+    cat > test.c <<-EOF
+#include<stdio.h>
+
+int main(int argc,char** argv)
+{
+        printf("hello world\n");
+        return 0;
+}
+EOF
+    CHECK_RESULT $? 0 0 "File creation failed"
+    gcc -o test test.c -Wl,-rpath=/usr/lib64
+    CHECK_RESULT $? 0 0 "File compilation failed"
+    chrpath -l test | grep 'RPATH=/usr/lib64'
     CHECK_RESULT $? 0 0 "Incorrect runpath"
-    chrpath -r "/usr/lib64/" man
-    chrpath -l man | grep 'PATH=/usr/lib64/'
+    chrpath -r "/usr/lib" test
+    chrpath -l test | grep 'RPATH=/usr/lib'
     CHECK_RESULT $? 0 0 "Failed to change search path"
-    chrpath -c man
-    ldd man | grep 'libman' | grep 'not found'
+    chrpath -c test | grep "RUNPATH=/usr/lib"
+    CHECK_RESULT $? 0 0 "path conversion failed"
+    ldd test | grep 'lib64'
     CHECK_RESULT $? 0 0 "Dependency path conversion failed"
-    chrpath -r "/usr/lib64/man-db" man
-    ldd man | grep 'libman' | grep 'not found'
-    CHECK_RESULT $? 0 1 "Dependent path restore failed"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    chrpath -r "/usr/lib64/man-db" man
-    DNF_REMOVE
-    cd $pwd
+    rm -rf test.c test
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 

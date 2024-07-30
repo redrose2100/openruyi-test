@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_createrepo_c_local_repo"
+        },
+        {
+            "name": "oe_test_createrepo_c_algorithm"
         }
     ]
 }

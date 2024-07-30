@@ -16,13 +16,13 @@
 #@Desc          :   OpenSSL commandline tool: file signature and signature verification
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     openssl dsaparam -noout -out dsakey.pem -genkey 2048
     CHECK_RESULT $?
-    grep 'BEGIN DSA PRIVATE KEY' dsakey.pem
+    grep 'PRIVATE KEY' dsakey.pem
     CHECK_RESULT $?
     echo "It is a test" >file.txt
     openssl dgst -sha1 -sign dsakey.pem -out dsasign.bin file.txt
@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $?
     openssl genrsa -out rsakey.pem
     CHECK_RESULT $?
-    grep 'BEGIN RSA PRIVATE KEY' rsakey.pem
+    grep 'PRIVATE KEY' rsakey.pem
     CHECK_RESULT $?
     openssl rsa -in rsakey.pem -pubout -out rsakey-pub.pem
     CHECK_RESULT $?
@@ -50,7 +50,11 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f $(ls | grep -v "\.sh\|common")
+    for file in *; do
+        if [[ $file != *.sh && $file != common ]]; then
+            rm -f "$file"
+        fi
+    done
     LOG_INFO "End to restore the test environment."
 }
 

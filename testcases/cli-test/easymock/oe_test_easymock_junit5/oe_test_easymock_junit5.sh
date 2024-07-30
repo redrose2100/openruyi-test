@@ -15,15 +15,18 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Easymock with JUnit5
 # ############################################
+# shellcheck disable=SC1091,SC2010
 
 source "../common/common_easymock.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "easymock junit5 maven"
-    java_version=$(rpm -qa java* | grep "java-.*-openjdk" | awk -F '-' '{print $2}')
-    DNF_INSTALL java-${java_version}-devel
+    java_version=$(rpm -qa java* | grep "java-.*-openjdk" -m1 | awk -F '-' '{print $2}')
+    DNF_INSTALL java-"${java_version}"-devel
     mkdir libs
-    cp -rf "$(rpm -ql junit5 | grep junit-jupiter-api.jar)" "$(rpm -ql easymock | grep easymock.jar)" "$(rpm -ql hamcrest | grep core.jar)" libs
+    cp -rf "$(rpm -ql junit5 | grep junit-jupiter-api.jar)" "$(rpm -ql easymock | grep easymock.jar)" libs
+    wget https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
+    mv hamcrest-core-1.3.jar libs/
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -36,8 +39,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf $(ls | grep -vE ".xml|main|.sh|test") /root/.m2
+    DNF_REMOVE "$@"
+    rm -rf "$(ls | grep -vE '.xml|main|.sh|test')" /root/.m2
     LOG_INFO "End to restore the test environment."
 }
 

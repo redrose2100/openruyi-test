@@ -1,0 +1,13 @@
+# bash ignore casename[#reason]
+run-alias         #LC_ALL=en_US.UTF-8(LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory)
+run-array         #非问题，测试脚本实际是执行成功的，嵌入式镜像多了egrep: warning: egrep is obsolescent; using grep -E，导致执行日志与预期不符
+run-builtins      #LC_ALL=en_US.UTF-8(LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory)
+run-execscript    #非问题，用例执行成功，与预期文件输出不一致
+run-glob-test     #LC_ALL=en_US.UTF-8(LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory)
+run-intl          #LC_ALL=en_US.UTF-8(LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory)
+run-new-exp       #非问题，输出与预期不一致：-argv[1] = <host(2)[5.2]# > 和+argv[1] = <host(2)[5.2]$ >不同，多了警告-test-tests: the test suite should not be run as root
+run-printf		  # LANG=en_US.UTF-8未生效，涉及文件printf2.sub
+run-read          #read -e -t .0001 a <<<abcde && echo $a,预期结果是adcde，嵌入式是abcd，涉及文件：./read7.sub和./read2.sub,时间加大即可，命令使用正常
+run-shopt         #非问题，镜像差异导致
+run-test          #非问题，输出多了警告-test-tests: the test suite should not be run as root，导致与预期文件不一致
+run-vredir        #非问题，手动执行成功

@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL "iSulad syscontainer-tools lxcfs-tools lxcfs tar"
+    DNF_INSTALL "iSulad syscontainer-tools lxcfs-tools lxcfs tar lcr"
     sed -i '/runc/s/runc/lcr/' /etc/isulad/daemon.json
     if [[ ${NODE1_FRAME} == "aarch64" ]]; then
         wget https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/aarch64/openEuler-docker.aarch64.tar.xz
@@ -34,9 +34,9 @@ function pre_test() {
     systemctl restart isulad
     mkdir /opt/rootfs
     cp "$image_name" /opt/rootfs
-    xz -d /opt/rootfs/"$image_name"
+    xz -d "/opt/rootfs/$image_name"
     img_tar=$(find /opt/rootfs -name "*.tar" | awk -F"/" '{print $NF}')
-    tar -xf /opt/rootfs/"$img_tar" --directory /opt/rootfs
+    tar -xf "/opt/rootfs/$img_tar" --directory /opt/rootfs
     root_tar=$(ls /opt/rootfs/*tar* | grep -v "$img_tar" | awk -F"/" '{print $NF}')
     tar -xf /opt/rootfs/"$root_tar" --directory /opt/rootfs
     isula load -i "$image_name"
@@ -57,9 +57,15 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    isula stop -f systest
-    isula rm "$(isula ps -a -q)"
-    isula rmi "$(isula images -q)"
+    containers_ids=$(isula ps -a -q)
+    for container_id in ${containers_ids}; do
+        isula stop -f "${container_id}"
+        isula rm "${container_id}"
+    done
+    images_ids=$(isula images -q)
+    for image_id in ${images_ids}; do
+        isula rmi "${image_id}"
+    done
     systemctl stop lxcfs
     systemctl stop isulad
     DNF_REMOVE "$@"

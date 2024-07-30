@@ -27,13 +27,18 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
+  soxi common/input.mp3
   sox -v 0.5 common/input.mp3 output_v0.5.wav
   test -e  output_v0.5.wav
   CHECK_RESULT $? 0 0 "output_v0.5.wav not exist"
-
+  soxi output_v0.5.wav |grep "Sample Encoding" | awk -F ":" '{print $2}' |grep "Signed Integer"
+  CHECK_RESULT $? 0 0 "check encoding type not correct"
+  
   sox common/input.mp3 -c 1 output_c1.wav
   test -e  output_c1.wav
   CHECK_RESULT $? 0 0 "output_c1.wav not exist"
+  channel_after=$(soxi output_c1.wav |grep "Channels" | awk -F ":" '{print $2}')
+  CHECK_RESULT "$channel_after" " 1" 0 "check channel data not correct"
 
   sox common/input.mp3 output_tirm1.wav trim 0 10
   sox common/input.mp3 output_tirm2.wav trim 10 20
@@ -47,6 +52,10 @@ function run_test() {
   CHECK_RESULT $? 0 0 "output_left.wav not exist"
   test -e  output_right.wav
   CHECK_RESULT $? 0 0 "output_right.wav not exist"
+  channel_left=$(soxi output_left.wav |grep "Channels" | awk -F ":" '{print $2}')
+  CHECK_RESULT "$channel_left" " 1" 0 "check left_wav channel data not correct"
+  channel_right=$(soxi output_right.wav |grep "Channels" | awk -F ":" '{print $2}')
+  CHECK_RESULT "$channel_right" " 1" 0 "check right_wav channel data not correct"
   LOG_INFO "End of the test."
 }
 

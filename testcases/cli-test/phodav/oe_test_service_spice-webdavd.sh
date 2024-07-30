@@ -16,32 +16,32 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test spice-webdavd.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    touch org.spice-space.webdav.0
+    LOG_INFO "Start to prepare the test environment."
     mkdir -p  /dev/virtio-ports/
-    mv org.spice-space.webdav.0  /dev/virtio-ports/
+    touch /dev/virtio-ports/org.spice-space.webdav.0
     DNF_INSTALL spice-webdavd
     systemctl start avahi-daemon.service
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     test_execution spice-webdavd.service
     test_reload spice-webdavd.service
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "Start to restore the test environment."
     systemctl stop avahi-daemon.service
     systemctl stop spice-webdavd.service
-    DNF_REMOVE
-    LOG_INFO "Finish environment cleanup!"
+    DNF_REMOVE "$@"
+    rm -rf /dev/virtio-ports
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

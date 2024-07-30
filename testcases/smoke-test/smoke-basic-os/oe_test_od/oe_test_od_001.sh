@@ -51,6 +51,12 @@ function run_test() {
     od -An -t d2 -s ./testfile | grep "25960  27756   8303  28535  27762   2660"
     CHECK_RESULT $? 0 0 "run od -t d2 -s failed"
 
+    od -v -t f4 ./testfile | grep "0000000   1.1431415e+27   7.6482007e+28   1.0998197e-32"
+    CHECK_RESULT $? 0 0 "run od -v -t f4 failed"
+
+    od --help | grep "--help"
+    CHECK_RESULT $? 0 0 "--help fail"
+
     LOG_INFO "Finish test!"
 }
 

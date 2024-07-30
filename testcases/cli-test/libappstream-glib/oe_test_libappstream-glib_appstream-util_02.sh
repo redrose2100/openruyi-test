@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of libappstream-glib command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -29,7 +29,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    appstream-util -v --profile --nonet check-component dejavu | grep "Checking source: \/usr/share/metainfo/dejavu"
+    appstream-util -v --profile --nonet check-component dejavu | grep "dejavu"
     CHECK_RESULT $? 0 0 "Check appstream-util -v --profile --nonet check-component failed"
 
     appstream-util -v --profile --nonet check-root | grep "AsStore:load-installed"
@@ -62,7 +62,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf glibtest
     LOG_INFO "Finish restore the test environment."
 }

@@ -74,8 +74,8 @@ function copyFiles() {
         findDir=$3
     fi
 
-    findThings=$(find "${findDir}" -name "$2")
-    if [ "$(find "${findDir}" -name "$2" | wc -l)" -gt 1 ]; then
+    findThings=$(find ${findDir} -name "$2")
+    if [ "$(find ${findDir} -name "$2" | wc -l)" -gt 1 ]; then
         for oneThing in ${findThings}; do
             cp -rR "${oneThing}" ./tmp_test/
         done
@@ -97,7 +97,7 @@ main() {
             downloadFromGitee "$2" "$3" "$6"
             if [ -z "$6" ]; then
                 if [ -z "$5" ]; then
-                    extractPackage "$2" "" "$4"
+                    extractPackage "$2" "$4" ""
                 else
                     extractPackage "$2" "$4" "$5"
                 fi

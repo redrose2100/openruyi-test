@@ -20,9 +20,18 @@
 
 source "./common/common_lib.sh"
 
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     iSulad_install
+    if [ "${NODE1_FRAME}" == "riscv64" ]; then
+        TEST_IMAGE=jchzhou/oerv
+        TEST_TAG=24.03    
+    else
+        TEST_IMAGE=centos
+        TEST_TAG=latest
+    fi
+
     localhostname=$(hostname)
     hostname test
     LOG_INFO "Start to prepare the test environment."
@@ -30,70 +39,70 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    isula run -itd -h "$(hostname)" --name volume -v vol:/vol:rw,nocopy centos
+    isula run -itd -h "$(hostname)" --name volume -v vol:/vol:rw,nocopy "${TEST_IMAGE}":"${TEST_TAG}"
     CHECK_RESULT $? 0 0 "create container failed"
     expect <<EOF
         spawn isula exec -it volume /bin/bash
         expect {
             "root@$(hostname)" {
-                send "cd /vol\\r"
+                send "cd /vol\n"
             }
         }
         expect {
             "root@$(hostname)" {
-                send "echo 'hello world' > test\\r"
+                send "echo 'hello world' > test\n"
             }
         }
         expect {
             "root@$(hostname)" {
-                send "exit\\r"
+                send "exit\n"
             }
         }
         expect eof
 EOF
     grep "hello world" /var/lib/isulad/volumes/vol/_data/test
     CHECK_RESULT $? 0 0 "resource mapping failed"
-    isula run -itd -h "$(hostname)" --name volume1 --mount type=volume,src=vol1,dst=/vol1,volume-nocopy=true centos
+    isula run -itd -h "$(hostname)" --name volume1 --mount type=volume,src=vol1,dst=/vol1,volume-nocopy=true "${TEST_IMAGE}":"${TEST_TAG}"
     CHECK_RESULT $? 0 0 "create container failed"
     expect <<EOF
         spawn isula exec -it volume1 /bin/bash
         expect {
             "root@$(hostname)" {
-                send "cd /vol1\\r"
+                send "cd /vol1\n"
             }
         }
         expect {
             "root@$(hostname)" {
-                send "echo 'hello world' > test\\r"
+                send "echo 'hello world' > test\n"
             }
         }
         expect {
             "root@$(hostname)" {
-                send "exit\\r"
+                send "exit\n"
             }
         }
         expect eof
 EOF
     grep "hello world" /var/lib/isulad/volumes/vol1/_data/test
     CHECK_RESULT $? 0 0 "resource mapping failed"
-    isula run -itd -h "$(hostname)" --name volume2 --volumes-from volume --volumes-from volume1 centos
+    isula run -itd -h "$(hostname)" --name volume2 --volumes-from volume --volumes-from volume1 "${TEST_IMAGE}":"${TEST_TAG}"
     CHECK_RESULT $? 0 0 "create container failed"
     expect <<EOF
         log_file /tmp/log_volume
         spawn isula exec -it volume2 /bin/bash
         expect {
             "root@$(hostname)" {
-                send "grep 'hello world' /vol/test\\r"
+                send "grep 'hello world' /vol/test\n"
             }
         }
         expect {
             "root@$(hostname)" {
-                send "grep 'hello world' /vol1/test\\r"
+                send "grep 'hello world' /vol1/test\n"
             }
         }
         expect {
             "root@$(hostname)" {
-                send "exit\\r"
+                send "exit\n"
             }
         }
         expect eof
@@ -111,8 +120,8 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    hostname ${localhostname}
-    isula rmi centos
+    hostname "${localhostname}"
+    isula rmi "${TEST_IMAGE}":"${TEST_TAG}"
     iSulad_remove
     rm -rf /tmp/log_volume
     LOG_INFO "End to restore the test environment"

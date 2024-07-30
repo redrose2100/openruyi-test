@@ -11,6 +11,15 @@
     "machine num": 2,
     "cases": [
         {
+            "name": "oe_test_enable_hugepage"
+        },
+        {
+            "name": "oe_test_cht_client_mode"
+        },
+        {
+            "name": "oe_test_cht_ordinary_mode"
+        },
+        {
             "name": "oe_test_who"
         },
         {
@@ -190,6 +199,9 @@
         },
         {
             "name": "oe_test_server_openssh_secure"
+        },
+        {
+            "name": "oe_test_netscript_cfg"
         },
         {
             "name": "oe_test_server_openssh_restart"
@@ -631,6 +643,9 @@
             "name": "oe_test_vim"
         },
         {
+            "name": "oe_test_vim_001"
+        },
+        {
             "name": "oe_test_basename"
         },
         {
@@ -668,6 +683,9 @@
     	},
         {
             "name": "oe_test_lsusb"
+    	},
+        {
+            "name": "oe_test_last"
     	},
         {
             "name": "oe_test_lastb"
@@ -895,7 +913,87 @@
 	},
 	{
 	  "name": "oe_test_readlink"
+	},
+	{
+	  "name": "oe_test_ul_001"
+	},
+	{
+	  "name": "oe_test_lscpu"
+	},
+	{
+	  "name": "oe_test_lsmem_1"
+	},
+        {
+          "name": "oe_test_yumdownloader"
+        },
+        {
+          "name": "oe_test_lsmem_2"
+        }
+	,
+	 {
+            "name": "oe_test_fallocate"
+        }
+	 ,
+         {
+            "name": "oe_test_xzgrep"
+        }
+        ,
+        {
+            "name": "oe_test_sfdisk"
+        },
+        {
+            "name": "oe_test_lsmem_3"
+        },
+        {
+            "name": "oe_test_lscpu_2"
+        },
+        {
+            "name": "oe_test_mkfifo"
+        },
+        {
+            "name": "oe_test_lspci"
+        },
+	{
+	    "name": "oe_test_bzcat"
+        },
+	{
+	    "name": "oe_test_zipinfo"
+	},
+	{
+	    "name": "oe_test_gunzip"
+        },
+        {	
+	    "name": "oe_test_split_01"
+	},
+	{
+	   "name": "oe_test_getent"
+	},
+	{
+	   "name": "oe_test_fincore"
+	},
+	{
+	   "name": "oe_test_udisksctl"
+	},
+	{
+	   "name": "oe_test_c++_stl"
+	},
+	{
+	   "name": "oe_test_fallocate_01"
+	},
+	{
+	   "name": "oe_test_lslocks"
+	},
+	{
+	    "name": "oe_test_brotli_002"
+	},
+	{
+	    "name": "oe_test_lslocks_2"
+	},
+	{
+	    "name": "oe_test_lslogins_1"
+	},
+	{
+	    "name": "oe_test_more"
 	}
-
     ]
 }

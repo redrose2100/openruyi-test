@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   fio command test
 # ############################################
+
+# shellcheck disable=SC1091,SC2154
 source ./common/disk_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     check_free_disk
-    DNF_INSTALL fio
+    DNF_INSTALL "fio libaio-devel"
     test -f test.txt || touch test.txt
     LOG_INFO "End to prepare the test environment!"
 }
@@ -33,7 +35,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Generating Zipf distribution option failed"
     fio-genzipf -i zipf theta -o 2 | grep "block_size"
     CHECK_RESULT $? 0 0 "fio-genzipf -i zipf theta -o option failed"
-    fio-genzipf -i zipf theta -o 2 -c
+    fio-genzipf -i zipf theta -g 2 -o 2 -c
     CHECK_RESULT $? 0 0 "fio-genzipf -i zipf theta -o 2 -c failed "
     fio-genzipf -g 2 | grep "2 GiB size and 4096 block_size"
     CHECK_RESULT $? 0 0 "fio-genzipf -g option failed"
@@ -43,12 +45,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "fio-genzipf -b option failed"
     fio-verify-state test.txt | grep "Version"
     CHECK_RESULT $? 0 0 " fio-verify-state option failed"
-    fio-dedupe -t 3 /dev/${local_disk} | grep "Will check </dev/${local_disk}>"
+    fio-dedupe -t 3 /dev/"${local_disk}" | grep "Will check </dev/${local_disk}>"
     CHECK_RESULT $? 0 0 "fio-dedupe option failed"
-    fio-dedupe -d 3 /dev/${local_disk} | grep "Will check </dev/${local_disk}>"
+    fio-dedupe -d 3 /dev/"${local_disk}" | grep "Will check </dev/${local_disk}>"
     CHECK_RESULT $? 0 0 "fio-dedupe option failed"
     LOG_INFO "End of testcase execution!"
 }
+
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
@@ -57,4 +60,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

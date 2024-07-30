@@ -29,12 +29,21 @@ function run_test() {
     uname -m
     CHECK_RESULT $? 0 0 "uname -m display error"
 
-    uname -a | grep $(uname -r)
+    uname -a | grep "$(uname -r)"
     CHECK_RESULT $? 0 0 "uname -a display error"
 
     uname --help
     CHECK_RESULT $? 0 0 "uname --help display error"
+
+    uname -o
+    CHECK_RESULT $? 0 0 "uname -o display error"
+
+    uname -p
+    CHECK_RESULT $? 0 0 "uname -p display error"
+
+    uname -n
+    CHECK_RESULT $? 0 0 "uname -n display error"
     LOG_INFO "Finish test!"
 }
 
-main $@
+main "$@"

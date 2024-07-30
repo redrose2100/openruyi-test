@@ -16,7 +16,7 @@
 #@Desc          :   OpenSSL commandline tool: Diffie-Hellman(key exchange protocal/algorithm)
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -24,7 +24,7 @@ function run_test() {
     CHECK_RESULT $?
     grep 'BEGIN DH PARAMETERS' dhparam.pem
     CHECK_RESULT $?
-    openssl dhparam -in dhparam.pem -noout -C
+    openssl dhparam -in dhparam.pem -noout -C || openssl dhparam -in dhparam.pem -noout -check
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

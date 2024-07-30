@@ -28,6 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    automount --foreground --dont-check-daemon &
     automount_daemon_id=$(pgrep -f "automount --foreground --dont-check-daemon")
     [ -n "$automount_daemon_id" ]
     CHECK_RESULT $?

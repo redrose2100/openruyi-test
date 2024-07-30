@@ -47,10 +47,10 @@ EOF
     cp /opt/file1 /opt/file3
     cmp /opt/file1 /opt/file3
     CHECK_RESULT $? 0 0 "The two files have the same content,but the detection fails"
-    if locale | grep LC_COLLATE | grep UTF-8; then
+    if locale | grep LC_COLLATE | grep "zh_CN.utf8"; then
         cmp /opt/file1 /opt/file2 | grep "不同"
         CHECK_RESULT $? 0 0 "The contents of the files are different,but no difference is detected"
-        cmp -l file1 file2 | grep "结束"
+        cmp -l /opt/file1 /opt/file2 | grep "结束"
         CHECK_RESULT $? 1 0 "Unable to display details"
     fi
     LOG_INFO "End to run test."

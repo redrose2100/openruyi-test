@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   OSC is a command line tool based on OBS, which is equivalent to the interface of OBS.
 #####################################
-
+# shellcheck disable=SC1091,SC2035,SC2154
 source "common/common_osc.sh"
 
 function config_params() {
@@ -27,8 +27,8 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL osc
-    osc checkout $branches_path | grep 'revision'
-    cd $branches_path/zjl || exit 1
+    osc checkout "$branches_path" | grep 'revision'
+    cd "$branches_path"/zjl || exit 1
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -39,13 +39,13 @@ function run_test() {
     CHECK_RESULT $?
     osc info | grep 'Project name'
     CHECK_RESULT $?
-    osc config section --dump-full | grep 'passx'
+    osc config section --dump-full | grep 'user'
     CHECK_RESULT $?
-    osc config section --dump | grep 'plaintext_passwd'
+    osc config section --dump | grep 'user'
     CHECK_RESULT $?
     osc clean . | grep 'Removing: osc.log'
     CHECK_RESULT $?
-    osc comment list package $branches_path zjl
+    osc comment list package "$branches_path" zjl
     CHECK_RESULT $?
     touch 4.txt
     osc add * | grep 'A' | grep '4.txt'

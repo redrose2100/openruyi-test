@@ -17,7 +17,13 @@
 # @Desc      :   Test nftables.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL nftables
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -38,6 +44,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload nftables.service
     systemctl stop nftables.service
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
