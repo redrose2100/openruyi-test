@@ -46,6 +46,15 @@ function run_test() {
     TEMP=$(ls -F)
     [[ $TEMP == *"test001/"* ]]
     CHECK_RESULT $? 0 0 "Command execution check file error"
+    TEMP=$(ls ./*.txt )
+    [[ $TEMP == "./test.txt" ]]
+    CHECK_RESULT $? 0 0 "Execution error"
+    TEMP=$(ls -g )
+    [[ $TEMP == *"test001"* ]]
+    CHECK_RESULT $? 0 0 "Execution error"
+    TEMP=$(ls -group )
+    [[ $TEMP == *"test001/"* ]]
+    CHECK_RESULT $? 0 0 "Execution error"
     LOG_INFO "Finish test!"
 }
 
