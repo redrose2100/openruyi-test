@@ -32,10 +32,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to view all SYSCALL options supported by auditd"
     ausyscall  list
     CHECK_RESULT $? 0 0 "failed to list the system calls supported by the current system"
-    ausyscall  100|grep time
-    CHECK_RESULT $? 0 0 "failed to view all SYSCALL options supported by auditd in item 100"
-    ausyscall --exact 1|grep write
-    CHECK_RESULT $? 0 0 "failed to view all SYSCALL options supported by auditd in item 1"
+    ausyscall  100
+    CHECK_RESULT $? 0 0 "100 command execution failed"
+    ausyscall --exact 1
+    CHECK_RESULT $? 0 0 "exact command execution failed"
+    ausyscall open | grep open
+    CHECK_RESULT $? 0 0 "retrieval failed open"
+    ausyscall read | grep read
+    CHECK_RESULT $? 0 0 "retrieval failed read"
+    ausyscall write |grep write
+    CHECK_RESULT $? 0 0 "retrieval failed write"
     LOG_INFO "End to run test."
 }
 
