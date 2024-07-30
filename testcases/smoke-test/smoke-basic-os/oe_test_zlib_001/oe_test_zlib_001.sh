@@ -27,7 +27,7 @@ function pre_test() {
 }
 
 function run_test() {
-    cat<<EOF>zlib.c
+    cat >zlib.c <<EOF 
 #include <stdio.h>
 #include <zlib.h>
 
