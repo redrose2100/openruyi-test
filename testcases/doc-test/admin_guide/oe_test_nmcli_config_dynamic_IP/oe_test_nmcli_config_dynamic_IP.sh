@@ -19,7 +19,6 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    pre_id=$(nmcli connection show|grep "${NODE1_NIC}"|awk -F ' ' '{print $2}')
     con_name='test_con'
     LOG_INFO "Loading data is complete!"
 }
@@ -39,7 +38,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     nmcli con delete ${con_name}
-    nmcli con up "${pre_id}"
+    nmcli con up "${NODE1_NIC}"
     LOG_INFO "Finish environment cleanup."
 }
 
