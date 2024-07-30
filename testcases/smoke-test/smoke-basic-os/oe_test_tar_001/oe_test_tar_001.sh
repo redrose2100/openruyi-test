@@ -32,6 +32,7 @@ function run_test() {
     mkdir -p /tmp/test
     dd if=/dev/zero of=/tmp/test/test count=1 bs=512
     tar -cf test.tar /tmp/test/test
+    touch file1 /tmp/test
     ls test.tar
     CHECK_RESULT $? 0 0 "tar -cf execute fail"
     tar -tvf test.tar | grep "test"
@@ -40,12 +41,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "tar --help execute fail"
     tar --usage
     CHECK_RESULT $? 0 0 "tar --usage execute fail"
+    tar -rvf test.tar file1 | grep "file1"
+    CHECK_RESULT $? 0 0 "tar -rvf execute fail"
+    tar --list -f test.tar | grep "file1"
+    CHECK_RESULT $? 0 0 "tar --list execute fail"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf /tmp/test test.tar
+    rm -rf /tmp/test test.tar file1
     DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
