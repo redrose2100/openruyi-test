@@ -12,9 +12,9 @@
 # #############################################
 # @Author    :   wangxiaorou
 # @Contact   :   wangxiaorou@uniontech.com
-# @Date      :   2024/07/25
+# @Date      :   2024/07/30
 # @License   :   Mulan PSL v2
-# @Desc      :   test createrepo_c pkg path
+# @Desc      :   test createrepo_c BaseFun
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL "createrepo_c"
-  yum download httpd-help httpd tcpdump
+  yum download tcpdump
   test -f /etc/yum.repos.d/local.repo && rm -rf /etc/yum.repos.d/local.repo
   test_path="/tmp"
   test -d "${test_path}"/pkg && rm -rf "${test_path}"/pkg
@@ -34,43 +34,34 @@ baseurl=file://${test_path}/pkg
 enabled=1
 gpgcheck=0
 EOF
-  mv httpd* tcpdump* "${test_path}"/pkg
-  createrepo_c "${test_path}"/pkg
+  mv tcpdump* "${test_path}"/pkg
   yum clean all
   LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
-  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)" "httpd httpd-help tcpdump" 0 "createrepo all rpm fail"
+  createrepo_c -h |grep -Ei '用法|usage'
+  CHECK_RESULT $? 0 0 "createrepo_c usage fail"
 
-  createrepo_c -x "*rpm" "${test_path}"/pkg
-  CHECK_RESULT $? 0 0 "createrepo no rpm fail"
-  yum clean all;sleep 5
-  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch")x" "x" 0 "createrepo no rpm fail"
+  createrepo_c -V
+  CHECK_RESULT $? 0 0 "createrepo_c version fail"
+  CHECK_RESULT "$(createrepo_c -V |awk '{print $2}')" "$(rpm -qi createrepo_c  |grep Version |awk '{print $NF}')" 0 "createrepo_c version fail"
 
-  cd "${test_path}"/pkg || exit
-  createrepo_c -n tcpdump* ./
-  CHECK_RESULT $? 0 0 "createrepo only tcpdump rpm fail"
-  yum clean all;sleep 3
-  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)" "tcpdump" 0 "createrepo only tcpdump rpm fail"
+  createrepo_c "${test_path}"/pkg -v
+  CHECK_RESULT $? 0 0 "createrepo_c run verbosely fail"
+  createrepo_c "${test_path}"/pkg -v 2>&1 |grep "$(date +%H:%M:%S)" |grep "All done"
+  CHECK_RESULT $? 0 0 "createrepo_c run verbosely fail"
 
-  createrepo_c -n httpd-help* -n tcpdump* -x tcpdump* ./
-  CHECK_RESULT $? 0 0 "createrepo only httpd-help rpm fail"
-  yum clean all;sleep 3
-  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)" "httpd-help" 0 "createrepo only httpd-help rpm fail"
-
-  createrepo_c --update ./
-  CHECK_RESULT $? 0 0 "createrepo update fail"
-  yum clean all;sleep 3
-  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)" "httpd httpd-help tcpdump" 0 "createrepo update fail"
-
+  createrepo_c --workers 4 "${test_path}"/pkg
+  CHECK_RESULT $? 0 0 "fix Number of workers fail"
+  CHECK_RESULT "$(createrepo_c --workers 4 "${test_path}"/pkg |grep "Pool started" |awk '{print $(NF-1)}')" "4" 0 "fix Number of workers fail"
+  CHECK_RESULT "$(createrepo_c "${test_path}"/pkg |grep "Pool started" |awk '{print $(NF-1)}')" "5" 0 "default Number of workers error"
   LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  cd .. || exit
   test -f /etc/yum.repos.d/local.repo && rm -rf /etc/yum.repos.d/local.repo
   test -d "${test_path}"/pkg && rm -rf "${test_path}"/pkg
   yum clean all
