@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_createrepo_c_algorithm"
+        },
+        {
+            "name": "oe_test_createrepo_c_pkg_path"
         }
     ]
 }
