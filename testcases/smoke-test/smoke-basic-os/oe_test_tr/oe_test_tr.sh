@@ -34,18 +34,21 @@ function run_test() {
     LOG_INFO "Start testing..."
     tr --v
     CHECK_RESULT $? 0 0 "Version is error"
-    cd /tmp&&tr -d "gghh" <test_tr> tr.result
+    cd /tmp&&tr -d "[:gghh:]" <test_tr> tr.result
     grep gghh /tmp/tr.result
     CHECK_RESULT $? 1 0 "delete testfile fail"    
-    tr -t "[123456]" "[oopptt]" <test_tr> tr.result
+    tr -t "123456" "[:oopptt:]" <test_tr> tr.result
     grep oopp /tmp/tr.result
     CHECK_RESULT $? 0 0 "cover testfile fail"
-    tr -s "[abcdef]" <test_tr> tr.result
+    tr -s "abcdef" <test_tr> tr.result
     grep abc /tmp/tr.result
     CHECK_RESULT $? 0 0 "duplicate removal error"   
     tr -c "0-9" "*" <test_tr> tr.result
     grep 123456 /tmp/tr.result
     CHECK_RESULT $? 0 0 "replace testfile fail"
+    tr '[:lower:]' '[:upper:]' <test_tr> tr.result
+    grep GGHH /tmp/tr.result
+    CHECK_RESULT $? 0 0 "upper testfile fail"
 }
 
 function post_test() {
@@ -55,4 +58,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
