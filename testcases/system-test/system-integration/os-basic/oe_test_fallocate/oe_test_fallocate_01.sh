@@ -33,10 +33,16 @@ function run_test() {
     fallocate -v -l 100M test1.txt
     du -sh test1.txt | awk '{print $1}' | grep -i '100M'
     CHECK_RESULT $? 0 0  "check test1.txt 100M failed"
+    fallocate -x -l 100M test2.txt
+    du -sh test2.txt | awk '{print $1}' | grep -i '100M'
+    CHECK_RESULT $? 0 0  "check test2.txt 100M failed"    
     fallocate -d test1.txt
     CHECK_RESULT $? 0 0  "fallocate failed to execute"
-    fallocate -p -o 100 -l 100 test1.txt
-    CHECK_RESULT $? 0 0  "check test1.txt failed"
+    fallocate -p -o 100 -l 100 test2.txt
+    CHECK_RESULT $? 0 0  "check test2.txt failed"
+    fallocate -z -l 100M test2.txt
+    du -sh test2.txt | awk '{print $1}' | grep -i '100M'
+    CHECK_RESULT $? 0 0  "check test2.txt 100M failed"
     LOG_INFO "End to run test."
 }
 
@@ -44,7 +50,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
     LOG_INFO "start environment cleanup!"
-    rm -rf  test1.txt
+    rm -rf  test1.txt test2.txt
     LOG_INFO "Finish environment cleanup!"
 
 }
