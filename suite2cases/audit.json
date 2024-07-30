@@ -105,6 +105,9 @@
         },
 	{
             "name": "oe_test_audit_monitor_pipe_file"
+        },
+        {
+            "name": "oe_test_audit_monitor_socket_file"
         }
     ]
 }
