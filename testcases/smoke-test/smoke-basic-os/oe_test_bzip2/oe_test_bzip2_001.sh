@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c), 2022-2022, Huawei Tech. Co., Ltd.
+# Copyright (c), 2024-2024, Huawei Tech. Co., Ltd.
 # Description: bzip2 检查压缩包完整性
 # Author: sunshang <sunshang4@h-partners.com>
 # Create: 2024-07-24
