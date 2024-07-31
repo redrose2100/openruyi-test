@@ -15,7 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command test-zstd
 # ############################################
-# shellcheck disable=SC1017,SC1091
+# shellcheck disable=SC1091,SP1017
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
