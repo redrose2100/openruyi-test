@@ -1,0 +1,75 @@
+{
+  "path": "$OET_PATH/testcases/smoke-test/smoke-elfutils",
+  "cases": [
+    {
+		"name": "oe_test_eu-addr2line_help"
+    },
+	{
+		"name": "oe_test_eu-addr2line_input_options_001"
+	},
+	{
+		"name": "oe_test_eu-addr2line_output_options_001"
+	},
+	{
+		"name": "oe_test_eu-ar_commands"
+	},
+	{
+		"name": "oe_test_eu-ar_modifiers_001"
+	},
+	{
+		"name": "oe_test_eu-elfclassify_additional_flag"
+	},
+	{
+		"name": "oe_test_eu-elfclassify_classification_options"
+	},
+	{
+		"name": "oe_test_eu-elfclassify_input_flags"
+	},
+	{
+		"name": "oe_test_eu-elfclassify_output_flags"
+	},
+	{
+		"name": "oe_test_eu-elfcmp_control_options_001"
+	},
+	{
+		"name": "oe_test_eu-elfcompress_default"
+	},
+	{
+		"name": "oe_test_eu-elfcompress_f"
+	},
+	{
+		"name": "oe_test_eu-elfcompress_n"
+	},
+	{
+		"name": "oe_test_eu-elfcompress_o"
+	},
+	{
+		"name": "oe_test_eu-elfcompress_q"
+	},
+	{
+		"name": "oe_test_eu-elfcompress_t"
+	},
+	{
+		"name": "oe_test_eu-elfcompress_v"
+	},
+	{
+		"name": "oe_test_eu-elflint_gnu_ld"
+	},
+	{
+		"name": "oe_test_eu-size_output_format"
+	},
+	{
+		"name": "oe_test_eu-size_output_options"
+	},
+	{
+		"name": "ooe_test_eu-stack_option_001"
+	},
+	{
+		"name": "oe_test_eu-strings_output_selection"
+	},
+	{
+		"name": "ooe_test_eu-strip_output_option_001"
+	}
+  ]
+}
+
