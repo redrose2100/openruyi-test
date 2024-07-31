@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+
 # Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -15,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command test-pzstd
 # ############################################
-# shellcheck disable=SC1017,SC1091
+# shellcheck disable=SC1091,SP1017
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -80,7 +81,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf testfile* tmp* bigfile*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
