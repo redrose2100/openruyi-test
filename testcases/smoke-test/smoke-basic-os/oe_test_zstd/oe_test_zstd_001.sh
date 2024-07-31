@@ -65,7 +65,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf testfile testfile_bak testfile.zst tmpfile
+    rm -rf testfile* tmpfile
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
