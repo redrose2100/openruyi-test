@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_createrepo_c_pkg_path"
+        },
+        {
+            "name": "oe_test_createrepo_c_BaseFun"
         }
     ]
 }
