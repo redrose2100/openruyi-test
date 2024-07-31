@@ -34,6 +34,9 @@ function run_test() {
     res2="$(cat -n /etc/passwd)"
     echo "$res2" | grep "root:x:0:0" | awk -F ' ' '{print $1}' | grep 1
     CHECK_RESULT $?
+    res3="$(cat -E /etc/passwd)"
+    echo "$res3" |grep root:x:0:0|awk '{print substr($0,length,1)}'|grep '\$'
+    CHECK_RESULT $?
     cat --help | grep "Usage"
     CHECK_RESULT $?
     LOG_INFO "Finish test!"
