@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+
 # Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -65,7 +66,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf testfile* tmpfile
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
