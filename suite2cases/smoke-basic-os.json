@@ -864,6 +864,21 @@
       },
       {
            "name": "oe_test_link"
+      },
+      {
+           "name": "oe_test_zstd_001"
+      },
+      {
+           "name": "oe_test_zstd_002"
+      },
+      {
+           "name": "oe_test_zstd_003"
+      },
+      {
+           "name": "oe_test_zstd_004"
+      },
+      {
+           "name": "oe_test_zstd_005"
       }
     ]
 }
