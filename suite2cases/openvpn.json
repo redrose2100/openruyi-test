@@ -1,10 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/openvpn",
     "machine num": 2,
+    "add network interface": 1,
     "cases": [
         {
             "name": "oe_test_openvpn"
         }
-
     ]
 }
