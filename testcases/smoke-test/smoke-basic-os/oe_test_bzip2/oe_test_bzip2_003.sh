@@ -17,7 +17,7 @@
 # @Desc      :   bzip2 check information option
 # ############################################
 
-source  ${OET_PATH}/libs/locallibs/common_lib.sh
+source  "${OET_PATH}"/libs/locallibs/common_lib.sh
 set +e
 
 function pre_test() {
