@@ -1,11 +1,6 @@
-#!/bin/bash
-# Copyright (c), 2024-2024, Huawei Tech. Co., Ltd.
-# Description: bzip2 检查压缩包完整性
-# Author: sunshang <sunshang4@h-partners.com>
-# Create: 2024-07-24
 #! /usr/bin/bash
 
-# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
