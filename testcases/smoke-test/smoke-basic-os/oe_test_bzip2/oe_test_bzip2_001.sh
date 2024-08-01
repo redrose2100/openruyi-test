@@ -41,7 +41,7 @@ function post_test() {
     LOG_INFO "Start to clean the test environment."
     id=$(yum history | grep "install -y bzip2" | head -n1 | awk '{print $1}')
     [ -z "${id}" ] || yum history undo -y "$id"
-    rm -fr ${testfile}*
+    rm -fr "${testfile}"*
     LOG_INFO "End to clean the test environment."
 }
 
