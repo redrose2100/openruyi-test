@@ -1,8 +1,21 @@
-#!/bin/bash
-# Copyright (c), 2024-2024, Huawei Tech. Co., Ltd.
-# Description: 确认bzip2查询信息参数
-# Author: sunshang <sunshang4@h-partners.com>
-# Create: 2024-07-24
+#! /usr/bin/bash
+
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   sunshang
+# @Contact   :   sunshang <sunshang4@h-partners.com>
+# @Date      :   2024-07-31
+# @License   :   Mulan PSL v2
+# @Desc      :   bzip2 check information option
+# ############################################
 
 source  ${OET_PATH}/libs/locallibs/common_lib.sh
 set +e
@@ -27,7 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to clean the test environment."
     id=$(yum history | grep "install -y bzip2" | head -n1 | awk '{print $1}')
-    [ -z "$id" ] || yum history undo -y "$id"
+    [ -z "${id}" ] || yum history undo -y "${id}"
     LOG_INFO "End to clean the test environment."
 }
 
