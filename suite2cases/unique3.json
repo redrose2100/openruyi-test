@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/unique3",
+    "cases": [
+        {
+            "name": "oe_test_unique3"
+        }
+
+      ]
+}
