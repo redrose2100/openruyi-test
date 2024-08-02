@@ -29,21 +29,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    openssl genrsa -out myprivatekey.pem 512
+    pyrsa-priv2pub -i myprivatekey.pem -o mypublicekey.pem && test -f mypublicekey.pem
     CHECK_RESULT $?
-    pyrsa-priv2pub-3 -i myprivatekey.pem -o mypublicekey.pem && test -f mypublicekey.pem
+    pyrsa-keygen --pubout=publickey.pem -o privatekey.pem 1024 && test -f privatekey.pem
     CHECK_RESULT $?
-    pyrsa-keygen-3 --pubout=publickey.pem -o privatekey.pem 1024 && test -f privatekey.pem
+    pyrsa-encrypt -i testfile.txt -o testfile.rsa publickey.pem && test -f testfile.rsa
     CHECK_RESULT $?
-    pyrsa-encrypt-3 -i testfile.txt -o testfile.rsa publickey.pem && test -f testfile.rsa
+    pyrsa-decrypt -i testfile.rsa -o testfile_af.txt privatekey.pem && grep 'hello' testfile_af.txt
     CHECK_RESULT $?
-    pyrsa-decrypt-3 -i testfile.rsa -o testfile_af.txt privatekey.pem && grep 'hello' testfile_af.txt
+    pyrsa-sign -i testfile.txt -o testfile_sign.txt privatekey.pem MD5 && test -f testfile_sign.txt
     CHECK_RESULT $?
-    pyrsa-sign-3 -i testfile.txt -o testfile_sign.txt privatekey.pem MD5 && test -f testfile_sign.txt
+    pyrsa-verify -i testfile.txt publickey.pem testfile_sign.txt 2>&1 | grep 'Verification OK'
     CHECK_RESULT $?
-    pyrsa-verify-3 -i testfile.txt publickey.pem testfile_sign.txt 2>&1 | grep 'Verification OK'
-    CHECK_RESULT $?
-    pyrsa-encrypt-3 -i bigfile -o bigfile.rsa publickey.pem
+    pyrsa-encrypt -i bigfile -o bigfile.rsa publickey.pem
     CHECK_RESULT $? 1
     LOG_INFO "End of the test."
 }
@@ -51,7 +49,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    rm -rf "$(ls | grep -vE '.sh')"
+    find . -maxdepth 1 -type f ! -name "myprivatekey.pem" ! -name "*.sh" -exec rm {} \;
     LOG_INFO "Finish restoring the test environment."
 }
 
