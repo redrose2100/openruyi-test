@@ -177,7 +177,10 @@
 	},
 	{
 	    "name": "oe_test_utshell_ps_002"
-	}
+	},
+        {
+            "name": "oe_test_utshell_getopts"
+        }
 
     ]
 }
