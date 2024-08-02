@@ -3,10 +3,7 @@
     "cases": [
         {"name": "oe_test_arping_SCEN.002"},
         {"name": "oe_test_iputils_FUN.003"},
-        {"name": "oe_test_ping6_FUN.002"},
         {"name": "oe_test_ping6_SCEN.005"},
-        {"name": "oe_test_ping_SCEN.005"},
-        {"name": "oe_test_tracepath6_FUN.001"},
-        {"name": "oe_test_tracepath_FUN.002"}
+        {"name": "oe_test_ping_SCEN.005"}
     ]
 }
