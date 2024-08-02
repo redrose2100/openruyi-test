@@ -20,6 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
     con_name='test_con'
+    export LANG=en_US.UTF-8
     LOG_INFO "Loading data is complete!"
 }
 
