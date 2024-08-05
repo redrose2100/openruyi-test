@@ -28,10 +28,10 @@ function pre_test() {
 function do_test() {
     LOG_INFO "Start testing..."
     python3 -c "import enchant;d=enchant.Dict('en_US');print(d.check('hello'));print(d.check('enchant'))" > tmp_log
-    count=$(grep True tmp_log | wc -l)
+    count=$(grep -c "True" tmp_log)
     CHECK_RESULT "$count" 2
     python3 -c "import enchant;d=enchant.Dict('en_US');print(d.check('helol'));print(d.check('enchnt'))" > tmp_log
-    count=$(grep False tmp_log | wc -l)
+    count=$(grep -c "False" tmp_log)
     CHECK_RESULT "$count" 2
     python3 -c "import enchant;d=enchant.Dict('en_US');print(d.suggest('enchnt'))" > tmp_log
     grep enchant tmp_log
