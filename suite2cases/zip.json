@@ -12,6 +12,9 @@
         },
         {
 	    "name": "oe_test_zip_004"
+	},
+	{
+	    "name": "oe_test_zip_005"
 	}
     ]
 }
