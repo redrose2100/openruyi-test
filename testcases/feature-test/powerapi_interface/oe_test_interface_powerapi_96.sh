@@ -24,9 +24,11 @@ function pre_test() {
         LOG_INFO "The environment does not support testing"
         exit 0
     fi
-    DNF_INSTALL "powerapi-devel gcc numactl"
+    OLD_LANG=$LANG
+    export LANG="en_US.UTF-8"
+    DNF_INSTALL "powerapi-devel gcc"
     cp common/demo_main.c ./
-    ((DMask=2**$(numactl --hardware | grep available: | awk -F " " '{print $2}'))) || true
+    ((DMask=2**$(lscpu | grep "NUMA node(s)" | awk -F" " '{print $3}')))
     echo "int main(int argc, const char *args[])
 {
     TEST_PWR_Register();
@@ -67,6 +69,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    export LANG=${OLD_LANG}
     rm -rf demo_main* test.log /root/pwrclient.sock
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
