@@ -997,6 +997,9 @@
 	},
 	{
 	    "name": "oe_test_lslogins_2"
+	},
+	{
+	    "name": "oe_test_column"
 	}
     ]
 }
