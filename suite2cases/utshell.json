@@ -180,6 +180,9 @@
 	},
         {
             "name": "oe_test_utshell_getopts"
+        },
+        {
+            "name": "oe_test_utshell_getopts_02"
         }
 
     ]
