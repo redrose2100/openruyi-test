@@ -1,5 +1,4 @@
 #!/bin/bash
-source common.sh
 hostinfo=`get_host_info_and_vm_name $REMOTE_IP`
 hostip=`echo $hostinfo | awk -F "," '{print $1}'`
 hostuser=`echo $hostinfo | awk -F "," '{print $2}'`
