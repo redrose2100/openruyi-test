@@ -1,9 +1,14 @@
 {
     "path": "$OET_PATH/testcases/smoke-test/smoke-openssh",
     "cases": [
-        {"name": "oe_test_sshd_SCEN.002"},
-        {"name": "oe_test_ssh_mutual_auth"},
-        {"name": "oe_test_ssh_su_PFM.001"}
+        {
+            "name": "oe_test_sshd_SCEN.002"
+        },
+        {
+            "name": "oe_test_ssh_mutual_auth"
+        },
+        {
+            "name": "oe_test_ssh_su_PFM.001"
+        }
     ]
 }
-
