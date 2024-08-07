@@ -3,6 +3,8 @@
 # Description: secDetector basic test
 # Author: lijiaming <lijiaming30@huawei.com>
 # Create: 2024-07-29
+# shellcheck disable=SC1017
+
 source ./common/common.sh
 set +e
 
