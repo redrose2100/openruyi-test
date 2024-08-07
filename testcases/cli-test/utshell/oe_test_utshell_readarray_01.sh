@@ -37,6 +37,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Incorrect array reading"
     su - test -c "readarray -s 10 myarr <test.log && echo \${myarr[@]}" | grep '^k.*z$'
     CHECK_RESULT $? 0 0 "Failed to display the last 16 letters"
+    su - test -c "readarray -n 6 myarr <test.log && echo \${myarr[@]}" | grep '^a.*f$'
+    CHECK_RESULT $? 0 0 "Failed to display the first 6 letters"
 }
 
 function post_test() {
