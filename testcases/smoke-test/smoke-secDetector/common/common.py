@@ -41,16 +41,12 @@ def thread_func_read(cli_reader):
 
     data = ctypes.create_string_buffer(DATA_LEN)
     data_len = ctypes.c_int(DATA_LEN)
-    #secDetectorsdklib.secReadFrom(cli_reader, data, data_len)
-    #print("client read data:{}".format(data.value.decode()))
 
     while reader_state:
         if data.value.decode() == 'end':
             print("client received end")
             break
-        #time.sleep(1)
         secDetectorsdklib.secReadFrom(cli_reader, data, data_len)
-        #print("client while read data:{}".format(data.value.decode()))
 
     print("client thread_func_read end")
     print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
