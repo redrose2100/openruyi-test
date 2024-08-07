@@ -1,4 +1,6 @@
 #!/bin/bash
+# shellcheck disable=SC1017
+
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 # 部署secD
