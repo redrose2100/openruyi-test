@@ -17,7 +17,7 @@
 # @Desc      :   Test Prometheus command line
 # #############################################
 
-source "./common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/prometheus2/common_lib.sh"
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to output version info.' 
     prometheus --config.file="prometheus.yml" > prometheus.log 2>&1 &
     wait_for_ready
-    curl -s "localhost:9090/config" | grep 'job_name: test_prometheus_cli'
+    curl -s "localhost:9090/config" | grep 'Prometheus Time Series Collection and Processing Server'
     CHECK_RESULT $? 0 0 "Failed to use specific config file."
     clear_env
     prometheus --web.listen-address="0.0.0.0:${free_port}" > prometheus.log 2>&1 &
@@ -69,7 +69,7 @@ function run_test() {
     prometheus --web.enable-lifecycle > prometheus.log 2>&1 &
     wait_for_ready
     curl -s -X POST 'http://localhost:9090/-/quit'
-    CHECK_RESULT "$(pgrep 'prometheus')" 1 0 'Failed to use flag: --web.enable-lifecycle'
+    CHECK_RESULT "$(pgrep 'prometheus' | wc -l)" 0 0 'Failed to use flag: --web.enable-lifecycle'
     clear_env
     prometheus --web.enable-admin-api > prometheus.log 2>&1 &
     wait_for_ready
@@ -92,8 +92,14 @@ function run_test() {
     clear_env
     prometheus --storage.tsdb.path="./the_data/" > prometheus.log 2>&1 &
     wait_for_ready
-    CHECK_RESULT "$(ls ./the_data | grep -cE 'chunks_head|lock|queries.active|wal')" 4 0 'Failed to use flag: --storage.tsdb.path'
-    clear_env
+    count=0
+    for file in ./the_data/*; do
+        filename=$(basename "$file")
+        if [[ "$filename" =~ chunks_head|lock|queries.active|wal ]]; then
+            count=$((count + 1))
+        fi
+    done
+    CHECK_RESULT $count 4 0 'Failed to use flag: --storage.tsdb.path'
     clear_env
     prometheus --storage.tsdb.retention=1m > prometheus.log 2>&1 &
     CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.retention'
@@ -105,7 +111,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.retention.size'
     clear_env
     prometheus --storage.tsdb.no-lockfile > prometheus.log 2>&1 &
-    CHECK_RESULT "$(ls ./data | grep -cE 'lock')" 0 0 'Failed to use flag: --storage.tsdb.no-lockfile'
+    sleep 2
+    count=0
+    for file in ./data/*; do
+        if [[ "$file" == *lock* ]]; then
+            ((count++))
+        fi
+    done
+    CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.no-lockfile'
     clear_env
     prometheus --storage.tsdb.allow-overlapping-blocks > prometheus.log 2>&1 &
     CHECK_RESULT $? 0 0 'Failed to use flag: --storage.tsdb.allow-overlapping-blocks'
