@@ -17,7 +17,8 @@
 # @Desc      :   Test lstopo-no-graphics
 # #############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "hwloc"
@@ -35,7 +36,7 @@ function run_test() {
     lstopo-no-graphics -l --output-format xml | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo-no-graphics --output-format failed"
     touch common/test_fn.xml
-    lstopo-no-graphics -l common/test_fn.xml --force && cat common/test_fn.xml | grep "Machine"
+    lstopo-no-graphics -l common/test_fn.xml --force && grep "Machine" common/test_fn.xml
     CHECK_RESULT $? 0 0 "lstopo-no-graphics --force failed"
     lstopo-no-graphics -l --verbose | grep "local"
     CHECK_RESULT $? 0 0 "lstopo-no-graphics --verbose failed"
@@ -55,7 +56,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -f common/test_fn.*
-    DNF_REMOVE 
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

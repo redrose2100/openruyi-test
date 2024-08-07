@@ -17,7 +17,7 @@
 # @Desc      :   Test hwloc-info
 # #############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwloc-info --object failed"
     lstopo -l ./test.xml
     hwloc-info -i test.xml | grep 'depth'
-    CHECK_RESULT $? 0 0 "hwloc-info -i <file> failed" 
+    CHECK_RESULT $? 0 0 "hwloc-info -i <file> failed"
     hwloc-info -i / --verbose | grep "/"
     CHECK_RESULT $? 0 0 "hwloc-info -i <directory> failed"
     hwloc-info -s core:0 | grep 'Core:0'
@@ -56,8 +56,8 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    rm -rf *.xml
-    DNF_REMOVE
+    rm -rf ./*.xml
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

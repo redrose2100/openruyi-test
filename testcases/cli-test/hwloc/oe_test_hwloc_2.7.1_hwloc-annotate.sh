@@ -17,7 +17,7 @@
 #@Desc      :   Test hwloc-annotate
 ##############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -28,7 +28,7 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "Start to run test."
-    hwloc-annotate --cu ./common/input.xml output.xml Core:all none && stat output.xml | grep "output.xml" 
+    hwloc-annotate --cu ./common/input.xml output.xml Core:all none && stat output.xml | grep "output.xml"
     CHECK_RESULT $? 0 0 "hwloc-annotate --cu failed"
     hwloc-annotate -h | grep "Usage: hwloc-annotate"
     CHECK_RESULT $? 0 0 "hwloc-annotate -h failed "
@@ -43,7 +43,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf output.xml
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
