@@ -1000,6 +1000,9 @@
 	},
 	{
 	    "name": "oe_test_column"
+	},
+	{
+	    "name": "oe_test_lslogins_3"
 	}
     ]
 }
