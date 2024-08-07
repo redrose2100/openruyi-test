@@ -65,7 +65,6 @@ def file_check():
     fd, path = tempfile.mkstemp()
     try:
         with os.fdopen(fd, 'w+') as tmp:
-            # do stuff with temp file
             tmp.write('stuff')
             s = tmp.readline()
     finally:
