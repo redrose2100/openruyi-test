@@ -17,6 +17,8 @@
 # @Desc      :   test arch
 # ############################################
 
+# shellcheck disable=SC9210
+# shellcheck disable=SC9215
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
