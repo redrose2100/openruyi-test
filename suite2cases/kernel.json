@@ -154,8 +154,10 @@
         },
         {
             "name": "oe_test_target_core_file"
+        },
+        {
+            "name": "oe_test_target_core_iblock"
         }
-
     ]
 }
 
