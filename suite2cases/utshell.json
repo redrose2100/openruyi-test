@@ -189,7 +189,11 @@
 	},
 	{
             "name": "oe_test_utshell_eval"
+        },
+        {
+            "name": "oe_test_utshell_times"
         }
+
     ]
 }
 
