@@ -183,7 +183,10 @@
         },
         {
             "name": "oe_test_utshell_getopts_02"
-        }
+        },
+	{
+	    "name": "oe_test_utshell_ps_003"
+	}
 
     ]
 }
