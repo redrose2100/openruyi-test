@@ -31,6 +31,10 @@ function run_test()
     CHECK_RESULT $? 0 0 "zipinfo function error"
     zipinfo -h /tmp/test.zip |grep "number of entries"
     CHECK_RESULT $? 0 0 "zipinfo function error"
+    zipinfo -s /tmp/test.zip |grep "bytes"
+    CHECK_RESULT $? 0 0 "bytes function error"
+    zipinfo -m /tmp/test.zip |grep "uncompressed"
+    CHECK_RESULT $? 0 0 "uncompressd function error"
     LOG_INFO "End to run test."
 }
 
@@ -42,3 +46,4 @@ function post_test() {
 }
 
 main "$@"
+
