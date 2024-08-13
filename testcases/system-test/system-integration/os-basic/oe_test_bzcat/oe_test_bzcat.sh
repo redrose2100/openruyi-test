@@ -29,12 +29,18 @@ function run_test()
     LOG_INFO "Start to run test."
     bzcat /tmp/test.txt.bz2 |grep aabbcc
     CHECK_RESULT $? 0 0 "bzcat function error"
+
+    bzcat /tmp/test.txt.bz2 > example.txt
+    grep  'aabbcc' example.txt
+    CHECK_RESULT $? 0 0 "check example.txt  failed"
+
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/test.txt.bz2
+    rm -rf example.txt
     LOG_INFO "Finish environment cleanup!"
 }
 
