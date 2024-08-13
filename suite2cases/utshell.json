@@ -195,6 +195,9 @@
 	},
 	{
             "name": "oe_test_utshell_command"
+        },
+	{
+            "name": "oe_test_utshell_kill"
         }
     ]
 }
