@@ -196,6 +196,9 @@
         {
             "name": "oe_test_utshell_command"
         },
+	    {
+            "name": "oe_test_utshell_kill"
+        },
         {
             "name": "oe_test_utshell_jobs_x"
         }
