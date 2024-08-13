@@ -24,6 +24,16 @@ function run_test()
     CHECK_RESULT $? 0 0 "namei function error"
     namei -o /etc/hosts
     CHECK_RESULT $? 0 0 "namei function error"
+    namei -l /etc/hosts |grep "drw"
+    CHECK_RESULT $? 0 0 "namei -l function error"
+    namei -x /etc/hosts | grep "D"
+    CHECK_RESULT $? 0 0 "namei -x function error"
+    namei -n /etc/hosts
+    CHECK_RESULT $? 0 0 "namei -n function error"
+    namei -v /etc/hosts
+    CHECK_RESULT $? 0 0 "namei -v function error"
+    namei -V /etc/hosts
+    CHECK_RESULT $? 0 0 "namei -V function error"
     LOG_INFO "End to run test."
 }
 
