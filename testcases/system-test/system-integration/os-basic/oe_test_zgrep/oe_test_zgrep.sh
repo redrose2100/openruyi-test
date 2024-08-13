@@ -20,25 +20,37 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    cd /tmp
-    echo "sdfassaaasd1223123223424435rrte" > test.txt
+        cat >test.txt<<EOF
+sdfassaaasd1223123223424435rrte
+13cdeff
+iAbc123
+25timens01
+EOF
     zip test.zip test.txt
+    tar -cvf test.tar.gz test.txt
+    xz  -k test.txt
+    gzip -k test.txt
+    bzip2 -k test.txt
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test()
 {
     LOG_INFO "Start testing..."
-    cd /tmp
-    zgrep a test.zip
-    CHECK_RESULT $? 0 0 "zgrep function error" 
+    zgrep assa test.zip
+    CHECK_RESULT $? 0 0 "zgrep assa error" 
+    zgrep -an "^[0-9]" test.tar.gz
+    CHECK_RESULT $? 0 0 "zgrep tar.gz error"
+    zgrep -ia "abc" test.tar.gz test.txt.xz
+    CHECK_RESULT $? 0 0 "zgrep xz error"
+    zgrep -an "^[0-9]" test.txt.gz | grep "2:"
+    CHECK_RESULT $? 0 0 "zgrep gz error"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf /tmp/test.txt
-    rm -rf /tmp/test.zip
+    rm -rf test.*
     LOG_INFO "Finish environment cleanup!"
 }
 
