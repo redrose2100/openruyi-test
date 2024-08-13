@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/findfs",
+    "cases": [
+        {
+            "name": "oe_test_findfs_01"
+        }
+    ]
+}
