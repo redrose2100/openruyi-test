@@ -157,6 +157,9 @@
         },
         {
             "name": "oe_test_target_core_iblock"
+        },
+        {
+            "name": "oe_test_target_core_mod"
         }
     ]
 }
