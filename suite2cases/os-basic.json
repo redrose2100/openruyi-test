@@ -1003,6 +1003,9 @@
 	},
 	{
 	    "name": "oe_test_lslogins_3"
+	},
+       {
+	    "name": "oe_test_xrandr"
 	}
     ]
 }
