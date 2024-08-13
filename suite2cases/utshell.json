@@ -192,8 +192,10 @@
         },
         {
             "name": "oe_test_utshell_times"
+	},
+	{
+            "name": "oe_test_utshell_command"
         }
-
     ]
 }
 
