@@ -21,8 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "python3-waitress"
-    pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple flask requests
+    DNF_INSTALL "python3-waitress python3-flask python3-requests"
     LOG_INFO "End of environmental preparation!"
 }
 
