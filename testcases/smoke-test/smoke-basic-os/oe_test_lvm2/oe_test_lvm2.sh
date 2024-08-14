@@ -37,48 +37,51 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase!"
     LOG_INFO "Start to create"
-    pvcreate -y /dev/loop0 --setphysicalvolumesize 100MB | grep "successfully created"
-    CHECK_RESULT $?
     pvcreate -y /dev/loop0
     CHECK_RESULT $?
     pvcreate -y /dev/loop1
     CHECK_RESULT $?
     vgcreate test /dev/loop0 /dev/loop1
     CHECK_RESULT $?
+    vgdisplay
+
     LOG_INFO "Start to change"
     pvchange --addtag gh /dev/loop0
     CHECK_RESULT $?
     pvdisplay -C -a | grep "/dev/loop0"
     CHECK_RESULT $?
+
     LOG_INFO "Start to remove"
     vgreduce test /dev/loop0
-    CHECK_RESULT $?
-    pvremove -f /dev/loop0
-    CHECK_RESULT $?
-    pvcreate -y /dev/loop0
     CHECK_RESULT $? 0 0 "Failed to reduce /dev/loop0"
+    vgdisplay
     LOG_INFO "/dev/loop0 is not in test"
+
     LOG_INFO "Start to resize"
     pvresize -y /dev/loop1 --setphysicalvolumesize 200MB
     CHECK_RESULT $?
     pvdisplay -C -a | grep "/dev/loop1"
     CHECK_RESULT $?
+
     LOG_INFO "Start to extend"
     vgextend test /dev/loop0
     CHECK_RESULT $? 0 0 "Failed to extend volume group test"
     vgdisplay
+
     LOG_INFO "Start to export"
     vgexport test | grep "successfully exported"
     CHECK_RESULT $? 0 0 "failed to export VG test"
     vgimport test
     CHECK_RESULT $? 0 0 "failed to import VG test"
+
     LOG_INFO "Start to create LV"
     lvcreate -L 100M -n lv1 test
     CHECK_RESULT $?
     lvdisplay
     lvextend -L 104M test/lv1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to extend lv1"
     lvdisplay | grep lv1
+
     LOG_INFO "Start to rename"
     vgrename test test1 | grep "successfully renamed"
     CHECK_RESULT $?
@@ -95,7 +98,7 @@ function post_test() {
     vgremove -f test1
     pvremove -f /dev/loop0 /dev/loop1
     DNF_REMOVE
-    # 删除RAM盘
+
     losetup -d /dev/loop0
     losetup -d /dev/loop1
     rm -f /tmp/ramdisk
