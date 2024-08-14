@@ -207,6 +207,9 @@
         },
         {
             "name": "oe_test_utshell_jobs_x"
+        },
+        {
+            "name": "oe_test_utshell_time"
         }
     ]
 }
