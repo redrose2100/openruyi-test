@@ -122,6 +122,9 @@
             "name": "oe_test_lsscsi"
         },
         {
+            "name": "oe_test_lvm2"
+        },
+        {
             "name": "oe_test_lzo"
         },
         {
