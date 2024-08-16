@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libtomcrypt",
+    "cases": [
+        {
+            "name": "oe_test_libtomcrypt"
+        }
+
+      ]
+}
+
