@@ -72,12 +72,19 @@ function run_test() {
     diff -r "testdir" "testdir_orig"
     CHECK_RESULT $? 0 0 "cpio -i -u option test failed..."
 
+    LOG_INFO "test cpio -p option"
+    mkdir -p test_cpio_p/testdir
+    cpio -p test_cpio_p < filelist
+    CHECK_RESULT $? 0 0 "failed to cpio pass-through"
+    diff -r "testdir" "test_cpio_p/testdir"
+    CHECK_RESULT $? 0 0 "cpio -p option test failed..."
+
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf "cpio.out"  "filelist" "filelist_orig" "testdir"  "testdir_orig"
+    rm -rf "cpio.out"  "filelist" "filelist_orig" "testdir"  "testdir_orig" "test_cpio_p"
     LOG_INFO "Finish restoring the test environment."
 }
 
