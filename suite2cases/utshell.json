@@ -213,6 +213,9 @@
         },
         {
             "name": "oe_test_utshell_time"
-        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+        },
+        {
+            "name": "oe_test_utshell_help"
+        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     ]
 }
