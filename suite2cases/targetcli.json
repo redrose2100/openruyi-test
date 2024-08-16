@@ -12,6 +12,12 @@
         },
         {
             "name": "oe_test_targetcli_04"
+        },
+        {
+            "name": "oe_test_socket_targetclid"
+        },
+        {
+            "name": "oe_test_service_targetclid"
         }
     ]
 }

@@ -3,6 +3,12 @@
     "cases": [
         {
             "name": "oe_test_service_ostree-finalize-staged"
+        },
+        {
+            "name": "oe_test_service_ostree-prepare-root"
+        },
+        {
+            "name": "oe_test_service_ostree-remount"
         }
     ]
 }
