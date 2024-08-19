@@ -17,13 +17,13 @@
 # @Desc      :   View multipath devices with dmsetup command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start executing testcase."
     count_mul=$(dmsetup ls | wc -l)
-    test $count_mul -gt 1
+    test "${count_mul}" -ge 1
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
 
-main $@
+main "$@"
