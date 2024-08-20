@@ -32,12 +32,18 @@ function run_test()
     LOG_INFO "Start testing..."
     bzgrep abc /tmp/test.txt.bz2
     CHECK_RESULT $? 0 0 "bzgrep function error"
+    bzgrep -i ABC /tmp/test.txt.bz2
+    CHECK_RESULT $? 0 0 "ABC not found"
     bzgrep -n 'ghi' /tmp/test.txt.bz2 | grep '3:ghi'
     CHECK_RESULT $? 0 0 "Failed to return line number"
     bzgrep -l 123 /tmp/test.txt.bz2 /tmp/test2.txt.bz2 | grep 'test2.txt.bz2'
     CHECK_RESULT $? 0 0 "Query failure"
+    bzgrep -r ndef /tmp/test.txt.bz2
+    CHECK_RESULT $? 0 0 "Query failure"
     nums=$(bzgrep -c 123 /tmp/test2.txt.bz2)
     CHECK_RESULT "$nums" 2 0 "Query failure"
+    result=$(bzgrep -v "123" /tmp/test2.txt.bz2)
+    CHECK_RESULT "$result" "" 0 "Query failure"
     LOG_INFO "Finish test!"
 }
 
