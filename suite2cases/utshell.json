@@ -216,6 +216,9 @@
         },
         {
             "name": "oe_test_utshell_pushd"
-        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+        },
+        {
+            "name": "oe_test_utshell_popd"
+        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
     ]
 }
