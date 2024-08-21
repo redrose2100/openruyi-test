@@ -23,6 +23,14 @@ function run_test()
     CHECK_RESULT $? 0 0 "getent function error"
     getent hosts localhost|grep localhost
     CHECK_RESULT $? 0 0 "getent function error"
+    getent group
+    CHECK_RESULT $? 0 0 "command execution failed"
+    getent group root
+    CHECK_RESULT $? 0 0 "root group query failed"
+    getent --version|grep getent
+    CHECK_RESULT $? 0 0 "version query failed"
+    getent --help|grep getent
+    CHECK_RESULT $? 0 0 "help query failed"
     LOG_INFO "End to run test."
 }
 
