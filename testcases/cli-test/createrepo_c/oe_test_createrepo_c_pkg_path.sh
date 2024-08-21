@@ -70,13 +70,13 @@ function run_test() {
   "httpd httpd-help tcpdump" 0 "createrepo update fail"
 
   basename -a "$(find ./ -name 'tcpdump*rpm')" > /tmp/list
-  createrepo -i /tmp/list ./
+  createrepo_c -i /tmp/list ./
   CHECK_RESULT $? 0 0 "createrepo pkglist fail"
   yum clean all;sleep 3
   CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)"  \
   "tcpdump" 0 "createrepo pkglist fail"
 
-  createrepo --read-pkgs-list=/tmp/list  ./
+  createrepo_c --read-pkgs-list=/tmp/list  ./
   CHECK_RESULT $? 0 0 "Output the paths to the pkgs fail"
   yum clean all;sleep 3
   CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)"  \
