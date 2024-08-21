@@ -160,6 +160,9 @@
         },
         {
             "name": "oe_test_target_core_mod"
+        },
+        {
+            "name": "oe_test_target_core_pscsi"
         }
     ]
 }
