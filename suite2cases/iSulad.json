@@ -1,32 +1,34 @@
 {
     "path": "$OET_PATH/testcases/cli-test/iSulad",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_service_isulad"
         },
         {
-            "name":"oe_test_iSulad_resource_mapping"
+            "name": "oe_test_iSulad_resource_mapping"
         },
         {
-            "name":"oe_test_iSulad_resource_restriction_cgroup"
+            "name": "oe_test_iSulad_resource_restriction_cgroup"
         },
         {
-            "name":"oe_test_iSulad_container"
+            "name": "oe_test_iSulad_container"
         },
         {
-            "name":"oe_test_iSulad_container01"
+            "name": "oe_test_iSulad_container01"
         },
         {
-            "name":"oe_test_iSulad_container02"
+            "name": "oe_test_iSulad_container02"
         },
         {
-            "name":"oe_test_iSulad_container03"
+            "name": "oe_test_iSulad_container03"
         },
         {
-            "name":"oe_test_iSulad_container04"
+            "name": "oe_test_iSulad_container04"
         },
         {
-            "name":"oe_test_iSulad_container05"
+            "name": "oe_test_iSulad_container05"
         }
     ]
 }

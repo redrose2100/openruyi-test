@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/mksh",
-  "cases": [
-      {
-          "name": "oe_test_mksh"
-      }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/mksh",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_mksh"
+        }
+    ]
 }

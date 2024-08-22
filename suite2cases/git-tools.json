@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/git-tools",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_git_tools_1"
@@ -13,10 +15,10 @@
         {
             "name": "oe_test_git_tools_4"
         },
-		{
+        {
             "name": "oe_test_git_tools_5"
         },
-		{
+        {
             "name": "oe_test_git_tools_6"
         }
     ]

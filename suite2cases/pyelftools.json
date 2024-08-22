@@ -1,14 +1,16 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/pyelftools",
-  "cases": [
-    {
-      "name": "oe_test_pyelftools_pyreadelf_01"
-    },
-    {
-      "name": "oe_test_pyelftools_pyreadelf_02"
-    },
-    {
-      "name": "oe_test_pyelftools_pyreadelf_03"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/pyelftools",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_pyelftools_pyreadelf_01"
+        },
+        {
+            "name": "oe_test_pyelftools_pyreadelf_02"
+        },
+        {
+            "name": "oe_test_pyelftools_pyreadelf_03"
+        }
+    ]
 }

@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/GraphicsMagick",
-  "cases": [
-    {
-      "name": "oe_test_GraphicsMagick"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/GraphicsMagick",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_GraphicsMagick"
+        }
+    ]
 }

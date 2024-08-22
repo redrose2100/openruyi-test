@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/libksba",
-  "cases": [
-    {
-      "name": "oe_test_libksba"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/libksba",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_libksba"
+        }
+    ]
 }

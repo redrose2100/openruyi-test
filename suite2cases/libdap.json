@@ -1,13 +1,15 @@
 {
     "path": "${OET_PATH}/testcases/cli-test/libdap",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_libdap_getdap"
         },
-	{
+        {
             "name": "oe_test_libdap_getdap4"
         },
-	{
+        {
             "name": "oe_test_libdap_devel_dap_config"
         }
     ]

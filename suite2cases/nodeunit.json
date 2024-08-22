@@ -1,11 +1,13 @@
 {
     "path": "$OET_PATH/testcases/cli-test/nodeunit",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_nodeunit"
-	},
-	{
-	    "name": "oe_test_nodeunit_01"
+        },
+        {
+            "name": "oe_test_nodeunit_01"
         }
     ]
 }

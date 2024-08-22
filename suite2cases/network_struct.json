@@ -3,23 +3,25 @@
     "machine type": "physical",
     "machine num": 2,
     "add network interface": 1,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_add_ip"
         },
         {
             "name": "oe_test_bridge_create",
-            "add network interface": 1 
+            "add network interface": 1
         },
         {
             "name": "oe_test_bridge_create_by_config_reboot",
             "machine num": 2,
-            "add network interface": 1 
+            "add network interface": 1
         },
         {
             "name": "oe_test_bridge_create_reboot",
             "machine num": 2,
-            "add network interface": 1 
+            "add network interface": 1
         },
         {
             "name": "oe_test_check_ip"
@@ -49,46 +51,46 @@
         },
         {
             "name": "oe_test_ipv6_add",
-	    "add network interface": 1
+            "add network interface": 1
         },
         {
             "name": "oe_test_ipv6_static_setting",
-            "add network interface": 1 
+            "add network interface": 1
         },
         {
             "name": "oe_test_lo"
         },
         {
             "name": "oe_test_nic_change_mac",
-	    "add network interface": 1
+            "add network interface": 1
         },
         {
             "name": "oe_test_nic_change_queue",
-	    "add network interface": 1
+            "add network interface": 1
         },
         {
             "name": "oe_test_nic_check",
-	    "add network interface": 1
+            "add network interface": 1
         },
         {
             "name": "oe_test_nic_ifconfig",
-	    "add network interface": 1
+            "add network interface": 1
         },
         {
             "name": "oe_test_nic_ifup",
-	    "add network interface": 1
+            "add network interface": 1
         },
         {
             "name": "oe_test_nic_ip",
-	    "add network interface": 1
+            "add network interface": 1
         },
         {
             "name": "oe_test_nic_nmcli",
-	    "add network interface": 1
+            "add network interface": 1
         },
         {
             "name": "oe_test_nic_queue",
-	    "add network interface": 1
+            "add network interface": 1
         },
         {
             "name": "oe_test_nic_scapy",
@@ -97,7 +99,7 @@
         {
             "name": "oe_test_nic_work_format",
             "machine type": "physical",
-	    "add network interface": 1
+            "add network interface": 1
         },
         {
             "name": "oe_test_nmap_check"
@@ -107,7 +109,7 @@
         },
         {
             "name": "oe_test_nmap_up_down",
-	    "add network interface": 1
+            "add network interface": 1
         },
         {
             "name": "oe_test_ss"

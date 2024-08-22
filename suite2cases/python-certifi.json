@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/python-certifi",
-  "cases": [
-    {
-      "name": "oe_test_python3-certifi"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/python-certifi",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_python3-certifi"
+        }
+    ]
 }

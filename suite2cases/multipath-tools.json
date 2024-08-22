@@ -4,6 +4,8 @@
     "add disk": [
         4
     ],
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_multipath-tools_kpartx",
@@ -40,11 +42,11 @@
                 4
             ]
         },
-        { 
+        {
             "name": "oe_test_service_multipathd"
-        }, 
-        { 
+        },
+        {
             "name": "oe_test_socket_multipathd"
-        } 
+        }
     ]
 }

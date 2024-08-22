@@ -1,26 +1,28 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/Kmesh",
-  "cases": [
-    {
-      "name": "oe_test_base_function"
-    },
-    {
-      "name": "oe_test_lb_policy_function"
-    },
-    {
-      "name": "oe_test_dark_launch_function"
-    },
-    {
-      "name": "oe_test_route_function"
-    },
-    {
-      "name": "oe_test_service_function"
-    },
-    {
-      "name": "oe_test_tcp_proxy_weight_cluster_function"
-    },
-    {
-      "name": "oe_test_kmesh_mda_001"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/Kmesh",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_base_function"
+        },
+        {
+            "name": "oe_test_lb_policy_function"
+        },
+        {
+            "name": "oe_test_dark_launch_function"
+        },
+        {
+            "name": "oe_test_route_function"
+        },
+        {
+            "name": "oe_test_service_function"
+        },
+        {
+            "name": "oe_test_tcp_proxy_weight_cluster_function"
+        },
+        {
+            "name": "oe_test_kmesh_mda_001"
+        }
+    ]
 }

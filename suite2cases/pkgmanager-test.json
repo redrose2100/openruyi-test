@@ -1,5 +1,7 @@
 {
     "path": "${OET_PATH}/testcases/system-test/pkgmanager-test",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_pkg_manager01"
@@ -9,4 +11,3 @@
         }
     ]
 }
-

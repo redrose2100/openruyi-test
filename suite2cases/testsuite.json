@@ -6,6 +6,8 @@
     "add disk": [
         50
     ],
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_casename_01",

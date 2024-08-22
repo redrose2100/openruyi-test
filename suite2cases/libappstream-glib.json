@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/libappstream-glib",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_libappstream-glib_appstream-builder_01"

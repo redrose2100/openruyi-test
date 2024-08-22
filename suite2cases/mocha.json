@@ -1,35 +1,37 @@
 {
     "path": "$OET_PATH/testcases/cli-test/mocha",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_mocha"
-	},
-	{
-	    "name": "oe_test_mocha_01"
         },
         {
-	    "name": "oe_test_mocha_02"	
-	},
+            "name": "oe_test_mocha_01"
+        },
         {
-	    "name": "oe_test_mocha_03"
-	},
-	{
-	    "name": "oe_test_mocha_04"
-	},
-	{
-	    "name": "oe_test_mocha_05"
-	},
+            "name": "oe_test_mocha_02"
+        },
         {
-	    "name": "oe_test_mocha_06"
-	},
+            "name": "oe_test_mocha_03"
+        },
         {
-	    "name": "oe_test_mocha_07"
-	},
-	{
-	    "name": "oe_test_mocha_08"
-	},
-	{
-	    "name": "oe_test_mocha_09"
-	}
+            "name": "oe_test_mocha_04"
+        },
+        {
+            "name": "oe_test_mocha_05"
+        },
+        {
+            "name": "oe_test_mocha_06"
+        },
+        {
+            "name": "oe_test_mocha_07"
+        },
+        {
+            "name": "oe_test_mocha_08"
+        },
+        {
+            "name": "oe_test_mocha_09"
+        }
     ]
 }

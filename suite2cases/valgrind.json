@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/valgrind",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_valgrind"
@@ -36,7 +38,7 @@
         },
         {
             "name": "oe_test_valgrind_11"
-        },     
+        },
         {
             "name": "oe_test_valgrind_12"
         },
@@ -86,5 +88,4 @@
             "name": "oe_test_ms_print_01"
         }
     ]
-  }
-  
+}

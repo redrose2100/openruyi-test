@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/ocaml-findlib",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_ocaml-findlib"

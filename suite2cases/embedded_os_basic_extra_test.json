@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/embedded-test/os_basic_extra_test",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_kmod_depmod"
@@ -99,9 +101,9 @@
         },
         {
             "name": "oe_test_libpwquality_test_001"
-	},
-	{
-	    "name": "oe_test_curl_test_001"
+        },
+        {
+            "name": "oe_test_curl_test_001"
         },
         {
             "name": "oe_test_rpcbind_test_001"

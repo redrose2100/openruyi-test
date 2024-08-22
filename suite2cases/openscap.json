@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/openscap",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_openscap_01"
@@ -16,7 +18,7 @@
         },
         {
             "name": "oe_test_assess_safety_compliance",
-            "machine num":2
+            "machine num": 2
         },
         {
             "name": "oe_test_fix_anisible"

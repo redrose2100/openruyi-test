@@ -1,46 +1,52 @@
 {
     "path": "$OET_PATH/testcases/cli-test/gdisk",
-    "add disk": [30],
+    "add disk": [
+        30
+    ],
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_gdisk_change_partition_name"
         },
-	{
-	    "name": "oe_test_gdisk_verify_disk"
-	},
-	{
-	    "name": "oe_test_gdisk_check_partition_info"
-	},
-	{
-	    "name": "oe_test_gdisk_change_partition_type_code"
-	},
-	{
-	    "name": "oe_test_gdisk_create_partition"
-	},
-	{
-	    "name": "oe_test_gdisk_create_partition_128"
-	},
-	{
-	    "name": "oe_test_gdisk_sort_partition"
-	},
-	{
-	    "name": "oe_test_sgdisk_backup_and_restore"
-	},
-	{
-	    "name": "oe_test_sgdisk_change_disk_guid"
-	},
-	{
-	    "name": "oe_test_sgdisk_change_partition_name"
-	},
-	{
-	    "name": "oe_test_sgdisk_check_partition_info"
-	},
-	{
-	    "name": "oe_test_sgdisk_create_partition"
-	},
-	{
-	    "name": "oe_test_sgdisk_sort_partition",
-            "add disk": [30]
-	}
+        {
+            "name": "oe_test_gdisk_verify_disk"
+        },
+        {
+            "name": "oe_test_gdisk_check_partition_info"
+        },
+        {
+            "name": "oe_test_gdisk_change_partition_type_code"
+        },
+        {
+            "name": "oe_test_gdisk_create_partition"
+        },
+        {
+            "name": "oe_test_gdisk_create_partition_128"
+        },
+        {
+            "name": "oe_test_gdisk_sort_partition"
+        },
+        {
+            "name": "oe_test_sgdisk_backup_and_restore"
+        },
+        {
+            "name": "oe_test_sgdisk_change_disk_guid"
+        },
+        {
+            "name": "oe_test_sgdisk_change_partition_name"
+        },
+        {
+            "name": "oe_test_sgdisk_check_partition_info"
+        },
+        {
+            "name": "oe_test_sgdisk_create_partition"
+        },
+        {
+            "name": "oe_test_sgdisk_sort_partition",
+            "add disk": [
+                30
+            ]
+        }
     ]
 }

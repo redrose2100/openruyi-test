@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/gdb",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_gdb_recovery_database"
@@ -16,6 +18,5 @@
         {
             "name": "oe_test_gdb-watch"
         }
-
     ]
 }

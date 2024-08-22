@@ -1,11 +1,13 @@
 {
     "path": "$OET_PATH/testcases/cli-test/fakeroot",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
-          "name": "oe_test_fakeroot_base"
+            "name": "oe_test_fakeroot_base"
         },
         {
-          "name": "oe_test_fakeroot_faked"
+            "name": "oe_test_fakeroot_faked"
         }
     ]
 }

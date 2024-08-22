@@ -1,6 +1,8 @@
 {
     "path": "$OET_PATH/testcases/embedded-test/mcs_qemu_test",
     "machine num": 1,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_mcs_rpi4_test_001"

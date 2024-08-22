@@ -1,9 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/ps_mem",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_ps_mem"
         }
-
     ]
 }

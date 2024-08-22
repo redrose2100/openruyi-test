@@ -2,6 +2,8 @@
     "path": "$OET_PATH/testcases/cli-test/keepalived",
     "machine num": 3,
     "add network interface": 4,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_keepalived_cli",

@@ -1,5 +1,7 @@
 {
     "path": "${OET_PATH}/testcases/smoke-test/smoke-basic-os",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_head"
@@ -97,9 +99,9 @@
         {
             "name": "oe_test_logname"
         },
-	{
-	    "name": "oe_test_logrotate_002"
-	},
+        {
+            "name": "oe_test_logrotate_002"
+        },
         {
             "name": "oe_test_log_001"
         },
@@ -682,36 +684,36 @@
         {
             "name": "oe_test_uptime"
         },
-	{
-	    "name": "oe_test_find"
-	},
         {
-	    "name": "oe_test_find_001"
-	},
-	{
-	    "name": "oe_test_source"
-	},
-	{
-	    "name": "oe_test_pwd_002"
-	},
-	{
-	    "name": "oe_test_mtr"
-	},
-	{
-	    "name": "oe_test_sadf_001"
-	},
-	{
-	    "name": "oe_test_pstree"
-	},
-	{
-	    "name": "oe_test_vmstat"
-	},
-	{
-	    "name": "oe_test_let"
-	},
-	{
-	    "name": "oe_test_unset_001"
-	},
+            "name": "oe_test_find"
+        },
+        {
+            "name": "oe_test_find_001"
+        },
+        {
+            "name": "oe_test_source"
+        },
+        {
+            "name": "oe_test_pwd_002"
+        },
+        {
+            "name": "oe_test_mtr"
+        },
+        {
+            "name": "oe_test_sadf_001"
+        },
+        {
+            "name": "oe_test_pstree"
+        },
+        {
+            "name": "oe_test_vmstat"
+        },
+        {
+            "name": "oe_test_let"
+        },
+        {
+            "name": "oe_test_unset_001"
+        },
         {
             "name": "oe_test_aide_config_cfgfile"
         },
@@ -790,29 +792,29 @@
         {
             "name": "oe_test_user_debug_iotop_03"
         },
-	{
+        {
             "name": "oe_test_user_debug_iotop_SCEN_01"
         },
         {
-	     "name": "oe_test_sed_001"
+            "name": "oe_test_sed_001"
         },
         {
-	     "name": "oe_test_xz"
-        },
-	 {
-	     "name": "oe_test_tr"
-        },
-	{
-	     "name": "oe_test_popt"
-	},
-         {
-             "name": "oe_test_chkconfig_01"
-        },
-       {
-	     "name": "oe_test_libxml2_001"
+            "name": "oe_test_xz"
         },
         {
-	     "name": "oe_test_libxml2_002"
+            "name": "oe_test_tr"
+        },
+        {
+            "name": "oe_test_popt"
+        },
+        {
+            "name": "oe_test_chkconfig_01"
+        },
+        {
+            "name": "oe_test_libxml2_001"
+        },
+        {
+            "name": "oe_test_libxml2_002"
         },
         {
             "name": "oe_test_libxml2_003"
@@ -820,69 +822,68 @@
         {
             "name": "oe_test_libxml2_004"
         },
-	{
-	    "name": "oe_test_logrotate_004"
-	},
-       {
-	    "name": "oe_test_gcc_001"
-	},
-       {
-	    "name": "oe_test_gcc_002"
-	},
         {
-	    "name": "oe_test_od"
-	 },
-        {
-             "name": "oe_test_mkdosfs"
+            "name": "oe_test_logrotate_004"
         },
         {
-             "name": "oe_test_dumpe2fs"
+            "name": "oe_test_gcc_001"
         },
         {
-             "name": "oe_test_mke2fs"
-        },
-	{
-	    "name": "oe_test_acpid_002"
-	},
-        {
-             "name": "oe_test_g++"
+            "name": "oe_test_gcc_002"
         },
         {
-             "name": "oe_test_binutils-objcopy"
+            "name": "oe_test_od"
         },
-	{
-	     "name": "oe_test_ebtables_002"
-	},
-	{
+        {
+            "name": "oe_test_mkdosfs"
+        },
+        {
+            "name": "oe_test_dumpe2fs"
+        },
+        {
+            "name": "oe_test_mke2fs"
+        },
+        {
+            "name": "oe_test_acpid_002"
+        },
+        {
+            "name": "oe_test_g++"
+        },
+        {
+            "name": "oe_test_binutils-objcopy"
+        },
+        {
+            "name": "oe_test_ebtables_002"
+        },
+        {
             "name": "oe_test_lscpu"
         },
-	{
+        {
             "name": "oe_test_lsipc"
         },
-	{
-	     "name":"oe_test_lzo_002"
-	},
-	{
-	    "name": "oe_test_lsirq"
-	},
-	{
-	    "name": "oe_test_pidwait"
-	},
-      {
-           "name": "oe_test_nproc"    
-      },
-      {
-           "name": "oe_test_echo"    
-      },
-      {
-           "name": "oe_test_pidof"
-      },
-      {
-           "name": "oe_test_link"
-      },
-      {
-          "name": "oe_test_zlib_001"
-      }
+        {
+            "name": "oe_test_lzo_002"
+        },
+        {
+            "name": "oe_test_lsirq"
+        },
+        {
+            "name": "oe_test_pidwait"
+        },
+        {
+            "name": "oe_test_nproc"
+        },
+        {
+            "name": "oe_test_echo"
+        },
+        {
+            "name": "oe_test_pidof"
+        },
+        {
+            "name": "oe_test_link"
+        },
+        {
+            "name": "oe_test_zlib_001"
+        }
     ]
 }
-

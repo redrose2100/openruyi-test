@@ -1,13 +1,13 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/objectweb-asm3",
-  "cases": [
-    {
-      "name": "oe_test_objectweb-asm3-processor"
-    },
-    {
-      "name": "oe_test_objectweb-asm3-processor_01"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/objectweb-asm3",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_objectweb-asm3-processor"
+        },
+        {
+            "name": "oe_test_objectweb-asm3-processor_01"
+        }
+    ]
 }
-
-

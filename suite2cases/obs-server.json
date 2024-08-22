@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/obs-server",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_obs-server"
@@ -83,13 +85,13 @@
             "name": "oe_test_service_obs-delayedjob-queue-default"
         },
         {
-            "name":"oe_test_service_obs-delayedjob-queue-scm"
+            "name": "oe_test_service_obs-delayedjob-queue-scm"
         },
         {
-            "name":"oe_test_service_obssourcepublish"
+            "name": "oe_test_service_obssourcepublish"
         },
         {
-            "name":"oe_test_service_obsredis"
+            "name": "oe_test_service_obsredis"
         }
     ]
 }

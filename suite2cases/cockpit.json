@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/cockpit",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_service_cockpit-motd"
@@ -13,7 +15,7 @@
         {
             "name": "oe_test_service_cockpit-wsinstance-http"
         },
-	{
+        {
             "name": "oe_test_cockpit"
         }
     ]

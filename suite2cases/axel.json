@@ -1,11 +1,13 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/axel",
-  "cases": [
-    {
-      "name": "oe_test_axel_01"
-    },
-    {
-      "name": "oe_test_axel_02"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/axel",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_axel_01"
+        },
+        {
+            "name": "oe_test_axel_02"
+        }
+    ]
 }

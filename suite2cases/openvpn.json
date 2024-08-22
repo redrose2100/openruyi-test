@@ -2,6 +2,8 @@
     "path": "$OET_PATH/testcases/cli-test/openvpn",
     "machine num": 2,
     "add network interface": 1,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_openvpn"

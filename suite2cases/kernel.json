@@ -1,6 +1,8 @@
 {
     "path": "${OET_PATH}/testcases/cli-test/kernel",
     "machine type": "physical",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_kernel_cmd_01",
@@ -65,27 +67,27 @@
         {
             "name": "oe_test_check_huge_task",
             "machine type": "physical"
-	},
-	{
+        },
+        {
             "name": "oe_test_swappiness",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_softdog",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_cifs",
             "machine type": "physical"
-	},
-	{
+        },
+        {
             "name": "oe_test_xfs",
             "machine type": "physical"
         },
-	{ 
-	    "name": "oe_test_wangxun",
-	    "machine type": "physical"
-	},
+        {
+            "name": "oe_test_wangxun",
+            "machine type": "physical"
+        },
         {
             "name": "oe_test_vlan_8021q"
         },
@@ -163,4 +165,3 @@
         }
     ]
 }
-

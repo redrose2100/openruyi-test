@@ -1,6 +1,7 @@
 {
-"path": "$OET_PATH/testcases/cli-test/lua-lunit",
-
+    "path": "$OET_PATH/testcases/cli-test/lua-lunit",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_lua-lunit_base"

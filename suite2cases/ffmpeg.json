@@ -1,14 +1,16 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/ffmpeg",
-  "cases": [
-    {
-      "name": "oe_test_ffmpeg"
-    },
-    {
-      "name": "oe_test_ffmpeg_01"
-    },
-    {
-      "name": "oe_test_ffmpeg_02"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/ffmpeg",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_ffmpeg"
+        },
+        {
+            "name": "oe_test_ffmpeg_01"
+        },
+        {
+            "name": "oe_test_ffmpeg_02"
+        }
+    ]
 }

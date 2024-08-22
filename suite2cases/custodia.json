@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/custodia",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_custodia"
@@ -13,5 +15,5 @@
         {
             "name": "oe_test_custodia-cli_03"
         }
-   ]
+    ]
 }

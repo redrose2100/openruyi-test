@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/openvswitch",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_service_openvswitch"
@@ -12,7 +14,7 @@
         },
         {
             "name": "oe_test_service_ovn-controller"
-        } ,
+        },
         {
             "name": "oe_test_service_ovn-northd"
         },

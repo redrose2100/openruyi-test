@@ -1,5 +1,7 @@
 {
     "path": "${OET_PATH}/testcases/system-test/fs-test/FS_Docker",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_docker_check_overlay2fs"
@@ -33,4 +35,3 @@
         }
     ]
 }
-

@@ -1,8 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/xsd",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_xsd"
         }
-   ]
+    ]
 }

@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/dosfstools",
-  "cases": [
-      {
-          "name": "oe_test_dosfsck"
-      }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/dosfstools",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_dosfsck"
+        }
+    ]
 }

@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/dracut",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_service_dracut-cmdline"
@@ -25,8 +27,8 @@
         {
             "name": "oe_test_service_dracut-shutdown"
         },
-	{
-	    "name": "oe_test_service_dracut-initramfs"
-	}
+        {
+            "name": "oe_test_service_dracut-initramfs"
+        }
     ]
 }

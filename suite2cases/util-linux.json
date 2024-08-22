@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/util-linux",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_service_fstrim"
@@ -13,16 +15,16 @@
         {
             "name": "oe_test_socket_uuidd"
         },
-	{
+        {
             "name": "oe_test_util-linux_mcookie"
-	},
+        },
         {
             "name": "oe_test_libuuid"
         },
         {
             "name": "oe_test_util-linux_utmpdump"
-        },        
-	{
+        },
+        {
             "name": "oe_test_unshare"
         },
         {

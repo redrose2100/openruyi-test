@@ -1,7 +1,11 @@
 {
     "path": "${OET_PATH}/testcases/system-test/fs-test/FS_Device",
-    "add disk": [20],
+    "add disk": [
+        20
+    ],
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_check_dm_info"
@@ -12,7 +16,9 @@
         {
             "name": "oe_test_raid_auto_mount",
             "machine num": 2,
-            "add disk": [20]
+            "add disk": [
+                20
+            ]
         },
         {
             "name": "oe_test_raid_compress"
@@ -59,7 +65,9 @@
         {
             "name": "oe_test_swap_auto_mount",
             "machine num": 2,
-            "add disk": [20]
+            "add disk": [
+                20
+            ]
         },
         {
             "name": "oe_test_swap_close",
@@ -73,4 +81,3 @@
         }
     ]
 }
-

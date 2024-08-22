@@ -2,6 +2,8 @@
     "path": "$OET_PATH/testcases/cli-test/iftop",
     "machine num": 1,
     "add network interface": 1,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_iftop_text_mode",

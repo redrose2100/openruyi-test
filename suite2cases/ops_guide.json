@@ -1,5 +1,7 @@
 {
     "path": "${OET_PATH}/testcases/doc-test/ops_guide",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_system_resources_and_performance"

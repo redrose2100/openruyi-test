@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/python-lxml",
-  "cases": [
-    {
-      "name": "oe_test_python3-lxml"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/python-lxml",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_python3-lxml"
+        }
+    ]
 }

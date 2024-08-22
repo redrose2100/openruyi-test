@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/feature-test/sysboost",
-  "cases": [
-    {
-      "name": "oe_test_sysboost_fun"
-    }
-  ]
+    "path": "$OET_PATH/testcases/feature-test/sysboost",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_sysboost_fun"
+        }
+    ]
 }

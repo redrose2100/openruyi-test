@@ -2,6 +2,8 @@
     "path": "${OET_PATH}/testcases/cli-test/firewalld",
     "machine num": 3,
     "add network interface": 1,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_firewalld_add_newservice",
@@ -165,8 +167,8 @@
         },
         {
             "name": "oe_test_firewalld_default_rules"
-        },       
-       	{
+        },
+        {
             "name": "oe_test_firewalld_runtime_rules_in_effect",
             "machine num": 2
         },
@@ -180,4 +182,3 @@
         }
     ]
 }
-

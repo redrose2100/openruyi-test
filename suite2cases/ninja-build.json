@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/ninja-build",
-  "cases": [
-    {
-      "name": "oe_test_ninja-build_ninja"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/ninja-build",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_ninja-build_ninja"
+        }
+    ]
 }

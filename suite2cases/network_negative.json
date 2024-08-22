@@ -1,6 +1,8 @@
 {
     "path": "${OET_PATH}/testcases/system-test/network-test/network_negative",
     "add network interface": 1,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_act_nonexist_nic"
@@ -13,7 +15,7 @@
         },
         {
             "name": "oe_test_modify_mac_failed",
-	    "add network interface": 1
+            "add network interface": 1
         }
     ]
 }

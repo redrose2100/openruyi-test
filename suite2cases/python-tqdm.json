@@ -1,14 +1,16 @@
 {
     "path": "$OET_PATH/testcases/cli-test/python-tqdm",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_python3-tqdm"
         },
-	{
-	    "name": "oe_test_python3-tqdm_02"
-	},
-	{
-	    "name": "oe_test_python3-tqdm_03"
-	}
+        {
+            "name": "oe_test_python3-tqdm_02"
+        },
+        {
+            "name": "oe_test_python3-tqdm_03"
+        }
     ]
 }

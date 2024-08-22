@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/dnf",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_dnf_alias"
@@ -12,13 +14,13 @@
         },
         {
             "name": "oe_test_dnf_automatic"
-        },    
+        },
         {
             "name": "oe_test_dnf_check_diffenert-packages"
-        }, 
+        },
         {
             "name": "oe_test_dnf_makecache_clean"
-        },      
+        },
         {
             "name": "oe_test_dnf_distro-sync_dnf-3"
         },
@@ -67,8 +69,8 @@
         {
             "name": "oe_test_dnf_repeat-upgrade-downgrade"
         },
-	{
-            "name":"oe_test_dnf_deplist"
-	}
+        {
+            "name": "oe_test_dnf_deplist"
+        }
     ]
 }

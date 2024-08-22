@@ -1,14 +1,16 @@
 {
     "path": "$OET_PATH/testcases/cli-test/flatbuffers",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_flatbuffers"
-	},
-	{
-	    "name": "oe_test_flatbuffers_01"
-	},
-	{
-	    "name": "oe_test_flatbuffers_02"
+        },
+        {
+            "name": "oe_test_flatbuffers_01"
+        },
+        {
+            "name": "oe_test_flatbuffers_02"
         }
     ]
 }

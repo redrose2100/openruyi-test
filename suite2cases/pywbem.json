@@ -1,6 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/pywbem",
-
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_pywbem_base_mof_compiler_01"

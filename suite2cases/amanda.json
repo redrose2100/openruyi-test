@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/amanda",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_amanda_amcheck"
@@ -16,15 +18,15 @@
         {
             "name": "oe_test_socket_amanda"
         },
-	{
-	    "name": "oe_test_amanda_aespipe"
-	},
+        {
+            "name": "oe_test_amanda_aespipe"
+        },
         {
             "name": "oe_test_socket_amanda-udp"
         },
-	{
-	    "name": "oe_test_amanda_dump"
-	},
+        {
+            "name": "oe_test_amanda_dump"
+        },
         {
             "name": "oe_test_socket_kamanda"
         }

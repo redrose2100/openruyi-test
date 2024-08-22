@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/keyutils",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_keyutils-api"
@@ -7,8 +9,8 @@
         {
             "name": "oe_test_keyutils-keyctl"
         },
-	{
-	    "name": "oe_test_keyutils-libs"
-	}
+        {
+            "name": "oe_test_keyutils-libs"
+        }
     ]
 }

@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/feature-test/oeaware",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_oeAware_01"
@@ -22,59 +24,59 @@
         {
             "name": "oe_test_oeAware_07"
         },
-	{
-	    "name": "oe_test_oeAware_08"
-	},
         {
-	    "name": "oe_test_oeAware_09"
-	},
-        {
-	    "name": "oe_test_oeAware_10"
-	},
-        {
-	    "name": "oe_test_oeAware_11"
-	},
-        {
-	    "name": "oe_test_oeAware_12"
-	},
-        {
-	    "name": "oe_test_oeAware_13"
+            "name": "oe_test_oeAware_08"
         },
         {
-	    "name": "oe_test_oeAware_14"
-	},
-	{
-	    "name": "oe_test_oeAware_15"
-	},
+            "name": "oe_test_oeAware_09"
+        },
         {
-	    "name": "oe_test_oeAware_16"
-	},
-	{
-	    "name": "oe_test_oeAware_17"
-	},
+            "name": "oe_test_oeAware_10"
+        },
         {
-	    "name": "oe_test_oeAware_18"
-	},
-	{
-	    "name": "oe_test_oeAware_19"
-	},
-	{
-	    "name": "oe_test_oeAware_20"
-	},
+            "name": "oe_test_oeAware_11"
+        },
         {
-	    "name": "oe_test_oeAware_21"
-	},
+            "name": "oe_test_oeAware_12"
+        },
         {
-	    "name": "oe_test_oeAware_22"
-	},
-	{
-	    "name": "oe_test_oeAware_23"
-	},
-	{
-	    "name": "oe_test_oeAware_24"
-	},
-	{
-	    "name": "oe_test_oeAware_25"
-	}  
+            "name": "oe_test_oeAware_13"
+        },
+        {
+            "name": "oe_test_oeAware_14"
+        },
+        {
+            "name": "oe_test_oeAware_15"
+        },
+        {
+            "name": "oe_test_oeAware_16"
+        },
+        {
+            "name": "oe_test_oeAware_17"
+        },
+        {
+            "name": "oe_test_oeAware_18"
+        },
+        {
+            "name": "oe_test_oeAware_19"
+        },
+        {
+            "name": "oe_test_oeAware_20"
+        },
+        {
+            "name": "oe_test_oeAware_21"
+        },
+        {
+            "name": "oe_test_oeAware_22"
+        },
+        {
+            "name": "oe_test_oeAware_23"
+        },
+        {
+            "name": "oe_test_oeAware_24"
+        },
+        {
+            "name": "oe_test_oeAware_25"
+        }
     ]
 }

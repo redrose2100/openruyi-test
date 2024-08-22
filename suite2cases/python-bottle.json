@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/python-bottle",
-  "cases": [
-    {
-      "name": "oe_test_python3-bottle"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/python-bottle",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_python3-bottle"
+        }
+    ]
 }

@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/PackageKit",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_service_packagekit-offline-update"
@@ -7,8 +9,8 @@
         {
             "name": "oe_test_service_packagekit"
         },
-	{
-            "name":"oe_test_packagekit_pkcon"
+        {
+            "name": "oe_test_packagekit_pkcon"
         }
     ]
 }

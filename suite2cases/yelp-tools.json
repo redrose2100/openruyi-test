@@ -1,15 +1,16 @@
 {
     "path": "$OET_PATH/testcases/cli-test/yelp-tools",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_yelp-build"
         },
-	{
+        {
             "name": "oe_test_yelp-check"
         },
-	{
+        {
             "name": "oe_test_yelp-new"
         }
-
     ]
 }

@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/atune",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_service_atuned"
@@ -21,9 +23,9 @@
         },
         {
             "name": "oe_test_service_atuned_04"
-	},
-	{
-	    "name": "oe_test_service_atuned_05"
+        },
+        {
+            "name": "oe_test_service_atuned_05"
         },
         {
             "name": "oe_test_service_atuned_06"
@@ -37,7 +39,5 @@
         {
             "name": "oe_test_service_atuned_09"
         }
-
     ]
 }
-

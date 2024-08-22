@@ -1,10 +1,12 @@
 {
     "path": "$OET_PATH/testcases/cli-test/python-typing",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_python3-typing"
         },
-         {
+        {
             "name": "oe_test_python3-typing_02"
         }
     ]

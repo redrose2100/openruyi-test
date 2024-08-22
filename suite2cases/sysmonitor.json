@@ -1,44 +1,46 @@
 {
-  "path": "$OET_PATH/testcases/feature-test/sysmonitor",
-  "cases": [
-    {
-      "name": "oe_test_sysmonitor_cpu"
-    },
-    {
-      "name": "oe_test_sysmonitor_custom"
-    },
-    {
-      "name": "oe_test_sysmonitor_disk"
-    },
-    {
-      "name": "oe_test_sysmonitor_file"
-    },
-    {
-      "name": "oe_test_sysmonitor_filesystem"
-    },
-    {
-      "name": "oe_test_sysmonitor_handles"
-    },
-    {
-      "name": "oe_test_sysmonitor_inode"
-    },
-    {
-      "name": "oe_test_sysmonitor_iodelay"
-    },
-    {
-      "name": "oe_test_sysmonitor_memory"
-    },
-    {
-      "name": "oe_test_sysmonitor_netcard"
-    },
-    {
-      "name": "oe_test_sysmonitor_process"
-    },
-    {
-      "name": "oe_test_sysmonitor_pscnt"
-    },
-    {
-      "name": "oe_test_sysmonitor_zombie"
-    }
-  ]
+    "path": "$OET_PATH/testcases/feature-test/sysmonitor",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_sysmonitor_cpu"
+        },
+        {
+            "name": "oe_test_sysmonitor_custom"
+        },
+        {
+            "name": "oe_test_sysmonitor_disk"
+        },
+        {
+            "name": "oe_test_sysmonitor_file"
+        },
+        {
+            "name": "oe_test_sysmonitor_filesystem"
+        },
+        {
+            "name": "oe_test_sysmonitor_handles"
+        },
+        {
+            "name": "oe_test_sysmonitor_inode"
+        },
+        {
+            "name": "oe_test_sysmonitor_iodelay"
+        },
+        {
+            "name": "oe_test_sysmonitor_memory"
+        },
+        {
+            "name": "oe_test_sysmonitor_netcard"
+        },
+        {
+            "name": "oe_test_sysmonitor_process"
+        },
+        {
+            "name": "oe_test_sysmonitor_pscnt"
+        },
+        {
+            "name": "oe_test_sysmonitor_zombie"
+        }
+    ]
 }

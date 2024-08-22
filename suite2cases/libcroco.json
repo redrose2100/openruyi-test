@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/libcroco",
-  "cases": [
-    {
-      "name": "oe_test_libcroco"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/libcroco",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_libcroco"
+        }
+    ]
 }

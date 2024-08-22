@@ -1,17 +1,19 @@
 {
     "path": "$OET_PATH/testcases/cli-test/freetds",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
-          "name": "oe_test_freetds_datacopy"
+            "name": "oe_test_freetds_datacopy"
         },
         {
-          "name": "oe_test_freetds_fisql"
+            "name": "oe_test_freetds_fisql"
         },
         {
-          "name": "oe_test_freetds_freebcp"
+            "name": "oe_test_freetds_freebcp"
         },
         {
-          "name": "oe_test_freetds_tsql"
+            "name": "oe_test_freetds_tsql"
         }
     ]
 }

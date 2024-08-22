@@ -1,7 +1,11 @@
 {
     "path": "${OET_PATH}/testcases/system-test/fs-test/FS_FileSystem",
-    "add disk": [20],
+    "add disk": [
+        20
+    ],
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_FSIO_change_fs"
@@ -39,7 +43,9 @@
         {
             "name": "oe_test_FSIO_mount_automount",
             "machine num": 2,
-            "add disk": [20]
+            "add disk": [
+                20
+            ]
         },
         {
             "name": "oe_test_FSIO_mount_block_dir"
@@ -104,7 +110,9 @@
         {
             "name": "oe_test_FSIO_mount_reboot",
             "machine num": 2,
-            "add disk": [20]
+            "add disk": [
+                20
+            ]
         },
         {
             "name": "oe_test_FSIO_mount_remount"
@@ -190,12 +198,11 @@
         {
             "name": "oe_test_FSIO_xfs_resize2fs"
         },
-	{
+        {
             "name": "oe_test_FSIO_create_squashfs"
-	},
-	{
+        },
+        {
             "name": "oe_test_FSIO_mount_tmpfs"
-	}
+        }
     ]
 }
-

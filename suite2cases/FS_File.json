@@ -1,6 +1,10 @@
 {
     "path": "${OET_PATH}/testcases/system-test/fs-test/FS_File",
-    "add disk": [20],
+    "add disk": [
+        20
+    ],
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_FSIO_act_alias"
@@ -122,6 +126,5 @@
         {
             "name": "oe_test_FSIO_zip_unzip_overfs"
         }
-
     ]
 }

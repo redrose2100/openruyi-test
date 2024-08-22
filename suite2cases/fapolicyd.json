@@ -1,11 +1,13 @@
 {
     "path": "$OET_PATH/testcases/cli-test/fapolicyd",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_fapolicyd-service"
         },
-	{
-	    "name": "oe_test_fapolicyd-bugfix"
-	}
+        {
+            "name": "oe_test_fapolicyd-bugfix"
+        }
     ]
 }

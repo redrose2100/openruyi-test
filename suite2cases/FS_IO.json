@@ -1,6 +1,10 @@
 {
     "path": "${OET_PATH}/testcases/system-test/fs-test/FS_IO",
-    "add disk": [20],
+    "add disk": [
+        20
+    ],
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_FSIO_aio_cancel"
@@ -130,4 +134,3 @@
         }
     ]
 }
-

@@ -1,20 +1,22 @@
 {
-	"path": "${OET_PATH}/testcases/cli-test/flex",
-	"cases": [
-		{
-		    "name": "oe_test_flex_analyzer"
-		},
-		{
-		    "name": "oe_test_flex_debugging"
-		},
-		{
-		    "name": "oe_test_flex_filetest"
-		},
-		{
-		    "name": "oe_test_flex_scanner"
-		},
-		{
-		    "name": "oe_test_flex_generated_code"
-		}
-	]
+    "path": "${OET_PATH}/testcases/cli-test/flex",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_flex_analyzer"
+        },
+        {
+            "name": "oe_test_flex_debugging"
+        },
+        {
+            "name": "oe_test_flex_filetest"
+        },
+        {
+            "name": "oe_test_flex_scanner"
+        },
+        {
+            "name": "oe_test_flex_generated_code"
+        }
+    ]
 }

@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/containerd",
-  "cases": [
-    {
-      "name": "oe_test_containerd"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/containerd",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_containerd"
+        }
+    ]
 }

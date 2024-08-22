@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/openjade",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_openjade_jade_01"

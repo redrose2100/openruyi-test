@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/nasm",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_nasm_01"
@@ -46,8 +48,8 @@
         {
             "name": "oe_test_nasm_ndisasm_02"
         },
-	{
-	    "name": "oe_test_nasm_14"
-	}
+        {
+            "name": "oe_test_nasm_14"
+        }
     ]
 }

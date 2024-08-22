@@ -1,7 +1,11 @@
 {
     "path": "${OET_PATH}/testcases/system-test/fs-test/FS_Directory",
-    "add disk": [20],
+    "add disk": [
+        20
+    ],
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_FSIO_dir_access"
@@ -105,4 +109,3 @@
         }
     ]
 }
-

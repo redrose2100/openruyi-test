@@ -1,17 +1,19 @@
 {
     "path": "$OET_PATH/testcases/cli-test/figlet",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_figlet"
-	},
-	{
-	    "name": "oe_test_figlet_01"
         },
-	{
-	    "name": "oe_test_figlet_02"
-	},
-	{
-	    "name": "oe_test_figlet_03"
+        {
+            "name": "oe_test_figlet_01"
+        },
+        {
+            "name": "oe_test_figlet_02"
+        },
+        {
+            "name": "oe_test_figlet_03"
         }
     ]
 }

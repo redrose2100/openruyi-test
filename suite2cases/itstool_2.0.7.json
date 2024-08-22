@@ -1,9 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/itstool",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_itstool_2.0.7"
         }
     ]
-
 }

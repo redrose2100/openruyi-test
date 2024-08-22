@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/mod_wsgi",
-  "cases": [
-    {
-      "name": "oe_test_mod_wsgi"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/mod_wsgi",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_mod_wsgi"
+        }
+    ]
 }

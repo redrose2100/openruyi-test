@@ -1,20 +1,22 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/gawk",
-  "cases": [
-    {
-      "name": "oe_test_gawk"
-    },
-    {
-      "name": "oe_test_gawk01"
-    },
-    {
-      "name": "oe_test_gawk02"
-    },
-    {
-      "name": "oe_test_gawk03"
-    },
-    {	
-      "name": "oe_test_gawk04"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/gawk",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_gawk"
+        },
+        {
+            "name": "oe_test_gawk01"
+        },
+        {
+            "name": "oe_test_gawk02"
+        },
+        {
+            "name": "oe_test_gawk03"
+        },
+        {
+            "name": "oe_test_gawk04"
+        }
+    ]
 }

@@ -1,5 +1,7 @@
 {
     "path": "${OET_PATH}/testcases/feature-test/pkgship/pkgship_reliability",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_pkgship_access_init"

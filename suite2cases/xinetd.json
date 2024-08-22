@@ -1,11 +1,13 @@
 {
     "path": "$OET_PATH/testcases/cli-test/xinetd",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_service_xinetd"
         },
-	{
-	    "name": "oe_test_service_xinetd_002"
-	}
+        {
+            "name": "oe_test_service_xinetd_002"
+        }
     ]
 }

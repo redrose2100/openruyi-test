@@ -1,6 +1,8 @@
 {
     "path": "$OET_PATH/testcases/embedded-test/distributed_file_test",
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_mkdir_ls_001",

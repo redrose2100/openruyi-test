@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/zip",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_zip_001"
@@ -11,10 +13,10 @@
             "name": "oe_test_zip_003"
         },
         {
-	    "name": "oe_test_zip_004"
-	},
-	{
-	    "name": "oe_test_zip_005"
-	}
+            "name": "oe_test_zip_004"
+        },
+        {
+            "name": "oe_test_zip_005"
+        }
     ]
 }

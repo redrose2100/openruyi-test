@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/clang",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_clang_01"
@@ -10,8 +12,8 @@
         {
             "name": "oe_test_clang_03"
         },
-	{
-	    "name": "oe_test_clang_04"
-	}
+        {
+            "name": "oe_test_clang_04"
+        }
     ]
 }

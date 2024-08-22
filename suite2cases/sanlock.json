@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/sanlock",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_sanlock_base_01"
@@ -25,7 +27,7 @@
         {
             "name": "oe_test_sanlock_sanlk_resetd"
         },
-	{
+        {
             "name": "oe_test_service_sanlk-resetd"
         },
         {
