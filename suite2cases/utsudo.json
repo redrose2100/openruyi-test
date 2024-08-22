@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/utsudo",
+    "cases": [
+        {
+            "name": "oe_test_utsudo_s"
+        }
+    ]
+}
