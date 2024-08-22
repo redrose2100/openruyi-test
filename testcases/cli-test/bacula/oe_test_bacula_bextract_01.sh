@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client bacula-common mysql5-server tar"
+    DNF_INSTALL "bacula-client bacula-common mysql-server tar"
     tar -zxvf common/test.tar.gz
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database
@@ -70,7 +70,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "test bextract -b failed"
     bextract -v -V testex FileChgr2-Dev1 /tmp | grep 'Ready to read from volume "testex" on File device "FileChgr2-Dev1"'
     CHECK_RESULT $? 0 0 "test bextract -v failed"
-    bextract -V testex -d 21 FileChgr2-Dev1 /tmp | grep 'address_conf.c:274-0 Initaddr'
+    bextract -V testex -d 21 FileChgr2-Dev1 /tmp | grep 'address_conf.c:.* Initaddr'
     CHECK_RESULT $? 0 0 "test bextract -d failed"
     bextract -V testex -dt -d 21 FileChgr2-Dev1 /tmp | grep '.*-.*-.* .*:.*:.* bextract: '
     CHECK_RESULT $? 0 0 "test bextract -dt failed"

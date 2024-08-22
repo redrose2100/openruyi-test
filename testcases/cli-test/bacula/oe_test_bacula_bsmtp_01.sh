@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client bacula-common mysql5-server sendmail m4"
+    DNF_INSTALL "bacula-client bacula-common mysql-server sendmail m4"
     line=$(grep -nr 'port=smtp,Addr=::1, Name=MTA-v6, Family=inet6' /etc/mail/sendmail.mc |  awk 'BEGIN {FS=":"}{print $1}')
     sed -i "${line}s/dnl //g" /etc/mail/sendmail.mc
     sed -i "${line}s/dnl//g" /etc/mail/sendmail.mc
