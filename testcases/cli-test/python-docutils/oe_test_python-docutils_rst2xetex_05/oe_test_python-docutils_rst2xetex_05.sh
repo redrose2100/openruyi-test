@@ -28,7 +28,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     rst2xetex --use-latex-toc testfile.rst test1.tex && test -f test1.tex
     CHECK_RESULT $?
-    rst2xetex --use-docutils-toc testfile.rst test2.tex && grep 'DUtitle\[contents\]' test2.tex
+    rst2xetex --use-docutils-toc testfile.rst test2.tex && grep 'DUtitle{Table of Contents title}' test2.tex
     CHECK_RESULT $?
     rst2xetex --use-part-section testfile.rst test3.tex && grep 'part{Title 1' test3.tex
     CHECK_RESULT $?

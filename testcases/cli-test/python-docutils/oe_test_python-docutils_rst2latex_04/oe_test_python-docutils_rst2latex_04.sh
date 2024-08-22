@@ -30,7 +30,7 @@ function run_test() {
         grep 'toprule' test1.tex
     CHECK_RESULT $?
     rst2latex --use-docutils-toc testfile.rst test2.tex &&
-        grep 'DUtitle\[contents\]' test2.tex
+        grep 'DUtitle{Table of Contents title}' test2.tex
     CHECK_RESULT $?
     rst2latex --use-part-section testfile.rst test3.tex &&
         grep 'part{Title 1' test3.tex
@@ -41,7 +41,7 @@ function run_test() {
     rst2latex --use-latex-docinfo testfile.rst test5.tex &&
         grep 'author{TESTER}' test5.tex
     CHECK_RESULT $?
-    test "$(rst2latex -V | awk '{print$3}')" == "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
+    test "$(rst2latex -V | awk '{print$3}' | sed 's/,$//')" == "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
     CHECK_RESULT $?
     rst2latex -h | grep 'Usage'
     CHECK_RESULT $?

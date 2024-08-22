@@ -30,7 +30,7 @@ function run_test() {
     CHECK_RESULT $?
     rstpep2html --no-toc-backlinks pep.rst test2.html
     CHECK_RESULT $?
-    grep 'class="toc-backref" href="#id12"' test2.html
+    grep 'class="toc-backref" href="#"' test2.html
     CHECK_RESULT $? 0 1
     rstpep2html --no-footnote-backlinks pep.rst test3.html
     CHECK_RESULT $?

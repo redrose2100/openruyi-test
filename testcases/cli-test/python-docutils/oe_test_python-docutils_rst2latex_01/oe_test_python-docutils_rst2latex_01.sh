@@ -29,11 +29,11 @@ function run_test() {
     rst2latex --title=testtitle testfile.rst test1.tex
     CHECK_RESULT $?
     rst2latex -g testfile.rst test2.tex &&
-        grep 'href{http://docutils.sourceforge.net/}' test2.tex
+        grep 'href{https://docutils.sourceforge.io/}' test2.tex
     CHECK_RESULT $?
     rst2latex --no-generator testfile.rst test3.tex
     CHECK_RESULT $?
-    grep 'href{http://docutils.sourceforge.net/}' test3.tex
+    grep 'href{https://docutils.sourceforge.io/}' test3.tex
     CHECK_RESULT $? 0 1
     rst2latex -d -t testfile.rst test4.tex &&
         grep -E "Generated on: [0-9]+-[0-9]+-[0-9]+ [0-9]+:[0-9]+ UTC" test4.tex

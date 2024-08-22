@@ -28,11 +28,11 @@ function run_test() {
     LOG_INFO "Start to run test."
     rst2s5 --title=testtitle testfile.rst test1.html && grep testtitle test1.html
     CHECK_RESULT $?
-    rst2s5 -g testfile.rst test2.html && grep 'href="http://docutils.sourceforge.net/' test2.html
+    rst2s5 -g testfile.rst test2.html && grep 'href="https://docutils.sourceforge.io/' test2.html
     CHECK_RESULT $?
     rst2s5 --no-generator testfile.rst test3.html
     CHECK_RESULT $?
-    grep 'href="http://docutils.sourceforge.net/' test3.html
+    grep 'href="https://docutils.sourceforge.io/' test3.html
     CHECK_RESULT $? 1
     rst2s5 -d -t testfile.rst test4.html && grep -E "Generated on: [0-9]+-[0-9]+-[0-9]+ [0-9]+:[0-9]+ UTC" test4.html
     CHECK_RESULT $?
@@ -48,13 +48,13 @@ function run_test() {
     CHECK_RESULT $?
     grep 'href="testfile.rst"' test8.html
     CHECK_RESULT $? 1
-    rst2s5 --toc-entry-backlinks testfile.rst test9.html && grep 'class="toc-backref" href="#id' test9.html
+    rst2s5 --toc-entry-backlinks testfile.rst test9.html && grep 'class="toc-backref" href="#' test9.html
     CHECK_RESULT $?
     rst2s5 --toc-top-backlinks testfile.rst test10.html && grep 'class="toc-backref" href="#table-of-contents-title"' test10.html
     CHECK_RESULT $?
     rst2s5 --no-toc-backlinks testfile.rst test11.html
     CHECK_RESULT $?
-    grep 'class="toc-backref" href="#id' test11.html
+    grep 'class="toc-backref" href="#' test11.html
     CHECK_RESULT $? 1
     rst2s5 --no-footnote-backlinks testfile.rst test12_1.html
     CHECK_RESULT $?
