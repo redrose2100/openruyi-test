@@ -1,11 +1,13 @@
 {
     "path": "$OET_PATH/testcases/cli-test/yajl",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_yajl"
         },
-	{
-	    "name": "oe_test_yajl_02"
-	}
+        {
+            "name": "oe_test_yajl_02"
+        }
     ]
 }

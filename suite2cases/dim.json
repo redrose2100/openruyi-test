@@ -1,6 +1,8 @@
 {
     "path": "$OET_PATH/testcases/cli-test/dim",
     "machine num": 1,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_dim_measure_001",
@@ -12,4 +14,3 @@
         }
     ]
 }
-

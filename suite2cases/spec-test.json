@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/system-test/spec-test",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_check_mul_so"

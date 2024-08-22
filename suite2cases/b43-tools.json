@@ -1,8 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/b43-tools",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
-          "name": "oe_test_b43-tools_b43-asm"
+            "name": "oe_test_b43-tools_b43-asm"
         }
     ]
 }

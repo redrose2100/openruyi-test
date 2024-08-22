@@ -1,11 +1,13 @@
 {
     "path": "$OET_PATH/testcases/cli-test/netdata",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_netdata"
         },
         {
             "name": "oe_test_service_netdata"
-        }        
-   ]
+        }
+    ]
 }

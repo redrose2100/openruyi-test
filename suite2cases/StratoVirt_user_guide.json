@@ -1,6 +1,8 @@
 {
     "path": "${OET_PATH}/testcases/doc-test/virtualization/StratoVirt_user_guide",
     "machine type": "physical",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_ready_environment",

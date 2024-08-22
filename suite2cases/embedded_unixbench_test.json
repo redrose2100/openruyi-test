@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/embedded-test/unix_bench_tests",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_unix_bench_test_001"

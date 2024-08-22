@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/audit",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_audit_monitor_file_access"
@@ -100,10 +102,10 @@
         {
             "name": "oe_test_ausyscall"
         },
-	{
+        {
             "name": "oe_test_aulastlog"
         },
-	{
+        {
             "name": "oe_test_audit_monitor_pipe_file"
         },
         {
@@ -111,4 +113,3 @@
         }
     ]
 }
-

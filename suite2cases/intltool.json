@@ -1,11 +1,13 @@
 {
     "path": "$OET_PATH/testcases/cli-test/intltool",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
-            "name": "oe_test_intltool_intltool-merge_01"    
+            "name": "oe_test_intltool_intltool-merge_01"
         },
         {
-            "name": "oe_test_intltool_intltool-merge_02"    
+            "name": "oe_test_intltool_intltool-merge_02"
         },
         {
             "name": "oe_test_intltool_intltool-update"

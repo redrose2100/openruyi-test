@@ -1,36 +1,37 @@
-
 {
     "path": "$OET_PATH/testcases/cli-test/jpegoptim",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_jpegoptim_01"
-	},
-	{
-	    "name": "oe_test_jpegoptim_02"
-	},
-	{
-	    "name": "oe_test_jpegoptim_03"
         },
-	{
-	    "name": "oe_test_jpegoptim_04"
-	},
-	{
-	    "name": "oe_test_jpegoptim_05"
-        },
-	{
-	    "name": "oe_test_jpegoptim_06"
-        },
-	{
-	    "name": "oe_test_jpegoptim_07"
-	},
         {
-	    "name": "oe_test_jpegoptim_08"
+            "name": "oe_test_jpegoptim_02"
         },
-	{
-	    "name": "oe_test_jpegoptim_09"
+        {
+            "name": "oe_test_jpegoptim_03"
         },
-	{
-	    "name": "oe_test_jpegoptim_10"	
-	}	
+        {
+            "name": "oe_test_jpegoptim_04"
+        },
+        {
+            "name": "oe_test_jpegoptim_05"
+        },
+        {
+            "name": "oe_test_jpegoptim_06"
+        },
+        {
+            "name": "oe_test_jpegoptim_07"
+        },
+        {
+            "name": "oe_test_jpegoptim_08"
+        },
+        {
+            "name": "oe_test_jpegoptim_09"
+        },
+        {
+            "name": "oe_test_jpegoptim_10"
+        }
     ]
 }

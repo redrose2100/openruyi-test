@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/elfutils",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_elfutils"
@@ -7,5 +9,5 @@
         {
             "name": "oe_test_service_debuginfod"
         }
-      ]
+    ]
 }

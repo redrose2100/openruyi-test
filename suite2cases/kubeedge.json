@@ -1,6 +1,8 @@
 {
     "path": "${OET_PATH}/testcases/feature-test/kubeedge",
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_kubeedge_deployment_guide",

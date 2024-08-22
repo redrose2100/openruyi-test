@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/batik",
-  "cases": [
-    {
-      "name": "oe_test_ttf2svg"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/batik",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_ttf2svg"
+        }
+    ]
 }

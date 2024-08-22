@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/docbook2X",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_docbook2X_db2x_manxml"

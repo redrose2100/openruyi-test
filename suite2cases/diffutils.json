@@ -1,17 +1,19 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/diffutils",
-  "cases": [
-    {
-      "name": "oe_test_diffutils_001"
-    },
-    {
-      "name": "oe_test_diffutils_002"
-    },
-    {
-      "name": "oe_test_diffutils_003"
-    },
-    {
-      "name": "oe_test_diffutils_004"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/diffutils",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_diffutils_001"
+        },
+        {
+            "name": "oe_test_diffutils_002"
+        },
+        {
+            "name": "oe_test_diffutils_003"
+        },
+        {
+            "name": "oe_test_diffutils_004"
+        }
+    ]
 }

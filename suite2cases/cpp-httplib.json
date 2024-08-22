@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/cpp-httplib",
-  "cases": [
-    {
-      "name": "oe_test_cpp-httplib"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/cpp-httplib",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_cpp-httplib"
+        }
+    ]
 }

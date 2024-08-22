@@ -1,14 +1,16 @@
 {
     "path": "$OET_PATH/testcases/cli-test/sox",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_sox"
         },
         {
-   	    "name": "oe_test_sox01"
+            "name": "oe_test_sox01"
         },
-	{
-	    "name": "oe_test_sox02"
+        {
+            "name": "oe_test_sox02"
         }
     ]
 }

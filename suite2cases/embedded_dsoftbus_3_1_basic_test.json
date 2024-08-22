@@ -1,6 +1,8 @@
 {
     "path": "$OET_PATH/testcases/embedded-test/dsoftbus_3_1_basic_test",
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_PublishServiceInterface_001"

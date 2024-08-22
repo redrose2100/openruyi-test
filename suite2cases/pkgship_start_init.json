@@ -1,17 +1,19 @@
 {
     "path": "${OET_PATH}/testcases/feature-test/pkgship/pkgship_start_init",
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_pkgship_autostart_01"
         },
         {
             "name": "oe_test_pkgship_autostart_02",
-	    "machine num": 2
+            "machine num": 2
         },
         {
             "name": "oe_test_pkgship_check_client",
-	    "machine num": 2
+            "machine num": 2
         },
         {
             "name": "oe_test_pkgship_dbs_1"

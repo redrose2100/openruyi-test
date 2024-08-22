@@ -1,10 +1,12 @@
 {
     "path": "$OET_PATH/testcases/cli-test/gdbm",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_gdbm_01"
         },
-	{
+        {
             "name": "oe_test_gdbm_02"
         }
     ]

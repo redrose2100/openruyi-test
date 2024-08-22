@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/boom-boot",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_boom_boot_1.3_01"

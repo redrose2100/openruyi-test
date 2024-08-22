@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/libldb",
-  "cases": [
-    {
-      "name": "oe_test_libldb"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/libldb",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_libldb"
+        }
+    ]
 }

@@ -2,9 +2,11 @@
     "path": "$OET_PATH/testcases/cli-test/rhash",
     "machine num": 1,
     "machine type": "kvm",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
-            "name": "oe_test_rhash_1.4.2_rhash"  
+            "name": "oe_test_rhash_1.4.2_rhash"
         }
     ]
 }

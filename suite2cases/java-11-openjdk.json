@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/java-11-openjdk",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_java"
@@ -13,7 +15,7 @@
         {
             "name": "oe_test_openjdk11_javap"
         },
-         {
+        {
             "name": "oe_test_openjdk11_jdb_jdeps"
         },
         {

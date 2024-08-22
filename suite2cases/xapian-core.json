@@ -1,9 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/xapian-core",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
-       
         {
-            "name": "oe_test_xapian-core_copydatabase"  
+            "name": "oe_test_xapian-core_copydatabase"
         },
         {
             "name": "oe_test_xapian-core_quest_01"
@@ -53,6 +54,5 @@
         {
             "name": "oe_test_xapian-core_xapian-tcpsrv"
         }
-
     ]
 }

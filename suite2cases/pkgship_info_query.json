@@ -1,5 +1,7 @@
 {
     "path": "${OET_PATH}/testcases/feature-test/pkgship/pkgship_info_query",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_pkgship_query_list_1"

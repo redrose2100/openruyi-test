@@ -1,38 +1,40 @@
 {
     "path": "$OET_PATH/testcases/cli-test/thrift",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_thrift_version"
         },
-	{
-	    "name": "oe_test_thrift_generate_cppcode"
-	},
-	{
-	    "name": "oe_test_thrift_generate_pycode"
-	},
-	{
-	    "name": "oe_test_thrift_generate_gocode"
-	},
-	{
-	    "name": "oe_test_thrift_generate_javacode"
-	},
-	{
-	    "name": "oe_test_thrift_generate_jscode"
-	},
-	{
-	    "name": "oe_test_thrift_generate_htmlcode"
-	},
-	{
-	    "name": "oe_test_thrift_generate_phpcode"
-	},
-	{
-	    "name": "oe_test_thrift_generate_xmlcode"
-	},
-	{
-	    "name": "oe_test_thrift_generate_rbcode"
-	},
-	{
-	    "name": "oe_test_thrift_generate_luacode"
-	}
+        {
+            "name": "oe_test_thrift_generate_cppcode"
+        },
+        {
+            "name": "oe_test_thrift_generate_pycode"
+        },
+        {
+            "name": "oe_test_thrift_generate_gocode"
+        },
+        {
+            "name": "oe_test_thrift_generate_javacode"
+        },
+        {
+            "name": "oe_test_thrift_generate_jscode"
+        },
+        {
+            "name": "oe_test_thrift_generate_htmlcode"
+        },
+        {
+            "name": "oe_test_thrift_generate_phpcode"
+        },
+        {
+            "name": "oe_test_thrift_generate_xmlcode"
+        },
+        {
+            "name": "oe_test_thrift_generate_rbcode"
+        },
+        {
+            "name": "oe_test_thrift_generate_luacode"
+        }
     ]
 }

@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/feature-test/zswap/",
-  "cases": [
-    {
-      "name": "oe_test_zswap01"
-    }
-  ]
+    "path": "$OET_PATH/testcases/feature-test/zswap/",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_zswap01"
+        }
+    ]
 }

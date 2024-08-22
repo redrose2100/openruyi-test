@@ -1,9 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/gobject-introspection",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_gobject-introspection"
         }
-
     ]
 }

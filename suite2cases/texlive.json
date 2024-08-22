@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/texlive",
-  "cases": [
-    {
-      "name": "oe_test_texlive"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/texlive",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_texlive"
+        }
+    ]
 }

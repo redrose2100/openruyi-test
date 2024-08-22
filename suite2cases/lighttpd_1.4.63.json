@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/lighttpd",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_lighttpd_1.4.63_service_lighttpd"

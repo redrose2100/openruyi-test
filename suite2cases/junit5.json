@@ -1,5 +1,7 @@
 {
     "path": "${OET_PATH}/testcases/cli-test/junit5",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_junit5_abnormal_removejar"

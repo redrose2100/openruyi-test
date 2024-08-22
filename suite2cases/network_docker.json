@@ -1,5 +1,7 @@
 {
     "path": "${OET_PATH}/testcases/system-test/network-test/network_docker",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_docker_network_create"

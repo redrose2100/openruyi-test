@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/rust",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_rustc_01"
@@ -25,5 +27,5 @@
         {
             "name": "oe_test_rustfmt"
         }
-    ] 
+    ]
 }

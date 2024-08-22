@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/aws-sdk-java",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_aws-sdk-java_001"

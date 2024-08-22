@@ -1,6 +1,8 @@
 {
     "path": "$OET_PATH/testcases/smoke-test/smoke-shangmi",
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_gm_openssl_001",
@@ -20,4 +22,3 @@
         }
     ]
 }
-

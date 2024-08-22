@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/p7zip",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_p7zip_7za_001"

@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/criu",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_criu_base"
@@ -61,5 +63,5 @@
         {
             "name": "oe_test_criu_base_service"
         }
-   ]
+    ]
 }

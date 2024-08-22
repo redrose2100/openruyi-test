@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/po4a",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_po4a_01"
@@ -11,37 +13,37 @@
             "name": "oe_test_po4a_03"
         },
         {
-            "name" : "oe_test_po4a-gettextize_01"
+            "name": "oe_test_po4a-gettextize_01"
         },
         {
-            "name" : "oe_test_po4a-gettextize_02"
+            "name": "oe_test_po4a-gettextize_02"
         },
         {
-            "name" : "oe_test_po4a-translate_01"
+            "name": "oe_test_po4a-translate_01"
         },
         {
-            "name" : "oe_test_po4a-translate_02"
+            "name": "oe_test_po4a-translate_02"
         },
         {
-            "name" : "oe_test_po4a-updatepo_01"
+            "name": "oe_test_po4a-updatepo_01"
         },
         {
-            "name" : "oe_test_po4a-updatepo_02"
+            "name": "oe_test_po4a-updatepo_02"
         },
         {
-            "name" : "oe_test_po4a-updatepo_03" 
+            "name": "oe_test_po4a-updatepo_03"
         },
         {
-            "name" : "oe_test_po4a-normalize_01"
+            "name": "oe_test_po4a-normalize_01"
         },
         {
-            "name" : "oe_test_po4a-normalize_02"
+            "name": "oe_test_po4a-normalize_02"
         },
         {
-            "name" :"oe_test_po4aman-display-po"
+            "name": "oe_test_po4aman-display-po"
         },
         {
-            "name" : "oe_test_po4apod-display-po"
+            "name": "oe_test_po4apod-display-po"
         }
     ]
 }

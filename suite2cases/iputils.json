@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/iputils",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_iputils_ping_01"

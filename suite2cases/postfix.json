@@ -1,11 +1,13 @@
 {
     "path": "$OET_PATH/testcases/cli-test/postfix",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_service_postfix"
         },
-	{
-	    "name": "oe_test_postfix_configuration"
-	}
+        {
+            "name": "oe_test_postfix_configuration"
+        }
     ]
 }

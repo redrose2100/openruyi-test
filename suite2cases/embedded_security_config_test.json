@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/embedded-test/security_config_test",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_check_file_sys_protect_001"

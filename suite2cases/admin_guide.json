@@ -9,6 +9,8 @@
         2
     ],
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_basic_del_user"

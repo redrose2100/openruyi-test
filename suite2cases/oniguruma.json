@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/oniguruma",
-  "cases": [
-    {
-      "name": "oe_test_oniguruma"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/oniguruma",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_oniguruma"
+        }
+    ]
 }

@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/units",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_units_01"
@@ -19,5 +21,5 @@
         {
             "name": "oe_test_units_cur"
         }
-   ]
+    ]
 }

@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/libtar",
-  "cases": [
-    {
-      "name": "oe_test_libtar"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/libtar",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_libtar"
+        }
+    ]
 }

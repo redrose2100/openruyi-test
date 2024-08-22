@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/python-greenlet",
-  "cases": [
-    {
-      "name": "oe_test_greenlet"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/python-greenlet",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_greenlet"
+        }
+    ]
 }

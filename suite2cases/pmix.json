@@ -1,11 +1,13 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/pmix",
-  "cases": [
-    {
-      "name": "oe_test_pmix"
-    },
-    {
-      "name": "oe_test_pmix_01"	    
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/pmix",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_pmix"
+        },
+        {
+            "name": "oe_test_pmix_01"
+        }
+    ]
 }

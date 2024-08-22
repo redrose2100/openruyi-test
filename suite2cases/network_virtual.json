@@ -1,5 +1,7 @@
 {
     "path": "${OET_PATH}/testcases/system-test/network-test/network_virtual",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_check_tuntap_support"

@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/cobbler",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_cobbler_distro"
@@ -8,7 +10,7 @@
             "name": "oe_test_cobbler_profile"
         },
         {
-            "name": "oe_test_cobbler_system" 
+            "name": "oe_test_cobbler_system"
         },
         {
             "name": "oe_test_cobbler_repo"
@@ -31,5 +33,5 @@
         {
             "name": "oe_test_service_cobblerd"
         }
-   ]
+    ]
 }

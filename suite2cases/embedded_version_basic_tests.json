@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/embedded-test/version_basic_tests",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_version_posix_suite_test_001"

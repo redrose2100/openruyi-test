@@ -1,6 +1,8 @@
 {
     "path": "$OET_PATH/testcases/doc-test/security_guide",
     "machine num": 3,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_ssh_warnings"
@@ -46,14 +48,14 @@
         },
         {
             "name": "oe_test_ssh_access_login_in_60s",
-	    "machine num": 2
+            "machine num": 2
         },
         {
             "name": "oe_test_set_password_complexity"
         },
         {
             "name": "oe_test_ssh_disable_parsing_sshpath",
-	    "machine num": 2
+            "machine num": 2
         },
         {
             "name": "oe_test_ssh_disable_root"
@@ -69,7 +71,7 @@
         },
         {
             "name": "oe_test_set_exit_time",
-	    "machine num": 2
+            "machine num": 2
         },
         {
             "name": "oe_test_add_sticky_bit_attribute"
@@ -88,18 +90,18 @@
         },
         {
             "name": "oe_test_ssh_allow_public_key",
-	    "machine num": 2
+            "machine num": 2
         },
         {
             "name": "oe_test_shield_system_account"
         },
         {
             "name": "oe_test_ssh_RSA_auth",
-	    "machine num": 2
+            "machine num": 2
         },
         {
             "name": "oe_test_ssh_disable_agent_forwarding",
-	    "machine num": 3
+            "machine num": 3
         },
         {
             "name": "oe_test_ssh_system_reinforcement"
@@ -134,26 +136,26 @@
             "name": "oe_test_ssh_server_reinforcement_suggestions"
         },
         {
-            "name" :"oe_test_kernel_parameter_reinforcement_description"
+            "name": "oe_test_kernel_parameter_reinforcement_description"
         },
         {
-            "name" :"oe_test_ssh_prohibit_root_login_system_through_ssh",
+            "name": "oe_test_ssh_prohibit_root_login_system_through_ssh",
             "machine num": 2
         },
         {
-            "name" :"oe_test_password_validity"
+            "name": "oe_test_password_validity"
         },
         {
-            "name" :"oe_test_passwd_salt_value_unique"
+            "name": "oe_test_passwd_salt_value_unique"
         },
         {
-            "name" :"oe_test_passwd_ciphertext_unique"
+            "name": "oe_test_passwd_ciphertext_unique"
         },
         {
-            "name" :"oe_test_check_default_dictionary_words"
+            "name": "oe_test_check_default_dictionary_words"
         },
         {
-            "name" :"oe_test_check_custom_dictionary_words"
+            "name": "oe_test_check_custom_dictionary_words"
         }
     ]
 }

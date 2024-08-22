@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/openssl",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_openssl_concurrent_operations"
@@ -82,26 +84,26 @@
         {
             "name": "oe_test_openssl_symmetric_encryption_decryption"
         },
-	{
-	    "name": "oe_test_openssl_enc"
-	},
-	{
-	    "name": "oe_test_openssl_rc4_encryption_file"
-	},
-	{
-	    "name": "oe_test_openssl_sm2"
-	},
-	{
-	    "name": "oe_test_openssl_sm4"
-	},
-	{
-	    "name": "oe_test_openssl_hmac"
-	},
-	{
-	    "name": "oe_test_openssl_speed"
-	},
         {
-	    "name": "oe_test_openssl_cryptographic_services"
-	}
+            "name": "oe_test_openssl_enc"
+        },
+        {
+            "name": "oe_test_openssl_rc4_encryption_file"
+        },
+        {
+            "name": "oe_test_openssl_sm2"
+        },
+        {
+            "name": "oe_test_openssl_sm4"
+        },
+        {
+            "name": "oe_test_openssl_hmac"
+        },
+        {
+            "name": "oe_test_openssl_speed"
+        },
+        {
+            "name": "oe_test_openssl_cryptographic_services"
+        }
     ]
 }

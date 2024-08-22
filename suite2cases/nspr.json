@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/nspr",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_nspr_001"
@@ -12,4 +14,3 @@
         }
     ]
 }
-

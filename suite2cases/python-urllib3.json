@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/python-urllib3",
-  "cases": [
-    {
-      "name": "oe_test_urllib3"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/python-urllib3",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_urllib3"
+        }
+    ]
 }

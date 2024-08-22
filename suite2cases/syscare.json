@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/syscare",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_syscare_basic_test"
@@ -8,10 +10,10 @@
             "name": "oe_test_syscare_build_kpatch"
         },
         {
-            "name":"oe_test_syscare_build_all_param"
+            "name": "oe_test_syscare_build_all_param"
         },
         {
-            "name":"oe_test_syscare_build_error_param"
+            "name": "oe_test_syscare_build_error_param"
         },
         {
             "name": "oe_test_service_syscare"

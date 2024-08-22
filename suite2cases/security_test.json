@@ -1,7 +1,11 @@
 {
     "path": "$OET_PATH/testcases/security_test",
-    "add disk":[10],
+    "add disk": [
+        10
+    ],
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_selinux_listuser"
@@ -83,7 +87,9 @@
         },
         {
             "name": "oe_test_use_luks",
-            "add disk": [10]
+            "add disk": [
+                10
+            ]
         },
         {
             "name": "oe_test_aide_check_update"
@@ -93,7 +99,9 @@
         },
         {
             "name": "oe_test_encrypt_data",
-	    "add disk": [10]
+            "add disk": [
+                10
+            ]
         },
         {
             "name": "oe_test_check_passwd_shadow"
@@ -117,7 +125,7 @@
         {
             "name": "oe_test_security_test_FUN297"
         },
-	{
+        {
             "name": "oe_test_security_test_FUN299"
         },
         {
@@ -204,10 +212,10 @@
         },
         {
             "name": "oe_test_acl_formats"
-	},
+        },
         {
             "name": "oe_test_hdf5"
-	},
+        },
         {
             "name": "oe_test_gpgcheck"
         },

@@ -1,6 +1,8 @@
 {
     "path": "$OET_PATH/testcases/feature-test/powerapi_interface",
     "machine type": "physical",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_interface_powerapi_01",
@@ -198,7 +200,7 @@
             "name": "oe_test_interface_powerapi_52",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_53",
             "machine type": "physical"
         },
@@ -206,27 +208,27 @@
             "name": "oe_test_interface_powerapi_54",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_55",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_56",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_57",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_58",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_59",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_60",
             "machine type": "physical"
         },
@@ -234,19 +236,19 @@
             "name": "oe_test_interface_powerapi_61",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_62",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_63",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_68",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_69",
             "machine type": "physical"
         },
@@ -254,87 +256,87 @@
             "name": "oe_test_interface_powerapi_70",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_71",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_72",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_73",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_82",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_83",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_84",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_85",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_86",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_88",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_89",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_90",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_91",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_92",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_93",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_94",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_95",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_96",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_97",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_98",
             "machine type": "physical"
         },
-	{
+        {
             "name": "oe_test_interface_powerapi_99",
             "machine type": "physical"
-	},
-	{
+        },
+        {
             "name": "oe_test_interface_powerapi_101",
             "machine type": "physical"
         }

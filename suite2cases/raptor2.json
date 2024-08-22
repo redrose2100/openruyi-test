@@ -1,17 +1,19 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/raptor2",
-  "cases": [
-    {
-      "name": "oe_test_raptor2_rapper_base_01"
-    },
-    {
-      "name": "oe_test_raptor2_rapper_base_02"
-    },
-    {
-      "name": "oe_test_raptor2_rapper_base_03"
-    },
-    {
-      "name": "oe_test_raptor2_rapper_base_04"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/raptor2",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_raptor2_rapper_base_01"
+        },
+        {
+            "name": "oe_test_raptor2_rapper_base_02"
+        },
+        {
+            "name": "oe_test_raptor2_rapper_base_03"
+        },
+        {
+            "name": "oe_test_raptor2_rapper_base_04"
+        }
+    ]
 }

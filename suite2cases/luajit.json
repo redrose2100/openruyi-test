@@ -1,11 +1,13 @@
 {
     "path": "$OET_PATH/testcases/cli-test/luajit",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_luajit_print"
         },
-	{
-	    "name": "oe_test_luajit_print1"
-	}
+        {
+            "name": "oe_test_luajit_print1"
+        }
     ]
 }

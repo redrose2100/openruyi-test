@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/meson",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_meson_base_meson_wrap"

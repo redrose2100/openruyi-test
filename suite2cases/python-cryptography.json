@@ -1,14 +1,16 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/python-cryptography",
-  "cases": [
-    {
-      "name": "oe_test_python3-cryptography"
-    },
-    {
-      "name": "oe_test_python-cryptography"
-    },
-    {
-      "name": "oe_test_hasher_python3-cryptography"
-    }    
-  ]
+    "path": "$OET_PATH/testcases/cli-test/python-cryptography",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_python3-cryptography"
+        },
+        {
+            "name": "oe_test_python-cryptography"
+        },
+        {
+            "name": "oe_test_hasher_python3-cryptography"
+        }
+    ]
 }

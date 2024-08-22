@@ -1,11 +1,13 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/sysfsutils",
-  "cases": [
-    {
-      "name": "oe_test_systools"
-    },
-    {
-      "name": "oe_test_systool_002"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/sysfsutils",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_systools"
+        },
+        {
+            "name": "oe_test_systool_002"
+        }
+    ]
 }

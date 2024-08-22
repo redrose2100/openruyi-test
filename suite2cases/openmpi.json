@@ -1,10 +1,11 @@
 {
     "path": "\"${OET_PATH}\"/testcases/cli-test/openmpi",
-    "machine num":2,
+    "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_openmpi_cluster"
-
         },
         {
             "name": "oe_test_openmpi_single_01"

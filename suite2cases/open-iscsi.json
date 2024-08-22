@@ -4,6 +4,8 @@
     "add disk": [
         2
     ],
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_open-iscsi_iscsiadm",

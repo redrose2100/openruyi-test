@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/pigz",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_pigz"
@@ -12,27 +14,27 @@
         },
         {
             "name": "oe_test_pigz_03"
-	},    
+        },
         {
-	    "name": "oe_test_pigz_04"
-	},
-	{
-	    "name": "oe_test_pigz_05"
-	},
+            "name": "oe_test_pigz_04"
+        },
         {
-	    "name": "oe_test_pigz_06"
-	},
+            "name": "oe_test_pigz_05"
+        },
         {
-	    "name": "oe_test_pigz_07"
-	},
+            "name": "oe_test_pigz_06"
+        },
         {
-	    "name": "oe_test_pigz_08"
-	},
+            "name": "oe_test_pigz_07"
+        },
         {
-	    "name": "oe_test_pigz_09"
-	},
+            "name": "oe_test_pigz_08"
+        },
         {
-	    "name" :"oe_test_pigz_10"
-	}
+            "name": "oe_test_pigz_09"
+        },
+        {
+            "name": "oe_test_pigz_10"
+        }
     ]
 }

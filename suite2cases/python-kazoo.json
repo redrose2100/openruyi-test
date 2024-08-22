@@ -1,9 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/python-kazoo",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_python-kazoo"
         }
-
     ]
 }

@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/java-1.8.0-openjdk",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_logstash_install"

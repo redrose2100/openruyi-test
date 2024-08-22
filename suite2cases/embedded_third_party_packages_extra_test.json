@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/embedded-test/third_party_packages_extra_test",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_libcgroup_test_001"

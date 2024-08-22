@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/pyyaml",
-  "cases": [
-    {
-      "name": "oe_test_pyyaml"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/pyyaml",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_pyyaml"
+        }
+    ]
 }

@@ -2,6 +2,8 @@
     "path": "${OET_PATH}/testcases/cli-test/kmod-kvdo",
     "disk size": 130,
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_kvdo_fenqu",

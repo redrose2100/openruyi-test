@@ -1,8 +1,10 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/librsvg2",
-  "cases": [
-    {
-      "name": "oe_test_librsvg2-tools"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/librsvg2",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_librsvg2-tools"
+        }
+    ]
 }

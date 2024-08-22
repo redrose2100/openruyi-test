@@ -1,6 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/lksctp-tools",
-
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_lksctp-tools_checksctp"

@@ -1,17 +1,19 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/nginx",
-  "cases": [
-    {
-      "name": "oe_test_nginx_cli"
-    },
-    {
-      "name": "oe_test_service_nginx"
-    },
-    {
-      "name": "oe_test_nginx_concurrent"
-    },
-    {
-      "name": "oe_test_service_nginx_2"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/nginx",
+    "cpu": 2,
+    "memory": 4,
+    "cases": [
+        {
+            "name": "oe_test_nginx_cli"
+        },
+        {
+            "name": "oe_test_service_nginx"
+        },
+        {
+            "name": "oe_test_nginx_concurrent"
+        },
+        {
+            "name": "oe_test_service_nginx_2"
+        }
+    ]
 }

@@ -1,6 +1,8 @@
 {
     "path": "$OET_PATH/testcases/cli-test/systemd",
     "machine num": 2,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_service_console-getty"
@@ -424,7 +426,7 @@
         {
             "name": "oe_test_target_sockets"
         },
-	{
+        {
             "name": "oe_test_target_suspend"
         },
         {
@@ -454,13 +456,13 @@
         {
             "name": "oe_test_target_umount"
         },
-	{
+        {
             "name": "oe_test_service_emergency"
         },
         {
             "name": "oe_test_target_emergency"
         },
-	{
+        {
             "name": "oe_test_service_systemd-sysext"
         },
         {

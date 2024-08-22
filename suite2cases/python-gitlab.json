@@ -1,5 +1,7 @@
 {
     "path": "$OET_PATH/testcases/cli-test/python-gitlab",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_gitlab_01"
@@ -7,5 +9,5 @@
         {
             "name": "oe_test_gitlab_02"
         }
-   ]
+    ]
 }

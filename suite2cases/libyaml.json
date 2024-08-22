@@ -1,9 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/libyaml",
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_libyaml"
         }
-
-      ]
+    ]
 }

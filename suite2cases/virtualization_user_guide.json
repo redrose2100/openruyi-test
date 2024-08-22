@@ -2,6 +2,8 @@
     "path": "${OET_PATH}/testcases/doc-test/virtualization/virtualization_user_guide",
     "machine type": "physical",
     "add network interface": 1,
+    "cpu": 2,
+    "memory": 4,
     "cases": [
         {
             "name": "oe_test_virtualization_user_guide",
