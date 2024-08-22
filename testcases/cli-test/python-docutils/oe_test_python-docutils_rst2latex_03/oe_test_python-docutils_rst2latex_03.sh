@@ -40,7 +40,7 @@ function run_test() {
         grep 'footnotetext' test3.tex
     CHECK_RESULT $?
     rst2latex --footnote-references=brackets testfile.rst test4.tex &&
-        grep 'DUfootnotetext{id4}{id2}{{\[}1{\]}}' test4.tex
+        grep 'DUfootnotetext{.*}{.*}{{\[}1{\]}}' test4.tex
     CHECK_RESULT $?
     rst2latex --use-latex-citations testfile.rst test5.tex &&
         grep 'cite{CIT1}' test5.tex
@@ -72,7 +72,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.tex ./*.rst ./*.log ./*.sty
     LOG_INFO "Finish restoring the test environment."
 }

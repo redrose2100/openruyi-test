@@ -28,11 +28,11 @@ function run_test() {
     LOG_INFO "Start to run test."
     rst2xetex --title=testtitle testfile.rst test1.tex && test -f test1.tex
     CHECK_RESULT $?
-    rst2xetex -g testfile.rst test2.tex && grep 'href{http://docutils.sourceforge.net/}' test2.tex
+    rst2xetex -g testfile.rst test2.tex && grep 'href{https://docutils.sourceforge.io/}' test2.tex
     CHECK_RESULT $?
     rst2xetex --no-generator testfile.rst test3.tex
     CHECK_RESULT $?
-    grep 'href{http://docutils.sourceforge.net/}' test3.tex
+    grep 'href{https://docutils.sourceforge.io/}' test3.tex
     CHECK_RESULT $? 0 1
     rst2xetex -d -t testfile.rst test4.tex && grep -E "Generated on: [0-9]+-[0-9]+-[0-9]+ [0-9]+:[0-9]+ UTC" test4.tex
     CHECK_RESULT $?
@@ -53,7 +53,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.tex ./*.rst ./*.log ./*.sty
     LOG_INFO "Finish restoring the test environment."
 }

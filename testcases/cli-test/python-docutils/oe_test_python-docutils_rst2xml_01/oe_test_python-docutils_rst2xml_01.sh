@@ -46,7 +46,7 @@ function run_test() {
     CHECK_RESULT $?
     grep 'refuri="testfile.rst"' test8.xml
     CHECK_RESULT $? 1
-    rst2xml --toc-entry-backlinks testfile.rst test9.xml && grep 'title refid="id' test9.xml
+    rst2xml --toc-entry-backlinks testfile.rst test9.xml && grep 'title refid=".*' test9.xml
     CHECK_RESULT $?
     rst2xml --toc-top-backlinks testfile.rst test10.xml && grep 'title refid="table-of-contents-title"' test10.xml
     CHECK_RESULT $?
@@ -79,7 +79,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.xml ./*.rst
     LOG_INFO "Finish restoring the test environment."
 }

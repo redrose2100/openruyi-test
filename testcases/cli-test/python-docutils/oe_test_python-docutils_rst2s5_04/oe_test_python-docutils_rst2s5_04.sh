@@ -56,7 +56,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.html ./*.rst ./*.log ./ui
     LOG_INFO "Finish restoring the test environment."
 }

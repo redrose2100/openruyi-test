@@ -30,7 +30,7 @@ function run_test() {
     CHECK_RESULT $?
     rstpep2html --record-dependencies=recordlist.log pep.rst test2.html && grep 'pep.css' recordlist.log
     CHECK_RESULT $?
-    test "$(rstpep2html -V | awk '{print$3}')" == "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
+    test "$(rstpep2html -V | awk '{print$3}' | sed 's/,$//')" == "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
     CHECK_RESULT $?
     rstpep2html -h | grep 'Usage'
     CHECK_RESULT $?
@@ -53,7 +53,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.html ./*.rst ./*.log
     LOG_INFO "Finish restoring the test environment."
 }

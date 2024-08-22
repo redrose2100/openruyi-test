@@ -28,7 +28,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     rst2xml --record-dependencies=recordlist.log testfile.rst test1.xml
     CHECK_RESULT $?
-    test "$(rst2xml -V| awk '{print$3}')" == "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
+    test "$(rst2xml -V| awk '{print$3}' | sed 's/,$//')" == "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
     CHECK_RESULT $?
     rst2xml -h | grep 'Usage'
     CHECK_RESULT $?
@@ -53,7 +53,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.xml ./*.rst
     LOG_INFO "Finish restoring the test environment."
 }

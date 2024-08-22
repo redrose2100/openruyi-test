@@ -31,7 +31,7 @@ function run_test() {
     CHECK_RESULT $?
     rst2s5 --record-dependencies=recordlist.log testfile.rst test2.html && grep 'html4css1.css' recordlist.log
     CHECK_RESULT $?
-    test "$(rst2s5 -V | awk '{print$3}')" == "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
+    test "$(rst2s5 -V | awk '{print$3}' | sed 's/,$//')" == "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
     CHECK_RESULT $?
     rst2s5 -h | grep 'Usage'
     CHECK_RESULT $?
@@ -71,7 +71,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.html ./*.rst ./*.log ./ui ./*.txt ./*.css
     LOG_INFO "Finish restoring the test environment."
 }
