@@ -31,6 +31,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to execute seinfo -c"
     seinfo -c x_selection | grep "x_selection"
     CHECK_RESULT $? 0 0 "Failed to display x_selection"
+    seinfo -b | grep httpd
+    CHECK_RESULT $? 0 0 "Failed to display rules about httpd"
+    seinfo -t | grep NetworkManager
+    CHECK_RESULT $? 0 0 "Failed to display types about NetworkManager"
+    seinfo -a domain
+    CHECK_RESULT $? 0 0 "Failed to display all types with domain attribute"
     LOG_INFO "End to run test."
 }
 
