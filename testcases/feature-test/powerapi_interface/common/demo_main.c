@@ -983,12 +983,14 @@ static void TEST_PWR_PROC_RebuildAffinityDomain(void)
     cpuId = 1234;
     ret = PWR_PROC_SetWattFirstDomain(cpuId);
     printf("PWR_PROC_SetWattFirstDomain: ret:%d\n", ret);
+}
 
+static void TEST_PWR_PROC_RebuildAffinityDomain_1(void)
+{
     system("echo 0 > /sys/devices/system/cpu/cpu1/online");
-    ret = PWR_PROC_SetWattFirstDomain(1);
+    int ret = PWR_PROC_SetWattFirstDomain(1);
     printf("PWR_PROC_SetWattFirstDomain: ret:%d\n", ret);
     system("echo 1 > /sys/devices/system/cpu/cpu1/online");
-
 }
 
 static void TEST_PWR_PROC_SetAndGetWattAttrs(int TEST_WATT_TH, int TEST_WATT_IT, int TEST_WATT_DM)

@@ -46,6 +46,12 @@ function run_test() {
     getfacl -p /tmp/acl01/acl03 | grep "user" | awk -F : '{print $2}' | grep -w "testuser"
     CHECK_RESULT $? 0 0
 
+    setfacl -x u:testuser /tmp/acl01
+    getfacl -p /tmp/acl01 | grep "user" | awk -F : '{print $2}' | grep -w "testuser"
+    CHECK_RESULT $? 0 1
+    getfacl -p /tmp/acl01 | grep "user" | awk -F : '{print $3}' | grep -w "testuser"
+    CHECK_RESULT $? 0 0
+
     setfacl -b /tmp/acl01
     getfacl -p /tmp/acl01 | grep "user" | awk -F : '{print $2}' | grep -w "testuser"
     CHECK_RESULT $? 0 1
@@ -63,4 +69,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/ocaml-gettext",
+    "cases": [
+        {
+            "name": "oe_test_ocaml-gettext"
+        }
+    ]
+}

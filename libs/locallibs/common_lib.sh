@@ -16,8 +16,7 @@
 # @Desc    :
 #####################################
 
-python3 --version >/dev/null 2>&1
-if [ $? -eq 0 ]; then
+if python3 --version; then
     source "$OET_PATH/libs/locallibs/common_lib_python.sh"
 else
     source "$OET_PATH/libs/locallibs/common_lib_shell.sh"
@@ -30,17 +29,18 @@ function CHECK_RESULT() {
     error_log=$4
     exit_mode=${5-0}
 
-    if [ -z "$actual_result" ]; then
-        LOG_ERROR "Missing actual error code."
+    if [ -z "$*" ]; then
+        LOG_ERROR "Missing parameter error code."
+	((exec_result++))
         return 1
     fi
 
-    if [ $mode -eq 0 ]; then
+    if [ "$mode" -eq 0 ]; then
         test "$actual_result"x != "$expect_result"x && {
             test -n "$error_log" && LOG_ERROR "$error_log"
             ((exec_result++))
             LOG_ERROR "${BASH_SOURCE[1]} line ${BASH_LINENO[0]}"
-	    if [ $exit_mode -eq 1 ]; then
+	    if [ "$exit_mode" -eq 1 ]; then
                     exit 1;
             fi
         }
@@ -49,7 +49,7 @@ function CHECK_RESULT() {
             test -n "$error_log" && LOG_ERROR "$error_log"
             ((exec_result++))
             LOG_ERROR "${BASH_SOURCE[1]} line ${BASH_LINENO[0]}"
-	    if [ $exit_mode -eq 1 ]; then
+	    if [ "$exit_mode" -eq 1 ]; then
                     exit 1;
             fi
         }
@@ -62,21 +62,21 @@ function CASE_RESULT() {
     case_re=$1
 
     test -z "$exec_result" && {
-        test $case_re -eq 0 && {
+        test "$case_re" -eq 0 && {
             LOG_INFO "succeed to execute the case."
             exec_result=""
             exit 0
         }
         LOG_ERROR "failed to execute the case."
-        exit $case_re
+        exit "$case_re"
     }
 
-    test $exec_result -gt 0 && {
+    test "$exec_result" -gt 0 && {
         LOG_ERROR "failed to execute the case."
-        exit $exec_result
+        exit "$exec_result"
     }
     LOG_INFO "succeed to execute the case."
-    exit $exec_result
+    exit "$exec_result"
 }
 
 function POST_TEST_DEFAULT() {

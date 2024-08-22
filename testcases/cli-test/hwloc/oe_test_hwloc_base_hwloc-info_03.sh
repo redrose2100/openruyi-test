@@ -17,7 +17,7 @@
 # @Desc      :   Test hwloc-info
 # #############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -56,7 +56,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf old.xml
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

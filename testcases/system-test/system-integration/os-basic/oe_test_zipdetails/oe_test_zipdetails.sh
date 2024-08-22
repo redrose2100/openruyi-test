@@ -33,6 +33,12 @@ function run_test()
     CHECK_RESULT $? 0 0 "zipdetails function error"
     zipdetails -v test.zip|grep PAYLOAD
     CHECK_RESULT $? 0 0 "zipdetails function error"
+    zipdetails --redact test.zip |grep HEADER
+    CHECK_RESULT $? 0 0 "zipdetails function error"
+    zipdetails --scan test.zip |grep LOCAL
+    CHECK_RESULT $? 0 0 "zipdetails function error"
+    zipdetails --utc test.zip |grep Extract
+    CHECK_RESULT $? 0 0 "zipdetails function error"
     LOG_INFO "Finish test!"
 }
 
