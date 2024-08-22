@@ -20,6 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
     con_name='test_con'
+    SRC_LANG=$(echo $LANG)
     export LANG=en_US.UTF-8
     LOG_INFO "Loading data is complete!"
 }
@@ -42,6 +43,7 @@ function post_test() {
     systemctl restart NetworkManager
     SLEP_WAIT 3
     nmcli con up "${NODE1_NIC}"
+    export LANG=$SRC_LANG
     LOG_INFO "Finish environment cleanup."
 }
 
