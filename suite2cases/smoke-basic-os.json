@@ -194,6 +194,9 @@
             "name": "oe_test_rm_001"
         },
         {
+            "name": "oe_test_w"
+        },
+        {
             "name": "oe_test_which"
         },
         {
