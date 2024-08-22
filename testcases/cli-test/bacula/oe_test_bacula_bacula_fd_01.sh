@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client mysql5-server bacula-common"
+    DNF_INSTALL "bacula-client mysql-server bacula-common"
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database
     /usr/libexec/bacula/make_mysql_tables
