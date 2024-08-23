@@ -62,6 +62,9 @@
             "name": "oe_test_file_001"
         },
         {
+            "name": "oe_test_glib2_001"
+        },
+        {
             "name": "oe_test_golang"
         },
         {
