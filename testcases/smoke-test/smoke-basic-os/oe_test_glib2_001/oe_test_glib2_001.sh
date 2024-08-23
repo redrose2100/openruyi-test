@@ -39,7 +39,7 @@ return 0;
 EOF
 
     CHECK_RESULT $? 0 0 "Test. c write error"
-    gcc test.c $(pkg-config --cflags --libs glib-2.0) -o hello
+    gcc test.c "$(pkg-config --cflags --libs glib-2.0)" -o hello
     CHECK_RESULT $? 0 0 "Compilation failed, no hello binary is generated"
     ./hello | grep Hello
     CHECK_RESULT $? 0 0 "not Print Hello, world!"
@@ -48,9 +48,9 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -f test.c hello
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
