@@ -12,32 +12,30 @@
 # #############################################
 # @Author    :   lihe
 # @Contact   :   lihea@uniontech.com
-# @Date      :   2024-05-21
+# @Date      :   2024-08-23
 # @License   :   Mulan PSL v2
-# @Desc      :   test lastlog
+# @Desc      :   test nl-link-list
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    lastlog
-    CHECK_RESULT $? 0 0 "lastlog execute fail"
-    lastlog --help | grep -E "用法|Usage"
-    CHECK_RESULT $? 0 0 "lastlog --help execute fail"
-    lastlog -t 1
-    CHECK_RESULT $? 0 0 "lastlog -t execute fail"
-    lastlog -b 1
-    CHECK_RESULT $? 0 0 "lastlog -b execute fail"
-    login_name=$(whoami)
-    lastlog -u "${login_name}" | grep "$(date +%d)" | grep "$(date +%Y)"
-    CHECK_RESULT $? 0 0 "lastlog -u execute fail"
-    lastlog -C -u "${login_name}"
-    lastlog -u "${login_name}" | grep -E "从未|Never"
-    CHECK_RESULT $? 0 0 "lastlog -C execute fail"
-    lastlog -S -u "${login_name}"
-    lastlog -u "${login_name}" | grep "$(date +%d)" | grep "$(date +%Y)"
-    CHECK_RESULT $? 0 0 "lastlog -S execute fail"
+    nl-link-list
+    CHECK_RESULT $? 0 0 "nl-link-list execute fail"
+    nl-link-list --help | grep -E "用法|Usage"
+    CHECK_RESULT $? 0 0 "nl-link-list --help execute fail"
+    nl-link-list --version | grep -i libnl
+    CHECK_RESULT $? 0 0 "nl-link-list --version execute fail"
+    nl-link-list --details | grep index
+    CHECK_RESULT $? 0 0 "nl-link-list --details execute fail"
+    nl-link-list --stats | grep index
+    CHECK_RESULT $? 0 0 "nl-link-list --stats execute fail"
+    link_name=$(nl-link-list --details | grep group | awk -F' ' 'NR==1 {print $1}')
+    nl-link-list -n "${link_name}" | grep group
+    CHECK_RESULT $? 0 0 "nl-link-list -n execute fail"
+    nl-link-list -i 1 | grep group
+    CHECK_RESULT $? 0 0 "nl-link-list -i execute fail"
     LOG_INFO "Finish test!"
 }
 
