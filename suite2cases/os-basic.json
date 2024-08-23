@@ -1009,6 +1009,9 @@
 	},
 	{
             "name": "oe_test_as"
+	},
+	{
+	    "name": "oe_test_lslogins_4"
 	}
     ]
 }
