@@ -108,7 +108,10 @@
         },
         {
             "name": "oe_test_audit_monitor_socket_file"
-        }
+        },
+	{
+	    "name": "oe_test_lastlog"
+	}
     ]
 }
 
