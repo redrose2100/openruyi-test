@@ -223,8 +223,11 @@
         {
             "name": "oe_test_utshell_builtin"
         },
-	{
-	    "name": "oe_test_utshell_ps_004"
-	}
+        {
+            "name": "oe_test_utshell_ps_004"
+        },
+        {
+            "name": "oe_test_utshell_disown"
+        }
     ]
 }
