@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_utsudo_s"
+        },
+        {
+            "name": "oe_test_utsudo_b"
         }
     ]
 }
