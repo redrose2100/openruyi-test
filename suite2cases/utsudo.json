@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_utsudo_b"
+        },
+        {
+            "name": "oe_test_utsudo_p"
         }
     ]
 }
