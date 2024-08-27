@@ -17,7 +17,7 @@
 # @Desc      :   Command test-tail 
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -29,11 +29,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    tail_value1= $(tail -n 1 /var/log/dnf.log)
-    tail_value2= $(sed -n '$p' /var/log/dnf.log)
+    tail_value1=$(tail -n 1 /var/log/dnf.log)
+    tail_value2=$(sed -n '$p' /var/log/dnf.log)
     CHECK_RESULT $((tail_value1)) $((tail_value2)) 0 0  "check Tail's result fail"
     tail --help | grep "Usage: tail"
     CHECK_RESULT $? 0 0 "check Tail's help manual fail"
+    touch ~/Desktop/test.log
+    echo "Test line1" >> ~/Desktop/test.log
+    tail -f ~/Desktop/test.log | grep -m 1 "Test line1"
+    CHECK_RESULT $? 0 0 "check Tail's -f result fail"
     LOG_INFO "End to run test."
 }
 
@@ -45,5 +49,3 @@ function post_test() {
 }
 
 main "$@"
-
-
