@@ -12,6 +12,9 @@
         },
         {
             "name": "oe_test_utsudo_u"
+        },
+        {
+            "name": "oe_test_utsudo_e"
         }
     ]
 }
