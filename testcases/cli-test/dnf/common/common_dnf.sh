@@ -23,7 +23,6 @@ function deploy_env() {
     export LANG=en_US.UTF-8
 }
 
-
 function add_low_repo() {
     touch /etc/yum.repos.d/openEuler_update.repo
     dnf repolist|grep "^LOW_OS"
@@ -32,10 +31,10 @@ function add_low_repo() {
         echo "
 [LOW_OS]
 name=LOW_OS
-baseurl=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/OS/\$basearch/
+baseurl=https://repo.huaweicloud.com/openeuler/openEuler-23.09/OS/\$basearch/
 enabled=1
 gpgcheck=1
-gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/OS/\$basearch/RPM-GPG-KEY-openEuler
+gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-23.09/OS/\$basearch/RPM-GPG-KEY-openEuler
 " >>/etc/yum.repos.d/openEuler_update.repo
     fi
 
@@ -45,10 +44,10 @@ gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/OS/\$basea
         echo "
 [update]
 name=update
-baseurl=https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS-SP3/update/\$basearch/
+baseurl=https://repo.huaweicloud.com/openeuler/openEuler-24.03-LTS/update/\$basearch/
 enabled=1
 gpgcheck=1
-gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS-SP3/OS/\$basearch/RPM-GPG-KEY-openEuler
+gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-24.03-LTS/OS/\$basearch/RPM-GPG-KEY-openEuler
 " >>/etc/yum.repos.d/openEuler_update.repo
     fi
     dnf repolist|grep "^debuginfo"
@@ -57,13 +56,14 @@ gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS-SP3/OS/\$basea
         echo "
 [debuginfo]
 name=debuginfo
-baseurl=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/debuginfo/\$basearch/
+baseurl=https://repo.huaweicloud.com/openeuler/openEuler-23.09/debuginfo/\$basearch/
 enabled=1
 gpgcheck=1
-gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/debuginfo/\$basearch/RPM-GPG-KEY-openEuler
+gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-23.09/debuginfo/\$basearch/RPM-GPG-KEY-openEuler
 " >>/etc/yum.repos.d/openEuler_update.repo
     fi
 }
+
 
 function delete_low_repo() {
     rm -rf /etc/yum.repos.d/openEuler_update.repo
