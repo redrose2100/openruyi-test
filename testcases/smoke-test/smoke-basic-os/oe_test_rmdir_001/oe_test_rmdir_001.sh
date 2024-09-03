@@ -37,6 +37,10 @@ function run_test() {
     rmdir -p /tmp/test1/test2 && ls /tmp/test1
     CHECK_RESULT $? 0 1
 
+    mkdir /tmp/test1
+    rmdir -v /tmp/test1 2>&1 | grep -q "rmdir" && ls /tmp/test1
+    CHECK_RESULT $? 0 1
+
     rmdir --help | grep "Usage"
     CHECK_RESULT $?
     LOG_INFO "Finish test!"
