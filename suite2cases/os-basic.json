@@ -1012,6 +1012,9 @@
 	},
 	{
 	    "name": "oe_test_lslogins_4"
+	},
+	{
+	    "name": "oe_test_zstd01"
 	}
     ]
 }
