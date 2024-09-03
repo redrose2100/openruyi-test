@@ -34,11 +34,11 @@ function run_test() {
     LOG_INFO "Start testing..."
     tr --v
     CHECK_RESULT $? 0 0 "Version is error"
-    cd /tmp&&tr -d "[:gghh:]" <test_tr> tr.result
-    grep gghh /tmp/tr.result
+    cd /tmp&&tr -d "gh" <test_tr> tr.result
+    grep gh /tmp/tr.result
     CHECK_RESULT $? 1 0 "delete testfile fail"    
-    tr -t "123456" "[:oopptt:]" <test_tr> tr.result
-    grep oopp /tmp/tr.result
+    tr -t "123456" "opqrst" <test_tr> tr.result
+    grep opqrst /tmp/tr.result
     CHECK_RESULT $? 0 0 "cover testfile fail"
     tr -s "abcdef" <test_tr> tr.result
     grep abc /tmp/tr.result
