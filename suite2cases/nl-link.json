@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/nl-link",
+    "cases": [
+        {
+            "name": "oe_test_nl_link_list"
+        }
+    ]
+}
