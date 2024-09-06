@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-  numfmt --to=si 1000 |grep 1.0K
+  numfmt --to=si 1000 |grep -i 1.0K
   CHECK_RESULT $? 0 0 "Error converting numbers to International System of Units"
   numfmt --to=iec 2048 |grep 2.0K
   CHECK_RESULT $? 0 0 "Error converting numbers to the International Electrotechnical Commission binary prefix unit system"
