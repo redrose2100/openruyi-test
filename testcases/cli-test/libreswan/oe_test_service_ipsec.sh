@@ -17,7 +17,7 @@
 # @Desc      :   Test ipsec.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "./common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -31,10 +31,10 @@ function run_test() {
     systemctl start ipsec.service
     sed -i 's\ExecStart=/usr/libexec/ipsec/pluto\ExecStart=/usr/libexec/ipsec/pluto --debug\g' /usr/lib/systemd/system/ipsec.service
     systemctl daemon-reload
-    systemctl reload ipsec.service
-    CHECK_RESULT $? 0 0 "ipsec.service reload failed"
+    systemctl restart ipsec.service
+    CHECK_RESULT $? 0 0 "ipsec.service restart failed"
     systemctl status ipsec.service | grep "Active: active"
-    CHECK_RESULT $? 0 0 "ipsec.service reload causes the service status to change"
+    CHECK_RESULT $? 0 0 "ipsec.service restart causes the service status to change"
     LOG_INFO "Finish test!"
 }
 
@@ -42,7 +42,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i 's\ExecStart=/usr/libexec/ipsec/pluto --debug\ExecStart=/usr/libexec/ipsec/pluto\g' /usr/lib/systemd/system/ipsec.service
     systemctl daemon-reload
-    systemctl reload ipsec.service
+    systemctl restart ipsec.service
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
