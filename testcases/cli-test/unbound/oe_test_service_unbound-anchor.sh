@@ -17,7 +17,7 @@
 # @Desc      :   Test unbound-anchor.service restart
 # #############################################
 
-source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
