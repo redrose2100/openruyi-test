@@ -36,7 +36,7 @@ function mysql_pre() {
     touch {/data/mysql/log/mysql.log,/data/mysql/run/mysqld.pid}
     chown -R mysql:mysql /data
     cd - || exit 1
-    DNF_INSTALL mysql
+    DNF_INSTALL mysql-server
     rpm -qa | grep mysql || exit 1
     touch /etc/my.cnf
     echo "[mysqld_safe]
@@ -61,9 +61,9 @@ user=mysql" >/etc/my.cnf
     source /etc/profile > /dev/null 2>&1
     rm -rf /data/mysql/data
     mysqld --initialize --basedir=/usr/local/mysql/ --datadir=/data/mysql/data --user=mysql 2>&1
-    chkconfig mysql on
+    chkconfig mysqld on
     systemctl daemon-reload
-    systemctl start mysql
+    systemctl start mysqld
 }
 
 

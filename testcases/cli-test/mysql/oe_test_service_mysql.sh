@@ -17,11 +17,12 @@
 # @Desc      :   Test mysql.service restart
 # #############################################
 
+
 source "common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    service=mysql.service
+    service=mysqld.service
     log_time=$(date '+%Y-%m-%d %T')
     mysql_pre
     LOG_INFO "End of environmental preparation!"
@@ -30,9 +31,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     test_restart "${service}"
-    systemctl disable mysql 2>&1 | grep "Executing: .*disable mysql"
+    systemctl disable mysqld 2>&1 | grep "Executing: .*disable mysqld"
     CHECK_RESULT $? 0 0 "${service} disable failed"
-    systemctl enable mysql 2>&1 | grep "Executing: .*enable mysql"
+    systemctl enable mysqld 2>&1 | grep "Executing: .*enable mysqld"
     CHECK_RESULT $? 0 0 "${service} enable failed"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
@@ -54,6 +55,7 @@ function post_test() {
     systemctl stop "${service}"
     mysql_post
     DNF_REMOVE
+    rm -rf /var/lib/mysql/*
     LOG_INFO "Finish environment cleanup!"
 }
 
