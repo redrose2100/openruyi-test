@@ -32,7 +32,9 @@ function pre_test() {
         TEST_IMAGE=openeuler-20.03-lts-sp1
         wget "https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/${NODE1_FRAME}/openEuler-docker.${NODE1_FRAME}.tar.xz"
         image_name="openEuler-docker.${NODE1_FRAME}.tar.xz"
-    fi    
+    fi
+    systemctl start docker
+    SLEEP_WAIT 3
     docker load -i "$image_name"
     image_id=$(docker images | grep ${TEST_IMAGE} | head -n 1 | awk '{print $3}')
     mkdir -p /home/docker_dir
