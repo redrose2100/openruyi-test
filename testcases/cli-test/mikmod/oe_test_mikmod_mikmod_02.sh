@@ -18,11 +18,16 @@
 # @Desc      :   TEST mikmod options
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 #Installation preparation for test objects, tools required for testing, etc.
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    ret=$?
+    if [ $ret -ne 0 ] ;then
+        LOG_WARN "The current kernel does not have the snd-dummy module."
+        exit 255
+    fi
     modprobe snd-dummy
     DNF_INSTALL "mikmod"
     LOG_INFO "End to prepare the test environment."
@@ -31,14 +36,14 @@ function pre_test() {
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "Q" | mikmod -y common > /dev/null && cat ~/.mikmod_playlist | grep -q "common"
+    echo "Q" | mikmod -y common > /dev/null && grep -q "common" ~/.mikmod_playlist
     CHECK_RESULT $? 0 0 "Check mikmod -y failed"
     rm -rf ~/.mikmod_playlist
-    echo "Q" | mikmod -directory common > /dev/null && cat ~/.mikmod_playlist | grep -q "common"
+    echo "Q" | mikmod -directory common > /dev/null && grep -q "common" ~/.mikmod_playlist
     CHECK_RESULT $? 0 0 "Check mikmod -di[rectory] failed"
-    mikmod -q & ps | grep -q "mikmod" && kill -INT $!
+    mikmod -q & pgrep mikmod > /dev/null && kill -INT $!
     CHECK_RESULT $? 0 0 "Check mikmod -q[uiet] failed"
-    mikmod -quiet & ps | grep -q "mikmod" && kill -INT $!
+    mikmod --quiet & pgrep mikmod > /dev/null && kill -INT $!
     CHECK_RESULT $? 0 0 "Check mikmod -quiet failed"
     echo "Q" | mikmod -v 1 > /dev/null && grep "VOLUME = 1" ~/.mikmodrc
     CHECK_RESULT $? 0 0 "Check mikmod -v 1 failed"
@@ -62,7 +67,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     modprobe -r snd-dummy
     rm -rf ~/.mikmod*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

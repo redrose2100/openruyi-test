@@ -18,11 +18,16 @@
 # @Desc      :   TEST mikmod options
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     modprobe snd-dummy
+    ret=$?
+    if [ $ret -ne 0 ] ;then
+        LOG_WARN "The current kernel does not have the snd-dummy module."
+        exit 255
+    fi
     DNF_INSTALL "mikmod"
     VERSION=$(rpm -qa mikmod | awk -F '-' '{print $2}')
     LOG_INFO "End to prepare the test environment."
@@ -59,7 +64,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     modprobe -r snd-dummy
     rm -rf ~/.mikmod*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
