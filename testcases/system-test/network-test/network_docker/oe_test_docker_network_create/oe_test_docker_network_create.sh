@@ -30,6 +30,8 @@ function pre_test() {
         docker_path="${docker_path}/${NODE1_FRAME}/${image_file}"
     fi
     wget "${docker_path}"
+    systemctl start docker
+    SLEEP_WAIT 3
     docker load -i "${image_file}"
     LOG_INFO "Finish to prepare the database config."
 }
