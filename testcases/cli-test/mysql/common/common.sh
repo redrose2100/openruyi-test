@@ -17,7 +17,7 @@
 # @Desc      :   mysql prepare
 # ############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function mysql_pre() {
     systemctl stop firewalld
