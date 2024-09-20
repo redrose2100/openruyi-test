@@ -18,6 +18,9 @@
         },
         {
             "name": "oe_test_utsudo_h"
+        },
+        {
+            "name": "oe_test_utsudo_l"
         }
     ]
 }
