@@ -22,15 +22,15 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    ROOT_UUID=$(blkid |grep root |awk -F " " '{print $2}'|awk -F "=" '{print $2}'|tr -d '""')
-    ROOT_DEV=$(blkid |grep root |awk -F " " '{print $1}'|tr -d ':')    
+    UUID=$(blkid |head -n 1 |awk -F " " '{print $2}'|awk -F "=" '{print $2}'|tr -d '""')
+    DEV=$(blkid |head -n 1 |awk -F " " '{print $1}'|tr -d ':')    
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "start to run test."
-    findfs UUID="$ROOT_UUID"| grep "$ROOT_DEV"
-    CHECK_RESULT $? 0 0 "cannot find $ROOT_DEV in system."
+    findfs UUID="$UUID"| grep "$DEV"
+    CHECK_RESULT $? 0 0 "cannot find $DEV in system."
     LOG_INFO "End of the test."
 }
 
