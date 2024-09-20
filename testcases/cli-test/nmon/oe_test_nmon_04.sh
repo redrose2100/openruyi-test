@@ -16,7 +16,7 @@
 #@Desc      	:   Take the test for nmon
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/testcases/cli-test/nmon/common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -200,7 +200,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./interactive_*
     unset NMON
     LOG_INFO "End to restore the test environment."
