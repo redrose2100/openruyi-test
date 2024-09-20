@@ -16,12 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test brltty.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL brltty
+    DNF_INSTALL "brltty cldr-emoji-annotation"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -34,7 +34,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
