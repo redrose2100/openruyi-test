@@ -900,7 +900,10 @@
       },
       {
           "name": "oe_test_luac"
-      }
+      },
+      {
+          "name": "oe_test_groups"
+    }
     ]
 }
 
