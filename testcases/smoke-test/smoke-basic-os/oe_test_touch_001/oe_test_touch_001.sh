@@ -30,14 +30,21 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     touch test1
-    ls | grep "test1"
+    ls test1
     CHECK_RESULT $?
 
-    time01=$(ls -l test1 | awk -F ' ' '{print $8}')
-    SLEEP_WAIT 60
+    time01=$(stat -c %Y test1)
+    sleep 60
     touch -m test1
-    time02=$(ls -l test1 | awk -F ' ' '{print $8}')
+    time02=$(stat -c %Y test1)
     [ "$time01" != "$time02" ]
+    CHECK_RESULT $?
+
+    time03=$(stat -c %X test1)
+    sleep 60
+    touch -a test1
+    time04=$(stat -c %X test1)
+    [ "$time03" != "$time04" ]
     CHECK_RESULT $?
 
     touch --help | grep "Usage"
@@ -52,4 +59,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
