@@ -897,6 +897,9 @@
       },
       {
           "name": "oe_test_zlib_001"
+      },
+      {
+          "name": "oe_test_luac"
       }
     ]
 }
