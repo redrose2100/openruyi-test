@@ -23,27 +23,36 @@ function env_pre() {
     systemctl start nfs-server
     rpmdev-setuptree
     cp ./common/libnvidia-ml.spec ~/rpmbuild/SPECS/
-    if [ "$NODE1_FRAME" = "x86_64" ]; then
+    if [[ "$NODE1_FRAME" == "x86_64" ]]; then
         export ARCH=X86
         wget -P ~/rpmbuild/SOURCES/ https://cn.download.nvidia.com/XFree86/Linux-x86_64/470.74/NVIDIA-Linux-x86_64-470.74.run
-    else
+    elif [[ "$NODE1_FRAME" == "aarch64" ]]; then
         export ARCH=ARM
         wget -P ~/rpmbuild/SOURCES/ https://cn.download.nvidia.com/XFree86/aarch64/470.74/NVIDIA-Linux-aarch64-470.74.run
+    else 
+        cp /usr/bin/nmon ./nmon_openEuler
+        mkdir template
+        return
     fi
-    dd if=/dev/null of=~/rpmbuild/SOURCES/null
+    touch ~/rpmbuild/SOURCES/null
     rpmbuild -ba --nodebuginfo ~/rpmbuild/SPECS/libnvidia-ml.spec
-    rpm -i ~/rpmbuild/RPMS/$NODE1_FRAME/libnvidia-ml-470.74-openEuler.$NODE1_FRAME.rpm
+    rpm -i ~/rpmbuild/RPMS/"$NODE1_FRAME"/libnvidia-ml-470.74-openEuler."${NODE1_FRAME}".rpm
+    CHECK_RESULT $? 0 0 "Failed to install libnvidia-ml"
     mv /lib64/libnvidia-ml.so.470.74 /lib64/libnvidia-ml.so
     ldconfig
     yumdownloader --source --destdir=./template/ nmon
     rpm -i ./template/nmon*.src.rpm
-    gcc -o nmon_openEuler ~/rpmbuild/SOURCES/lmon*.c -g -Wall -D JFS -D GETUSER -D LARGEMEM -lncurses -lm -g -D $ARCH -lnvidia-ml -D NVIDIA_GPU
+    gcc -o nmon_openEuler ~/rpmbuild/SOURCES/lmon*.c -g -Wall -D JFS -D GETUSER -D LARGEMEM -lncurses -lm -g -D "${ARCH}" -lnvidia-ml -D NVIDIA_GPU
+    [ -f ./nmon_openEuler ]
+    CHECK_RESULT $? 0 0 "Failed to build nmon_openEuler"
+
 }
 
 function env_post() {
     systemctl stop nfs-server
     unset ARCH
     rm -rf ./template ~/rpmbuild nmon_openEuler auto /lib64/libnvidia-ml*
+    mv /lib64/libnvidia-ml.so /lib64/libnvidia-ml.so.470.74
     rpm -e --nodeps libnvidia-ml
 }
 

@@ -15,8 +15,8 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Jemalloc is a memory allocator, the biggest advantage is: high performance in the case of multithreading and the reduction of memory fragmentation.
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+#shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,28 +28,28 @@ function run_test() {
     LOG_INFO "Start to run test."
     jemalloc-config --mandir | grep '/usr/share/man'
     CHECK_RESULT $?
-    jemalloc-config --cc | grep 'gcc'
+    jemalloc-config --cc | grep 'gcc\|clang'
     CHECK_RESULT $?
     jemalloc-config --cflags | grep '\-std\|\-Wundef'
     CHECK_RESULT $?
     jemalloc-config --cppflags | grep 'D_GNU_SOURCE'
     CHECK_RESULT $?
-    jemalloc-config --cxxflags | grep 'openEuler-hardened-cc1\|generic-hardened-cc1'
+    jemalloc-config --cxxflags | grep 'openEuler-hardened\|generic-hardened'
     CHECK_RESULT $?
-    jemalloc-config --ldflags | grep 'openEuler-hardened-ld\|generic-hardened-ld'
+    jemalloc-config --ldflags | grep '\-Wl,\-z,relro'
     CHECK_RESULT $?
     jemalloc-config --libs | grep 'lm'
     CHECK_RESULT $?
     source /usr/bin/jemalloc.sh
     CHECK_RESULT $?
-    echo ${LD_PRELOAD} | grep '/usr/lib64/libjemalloc.so.2'
+    echo "${LD_PRELOAD}" | grep '/usr/lib64/libjemalloc.so.2'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

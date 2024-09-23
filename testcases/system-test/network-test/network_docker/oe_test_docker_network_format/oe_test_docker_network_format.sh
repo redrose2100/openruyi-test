@@ -33,8 +33,9 @@ function pre_test() {
         image_file="openEuler-docker.${NODE1_FRAME}.tar.xz"
         docker_path="${docker_path}/${NODE1_FRAME}/${image_file}"
     fi
-
     wget "${docker_path}"
+    systemctl start docker
+    SLEEP_WAIT 3
     docker load -i "${image_file}"
     image_tag=$(docker images -a | grep "${image_name}" | awk '{print $2}')
 

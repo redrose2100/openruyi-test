@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    dracut
+    dracut --force
     CHECK_RESULT $? 0 0 "Create initramfs fail"
     test -f "/boot/initramfs-$(uname -a | awk -F ' ' '{print $3}').img"
     dracut --hostonly --force

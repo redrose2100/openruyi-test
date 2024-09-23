@@ -43,6 +43,10 @@ function run_test()
     CHECK_RESULT $? 0 0 "zipinfo -l command execution failure"
     zipinfo -z /tmp/test.zip |grep "tmp/test.txt"
     CHECK_RESULT $? 0 0 "zipinfo -z command execution failure"
+    zipinfo -C /tmp/test.zip |grep "Archive"
+    CHECK_RESULT $? 0 0 "zipinfo -C command execution failure"
+    zipinfo -t /tmp/test.zip |grep "file"
+    CHECK_RESULT $? 0 0 "zipinfo -t command execution failure"
     LOG_INFO "End to run test."
 }
 

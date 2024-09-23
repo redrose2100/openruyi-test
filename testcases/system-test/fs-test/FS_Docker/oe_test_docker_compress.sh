@@ -42,6 +42,8 @@ function pre_test() {
     cd ../common_lib/fault_injection/inject_mem_overloading_malloc || exit
     bash inject_mem_overloading_malloc.sh inject
     cd "$cur_path" || exit
+    systemctl start docker
+    SLEEP_WAIT 3
     LOG_INFO "Finish to prepare the database config."
 }
 
