@@ -27,6 +27,7 @@ function pre_test() {
     test -d /tmp/test2 && rm -rf /tmp/test2
     test -d /tmp/test3 && rm -rf /tmp/test3
     test -d /tmp/test5 && rm -rf /tmp/test5
+    test -d /tmp/test6 && rm -rf /tmp/test6
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -41,10 +42,13 @@ function run_test() {
     CHECK_RESULT $?
 
     mkdir -m 777 /tmp/test5
-    ls -l /tmp | grep test5 | grep "drwxrwxrwx"
+    find /tmp -maxdepth 1 -type d -name "test5" -perm 777
     CHECK_RESULT $?
 
-    mkdir --help | grep "Usage"
+    mkdir -v /tmp/test6 2>&1 | grep -q "mkdir" && ls /tmp/test6
+    CHECK_RESULT $?
+
+    mkdir --help | grep "Usage"s
     CHECK_RESULT $?
     LOG_INFO "Finish test!"
 }
@@ -56,4 +60,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
