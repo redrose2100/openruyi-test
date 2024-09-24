@@ -16,7 +16,7 @@
 #@Desc      	:   Define testing methods for pkgship
 #####################################
 # shellcheck disable=SC1091
-source ../common_lib/pkgship_lib.sh
+source ../../common_lib/pkgship_lib.sh
 
 function exec_init() {
     pkgship init -filepath ../common_lib/openEuler.yaml
