@@ -29,6 +29,10 @@ function run_test() {
     LOG_INFO "Start testing..."
     mtoolstest
     CHECK_RESULT $? 0 0 "mtoolstest execute fail"
+    mtoolstest | grep 'drive'
+    CHECK_RESULT $? 0 0 "no drive info is found"
+    mtoolstest | grep 'fat_bits'
+    CHECK_RESULT $? 0 0 "no fat_bits info is found"
     mtoolstest --version | grep 'mtoolstest'
     CHECK_RESULT $? 0 0 "mtoolstest --version execute fail"
     LOG_INFO "Finish test!"
