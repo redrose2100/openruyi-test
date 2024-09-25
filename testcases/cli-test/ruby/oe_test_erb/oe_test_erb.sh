@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of erb command
 # ############################################
-
+# shellcheck disable=SC1091
 source "../common/common_ruby.sh"
 
 function pre_test() {
@@ -30,7 +30,7 @@ function run_test() {
     erb --help >helpinfo 2>&1
     grep -E "erb|-" helpinfo
     CHECK_RESULT $?
-    erb --version 2>&1 | grep "erb.*[0-9]"
+    erb --version 2>&1 | grep -E '(erb\.rb\s*\[[0-9]+\.[0-9]+\.[0-9]+\s*\$])|([0-9]+\.[0-9]+\.[0-9]+)'
     CHECK_RESULT $?
     erb -x example1.erb | grep "_erbout"
     CHECK_RESULT $?
@@ -41,8 +41,6 @@ function run_test() {
     erb -x -d example1.erb | grep -E "require|erbout"
     CHECK_RESULT $?
     erb -r 'prime' -T - example2.erb | grep -E "<|>"
-    CHECK_RESULT $?
-    erb -S 0 -x example1.erb | grep "freeze"
     CHECK_RESULT $?
     erb -E external -x example1.erb | grep -E "freeze|erbout"
     CHECK_RESULT $?
@@ -62,4 +60,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

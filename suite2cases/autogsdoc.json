@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/autogsdoc",
+    "cases": [
+        {
+            "name": "oe_test_autogsdoc"
+        }
+    ]
+}
+

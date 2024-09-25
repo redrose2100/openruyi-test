@@ -16,7 +16,7 @@
 #@Desc          :   Test hwloc-calc_1
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -29,7 +29,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     hwloc-calc -i "node:1 2" --physical-output -I pu Machine:0 | grep "0,1"
     CHECK_RESULT $? 0 0 "hwloc-calc --physical-output failed"
-    hwloc-calc --input ./common/input_test.xml Machine:0 | grep "0x0000000f" 
+    hwloc-calc --input ./common/input_test.xml Machine:0 | grep "0x0000000f"
     CHECK_RESULT $? 0 0 "hwloc-calc --input <XML file> failed"
     hwloc-calc -i "node:1 2" --number-of pu Machine:0 | grep "2"
     CHECK_RESULT $? 0 0 "hwloc-calc--number-of failed"
@@ -45,15 +45,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwloc-calc --logical-input failed"
     hwloc-calc -i "node:1 2" --logical-output -I pu Machine:0 | grep "0,1"
     CHECK_RESULT $? 0 0 "hwloc-calc --logical-output failed"
-    hwloc-calc --pi pu:0 | grep "0x00000001" 
-    CHECK_RESULT $? 0 0 "hwloc-calc --physical-input failed"    
+    hwloc-calc --pi pu:0 | grep "0x00000001"
+    CHECK_RESULT $? 0 0 "hwloc-calc --physical-input failed"
     LOG_INFO "Finish test!"
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

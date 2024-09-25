@@ -37,6 +37,7 @@ function pre_test() {
     hostName_bak=$(hostname)
     hostnamectl set-hostname server
     P_SSH_CMD --cmd "yum install -y k3s" --node 2
+    P_SSH_CMD --cmd "hostnamectl set-hostname agent" --node 2
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -54,7 +55,7 @@ function run_test() {
     systemctl status k3s.service | grep "active (running)"
     CHECK_RESULT $? 0 0 "Failed to restart the k3s-server"
     SLEEP_WAIT 30
-    kubectl get nodes | grep "openeuler"
+    kubectl get nodes | grep "agent"
     CHECK_RESULT $? 0 0 "Failed to deploy the k3s-agent"
     kubectl apply -f deployment.yml | grep "deployment.apps/nginx-deployment created"
     CHECK_RESULT $? 0 0 "Failed to create the k3s-server nginx-deployment"

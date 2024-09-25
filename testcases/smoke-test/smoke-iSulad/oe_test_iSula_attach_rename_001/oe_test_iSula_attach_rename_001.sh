@@ -17,7 +17,7 @@
 # @Desc      :   attach and rename containers
 # ############################################
 
-source ../common/prepare_isulad.sh
+source "${OET_PATH}/testcases/smoke-test/smoke-iSulad/common/prepare_isulad.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_isulad_env
@@ -30,7 +30,7 @@ function run_test() {
     expect -c "
     log_file testlog
     spawn isula attach ${containerId}
-    sleep 1
+    sleep 2
     expect {
     \"\" {send \"\r\";
      expect \"*\[#|/\]*\" {send \"exit\r\"}
@@ -41,16 +41,16 @@ expect eof
     grep -iE 'error|fail' testlog
     CHECK_RESULT $? 1
     
-    if [ $Images_name == busybox ];then
-        CHECK_RESULT $(grep -c "exit" testlog) 1
+    if [ "$Images_name" == busybox ];then
+        CHECK_RESULT "$(grep -c "exit" testlog)" 1
     else
-        CHECK_RESULT $(grep -c "exit" testlog) 2
+        CHECK_RESULT "$(grep -c "exit" testlog)" 2
     fi
 
-    container_name=$(isula ps -a | grep ${Images_name} | awk '{print$NF}')
+    container_name=$(isula ps -a | grep "${Images_name}" | awk '{print$NF}')
     CHECK_RESULT $?
 
-    isula rename ${container_name} ${container_name}_test
+    isula rename "${container_name}" "${container_name}"_test
     CHECK_RESULT $?
 
     isula ps -a | grep "${container_name}_test"
@@ -61,9 +61,9 @@ expect eof
 function post_test() {
     LOG_INFO "start environment cleanup."
     clean_isulad_env
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testlog
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

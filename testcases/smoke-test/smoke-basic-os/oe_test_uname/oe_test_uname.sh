@@ -32,6 +32,12 @@ function run_test() {
     uname -a | grep "$(uname -r)"
     CHECK_RESULT $? 0 0 "uname -a display error"
 
+    uname -n
+    CHECK_RESULT $? 0 0 "uname -n display error"
+    
+    uname -v
+    CHECK_RESULT $? 0 0 "uname -n display error"
+
     uname --help
     CHECK_RESULT $? 0 0 "uname --help display error"
 

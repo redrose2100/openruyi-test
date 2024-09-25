@@ -17,7 +17,7 @@
 #@Desc      :   Test hwloc-ls,lstopo,lstopo-no-graphics,hwloc-patch,hwloc-diff
 ##############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -28,15 +28,15 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "Start to run test."
-    hwloc-ls --help | grep "Usage: hwloc-ls" 
+    hwloc-ls --help | grep "Usage: hwloc-ls"
     CHECK_RESULT $? 0 0 "hwloc-ls --help failed"
     hwloc-ls -l --export-xml-flags 1 | grep "Machine"
     CHECK_RESULT $? 0 0 "hwloc-ls --export-xml-flags failed"
-    lstopo --help | grep "Usage: lstopo" 
+    lstopo --help | grep "Usage: lstopo"
     CHECK_RESULT $? 0 0 "lstopo --help failed"
     lstopo -l --export-xml-flags 1 | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo --export-xml-flags failed"
-    lstopo-no-graphics --help | grep "Usage: lstopo-no-graphics" 
+    lstopo-no-graphics --help | grep "Usage: lstopo-no-graphics"
     CHECK_RESULT $? 0 0 "lstopo-no-graphics --help failed "
     lstopo-no-graphics -l --export-xml-flags 1 | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo-no-graphics --export-xml-flags failed "
@@ -44,7 +44,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwloc-patch -h failed"
     hwloc-patch --help | grep "Usage: hwloc-patch"
     CHECK_RESULT $? 0 0 "hwloc-patch --help failed"
-    hwloc-diff -h | grep "hwloc-diff \[options\]" 
+    hwloc-diff -h | grep "hwloc-diff \[options\]"
     CHECK_RESULT $? 0 0 "hwloc-diff --help failed"
     hwloc-diff --help | grep "hwloc-diff \[options\]"
     CHECK_RESULT $? 0 0 "hwloc-diff -h failed"
@@ -54,7 +54,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

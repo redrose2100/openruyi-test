@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL iptables
+    systemctl start iptables
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -30,13 +31,13 @@ function run_test() {
     if df -h / | grep overlay; then
         LOG_INFO "The current environment is Docker."
     else
-        iptables-save | grep nat
+        iptables-save -t nat 
         CHECK_RESULT $? 0 0 "Incomplete display nat"
-        iptables-save | grep mangle
+        iptables-save -t mangle
         CHECK_RESULT $? 0 0 "Incomplete display mangle"
-        iptables-save | grep raw
+        iptables-save -t raw 
         CHECK_RESULT $? 0 0 "Incomplete display raw"
-        iptables-save | grep security
+        iptables-save -t security
         CHECK_RESULT $? 0 0 "Incomplete display security"
     fi
     iptables-save | grep filter

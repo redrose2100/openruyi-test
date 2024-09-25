@@ -11,6 +11,15 @@
     "machine num": 2,
     "cases": [
         {
+            "name": "oe_test_enable_hugepage"
+        },
+        {
+            "name": "oe_test_cht_client_mode"
+        },
+        {
+            "name": "oe_test_cht_ordinary_mode"
+        },
+        {
             "name": "oe_test_who"
         },
         {
@@ -39,6 +48,9 @@
         },
         {
             "name": "oe_test_comm"
+        },
+        {
+          "name": "oe_test_dc"
         },
         {
             "name": "oe_test_look"
@@ -967,6 +979,48 @@
 	},
 	{
 	   "name": "oe_test_free"
+    },
+    {
+	   "name": "oe_test_c++_stl"
+	},
+	{
+	   "name": "oe_test_fallocate_01"
+	},
+	{
+	   "name": "oe_test_lslocks"
+	},
+	{
+	    "name": "oe_test_brotli_002"
+	},
+	{
+	    "name": "oe_test_lslocks_2"
+	},
+	{
+	    "name": "oe_test_lslogins_1"
+	},
+	{
+	    "name": "oe_test_more"
+	},
+	{
+	    "name": "oe_test_lslogins_2"
+	},
+	{
+	    "name": "oe_test_column"
+	},
+	{
+	    "name": "oe_test_lslogins_3"
+	},
+	{
+	    "name": "oe_test_xrandr"
+	},
+	{
+            "name": "oe_test_as"
+	},
+	{
+	    "name": "oe_test_lslogins_4"
+	},
+	{
+	    "name": "oe_test_zstd01"
 	}
     ]
 }

@@ -1,0 +1,26 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/utsudo",
+    "cases": [
+        {
+            "name": "oe_test_utsudo_s"
+        },
+        {
+            "name": "oe_test_utsudo_b"
+        },
+        {
+            "name": "oe_test_utsudo_p"
+        },
+        {
+            "name": "oe_test_utsudo_u"
+        },
+        {
+            "name": "oe_test_utsudo_e"
+        },
+        {
+            "name": "oe_test_utsudo_h"
+        },
+        {
+            "name": "oe_test_utsudo_l"
+        }
+    ]
+}

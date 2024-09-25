@@ -29,6 +29,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "last --help execute fail"
     last --version | grep -i last
     CHECK_RESULT $? 0 0 "last --version execute fail"
+    last root -2
+    CHECK_RESULT $? 0 0 "last username option result fail"
+    last -x |grep "level"
+    CHECK_RESULT $? 0 0 "last -x option result fail"
     LOG_INFO "Finish test!"
 }
 

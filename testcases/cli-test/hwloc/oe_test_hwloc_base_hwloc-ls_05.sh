@@ -16,7 +16,7 @@
 # @Desc      :   Test hwloc-ps
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -29,7 +29,7 @@ function pre_test()
 function run_test() {
     LOG_INFO "Start testing..."
     pid=$(ps -fC bash | sed '1d' | awk 'NR==1 {print $2}')
-    hwloc-ls --pid $pid | grep "Machine"
+    hwloc-ls --pid "$pid" | grep "Machine"
     CHECK_RESULT $? 0 0 "hwloc-ls --pid failed"
     hwloc-ls --whole-system | grep "Machine"
     CHECK_RESULT $? 0 0 "hwloc-ls --whole-system  failed"
@@ -45,7 +45,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

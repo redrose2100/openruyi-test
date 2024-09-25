@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/disown",
+    "cases": [
+        {
+            "name": "oe_test_disown"
+        }
+    ]
+}
+

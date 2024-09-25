@@ -42,6 +42,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to filter tty login users. Procedure"
     aulast --proof|grep ausearch
     CHECK_RESULT $? 0 0 "failed to print the audit event sequence number used to determine a row on the report"
+    aulast --bad
+    CHECK_RESULT $? 0 0 "the command bad failed to execute"
+    aulast --debug
+    CHECK_RESULT $? 0 0 "the command debug failed to execute"
     LOG_INFO "End to run test."
 }
 

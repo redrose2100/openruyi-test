@@ -16,7 +16,7 @@
 # @Desc      :   Test hwloc-ls
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -28,7 +28,7 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "Start testing..."
-    hwloc-ls -f out.xml && ls | grep "out.xml"
+    hwloc-ls -f out.xml && [ -e "out.xml" ]
     CHECK_RESULT $? 0 0 "hwloc-ls -f failed"
     hwloc-ls -l | grep "L#0"
     CHECK_RESULT $? 0 0 "hwloc-ls -l failed"
@@ -55,7 +55,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -f out.xml
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -18,33 +18,34 @@
 # @Desc      :   Test fftwl-wisdom
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "fftw"
     TMP_DIR="$(mktemp -d -t fftw.XXXXXXXXXXXX)"
-    echo "(fftw-3.3.8 fftwl_wisdom #xc55000ae #xe28b9b3a #x070e76c6 #xeeae5518
+    VERSION="$(rpm -qa fftw | awk -F '-' '{print $2}')"
+    echo "(fftw-${VERSION} fftwl_wisdom #xc55000ae #xe28b9b3a #x070e76c6 #xeeae5518
 (fftwl_codelet_n1_16 0 #x12345 #x22222 #x0 #x4396230b #x936694df #xa8dfdff3 #x77777777)
-)" > ${TMP_DIR}/fftwl_wisdom
+)" > "${TMP_DIR}"/fftwl_wisdom
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    fftwl-wisdom -o ${TMP_DIR}/test_1_fftwl.out cif3x4x5 && grep -q "fftwl_wisdom" < ${TMP_DIR}/test_1_fftwl.out
+    fftwl-wisdom -o "${TMP_DIR}"/test_1_fftwl.out cif3x4x5 && grep -q "fftwl_wisdom" < "${TMP_DIR}"/test_1_fftwl.out
     CHECK_RESULT $? 0 0 "Check fftwl-wisdom -o failed."
-    fftwl-wisdom --output-file=${TMP_DIR}/test_2_fftwl.out cif3x4x5 && grep -q "fftwl_wisdom" < ${TMP_DIR}/test_2_fftwl.out
+    fftwl-wisdom --output-file="${TMP_DIR}"/test_2_fftwl.out cif3x4x5 && grep -q "fftwl_wisdom" < "${TMP_DIR}"/test_2_fftwl.out
     CHECK_RESULT $? 0 0 "Check fftwl-wisdom --output-file=FILE failed."
     fftwl-wisdom -n -v 2>&1 | grep -q "system-wisdom"
     CHECK_RESULT $? 1 0 "Check fftwl-wisdom -n failed."
     fftwl-wisdom --no-system-wisdom -v 2>&1 | grep -q "system-wisdom"
     CHECK_RESULT $? 1 0 "Check fftwl-wisdom --no-system-wisdom failed."
-    fftwl-wisdom -w ${TMP_DIR}/fftwl_wisdom 2>&1 | grep -q "#x12345"
+    fftwl-wisdom -w "${TMP_DIR}"/fftwl_wisdom 2>&1 | grep -q "#x12345"
     CHECK_RESULT $? 0 0 "Check fftwl-wisdom -w failed."
-    fftwl-wisdom -w - < ${TMP_DIR}/fftwl_wisdom 2>&1 | grep -q "#x12345"
+    fftwl-wisdom -w - < "${TMP_DIR}"/fftwl_wisdom 2>&1 | grep -q "#x12345"
     CHECK_RESULT $? 0 0 "Check fftwl-wisdom -w STDIN failed."
-    fftwl-wisdom --wisdom-file ${TMP_DIR}/fftwl_wisdom 2>&1 | grep -q "#x12345"
+    fftwl-wisdom --wisdom-file "${TMP_DIR}"/fftwl_wisdom 2>&1 | grep -q "#x12345"
     CHECK_RESULT $? 0 0 "Check fftwl-wisdom --wisdom-file failed."
     fftwl-wisdom -T 2 cif3x4x5 2>&1 | grep -q "fftwl_wisdom"
     CHECK_RESULT $? 0 0 "Check fftwl-wisdom -T failed."
@@ -59,8 +60,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf ${TMP_DIR}
-    DNF_REMOVE
+    rm -rf "${TMP_DIR}"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

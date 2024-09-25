@@ -17,7 +17,7 @@
 # @Desc      :   Test tidy character encodings
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -86,8 +86,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to use option: -utf16"
     # -big5
     # 用 BIG-5 作为输入和输出编码
-    # 使用 uchardet 检出结果为 WINDOWS-1252
-    echo '好' | iconv -f UTF-8 -t BIG-5 | tidy -big5 | uchardet | grep 'WINDOWS-1252'
+    # 使用 uchardet 检出结果为 IBM852
+    echo '好' | iconv -f UTF-8 -t BIG-5 | tidy -big5 | uchardet | grep 'IBM852'
     CHECK_RESULT $? 0 0 "Failed to use option: -big5"
     # -shiftjis
     # 用 SHITFT-JIS 作为输入和输出编码
@@ -99,7 +99,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -f ./tidied.html
     LOG_INFO "Finish environment cleanup!"
 }

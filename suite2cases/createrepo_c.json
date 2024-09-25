@@ -3,6 +3,18 @@
     "cases": [
         {
             "name": "oe_test_createrepo_c_local_repo"
+        },
+        {
+            "name": "oe_test_createrepo_c_algorithm"
+        },
+        {
+            "name": "oe_test_createrepo_c_pkg_path"
+        },
+        {
+            "name": "oe_test_createrepo_c_BaseFun"
+        },
+        {
+            "name": "oe_test_sqliterepo_c"
         }
     ]
 }

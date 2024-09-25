@@ -17,6 +17,7 @@
 #include <signal.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <pwrapic/powerapi.h>
 
 #define MAIN_LOOP_INTERVAL 5
@@ -25,9 +26,14 @@
 #define AVG_LEN_PER_CORE 5
 #define TEST_CPU_DMA_LATENCY 2000000000
 #define TASK_INTERVAL 1000
+#define TASK_MIN_INTERVAL 1000
+#define TASK_MAX_INTERVAL 100000000
 #define TASK_RUN_TIME 10
 #define TEST_FREQ_RANGE_MIN 500
 #define TEST_FREQ_RANGE_MAX 2500
+#define TEST_MAX_PROC_NUM 100
+#define INVALIDE_STATE (-1)
+#define TEST_PID_NUM 1
 
 static int g_run = 1;
 
@@ -188,9 +194,111 @@ static void TEST_PWR_ReleaseControlAuth(void)
     PrintResult("PWR_ReleaseControlAuth", ret);
 }
 
+static void TEST_PWR_SetClientSockPath(char str[])
+{
+    int ret = -1;
+    ret = PWR_SetClientSockPath(str);
+    PrintResult("PWR_SetClientSockPath", ret);
+}
+
+static void TEST_PWR_COM_DcTaskMgr(void)
+{
+    int ret = -1;
+    ret = PWR_SetMetaDataCallback(MetaDataCallback);
+    PrintResult("PWR_SetMetaDataCallback", ret);
+
+    PWR_COM_BasicDcTaskInfo task = {0};
+    task.dataType = PWR_COM_DATATYPE_CPU_PERF;
+    task.interval = TASK_MIN_INTERVAL;
+    ret = PWR_CreateDcTask(&task);
+    PrintResult("PWR_CreateDcTask", ret);
+    printf("dataType:%d\n", task.dataType);
+
+    task.dataType = PWR_COM_DATATYPE_CPU_USAGE;
+    ret = PWR_CreateDcTask(&task);
+    PrintResult("PWR_CreateDcTask", ret);
+    printf("dataType:%d\n", task.dataType);
+
+    task.dataType = PWR_COM_DATATYPE_INVALIDE;
+    ret = PWR_CreateDcTask(&task);
+    PrintResult("PWR_CreateDcTask", ret);
+    printf("dataType:%d\n", task.dataType);
+
+    task.dataType = 4;
+    ret = PWR_CreateDcTask(&task);
+    PrintResult("PWR_CreateDcTask", ret);
+    printf("dataType:%d\n", task.dataType);
+
+    task.dataType = -1;
+    ret = PWR_CreateDcTask(&task);
+    PrintResult("PWR_CreateDcTask", ret);
+    printf("dataType:%d\n", task.dataType);
+
+    sleep(TASK_RUN_TIME);
+    ret = PWR_DeleteDcTask(PWR_COM_DATATYPE_CPU_PERF);
+    PrintResult("PWR_DeleteDcTask", ret);
+    printf("dataType:%d\n", PWR_COM_DATATYPE_CPU_PERF);
+
+    ret = PWR_DeleteDcTask(PWR_COM_DATATYPE_CPU_USAGE);
+    PrintResult("PWR_DeleteDcTask", ret);
+    printf("dataType:%d\n", PWR_COM_DATATYPE_CPU_USAGE);
+
+    ret = PWR_DeleteDcTask(PWR_COM_DATATYPE_INVALIDE);
+    PrintResult("PWR_DeleteDcTask", ret);
+    printf("dataType:%d\n", PWR_COM_DATATYPE_INVALIDE);
+}
+
+static void TEST_PWR_COM_DcTaskMgr_1(void)
+{
+    int ret = -1;
+    ret = PWR_SetMetaDataCallback(MetaDataCallback);
+    PrintResult("PWR_SetMetaDataCallback", ret);
+
+    PWR_COM_BasicDcTaskInfo task = {0};
+    task.dataType = PWR_COM_DATATYPE_CPU_PERF;
+    task.interval = TASK_MIN_INTERVAL;
+    ret = PWR_CreateDcTask(&task);
+    PrintResult("PWR_CreateDcTask", ret);
+    printf("interval:%d\n", task.interval);
+
+    task.interval = TASK_MAX_INTERVAL;
+    ret = PWR_CreateDcTask(&task);
+    PrintResult("PWR_CreateDcTask", ret);
+    printf("interval:%d\n", task.interval);
+
+    task.interval = TASK_MIN_INTERVAL-1;
+    ret = PWR_CreateDcTask(&task);
+    PrintResult("PWR_CreateDcTask", ret);
+    printf("interval:%d\n", task.interval);
+
+    task.interval = TASK_MAX_INTERVAL+1;
+    ret = PWR_CreateDcTask(&task);
+    PrintResult("PWR_CreateDcTask", ret);
+    printf("interval:%d\n", task.interval);
+
+    sleep(TASK_RUN_TIME);
+    ret = PWR_DeleteDcTask(PWR_COM_DATATYPE_CPU_PERF);
+    PrintResult("PWR_DeleteDcTask", ret);
+    printf("dataType:%d\n", PWR_COM_DATATYPE_CPU_PERF);
+}
 /************************** COMMON END************************/
 
 /***************************** SYS ***************************/
+static void TEST_SYS_GetRtPowerInfo(void)
+{
+    int ret = -1;
+    PWR_SYS_PowerInfo *powerInfo = (PWR_SYS_PowerInfo *)malloc(sizeof(PWR_SYS_PowerInfo));
+    if (!powerInfo) {
+        return;
+    }
+    bzero(powerInfo, sizeof(PWR_SYS_PowerInfo));
+    ret = PWR_SYS_GetRtPowerInfo(powerInfo);
+    PrintResult("PWR_SYS_GetRtPower", ret);
+    printf("    sys rt power:%d\n", powerInfo->sysPower);
+    printf("    cpu rt power:%d\n", powerInfo->cpuPower);
+    printf("    mem rt power:%d\n", powerInfo->memPower);
+    free(powerInfo);
+}
 /*************************** SYS END *************************/
 
 /***************************** CPU ***************************/
@@ -789,7 +897,235 @@ static void TEST_PWR_CPU_DmaSetLatency_6(void)
     PWR_CPU_DmaSetLatency(la_old);
 }
 
+static void TEST_PWR_SetEventCallback_1(void)
+{
+    int ret = -1;
+    ret = PWR_SetEventCallback(EventCallback);
+    PrintResult("PWR_SetEventCallback", ret);
+    TEST_PWR_CPU_GetInfo();
+    sleep(3);
+}
 
+static void TEST_PWR_SetEventCallback_2(void)
+{
+    int ret = -1;
+    ret = PWR_SetEventCallback(EventCallback);
+    PrintResult("PWR_SetEventCallback", ret);
+    PWR_RequestControlAuth();
+    sleep(30);
+    PWR_ReleaseControlAuth();
+}
+
+static void TEST_PWR_CPU_GetUsage(void)
+{
+    int ret = -1;
+    size_t buffSize = sizeof(PWR_CPU_Usage) + TEST_CORE_NUM * sizeof(PWR_CPU_CoreUsage);
+    PWR_CPU_Usage *u = (PWR_CPU_Usage *)malloc(buffSize);
+    if (!u) {
+        return;
+    }
+    bzero(u, buffSize);
+    ret = PWR_CPU_GetUsage(u, buffSize);
+    PrintResult("PWR_CPU_GetUsage", ret);
+    printf("    CPU avgUsage: %f, coreNum: %d \n", u->avgUsage, u->coreNum);
+    for (int i = 0; i < u->coreNum; i++) {
+        printf("    core[%d] usage: %f\n", u->coreUsage[i].coreNo, u->coreUsage[i].usage);
+    }
+    free(u);
+}
+
+static void TEST_PWR_CPU_GetPerfData(void)
+{
+    int ret = -1;
+    PWR_CPU_PerfData perfData = { 0 };
+    ret = PWR_CPU_GetPerfData(&perfData);
+    PrintResult("PWR_CPU_GetPerfData", ret);
+    printf("    IPC: %.8f, LLC misses: %.8f \n", perfData.ipc, perfData.llcMiss);
+}
 /*************************** CPU END *************************/
 
+/************************** PROC ************************/
+static void TEST_PWR_PROC_QueryProcs(char keywords[])
+{
+    pid_t procs[TEST_MAX_PROC_NUM] = {0};
+    uint32_t num = 100;
+    printf("keywords:%s\n", keywords);
+    int ret = PWR_PROC_QueryProcs(keywords, procs, &num);
+    printf("PWR_PROC_QueryProcs. ret: %d num:%d\n", ret, num);
+    for (int i = 0; i < num; i++) {
+        printf("\tprocs[%d]: %d\n", i, procs[i]);
+    }
+}
 
+static void TEST_PWR_PROC_SetAndGetWattState(void)
+{
+    int state = INVALIDE_STATE;
+    int ret = PWR_SUCCESS;
+    ret = PWR_PROC_GetWattState(&state);
+    printf("PWR_PROC_GetWattState. ret: %d state:%d\n", ret, state);
+}
+
+static void TEST_PWR_PROC_SetAndGetWattState_1(int PWRState)
+{
+    int state = INVALIDE_STATE;
+    int ret = PWR_SUCCESS;
+    ret = PWR_PROC_SetWattState(PWRState);
+    ret = PWR_PROC_GetWattState(&state);
+    printf("PWR_PROC_GetWattState. ret: %d state:%d\n", ret, state);
+}
+
+static void TEST_PWR_PROC_RebuildAffinityDomain(void)
+{
+    int cpuId = 0;
+    int ret = PWR_PROC_SetWattFirstDomain(cpuId);
+    printf("PWR_PROC_SetWattFirstDomain: ret:%d\n", ret);
+
+    cpuId = 1234;
+    ret = PWR_PROC_SetWattFirstDomain(cpuId);
+    printf("PWR_PROC_SetWattFirstDomain: ret:%d\n", ret);
+}
+
+static void TEST_PWR_PROC_RebuildAffinityDomain_1(void)
+{
+    system("echo 0 > /sys/devices/system/cpu/cpu1/online");
+    int ret = PWR_PROC_SetWattFirstDomain(1);
+    printf("PWR_PROC_SetWattFirstDomain: ret:%d\n", ret);
+    system("echo 1 > /sys/devices/system/cpu/cpu1/online");
+}
+
+static void TEST_PWR_PROC_SetAndGetWattAttrs(int TEST_WATT_TH, int TEST_WATT_IT, int TEST_WATT_DM)
+{
+    int ret = PWR_SUCCESS;
+    PWR_PROC_WattAttrs was = {0};
+    ret = PWR_PROC_GetWattAttrs(&was);
+    printf("PWR_PROC_GetWattAttrs: ret:%d th:%d, interval:%d dmask:%d\n", ret,
+        was.scaleThreshold, was.scaleInterval, was.domainMask);
+    was.scaleThreshold = TEST_WATT_TH;
+    was.scaleInterval = TEST_WATT_IT;
+    was.domainMask = TEST_WATT_DM;
+    ret = PWR_PROC_SetWattAttrs(&was);
+    printf("PWR_PROC_SetWattAttrs. ret: %d\n", ret);
+    bzero(&was, sizeof(was));
+    (void)PWR_PROC_GetWattAttrs(&was);
+    printf("After PWR_PROC_SetWattAttrs: ret:%d th:%d, interval:%d dmask:%d\n", ret,
+        was.scaleThreshold, was.scaleInterval, was.domainMask);
+
+}
+
+static void TEST_PWR_PROC_AddAndDelWattProcs(int TEST_PID)
+{
+    pid_t procs[TEST_PID_NUM] = {TEST_PID};
+    int num = TEST_PID_NUM;
+    int ret = -1;
+    ret = PWR_PROC_GetWattProcs(procs, &num);
+    printf("PWR_PROC_GetWattProcs: ret:%d num:%d\n", ret, num);
+    for (int i = 0; i < num; i++) {
+        printf("\tPWR_PROC_GetWattProcs. procs%d: %d.\n", i, procs[i]);
+    }
+
+    num = 1;
+    ret = PWR_PROC_AddWattProcs(procs, num);
+    printf("PWR_PROC_AddWattProcs: ret:%d\n", ret);
+
+    bzero(procs, sizeof(procs));
+    ret = PWR_PROC_GetWattProcs(procs, &num);
+    printf("PWR_PROC_GetWattProcs: ret:%d num:%d\n", ret, num);
+    for (int i = 0; i < num; i++) {
+        printf("\tPWR_PROC_GetWattProcs. after add. procs%d: %d.\n", i, procs[i]);
+    }
+
+    ret = PWR_PROC_DelWattProcs(procs, num);
+    printf("PWR_PROC_DelWattProcs: ret:%d\n", ret);
+    bzero(procs, sizeof(procs));
+    (void)PWR_PROC_GetWattProcs(procs, &num);
+    printf("PWR_PROC_GetWattProcs: ret:%d num:%d\n", ret, num);
+    for (int i = 0; i < num; i++) {
+        printf("\tPWR_PROC_DelWattProcs. after del. procs%d: %d.\n", i, procs[i]);
+    }
+}
+
+static void TEST_PWR_PROC_AddAndDelWattProcs_1(int TEST_PID)
+{
+    pid_t procs[TEST_PID_NUM] = {TEST_PID};
+    int num = TEST_PID_NUM;
+    int ret = -1;
+    ret = PWR_PROC_GetWattProcs(procs, &num);
+    printf("PWR_PROC_GetWattProcs: ret:%d num:%d\n", ret, num);
+    for (int i = 0; i < num; i++) {
+        printf("\tPWR_PROC_GetWattProcs. procs%d: %d.\n", i, procs[i]);
+    }
+
+    num = 1;
+    ret = PWR_PROC_AddWattProcs(procs, num);
+    printf("PWR_PROC_AddWattProcs: ret:%d\n", ret);
+
+    bzero(procs, sizeof(procs));
+    ret = PWR_PROC_GetWattProcs(procs, &num);
+    printf("PWR_PROC_GetWattProcs: ret:%d num:%d\n", ret, num);
+    for (int i = 0; i < num; i++) {
+        printf("\tPWR_PROC_GetWattProcs. after add. procs%d: %d.\n", i, procs[i]);
+    }
+}
+
+static void TEST_PWR_PROC_SetAndGetSmartGridState(void)
+{
+    int state = INVALIDE_STATE;
+    int ret = PWR_SUCCESS;
+    ret = PWR_PROC_GetSmartGridState(&state);
+    printf("PWR_PROC_GetSmartGridState. ret: %d state:%d\n", ret, state);
+    PWR_PROC_SetWattState(PWR_ENABLE);
+    ret = PWR_PROC_SetSmartGridState(PWR_ENABLE);
+    printf("PWR_PROC_SetSmartGridState. ret: %d\n", ret);
+    ret = PWR_PROC_GetSmartGridState(&state);
+    printf("PWR_PROC_GetSmartGridState. ret: %d state:%d\n", ret, state);
+    ret = PWR_PROC_SetSmartGridState(PWR_DISABLE);
+    printf("PWR_PROC_SetSmartGridState. ret: %d\n", ret);
+    ret = PWR_PROC_GetSmartGridState(&state);
+    printf("PWR_PROC_GetSmartGridState. ret: %d state:%d\n", ret, state);
+    ret = PWR_PROC_SetSmartGridState(-1);
+    printf("PWR_PROC_SetSmartGridState. ret: %d\n", ret);
+    PWR_PROC_SetWattState(PWR_DISABLE);
+}
+
+static void TEST_PWR_PROC_SetAndGetSmartGridGov(void)
+{
+    PWR_PROC_SmartGridGov sgGov = {0};
+    int ret = PWR_PROC_GetSmartGridGov(&sgGov);
+    printf("PWR_PROC_GetSmartGridGov: ret:%d sgAgentState:%d, sgLevel0Gov:%s sgLevel1Gov:%s\n",
+        ret, sgGov.sgAgentState, sgGov.sgLevel0Gov, sgGov.sgLevel1Gov);
+}
+
+static void TEST_PWR_PROC_SetAndGetSmartGridGov_1(int sgAgentState, char level0Gov[], char level1Gov[])
+{
+    PWR_PROC_SmartGridGov sgGov = {0};
+    sgGov.sgAgentState = sgAgentState;
+    printf("PWR_MAX_ELEMENT_NAME_LEN:%d\n", PWR_MAX_ELEMENT_NAME_LEN);
+    strncpy(sgGov.sgLevel0Gov, level0Gov, PWR_MAX_ELEMENT_NAME_LEN);
+    strncpy(sgGov.sgLevel1Gov, level1Gov, PWR_MAX_ELEMENT_NAME_LEN);
+    int ret = PWR_PROC_SetSmartGridGov(&sgGov);
+    printf("PWR_PROC_SetSmartGridGov: ret:%d\n", ret);
+    bzero(&sgGov, sizeof(PWR_PROC_SmartGridGov));
+    PWR_PROC_GetSmartGridGov(&sgGov);
+    printf("PWR_PROC_GetSmartGridGov: after set. ret:%d sgAgentState:%d, sgLevel0Gov:%s sgLevel1Gov:%s\n",
+        ret, sgGov.sgAgentState, sgGov.sgLevel0Gov, sgGov.sgLevel1Gov);
+}
+
+static void TEST_PWR_PROC_SetServiceState(int sname, int sstate)
+{
+    size_t size = sizeof(PWR_PROC_ServiceState);
+    PWR_PROC_ServiceState sState = {0};
+    sState.name = sname;
+    sState.state = sstate;
+    int ret = PWR_PROC_SetServiceState(&sState);
+    printf("PWR_PROC_SetServiceState ret:%d\n", ret);
+}
+
+static void TEST_PWR_PROC_GetServiceState(void)
+{
+    size_t size = sizeof(PWR_PROC_ServiceStatus);
+    PWR_PROC_ServiceStatus sStatus = {0};
+    sStatus.name = PWR_PROC_SERVICE_EAGLE;
+    int ret = PWR_PROC_GetServiceState(&sStatus);
+    printf("PWR_PROC_GetServiceState ret:%d status:%d\n", ret, sStatus.status);
+}
+/************************** PROC END ************************/

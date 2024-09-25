@@ -32,6 +32,10 @@ function run_test() {
     echo "hello" > hello.txt
     grep "hello" hello.txt
     CHECK_RESULT $? 0 0 "echo execute fail"
+    echo "hello" > hello.txt
+    echo "hello world" >>hello.txt
+    count=$(grep -o "hello" hello.txt | wc -l) && [ "$count" -eq 2 ]
+    CHECK_RESULT $? 0 0 "echo execute fail"
     LOG_INFO "Finish test!"
 }
 

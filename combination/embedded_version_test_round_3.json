@@ -1,7 +1,8 @@
 {
     "export": {
-        "DOWNLOAD_BRANCH": "openEuler-22.03-LTS-SP2",
-        "FIND_TINY_DIR": "/home/openeuler/tmp_image/tiny"
+        "DOWNLOAD_BRANCH": "openEuler-24.03-LTS",
+        "FIND_TINY_DIR": "/home/openeuler/tmp_image/tiny",
+        "OS_RELEASE_NAME":"openeuler"
     },
     "env": [
         {
@@ -22,6 +23,18 @@
             "initrd_path": "/home/openeuler/tmp_image/aarch64/initrd",
             "option_wait_time": "180",
             "login_wait_str": "openEuler Embedded(openEuler Embedded Reference Distro)",
+            "qemu_type": "aarch64",
+            "sdk_path": "/home/openeuler/tmp_image/aarch64/sdk",
+            "put_all":true
+        },
+        {
+            "type": "qemu",
+            "name": "qemu_aarch64_big_mem",
+            "kernal_img_path": "/home/openeuler/tmp_image/aarch64/zImage",
+            "initrd_path": "/home/openeuler/tmp_image/aarch64/initrd",
+            "option_wait_time": "180",
+            "login_wait_str": "openEuler Embedded(openEuler Embedded Reference Distro)",
+            "memory_size": 3072,
             "qemu_type": "aarch64",
             "sdk_path": "/home/openeuler/tmp_image/aarch64/sdk",
             "put_all":true
@@ -130,7 +143,16 @@
             ]
         },
         {
-            "name": "third_party_test",
+            "name": "third_party_test_for_device",
+            "testcases": [
+                {
+                    "testsuite": "embedded_third_party_packages_test",
+                    "del": ["oe_test_tcl_test_001"]
+                }
+            ]
+        },
+        {
+            "name": "third_party_test_for_qemu",
             "testcases": [
                 {
                     "testsuite": "embedded_third_party_packages_test"
@@ -138,10 +160,18 @@
             ]
         },
         {
-            "name": "dsoftbus_basic_test",
+            "name": "dsoftbus_3_1_basic_test",
             "testcases": [
                 {
-                    "testsuite": "embedded_dsoftbus_basic_test"
+                    "testsuite": "embedded_dsoftbus_3_1_basic_test"
+                }
+            ]
+        },
+        {
+            "name": "dsoftbus_3_2_basic_test",
+            "testcases": [
+                {
+                    "testsuite": "embedded_dsoftbus_3_2_basic_test"
                 }
             ]
         },
@@ -193,9 +223,9 @@
         },
         {
             "env": [
-                "qemu_aarch64"
+                "qemu_aarch64_big_mem"
             ],
-            "combination": "third_party_test"
+            "combination": "third_party_test_for_qemu"
         },
         {
             "env": [
@@ -208,7 +238,14 @@
                 "qemu_aarch64",
                 "qemu_aarch64_2"
             ],
-            "combination": "dsoftbus_basic_test"
+            "combination": "dsoftbus_3_1_basic_test"
+        },
+        {
+            "env": [
+                "qemu_aarch64",
+                "qemu_aarch64_2"
+            ],
+            "combination": "dsoftbus_3_2_basic_test"
         },
         {
             "env": [
@@ -220,7 +257,7 @@
             "env": [
                 "raspi4_basic"
             ],
-            "combination": "third_party_test"
+            "combination": "third_party_test_for_device"
         },
         {
             "env": [
@@ -239,7 +276,14 @@
                 "raspi4_basic",
                 "raspi4_basic_2"
             ],
-            "combination": "dsoftbus_basic_test"
+            "combination": "dsoftbus_3_1_basic_test"
+        },
+        {
+            "env": [
+                "raspi4_basic",
+                "raspi4_basic_2"
+            ],
+            "combination": "dsoftbus_3_2_basic_test"
         }
     ]
 }

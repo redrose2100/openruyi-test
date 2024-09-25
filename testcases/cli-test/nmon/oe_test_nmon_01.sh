@@ -14,9 +14,10 @@
 #@Date      	:   2022/08/04
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test for nmon
+#April's remind :   When you run this testcase, you'd better make the window large enough to avoid errors caused by line wrapping.
 #####################################
 # shellcheck disable=SC1091
-source "./common/common.sh"
+source "${OET_PATH}/testcases/cli-test/nmon/common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -87,7 +88,7 @@ function run_test() {
     grep -iE 'NFSSVRV2|NFSSVRV3|NFSSVRV4|fN' ./*.nmon
     CHECK_RESULT $? 0 0 "Failed option: -N"
     rm -rf ./*.nmon
-    nmon -fp >./template/nmonPID
+    nmon -fp > ./template/nmonPID
     if [ "$(cat ./template/nmonPID)" -eq "$(pgrep -f "nmon -fp")" ]; then
         touch ./template/equal
     fi

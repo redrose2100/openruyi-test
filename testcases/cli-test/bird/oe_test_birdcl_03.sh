@@ -43,7 +43,7 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    num=$(wc -l tmp.txt)
+    num=$(wc -l tmp.txt | awk '{print $1}')
     if [[ "${num}" -gt 0 ]]; then
         echo "aa" | grep "aa"
     else
@@ -57,7 +57,7 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    num=$(wc -l tmp.txt)
+    num=$(wc -l tmp.txt | awk '{print $1}')
     if [[ "${num}" -gt 0 ]]; then
         echo "aa" | grep "aa"
     else
@@ -71,7 +71,7 @@ EOF
     send "quit\n"
     expect eof
 EOF
-    num=$(wc -l tmp.txt)
+    num=$(wc -l tmp.txt | awk '{print $1}')
     if [[ "${num}" -gt 0 ]]; then
         echo "aa" | grep "aa"
     else

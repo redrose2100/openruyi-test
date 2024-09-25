@@ -21,7 +21,12 @@ source ../comm_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
     pushd ./tmp_test/tests/ || exit
-    testlist=(test-punycode test-lookup test-register test-strerror test-tounicode test-locale test-glibc)
+    if [ -e /usr/lib64/locale/ ]; then
+        testlist=(test-punycode test-lookup test-register test-strerror test-tounicode test-locale test-glibc)
+    else
+        testlist=(test-punycode test-lookup test-register test-strerror test-tounicode test-locale)
+    fi
+
     for onetest in "${testlist[@]}"; do
         outStr=$(../test-driver --test-name "${onetest}".test --log-file "${onetest}".log --trs-file "${onetest}".trs -- ./"$onetest")
         echo "Output: $outStr"

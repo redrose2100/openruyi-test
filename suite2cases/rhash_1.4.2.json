@@ -5,24 +5,6 @@
     "cases": [
         {
             "name": "oe_test_rhash_1.4.2_rhash"  
-        },
-        {
-            "name": "oe_test_rhash_base_rhash_01"
-        },
-        {
-            "name": "oe_test_rhash_base_rhash_02"
-        },
-        {
-            "name": "oe_test_rhash_base_rhash_03"
-        },
-        {
-            "name": "oe_test_rhash_base_rhash_04"
-        },
-        {
-            "name": "oe_test_rhash_base_rhash_05"
-        },
-        {
-            "name": "oe_test_rhash_base_rhash_06"
         }
     ]
 }

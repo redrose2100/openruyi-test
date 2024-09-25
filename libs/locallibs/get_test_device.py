@@ -47,11 +47,20 @@ def get_test_nic(node=1):
         sys.exit(exitcode)
 
     if os.environ.get("NODE" + str(node) + "_LOCALTION") == "local":
-        output = subprocess.getoutput(
-            "lshw -class network | grep -A 5 'description: Ethernet interface' | grep 'logical name:' | awk '{print $NF}' | grep -v '"
-            + os.environ.get("NODE" + str(node) + "_NIC")
-            + "'"
-        ).replace("\n", " ")
+        dev_info = subprocess.getoutput("cat /proc/device-tree/model")
+        if "Lichee Pi 4A" in dev_info:
+            # 兼容  licheepi4a 硬件板
+            output = subprocess.getoutput(
+                "ip addr show | grep '^[0-9]:'|grep -v lo |grep -v virbr |grep -v wlan0 |grep -v dummy0 |grep -v sit0@NONE |grep -v ip_vti0@NONE |cut -d ':' -f2 |sed -e 's/^[[:space:]]*//' | grep -v '"
+                + os.environ.get("NODE" + str(node) + "_NIC")
+                + "'"
+            ).replace("\n", " ")
+        else:
+            output = subprocess.getoutput(
+                "lshw -class network | grep -A 5 'description: Ethernet interface' | grep 'logical name:' | awk '{print $NF}' | grep -v '"
+                + os.environ.get("NODE" + str(node) + "_NIC")
+                + "'"
+            ).replace("\n", " ")
     else:
         conn = ssh_cmd.pssh_conn(
             os.environ.get("NODE" + str(node) + "_IPV4"),
@@ -59,13 +68,25 @@ def get_test_nic(node=1):
             os.environ.get("NODE" + str(node) + "_SSH_PORT"),
             os.environ.get("NODE" + str(node) + "_USER"),
         )
-
-        output = ssh_cmd.pssh_cmd(
+        dev_info = ssh_cmd.pssh_cmd(
             conn,
-            "lshw -class network | grep -A 5 'description: Ethernet interface' | grep 'logical name:' | awk '{print $NF}' | grep -v '"
-            + os.environ.get("NODE" + str(node) + "_NIC")
-            + "'",
-        )[1].replace("\n", " ")
+            "cat /proc/device-tree/model"
+        )[1]
+        if "Lichee Pi 4A" in dev_info:
+            # 兼容 licheepi4a 硬件板
+            output = ssh_cmd.pssh_cmd(
+                conn,
+                "ip addr show | grep '^[0-9]:'|grep -v lo |grep -v virbr |grep -v wlan0 |grep -v dummy0 |grep -v sit0@NONE |grep -v ip_vti0@NONE |cut -d ':' -f2 |sed -e 's/^[[:space:]]*//' | grep -v '"
+                + os.environ.get("NODE" + str(node) + "_NIC")
+                + "'",
+            )[1].replace("\n", " ")
+        else:
+            output = ssh_cmd.pssh_cmd(
+                conn,
+                "lshw -class network | grep -A 5 'description: Ethernet interface' | grep 'logical name:' | awk '{print $NF}' | grep -v '"
+                + os.environ.get("NODE" + str(node) + "_NIC")
+                + "'",
+            )[1].replace("\n", " ")
 
         ssh_cmd.pssh_close(conn)
 
@@ -90,7 +111,7 @@ def get_test_disk(node=1):
         )
 
         test_disk = subprocess.getoutput(
-            "lsblk -n | grep -v '└─.*\|"
+            "lsblk -n | grep 'disk' | grep -v '└─.*\|"
             + used_disk.replace(" ", "\|")
             + "' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'"
         )
@@ -107,7 +128,7 @@ def get_test_disk(node=1):
         )[1]
         test_disk = ssh_cmd.pssh_cmd(
             conn,
-            "lsblk -n | grep -v '└─.*\|"
+            "lsblk -n | grep 'disk' | grep -v '└─.*\|"
             + used_disk.replace(" ", "\|")
             + "' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'",
         )[1]

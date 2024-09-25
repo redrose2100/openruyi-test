@@ -17,7 +17,7 @@
 # @Desc      :   Command test-history
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -31,7 +31,19 @@ function run_test() {
     CHECK_RESULT $? 0 0 "history write file failed"
     help history
     CHECK_RESULT $? 0 0 "history write file failed"
-    LOG_INFO "End to run test."
+    history -a
+    CHECK_RESULT $? 0 0 "history write file failed"
+    history -r
+    CHECK_RESULT $? 0 0 "history write file failed"
+    history -c
+    ls ./
+    uname -a
+    history -d 2
+    history |grep uname
+    CHECK_RESULT $? 0 1 "delete history command record 2"
+    history |grep ls
+    CHECK_RESULT $? 0 1 "delete history command record 2 failed"
+    LOG_INFO "End to run test." 
 }
 
 main "$@"

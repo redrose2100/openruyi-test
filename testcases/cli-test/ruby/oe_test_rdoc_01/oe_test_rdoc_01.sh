@@ -16,17 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of rdoc command
 # ############################################
-
+# shellcheck disable=SC1091
 source "../common/common_ruby.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL rubygem-rdoc
-    VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
-    if [ $VERSION_ID != "22.03" ]; then
-      path_rdoc=/root/.rdoc
+    if [ -d "$HOME/.rdoc" ]; then
+     path_rdoc=$HOME/.rdoc
     else
-      path_rdoc=/root/.local/share/rdoc
+      path_rdoc=$HOME/.local/share/rdoc
     fi
     LOG_INFO "Finish preparing the test environment."
 }
@@ -56,9 +55,9 @@ function run_test() {
     CHECK_RESULT $?
     rdoc ../common/main.rb -r | grep "Parsing sources"
     CHECK_RESULT $?
-    test -d $path_rdoc/Customer
+    test -d "$path_rdoc"/Customer
     CHECK_RESULT $?
-    test -f $path_rdoc/cache.ri -a -f $path_rdoc/created.rid
+    test -f "$path_rdoc"/cache.ri -a -f "$path_rdoc"/created.rid
     CHECK_RESULT $?
     rdoc ../common/main.rb -R | grep "Parsing sources"
     CHECK_RESULT $?
@@ -85,9 +84,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     delete_files
-    rm -rf /root/.rdoc/ .rdoc_options /usr/share/ri/site /root/.local
+    rm -rf "$HOME"/.rdoc/ .rdoc_options /usr/share/ri/site "$HOME"/.local
     DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

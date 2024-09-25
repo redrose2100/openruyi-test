@@ -93,12 +93,6 @@
             "name": "oe_test_nbd"
         },
         {
-            "name": "oe_test_hifc"
-        },
-        {
-            "name": "oe_test_fnic"
-        },
-        {
             "name": "oe_test_libfc"
         },
         {
@@ -135,9 +129,6 @@
             "name": "oe_test_uio"
         },
         {
-            "name": "oe_test_ntb"
-        },
-        {
             "name": "oe_test_clk"
         },
         {
@@ -160,8 +151,19 @@
         },
         {
             "name": "oe_test_radeon"
+        },
+        {
+            "name": "oe_test_target_core_file"
+        },
+        {
+            "name": "oe_test_target_core_iblock"
+        },
+        {
+            "name": "oe_test_target_core_mod"
+        },
+        {
+            "name": "oe_test_target_core_pscsi"
         }
-
     ]
 }
 

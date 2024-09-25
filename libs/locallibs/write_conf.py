@@ -162,7 +162,7 @@ def write_conf(ip, password, port=22, user="root", run_remote=False, copy_all=Tr
         NODE_DATA["FRAME"] = output.strip("\n")
 
         exitcode, output = subprocess.getstatusoutput(
-            " ip route | grep " + ip + " | grep -v default | awk '{print $3}' | sort -u"
+            " ip route | grep " + ip + " | grep -v default |grep -v via| awk '{print $3}' | sort -u"
         )
         NODE_DATA["NIC"] = output.strip("\n")
 

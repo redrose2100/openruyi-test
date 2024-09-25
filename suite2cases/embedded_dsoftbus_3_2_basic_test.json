@@ -1,0 +1,76 @@
+{
+    "path": "$OET_PATH/testcases/embedded-test/dsoftbus_3_2_basic_test",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_PublishServiceInterface_001"
+        },
+        {
+            "name": "oe_test_UnPublishServiceInterface_001"
+        },
+        {
+            "name": "oe_test_DiscoveryInterface_001"
+        },
+        {
+            "name": "oe_test_StopDiscoveryInterface_001"
+        },
+        {
+            "name": "oe_test_GetAllNodeDeviceInfoInterface_001",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_FreeNodeInfoInterface_001",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_CreateSessionServerInterface_001"
+        },
+        {
+            "name": "oe_test_RemoveSessionServerInterface_001"
+        },
+        {
+            "name": "oe_test_OpenSessionInterface_001",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_CloseSessionInterface_001",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_CloseSessionInterface_002",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_SendBytesInterface_001",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_SendMessageInterface_001",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_FunctionDiscovery_001",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_FunctionNetwork_002",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_FunctionNetwork_003",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_FunctionSession_004",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_FunctionTransmission_005",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_FunctionTransmission_006",
+            "machine num": 2
+        }
+    ]
+}

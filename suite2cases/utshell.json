@@ -2,10 +2,19 @@
     "path": "$OET_PATH/testcases/cli-test/utshell",
     "cases": [
         {
-            "name" :"oe_test_utshell_test"
+            "name": "oe_test_utshell_test"
         },
         {
             "name": "oe_test_utshell_test_01"
+        },
+        {
+            "name": "oe_test_utshell_type_01"
+        },
+        {
+            "name": "oe_test_utshell_type_02"
+        },
+        {
+            "name": "oe_test_utshell_type_03"
         },
         {
             "name": "oe_test_utshell_readarray_01"
@@ -17,7 +26,7 @@
             "name": "oe_test_utshell_readarray_02"
         },
         {
-            "name":"oe_test_utshell_typeset"
+            "name": "oe_test_utshell_typeset"
         },
         {
             "name": "oe_test_utshell_exit_01"
@@ -69,6 +78,156 @@
         },
         {
             "name": "oe_test_utshell_test_04"
+        },
+        {
+            "name": "oe_test_utshell_test_05"
+        },
+        {
+            "name": "oe_test_utshell_test_06"
+        },
+        {
+            "name": "oe_test_utshell_test_07"
+        },
+        {
+            "name": "oe_test_utshell_let_01"
+        },
+        {
+            "name": "oe_test_utshell_let_02"
+        },
+        {
+            "name": "oe_test_utshell_export_01"
+        },
+        {
+            "name": "oe_test_utshell_return"
+        },
+        {
+            "name": "oe_test_utshell_compgen_02"
+        },
+        {
+            "name": "oe_test_utshell_ulimit_01"
+        },
+        {
+            "name": "oe_test_utshell_case"
+        },
+        {
+            "name": "oe_test_utshell_compgen_03"
+        },
+        {
+            "name": "oe_test_utshell_ulimit_02"
+        },
+        {
+            "name": "oe_test_utshell_bind_01"
+        },
+        {
+            "name": "oe_test_utshell_readonly"
+        },
+        {
+            "name": "oe_test_utshell_select"
+        },
+        {
+            "name": "oe_test_utshell_cd_01"
+        },
+        {
+            "name": "oe_test_utshell_mapfile_01"
+        },
+        {
+            "name": "oe_test_utshell_mapfile_02"
+        },
+        {
+            "name": "oe_test_utshell_mapfile_03"
+        },
+        {
+            "name": "oe_test_utshell_shopt"
+        },
+        {
+            "name": "oe_test_utshell_enable"
+        },
+        {
+            "name": "oe_test_utshell_for"
+        },
+        {
+            "name": "oe_test_utshell_cd_02"
+        },
+        {
+            "name": "oe_test_utshell_true"
+        },
+        {
+            "name": "oe_test_utshell_trap_001"
+        },
+        {
+            "name": "oe_test_utshell_shift"
+        },
+        {
+            "name": "oe_test_utshell_continue"
+        },
+        {
+            "name": "oe_test_utshell_caller_001"
+        },
+        {
+            "name": "oe_test_utshell_printf"
+        },
+        {
+            "name": "oe_test_utshell_caller_002"
+        },
+        {
+            "name": "oe_test_utshell_pwd"
+        },
+        {
+            "name": "oe_test_utshell_local"
+        },
+        {
+            "name": "oe_test_utshell_ps_001"
+        },
+        {
+            "name": "oe_test_utshell_ps_002"
+        },
+        {
+            "name": "oe_test_utshell_getopts"
+        },
+        {
+            "name": "oe_test_utshell_getopts_02"
+        },
+        {
+            "name": "oe_test_utshell_ps_003"
+        },
+        {
+            "name": "oe_test_utshell_eval"
+        },
+        {
+            "name": "oe_test_utshell_times"
+        },
+        {
+            "name": "oe_test_utshell_command"
+        },
+        {
+            "name": "oe_test_utshell_kill"
+        },
+        {
+            "name": "oe_test_utshell_function"
+        },
+        {
+            "name": "oe_test_utshell_jobs_x"
+        },
+        {
+            "name": "oe_test_utshell_dirs"
+        },
+        {
+            "name": "oe_test_utshell_time"
+        },
+        {
+            "name": "oe_test_utshell_pushd"
+        },
+        {
+            "name": "oe_test_utshell_popd"
+        },
+        {
+            "name": "oe_test_utshell_builtin"
+        },
+        {
+            "name": "oe_test_utshell_ps_004"
+        },
+        {
+            "name": "oe_test_utshell_disown"
         }
     ]
 }

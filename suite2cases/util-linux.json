@@ -13,15 +13,23 @@
         {
             "name": "oe_test_socket_uuidd"
         },
+	{
+            "name": "oe_test_util-linux_mcookie"
+	},
         {
             "name": "oe_test_libuuid"
         },
         {
+            "name": "oe_test_util-linux_utmpdump"
+        },        
+	{
             "name": "oe_test_unshare"
         },
         {
             "name": "oe_test_hwclock"
+        },
+        {
+            "name": "oe_test_mkfs_001"
         }
-
     ]
 }

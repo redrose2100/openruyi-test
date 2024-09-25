@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test/smoke-oncn-bwm",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_bwm_qos_limit_001",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_bwm_qos_limit_002",
+            "machine num": 2
+        }
+    ]
+}
