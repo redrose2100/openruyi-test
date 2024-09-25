@@ -51,8 +51,8 @@ function run_test() {
         fi
         SLEEP_WAIT 5
     done
-    for ((i = 1; i < 6; i++)); do
-        num_tmp=$(wc -l cp_result"{$i}" | awk '{print $1}')
+    for ((i = 1; i < 5; i++)); do
+        num_tmp=$(wc -l cp_result"${i}" | awk '{print $1}')
         CHECK_RESULT "${num_tmp}" 0
     done
     LOG_INFO "Finish testcase execution."
@@ -61,6 +61,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     kill -9 "$(pgrep -f cp_result)"
     rm -rf /mnt/./*
+    umount /mnt
     vdo remove --name=vdo1
     DNF_REMOVE 1
     rm -rf cp_result*
