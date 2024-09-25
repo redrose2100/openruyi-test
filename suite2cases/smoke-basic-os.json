@@ -903,6 +903,9 @@
       },
       {
           "name": "oe_test_groups"
+      },
+      {
+          "name": "oe_test_free"
     }
     ]
 }
