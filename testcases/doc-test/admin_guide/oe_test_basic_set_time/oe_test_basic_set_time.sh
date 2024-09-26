@@ -16,10 +16,9 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Use the timedatectl command to set the time
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    time=$(date "+%Y-%m-%d %H:%M:%S")
     timedatectl set-ntp no
     SLEEP_WAIT 5
     localzone=$(timedatectl | sed -n '4p' | cut -d ":" -f 2 | awk '{print$1}')
@@ -38,15 +37,17 @@ function run_test() {
     timedatectl set-ntp no
     SLEEP_WAIT 5
     timedatectl set-time '2019-08-14'
+    SLEEP_WAIT 5
     CHECK_RESULT $?
     timedatectl | grep "Local time" | grep "2019-08-14"
     CHECK_RESULT $?
     timedatectl set-time 15:00:00
+    SLEEP_WAIT 5
     CHECK_RESULT $?
     timedatectl | grep "Local time" | grep "15:00"
     CHECK_RESULT $?
     ret=$(timedatectl list-timezones | grep -c Asia)
-    CHECK_RESULT $ret 0 1
+    CHECK_RESULT "$ret" 0 1
     timedatectl set-timezone Asia/Beijing
     timedatectl | grep "Asia\/Beijing"
     CHECK_RESULT $?
@@ -55,9 +56,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    timedatectl set-timezone ${localzone}
+    timedatectl set-timezone "${localzone}"
     timedatectl set-ntp yes
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
