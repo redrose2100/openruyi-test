@@ -67,17 +67,17 @@ EOF
     ./zlib > log
     LOG_INFO "Start testing..."
     # 验证压缩前后长度对比
-    length_forward=$(sed -n '3p' test.txt | awk -F ":" '{print $2}')
-    length_Rear=$(sed -n '5p' test.txt | awk -F ":" '{print $2}')
+    length_forward=$(sed -n '3p' log | awk -F ":" '{print $2}')
+    length_Rear=$(sed -n '5p' log | awk -F ":" '{print $2}')
     test "$length_forward" -gt "$length_Rear"
     CHECK_RESULT $? 0 0 "The lengths before and after compression are not equal"
     # 验证压缩前后数据变化
-    Data_forward=$(sed -n '1p' test.txt | awk -F "。" '{print $2}')
-    Date_Rear=$(sed -n '6p' test.txt | awk -F "。" '{print $2}')
+    Data_forward=$(sed -n '1p' log | awk -F "。" '{print $2}')
+    Date_Rear=$(sed -n '6p' log | awk -F "。" '{print $2}')
     test "$Data_forward" = "$Date_Rear"
     CHECK_RESULT $? 0 0 "Data is inconsistent before and after compression"
-    Data_forward=$(sed -n '2p' test.txt | awk -F "a" '{print $2}')
-    Date_Rear=$(sed -n '7p' test.txt | awk -F "a" '{print $2}')
+    Data_forward=$(sed -n '2p' log | awk -F "a" '{print $2}')
+    Date_Rear=$(sed -n '7p' log | awk -F "a" '{print $2}')
     test "$Data_forward" = "$Date_Rear"
     CHECK_RESULT $? 0 0 "Data is inconsistent before and after compression"
     LOG_INFO "Finish test!"
