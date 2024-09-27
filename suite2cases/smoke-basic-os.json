@@ -95,6 +95,9 @@
             "name": "oe_test_iscsi"
         },
         {
+            "name": "oe_test_ipcs"
+        },
+        {
             "name": "oe_test_journalctl"
         },
         {
