@@ -22,6 +22,9 @@
         {
             "name": "oe_test_who"
         },
+	    {
+	        "name": "oe_test_w"
+	    },
         {
             "name": "oe_test_dircolors"
         },
