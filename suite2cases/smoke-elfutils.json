@@ -5,15 +5,6 @@
             "name": "oe_test_eu-addr2line_input_options_001"
         },
         {
-            "name": "oe_test_eu-ar_commands"
-        },
-        {
-            "name": "oe_test_eu-elfclassify_additional_flag"
-        },
-        {
-            "name": "oe_test_eu-elfclassify_input_flags"
-        },
-        {
             "name": "oe_test_eu-elfcompress_default"
         },
         {
@@ -23,22 +14,13 @@
             "name": "oe_test_eu-elfcompress_n"
         },
         {
-            "name": "oe_test_eu-elfcompress_o"
-        },
-        {
             "name": "oe_test_eu-elfcompress_q"
-        },
-        {
-            "name": "oe_test_eu-elfcompress_t"
         },
         {
             "name": "oe_test_eu-elfcompress_v"
         },
         {
             "name": "oe_test_eu-elflint_gnu_ld"
-        },
-        {
-            "name": "oe_test_eu-size_output_format"
         },
         {
             "name": "oe_test_eu-size_output_options"
