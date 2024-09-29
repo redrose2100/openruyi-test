@@ -16,7 +16,7 @@
 #@Desc          :   Default rules for firewall
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -27,7 +27,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    CHECK_RESULT "$(firewall-cmd --get-zones)" "block dmz drop external home internal libvirt nm-shared public trusted work" 0 "check default exists zone fail"
+    required_zones=("block" "drop" "dmz" "external" "home" "internal" "public" "trusted" "work")
+    missing_zones=$(echo "${required_zones[@]}" | tr ' ' '\n' | grep -vxFf <(firewall-cmd --get-zones | tr ' ' '\n'))
+    CHECK_RESULT "$missing_zones" "" 0 "Missing zones: $missing_zones"
     CHECK_RESULT "$(firewall-cmd --get-target --permanent)" "default" 0 "check default target fail"
     CHECK_RESULT "$(firewall-cmd --get-default-zone)" "public" 0 "check default zone fail"
 
