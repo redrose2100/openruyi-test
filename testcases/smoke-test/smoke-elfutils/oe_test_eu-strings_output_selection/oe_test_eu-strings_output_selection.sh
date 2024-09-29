@@ -57,8 +57,8 @@ function run_test() {
     # test -n/--bytes=
     eu-strings -n 10 $bin_dir/test_main &> ${test_log}_n
     CHECK_RESULT $? 0 0
-    while read line; do
-        test "$(echo "$line" | wc -c)" -ge "10"
+    while read -r line; do
+        test "${#line}" -ge "10"
         CHECK_RESULT $? 0 0
     done < ${test_log}_n
     diff ${test_log}_n ${test_log} | grep '^<'
