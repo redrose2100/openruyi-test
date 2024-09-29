@@ -17,7 +17,7 @@
 # @Desc      :   Test the basic functions of ip6tables-save
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -27,8 +27,14 @@ function pre_test() {
 	
 function run_test() {
     LOG_INFO "Start to run test."
-    ip6tables-save | grep -A 200 nat | grep -A 100 mangle | grep -A 80 raw | grep -A 60 security | grep filter
-    CHECK_RESULT $? 0 0 "Incomplete display"
+    ip6tables-save -t nat |grep nat
+    CHECK_RESULT $? 0 0 "Incomplete display nat"
+    ip6tables-save -t mangle |grep mangle
+    CHECK_RESULT $? 0 0 "Incomplete display mangle"
+    ip6tables-save -t raw |grep raw
+    CHECK_RESULT $? 0 0 "Incomplete display raw"
+    ip6tables-save -t security |grep security
+    CHECK_RESULT $? 0 0 "Incomplete display security"
     ip6tables-save -t filter | grep filter
     CHECK_RESULT $? 0 0 "Failed to display filter"
     ip6tables-save -t filter | grep -E "nat|mangle|raw|security"
