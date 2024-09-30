@@ -17,7 +17,7 @@
 # @Desc      :   Test selinux-autorelabel-mark.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
