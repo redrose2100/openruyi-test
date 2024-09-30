@@ -17,12 +17,21 @@
 # @Desc      :   Test restorecond.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution restorecond.service
-    test_reload restorecond.service
+    # 对selinux是否被禁用进行判断
+    setenforce 1  #如果在内核层禁用了selinux,那么这里是无法打开的
+    selinux_status=$(getenforce)
+    if [ "${selinux_status}" == "Enforcing" ] || [ "${selinux_status}" == "Permissive" ]; then
+        test_execution restorecond.service
+        test_reload restorecond.service
+    else
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
+    
     LOG_INFO "Finish test!"
 }
 
