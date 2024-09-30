@@ -34,10 +34,10 @@ function pre_test() {
 
 function do_test() {
     # 客户端登服务端免密
-    ssh "${REMOTE_USER}"@"${REMOTE_IP}" "ip a | grep ${REMOTE_IP}"
+    ssh "\${REMOTE_USER}"@"\${REMOTE_IP}" "ip a | grep \${REMOTE_IP}"
     CHECK_RESULT $? 0 0
     # 服务端登客户端免密
-    ssh "${REMOTE_USER}"@"${REMOTE_IP}" "ssh root@${ETS_LOCAL_IP} 'ip a | grep ${ETS_LOCAL_IP}'"
+    ssh "\${REMOTE_USER}"@"\${REMOTE_IP}" "ssh root@\${ETS_LOCAL_IP} 'ip a | grep \${ETS_LOCAL_IP}'"
     CHECK_RESULT $? 0 0
 }
 
