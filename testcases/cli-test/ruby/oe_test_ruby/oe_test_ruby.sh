@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ruby command
 # ############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2016
 source "../common/common_ruby.sh"
 
 function pre_test() {
@@ -64,7 +64,7 @@ EOF
     CHECK_RESULT $?
     echo 'matz' >junk
     CHECK_RESULT $?
-    ruby -p -i.bak -e "$_.upcase!" junk
+    ruby -p -i.bak -e '$_.upcase!' junk
     CHECK_RESULT $?
     grep "matz" junk.bak
     CHECK_RESULT $?
@@ -76,7 +76,7 @@ EOF
     CHECK_RESULT $?
     ruby -l -w -e 'x = 10; print (1 + x)' | grep "11"
     CHECK_RESULT $?
-    echo 'matz' | ruby -p -e "$_.tr! \"a-z\", \"A-Z\"" | grep "MATZ"
+    echo 'matz' | ruby -p -e '$_.tr! "a-z", "A-Z"' | grep "MATZ"
     CHECK_RESULT $?
     ruby -r 'prime' ../common/test.rb | grep -E "2, 3, 5, 7|Hello World!"
     CHECK_RESULT $?
