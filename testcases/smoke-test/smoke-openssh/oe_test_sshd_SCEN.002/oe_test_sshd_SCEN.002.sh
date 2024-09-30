@@ -43,10 +43,10 @@ function run_test() {
     echo "${pid}"
     CHECK_RESULT $? 0 0
     if test -f $sshd_pid_dir1; then
-        pid1=$(< $sshd_pid_dir1 | awk '{print $1}' | head -n 1)
+        pid1=$(< $sshd_pid_dir1 awk '{print $1}' | head -n 1)
         echo "${pid1}"
     else
-        pid1=$(< $sshd_pid_dir2 | awk '{print $1}' | head -n 1)
+        pid1=$(< $sshd_pid_dir2 awk '{print $1}' | head -n 1)
         echo "${pid1}"
     fi
     if [ "${pid}" -ne "${pid1}" ]; then
