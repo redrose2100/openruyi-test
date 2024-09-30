@@ -20,7 +20,6 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 sshd_pid_dir1="/var/run/sshd.pid"
 sshd_pid_dir2="/var/run/sshd.init.pid"
-flag=0
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -31,10 +30,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to prepare the test environment."
-    test -f $sshd_pid_dir1
-    if [ $? -eq 0 ]; then
+    if test -f $sshd_pid_dir1; then
         echo > $sshd_pid_dir1
-        flag=1
     else
         echo > $sshd_pid_dir2
     fi
@@ -42,11 +39,10 @@ function run_test() {
     CHECK_RESULT $? 0 0
     systemctl status sshd
     CHECK_RESULT $? 0 0
-    pid=$(ps -ef | grep "/usr/sbin/sshd" | grep -v grep | awk 'NR==1{print $2}')
+    pid=$(pgrep -f "/usr/sbin/sshd" | awk 'NR==1{print $2}')
     echo "${pid}"
     CHECK_RESULT $? 0 0
-    test -f $sshd_pid_dir1
-    if [ $? -eq 0 ]; then
+    if test -f $sshd_pid_dir1; then
         pid1=$(< $sshd_pid_dir1 | awk '{print $1}' | head -n 1)
         echo "${pid1}"
     else
