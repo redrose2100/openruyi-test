@@ -26,7 +26,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     (time ping6 "$REMOTE_IPV6"%"${eth_main}" -w 3) > log 2>&1
-    time=$(cat log | grep real | awk '{print $2}' | awk -F'm' '{print $2}' | awk -F'.' '{print $1}')
+    time=$(grep real log | awk '{print $2}' | awk -F'm' '{print $2}' | awk -F'.' '{print $1}')
     if [ "$time" -gt 4 ]; then
         CHECK_RESULT $? 0 0
     fi
