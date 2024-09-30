@@ -19,7 +19,6 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 test_dir=$(pwd)
-set +e
 total_num=500
 
 function pre_test() {
@@ -37,9 +36,9 @@ function run_test() {
         (time ssh -o "StrictHostKeyChecking no" root@127.0.0.1 "echo OK > /dev/null") >> "$test_dir"/time_log 2>&1
         CHECK_RESULT $? 0 0
     done
-    cat "$test_dir"/time_log | grep real | cut -d'm' -f2 | cut -d'.' -f1 > "$test_dir"/time_log_new
+    < "$test_dir"/time_log | grep real | cut -d'm' -f2 | cut -d'.' -f1 > "$test_dir"/time_log_new
     count=0
-    for i in $(cat "$test_dir"/time_log_new); do
+    < "$test_dir"/time_log_new | while IFS= read -r line;do
         if [[ $i -gt 10 ]]; then
             ((count++))
             echo "ssh time is larger than 10s:$count"
@@ -53,7 +52,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /root/.ssh/
-    [ "${ets_expects_failed}" = "0" ] && rm -rf "$test_dir"/time_log
+    rm -rf "$test_dir"/time_log
 }
 
 main "$@"
