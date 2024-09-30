@@ -38,13 +38,15 @@ def get_test_nic(node=1):
     Returns:
         [str]: 网卡名
     """
-    exitcode, tmpfile = rpm_manage.rpm_install(pkgs="lshw", node=node)
-    if exitcode != 0:
-        mugen_log.logging(
-            "error",
-            "Failed to install the dependent software package required to obtain the network card.",
-        )
-        sys.exit(exitcode)
+    tmpfile = None
+    if not rpm_manage.rpm_check(node=node, pkgs="lshw"):
+        exitcode, tmpfile = rpm_manage.rpm_install(pkgs="lshw", node=node)
+        if exitcode != 0:
+            mugen_log.logging(
+                "error",
+                "Failed to install the dependent software package required to obtain the network card.",
+            )
+            sys.exit(exitcode)
 
     if os.environ.get("NODE" + str(node) + "_LOCALTION") == "local":
         dev_info = subprocess.getoutput("cat /proc/device-tree/model")
