@@ -35,7 +35,12 @@ function run_test() {
     CHECK_RESULT $? 0 0  "cut file fail"
     cut -b 3 test|grep -w m
     CHECK_RESULT $? 0 0 "cut file  fail"
-    cut -c1-3 test|grep -w nam
+    cut -c 1-3 test|grep -w nam
+    CHECK_RESULT $? 0 0  "cut file fail"
+    cut -f 3 -d '|' test|grep -w helloword
+    CHECK_RESULT $? 0 0  "cut file fail"
+    echo  -e "name|age|helloword\nabc|def|g" >./test
+    cut -d '|' -f 2 --output-delimiter '|' test|grep -e age -e def
     CHECK_RESULT $? 0 0  "cut file fail"
     cut --help |grep cut
     CHECK_RESULT $? 0 0  "check command fail"
