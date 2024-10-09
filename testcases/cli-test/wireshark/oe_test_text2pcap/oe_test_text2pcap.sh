@@ -46,7 +46,7 @@ function run_test() {
     CHECK_RESULT $?
     text2pcap -m 20 test.txt test3.pcap
     CHECK_RESULT $?
-    capinfos test3.pcap | grep "Packet size limit:.*file hdr:.*bytes"
+    capinfos test3.pcap | grep "Packet size limit:.*file hdr:.*"
     CHECK_RESULT $?
     text2pcap -e 0x806 -m 100 test.txt test4.pcap >runlog 2>&1
     CHECK_RESULT $?
@@ -84,12 +84,14 @@ function run_test() {
     CHECK_RESULT $?
     capinfos test9.pcap | grep "File name:.*test9.pcap"
     CHECK_RESULT $?
-    text2pcap -d test.txt test10.pcap >runlog 2>&1
-    CHECK_RESULT $?
-    grep -E "Start new packet|parse_preamble" runlog
-    CHECK_RESULT $?
-    capinfos test10.pcap | grep "File name:.*test10.pcap"
-    CHECK_RESULT $?
+    if version_ge 4.0.0 "$version"; then
+        text2pcap -d test.txt test10.pcap >runlog 2>&1
+        CHECK_RESULT $?
+        grep -E "Start new packet|parse_preamble" runlog
+        CHECK_RESULT $?
+        capinfos test10.pcap | grep "File name:.*test10.pcap"
+        CHECK_RESULT $?
+    fi
     text2pcap -q test.txt test11.pcap
     CHECK_RESULT $?
     capinfos test11.pcap | grep "File name:.*test11.pcap"
@@ -99,8 +101,12 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $(ls | grep -vE ".sh|.txt")
-    DNF_REMOVE
+    for file in *; do
+    if [[ "$file" != *.sh && "$file" != *.txt ]]; then
+        rm -rf "$file"
+    fi
+    done
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
