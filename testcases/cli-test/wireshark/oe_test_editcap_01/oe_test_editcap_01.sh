@@ -32,14 +32,14 @@ function run_test() {
     editcap --version | grep "$version"
     CHECK_RESULT $?
     netCard=$(dumpcap -D | awk -F '.' '{print $2}' | head -1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-    SLEEP_WAIT 10 "dumpcap -i '$netCard' -c 20 -w testfile1" 2
+    SLEEP_WAIT 10 "dumpcap -i $netCard -c 20 -w testfile1" 2
     capinfos testfile1 | grep "Number of packets:.*20"
     CHECK_RESULT $?
     editcap -r testfile1 testfile1_A 2-5
     CHECK_RESULT $?
     capinfos testfile1_A | grep "Number of packets:.*4"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "dumpcap -i '$netCard' -f \"tcp port 22\" -c 20 -w testfile2" 2
+    SLEEP_WAIT 5 "dumpcap -i $netCard -f \"tcp port 22\" -c 20 -w testfile2" 2
     grep -a "tcp port 22" testfile2
     CHECK_RESULT $?
     capinfos testfile2 | grep -E "Number of packets:.*20|Filter string = tcp port 22"
@@ -57,14 +57,14 @@ function run_test() {
     CHECK_RESULT $?
     capinfos testfile2_C | grep "File size:.*bytes"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "dumpcap -i '$netCard' -c 20 -w testfile3" 2
+    SLEEP_WAIT 5 "dumpcap -i $netCard -c 20 -w testfile3" 2
     capinfos testfile3 | grep "Number of packets:.*20"
     CHECK_RESULT $?
     editcap -D 10 testfile3 testfile3_A
     CHECK_RESULT $?
     capinfos testfile3_A | grep -E "File size:.*bytes|Number of stat entries = 0"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "dumpcap -i '$netCard' -p -c 20 -w testfile4" 2
+    SLEEP_WAIT 5 "dumpcap -i $netCard -p -c 20 -w testfile4" 2
     capinfos testfile4 | grep "Number of packets:.*20"
     CHECK_RESULT $?
     editcap -w 0.01 testfile4 testfile4_A
@@ -72,7 +72,7 @@ function run_test() {
     capinfos testfile4_A | grep "File size:.*bytes"
     CHECK_RESULT $?
     linkType=$(dumpcap -i "$netCard" -L | sed -n '2p' | awk '{print $1}')
-    SLEEP_WAIT 5 "dumpcap -i '$netCard' -y $linkType -c 20 -w testfile5" 2
+    SLEEP_WAIT 5 "dumpcap -i $netCard -y $linkType -c 20 -w testfile5" 2
     capinfos testfile5 | grep -E "$netCard|Ethernet"
     CHECK_RESULT $?
     editcap -s 10 testfile5 testfile5_A
