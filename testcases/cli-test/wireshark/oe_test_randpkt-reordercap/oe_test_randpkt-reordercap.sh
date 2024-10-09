@@ -37,7 +37,7 @@ function run_test() {
     CHECK_RESULT $?
     reordercap --help | grep "Usage: reordercap \[options\] <infile> <outfile>"
     CHECK_RESULT $?
-    reordercap -n randomfile1 randomfile1_A
+    reordercap randomfile1 randomfile1_A
     CHECK_RESULT $?
     capinfos randomfile1_A | grep "File name:.*randomfile1_A"
     CHECK_RESULT $?
