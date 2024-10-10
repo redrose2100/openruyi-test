@@ -66,9 +66,9 @@ function run_test() {
     capinfos mergefile5 | grep -E "Number of packets = 20|Filter string = tcp port 22|Interface #.* info:"
     CHECK_RESULT $?
     if version_ge $version  3.7.1; then
-    mergecap -a -v -w mergefile6 testfile1 testfile2 >runlog 2>&1
-    else
     mergecap -a -V -w mergefile6 testfile1 testfile2 >runlog 2>&1
+    else
+    mergecap -a -v -w mergefile6 testfile1 testfile2 >runlog 2>&1
     fi
     CHECK_RESULT $?
     grep -E "mergecap|Record|merging complete|ready to merge records" runlog

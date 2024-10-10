@@ -19,3 +19,9 @@ function close_traffic()
 		kill -9 "${wireshark_traffic_pid}"
 	fi
 }
+
+function version_ge() {
+    test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" == "$1"
+}
+
+
