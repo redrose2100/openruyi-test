@@ -84,7 +84,7 @@ function run_test() {
     CHECK_RESULT $?
     capinfos test9.pcap | grep "File name:.*test9.pcap"
     CHECK_RESULT $?
-    if $version -lt "4.0.0"; then
+    if version_ge 4.0.0 $version; then
         text2pcap -d test.txt test10.pcap >runlog 2>&1
         CHECK_RESULT $?
         grep -E "Start new packet|parse_preamble" runlog
