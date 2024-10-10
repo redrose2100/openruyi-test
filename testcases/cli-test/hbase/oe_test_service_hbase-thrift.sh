@@ -17,7 +17,7 @@
 # @Desc      :   Test hbase-thrift.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -56,7 +56,7 @@ function post_test() {
     systemctl stop hadoop-namenode.service
     systemctl stop hadoop-datanode.service
     systemctl stop zookeeper.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

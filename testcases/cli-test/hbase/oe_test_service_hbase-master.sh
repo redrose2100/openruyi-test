@@ -17,7 +17,7 @@
 # @Desc      :   Test hbase-master.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -59,7 +59,7 @@ function post_test() {
     systemctl stop zookeeper.service
     systemctl stop hbase-regionserver.service
     systemctl stop hbase-master.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
