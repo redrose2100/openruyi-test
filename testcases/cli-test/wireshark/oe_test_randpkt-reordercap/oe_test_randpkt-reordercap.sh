@@ -46,8 +46,12 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $(ls | grep -v ".sh")
-    DNF_REMOVE
+    for file in *; do
+        if [[ "$file" != *.sh ]]; then
+            rm -rf "$file"
+        fi
+    done
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
