@@ -37,7 +37,7 @@ function run_test() {
     CHECK_RESULT $?
     reordercap --help | grep "Usage: reordercap \[options\] <infile> <outfile>"
     CHECK_RESULT $?
-    reordercap -n randomfile1 randomfile1_A
+    reordercap randomfile1 randomfile1_A
     CHECK_RESULT $?
     capinfos randomfile1_A | grep "File name:.*randomfile1_A"
     CHECK_RESULT $?
@@ -46,8 +46,12 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $(ls | grep -v ".sh")
-    DNF_REMOVE
+    for file in *; do
+        if [[ "$file" != *.sh ]]; then
+            rm -rf "$file"
+        fi
+    done
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
