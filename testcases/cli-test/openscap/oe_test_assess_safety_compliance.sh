@@ -59,7 +59,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     DNF_REMOVE 2 "openscap scap-security-guide"
     rm -rf /tmp/remote_report.html /tmp/report.html
     LOG_INFO "Finish environment cleanup!"
