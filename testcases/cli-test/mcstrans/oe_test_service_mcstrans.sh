@@ -17,7 +17,7 @@
 # @Desc      :   Test mcstrans.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -29,8 +29,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_restart "${service}"
-    test_enabled "${service}"
+    setenforce 1
+    selinux_status=$(getenforce)
+    if [ "${selinux_status}" == "Enforcing" ] || [ "${selinux_status}" == "Permissive" ]; then
+        test_restart "${service}"
+        test_enabled "${service}"
+    else
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\| WARNING" | grep -v "initialize color translations"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload mcstrans.service
@@ -40,7 +47,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop mcstrans.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
