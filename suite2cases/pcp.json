@@ -224,6 +224,9 @@
         },
         {
             "name": "oe_test_pcp-uptime_pcp-verify"
+        },
+        {
+            "name": "oe_test_service_pcp-geolocate"
         }
     ]
 }
