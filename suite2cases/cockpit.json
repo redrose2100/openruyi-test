@@ -13,6 +13,15 @@
         {
             "name": "oe_test_service_cockpit-wsinstance-http"
         },
+        {
+            "name": "oe_test_socket_cockpit-session"
+        },
+        {
+            "name": "oe_test_socket_cockpit-wsinstance-https-factory"
+        },
+        {
+            "name": "oe_test_socket_cockpit-wsinstance-http"
+        },
 	{
             "name": "oe_test_cockpit"
         }
