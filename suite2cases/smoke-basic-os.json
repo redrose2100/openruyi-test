@@ -912,6 +912,9 @@
       },
       {
           "name": "oe_test_free"
+      },
+      {
+          "name": "oe_test_iconv"
     }
     ]
 }
