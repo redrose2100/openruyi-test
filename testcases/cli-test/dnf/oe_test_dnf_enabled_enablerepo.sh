@@ -34,10 +34,10 @@ function run_test() {
     CHECK_RESULT $?
     dnf repolist | grep everything
     CHECK_RESULT $?
-    dnf config-manager --set-disable "OS" "everything"
+    dnf config-manager --set-disable "*"
     dnf repolist | grep "OS\|everything"
     CHECK_RESULT $? 1 0 "disable repo failed"
-    dnf install -y sysstat 2>&1 | grep "No match for argument: sysstat"
+    dnf install -y sysstat 2>&1 | grep "There are no enabled repositories"
     CHECK_RESULT $?
     dnf remove -y sysstat
     dnf --enablerepo=EPOL repolist | grep EPOL

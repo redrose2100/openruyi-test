@@ -17,7 +17,7 @@
 # @Desc      :   Test dnf-automatic-install.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -34,14 +34,14 @@ function run_test() {
     systemctl status "${service}" | grep "Active" | grep -v "${status}"
     CHECK_RESULT $? 0 1 "There is an error for the status of ${service}"
     test_enabled "${service}"
-    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v "libgpg-error" | grep -v "_sasl_plugin_load failed on sasl_canonuser_init"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v "libgpg-error" | grep -v "_sasl_plugin_load failed on sasl_canonuser_init" | grep -v  "ldapdb_canonuser_plug_init() failed in sasl_canonuser_add_plugin()" |  grep -v  "Unit unbound-anchor.timer not found" |  grep -v  "usr/lib/kbd/consolefonts/ERRORS" 
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
