@@ -22,10 +22,10 @@ function run_test() {
     reponame=$(dnf repolist | grep "repo id" -A 1 | grep -v "repo id" | awk '{print$1}')
     dnf config-manager --set-disable "${reponame}"
     CHECK_RESULT $?
-    CHECK_RESULT "$(grep "${reponame} "-A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}')" 0
+    CHECK_RESULT "$(grep "\[${reponame}\]" -A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}')" 0
     dnf config-manager --set-enable "${reponame}"
     CHECK_RESULT $?
-    CHECK_RESULT "$(grep "${reponame}" -A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}')" 1
+    CHECK_RESULT "$(grep "\[${reponame}\]" -A 4 /etc/yum.repos.d/openEuler.repo | grep "enabled=" | awk -F '=' '{print$2}')" 1
     LOG_INFO "End of testcase execution."
 }
 
