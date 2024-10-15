@@ -896,6 +896,9 @@
            "name": "oe_test_echo_002"
       },
       {
+           "name": "oe_test_echo_003"
+      },
+      {
            "name": "oe_test_pidof"
       },
       {
