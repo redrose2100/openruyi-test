@@ -6,8 +6,10 @@
         },
         {
             "name": "oe_test_augeas_augmatch"
-        }
-
+        },
+	{
+            "name": "oe_test_augeas_augtool01"
+	}
       ]
 }
 
