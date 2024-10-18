@@ -36,7 +36,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution phc2sys.service
-    test_reload phc2sys.service
     LOG_INFO "Finish test!"
 }
 

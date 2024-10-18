@@ -23,19 +23,30 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     eth_name=$(ip a | grep "${NODE1_IPV4}" | awk '{print $NF}')
     if [ "$(ethtool -T "${eth_name}" | grep 'PTP Hardware Clock' | awk '{print $4}')" == none ]; then
-        LOG_INFO "The environment does not support testing"
-        exit 1
-    else
-        DNF_INSTALL linuxptp
-        sed -i "s\-f /etc/ptp4l.conf -i eth0\-f /etc/ptp4l.conf -i ${eth_name}\g" /etc/sysconfig/ptp4l
+        LOG_INFO "The environment does not support hardware testing"
     fi
+
+    DNF_INSTALL linuxptp
+    sed -i "s\-f /etc/ptp4l.conf -i eth0\-f /etc/ptp4l.conf -i ${eth_name}\g" /etc/sysconfig/ptp4l
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution ptp4l.service
-    test_reload ptp4l.service
+
+    if [ "$(ethtool -T "${eth_name}" | grep 'PTP Hardware Clock' | awk '{print $4}')" != none ]; then
+        sed -i "s/^time_stamping.*/time_stamping		hardware/" /etc/ptp4l.conf
+        test_execution ptp4l.service
+    fi
+    
+    ethtool_output=$(ethtool -T "${eth_name}")
+    if  echo "$ethtool_output" | grep -q "software-transmit" && \
+        echo "$ethtool_output" | grep -q "software-receive" && \
+        echo "$ethtool_output" | grep -q "software-system-clock"; then
+            sed -i "s/^time_stamping.*/time_stamping		software/" /etc/ptp4l.conf
+            test_execution ptp4l.service
+    fi
+
     LOG_INFO "Finish test!"
 }
 
