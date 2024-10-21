@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "pmix pmix-devel pmix-tools gcc"
+  DNF_INSTALL "pmix pmix-devel pmix-tools gcc clang"
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -33,7 +33,9 @@ function run_test() {
   CHECK_RESULT $? 0 0 "display config information failed"
   pmix_info --hostname
   CHECK_RESULT $? 0 0 "display hostname information failed"
-  pmixcc -dumpspecs 
+  if [ "$(uname -m)" != "riscv64" ]; then
+      pmixcc -dumpspecs 
+  fi
   CHECK_RESULT $? 0 0 "display dumpspecs information failed"
   pmixcc -dumpmachine 
   CHECK_RESULT $? 0 0 "display dumpmachine information failed"

@@ -43,7 +43,8 @@ function run_test() {
     lwp-download -a http://www.baidu.com ./ 2>&1 | grep 'Saving'
     CHECK_RESULT $? 0 0 "Check lwp-download -a  failed"
     lwp-download -s http://www.baidu.com ./index.html
-    CHECK_RESULT "$(test -f ./index.html)"
+    test -f ./index.html
+    CHECK_RESULT $? 0 0 "Check lwp-download -s failed"
     lwp-mirror -v 2>&1 | grep 'This is lwp-mirror version'
     CHECK_RESULT $? 0 0 "Check lwp-mirror -v failed"
     lwp-mirror -t 10 http://www.baidu.com a.txt

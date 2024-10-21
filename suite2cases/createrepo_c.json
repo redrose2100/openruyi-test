@@ -12,6 +12,9 @@
         },
         {
             "name": "oe_test_createrepo_c_BaseFun"
+        },
+        {
+            "name": "oe_test_sqliterepo_c"
         }
     ]
 }

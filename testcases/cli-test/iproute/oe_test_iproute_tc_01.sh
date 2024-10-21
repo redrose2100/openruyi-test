@@ -23,7 +23,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "iproute"
-    Net=$(nmcli connection show |awk 'NR==2' |awk '{print $1}')
+    Net=$(nmcli -f device connection show |awk 'NR==2' |awk '{print $1}')
 }
 
 function run_test() {

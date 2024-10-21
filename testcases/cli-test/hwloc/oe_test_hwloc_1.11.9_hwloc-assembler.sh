@@ -16,7 +16,7 @@
 #@Desc          :   Test hwloc-assembler
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -28,15 +28,15 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "Start testing..."
-    hwloc-assembler ./tmp/output.xml --name host1 ./common/host1.xml --name host2 ./common/host2.xml && cat ./tmp/output.xml | grep "host1"
+    hwloc-assembler ./tmp/output.xml --name host1 ./common/host1.xml --name host2 ./common/host2.xml && grep "host1" tmp/output.xml
     CHECK_RESULT $? 0 0 "hwloc-assembler --name  failed" 
-    hwloc-assembler ./tmp/output1.xml -n host1 ./common/host1.xml -n host2 ./common/host2.xml && cat ./tmp/output1.xml | grep "host1"
+    hwloc-assembler ./tmp/output1.xml -n host1 ./common/host1.xml -n host2 ./common/host2.xml && grep "host1" tmp/output1.xml
     CHECK_RESULT $? 0 0 "hwloc-assembler -n failed"
-    hwloc-assembler --force ./tmp/output2.xml ./common/host1.xml ./common/host2.xml && ls tmp | grep "output2.xml"
+    hwloc-assembler --force ./tmp/output2.xml ./common/host1.xml ./common/host2.xml && [ -e tmp/output2.xml ]
     CHECK_RESULT $? 0 0 "hwloc-assembler --force  failed"
-    hwloc-assembler -f ./tmp/output3.xml ./common/host1.xml ./common/host2.xml && ls tmp | grep "output3.xml"
+    hwloc-assembler -f ./tmp/output3.xml ./common/host1.xml ./common/host2.xml && [ -e /tmp/output3.xml ]
     CHECK_RESULT $? 0 0 "hwloc-assembler -f failed"
-    hwloc-assembler --verbose ./tmp/output4.xml --name host1 ./common/host1.xml --name host2 ./common/host2.xml | grep "Importing" 
+    hwloc-assembler --verbose ./tmp/output4.xml --name host1 ./common/host1.xml --name host2 ./common/host2.xml | grep "Importing"
     CHECK_RESULT $? 0 0 "hwloc-assembler --verbose  failed"
     hwloc-assembler -v ./tmp/output5.xml --name host1 ./common/host1.xml --name host2 ./common/host2.xml | grep "Importing"
     CHECK_RESULT $? 0 0 "hwloc-assembler -v failed"
@@ -46,8 +46,8 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    rm -rf ./tmp 
-    DNF_REMOVE
+    rm -rf ./tmp
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

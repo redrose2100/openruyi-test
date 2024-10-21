@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libacl",
+    "cases": [
+        {
+            "name": "oe_test_libacl"
+        }
+
+      ]
+}

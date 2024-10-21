@@ -108,8 +108,8 @@ function run_test() {
     test -f /tmp/elfutils/app.core
     CHECK_RESULT $? 0 0 "Collapse failure"
     cd /tmp/elfutils/ || exit
-    nu=$(sed -n '$p' dump.txt | awk '{print $2}')
-    eu-addr2line -e ./app_debug --core ./app.core "$nu"
+    address=$(eu-stack -e ./app_debug --core ./app.core | awk '/#0/ {print $2; exit}')
+    eu-addr2line -e ./app_debug --core ./app.core "$address"
     CHECK_RESULT $? 0 0 "Acquisition failed"
 
 }

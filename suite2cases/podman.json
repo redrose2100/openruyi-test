@@ -177,6 +177,9 @@
         },
         {
             "name": "oe_test_podman_0.10.1"
+        },
+        {
+            "name": "oe_test_service_podman-clean-transient"
         }
     ]
 }

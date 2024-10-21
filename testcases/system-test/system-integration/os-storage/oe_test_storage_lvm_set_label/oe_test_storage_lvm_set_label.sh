@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Set the label of primary and secondary equipment
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk 2
-    mkfs.ext4 -F /dev/${local_disk}
-    mkfs.ext4 -F /dev/${local_disk1}
-    pvcreate -y /dev/${local_disk} /dev/${local_disk1}
-    vgcreate openeulertest /dev/${local_disk} /dev/${local_disk1}
+    mkfs.ext4 -F /dev/"${local_disk}"
+    mkfs.ext4 -F /dev/"${local_disk1}"
+    pvcreate -y /dev/"${local_disk}" /dev/"${local_disk1}"
+    vgcreate openeulertest /dev/"${local_disk}" /dev/"${local_disk1}"
     lvcreate -L 200M -n test openeulertest --persistent y --major 253 --minor 7788 -y
     number=$(pvs -o+pv_used 2>&1 | wc -l)
     LOG_INFO "Environmental preparation is over."
@@ -31,7 +31,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    test "${number}" -gt 3
+    test "${number}" -ge 3
     CHECK_RESULT $?
     lvchange --persistent y --major 253 --minor 7788 openeulertest/test -y
     CHECK_RESULT $?
@@ -42,8 +42,8 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove openeulertest/test -y
     vgremove openeulertest -y
-    pvremove /dev/${local_disk} /dev/${local_disk1} -y
+    pvremove /dev/"${local_disk}" /dev/"${local_disk1}" -y
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

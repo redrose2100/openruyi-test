@@ -483,6 +483,15 @@
         },
         {
             "name": "oe_test_target_veritysetup-pre"
+        },
+        {
+            "name": "oe_test_target_factory-reset"
+        },
+        {
+            "name": "oe_test_target_integritysetup"
+        },
+        {
+            "name": "oe_test_service_systemd_growfs-root"
         }
     ]
 }

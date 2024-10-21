@@ -1,0 +1,35 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test/smoke-elfutils",
+    "cases": [
+        {
+            "name": "oe_test_eu-addr2line_input_options_001"
+        },
+        {
+            "name": "oe_test_eu-elfcompress_default"
+        },
+        {
+            "name": "oe_test_eu-elfcompress_f"
+        },
+        {
+            "name": "oe_test_eu-elfcompress_n"
+        },
+        {
+            "name": "oe_test_eu-elfcompress_q"
+        },
+        {
+            "name": "oe_test_eu-elfcompress_v"
+        },
+        {
+            "name": "oe_test_eu-elflint_gnu_ld"
+        },
+        {
+            "name": "oe_test_eu-size_output_options"
+        },
+        {
+            "name": "oe_test_eu-strings_output_selection"
+        },
+        {
+            "name": "oe_test_eu-strip_output_option_001"
+        }
+    ]
+}

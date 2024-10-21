@@ -22,7 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "stress sysstat"
+    DNF_INSTALL "stress-ng sysstat"
     ORIGIN=$(cat /sys/module/zswap/parameters/enabled)
     LOG_INFO "Origin status: $ORIGIN"
     MEM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}')
@@ -43,15 +43,15 @@ function run_test() {
     LOG_INFO "Start to run test."
     test "$SWAP_KB" -eq 0
     CHECK_RESULT $? 0 1 "no available swap." 1
-    which stress
-    CHECK_RESULT $? 0 0 "stress not found in system" 1
+    which stress-ng
+    CHECK_RESULT $? 0 0 "stress-ng not found in system" 1
     which sar
     CHECK_RESULT $? 0 0 "sar not found in system" 1
     MEM_GB=$((MEM_KB/1024/1024))
     LOG_INFO "current zswap status: $(cat /sys/module/zswap/parameters/enabled)"
-    LOG_INFO "run stress --vm $((MEM_GB/4+1)) --vm-bytes 4G --timeout 10s"
-    stress --vm $((MEM_GB/4+1)) --vm-bytes 4G --timeout 10s &
-    # sar collect a little longer than stress run, for ensure stress ends.
+    LOG_INFO "run stress-ng --vm $((MEM_GB/4+1)) --vm-bytes 4G --timeout 10s"
+    stress-ng --vm $((MEM_GB/4+1)) --vm-bytes 4G --timeout 10s &
+    # sar collect a little longer than stress-ng run, for ensure stress ends.
     local origin_cad_kb=
     origin_cad_kb=$(sar -S 2 5 | grep "Average" | awk '{print $5}')
     LOG_INFO "origin_cad_kb: $origin_cad_kb"
@@ -60,11 +60,11 @@ function run_test() {
     else
         echo "N" > /sys/module/zswap/parameters/enabled
     fi
-    # sleep 5, ensure stress ends
+    # sleep 5, ensure stress-ng ends
     sleep 5
     LOG_INFO "current zswap status: $(cat /sys/module/zswap/parameters/enabled)"
-    LOG_INFO "run stress --vm $((MEM_GB/4+1)) --vm-bytes 4G --timeout 10s"
-    stress --vm $((MEM_GB/4+1)) --vm-bytes 4G --timeout 10s &
+    LOG_INFO "run stress-ng --vm $((MEM_GB/4+1)) --vm-bytes 4G --timeout 10s"
+    stress-ng --vm $((MEM_GB/4+1)) --vm-bytes 4G --timeout 10s &
     local tested_cad_kb=
     tested_cad_kb=$(sar -S 2 5 | grep "Average" | awk '{print $5}')
     LOG_INFO "tested_cad_kb: $tested_cad_kb"

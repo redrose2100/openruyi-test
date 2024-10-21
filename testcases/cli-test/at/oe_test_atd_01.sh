@@ -49,7 +49,8 @@ EOF
     done
     grep 'test at' /home/test_at/test1.log
     CHECK_RESULT $? 0 0 "Test1 failed"
-        expect <<-EOF
+    
+    expect <<-EOF
 set timeout 10
 spawn batch
 expect "at"
@@ -58,7 +59,14 @@ expect "at"
 send "\\004\\r"
 expect eof
 EOF
-    sleep 5
+    timeout=800
+    while [ $timeout -gt 0 ]; do
+        if test -f /home/test_at/test2.log; then
+        break
+        fi
+        sleep 5
+        timeout=$((timeout-5))
+    done
     grep 'This is a batch job' /home/test_at/test2.log
     CHECK_RESULT $? 0 0 "Test2 failure"
     LOG_INFO "End to run test."

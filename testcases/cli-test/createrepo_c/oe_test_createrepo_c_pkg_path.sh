@@ -42,7 +42,8 @@ EOF
 
 function run_test() {
   LOG_INFO "Start to run test."
-  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)" "httpd httpd-help tcpdump" 0 "createrepo all rpm fail"
+  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)"  \
+  "httpd httpd-help tcpdump" 0 "createrepo all rpm fail"
 
   createrepo_c -x "*rpm" "${test_path}"/pkg
   CHECK_RESULT $? 0 0 "createrepo no rpm fail"
@@ -53,18 +54,34 @@ function run_test() {
   createrepo_c -n tcpdump* ./
   CHECK_RESULT $? 0 0 "createrepo only tcpdump rpm fail"
   yum clean all;sleep 3
-  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)" "tcpdump" 0 "createrepo only tcpdump rpm fail"
+  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)"  \
+  "tcpdump" 0 "createrepo only tcpdump rpm fail"
 
   createrepo_c -n httpd-help* -n tcpdump* -x tcpdump* ./
   CHECK_RESULT $? 0 0 "createrepo only httpd-help rpm fail"
   yum clean all;sleep 3
-  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)" "httpd-help" 0 "createrepo only httpd-help rpm fail"
+  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)"  \
+  "httpd-help" 0 "createrepo only httpd-help rpm fail"
 
   createrepo_c --update ./
   CHECK_RESULT $? 0 0 "createrepo update fail"
   yum clean all;sleep 3
-  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)" "httpd httpd-help tcpdump" 0 "createrepo update fail"
+  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)"  \
+  "httpd httpd-help tcpdump" 0 "createrepo update fail"
 
+  basename -a "$(find ./ -name 'tcpdump*rpm')" > /tmp/list
+  createrepo_c -i /tmp/list ./
+  CHECK_RESULT $? 0 0 "createrepo pkglist fail"
+  yum clean all;sleep 3
+  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)"  \
+  "tcpdump" 0 "createrepo pkglist fail"
+
+  createrepo_c --read-pkgs-list=/tmp/list  ./
+  CHECK_RESULT $? 0 0 "Output the paths to the pkgs fail"
+  yum clean all;sleep 3
+  CHECK_RESULT "$(yum --repo=local list --available |grep -E "$(arch)|noarch" |awk '{print $1}' |awk -F '.' '{print $1}' |sort |xargs)"  \
+  "httpd httpd-help tcpdump" 0 "Output the paths to the pkgs fail"
+  CHECK_RESULT "$(cat < /tmp/list |sort)" "$(find ./ -name '*rpm' -print0 |xargs -0 basename -a |sort)" 0 "Output the paths to the pkgs fail"
   LOG_INFO "End of the test."
 }
 
@@ -72,6 +89,7 @@ function post_test() {
   LOG_INFO "start environment cleanup."
   cd .. || exit
   test -f /etc/yum.repos.d/local.repo && rm -rf /etc/yum.repos.d/local.repo
+  test -f /tmp/list && rm -rf /tmp/list
   test -d "${test_path}"/pkg && rm -rf "${test_path}"/pkg
   yum clean all
   DNF_REMOVE "$@"

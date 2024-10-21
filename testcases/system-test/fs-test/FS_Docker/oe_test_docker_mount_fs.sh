@@ -15,8 +15,9 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   mount share dir on different fs type(ext3/ext4/xfs)
 #####################################
+# shellcheck disable=SC1091
 
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -32,6 +33,8 @@ function pre_test() {
         wget "https://repo.openeuler.org/openEuler-20.03-LTS-SP1/docker_img/${NODE1_FRAME}/openEuler-docker.${NODE1_FRAME}.tar.xz"
         image_name="openEuler-docker.${NODE1_FRAME}.tar.xz"
     fi
+    systemctl start docker
+    SLEEP_WAIT 3
     docker load -i "$image_name"
     image_id=$(docker images | grep ${TEST_IMAGE} | head -n 1 | awk '{print $3}')
     LOG_INFO "Finish to prepare the database config."

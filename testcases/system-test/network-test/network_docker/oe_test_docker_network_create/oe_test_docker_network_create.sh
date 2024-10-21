@@ -15,6 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Create bridge for docker
 #####################################
+# shellcheck disable=SC2154
 # shellcheck source=/dev/null
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
@@ -23,13 +24,18 @@ source ../common/docker.conf
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL "wget docker bridge-utils net-tools"
-    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
-        docker_path="${docker_path}/${image_file}"
-    else
-        image_file="openEuler-docker.${NODE1_FRAME}.tar.xz"
-        docker_path="${docker_path}/${NODE1_FRAME}/${image_file}"
+
+    if [ -z "${docker_path}" ]; then
+        LOG_INFO "Set version/url for docker in common/docker.conf first"
+        exit 1
     fi
+
+    image_file="openEuler-docker.${NODE1_FRAME}.tar.xz"
+    docker_path="${docker_path}/${version}/docker_img/${NODE1_FRAME}/${image_file}"
     wget "${docker_path}"
+    systemctl start docker
+    SLEEP_WAIT 3
+
     docker load -i "${image_file}"
     LOG_INFO "Finish to prepare the database config."
 }

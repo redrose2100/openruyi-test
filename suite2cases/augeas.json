@@ -1,0 +1,15 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/augeas",
+    "cases": [
+        {
+            "name": "oe_test_augeas_augprint"
+        },
+        {
+            "name": "oe_test_augeas_augmatch"
+        },
+	{
+            "name": "oe_test_augeas_augtool01"
+	}
+      ]
+}
+

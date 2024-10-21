@@ -1,5 +1,6 @@
 {
     "path": "${OET_PATH}/testcases/system-test/fs-test/FS_Docker",
+    "add disk": [20],
     "cases": [
         {
             "name": "oe_test_docker_check_overlay2fs"
@@ -23,7 +24,8 @@
             "name": "oe_test_docker_mount"
         },
         {
-            "name": "oe_test_docker_mount_fs"
+            "name": "oe_test_docker_mount_fs",
+            "add disk": [20]
         },
         {
             "name": "oe_test_docker_write_in_docker"

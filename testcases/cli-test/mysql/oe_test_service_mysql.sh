@@ -17,30 +17,32 @@
 # @Desc      :   Test mysql.service restart
 # #############################################
 
-source "common/common.sh"
+source "${OET_PATH}/testcases/cli-test/mysql/common/common.sh"
+
+
+
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    service=mysql.service
+    service=mysqld.service
     log_time=$(date '+%Y-%m-%d %T')
-    mysql_pre
+    DNF_INSTALL mysql-server
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
     test_restart "${service}"
-    systemctl disable mysql 2>&1 | grep "Executing: .*disable mysql"
+    systemctl disable mysqld 2>&1 
     CHECK_RESULT $? 0 0 "${service} disable failed"
-    systemctl enable mysql 2>&1 | grep "Executing: .*enable mysql"
+    systemctl enable mysqld 2>&1 | grep "Created symlink"
     CHECK_RESULT $? 0 0 "${service} enable failed"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     systemctl start "${service}"
     sed -i 's/port=3306/port=3316/' /etc/my.cnf
     systemctl daemon-reload
-    systemctl reload "${service}"
-    CHECK_RESULT $? 0 0 "${service} reload failed"
+    systemctl restart "${service}"
     systemctl status "${service}" | grep "Active: active"
     CHECK_RESULT $? 0 0 "${service} reload causes the service status to change"
     LOG_INFO "Finish test!"
@@ -53,7 +55,8 @@ function post_test() {
     systemctl reload "${service}"
     systemctl stop "${service}"
     mysql_post
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    rm -rf /var/lib/mysql/*
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -76,6 +76,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ${TMP_DIR}
+    sed -i '17s/.*/<xsl:import href="\/usr\/share\/sgml\/docbook\/xsl-stylesheets-1.79.2\/common\/common.xsl\"\/>/' common/xsl/test.xsl
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

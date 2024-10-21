@@ -50,6 +50,9 @@
             "name": "oe_test_comm"
         },
         {
+          "name": "oe_test_dc"
+        },
+        {
             "name": "oe_test_look"
         },
         {
@@ -997,6 +1000,24 @@
 	},
 	{
 	    "name": "oe_test_lslogins_2"
+	},
+	{
+	    "name": "oe_test_column"
+	},
+	{
+	    "name": "oe_test_lslogins_3"
+	},
+	{
+	    "name": "oe_test_xrandr"
+	},
+	{
+            "name": "oe_test_as"
+	},
+	{
+	    "name": "oe_test_lslogins_4"
+	},
+	{
+	    "name": "oe_test_zstd01"
 	}
     ]
 }

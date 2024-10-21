@@ -34,7 +34,7 @@ function run_test() {
     CHECK_RESULT $?
     irb --single-irb ../common/hello.rb | grep -i "hello"
     CHECK_RESULT $?
-    irb --tracer ../common/hello.rb | grep "hello.rb:3"
+    irb --tracer ../common/hello.rb | grep "hello.rb(main):003:0>"
     CHECK_RESULT $?
     irb --back-trace-limit 2 ../common/hello.rb | grep "Hello World"
     CHECK_RESULT $?

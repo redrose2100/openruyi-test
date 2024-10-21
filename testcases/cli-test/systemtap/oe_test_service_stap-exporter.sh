@@ -15,13 +15,29 @@
 # @Date      :   2020/10/23
 # @License   :   Mulan PSL v2
 # @Desc      :   Test stap-exporter.service restart
+#April's remind :   If stap-exporter skipped, please check whether debuginfo is enabled in the repo.
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
+
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL systemtap-stap-exporter
+    current_kernel=$(uname -r)
+    DNF_INSTALL "systemtap-stap-exporter systemtap-client systemtap-devel gcc kernel-devel-${current_kernel} kernel-debuginfo-${current_kernel} kernel-headers-${current_kernel}"
+    # 检查 kernel-devel kernel-debuginfo kernel-headers 是否安装,缺少任何一个则通不过编译
+    if ! rpm -q "kernel-devel-${current_kernel}" &>/dev/null; then
+        LOG_WARN "kernel-devel-${current_kernel} is not installed."
+        exit 255
+    fi
+    if ! rpm -q "kernel-debuginfo-${current_kernel}" &>/dev/null; then
+        LOG_WARN "kernel-debuginfo-${current_kernel} is not installed."
+        exit 255
+    fi
+    if ! rpm -q "kernel-headers-${current_kernel}" &>/dev/null; then
+        LOG_WARN "kernel-headers-${current_kernel} is not installed."
+        exit 255
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -35,7 +51,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop stap-exporter.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

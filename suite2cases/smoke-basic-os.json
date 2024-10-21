@@ -17,6 +17,18 @@
             "name": "oe_test_cat_001"
         },
         {
+            "name": "oe_test_cat_002"
+        },
+        {
+            "name": "oe_test_cat_003"
+        },
+        {
+            "name": "oe_test_cat_004"
+        },
+        {
+            "name": "oe_test_cat_005"
+        },
+        {
             "name": "oe_test_cd_002"
         },
         {
@@ -51,6 +63,9 @@
         },
         {
             "name": "oe_test_file_002"
+        },
+        {
+            "name": "oe_test_glib2_001"
         },
         {
             "name": "oe_test_golang"
@@ -120,6 +135,9 @@
         },
         {
             "name": "oe_test_lsscsi"
+        },
+        {
+            "name": "oe_test_lvm2"
         },
         {
             "name": "oe_test_lzo"
@@ -267,6 +285,12 @@
         },
         {
             "name": "oe_test_bc_02"
+        },
+        {
+            "name": "oe_test_bc_03"
+        },
+        {
+            "name": "oe_test_bc_04"
         },
         {
             "name": "oe_test_bridge-utils_01"
@@ -805,6 +829,12 @@
         {
 	     "name": "oe_test_libxml2_002"
         },
+        {
+            "name": "oe_test_libxml2_003"
+        },
+        {
+            "name": "oe_test_libxml2_004"
+        },
 	{
 	    "name": "oe_test_logrotate_004"
 	},
@@ -860,10 +890,34 @@
            "name": "oe_test_echo"    
       },
       {
+           "name": "oe_test_echo_001"
+      },
+      {
+           "name": "oe_test_echo_002"
+      },
+      {
+           "name": "oe_test_echo_003"
+      },
+      {
            "name": "oe_test_pidof"
       },
       {
            "name": "oe_test_link"
+      },
+      {
+          "name": "oe_test_zlib_001"
+      },
+      {
+          "name": "oe_test_luac"
+      },
+      {
+          "name": "oe_test_groups"
+      },
+      {
+          "name": "oe_test_free"
+      },
+      {
+          "name": "oe_test_iconv"
       },
       {
            "name": "oe_test_zstd_001"
@@ -879,7 +933,7 @@
       },
       {
            "name": "oe_test_zstd_005"
-      }
+    }
     ]
 }
 

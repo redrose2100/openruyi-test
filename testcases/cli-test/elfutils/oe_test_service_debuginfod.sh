@@ -17,7 +17,7 @@
 # @Desc      :   Test debuginfod.service restart
 # #############################################
 #shellcheck disable=SC1091
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."

@@ -17,26 +17,26 @@
 # @Desc      :   mysql prepare
 # ############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function mysql_pre() {
     systemctl stop firewalld
     systemctl disable firewalld
     flag=false
-    if [ $(getenforce | grep Enforcing) ]; then
+    if getenforce | grep -q Enforcing; then
         setenforce 0
         flag=true
     fi
     groupadd mysql
     useradd -g mysql mysql
-    echo ${NODE1_PASSWORD} | passwd --stdin mysql
+    echo "${NODE1_PASSWORD}" | passwd --stdin mysql
     mkdir -p /data/mysql
     cd /data/mysql || exit 1
     mkdir data tmp run log
     touch {/data/mysql/log/mysql.log,/data/mysql/run/mysqld.pid}
     chown -R mysql:mysql /data
     cd - || exit 1
-    DNF_INSTALL mysql
+    DNF_INSTALL mysql-server
     rpm -qa | grep mysql || exit 1
     touch /etc/my.cnf
     echo "[mysqld_safe]
@@ -57,13 +57,13 @@ default_authentication_plugin=mysql_native_password
 port=3306
 user=mysql" >/etc/my.cnf
     chown mysql:mysql /etc/my.cnf
-    echo export PATH=${PATH}:/usr/local/mysql/bin >>/etc/profile
+    echo export PATH="${PATH}":/usr/local/mysql/bin >>/etc/profile
     source /etc/profile > /dev/null 2>&1
     rm -rf /data/mysql/data
     mysqld --initialize --basedir=/usr/local/mysql/ --datadir=/data/mysql/data --user=mysql 2>&1
-    chkconfig mysql on
+    chkconfig mysqld on
     systemctl daemon-reload
-    systemctl start mysql
+    systemctl start mysqld
 }
 
 
