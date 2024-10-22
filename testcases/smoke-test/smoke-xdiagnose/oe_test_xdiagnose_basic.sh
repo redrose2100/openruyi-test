@@ -34,11 +34,10 @@ function run_test() {
     stdbuf -oL xd_scsiiocount -d sda -i 1 -t 5 2>&1 | grep -c DEVICE  | grep -w 5
     CHECK_RESULT $? 0 0 "xd_scsiiocount result err"
 
-    local_ip=$(ip route | head -1 | awk '{print $3}')
-    stdbuf -oL xd_tcpskinfo -a "${local_ip}" -p 22 2>&1 | grep skmem 
+    stdbuf -oL xd_tcpskinfo -a "${NODE1_IPV4}" -p 22 2>&1 | grep skmem 
     CHECK_RESULT $? 0 0 "xd_tcpskinfo result err"
 
-    stdbuf -oL xd_scsiiotrace -d 0:0:0:0 -e start >checklog 2>&1 &
+    stdbuf -oL xd_scsiiotrace -d 0:0:0:0 >checklog 2>&1 &
     SLEEP_WAIT 3
     pkill xd_scsiiotrace
     grep Tracing checklog
