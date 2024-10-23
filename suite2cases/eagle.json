@@ -1,0 +1,35 @@
+{
+    "path": "$OET_PATH/testcases/feature-test/eagle",
+    "cases": [
+        {
+            "name": "oe_test_eagle_01"
+        },
+        {
+            "name": "oe_test_eagle_02"
+        },
+        {
+            "name": "oe_test_eagle_03"
+        },
+        {
+            "name": "oe_test_eagle_04"
+        },
+        {
+            "name": "oe_test_eagle_05"
+        },
+        {
+            "name": "oe_test_eagle_06"
+        },
+        {
+            "name": "oe_test_eagle_07"
+        },
+        {
+            "name": "oe_test_eagle_08"
+        },
+        {
+            "name": "oe_test_eagle_09"
+        },
+        {
+            "name": "oe_test_eagle_10"
+        }
+    ]
+}

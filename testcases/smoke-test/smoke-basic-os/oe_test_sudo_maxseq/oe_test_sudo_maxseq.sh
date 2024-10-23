@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test sudo maxseq
 # ############################################
-
+# shellcheck disable=SC2012
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -37,7 +37,7 @@ function run_test() {
         su -c "sudo ls" testuser
         (( flag+=1 ))
     done
-    count=$(wc -l /var/log/sudo-io/00/00/ | grep 100)
+    count=$(ls /var/log/sudo-io/00/00 | wc -l | grep 100)
     CHECK_RESULT "${count}" 100 0 "Failed to execute sudo"
     LOG_INFO "End to run test."
 }
