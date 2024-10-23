@@ -23,44 +23,55 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL dejagnu
     test -d tmp || mkdir tmp
+    ARCH=$(uname -m)
+    if [[ "$ARCH" == "x86_64" ]]; then
+        CALC=common/calc_x86_64
+    elif [[ "$ARCH" == "riscv64" ]]; then
+        CALC=common/calc_riscv64
+    elif [[ "$ARCH" == "aarch64" ]]; then
+	    CALC=common/calc_aarch64    
+    else
+        LOG_ERROR "Unsupported architecture: $ARCH"
+        exit 1
+    fi
     LOG_INFO "End to prepare the test environment!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    runtest CALC=common/calc --objdir common --srcdir common --outdir tmp 2>&1 | grep "expected passes"
+    runtest CALC=${CALC} --objdir common --srcdir common --outdir tmp 2>&1 | grep "expected passes"
     CHECK_RESULT $? 0 0 "Failed option : --objdir"
     rm -rf tmp/*
-    runtest CALC=common/calc --srcdir common --outdir tmp
+    runtest CALC=${CALC} --srcdir common --outdir tmp
     test -f ./tmp/testrun.log
     CHECK_RESULT $? 0 0 "Failed option : --outdir or --srcdir"
-    runtest CALC=common/calc --srcdir common -v --reboot --outdir tmp 2>&1 | grep "Will reboot the target (if supported)"
+    runtest CALC=${CALC} --srcdir common -v --reboot --outdir tmp 2>&1 | grep "Will reboot the target (if supported)"
     CHECK_RESULT $? 0 0 "Failed option : --reboot"
-    runtest CALC=common/calc --strace 1 --srcdir common --outdir tmp 2>&1 | grep -m 1 "log_and_exit"
+    runtest CALC=${CALC} --strace 1 --srcdir common --outdir tmp 2>&1 | grep -m 1 "log_and_exit"
     CHECK_RESULT $? 0 0 "Failed option : --strace"
-    runtest CALC=common/calc -v --tool version --srcdir common --outdir tmp 2>&1 | grep "Testing version"
+    runtest CALC=${CALC} -v --tool version --srcdir common --outdir tmp 2>&1 | grep "Testing version"
     CHECK_RESULT $? 0 0 "Failed option : --tool"
-    runtest CALC=common/calc -v --D0 --srcdir common --outdir tmp 2>&1 | grep "Tcl debugger is ON"
+    runtest CALC=${CALC} -v --D0 --srcdir common --outdir tmp 2>&1 | grep "Tcl debugger is ON"
     CHECK_RESULT $? 0 0 "Failed option : --D"
     rm -rf tmp/*
-    runtest CALC=common/calc --xml --srcdir common --outdir tmp
+    runtest CALC=${CALC} --xml --srcdir common --outdir tmp
     test -f ./tmp/testrun.xml
     CHECK_RESULT $? 0 0 "Failed option : --xml"
     rm -rf tmp/*
-    runtest CALC=common/calc -x --srcdir common --outdir tmp
+    runtest CALC=${CALC} -x --srcdir common --outdir tmp
     test -f ./tmp/testrun.xml
     CHECK_RESULT $? 0 0 "Failed option : -x"
-    runtest CALC=common/calc -v --script.exp --srcdir common --outdir tmp 2>&1 | grep "Running only tests --script.exp" 
+    runtest CALC=${CALC} -v --script.exp --srcdir common --outdir tmp 2>&1 | grep "Running only tests --script.exp" 
     CHECK_RESULT $? 0 0 "Failed option : --script.exp"
-    runtest CALC=common/calc -v --target_boards=unix --srcdir common --outdir tmp 2>&1 | grep "Running target unix"
+    runtest CALC=${CALC} -v --target_boards=unix --srcdir common --outdir tmp 2>&1 | grep "Running target unix"
     CHECK_RESULT $? 0 0 "Failed option : --target_boards"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
-    rm -rf tmp *.sum *.log 
+    DNF_REMOVE "$@"
+    rm -rf tmp ./*.sum ./*.log
     LOG_INFO "Finish environment cleanup!"
 }
 
