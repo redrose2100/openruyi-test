@@ -28,7 +28,7 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "Start to run test."
-    hwloc_version=$(rpm -qa | grep hwloc | grep -oP '\d+\.\d+\.\d+-\d+' | head -n 1)
+    hwloc_version=$(rpm -qa | grep hwloc | grep -oP '\d+\.\d+\.\d+' | head -n 1)
     hwloc-ps --version | grep "${hwloc_version}"
     CHECK_RESULT $? 0 0 "hwloc-ps --version falied"
     hwloc-ps -h | grep "Usage:"

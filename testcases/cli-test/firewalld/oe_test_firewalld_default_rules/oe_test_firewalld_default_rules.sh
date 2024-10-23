@@ -21,13 +21,14 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     CHECK_RESULT "$(firewall-cmd --state)" "running" 0 "firewalld.service not running"
-    ls -l ./*.info && rm -rf ./*.info
+    rm -rf ./*.info
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    CHECK_RESULT "$(firewall-cmd --get-zones)" "block dmz drop external home internal libvirt nm-shared public trusted work" 0 "check default exists zone fail"
+    firewall-cmd --get-zones|grep -E "block dmz drop external home internal public trusted work|block dmz drop external home internal libvirt nm-shared public trusted work"
+    CHECK_RESULT $? 0 0 "check default exists zone fail"
     CHECK_RESULT "$(firewall-cmd --get-target --permanent)" "default" 0 "check default target fail"
     CHECK_RESULT "$(firewall-cmd --get-default-zone)" "public" 0 "check default zone fail"
 

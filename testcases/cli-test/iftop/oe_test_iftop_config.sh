@@ -179,7 +179,7 @@ EOF
     ping "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
     expect <<EOF
         spawn iftop -n -c ./iftoprc
-        expect "$ipv4_target_addr" {
+        expect "$ip_vir4" {
             exec touch ./config_net_filter
         }
         send "q"
