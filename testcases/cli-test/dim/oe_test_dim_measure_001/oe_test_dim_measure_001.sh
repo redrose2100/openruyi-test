@@ -17,7 +17,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    DNF_INSTALL "dim_tools dim vdo"
+    DNF_INSTALL "dim_tools dim vdo kmod-kvdo"
     modprobe dim_monitor 
     modprobe kvdo
 }
