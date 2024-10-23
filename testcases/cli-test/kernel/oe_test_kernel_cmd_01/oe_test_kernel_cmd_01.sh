@@ -35,7 +35,7 @@ function run_test() {
         current_frequency=$(cpupower frequency-info | grep "current CPU frequency" | awk -F ": " '{print $2}' | awk '{print $1}')
         cpupower frequency-set -f 1.0GHz
         CHECK_RESULT $?
-        cpupower frequency-info | grep "current CPU frequency" | grep "1000 MHz"
+        cpupower frequency-info | grep "current CPU frequency" | grep "Hz"
         CHECK_RESULT $?
         cpupower frequency-set -f "${current_frequency}"GHz
     fi

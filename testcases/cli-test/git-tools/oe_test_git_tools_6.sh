@@ -44,10 +44,10 @@ function run_test(){
     git-strip-merge -v master ./* | grep "delete mode"
     CHECK_RESULT $? 0 0 "L$LINENO: git-strip-merge master -v No Pass"
     git checkout testBranch3
-    git-strip-merge -M  "testMyDeleteMessage" ./* | grep "Already up to date"
+    git-strip-merge -M  "testMyDeleteMessage" ./* | grep -E "Already up to date|已经是最新的"
     CHECK_RESULT $? 0 0 "L$LINENO: git-strip-merge -M No Pass"
     git checkout testBranch4
-    git-strip-merge -m "testMyCommitMessage" ./* | grep "Already up to date"
+    git-strip-merge -m "testMyCommitMessage" ./* | grep -E "Already up to date|已经是最新的"
     CHECK_RESULT $? 0 0 "L$LINENO: git-strip-merge -m No Pass"
     LOG_INFO "End to run test."
 }
