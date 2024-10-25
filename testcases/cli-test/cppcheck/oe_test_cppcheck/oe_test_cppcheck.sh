@@ -102,8 +102,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    roc=$(shopt -s nullglob; echo !(*.sh|*.c|*.cpp))
-    rm -rf "$roc"
+    find . -type f ! -name '*.sh' ! -name '*.c' ! -name '*.cpp' -exec rm -f {} +
+    find . -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +
     DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
