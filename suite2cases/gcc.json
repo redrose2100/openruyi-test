@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_liblsan"
+        },
+        {
+            "name": "oe_test_dejagnu"
         }
     ]
 }
