@@ -63,11 +63,11 @@ Simply run `bash dep_install.sh`.
 #### Run the test
 - Run all test cases
 `bash mugen.sh -a`
-- Run a test suit
+- Run a test suite
 `bash mugen.sh -f testsuite`
 - Run a test case
 `bash mugen.sh -f testsuite -r testcase`
-- Scve the testing log
+- Save the testing log
 ```
 bash mugen.sh -a -x 
 bash mugen.sh -f testsuite -x
