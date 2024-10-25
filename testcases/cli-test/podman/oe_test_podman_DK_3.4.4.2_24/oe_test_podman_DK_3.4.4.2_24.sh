@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   docker container exec top
 # ############################################
+# shellcheck disable=SC1091
 
-source ../common/common_podman.sh
+source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
@@ -29,12 +31,12 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     id=$(docker create --name postgres docker.io/library/nginx | sed -n '$p')
-    test -z ${id}
-    CHECK_RESULT $? 1 0 'check ${id} failed'
+    test -z "${id}"
+    CHECK_RESULT $? 1 0 "check ${id} failed"
     docker container stop postgres
     CHECK_RESULT $? 0 0 'check docker container stop postgres failed'
-    docker container rm postgres | grep ${id}
-    CHECK_RESULT $? 0 0 'check docker container rm postgres | grep ${id} failed'
+    docker container rm postgres | grep "${id}"
+    CHECK_RESULT $? 0 0 "check docker container rm postgres | grep ${id} failed"
     docker container ls | grep postgres
     CHECK_RESULT $? 1 0 'check docker container ls | grep postgres failed'
     docker create --name postgres1 docker.io/library/nginx
@@ -63,4 +65,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

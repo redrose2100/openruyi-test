@@ -13,6 +13,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Public class integration
 #####################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -33,5 +34,5 @@ function clear_env() {
     podman stop postgres
     podman rm --all
     podman rmi -f --all
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 }

@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   docker-mount-unmount
 # ############################################
+# shellcheck disable=SC1091
 
-source ../common/common_podman.sh
+source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
@@ -30,8 +32,8 @@ function run_test() {
     docker pull docker.io/library/nginx
     CHECK_RESULT $? 0 0 'check docker pull docker.io/library/nginx failed'
     id=$(docker create --name postgres docker.io/library/nginx)
-    test -z ${id}
-    CHECK_RESULT $? 1 0 'check id=$(docker create --name postgres docker.io/library/nginx) failed'
+    test -z "${id}"
+    CHECK_RESULT $? 1 0 "check id=$(docker create --name postgres docker.io/library/nginx) failed"
     docker start postgres
     CHECK_RESULT $? 0 0 'check docker start postgres failed'
     docker top -l | grep "USER"
@@ -50,8 +52,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 'check docker mount postgres failed'
     docker unmount --all
     CHECK_RESULT $? 0 0 'check docker unmount --all failed'
-    docker rm postgres | grep ${id}
-    CHECK_RESULT $? 0 0 'check docker rm postgres | grep ${id} failed'
+    docker rm postgres | grep "${id}"
+    CHECK_RESULT $? 0 0 "check docker rm postgres | grep ${id} failed"
     LOG_INFO "End executing testcase."
 }
 
@@ -61,4 +63,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

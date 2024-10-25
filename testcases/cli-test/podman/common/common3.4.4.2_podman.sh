@@ -13,6 +13,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Public class integration
 #####################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -22,7 +23,8 @@ function deploy_env() {
 unqualified-search-registries = ['docker.io']    
 [[registry]]
 prefix = 'docker.io'
-location = 'a74l47xi.mirror.aliyuncs.com'
+#location = 'a74l47xi.mirror.aliyuncs.com'
+location = 'docker.211678.top'
 " >/etc/containers/registries.conf
 }
 
@@ -30,5 +32,5 @@ function clear_env() {
     podman stop --all
     podman rm --all
     podman rmi --all
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 }
