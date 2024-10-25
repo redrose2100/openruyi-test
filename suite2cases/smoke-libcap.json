@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test/smoke-libcap",
+    "cases": [
+        {
+            "name": "oe_test_libcap_FUN.001"
+        }
+    ]
+}
