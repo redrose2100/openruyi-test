@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "rubygem-asciidoctor"
+    DNF_INSTALL "rubygem-asciidoctor tar"
     tar -zxvf common/test.tar.gz
     gem install -l data/tilt-2.0.11.gem
     LOG_INFO "End of environmental preparation!"
