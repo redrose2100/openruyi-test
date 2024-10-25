@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   docker save inspect
 # ############################################
+# shellcheck disable=SC1091
 
-source ../common/common_podman.sh
+source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
@@ -56,4 +58,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
+# shellcheck disable=SC1091
 
 source "../common/common_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
@@ -51,7 +53,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

@@ -16,24 +16,26 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
+# shellcheck disable=SC1091
 
-source "../common/common_podman.sh"
+source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    docker pull registry.access.redhat.com/ubi8-minimal
-    docker run --name postgres registry.access.redhat.com/ubi8-minimal
+    docker pull postgres:alpine
+    docker run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    docker save --compress --format oci-dir -o alp-dir registry.access.redhat.com/ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker save --compress --format oci-dir -o alp-dir registry.access.redhat.com failed'
+    docker save --compress --format docker-dir -o alp-dir postgres:alpine
+    CHECK_RESULT $? 0 0 'check docker save --compress --format docker-dir -o alp-dir postgres:alpine failed'
     test -d alp-dir
     CHECK_RESULT $? 0 0 'check test -d alp-dir failed'
-    docker save -q -o alpine.tar registry.access.redhat.com/ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker save -q -o alpine.tar registry.access.redhat.com/ubi8-minimal failed'
+    docker save -q -o alpine.tar postgres:alpine
+    CHECK_RESULT $? 0 0 'check docker save -q -o alpine.tar postgres:alpine failed'
     test -f alpine.tar
     CHECK_RESULT $? 0 0 'check test -f alpine.tar failed'
     docker info | grep -E "host|insecure registries|registries|store"
@@ -42,21 +44,21 @@ function run_test() {
     CHECK_RESULT $? 0 0 'check docker info --debug | grep "host" failed'
     docker info --format json | grep "\"host\":"
     CHECK_RESULT $? 0 0 'check docker info --format json failed'
-    docker history --format=json $(docker images -q) | grep "$(docker images -q)"
-    CHECK_RESULT $? 0 0 'check docker history --format=json $(docker images -q) failed'
-    docker history --human $(docker images -q) | grep "B"
+    docker history --format=json "$(docker images -q)" | grep "$(docker images -q)"
+    CHECK_RESULT $? 0 0 "check docker history --format=json $(docker images -q) failed"
+    docker history --human "$(docker images -q)" | grep "B"
     CHECK_RESULT $? 0 0 'check docker history --human failed'
-    docker history --no-trunc $(docker images -q) | grep "$(ls /var/lib/containers/storage/overlay-images/)"
+    docker history --no-trunc "$(docker images -q)" | grep "$(ls /var/lib/containers/storage/overlay-images/)"
     CHECK_RESULT $? 0 0 'check docker history --no-trunc failed'
-    docker history -q $(docker images -q) | grep "nop"
-    CHECK_RESULT $? 1 0 'check docker history -q $(docker images -q) failed'
+    docker history -q "$(docker images -q)" | grep "nop"
+    CHECK_RESULT $? 1 0 "check docker history -q $(docker images -q) failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

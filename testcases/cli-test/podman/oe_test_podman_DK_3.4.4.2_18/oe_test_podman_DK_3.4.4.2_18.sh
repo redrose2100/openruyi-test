@@ -16,27 +16,29 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in docker package
 # ############################################
+# shellcheck disable=SC1091
 
 source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    echo '"auth":{}' > authdir/yauths.json 
+    echo '{"auth":{}}' > myauths.json 
     deploy_env
-    docker pull registry.access.redhat.com/ubi8-minimal
-    docker run --name postgres -p 256:456 registry.access.redhat.com/ubi8-minimal
+    podman pull postgres:alpine
+    podman run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    docker ps --all | grep "0.0.0.0:256"
-    CHECK_RESULT $? 0 0 'check docker ps --all | grep "0.0.0.0:256" failed'
+    docker ps --all | grep "postgres"
+    CHECK_RESULT $? 0 0 'check docker ps --all | grep "postgres" failed'
     docker port --latest
     CHECK_RESULT $? 0 0 'check docker port --latest failed'
     expect <<EOF
         set time 30
         log_file testlog
-        spawn docker login a74l47xi.mirror.aliyuncs.com 
+        spawn docker login docker.211678.top 
         expect {
             "Username*" { send "umohnani\r"; exp_continue }
             "Password:" { send "\r" }
@@ -46,12 +48,12 @@ EOF
     grep -i "Login Succeeded" testlog
     CHECK_RESULT $? 0 0 'check grep -i "Login Succeeded" testlog failed'
     rm -rf testlog
-    docker logout a74l47xi.mirror.aliyuncs.com
-    CHECK_RESULT $? 0 0 'check docker logout a74l47xi.mirror.aliyuncs.com failed'
+    docker logout docker.211678.top
+    CHECK_RESULT $? 0 0 'check docker logout docker.211678.top failed'
     expect <<EOF
         set time 30
         log_file testlog
-        spawn docker login --authfile authdir/myauths.json a74l47xi.mirror.aliyuncs.com
+        spawn docker login --authfile myauths.json docker.211678.top
         expect {
             "Username*" { send "umohnani\r"; exp_continue }
             "Password:" { send "\r" }
@@ -61,12 +63,12 @@ EOF
     grep -i "Login Succeeded" testlog
     CHECK_RESULT $? 0 0 'check grep -i "Login Succeeded" testlog failed'
     rm -rf testlog
-    docker logout --authfile authdir/myauths.json a74l47xi.mirror.aliyuncs.com
+    docker logout --authfile myauths.json docker.211678.top
     CHECK_RESULT $?
     expect <<EOF
         set time 30
         log_file testlog
-        spawn docker login -u umohnani a74l47xi.mirror.aliyuncs.com
+        spawn docker login -u umohnani docker.211678.top
         expect {
             "Password:" { send "\r" }
         }
@@ -78,7 +80,7 @@ EOF
     expect <<EOF
         set time 30
         log_file testlog
-        spawn docker login --tls-verify=false a74l47xi.mirror.aliyuncs.com
+        spawn docker login --tls-verify=false docker.211678.top
         expect {
             "Username*" { send "umohnani\r"; exp_continue }
             "Password:" { send "\r" }
@@ -95,7 +97,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

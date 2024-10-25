@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   docker-search
 # ############################################
+# shellcheck disable=SC1091
 
-source ../common/common_podman.sh
+source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
@@ -41,7 +43,7 @@ function run_test() {
     docker pull docker.io/library/nginx
     CHECK_RESULT $? 0 0 'check docker pull docker.io/library/nginx failed'
     id=$(docker create --name postgres docker.io/library/nginx | sed -n '$p')
-    test -z ${id}
+    test -z "${id}"
     CHECK_RESULT $? 1 0 'check id failed'
     docker start postgres | grep postgres
     CHECK_RESULT $? 0 0 'check docker start postgres | grep postgres failed'
@@ -49,17 +51,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 'check docker ps -a | grep postgres failed'
     docker stats -a --no-stream
     CHECK_RESULT $? 0 0 'check docker stats -a --no-stream failed'
-    docker stats --no-stream ${id} | grep postgres
-    CHECK_RESULT $? 0 0 'check docker stats --no-stream ${id} | grep postgres failed'
-    docker stats --no-stream --format=json ${id} | grep postgres
-    CHECK_RESULT $? 0 0 'check docker stats --no-stream --format=json ${id} | grep postgres failed'
+    docker stats --no-stream "${id}" | grep postgres
+    CHECK_RESULT $? 0 0 "check docker stats --no-stream ${id} | grep postgres failed"
+    docker stats --no-stream --format=json "${id}" | grep postgres
+    CHECK_RESULT $? 0 0 "check docker stats --no-stream --format=json ${id} | grep postgres failed"
     docker stats --no-stream --format "table {{.ID}} {{.Name}} {{.MemUsage}}" | grep postgres
     CHECK_RESULT $? 0 0 'check docker stats --no-stream --format failed'
     docker stop postgres
     CHECK_RESULT $? 0 0 'check odman stop postgres | grep postgres failed'
     docker ps -a | grep postgres | grep Exited
-    docker rm ${id}
-    CHECK_RESULT $? 0 0 'check docker rm ${id} failed'
+    docker rm "${id}"
+    CHECK_RESULT $? 0 0 "check docker rm ${id} failed"
     docker search --limit 3 fedora 2>&1 | grep "docker.io/library/fedora"
     CHECK_RESULT $? 0 0 'check docker search --limit 3 fedora 2>&1 | grep "docker.io/library/fedora" failed'
     LOG_INFO "End executing testcase."
@@ -72,4 +74,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

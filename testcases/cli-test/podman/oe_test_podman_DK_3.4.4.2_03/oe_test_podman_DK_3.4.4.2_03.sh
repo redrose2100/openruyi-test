@@ -16,45 +16,47 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
+# shellcheck disable=SC1091
 
-source "../common/common_podman.sh"
+source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    docker pull registry.access.redhat.com/ubi8-minimal
-    docker run --name postgres registry.access.redhat.com/ubi8-minimal
+    docker pull postgres:alpine
+    docker run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
     echo '"auths": {}' >myauths.json
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    docker push registry.access.redhat.com/ubi8-minimal dir:/tmp/myimage 2>&1 | grep "Storing signatures"
-    CHECK_RESULT $? 0 0 'check docker push registry.access.redhat.com/ubi8-minimal dir:/tmp/myimage failed'
-    docker push --authfile myauths.json registry.access.redhat.com/ubi8-minimal dir:/tmp/myimage
-    CHECK_RESULT $? 0 0 'check docker push --authfile myauths.json registry.access.redhat.com/ubi8-minimal faield'
+    docker push postgres:alpine dir:/tmp/myimage 2>&1 | grep "signatures"
+    CHECK_RESULT $? 0 0 'check docker push postgres:alpine dir:/tmp/myimage failed'
+    docker push --authfile myauths.json postgres:alpine dir:/tmp/myimage
+    CHECK_RESULT $? 0 0 'check docker push --authfile myauths.json postgres:alpine faield'
     test -f /tmp/myimage/manifest.json && rm -rf /tmp/myimage/manifest.json
     CHECK_RESULT $? 0 0 'check test -f /tmp/myimage/manifest.json && rm -rf /tmp/myimage/manifest.json failed'
-    docker push --format oci registry.access.redhat.com/ubi8-minimal dir:/tmp/myimage
-    CHECK_RESULT $? 0 0 'check docker push --format oci registry.access.redhat.com/ubi8-minimal failed'
+    docker push --format oci postgres:alpine dir:/tmp/myimage
+    CHECK_RESULT $? 0 0 'check docker push --format oci postgres:alpine failed'
     grep "oci" /tmp/myimage/manifest.json && rm -rf /tmp/myimage/manifest.json
     CHECK_RESULT $? 0 0 'check grep "oci" /tmp/myimage/manifest.json && rm -rf /tmp/myimage/manifest.json failed'
-    docker push --compress registry.access.redhat.com/ubi8-minimal dir:/tmp/myimage
-    CHECK_RESULT $? 0 0 'check docker push --compress registry.access.redhat.com/ubi8-minimal failed'
-    grep "image.rootfs.diff.tar.gzip" /tmp/myimage/manifest.json
+    docker push --compress postgres:alpine dir:/tmp/myimage
+    CHECK_RESULT $? 0 0 'check docker push --compress postgres:alpine failed'
+    grep "image.layer.v1.tar+gzip" /tmp/myimage/manifest.json
     CHECK_RESULT $? 0 0 'check grep "image.rootfs.diff.tar.gzip" /tmp/myimage/manifest.json failed'
-    docker push -q registry.access.redhat.com/ubi8-minimal dir:/tmp/myimage
-    CHECK_RESULT $? 0 0 'check docker push -q registry.access.redhat.com/ubi8-minimal dir:/tmp/myimage failed'
+    docker push -q postgres:alpine dir:/tmp/myimage
+    CHECK_RESULT $? 0 0 'check docker push -q postgres:alpine dir:/tmp/myimage failed'
     test -f /tmp/myimage/manifest.json
     CHECK_RESULT $? 0 0 'check test -f /tmp/myimage/manifest.json failed'
-    docker push --remove-signatures registry.access.redhat.com/ubi8-minimal dir:/tmp/myimage 2>&1 | grep "Writing manifest"
-    CHECK_RESULT $? 0 0 'check docker push --remove-signatures registry.access.redhat.com/ubi8-minimal failed'
-    docker push --tls-verify registry.access.redhat.com/ubi8-minimal dir:/tmp/myimage 2>&1 | grep "Copying blob"
-    CHECK_RESULT $? 0 0 'check docker push --tls-verify registry.access.redhat.com/ubi8-minimal failed'
-    docker push --creds postgres:screte registry.access.redhat.com/ubi8-minimal dir:/tmp/myimage 2>&1 | grep "Writing manifest"
+    docker push --remove-signatures postgres:alpine dir:/tmp/myimage 2>&1 | grep "Writing manifest"
+    CHECK_RESULT $? 0 0 'check docker push --remove-signatures postgres:alpine failed'
+    docker push --tls-verify postgres:alpine dir:/tmp/myimage 2>&1 | grep "Copying blob"
+    CHECK_RESULT $? 0 0 'check docker push --tls-verify postgres:alpine failed'
+    docker push --creds postgres:screte postgres:alpine dir:/tmp/myimage 2>&1 | grep "Writing manifest"
     CHECK_RESULT $? 0 0 'check docker push --creds postgres:screte failed'
     rm -rf /tmp/myimage
-    docker push --cert-dir /tmp registry.access.redhat.com/ubi8-minimal dir:/tmp/myimage
+    docker push --cert-dir /tmp postgres:alpine dir:/tmp/myimage
     CHECK_RESULT $? 0 0 'check docker push --cert-dir /tmp failed'
     test -d /tmp/myimage
     CHECK_RESULT $? 0 0 'check test -d /tmp/myimage failed'
