@@ -17,7 +17,7 @@
 # @Desc      :   Test syscare.service status
 # #############################################
 
-source "./common/common_syscare.sh"
+source "$OET_PATH/testcases/cli-test/syscare/common/common_syscare.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
