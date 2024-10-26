@@ -16,44 +16,46 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
+# shellcheck disable=SC1091
 
 source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman pull registry.access.redhat.com/ubi8-minimal
-    podman run --name postgres registry.access.redhat.com/ubi8-minimal
+    podman pull postgres:alpine
+    podman run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     ID=$(podman create --cgroup-parent /tmp alpine ls)
-    podman inspect $ID | grep '"CgroupParent"'
+    podman inspect "$ID" | grep '"CgroupParent"'
     CHECK_RESULT $? 0 0 'check "CgroupParent" test failed'
     ID=$(podman create --cidfile cidfile alpine ls)
-    grep $ID cidfile
-    CHECK_RESULT $? 0 0 'check test $id failed'
+    grep "$ID" cidfile
+    CHECK_RESULT $? 0 0 "check test $ID failed"
     ID=$(podman create --conmon-pidfile ./ alpine ls)
-    podman inspect $ID | grep $ID
+    podman inspect "$ID" | grep "$ID"
     CHECK_RESULT $? 0 0 'check grep id failed'
     ID=$(podman create --cpu-period 10000 alpine ls)
-    podman inspect $ID | grep '"CpuPeriod": 10000'
+    podman inspect "$ID" | grep '"CpuPeriod": 10000'
     CHECK_RESULT $? 0 0 'check "CpuPeriod": 10000 test failed'
     ID=$(podman create --cpu-quota 1001 alpine ls)
-    podman inspect $ID | grep '"CpuQuota": 1001'
+    podman inspect "$ID" | grep '"CpuQuota": 1001'
     CHECK_RESULT $? 0 0 'check "CpuQuota": 1001 test failed'
     ID=$(podman create --cpu-rt-period 1 alpine ls)
-    podman inspect $ID | grep '"CpuRealtimePeriod": 1'
+    podman inspect "$ID" | grep '"CpuRealtimePeriod": 1'
     CHECK_RESULT $? 0 0 'check "CpuRealtimePeriod": 1 test failed'
     ID=$(podman create --cpu-rt-runtime 2 alpine ls)
-    podman inspect $ID | grep '"CpuRealtimeRuntime": 2'
+    podman inspect "$ID" | grep '"CpuRealtimeRuntime": 2'
     CHECK_RESULT $? 0 0 'check "CpuRealtimeRuntime": 2 test failed'
     ID=$(podman create --cpu-shares 3 alpine ls)
-    podman inspect $ID | grep '"CpuShares": 3'
+    podman inspect "$ID" | grep '"CpuShares": 3'
     CHECK_RESULT $? 0 0 'check "CpuShares": 3 test failed'
     ID=$(podman create --cpus 4 alpine ls)
-    podman inspect $ID | grep '"CpuQuota": 400000'
+    podman inspect "$ID" | grep '"CpuQuota": 400000'
     CHECK_RESULT $? 0 0 'check "CpuQuota": 400000 test failed'
     LOG_INFO "End to run test."
 }
@@ -61,7 +63,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

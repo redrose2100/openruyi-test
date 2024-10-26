@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   podman build
 # ############################################
+# shellcheck disable=SC1091
 
-source ../common/common_podman.sh
+source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL cpp
@@ -32,23 +34,23 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     id=$(podman build . | sed -n '$p')
-    test -z ${id}
+    test -z "${id}"
     CHECK_RESULT $? 1 0 'check id failed'
-    cat ./Dockerfile | podman build -f - . | grep ${id}
-    CHECK_RESULT $? 0 0 'check cat ./Dockerfile | podman build -f - . | grep ${id} failed'
-    podman build --runtime-flag debug . | grep ${id}
-    CHECK_RESULT $? 0 0 'check podman build --runtime-flag debug . | grep ${id} failed'
-    podman build --authfile myauths.json --cert-dir $HOME/auth --tls-verify=true --creds=username:password -t hjfd -f ./Dockerfile.simple . | grep ${id}
+    podman build -f - . <./Dockerfile | grep "${id}"
+    CHECK_RESULT $? 0 0 "check cat ./Dockerfile | podman build -f - . | grep ${id} failed"
+    podman build --runtime-flag debug . | grep "${id}"
+    CHECK_RESULT $? 0 0 "check podman build --runtime-flag debug . | grep ${id} failed"
+    podman build --authfile myauths.json --cert-dir "$HOME"/auth --tls-verify=true --creds=username:password -t hjfd -f ./Dockerfile.simple . | grep "${id}"
     CHECK_RESULT $? 0 0 'check podman build --authfile ./authdir/myauths.json --cert-dir failed'
-    podman build --memory 40m --cpu-period 10000 --cpu-quota 50000 --ulimit nofile=1024:1028 -t imagenam . | grep ${id}
+    podman build --memory 40m --cpu-period 10000 --cpu-quota 50000 --ulimit nofile=1024:1028 -t imagenam . | grep "${id}"
     CHECK_RESULT $? 0 0 'check podman build --memory 40m --cpu-period 10000 --cpu-quota 50000 --ulimit failed'
-    podman build -f Dockerfile.simple -f Containerfile.notsosimple . | grep ${id}
+    podman build -f Dockerfile.simple -f Containerfile.notsosimple . | grep "${id}"
     CHECK_RESULT $? 0 0 'check podman build -f Dockerfile.simple -f Containerfile.notsosimple . failed'
-    podman build -f Dockerfile.in ${HOME} | grep ${id}
-    CHECK_RESULT $? 0 0 'check podman build -f Dockerfile.in ${HOME} | grep ${id} failed'
+    podman build -f Dockerfile.in "${HOME}" | grep "${id}"
+    CHECK_RESULT $? 0 0 "check podman build -f Dockerfile.in ${HOME} | grep ${id} failed"
     podman build --no-cache --rm=false -t newimages1 . | grep "Successfully tagged localhost/newimages1:latest"
     CHECK_RESULT $? 0 0 'check podman build --no-cache --rm=false -t newimages1 . failed'
-    podman build --layers --force-rm -t testname . | grep ${id}
+    podman build --layers --force-rm -t testname . | grep "${id}"
     CHECK_RESULT $? 0 0 'check podman build --layers --force-rm -t testname . failed'
     podman build --no-cache -t imageert . | grep "Successfully tagged localhost/imageert:latest"
     CHECK_RESULT $? 0 0 'check podman build --no-cache -t imageert . failed'
@@ -57,10 +59,11 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf $(ls | grep -vE '.sh') common*
+    find . -type f ! -name '*.sh' -exec rm -f {} +
+    rm -f common*
     clear_env
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

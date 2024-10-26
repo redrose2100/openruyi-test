@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   podman build
 # ############################################
+# shellcheck disable=SC1091
 
-source ../common/common_podman.sh
+source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
@@ -30,26 +32,27 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     value=$(podman build --security-opt label=level:s0:c100,c200 --cgroup-parent /path/to/cgroup/parent -t imageme . | sed -n '$p')
-    test -z ${value}
+    test -z "${value}"
     CHECK_RESULT $? 1 0 'check value failed'
-    podman build --authfile myauths.json --cert-dir $HOME/auth --tls-verify=true --creds=username:password -t imageme -f Dockerfile.simple . | grep ${value}
+    podman build --authfile myauths.json --cert-dir "$HOME"/auth --tls-verify=true --creds=username:password -t imageme -f Dockerfile.simple . | grep "${value}"
     CHECK_RESULT $? 0 0 'check podman build --authfile temp-auths/myauths.json --cert-dir failed'
-    podman build --runtime-flag log-format=json . | grep ${value}
+    podman build --runtime-flag log-format=json . | grep "${value}"
     CHECK_RESULT $? 0 0 'check podman build --runtime-flag log-format=json . failed'
-    podman build --tls-verify=false -t imagename . | grep ${value}
+    podman build --tls-verify=false -t imagename . | grep "${value}"
     CHECK_RESULT $? 0 0 'check podman build --tls-verify=false -t imagename . failed'
-    podman build --tls-verify=true -t imagename1 -f Dockerfile.simple . | grep ${value}
+    podman build --tls-verify=true -t imagename1 -f Dockerfile.simple . | grep "${value}"
     CHECK_RESULT $? 0 0 'check podman build --tls-verify=true -t imagename1 -f Dockerfile.simple . failed'
-    podman build -t imag . | grep ${value}
+    podman build -t imag . | grep "${value}"
     CHECK_RESULT $? 0 0 'check podman build -t imag .'
     LOG_INFO "End executing testcase."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf $(ls | grep -vE '.sh') common*
+    find . -type f ! -name '*.sh' -exec rm -f {} +
+    rm -f common*
     clear_env
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

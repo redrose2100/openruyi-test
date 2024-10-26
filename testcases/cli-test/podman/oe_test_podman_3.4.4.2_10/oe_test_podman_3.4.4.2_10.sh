@@ -17,12 +17,14 @@
 # @Desc      :   The usage of commands in podman package
 # ############################################
 # shellcheck disable=SC1091
+
 source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman pull registry.access.redhat.com/ubi8-minimal
-    podman run --name postgres registry.access.redhat.com/ubi8-minimal
+    podman pull postgres:alpine
+    podman run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
     LOG_INFO "End to prepare the test environment."
 }
 

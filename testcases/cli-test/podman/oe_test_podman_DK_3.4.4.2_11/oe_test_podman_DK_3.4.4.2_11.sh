@@ -16,50 +16,52 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
+# shellcheck disable=SC1091
 
-source "../common/common_podman.sh"
+source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    docker pull registry.access.redhat.com/ubi8-minimal
-    docker run --name postgres registry.access.redhat.com/ubi8-minimal
+    docker pull postgres:alpine
+    docker run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     ID=$(docker create --dns 255.255.255.0 alpine ls)
-    docker inspect $ID | grep "255.255.255.0"
-    CHECK_RESULT $? 0 0 'check docker inspect $ID | grep "255.255.255.0" failed'
+    docker inspect "$ID" | grep "255.255.255.0"
+    CHECK_RESULT $? 0 0 "check docker inspect $ID | grep '255.255.255.0' failed"
     ID=$(docker create --dns-opt 8.8.8.8 alpine ls)
-    docker inspect $ID | grep "8.8.8.8"
-    CHECK_RESULT $? 0 0 'check docker inspect $ID | grep "8.8.8.8" failed'
+    docker inspect "$ID" | grep "8.8.8.8"
+    CHECK_RESULT $? 0 0 "check docker inspect $ID | grep '8.8.8.8' failed"
     ID=$(docker create --dns-search domain alpine ls)
-    docker inspect $ID | grep "domain"
-    CHECK_RESULT $? 0 0 'check docker inspect $ID | grep "domain" failed'
+    docker inspect "$ID" | grep "domain"
+    CHECK_RESULT $? 0 0 "check docker inspect $ID | grep 'domain' failed"
     ID=$(docker create --name ctr --env ENV*****=b alpine printenv ENV*****)
-    docker inspect $ID | grep "ENV****"
-    CHECK_RESULT $? 0 0 'check docker inspect $ID | grep "ENV****" failed'
+    docker inspect "$ID" | grep "ENV****"
+    CHECK_RESULT $? 0 0 "check docker inspect $ID | grep "ENV****" failed"
     echo "ENV*****=b" >./a
     ID=$(docker create --env-file ./a alpine ls)
-    docker inspect $ID | grep "ENV"
-    CHECK_RESULT $? 0 0 'check docker inspect $ID | grep "ENV" faield' 
+    docker inspect "$ID" | grep "ENV"
+    CHECK_RESULT $? 0 0 "check docker inspect $ID | grep 'ENV' failed" 
     ID=$(docker create --expose 1 alpine ls)
-    docker inspect $ID | grep "0"
-    CHECK_RESULT $? 0 0 'check docker inspect $ID | grep "0" failed'
+    docker inspect "$ID" | grep "0"
+    CHECK_RESULT $? 0 0 "check docker inspect $ID | grep '0' failed"
     ID=$(docker create --uidmap 0:30000:7000 --gidmap 0:30000:7000 fedora echo hello)
-    docker inspect $ID | grep "gid"
-    CHECK_RESULT $? 0 0 'check docker inspect $ID | grep "gid" failed'
+    docker inspect "$ID" | grep "gid"
+    CHECK_RESULT $? 0 0 "check docker inspect $ID | grep 'gid' failed"
     ID=$(docker create --group-add groups alpine ls)
-    docker inspect $ID | grep -i group
-    CHECK_RESULT $? 0 0 'check docker inspect $ID | grep -i group failed'
+    docker inspect "$ID" | grep -i group
+    CHECK_RESULT $? 0 0 "check docker inspect $ID | grep -i group failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

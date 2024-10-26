@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   podman-start-pause-unpause
 # ############################################
+# shellcheck disable=SC1091
 
-source ../common/common_podman.sh
+source "../common/common3.4.4.2_podman.sh"
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_env
@@ -49,7 +51,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 'check podman start -i -l failed'
     podman pause test1 new_name
     CHECK_RESULT $? 0 0 'check podman pause test1 new_name failed'
-    podman ps -a | grep test1 | grep paused
+    podman ps -a | grep test1 | grep -i paused
     CHECK_RESULT $? 0 0 'check podman ps -a | grep test1 failed'
     podman unpause test1 new_name
     CHECK_RESULT $? 0 0 'check podman unpause test1 new_name failed'
@@ -74,4 +76,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
