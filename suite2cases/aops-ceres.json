@@ -1,8 +1,23 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/aops-ceres",
+    "path": "$OET_PATH/testcases/smoke-test/smoke-aops-ceres",
     "cases": [
         {
-            "name": "oe_test_service_aops-ceres"
+            "name": "oe_test_ceres_apollo_fix"
+        },
+        {
+            "name": "oe_test_ceres_apollo_set-repo"
+        },
+        {
+            "name": "oe_test_ceres_collect_host"
+        },
+        {
+            "name": "oe_test_ceres_collect_application"
+        },
+        {
+            "name": "oe_test_ceres_apollo_scan"
+        },
+        {
+            "name": "oe_test_ceres_collect_file"
         }
     ]
 }
