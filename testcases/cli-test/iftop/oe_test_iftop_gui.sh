@@ -48,7 +48,7 @@ EOF
     kill -9 "$(pgrep -f 'iftop -b')"
     expect <<EOF
         spawn iftop -n -F $ipv4_target_network/24
-        expect "$ipv4_target_addr" {
+        expect "$ip_vir4" {
             exec touch ./opt_F
         }
         send "q"
