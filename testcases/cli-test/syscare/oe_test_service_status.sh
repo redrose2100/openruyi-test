@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test syscare.service status
 # #############################################
-#shellcheck disable=SC1091
+
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -30,31 +30,31 @@ function run_test() {
     LOG_INFO "syscare service test"
     systemctl start syscare.service
     systemctl status syscare.service | grep -w 'active'
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "syscare-service status is not active"
     systemctl stop syscare.service
     systemctl status syscare.service | grep -w 'inactive'
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "syscare-service status is not inactive"
     systemctl restart syscare.service
     systemctl status syscare.service | grep -w 'active'
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "syscare-service status is not active"
 
     LOG_INFO "upatch service test"
     systemctl start upatch.service
     systemctl status upatch.service | grep -w 'active'
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "upatch-service status is not active"
     systemctl stop upatch.service
     systemctl status upatch.service | grep -w 'inactive'
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "upatch-service status is not inactive"
     systemctl restart upatch.service
     systemctl status upatch.service | grep -w 'active'
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "upatch-service status is not active"
 
     LOG_INFO "remove syscare & upatch"
     DNF_REMOVE "$@"
     systemctl status syscare.service
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "syscare-service still exist"
     systemctl status upatch.service
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "upatch-service still exist"
 
     LOG_INFO "End to run test."
 }
