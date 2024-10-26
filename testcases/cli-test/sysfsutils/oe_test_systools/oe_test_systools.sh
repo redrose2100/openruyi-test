@@ -30,7 +30,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Buses information query failed"
     systool -c pps -av | grep pps
     CHECK_RESULT $? 0 0 "classes information query failed"
-    systool -m acpi -av | grep acpi
+    systool -m cpufreq -av | grep cpufreq
     CHECK_RESULT $? 0 0 "modules information query failed"
     LOG_INFO "End to run test."
 }
