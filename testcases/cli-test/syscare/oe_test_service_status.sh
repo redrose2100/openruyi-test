@@ -21,7 +21,7 @@ source "$OET_PATH/testcases/cli-test/syscare/common/common_syscare.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "syscare syscare-build"
+    DNF_INSTALL "syscare" "syscare-build"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -50,7 +50,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "upatch-service status is not active"
 
     LOG_INFO "remove syscare & upatch"
-    DNF_REMOVE "$@"
+    DNF_REMOVE "syscare" "syscare-build"
     systemctl status syscare.service
     CHECK_RESULT $? 0 1 "syscare-service still exist"
     systemctl status upatch.service
