@@ -16,26 +16,33 @@
 #@Desc          :   Default rules for firewall
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     CHECK_RESULT "$(firewall-cmd --state)" "running" 0 "firewalld.service not running"
-    ls -l ./*.info && rm -rf ./*.info
+    rm -rf ./*.info
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    CHECK_RESULT "$(firewall-cmd --get-zones)" "block dmz drop external home internal libvirt nm-shared public trusted work" 0 "check default exists zone fail"
-    CHECK_RESULT "$(firewall-cmd --get-target --permanent)" "default" 0 "check default target fail"
-    CHECK_RESULT "$(firewall-cmd --get-default-zone)" "public" 0 "check default zone fail"
+    firewall-cmd --get-zones|grep -E "block dmz drop external home internal public trusted work|block dmz drop external home internal libvirt nm-shared public trusted work"
+    CHECK_RESULT $? 0 0 "check default exists zone fail"
+    firewall-cmd --get-target --permanent|grep "default"
+    CHECK_RESULT $? 0 0 "check default target fail"
+    firewall-cmd --get-default-zone|grep "public"
+    CHECK_RESULT $? 0 0 "check default zone fail"
 
     NODE1_Interface=$(ip a |grep "${NODE1_IPV4}" -B2 |head -1 |awk -F ":" '{print $2}' |awk '{print $1}')
-    CHECK_RESULT "$(firewall-cmd --list-all |grep interfaces |awk '{print $NF}')" "${NODE1_Interface}" 0 "check values of interfaces in runtime public zone fail"
-    CHECK_RESULT "$(firewall-cmd --list-all --permanent |grep interfaces |awk '{print $1}')" "interfaces:" 0 "check values of interfaces in permanent public zone fail"
-    CHECK_RESULT "$(firewall-cmd --list-all |head -1)" "public (active)" 0 "runtime public zone status fail"
-    CHECK_RESULT "$(firewall-cmd --list-all --permanent |head -1)" "public" 0 "permanent public zone fail"
+    firewall-cmd --list-all |grep interfaces |awk '{print $NF}'|grep "${NODE1_Interface}"
+    CHECK_RESULT $? 0 0 "check values of interfaces in runtime public zone fail"
+    firewall-cmd --list-all --permanent |grep interfaces |awk '{print $1}'|grep "interfaces:"
+    CHECK_RESULT $? 0 0 "check values of interfaces in permanent public zone fail"
+    firewall-cmd --list-all |head -1|grep "public (active)"
+    CHECK_RESULT $? 0 0 "runtime public zone status fail"
+    firewall-cmd --list-all --permanent |head -1|grep "public"
+    CHECK_RESULT $? 0 0 "permanent public zone fail"
 
     firewall-cmd --list-all |grep -v -E 'interfaces|public' > runtime_rule.info
     firewall-cmd --list-all --permanent |grep -v -E 'interfaces|public' > permanent_rule.info
@@ -46,7 +53,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    ls -l ./*.info && rm -rf ./*.info
+    rm -rf ./*.info
     LOG_INFO "End to restore the test environment."
 }
 

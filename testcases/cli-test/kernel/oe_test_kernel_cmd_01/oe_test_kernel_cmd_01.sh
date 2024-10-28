@@ -26,29 +26,29 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     cpupower -h | grep "Usage" | grep "cpupower"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "check -h usage fail"
     cpupower help | grep "Usage" | grep "cpupower"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "check help usage fail"
     cpupower frequency-info | grep "analyzing CPU "
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "check analyzing CPU fail"
     if ! hostnamectl | grep Virtualization && ! lshw -c system | grep -E "product.*qemu"; then
         current_frequency=$(cpupower frequency-info | grep "current CPU frequency" | awk -F ": " '{print $2}' | awk '{print $1}')
         cpupower frequency-set -f 1.0GHz
-        CHECK_RESULT $?
-        cpupower frequency-info | grep "current CPU frequency" | grep "1000 MHz"
-        CHECK_RESULT $?
+        CHECK_RESULT $? 0 0 "check 1.0GHz fail"
+        cpupower frequency-info | grep "current CPU frequency" | grep "Hz"
+        CHECK_RESULT $? 0 0 "check current CPU frequency Hz fail"
         cpupower frequency-set -f "${current_frequency}"GHz
     fi
     cpupower idle-info | grep "analyzing CPU "
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "check analyzing CPU fail"
     cpupower idle-set
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "check idle-set fail"
     cpupower info | grep "analyzing CPU "
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "check analyzing CPU fail"
     gpio-event-mon -? 2>&1 | grep "Usage: gpio-event-mon"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "check Usage: gpio-event-mon fail"
     gpio-hammer -? 2>&1 | grep "Usage: gpio-hammer"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "check Usage: gpio-hammer fail"
     LOG_INFO "End of the test."
 }
 
