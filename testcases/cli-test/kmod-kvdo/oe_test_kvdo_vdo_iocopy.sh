@@ -31,14 +31,18 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    vdo create --name=vdo1 --device="${free_disk}" --vdoLogicalSize=130G --force
+    pvcreate --yes "${free_disk}"
     CHECK_RESULT $?
-    mkfs.xfs -K /dev/mapper/vdo1
+    vgcreate vg_test --yes "${free_disk}"
     CHECK_RESULT $?
-    mount /dev/mapper/vdo1 /mnt/
+    lvcreate --type=vdo --yes -n lv_test -L 5g vg_test
+    CHECK_RESULT $?
+    mkfs.xfs /dev/vg_test/lv_test
+    CHECK_RESULT $?
+    mount /dev/vg_test/lv_test /mnt/
     CHECK_RESULT $?
     for ((i = 1; i < 6; i++)); do
-        dd if=/dev/zero of=/mnt/test"${i}" bs=25M count=1024
+        dd if=/dev/zero of=/mnt/test"${i}" bs=256k count=1024
         CHECK_RESULT $?
     done
     \cp /mnt/test1 /mnt/test2 2>cp_result1 &
@@ -60,10 +64,14 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     kill -9 "$(pgrep -f cp_result)"
-    rm -rf /mnt/./*
+    if [ -d /mnt ]; then
+    rm -rf "${STEAMROOT:?}/"*
+    fi
     umount /mnt
-    vdo remove --name=vdo1
-    DNF_REMOVE 1
+    lvremove -f /dev/vg_test/lv_test
+    vgremove -f vg_test
+    pvremove -f "${free_disk}"
+    DNF_REMOVE "$&"
     rm -rf cp_result*
     LOG_INFO "Finish environment cleanup!"
 }
