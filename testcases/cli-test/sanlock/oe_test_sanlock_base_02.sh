@@ -58,9 +58,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check sanlock client read -s failed"
 
     nohup sanlock client command -r test:testres:./res:0 >./info1.log 2>&1 &
+    ppid=$!
     SLEEP_WAIT  10
     sanlock client init -r test:testres1:./res:0
-    sanlock client acquire -r test:testres1:./res:0 -p $(pgrep -f "sanlock client command") | grep "acquire done 0"
+    sanlock client acquire -r test:testres1:./res:0 -p $ppid | grep "acquire done"
     CHECK_RESULT $? 0 0 "Check sanlock client acquire -r -p failed"
 
     sanlock client inq_lockspace -s test:0:./dev:0 | grep "inq_lockspace done 0"

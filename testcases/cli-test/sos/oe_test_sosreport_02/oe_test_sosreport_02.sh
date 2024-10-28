@@ -71,7 +71,7 @@ EOF
 	CHECK_RESULT $?
 	expect <<EOF
 		log_file sos_log14
-		spawn sosreport -k dnf.history
+		spawn sosreport -k history
 		expect "" {send "\r"}
 		expect ":" {send "plugin-option\r"}
 		sleep 180
