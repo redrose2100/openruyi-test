@@ -49,7 +49,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    su test1 -c "./demo_main" | grep -Pz "PWR_SetServerInfo.*:SUCCESS ret: 0[\S\s]*GetCpuInfo succeed"
+    su - test1 -c "./demo_main" | grep -Pz "PWR_SetServerInfo.*:SUCCESS ret: 0[\S\s]*GetCpuInfo succeed"
     CHECK_RESULT $? 0 0 "Check interface PWR_SetServerInfo failed"
     LOG_INFO "End to run test."
 }

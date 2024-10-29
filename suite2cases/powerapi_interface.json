@@ -243,6 +243,14 @@
             "machine type": "physical"
         },
 	{
+            "name": "oe_test_interface_powerapi_65",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_67",
+            "machine type": "physical"
+        },
+	{
             "name": "oe_test_interface_powerapi_68",
             "machine type": "physical"
         },
@@ -267,6 +275,22 @@
             "machine type": "physical"
         },
 	{
+            "name": "oe_test_interface_powerapi_74",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_75",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_78",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_81",
+            "machine type": "physical"
+        },
+	{
             "name": "oe_test_interface_powerapi_82",
             "machine type": "physical"
         },
@@ -284,6 +308,10 @@
         },
 	{
             "name": "oe_test_interface_powerapi_86",
+            "machine type": "physical"
+        },
+	{
+            "name": "oe_test_interface_powerapi_87",
             "machine type": "physical"
         },
 	{
@@ -335,7 +363,19 @@
             "machine type": "physical"
 	},
 	{
+            "name": "oe_test_interface_powerapi_100",
+            "machine type": "physical"
+	},
+	{
             "name": "oe_test_interface_powerapi_101",
+            "machine type": "physical"
+	},
+	{
+            "name": "oe_test_interface_powerapi_102",
+            "machine type": "physical"
+	},
+	{
+            "name": "oe_test_interface_powerapi_103",
             "machine type": "physical"
         }
     ]
