@@ -40,11 +40,11 @@ EOF
     SSH_CMD "
     echo  ':msg,contains,'abd' @@${NODE1_IPV4}' > /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
-    logger -t local5 -p local5.info "local5infoabd$time"
+    logger -t local5 -p local5.info 'local5infoabd"$time"'
     " ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     CHECK_RESULT $?
     SLEEP_WAIT 20
-    grep -a "local5infoabd$time" /var/log/messages
+    grep -a local5infoabd$time /var/log/messages
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
