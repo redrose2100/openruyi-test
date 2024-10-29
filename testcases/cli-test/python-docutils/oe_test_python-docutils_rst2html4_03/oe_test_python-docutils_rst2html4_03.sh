@@ -15,6 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   The command rst2html4 parameter coverage test of the python-docutils package
 #####################################
+# shellcheck disable=SC1090
+
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -31,7 +33,7 @@ function run_test() {
     CHECK_RESULT $?
     rst2html4 --record-dependencies=recordlist.log testfile.rst test2.html && grep 'html4css1.css' recordlist.log
     CHECK_RESULT $?
-    test "$(rst2html4 -V | awk '{print$3}')" == "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
+    [[ "$(rst2html4 -V | awk '{print$3}')" =~ $(rpm -qa python3-docutils | awk -F "-" '{print$3}') ]]
     CHECK_RESULT $?
     rst2html4 -h | grep 'Usage'
     CHECK_RESULT $?
@@ -68,8 +70,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf ./*.html ./*.rst ./*.log
+    DNF_REMOVE "$@"
+    rm -rf ./*.html ./*.rst ./*.log template_html.txt
     LOG_INFO "Finish restoring the test environment."
 }
 

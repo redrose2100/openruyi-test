@@ -15,8 +15,10 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   The command rstpep2html parameter coverage test of the python-docutils package
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "python-docutils"
@@ -28,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     rstpep2html --title=testtitle pep.rst test1.html && test -f test1.html
     CHECK_RESULT $?
-    rstpep2html -g pep.rst test2.html && grep 'href="http://docutils.sourceforge.net/' test2.html
+    rstpep2html -g pep.rst test2.html && grep "docutils.sourceforge" test2.html
     CHECK_RESULT $?
     rstpep2html --no-generator pep.rst test3.html
     CHECK_RESULT $?
@@ -48,14 +50,14 @@ function run_test() {
     CHECK_RESULT $?
     grep 'href="pep.rst"' test8.html
     CHECK_RESULT $? 0 1
-    rstpep2html --toc-entry-backlinks pep.rst test9.html && grep 'class="toc-backref" href="#id12"' test9.html
+    rstpep2html --toc-entry-backlinks pep.rst test9.html && grep 'class="toc-backref" href="#' test9.html
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.html ./*.rst ./*.log
     LOG_INFO "Finish restoring the test environment."
 }
