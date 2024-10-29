@@ -33,19 +33,19 @@ function run_test() {
 
     P_SSH_CMD --cmd "gnutls-serv --http --x509cafile ca-cert.pem --x509certfile server-cert.pem --x509keyfile server-key.pem --port 50051" &
     wait_server_start 50051
-    gnutls-cli "$ETS_REMOTE_IP" --port 50051 --x509cafile ca-cert.pem --x509certfile client-cert.pem --x509keyfile client-key.pem --verify-hostname localhost > client.log
+    gnutls-cli "$NODE2_IPV4" --port 50051 --x509cafile ca-cert.pem --x509certfile client-cert.pem --x509keyfile client-key.pem --verify-hostname localhost > client.log
     check_connect client.log
     CHECK_RESULT $? 0 0 "connect failed first."
-    gnutls-cli "$ETS_REMOTE_IP" --port 50051 --x509cafile ca-cert.pem --verify-hostname localhost > client.log
+    gnutls-cli "$NODE2_IPV4" --port 50051 --x509cafile ca-cert.pem --verify-hostname localhost > client.log
     check_connect client.log
     CHECK_RESULT $? 0 0 "connect failed second."
 
     P_SSH_CMD --cmd "gnutls-serv --http --x509certfile server-cert.pem --x509keyfile server-key.pem --port 50052" &
     wait_server_start 50052
-    gnutls-cli "$ETS_REMOTE_IP" --port 50052 --x509cafile ca-cert.pem --x509certfile client-cert.pem --x509keyfile client-key.pem --verify-hostname localhost > client.log
+    gnutls-cli "$NODE2_IPV4" --port 50052 --x509cafile ca-cert.pem --x509certfile client-cert.pem --x509keyfile client-key.pem --verify-hostname localhost > client.log
     check_connect client.log
     CHECK_RESULT $? 0 0 "connect failed third."
-    gnutls-cli "$ETS_REMOTE_IP" --port 50052 --x509cafile ca-cert.pem --verify-hostname localhost > client.log
+    gnutls-cli "$NODE2_IPV4" --port 50052 --x509cafile ca-cert.pem --verify-hostname localhost > client.log
     check_connect client.log
     CHECK_RESULT $? 0 0 "connect failed fourth."
 
