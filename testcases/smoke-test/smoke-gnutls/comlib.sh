@@ -65,7 +65,7 @@ function create_server_cert() {
     echo "encryption_key" >> server.tmpl
     echo "signing_key" >> server.tmpl
     echo "dns_name = localhost" >> server.tmpl
-    echo "ip_address = ${ETS_REMOTE_IP}" >> server.tmpl
+    echo "ip_address = ${NODE2_IPV4}" >> server.tmpl
     SFTP put --localdir ./ --localfile server.tmpl --remotedir /root --node 2
 
     P_SSH_CMD --cmd "certtool --generate-privkey --outfile server-key.pem"
