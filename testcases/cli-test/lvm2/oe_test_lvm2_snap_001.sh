@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   lvm-snap test
 # ############################################
-source ./common/disk_lib.sh
+source "$OET_PATH/testcases/cli-test/lvm2/common/disk_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL lvm2
