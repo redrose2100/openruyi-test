@@ -25,6 +25,22 @@ function pre_test() {
     LOG_INFO "End of environmental preparation!"
 }
 
+find_free_port() {  
+    local start_port=5000  
+    local found=0
+
+    while [ $found -eq 0 ]; do  
+        if ! ss -tuln | grep -q ":$start_port "; then  
+            echo $start_port  
+            found=1  
+        else    
+            ((start_port++))  
+        fi  
+    done  
+}  
+
+FREE_PORT=$(find_free_port)  
+
 function run_test() {
     LOG_INFO "Start testing..."
     cat >test.py<<EOF
@@ -37,7 +53,7 @@ def application(request):
 
 if __name__ == '__main__':
     from werkzeug.serving import run_simple
-    run_simple('localhost', 5000, application)
+    run_simple('localhost', $FREE_PORT, application)
 EOF
     test -f test.py
     CHECK_RESULT $? 0 0 "Create test.py file fail"
@@ -45,7 +61,7 @@ EOF
     CHECK_RESULT $? 0 0 "Execution fail"
     sleep 5
     CHECK_RESULT $? 0 0 "Execution fail"
-    curl http://localhost:5000 | grep "Hello, World!"                        
+    curl http://localhost:$FREE_PORT
     CHECK_RESULT $? 0 0 "Execution fail"
     LOG_INFO "Finish test!"
 }
