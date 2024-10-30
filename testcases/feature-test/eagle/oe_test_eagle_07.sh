@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if ! test -d /sys/fs/cgroup/cpu/watt_sched; then
+    if ! test -f /sys/fs/cgroup/cpu/cpu.dynamic_affinity_mode; then
         echo "the environment is not support!"
         exit 0
     fi

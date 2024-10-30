@@ -21,10 +21,6 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if ! test -d /sys/fs/cgroup/cpu/watt_sched; then
-        echo "the environment is not support!"
-        exit 0
-    fi
     DNF_INSTALL "eagle"
     cp /etc/eagle/eagle_policy.ini /etc/eagle/eagle_policy.ini_bak
     LOG_INFO "End to to prepare the test environment."
