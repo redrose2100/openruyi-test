@@ -29,9 +29,9 @@ function run_test() {
     LOG_INFO "Start to run test."
     oeawarectl -e thread_scenario | grep "Instance enabled successfully"
     CHECK_RESULT $? 0 0 "Error: plugin enable"
-    cd /usr/lib64/oeAware-plugin || exit
-    
-    rm -rf libthread_collector.so
+    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so -execdir mv {} {}.bak \;
+    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so -execdir rm {} {} \;
+
     oeawarectl -q | grep "thread_scenario(available, running)"
     CHECK_RESULT $? 0 0 "Error: thread_scenario status is wrong"
     oeawarectl -q | grep "thread_collector(available, running)"
@@ -46,6 +46,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so.bak -execdir mv {} libthread_collector.so \;
+    systemctl restart oeaware
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
