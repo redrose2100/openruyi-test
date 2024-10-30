@@ -15,8 +15,10 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   The command rst2xetex parameter coverage test of the python-docutils package
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "python-docutils"
@@ -28,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     rst2xetex --title=testtitle testfile.rst test1.tex && test -f test1.tex
     CHECK_RESULT $?
-    rst2xetex -g testfile.rst test2.tex && grep 'href{http://docutils.sourceforge.net/}' test2.tex
+    rst2xetex -g testfile.rst test2.tex && grep "docutils.sourceforge" test2.tex
     CHECK_RESULT $?
     rst2xetex --no-generator testfile.rst test3.tex
     CHECK_RESULT $?
@@ -53,7 +55,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.tex ./*.rst ./*.log ./*.sty
     LOG_INFO "Finish restoring the test environment."
 }

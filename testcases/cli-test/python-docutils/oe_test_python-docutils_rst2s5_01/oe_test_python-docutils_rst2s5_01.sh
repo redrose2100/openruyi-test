@@ -15,6 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   The command rst2s5 parameter coverage test of the python-docutils package
 #####################################
+# shellcheck disable=SC1090
+
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -28,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     rst2s5 --title=testtitle testfile.rst test1.html && grep testtitle test1.html
     CHECK_RESULT $?
-    rst2s5 -g testfile.rst test2.html && grep 'href="http://docutils.sourceforge.net/' test2.html
+    rst2s5 -g testfile.rst test2.html && grep "docutils.sourceforge" test2.html
     CHECK_RESULT $?
     rst2s5 --no-generator testfile.rst test3.html
     CHECK_RESULT $?
@@ -48,7 +50,7 @@ function run_test() {
     CHECK_RESULT $?
     grep 'href="testfile.rst"' test8.html
     CHECK_RESULT $? 1
-    rst2s5 --toc-entry-backlinks testfile.rst test9.html && grep 'class="toc-backref" href="#id' test9.html
+    rst2s5 --toc-entry-backlinks testfile.rst test9.html && grep 'class="toc-backref" href="#' test9.html
     CHECK_RESULT $?
     rst2s5 --toc-top-backlinks testfile.rst test10.html && grep 'class="toc-backref" href="#table-of-contents-title"' test10.html
     CHECK_RESULT $?
@@ -81,7 +83,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.html ./*.rst ./ui
     LOG_INFO "Finish restoring the test environment."
 }

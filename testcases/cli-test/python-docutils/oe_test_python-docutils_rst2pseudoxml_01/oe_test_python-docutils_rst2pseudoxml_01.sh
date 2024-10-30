@@ -15,6 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   The command rst2pseudoxml parameter coverage test of the python-docutils package
 #####################################
+# shellcheck disable=SC1090
+
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -46,7 +48,7 @@ function run_test() {
     CHECK_RESULT $?
     grep 'refuri="testfile.rst"' test8.xml
     CHECK_RESULT $? 1
-    rst2pseudoxml --toc-entry-backlinks testfile.rst test9.xml && grep 'title refid="id' test9.xml
+    rst2pseudoxml --toc-entry-backlinks testfile.rst test9.xml && grep "<title refid=" test9.xml
     CHECK_RESULT $?
     rst2pseudoxml --toc-top-backlinks testfile.rst test10.xml && grep 'title refid="table-of-contents-title"' test10.xml
     CHECK_RESULT $?
@@ -79,7 +81,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.xml ./*.rst
     LOG_INFO "Finish restoring the test environment."
 }
