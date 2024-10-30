@@ -43,12 +43,14 @@ function check_connect() {
 }
 
 function create_ca_cert() {
-    echo "cn = GnuTLS test CA" > ca.tmpl
-    echo "expiration_days = 365" >> ca.tmpl
-    echo "ca" >> ca.tmpl
-    echo "signing_key" >> ca.tmpl
-    echo "cert_signing_key" >> ca.tmpl
-    echo "crl_signing_key" >> ca.tmpl
+    {
+        echo "cn = GnuTLS test CA"
+        echo "expiration_days = 365"
+        echo "ca"
+        echo "signing_key"
+        echo "cert_signing_key"
+        echo "crl_signing_key"
+    } > ca.tmpl
     SFTP put --localdir ./ --localfile ca.tmpl --remotedir /root --node 2
 
     P_SSH_CMD --cmd "certtool --generate-privkey --outfile ca-key.pem"
@@ -58,13 +60,15 @@ function create_ca_cert() {
 }
 
 function create_server_cert() {
-    echo "cn = test.gnutls.org" > server.tmpl
-    echo "expiration_days = 365" >> server.tmpl
-    echo "tls_www_server" >> server.tmpl
-    echo "encryption_key" >> server.tmpl
-    echo "signing_key" >> server.tmpl
-    echo "dns_name = localhost" >> server.tmpl
-    echo "ip_address = ${NODE2_IPV4}" >> server.tmpl
+    {
+        echo "cn = test.gnutls.org"
+        echo "expiration_days = 365"
+        echo "tls_www_server"
+        echo "encryption_key"
+        echo "signing_key"
+        echo "dns_name = localhost"
+        echo "ip_address = ${NODE2_IPV4}"
+    } > server.tmpl
     SFTP put --localdir ./ --localfile server.tmpl --remotedir /root --node 2
 
     P_SSH_CMD --cmd "certtool --generate-privkey --outfile server-key.pem"
@@ -73,12 +77,14 @@ function create_server_cert() {
 }
 
 function create_client_cert() {
-    echo "cn = test.gnutls.org" > client.tmpl
-    echo "expiration_days = 365" >> client.tmpl
-    echo "tls_www_client" >> client.tmpl
-    echo "encryption_key" >> client.tmpl
-    echo "signing_key" >> client.tmpl
-    echo "dns_name = localhost" >> client.tmpl
+    {
+        echo "cn = test.gnutls.org"
+        echo "expiration_days = 365"
+        echo "tls_www_client"
+        echo "encryption_key"
+        echo "signing_key"
+        echo "dns_name = localhost"
+    } > client.tmpl
 
     certtool --generate-privkey --outfile client-key.pem
     certtool --generate-certificate --load-privkey client-key.pem --load-ca-certificate ca-cert.pem \
