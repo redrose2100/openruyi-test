@@ -15,7 +15,6 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   gnutls connect test public functions
 ####################################
-# shellcheck disable=SC2129
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function check_time() {
