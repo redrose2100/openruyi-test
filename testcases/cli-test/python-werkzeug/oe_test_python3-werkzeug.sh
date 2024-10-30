@@ -61,7 +61,7 @@ EOF
     CHECK_RESULT $? 0 0 "Execution fail"
     sleep 5
     CHECK_RESULT $? 0 0 "Execution fail"
-    curl http://localhost:$FREE_PORT
+    curl http://localhost:"$FREE_PORT"
     CHECK_RESULT $? 0 0 "Execution fail"
     LOG_INFO "Finish test!"
 }
