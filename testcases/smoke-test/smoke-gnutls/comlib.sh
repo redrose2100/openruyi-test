@@ -37,7 +37,7 @@ function wait_server_start() {
 function check_connect() {
     local file=${1}
     for ((i = 0; i < 20; i++)); do
-	cat "$file" | grep -v "error" | grep "Handshake was completed" && return 0
+        grep -v "error" "$file" | grep "Handshake was completed" && return 0
         sleep 0.5
     done
     return 1
