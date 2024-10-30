@@ -15,7 +15,7 @@
 # @Date      :   2024/10/29
 # @Desc      :   gnutls tls connect test 
 # ##################################
-source "$(pwd)"/comlib.sh
+source "${OET_PATH}"/testcases/smoke-test/smoke-gnutls/comlib.sh
 
 function pre_test() {
     DNF_INSTALL gnutls-utils
