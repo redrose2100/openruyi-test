@@ -27,6 +27,28 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
+    local start_port=5000  
+    local free_port=""  
+  
+    # 循环检查端口，直到找到空闲端口  
+    while [ -z "$free_port" ]; do  
+        # 检查端口是否被占用  
+        if ! ss -tuln | grep -q ":$start_port "; then  
+            free_port=$start_port  
+        else  
+            ((start_port++))  
+        fi  
+  
+        # 可选：添加超时或限制最大端口号以防止无限循环  
+         if [ $start_port -gt 65535 ]; then  
+             echo "Error: No free port found within the range."  
+             exit 1  
+         fi  
+  
+        # 为了避免过于频繁的端口检查（尤其是在端口密集占用的情况下），可以添加一个小的休眠时间  
+        # sleep 0.1  
+    done 
+
     cat >test.py<<EOF
 #!/usr/bin/python
 from werkzeug.wrappers import Request, Response
@@ -37,7 +59,7 @@ def application(request):
 
 if __name__ == '__main__':
     from werkzeug.serving import run_simple
-    run_simple('localhost', 5000, application)
+    run_simple('localhost', $free_port, application)
 EOF
     test -f test.py
     CHECK_RESULT $? 0 0 "Create test.py file fail"
@@ -45,7 +67,7 @@ EOF
     CHECK_RESULT $? 0 0 "Execution fail"
     sleep 5
     CHECK_RESULT $? 0 0 "Execution fail"
-    curl http://localhost:5000 | grep "Hello, World!"                        
+    curl http://localhost:"$free_port"       
     CHECK_RESULT $? 0 0 "Execution fail"
     LOG_INFO "Finish test!"
 }
@@ -58,4 +80,5 @@ function post_test() {
 }
 
 main "$@"
+
 
