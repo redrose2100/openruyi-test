@@ -1,0 +1,78 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+####################################
+#@Author        :   wenjun
+#@Contact       :   1009065695@qq.com
+#@Date          :   2024-10-09
+#@License       :   Mulan PSL v2
+#@Desc          :   set parameter [sched_service] smart_grid_vip_procs test
+#####################################
+
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if ! test -f /sys/fs/cgroup/cpu/cpu.dynamic_affinity_mode; then
+        echo "the environment is not support!"
+        exit 0
+    fi
+    DNF_INSTALL "eagle"
+    cp /etc/eagle/eagle_policy.ini /etc/eagle/eagle_policy.ini_bak
+    echo "sleep 30" > test1.sh
+    echo "sleep 30" > test2.sh
+    LOG_INFO "End to to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+    sh test1.sh &
+    pid=$(pgrep -f "sh test1.sh")
+    level_origin=$(cat /proc/"${pid}"/smart_grid_level)
+    sed -i 's/smart_grid_vip_procs =.*/smart_grid_vip_procs = all/' /etc/eagle/eagle_policy.ini
+    SLEEP_WAIT 5
+    level_cur=$(cat /proc/"${pid}"/smart_grid_level)
+    test "${level_origin}" != "${level_cur}" -a "${level_cur}" = 0
+    CHECK_RESULT $? 0 0 "Check [sched_service] smart_grid_vip_procs=all failed"
+    kill -9 "${pid}"
+
+    sh test1.sh &
+    sh test2.sh &
+    sed -i 's/smart_grid_vip_procs =.*/smart_grid_vip_procs = sh test1.sh|test2.sh/' /etc/eagle/eagle_policy.ini
+    SLEEP_WAIT 5
+    pid1=$(pgrep -f "sh test1.sh")
+    pid2=$(pgrep -f "sh test2.sh")
+    pid1_level=$(cat /proc/"${pid1}"/smart_grid_level)
+    pid2_level=$(cat /proc/"${pid2}"/smart_grid_level)
+    test "${pid1_level}" = 0 -a "${pid2_level}" = 0
+    CHECK_RESULT $? 0 0 "Check [sched_service] smart_grid_vip_procs=sh test1.sh|test2.sh failed"
+    kill -9 "${pid1}" "${pid2}"
+    
+    sh test1.sh &
+    pid=$(pgrep -f "sh test1.sh")
+    level_origin=$(cat /proc/"${pid}"/smart_grid_level)
+    sed -i 's/smart_grid_vip_procs =.*/smart_grid_vip_procs = /' /etc/eagle/eagle_policy.ini
+    SLEEP_WAIT 5
+    level_cur=$(cat /proc/"${pid}"/smart_grid_level)
+    test "${level_origin}" != "${level_cur}" -a "${level_cur}" = 0
+    CHECK_RESULT $? 0 0 "Check [sched_service] smart_grid_vip_procs= failed"
+    kill -9 "${pid}"
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    rm -rf test1.sh test2.sh
+    mv -f /etc/eagle/eagle_policy.ini_bak /etc/eagle/eagle_policy.ini
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"

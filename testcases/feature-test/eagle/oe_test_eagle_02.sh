@@ -20,34 +20,33 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if ! test -d /sys/fs/cgroup/cpu/watt_sched; then
-        echo "the environment is not support!"
-        exit 0
-    fi
     DNF_INSTALL "eagle"
     cp /etc/eagle/eagle_config.ini /etc/eagle/eagle_config.ini_bak
-    sed -i 's/config_update_interval=.*/config_update_interval=5' /etc/eagle/eagle_config.ini
+    sed -i 's/config_update_interval=.*/config_update_interval=5/' /etc/eagle/eagle_config.ini
+    log=/var/log/eagle/eagle.log
     LOG_INFO "End to to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    grep -e "DEBUG PWRAPI" -e "INFO PWRAPI" -e "ERROR PWRAPI" /var/log/eagle/eagle.log
+    grep "DEBUG " "${log}" && grep "INFO " "${log}" && grep "ERROR PWRAPI" "${log}"
     CHECK_RESULT $? 0 0 "Check log_level=0 failed"
-    echo > /var/log/eagle/eagle.log
-    sed -i 's/log_level=.*/log_level=1/' /etc/eagle/eagle_config.ini
     SLEEP_WAIT 80
-    grep -e "INFO PWRAPI" -e "ERROR PWRAPI" /var/log/eagle/eagle.log
+    echo > "${log}"
+    sed -i 's/log_level=.*/log_level=1/' /etc/eagle/eagle_config.ini
+    SLEEP_WAIT 5
+    cat "${log}"
+    grep "INFO " "${log}" && grep "ERROR " "${log}"
     CHECK_RESULT $? 0 0 "Check log_level=1 failed"
-    echo > /var/log/eagle/eagle.log
+    echo > "${log}"
     sed -i 's/log_level=.*/log_level=2/' /etc/eagle/eagle_config.ini
     SLEEP_WAIT 5
-    grep -e "ERROR PWRAPI" /var/log/eagle/eagle.log
+    grep "ERROR " "${log}"
     CHECK_RESULT $? 0 0 "Check log_level=2 failed"
-    echo > /var/log/eagle/eagle.log
+    echo > "${log}"
     sed -i 's/log_level=.*/log_level=3/' /etc/eagle/eagle_config.ini
     SLEEP_WAIT 5
-    grep "ERROR PWRAPI" /var/log/eagle/eagle.log
+    grep "ERROR " "${log}"
     CHECK_RESULT $? 0 0 "Check log_level=3 failed"
     LOG_INFO "End to run test."
 }
