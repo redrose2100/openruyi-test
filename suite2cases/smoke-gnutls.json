@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test/smoke-gnutls",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_gnutls_basic_test",
+            "machine num": 2
+        }
+    ]
+}
