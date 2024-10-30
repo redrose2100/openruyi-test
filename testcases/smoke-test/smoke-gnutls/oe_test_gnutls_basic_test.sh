@@ -15,7 +15,6 @@
 # @Date      :   2024/10/29
 # @Desc      :   gnutls tls connect test 
 # ##################################
-# shellcheck disable=SC1091,SC2002,SC2035
 source comlib.sh
 
 function pre_test() {
