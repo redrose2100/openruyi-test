@@ -15,7 +15,7 @@
 # @Date      :   2024/10/29
 # @Desc      :   gnutls tls connect test 
 # ##################################
-source comlib.sh
+source "$(pwd)"/comlib.sh
 
 function pre_test() {
     DNF_INSTALL gnutls-utils
