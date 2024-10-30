@@ -70,7 +70,7 @@ function create_server_cert() {
 
     P_SSH_CMD --cmd "certtool --generate-privkey --outfile server-key.pem"
     P_SSH_CMD --cmd "certtool --generate-certificate --load-privkey server-key.pem --load-ca-certificate ca-cert.pem \
-    --load-ca-privkey ca-key.pem --template server.tmpl --outfile server-cert.pem"
+        --load-ca-privkey ca-key.pem --template server.tmpl --outfile server-cert.pem"
 }
 
 function create_client_cert() {
