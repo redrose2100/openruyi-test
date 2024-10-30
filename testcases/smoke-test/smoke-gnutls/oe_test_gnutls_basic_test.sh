@@ -56,8 +56,8 @@ function post_test() {
     P_SSH_CMD --cmd "systemctl start firewalld"
     rm -rf *.log *.pem *.tmpl
     P_SSH_CMD --cmd "rm -rf *.pem *.tmpl"
-    DNF_REMOVE
-    DNF_REMOVE 2
+    DNF_REMOVE 1 "$@"
+    DNF_REMOVE 2 "$@"
 }
 
 main "$@"
