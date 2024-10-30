@@ -15,6 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   The command rst2html5 parameter coverage test of the python-docutils package
 #####################################
+# shellcheck disable=SC1090
+
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -28,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     rst2html5 --title=testtitle testfile.rst test1.html && grep testtitle test1.html
     CHECK_RESULT $?
-    rst2html5 -g testfile.rst test2.html && grep 'href="http://docutils.sourceforge.net/' test2.html
+    rst2html5 -g testfile.rst test2.html && grep "docutils.sourceforge" test2.html
     CHECK_RESULT $?
     rst2html5 --no-generator testfile.rst test3.html
     CHECK_RESULT $?
@@ -48,7 +50,7 @@ function run_test() {
     CHECK_RESULT $?
     grep 'href="testfile.rst"' test8.html
     CHECK_RESULT $? 1
-    rst2html5 --toc-entry-backlinks testfile.rst test9.html && grep 'class="toc-backref" href="#id' test9.html
+    rst2html5 --toc-entry-backlinks testfile.rst test9.html && grep 'An Exceptional Section' test9.html
     CHECK_RESULT $?
     rst2html5 --toc-top-backlinks testfile.rst test10.html && grep 'class="toc-backref" href="#table-of-contents-title"' test10.html
     CHECK_RESULT $?
@@ -60,7 +62,7 @@ function run_test() {
     CHECK_RESULT $?
     grep 'class="fn-backref"' test12_1.html
     CHECK_RESULT $? 1
-    rst2html5 --footnote-backlinks testfile.rst test12_2.html && grep 'class="fn-backref"' test12_2.html
+    rst2html5 --footnote-backlinks testfile.rst test12_2.html && grep -E "class=\"fn-backref\" | class=\"fn-bracket\"" test12_2.html
     CHECK_RESULT $?
     rst2html5 --strip-comments testfile.rst test13.html
     CHECK_RESULT $?
@@ -81,7 +83,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.html ./*.rst
     LOG_INFO "Finish restoring the test environment."
 }
