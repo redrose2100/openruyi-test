@@ -7,10 +7,7 @@
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
-# shellcheck disable=SC2207
-# shellcheck disable=SC2202
-# shellcheck disable=SC2009
-# shellcheck disable=SC2022
+
 # #############################################
 # @Author    :   duxiao
 # @Contact   :   duxiao13@h-partners.com
