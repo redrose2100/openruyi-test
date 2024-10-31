@@ -38,7 +38,7 @@ function run_test() {
         test -n "$domain" && break
         sleep 1
     done
-    CHECK_RESULT $i 10 1 "check sssctl domain-list"
+    CHECK_RESULT "$i" 10 1 "check sssctl domain-list"
     sssctl domain-status "$domain"
     CHECK_RESULT $? 0 0 "check sssctl domain-status"
     sssctl config-check -c /etc/sssd/sssd.conf
