@@ -16,7 +16,6 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command test-zstdcat
 # ############################################
-# shellcheck disable=SC1017
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -29,22 +28,22 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     rpm -qa | grep zstd
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstd install"
     echo test_str > testfile
     zstd testfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "raw file"
     zstdcat testfile.zst | grep -w "test_str"
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdcat zstfile"
     zstdcat testfile.zst -o tmpfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdcat -o"
     diff testfile tmpfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdcat -o"
     echo y | zstdcat testfile.zst -o tmpfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdcat zst -o file"
     zstdcat -f testfile.zst -o tmpfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdcat -f zst -o file"
     zstdcat --rm testfile.zst
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdcat --rm"
     test -f testfile.zst
     CHECK_RESULT $? 0 1 "Return value error"
     LOG_INFO "End to run test."
