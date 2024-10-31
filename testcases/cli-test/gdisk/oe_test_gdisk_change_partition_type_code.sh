@@ -22,7 +22,7 @@ source "${OET_PATH}"/testcases/cli-test/gdisk/common_lib.sh
 function pre_test() {
 	DNF_INSTALL gdisk
 	get_unused_disk
-	[ -z "$unused_disk" ] && exit 1
+	[ -z "$unused_disk" ] && echo "no unused disk" && exit 1
 }
 
 function run_test() {
