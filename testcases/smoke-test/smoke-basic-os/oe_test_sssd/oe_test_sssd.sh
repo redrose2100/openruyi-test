@@ -58,6 +58,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf sssduser
     rm -f sssd-test.log
+    systemctl stop sssd
     mv -f /etc/sssd/sssd.conf.bak /etc/sssd/sssd.conf
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
