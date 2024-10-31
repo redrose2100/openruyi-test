@@ -19,16 +19,21 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
     which pscap || DNF_INSTALL "libcap-ng libcap-ng-utils"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
+    LOG_INFO "Start to run test."
     pscap -a | grep -A5 "capabilities"
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "Check pscap -a failed"
 }
 
 function post_test() {
+    LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@" 
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
