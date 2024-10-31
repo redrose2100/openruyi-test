@@ -23,36 +23,40 @@ testfile2=test"$RANDOM"2
 path=$(pwd)/"$testdir"
 
 function pre_test() {
+    LOG_INFO "Start to prepare the test environment."	
     which filecap || DNF_INSTALL "libcap-ng libcap-ng-utils"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
+    LOG_INFO "Start to run test."
     #创建一个文件夹和两个文件
     mkdir "$testdir" && touch "$testdir"/"$testfile1" "$testdir"/"$testfile2"
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "mkdir and touch "$testdir" failed"
     #给文件添加capabilities
     filecap "$path"/"$testfile1" sys_time && filecap "$path"/"$testfile2" sys_time
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "Check filecap failed"
     #获取文件的capabilities
     filecap "$path"/"$testfile1" | grep "sys\_time"
-    CHECK_RESULT $? 0 0
-
+    CHECK_RESULT $? 0 0 "Check testfile1 capabilities failed"
     filecap "$path"/"$testfile2" | grep "sys\_time"
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0  "Check testfile2 capabilities failed"
     #获取testdir目录下文件的capabilities
     filecap "$path" | grep "$testfile1" && filecap "$path" | grep "$testfile1"
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "Check testdir capabilities failed"
     #移除文件的capabilities
     filecap "$path"/"$testfile1" none && filecap "$path"/"$testfile2" none
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "Check remove testfile capabilities failed"
     #再次获取文件的capabilities
     get_filecap=$(filecap "$path")
     test -z "$get_filecap"
 }
 
 function post_test() {
+    LOG_INFO "Start to restore the test environment."
     rm -rf "$testdir"
     DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
