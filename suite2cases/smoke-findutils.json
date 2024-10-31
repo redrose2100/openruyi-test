@@ -1,0 +1,15 @@
+{
+    "path": "${OET_PATH}/testcases/smoke-test/smoke-findutils",
+    "cases": [
+        {
+            "name": "oe_test_find_FUN.001"
+        },
+                {
+                        "name": "oe_test_find_FUN.002"
+                },
+                {
+                        "name": "oe_test_find_FUN.003"
+                }
+    ]
+}
+
