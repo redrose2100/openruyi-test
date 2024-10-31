@@ -21,11 +21,14 @@ testfile=file"$RANDOM"
 path=$(pwd)/"$testfile"
 
 function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
     which filecap || DNF_INSTALL "libcap-ng libcap-ng-utils"
     touch "$testfile"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
+    LOG_INFO "Start to run test."
     for i in $(seq 10000); do
         {
             filecap "$path" sys_time
@@ -35,14 +38,16 @@ function run_test() {
     wait
 
     filecap "$path" sys_time
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "Check filecap failed"
     filecap "$path" | grep "sys\_time"
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "Check sys\_time failed"
 }
 
 function post_test() {
+    LOG_INFO "Start to restore the test environment."
     rm -rf "$testfile"
     DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
