@@ -16,7 +16,6 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command test-zstdmt
 # ############################################
-# shellcheck disable=SC1017
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -29,22 +28,22 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     rpm -qa | grep zstd
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstd install"
     echo test_str > testfile
     zstdmt -2 testfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdmt -2 file"
     zstdmt -d testfile.zst -o tmpfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdmt -d zst -o file"
     diff tmpfile testfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdmt -d zst -o file"
     zstdmt -f -d testfile.zst
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdmt -f -d zst"
     zstdmt --rm -f testfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdmt --rm -f file"
     test -f testfile
-    CHECK_RESULT $? 0 1 "Return value error"
+    CHECK_RESULT $? 0 1 "check zstdmt --rm -f file"
     zstdmt -d --rm -f testfile.zst
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstdmt -d zst"
     LOG_INFO "End to run test."
 }
 
