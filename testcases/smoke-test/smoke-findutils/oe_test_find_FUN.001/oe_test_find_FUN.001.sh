@@ -15,7 +15,7 @@
 # @Date      :   2024/10/30
 # @Desc      :   user identity authentication sm test
 # ##################################
-# shellcheck disable=SC2002,SC2119
+# shellcheck disable=SC2002,SC2119,SC2185
 
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
