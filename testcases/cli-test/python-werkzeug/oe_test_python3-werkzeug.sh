@@ -40,7 +40,7 @@ function run_test() {
         fi  
   
         # 可选：添加超时或限制最大端口号以防止无限循环  
-         if [ $start_port -gt 65535 ]; then  
+         if [ "$start_port" -gt 65535 ]; then  
              echo "Error: No free port found within the range."  
              exit 1  
          fi  
