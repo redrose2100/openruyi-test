@@ -34,7 +34,7 @@ function run_test() {
     CHECK_RESULT $?
     pmevent --container=busybox vfs.inodes.count -s 10 | grep 'metric'
     CHECK_RESULT $?
-    pmevent --derived=/var/lib/pcp/config/pmieconf/dm -s 10 "$metric_name" | grep 'metric'
+    pmevent --derived=/var/lib/pcp/config/pmieconf/cpu -s 10 "$metric_name" | grep 'metric'
     CHECK_RESULT $?
     pmevent -a "$archive_data" -d -s 10 "$metric_name" | grep 'metric'
     CHECK_RESULT $?

@@ -29,11 +29,12 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     grep "^PasswordAuthentication yes" /etc/ssh/sshd_config
     CHECK_RESULT $?
-    semanage port --delete -t ssh_port_t -p tcp 36
-    CHECK_RESULT $?
     semanage port -a -t ssh_port_t -p tcp 36
     CHECK_RESULT $?
+    semanage port --delete -t ssh_port_t -p tcp 36
+    CHECK_RESULT $?
     firewall-cmd --remove-port 36/tcp
+    CHECK_RESULT $?
     firewall-cmd --add-port 36/tcp
     CHECK_RESULT $?
     firewall-cmd --runtime-to-permanent
@@ -44,8 +45,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     firewall-cmd --remove-port 36/tcp
-    firewall-cmd --runtime-to-permanent
-    DNF_REMOVE
+    semanage port --delete -t ssh_port_t -p tcp 36
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
