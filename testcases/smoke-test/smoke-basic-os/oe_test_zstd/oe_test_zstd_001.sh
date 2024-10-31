@@ -16,7 +16,6 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command test-zstd
 # ############################################
-# shellcheck disable=SC1017
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -29,37 +28,37 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     rpm -qa | grep zstd
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstd install"
     echo test_str > testfile
     zstd testfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstd file"
     file testfile.zst | grep " Zstandard compressed"
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstd file"
 
     rm -rf testfile.zst
     zstd -19 testfile
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check zstd -19" 
 
     mv testfile testfile_bak
     zstd -d testfile.zst
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check zstd -d" 
     diff testfile testfile_bak
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check zstd -d" 
 
     rm -rf testfile.zst
     zstd -18 testfile -o tmpfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check zstd -18 file.zst"
     file tmpfile | grep " Zstandard compressed"
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check zstd -18 file.zst" 
 
     zstd -f testfile
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check zstd -f file" 
     zstd --rm -f testfile
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check zstd --rm file" 
     test -f testfile.zst
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check zstd --rm file" 
     test -f testfile
-    CHECK_RESULT $? 0 1 "Return value error"
+    CHECK_RESULT $? 0 1 "check zstd --rm file"
     LOG_INFO "End to run test."
 }
 
