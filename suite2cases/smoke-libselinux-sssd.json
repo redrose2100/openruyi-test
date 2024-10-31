@@ -1,0 +1,11 @@
+{
+    "path": "${OET_PATH}/testcases/smoke-test/smoke-basic-os",
+    "cases": [
+        {
+            "name": "oe_test_libselinux"
+        },
+        {
+            "name": "oe_test_sssd"
+        }
+    ]
+}
