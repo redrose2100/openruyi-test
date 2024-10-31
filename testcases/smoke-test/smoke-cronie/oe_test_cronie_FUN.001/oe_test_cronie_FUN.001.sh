@@ -24,9 +24,9 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     which crontab || yum install -y cronie
     systemctl status crond.service || systemctl restart crond.service
-    if [ -e $CRONPATH ]; then
+    if [ -e "$CRONPATH" ]; then
         flag=1
-        cp -ar $CRONPATH /var/spool/cron/root.bak
+        cp -ar "$CRONPATH" /var/spool/cron/root.bak
     fi
     LOG_INFO "End to prepare the test environment."
 }
@@ -38,7 +38,7 @@ function do_test() {
     crontab -c | grep local
     CHECK_RESULT $? 0 0
     crontab -s cron_task
-    cat $CRONPATH | grep -E "MLS_LEVEL|SELINUX_ROLE_TYPE"
+    cat "$CRONPATH" | grep -E "MLS_LEVEL|SELINUX_ROLE_TYPE"
     CHECK_RESULT $? 0 0
     echo n | crontab -i -r
     crontab -l | grep "test_long.sh"
@@ -54,7 +54,7 @@ function post_test() {
     id=$(yum history | grep "install -y python3-pip" | head -n1 | awk '{print $1}')
     [ -z "${id}" ] || yum history undo -y "$id"
     if [ $flag == 1 ]; then
-        mv /var/spool/cron/root.bak $CRONPATH
+        mv /var/spool/cron/root.bak "$CRONPATH"
     fi
     LOG_INFO "End to clean the test environment."
 }
