@@ -18,7 +18,6 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 path="$PATH"
 testfile=test"$RANDOM"
-#curr_loc=$(pwd)
 location=$(pwd)/"$testfile"
 
 function pre_test() {
@@ -38,8 +37,8 @@ function run_test() {
     capsh --print | grep Bounding | awk -F"=" '{print $2}' | sed 's/cap_//g;s/,/ /g' > set_info 2>&1
     filecap -d > filecap_d_info 2>&1
     while read -r line || [[ -n $line ]];do 
-    grep -i "$line" set_info
-    CHECK_RESULT $? 0 0 "Check filecap -d failed"
+         grep -i "$line" set_info
+         CHECK_RESULT $? 0 0 "Check filecap -d failed"
     done < filecap_d_info
 
     #验证filecap -a参数
