@@ -16,7 +16,6 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command test-unzstd
 # ############################################
-# shellcheck disable=SC1017
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -29,24 +28,24 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     rpm -qa | grep zstd
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check zstd install"
     echo test_str > testfile
     zstd testfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "raw file"
     unzstd testfile.zst -o srcfile
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check unzstd zst -o file"
     diff srcfile testfile
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check unzstd"
     unzstd -2 -f --rm testfile.zst -o srcfile
-    CHECK_RESULT $? 0 0 "Return value error"
+    CHECK_RESULT $? 0 0 "check unzstd -2 -f --rm"
     test -f testfile.zst
-    CHECK_RESULT $? 0 1 "Return value error" 
+    CHECK_RESULT $? 0 1 "check unzstd -2 -f --rm"
     unzstd -h > tmpfile
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check unzstd help"
     grep "Usage" tmpfile
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check unzstd help"
     grep "Advanced arguments" tmpfile
-    CHECK_RESULT $? 0 0 "Return value error" 
+    CHECK_RESULT $? 0 0 "check unzstd help"
     LOG_INFO "End to run test."
 }
 
