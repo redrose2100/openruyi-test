@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test/smoke-libcap-ng",
+    "cases": [
+        {
+            "name": "oe_libcap-ng_captest_command_001"
+        },
+	{
+            "name": "oe_libcap-ng_captest_normal_user_001"
+	},
+	{
+	    "name": "oe_libcap-ng_filecap_command_001"
+	},
+	{
+	    "name": "oe_libcap-ng_filecap_command_002"
+	},
+	{
+	    "name": "oe_libcap-ng_filecap_simultane_001"
+	},
+	{
+	   "name": "oe_libcap-ng_netcap_command_001"
+	},
+	{
+	    "name": "oe_libcap-ng_package_remove_001"
+	},
+	{
+	    "name": "oe_libcap-ng_ping_remove_cap_001"
+	},
+	{
+	    "name": "oe_libcap-ng_pscap_command_001"
+	}
+    ]
+}
