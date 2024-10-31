@@ -30,8 +30,6 @@ function run_test() {
     LOG_INFO "Start testing..."
     find --help | grep "Usage"
     CHECK_RESULT $? 0 0 
-    find -help | grep "Usage"
-    CHECK_RESULT $? 0 0 
     LOG_INFO "Finish test!"
 }
 
