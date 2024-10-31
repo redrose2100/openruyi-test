@@ -1,0 +1,8 @@
+{
+    "path": "${OET_PATH}/testcases/smoke-test/smoke-cronie",
+    "cases": [
+        {
+            "name": "oe_test_cronie_FUN.001"
+        }
+    ]
+}
