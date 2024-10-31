@@ -18,24 +18,29 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
     rpm -q libcap-ng || DNF_INSTALL "libcap-ng"
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
+    LOG_INFO "Start to run test."
     rpm -ql libcap-ng > libcap-ng_file 2>&1
     rpm -e libcap-ng --nodeps
     while read -r line; do
         test -f "$line"
-        CHECK_RESULT $? 0 1
+        CHECK_RESULT $? 0 1 "Check rpm -e libcap-ng --nodeps failed"
     done < libcap-ng_file
 
     yum install libcap-ng -y
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "yum install libcap-ng failed"
 }
 
 function post_test() {
+    LOG_INFO "Start to restore the test environment."
     rm -rf libcap-ng_file
     DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
