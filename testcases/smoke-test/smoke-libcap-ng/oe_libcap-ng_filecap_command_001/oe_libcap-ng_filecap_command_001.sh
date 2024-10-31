@@ -32,7 +32,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     #创建一个文件夹和两个文件
     mkdir "$testdir" && touch "$testdir"/"$testfile1" "$testdir"/"$testfile2"
-    CHECK_RESULT $? 0 0 "mkdir and touch "$testdir" failed"
+    CHECK_RESULT $? 0 0 "mkdir and touch testdir failed"
     #给文件添加capabilities
     filecap "$path"/"$testfile1" sys_time && filecap "$path"/"$testfile2" sys_time
     CHECK_RESULT $? 0 0 "Check filecap failed"
