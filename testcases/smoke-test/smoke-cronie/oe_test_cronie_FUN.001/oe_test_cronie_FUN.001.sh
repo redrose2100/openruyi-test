@@ -31,7 +31,7 @@ function pre_test() {
     LOG_INFO "End to prepare the test environment."
 }
 
-function do_test() {
+function run_test() {
     LOG_INFO "Start testing..."
     crontab -n local
     CHECK_RESULT $? 0 0 
