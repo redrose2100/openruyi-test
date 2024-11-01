@@ -1,0 +1,29 @@
+{
+    "path":"$OET_PATH/testcases/smoke-test/smoke-oeaware",
+    "cases":[
+	{
+            "name": "plugin_load_test"
+        },
+        {
+            "name": "plugin_remove_test"
+        },
+        {
+            "name": "plugin_query_test"
+        },
+        {
+            "name": "plugin_list_test"
+        },
+        {
+            "name": "plugin_install_test"
+        },
+        {
+            "name": "plugin_enable_test"
+        },
+        {
+            "name": "plugin_disable_test"
+        },
+        {
+            "name": "plugin_query_dep_test"
+        }
+    ]
+}
