@@ -22,7 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 set +e
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    which find || yum install -y findutils
+    DNF_INSTALL findutils
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -37,8 +37,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to clean the test environment."
-    id=$(yum history | grep "install -y findutils" | head -n1 | awk '{print $1}')
-    [ -z "${id}" ] || yum history undo -y "$id"
+    DNF_REMOVE "$@"
     LOG_INFO "End to clean the test environment."
 }
 
