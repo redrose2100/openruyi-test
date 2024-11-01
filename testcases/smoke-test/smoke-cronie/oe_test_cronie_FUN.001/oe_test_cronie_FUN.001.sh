@@ -22,7 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 set +e
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    which crontab || yum install -y cronie
+    DNF_INSTALL cronie
     systemctl status crond.service || systemctl restart crond.service
     if [ -e "$CRONPATH" ]; then
         flag=1
@@ -51,8 +51,7 @@ function do_test() {
 
 function post_test() {
     LOG_INFO "Start to clean the test environment."
-    id=$(yum history | grep "install -y python3-pip" | head -n1 | awk '{print $1}')
-    [ -z "${id}" ] || yum history undo -y "$id"
+    DNF_REMOVE "$@"
     if [ $flag == 1 ]; then
         mv /var/spool/cron/root.bak "$CRONPATH"
     fi
