@@ -56,7 +56,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    mvn -f "${mvn_path}/pom.xml" test | grep "run: 2, Failures: 0, Errors: 0, Skipped: 0"
+    mvn -f "${mvn_path}/pom.xml" test >mvn.log
+    CHECK_RESULT $? 0 0 "mvn -f failed."
+    grep "run: 2, Failures: 0, Errors: 0, Skipped: 0" mvn.log
     CHECK_RESULT $? 0 0 "testng execution use case failed."
 
     LOG_INFO "End to run test."
@@ -64,7 +66,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf /tmp/test
+    rm -rf /tmp/test mvn.log
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
