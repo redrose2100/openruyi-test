@@ -14,7 +14,7 @@
 # @Contact   :   cheliequan@inspur.com
 # @Date      :   2024/10/28
 # @License   :   Mulan PSL v2
-# @Desc      :   Test qemu-crypto-sm4
+# @Desc      :   Test qemu-crypto-aes-sm3
 # #############################################
 OET_PATH=$(readlink -f "../../../")
 source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
@@ -42,7 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     cleanup "${enc_volume}" "${volume}" 
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
