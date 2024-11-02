@@ -26,12 +26,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    \cp -rf /etc/oeAware/config.yaml /etc/oeAware/config_ori.yaml
     log_level_new='1'
     sed -i -e '/^log_level: / s/: .*/: '$log_level_new'/' /etc/oeAware/config.yaml
     grep -F "log_level: 1" /etc/oeAware/config.yaml
     CHECK_RESULT $? 0 0 "modify config file failed"
     systemctl restart oeaware
-    log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml)
+    log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml | awk '{$1=$1};1')
     test -f "$log_path"/server.log
     CHECK_RESULT $? 0 0 "logfile does not exist"
 
@@ -40,7 +41,7 @@ function run_test() {
     grep -F "log_level: 2" /etc/oeAware/config.yaml
     CHECK_RESULT $? 0 0 "modify config file failed"
     systemctl restart oeaware
-    log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml)
+    log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml | awk '{$1=$1};1')
     test -f "$log_path"/server.log
     CHECK_RESULT $? 0 0 "logfile does not exist"
 
@@ -49,7 +50,7 @@ function run_test() {
     grep -F "log_level: 3" /etc/oeAware/config.yaml
     CHECK_RESULT $? 0 0 "modify config file failed"
     systemctl restart oeaware
-    log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml)
+    log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml | awk '{$1=$1};1')
     test -f "$log_path"/server.log
     CHECK_RESULT $? 0 0 "logfile does not exist"
 
@@ -58,7 +59,7 @@ function run_test() {
     grep -F "log_level: 4" /etc/oeAware/config.yaml
     CHECK_RESULT $? 0 0 "modify config file failed"
     systemctl restart oeaware
-    log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml)
+    log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml | awk '{$1=$1};1')
     test -f "$log_path"/server.log
     CHECK_RESULT $? 0 0 "logfile does not exist"
     LOG_INFO "End to run test."
@@ -66,6 +67,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    mv /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
+    systemctl restart oeaware
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

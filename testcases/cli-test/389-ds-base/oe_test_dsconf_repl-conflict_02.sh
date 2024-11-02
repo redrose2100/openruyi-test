@@ -31,17 +31,17 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsconf localhost repl-conflict list-glue -h | grep "usage: dsconf instance repl-conflict list-glue"
+    dsconf localhost repl-conflict list-glue -h | grep "usage: dsconf.* instance repl-conflict list-glue"
     CHECK_RESULT $? 0 0 "Check: repl-conflict list-glue -h No Pass"
     dsconf localhost repl-conflict list-glue dc=example,dc=com | grep "no glue entries"
     CHECK_RESULT $? 0 0 "Check: repl-conflict list-glue No Pass"
-    dsconf localhost repl-conflict delete-glue -h | grep "usage: dsconf instance repl-conflict delete-glue"
+    dsconf localhost repl-conflict delete-glue -h | grep "usage: dsconf.* instance repl-conflict delete-glue"
     CHECK_RESULT $? 0 0 "Check: repl-conflict delete-glue -h No Pass"
-    dsconf localhost repl-conflict delete-glue dc=example,dc=com | grep "No such object"
+    dsconf localhost repl-conflict delete-glue dc=example,dc=com 2>&1 | grep "No such object"
     CHECK_RESULT $? 0 0 "Check: repl-conflict delete-glue No Pass"
-    dsconf localhost repl-conflict convert-glue -h | grep "usage: dsconf instance repl-conflict convert-glue"
+    dsconf localhost repl-conflict convert-glue -h | grep "usage: dsconf.* instance repl-conflict convert-glue"
     CHECK_RESULT $? 0 0 "Check: repl-conflict convert-glue -h No Pass"
-    dsconf localhost repl-conflict convert-glue dc=example,dc=com | grep "No such object"
+    dsconf localhost repl-conflict convert-glue dc=example,dc=com 2>&1 | grep "No such object"
     CHECK_RESULT $? 0 0 "Check: repl-conflict convert-glue No Pass"
     LOG_INFO "End to run test."
 

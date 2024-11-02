@@ -35,60 +35,129 @@ function run_test() {
     oeawarectl --list | grep "Plugin list as follows"
     CHECK_RESULT $? 0 0 "Failed command: oeawarectl --list"
 
-    oeawarectl -i numafast | grep "numafast"
-    CHECK_RESULT $? 0 0 "Failed command: oeawarectl -i|--install"
 
     oeawarectl -e thread_scenario | grep "Instance enabled successfully"
     CHECK_RESULT $? 0 0 "Instance enabled failed"
-    oeawarectl -e collector_pmu_sampling | grep "Instance enabled successfully"
-    CHECK_RESULT $? 0 0 "Instance enabled failed"
-    oeawarectl -e collector_pmu_counting | grep "Instance enabled successfully"
-    CHECK_RESULT $? 0 0 "Instance enabled failed"
-    oeawarectl -e collector_pmu_uncore | grep "Instance enabled successfully"
-    CHECK_RESULT $? 0 0 "Instance enabled failed"
-    oeawarectl -e collector_spe | grep "Instance enabled successfully"
-    CHECK_RESULT $? 0 0 "Instance enabled failed"
     oeawarectl -e thread_collector | grep "Instance enabled failed, because instance is already enabled"
     CHECK_RESULT $? 0 0 "Instance enabled failed"
+    oeawarectl -e smc_tune | grep "Instance enabled successfully"
+    CHECK_RESULT $? 0 0 "Instance disabled failed"   
+    oeawarectl -e thread_tune | grep "Instance enabled successfully"
+    CHECK_RESULT $? 0 0 "Instance disabled failed" 
+
     oeawarectl -q | grep "thread_scenario(available, running)"
     CHECK_RESULT $? 0 0 "Instance running failed"
-    oeawarectl -q | grep "collector_pmu_sampling(available, running)"
+    oeawarectl -q | grep "thread_collector(available, running)"
     CHECK_RESULT $? 0 0 "Instance running failed"
-    oeawarectl -q | grep "collector_pmu_counting(available, running)"
-    CHECK_RESULT $? 0 0 "Instance running failed"
-    oeawarectl -q | grep "collector_pmu_uncore(available, running)"
-    CHECK_RESULT $? 0 0 "Instance running failed"
-    oeawarectl -q | grep "collector_spe(available, running)"
+    oeawarectl -q | grep "thread_scenario(available, running)"
     CHECK_RESULT $? 0 0 "Instance running failed"
     oeawarectl -q | grep "thread_collector(available, running)"
     CHECK_RESULT $? 0 0 "Instance running failed"
 
     oeawarectl -d thread_scenario | grep "Instance disabled successfully"
     CHECK_RESULT $? 0 0 "Instance disabled failed"
-    oeawarectl -d collector_pmu_sampling | grep "Instance disabled successfully"
-    CHECK_RESULT $? 0 0 "Instance disabled failed"
-    oeawarectl -d collector_pmu_counting | grep "Instance disabled successfully"
-    CHECK_RESULT $? 0 0 "Instance disabled failed"
-    oeawarectl -d collector_pmu_uncore | grep "Instance disabled successfully"
-    CHECK_RESULT $? 0 0 "Instance disabled failed"
-    oeawarectl -d collector_spe | grep "Instance disabled successfully"
-    CHECK_RESULT $? 0 0 "Instance disabled failed"
-    oeawarectl -d thread_collector | grep "Instance disabled successfully"
-    CHECK_RESULT $? 0 0 "Instance disabled failed"
-    oeawarectl -d thread_collector | grep "Instance disabled failed, because instance is already disabled"
-    CHECK_RESULT $? 0 0 "Instance disabled failed"
     oeawarectl -q | grep "thread_scenario(available, close)"
     CHECK_RESULT $? 0 0 "Instance close failed"
-    oeawarectl -q | grep "collector_pmu_sampling(available, close)"
-    CHECK_RESULT $? 0 0 "Instance close failed"
-    oeawarectl -q | grep "collector_pmu_counting(available, close)"
-    CHECK_RESULT $? 0 0 "Instance close failed"
-    oeawarectl -q | grep "collector_pmu_uncore(available, close)"
-    CHECK_RESULT $? 0 0 "Instance close failed"
-    oeawarectl -q | grep "collector_spe(available, close)"
-    CHECK_RESULT $? 0 0 "Instance close failed"
+    oeawarectl -d thread_collector | grep "Instance disabled failed, because instance is already disabled"
+    CHECK_RESULT $? 0 0 "Instance status error"
     oeawarectl -q | grep "thread_collector(available, close)"
     CHECK_RESULT $? 0 0 "Instance close failed"
+    oeawarectl -d thread_tune | grep "Instance disabled successfully"
+    CHECK_RESULT $? 0 0 "Instance disabled failed"
+    oeawarectl -q | grep "thread_tune(available, close)"
+    CHECK_RESULT $? 0 0 "Instance close failed"
+    oeawarectl -d smc_tune | grep "Instance disabled successfully"
+    CHECK_RESULT $? 0 0 "Instance disabled failed"
+    oeawarectl -q | grep "smc_tune(available, close)"
+    CHECK_RESULT $? 0 0 "Instance close failed"
+
+
+
+    if [ "$NODE1_FRAME" == "aarch64" ]; then
+
+        if [ "$NODE1_MACHINE" == "kvm" ]
+        then
+
+            oeawarectl -i numafast | grep "numafast"
+            CHECK_RESULT $? 0 0 "Failed command: oeawarectl -i|--install"
+            
+            oeawarectl -e pmu_cycles_sampling | grep "Instance enabled successfully"
+            CHECK_RESULT $? 0 0 "Instance enabled failed"
+            oeawarectl -e pmu_cycles_counting | grep "Instance enabled successfully"
+            CHECK_RESULT $? 0 0 "Instance enabled failed"
+            oeawarectl -e pmu_uncore_counting | grep "Instance enabled failed, because instance init environment failed"
+            CHECK_RESULT $? 0 0 "Instance disabled failed"
+            oeawarectl -e pmu_spe_sampling | grep "Instance enabled failed, because instance init environment failed"
+            CHECK_RESULT $? 0 0 "Instance disabled failed"
+            oeawarectl -e pmu_netif_rx_counting | grep "Instance enabled successfully"
+            CHECK_RESULT $? 0 0 "Instance disabled failed"
+         
+
+           
+            oeawarectl -q | grep "pmu_cycles_sampling(available, running)"
+            CHECK_RESULT $? 0 0 "Instance running failed"
+            oeawarectl -q | grep "pmu_cycles_counting(available, running)"
+            CHECK_RESULT $? 0 0 "Instance running failed"
+            oeawarectl -q | grep "pmu_uncore_counting(available, close)"
+            CHECK_RESULT $? 0 0 "Instance status error"
+            oeawarectl -q | grep "pmu_spe_sampling(available, close)"
+            CHECK_RESULT $? 0 0 "Instance status error"
+            oeawarectl -q | grep "pmu_netif_rx_counting(available, running)"
+            CHECK_RESULT $? 0 0 "Instance running failed"
+            
+
+            
+            oeawarectl -d pmu_cycles_sampling | grep "Instance disabled successfully"
+            CHECK_RESULT $? 0 0 "Instance disabled failed"
+            oeawarectl -d pmu_cycles_counting | grep "Instance disabled successfully"
+            CHECK_RESULT $? 0 0 "Instance disabled failed"
+            oeawarectl -d pmu_uncore_counting | grep "Instance disabled failed, because instance is already disabled"
+            CHECK_RESULT $? 0 0 "Instance status error"
+            oeawarectl -d pmu_spe_sampling | grep "Instance disabled failed, because instance is already disabled"
+            CHECK_RESULT $? 0 0 "Instance status error"
+            oeawarectl -d pmu_netif_rx_counting | grep "Instance disabled successfully"
+            CHECK_RESULT $? 0 0 "Instance disabled failed"
+
+            
+
+            oeawarectl -q | grep "pmu_cycles_sampling(available, close)"
+            CHECK_RESULT $? 0 0 "Instance close failed"
+            oeawarectl -q | grep "pmu_cycles_counting(available, close)"
+            CHECK_RESULT $? 0 0 "Instance close failed"
+            oeawarectl -q | grep "pmu_uncore_counting(available, close)"
+            CHECK_RESULT $? 0 0 "Instance status error"
+            oeawarectl -q | grep "pmu_spe_sampling(available, close)"
+            CHECK_RESULT $? 0 0 "Instance status error"
+            oeawarectl -q | grep "pmu_netif_rx_counting(available, close)"
+            CHECK_RESULT $? 0 0 "Instance close failed"
+
+            
+            
+        else 
+            oeawarectl -e pmu_spe_sampling | grep "Instance enabled successfully"
+            CHECK_RESULT $? 0 0 "Instance enabled failed"
+            oeawarectl -e pmu_uncore_counting | grep "Instance enabled successfully"
+            CHECK_RESULT $? 0 0 "Instance enabled failed"
+
+            oeawarectl -q | grep "pmu_spe_sampling(available, running)"
+            CHECK_RESULT $? 0 0 "Instance running failed"
+            oeawarectl -q | grep "pmu_uncore_counting(available, running)"
+            CHECK_RESULT $? 0 0 "Instance running failed"
+
+            oeawarectl -d pmu_uncore_counting | grep "Instance disabled successfully"
+            CHECK_RESULT $? 0 0 "Instance disabled failed"
+            oeawarectl -d pmu_spe_sampling | grep "Instance disabled successfully"
+            CHECK_RESULT $? 0 0 "Instance disabled failed"
+
+            oeawarectl -q | grep "pmu_uncore_counting(available, close)"
+            CHECK_RESULT $? 0 0 "Instance close failed"
+            oeawarectl -q | grep "pmu_spe_sampling(available, close)"
+            CHECK_RESULT $? 0 0 "Instance close failed"
+
+        fi
+    fi
+
+
     LOG_INFO "End to run test."
 }
 

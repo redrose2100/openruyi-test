@@ -40,6 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
+    kill -9 "$(cat test.pid)"
     rm -rf test.sh test.log test.pid
     LOG_INFO "End to restore the test environment."
 }
