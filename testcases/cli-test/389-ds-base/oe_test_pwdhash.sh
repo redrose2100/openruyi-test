@@ -29,9 +29,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    pwdhash 123456 | grep -E "{PBKDF2_SHA256}"
+    pwdhash 123456 | grep -E -e "{PBKDF2-SHA512}" -e {PBKDF2_SHA256}
     CHECK_RESULT $? 0 0 "L$LINENO: pwdhash No Pass"
-    pwdhash -H 123456 | grep -E "{PBKDF2_SHA256}"
+    pwdhash -H 123456 | grep -E -e "{PBKDF2-SHA512}" -e {PBKDF2_SHA256}
     CHECK_RESULT $? 0 0 "L$LINENO: pwdhash -H No Pass"
     pwdhash -c 123456 123456 | grep -E "password ok"
     CHECK_RESULT $? 0 0 "L$LINENO: pwdhash -c No Pass"

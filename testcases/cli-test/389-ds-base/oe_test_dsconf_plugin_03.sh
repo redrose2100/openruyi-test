@@ -118,7 +118,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: plugin linked-attr status No Pass"
     dsconf localhost plugin linked-attr status  | grep "Plugin 'Linked Attributes' is disabled"
     CHECK_RESULT $? 0 0 "Check: plugin linked-attr status No Pass"
-    dsconf localhost plugin linked-attr fixup -l example | grep "Successfully added fixup task"
+    dsconf localhost plugin linked-attr fixup -l example | grep "Successfully added task entry"
     CHECK_RESULT $? 0 0 "Check: plugin linked-attr fixup -l No Pass"
     dsconf localhost plugin linked-attr config my_plugin add --link-type myLinkType --managed-type myManagedType --link-scope myLinkScope | grep "Successfully created the cn=my_plugin,cn=Linked Attributes,cn=plugins,cn=config"
     CHECK_RESULT $? 0 0 "Check: plugin linked-attr config NAME add all No Pass"

@@ -41,35 +41,35 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsidm localhost user -h | grep "usage: dsidm instance user"
+    dsidm localhost user -h | grep "usage: dsidm.* instance user"
     CHECK_RESULT $? 0 0 "L$LINENO: user -h No Pass"
-    dsidm localhost user list -h | grep "usage: dsidm instance user list"
+    dsidm localhost user list -h | grep "usage: dsidm.* instance user list"
     CHECK_RESULT $? 0 0 "L$LINENO: user list -h No Pass"
     dsidm -b "dc=example,dc=com" localhost user list | grep "demo_user"
     CHECK_RESULT $? 0 0 "L$LINENO: user list No Pass"
-    dsidm localhost user get -h | grep "usage: dsidm instance user get"
+    dsidm localhost user get -h | grep "usage: dsidm.* instance user get"
     CHECK_RESULT $? 0 0 "L$LINENO: user get -h No Pass"
     dsidm -b "dc=example,dc=com" localhost user get demo_user | grep "uid: demo_user"
     CHECK_RESULT $? 0 0 "L$LINENO: user get No Pass"
-    dsidm localhost user get_dn -h | grep "usage: dsidm instance user get_dn"
+    dsidm localhost user get_dn -h | grep "usage: dsidm.* instance user get_dn"
     CHECK_RESULT $? 0 0 "L$LINENO: user get_dn -h No Pass"
-    dsidm localhost user create -h | grep "usage: dsidm instance user create"
+    dsidm localhost user create -h | grep "usage: dsidm.* instance user create"
     CHECK_RESULT $? 0 0 "L$LINENO: user create -h No Pass"
     dsidm -b "dc=example,dc=com" localhost user create --uid 123456\
     --cn demo_cn --displayName demo_name --uidNumber 123456 --gidNumber 1000 \
     --homeDirectory /home/william  | grep "Successfully created 123456"
     CHECK_RESULT $? 0 0 "L$LINENO: user create No Pass"
-    dsidm localhost user modify -h | grep "usage: dsidm instance user modify"
+    dsidm localhost user modify -h | grep "usage: dsidm.* instance user modify"
     CHECK_RESULT $? 0 0 "L$LINENO: user modify -h No Pass"
     dsidm -b "dc=example,dc=com" localhost user modify 123456 replace:displayName:demo_name_change | \
     grep "Successfully modified uid=123456,ou=people,dc=example,dc=com"
     CHECK_RESULT $? 0 0 "L$LINENO: user modify No Pass"
-    dsidm localhost user rename -h | grep "usage: dsidm instance user rename"
+    dsidm localhost user rename -h | grep "usage: dsidm.* instance user rename"
     CHECK_RESULT $? 0 0 "L$LINENO: user rename -h No Pass"
     dsidm -b "dc=example,dc=com" localhost user rename 123456 demo_cn_change --keep-old-rdn | \
     grep "Successfully renamed to uid=demo_cn_change,ou=people,dc=example,dc=com"
     CHECK_RESULT $? 0 0 "L$LINENO: user rename No Pass"
-    dsidm localhost user delete -h | grep "usage: dsidm instance user delete"
+    dsidm localhost user delete -h | grep "usage: dsidm.* instance user delete"
     CHECK_RESULT $? 0 0 "L$LINENO: user delete -h No Pass"
     echo "Yes I am sure" | dsidm -b "dc=example,dc=com" localhost user delete \
     "uid=demo_user,ou=people,dc=example,dc=com" | grep "Successfully deleted uid=demo_user,ou=people,dc=example,dc=com"

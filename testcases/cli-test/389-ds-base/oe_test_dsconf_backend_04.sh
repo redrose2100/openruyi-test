@@ -34,11 +34,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsconf localhost backend config -h | grep  "usage: dsconf instance backend config" 
+    dsconf localhost backend config -h | grep  "usage: dsconf.* instance backend config" 
     CHECK_RESULT $? 0 0 "Check: backend config -h No Pass" 
-    dsconf localhost backend config get -h | grep  "usage: dsconf instance backend config get" 
+    dsconf localhost backend config get -h | grep  "usage: dsconf.* instance backend config get" 
     CHECK_RESULT $? 0 0 "Check: backend config get -h No Pass" 
-    dsconf localhost backend config set -h | grep  "usage: dsconf instance backend config set" 
+    dsconf localhost backend config set -h | grep  "usage: dsconf.* instance backend config set" 
     CHECK_RESULT $? 0 0 "Check: backend config set -h No Pass" 
     dsconf localhost backend config set --lookthroughlimit 100 | grep -iE  "Successfully updated database configuration" 
     CHECK_RESULT $? 0 0 "Check: backend config set --lookthroughlimit No Pass" 
@@ -78,7 +78,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: backend config set --rangelookthroughlimit No Pass" 
     dsconf localhost backend config set --deadlock-policy 9 | grep -iE "Successfully updated database configuration" 
     CHECK_RESULT $? 0 0 "Check: backend config set --deadlock-policy No Pass" 
-    dsconf localhost backend monitor -h | grep  "usage: dsconf instance backend monitor" 
+    dsconf localhost backend monitor -h | grep  "usage: dsconf.* instance backend monitor" 
     CHECK_RESULT $? 0 0 "Check: backend monitor -h No Pass" 
     dsconf localhost backend monitor --suffix example | grep  "dn: cn=monitor" 
     CHECK_RESULT $? 0 0 "Check: monitor --suffix No Pass"

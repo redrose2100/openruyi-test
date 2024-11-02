@@ -22,6 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "389-ds-base"
+    DNF_INSTALL "expect"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
     cat <<EOF > dscreate_interactive_shell.sh
@@ -42,7 +43,7 @@ expect "Create self-signed certificate database"
 send "yes\n"
 
 expect "Enter secure port number"
-send "10650\n"
+send "636\n"
 
 expect "Enter Directory Manager DN"
 send "cn=Directory Manager\n"
@@ -52,6 +53,12 @@ send "test_password\n"
 
 expect "Confirm the Directory Manager Password"
 send "test_password\n"
+
+expect "Choose whether mdb or bdb is used"
+send "mdb\n"
+
+expect "Enter the lmdb database size"
+send "20Gb\n"
 
 expect "Enter the database suffix"
 send "none\n"

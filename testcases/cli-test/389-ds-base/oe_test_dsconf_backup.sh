@@ -34,11 +34,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsconf localhost backup -h | grep  "usage: dsconf instance backup" 
+    dsconf localhost backup -h | grep  "usage: dsconf.* instance backup" 
     CHECK_RESULT $? 0 0 "Check: backup -h No Pass" 
-    dsconf localhost backup create -h | grep  "usage: dsconf instance backup create" 
+    dsconf localhost backup create -h | grep  "usage: dsconf.* instance backup create" 
     CHECK_RESULT $? 0 0 "Check: backup create -h No Pass" 
-    dsconf localhost backup restore -h | grep  "usage: dsconf instance backup restore" 
+    dsconf localhost backup restore -h | grep  "usage: dsconf.* instance backup restore" 
     CHECK_RESULT $? 0 0 "Check: backup restore -h No Pass"
     LOG_INFO "End to run test."
 }
