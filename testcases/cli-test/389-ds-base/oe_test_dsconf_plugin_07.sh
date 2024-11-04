@@ -34,15 +34,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsconf localhost plugin list -h | grep "dsconf instance plugin list"
+    dsconf localhost plugin list -h | grep "dsconf.* instance plugin list"
     CHECK_RESULT $? 0 0 "L$LINENO: plugin list -h No Pass"
     dsconf localhost plugin list | grep "SSHA"
     CHECK_RESULT $? 0 0 "L$LINENO: plugin list No Pass"
-    dsconf localhost plugin set -h | grep "dsconf instance plugin set"
+    dsconf localhost plugin set -h | grep "dsconf.* instance plugin set"
     CHECK_RESULT $? 0 0 "L$LINENO: plugin set -h No Pass"
     dsconf localhost plugin set --type 2 --enabled on --id 123456 --description 12345 SSHA384 | grep "Successfully changed the"
     CHECK_RESULT $? 0 0 "L$LINENO: plugin set No Pass"
-    dsconf localhost plugin show -h | grep "dsconf instance plugin show"
+    dsconf localhost plugin show -h | grep "dsconf.* instance plugin show"
     CHECK_RESULT $? 0 0 "L$LINENO: plugin show -h No Pass"
     dsconf localhost plugin show SSHA384 | grep "SSHA"
     CHECK_RESULT $? 0 0 "L$LINENO: plugin show No Pass"

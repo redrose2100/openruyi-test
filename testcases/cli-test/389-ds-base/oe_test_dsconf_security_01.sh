@@ -31,9 +31,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsconf localhost security -h | grep "usage: dsconf instance security"
+    dsconf localhost security -h | grep "usage: dsconf.* instance security"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security -h No Pass"
-    dsconf localhost security set -h | grep "usage: dsconf instance security set"
+    dsconf localhost security set -h | grep "usage: dsconf.* instance security set"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security set -h No Pass"
     dsconf localhost security set --security on
     dsconf localhost security get | grep "nsslapd-security: on"

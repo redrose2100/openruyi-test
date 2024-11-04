@@ -48,7 +48,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: restart No Pass"
     dsctl localhost status | grep "Instance \"localhost\" is running"
     CHECK_RESULT $? 0 0 "L$LINENO: status No Pass"
-    dsctl localhost remove -h | grep "usage: dsctl \[instance\] remove \[-h\] \[--do-it\]"
+    dsctl localhost remove -h | grep "usage: dsctl.* \[instance\] remove \[-h\] \[--do-it\]"
     CHECK_RESULT $? 0 0 "L$LINENO: remove -h No Pass"
     dsctl localhost remove --do-it | grep "Completed instance removal"
     CHECK_RESULT $? 0 0 "L$LINENO: remove No Pass"
