@@ -28,13 +28,16 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    oeawarectl -r libthread_tune.so | grep "Plugin remove successfully"
+    CHECK_RESULT $? 0 0 "Failed command: oeawarectl -r|--remove"
     oeawarectl -r libthread_scenario.so | grep "Plugin remove successfully"
-    oeawarectl -l libthread_scenario.so -t scenario | grep "Plugin loaded successfully"
+    CHECK_RESULT $? 0 0 "Failed command: oeawarectl -r|--remove"
+    oeawarectl -l libthread_scenario.so | grep "Plugin loaded successfully"
     CHECK_RESULT $? 0 0 "Failed command: oeawarectl -l|--load"
-    oeawarectl -l libthread_scenario.so -t scenario | grep "Plugin loaded failed, because plugin already loaded"
+    oeawarectl -l libthread_scenario.so | grep "Plugin loaded failed, because plugin already loaded"
     CHECK_RESULT $? 0 0 "Plugin loaded error"
 
-    oeawarectl -l test.so -t collector | grep "Plugin loaded failed, because plugin file does not exist"
+    oeawarectl -l test.so | grep "Plugin loaded failed, because plugin file does not exist"
     CHECK_RESULT $? 0 0 "Plugin loaded error"
 
     oeawarectl --query test.so | grep "Plugin query failed, because plugin does not exist"

@@ -29,8 +29,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     oeaware | grep "System need a argument"
     CHECK_RESULT $? 0 0 "command error"
-
-    mv /usr/lib64/oeAware-plugin/libthread_collector.so /usr/lib64/oeAware-plugin/libthread_collector_ori.so
+    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so -execdir mv {} {}.bak \;
     systemctl restart oeaware
     SLEEP_WAIT 1
     oeawarectl -q | grep "thread_scenario(unavailable, close)"
@@ -42,7 +41,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    mv /usr/lib64/oeAware-plugin/libthread_collector_ori.so /usr/lib64/oeAware-plugin/libthread_collector.so
+    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so.bak -execdir mv {} libthread_collector.so \;
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
