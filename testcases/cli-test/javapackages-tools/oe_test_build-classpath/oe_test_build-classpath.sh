@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of build-classpath and build-classpath-directory command
 # ############################################
-
-source "../common/common_javapackages-tools.sh"
+# shellcheck disable=SC2119
+source "${OET_PATH}/"testcases/cli-test/javapackages-tools/common/common_javapackages-tools.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,19 +28,19 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     build-classpath log4j | grep -E "/usr/share/java/log4j.jar"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Check build-classpath log4j failed"
     build-classpath junit | grep -E "/usr/share/java/junit.jar"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Check build-classpath junit failed"
     build-classpath easymock beust-jcommander | grep -E "/usr/share/java/easymock.jar|/usr/share/java/beust-jcommander.jar"
-    CHECK_RESULT $?
-    build-classpath-directory --help | grep "Usage:"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Check build-classpath easymock failed"
+    build-classpath-directory --help | grep -iE "Usage:|用法："
+    CHECK_RESULT $? 0 0 "Check build-classpath-directory failed"
     build-classpath-directory --version | grep "[0-9]"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Check build-classpath-directory failed"
     build-classpath-directory /usr/share/java | tr ':' '\n' | grep "/usr/share/java"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Check build-classpath-directory failed"
     build-classpath-directory /usr/lib | tr ':' '\n' | grep "/usr/lib"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Check build-classpath-directory faile"
     LOG_INFO "End of the test."
 }
 

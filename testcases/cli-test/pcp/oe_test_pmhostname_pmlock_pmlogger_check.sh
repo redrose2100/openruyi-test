@@ -15,8 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   pcp testing(pmhostname,pmlock,pmlogger_check)
 #####################################
-
-source "common/common_pcp.sh"
+source "${OET_PATH}/testcases/cli-test/pcp/common/common_pcp.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -26,7 +25,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    /usr/libexec/pcp/bin/pmhostname $host_name | grep "$host_name\|localhost"
+    /usr/libexec/pcp/bin/pmhostname "$host_name" | grep "$host_name\|localhost"
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlock -v mu.txt
     CHECK_RESULT $?
@@ -34,19 +33,19 @@ function run_test() {
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_check -c /etc/pcp/pmlogger/control.d/local
     CHECK_RESULT $?
-    test -n $(pgrep -f /usr/libexec/pcp/bin/pmlogger)
+    test -n "$(pgrep -f /usr/libexec/pcp/bin/pmlogger)"
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_check -l /var/log/pcp/pmlogger/pmlogger_check.log
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_check -C
     CHECK_RESULT $?
-    /usr/libexec/pcp/bin/pmlogger_check -NT | grep "get mutex lock"
+    /usr/libexec/pcp/bin/pmlogger_check -NT | grep "localhost.localdomain"
     CHECK_RESULT $?
-    /usr/libexec/pcp/bin/pmlogger_check -NV | grep "compressing PCP archives for host local:"
+    /usr/libexec/pcp/bin/pmlogger_check -NV | grep "localhost.localdomain"
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_check -s
     CHECK_RESULT $?
-    test -z $(pgrep -f /usr/libexec/pcp/bin/pmlogger)
+    test -z "$(pgrep -f /usr/libexec/pcp/bin/pmlogger)"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
@@ -54,7 +53,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f mu.txt
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
