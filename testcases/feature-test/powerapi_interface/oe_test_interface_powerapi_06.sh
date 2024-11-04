@@ -50,7 +50,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    su test1 -c "./demo_main" > test.log &
+    su - test1 -c "./demo_main" > test.log &
     SLEEP_WAIT 180
     grep "Server sock doesn't exist. Check server addr path please." test.log
     CHECK_RESULT $? 0 0 "Check interface PWR_SetServerInfo failed"

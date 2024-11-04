@@ -45,7 +45,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    su test1 -c "./demo_main" | grep "PWR_RequestControlAuth.*SUCCESS ret: 0"
+    su - test1 -c "./demo_main" | grep "PWR_RequestControlAuth.*SUCCESS ret: 0"
     CHECK_RESULT $? 0 0 "Check interface PWR_RequestControlAuth failed"
     LOG_INFO "End to run test."
 }
