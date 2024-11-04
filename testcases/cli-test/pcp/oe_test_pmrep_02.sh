@@ -22,16 +22,16 @@ source "common/common_pcp-system-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}')
+    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}' | awk -F " " '{print $1}')
     metric_name=disk.dev.write
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    pmrep -a "$archive_data ""$metric_name" -o stdout | grep 'count/s'
+    pmrep -a "$archive_data" "$metric_name" -o stdout | grep 'count/s'
     CHECK_RESULT $?
-    pmrep -a "$archive_data ""$metric_name" -F OUTFILE
+    pmrep -a "$archive_data" "$metric_name" -F OUTFILE
     CHECK_RESULT $?
     grep 'count/s' OUTFILE
     CHECK_RESULT $?
@@ -45,9 +45,9 @@ function run_test() {
     CHECK_RESULT $?
     pmrep -p -s 10 "$metric_name" | grep 'count/s'
     CHECK_RESULT $?
-    pmrep -a "$archive_data "-S @08 -T @18 "$metric_name" | grep 'count/s'
+    pmrep -a "$archive_data" -S @08 -T @18 "$metric_name" | grep 'count/s'
     CHECK_RESULT $?
-    pmrep -a "$archive_data "-O @08 -s 10 -t 2 "$metric_name" | grep 'count/s'
+    pmrep -a "$archive_data" -O @08 -s 10 -t 2 "$metric_name" | grep 'count/s'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
