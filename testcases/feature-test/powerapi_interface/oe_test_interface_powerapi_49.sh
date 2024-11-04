@@ -99,6 +99,7 @@ function run_test() {
     systemctl restart pwrapis 
     ./demo_main
     grep ERROR "${log}"
+    CHECK_RESULT $? 0 0 "Check log failed"
     LOG_INFO "End to run test."
 }
 
