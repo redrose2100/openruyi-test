@@ -284,6 +284,18 @@ static void TEST_PWR_COM_DcTaskMgr_1(void)
 /************************** COMMON END************************/
 
 /***************************** SYS ***************************/
+static void TEST_SYS_SetPowerState(int state)
+{
+    /**
+     * warning: After the system sleeps, it needs to be reactivated through
+     * other means (such as the IMPI interface through the BMC physical port)
+    */
+    int ret = -1;
+    ret = PWR_SYS_SetPowerState(state);
+    PrintResult("PWR_SYS_SetPowerState", ret);
+    printf("PWR_SYS_SetPowerState ret: %d\n", ret);
+}
+
 static void TEST_SYS_GetRtPowerInfo(void)
 {
     int ret = -1;
@@ -957,6 +969,50 @@ static void TEST_PWR_PROC_QueryProcs(char keywords[])
     }
 }
 
+static void TEST_PWR_PROC_QueryProcs_1(char keywords[], uint32_t num)
+{
+    pid_t procs[5000] = {0};
+    printf("keywords:%s\n", keywords);
+    int ret = PWR_PROC_QueryProcs(keywords, procs, &num);
+    printf("PWR_PROC_QueryProcs. ret: %d num:%d\n", ret, num);
+    for (int i = 0; i < num; i++) {
+        printf("\tprocs[%d]: %d\n", i, procs[i]);
+    }
+}
+
+static void TEST_PWR_PROC_AddAndDelWattProcs_2(int num, char* pids)
+{
+    int ret = -1;
+    int pidNum = 0;
+    char *token;
+    pid_t *procs = (pid_t*)malloc(sizeof(pid_t)*num);
+    token = strtok(pids, " ");
+    while(token != NULL){
+        procs[pidNum++] = (pid_t)atoi(token);
+        printf("%s", token);
+        token = strtok(NULL, " ");
+        if(pidNum>=num) break;
+    }
+    for(int i = 0; i < num; i++){
+        printf("%d ", procs[i]);
+    }
+    printf("wtf\n");
+    PWR_PROC_SetWattState(PWR_ENABLE);
+    ret = PWR_PROC_AddWattProcs(procs, num);
+    printf("PWR_PROC_AddWattProcs: ret:%d\n", ret);
+    int n = 5001;
+    int rett = -1;
+    pid_t procst[5001] = {0};
+    rett = PWR_PROC_GetWattProcs(procst, &n);
+    printf("PWR_PROC_GetWattProcs: ret:%d n:%d\n", rett, n);
+    for (int i = 0; i < n; i++) {
+        printf("\tPWR_PROC_GetWattProcs. procs%d: %d.\n", i, procst[i]);
+    }
+    ret = PWR_PROC_DelWattProcs(procs, n);
+    printf("PWR_PROC_DelWattProcs: ret:%d\n", ret);
+
+}
+
 static void TEST_PWR_PROC_SetAndGetWattState(void)
 {
     int state = INVALIDE_STATE;
@@ -1129,3 +1185,20 @@ static void TEST_PWR_PROC_GetServiceState(void)
     printf("PWR_PROC_GetServiceState ret:%d status:%d\n", ret, sStatus.status);
 }
 /************************** PROC END ************************/
+
+static void TEST_PWR_HBM_GetSysState(void)
+{
+    int ret = -1;
+    PWR_HBM_SYS_STATE state = PWR_HBM_HYBRID_MOD;
+    ret = PWR_HBM_GetSysState(&state);
+    PrintResult("TEST_PWR_HBM_GetSysState", ret);
+    printf("hbm state is %d.\n", (int)state);
+}
+
+static void TEST_PWR_HBM_SetAllPwrState(int state)
+{
+    int ret = -1;
+    ret = PWR_HBM_SetAllPwrState(state);
+    PrintResult("TEST_PWR_HBM_SetAllPwrState", ret);
+}
+

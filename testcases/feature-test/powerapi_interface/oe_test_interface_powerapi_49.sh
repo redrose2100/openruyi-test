@@ -70,34 +70,36 @@ function pre_test() {
 }
 " >> demo_main.c
     gcc ./demo_main.c -o demo_main -lpwrapi
+    log=/var/log/pwrapis/papis.log
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    echo > /var/log/pwrapis/papis.log
+    echo > "${log}"
     sed -i 's#log_level=.*#log_level=0#' /etc/sysconfig/pwrapis/pwrapis_config.ini
     systemctl restart pwrapis 
     ./demo_main
-    grep -e DEBUG -e INFO -e ERROR /var/log/pwrapis/papis.log
+    grep DEBUG "${log}" && grep INFO "${log}" && grep ERROR "${log}"
     CHECK_RESULT $? 0 0 "Check log failed"
-    echo > /var/log/pwrapis/papis.log
+    echo > "${log}"
     sed -i 's#log_level=.*#log_level=1#' /etc/sysconfig/pwrapis/pwrapis_config.ini
     systemctl restart pwrapis 
     ./demo_main
-    grep -e INFO -e ERROR /var/log/pwrapis/papis.log
+    grep INFO "${log}" && grep ERROR "${log}"
     CHECK_RESULT $? 0 0 "Check log failed"
-    echo > /var/log/pwrapis/papis.log
+    echo > "${log}"
     sed -i 's#log_level=.*#log_level=2#' /etc/sysconfig/pwrapis/pwrapis_config.ini
     systemctl restart pwrapis 
     ./demo_main
-    grep -e ERROR /var/log/pwrapis/papis.log
+    grep ERROR "${log}"
     CHECK_RESULT $? 0 0 "Check log failed"
-    echo > /var/log/pwrapis/papis.log
+    echo > "${log}"
     sed -i 's#log_level=.*#log_level=3#' /etc/sysconfig/pwrapis/pwrapis_config.ini
     systemctl restart pwrapis 
     ./demo_main
-    grep -e ERROR /var/log/pwrapis/papis.log
+    grep ERROR "${log}"
+    CHECK_RESULT $? 0 0 "Check log failed"
     LOG_INFO "End to run test."
 }
 

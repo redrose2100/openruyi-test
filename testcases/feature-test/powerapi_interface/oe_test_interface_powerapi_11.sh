@@ -43,7 +43,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    su test1 -c "./demo_main" > test.log
+    su - test1 -c "./demo_main" > test.log
     grep -Pz "Server has closed connection. This client is not in white list[\S\s]*RequestControlAuth failed. ret:1" test.log && grep "the client <test1> is not in white list" /var/log/pwrapis/papis.log
     CHECK_RESULT $? 0 0 "Check interface PWR_RequestControlAuth failed"
     LOG_INFO "End to run test."
