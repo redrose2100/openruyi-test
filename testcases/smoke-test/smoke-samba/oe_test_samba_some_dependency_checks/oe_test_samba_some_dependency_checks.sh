@@ -24,12 +24,12 @@ function pre_test() {
 function run_test() {
     current_version=$(rpm -qp --queryformat '%{VERSION}-%{RELEASE}' samba-client*.rpm)
     rpm -qp --obsoletes samba*.rpm | grep -v python2-samba &> t1.log
-    while read line; do
+    while read -r line; do
         echo "$line" | grep samba | grep -E '<|=|>' | grep "$current_version"
         CHECK_RESULT $? 0 0
     done < t1.log
     rpm -qp --provides samba*.rpm | grep -v lib &> t2.log
-    while read line; do
+    while read -r line; do
         echo "$line" | grep samba | grep -E '<|=|>' | grep "$current_version"
         CHECK_RESULT $? 0 0
     done < t2.log
