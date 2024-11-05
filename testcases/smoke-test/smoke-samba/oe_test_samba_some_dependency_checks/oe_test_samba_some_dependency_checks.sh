@@ -13,13 +13,13 @@
 # @Contact   :   liangdong47@h-partners.com
 # @Date      :   2024/10/28
 # @License   :   Mulan PSL v2
-# @Desc      :   检查samba的依赖关系(DTS2023052518137)
+# @Desc      :   检查samba的依赖关系
 # ############################################
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    yumdownloader samba samba-client || exit 1
+    DNF_INSTALL "samba" "samba-client" || exit 1
 }
 
 function run_test() {
