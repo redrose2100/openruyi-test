@@ -7,7 +7,6 @@
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
-
 # #############################################
 # @Author    :   liangdong
 # @Contact   :   liangdong47@h-partners.com
@@ -19,7 +18,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    DNF_INSTALL "samba" "samba-client" || exit 1
+    DNF_INSTALL "samba" "samba-client"
 }
 
 function run_test() {
