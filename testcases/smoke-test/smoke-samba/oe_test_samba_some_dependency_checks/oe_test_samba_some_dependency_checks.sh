@@ -27,12 +27,12 @@ function run_test() {
     rpm -qp --obsoletes samba*.rpm | grep -v python2-samba &> t1.log
     while read line; do
         echo "$line" | grep samba | grep -E '<|=|>' | grep "$current_version"
-        CHECK_RESULT $? 0 0 || cat t1.log
+        CHECK_RESULT $? 0 0
     done < t1.log
     rpm -qp --provides samba*.rpm | grep -v lib &> t2.log
     while read line; do
         echo "$line" | grep samba | grep -E '<|=|>' | grep "$current_version"
-        CHECK_RESULT $? 0 0 || cat t2.log
+        CHECK_RESULT $? 0 0
     done < t2.log
 }
 
