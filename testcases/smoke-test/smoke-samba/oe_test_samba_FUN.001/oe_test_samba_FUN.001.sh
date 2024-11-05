@@ -19,8 +19,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    yum install samba samba-winbind -y
-    # DTS2021113016240
+    DNF_INSTALL "samba" "samba-winbind"
     net -s /dev/null groupmap add sid=S-1-5-32-546 unixgroup=nobody type=builtin
 }
 
@@ -41,7 +40,7 @@ function run_test() {
 }
 
 function post_test() {
-    yum remove samba samba-winbind -y
+    DNF_REMOVE "samba" "samba-winbind"
 }
 
 main "$@"
