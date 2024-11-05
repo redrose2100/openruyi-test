@@ -36,7 +36,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     osc pr
     CHECK_RESULT $?
-    nohup osc rdiff $branches_path zjl >osc_rdiff.log 2>&1 &
+    nohup osc rdiff $branches_path my_test >osc_rdiff.log 2>&1 &
     CHECK_RESULT $?
     SLEEP_WAIT 3 "test -f osc_rdiff.log" 2
     CHECK_RESULT $?
@@ -44,15 +44,15 @@ function run_test() {
     CHECK_RESULT $?
     osc search --project $branches_path | grep 'Project'
     CHECK_RESULT $?
-    osc search --package zjl | grep 'Package'
+    osc search --package my_test | grep 'Package'
     CHECK_RESULT $?
     osc search -m -v | grep 'maintainer'
     CHECK_RESULT $?
     osc search -m -V | grep 'maintainer'
     CHECK_RESULT $?
-    osc search --title zjl | grep 'Package'
+    osc search --title 'Apache' | grep 'Package'
     CHECK_RESULT $?
-    osc search --description zjl_description | grep 'Package'
+    osc search --description 'Apache' | grep 'Package'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

@@ -28,7 +28,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL osc
     osc checkout "$branches_path" | grep 'revision'
-    cd "$branches_path"/zjl || exit 1
+    cd "$branches_path"/xzy || exit 1
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -45,7 +45,7 @@ function run_test() {
     CHECK_RESULT $?
     osc clean . | grep 'Removing: osc.log'
     CHECK_RESULT $?
-    osc comment list package "$branches_path" zjl
+    osc comment list package "$branches_path" xzy
     CHECK_RESULT $?
     touch 4.txt
     osc add * | grep 'A' | grep '4.txt'
@@ -64,16 +64,16 @@ function run_test() {
     osc diff
     CHECK_RESULT $?
     expect <<-END
-        spawn osc rremove $branches_path zjl 4.txt
-        expect "function/zjl"
+        spawn osc rremove $branches_path xzy 4.txt
+        expect "function/xzy"
         send "y\\n"
         expect eof
         exit
 END
     CHECK_RESULT $?
     expect <<-END
-        spawn osc rremove $branches_path zjl osc_diff.log
-        expect "function/zjl"
+        spawn osc rremove $branches_path xzy osc_diff.log
+        expect "function/xzy"
         send "y\\n"
         expect eof
         exit

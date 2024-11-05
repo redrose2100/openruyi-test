@@ -28,7 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     SLEEP_WAIT 60
-    pcp2xml -a "$archive_data" "$metric_name" -F OUTFILE
+    pcp2xml -a $archive_data $metric_name -F OUTFILE
     CHECK_RESULT $?
     grep 'instance-name' OUTFILE
     CHECK_RESULT $?
@@ -39,9 +39,9 @@ function run_test() {
     CHECK_RESULT $?
     pcp2xml -G -s 10 -t 2 "$metric_name" | grep 'metrics'
     CHECK_RESULT $?
-    pcp2xml -a "$archive_data" -S @00 -T @23 -s 10 -t 2 "$metric_name" | grep 'archived metrics'
+    pcp2xml -a $archive_data -S @00 -T @23 -s 10 -t 2 $metric_name | grep 'archived metrics'
     CHECK_RESULT $?
-    pcp2xml -a "$archive_data" -O @00 -s 10 -t 2 "$metric_name" | grep 'archived metrics'
+    pcp2xml -a $archive_data -O @00 -s 10 -t 2 $metric_name | grep 'archived metrics'
     CHECK_RESULT $?
     pcp2xml -Z Africa/Lagos -s 10 -t 2 "$metric_name" | grep 'UTC+1'
     CHECK_RESULT $?

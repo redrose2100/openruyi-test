@@ -22,7 +22,7 @@ source "common/common_pcp-system-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}' | awk -F " " '{print $1}')
+    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}' | awk -F " " '{print $1}').0
     OLD_PATH=$PATH
     export PATH=/usr/libexec/pcp/bin/:$PATH
     LOG_INFO "End to prepare the test environment."
@@ -33,7 +33,7 @@ function run_test() {
     SLEEP_WAIT 60
     pcp-pidstat --version 2>&1 | grep "$pcp_version"
     CHECK_RESULT $?
-    pcp-pidstat -a "$archive_data" -s 20 | grep 'UID'
+    pcp-pidstat -a $archive_data -s 20 | grep 'UID'
     CHECK_RESULT $?
     pcp-pidstat -t 2 -s 3 -I -U pcp -G pmcd | grep 'pmcd'
     CHECK_RESULT $?
