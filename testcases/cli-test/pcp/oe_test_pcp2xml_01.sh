@@ -29,7 +29,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     pcp2xml --version 2>&1 | grep 'version'
     CHECK_RESULT $?
-    pcp2xml -a "$archive_data" -A 10min -s 10 "$metric_name" | grep 'archived metrics'
+    pcp2xml -a $archive_data -A 10min -s 10 $metric_name | grep 'archived metrics'
     CHECK_RESULT $?
     pcp2xml --archive-folio=/var/log/pcp/pmlogger/"$(hostname)"/Latest -s 10 "$metric_name" | grep 'nodename'
     CHECK_RESULT $?

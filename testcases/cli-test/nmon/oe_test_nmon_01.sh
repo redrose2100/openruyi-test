@@ -130,7 +130,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start restore the test environment."
     env_post
-    kill -USR2 "$(pgrep -w nmon) $(pgrep nmon_openEuler)"
+    kill -9 "$(pgrep -w nmon) $(pgrep nmon_openEuler)"
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
