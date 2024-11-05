@@ -19,24 +19,41 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function deploy_env() {
-    cat >/root/.oscrc <<EOF
+    DNF_INSTALL osc
+    mkdir -p /root/.config/osc/
+    cat >/root/.config/osc/oscrc <<EOF
 [general]
-apiurl=https://build.openeuler.openatom.cn/
-no_verify=1
-build-root=/root/osc/buildroot
-[https://build.openeuler.openatom.cn/]
+apiurl=https://api.opensuse.org
+
+[https://api.opensuse.org]
 user=test666
 pass=test666@123
+credentials_mgr_class=osc.credentials.TransientCredentialsManager
 EOF
-    branches_path=home:test666:branches:openEuler:Mainline
+    branches_path=home:test666
     currentDir=$(
         cd "$(dirname "$0")" || exit 1
         pwd
     )
+    expect <<EOF
+        spawn osc list
+        expect {
+            "User*" {
+                send "test666\\r"
+            }
+        }
+        expect {
+            "Password*" {
+                send "test666@123\\r"
+            }
+        }
+        expect eof
+EOF
+
 }
 
 function clear_env() {
     cd "$currentDir" || exit 1
-    rm -rf $branches_path /root/.oscrc
+    rm -rf "$branches_path" /root/.config/osc
     DNF_REMOVE "$@"
 }
