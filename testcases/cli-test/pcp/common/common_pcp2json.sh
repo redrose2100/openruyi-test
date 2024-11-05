@@ -21,12 +21,22 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function deploy_env {
     DNF_INSTALL "pcp pcp-export-pcp2json pcp-system-tools"
+    pip install requests zstandard
     systemctl enable pmcd
     systemctl start pmcd
     systemctl enable pmlogger
     systemctl start pmlogger
     SLEEP_WAIT 10
     host_name=$(hostname)
-    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}')
+    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}').0
     metric_name=disk.dev.write
+}
+
+
+function clean_env {
+    pip uninstall -y requests zstandard
+    systemctl disable pmcd
+    systemctl stop pmcd
+    systemctl disable pmlogger
+    systemctl stop pmlogger
 }
