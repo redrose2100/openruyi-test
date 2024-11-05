@@ -24,7 +24,7 @@ smb_conf="/etc/samba/smb.conf"
 
 function pre_test() {
     history=$(yum history | grep '[0-9]' | head -1 | awk '{print $1}')
-    yum install -y samba samba-client firewalld
+    DNF_INSTALL "samba" "samba-client" "firewalld"
     systemctl stop firewalld
     iptables -F
     ip6tables -F
@@ -66,7 +66,7 @@ function run_test() {
 
 function post_test() {
     systemctl stop smb
-    yum history rollback -y "${history}"
+    DNF_REMOVE "samba" "samba-client"
     mv /etc/samba/smb.conf.bak /etc/samba/smb.conf
     systemctl restart firewalld
     sleep 3
