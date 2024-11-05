@@ -37,6 +37,7 @@ function run_test() {
 }
 
 function post_test() {
+    DNF_REMOVE "samba" "samba-client"
     rm -rf samba*.rpm t*.log
 }
 
