@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test/smoke-samba",
+    "cases": [
+        {
+            "name": "oe_test_samba_FUN.001"
+        },
+        {
+            "name": "oe_test_samba_some_dependency_checks"
+        },
+        {
+            "name": "oe_test_samba_tdbsam"
+        }
+    ]
+}
