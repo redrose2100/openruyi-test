@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test Prometheus command line
 # #############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/testcases/cli-test/prometheus2/common_lib.sh"
 
@@ -69,6 +70,7 @@ function run_test() {
     prometheus --web.enable-lifecycle > prometheus.log 2>&1 &
     wait_for_ready
     curl -s -X POST 'http://localhost:9090/-/quit'
+    SLEEP_WAIT 3
     CHECK_RESULT "$(pgrep 'prometheus' | wc -l)" 0 0 'Failed to use flag: --web.enable-lifecycle'
     clear_env
     prometheus --web.enable-admin-api > prometheus.log 2>&1 &
@@ -178,7 +180,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -22,7 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "python3-robotframework python3-jsonschema"
+  DNF_INSTALL "python3-robotframework python3-jsonschema tar"
   LOG_INFO "End of environmental preparation!"
 }
 

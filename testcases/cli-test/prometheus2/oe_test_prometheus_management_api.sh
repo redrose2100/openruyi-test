@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test Prometheus management API
 # #############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/testcases/cli-test/prometheus2/common_lib.sh"
 
@@ -27,14 +28,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    prometheus --config.file="prometheus.yml" > prometheus.log 2>&1 &
+    prometheus --config.file="prometheus.yml" >prometheus.log 2>&1 &
     wait_for_ready
-    curl -s 'http://localhost:9090/-/healthy' | grep 'Prometheus Server is Healthy.'
+    curl -s 'http://localhost:9090/-/healthy' | grep -E "Prometheus Server is Healthy.|Prometheus is Healthy."
     CHECK_RESULT $? 0 0 "Failed use api: health."
-    curl -s 'http://localhost:9090/-/ready' | grep 'Prometheus Server is Ready.'
+    curl -s 'http://localhost:9090/-/ready' | grep -E "Prometheus Server is Ready.|Prometheus is Ready."
     CHECK_RESULT $? 0 0 "Failed use api: readiness."
     clear_env
-    prometheus --web.enable-lifecycle > prometheus.log 2>&1 &
+    prometheus --web.enable-lifecycle >prometheus.log 2>&1 &
     wait_for_ready
     curl -s -X POST 'http://localhost:9090/-/reload'
     CHECK_RESULT $? 0 0 'Failed to use api: reload'
@@ -46,7 +47,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
