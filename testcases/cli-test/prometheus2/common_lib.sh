@@ -16,8 +16,9 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Common lib for test prometheus
 # #############################################
+# shellcheck disable=SC1090
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function is_running() {
     if pgrep -x "prometheus" >/dev/null; then

@@ -16,12 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   package python-kazoo test
 # ############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "python-kazoo zookeeper"
+    DNF_INSTALL "python3-kazoo zookeeper"
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -39,6 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
+    kill -9 "$(pgrep -f zookeeper)"
     LOG_INFO "Finish restoring the test environment."
 }
 
