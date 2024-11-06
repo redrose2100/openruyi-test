@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test python3-flask function
 # #############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
@@ -45,18 +46,16 @@ EOF
     CHECK_RESULT $? 0 0 "Execution fail"
     sleep 20
     CHECK_RESULT $? 0 0 "Execution fail"
-    ip=$(ip a |grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|awk -F '/'  '{print $1}')
-    curl http://"$ip":2021 | grep "jianhua_helloworld2020"
+    curl http://"${NODE1_IPV4}":2021 | grep "jianhua_helloworld2020"
     CHECK_RESULT $? 0 0 "Execution fail"
     LOG_INFO "Finish test!"
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    pgrep -n python3 | xargs kill -9
+    kill -9 "$(pgrep -f 'python3 main.py')"
     rm -rf main.py
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
-

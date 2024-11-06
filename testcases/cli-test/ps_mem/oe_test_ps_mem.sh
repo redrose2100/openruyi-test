@@ -16,30 +16,38 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   ps_mem basic function
 # ############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    pip3 install ps_mem
+    DNF_INSTALL ps_mem
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ps_mem |grep Private |grep Shared |grep RAM |grep Program
+    ps_mem -h | grep -i "Usage:"
+    CHECK_RESULT $? 0 0 "ps_mem -h failed"
+    ps_mem -p 1 | grep -i "systemd"
+    CHECK_RESULT $? 0 0 "ps_mem -p failed"
+    ps_mem -s | grep -E "/usr/sbin/|/usr/sbin/"
+    CHECK_RESULT $? 0 0 "ps_mem -s failed"
+    ps_mem -t | grep -v "[0-9]"
+    CHECK_RESULT $? 1 0 "ps_mem -t failed"
+    nohup ps_mem -w 5 &
+    CHECK_RESULT $? 0 0 "ps_mem -w failed"
+    ps_mem | grep Private | grep Shared | grep RAM | grep Program
     CHECK_RESULT $? 0 0 "Compilation failed"
-    ps_mem -S |grep Swap
-    CHECK_RESULT $? 0 0 "Compilation failed"
-    pid=$(ps_mem -d |grep firewalld |awk -F[ '{print $2}' |awk -F] '{print $1}')
-    ps_mem -p "$pid" |grep firewalld
-    CHECK_RESULT $? 0 0 "Failed to view the memory usage of the specified process"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    pip3 uninstall ps_mem -y
+    DNF_REMOVE "$@"
+    rm -f nohup.out
+    kill -9 "$(pgrep -f /usr/bin/ps_mem -w 5)"
     LOG_INFO "End to restore the test environment."
 }
 
