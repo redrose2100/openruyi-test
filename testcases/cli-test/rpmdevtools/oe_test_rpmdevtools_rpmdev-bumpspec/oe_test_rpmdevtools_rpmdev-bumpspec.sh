@@ -16,7 +16,7 @@
 #@Desc      	:   test rpmdev-bumpspec rpmdev-newinit rpmdev-newspec
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
@@ -71,7 +71,7 @@ function run_test() {
     grep 'python' testt.spec
     CHECK_RESULT $? 0 0 "Failed option: -t"
     rpmdev-newspec -m -o testm.spec
-    grep '%{buildroot}' testm.spec
+    grep '%changelog' testm.spec
     CHECK_RESULT $? 0 0 "Failed option: -m"
     rpmdev-newspec -r 4.3 -o testr.spec | grep '4.3'
     CHECK_RESULT $? 0 0 "Failed option: -r"
@@ -85,7 +85,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf test* file1
     LOG_INFO "End to restore the test environment."
 }
