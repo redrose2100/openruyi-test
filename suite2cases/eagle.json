@@ -87,6 +87,36 @@
         },
         {
             "name": "oe_test_eagle_29"
+        },
+	{
+            "name": "oe_test_eagle_30"
+        },
+        {
+            "name": "oe_test_eagle_31"
+        },
+        {
+            "name": "oe_test_eagle_32"
+        },
+        {
+            "name": "oe_test_eagle_33"
+        },
+        {
+            "name": "oe_test_eagle_34"
+        },
+        {
+            "name": "oe_test_eagle_35"
+        },
+        {
+            "name": "oe_test_eagle_36"
+        },
+        {
+            "name": "oe_test_eagle_37"
+        },
+        {
+            "name": "oe_test_eagle_38"
+        },
+        {
+            "name": "oe_test_service_eagle_39"
         }
     ]
 }
