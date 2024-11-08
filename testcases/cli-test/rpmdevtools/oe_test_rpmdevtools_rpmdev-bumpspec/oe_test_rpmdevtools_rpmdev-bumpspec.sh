@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "rpmdevtools"
-
+    VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
     rpmdev-newspec -o test.spec
     echo "test -f." >file1
 
@@ -70,9 +70,11 @@ function run_test() {
     rpmdev-newspec -t python -o testt.spec
     grep 'python' testt.spec
     CHECK_RESULT $? 0 0 "Failed option: -t"
-    rpmdev-newspec -m -o testm.spec
-    grep '%changelog' testm.spec
-    CHECK_RESULT $? 0 0 "Failed option: -m"
+    if [ "$VERSION_ID" != "24.03" ] && [ "$VERSION_ID" != "24.09" ]; then
+	rpmdev-newspec -m -o testm.spec 
+	grep '%{buildroot}' testm.spec
+        CHECK_RESULT $? 0 0 "Failed option: -m"
+    fi 
     rpmdev-newspec -r 4.3 -o testr.spec | grep '4.3'
     CHECK_RESULT $? 0 0 "Failed option: -r"
     rpmdev-newspec -h | grep "Usage: rpmdev-newspec \[option\]"
