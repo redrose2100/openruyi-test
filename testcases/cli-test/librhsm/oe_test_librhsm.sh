@@ -45,11 +45,7 @@ glib = dependency('glib-2.0', version : '>=2.44')
 gobject = dependency('gobject-2.0', version : '>=2.44')
 gio = dependency('gio-2.0', version : '>=2.44')
 json_glib = dependency('json-glib-1.0', version : '>=1.2')
-openssl = dependency('openssl')
 
-pkg = import('pkgconfig')
-
-subdir('rhsm')
 EOF
     CHECK_RESULT $? 0 0 "Error, save the file permission denied"
     cd /tmp/librhsm_build && meson librhsm_build | grep 'The Meson build system'
