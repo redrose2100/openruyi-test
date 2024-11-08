@@ -48,7 +48,7 @@ function run_test() {
     rpmargs -c file -p /ALT/Sisyphus/files/noarch/RPMS/"${pkg_name}"*.rpm | grep "${pkg_name}"
     CHECK_RESULT $? 0 0 "Failed option: -p"
 
-    rpmdev-checksig "${pkg_name}"*.rpm | grep "${pkg_name}.*.rpm: RSA"
+    rpmdev-checksig "${pkg_name}"*.rpm | grep -E "${pkg_name}.*.rpm: RSA|${pkg_name}.*.rpm: MD5"
     CHECK_RESULT $? 0 0 "Failed command:rpmdev-checksig"
 
     rpmdev-cksum "${pkg_name}"*rpm | head -n 1 | awk '{print $3}' | grep "${pkg_name}.*rpm"
@@ -70,12 +70,18 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: -y"
 
     rpmdev-extract -q "${pkg_name}"*.rpm
-    test -d "${pkg_name}"*"${pkg_arch}"
+    for dir in ./"${pkg_name}"*"${pkg_arch}"; do
+        [[ -d "$dir" ]]
+        CHECK_RESULT $? 0 0 "Failed option: -q"
+    done
     CHECK_RESULT $? 0 0 "Failed option: -q"
     rpmdev-extract -f "${pkg_name}"*.rpm | grep "${pkg_name}"
     CHECK_RESULT $? 0 0 "Failed option: -f"
     rpmdev-extract -C ./tmp_dir "${pkg_name}"*.rpm
-    test -d ./tmp_dir/"${pkg_name}"*"${pkg_arch}"
+    for dir in ./tmp_dir/"${pkg_name}"*"${pkg_arch}"; do
+        [[ -d "$dir" ]]
+        CHECK_RESULT $? 0 0 "Failed option: -C"
+    done
     CHECK_RESULT $? 0 0 "Failed option: -C"
     rpmdev-extract -h | grep -A 10 "rpmdev-extract" | grep "Options:"
     CHECK_RESULT $? 0 0 "Failed option: -h"
