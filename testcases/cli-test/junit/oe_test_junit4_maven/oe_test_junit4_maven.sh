@@ -25,8 +25,7 @@ function pre_test() {
     deploy_env
     DNF_INSTALL "hamcrest maven"
     cp /etc/profile /etc/profile-bak
-    echo -e "export MAVEN_HOME=/usr/share/maven\nexport PATH=\$PATH:\$MAVEN_HOME" >>/etc/profile
-    source /etc/profile
+    export MAVEN_HOME=/usr/share/maven
     mkdir libs
     cp -r "$(rpm -ql junit | grep junit.jar)" libs
     wget https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
@@ -48,8 +47,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    mv /etc/profile-bak /etc/profile -f
-    source /etc/profile
+    unset MAVEN_HOME
     rm -rf "$(ls | grep -vE '.xml|main|.sh|test')" /root/.m2
     LOG_INFO "Finish restoring the test environment."
 }

@@ -16,7 +16,7 @@
 #@Desc      	:   Take the test for nmon
 #April's remind :   When you run this testcase, you'd better make the window large enough to avoid errors caused by line wrapping.
 #####################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC2046
 source "${OET_PATH}/testcases/cli-test/nmon/common/common.sh"
 
 function pre_test() {
@@ -130,7 +130,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start restore the test environment."
     env_post
-    kill -USR2 "$(pgrep -w nmon) $(pgrep nmon_openEuler)"
+    kill -9 $(pgrep -w nmon) $(pgrep nmon_openEuler)
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

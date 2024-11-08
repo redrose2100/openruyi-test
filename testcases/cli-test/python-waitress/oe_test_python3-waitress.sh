@@ -16,13 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test python3-waitress function
 # #############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "python3-waitress"
-    pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple flask requests
+    pip3 install -i https://mirrors.aliyun.com/pypi/simple flask requests
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -103,7 +104,7 @@ EOF
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf pss_app.py pss_waitress.py test_log.log
+    rm -rf pss_app.py pss_waitress.py test_log.log __pycache__
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }

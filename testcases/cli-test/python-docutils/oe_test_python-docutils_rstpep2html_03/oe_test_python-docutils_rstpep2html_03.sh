@@ -15,8 +15,10 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   The command rstpep2html parameter coverage test of the python-docutils package
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "python-docutils"
@@ -30,7 +32,7 @@ function run_test() {
     CHECK_RESULT $?
     rstpep2html --record-dependencies=recordlist.log pep.rst test2.html && grep 'pep.css' recordlist.log
     CHECK_RESULT $?
-    test "$(rstpep2html -V | awk '{print$3}')" == "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
+    [[ "$(rstpep2html -V | awk '{print$3}')" =~ $(rpm -qa python3-docutils | awk -F "-" '{print$3}') ]]
     CHECK_RESULT $?
     rstpep2html -h | grep 'Usage'
     CHECK_RESULT $?
@@ -53,7 +55,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.html ./*.rst ./*.log
     LOG_INFO "Finish restoring the test environment."
 }

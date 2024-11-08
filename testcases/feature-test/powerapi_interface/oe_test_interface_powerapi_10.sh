@@ -47,7 +47,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    su test1 -c "./demo_main" | grep "RequestControlAuth failed. ret:405" && grep "the client <test1> is not an admin" /var/log/pwrapis/papis.log
+    su - test1 -c "./demo_main" | grep "RequestControlAuth failed. ret:405" && grep "the client <test1> is not an admin" /var/log/pwrapis/papis.log
     CHECK_RESULT $? 0 0 "Check interface PWR_RequestControlAuth failed"
     LOG_INFO "End to run test."
 }

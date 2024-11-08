@@ -15,9 +15,8 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   (pcp-export-pcp2json) pcp2json - pcp-to-json metrics exporter
 #####################################
-# shellcheck disable=SC1091,SC2154
-
-source "common/common_pcp2json.sh"
+# shellcheck disable=SC2086
+source "${OET_PATH}/testcases/cli-test/pcp/common/common_pcp2json.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -29,7 +28,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     pcp2json --version 2>&1 | grep 'version'
     CHECK_RESULT $?
-    pcp2json -a "$archive_data" -A 10min -s 10 "$metric_name" | grep 'archived metrics'
+    pcp2json -a $archive_data -A 10min -s 10 $metric_name | grep 'archived metrics'
     CHECK_RESULT $?
     pcp2json --archive-folio=/var/log/pcp/pmlogger/"$(hostname)"/Latest -s 10 "$metric_name" | grep 'archived metrics'
     CHECK_RESULT $?
@@ -50,6 +49,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    clean_env
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if ! test -d /sys/fs/cgroup/cpu/watt_sched; then
+    if ! test -f /sys/fs/cgroup/cpu/cpu.dynamic_affinity_mode; then
         echo "the environment is not support!"
         exit 0
     fi
@@ -35,7 +35,6 @@ function run_test() {
     sed -i "/\[sched_service\]/{N;s/.*/[sched_service]\nenable=0/}" /etc/eagle/eagle_policy.ini
     sed -i 's/watt_threshold =.*/watt_threshold = 36/' /etc/eagle/eagle_policy.ini
     SLEEP_WAIT 5
-    cat /var/log/eagle/eagle.log
     grep "SetProcWattAttrs" /var/log/eagle/eagle.log && grep 36 /proc/sys/kernel/sched_util_low_pct
     CHECK_RESULT $? 1 0 "Check [sched_service] enable=0 failed"
     echo > /var/log/eagle/eagle.log

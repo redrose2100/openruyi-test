@@ -19,15 +19,10 @@
 # shellcheck disable=SC1091
 source "common/common_osc.sh"
 
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    deploy_env
-    LOG_INFO "End to config params of the case."
-}
-
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "osc build"
+    deploy_env
+    DNF_INSTALL "build"
     osc checkout "${branches_path}" | grep 'revision'
     LOG_INFO "End to prepare the test environment."
 }

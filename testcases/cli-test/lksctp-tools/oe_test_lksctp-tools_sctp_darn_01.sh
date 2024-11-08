@@ -17,7 +17,7 @@
 # @Desc      :   Test sctp_darn
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
@@ -34,7 +34,7 @@ function run_test()
     SLEEP_WAIT 2
     echo "hello" | sctp_darn -H ::1 -P 7000 -h ::1 -p 6000 -s
     SLEEP_WAIT 2
-    cat server_output | grep 'hello'
+    grep 'hello' server_output
     CHECK_RESULT $? 0 0 "sctp_darn: failed to test options: -H, -P, -h, -p, -s, -l, -B, -b, -c"
     kill -9 $server_pid
     rm -rf server_output
@@ -43,7 +43,7 @@ function run_test()
     SLEEP_WAIT 2
     echo "hello" | sctp_darn -H ::1 -P 7010 -h ::1 -p 6010 -s -t -z 8 --interface="lo"
     SLEEP_WAIT 2
-    cat server_output | grep 'hello'
+    grep 'hello' server_output
     CHECK_RESULT $? 0 0 "sctp_darn: failed to test options: -t, -z, --interface"
     kill -9 $server_pid
     rm -rf server_output
@@ -52,12 +52,12 @@ function run_test()
     SLEEP_WAIT 2
     echo "hello" | sctp_darn -H ::1 -P 7030 -h ::1 -p 6030 -s
     SLEEP_WAIT 2
-    cat server_output | grep 'No association is present in sk No.1 now'
+    grep 'No association is present in sk No.1 now' server_output
     CHECK_RESULT $? 0 0 "sctp_darn: failed to test options: -m, -i, --use-poll"
     kill -9 $server_pid
     rm -rf server_output
     echo "?" | sctp_darn -H ::1 -P 6040 -l -n -I > server_output 2>&1
-    cat server_output | grep "Interactive commands:"
+    grep "Interactive commands:" server_output
     CHECK_RESULT $? 0 0 "sctp_darn: failed to test interactive command '?'"
     rm -rf server_output
     unbuffer sctp_darn -H ::1 -P 6040 -l > server_output 2>&1 &
@@ -65,7 +65,7 @@ function run_test()
     SLEEP_WAIT 2
     echo "snd=8" | sctp_darn -H ::1 -P 7040 -h ::1 -p 6040 -s -I
     SLEEP_WAIT 2
-    cat server_output | grep "DATA(8):"
+    grep "DATA(8):" server_output
     CHECK_RESULT $? 0 0 "sctp_darn: failed to test interactive command 'snd=<int>'"
     kill -9 $server_pid
     rm -rf server_output
@@ -80,17 +80,19 @@ function run_test()
     echo "hello" | sctp_darn -H ::1 -P 7050 -h ::1 -p 6050 -s
     echo -e "rcv=8\nrcv=8" > server_fifo
     SLEEP_WAIT 2
-    cat server_output | grep "hello"
+    grep "hello" server_output
     CHECK_RESULT $? 0 0 "sctp_darn: failed to test interactive command 'rcv=<int>'"
     echo "shutdown" > server_fifo
+    SLEEP_WAIT 3
     tail server_output | grep "SHUTDOWN"
     CHECK_RESULT $? 0 0 "sctp_darn: failed to test interactive command 'shutdown'"
     echo "abort" > server_fifo
+    SLEEP_WAIT 3
     tail server_output | grep "ABORT"
     CHECK_RESULT $? 0 0 "sctp_darn: failed to test interactive command 'abort'"
     kill -9 $server_pid
     echo "bindx-add=127.0.0.1" | sctp_darn -H ::1 -P 6000 -l -I > server_output 2>&1
-    cat server_output | grep "Invalid input."
+    grep "Invalid input." server_output
     CHECK_RESULT $? 1 0 "sctp_darn: failed to test interactive command 'bindx-add=<addr>'"
     LOG_INFO "End to run test."
 }
@@ -99,7 +101,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf server_fifo server_output
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

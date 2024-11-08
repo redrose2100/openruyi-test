@@ -15,8 +15,8 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   pcp testing(pmprobe)
 #####################################
-
-source "common/common_pcp.sh"
+# shellcheck disable=SC2086
+source "${OET_PATH}/testcases/cli-test/pcp/common/common_pcp.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $?
     pmprobe --container=busybox pmcd.pid | grep 'pmcd.pid'
     CHECK_RESULT $?
-    pmprobe --derived=/var/lib/pcp/config/pmieconf/dm $metric_name | grep "$metric_name"
+    pmprobe --derived=/var/lib/pcp/config/pmieconf/cpu $metric_name | grep "$metric_name"
     CHECK_RESULT $?
     pmprobe -L $metric_name | grep "$metric_name"
     CHECK_RESULT $?
@@ -51,7 +51,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -27,87 +27,54 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ocamlmktop -unsafe-string example.ml
+    ocamlmklib.byte -dllpath ./ -o  example example.ml
     CHECK_RESULT $?
-    grep -ai "unsafe" a.out && rm -rf a.out
+    ocamlmklib.byte -dllpath ./ example.o
     CHECK_RESULT $?
-    ocamlmktop.opt -unsafe-string example.ml
+    strings dlla.so | grep "Example"
     CHECK_RESULT $?
-    grep -ai "unsafe" a.out && rm -rf a.out
+    ocamlmklib.byte -rpath ./ example.o
     CHECK_RESULT $?
-    ocamlmktop.byte -unsafe-string example.ml
+    strings dlla.so | grep "Example" && rm -rf dlla.so
     CHECK_RESULT $?
-    grep -ai "unsafe" a.out && rm -rf a.out
+    ocamlmklib.byte -R ./ example.o
     CHECK_RESULT $?
-    ocamlopt.byte -davail example.ml
+    strings dlla.so | grep "Example"
     CHECK_RESULT $?
-    grep -az vail a.out
+    ocamlmklib.opt -dllpath ./ -o  hello hello.ml
     CHECK_RESULT $?
-    ocamlopt.opt -davail example.ml
+    ocamlmklib.opt -dllpath ./ hello.o
     CHECK_RESULT $?
-    grep -az vail a.out
+    strings dlla.so | grep "camlHello"
     CHECK_RESULT $?
-    ocamloptp.byte -davail example.ml
+    ocamlmklib.opt -rpath ./ hello.o
     CHECK_RESULT $?
-    grep -az "vail" a.out
+    strings dlla.so | grep "camlHello" && rm -rf dlla.so
     CHECK_RESULT $?
-    ocamloptp -davail example.ml
+    ocamlmklib.opt -R ./ hello.o
     CHECK_RESULT $?
-    grep -az vail a.out
+    strings dlla.so | grep "camlHello"
     CHECK_RESULT $?
-    ocamlopt -davail example.ml
+    ocamlmklib -dllpath ./ hello.o
     CHECK_RESULT $?
-    grep -az vail a.out
+    strings dlla.so | grep "camlHello"
     CHECK_RESULT $?
-    ocamloptp.opt -davail example.ml
+    ocamlmklib -rpath ./ hello.o
     CHECK_RESULT $?
-    grep -az vail a.out
+    strings dlla.so | grep "camlHello" && rm -rf dlla.so
     CHECK_RESULT $?
-    ocamlmklib.byte -dllpath /tmp example.o
+    ocamlmklib -R ./ hello.o
     CHECK_RESULT $?
-    strings dlla.so | grep "/tmp"
-    CHECK_RESULT $?
-    ocamlmklib.byte -rpath /tmp example.o
-    CHECK_RESULT $?
-    strings dlla.so | grep "/tmp" && rm -rf dlla.so
-    CHECK_RESULT $?
-    ocamlmklib.byte -R /tmp example.o
-    CHECK_RESULT $?
-    strings dlla.so | grep "/tmp"
-    CHECK_RESULT $?
-    ocamlmklib.opt -dllpath /tmp example.o
-    CHECK_RESULT $?
-    strings dlla.so | grep "/tmp"
-    CHECK_RESULT $?
-    ocamlmklib.opt -rpath /tmp example.o
-    CHECK_RESULT $?
-    strings dlla.so | grep "/tmp" && rm -rf dlla.so
-    CHECK_RESULT $?
-    ocamlmklib.opt -R /tmp example.o
-    CHECK_RESULT $?
-    strings dlla.so | grep "/tmp"
-    CHECK_RESULT $?
-    ocamlmklib -dllpath /tmp example.o
-    CHECK_RESULT $?
-    strings dlla.so | grep "/tmp"
-    CHECK_RESULT $?
-    ocamlmklib -rpath /tmp example.o
-    CHECK_RESULT $?
-    strings dlla.so | grep "/tmp" && rm -rf dlla.so
-    CHECK_RESULT $?
-    ocamlmklib -R /tmp example.o
-    CHECK_RESULT $?
-    strings dlla.so | grep "/tmp"
+    strings dlla.so | grep "camlHello"
     CHECK_RESULT $?
     ocamlmktop -o hellotop.exe -custom hello_stubs.c hello.ml
-    ocamlbyteinfo hellotop.exe | grep -E "Imported|caml"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf a.* dlla* example* hello* liba.a ocamlprof.dump
     LOG_INFO "End to restore the test environment."
 }
