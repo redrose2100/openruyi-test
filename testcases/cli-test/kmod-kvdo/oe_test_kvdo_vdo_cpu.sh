@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "vdo kmod-kvdo"
+    DNF_INSTALL "vdo kmod-kvdo lvm2"
     free_disks=$(TEST_DISK 1)
     free_disk=/dev/$(echo "${free_disks}" | awk -F " " '{for(i=1;i<=NF;i++) if ($i!~/[0-9]/)j=i;print $j}')
     test -z "${free_disk}" && exit 1
@@ -31,7 +31,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    vdo create --name=vdo1 --device="${free_disk}" --vdoLogicalSize=1T --force
+    pvcreate --yes "${free_disk}"
+    CHECK_RESULT $?
+    vgcreate vg_test --yes "${free_disk}"
+    CHECK_RESULT $?
+    lvcreate --type=vdo --yes -n lv_test -L 5g vg_test
     CHECK_RESULT $?
     top -n 10 -bw >/tmp/top_result
     grep indexW /tmp/top_result | awk '{print $9}' | awk '{if($1 > 1.0) print 1}' | grep 1
@@ -40,8 +44,10 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    vdo remove --name=vdo1
-    DNF_REMOVE 1
+    lvremove -f /dev/vg_test/lv_test
+    vgremove -f vg_test
+    pvremove -f "${free_disk}"
+    DNF_REMOVE "$@"
     rm -rf /tmp/top_result
     LOG_INFO "Finish environment cleanup!"
 }
