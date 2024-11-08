@@ -18,17 +18,11 @@
 # shellcheck disable=SC1091,SC2154
 source "common/common_osc.sh"
 
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    deploy_env
-    LOG_INFO "End to config params of the case."
-}
-
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL osc
+    deploy_env
     osc checkout "$branches_path" | grep 'revision'
-    cd "$branches_path"/zjl || exit 1
+    cd "$branches_path"/xzy || exit 1
     touch {1..3}.txt
     LOG_INFO "End to prepare the test environment."
 }
@@ -51,13 +45,13 @@ function run_test() {
     CHECK_RESULT $?
     osc commit -n | grep 'Committed revision'
     CHECK_RESULT $?
-    osc lock "$branches_path" zjl
+    osc lock "$branches_path" xzy
     CHECK_RESULT $?
     echo 'good boy' >3.txt
     CHECK_RESULT $?
     osc commit -n
     CHECK_RESULT $? 1 0 'Package locked failed'
-    osc unlock "$branches_path" zjl -m "Package unlock"
+    osc unlock "$branches_path" xzy -m "Package unlock"
     CHECK_RESULT $?
     osc commit -n | grep 'Committed revision'
     CHECK_RESULT $?

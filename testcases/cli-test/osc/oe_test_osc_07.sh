@@ -15,20 +15,14 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   OSC is a command line tool based on OBS, which is equivalent to the interface of OBS.
 #####################################
-
-source "common/common_osc.sh"
-
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    deploy_env
-    LOG_INFO "End to config params of the case."
-}
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/cli-test/osc/common/common_osc.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL osc
-    osc checkout $branches_path | grep 'revision'
-    cd $branches_path/zjl || exit 1
+    deploy_env
+    osc checkout "$branches_path" | grep 'revision'
+    cd "$branches_path/zjl" || exit 1
     echo "hello world" >>last_file.txt
     LOG_INFO "End to prepare the test environment."
 }
@@ -47,16 +41,16 @@ function run_test() {
     CHECK_RESULT $?
     osc service runall
     CHECK_RESULT $?
-    osc service wait $branches_path zjl | grep 'ok'
+    osc service wait "$branches_path" zjl | grep 'ok'
     CHECK_RESULT $?
     osc status -v | grep 'last_file.txt'
     CHECK_RESULT $?
-    osc token --create $branches_path zjl | grep 'Create a new token'
+    osc token --create "$branches_path" zjl | grep 'Create a new token'
     CHECK_RESULT $?
-    token_data=$(osc token --create $branches_path zjl | grep 'id' | awk '{print $2}')
+    token_data=$(osc token --create "$branches_path" zjl | grep 'id' | awk '{print $2}')
     handle_token=${token_data#*>}
     token_id=${handle_token%<*}
-    osc token --delete $token_id | grep 'Delete token'
+    osc token --delete "$token_id" | grep 'Delete token'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

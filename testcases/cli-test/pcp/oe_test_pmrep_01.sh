@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   (pcp-system-tools) (pmrep)
 #####################################
-# shellcheck disable=SC1091,SC2154
+# shellcheck disable=SC1091,SC2154,SC2086
 
 source "common/common_pcp-system-tools.sh"
 
@@ -31,7 +31,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     pmrep --version 2>&1 | grep "$pcp_version"
     CHECK_RESULT $?
-    pmrep -a "$archive_data" -A 10min "$metric_name" | grep 'count/s'
+    pmrep -a $archive_data -A 10min $metric_name | grep 'count/s'
     CHECK_RESULT $?
     pmrep --archive-folio=/var/log/pcp/pmlogger/"$(hostname)"/Latest "$metric_name" | grep 'count/s'
     CHECK_RESULT $?
