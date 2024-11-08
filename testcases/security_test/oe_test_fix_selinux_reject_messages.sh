@@ -26,6 +26,8 @@ function pre_test() {
     [ "$default_selinux_status" == "Enforcing" ] || setenforce 1
     cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf-bak
     sed -i "s/Listen 80/Listen 3131/g" /etc/httpd/conf/httpd.conf
+    old_lang=$LANG
+    export LANG=en_US.utf-8
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -33,7 +35,7 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     systemctl restart httpd
     sealert -a /var/log/audit/audit.log | grep "[a-z]" >/tmp/prevent_info.txt
-    grep "SELinux is preventing httpd from name_bind access on the tcp_socket port 3131" /tmp/prevent_info.txt
+    grep "SELinux is preventing /usr/sbin/httpd from name_bind access on the tcp_socket port 3131" /tmp/prevent_info.txt
     CHECK_RESULT $?
     suggest_infoc=$(grep "ausearch -c" /tmp/prevent_info.txt)
     suggest_infox=$(grep "semodule -X" /tmp/prevent_info.txt)
@@ -63,6 +65,7 @@ function post_test() {
     fi
     rm -rf /tmp/prevent_info.txt
     [ ${RULE_FLAG} -eq 1 ] && auditctl -w /usr/bin/systemctl -p r -k httpd-start
+    export LANG=${old_lang}
     LOG_INFO "Finish environment cleanup!"
 }
 

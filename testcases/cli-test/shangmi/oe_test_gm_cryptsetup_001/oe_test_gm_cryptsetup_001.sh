@@ -17,7 +17,7 @@
 # @Desc      :   cryptsetup sm test
 # ##################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     dd if=/dev/zero of=img1 bs=10M count=10
@@ -25,6 +25,8 @@ function pre_test() {
     dd if=/dev/zero of=img2 bs=10M count=10
     losetup /dev/loop6 img2
     mkdir /home/{encrypted1,encrypted2}
+    DNF_INSTALL "cryptsetup"
+
 }
 
 function run_test() {
@@ -79,6 +81,7 @@ function post_test() {
     losetup -d /dev/loop5
     losetup -d /dev/loop6
     rm -rf img1 img2 /home/{encrypted1,encrypted2}
+    DNF_REMOVE "$@"
 }
 
 main "$@"

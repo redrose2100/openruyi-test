@@ -30,6 +30,8 @@ function pre_test() {
     sed -i '/Directory/s/www/test_www/g' /etc/httpd/conf/httpd.conf
     cp /var/www /var/test_www -rf
     cp /usr/share/httpd/noindex/index.html /var/test_www/html
+    default_selinux_status=$(getenforce)
+    [ "$default_selinux_status" == "Enforcing" ] || setenforce 1
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -54,6 +56,11 @@ function post_test() {
     semanage fcontext -d -e /var/www /var/test_www
     semanage port --delete -t ssh_port_t -p tcp "$rdport"
     systemctl stop httpd
+    if [ "$default_selinux_status" == "Enforcing" ]; then
+        setenforce 1
+    else
+        setenforce 0
+    fi
     DNF_REMOVE "$@"
     rm -rf /var/test_www index.html /home/http_status.txt
     LOG_INFO "Finish environment cleanup!"
