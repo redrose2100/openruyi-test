@@ -27,78 +27,91 @@ function pre_test() {
 
 function run_test() {
 	LOG_INFO "Start to run test."
+
+	arch=$(arch)
+	if [ "$arch" == "x86_64" ]; then
+		name="sosreport-localhost"
+	elif [ "$arch" == "riscv64" ]; then
+	 	name="sosreport-openeuler-riscv64"
+	fi
+
+	# sleep 120
 	expect <<EOF
-		log_file sos_log9
-		spawn sosreport --debug
+		spawn sos report --debug --case-id debug
 		expect "" {send "\r"}
-		expect ":" {send "debug\r"}
-		sleep 120
+		expect "" {send "\r"}
+		sleep 240
 		expect eof
 EOF
-	grep "sosreport-localhost-debug-$(date +%Y-%m-%d)" sos_log9 && test -f /var/tmp/sosreport-localhost-debug-$(date +%Y-%m-%d)-*.tar.xz
+	test -f /var/tmp/$name-debug-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
+	# sleep 120
 	expect <<EOF
-		log_file sos_log10
-		spawn sosreport --desc "test description content" 
+		spawn sos report --desc "test description content" --case-id desc
 		expect "" {send "\r"}
-		expect ":" {send "desc\r"}
-		sleep 120
+		expect "" {send "\r"}
+		sleep 240
 		expect eof
 EOF
-	grep "sosreport-localhost-desc-$(date +%Y-%m-%d)" sos_log10 && test -f /var/tmp/sosreport-localhost-desc-$(date +%Y-%m-%d)-*.tar.xz
+	test -f /var/tmp/$name-desc-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
+	# sleep 120
 	expect <<EOF
-		log_file sos_log12
-		spawn sosreport --experimental
+		spawn sos report --experimental --case-id experimental
 		expect "" {send "\r"}
-		expect ":" {send "experimental\r"}
-		sleep 120
+		expect "" {send "\r"}
+		sleep 240
 		expect eof
 EOF
-	grep "sosreport-localhost-experimental-$(date +%Y-%m-%d)" sos_log12 && test -f /var/tmp/sosreport-localhost-experimental-$(date +%Y-%m-%d)-*.tar.xz
+	test -f /var/tmp/$name-experimental-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
+	# sleep 120
 	expect <<EOF
-		log_file sos_log13
-		spawn sosreport -e dnf,rpm,selinux,dovecot
+		spawn sos report -e dnf,rpm,selinux,dovecot --case-id enable-plugins
 		expect "" {send "\r"}
-		expect ":" {send "enable-plugins\r"}
-		sleep 120
+		expect "" {send "\r"}
+		sleep 240
 		expect eof
 EOF
-	grep "sosreport-localhost-enable-plugins-$(date +%Y-%m-%d)" sos_log13 && test -f /var/tmp/sosreport-localhost-enable-plugins-$(date +%Y-%m-%d)-*.tar.xz
+	test -f /var/tmp/$name-enable-plugins-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
-	sosreport -l | grep -E "on|off|inactive"
+	sos report -l | grep -E "on|off|inactive"
 	CHECK_RESULT $?
+	# sleep 180
 	expect <<EOF
-		log_file sos_log14
-		spawn sosreport -k history
+		spawn sos report -k dnf.history-info --case-id plugin-option
 		expect "" {send "\r"}
-		expect ":" {send "plugin-option\r"}
-		sleep 180
+		expect "" {send "\r"}
+		sleep 240
 		expect eof
 EOF
-	grep "sosreport-localhost-plugin-option-$(date +%Y-%m-%d)" sos_log14 && test -f /var/tmp/sosreport-localhost-plugin-option-$(date +%Y-%m-%d)-*.tar.xz
+	test -f /var/tmp/$name-plugin-option-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
+	#sleep 120
 	expect <<EOF
-		log_file sos_log15
-		spawn sosreport --label test-label
+		spawn sos report --label test-label --case-id 001
 		expect "" {send "\r"}
-		expect ":" {send "\r"}
-		sleep 120
+		expect "" {send "\r"}
+		sleep 240
 		expect eof
 EOF
-	grep "sosreport-localhost-test-label-$(date +%Y-%m-%d)" sos_log15 && test -f /var/tmp/sosreport-localhost-test-label-$(date +%Y-%m-%d)-*.tar.xz
+	test -f /var/tmp/$name-test-label-001-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
-	sosreport --list-presets
+	sos report --list-presets
 	CHECK_RESULT $?
 	LOG_INFO "End of the test."
 }
 
 function post_test() {
 	LOG_INFO "Start to restore the test environment."
-	rm -rf $(ls | grep -v ".sh") /var/tmp/sos*
-	DNF_REMOVE
+	for file in *; do
+		if [[ ! $file =~ \.sh$ ]]; then
+			rm -rf "$file"
+		fi
+	done
+	rm -rf /var/tmp/sos*
+	DNF_REMOVE "$@"
 	LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
