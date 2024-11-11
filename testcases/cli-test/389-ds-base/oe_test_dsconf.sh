@@ -44,9 +44,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: -y No Pass" 
     dsconf -D "cn=Directory Manage" -b "dc=example,dc=com" localhost backend suffix list | grep  "dc=example,dc=com (example)"
     CHECK_RESULT $? 0 0 "Check: -b No Pass" 
-    dsconf -Z -b "dc=example,dc=com" localhost backend suffix list  | grep  "Start TLS request accepted"
+    dsconf -Z -b "dc=example,dc=com" localhost backend suffix list 2>&1 | grep  "Start TLS request accepted"
     CHECK_RESULT $? 0 0 "Check: -Z No Pass" 
-    dsconf -j -b "dc=example,dc=com" localhost backend suffix list   | grep "\"type\": \"list\""
+    dsconf -j -b "dc=example,dc=com" localhost backend suffix list | grep "\"type\": \"list\""
     CHECK_RESULT $? 0 0 "Check: -j No Pass" 
     LOG_INFO "End to run test."
 }
