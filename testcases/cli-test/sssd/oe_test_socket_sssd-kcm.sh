@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL sssd
+    DNF_INSTALL "sssd sssd-kcm"
     LOG_INFO "End of environmental preparation!"
 }
 

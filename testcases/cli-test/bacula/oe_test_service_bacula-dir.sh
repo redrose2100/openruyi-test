@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "bacula-client mysql5-server"
+    DNF_INSTALL "bacula-client mysql-server"
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database
     /usr/libexec/bacula/make_mysql_tables

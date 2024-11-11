@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL mysql5-server
+    DNF_INSTALL mysql-server
     LOG_INFO "End of environmental preparation!"
 }
 
