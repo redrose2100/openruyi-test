@@ -32,24 +32,24 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsctl dsrc -h | grep "dsctl \[instance\] dsrc \[-h\]"
+    dsctl dsrc -h | grep "dsctl.* \[instance\] dsrc \[-h\]"
     CHECK_RESULT $? 0 0 "L$LINENO: dsrc -h No Pass"
-    dsctl localhost dsrc create -h | grep "usage: dsctl \[instance\] dsrc create"
+    dsctl localhost dsrc create -h | grep "usage: dsctl.* \[instance\] dsrc create"
     CHECK_RESULT $? 0 0 "L$LINENO: dsrc create -h No Pass"
     dsctl localhost dsrc create --uri ldap://server.example.com \
     --basedn dc=example,dc=net --binddn "cn=Directory Manager" --do-it \
     | grep "Successfully updated: /root/.dsrc"
     CHECK_RESULT $? 0 0 "L$LINENO: dsrc create No Pass"
-    dsctl localhost dsrc modify -h | grep "usage: dsctl \[instance\] dsrc modify"
+    dsctl localhost dsrc modify -h | grep "usage: dsctl.* \[instance\] dsrc modify"
     CHECK_RESULT $? 0 0 "L$LINENO: dsrc modify -h No Pass"
     dsctl localhost dsrc modify --basedn "cn=Directory Manager"\
     | grep "Successfully updated: /root/.dsrc"
     CHECK_RESULT $? 0 0 "L$LINENO: dsrc modify No Pass"
-    dsctl localhost dsrc display -h | grep "usage: dsctl \[instance\] dsrc display"
+    dsctl localhost dsrc display -h | grep "usage: dsctl.* \[instance\] dsrc display"
     CHECK_RESULT $? 0 0 "L$LINENO: dsrc display -h No Pass"
     dsctl localhost dsrc display | grep "\[localhost\]"
     CHECK_RESULT $? 0 0 "L$LINENO: dsrc display No Pass"
-    dsctl localhost dsrc delete -h | grep "usage: dsctl \[instance\] dsrc delete"
+    dsctl localhost dsrc delete -h | grep "usage: dsctl.* \[instance\] dsrc delete"
     CHECK_RESULT $? 0 0 "L$LINENO: dsrc delete -h No Pass"
     dsctl localhost dsrc delete --do-it | grep "Successfully removed: /root/.dsrc"
     CHECK_RESULT $? 0 0 "L$LINENO: dsrc delete No Pass"

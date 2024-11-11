@@ -31,9 +31,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsconf localhost security rsa -h | grep "usage: dsconf instance security rsa"
+    dsconf localhost security rsa -h | grep "usage: dsconf.* instance security rsa"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security rsa -h No Pass"
-    dsconf localhost security rsa set -h | grep "usage: dsconf instance security rsa set"
+    dsconf localhost security rsa set -h | grep "usage: dsconf.* instance security rsa set"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security rsa set -h No Pass"
     dsconf localhost security rsa set --tls-allow-rsa-certificates on
     dsconf localhost security rsa get | grep "nssslactivation: on"
@@ -44,13 +44,13 @@ function run_test() {
     dsconf localhost security rsa set --nss-token "internal (software)"
     dsconf localhost security rsa get | grep "nsssltoken: internal"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security rsa set --nss-token No Pass"
-    dsconf localhost security rsa get -h | grep "usage: dsconf instance security rsa get"
+    dsconf localhost security rsa get -h | grep "usage: dsconf.* instance security rsa get"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security rsa get -h No Pass"
     dsconf localhost security rsa get | grep "nssslactivation: on"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security rsa get No Pass"
-    dsconf localhost security rsa enable -h | grep "usage: dsconf instance security rsa enable"
+    dsconf localhost security rsa enable -h | grep "usage: dsconf.* instance security rsa enable"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security rsa enable -h No Pass"
-    dsconf localhost security rsa disable -h | grep "usage: dsconf instance security rsa disable"
+    dsconf localhost security rsa disable -h | grep "usage: dsconf.* instance security rsa disable"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security rsa disable -h No Pass"
     dsconf localhost security rsa disable
     dsconf localhost security rsa get | grep "nssslactivation: off"

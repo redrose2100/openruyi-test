@@ -31,16 +31,16 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsconf localhost security get -h | grep "usage: dsconf instance security get"
+    dsconf localhost security get -h | grep "usage: dsconf.*instance.*security get"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security get -h No Pass"
     dsconf localhost security get | grep "nsslapd-security:"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security get No Pass"
-    dsconf localhost security disable -h | grep "usage: dsconf instance security disable"
+    dsconf localhost security disable -h | grep "usage: dsconf.*instance.*security disable"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security disable -h No Pass"
     dsconf localhost security disable 
     dsconf localhost security get | grep "nsslapd-security: off"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security disable No Pass"
-    dsconf localhost security enable -h | grep "usage: dsconf instance security enable"
+    dsconf localhost security enable -h | grep "usage: dsconf.*instance.*security enable"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security enable -h No Pass"
     dsconf localhost security enable 
     dsconf localhost security get | grep "nsslapd-security: on"
@@ -48,7 +48,7 @@ function run_test() {
     dsconf localhost sasl security enable --cert-name Server-Cert
     dsconf localhost security get | grep "nsslapd-security: on"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security enable --cert-name No Pass"
-    dsconf localhost security disable_plain_port -h | grep "usage: dsconf instance security disable_plain_port"
+    dsconf localhost security disable_plain_port -h | grep "usage: dsconf.*instance.*security disable_plain_port"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security disable_plain_port -h No Pass"
     echo "^C" | dsconf localhost security disable_plain_port | grep "Disabling plaintext ldap port"
     CHECK_RESULT $? 0 0 "L$LINENO: dsconf security disable_plain_port No Pass"

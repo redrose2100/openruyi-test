@@ -32,7 +32,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsctl healthcheck -h | grep "usage: dsctl \[instance\] healthcheck"
+    dsctl healthcheck -h | grep "usage: dsctl.* \[instance\] healthcheck"
     CHECK_RESULT $? 0 0 "L$LINENO: healthcheck -h No Pass"
     dsctl localhost healthcheck --list-checks | grep "backends:example:search"
     CHECK_RESULT $? 0 0 "L$LINENO: healthcheck --list-checks No Pass"
@@ -42,7 +42,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: healthcheck --dry-run No Pass"
     dsctl localhost healthcheck --check backends:example:search | grep "Healthcheck complete."
     CHECK_RESULT $? 0 0 "L$LINENO: healthcheck --check No Pass"
-    dsctl get-nsstate -h | grep "usage: dsctl \[instance\] get-nsstate \[-h\]"
+    dsctl get-nsstate -h | grep "usage: dsctl.* \[instance\] get-nsstate \[-h\]"
     CHECK_RESULT $? 0 0 "L$LINENO: get-nsstate -h No Pass"
     dsctl localhost get-nsstate --suffix "dc=example,dc=net"
     CHECK_RESULT $? 0 0 "L$LINENO: get-nsstate --suffix No Pass"
