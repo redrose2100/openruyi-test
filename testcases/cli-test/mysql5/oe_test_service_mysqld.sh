@@ -35,7 +35,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop mysqld.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /var/lib/mysql/*
     LOG_INFO "Finish environment cleanup!"
 }
