@@ -28,6 +28,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     log_path_new='/var/log/oeAware_new2'
     log_path_new2="${log_path_new//\//\\\/}"
+    \cp -rf /etc/oeAware/config.yaml /etc/oeAware/config_ori.yaml
     sed -i -e '/^log_path: / s/: .*/: '"$log_path_new2"'/' /etc/oeAware/config.yaml
     systemctl restart oeaware
     systemctl status oeaware | grep "active (running)"
@@ -39,6 +40,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    mv /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
+    systemctl restart oeawar
     DNF_REMOVE "$@"
     rm -rf $log_path_new
     LOG_INFO "End to restore the test environment."

@@ -32,22 +32,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    source /etc/openEuler-latest
-    os_version=${openeulerversion}
-    address="https://repo.oepkgs.net/openeuler/rpm/$os_version/extras/$NODE_FRAME/Packages/n/"
-    wget "$address"
-    software=$(grep numafast index.html | cut -d '>' -f 1 | awk -F '"' '{print$2}')
-    sed -i '/plugin_list/a\  - name: numafast2\n    description: numafast2' /etc/oeAware/config.yaml
-    url="https://repo.oepkgs.net/openeuler/rpm/$os_version/extras/$NODE_FRAME/Packages/n/$software"
-    url="${url//\//\\\/}"
-    sed -i '/description: numafast2/a\    url: '"$url"' ' /etc/oeAware/config.yaml
+    sed -i '/- name: numafast/c\  - name: numafast2' /etc/oeAware/config.yaml
+    sed -i '/description: numafast/c\    description: numafast2' /etc/oeAware/config.yaml
     systemctl restart oeaware
     SLEEP_WAIT 1
     oeawarectl --list | grep "numafast2"
     CHECK_RESULT $? 0 0 "numafast2 is not found in oeawarectl --list"
     oeawarectl --install numafast2 | grep "numafast"
     CHECK_RESULT $? 0 0 "numafast2 install failed" 
-    rm -rf index.html
+    
     LOG_INFO "End to run test."
 }
 

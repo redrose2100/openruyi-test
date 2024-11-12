@@ -26,7 +26,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    chmod 400 /usr/lib64/oeAware-plugin/libthread_collector.so
+    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so -print0 | xargs -0 chmod 400
     \cp -rf /etc/oeAware/config.yaml /etc/oeAware/config_ori.yaml
     sed -i '/enable_list/a\ - name: libthread_collector.so' /etc/oeAware/config.yaml
     systemctl restart oeaware
@@ -40,7 +40,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    chmod 440 /usr/lib64/oeAware-plugin/libthread_collector.so
+    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so -print0 | xargs -0 chmod 440
     \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
     systemctl restart oeaware
     rm -rf /etc/oeAware/config_ori.yaml
