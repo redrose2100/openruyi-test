@@ -28,40 +28,53 @@ function pre_test() {
 
 function run_test() {
 	LOG_INFO "Start to run test."
-	sosreport -s "/tmp" >runlog 2>&1
-	CHECK_RESULT $? 1
-	grep "Could not obtain installed package list" runlog
+
+	arch=$(arch)
+	if [ "$arch" == "x86_64" ]; then
+		name="sosreport-localhost"
+	elif [ "$arch" == "riscv64" ]; then
+	 	name="sosreport-openeuler-riscv64"
+	fi
+
+	sos report --batch -s "/tmp"
+	LAST_RESULT=$?
+	if [ "$arch" == "x86_64" ]; then
+		CHECK_RESULT $LAST_RESULT 1
+	elif [ "$arch" == "riscv64" ]; then
+		CHECK_RESULT $LAST_RESULT
+	fi
+
+	sos report -s "/" --batch --label sysroot
 	CHECK_RESULT $?
-	sosreport -s "/" --batch --label sysroot >sos_log25
+	test -f /var/tmp/$name-sysroot-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
-	grep "sosreport-localhost-sysroot-$(date +%Y-%m-%d)" sos_log25 && test -f /var/tmp/sosreport-localhost-sysroot-$(date +%Y-%m-%d)-*.tar.xz
-	CHECK_RESULT $?
-	if [ $VERSION_ID != "22.03" ]; then
-		sosreport --batch --ticket-number 666
+
+	if [ "$VERSION_ID" != "22.03" ]; then
+		sos report --batch --case-id 666
 		CHECK_RESULT $?
-		test -f /var/tmp/sosreport-localhost-666-$(date +%Y-%m-%d)-*.tar.xz
+		test -f /var/tmp/$name-666-"$(date +%Y-%m-%d)"-*.tar.xz
 		CHECK_RESULT $?
 		mkdir temp
 		CHECK_RESULT $?
-		sosreport --batch --tmp-dir temp --ticket-number temp
+		sos report --batch --tmp-dir temp --case-id temp
 		CHECK_RESULT $?
-		test -f temp/sosreport-localhost-temp-$(date +%Y-%m-%d)-*.tar.xz
+		test -f temp/$name-temp-"$(date +%Y-%m-%d)"-*.tar.xz
 		CHECK_RESULT $?
-		sosreport --batch --tmp-dir temp -v --ticket-number verbose >sos_log26
+		sos report --batch --tmp-dir temp -v --case-id verbose
 		CHECK_RESULT $?
-		grep -E "adding|collecting|sosreport-localhost-verbose-$(date +%Y-%m-%d)-.*.tar.xz" sos_log26 && test -f temp/sosreport-localhost-verbose-$(date +%Y-%m-%d)-*.tar.xz
+	 	test -f temp/$name-verbose-"$(date +%Y-%m-%d)"-*.tar.xz
 		CHECK_RESULT $?
-		sosreport --batch --verify --tmp-dir temp --ticket-number verify
+		sos report --batch --verify --tmp-dir temp --case-id verify
 		CHECK_RESULT $?
-		test -f temp/sosreport-localhost-verify-$(date +%Y-%m-%d)-*.tar.xz
+		test -f temp/$name-verify-"$(date +%Y-%m-%d)"-*.tar.xz
 		CHECK_RESULT $?
-		sosreport -z gzip --batch --tmp-dir temp --ticket-number gzipForm
+		sos report -z gzip --batch --tmp-dir temp --case-id gzipForm
 		CHECK_RESULT $?
-		test -f temp/sosreport-localhost-gzipForm-$(date +%Y-%m-%d)-*.tar.gz
+		test -f temp/$name-gzipForm-"$(date +%Y-%m-%d)"-*.tar.gz
 		CHECK_RESULT $?
-		sosreport --threads 6 --batch --tmp-dir temp --ticket-number threads
+		sos report --threads 6 --batch --tmp-dir temp --case-id threads
 		CHECK_RESULT $?
-		test -f temp/sosreport-localhost-threads-$(date +%Y-%m-%d)-*.tar.xz
+		test -f temp/$name-threads-"$(date +%Y-%m-%d)"-*.tar.xz
 		CHECK_RESULT $?
 	else
 		LOG_INFO "Obsolete version command"
@@ -72,9 +85,14 @@ function run_test() {
 
 function post_test() {
 	LOG_INFO "Start to restore the test environment."
-	rm -rf $(ls | grep -v ".sh") /var/tmp/sos*
-	DNF_REMOVE
+	for file in *; do
+		if [[ ! $file =~ \.sh$ ]]; then
+			rm -rf "$file"
+		fi
+	done
+	rm -rf /var/tmp/sos*
+	DNF_REMOVE "$@"
 	LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

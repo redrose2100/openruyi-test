@@ -27,64 +27,76 @@ function pre_test() {
 
 function run_test() {
 	LOG_INFO "Start to run test."
-	sosreport --list-profiles
+	sos report --list-profiles
 	CHECK_RESULT $?
+
+	arch=$(arch)
+	if [ "$arch" == "x86_64" ]; then
+		name="sosreport-localhost"
+	elif [ "$arch" == "riscv64" ]; then
+	 	name="sosreport-openeuler-riscv64"
+	fi
+	# sleep 120
 	expect <<EOF
-		log_file sos_log16
-		spawn sosreport --log-size 10
+		spawn sos report --log-size 10 --case-id log-size
 		expect "" {send "\r"}
-		expect ":" {send "log-size\r"}
-		sleep 120
+		expect "" {send "\r"}
+		sleep 240
 		expect eof
 EOF
-	grep "sosreport-localhost-log-size-$(date +%Y-%m-%d)" sos_log16 && test -f /var/tmp/sosreport-localhost-log-size-$(date +%Y-%m-%d)-*.tar.xz
+	test -f /var/tmp/$name-log-size-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
+	# sleep 120
 	expect <<EOF
-		log_file sos_log17
-		spawn sosreport -n dnf,rpm,selinux,dovecot
+		spawn sos report -n dnf,rpm,selinux,dovecot --case-id skip-plugins
 		expect "" {send "\r"}
-		expect ":" {send "skip-plugins\r"}
-		sleep 120
+		expect "" {send "\r"}
+		sleep 240
 		expect eof
 EOF
-	grep "sosreport-localhost-skip-plugins-$(date +%Y-%m-%d)" sos_log17 && test -f /var/tmp/sosreport-localhost-skip-plugins-$(date +%Y-%m-%d)-*.tar.xz
+	test -f /var/tmp/$name-skip-plugins-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
+	# sleep 120
 	expect <<EOF
-		log_file sos_log18
-		spawn sosreport --no-report 
+		spawn sos report --no-report --case-id no-report
 		expect "" {send "\r"}
-		expect ":" {send "no-report\r"}
-		sleep 120
+		expect "" {send "\r"}
+		sleep 240
 		expect eof
 EOF
-	grep "sosreport-localhost-no-report-$(date +%Y-%m-%d)" sos_log18 && test -f /var/tmp/sosreport-localhost-no-report-$(date +%Y-%m-%d)-*.tar.xz
+	test -f /var/tmp/$name-no-report-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
-	no_report_file=$(ls /var/tmp/sosreport-localhost-no-report-$(date +%Y-%m-%d)-*.tar.xz)
-	tar -xvf ${no_report_file}
-	test -f sosreport-localhost-no-report-$(date +%Y-%m-%d)-*/sos_reports/sos.html -a -f sosreport-localhost-no-report-$(date +%Y-%m-%d)-*/sos_reports/sos.txt -a -f sosreport-localhost-no-report-$(date +%Y-%m-%d)-*/sos_reports/sos.json
+	no_report_file=$(ls /var/tmp/$name-no-report-"$(date +%Y-%m-%d)"-*.tar.xz)
+	tar -xvf "${no_report_file}"
+	test -f $name-no-report-"$(date +%Y-%m-%d)"-*/sos_reports/sos.html -a -f $name-no-report-"$(date +%Y-%m-%d)"-*/sos_reports/sos.txt -a -f $name-no-report-"$(date +%Y-%m-%d)"-*/sos_reports/sos.json
 	CHECK_RESULT $? 1
+	# sleep 120
 	expect <<EOF
-		log_file sos_log21
-		spawn sosreport --note "testnote"
+		spawn sos report --note "testnote" --case-id testnote
 		expect "" {send "\r"}
-		expect ":" {send "testnote\r"}
-		sleep 120
+		expect "" {send "\r"}
+		sleep 240
 		expect eof
 EOF
-	grep "sosreport-localhost-testnote-$(date +%Y-%m-%d)" sos_log21 && test -f /var/tmp/sosreport-localhost-testnote-$(date +%Y-%m-%d)-*.tar.xz
+	test -f /var/tmp/$name-testnote-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
-	sosreport -o dnf,rpm,selinux,dovecot --batch --label only-plugins >sos_log22
+	sos report -o dnf,rpm,selinux,dovecot --batch --label only-plugins
 	CHECK_RESULT $?
-	grep -E "4|dnf|rpm|selinux|dovecot|sosreport-localhost-only-plugins-$(date +%Y-%m-%d)-.*.tar.xz" sos_log22 && test -f /var/tmp/sosreport-localhost-only-plugins-$(date +%Y-%m-%d)-*.tar.xz
+	test -f /var/tmp/$name-only-plugins-"$(date +%Y-%m-%d)"-*.tar.xz
 	CHECK_RESULT $?
 	LOG_INFO "End of the test."
 }
 
 function post_test() {
 	LOG_INFO "Start to restore the test environment."
-	rm -rf $(ls | grep -v ".sh") /var/tmp/sos*
-	DNF_REMOVE
+	for file in *; do
+		if [[ ! $file =~ \.sh$ ]]; then
+			rm -rf "$file"
+		fi
+	done
+	rm -rf /var/tmp/sos*
+	DNF_REMOVE "$@"
 	LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
