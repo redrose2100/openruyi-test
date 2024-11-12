@@ -26,6 +26,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    \cp -rf /etc/oeAware/config.yaml /etc/oeAware/config_ori.yaml
     log_path_new='/var/log/oeAware_new'
     mkdir $log_path_new
     log_path_new1="${log_path_new//\//\\\/}"
@@ -38,6 +39,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    mv /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
+    systemctl restart oeaware    
     DNF_REMOVE "$@"
     rm -rf $log_path_new
     LOG_INFO "End to restore the test environment."
