@@ -40,6 +40,7 @@ function pre_test() {
         }
         expect eof
 EOF
+    cp -r smb.conf /etc/samba/
     mv /etc/krb5.conf /etc/krb5.bak
     rm -rf /etc/krb5.conf && cp -raf /var/lib/samba/private/krb5.conf /etc/
     systemctl stop firewalld

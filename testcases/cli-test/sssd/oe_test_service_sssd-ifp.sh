@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     openldap_server_pre
     openldap_client_pre
-    DNF_INSTALL sssd
+    DNF_INSTALL "sssd sssd-dbus"
     LOG_INFO "End to prepare the test environment."
 }
 
