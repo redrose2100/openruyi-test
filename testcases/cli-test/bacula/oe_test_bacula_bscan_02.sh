@@ -23,7 +23,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client bacula-common mysql5-server tar"
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    else
+        DNF_INSTALL "bacula-client mysql-server bacula-common tar"
+    fi
     tar -zxvf common/test.tar.gz
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database
@@ -62,17 +66,17 @@ function run_test() {
     expect "Defined Pools:" {send "1\n"}
     expect "successfully created" {send "q\n"}
 EOF
-    bscan -v -m  FileChgr1-Dev1 -V test1 -n bacula -u root -P "" -h localhost -t 3306 | grep 'Using Database: bacula, User: root'
+    bscan -v -m FileChgr1-Dev1 -V test1 -n bacula -u root -P "" -h localhost -t 3306 | grep 'Using Database: bacula, User: root'
     CHECK_RESULT $? 0 0 "test bscan -m -n failed"
     bscan -d 23 FileChgr1-Dev1 -V test1 -n bacula -u root -P "" -h localhost -t 3306 | grep 'Initaddr '
     CHECK_RESULT $? 0 0 "test bscan -d failed"
     bscan -d 23 -dt FileChgr1-Dev1 -V test1 -n bacula -u root -P "" -h localhost -t 3306 | grep '.*-.*-.* .*:.*:.* bscan:'
     CHECK_RESULT $? 0 0 "test bscan -dt failed"
-    bscan -D FileChgr1-Dev1 -v FileChgr1-Dev1 -V test1 -n bacula -u root -P "" -h localhost -t 3306 | grep 'Using Database: bacula, User: root' 
+    bscan -D FileChgr1-Dev1 -v FileChgr1-Dev1 -V test1 -n bacula -u root -P "" -h localhost -t 3306 | grep 'Using Database: bacula, User: root'
     CHECK_RESULT $? 0 0 "test bscan -D failed"
-    bscan -v -b ./config/1.conf FileChgr1-Dev1 -n bacula -u root -P "" -h localhost -t 3306 | grep 'Using Database: bacula, User: root' 
+    bscan -v -b ./config/1.conf FileChgr1-Dev1 -n bacula -u root -P "" -h localhost -t 3306 | grep 'Using Database: bacula, User: root'
     CHECK_RESULT $? 0 0 "test bscan -b failed"
-    bscan -v -c /etc/bacula/bacula-sd.conf -V test1 FileChgr1-Dev1 -n bacula -u root -P "" -h localhost -t 3306 | grep 'Using Database: bacula, User: root' 
+    bscan -v -c /etc/bacula/bacula-sd.conf -V test1 FileChgr1-Dev1 -n bacula -u root -P "" -h localhost -t 3306 | grep 'Using Database: bacula, User: root'
     CHECK_RESULT $? 0 0 "test bscan -c failed"
     LOG_INFO "End to run test."
 }

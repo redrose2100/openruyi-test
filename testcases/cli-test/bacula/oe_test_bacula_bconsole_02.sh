@@ -23,8 +23,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
-    tar -zxvf common/test.tar.gz 
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    else
+        DNF_INSTALL "bacula-client mysql-server bacula-common tar"
+    fi
+    tar -zxvf common/test.tar.gz
     systemctl restart mysqld
     mkdir tmp
     /usr/libexec/bacula/create_mysql_database
@@ -37,7 +41,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    expect <<EOF > tmp/1.txt
+    expect <<EOF >tmp/1.txt
     exp_internal 1
     set timeout -1
     spawn bconsole -u 30
@@ -45,7 +49,7 @@ function run_test() {
 EOF
     grep '1000 OK' tmp/1.txt
     CHECK_RESULT $? 0 0 "test bconsole -u failed"
-    bconsole -t 
+    bconsole -t
     CHECK_RESULT $? 0 0 "test bconsole -t failed"
     bconsole -? 2>&1 | grep 'Usage: '
     CHECK_RESULT $? 0 0 "test bconsole -? failed"

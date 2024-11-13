@@ -23,7 +23,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client mysql5-server bacula-common"
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server bacula-common"
+    else
+        DNF_INSTALL "bacula-client mysql-server bacula-common"
+    fi
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database
     /usr/libexec/bacula/make_mysql_tables
@@ -44,7 +48,7 @@ function run_test() {
     ss -ntlp | grep bacula-fd
     CHECK_RESULT $? 0 0 "test bacula-fd -dt failed"
     pkill -f bacula-fd
-    (timeout 10 bacula-fd -v -f -s -c /etc/bacula/bacula-fd.conf)&
+    (timeout 10 bacula-fd -v -f -s -c /etc/bacula/bacula-fd.conf) &
     SLEEP_WAIT 3
     ss -ntlp | grep bacula-fd
     CHECK_RESULT $? 0 0 "test bacula-fd -f -s failed"
@@ -72,7 +76,7 @@ function run_test() {
     bacula-fd -t -v -c /etc/bacula/bacula-fd.conf
     CHECK_RESULT $? 0 0 "test bacula-fd -t failed"
     pkill -f bacula-fd
-    bacula-fd -T -v -c /etc/bacula/bacula-fd.conf 
+    bacula-fd -T -v -c /etc/bacula/bacula-fd.conf
     CHECK_RESULT $? 0 0 "test bacula-fd -T failed"
     bacula-fd -? 2>&1 | grep 'Usage'
     CHECK_RESULT $? 0 0 "test bacula-fd -? failed"
@@ -88,7 +92,7 @@ function post_test() {
     /usr/libexec/bacula/drop_mysql_tables
     /usr/libexec/bacula/drop_mysql_database
     systemctl stop mysqld
-    rm -rf *.log bacula-fd.trace  var/lib/mysql/* /var/spool/bacula/*
+    rm -rf ./*.log bacula-fd.trace var/lib/mysql/* /var/spool/bacula/*
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

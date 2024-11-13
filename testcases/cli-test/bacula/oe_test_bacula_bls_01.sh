@@ -23,7 +23,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client bacula-common mysql5-server tar"
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    else
+        DNF_INSTALL "bacula-client mysql-server bacula-common tar"
+    fi
     tar -zxvf common/test.tar.gz
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database

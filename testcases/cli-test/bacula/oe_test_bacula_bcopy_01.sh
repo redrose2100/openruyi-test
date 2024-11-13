@@ -23,8 +23,12 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client bacula-common mysql5-server tar"
-    tar -zxvf common/test.tar.gz 
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    else
+        DNF_INSTALL "bacula-client mysql-server bacula-common tar"
+    fi
+    tar -zxvf common/test.tar.gz
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database
     /usr/libexec/bacula/make_mysql_tables
@@ -88,7 +92,7 @@ EOF
   AlwaysOpen = no;
   Maximum Concurrent Jobs = 5
 
-}' >> /etc/bacula/bacula-sd.conf
+}' >>/etc/bacula/bacula-sd.conf
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -100,9 +104,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "test bcopy -c failed"
     bcopy -i testc1 FileChgr1-Dev1 -o test2 Onstream | grep 'moving to end of data.'
     CHECK_RESULT $? 0 0 "test bcopy -i -o failed"
-    bcopy -d 20 -i testc1 FileChgr1-Dev1 -o test2 Onstream  | grep 'bcopy: address_conf.c:274-0 Initaddr'
+    bcopy -d 20 -i testc1 FileChgr1-Dev1 -o test2 Onstream | grep 'bcopy: address_conf.c:2[0-9][0-9]-0 Initaddr'
     CHECK_RESULT $? 0 0 "test bcopy -d failed"
-    bcopy -dt -i testc1 FileChgr1-Dev1 -o test2 Onstream  | grep '.*-.*-.* .*:.*:.* bcopy: '
+    bcopy -dt -i testc1 FileChgr1-Dev1 -o test2 Onstream | grep '.*-.*-.* .*:.*:.* bcopy: '
     CHECK_RESULT $? 0 0 "test bcopy -dt failed"
     bcopy -p -i testc1 FileChgr1-Dev1 -o test2 Onstream | grep 'moving to end of data.'
     CHECK_RESULT $? 0 0 "test bcopy -p failed"
