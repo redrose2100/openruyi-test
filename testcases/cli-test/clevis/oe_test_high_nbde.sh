@@ -27,7 +27,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "tang clevis clevis-dracut cryptsetup-reencrypt clevis-udisks2"
+    DNF_INSTALL "tang clevis clevis-dracut cryptsetup clevis-udisks2"
     DNF_INSTALL tang 2
     echo -e "n\n\np\n\n\n+100M\nw"| fdisk "${TEST_DISK}"
     ls /mnt/test_encrypted && rm -rf /mnt/test_encrypted
@@ -44,9 +44,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    echo -e "\n\n"|cryptsetup-reencrypt --type luks1 --new --reduce-device-size 8M "${TEST_DISK}"1
+    echo -e "${NODE1_PASSWORD}""\n""${NODE1_PASSWORD}""\n"|cryptsetup luksFormat "${TEST_DISK}"1
     CHECK_RESULT $? 0 0 "Disk encryption failed"
-    echo -e "\n"|cryptsetup open "${TEST_DISK}"1 test_encrypted
+    echo -e "${NODE1_PASSWORD}""\n"|cryptsetup open "${TEST_DISK}"1 test_encrypted
     CHECK_RESULT $? 0 0 "Disk mapping failed"
     mkfs.ext4 /dev/mapper/test_encrypted -F
     mount /dev/mapper/test_encrypted /mnt/test_encrypted
