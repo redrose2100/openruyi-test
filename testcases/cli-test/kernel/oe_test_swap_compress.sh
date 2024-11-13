@@ -17,31 +17,36 @@
 # @Desc      :   Test 内核-swap压缩
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
-function run_test() {
-    LOG_INFO "Start testing..."
-    default_swap=`free -lh |grep -i swap |awk '{print $2}' |awk -F"G" '{print $1}'`
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
     swapoff /dev/dm-1
-    swap1=`free -lh |grep -i swap |awk '{print $2}' |awk -F"B" '{print $1}'`
-    CHECK_RESULT $swap1 0 0 "Uninstall Failed"
-    lvreduce -L -1G -f /dev/openeuler/swap
-    mkswap /dev/openeuler/swap
+    LOG_INFO "End to prepare the test environment."
+}
+function run_test() {
+    LOG_INFO "Start to run test."
+    default_swap=$(free -lh |grep -i swap |awk '{print $2}' |awk -F"G" '{print $1}')
+    swapoff /dev/dm-1
+    swap1=$(free -lh |grep -i swap |awk '{print $2}' |awk -F"B" '{print $1}')
+    CHECK_RESULT "${swap1}" 0 0 "Uninstall Failed"
+    lvreduce -L -1G -f /dev/openeuler*/swap
+    mkswap /dev/openeuler*/swap
     CHECK_RESULT $? 0 0 "Erase failed"
-    swapon /dev/openeuler/swap
-    swap2=`free -lh |grep -i swap |awk '{print $2}' |awk -F"G" '{print $1}'`
-    [ `echo "${default_swap} > ${swap2}" |bc` -eq 1 ]
+    swapon /dev/openeuler*/swap
+    swap2=$(free -lh |grep -i swap |awk '{print $2}' |awk -F"G" '{print $1}')
+    [ "$(echo "${default_swap} > ${swap2}" |bc)" -eq 1 ]
     CHECK_RESULT $? 0 0 "Compression failed"
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the tet environment."
     swapoff /dev/dm-1
-    lvextend -L +1G -f /dev/openeuler/swap
-    mkswap /dev/openeuler/swap
-    swapon /dev/openeuler/swap
-    LOG_INFO "Finish to restore the tet environment."
+    lvextend -L +1G -f /dev/openeuler*/swap
+    mkswap /dev/openeuler*/swap
+    swapon /dev/openeuler*/swap
+    LOG_INFO "End to restore the tet environment."
 }
 
 main "$@"
