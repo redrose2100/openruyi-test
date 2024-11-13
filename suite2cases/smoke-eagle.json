@@ -1,0 +1,26 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test/smoke-eagle",
+    "machine type": "physical",
+    "cases": [
+        {
+            "name": "oe_test_interface_eagle_40",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_eagle_41",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_eagle_42",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_eagle_43",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_eagle_44",
+            "machine type": "physical"
+        }
+    ]
+}
