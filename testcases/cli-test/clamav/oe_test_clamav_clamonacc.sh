@@ -16,12 +16,12 @@
 #@Desc      	:   Take the test clamonacc(only for clamav version ≥ 0.103.2)
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL "clamav clamav-server"
+    DNF_INSTALL "clamav clamav-* clamd"
 
     echo "/opt" >testlist
     mkdir testdir
@@ -75,12 +75,12 @@ function run_test() {
     clamonacc --stream
     CHECK_RESULT $? 0 0 "Execute clamonacc --stream failed."
 
-    nohup clamonacc -v -F &
+    clamonacc -v -F > /dev/null 2>&1 > test.log &
     SLEEP_WAIT 2
     # create a new console to execute cmd to be watched
-    SSH_CMD "echo 'test force file' >/opt/test_forcefile" ${NODE1_IPV4} ${NODE1_PASSWORD} ${NODE1_USER}
-    SLEEP_WAIT 2
-    grep -q "/opt/test_forcefile" nohup.out
+    SSH_CMD "echo 'test force file' >/opt/test_forcefile" "${NODE1_IPV4}" "${NODE1_PASSWORD}" "${NODE1_USER}"
+    SLEEP_WAIT 5
+    grep -q "/opt/test_forcefile" test.log
     CHECK_RESULT $? 0 0 "Execute clamonacc -F failed."
 
     LOG_INFO "End to run test."
@@ -88,9 +88,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
-    kill -9 $(ps -ef | grep clamonacc | grep -Ev 'grep|bash' | awk '{print $2}')
-    rm -rf /etc/clamd.d/scan.conf testlist clamonacc_log testdir nohup.out /opt/test_forcefile
+    kill -9 "$(pgrep -f "^clamonacc")"
+    rm -rf /etc/clamd.d/scan.conf testlist clamonacc_log testdir /opt/test_forcefile test.log
     mv /etc/clamd.d/scan.conf.bak /etc/clamd.d/scan.conf
     DNF_REMOVE
 

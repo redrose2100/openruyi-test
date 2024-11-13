@@ -20,7 +20,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
+    LANG_OLD="${LANG}"
+    export LANG=en_US.utf8
     cat >"test-data" <<EOF
 antzer
 G@ndalf
@@ -87,14 +88,14 @@ function run_test() {
     LOG_INFO "Test: cracklib-packer"
     cracklib-format test-data | cracklib-packer words
     CHECK_RESULT $? 0 0 "cracklib-packer failed..."
-    [ -f words.hwm -a -f words.pwd -a -f words.pwi ]
+    test -f words.hwm -a -f words.pwd -a -f words.pwi
     CHECK_RESULT $? 0 0 "cracklib-packer error: data is not exist..."
 
     ### test: packer
     LOG_INFO "Test: packer"
     cracklib-format test-data | packer packers
     CHECK_RESULT $? 0 0 "packer failed..."
-    [ -f packers.hwm -a -f packers.pwd -a -f packers.pwi ]
+    test -f packers.hwm -a -f packers.pwd -a -f packers.pwi
     CHECK_RESULT $? 0 0 "packer error: data is not exist..."
 
     ### test: cracklib-unpacker
@@ -122,7 +123,7 @@ function run_test() {
     ### test: create-cracklib-dict -o
     create-cracklib-dict -o output test-data
     CHECK_RESULT $? 0 0 "create-cracklib-dict option --output failed..."
-    [ -f output.hwm -a -f output.pwd -a -f output.pwi ]
+    test -f output.hwm -a -f output.pwd -a -f output.pwi
     CHECK_RESULT $? 0 0 "cracklib-packer error: data is not exist..."
 
     ### test: create-cracklib-dict -h
@@ -134,6 +135,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    ecport LANG="${LANG_OLD}"
     rm -f "pw_dict.orig" "pw_dict.new" "test-data" "format-data" "unpacker-data" "format-dict"
     rm -f "output.hwm" "output.pwd" "output.pwi" "packer.hwm" "packers.pwd" "packers.pwi" "words.hwm" "words.pwd" "words.pwi"
     LOG_INFO "Finish restoring the test environment."
