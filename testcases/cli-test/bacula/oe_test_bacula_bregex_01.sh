@@ -23,7 +23,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    else
+        DNF_INSTALL "bacula-client mysql-server bacula-common tar"
+    fi
     tar -zxvf common/test.tar.gz
     mkdir tmp
     LOG_INFO "End to prepare the test environment."
@@ -31,7 +35,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    expect <<EOF > tmp/1.txt
+    expect <<EOF >tmp/1.txt
     exp_internal 1
     set timeout -1
     spawn bregex -f ./config/a.config
@@ -40,7 +44,7 @@ function run_test() {
 EOF
     grep 'Director' tmp/1.txt
     CHECK_RESULT $? 0 0 "test bregex -f failed"
-    expect <<EOF > tmp/2.txt
+    expect <<EOF >tmp/2.txt
     exp_internal 1
     set timeout -1
     spawn bregex -d 33 -f ./config/a.config
@@ -49,32 +53,32 @@ EOF
 EOF
     grep '.* Director' tmp/2.txt
     CHECK_RESULT $? 0 0 "test bregex -d failed"
-    expect <<EOF > tmp/3.txt
+    expect <<EOF >tmp/3.txt
     exp_internal 1
     set timeout -1
     spawn bregex -l -f ./config/a.config
     expect "Enter regex pattern: " {send "Director\n"}
     expect "Enter regex pattern:" {send "\n"}
 EOF
-    grep -v '.* Director' tmp/3.txt 
+    grep -v '.* Director' tmp/3.txt
     CHECK_RESULT $? 0 0 "test bregex -l failed"
-    expect <<EOF > tmp/4.txt
+    expect <<EOF >tmp/4.txt
     exp_internal 1
     set timeout -1
     spawn bregex -n -f ./config/a.config
     expect "Enter regex pattern: " {send "Director\n"}
     expect "Enter regex pattern:" {send "\n"}
 EOF
-    grep 'Enter regex pattern: Director' tmp/4.txt 
+    grep 'Enter regex pattern: Director' tmp/4.txt
     CHECK_RESULT $? 0 0 "test bregex -n failed"
-    expect <<EOF > tmp/5.txt
+    expect <<EOF >tmp/5.txt
     exp_internal 1
     set timeout -1
     spawn bregex -dt -f ./config/a.config
     expect "Enter regex pattern: " {send "Director\n"}
     expect "Enter regex pattern:" {send "\n"}
 EOF
-    grep 'Director' tmp/5.txt 
+    grep 'Director' tmp/5.txt
     CHECK_RESULT $? 0 0 "test bregex -dt failed"
     bregex -? 2>&1 | grep 'Usage:'
     CHECK_RESULT $? 0 0 "test bregex -? failed"

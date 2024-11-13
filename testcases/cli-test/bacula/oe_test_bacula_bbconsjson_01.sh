@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "test bbconsjson -v failed"
     bbconsjson -v -r Director -c /etc/bacula/bconsole.conf | grep 'Address'
     CHECK_RESULT $? 0 0 "test bbconsjson -r failed"
-    bbconsjson -v  -r Director -n bacula-dir -c /etc/bacula/bconsole.conf | grep 'DirPort'
+    bbconsjson -v -r Director -n bacula-dir -c /etc/bacula/bconsole.conf | grep 'DirPort'
     CHECK_RESULT $? 0 0 "test bbconsjson -n failed"
     bbconsjson -v -l baucla -r Director -c /etc/bacula/bconsole.conf | grep 'bacula-dir'
     CHECK_RESULT $? 0 0 "test bbconsjson -l failed"

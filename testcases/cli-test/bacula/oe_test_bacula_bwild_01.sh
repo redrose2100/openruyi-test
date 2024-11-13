@@ -23,7 +23,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    else
+        DNF_INSTALL "bacula-client mysql-server bacula-common tar"
+    fi
     tar -zxvf common/test.tar.gz
     mkdir tmp
     LOG_INFO "End to prepare the test environment."
@@ -33,28 +37,28 @@ function run_test() {
     LOG_INFO "Start to run test."
     bwild -? 2>&1 | grep 'Usage:'
     CHECK_RESULT $? 0 0 "test bwild -? failed"
-    expect <<EOF > tmp/1.txt
+    expect <<EOF >tmp/1.txt
     spawn bwild -f /etc/bacula/bacula-sd.conf 
     expect "Enter a wild-card:" {send "*\n"}
     expect "Enter a wild-card:" {send "\n"}
 EOF
     grep 'Device' tmp/1.txt
     CHECK_RESULT $? 0 0 "test bwild -f failed"
-    expect <<EOF > tmp/2.txt
+    expect <<EOF >tmp/2.txt
     spawn bwild -f /etc/bacula/bacula-sd.conf 
     expect "Enter a wild-card:" {send "*\n"}
     expect "Enter a wild-card:" {send "\n"}
 EOF
     grep 'Device' tmp/2.txt
     CHECK_RESULT $? 0 0 "test bwild -l failed"
-    expect <<EOF > tmp/3.txt
+    expect <<EOF >tmp/3.txt
     spawn bwild -n -f /etc/bacula/bacula-sd.conf 
     expect "Enter a wild-card:" {send "1\n"}
     expect "Enter a wild-card:" {send "\n"}
 EOF
     grep 'Device' tmp/3.txt
     CHECK_RESULT $? 0 0 "test bwild -n failed"
-    expect <<EOF > tmp/4.txt
+    expect <<EOF >tmp/4.txt
     spawn bwild -i -f /etc/bacula/bacula-sd.conf 
     expect "Enter a wild-card:" {send "1\n"}
     expect "Enter a wild-card:" {send "\n"}
