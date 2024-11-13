@@ -1,4 +1,4 @@
-﻿#!/usr/bin/bash
+#!/usr/bin/bash
 
 # Copyright (c) 2023 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
@@ -17,7 +17,7 @@
 # @Desc      :   package flink-local test
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    cd /opt/apache-flink-1.12.7/
+    cd /opt/apache-flink*/ || exit
     ./bin/start-cluster.sh   
     CHECK_RESULT $? 0 0 "Execution completion failed" 
     ./bin/flink run examples/streaming/WordCount.jar
@@ -43,8 +43,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl start firewalld
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
