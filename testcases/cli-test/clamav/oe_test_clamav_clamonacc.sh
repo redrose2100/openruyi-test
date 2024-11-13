@@ -91,7 +91,7 @@ function post_test() {
     kill -9 "$(pgrep -f "^clamonacc")"
     rm -rf /etc/clamd.d/scan.conf testlist clamonacc_log testdir /opt/test_forcefile test.log
     mv /etc/clamd.d/scan.conf.bak /etc/clamd.d/scan.conf
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }
