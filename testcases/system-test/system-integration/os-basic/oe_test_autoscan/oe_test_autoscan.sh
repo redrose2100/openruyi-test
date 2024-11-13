@@ -34,7 +34,7 @@ function run_test() {
     autoscan -d|grep function
     CHECK_RESULT $? 0 0 "Do not fail to delete temporary files"
     autoscan -h|grep Usage
-    CHECK_RESULT $? 0 0  "check commmand usage fail"
+    CHECK_RESULT $? 0 0  "check command usage fail"
     autoscan -V|grep Copyright  
     CHECK_RESULT $? 0 0  "check version fail"
     LOG_INFO "End to run test."
