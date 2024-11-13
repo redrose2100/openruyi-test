@@ -28,6 +28,14 @@ function pre_test() {
     LOG_INFO "End to prepare the test environment."
 }
 
+function check() {
+    # check '192.168.1.101' "test1.com" "$AUGEAS_ROOT/etc/hosts" 0
+    grep "$1" "$3"
+    CHECK_RESULT $? "$4" 0 "content not as expected $3"
+    grep "$2" "$3"
+    CHECK_RESULT $? "$4" 0 "content not as expected $3" 
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
 
@@ -39,10 +47,18 @@ set /files/etc/hosts/01/canonical test.com
 save
 quit
 eof
-    grep "192.168.1.100" "$AUGEAS_ROOT/etc/hosts"
-    CHECK_RESULT $? 0 0 "no specific line in $AUGEAS_ROOT/etc/hosts"
-    grep "test.com" "$AUGEAS_ROOT/etc/hosts"
-    CHECK_RESULT $? 0 0 "no specific line in $AUGEAS_ROOT/etc/hosts"
+    check "192.168.1.100" "test.com" "$AUGEAS_ROOT/etc/hosts" 0
+
+    # for testing -b option
+    augtool -b set /files/etc/hosts/1/ipaddr 192.168.1.101
+    check "192.168.1.101" "test.com" "$AUGEAS_ROOT/etc/hosts" 0
+    check "192.168.1.100" "test.com" "$AUGEAS_ROOT/etc/hosts.augsave" 0
+
+    # for testing -n option
+    augtool -n set /files/etc/hosts/1/ipaddr 192.168.1.102 
+    check "192.168.1.101" "test.com" "$AUGEAS_ROOT/etc/hosts" 0
+    check "192.168.1.102" "test.com" "$AUGEAS_ROOT/etc/hosts.augnew" 0
+
     LOG_INFO "End to run test."
 }
 
