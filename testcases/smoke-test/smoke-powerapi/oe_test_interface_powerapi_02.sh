@@ -1,0 +1,63 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+####################################
+#@Author        :   jinye
+#@Contact       :   jinye10@huawei.com
+#@Date          :   2024-10-29
+#@License       :   Mulan PSL v2
+#@Desc          :   PWR_SetServerInfo() test
+#####################################
+
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if [ "${NODE1_MACHINE}" != "physical" ]; then
+        LOG_INFO "The environment does not support testing"
+        exit 0
+    fi
+    DNF_INSTALL "powerapi-devel gcc"
+    sock_file="/opt/sysconfig/pwrapis/pwrserver.sock"
+    cp /etc/sysconfig/pwrapis/pwrapis_config.ini /etc/sysconfig/pwrapis/pwrapis_config.ini_bak
+    sed -i 's#sock_file=.*#sock_file='"${sock_file}"'#' /etc/sysconfig/pwrapis/pwrapis_config.ini
+    cp common/demo_main.c ./
+    sed -i 's#sock_file\[\] =.*#sock_file[] = "'"${sock_file}"'";#' demo_main.c
+    echo "int main(int argc, const char *args[])
+{
+    TEST_PWR_SetServerInfo();
+    TEST_PWR_Register();
+    TEST_PWR_CPU_GetInfo();
+    TEST_PWR_UnRegister();
+    return 0;
+}
+" >> demo_main.c
+    gcc ./demo_main.c -o demo_main -lpwrapi
+    systemctl restart pwrapis
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+    ./demo_main | grep -Pz "PWR_SetServerInfo.*:SUCCESS ret: 0[\S\s]*GetCpuInfo succeed"
+    CHECK_RESULT $? 0 0 "Check interface PWR_SetServerInfo failed"
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    mv -f /etc/sysconfig/pwrapis/pwrapis_config.ini_bak /etc/sysconfig/pwrapis/pwrapis_config.ini
+    systemctl restart pwrapis
+    DNF_REMOVE "$@"
+    rm -rf demo_main* pwrclient.sock /opt/sysconfig
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"

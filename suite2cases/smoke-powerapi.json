@@ -1,0 +1,30 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test/smoke-powerapi",
+    "machine type": "physical",
+    "cases": [
+        {
+            "name": "oe_test_interface_powerapi_01",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_powerapi_02",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_powerapi_03",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_powerapi_04",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_powerapi_05",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_interface_powerapi_06",
+            "machine type": "physical"
+        }
+    ]
+}
