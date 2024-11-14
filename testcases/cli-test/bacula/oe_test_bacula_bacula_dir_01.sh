@@ -23,7 +23,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client mysql5-server bacula-common"
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server bacula-common"
+    else
+        DNF_INSTALL "bacula-client mysql-server bacula-common"
+    fi
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database
     /usr/libexec/bacula/make_mysql_tables
@@ -44,7 +48,7 @@ function run_test() {
     ss -ntlp | grep bacula-dir
     CHECK_RESULT $? 0 0 "test bacula-dir -dt failed"
     pkill -f bacula-.*
-    (timeout 6 bacula-dir -v -f -s -c /etc/bacula/bacula-dir.conf)&
+    (timeout 6 bacula-dir -v -f -s -c /etc/bacula/bacula-dir.conf) &
     SLEEP_WAIT 3
     ss -ntlp | grep bacula-dir
     CHECK_RESULT $? 0 0 "test bacula-dir -f -s failed"
@@ -80,8 +84,8 @@ function post_test() {
     /usr/libexec/bacula/drop_mysql_tables
     /usr/libexec/bacula/drop_mysql_database
     systemctl stop mysqld
-    rm -rf *.log bacula-dir.trace  var/lib/mysql/* /var/spool/bacula/*
-    DNF_REMOVE
+    rm -rf ./*.log bacula-dir.trace var/lib/mysql/* /var/spool/bacula/*
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

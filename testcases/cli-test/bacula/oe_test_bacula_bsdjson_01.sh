@@ -23,7 +23,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    else
+        DNF_INSTALL "bacula-client mysql-server bacula-common tar"
+    fi
     tar -zxvf common/test.tar.gz
     LOG_INFO "End to prepare the test environment."
 }
@@ -39,10 +43,10 @@ function run_test() {
     bsdjson -r Device -l /dev/null /etc/bacula/bacula-sd.conf | grep 'FileChgr2-Dev1'
     CHECK_RESULT $? 0 0 "test bsdjson -l failed"
     bsdjson -D /etc/bacula/bacula-sd.conf | grep '"Name": "bacula-dir"'
-    CHECK_RESULT $? 0 0 "test bsdjson -D failed" 
+    CHECK_RESULT $? 0 0 "test bsdjson -D failed"
     bsdjson -c /etc/bacula/bacula-sd.conf | grep '"Name": "bacula-dir"'
     CHECK_RESULT $? 0 0 "test bsdjson -c failed"
-    bsdjson -d 21 /etc/bacula/bacula-sd.conf | grep 'bacula-sd: address_conf.c:' 
+    bsdjson -d 21 /etc/bacula/bacula-sd.conf | grep 'bacula-sd: address_conf.c:'
     CHECK_RESULT $? 0 0 "test bsdjson -d failed"
     bsdjson -dt -d 21 /etc/bacula/bacula-sd.conf | grep '.*-.*-.* .*:.*:.* bacula-sd:'
     CHECK_RESULT $? 0 0 "test bsdjson -dt failed"
@@ -56,7 +60,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=$OLD_LANG
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf config/
     LOG_INFO "End to restore the test environment."
 }

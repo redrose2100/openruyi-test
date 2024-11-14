@@ -23,7 +23,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    else
+        DNF_INSTALL "bacula-client mysql-server bacula-common tar"
+    fi
     tar -zxvf common/test.tar.gz
     systemctl restart mysqld
     mkdir tmp
@@ -37,35 +41,35 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    expect <<EOF > tmp/4.txt
-    spawn dbcheck -v -B -C MyCatalog -d 11 tmp/back_1 bacula root ""  127.0.0.1  3306 ssh
+    expect <<EOF >tmp/4.txt
+    spawn dbcheck -v -B -C MyCatalog -d 11 tmp/back_1 bacula root ""  127.0.0.1  3306
     expect "Please select the function you want to perform." {send "1\n"}
     expect "Select function number:" {send "18\n"}
 EOF
     grep 'Verbose is ' tmp/4.txt
     CHECK_RESULT $? 0 0 "test dbcheck -v -B -C -d failed"
-    expect <<EOF > tmp/5.txt
-    spawn dbcheck -v -B -C MyCatalog -dt -d 11 tmp/back_1 bacula root ""  127.0.0.1  3306 ssh
+    expect <<EOF >tmp/5.txt
+    spawn dbcheck -v -B -C MyCatalog -dt -d 11 tmp/back_1 bacula root ""  127.0.0.1  3306
     expect "Please select the function you want to perform." {send "1\n"}
     expect "Select function number:" {send "18\n"}
 EOF
-    grep 'Verbose is ' tmp/5.txt 
+    grep 'Verbose is ' tmp/5.txt
     CHECK_RESULT $? 0 0 "test dbcheck -dt failed"
-    expect <<EOF > tmp/6.txt
-    spawn dbcheck -f -v -B -C MyCatalog -dt -d 11 tmp/back_1 bacula root ""  127.0.0.1  3306 ssh
+    expect <<EOF >tmp/6.txt
+    spawn dbcheck -f -v -B -C MyCatalog -dt -d 11 tmp/back_1 bacula root ""  127.0.0.1  3306
     expect "Please select the function you want to perform." {send "1\n"}
     expect "Select function number:" {send "18\n"}
 EOF
     grep 'Verbose is ' tmp/6.txt
     CHECK_RESULT $? 0 0 "test dbcheck -f failed"
-    expect <<EOF > tmp/7.txt
-    spawn dbcheck -b -v -d 21 tmp/back_1 bacula root ""  127.0.0.1  3306 ssh
+    expect <<EOF >tmp/7.txt
+    spawn dbcheck -b -v -d 21 tmp/back_1 bacula root ""  127.0.0.1  3306
     expect "Please select the function you want to perform." {send "1\n"}
     expect "Select function number:" {send "18\n"}
 EOF
     grep 'Found 0 bad Path records.' tmp/7.txt
     CHECK_RESULT $? 0 0 "test dbcheck -b failed"
-    dbcheck -c /etc/bacula/bacula-dir.conf -f -v -B -C MyCatalog -dt -d 11 tmp/back_1 bacula root ""  127.0.0.1  3306 ssh 2>&1 | grep 'db_name=bacula'
+    dbcheck -c /etc/bacula/bacula-dir.conf -f -v -B -C MyCatalog -dt -d 11 tmp/back_1 bacula root "" 127.0.0.1 3306 ssh 2>&1 | grep 'db_name=bacula'
     CHECK_RESULT $? 0 0 "test dbcheck -c failed"
     LOG_INFO "End to run test."
 }
