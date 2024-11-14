@@ -23,8 +23,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
-    tar -zxvf common/test.tar.gz 
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server bacula-common tar"
+    else
+        DNF_INSTALL "bacula-client mysql-server bacula-common tar"
+    fi
+    tar -zxvf common/test.tar.gz
     mkdir tmp
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database
@@ -85,7 +89,7 @@ EOF
   AlwaysOpen = no;
   Maximum Concurrent Jobs = 5
 
-}' >> /etc/bacula/bacula-sd.conf
+}' >>/etc/bacula/bacula-sd.conf
     mt -f /dev/nst0 rewind
     tar cvf /dev/nst0 .
     mt -f /dev/nst0 rewind
@@ -95,7 +99,7 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    expect <<EOF > tmp/4.txt
+    expect <<EOF >tmp/4.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
@@ -103,71 +107,71 @@ function run_test() {
     expect "continue" {send "n\n"}
     expect "btape:" {send "q\n"}
 EOF
-    grep 'Command' tmp/4.txt 
+    grep 'Command' tmp/4.txt
     CHECK_RESULT $? 0 0 "test btape rectest failed"
-    expect <<EOF > tmp/5.txt
+    expect <<EOF >tmp/5.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "rewind\n"}
     expect "Onstream" {send "q\n"}
 EOF
-    grep 'Rewound' tmp/5.txt 
+    grep 'Rewound' tmp/5.txt
     CHECK_RESULT $? 0 0 "test btape rewind failed"
-    expect <<EOF > tmp/6.txt
+    expect <<EOF >tmp/6.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "scan\n"}
     expect "Total files" {send "q\n"}
 EOF
-    grep 'End of tape' tmp/6.txt 
+    grep 'End of tape' tmp/6.txt
     CHECK_RESULT $? 0 0 "test btape scan failed"
-    expect <<EOF > tmp/7.txt
+    expect <<EOF >tmp/7.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "scanblocks\n"}
     expect "Total files" {send "q\n"}
 EOF
-    grep 'Total files' tmp/7.txt 
+    grep 'Total files' tmp/7.txt
     CHECK_RESULT $? 0 0 "test btape scanblocks failed"
-    expect <<EOF > tmp/8.txt
+    expect <<EOF >tmp/8.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "speed\n"}
     expect "Write" {send "q\n"}
 EOF
-    grep 'Write' tmp/8.txt 
+    grep 'Write' tmp/8.txt
     CHECK_RESULT $? 0 0 "test btape speed failed"
     SLEEP_WAIT 5
-    expect <<EOF > tmp/9.txt
+    expect <<EOF >tmp/9.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "status\n"}
     expect "btape: btape" {send "q\n"}
 EOF
-    grep 'Device status' tmp/9.txt 
+    grep 'Device status' tmp/9.txt
     CHECK_RESULT $? 0 0 "test btape status failed"
-    expect <<EOF > tmp/10.txt
+    expect <<EOF >tmp/10.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "test\n"}
     expect "\*" {send "q\n"}
 EOF
-    grep 'writing' tmp/10.txt 
+    grep 'writing' tmp/10.txt
     CHECK_RESULT $? 0 0 "test btape test failed"
-    expect <<EOF > tmp/1.txt
+    expect <<EOF >tmp/1.txt
     exp_internal 1
     set timeout -1
     spawn btape -v Onstream
     expect "OK" {send "autochanger\n"}
     expect "*" {send "q\n"}
 EOF
-    grep 'OK' tmp/1.txt 
+    grep 'OK' tmp/1.txt
     CHECK_RESULT $? 0 0 "test btape autochanger failed"
     LOG_INFO "End to run test."
 }
