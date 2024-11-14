@@ -110,7 +110,7 @@ function post_test() {
     /usr/libexec/bacula/drop_mysql_database
     systemctl stop mysqld
     systemctl daemon-reload
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf config/ /var/lib/mysql/* /var/spool/bacula/* tmp/
     LOG_INFO "End to restore the test environment."
 }

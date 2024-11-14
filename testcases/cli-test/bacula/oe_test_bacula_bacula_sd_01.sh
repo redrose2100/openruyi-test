@@ -83,7 +83,7 @@ function post_test() {
     /usr/libexec/bacula/drop_mysql_database
     systemctl stop mysqld
     rm -rf ./*.log bacula-sd.trace var/lib/mysql/* /var/spool/bacula/*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
