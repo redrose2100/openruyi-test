@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of uwsgi command
 # ############################################
-# shellcheck disable=SC1090,SC2010
+# shellcheck disable=SC1090,SC2010,SC2009
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -41,20 +41,20 @@ function run_test() {
     CHECK_RESULT $?
     curl http:/0.0.0.0:9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --http')"
-    SLEEP_WAIT 5
+    ps -ef | grep "uwsgi --http" | grep -v grep | cut -c 9-16 | xargs kill -9
     nohup uwsgi --http :9090 --wsgi-file test.py --master --processes 4 --threads 2 >/dev/null 2>&1 &
     CHECK_RESULT $?
+    SLEEP_WAIT 5
     curl http://"${NODE1_IPV4}":9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
     curl http://127.0.0.1:9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
     curl http:/0.0.0.0:9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --http')"
-    SLEEP_WAIT 5
+    ps -ef | grep "uwsgi --http" | grep -v grep | cut -c 9-16 | xargs kill -9
     nohup uwsgi --http :9090 --wsgi-file test.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191 >/dev/null 2>&1 &
     CHECK_RESULT $?
+    SLEEP_WAIT 5
     curl http://"${NODE1_IPV4}":9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
     curl http://127.0.0.1:9090 -w '\n' | grep "Hello World"
@@ -69,10 +69,11 @@ EOF
     pid=$(pgrep -f 'uwsgi --http' | head -n 1)
     grep "$pid" log1
     CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --http')"
-    SLEEP_WAIT 5
+    ps -ef | grep "uwsgi --http" | grep -v grep | cut -c 9-16 | xargs kill -9
+    ps -ef | grep "uwsgi --socket" | grep -v grep | cut -c 9-16 | xargs kill -9
     nohup uwsgi --socket 127.0.0.1:3031 --wsgi-file test.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191 >/dev/null 2>&1 &
     CHECK_RESULT $?
+    SLEEP_WAIT 5
     pid=$(pgrep -f 'uwsgi --socket' | head -n 1)
     expect <<EOF
         log_file log2
@@ -81,13 +82,13 @@ EOF
 EOF
     grep "$pid" log2
     CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --socket')"
+    ps -ef | grep "uwsgi --socket" | grep -v grep | cut -c 9-16 | xargs kill -9
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf "$(ls | grep -vE ".sh|.py")"
+    rm -rf log*
     pip3 uninstall uwsgitop -y
     DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
