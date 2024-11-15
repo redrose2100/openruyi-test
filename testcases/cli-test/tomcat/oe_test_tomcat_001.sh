@@ -16,10 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   tomcat command test
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL tomcat 
+    DNF_INSTALL tomcat
     systemctl start tomcat
     LOG_INFO "End to prepare the test environment!"
 }
@@ -34,13 +34,11 @@ function run_test() {
     CHECK_RESULT $?
     tomcat-digest -e SHA-256 Foo | grep "Foo"
     CHECK_RESULT $?
-    tomcat-digest -h  Foo | grep "Foo"
+    tomcat-digest -a sha-512 -h org.apache.catalina.realm.MessageDigestCredentialHandler -s 1 -k 1 -i 2 xxxxxxxx | grep "xxxxxxxx"
     CHECK_RESULT $?
-    tomcat-digest -k  Foo | grep "Foo"
+    tomcat-digest -a sha-512 -h org.apache.catalina.realm.MessageDigestCredentialHandler -s 1 -i 3 xxxxxxxx | grep "\$3"
     CHECK_RESULT $?
-    tomcat-digest -i  Foo
-    CHECK_RESULT $?
-    tomcat-digest -s Foo
+    tomcat-digest -a sha-512 -h org.apache.catalina.realm.MessageDigestCredentialHandler -s 2 xxxxxxxx | awk -F: '{print $2}' | awk -F'$' '{print $1}' | wc -c | grep 5
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
@@ -48,8 +46,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     systemctl stop tomcat
-    DNF_REMOVE 
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
