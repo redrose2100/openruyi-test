@@ -19,6 +19,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    LOG_INFO "test start"
     DNF_INSTALL "atune atune-engine"
 }
 

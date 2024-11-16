@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test/smoke-A-Tune",
+    "cases": [
+        {
+            "name": "oe_test_A_Tune"
+        }
+    ]
+}
