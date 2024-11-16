@@ -52,6 +52,7 @@ function post_test() {
     iscsiadm --mode node -u
     iscsiadm -m node --op delete ALL
     echo -e "cd /\nclearconfig confirm=true\n" | targetcli
+    rm -rf /home/testfile
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
