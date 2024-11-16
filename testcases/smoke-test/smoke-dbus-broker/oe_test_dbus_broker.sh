@@ -28,24 +28,25 @@ function pre_test() {
 function run_test() {
     systemctl status dbus | grep 'Main PID' | grep dbus-daemon || exit 1
     systemctl status dbus | grep 'Loaded' | grep '/usr/lib/systemd/system/dbus.service' || exit 1
-    ps aux | grep -v grep | grep -v mugen | grep dbus-broker && exit 1
+    pgrep dbus-broker && exit 1
     systemctl is-enabled dbus |& grep static || exit 1
 
     # install dbus-broker
     DNF_INSTALL dbus-broker
     CHECK_RESULT $? 0 0 'dbus-broker is install success'
     systemctl status dbus | grep 'Main PID' | grep dbus-daemon
-    CHECK_RESULT $? 0 0 'dbus-broker is install success'
+    CHECK_RESULT $? 0 0 'dbus status is right'
     systemctl status dbus | grep 'Loaded' | grep '/usr/lib/systemd/system/dbus-broker.service'
-    CHECK_RESULT $? 0 0 'dbus-broker is install success'
-    ps aux | grep -v grep | grep -v mugen | grep dbus-broker && exit 1
+    CHECK_RESULT $? 0 0 'dbus files is right'
+    pgrep dbus-broker && exit 1
     ls /usr/lib/systemd/system/dbus.service
     CHECK_RESULT $? 0 0
     systemctl is-enabled dbus |& grep alias
     CHECK_RESULT $? 0 0
 
     # remove dbus-broker directly
-    DNF_REMOVE "$@"
+    yum remove -y dbus-broker
+    CHECK_RESULT $? 0 0
     # dbus start, NetworkManager inactive
     systemctl start dbus
     sleep 10
@@ -55,11 +56,10 @@ function run_test() {
     CHECK_RESULT $? 0 0
     systemctl status dbus | grep 'Loaded' | grep '/usr/lib/systemd/system/dbus.service'
     CHECK_RESULT $? 0 0
-    ps aux | grep -v grep | grep -v mugen | grep dbus-broker
+    pgrep dbus-broker
     CHECK_RESULT $? 0 1
     systemctl is-enabled dbus |& grep static
     CHECK_RESULT $? 0 0
-
 }
 
 function post_test() {
