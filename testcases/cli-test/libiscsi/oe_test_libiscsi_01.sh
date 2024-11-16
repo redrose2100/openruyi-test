@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-  
+
 # Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -36,13 +36,13 @@ function run_test() {
     CHECK_RESULT $? 0 0
     iscsiadm --mode node -p 127.0.0.1 -l
     CHECK_RESULT $? 0 0
-    iscsi-inq -e 0 iscsi://127.0.0.1/${TARGET_IQN}/0 -d 2
+    iscsi-inq -e 0 iscsi://127.0.0.1/"${TARGET_IQN}"/0 -d 2
     CHECK_RESULT $? 0 0
-    iscsi-ls iscsi://127.0.0.1/${TARGET_IQN}/0 -d -s -U
+    iscsi-ls iscsi://127.0.0.1/"${TARGET_IQN}"/0 -d -s -U
     CHECK_RESULT $? 0 0
-    iscsi-perf iscsi://127.0.0.1/${TARGET_IQN}/0 -t 10
+    iscsi-perf iscsi://127.0.0.1/"${TARGET_IQN}"/0 -t 10
     CHECK_RESULT $? 0 0
-    iscsi-readcapacity16 iscsi://127.0.0.1/${TARGET_IQN}/0 -s
+    iscsi-readcapacity16 iscsi://127.0.0.1/"${TARGET_IQN}"/0 -s
     CHECK_RESULT $? 0 0
     LOG_INFO "End to run test."
 }
