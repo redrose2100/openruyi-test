@@ -37,7 +37,7 @@ function run_test() {
     hwloc-compress-dir -v ./raw/ ./compress/ | grep "already non-compressed"
     CHECK_RESULT $? 0 0 "hwloc-compress-dir -v failed"
     cd compress/ || exit
-    [ -e "diff.xml" ]
+    ls ./*diff.xml
     CHECK_RESULT $? 0 0 "hwloc-compress-dir -v failed"
     cd ../
     hwloc-compress-dir -R ./compress/ ./uncompress/ | grep "Uncompressed"
