@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
   LOG_INFO "Start to prepare the test environment."
-  dd if=/dev/zero of=/home/testzone count=20 bs=10M
+  dd if=/dev/zero of=/home/testzone count=30 bs=10M
   losetup /dev/loop0 /home/testzone
   CHECK_RESULT $? 0 0 "log message: Failed install minimap2 "
 }
