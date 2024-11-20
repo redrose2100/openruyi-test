@@ -29,13 +29,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     lstopo -l | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo -l failed"
-    lstopo -l common/test_fn.console && cat grep "Machine" common/test_fn.console
+    lstopo -l test01_fn.console && grep "Machine" test01_fn.console
     CHECK_RESULT $? 0 0 "lstopo -l failed"
     lstopo -p | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo -p failed"
     lstopo -l --of console | grep "Machine"
     CHECK_RESULT $? 0 0 "lstopo --of failed"
-    lstopo -l common/test_fn.console -f && grep "Machine" common/test_fn.console
+    lstopo -l test02_fn.console -f && grep "Machine" test02_fn.console
     CHECK_RESULT $? 0 0 "lstopo -f failed"
     lstopo -l --only PU | grep "PU"
     CHECK_RESULT $? 0 0 "lstopo -only <type> failed"
@@ -54,7 +54,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -f common/test_fn.console
+    rm -f test01_fn.console test02_fn.console
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
