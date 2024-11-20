@@ -106,11 +106,11 @@ function run_test() {
     if [ "${version_id}" =  "22.03" ]; then
         # --wrap
         # 指定Tidy用于换行时的右边距，若设置为0则不换行
-        echo 'hi' | tidy --wrap 0 | grep '<meta name="generator" content="HTML Tidy for HTML5 for Linux version'
+        echo 'hi' | tidy --wrap 0 | grep '<meta name="generator" content="HTML Tidy for HTML5 for .*Linux version'
         CHECK_RESULT $? 0 0 "Failed to use option: --wrap"
     fi
     echo 'wrap: 0' >./tidyrc
-    echo 'hi' | tidy -config ./tidyrc | grep '<meta name="generator" content="HTML Tidy for HTML5 for Linux version'
+    echo 'hi' | tidy -config ./tidyrc | grep '<meta name="generator" content="HTML Tidy for HTML5 for .*Linux version'
     CHECK_RESULT $? 0 0 "Failed to use option in configuration: wrap"
     # --wrap-asp
     # --wrap-attributes
