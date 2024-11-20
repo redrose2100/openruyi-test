@@ -17,12 +17,13 @@
 # @Desc      :   Command line test of security tool package
 # ############################################
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     cp /etc/sudoers /etc/sudoers-bak
     echo 'test' >/tmp/m_test && echo 'test ' >/tmp/sm_test && echo 'test test2' >/tmp/M_test
     touch /tmp/rm_test
-    DNF_INSTALL httpd
+    DNF_INSTALL "httpd security-tool"
     cp /etc/openEuler_security/usr-security.conf /etc/openEuler_security/usr-security.conf-bak
     systemctl stop httpd
     LOG_INFO "End of environmental preparation!"
@@ -57,7 +58,7 @@ function post_test() {
     mv /etc/openEuler_security/usr-security.conf-bak /etc/openEuler_security/usr-security.conf -f
     mv /etc/sudoers-bak /etc/sudoers -f
     rm -rf log /tmp/M_test /tmp/m_test /tmp/sm_test /tmp/touch_test
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
