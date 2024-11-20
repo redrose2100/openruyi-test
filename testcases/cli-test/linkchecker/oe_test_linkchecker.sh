@@ -27,14 +27,14 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-  linkchecker  https://gitlab.com | grep -i 'Valid: 200 OK'
+  linkchecker  https://gitlab.com -v | grep -i 'Valid: 200 OK'
   CHECK_RESULT $? 0 0 "Test single URL failed."
-  linkchecker -r 2  https://gitlab.com | grep -i 'Valid: 200 OK'
+  linkchecker -r 2  https://gitlab.com -v | grep -i 'Valid: 200 OK'
   CHECK_RESULT $? 0 0 "Failed to specify recursion depth"
   
   touch linkchecker-out.html
   chmod 777 linkchecker-out.html
-  linkchecker -F html https://gitlab.com | grep -i 'Valid: 200 OK'
+  linkchecker -F html https://gitlab.com -v | grep -i 'Valid: 200 OK'
   CHECK_RESULT $? 0 0 "Failed to specify output format as HTML"
   LOG_INFO "End of the test."
 }
