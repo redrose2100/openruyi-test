@@ -21,10 +21,9 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function config_params(){
     LOG_INFO "Start to config params of the case."
-
-    mailAddress1=${USER}@localhost
+    mailAddress1="${USER}"@localhost
     anotherUser=mufiyemailuser
-    mailAddress2=${anotherUser}@localhost
+    mailAddress2="${anotherUser}"@localhost
     LOG_INFO "End to config params of the case."
 }
 
@@ -34,8 +33,19 @@ function pre_test() {
     firewall-cmd --zone=public --add-port=25/tcp
     firewall-cmd --reload
     systemctl start sendmail
-    useradd ${anotherUser}
+    useradd "${anotherUser}"
     test -d tmp || mkdir tmp
+    ARCH=$(uname -m)
+    if [[ "$ARCH" == "x86_64" ]]; then
+        CALC=common/calc_x86_64
+    elif [[ "$ARCH" == "riscv64" ]]; then
+        CALC=common/calc_riscv64
+    elif [[ "$ARCH" == "aarch64" ]]; then
+        CALC=common/calc_aarch64
+    else
+        LOG_ERROR "Unsupported architecture: $ARCH"
+        exit 1
+    fi
     LOG_INFO "End to prepare the test environment!"
 }
 
@@ -47,42 +57,43 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option : --version"
     runtest -help 2>&1 | grep "USAGE: runtest"
     CHECK_RESULT $? 0 0 "Failed option : --help"
-    runtest CALC=common/calc --verbose --srcdir common --outdir tmp 2>&1 | grep "Verbose level"
+    runtest CALC=${CALC} --verbose --srcdir common --outdir tmp 2>&1 | grep "Verbose level"
     CHECK_RESULT $? 0 0 "Failed option : --verbose"
-    runtest CALC=common/calc -v --srcdir common --outdir tmp 2>&1 | grep "Verbose level"
+    runtest CALC=${CALC} -v --srcdir common --outdir tmp 2>&1 | grep "Verbose level"
     CHECK_RESULT $? 0 0 "Failed option : -v"
     rm -rf tmp/*
-    runtest CALC=common/calc --debug=tmp --srcdir common --outdir tmp
+    runtest CALC=${CALC} --debug=tmp --srcdir common --outdir tmp
     test -f ./dbg.log
     CHECK_RESULT $? 0 0 "Failed option : --debug"
-    runtest CALC=common/calc --srcdir common --outdir tmp --all 2>&1 | grep "PASS: version"
+    runtest CALC=${CALC} --srcdir common --outdir tmp --all 2>&1 | grep "PASS: version"
     CHECK_RESULT $? 0 0 "Failed option : --all"
-    runtest CALC=common/calc --srcdir common --outdir tmp -a 2>&1 | grep "PASS: version"
+    runtest CALC=${CALC} --srcdir common --outdir tmp -a 2>&1 | grep "PASS: version"
     CHECK_RESULT $? 0 0 "Failed option : -a"
     rm -rf tmp/*
-    runtest CALC=common/calc --srcdir common --outdir tmp --directory common
+    runtest CALC=${CALC} --srcdir common --outdir tmp --directory common
     test -f ./tmp/testrun.log
     CHECK_RESULT $? 0 0 "Failed option : --directory"
-    runtest CALC=common/calc -v --ignore calc.exp --srcdir common --outdir tmp 2>&1 | grep "Ignoring test"
+    runtest CALC=${CALC} -v --ignore calc.exp --srcdir common --outdir tmp 2>&1 | grep "Ignoring test"
     CHECK_RESULT $? 0 0 "Failed option : --ignore"
-    runtest CALC=common/calc --log_dialog --srcdir common --outdir tmp 2>&1 | grep "calc: add 1 2 3"
+    runtest CALC=${CALC} --log_dialog --srcdir common --outdir tmp 2>&1 | grep "calc: add 1 2 3"
     CHECK_RESULT $? 0 0 "Failed option : --log_dialog"
-    runtest CALC=common/calc -v --mail ${mailAddress1} --srcdir common --outdir tmp 
+    runtest CALC=${CALC} -v --mail "${mailAddress1}" --srcdir common --outdir tmp 
     SLEEP_WAIT 3
-    grep "To: ${USER}@$(hostname)" /var/spool/mail/${USER}
+    grep "To: ""${USER}""@$(hostname)" /var/spool/mail/"${USER}"
     CHECK_RESULT $? 0 0 "Failed option : --mail (to one host)"
-    runtest CALC=common/calc -v --mail ${mailAddress1},${mailAddress2} --srcdir common --outdir tmp 
+    runtest CALC=${CALC} -v --mail "${mailAddress1}","${mailAddress2}" --srcdir common --outdir tmp 
     SLEEP_WAIT 3
-    grep "To: ${anotherUser}@$(hostname), ${USER}@$(hostname)" /var/spool/mail/${USER} && grep "To: ${anotherUser}@$(hostname), ${USER}@$(hostname)" /var/spool/mail/${anotherUser}
+    grep "To: mufiyemailuser@localhost\(\.localdomain\)\?, root@localhost\(\.localdomain\)\?" /var/spool/mail/root && \
+    grep "To: mufiyemailuser@localhost\(\.localdomain\)\?, root@localhost\(\.localdomain\)\?" /var/spool/mail/mufiyemailuser
     CHECK_RESULT $? 0 0 "Failed option : --mail (to multihost)"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
-    userdel -rf ${anotherUser}
-    rm -rf tmp *.sum *.log /var/spool/mail/{${USER},${anotherUser}}
+    DNF_REMOVE "$@"
+    userdel -rf "${anotherUser}"
+    rm -rf tmp ./*.sum ./*.log /var/spool/mail/"${USER}" /var/spool/mail/"${anotherUser}"
     LOG_INFO "Finish environment cleanup!"
 }
 
