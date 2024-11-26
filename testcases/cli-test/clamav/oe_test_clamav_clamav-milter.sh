@@ -16,7 +16,7 @@
 #@Desc      	:   Take the test clamav-milter
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -57,7 +57,7 @@ function post_test() {
 
     rm -f /etc/mail/clamav-milter.conf
     mv /etc/mail/clamav-milter.conf.bak /etc/mail/clamav-milter.conf
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }

@@ -16,14 +16,14 @@
 #@Desc      	:   Take the test clamscan
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
     DNF_INSTALL clamav
     mkdir /opt/testscan
-    cd /opt/testscan/ && sigtool -u /var/lib/clamav/daily.cvd && cd -
+    cd /opt/testscan/ && sigtool -u /var/lib/clamav/daily.cvd && cd - || exit
 
     LOG_INFO "End to prepare the database config."
 }
@@ -61,7 +61,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -rf /opt/testscan
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }

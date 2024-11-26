@@ -16,7 +16,7 @@
 #@Desc      	:   Take the test clamdtop info
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -62,7 +62,7 @@ function post_test() {
     rm -f /etc/clamd.d/scan.conf
     mv /etc/clamd.d/scan.conf.bak /etc/clamd.d/scan.conf
     systemctl restart clamd@scan.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }
