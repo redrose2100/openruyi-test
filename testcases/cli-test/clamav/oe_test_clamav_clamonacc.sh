@@ -16,7 +16,7 @@
 #@Desc      	:   Take the test clamonacc(only for clamav version ≥ 0.103.2)
 #####################################
 
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -88,7 +88,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 "$(pgrep -f "^clamonacc")"
+    pgrep -f "^clamonacc" | xargs kill -9
     rm -rf /etc/clamd.d/scan.conf testlist clamonacc_log testdir /opt/test_forcefile test.log
     mv /etc/clamd.d/scan.conf.bak /etc/clamd.d/scan.conf
     DNF_REMOVE "$@"

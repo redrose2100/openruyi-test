@@ -16,7 +16,7 @@
 #@Desc      	:   Take the test sigtool info cmd
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -55,10 +55,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check sigtool -i --debug failed."
 
     # test sigtool -u
-    cd testu/
+    cd testu/ || exit
     sigtool -u main.cvd && ls main.hsb
     CHECK_RESULT $? 0 0 "Execute sigtool -u cmd failed."
-    cd ../testunpack/
+    cd ../testunpack/ || exit
     sigtool --unpack /var/lib/clamav/main.cvd && ls main.hsb
     CHECK_RESULT $? 0 0 "Execute sigtool -unpack cmd failed."
 
@@ -69,7 +69,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     cd ../ && rm -rf testu testunpack
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }

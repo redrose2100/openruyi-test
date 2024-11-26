@@ -16,7 +16,7 @@
 #@Desc      	:   Take the test clamconf generate config
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -56,7 +56,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }

@@ -16,7 +16,7 @@
 #@Desc      	:   Take the test sigtool normalise
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -68,7 +68,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -rf nocomment.html notags.html rfc2397 /opt/bytecode.cvd /opt/bytecode.cvd.ascii testfile normalised_text main.cvd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }
