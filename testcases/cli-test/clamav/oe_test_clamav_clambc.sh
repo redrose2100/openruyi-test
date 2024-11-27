@@ -16,14 +16,14 @@
 #@Desc      	:   Take the test clambc execution
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
     DNF_INSTALL clamav
     mkdir /opt/test_clambc
-    cd /opt/test_clambc
+    cd /opt/test_clambc || exit
     sigtool -u /var/lib/clamav/bytecode.cvd
 
     LOG_INFO "End to prepare the database config."
@@ -65,7 +65,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     cd - && rm -rf /opt/test_clambc
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }
