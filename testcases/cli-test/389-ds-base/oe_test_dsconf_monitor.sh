@@ -26,6 +26,7 @@ function pre_test() {
     DNF_INSTALL "389-ds-base"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
+    export NSSLAPD_DB_LIB=bdb
     dscreate create-template 389_ds_test.inf
     dscreate from-file 389_ds_test.inf
     dsconf localhost backend create --suffix dc=example,dc=com --be-name example
@@ -46,35 +47,35 @@ EOT
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsconf localhost directory_manager -h | grep  "usage: dsconf instance directory_manager" 
+    dsconf localhost directory_manager -h | grep  "usage: dsconf.*instance.*directory_manager" 
     CHECK_RESULT $? 0 0 "Check: backend directory_manager -h No Pass" 
-    dsconf localhost directory_manager password_change -h | grep  "usage: dsconf instance directory_manager password_change" 
+    dsconf localhost directory_manager password_change -h | grep  "usage: dsconf.*instance.*directory_manager password_change" 
     CHECK_RESULT $? 0 0 "Check: backend directory_manager password_change -h No Pass"
     bash ./change.sh 
     CHECK_RESULT $? 0 0 "Check: backend directory_manager password_change  No Pass"
-    dsconf localhost monitor -h | grep  "usage: dsconf instance monitor" 
+    dsconf localhost monitor -h | grep  "usage: dsconf.*instance.*monitor" 
     CHECK_RESULT $? 0 0 "Check: backend monitor -h No Pass" 
-    dsconf localhost monitor server -h | grep  "usage: dsconf instance monitor server" 
+    dsconf localhost monitor server -h | grep  "usage: dsconf.*instance.*monitor server" 
     CHECK_RESULT $? 0 0 "Check: backend monitor server-h No Pass" 
-    dsconf localhost monitor dbmon -h | grep  "usage: dsconf instance monitor dbmon" 
+    dsconf localhost monitor dbmon -h | grep  "usage: dsconf.*instance.*monitor dbmon" 
     CHECK_RESULT $? 0 0 "Check: backend monitor dbmon -h No Pass" 
     dsconf localhost monitor dbmon -b example | grep -iE "DB Monitor Report" 
     CHECK_RESULT $? 0 0 "Check: backend monitor dbmon -b No Pass" 
     dsconf localhost monitor dbmon -b example -x | grep  "Indexes:" 
     CHECK_RESULT $? 0 0 "Check: backend monitor dbmon -x No Pass" 
-    dsconf localhost monitor ldbm -h | grep  "usage: dsconf instance monitor ldbm" 
+    dsconf localhost monitor ldbm -h | grep  "usage: dsconf.*instance.*monitor ldbm" 
     CHECK_RESULT $? 0 0 "Check: backend monitor ldbm -h No Pass" 
-    dsconf localhost monitor backend -h | grep  "usage: dsconf instance monitor backend" 
+    dsconf localhost monitor backend -h | grep  "usage: dsconf.*instance.*monitor backend" 
     CHECK_RESULT $? 0 0 "Check: backend monitor backend -h No Pass" 
     dsconf localhost monitor backend example | grep  "dn: cn=monitor,cn=example,cn=ldbm database,cn=plugins,cn=config" 
     CHECK_RESULT $? 0 0 "Check: backend monitor backend [backend] No Pass" 
-    dsconf localhost monitor snmp -h | grep  "usage: dsconf instance monitor snmp" 
+    dsconf localhost monitor snmp -h | grep  "usage: dsconf.*instance.*monitor snmp" 
     CHECK_RESULT $? 0 0 "Check: backend monitor snmp -h No Pass" 
-    dsconf localhost monitor chaining -h | grep  "usage: dsconf instance monitor chaining" 
+    dsconf localhost monitor chaining -h | grep  "usage: dsconf.*instance.*monitor chaining" 
     CHECK_RESULT $? 0 0 "Check: backend monitor chaining -h No Pass" 
     dsconf localhost monitor chaining link1 | grep  "dn: cn=monitor,cn=link1,cn=chaining database,cn=plugins,cn=config" 
     CHECK_RESULT $? 0 0 "Check: backend monitor chaining [backend] No Pass" 
-    dsconf localhost monitor disk -h | grep  "usage: dsconf instance monitor disk" 
+    dsconf localhost monitor disk -h | grep  "usage: dsconf.*instance.*monitor disk" 
     CHECK_RESULT $? 0 0 "Check: backend monitor disk -h No Pass" 
     LOG_INFO "End to run test."
 }

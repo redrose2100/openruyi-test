@@ -24,6 +24,7 @@ function pre_test() {
     DNF_INSTALL "389-ds-base"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
+    export NSSLAPD_DB_LIB=bdb
     dscreate create-template 389_ds_test.inf
     dscreate from-file 389_ds_test.inf
     dsconf localhost backend create --suffix dc=example,dc=com --be-name example
@@ -59,15 +60,15 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsconf localhost backend import -h | grep  "usage: dsconf instance backend import" 
+    dsconf localhost backend import -h | grep  "usage: dsconf.*instance.*backend import" 
     CHECK_RESULT $? 0 0 "Check: backend import -h No Pass" 
-    dsconf localhost backend import -c 2 example user.ldif| grep  "'int' object has no attribute 'encode'" 
+    dsconf localhost backend import -c 2 example user.ldif 2>&1| grep  "'int' object has no attribute 'encode'" 
     CHECK_RESULT $? 0 0 "Check: backend import -h No Pass" 
     dsconf localhost backend import -E example users.ldif | grep  "The import task has finished successfully" 
     CHECK_RESULT $? 0 0 "Check: backend import -E No Pass" 
     dsconf localhost backend import -O example users.ldif | grep  "The import task has finished successfully" 
     CHECK_RESULT $? 0 0 "Check: backend import -O No Pass" 
-    dsconf localhost backend export -h | grep  "usage: dsconf instance backend export" 
+    dsconf localhost backend export -h | grep  "usage: dsconf.*instance.*backend export" 
     CHECK_RESULT $? 0 0 "Check: backend export -h No Pass" 
     dsconf localhost backend export -l a.ldif example | grep  "The export task has finished successfully" 
     CHECK_RESULT $? 0 0 "Check: backend export -l No Pass" 
@@ -85,15 +86,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: backend export -u No Pass"
     dsconf localhost backend export -U example | grep  "The export task has finished successfully" 
     CHECK_RESULT $? 0 0 "Check: backend export -U No Pass"
-    dsconf localhost backend create -h  | grep  "usage: dsconf instance backend create" 
+    dsconf localhost backend create -h  | grep  "usage: dsconf.*instance.*backend create" 
     CHECK_RESULT $? 0 0 "Check: backend create -h No Pass" 
     dsconf localhost backend create --parent-suffix dc=com --suffix dc=exa,dc=com --be-name example2  | grep  "The database was sucessfully created" 
     CHECK_RESULT $? 0 0 "Check: backend create -h No Pass"
-    dsconf localhost backend delete -h  | grep  "usage: dsconf instance backend delete" 
+    dsconf localhost backend delete -h  | grep  "usage: dsconf.*instance.*backend delete" 
     CHECK_RESULT $? 0 0 "Check: backend delete -h No Pass" 
-    (echo "Yes I am sure" | dsconf localhost backend delete example2) | grep "were sucessfully deleted" 
+    (echo "Yes I am sure" | dsconf localhost backend delete example2 --do-it) | grep "were successfully deleted" 
     CHECK_RESULT $? 0 0 "Check: backend delete  No Pass" 
-    dsconf localhost backend get-tree -h | grep  "usage: dsconf instance backend get-tree" 
+    dsconf localhost backend get-tree -h | grep  "usage: dsconf.*instance.*backend get-tree" 
     CHECK_RESULT $? 0 0 "Check: backend get-tree -h No Pass" 
     LOG_INFO "End to run test."
 }
