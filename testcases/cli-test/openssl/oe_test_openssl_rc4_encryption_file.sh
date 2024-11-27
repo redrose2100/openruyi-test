@@ -16,14 +16,19 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test rc4 encryption and decryption file
 # #######################################################
-
+# shellcheck disable=SC1091,SC2154
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL openssl
+    openssl_version=$(rpm -qa openssl|cut -d "-" -f 2|cut -d "." -f 1)
+    if [ "${openssl_version}" -ge 3 ];then
+        LOG_WARN "OpenSSL 3.x deprecates the RC4 encryption algorithm."
+        exit 255
+    fi
     mkdir /tmp/test
-    cd /tmp/test
+    cd /tmp/test || exit
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -59,7 +64,7 @@ END
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /tmp/test
     LOG_INFO "Finish environment cleanup!"
 }

@@ -16,27 +16,28 @@
 #@Desc          :   Pressure load : repeated execution
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 200); do
-        echo $i >word_$i
-        openssl enc -e -des3 -a -salt -in word_$i -out encword_$i -pass pass:123456
-        CHECK_RESULT $?
-        grep "U2FsdGVkX1" encword_$i
-        CHECK_RESULT $?
-        openssl enc -d -des3 -a -salt -in encword_$i -out decword_$i -pass pass:123456
-        CHECK_RESULT $?
-        test -f decword_$i && diff decword_$i word_$i
-        CHECK_RESULT $?
+        echo "$i" > word_"$i"
+        openssl enc -e -des3 -a -salt -in word_"$i" -out encword_"$i" -pass pass:123456
+        CHECK_RESULT $? 0 0 "Failed to generate encword_$i"
+        grep "U2FsdGVkX1" encword_"$i"
+        CHECK_RESULT $? 0 0 "encword_$i error."
+
+        openssl enc -d -des3 -a -salt -in encword_"$i" -out decword_"$i" -pass pass:123456
+        CHECK_RESULT $? 0 0 "Failed to generate decword_$i"
+        test -f decword_"$i" && diff decword_"$i" word_"$i"
+        CHECK_RESULT $? 0 0 "decword_$i error."
     done
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f word* encword* decword*
+    rm -f ./word* ./encword* ./decword*
     LOG_INFO "End to restore the test environment."
 }
 

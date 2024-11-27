@@ -16,11 +16,11 @@
 #@Desc          :   OpenSSL commandline tool: message digest algorithm
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "It is a test" >file.txt
+    echo "It is a test" > file.txt
     openssl dgst -sha1 file.txt | grep "SHA1(file.txt)"
     CHECK_RESULT $?
     openssl sha1 -out digest.txt file.txt

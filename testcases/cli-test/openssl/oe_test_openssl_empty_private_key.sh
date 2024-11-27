@@ -20,7 +20,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "Hello, world!" >word
+    echo "Hello, world!" > word
     openssl genrsa -out rsakey.pem -passout pass:123123 2048
     CHECK_RESULT $?
     grep 'PRIVATE KEY' rsakey.pem
@@ -31,7 +31,7 @@ function run_test() {
     CHECK_RESULT $?
     openssl rsautl -encrypt -pubin -inkey rsakey-pub.pem -in word -out wordencp1
     CHECK_RESULT $?
-    true >rsakey.pem
+    true > rsakey.pem
     openssl rsautl -decrypt -inkey rsakey.pem -in wordencp1 -out word_replain1 2>&1 | grep -E 'unable to load Private Key|Could not read private key'
     CHECK_RESULT $?
     LOG_INFO "End to run test."

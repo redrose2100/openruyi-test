@@ -15,19 +15,14 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   the certificate has expired
 #####################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_openssl.sh"
-
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    OLD_LANG=$LANG
-    export LANG=en_US.UTF-8
-    deploy_env
-    LOG_INFO "End to config params of the case."
-}
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    deploy_env
     DNF_INSTALL "httpd mod_ssl"
     createCA_and_Self_signed_certificate
     generate_PrivateKey_and_Certificate_Signing_Request
@@ -62,11 +57,10 @@ END
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    export LANG=${OLD_LANG}
-    mv -f /etc/pki/tls/openssl.cnf.bak /etc/pki/tls/openssl.cnf
     clean_httpd_openssl
     systemctl stop httpd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

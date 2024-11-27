@@ -16,11 +16,11 @@
 #@Desc          :   Application scenarios: symmetrically encrypts and decrypts files
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cat >test.txt <<EOF
+    cat > test.txt <<EOF
     This is a file created by shell.
     We want to make a good world.
     Byebye!
@@ -54,7 +54,7 @@ END
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f test.txt test.enc testlog*
+    rm -f test.txt test.enc ./testlog*
     LOG_INFO "End to restore the test environment."
 }
 

@@ -16,11 +16,11 @@
 #@Desc          :   Encryption algorithm: one-way encryption
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "Hello, world!" >word
+    echo "Hello, world!" > word
     openssl dgst -sha1 -c word | grep "SHA1(word)"
     CHECK_RESULT $?
     LOG_INFO "End to run test."

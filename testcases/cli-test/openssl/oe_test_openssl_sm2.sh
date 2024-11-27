@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command openssl sm2
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "start to run test."

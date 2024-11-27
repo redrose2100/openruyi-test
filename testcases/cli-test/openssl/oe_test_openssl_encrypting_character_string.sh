@@ -16,14 +16,14 @@
 #@Desc          :   Application scenarios: encrypting character string
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     echo "encode me" | openssl enc -base64
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to encode."
     echo "encode me" | openssl enc -base64 | openssl enc -base64 -d | grep 'encode me'
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to decode."
     LOG_INFO "End to run test."
 }
 

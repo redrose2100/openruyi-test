@@ -16,11 +16,11 @@
 #@Desc          :   Encryption algorithm: symmetric encryption and decryption
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "Hello, world!" >word
+    echo "Hello, world!" > word
     openssl enc -e -des3 -a -salt -in word -out encword -pass pass:123456
     CHECK_RESULT $?
     grep "U2FsdGVkX1" encword
