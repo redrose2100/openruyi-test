@@ -17,12 +17,12 @@
 # @Desc      :   Test import-state.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution import-state.service
-    test_reload import-state.service
+    test_oneshot import-state.service
     LOG_INFO "Finish test!"
 }
 
