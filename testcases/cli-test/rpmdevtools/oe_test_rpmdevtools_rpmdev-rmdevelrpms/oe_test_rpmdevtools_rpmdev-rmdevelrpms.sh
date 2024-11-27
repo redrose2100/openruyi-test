@@ -18,12 +18,16 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR="${HOME}/.rpmbuild.$(date +'%s')"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "rpmdevtools"
     pkg_name=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
     yumdownloader "${pkg_name}"
-    test -d ~/rpmbuild && rm -rf ~/rpmbuild && LOG_INFO "Successfully deleted this dir."
+    test -d "${HOME}/rpmbuild" \
+	    && mv -f "${HOME}/rpmbuild" "$_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR" \
+	    && LOG_INFO "Successfully move ${HOME}/rpmbuild to ${_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR}."
     LOG_INFO "End of environmental preparation."
 }
 
@@ -42,7 +46,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Fail option: -y"
 
     rpmdev-setuptree
-    test -d ~/rpmbuild
+    test -d "${HOME}/rpmbuild"
     CHECK_RESULT $? 0 0 "Failed command: rpmdev-setuptree"
 
     sha1=$(rpmdev-sha1 "${pkg_name}"*rpm 2>/dev/null | head -n 1 | awk '{print $1}')
@@ -84,7 +88,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    rm -rf ~/rpmbuild ./*rpm
+    rm -rf "${HOME}/rpmbuild" ./*rpm
+    test -d "$_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR" \
+	    && mv -f "$_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR" "${HOME}/rpmbuild" \
+	    && LOG_INFO "Successfully move ${_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR} to ${HOME}/rpmbuild."
     LOG_INFO "End to restore the test environment."
 }
 
