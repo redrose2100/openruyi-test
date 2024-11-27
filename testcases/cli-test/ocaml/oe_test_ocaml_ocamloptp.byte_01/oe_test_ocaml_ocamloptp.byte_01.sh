@@ -42,9 +42,9 @@ function run_test() {
     grep -a "invariant" a.out
     CHECK_RESULT $?
 
-    ocamloptp.byte -dtimings example.ml | grep "0.0"
+    ocamloptp.byte -dtimings example.ml 2>&1 | grep "0.0"
     CHECK_RESULT $?
-    ocamloptp.byte -dprofile example.ml | grep "0."
+    ocamloptp.byte -dprofile example.ml 2>&1 | grep "0."
     CHECK_RESULT $?
     ocamloptp.byte -no-unbox-specialised-args example.ml
     CHECK_RESULT $?
@@ -55,7 +55,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./example* a.out ocamlprof.dump
     LOG_INFO "End to restore the test environment."
 }
