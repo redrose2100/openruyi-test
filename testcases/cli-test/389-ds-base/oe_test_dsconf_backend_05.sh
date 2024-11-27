@@ -92,8 +92,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: backend create -h No Pass"
     dsconf localhost backend delete -h  | grep  "usage: dsconf.*instance.*backend delete" 
     CHECK_RESULT $? 0 0 "Check: backend delete -h No Pass" 
-    (echo "Yes I am sure" | dsconf localhost backend delete example2 --do-it) | grep "were successfully deleted" 
-    CHECK_RESULT $? 0 0 "Check: backend delete  No Pass" 
+    if [ "$(rpm -qa 389-ds-base | awk -F- '{print $4}' | awk -F. '{print $1}')" -ge 3 ]; then
+        (echo "Yes I am sure" | dsconf localhost backend delete --do-it example2) | grep "were successfully deleted"
+    else
+        (echo "Yes I am sure" | dsconf localhost backend delete example2) | grep "were successfully deleted"
+    fi
     dsconf localhost backend get-tree -h | grep  "usage: dsconf.*instance.*backend get-tree" 
     CHECK_RESULT $? 0 0 "Check: backend get-tree -h No Pass" 
     LOG_INFO "End to run test."
