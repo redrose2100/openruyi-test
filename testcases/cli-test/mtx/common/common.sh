@@ -20,6 +20,8 @@
 # shellcheck disable=SC1091
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+_MTX_COMMON_RPMBUILD_BAKUP_DIR="${HOME}/.rpmbuild.$(date +'%s')"
+
 # Define configuration information
 function common_config_params() {
     # Mechanical arm of mhvtl
@@ -31,11 +33,14 @@ function common_config_params() {
 # Test environment preparation
 function common_pre() {
     DNF_INSTALL "mtx rpm-build rpmdevtools git zlib-devel gcc kernel-devel"
+    test -d "${HOME}/rpmbuild" \
+        && mv -f "${HOME}/rpmbuild" "$_MTX_COMMON_RPMBUILD_BAKUP_DIR" \
+        && LOG_INFO "Successfully move ${HOME}/rpmbuild to ${_MTX_COMMON_RPMBUILD_BAKUP_DIR}."
     rpmdev-setuptree
     git clone https://gitee.com/src-openeuler/mhvtl.git ./tmp/mhvtl
-    cp ./tmp/mhvtl/1.7-0_release.tar.gz ./tmp/mhvtl/build-kernel-module.patch ./tmp/mhvtl/build-mhvtl-module.patch ~/rpmbuild/SOURCES
+    cp ./tmp/mhvtl/1.7-0_release.tar.gz ./tmp/mhvtl/build-kernel-module.patch ./tmp/mhvtl/build-mhvtl-module.patch "${HOME}/rpmbuild/SOURCES"
     rpmbuild -bb ./tmp/mhvtl/*.spec
-    dnf install ~/rpmbuild/RPMS/"$(arch)"/*.rpm -y
+    dnf install "${HOME}/rpmbuild/RPMS/$(arch)"/*.rpm -y
     systemctl start mhvtl.target
     # waite ....
     SLEEP_WAIT 5s
@@ -55,7 +60,10 @@ function common_test() {
 
 # Environmental recovery
 function common_post() {
-    rm -rf ./tmp ~/rpmbuild
+    rm -rf ./tmp "${HOME}/rpmbuild"
+    test -d "$_MTX_COMMON_RPMBUILD_BAKUP_DIR" \
+        && mv -f "$_MTX_COMMON_RPMBUILD_BAKUP_DIR" "${HOME}/rpmbuild" \
+        && LOG_INFO "Successfully move ${_MTX_COMMON_RPMBUILD_BAKUP_DIR} to ${HOME}/rpmbuild."
     systemctl stop mhvtl.target
     DNF_REMOVE "$@"
 }
