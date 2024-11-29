@@ -24,7 +24,7 @@ function pre_test() {
     DNF_INSTALL "389-ds-base"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
-    cat <<EOF > instance.inf
+    cat <<EOF >instance.inf
 [general]
 config_version = 2
 
@@ -41,7 +41,7 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsidm -h | grep "usage: dsidm \[-h\]"
+    dsidm -h | grep "usage: dsidm"
     CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
     dsidm -D "cn=Directory Manage" -b "dc=example,dc=com" localhost user list | grep "demo_user"
     CHECK_RESULT $? 0 0 "L$LINENO: -b -D No Pass"
@@ -51,13 +51,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: -v No Pass"
     dsidm -y instance.inf -b "dc=example,dc=com" localhost user list | grep "demo_user"
     CHECK_RESULT $? 0 0 "L$LINENO: -y No Pass"
-    dsidm -Z -b "dc=example,dc=com" localhost user list | grep "Start TLS request accepted"
+    dsidm -j -Z -b "dc=example,dc=com" localhost user list 2>&1 | grep "Start TLS request accepted"
     CHECK_RESULT $? 0 0 "L$LINENO: -Z No Pass"
     dsidm -j -b "dc=example,dc=com" localhost user list | grep "\"type\": \"list\""
     CHECK_RESULT $? 0 0 "L$LINENO: -j No Pass"
-    dsidm localhost initialise -h | grep "usage: dsidm instance initialise"
+    dsidm localhost initialise -h | grep "usage: dsidm.*instance.*initialise"
     CHECK_RESULT $? 0 0 "L$LINENO: initialise -h No Pass"
-    dsidm -b "dc=example,dc=com" localhost initialise | grep "Already exists"
+    dsidm -b "dc=example,dc=com" localhost initialise 2>&1 | grep "Already exists"
     CHECK_RESULT $? 0 0 "L$LINENO: initialise No Pass"
     LOG_INFO "End to run test."
 }
