@@ -2,6 +2,12 @@
     "path": "$OET_PATH/testcases/cli-test/389-ds-base",
     "cases": [
         {
+            "name":"oe_test_dsconf"
+        },
+        {
+            "name":"oe_test_dsconf_backend_01"
+        },
+        {
             "name":"oe_test_dsconf_backend_02"
         },
         {
@@ -9,6 +15,12 @@
         },
         {
             "name":"oe_test_dsconf_backend_04"
+        },
+        {
+            "name":"oe_test_dsconf_backend_05"
+        },
+        {
+            "name":"oe_test_dsconf_backup"
         },
         {
             "name":"oe_test_dsconf_chaining_01"
@@ -26,6 +38,15 @@
             "name":"oe_test_dsconf_plugin_01"
         },
         {
+            "name":"oe_test_dsconf_plugin_02"
+        },
+        {
+            "name":"oe_test_dsconf_plugin_03"
+        },
+        {
+            "name":"oe_test_dsconf_plugin_04"
+        },
+        {
             "name":"oe_test_dsconf_plugin_05"
         },
         {
@@ -38,10 +59,37 @@
             "name":"oe_test_dsconf_pwpolicy"
         },
         {
+            "name":"oe_test_dsconf_repl-agmt"
+        },
+        {
+            "name":"oe_test_dsconf_repl-conflict_01"
+        },
+        {
+            "name":"oe_test_dsconf_repl-conflict_02"
+        },
+        {
+            "name":"oe_test_dsconf_repl-tasks"
+        },
+        {
+            "name":"oe_test_dsconf_repl-winsync-agmt"
+        },
+        {
+            "name":"oe_test_dsconf_replication"
+        },
+        {
             "name":"oe_test_dsconf_sasl"
         },
         {
             "name":"oe_test_dsconf_schema_01"
+        },
+        {
+            "name":"oe_test_dsconf_schema_02"
+        },
+        {
+            "name":"oe_test_dsconf_schema_03"
+        },
+        {
+            "name":"oe_test_dsconf_schema_04"
         },
         {
             "name":"oe_test_dsconf_security_01"
@@ -68,6 +116,9 @@
             "name":"oe_test_dsctl_01"
         },
         {
+            "name":"oe_test_dsctl_02"
+        },
+        {
             "name":"oe_test_dsctl_03"
         },
         {
@@ -77,7 +128,16 @@
             "name":"oe_test_dsctl_dsrc"
         },
         {
+            "name":"oe_test_dsctl_ldifgen"
+        },
+        {
             "name":"oe_test_dsctl_tls"
+        },
+        {
+            "name":"oe_test_dsidm"
+        },
+        {
+            "name":"oe_test_dsidm_account"
         },
         {
             "name":"oe_test_dsidm_client_config"
@@ -86,19 +146,40 @@
             "name":"oe_test_dsidm_group"
         },
         {
+            "name":"oe_test_dsidm_organizationalunit"
+        },
+        {
+            "name":"oe_test_dsidm_posixgroup"
+        },
+        {
             "name":"oe_test_dsidm_user"
+        },
+        {
+            "name":"oe_test_service_dirsrv-snmp"
+        },
+        {
+            "name":"oe_test_target_dirsrv"
         },
         {
             "name":"oe_test_dbscan"
         },
         {
+            "name":"oe_test_ds-logpipe"
+        },
+        {
             "name":"oe_test_ldclt"
+        },
+        {
+            "name":"oe_test_logconv"
         },
         {
             "name":"oe_test_ns-slapd"
         },
         {
-            "name":"oe_test_readnsstate"
+            "name":"oe_test_pwdhash"
+        },
+        {
+            "name":"oe_test_ds-replcheck"
         }
     ]
 }
