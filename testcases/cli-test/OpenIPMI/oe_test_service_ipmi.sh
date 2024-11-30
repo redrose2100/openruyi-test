@@ -22,7 +22,7 @@ source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL OpenIPMI
-    if [ "$NODE1_FRAME" == "ppc64le" ]; then
+    if [ "$NODE1_FRAME" == "ppc64le" ] || [ "$NODE1_FRAME" == "riscv64" ]; then
       if [ -f /etc/sysconfig/ipmi ]; then
         sed -i 's/IPMI_SI=yes/#&/g' /etc/sysconfig/ipmi
       fi
