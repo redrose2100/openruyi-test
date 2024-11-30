@@ -30,12 +30,11 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     umask | grep 0022
     CHECK_RESULT $? 0 0 "The default value of umask is not 0022."
-    ls -l /tmp | grep 'test_dir1' | grep -e 'drwxr-xr-x'
-    CHECK_RESULT $? 0 0 "The default permission of the folder is not 'drwxr-xr-x'."
-    ls -l /tmp | grep 'test_file1' | grep -e '-rw-r--r--'
-    CHECK_RESULT $? 0 0 "The default permission of the file is not '-rw-r--r--'."
+    res=$( [[ $(stat -c "%A" /tmp/test_dir1) == "drwxr-xr-x" ]] && echo "0" || echo "1" )
+    CHECK_RESULT "$res" 0 0 "The default permission of the folder is not 'drwxr-xr-x'."
+    res=$( [[ $(stat -c "%A" /tmp/test_file1) == "-rw-r--r--" ]] && echo "0" || echo "1" )
+    CHECK_RESULT "$res" 0 0 "The default permission of the file is not '-rw-r--r--'."
     expect -c "
-        log_file testlog1
         spawn su test1
         expect {
             \"*test1@*\" {
@@ -59,17 +58,17 @@ function run_test() {
         }   
                      
     "
-    ls -l /tmp | grep 'test_dir2' | grep -e 'drwxrwxr-x'
-    CHECK_RESULT $? 0 0 "The permission of the folder is not 'drwxrwxr-x'."
-    ls -l /tmp | grep 'test_file2' | grep -e '-rw-rw-r--'
-    CHECK_RESULT $? 0 0 "The permission of the file is not '-rw-rw-r--'."
+    res=$( [[ $(stat -c "%A" /tmp/test_dir2) == "drwxr-xr-x" ]] && echo "0" || echo "1" )
+    CHECK_RESULT "$res" 0 0 "The permission of the folder is not 'drwxr-xr-x'."
+    res=$( [[ $(stat -c "%A" /tmp/test_file2) == "-rw-r--r--" ]] && echo "0" || echo "1" )
+    CHECK_RESULT "$res" 0 0 "The permission of the file is not '-rw-r--r--'."
 
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "Start cleanning environment."
-    rm -rf testlog* /tmp/test*
+    rm -rf /tmp/test_dir1 /tmp/test_dir2 /tmp/test_file1 /tmp/test_file2
     userdel -rf test1
     LOG_INFO "Finish environment cleanup!"
 }

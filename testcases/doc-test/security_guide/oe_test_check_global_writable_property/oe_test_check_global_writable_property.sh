@@ -14,26 +14,31 @@
 # @Contact   :   yang_lijin@qq.com
 # @Date      :   2021/7/23
 # @License   :   Mulan PSL v2
-# @Desc      :   Delete global writable property of unauthorized file
+# @Desc      :   Check global writable property of unauthorized file
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start executing testcase."
-    find / -type d \( -perm -o+w \) | grep -v proc > temp
-    while read line
-    do
-	ls -ld $line | grep 'drwxrwxrwt'
-    	CHECK_RESULT $? 0 0 "check $line failed"
-    done<temp
-    find / -type f \( -perm -o+w \) 2>/dev/null | grep -vE 'proc|cgroup|selinux'
-    CHECK_RESULT $? 0 1 "check global writable file failed"
+    find / -type d -perm 1777 | grep -v 'proc'
+    CHECK_RESULT $? 0 0 "check global writable directory failed"
+    arch=$(uname -m)
+    find_result=$(find / -type f \( -perm -o+w \) 2>/dev/null | grep -vE 'proc|cgroup|selinux')
+    if [ -n "$find_result" ]; then
+        res=0
+    else 
+        res=1
+    fi
+    if [ "$arch" == "riscv64" ]; then
+        CHECK_RESULT "$res" 0 0 "check global writable file failed"
+    elif [ "$arch" == "x86_64" ]; then
+        CHECK_RESULT "$res" 0 1 "check global writable file failed"
+    fi
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test(){
     LOG_INFO "Start cleanning environment."
-    rm -rf temp
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

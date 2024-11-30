@@ -81,7 +81,7 @@
             "name": "oe_test_access_cron_commands"
         },
         {
-            "name": "oe_test_delete_global_writable_property"
+            "name": "oe_test_check_global_writable_property"
         },
         {
             "name": "oe_test_ssh_check_home"
