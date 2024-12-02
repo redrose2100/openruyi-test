@@ -43,7 +43,7 @@ END
 
 function Post_Test() {
     rm -rf /etc/ansible/hosts
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /root/.ssh
 }
 main "$@"
