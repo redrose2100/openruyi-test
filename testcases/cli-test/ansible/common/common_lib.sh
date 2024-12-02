@@ -14,11 +14,13 @@
 #@License   	:   Mulan PSL v2
 #@Desc          :   verification ansible's commnd
 #####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1003
+
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function Pre_Test() {
     DNF_INSTALL ansible
-    sed -i '1i\${NODE2_IPV4}' /etc/ansible/hosts
+    sed -i '1i\'"${NODE2_IPV4}" /etc/ansible/hosts
     expect <<-END
     spawn ssh-keygen
     expect ":"

@@ -20,8 +20,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "powerapi-devel gcc iperf"
-    echo "iperf -s" >> test.sh
+    DNF_INSTALL "powerapi-devel gcc iperf3"
+    echo "iperf3 -s" >> test.sh
     sh test.sh &
     cp common/demo_main.c ./
     echo "int main(int argc, const char *args[])
@@ -46,7 +46,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 "$(pgrep -f "sh test.sh")" && pgrep iperf | xargs kill -9 
+    kill -9 "$(pgrep -f "sh test.sh")" && pgrep iperf3 | xargs kill -9 
     rm -rf demo_main* test.log /root/pwrclient.sock test.sh
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

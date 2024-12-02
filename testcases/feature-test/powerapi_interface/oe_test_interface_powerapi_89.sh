@@ -43,7 +43,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ./demo_main  > test.log
+    ./demo_main > test.log
     test "$(grep -c "\[DEBUG\]    SetProcWattState succeed" test.log)" -eq 2
     CHECK_RESULT $? 0 0 "Check interface PWR_PROC_SetWattState failed"
     grep "PWR_PROC_GetWattState. ret: 0 state:1" test.log
