@@ -16,7 +16,6 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   package activemq test
 # ############################################
-# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -31,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     ./activemq start
     CHECK_RESULT $? 0 0 "Activemq server startup failed1"
-    SLEEP_WAIT 3
+    SLEEP_WAIT 10
     ./activemq status
     CHECK_RESULT $? 0 0 "Activemq state is not active"
     netstat -anp | grep 8161

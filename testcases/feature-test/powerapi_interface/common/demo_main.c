@@ -1073,6 +1073,7 @@ static void TEST_PWR_PROC_AddAndDelWattProcs(int TEST_PID)
     pid_t procs[TEST_PID_NUM] = {TEST_PID};
     int num = TEST_PID_NUM;
     int ret = -1;
+    PWR_PROC_SetWattState(PWR_ENABLE);
     ret = PWR_PROC_GetWattProcs(procs, &num);
     printf("PWR_PROC_GetWattProcs: ret:%d num:%d\n", ret, num);
     for (int i = 0; i < num; i++) {
@@ -1164,6 +1165,39 @@ static void TEST_PWR_PROC_SetAndGetSmartGridGov_1(int sgAgentState, char level0G
     PWR_PROC_GetSmartGridGov(&sgGov);
     printf("PWR_PROC_GetSmartGridGov: after set. ret:%d sgAgentState:%d, sgLevel0Gov:%s sgLevel1Gov:%s\n",
         ret, sgGov.sgAgentState, sgGov.sgLevel0Gov, sgGov.sgLevel1Gov);
+}
+
+static void TEST_PWR_PROC_SetAndGetSmartGridProcs(int level, int pidsNum, char* pids)
+{
+    PWR_PROC_SetWattState(PWR_ENABLE);
+    PWR_PROC_SetSmartGridState(PWR_ENABLE);
+    int ret = -1;
+    char *token;
+    size_t size = sizeof(PWR_PROC_SmartGridProcs) + pidsNum * sizeof(pid_t);
+    PWR_PROC_SmartGridProcs *sgp = (PWR_PROC_SmartGridProcs *)malloc(size);
+    if (!sgp) {
+        return;
+    }
+    token = strtok(pids, " ");
+    sgp->level = level;
+    sgp->procNum = pidsNum;
+    int pidNum = 0;
+    while(token != NULL){
+        sgp->procs[pidNum++] = (pid_t)atoi(token);
+        printf("%s", token);
+        token = strtok(NULL, " ");
+        if(pidNum>=pidsNum) break;
+    }
+    ret = PWR_PROC_SetSmartGridLevel(sgp);
+    printf("PWR_PROC_SetSmartGridLevel: ret:%d\n", ret);
+    bzero(sgp, size);
+    sgp->procNum = 5001;
+    ret = PWR_PROC_GetSmartGridProcs(level, sgp);
+    printf("PWR_PROC_GetSmartGridProcs: ret:%d num:%d\n", ret, sgp->procNum);
+    for (int i = 0; i < sgp->procNum; i++) {
+        printf("\tPWR_PROC_GetSmartGridProcs, procId%d:%d\n", i, sgp->procs[i]);
+    }
+    free(sgp);
 }
 
 static void TEST_PWR_PROC_SetServiceState(int sname, int sstate)

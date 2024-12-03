@@ -22,6 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "powerapi-devel gcc"
     echo "while true;do sleep 1;done" >> test.sh
+    cp test.sh t.sh
     echo "for((i=1;i<=5000;i++));
 do
     sh test.sh &
@@ -30,9 +31,10 @@ done" > runtest.sh
     echo "int main(int argc, const char *args[])
 {
     TEST_PWR_Register();
-    TEST_PWR_PROC_QueryProcs_1(\"sh runtest.sh\", 1);
+    TEST_PWR_PROC_QueryProcs_1(\"sh t.sh\", 1);
     TEST_PWR_PROC_QueryProcs_1(\"sh test.sh\", 5000);
     TEST_PWR_PROC_QueryProcs_1(\"sh runtest.sh|sh test.sh\", 5001);
+    TEST_PWR_PROC_QueryProcs_1(\"\", 0);
     TEST_PWR_UnRegister();
     return 0;
 }
@@ -43,9 +45,16 @@ done" > runtest.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
+    sh t.sh &
     sh runtest.sh
     ./demo_main > test.log
-    grep -A1 "\[DEBUG\]    QueryProcsByKeywords succeed." test.log | grep "PWR_PROC_QueryProcs. ret: 0 num:1"
+    grep -A5 "keywords:sh t.sh" test.log | grep -Pz "\[DEBUG\]    QueryProcsByKeywords succeed.\nPWR_PROC_QueryProcs. ret: 0 num:1"
+    CHECK_RESULT $? 0 0 "Check interface TEST_PWR_PROC_QueryProcs failed"
+    grep -A5 "keywords:sh test.sh" test.log | grep -Pz "\[DEBUG\]    QueryProcsByKeywords succeed.\nPWR_PROC_QueryProcs. ret: 0 num:5000"
+    CHECK_RESULT $? 0 0 "Check interface TEST_PWR_PROC_QueryProcs failed"
+    grep -A5 "keywords:sh runtest.sh|sh test.sh" test.log | grep -Pz "\[DEBUG\]    QueryProcsByKeywords succeed.\nPWR_PROC_QueryProcs. ret: 0 num:5000"
+    CHECK_RESULT $? 0 0 "Check interface TEST_PWR_PROC_QueryProcs failed"
+    grep -A1 "keywords:$" test.log | grep "PWR_PROC_QueryProcs. ret: 6 num:0"
     CHECK_RESULT $? 0 0 "Check interface TEST_PWR_PROC_QueryProcs failed"
     LOG_INFO "End to run test."
 }
@@ -53,7 +62,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     pkill -9 -f "test.sh"
-    rm -rf demo_main* test.log /root/pwrclient.sock test.sh runtest.sh
+    rm -rf demo_main* test.log /root/pwrclient.sock test.sh runtest.sh t.sh
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

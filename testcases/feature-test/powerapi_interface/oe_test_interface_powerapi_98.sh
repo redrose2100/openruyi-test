@@ -24,10 +24,10 @@ function pre_test() {
         LOG_INFO "The environment does not support testing"
         exit 0
     fi
-    DNF_INSTALL "powerapi-devel gcc iperf"
+    DNF_INSTALL "powerapi-devel gcc iperf3"
     cp common/demo_main.c ./
-    iperf -s &
-    PidNum="$(pgrep -f "iperf")"
+    iperf3 -s &
+    PidNum="$(pgrep -f "iperf3")"
     echo "int main(int argc, const char *args[])
 {
     TEST_PWR_Register();
