@@ -35,7 +35,7 @@ function pre_test() {
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test_1() {
+function run_test() {
     LOG_INFO "Start to run test."
 
     SSH_CMD "bash /etc/pkgship/auto_install_pkgship_requires.sh redis
@@ -63,7 +63,7 @@ function run_test_1() {
     LOG_INFO "End to run test."
 }
 
-function post_test_1() {
+function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     mv -f "${SYS_CONF_PATH}"/package.ini.bak "${SYS_CONF_PATH}"/package.ini
