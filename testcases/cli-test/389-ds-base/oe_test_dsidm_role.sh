@@ -24,7 +24,7 @@ function pre_test() {
     DNF_INSTALL "389-ds-base"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
-    cat <<EOF > instance.inf
+    cat <<EOF >instance.inf
 [general]
 config_version = 2
 
@@ -45,51 +45,51 @@ objectclass: LdapSubEntry
 objectclass: nsRoleDefinition
 objectclass: nsSimpleRoleDefinition
 objectclass: nsManagedRoleDefinition
-cn: example_roles" >> /var/lib/dirsrv/slapd-localhost/ldif/dsidm_08_temp.ldif
+cn: example_roles" >>/var/lib/dirsrv/slapd-localhost/ldif/dsidm_08_temp.ldif
     dsctl localhost ldif2db userroot /var/lib/dirsrv/slapd-localhost/ldif/dsidm_08_temp.ldif
-    dsctl localhost start 
+    dsctl localhost start
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsidm localhost role -h | grep "usage: dsidm instance role"
+    dsidm localhost role -h | grep "usage: dsidm.*instance.*role"
     CHECK_RESULT $? 0 0 "L$LINENO: role -h No Pass"
-    dsidm localhost role list -h | grep "usage: dsidm instance role list"
+    dsidm localhost role list -h | grep "usage: dsidm.*instance.*role list"
     CHECK_RESULT $? 0 0 "L$LINENO: role list -h No Pass"
     dsidm -b "dc=example,dc=com" localhost role list | grep "example_roles"
     CHECK_RESULT $? 0 0 "L$LINENO: role list No Pass"
-    dsidm localhost role get-by-dn -h | grep "usage: dsidm instance role get-by-dn"
+    dsidm localhost role get-by-dn -h | grep "usage: dsidm.*instance.*role get-by-dn"
     CHECK_RESULT $? 0 0 "L$LINENO: role get-by-dn -h No Pass"
-    dsidm -b "dc=example,dc=com" localhost role get-by-dn "cn=example_roles,dc=example,dc=com" | \
-    grep "objectClass: nsManagedRoleDefinition"
+    dsidm -b "dc=example,dc=com" localhost role get-by-dn "cn=example_roles,dc=example,dc=com" |
+        grep "objectClass: nsManagedRoleDefinition"
     CHECK_RESULT $? 0 0 "L$LINENO: role get-by-dn No Pass"
-    dsidm localhost role modify-by-dn -h | grep "usage: dsidm instance role modify-by-dn"
+    dsidm localhost role modify-by-dn -h | grep "usage: dsidm.*instance.*role modify-by-dn"
     CHECK_RESULT $? 0 0 "L$LINENO: role modify-by-dn -h No Pass"
     dsidm -b "dc=example,dc=com" localhost role modify-by-dn "cn=example_roles,dc=example,dc=com" \
-    replace:cn:example_roles | grep "Successfully modified cn=example_roles,dc=example,dc=com"
+        replace:cn:example_roles | grep "Successfully modified cn=example_roles,dc=example,dc=com"
     CHECK_RESULT $? 0 0 "L$LINENO: role modify-by-dn No Pass"
-    dsidm localhost role rename-by-dn -h | grep "usage: dsidm instance role rename-by-dn"
+    dsidm localhost role rename-by-dn -h | grep "usage: dsidm.*instance.*role rename-by-dn"
     CHECK_RESULT $? 0 0 "L$LINENO: role rename-by-dn -h No Pass"
     dsidm -b "dc=example,dc=com" localhost role rename-by-dn "cn=example_roles,dc=example,dc=com" \
-    "cn=example_roles,dc=example,dc=com" | grep "Successfully renamed to cn=example_roles,dc=example,dc=com"
+        "cn=example_roles,dc=example,dc=com" | grep "Successfully renamed to cn=example_roles,dc=example,dc=com"
     CHECK_RESULT $? 0 0 "L$LINENO: role rename-by-dn No Pass"
-    dsidm localhost role unlock -h | grep "usage: dsidm instance role unlock"
+    dsidm localhost role unlock -h | grep "usage: dsidm.*instance.*role unlock"
     CHECK_RESULT $? 0 0 "L$LINENO: role unlock -h No Pass"
-    dsidm -b "dc=example,dc=com" localhost role unlock "cn=example_roles,dc=example,dc=com" \
-    | grep "Entry cn=example_roles,dc=example,dc=com is unlocked"
+    dsidm -b "dc=example,dc=com" localhost role unlock "cn=example_roles,dc=example,dc=com" |
+        grep "Entry cn=example_roles,dc=example,dc=com is unlocked"
     CHECK_RESULT $? 0 0 "L$LINENO: role unlock No Pass"
-    dsidm localhost role lock -h | grep  "usage: dsidm instance role lock"
+    dsidm localhost role lock -h | grep "usage: dsidm.*instance.*role lock"
     CHECK_RESULT $? 0 0 "L$LINENO: role lock -h No Pass"
-    dsidm -b "dc=example,dc=com" localhost role lock "cn=example_roles,dc=example,dc=com" \
-    | grep "Entry cn=example_roles,dc=example,dc=com is locked"
+    dsidm -b "dc=example,dc=com" localhost role lock "cn=example_roles,dc=example,dc=com" |
+        grep "Entry cn=example_roles,dc=example,dc=com is locked"
     CHECK_RESULT $? 0 0 "L$LINENO: role lock No Pass"
-    dsidm localhost role entry-status -h | grep "usage: dsidm instance role entry-status"
+    dsidm localhost role entry-status -h | grep "usage: dsidm.*instance.*role entry-status"
     CHECK_RESULT $? 0 0 "L$LINENO: role entry-status -h No Pass"
-    dsidm -b "dc=example,dc=com" localhost role entry-status "cn=example_roles,dc=example,dc=com" \
-    | grep "Entry State: directly locked through nsDisabledRole"
+    dsidm -b "dc=example,dc=com" localhost role entry-status "cn=example_roles,dc=example,dc=com" |
+        grep "Entry State: directly locked through nsDisabledRole"
     CHECK_RESULT $? 0 0 "L$LINENO: role entry-status No Pass"
-    dsidm localhost role subtree-status -h | grep "usage: dsidm instance role subtree-status"
+    dsidm localhost role subtree-status -h | grep "usage: dsidm.*instance.*role subtree-status"
     CHECK_RESULT $? 0 0 "L$LINENO: role subtree-status -h No Pass"
     dsidm -b "dc=example,dc=com" localhost role subtree-status "dc=example,dc=com" | grep "Entry State: activated"
     CHECK_RESULT $? 0 0 "L$LINENO: role subtree-status No Pass"
