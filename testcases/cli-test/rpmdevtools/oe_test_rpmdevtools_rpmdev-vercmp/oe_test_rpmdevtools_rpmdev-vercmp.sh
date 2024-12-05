@@ -18,9 +18,15 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+_RPMBUILD_BAKUP_DIR="${HOME}/.rpmbuild.$(date +'%s')"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "rpmdevtools"
+
+    test -d "${HOME}/rpmbuild" \
+        && mv -f "${HOME}/rpmbuild" "$_RPMBUILD_BAKUP_DIR" \
+        && LOG_INFO "Successfully move ${HOME}/rpmbuild to ${_RPMBUILD_BAKUP_DIR}."
 
     wget https://gitee.com/src-openeuler/rpmdevtools/raw/master/rpmdevtools.spec
     mkdir ./test_dir
@@ -65,7 +71,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: -d"
     spectool -g -C ./test_dir rpmdevtools.spec && test -f ./test_dir/*tar.xz
     CHECK_RESULT $? 0 0 "Failed option: -C"
-    spectool -g -R rpmdevtools.spec && test -f ~/rpmbuild/SOURCES/*tar.xz
+    spectool -g -R rpmdevtools.spec && test -f "${HOME}/rpmbuild/SOURCES"/*tar.xz
     CHECK_RESULT $? 0 0 "Failed option: -R"
     test -f ./*tar.xz && spectool -g -f rpmdevtools.spec
     CHECK_RESULT $? 0 0 "Failed option: -f"
@@ -81,7 +87,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    rm -rf ./test_dir ~/rpmbuild ./rpmdevtools* ./*tar.xz
+    rm -rf ./test_dir "${HOME}/rpmbuild" ./rpmdevtools* ./*tar.xz
+    test -d "$_RPMBUILD_BAKUP_DIR" \
+        && mv -f "$_RPMBUILD_BAKUP_DIR" "${HOME}/rpmbuild" \
+        && LOG_INFO "Successfully move ${_RPMBUILD_BAKUP_DIR} to ${HOME}/rpmbuild."
     LOG_INFO "End to restore the test environment."
 }
 
