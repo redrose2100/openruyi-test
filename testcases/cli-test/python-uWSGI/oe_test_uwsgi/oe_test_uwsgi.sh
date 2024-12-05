@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of uwsgi command
 # ############################################
-# shellcheck disable=SC1090,SC2010
+# shellcheck disable=SC1090,SC2010,SC2046
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $?
     curl http:/0.0.0.0:9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --http')"
+    kill -9 $(pgrep -f 'uwsgi --http')
     SLEEP_WAIT 5
     nohup uwsgi --http :9090 --wsgi-file test.py --master --processes 4 --threads 2 >/dev/null 2>&1 &
     CHECK_RESULT $?
@@ -51,7 +51,7 @@ function run_test() {
     CHECK_RESULT $?
     curl http:/0.0.0.0:9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --http')"
+    kill -9 $(pgrep -f 'uwsgi --http')
     SLEEP_WAIT 5
     nohup uwsgi --http :9090 --wsgi-file test.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191 >/dev/null 2>&1 &
     CHECK_RESULT $?
@@ -66,14 +66,14 @@ function run_test() {
         spawn uwsgitop 127.0.0.1:9191
         expect eof
 EOF
-    pid=$(pgrep -f 'uwsgi --http' | head -n 1)
+    pid=$(pgrep -f 'uwsgi --http' | sed -n '2p')
     grep "$pid" log1
     CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --http')"
+    kill -9 $(pgrep -f 'uwsgi --http')
     SLEEP_WAIT 5
     nohup uwsgi --socket 127.0.0.1:3031 --wsgi-file test.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191 >/dev/null 2>&1 &
     CHECK_RESULT $?
-    pid=$(pgrep -f 'uwsgi --socket' | head -n 1)
+    pid=$(pgrep -f 'uwsgi --socket' | sed -n '2p')
     expect <<EOF
         log_file log2
         spawn uwsgitop 127.0.0.1:9191
@@ -81,7 +81,7 @@ EOF
 EOF
     grep "$pid" log2
     CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --socket')"
+    kill -9 $(pgrep -f 'uwsgi --socket')
     LOG_INFO "End of the test."
 }
 
