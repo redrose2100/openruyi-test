@@ -2,6 +2,9 @@ KERNELDIR := ${KERNEL_SRC_DIR}
 ifeq ($(KERNELDIR),)
 	KERNELDIR = ${KERNEL_SRC}
 endif
+ifeq ($(KERNELDIR),)
+        KERNELDIR = /lib/modules/$(shell uname -r)/build/
+endif
 CURRENT_PATH := $(shell pwd)
 
 target := kernel_hello_world
