@@ -49,7 +49,7 @@ END
     CHECK_RESULT "$(wc -l ./output.txt | grep -cE "25")" 1
     CHECK_RESULT "$(grep -cE "select" ./output.txt)" 1
     CHECK_RESULT "$(wc -l ./output1.txt | grep -cE "24")" 1
-    CHECK_RESULT "$(grep "select" ./output1.txt)" 1
+    CHECK_RESULT "$(grep -cE "select" ./output1.txt)" 0
     LOG_INFO "End to run test."
 }
 function post_test() {
