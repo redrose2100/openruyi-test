@@ -17,15 +17,18 @@
 # @Desc      :   test build ko
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
 
+    make kernel_modules
+    CHECK_RESULT $? 0 0 "build kernel hello world fail"
+
     test -f ./kernel_hello_world.ko
     CHECK_RESULT $? 0 0 "no kernel hello world ko file build fail"
     chmod 777 ./kernel_hello_world.ko
-    ls -l ./kernel_hello_world.ko | grep "\-rwxrwxrwx"
+    stat ./kernel_hello_world.ko | grep "\-rwxrwxrwx"
     CHECK_RESULT $? 0 0 "kernel hello world ko chmod fail"
 
     insmod ./kernel_hello_world.ko
@@ -47,6 +50,9 @@ function run_test() {
 
     dmesg | grep "Byebye!, openEuler Embedded!"
     CHECK_RESULT $? 0 0 "check kernel hello world remove message fail"
+
+    make clean
+    CHECK_RESULT $? 0 0 "clean kernel hello world fail"
 
     LOG_INFO "End to run test."
 }
