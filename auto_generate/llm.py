@@ -3,7 +3,7 @@ import json
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import ChatMessage
 from config import config
-from prompt import GENERATE_SCRIPT_SYS_PROMPT, GENERATE_SCRIPT_USER_PROMPT, CHECK_PACKAGE_SYS_PROMPT, CHECK_PACKAGE_USER_PROMPT
+from prompt import GENERATE_SCRIPT_SYS_PROMPT, GENERATE_SCRIPT_USER_PROMPT, CHECK_PACKAGE_SYS_PROMPT, CHECK_PACKAGE_USER_PROMPT,GENERATE_MARKDOWN_SYS_PROMPT,GENERATE_MARKDOWN_USER_PROMPT
 MAX_TIMEOUT = 60
 MAX_TOKENS = 8192
 
@@ -48,3 +48,12 @@ def check_package_command(package_info):
         return result_json['command']
     else:
         return None
+
+
+def generate_markdown(test_script_name, test_script):
+    llm = get_llm()
+    messages = [get_chat_message("system", GENERATE_MARKDOWN_SYS_PROMPT), get_chat_message(
+        "user", GENERATE_MARKDOWN_USER_PROMPT.format(test_script_name=test_script_name, test_script=test_script)), ]
+    result = llm.invoke(messages).content
+    matches = re.findall(r"```markdown(.*?)```", result, re.DOTALL)
+    return matches[0]

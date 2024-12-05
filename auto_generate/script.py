@@ -2,7 +2,7 @@ import os
 import re
 import argparse
 import subprocess
-from llm import generate_script, check_package_command
+from llm import generate_script, check_package_command, generate_markdown
 
 TEST_CASE_DIR = "generate_test_cases"
 NOTE_DIR = "note.md"
@@ -83,12 +83,12 @@ def get_test_script(software_name):
 
     if not package_info:
         return
-    
+
     commands = check_package_command(package_info)
     if not commands:
         print(f"获取软件包{software_name}的子命令为空")
         commands = ['']
-    
+
     software_dir = os.path.join(current_dir_path, TEST_CASE_DIR, software_name)
     # 如果不存在在test_cases目录下software_name文件夹的话，则创建
     os.makedirs(software_dir, exist_ok=True)
@@ -108,18 +108,41 @@ def get_test_script(software_name):
         print(f"生成测试脚本{software_dir}/{command}.sh")
 
 
+def get_test_script_md(software_name):
+    # 读取software_dir下的.sh文件
+    software_dir = os.path.join(current_dir_path, TEST_CASE_DIR, software_name)
+    # 每个文件生成对应的md文件
+    for file in os.listdir(software_dir):
+        if file.endswith(".sh"):
+            # 读取文件内容
+            with open(os.path.join(software_dir, file), "r") as f:
+                script = f.read()
+            # 生成md文件
+            md_file = generate_markdown(file, script)
+            # 在software_dir下保存{file}.md
+            with open(os.path.join(software_dir, f"{file}.md"), "w") as f:
+                f.write(md_file)
+            print(f"生成测试文档{software_dir}/{file}.md")
+
+
 def main():
     # 创建 ArgumentParser 对象
     parser = argparse.ArgumentParser(description='根据软件包的help和测试文档生成测试脚本')
 
     # 添加参数
+    # 模式
+    parser.add_argument('-m', '--mode', help='模式，默认为shell，shell和md', default='shell')
+    # 软件包名
     parser.add_argument('-n', '--package-name', help='软件包名称')
 
     # 解析命令行参数
     args = parser.parse_args()
 
     # 根据参数执行操作
-    get_test_script(args.package_name)
+    if args.mode == 'shell':
+        get_test_script(args.package_name)
+    elif args.mode == 'md':
+        get_test_script_md(args.package_name)
 
 
 if __name__ == "__main__":
