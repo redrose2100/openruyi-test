@@ -18,12 +18,15 @@
 # ############################################
 # shellcheck disable=SC1090,SC2010
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL python3-uWSGI
     pip3 install uwsgitop
+    firewall-cmd --state|grep "not running"
+    firewalld_status=$?
+    systemctl stop firewalld
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -33,55 +36,62 @@ function run_test() {
     CHECK_RESULT $?
     pip3 | grep -E "Usage:|pip3 <command> \[options\]"
     CHECK_RESULT $?
+
     nohup uwsgi --http :9090 --wsgi-file test.py >/dev/null 2>&1 &
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to run uwsgi --http."
     curl http://"${NODE1_IPV4}":9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
     curl http://127.0.0.1:9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
-    curl http:/0.0.0.0:9090 -w '\n' | grep "Hello World"
+    curl http://0.0.0.0:9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --http')"
+    pgrep -f 'uwsgi --http' | xargs kill -9
     SLEEP_WAIT 5
+    
     nohup uwsgi --http :9090 --wsgi-file test.py --master --processes 4 --threads 2 >/dev/null 2>&1 &
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to run uwsgi --http concurrent."
     curl http://"${NODE1_IPV4}":9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
     curl http://127.0.0.1:9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
-    curl http:/0.0.0.0:9090 -w '\n' | grep "Hello World"
+    curl http://0.0.0.0:9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --http')"
+    pgrep -f 'uwsgi --http' | xargs kill -9
     SLEEP_WAIT 5
+
     nohup uwsgi --http :9090 --wsgi-file test.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191 >/dev/null 2>&1 &
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to run uwsgi --http concurrent and port."
     curl http://"${NODE1_IPV4}":9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
     curl http://127.0.0.1:9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
-    curl http:/0.0.0.0:9090 -w '\n' | grep "Hello World"
+    curl http://0.0.0.0:9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
     expect <<EOF
         log_file log1
         spawn uwsgitop 127.0.0.1:9191
+        interact
         expect eof
+        send 'q'
 EOF
-    pid=$(pgrep -f 'uwsgi --http' | head -n 1)
+    pid=$(pgrep -f 'uwsgi --http' | awk 'NR==2')
     grep "$pid" log1
-    CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --http')"
+    CHECK_RESULT $? 0 0 "log1 error."
+    pgrep -f 'uwsgi --http' | xargs kill -9
     SLEEP_WAIT 5
+    
     nohup uwsgi --socket 127.0.0.1:3031 --wsgi-file test.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191 >/dev/null 2>&1 &
-    CHECK_RESULT $?
-    pid=$(pgrep -f 'uwsgi --socket' | head -n 1)
+    CHECK_RESULT $? 0 0 "Failed to run uwsgi --socket concurrent and port."
+    pid=$(pgrep -f 'uwsgi --socket' | awk 'NR==2')
     expect <<EOF
         log_file log2
         spawn uwsgitop 127.0.0.1:9191
+        interact
         expect eof
 EOF
     grep "$pid" log2
-    CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'uwsgi --socket')"
+    CHECK_RESULT $? 0 0 "log2 error."
+    pgrep -f 'uwsgi --socket' | xargs kill -9
     LOG_INFO "End of the test."
 }
 
@@ -90,6 +100,9 @@ function post_test() {
     rm -rf "$(ls | grep -vE ".sh|.py")"
     pip3 uninstall uwsgitop -y
     DNF_REMOVE "$@"
+    if [ ${firewalld_status} -eq 1 ];then
+        systemctl start firewalld
+    fi
     LOG_INFO "Finish restoring the test environment."
 }
 
