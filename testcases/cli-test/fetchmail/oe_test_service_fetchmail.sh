@@ -17,13 +17,17 @@
 # @Desc      :   Test fetchmail.service restart
 # #############################################
 #shellcheck disable=SC1091
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL fetchmail
     echo "poll  pop.qq.com  protocol pop3 user 'QQ_NUMBER@qq.com' password 'YOUR_PASSEORD' sslproto ''" >>/etc/fetchmailrc.example
-    which firewalld && systemctl stop firewalld
+    chmod 600 /etc/fetchmailrc.example
+    chown mail:mail /etc/fetchmailrc.example
+    firewall-cmd --state|grep "not running"
+    firewalld_status=$?
+    systemctl stop firewalld
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -38,7 +42,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop fetchmail.service
     DNF_REMOVE "$@"
-    which firewalld && systemctl start firewalld
+    if [ ${firewalld_status} -eq 1 ];then
+        systemctl start firewalld
+    fi
     LOG_INFO "End to restore the test environment."
 }
 
