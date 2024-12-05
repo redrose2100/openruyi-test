@@ -19,28 +19,36 @@
 # ############################################
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+_RPMBUILD_BAKUP_DIR="${HOME}/.rpmbuild.$(date +'%s')"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
+    test -d "${HOME}/rpmbuild" \
+        && mv -f "${HOME}/rpmbuild" "$_RPMBUILD_BAKUP_DIR" \
+        && LOG_INFO "Successfully move ${HOME}/rpmbuild to ${_RPMBUILD_BAKUP_DIR}."
     DNF_INSTALL "rpmdevtools*"
     rpmdev-setuptree
-    cp ../common/hello.spec ~/rpmbuild/SPECS
-    cd ~/rpmbuild/SOURCES && wget http://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz
+    cp ../common/hello.spec "${HOME}/rpmbuild/SPECS"
+    cd "${HOME}/rpmbuild/SOURCES" && wget http://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz
     LOG_INFO "End to prepare the test environment!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    rpmbuild -ba ~/rpmbuild/SPECS/hello.spec
+    rpmbuild -ba "${HOME}/rpmbuild/SPECS/hello.spec"
     CHECK_RESULT $? 0 0 "Failed to build RPM package"
-    tree ~/rpmbuild/*RPMS | grep "/root/rpmbuild/SRPMS\|hello-2.10-1.src.rpm"
+    tree "${HOME}/rpmbuild"/*RPMS | grep "/root/rpmbuild/SRPMS\|hello-2.10-1.src.rpm"
     CHECK_RESULT $? 0 0 "Failed to check SRPMS file"
     LOG_INFO "End of testcase execution!"
 }
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    rm -rf ~/rpmbuild
+    rm -rf "${HOME}/rpmbuild"
     DNF_REMOVE "$@"
+    test -d "$_RPMBUILD_BAKUP_DIR" \
+        && mv -f "$_RPMBUILD_BAKUP_DIR" "${HOME}/rpmbuild" \
+        && LOG_INFO "Successfully move ${_RPMBUILD_BAKUP_DIR} to ${HOME}/rpmbuild."
     LOG_INFO "End environment cleanup."
 }
 

@@ -18,7 +18,7 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
-_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR="${HOME}/.rpmbuild.$(date +'%s')"
+_RPMBUILD_BAKUP_DIR="${HOME}/.rpmbuild.$(date +'%s')"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -26,8 +26,8 @@ function pre_test() {
     pkg_name=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
     yumdownloader "${pkg_name}"
     test -d "${HOME}/rpmbuild" \
-	    && mv -f "${HOME}/rpmbuild" "$_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR" \
-	    && LOG_INFO "Successfully move ${HOME}/rpmbuild to ${_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR}."
+	    && mv -f "${HOME}/rpmbuild" "$_RPMBUILD_BAKUP_DIR" \
+	    && LOG_INFO "Successfully move ${HOME}/rpmbuild to ${_RPMBUILD_BAKUP_DIR}."
     LOG_INFO "End of environmental preparation."
 }
 
@@ -89,9 +89,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
     rm -rf "${HOME}/rpmbuild" ./*rpm
-    test -d "$_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR" \
-	    && mv -f "$_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR" "${HOME}/rpmbuild" \
-	    && LOG_INFO "Successfully move ${_RPMDEV_RMDEVELRPMS_RPMBUILD_BAKUP_DIR} to ${HOME}/rpmbuild."
+    test -d "$_RPMBUILD_BAKUP_DIR" \
+	    && mv -f "$_RPMBUILD_BAKUP_DIR" "${HOME}/rpmbuild" \
+	    && LOG_INFO "Successfully move ${_RPMBUILD_BAKUP_DIR} to ${HOME}/rpmbuild."
     LOG_INFO "End to restore the test environment."
 }
 
