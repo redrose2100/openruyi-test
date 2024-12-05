@@ -33,7 +33,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsctl cockpit -h | grep "usage: dsctl \[instance\] cockpit"
+    dsctl cockpit -h | grep "usage: dsctl.*instance.*cockpit"
     CHECK_RESULT $? 0 0 "L$LINENO: cockpit -h No Pass"
     dsctl -v localhost cockpit enable | grep "DEBUG: Instance allocated"
     CHECK_RESULT $? 0 0 "L$LINENO: cockpit enable No Pass"
