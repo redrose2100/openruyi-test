@@ -27,7 +27,7 @@ function pre_test() {
     DNF_INSTALL "eagle"
     cp /etc/eagle/eagle_policy.ini /etc/eagle/eagle_policy.ini_bak
     IFS=" " read -r -a available_governors <<< "$(cat /sys/devices/system/cpu/cpufreq/policy0/scaling_available_governors)"
-    sed -i 's/smart_grid_gov_eable =.*/smart_grid_gov_eable = 1/' /etc/eagle/eagle_policy.ini
+    sed -i 's/smart_grid_gov_enable =.*/smart_grid_gov_enable = 1/' /etc/eagle/eagle_policy.ini
     LOG_INFO "End to to prepare the test environment."
 }
 

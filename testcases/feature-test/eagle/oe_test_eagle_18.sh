@@ -41,10 +41,10 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Check [sched_service] watt_domain_mask = 0 failed"
     
     echo > /var/log/eagle/eagle.log
-    sed -i 's/watt_domain_mask =.*/watt_domain_mask = '"${numa_nodes}"'/' /etc/eagle/eagle_policy.ini
+    sed -i 's/watt_domain_mask =.*/watt_domain_mask = '$((2**numa_nodes -1))'/' /etc/eagle/eagle_policy.ini
     SLEEP_WAIT 5
     grep "SetProcWattAttrs succeed" /var/log/eagle/eagle.log 
-    CHECK_RESULT $? 0 0 "Check [sched_service] watt_domain_mask = ${numa_nodes} failed"
+    CHECK_RESULT $? 0 0 "Check [sched_service] watt_domain_mask = $((2**numa_nodes -1)) failed"
     
     echo > /var/log/eagle/eagle.log
     sed -i 's/watt_domain_mask =.*/watt_domain_mask = -1/' /etc/eagle/eagle_policy.ini
@@ -53,10 +53,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check [sched_service] watt_domain_mask = -1 failed"
 
     echo > /var/log/eagle/eagle.log
-    sed -i 's/watt_domain_mask =.*/watt_domain_mask = '$((numa_nodes + 1))'/' /etc/eagle/eagle_policy.ini
+    sed -i 's/watt_domain_mask =.*/watt_domain_mask = '$((2**numa_nodes))'/' /etc/eagle/eagle_policy.ini
     SLEEP_WAIT 5
-    grep -F "Policy Content Error: seg:[sched_service] item:watt_domain_mask value:$((numa_nodes + 1))" /var/log/eagle/eagle.log
-    CHECK_RESULT $? 0 0 "Check [sched_service] watt_domain_mask = $((numa_nodes + 1)) failed"
+    grep -F "Policy Content Error: seg:[sched_service] item:watt_domain_mask value:$((2**numa_nodes))" /var/log/eagle/eagle.log
+    CHECK_RESULT $? 0 0 "Check [sched_service] watt_domain_mask = $((2**numa_nodes)) failed"
     LOG_INFO "End to run test."
 }
 
