@@ -13,7 +13,7 @@
 #@Contact       :   1009065695@qq.com
 #@Date          :   2024-10-09
 #@License       :   Mulan PSL v2
-#@Desc          :   set parameter [sched_service] smart_grid_gov_eable test
+#@Desc          :   set parameter [sched_service] smart_grid_gov_enable test
 #####################################
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
@@ -37,17 +37,17 @@ function run_test() {
     sed -i 's/smart_grid_vip_gov =.*/smart_grid_vip_gov = '"${available_governors[-1]}"'/' /etc/eagle/eagle_policy.ini
     SLEEP_WAIT 5
     grep "smart_grid-0: ${available_governors[-1]}" /sys/devices/system/cpu/cpufreq/smart_grid_governor
-    CHECK_RESULT $? 1 0 "Check [sched_service] smart_grid_gov_eable=0 failed"
+    CHECK_RESULT $? 1 0 "Check [sched_service] smart_grid_gov_enable=0 failed"
     echo > /var/log/eagle/eagle.log
-    sed -i 's/smart_grid_gov_eable =.*/smart_grid_gov_eable = 1/' /etc/eagle/eagle_policy.ini
+    sed -i 's/smart_grid_gov_enable =.*/smart_grid_gov_enable = 1/' /etc/eagle/eagle_policy.ini
     SLEEP_WAIT 5
     grep "smart_grid-0: ${available_governors[-1]}" /sys/devices/system/cpu/cpufreq/smart_grid_governor
-    CHECK_RESULT $? 0 0 "Check [sched_service] smart_grid_gov_eable=1 failed"
+    CHECK_RESULT $? 0 0 "Check [sched_service] smart_grid_gov_enable=1 failed"
     echo > /var/log/eagle/eagle.log
-    sed -i 's/smart_grid_gov_eable =.*/smart_grid_gov_eable = -1/' /etc/eagle/eagle_policy.ini
+    sed -i 's/smart_grid_gov_enable =.*/smart_grid_gov_enable = -1/' /etc/eagle/eagle_policy.ini
     SLEEP_WAIT 5
-    grep -F "Policy Content Error: seg:[sched_service] item:smart_grid_gov_eable value:-1" /var/log/eagle/eagle.log
-    CHECK_RESULT $? 0 0 "Check [sched_service] smart_grid_gov_eable=-1 failed"
+    grep -F "Policy Content Error: seg:[sched_service] item:smart_grid_gov_enable value:-1" /var/log/eagle/eagle.log
+    CHECK_RESULT $? 0 0 "Check [sched_service] smart_grid_gov_enable=-1 failed"
     LOG_INFO "End to run test."
 }
 

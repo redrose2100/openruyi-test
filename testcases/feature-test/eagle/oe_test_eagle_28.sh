@@ -38,7 +38,7 @@ function run_test() {
     echo > /var/log/eagle/eagle.log
     sed -i 's/cpufreq_gov =.*/cpufreq_gov = seep/' /etc/eagle/eagle_policy.ini	    
     SLEEP_WAIT 5
-    grep -A1 "ERROR PWRAPI: SetCpuFreqGovernor failed. ret: 9" /var/log/eagle/eagle.log | grep -F "ERROR SERVICE_MGR: [libfreq_service.so] freq_sevice. set cpufreq gov to seep failed"
+    grep -A1 "ERROR PWRAPI: SetCpuFreqGovernor failed. ret: 9" /var/log/eagle/eagle.log | grep -F "ERROR SERVICE_MGR: [libfreq_service.so] freq_service. set cpufreq gov to seep failed"
     CHECK_RESULT $? 0 0 "Check cpufreq_gov = seep failed"
     echo > /var/log/eagle/eagle.log
     sed -i 's/cpufreq_gov =.*/cpufreq_gov = test/' /etc/eagle/eagle_policy.ini	    

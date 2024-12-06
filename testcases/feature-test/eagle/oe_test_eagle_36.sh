@@ -29,7 +29,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if ! ipmitool raw 0x30 0x92 0xdb 0x07 0x00 0x27 0x01 0x01 2>&1 | grep "Unable to send RAW command"; then
+    if ! ipmitool raw 0x30 0x92 0xdb 0x07 0x00 0x27 0x01 0x01 2>&1 | grep -E "Unable to send RAW command|Could not open device"; then
         sed -i 's/enable_mpc =.*/enable_mpc = 1/' /etc/eagle/eagle_policy.ini
         SLEEP_WAIT 5
         systemctl status mpctool.service | grep "Active: active"
