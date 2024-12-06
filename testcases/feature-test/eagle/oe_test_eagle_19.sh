@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   set parameter [sched_service] watt_first_domain test
 #####################################
+# shellcheck disable=SC2207
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -29,7 +30,7 @@ function pre_test() {
     export LANG=en_US.utf8
     cp /etc/eagle/eagle_policy.ini /etc/eagle/eagle_policy.ini_bak
     sed -i 's/watt_sched_enable =.*/watt_sched_enable = 0/' /etc/eagle/eagle_policy.ini
-    arr=("$(lscpu | grep "On-line CPU(s) list" | awk '{print $4}' | awk -F'-' '{print $1" "$2}')")
+    arr=($(lscpu | grep "On-line CPU(s) list" | awk '{print $4}' | awk -F'-' '{print $1" "$2}'))
     LOG_INFO "End to to prepare the test environment."
 }
 
