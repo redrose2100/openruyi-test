@@ -1191,7 +1191,7 @@ static void TEST_PWR_PROC_SetAndGetSmartGridProcs(int level, int pidsNum, char* 
     ret = PWR_PROC_SetSmartGridLevel(sgp);
     printf("PWR_PROC_SetSmartGridLevel: ret:%d\n", ret);
     bzero(sgp, size);
-    sgp->procNum = 5001;
+    sgp->procNum = pidsNum;
     ret = PWR_PROC_GetSmartGridProcs(level, sgp);
     printf("PWR_PROC_GetSmartGridProcs: ret:%d num:%d\n", ret, sgp->procNum);
     for (int i = 0; i < sgp->procNum; i++) {

@@ -58,7 +58,7 @@ function run_test() {
     sed -i 's/pidsnum/5000/' demo_main1.c
     sed -i 's/pidlist/'"${pid}"'/' demo_main1.c
     gcc ./demo_main1.c -o demo_main -lpwrapi
-    ./demo_main | grep A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:5000"
+    ./demo_main | grep -A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:5000"
     CHECK_RESULT $? 0 0 "Check interface SetSmartGridLevel procs is 5000 level=0 failed"
     for id in ${pid}
     do
@@ -70,7 +70,7 @@ function run_test() {
     sed -i 's/pidsnum/5000/' demo_main2.c
     sed -i 's/pidlist/'"${pid}"'/' demo_main2.c
     gcc ./demo_main2.c -o demo_main -lpwrapi
-    ./demo_main | grep A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:5000"
+    ./demo_main | grep -A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:5000"
     CHECK_RESULT $? 0 0 "Check interface SetSmartGridLevel procs is 5000 level=1 failed"
     for id in ${pid}
     do
