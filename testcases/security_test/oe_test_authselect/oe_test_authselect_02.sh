@@ -51,7 +51,7 @@ function run_test() {
 function post_test() {
     LANG=$lang
     rm -fr /etc/authselect/custom
-    back_up=$(authselect backup-list |awk -F " " '{print $1}')
+    back_up=$(authselect backup-list |awk -F " " 'END{print $1}')
     authselect backup-restore $back_up
     authselect backup-remove $back_up
 }
