@@ -36,10 +36,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to get the OS version info-2"
     grep "openEuler release" /etc/openEuler-release
     CHECK_RESULT $? 0 0 "Failed to get the OS version info-3"
-    if [ "$NODE1_FRAME" == "ppc64le" ];then 
+    if [ "$NODE1_FRAME" == "ppc64le" ]; then
         echo "need match by kernel"
     else
-        uname -a | grep "Linux openEuler"
+        [[ $(rpm -qa kernel) =~ $(uname -a | awk -F' ' '{print $3}') ]]
     fi
     CHECK_RESULT $? 0 0 "Failed to get the kernel version info"
     # Get hardware info
@@ -49,8 +49,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to get CPU parameters"
     grep "MemTotal:" /proc/meminfo
     CHECK_RESULT $? 0 0 "Failed to get meminfo parameters"
-    if [ "$NODE1_FRAME" == "ppc64le" ];then 
-        lshw -c memory |grep bank
+    if [ "$NODE1_FRAME" == "ppc64le" ]; then
+        lshw -c memory | grep bank
     else
         dmidecode -t memory | grep "Memory Device"
     fi
@@ -73,9 +73,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to execute lspci"
     lspci -t
     CHECK_RESULT $? 0 0 "Failed to execute lspci -t"
-    if [ "$NODE1_FRAME" == "ppc64le" ];then
+    if [ "$NODE1_FRAME" == "ppc64le" ]; then
         echo "ppc64le not support dmidecode"
-    else 
+    else
         dmidecode -t bios | grep "BIOS Information"
     fi
     CHECK_RESULT $? 0 0 "Failed to get bios info"
