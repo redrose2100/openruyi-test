@@ -58,14 +58,14 @@ function run_test() {
     sed -i 's/pidsnum/1/' demo_main1.c
     sed -i 's/pidlist/'"${pid}"'/' demo_main1.c
     gcc ./demo_main1.c -o demo_main -lpwrapi
-    ./demo_main | grep A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:1" && grep 0 /proc/"${pid}"/smart_grid_level
+    ./demo_main | grep -A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:1" && grep 0 /proc/"${pid}"/smart_grid_level
     CHECK_RESULT $? 0 0 "Check interface SetSmartGridLevel single task level=0 failed"
 
     sed -i 's/curlevel/1/' demo_main2.c
     sed -i 's/pidsnum/1/' demo_main2.c
     sed -i 's/pidlist/'"${pid}"'/' demo_main2.c
     gcc ./demo_main2.c -o demo_main -lpwrapi
-    ./demo_main | grep A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:1" && grep 1 /proc/"${pid}"/smart_grid_level
+    ./demo_main | grep -A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:1" && grep 1 /proc/"${pid}"/smart_grid_level
     CHECK_RESULT $? 0 0 "Check interface SetSmartGridLevel single task level=1 failed"
     pkill -9 -f "test.sh"
      
@@ -75,7 +75,7 @@ function run_test() {
     sed -i 's/pidsnum/3/' demo_main3.c
     sed -i 's/pidlist/'"${pid}"'/' demo_main3.c
     gcc ./demo_main3.c -o demo_main -lpwrapi
-    ./demo_main | grep A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:3"
+    ./demo_main | grep -A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:3"
     CHECK_RESULT $? 0 0 "Check interface SetSmartGridLevel multiple task level=0 failed"
     for id in ${pid}
     do
@@ -88,7 +88,7 @@ function run_test() {
     sed -i 's/pidsnum/3/' demo_main4.c
     sed -i 's/pidlist/'"${pid}"'/' demo_main4.c
     gcc ./demo_main4.c -o demo_main -lpwrapi
-    ./demo_main | grep A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:3"
+    ./demo_main | grep -A8 "SetSmartGridLevel succeed" | grep "PWR_PROC_GetSmartGridProcs: ret:0 num:3"
     CHECK_RESULT $? 0 0 "Check interface SetSmartGridLevel multiple task level=1 failed"
     for id in ${pid}
     do
