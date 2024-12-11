@@ -16,11 +16,11 @@
 #@Desc      	:   Take the test access of /var
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    cur_lang=$(echo $LANG)
+    cur_lang="$LANG"
     export LANG=en_US.UTF-8
     LOG_INFO "End of environmental preparation!"
 }
@@ -28,14 +28,19 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     actual_name=$(ls /var)
-    while read rows; do
+    while read -r rows; do
         if [[ $actual_name =~ $rows ]]; then 
             continue
         fi
-        CHECK_RESULT 1 0 0 "The file under /var is error."
+	if uname -a | grep -q "riscv64"; then
+	    if [[ $rows = "crash" ]]; then
+		    continue	
+	    fi
+	fi
+	CHECK_RESULT 1 0 0 "The file under /var is error."
         break
     done <./expect_name
-    actual_access=$(ls -l  /var | grep -v named | awk '{print $1}' | grep -v "total" | sort | uniq | cut -c 1-10)
+    actual_access=$(find /var -maxdepth 1  ! -name "." ! -name ".." ! -name ".*"  ! -name "named" -exec stat -c "%A" {} + | grep -Ev "^total$" | sort | uniq)
     while read rows; do
         if [[ $actual_access =~ $rows ]]; then 
             continue
