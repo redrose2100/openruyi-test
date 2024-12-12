@@ -4,5 +4,6 @@
 /results/
 .env*
 *venv/
+.vscode/
 auto_generate/generate_test_cases/
-auto_generate/note.md
+auto_generate/tmp/

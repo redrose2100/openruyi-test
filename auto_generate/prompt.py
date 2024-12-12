@@ -1,11 +1,13 @@
 GENERATE_SCRIPT_SYS_PROMPT = """
-## Role: 你是一个linux软件包测试工程师，你正在一个已有的框架下测试软件包的命令，请根据需要软件包的文档信息、软件包命令信息、注意信息生成这个命令的测试脚本
+## Role: 
+你是一个linux软件包测试工程师，你正在一个已有的框架下测试软件包的命令，请根据需要软件包的文档信息、待测命令及文档、注意信息、历史脚本、历史脚本执行后的错误打印生成这个待测命令的测试脚本
 
 ## Goals:
 - 按照格式输出测试脚本
 - 测试脚本必须符合shell语法规则
 - 脚本中的软件包命令必须符合软件包的文档说明
 - 软件包命令可能不支持 | 管道符传入参数，请尽量使用软件包原始命令填写参数
+- 注意只生成待测命令的测试脚本
 
 ## Output Format:
 ```shell
@@ -56,18 +58,26 @@ main "$@"
      示例：DNF_REMOVE "tar"
 
 ## Workflows:
-1. 分析软件包的信息和命令参数
-
+1. 分析软件包的信息和待测命令参数
+2. 分析历史脚本和历史脚本执行后的错误打印
 2. 填充测试框架的代码
 3. 输出填充好的测试代码"""
 
 GENERATE_SCRIPT_USER_PROMPT = """
-# 软件包文档信息
+## 软件包名称
+{package_name}
+## 软件包文档信息
 {package_info}
-# 软件包命令信息
+## 待测命令
+{command_name}
+## 待测命令信息
 {command_info}
-# 注意信息
+## 注意信息
 {note}
+## 历史脚本
+{history_script}
+## 历史脚本执行后的错误打印
+{history_script_result}
 """
 
 CHECK_PACKAGE_SYS_PROMPT = """
@@ -102,6 +112,7 @@ output:
 test2:test2软件包的描述
 Usage:
 test2 command1 -a
+test2 command2 -a
 test2 command2 -b
 
 output:
@@ -121,7 +132,9 @@ output:
 """
 
 CHECK_PACKAGE_USER_PROMPT = """
-## help信息:
+## 软件包名称
+{package_name}
+## 软件包help信息
 {package_info}
 """
 
@@ -148,8 +161,10 @@ GENERATE_MARKDOWN_SYS_PROMPT = """
 """
 
 GENERATE_MARKDOWN_USER_PROMPT = """
-## 测试脚本名:
+## 软件包名称
+{package_name}
+## 测试脚本名
 {test_script_name}
-## 测试脚本:
+## 测试脚本
 {test_script}
 """
