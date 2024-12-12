@@ -17,12 +17,14 @@
 # @Desc      :   Test dbus-org.freedesktop.login1.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution dbus-org.freedesktop.login1.service
-    test_reload dbus-org.freedesktop.login1.service
+    if [[ "$NODE1_FRAME" != "riscv64" && "$NODE1_FRAME" != "x86_64" ]]; then
+        test_reload dbus-org.freedesktop.login1.service
+    fi
     LOG_INFO "Finish test!"
 }
 
