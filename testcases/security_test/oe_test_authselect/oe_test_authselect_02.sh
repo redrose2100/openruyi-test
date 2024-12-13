@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    lang=$(echo $LANG)
+    lang=$(echo "$LANG")
     LANG=en_US.UTF-8
     LOG_INFO "End of environmental preparation!"
 }
@@ -51,9 +51,9 @@ function run_test() {
 function post_test() {
     LANG=$lang
     rm -fr /etc/authselect/custom
-    back_up=$(authselect backup-list |awk -F " " '{print $1}')
-    authselect backup-restore $back_up
-    authselect backup-remove $back_up
+    back_up=$(authselect backup-list |awk -F " " 'END{print $1}')
+    authselect backup-restore "$back_up"
+    authselect backup-remove "$back_up"
 }
 
 main $@
