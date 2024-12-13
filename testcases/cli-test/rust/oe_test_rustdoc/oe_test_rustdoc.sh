@@ -43,7 +43,7 @@ function run_test() {
     rustdoc hello.rs --cfg hello
     test -d doc/hello
     CHECK_RESULT $? 0 0 "Failed to pass configuration parameters"
-    rustdoc test.rs --extern doc
+    rustdoc test.rs
     CHECK_RESULT $?
     rustdoc test.rs -C target_feature=+avx
     CHECK_RESULT $?
