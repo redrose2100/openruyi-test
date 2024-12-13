@@ -30,12 +30,20 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
   cd /tmp || exit
+  size_test_zip=$(stat -c %s test.zip)
   zipsplit -q test.zip
   CHECK_RESULT $? 0 0 "Splitting the test.zip file in quiet mode failed"
   zipsplit -t test.zip
   CHECK_RESULT $? 0 0 "Failed to check file list size"
   zipsplit -i test.zip
   CHECK_RESULT $? 0 0 "Import file from compressed file for execution failed"
+  rm -rf test1.zip
+  zipsplit -n "${size_test_zip}" test.zip
+  test -e test1.zip
+  CHECK_RESULT $? 0 0 "test1.zip not found"
+  size_test1_zip=$(stat -c %s test1.zip)
+  [ "${size_test_zip}" -eq "${size_test1_zip}" ]
+  CHECK_RESULT $? 0 0 "size_test1_zip capacity display error"
   LOG_INFO "End of the test."
 }
 
