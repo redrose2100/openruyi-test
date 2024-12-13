@@ -3,7 +3,9 @@
     "cases": [
         {
             "name": "oe_test_zipsplit"
+        },
+        {
+            "name": "oe_test_zipsplit_01"
         }
     ]
 }
-
