@@ -29,14 +29,14 @@ function pre_test(){
 function run_test() {
     authselect select minimal --force
     CHECK_RESULT $? 0 0 "Backup failure"
-    back_up=$(authselect backup-list |awk -F " " '{print $1}')
+    back_up=$(authselect backup-list |awk -F " " 'END{print $1}')
     authselect check |grep "Current configuration is valid"
     CHECK_RESULT $? 0 0 "Validity failure"
     authselect backup-restore $back_up
     CHECK_RESULT $? 0 0 "Recovery failure"
     authselect backup-remove $back_up
     CHECK_RESULT $? 0 0 "remove failure"
-    authselect backup-list |grep $pack_up
+    authselect backup-list |grep $back_up
     CHECK_RESULT $? 0 1 "delete failure"
 }
 
