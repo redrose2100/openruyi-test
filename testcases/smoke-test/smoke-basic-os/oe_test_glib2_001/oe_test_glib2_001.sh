@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   package glib2 test
 # ############################################
+# shellcheck disable=SC2046
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -39,7 +40,7 @@ return 0;
 EOF
 
     CHECK_RESULT $? 0 0 "Test. c write error"
-    gcc test.c "$(pkg-config --cflags --libs glib-2.0)" -o hello
+    gcc test.c $(pkg-config --cflags --libs glib-2.0) -o hello
     CHECK_RESULT $? 0 0 "Compilation failed, no hello binary is generated"
     ./hello | grep Hello
     CHECK_RESULT $? 0 0 "not Print Hello, world!"

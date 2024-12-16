@@ -47,8 +47,8 @@ function run_test() {
 
     mkdir -v /tmp/test6 2>&1 | grep -q "mkdir" && ls /tmp/test6
     CHECK_RESULT $?
-
-    mkdir --help | grep "Usage"s
+    
+    mkdir --help | grep -iE "Usage|Usages"
     CHECK_RESULT $?
     LOG_INFO "Finish test!"
 }
