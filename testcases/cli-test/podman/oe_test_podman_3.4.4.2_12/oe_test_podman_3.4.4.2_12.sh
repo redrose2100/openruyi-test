@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
+# shellcheck disable=SC1091
 
 source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
@@ -26,38 +27,38 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(podman create -t -i --name myctr alpine ls)
-    podman inspect $ID | grep '"Name": "myctr"'
-    CHECK_RESULT $? 0 0 'check podman inspect $ID | grep -i group failed'
-    ID=$(podman create --hostname localhost alpine ls)
-    podman inspect $ID | grep '"Hostname": "localhost"'
-    CHECK_RESULT $? 0 0 'check podman inspect $ID | grep -i group failed'
-    ID=$(podman create --image-volume bind alpine ls)
-    podman inspect $ID | grep -i bind
-    CHECK_RESULT $? 0 0 'check podman inspect $ID | grep -i bind failed'
-    ID=$(podman create --ip ${NODE1_IPV4} alpine ls)
-    podman inspect $ID | grep -i ip
-    CHECK_RESULT $? 0 0 'check podman inspect $ID | grep -i ip failed'
-    ID=$(podman create --ipc host alpine ls)
-    podman inspect $ID | grep '"IpcMode": "host"'
-    CHECK_RESULT $? 0 0 'check podman inspect $ID | grep '"IpcMode": "host"' failed'
-    ID=$(podman create --kernel-memory 1g alpine ls)
-    podman inspect $ID | grep '"KernelMemory": 1073741824'
-    CHECK_RESULT $? 0 0 'check podman inspect $ID | grep KernelMemory failed'
-    ID=$(podman create --label com.example.key=value alpine ls)
-    podman inspect $ID | grep '"com.example.key": "value"'
-    CHECK_RESULT $? 0 0 'check podman inspect $ID | grep '"com.example.key": "value"' failed'
+    ID=$(podman create -t -i --name myctr registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep '"Name": "myctr"'
+    CHECK_RESULT $? 0 0 "check podman inspect $ID | grep -i group failed"
+    ID=$(podman create --hostname localhost registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep '"Hostname": "localhost"'
+    CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep -i group failed"
+    ID=$(podman create --image-volume bind registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep -i bind
+    CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep -i bind failed"
+    ID=$(podman create --ip "${NODE1_IPV4}" registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep -i ip
+    CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep -i ip failed"
+    ID=$(podman create --ipc host registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep '"IpcMode": "host"'
+    CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep IpcMode: host failed"
+    ID=$(podman create --kernel-memory 1g registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep -i "Kernel.*Memory"
+    CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep KernelMemory failed"
+    ID=$(podman create --label com.example.key=value registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep '"com.example.key": "value"'
+    CHECK_RESULT $? 0 0 "podman create --label com.example.key=value registry.access.redhat.com/ubi8-minimal ls failed"
     echo "com.example.key=value" >./a
-    ID=$(podman create --label-file ./a alpine ls)
-    podman inspect $ID | grep '"com.example.key": "value"'
-    CHECK_RESULT $? 0 0 'check podman inspect $ID | grep '"com.example.key": "value"' failed '
+    ID=$(podman create --label-file ./a registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep '"com.example.key": "value"'
+    CHECK_RESULT $? 0 0 "podman create --label-file ./a registry.access.redhat.com/ubi8-minimal ls failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

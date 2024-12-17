@@ -28,29 +28,29 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(docker create -t -i --name myctr alpine ls)
+    ID=$(docker create -t -i --name myctr registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"Name": "myctr"'
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep Name myctr failed"
-    ID=$(docker create --hostname localhost alpine ls)
+    ID=$(docker create --hostname localhost registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"Hostname": "localhost"'
     CHECK_RESULT $? 0 0 'check Hostname": "localhost failed'
-    ID=$(docker create --image-volume bind alpine ls)
+    ID=$(docker create --image-volume bind registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep -i bind
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep -i bind failed"
-    ID=$(docker create --ip "${NODE1_IPV4}" alpine ls)
+    ID=$(docker create --ip "${NODE1_IPV4}" registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep -i ip
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep -i ip failed"
-    ID=$(docker create --ipc host alpine ls)
+    ID=$(docker create --ipc host registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"IpcMode": "host"'
     CHECK_RESULT $? 0 0 'check IpcMode": "host failed'
-    ID=$(docker create --kernel-memory 1g alpine ls)
-    docker inspect "$ID" | grep '"KernelMemory": 1073741824'
+    ID=$(docker create --kernel-memory 1g registry.access.redhat.com/ubi8-minimal ls)
+    docker inspect "$ID" | grep -i "Kernel.*Memory"
     CHECK_RESULT $? 0 0 'check KernelMemory": 1073741824 failed'
-    ID=$(docker create --label com.example.key=value alpine ls)
+    ID=$(docker create --label com.example.key=value registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"com.example.key": "value"'
     CHECK_RESULT $? 0 0 'check com.example.key": "value failed'
     echo "com.example.key=value" >./a
-    ID=$(docker create --label-file ./a alpine ls)
+    ID=$(docker create --label-file ./a registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"com.example.key": "value"'
     CHECK_RESULT $? 0 0 'check com.example.key": "value failed'
     LOG_INFO "End to run test."

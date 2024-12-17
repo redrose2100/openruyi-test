@@ -30,12 +30,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    podman create --name postgres docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check podman create --name postgres docker.io/library/nginx failed'
-    podman create --name test1 docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check podman create --name test1 docker.io/library/nginx failed'
-    podman create --name new_name docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check podman create --name new_name docker.io/library/nginx failed'
+    podman create --name postgres -t registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check podman create --name postgres -t registry.access.redhat.com/ubi8-minimal failed'
+    podman create --name test1 -t registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check podman create --name test1 -t registry.access.redhat.com/ubi8-minimal failed'
+    podman create --name new_name -t registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check podman create --name new_name -t registry.access.redhat.com/ubi8-minimal failed'
     podman ps -a | grep -E "postgres|test1|new_name"
     CHECK_RESULT $? 0 0 'check podman ps -all | grep -E "postgres|test1|new_name" failed'
     podman start postgres new_name test1

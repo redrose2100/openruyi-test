@@ -16,13 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
+# shellcheck disable=SC1091
 
 source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     podman pull registry.access.redhat.com/ubi8-minimal
-    podman run --name postgres registry.access.redhat.com/ubi8-minimal
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -33,9 +33,9 @@ function run_test() {
     podman image history --human registry.access.redhat.com/ubi8-minimal | grep "B"
     CHECK_RESULT $? 0 0 'check podman image history --human registry.access.redhat.com/ubi8-minimal | grep "B" failed'
     podman image history --no-trunc registry.access.redhat.com/ubi8-minimal | grep "$(podman images -aq)"
-    CHECK_RESULT $? 0 0 'check podman image history --no-trunc registry.access.redhat.com/ubi8-minimal | grep "$(podman images -aq)" failed'
+    CHECK_RESULT $? 0 0 "check podman image history --no-trunc registry.access.redhat.com/ubi8-minimal failed"
     podman image history -q registry.access.redhat.com/ubi8-minimal | grep "$(podman images -aq)"
-    CHECK_RESULT $? 0 0 'check podman image history -q registry.access.redhat.com/ubi8-minimal | grep "$(podman images -aq)" failed'
+    CHECK_RESULT $? 0 0 "check podman image history -q registry.access.redhat.com/ubi8-minimal failed"
     podman image ls --filter after=registry.access.redhat.com/ubi8-minimal
     CHECK_RESULT $? 0 0 'check podman image ls --filter after=registry.access.redhat.com/ubi8-minimal failed'
     podman image ls --all | grep "registry.access.redhat.com/ubi8-minimal"
@@ -54,7 +54,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

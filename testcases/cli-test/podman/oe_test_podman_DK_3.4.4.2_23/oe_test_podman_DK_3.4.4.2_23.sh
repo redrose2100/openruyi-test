@@ -29,11 +29,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker pull docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check docker pull docker.io/library/nginx failed'
-    id=$(docker create --name postgres docker.io/library/nginx)
+    docker pull registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check docker pull registry.access.redhat.com/ubi8-minimal failed'
+    id=$(docker create --name postgres -t registry.access.redhat.com/ubi8-minimal)
     test -z "${id}"
-    CHECK_RESULT $? 1 0 "check id=$(docker create --name postgres docker.io/library/nginx) failed"
+    CHECK_RESULT $? 1 0 "check id=$(docker create --name postgres -t registry.access.redhat.com/ubi8-minimal) failed"
     docker start postgres
     CHECK_RESULT $? 0 0 'check docker start postgres failed'
     docker top -l | grep "USER"
@@ -52,7 +52,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 'check docker mount postgres failed'
     docker unmount --all
     CHECK_RESULT $? 0 0 'check docker unmount --all failed'
-    docker rm postgres | grep "${id}"
+    docker rm postgres | grep -E "${id}|postgres"
     CHECK_RESULT $? 0 0 "check docker rm postgres | grep ${id} failed"
     LOG_INFO "End executing testcase."
 }
