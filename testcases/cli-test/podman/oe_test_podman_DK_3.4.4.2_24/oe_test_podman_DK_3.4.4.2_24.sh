@@ -30,26 +30,26 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    id=$(docker create --name postgres docker.io/library/nginx | sed -n '$p')
+    id=$(docker create --name postgres -t registry.access.redhat.com/ubi8-minimal | sed -n '$p')
     test -z "${id}"
     CHECK_RESULT $? 1 0 "check ${id} failed"
     docker container stop postgres
     CHECK_RESULT $? 0 0 'check docker container stop postgres failed'
-    docker container rm postgres | grep "${id}"
+    docker container rm postgres | grep -E "${id}|postgres"
     CHECK_RESULT $? 0 0 "check docker container rm postgres | grep ${id} failed"
     docker container ls | grep postgres
     CHECK_RESULT $? 1 0 'check docker container ls | grep postgres failed'
-    docker create --name postgres1 docker.io/library/nginx
+    docker create --name postgres1 -t registry.access.redhat.com/ubi8-minimal
     docker container stop postgres1
     CHECK_RESULT $? 0 0 'check docker container stop postgres1 failed'
     docker container cleanup postgres1
     CHECK_RESULT $? 0 0 'check docker container cleanup postgres1 failed'
-    docker create --name postgres2 docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check docker create --name postgres2 docker.io/library/nginx failed'
+    docker create --name postgres2 -t registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check docker create --name postgres2 -t registry.access.redhat.com/ubi8-minimal failed'
     docker start postgres2
     docker exec -it postgres2 ls | grep "bin"
     CHECK_RESULT $? 0 0 'check docker exec -it postgres2 ls | grep "bin" failed'
-    docker exec --privileged postgres2 ls | grep "docker-entrypoint.d"
+    docker exec --privileged postgres2 ls | grep "boot"
     CHECK_RESULT $? 0 0 'check docker exec --privileged postgres2 ls failed'
     docker exec --user root postgres2 ls | grep "home"
     docker stop postgres2

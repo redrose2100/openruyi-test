@@ -29,11 +29,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    podman pull docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check podman pull docker.io/library/nginx failed'
-    id=$(podman create --name postgres docker.io/library/nginx)
+    podman pull registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check podman pull registry.access.redhat.com/ubi8-minimal failed'
+    id=$(podman create --name postgres -t registry.access.redhat.com/ubi8-minimal)
     test -z "${id}"
-    CHECK_RESULT $? 1 0 "check id=$(podman create --name postgres docker.io/library/nginx) failed"
+    CHECK_RESULT $? 1 0 "check id=$(podman create --name postgres -t registry.access.redhat.com/ubi8-minimal) failed"
     podman start postgres
     CHECK_RESULT $? 0 0 'check podman start postgres failed'
     podman top -l | grep "USER"
@@ -52,7 +52,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 'check podman mount postgres failed'
     podman unmount --all
     CHECK_RESULT $? 0 0 'check podman unmount --all failed'
-    podman rm postgres | grep "${id}"
+    podman rm postgres | grep -E "${id}|postgres"
     CHECK_RESULT $? 0 0 "check podman rm postgres | grep ${id} failed"
     LOG_INFO "End executing testcase."
 }

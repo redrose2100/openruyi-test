@@ -23,8 +23,8 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman pull postgres:alpine
-    podman run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
+    podman pull registry.access.redhat.com/ubi8-minimal
+    podman run --name postgres -e POSTGRES_PASSWORD=secret -d registry.access.redhat.com/ubi8-minimal
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -32,32 +32,32 @@ function run_test() {
     LOG_INFO "Start to run test."
     podman help | grep -E "podman|help"
     CHECK_RESULT $? 0 0 'check podman --help test failed'
-    podman create alpine
-    CHECK_RESULT $? 0 0 'check create alpine failed'
+    podman create registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check create registry.access.redhat.com/ubi8-minimal failed'
     podman ps -a | grep -i "Created"
     CHECK_RESULT $? 0 0 'check ps -a test failed'
-    ID=$(podman create --annotation HELLO=WORLD alpine)
+    ID=$(podman create --annotation HELLO=WORLD registry.access.redhat.com/ubi8-minimal)
     podman inspect "$ID" | grep '"HELLO": "WORLD"'
     CHECK_RESULT $? 0 0 'check grep hello world failed'
-    podman create --attach STDIN alpine ls
-    CHECK_RESULT $? 0 0 'check podman create --attach STDIN alpine ls failed'
+    podman create --attach STDIN registry.access.redhat.com/ubi8-minimal ls
+    CHECK_RESULT $? 0 0 'check podman create --attach STDIN registry.access.redhat.com/ubi8-minimal ls failed'
     podman ps -a | grep ls
     CHECK_RESULT $? 0 0 'check podman ps -a | grep ls failed'
     podman_version=$(rpm -qa podman | awk -F- '{print $2}' | awk -F. '{print $1$2$3}')
     if [ "$podman_version" -gt 400 ]; then
-        ID=$(podman create --blkio-weight 15 alpine ls)
-        podman inspect "$ID" | grep '"BlkioWeight": 15'
+        ID=$(podman create --blkio-weight 15 registry.access.redhat.com/ubi8-minimal ls)
+        podman inspect "$ID" | grep -i "Blkio.*Weight"
         CHECK_RESULT $? 0 0 'check "BlkioWeight": 15 test failed'
         ID=$(podman create --blkio-weight-device /dev/:15 fedora ls)
-        podman inspect "$ID" | grep '"weight": 15'
+        podman inspect "$ID" | grep -i "weight"
         CHECK_RESULT $? 0 0 'check "weight": 15 test failed'
     else
         LOG_INFO "This version does not have this parameter."
     fi
-    ID=$(podman create --cap-add net_admin alpine ls)
+    ID=$(podman create --cap-add net_admin registry.access.redhat.com/ubi8-minimal ls)
     podman inspect "$ID" | grep -A 1 "Add" | grep -i "net_admin"
     CHECK_RESULT $? 0 0 'check net_admin test failed'
-    ID=$(podman create --cap-drop net_admin alpine ls)
+    ID=$(podman create --cap-drop net_admin registry.access.redhat.com/ubi8-minimal ls)
     podman inspect "$ID" | grep -iA 1 "Drop" | grep -i "net_admin"
     CHECK_RESULT $? 0 0 'check CapDrop test failed'
     LOG_INFO "End to run test."

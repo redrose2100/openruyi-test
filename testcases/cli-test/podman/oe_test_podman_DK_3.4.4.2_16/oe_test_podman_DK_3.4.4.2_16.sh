@@ -23,42 +23,40 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman pull postgres:alpine
-    podman run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(docker create --tmpfs /tmp:rw alpine ls)
+    ID=$(docker create --tmpfs /tmp:rw registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep "/tmp:rw"
     CHECK_RESULT $? 0 0 'check /tmp:rw failed'
-    ID=$(docker create --userns host alpine ls)
+    ID=$(docker create --userns host registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep 'UsernsMode'
     CHECK_RESULT $? 0 0 'check UsernsMode failed'
-    ID=$(docker create --uts host alpine ls)
+    ID=$(docker create --uts host registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"UTSMode": "host"'
     CHECK_RESULT $? 0 0 'check UTSMode host failed'
-    ID=$(docker create --name example alpine ls)
+    ID=$(docker create --name example registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"Name": "example"'
     CHECK_RESULT $? 0 0 'check Name - example failed'
-    ID=$(docker create --volume /tmp:/tmp:z alpine ls)
+    ID=$(docker create --volume /tmp:/tmp:z registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep -i '"destination": "/tmp"'
     CHECK_RESULT $? 0 0 'check destination failed'
-    ID=$(docker create --workdir /tmp alpine ls)
+    ID=$(docker create --workdir /tmp registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"WorkingDir": "/tmp"'
     CHECK_RESULT $? 0 0 'check WorkingDir failed'
     docker rmi -f "$(docker images -q)"
     CHECK_RESULT $? 0 0 "check docker rmi -f $(docker images -q) failed"
-    docker images | grep "postgres"
-    CHECK_RESULT $? 1 0 'check docker images | grep "postgres"" failed'
-    docker pull postgres:alpine
-    docker images | grep "postgres"
-    CHECK_RESULT $? 0 0 'check docker images | grep "postgres"" failed'
+    docker images | grep "ubi8-minimal"
+    CHECK_RESULT $? 1 0 'check docker images | grep "ubi8-minimal"" failed'
+    docker pull registry.access.redhat.com/ubi8-minimal
+    docker images | grep "ubi8-minimal"
+    CHECK_RESULT $? 0 0 'check docker images | grep "ubi8-minimal"" failed'
     docker rmi --all
     CHECK_RESULT $? 0 0 'check docker rmi --all failed'
-    docker images | grep "postgres"
-    CHECK_RESULT $? 1 0 'check docker images | grep "postgres"" faileds'
+    docker images | grep "ubi8-minimal"
+    CHECK_RESULT $? 1 0 'check docker images | grep "ubi8-minimal"" faileds'
     LOG_INFO "End to run test."
 }
 

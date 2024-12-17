@@ -26,8 +26,12 @@ function pre_test() {
     deploy_env
     podman rm --all
     podman rmi --all
-    cp ../common/* .
     echo '"auths": {}' >myauths.json
+    echo "FROM ubi8/ubi:latest
+RUN dnf install -y nano" >Dockerfile
+    cp -f Dockerfile Dockerfile.simple
+    cp -f Dockerfile Dockerfile.in
+    cp -f Dockerfile Containerfile.notsosimple
     LOG_INFO "Environmental preparation is over."
 }
 

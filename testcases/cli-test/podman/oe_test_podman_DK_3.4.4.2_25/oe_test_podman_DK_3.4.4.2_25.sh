@@ -30,15 +30,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker create --name postgres docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check docker create --name postgres docker.io/library/nginx failed'
-    docker save -q -o alpine.tar docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check docker save -q -o alpine.tar docker.io/library/nginx failed'
+    docker create --name postgres -t registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check docker create --name postgres -t registry.access.redhat.com/ubi8-minimal failed'
+    docker save -q -o alpine.tar registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check docker save -q -o alpine.tar registry.access.redhat.com/ubi8-minimal failed'
     test -f ./alpine.tar
     CHECK_RESULT $? 0 0 'check test -f ./alpine.tar failed'
     docker inspect -f json postgres | grep "ID"
     CHECK_RESULT $? 0 0 'check docker inspect -f json postgres | grep "ID" failed'
-    docker inspect postgres --format "{{.ImageName}}" | grep "docker.io/library/nginx"
+    docker inspect postgres --format "{{.ImageName}}" | grep "registry.access.redhat.com/ubi8-minimal"
     CHECK_RESULT $? 0 0 'check docker inspect postgres --format failed'
     docker inspect postgres --type all --format "{{.Name}}" | grep postgres
     CHECK_RESULT $? 0 0 'check docker inspect postgres --type all --format failed'

@@ -23,19 +23,19 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman pull postgres:alpine
-    podman run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
+    podman pull registry.access.redhat.com/ubi8-minimal
+    podman run --name postgres -e POSTGRES_PASSWORD=secret -d registry.access.redhat.com/ubi8-minimal
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    podman save --compress --format docker-dir -o alp-dir postgres:alpine
-    CHECK_RESULT $? 0 0 'check podman save --compress --format docker-dir -o alp-dir postgres:alpine failed'
+    podman save --compress --format docker-dir -o alp-dir registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check podman save --compress --format docker-dir -o alp-dir registry.access.redhat.com/ubi8-minimal failed'
     test -d alp-dir
     CHECK_RESULT $? 0 0 'check test -d alp-dir failed'
-    podman save -q -o alpine.tar postgres:alpine
-    CHECK_RESULT $? 0 0 'check podman save -q -o alpine.tar postgres:alpine failed'
+    podman save -q -o alpine.tar registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check podman save -q -o alpine.tar registry.access.redhat.com/ubi8-minimal failed'
     test -f alpine.tar
     CHECK_RESULT $? 0 0 'check test -f alpine.tar failed'
     podman info | grep -E "host|insecure registries|registries|store"
@@ -58,6 +58,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
+    rm -rf alp-dir
     find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }

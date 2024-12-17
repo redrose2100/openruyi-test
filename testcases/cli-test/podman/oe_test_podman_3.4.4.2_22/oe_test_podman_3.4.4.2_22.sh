@@ -2,7 +2,7 @@
 
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
-# You can use it according to the terms and conditions of the Mulan PSL v2.
+# You can use it according to the registry.access.redhat.com/ubi8-minimals and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
@@ -30,19 +30,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    podman search --limit 5 term | wc -l | grep 6
-    CHECK_RESULT $? 0 0 'check podman search --limit 5 term | wc -l | grep 6 failed'
-    podman search --no-trunc term | grep "docker.io"
-    CHECK_RESULT $? 0 0 'check podman search --no-trunc term | grep "docker.io" failed'
-    podman search --authfile test.json term | grep -i "DESCRIPTION"
-    CHECK_RESULT $? 0 0 'check podman search --authfile test.json term | grep -i "DESCRIPTION" failed'
-    podman search json --format json | grep "json"
-    CHECK_RESULT $? 0 0 'check podman search json --format json | grep "json" failed'
-    podman search --tls-verify true | grep -i "docker.io"
-    CHECK_RESULT $? 0 0 'check podman search --tls-verify true | grep -i "docker.io" failed'
-    podman pull docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check podman pull docker.io/library/nginx failed'
-    id=$(podman create --name postgres docker.io/library/nginx | sed -n '$p')
+    podman search --limit 5 registry.access.redhat.com/ubi8-minimal | wc -l | grep 6
+    CHECK_RESULT $? 0 0 'check podman search --limit 5 registry.access.redhat.com/ubi8-minimal | wc -l | grep 6 failed'
+    podman search --no-trunc registry.access.redhat.com/ubi8-minimal | grep "ubi8-minimal"
+    CHECK_RESULT $? 0 0 'check podman search --no-trunc registry.access.redhat.com/ubi8-minimal | grep "dockerpull.org" failed'
+    podman search --authfile test.json registry.access.redhat.com/ubi8-minimal | grep -i "DESCRIPTION"
+    CHECK_RESULT $? 0 0 'check podman search --authfile test.json registry.access.redhat.com/ubi8-minimal | grep -i "DESCRIPTION" failed'
+    podman search --format json registry.access.redhat.com/ubi8-minimal | grep "}"
+    CHECK_RESULT $? 0 0 'check podman search --format json failed'
+    podman search --tls-verify=true registry.access.redhat.com/ubi8-minimal | grep -i "ubi8-minimal"
+    CHECK_RESULT $? 0 0 'check podman search --tls-verify true failed'
+    podman pull registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check podman pull registry.access.redhat.com/ubi8-minimal failed'
+    id=$(podman create --name postgres -t registry.access.redhat.com/ubi8-minimal | sed -n '$p')
     test -z "${id}"
     CHECK_RESULT $? 1 0 'check id failed'
     podman start postgres | grep postgres
@@ -62,8 +62,8 @@ function run_test() {
     podman ps -a | grep postgres | grep Exited
     podman rm "${id}"
     CHECK_RESULT $? 0 0 "check podman rm ${id} failed"
-    podman search --limit 3 fedora 2>&1 | grep "docker.io/library/fedora"
-    CHECK_RESULT $? 0 0 'check podman search --limit 3 fedora 2>&1 | grep "docker.io/library/fedora" failed'
+    podman search --limit 3 registry.access.redhat.com/ubi8-minimal 2>&1 | grep "registry.access.redhat.com/ubi8-minimal"
+    CHECK_RESULT $? 0 0 'check podman search --limit 3 fedora 2>&1 | grep "dockerpull.org/library/fedora" failed'
     LOG_INFO "End executing testcase."
 }
 

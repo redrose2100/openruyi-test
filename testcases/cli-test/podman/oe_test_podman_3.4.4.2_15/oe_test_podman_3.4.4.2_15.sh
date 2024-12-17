@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
+# shellcheck disable=SC1091
 
 source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
@@ -26,29 +27,29 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(podman create --read-only alpine ls)
-    podman inspect $ID | grep '"ReadonlyRootfs": true'
-    CHECK_RESULT $? 0 0 'check ReadonlyRootfs failed'
-    podman create --rm alpine ls
-    CHECK_RESULT $? 0 0 'check podman create --rm alpine ls failed'
-    ID=$(podman create --security-opt apparmor=unconfined alpine ls)
-    podman inspect $ID | grep 'apparmor=unconfined'
-    CHECK_RESULT $? 0 0 'check apparmor=unconfined failed'
-    ID=$(podman create --shm-size 65536k alpine ls)
-    podman inspect $ID | grep '"ShmSize": 65536000'
-    CHECK_RESULT $? 0 0 'check ShmSize: 65536000 failed'
-    ID=$(podman create --stop-signal 20 alpine ls)
-    podman inspect $ID | grep '"StopSignal": 20'
-    CHECK_RESULT $? 0 0 'check StopSignal failed'
-    podman create --stop-timeout 10 alpine ls
-    CHECK_RESULT $? 0 0 'check podman create --stop-timeout 10 alpine ls failed'
+    ID=$(podman create --read-only registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep '"ReadonlyRootfs": true'
+    CHECK_RESULT $? 0 0 "check ReadonlyRootfs failed"
+    podman create --rm registry.access.redhat.com/ubi8-minimal ls
+    CHECK_RESULT $? 0 0 "check podman create --rm registry.access.redhat.com/ubi8-minimal ls failed"
+    ID=$(podman create --security-opt apparmor=unconfined registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep 'apparmor=unconfined'
+    CHECK_RESULT $? 0 0 "check apparmor=unconfined failed"
+    ID=$(podman create --shm-size 65536k registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep -i "Shm.*Size"
+    CHECK_RESULT $? 0 0 "check ShmSize: 65536000 failed"
+    ID=$(podman create --stop-signal 20 registry.access.redhat.com/ubi8-minimal ls)
+    podman inspect "$ID" | grep '"StopSignal": 20'
+    CHECK_RESULT $? 0 0 "check StopSignal failed"
+    podman create --stop-timeout 10 registry.access.redhat.com/ubi8-minimal ls
+    CHECK_RESULT $? 0 0 "check podman create --stop-timeout 10 registry.access.redhat.com/ubi8-minimal ls failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    rm -rf $(ls | grep -vE ".sh")
+    find . -type f ! -name '*.sh' -exec rm -f {} +
     LOG_INFO "End to restore the test environment."
 }
 

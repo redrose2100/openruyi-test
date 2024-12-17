@@ -30,15 +30,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    podman create --name postgres docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check podman create --name postgres docker.io/library/nginx failed'
-    podman save -q -o alpine.tar docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check podman save -q -o alpine.tar docker.io/library/nginx failed'
+    podman create --name postgres -t registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check podman create --name postgres -t registry.access.redhat.com/ubi8-minimal failed'
+    podman save -q -o alpine.tar registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check podman save -q -o alpine.tar registry.access.redhat.com/ubi8-minimal failed'
     test -f ./alpine.tar
     CHECK_RESULT $? 0 0 'check test -f ./alpine.tar failed'
     podman inspect -f json postgres | grep "ID"
     CHECK_RESULT $? 0 0 'check podman inspect -f json postgres | grep "ID" failed'
-    podman inspect postgres --format "{{.ImageName}}" | grep "docker.io/library/nginx"
+    podman inspect postgres --format "{{.ImageName}}" | grep "registry.access.redhat.com/ubi8-minimal"
     CHECK_RESULT $? 0 0 'check podman inspect postgres --format failed'
     podman inspect postgres --type all --format "{{.Name}}" | grep postgres
     CHECK_RESULT $? 0 0 'check podman inspect postgres --type all --format failed'

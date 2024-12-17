@@ -26,8 +26,12 @@ function pre_test() {
     deploy_env
     docker rm --all
     docker rmi --all
-    cp ../common/* .
     echo '"auths": {}' >myauths.json
+    echo "FROM ubi8/ubi:latest
+RUN dnf install -y nano" >Dockerfile
+    cp -f Dockerfile Dockerfile.simple
+    cp -f Dockerfile Dockerfile.in
+    cp -f Dockerfile Containerfile.notsosimple
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -36,7 +40,7 @@ function run_test() {
     id=$(docker build . | sed -n '$p')
     test -z "${id}"
     CHECK_RESULT $? 1 0 'check id failed'
-    docker build -f - . <Dockerfile | grep "${id}"
+    docker build -f - . <./Dockerfile | grep "${id}"
     CHECK_RESULT $? 0 0 "check cat ./Dockerfile | docker build -f - . | grep ${id} failed"
     docker build --runtime-flag debug . | grep "${id}"
     CHECK_RESULT $? 0 0 "check docker build --runtime-flag debug . | grep ${id} failed"

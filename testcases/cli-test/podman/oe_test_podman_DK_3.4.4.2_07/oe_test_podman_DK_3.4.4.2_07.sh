@@ -23,7 +23,7 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    docker run --name postgres -dt -p 80:80/tcp docker.io/library/nginx
+    docker run --name postgres -dt -p 80:80/tcp registry.access.redhat.com/ubi8-minimal
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -53,10 +53,10 @@ function run_test() {
     docker ps -a | grep "Exited"
     CHECK_RESULT $? 0 0 'check docker ps -a | grep "Exited" failed'
     docker start postgres
-    docker diff postgres | grep -E "C|A"
-    CHECK_RESULT $? 0 0 'check docker diff postgres | grep -E "C|A" failed'
-    docker diff --format json postgres | grep -E "changed|added"
-    CHECK_RESULT $? 0 0 'check docker diff --format json postgres | grep -E "changed|added" failed'
+    docker diff registry.access.redhat.com/ubi8-minimal | grep -E "C|A"
+    CHECK_RESULT $? 0 0 'check docker diff registry.access.redhat.com/ubi8-minimal | grep -E "C|A" failed'
+    docker diff --format json registry.access.redhat.com/ubi8-minimal | grep -E "changed|added"
+    CHECK_RESULT $? 0 0 'check docker diff --format json registry.access.redhat.com/ubi8-minimal | grep -E "changed|added" failed'
     docker version | grep "$(rpm -qa docker | awk -F "-" '{print $2}')"
     CHECK_RESULT $? 0 0 'check docker version | grep rpm -qa docker failed'
     LOG_INFO "End to run test."
