@@ -377,6 +377,10 @@
 	{
             "name": "oe_test_interface_powerapi_103",
             "machine type": "physical"
+	},
+	{
+            "name": "oe_test_interface_powerapi_104",
+            "machine type": "physical"
         }
     ]
 }
