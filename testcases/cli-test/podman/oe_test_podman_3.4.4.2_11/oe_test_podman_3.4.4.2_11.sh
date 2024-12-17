@@ -23,36 +23,34 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman pull postgres:alpine
-    podman run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(podman create --dns 255.255.255.0 alpine ls)
+    ID=$(podman create --dns 255.255.255.0 registry.access.redhat.com/ubi8-minimal ls)
     podman inspect "$ID" | grep "255.255.255.0"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep '255.255.255.0' failed"
-    ID=$(podman create --dns-opt 8.8.8.8 alpine ls)
+    ID=$(podman create --dns-opt 8.8.8.8 registry.access.redhat.com/ubi8-minimal ls)
     podman inspect "$ID" | grep "8.8.8.8"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep '8.8.8.8' failed"
-    ID=$(podman create --dns-search domain alpine ls)
+    ID=$(podman create --dns-search domain registry.access.redhat.com/ubi8-minimal ls)
     podman inspect "$ID" | grep "domain"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep '8.8.8.8' failed"
-    ID=$(podman create --name ctr --env ENV*****=b alpine printenv ENV*****)
+    ID=$(podman create --name ctr --env ENV*****=b registry.access.redhat.com/ubi8-minimal printenv ENV*****)
     podman inspect "$ID" | grep "ENV****"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep "ENV****" failed"
     echo "ENV*****=b" >./a
-    ID=$(podman create --env-file ./a alpine ls)
+    ID=$(podman create --env-file ./a registry.access.redhat.com/ubi8-minimal ls)
     podman inspect "$ID" | grep "ENV"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep 'ENV' failed"
-    ID=$(podman create --expose 1 alpine ls)
+    ID=$(podman create --expose 1 registry.access.redhat.com/ubi8-minimal ls)
     podman inspect "$ID" | grep "0"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep '0' failed"
     ID=$(podman create --uidmap 0:30000:7000 --gidmap 0:30000:7000 fedora echo hello)
     podman inspect "$ID" | grep "gid"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep 'gid' failed"
-    ID=$(podman create --group-add groups alpine ls)
+    ID=$(podman create --group-add groups registry.access.redhat.com/ubi8-minimal ls)
     podman inspect "$ID" | grep -i group
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep -i group failed"
     LOG_INFO "End to run test."

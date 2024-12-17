@@ -23,38 +23,36 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    docker pull postgres:alpine
-    docker run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(docker create --cgroup-parent /tmp alpine ls)
+    ID=$(docker --cgroup-manager=cgroupfs create --cgroup-parent /tmp registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"CgroupParent"'
     CHECK_RESULT $? 0 0 "check docker inspect $ID failed"
-    ID=$(docker create --cidfile cidfile alpine ls)
+    ID=$(docker create --cidfile cidfile registry.access.redhat.com/ubi8-minimal ls)
     grep "$ID" cidfile
     CHECK_RESULT $? 0 0 "check grep $ID cidfile failed"
-    ID=$(docker create --conmon-pidfile ./ alpine ls)
+    ID=$(docker create --conmon-pidfile ./ registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep "$ID"
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep $ID failed"
-    ID=$(docker create --cpu-period 10000 alpine ls)
+    ID=$(docker create --cpu-period 10000 registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"CpuPeriod": 10000'
     CHECK_RESULT $? 0 0 "check docker inspect $ID CpuPeriod failed"
-    ID=$(docker create --cpu-quota 1001 alpine ls)
+    ID=$(docker create --cpu-quota 1001 registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"CpuQuota": 1001'
     CHECK_RESULT $? 0 0 "check docker inspect $ID CpuQuota failed"
-    ID=$(docker create --cpu-rt-period 1 alpine ls)
+    ID=$(docker create --cpu-rt-period 1 registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"CpuRealtimePeriod": 1'
     CHECK_RESULT $? 0 0 "check docker inspect $ID CpuRealtimePeriod failed"
-    ID=$(docker create --cpu-rt-runtime 2 alpine ls)
+    ID=$(docker create --cpu-rt-runtime 2 registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"CpuRealtimeRuntime": 2'
     CHECK_RESULT $? 0 0 "check docker inspect $ID CpuRealtimeRuntime failed"
-    ID=$(docker create --cpu-shares 3 alpine ls)
+    ID=$(docker create --cpu-shares 3 registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"CpuShares": 3'
     CHECK_RESULT $? 0 0 "check docker inspect $ID CpuShares failed"
-    ID=$(docker create --cpus 4 alpine ls)
+    ID=$(docker create --cpus 4 registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep '"CpuQuota": 400000'
     CHECK_RESULT $? 0 0 "check docker inspect $ID failed"
     LOG_INFO "End to run test."

@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   podman-run
 # ############################################
+# shellcheck disable=SC1091
 
 source ../common/common3.4.4.2_podman.sh
 function config_params() {
@@ -35,14 +36,14 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     podman pull registry.access.redhat.com/ubi8-minimal
     CHECK_RESULT $? 0 0 'check podman pull registry.access.redhat.com/ubi8-minimal failed'
-    podman run --name ${name} registry.access.redhat.com/ubi8-minimal
-    CHECK_RESULT $? 0 0 'check podman run --name ${name} registry.access.redhat.com/ubi8-minimal failed'
-    podman ps -a | grep ${name}
-    CHECK_RESULT $? 0 0 'check podman ps -a | grep ${name} failed'
-    podman stop ${name} | grep ${name}
-    CHECK_RESULT $? 0 0 'check podman stop ${name} | grep ${name} failed'
-    podman rm ${name}
-    CHECK_RESULT $? 0 0 'check podman rm ${name} failed'
+    podman run --name "${name}" registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 "check podman run --name ${name} registry.access.redhat.com/ubi8-minimal failed"
+    podman ps -a | grep "${name}"
+    CHECK_RESULT $? 0 0 "check podman ps -a | grep ${name} failed"
+    podman stop "${name}" | grep "${name}"
+    CHECK_RESULT $? 0 0 "check podman stop ${name} | grep ${name} failed"
+    podman rm "${name}"
+    CHECK_RESULT $? 0 0 "check podman rm ${name} failed"
     LOG_INFO "End executing testcase."
 }
 
@@ -52,4 +53,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

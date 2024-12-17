@@ -30,12 +30,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker create --name postgres docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check docker create --name postgres docker.io/library/nginx failed'
-    docker create --name test1 docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check docker create --name test1 docker.io/library/nginx failed'
-    docker create --name new_name docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check docker create --name new_name docker.io/library/nginx failed'
+    docker create --name postgres -t registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check docker create --name postgres -t registry.access.redhat.com/ubi8-minimal failed'
+    docker create --name test1 -t registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check docker create --name test1 -t registry.access.redhat.com/ubi8-minimal failed'
+    docker create --name new_name -t registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check docker create --name new_name -t registry.access.redhat.com/ubi8-minimal failed'
     docker ps -a | grep -E "postgres|test1|new_name"
     CHECK_RESULT $? 0 0 'check docker ps -all | grep -E "postgres|test1|new_name" failed'
     docker start postgres new_name test1

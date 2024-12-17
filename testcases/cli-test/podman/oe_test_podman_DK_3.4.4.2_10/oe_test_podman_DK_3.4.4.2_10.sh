@@ -23,8 +23,6 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    docker pull postgres:alpine
-    docker run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -33,29 +31,29 @@ function run_test() {
     if lscpu | grep -i cpu: | grep 1; then
         LOG_INFO "Insufficient number of CPUs."
     else
-        ID=$(docker create --cpuset-cpus 1 alpine ls)
+        ID=$(docker create --cpuset-cpus 1 registry.access.redhat.com/ubi8-minimal ls)
         docker inspect "$ID" | grep -i '"CpuSetCpus": "1"'
         CHECK_RESULT $? 0 0 "check docker inspect $ID | grep -i CpuSetCpus failed"
     fi
-    ID=$(docker create --cpuset-mems 0 alpine ls)
+    ID=$(docker create --cpuset-mems 0 registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep -i '"CpuSetMems": "0"'
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep -i CpuSetMems failed"
-    ID=$(docker create alpine ls)
-    docker inspect "$ID" | grep -i alpine
-    CHECK_RESULT $? 0 0 "check docker inspect $ID | grep -i alpine failed"
-    ID=$(docker create --device /dev/dm-0 alpine ls)
+    ID=$(docker create registry.access.redhat.com/ubi8-minimal ls)
+    docker inspect "$ID" | grep -i registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 "check docker inspect $ID | grep -i registry.access.redhat.com/ubi8-minimal failed"
+    ID=$(docker create --device /dev/dm-0 registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep -i '"PathOnHost": "/dev/dm-0"'
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep -i PathOnHost failed"
-    ID=$(docker create --device-read-bps=/dev/:1mb alpine ls)
+    ID=$(docker create --device-read-bps=/dev/:1mb registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep -A 5 -i "BlkioDeviceReadBps"
     CHECK_RESULT $? 0 0 "check docker inspect $ID grep -A 5 -i BlkioDeviceReadBps failed"
-    ID=$(docker create --device-read-iops=/dev/:1000 alpine ls)
+    ID=$(docker create --device-read-iops=/dev/:1000 registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep -A 5 -i "BlkioDeviceReadIOps"
     CHECK_RESULT $? 0 0 "check docker inspect $ID grep -A 5 -i BlkioDeviceReadIOps failed"
-    ID=$(docker create --device-write-bps=/dev/:1mb alpine ls)
+    ID=$(docker create --device-write-bps=/dev/:1mb registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep -A 5 -i "BlkioDeviceWriteBps"
     CHECK_RESULT $? 0 0 "check docker inspect $ID grep -A 5 -i BlkioDeviceWriteBps failed"
-    ID=$(docker create --device-write-iops=/dev/:1000 alpine ls)
+    ID=$(docker create --device-write-iops=/dev/:1000 registry.access.redhat.com/ubi8-minimal ls)
     docker inspect "$ID" | grep -A 5 -i "BlkioDeviceWriteIOps"
     CHECK_RESULT $? 0 0 "check docker inspect $ID grep -A 5 -i BlkioDeviceWriteIOps failed"
     LOG_INFO "End to run test."

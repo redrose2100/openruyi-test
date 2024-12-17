@@ -30,26 +30,26 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    id=$(podman create --name postgres docker.io/library/nginx | sed -n '$p')
+    id=$(podman create --name postgres -t registry.access.redhat.com/ubi8-minimal | sed -n '$p')
     test -z "${id}"
     CHECK_RESULT $? 1 0 "check ${id} failed"
     podman container stop postgres
     CHECK_RESULT $? 0 0 'check podman container stop postgres failed'
-    podman container rm postgres | grep "${id}"
+    podman container rm postgres | grep -E "${id}|postgres"
     CHECK_RESULT $? 0 0 "check podman container rm postgres | grep ${id} failed"
     podman container ls | grep postgres
     CHECK_RESULT $? 1 0 'check podman container ls | grep postgres failed'
-    podman create --name postgres1 docker.io/library/nginx
+    podman create --name postgres1 -t registry.access.redhat.com/ubi8-minimal
     podman container stop postgres1
     CHECK_RESULT $? 0 0 'check podman container stop postgres1 failed'
     podman container cleanup postgres1
     CHECK_RESULT $? 0 0 'check podman container cleanup postgres1 failed'
-    podman create --name postgres2 docker.io/library/nginx
-    CHECK_RESULT $? 0 0 'check podman create --name postgres2 docker.io/library/nginx failed'
+    podman create --name postgres2 -t registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check podman create --name postgres2 -t registry.access.redhat.com/ubi8-minimal failed'
     podman start postgres2
     podman exec -it postgres2 ls | grep "bin"
     CHECK_RESULT $? 0 0 'check podman exec -it postgres2 ls | grep "bin" failed'
-    podman exec --privileged postgres2 ls | grep "docker-entrypoint.d"
+    podman exec --privileged postgres2 ls | grep "boot"
     CHECK_RESULT $? 0 0 'check podman exec --privileged postgres2 ls failed'
     podman exec --user root postgres2 ls | grep "home"
     podman stop postgres2

@@ -22,10 +22,10 @@ source "../common/common3.4.4.2_podman.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    echo '{"auth":{}}' > myauths.json 
+    echo '{"auth":{}}' >myauths.json
     deploy_env
-    podman pull postgres:alpine
-    podman run --name postgres -e POSTGRES_PASSWORD=secret -d postgres:alpine
+    podman pull registry.access.redhat.com/ubi8-minimal
+    podman run --name postgres -e POSTGRES_PASSWORD=secret -d registry.access.redhat.com/ubi8-minimal
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -38,7 +38,7 @@ function run_test() {
     expect <<EOF
         set time 30
         log_file testlog
-        spawn docker login docker.211678.top 
+        spawn docker login registry.access.redhat.com/ubi8-minimal 
         expect {
             "Username*" { send "umohnani\r"; exp_continue }
             "Password:" { send "\r" }
@@ -48,12 +48,12 @@ EOF
     grep -i "Login Succeeded" testlog
     CHECK_RESULT $? 0 0 'check grep -i "Login Succeeded" testlog failed'
     rm -rf testlog
-    docker logout docker.211678.top
-    CHECK_RESULT $? 0 0 'check docker logout docker.211678.top failed'
+    docker logout registry.access.redhat.com/ubi8-minimal
+    CHECK_RESULT $? 0 0 'check docker logout registry.access.redhat.com/ubi8-minimal failed'
     expect <<EOF
         set time 30
         log_file testlog
-        spawn docker login --authfile myauths.json docker.211678.top
+        spawn docker login --authfile myauths.json registry.access.redhat.com/ubi8-minimal
         expect {
             "Username*" { send "umohnani\r"; exp_continue }
             "Password:" { send "\r" }
@@ -63,12 +63,12 @@ EOF
     grep -i "Login Succeeded" testlog
     CHECK_RESULT $? 0 0 'check grep -i "Login Succeeded" testlog failed'
     rm -rf testlog
-    docker logout --authfile myauths.json docker.211678.top
+    docker logout --authfile myauths.json registry.access.redhat.com/ubi8-minimal
     CHECK_RESULT $?
     expect <<EOF
         set time 30
         log_file testlog
-        spawn docker login -u umohnani docker.211678.top
+        spawn docker login -u umohnani registry.access.redhat.com/ubi8-minimal
         expect {
             "Password:" { send "\r" }
         }
@@ -80,7 +80,7 @@ EOF
     expect <<EOF
         set time 30
         log_file testlog
-        spawn docker login --tls-verify=false docker.211678.top
+        spawn docker login --tls-verify=false registry.access.redhat.com/ubi8-minimal
         expect {
             "Username*" { send "umohnani\r"; exp_continue }
             "Password:" { send "\r" }
