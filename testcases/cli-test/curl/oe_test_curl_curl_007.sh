@@ -35,7 +35,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check curl --tlsv1.3 failed"
     curl https://www.baidu.com -A "Mozilla/5.0"
     CHECK_RESULT $? 0 0 "check curl -A failed"
-    curl -v www.sina.com
+    curl -v https://www.sina.com.cn
     CHECK_RESULT $? 0 0 "check curl -v failed"
     curl -V | grep "$vers"
     CHECK_RESULT $? 0 0 "check curl -V failed"
@@ -46,9 +46,9 @@ function run_test() {
         > "local_port": "%{local_port}"
         > }' http://www.baidu.com 2>&1 | grep "time_namelookup"
     CHECK_RESULT $? 0 0 "check curl -w failed"
-    curl --trace output1.txt www.sina.com && test -f output1.txt
+    curl --trace output1.txt https://www.sina.com.cn && test -f output1.txt
     CHECK_RESULT $? 0 0 "check curl --trace failed"
-    curl --trace-ascii output2.txt www.sina.com && test -f output2.txt
+    curl --trace-ascii output2.txt https://www.sina.com.cn && test -f output2.txt
     CHECK_RESULT $? 0 0 "check curl --trace-ascii failed"
     currentTime=$(date "+%H:%M")
     curl --trace-time --trace output3.txt https://www.baidu.com && grep "$currentTime" output3.txt
