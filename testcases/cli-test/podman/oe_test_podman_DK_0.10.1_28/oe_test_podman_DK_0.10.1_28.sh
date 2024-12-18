@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Backup / restore database
 # ############################################
+# shellcheck disable=SC1091
 
 source ../common/common_podman.sh
 function pre_test() {
@@ -29,26 +30,26 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     docker pod create --infra=false
     CHECK_RESULT $?
-    name=$(docker pod ls | sed -n 2p | awk {'print$2'})
+    name=$(docker pod ls | sed -n 2p | awk '{print $2}')
     CHECK_RESULT $?
-    docker pod ls | grep ${name}
+    docker pod ls | grep "${name}"
     CHECK_RESULT $?
-    docker pod ps | grep ${name}
+    docker pod ps | grep "${name}"
     CHECK_RESULT $?
-    docker pod list | grep ${name}
+    docker pod list | grep "${name}"
     CHECK_RESULT $?
-    docker pod pause ${name}
+    docker pod pause "${name}"
     CHECK_RESULT $?
-    docker pod unpause ${name}
+    docker pod unpause "${name}"
     CHECK_RESULT $?
-    docker pod inspect ${name}
+    docker pod inspect "${name}"
     CHECK_RESULT $?
-    nohup openvpn docker pod stats ${name} >/dev/null 2>&1 &
-    local_pid=$(echo $!)
+    nohup docker pod stats "${name}" >/dev/null 2>&1 &
+    local_pid=$(pgrep -f "podman pod stats")
     CHECK_RESULT $?
-    docker pod stop ${name}
+    docker pod stop "${name}"
     CHECK_RESULT $?
-    docker pod rm ${name}
+    docker pod rm "${name}"
     CHECK_RESULT $?
     LOG_INFO "End executing testcase."
 }
@@ -56,8 +57,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     clear_env
-    kill -9 $local_pid
+    kill -9 "$local_pid"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
