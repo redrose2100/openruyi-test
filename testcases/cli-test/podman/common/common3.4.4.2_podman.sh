@@ -20,7 +20,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function deploy_env() {
     DNF_INSTALL "podman podman-docker"
     echo -e "
-unqualified-search-registries = ['docker.io']    
+unqualified-search-registries = ['registry.access.redhat.com','docker.io']    
 [[registry]]
 prefix = 'docker.io'
 #location = 'a74l47xi.mirror.aliyuncs.com'
