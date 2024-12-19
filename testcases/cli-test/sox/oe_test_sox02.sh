@@ -38,13 +38,12 @@ function run_test() {
   sox output.wav -r 48k -c 1 -b 16 output1.wav
   test -e  output1.wav
   CHECK_RESULT $? 0 0 "output1.wav not exist"
-  channel_after=$(soxi output1.wav |grep Channels | awk -F ":" '{print $2}')
-  samplerate_after=$(soxi output1.wav |grep "Sample Rate" | awk -F ":" '{print $2}')
-  Precision_after=$(soxi output1.wav |grep "Precision" | awk -F ":" '{print $2}')
-  CHECK_RESULT "$(eval "$channel_after")" "1" 0 "check channel data not correct"
-  CHECK_RESULT "$(eval "$samplerate_after")" "48000" 0 "check samplerate not correct"
-  CHECK_RESULT "$(eval "$Precision_after")" "16-bit" 0 "check Precision not correct"
-
+  channel_after=$(soxi output1.wav |grep Channels | awk '{print $3}')
+  samplerate_after=$(soxi output1.wav |grep "Sample Rate" | awk '{print $4}')
+  Precision_after=$(soxi output1.wav |grep "Precision" | awk '{print $3}')
+  CHECK_RESULT "$channel_after" "1" 0 "check channel data not correct"
+  CHECK_RESULT "$samplerate_after" "48000" 0 "check samplerate not correct"
+  CHECK_RESULT "$Precision_after" "16-bit" 0 "check Precision not correct"
   sox output1.wav output2.wav speed 2
   test -e  output2.wav
   CHECK_RESULT $? 0 0 "output2.wav not exist"
