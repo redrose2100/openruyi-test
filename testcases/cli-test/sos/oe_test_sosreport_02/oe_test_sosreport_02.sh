@@ -20,98 +20,90 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-	LOG_INFO "Start to prepare the test environment."
-	DNF_INSTALL "sos tar"
-	LOG_INFO "Finish preparing the test environment."
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "sos tar"
+    LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
-	LOG_INFO "Start to run test."
+    LOG_INFO "Start to run test."
+    if [ "${NODE1_FRAME}" == "riscv64" ]; then
+        name="sosreport-openeuler-riscv64"
+    else
+        name="sosreport-localhost"
+    fi
 
-	arch=$(arch)
-	if [ "$arch" == "x86_64" ]; then
-		name="sosreport-localhost"
-	elif [ "$arch" == "riscv64" ]; then
-	 	name="sosreport-openeuler-riscv64"
-	fi
-
-	# sleep 120
-	expect <<EOF
-		spawn sos report --debug --case-id debug
-		expect "" {send "\r"}
-		expect "" {send "\r"}
-		sleep 240
-		expect eof
+    expect <<EOF
+        spawn sos report --debug --case-id debug
+        expect "" {send "\r"}
+        expect "" {send "\r"}
+        sleep 240
+        expect eof
 EOF
-	test -f /var/tmp/$name-debug-"$(date +%Y-%m-%d)"-*.tar.xz
-	CHECK_RESULT $?
-	# sleep 120
-	expect <<EOF
-		spawn sos report --desc "test description content" --case-id desc
-		expect "" {send "\r"}
-		expect "" {send "\r"}
-		sleep 240
-		expect eof
+    test -f /var/tmp/$name-debug-"$(date +%Y-%m-%d)"-*.tar.xz
+    CHECK_RESULT $?
+    expect <<EOF
+        spawn sos report --desc "test description content" --case-id desc
+        expect "" {send "\r"}
+        expect "" {send "\r"}
+        sleep 240
+        expect eof
 EOF
-	test -f /var/tmp/$name-desc-"$(date +%Y-%m-%d)"-*.tar.xz
-	CHECK_RESULT $?
-	# sleep 120
-	expect <<EOF
-		spawn sos report --experimental --case-id experimental
-		expect "" {send "\r"}
-		expect "" {send "\r"}
-		sleep 240
-		expect eof
+    test -f /var/tmp/$name-desc-"$(date +%Y-%m-%d)"-*.tar.xz
+    CHECK_RESULT $?
+    expect <<EOF
+        spawn sos report --experimental --case-id experimental
+        expect "" {send "\r"}
+        expect "" {send "\r"}
+        sleep 240
+        expect eof
 EOF
-	test -f /var/tmp/$name-experimental-"$(date +%Y-%m-%d)"-*.tar.xz
-	CHECK_RESULT $?
-	# sleep 120
-	expect <<EOF
-		spawn sos report -e dnf,rpm,selinux,dovecot --case-id enable-plugins
-		expect "" {send "\r"}
-		expect "" {send "\r"}
-		sleep 240
-		expect eof
+    test -f /var/tmp/$name-experimental-"$(date +%Y-%m-%d)"-*.tar.xz
+    CHECK_RESULT $?
+    expect <<EOF
+        spawn sos report -e dnf,rpm,selinux,dovecot --case-id enable-plugins
+        expect "" {send "\r"}
+        expect "" {send "\r"}
+        sleep 240
+        expect eof
 EOF
-	test -f /var/tmp/$name-enable-plugins-"$(date +%Y-%m-%d)"-*.tar.xz
-	CHECK_RESULT $?
-	sos report -l | grep -E "on|off|inactive"
-	CHECK_RESULT $?
-	# sleep 180
-	expect <<EOF
-		spawn sos report -k dnf.history-info --case-id plugin-option
-		expect "" {send "\r"}
-		expect "" {send "\r"}
-		sleep 240
-		expect eof
+    test -f /var/tmp/$name-enable-plugins-"$(date +%Y-%m-%d)"-*.tar.xz
+    CHECK_RESULT $?
+    sos report -l | grep -E "on|off|inactive"
+    CHECK_RESULT $?
+    expect <<EOF
+        spawn sos report -k dnf.history-info --case-id plugin-option
+        expect "" {send "\r"}
+        expect "" {send "\r"}
+        sleep 240
+        expect eof
 EOF
-	test -f /var/tmp/$name-plugin-option-"$(date +%Y-%m-%d)"-*.tar.xz
-	CHECK_RESULT $?
-	#sleep 120
-	expect <<EOF
-		spawn sos report --label test-label --case-id 001
-		expect "" {send "\r"}
-		expect "" {send "\r"}
-		sleep 240
-		expect eof
+    test -f /var/tmp/$name-plugin-option-"$(date +%Y-%m-%d)"-*.tar.xz
+    CHECK_RESULT $?
+    expect <<EOF
+        spawn sos report --label test-label --case-id 001
+        expect "" {send "\r"}
+        expect "" {send "\r"}
+        sleep 240
+        expect eof
 EOF
-	test -f /var/tmp/$name-test-label-001-"$(date +%Y-%m-%d)"-*.tar.xz
-	CHECK_RESULT $?
-	sos report --list-presets
-	CHECK_RESULT $?
-	LOG_INFO "End of the test."
+    test -f /var/tmp/$name-test-label-001-"$(date +%Y-%m-%d)"-*.tar.xz
+    CHECK_RESULT $?
+    sos report --list-presets
+    CHECK_RESULT $?
+    LOG_INFO "End of the test."
 }
 
 function post_test() {
-	LOG_INFO "Start to restore the test environment."
-	for file in *; do
-		if [[ ! $file =~ \.sh$ ]]; then
-			rm -rf "$file"
-		fi
-	done
-	rm -rf /var/tmp/sos*
-	DNF_REMOVE "$@"
-	LOG_INFO "Finish restoring the test environment."
+    LOG_INFO "Start to restore the test environment."
+    for file in *; do
+        if [[ ! $file =~ \.sh$ ]]; then
+            rm -rf "$file"
+        fi
+    done
+    rm -rf /var/tmp/sos*
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish restoring the test environment."
 }
 
 main "$@"
