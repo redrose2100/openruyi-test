@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_dmidecode"
+        },
+        {
+            "name": "oe_test_biosdecode"
         }
     ]
 }
