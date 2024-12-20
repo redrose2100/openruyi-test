@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/avcstat",
+    "cases": [
+        {
+            "name": "oe_test_avcstat"
+        }
+      ]
+}
+
