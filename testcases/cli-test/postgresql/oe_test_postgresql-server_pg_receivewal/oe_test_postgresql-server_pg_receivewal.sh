@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   pg_receivewal
 # ############################################
+# shellcheck disable=SC1091
 
 source ../common/lib.sh
 
@@ -30,40 +31,40 @@ function run_test() {
     CHECK_RESULT $?
     su - postgres -c "pg_receivewal -D /var/lib/pgsql/pg_receivewal --if-not-exists &"
     CHECK_RESULT $?
-    kill -9 $(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal --if-not-exists')
+    kill -9 "$(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal --if-not-exists')"
     CHECK_RESULT $?
     su - postgres -c "pg_receivewal -n -D /var/lib/pgsql/pg_receivewal &"
     CHECK_RESULT $?
     su - postgres -c "pg_receivewal -s 5 -D /var/lib/pgsql/pg_receivewal &"
     CHECK_RESULT $?
-    kill -9 $(pgrep -f 'pg_receivewal -s 5 -D /var/lib/pgsql/pg_receivewal')
+    kill -9 "$(pgrep -f 'pg_receivewal -s 5 -D /var/lib/pgsql/pg_receivewal')"
     CHECK_RESULT $?
     psql -U postgres -h 127.0.0.1 -c "SELECT * FROM pg_create_physical_replication_slot('node_a_slot');"
     CHECK_RESULT $?
     su - postgres -c "pg_receivewal -D /var/lib/pgsql/pg_receivewal -S node_a_slot &"
     CHECK_RESULT $?
-    kill -9 $(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal -S node_a_slot')
+    kill -9 "$(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal -S node_a_slot')"
     CHECK_RESULT $?
     su - postgres -c "pg_receivewal -D /var/lib/pgsql/pg_receivewal --synchronous &"
     CHECK_RESULT $?
-    kill -9 $(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal --synchronous')
+    kill -9 "$(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal --synchronous')"
     CHECK_RESULT $?
     su - postgres -c "pg_receivewal -D /var/lib/pgsql/pg_receivewal -v &"
     CHECK_RESULT $?
-    kill -9 $(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal -v')
+    kill -9 "$(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal -v')"
     CHECK_RESULT $?
     pg_receivewal -V | grep "PostgreSQL"
     CHECK_RESULT $?
     su - postgres -c "pg_receivewal -D /var/lib/pgsql/pg_receivewal -Z 3 &"
     CHECK_RESULT $?
-    kill -9 $(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal -Z 3')
+    kill -9 "$(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal -Z 3')"
     CHECK_RESULT $?
     pg_receivewal -? | grep "Usage:"
     CHECK_RESULT $?
-    su - postgres -c "pg_receivewal -D /var/lib/pgsql/pg_receivewal -h ${NODE1_IPV4} -U sstest -w -p 5432 &"
+    su - postgres -c "pg_receivewal -D /var/lib/pgsql/pg_receivewal -h $(hostname) -U postgres -w -p 5432 &"
     CHECK_RESULT $?
-    kill -9 $(pgrep -f 'pg_receivewal -D /var/lib/pgsql/pg_receivewal -h ${NODE1_IPV4} -U sstest -w -p 5432')
-    CHECK_RESULT $?    
+    kill -9 "$(pgrep -f "pg_receivewal -D /var/lib/pgsql/pg_receivewal -h $(hostname) -U postgres -w -p 5432")"
+    CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 

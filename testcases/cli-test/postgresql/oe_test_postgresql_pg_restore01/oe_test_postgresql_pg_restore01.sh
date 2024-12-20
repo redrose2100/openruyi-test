@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   pg_restore
 # ############################################
+# shellcheck disable=SC1091
 
 source ../common/lib.sh
 
@@ -27,10 +28,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    su - postgres -c "pg_restore -c testdb.dump -v" 2>&1 | grep "Completed"
+    su - postgres -c "pg_restore -c testdb.dump -v -f log1"
+    su - postgres -c "grep Completed log1"
     CHECK_RESULT $?
-    su - postgres -c "pg_restore -v -a testdb.dump" 2>&1 | grep "Completed"
+    su - postgres -c "rm -f log1"
+    su - postgres -c "pg_restore -v -a testdb.dump -f log2"
+    su - postgres -c "grep Completed log2"
     CHECK_RESULT $?
+    su - postgres -c "rm -f log2"
     su - postgres -c "dropdb testdb"
     su - postgres -c "pg_restore -C testdb.dump  -d postgres -v" 2>&1 | grep "pg_restore"
     CHECK_RESULT $?
