@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cat > test.py <<EOF
+    cat >test.py <<EOF
 from jinja2 import Template
 
 # 创建一个模板字符串
@@ -50,7 +50,7 @@ print(rendered_template)
 EOF
     test -f test.py
     CHECK_RESULT $? 0 0 " File generation failed"
-    python3 test.py  |grep "Hello"
+    python3 test.py | grep "Hello"
     CHECK_RESULT $? 0 0 "Execution failed"
     LOG_INFO "End to run test."
 }

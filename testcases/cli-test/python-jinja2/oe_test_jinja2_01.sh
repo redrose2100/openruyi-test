@@ -19,10 +19,10 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
-function pre_test(){
+function pre_test() {
     LOG_INFO "Start environment preparation."
 
-    cat > /tmp/template.html  <<EOF
+    cat >/tmp/template.html <<EOF
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,7 +33,7 @@ function pre_test(){
 </body>
 </html>
 EOF
-    cat > /tmp/test-jinja2.py  <<EOF
+    cat >/tmp/test-jinja2.py <<EOF
 import unittest
 from jinja2 import Template
 class TestJinja2Template(unittest.TestCase):
@@ -64,12 +64,12 @@ function run_test() {
     LOG_INFO "Start to run test."
     rpm -qa | grep python3-jinja2
     CHECK_RESULT $? 0 0 "Return value error"
-    cd /tmp && python3 test-jinja2.py > /tmp/jinja2_test 2>&1
+    cd /tmp && python3 test-jinja2.py >/tmp/jinja2_test 2>&1
     test -f /tmp/jinja2_test
     CHECK_RESULT $? 0 0 "Generate test fail "
     grep "Ran 1 test" /tmp/jinja2_test
-    CHECK_RESULT $? 0 0 "jinja2_test is error" 
-    LOG_INFO "End to run test."  
+    CHECK_RESULT $? 0 0 "jinja2_test is error"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
@@ -80,4 +80,3 @@ function post_test() {
 }
 
 main "$@"
-

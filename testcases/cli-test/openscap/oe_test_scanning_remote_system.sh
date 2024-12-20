@@ -54,6 +54,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE "$@"
+    SLEEP_WAIT 3
     DNF_REMOVE 2 "openscap scap-security-guide"
     rm -rf /tmp/remote-vulnerability.html
     LOG_INFO "Finish environment cleanup!"

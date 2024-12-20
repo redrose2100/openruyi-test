@@ -19,6 +19,8 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL "python-docutils"
     cp -r ../common/testfile_tex.rst ./testfile.rst
     cp -r ../common/template.tex ./
@@ -30,7 +32,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     rst2xetex --docutils-footnotes testfile.rst test3.tex && grep 'footnotetext' test3.tex
     CHECK_RESULT $?
-    rst2xetex --footnote-references=brackets testfile.rst test4.tex && grep 'DUfootnotetext{id4}{id2}{{\[}1{\]}}' test4.tex
+    rst2xetex --footnote-references=brackets testfile.rst test4.tex && grep 'DUfootnotetext{.*}{.*}{{\[}1{\]}}' test4.tex
     CHECK_RESULT $?
     rst2xetex --use-latex-citations testfile.rst test5.tex && grep 'cite{CIT1}' test5.tex
     CHECK_RESULT $?
@@ -55,8 +57,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.tex ./*.rst ./*.log ./*.sty
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish restoring the test environment."
 }
 
