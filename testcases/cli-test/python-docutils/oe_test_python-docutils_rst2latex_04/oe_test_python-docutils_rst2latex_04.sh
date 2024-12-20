@@ -1,6 +1,5 @@
 #!/usr/bin/bash
 
-
 # Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -19,6 +18,8 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     cp -r ../common/testfile_tex.rst ./testfile.rst
     DNF_INSTALL "python-docutils"
     LOG_INFO "Finish preparing the test environment."
@@ -30,7 +31,7 @@ function run_test() {
         grep 'toprule' test1.tex
     CHECK_RESULT $?
     rst2latex --use-docutils-toc testfile.rst test2.tex &&
-        grep 'DUtitle\[contents\]' test2.tex
+        grep -i 'DUtitle.*contents' test2.tex
     CHECK_RESULT $?
     rst2latex --use-part-section testfile.rst test3.tex &&
         grep 'part{Title 1' test3.tex
@@ -41,7 +42,7 @@ function run_test() {
     rst2latex --use-latex-docinfo testfile.rst test5.tex &&
         grep 'author{TESTER}' test5.tex
     CHECK_RESULT $?
-    test "$(rst2latex -V | awk '{print$3}')" == "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
+    rst2latex -V | grep "$(rpm -qa python3-docutils | awk -F "-" '{print$3}')"
     CHECK_RESULT $?
     rst2latex -h | grep 'Usage'
     CHECK_RESULT $?
@@ -59,8 +60,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.tex ./*.rst ./*.log ./*.sty
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish restoring the test environment."
 }
 

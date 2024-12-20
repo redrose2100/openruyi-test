@@ -16,15 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of uwsgi command
 # ############################################
-# shellcheck disable=SC1090,SC2010
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL python3-uWSGI
-    pip3 install uwsgitop
-    firewall-cmd --state|grep "not running"
+    pip3 install uwsgitop --default-timeout=100
+    firewall-cmd --state | grep "not running"
     firewalld_status=$?
     systemctl stop firewalld
     LOG_INFO "Finish preparing the test environment."
@@ -39,6 +39,7 @@ function run_test() {
 
     nohup uwsgi --http :9090 --wsgi-file test.py >/dev/null 2>&1 &
     CHECK_RESULT $? 0 0 "Failed to run uwsgi --http."
+    SLEEP_WAIT 3
     curl http://"${NODE1_IPV4}":9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
     curl http://127.0.0.1:9090 -w '\n' | grep "Hello World"
@@ -47,9 +48,10 @@ function run_test() {
     CHECK_RESULT $?
     pgrep -f 'uwsgi --http' | xargs kill -9
     SLEEP_WAIT 5
-    
+
     nohup uwsgi --http :9090 --wsgi-file test.py --master --processes 4 --threads 2 >/dev/null 2>&1 &
     CHECK_RESULT $? 0 0 "Failed to run uwsgi --http concurrent."
+    SLEEP_WAIT 3
     curl http://"${NODE1_IPV4}":9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
     curl http://127.0.0.1:9090 -w '\n' | grep "Hello World"
@@ -61,6 +63,7 @@ function run_test() {
 
     nohup uwsgi --http :9090 --wsgi-file test.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191 >/dev/null 2>&1 &
     CHECK_RESULT $? 0 0 "Failed to run uwsgi --http concurrent and port."
+    SLEEP_WAIT 3
     curl http://"${NODE1_IPV4}":9090 -w '\n' | grep "Hello World"
     CHECK_RESULT $?
     curl http://127.0.0.1:9090 -w '\n' | grep "Hello World"
@@ -79,9 +82,10 @@ EOF
     CHECK_RESULT $? 0 0 "log1 error."
     pgrep -f 'uwsgi --http' | xargs kill -9
     SLEEP_WAIT 5
-    
+
     nohup uwsgi --socket 127.0.0.1:3031 --wsgi-file test.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191 >/dev/null 2>&1 &
     CHECK_RESULT $? 0 0 "Failed to run uwsgi --socket concurrent and port."
+    SLEEP_WAIT 3
     pid=$(pgrep -f 'uwsgi --socket' | awk 'NR==2')
     expect <<EOF
         log_file log2
@@ -97,10 +101,10 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf "$(ls | grep -vE ".sh|.py")"
+    rm -rf log1 log2
     pip3 uninstall uwsgitop -y
     DNF_REMOVE "$@"
-    if [ ${firewalld_status} -eq 1 ];then
+    if [ ${firewalld_status} -eq 1 ]; then
         systemctl start firewalld
     fi
     LOG_INFO "Finish restoring the test environment."
