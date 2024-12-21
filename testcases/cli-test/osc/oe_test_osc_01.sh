@@ -28,7 +28,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     osc --help | grep -i 'Usage'
     CHECK_RESULT $?
-    osc --version | grep "[0-9]"
+    osc version | grep "[0-9]"
     CHECK_RESULT $?
     osc list | grep 'Base:Kernel'
     CHECK_RESULT $?
