@@ -15,11 +15,12 @@
 # @Desc      :   Test cleancss
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "nodejs-clean-css tar"
+    DNF_INSTALL "nodejs tar"
+    npm install -g clean-css-cli
     tar -xvf ./common/data.tar.gz > /dev/null
     LOG_INFO "End to prepare the test environment."
 }
@@ -33,10 +34,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check cleancss -v failed"
     cleancss --version
     CHECK_RESULT $? 0 0 "Check cleancss --version failed"
-    cleancss -b ./data/*.css | grep ".one{color:red}"
+    cleancss -b ./data/one.css && grep ".one{color:red}" ./data/one-min.css
     CHECK_RESULT $? 0 0 "Check cleancss -b failed"
-    cleancss --keep-line-breaks ./data/*.css | grep ".one{color:red}"
-    CHECK_RESULT $? 0 0 "Check cleancss -b failed"
+    cleancss --format keep-breaks ./data/*.css | grep ".one{color:red}"
+    CHECK_RESULT $? 0 0 "Check cleancss --format keep-breaks failed"
     cleancss --compatibility 'ie9,-colors.opacity,-units.rem' ./data/one.css |  grep ".one{color:red}"
     CHECK_RESULT $? 0 0 "Check cleancss --compatibility failed"
     cleancss -c 'ie9,-colors.opacity,-units.rem' ./data/one.css |  grep ".one{color:red}"
@@ -51,19 +52,16 @@ function run_test() {
     cleancss --output one.min.css ./data/one.css
     grep ".one{color:red}" one.min.css
     CHECK_RESULT $? 0 0 "Check cleancss --output failed"
-    cleancss -r . ./data/two.css | grep ".one{color:red}.three{color:#0f0}.four{color:#00f}.two{color:#fff}"
-    CHECK_RESULT $? 0 0 "Check cleancss -r failed"
-    cleancss --root . ./data/two.css | grep ".one{color:red}.three{color:#0f0}.four{color:#00f}.two{color:#fff}"
+    cleancss ./data/two.css | grep ".one{color:red}.three{color:#0f0}.four{color:#00f}.two{color:#fff}"
     CHECK_RESULT $? 0 0 "Check cleancss --root failed"
-    cleancss -s ./data/two.css | grep "@import url(one.css);@import url(extra/three.css)"
-    CHECK_RESULT $? 0 0 "Check cleancss -s failed"
-    cleancss --skip-import ./data/two.css | grep "@import url(one.css);@import url(extra/three.css)"
-    CHECK_RESULT $? 0 0 "Check cleancss --skip-import failed"
+    cleancss --inline none  ./data/two.css | grep "@import url(data/one.css);@import url(data/extra/three.css)"
+    CHECK_RESULT $? 0 0 "Check cleancss --inline none failed"
     LOG_INFO "End to run test."
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    npm uninstall -g clean-css-cli
     rm -rf ./data one.min.css
     LOG_INFO "End to restore the test environment."
 }

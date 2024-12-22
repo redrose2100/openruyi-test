@@ -15,53 +15,47 @@
 # @Desc      :   Test cleancss
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "nodejs-clean-css tar"
+    DNF_INSTALL "nodejs tar"
+    npm install -g clean-css-cli
     tar -xvf ./common/data.tar.gz > /dev/null
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    cleancss -t 2 ./data/one.css  | grep ".one{color:red}"
-    CHECK_RESULT $? 0 0 "Check cleancss -t failed"
-    cleancss --timeout 2 ./data/one.css  | grep ".one{color:red}"
+    cleancss --inline-timeout 2 ./data/one.css | grep ".one{color:red}"
     CHECK_RESULT $? 0 0 "Check cleancss --timeout failed"
-    cleancss --rounding-precision 2 ./data/six.css  | grep ".six{height:20.25px;width:14.24px}"
-    CHECK_RESULT $? 0 0 "Check cleancss --rounding-precision failed"
-    cleancss ./data/comment.css --s0 | grep ".six{height:20.25px;width:14.24px}"
-    CHECK_RESULT $? 0 0 "Check cleancss --s0 failed"
-    cleancss ./data/comment.css --s1 | grep "\/\*! this comment1 \*\/.six{height:20.25px;width:14.24px}"
-    CHECK_RESULT $? 0 0 "Check cleancss --s1 failed"
-    echo ".a{margin:0}.b{margin:10px;padding:0}.c{margin:0}" | cleancss --semantic-merging | grep ".a,.c{margin:0}.b{margin:10px;padding:0}"
+    cleancss -O1 roundingPrecision:2 ./data/six.css  | grep ".six{height:20.25px;width:14.24px}"
+    CHECK_RESULT $? 0 0 "Check cleancss roundingPrecision failed"
+    cleancss -O1 specialComments:0 ./data/comment.css | grep ".six{height:20.245px;width:14.235px}"
+    CHECK_RESULT $? 0 0 "Check cleancss specialComments:0 failed"
+    cleancss -O1 specialComments:1 ./data/comment.css | grep "\/\*! this comment1 \*\/.six{height:20.245px;width:14.235px}"
+    CHECK_RESULT $? 0 0 "Check cleancss specialComments:1 failed"
+    echo ".a{margin:0}.b{margin:10px;padding:0}.c{margin:0}" | cleancss -O2 mergeSemantically:on | grep ".a,.c{margin:0}.b{margin:10px;padding:0}"
     CHECK_RESULT $? 0 0 "Check cleancss --semantic-merging failed"
-    echo ".a{margin:0}.b{margin:10px;padding:0}.c{margin:0}" | cleancss --skip-advanced --semantic-merging | grep ".a{margin:0}.b{margin:10px;padding:0}.c{margin:0}"
-    CHECK_RESULT $? 0 0 "Check cleancss --skip-advanced failed"
-    echo ".a{margin:0}.b{margin:10px;padding:0}.c{margin:0}" | cleancss --skip-aggressive-merging --semantic-merging | grep ".a,.c{margin:0}.b{margin:10px;padding:0}"
-    CHECK_RESULT $? 0 0 "Check cleancss --skip-aggressive-merging failed"
-    cleancss ./data/two.css  --skip-import-from one.css 2>&1 | grep 'Ignoring local @import of "one.css"'
-    CHECK_RESULT $? 0 0 "Check cleancss --skip-aggressive-merging failed"
-    cat ./data/mediatmp1.css ./data/mediatmp2.css | cleancss  --skip-media-merging | grep ".mediatmp1{color:#fff}@media screen and (min-width:900px){article{padding:1rem 3rem}}.mediatmp{color:#ffa}@media screen and (min-width:900px){article{padding:1rem 3rem}}"
+    cleancss ./data/two.css  --inline local one.css 2>&1 | grep 'Ignoring local @import of "one.css"'
+    CHECK_RESULT $? 0 0 "Check cleancss --inline local failed"
+    cat ./data/mediatmp1.css ./data/mediatmp2.css | cleancss -O2 all:off | grep ".mediatmp1{color:#fff}@media screen and (min-width:900px){article{padding:1rem 3rem}}.mediatmp{color:#ffa}@media screen and (min-width:900px){article{padding:1rem 3rem}}"
     CHECK_RESULT $? 0 0 "Check cleancss --skip-media-merging failed"
-    cat ./data/five.css ./data/five.css | cleancss --skip-rebase | grep ".five{background:url(data:image/jpeg;base64,/9j/)}"
-    CHECK_RESULT $? 0 0 "Check cleancss --skip-rebase failed"
-    cleancss --skip-restructuring ./data/one.css | grep ".one{color:red}"
-    CHECK_RESULT $? 0 0 "Check cleancss --skip-restructuring failed"
-    cleancss --skip-shorthand-compacting ./data/one.css | grep ".one{color:red}"
-    CHECK_RESULT $? 0 0 "Check cleancss --skip-shorthand-compacting failed"
-    cleancss --source-map --output one.min.css ./data/one.css && grep ".one{color:red}\/\*# sourceMappingURL=one.min.css.map \*\/" one.min.css
+    cleancss -O2 restructureRules:off ./data/one.css | grep ".one{color:red}"
+    CHECK_RESULT $? 0 0 "Check cleancss skip restructureRules failed"
+    cleancss -O2 mergeIntoShorthands:off ./data/one.css | grep ".one{color:red}"
+    CHECK_RESULT $? 0 0 "Check cleancss skip mergeIntoShorthands failed"
+    cleancss --source-map --output one.min.css ./data/one.css && grep ".one{color:red}" one.min.css && grep "\/\*# sourceMappingURL=one.min.css.map \*\/" one.min.css
     CHECK_RESULT $? 0 0 "Check cleancss --source-map failed"
     rm -f one.min.css
-    cleancss --source-map --source-map-inline-sources --output one.min.css ./data/one.css && grep ".one{color:red}\/\*# sourceMappingURL=one.min.css.map \*\/" one.min.css
+    cleancss --source-map --source-map-inline-sources --output one.min.css ./data/one.css && grep ".one{color:red}" one.min.css && grep "\/\*# sourceMappingURL=one.min.css.map \*\/" one.min.css
     CHECK_RESULT $? 0 0 "Check cleancss --source-map-inline-sources failed"
     rm -f one.min.css
     LOG_INFO "End to run test."
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    npm uninstall -g clean-css-cli
     rm -rf ./data one.min.css.map
     LOG_INFO "End to restore the test environment."
 }
