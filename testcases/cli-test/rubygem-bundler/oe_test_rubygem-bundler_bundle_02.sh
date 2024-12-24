@@ -69,8 +69,8 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf Gemfile testgem* .bundle bundle_log*
     DNF_REMOVE "$@"
+    rm -rf Gemfile testgem* ~/.bundle bundle_log* /usr/share/gems
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
