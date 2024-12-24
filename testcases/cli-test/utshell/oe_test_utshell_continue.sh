@@ -23,7 +23,7 @@ function pre_test(){
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "utshell"
     mkdir /tmp/test_continue
-    cd test_continue || exit
+    cd /tmp/test_continue || exit
     LOG_INFO "End of environmental preparation!"
 }
 
