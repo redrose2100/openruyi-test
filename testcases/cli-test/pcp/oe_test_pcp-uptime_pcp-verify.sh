@@ -25,14 +25,59 @@ function pre_test() {
     archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}')
     OLD_PATH=$PATH
     export PATH=/usr/libexec/pcp/bin/:$PATH
+    mkdir -p /etc/pcp/tls
+    cat >/etc/pcp/tls/openssl.cnf <<_END_
+[ server_cert ]
+keyUsage = digitalSignature, keyEncipherment
+nsCertType = server
+[ client_cert ]
+keyUsage = digitalSignature, keyEncipherment
+nsCertType = client
+_END_
+    openssl genrsa -out /etc/pcp/tls/ca.key
+    openssl req \
+        -x509 -new -nodes -sha256 -days 3650 -key /etc/pcp/tls/ca.key \
+        -subj '/O=PCP Authority/CN=Certificate Authority' \
+        -out /etc/pcp/tls/ca.crt
+    openssl genrsa -out /etc/pcp/tls/server.key 2048
+    openssl req \
+        -new -sha256 -subj '/O=PCP Authority/CN=PCP Collector' \
+        -key /etc/pcp/tls/server.key |
+        openssl x509 \
+            -req -sha256 -days 365 \
+            -CA /etc/pcp/tls/ca.crt \
+            -CAkey /etc/pcp/tls/ca.key \
+            -extfile /etc/pcp/tls/openssl.cnf -extensions server_cert \
+            -out /etc/pcp/tls/server.crt
+    openssl genrsa -out /etc/pcp/tls/client.key 2048
+    openssl req \
+        -new -sha256 -subj '/O=PCP Authority/CN=PCP Monitor' \
+        -key /etc/pcp/tls/client.key |
+        openssl x509 \
+            -req -sha256 -days 365 \
+            -CA /etc/pcp/tls/ca.crt \
+            -CAkey /etc/pcp/tls/ca.key \
+            -extfile /etc/pcp/tls/openssl.cnf -extensions client_cert \
+            -out /etc/pcp/tls/client.crt
+    chown -R pcp:pcp /etc/pcp/tls
+    cat >/etc/pcp/tls.conf <<_END_
+tls-ca-cert-file = /etc/pcp/tls/ca.crt
+tls-key-file = /etc/pcp/tls/server.key
+tls-cert-file = /etc/pcp/tls/server.crt
+tls-client-key-file = /etc/pcp/tls/client.key
+tls-client-cert-file = /etc/pcp/tls/client.crt
+_END_
+    systemctl restart pmcd
+    systemctl restart pmlogger
+    SLEEP_WAIT 3
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    pcp-uptime  --help 2>&1 | grep 'Usage'
+    pcp-uptime --help 2>&1 | grep 'Usage'
     CHECK_RESULT $?
-    pcp-uptime  --version 2>&1 | grep "$pcp_version"
+    pcp-uptime --version 2>&1 | grep "$pcp_version"
     CHECK_RESULT $?
     pcp-verify --help 2>&1 | grep 'Usage'
     CHECK_RESULT $?
@@ -54,6 +99,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
+    rm -rf /etc/pcp/tls
     PATH=${OLD_PATH}
     LOG_INFO "End to restore the test environment."
 }

@@ -15,14 +15,14 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   OSC is a command line tool based on OBS, which is equivalent to the interface of OBS.
 #####################################
-# shellcheck disable=SC2119
+# shellcheck disable=SC2119,SC2154
 source "${OET_PATH}"/testcases/cli-test/osc/common/common_osc.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     osc checkout "$branches_path" | grep 'revision'
-    cd "$branches_path/zjl" || exit 1
+    cd "$branches_path/xzy" || exit 1
     echo "hello world" >>last_file.txt
     LOG_INFO "End to prepare the test environment."
 }
@@ -31,7 +31,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     osc revert last_file.txt
     CHECK_RESULT $?
-    osc search --package zjl | grep 'Package'
+    osc search --package xzy | grep 'Package'
     CHECK_RESULT $?
     osc service disabledrun
     CHECK_RESULT $?
@@ -41,13 +41,13 @@ function run_test() {
     CHECK_RESULT $?
     osc service runall
     CHECK_RESULT $?
-    osc service wait "$branches_path" zjl | grep 'ok'
+    osc service wait "$branches_path" xzy | grep 'ok'
     CHECK_RESULT $?
     osc status -v | grep 'last_file.txt'
     CHECK_RESULT $?
-    osc token --create "$branches_path" zjl | grep 'Create a new token'
+    osc token --create --operation workflow --scm-token long_ascii_salad "$branches_path" xzy | grep 'Create a new token'
     CHECK_RESULT $?
-    token_data=$(osc token --create "$branches_path" zjl | grep 'id' | awk '{print $2}')
+    token_data=$(osc token --create --operation workflow --scm-token long_ascii_salad "$branches_path" xzy | grep 'id' | awk '{print $2}')
     handle_token=${token_data#*>}
     token_id=${handle_token%<*}
     osc token --delete "$token_id" | grep 'Delete token'
