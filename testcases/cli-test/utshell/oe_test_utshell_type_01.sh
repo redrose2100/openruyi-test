@@ -17,27 +17,27 @@
 # @Desc      :   utshell-type
 # ############################################
 
-#source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "utshell"
-  LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "utshell"
+    LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-  utshell -c "type -a pwd |grep shell"
-  CHECK_RESULT $? 0 0 "-a fail"
-  utshell -c "type -f pwd |grep shell"
-  CHECK_RESULT $? 0 0 "-f fail"
-  LOG_INFO "End of the test."
+    LOG_INFO "Start to run test."
+    utshell -c "type -a pwd |grep shell"
+    CHECK_RESULT $? 0 0 "-a fail"
+    utshell -c "type -f pwd |grep shell"
+    CHECK_RESULT $? 0 0 "-f fail"
+    LOG_INFO "End of the test."
 }
 
 function post_test() {
-  LOG_INFO "start environment cleanup."
-  DNF_REMOVE "$@"
-  LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
