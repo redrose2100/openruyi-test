@@ -17,13 +17,13 @@
 # @Desc      :   verify the uasge of perl-libwww-perl command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "perl-libwww-perl perl-CPAN"
+    DNF_INSTALL "perl-libwww-perl perl-CPAN tar"
     tar -xf common/HTML-Tree-5.07.tar.gz
-    cd HTML-Tree-5.07
+    cd HTML-Tree-5.07 || exit 1
     perl Build.PL
     ./Build
     ./Build test
@@ -62,8 +62,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     cd ..
     rm -rf HTML-Tree-5.07
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

@@ -15,6 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   command test-iscsiadm
 #####################################
+# shellcheck disable=SC1091,SC2154
 source ./common/open-iscsi_lib.sh
 
 function pre_test() {
@@ -31,9 +32,9 @@ function run_test() {
     CHECK_RESULT $?
     test "$(iscsiadm -V | grep -Eo "[0-9]*\.[0-9]*\.[0-9]*")" == "$(rpm -qa open-iscsi | awk -F "-" '{print$3}')"
     CHECK_RESULT $?
-    iscsiadm -m discoverydb -t st -p "${NODE2_IPV4}" -I iface."${LOCAL_NICS}" --discover | grep 'iqn.2020-08.com.example:server'
+    iscsiadm -m discoverydb -t st -p "${NODE2_IPV4}" -I iface."${NODE1_NIC}" --discover | grep 'iqn.2020-08.com.example:server'
     CHECK_RESULT $?
-    iscsiadm -m discovery -t st -p "${NODE2_IPV4}" -I iface."${LOCAL_NICS}" --discover | grep 'iqn.2020-08.com.example:server'
+    iscsiadm -m discovery -t st -p "${NODE2_IPV4}" -I iface."${NODE1_NIC}" --discover | grep 'iqn.2020-08.com.example:server'
     CHECK_RESULT $?
     iscsiadm -m discoverydb -d 4 -P 1 -t sendtargets -p "${NODE2_IPV4}" --discover | grep 'iqn.2020-08.com.example:server'
     CHECK_RESULT $?
@@ -43,18 +44,18 @@ function run_test() {
     CHECK_RESULT $?
     iscsiadm -m discoverydb -t st -p "${NODE2_IPV4}" -n iqn.2020-08.com.example:server | grep 'sendtargets'
     CHECK_RESULT $?
-    iscsiadm -m node -d 4 -P 1 −T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --login 2>&1 | grep -E 'successful|already present'
+    iscsiadm -m node -d 4 -P 1 -T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --login 2>&1 | grep -E 'successful|already present'
     CHECK_RESULT $?
-    iscsiadm -m node −T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 | grep 'iqn.2020-08.com.example:client'
+    iscsiadm -m node -T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 | grep 'iqn.2020-08.com.example:client'
     CHECK_RESULT $?
     SLEEP_WAIT 2
-    iscsiadm -m node -d 4 -P 1 −T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --logout 2>&1 | grep 'successful'
+    iscsiadm -m node -d 4 -P 1 -T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --logout 2>&1 | grep 'successful'
     CHECK_RESULT $?
     iscsiadm -m node -L all -U all -d 0 -P 1 -o show | grep 'successful'
     CHECK_RESULT $?
-    iscsiadm -m node -d 4 -P 1 −T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --logout 2>&1 | grep 'successful'
+    iscsiadm -m node -d 4 -P 1 -T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --logout 2>&1 | grep 'successful'
     CHECK_RESULT $?
-    iscsiadm -m node −T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --login 2>&1 | grep 'successful'
+    iscsiadm -m node -T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --login 2>&1 | grep 'successful'
     CHECK_RESULT $?
     sid="$(iscsiadm -m session -P 3 | grep 'SID' | awk -F " " '{print$2}')"
     CHECK_RESULT "${sid}" 0 1
@@ -74,12 +75,12 @@ function run_test() {
     CHECK_RESULT $?
     grep "192.168.1.2" /etc/iscsi/ifaces/iface0
     CHECK_RESULT $?
-    iscsiadm -m node −T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --login 2>&1 | grep 'successful'
+    iscsiadm -m node -T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --login 2>&1 | grep 'successful'
     CHECK_RESULT $?
     iscsiadm -k 0
     CHECK_RESULT $?
     SLEEP_WAIT 2
-    iscsiadm -m node −T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --logout 2>&1 | grep 'iscsid is not running'
+    iscsiadm -m node -T iqn.2020-08.com.example:server -p "${NODE2_IPV4}":3260 --logout 2>&1 | grep 'iscsid is not running'
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
@@ -90,7 +91,7 @@ function post_test() {
     dd if=/dev/zero of=/dev/${unused_disk} bs=2G count=1;
     rm -rf /tmp/disk_info.sh;
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /etc/iscsi/*
     LOG_INFO "Finish restoring the test environment."
 }
