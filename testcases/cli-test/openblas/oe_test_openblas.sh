@@ -19,7 +19,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "gcc openblas"
+    DNF_INSTALL "gcc openblas openblas-devel"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -31,7 +31,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 'Compilation failed'
     test -e sampleblas
     CHECK_RESULT $? 0 0 'sampleblas file not found'
-    ./sampleblas| grep '\-4.950000 10.050000 -0.950000 10.050000 -9.950000 4.050000 7.050000 4.050000 5.050000'
+    ./sampleblas | grep '\-4.950000 10.050000 -0.950000 10.050000 -9.950000 4.050000 7.050000 4.050000 5.050000'
     CHECK_RESULT $? 0 0 'Script returned information error'
     LOG_INFO "End to run test."
 }

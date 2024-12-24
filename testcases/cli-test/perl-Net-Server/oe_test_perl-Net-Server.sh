@@ -16,15 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test perl-Net-Server
 # #############################################
-
-
+# shellcheck disable=SC2046
 source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "perl-Net-Server perl-Socket6"
+    DNF_INSTALL "perl-Net-Server perl-Socket6 net-tools"
     port=$(GET_FREE_PORT 127.0.0.1)
-    cat<<EOF >app.cgi
+    cat <<EOF >app.cgi
 #!/bin/bash
 echo "Content-type: text/html"
 echo ""
@@ -39,116 +38,75 @@ function run_test() {
     # Fork mode in *:$port
     net-server Fork port "$port" 2>&1 &
     SLEEP_WAIT 1
-    IS_FREE_PORT "$port" 127.0.0.1
-    CHECK_RESULT $? 1 0 "L$LINENO: Fork No Pass "
-    if [[ "$NODE1_FRAME" == "riscv64" ]]; then
-        killall net-server
-    else
-        killall perl
-    fi
+    netstat -nltp | grep "$port"
+    CHECK_RESULT $? 0 0 "L$LINENO: Fork No Pass "
+    kill -9 $(pgrep -f "/bin/net-server")
     # INET mode
     echo helloTest | net-server INET 2>&1 | grep "net_server:.*You said \"helloTest\""
     CHECK_RESULT $? 0 0 "L$LINENO: INET No Pass. Output Error."
-    IS_FREE_PORT "$port" 127.0.0.1
-    CHECK_RESULT $? 0 0 "L$LINENO: INET No Pass. Port $port still in use."
+    netstat -nltp | grep "$port"
+    CHECK_RESULT $? 1 0 "L$LINENO: INET No Pass. Port $port still in use."
     # MultiType mode in *:$port
     net-server MultiType port "$port" 2>&1 &
     SLEEP_WAIT 1
-    IS_FREE_PORT "$port" 127.0.0.1
-    CHECK_RESULT $? 1 0 "L$LINENO: MultiType No Pass"
-    if [[ "$NODE1_FRAME" == "riscv64" ]]; then
-        killall net-server
-    else
-        killall perl
-    fi
+    netstat -nltp | grep "$port"
+    CHECK_RESULT $? 0 0 "L$LINENO: MultiType No Pass"
+    kill -9 $(pgrep -f "/bin/net-server")
     # Multiplex mode in *:$port
     net-server Multiplex port "$port" 2>&1 &
     SLEEP_WAIT 1
-    IS_FREE_PORT "$port" 127.0.0.1
-    CHECK_RESULT $? 1 0 "L$LINENO: Multiplex No Pass"
-    if [[ "$NODE1_FRAME" == "riscv64" ]]; then
-        killall net-server
-    else
-        killall perl
-    fi
+    netstat -nltp | grep "$port"
+    CHECK_RESULT $? 0 0 "L$LINENO: Multiplex No Pass"
+    kill -9 $(pgrep -f "/bin/net-server")
     # PreForkSimple mode in *:$port
     net-server PreForkSimple port "$port" 2>&1 &
     SLEEP_WAIT 1
-    IS_FREE_PORT "$port" 127.0.0.1
-    CHECK_RESULT $? 1 0 "L$LINENO: PreForkSimple No Pass"
-    if [[ "$NODE1_FRAME" == "riscv64" ]]; then
-        killall net-server
-    else
-        killall perl
-    fi
+    netstat -nltp | grep "$port"
+    CHECK_RESULT $? 0 0 "L$LINENO: PreForkSimple No Pass"
+    kill -9 $(pgrep -f "/bin/net-server")
     # PreFork mode in *:$port
     net-server PreFork port "$port" 2>&1 &
     SLEEP_WAIT 1
-    IS_FREE_PORT "$port" 127.0.0.1
-    CHECK_RESULT $? 1 0 "L$LINENO: PreFork No Pass"
-    if [[ "$NODE1_FRAME" == "riscv64" ]]; then
-        killall net-server
-    else
-        killall perl
-    fi
+    netstat -nltp | grep "$port"
+    CHECK_RESULT $? 0 0 "L$LINENO: PreFork No Pass"
+    kill -9 $(pgrep -f "/bin/net-server")
     # Single mode in *:$port
     net-server Single port "$port" 2>&1 &
     SLEEP_WAIT 1
-    IS_FREE_PORT "$port" 127.0.0.1
-    CHECK_RESULT $? 1 0 "L$LINENO: Single No Pass"
-    if [[ "$NODE1_FRAME" == "riscv64" ]]; then
-        killall net-server
-    else
-        killall perl
-    fi
+    netstat -nltp | grep "$port"
+    CHECK_RESULT $? 0 0 "L$LINENO: Single No Pass"
+    kill -9 $(pgrep -f "/bin/net-server")
     # HTTP mode in *:$port
     net-server HTTP port "$port" 2>&1 &
     SLEEP_WAIT 1
-    IS_FREE_PORT "$port" 127.0.0.1
-    CHECK_RESULT $? 1 0 "L$LINENO: Http No Pass"
-    if [[ "$NODE1_FRAME" == "riscv64" ]]; then
-        killall net-server
-    else
-        killall perl
-    fi
+    netstat -nltp | grep "$port"
+    CHECK_RESULT $? 0 0 "L$LINENO: Http No Pass"
+    kill -9 $(pgrep -f "/bin/net-server")
     # -app
     net-server HTTP port "$port" app "$PWD"/app.cgi 2>&1 &
     SLEEP_WAIT 1
-    IS_FREE_PORT "$port" 127.0.0.1
-    CHECK_RESULT $? 1 0 "L$LINENO: app No Pass"
+    netstat -nltp | grep "$port"
+    CHECK_RESULT $? 0 0 "L$LINENO: app No Pass"
     curl 127.0.0.1:"$port" 2>&1 | grep "Test success"
     CHECK_RESULT $? 0 0 "L$LINENO: app No Pass. Failed to get data from net-server"
-    if [[ "$NODE1_FRAME" == "riscv64" ]]; then
-        killall net-server
-    else
-        killall perl
-    fi
+    kill -9 $(pgrep -f "/bin/net-server")
     # ipv4 only
     net-server host localhost/IPv4 port "$port" app app.cgi 2>&1 &
     SLEEP_WAIT 1
-    IS_FREE_PORT "$port" 127.0.0.1
-    CHECK_RESULT $? 1 0 "L$LINENO: IPv4 No Pass"
-    if [[ "$NODE1_FRAME" == "riscv64" ]]; then
-        killall net-server
-    else
-        killall perl
-    fi
+    netstat -nltp | grep "$port"
+    CHECK_RESULT $? 0 0 "L$LINENO: IPv4 No Pass"
+    kill -9 $(pgrep -f "/bin/net-server")
     # ipv6 only
     net-server host localhost/IPv6 port "$port" 2>&1 &
     SLEEP_WAIT 1
-    IS_FREE_PORT "$port" ::1
-    CHECK_RESULT $? 1 0 "L$LINENO: IPv6 No Pass"
-    
+    netstat -nltp | grep "$port" | grep "::1"
+    CHECK_RESULT $? 0 0 "L$LINENO: IPv6 No Pass"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    if [[ "$NODE1_FRAME" == "riscv64" ]]; then
-        killall net-server
-    else
-        killall perl
-    fi
+    kill -9 $(pgrep -f "/bin/net-server")
     DNF_REMOVE "$@"
     rm -rf app.cgi
     LOG_INFO "Finish environment cleanup!"

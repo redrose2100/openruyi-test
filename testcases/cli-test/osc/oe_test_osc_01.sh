@@ -28,8 +28,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     osc --help | grep -i 'Usage'
     CHECK_RESULT $?
-    osc --version | grep "[0-9]"
-    CHECK_RESULT $?
+    if osc --help | grep "\--version"; then
+        osc --version | grep "[0-9]"
+        CHECK_RESULT $?
+    fi
     osc list | grep 'Base:Kernel'
     CHECK_RESULT $?
     osc api https://build.opensuse.org | grep 'Open Build Service API'
