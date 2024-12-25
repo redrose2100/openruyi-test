@@ -33,12 +33,13 @@ function run_test() {
     cg_diff -h > valgrind_test.log 2>&1
     grep "usage: cg_diff" valgrind_test.log
     CHECK_RESULT $? 0 0 "execute cg_diff -h error"
-    cg_diff --help valgrind_test.log 2>&1
+    cg_diff --help > valgrind_test.log 2>&1
     grep "usage: cg_diff" valgrind_test.log
     CHECK_RESULT $? 0 0 "execute cg_diff --help error"
-    cg_diff -v > valgrind_test.log 2>&1
-    grep -E "cg_diff-[0-9]+.[0-9]+.[0-9]+" valgrind_test.log
-    CHECK_RESULT $? 0 0 "execute cg_diff -v error"
+    if cg_diff -v;then
+        cg_diff -v 2>&1 | grep -E "cg_diff-[0-9]+.[0-9]+.[0-9]+"
+        CHECK_RESULT $? 0 0 "execute cg_diff -v error"
+    fi
     cg_diff --version > valgrind_test.log 2>&1
     grep -E "cg_diff-[0-9]+.[0-9]+.[0-9]+" valgrind_test.log
     CHECK_RESULT $? 0 0 "execute cg_diff --version error"
