@@ -52,8 +52,7 @@ function run_test() {
     valgrind --vgdb-error=1 ./valgrind_test_fork > valgrind_test.log 2>&1
     grep "TO DEBUG THIS PROCESS USING GDB: start GDB like this" valgrind_test.log
     CHECK_RESULT $? 0 0 "execute valgrind --vgdb error" 
-    valgrind --track-fds=yes ./valgrind_test_fork > valgrind_test.log 2>&1
-    grep "Open file descriptor" valgrind_test.log
+    valgrind --track-fds=yes ./valgrind_test_fork && valgrind --track-fds=yes ./valgrind_test_fork 2>&1 | grep "FILE DESCRIPTORS"
     CHECK_RESULT $? 0 0 "execute valgrind --track-fds error" 
     valgrind --time-stamp=yes ./valgrind_test_fork > valgrind_test.log 2>&1
     grep -E "[0-99]+:[0-99]+:[0-99]+" valgrind_test.log
@@ -63,7 +62,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf valgrind_test*
+    rm -rf valgrind_test* cachegrind*
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }

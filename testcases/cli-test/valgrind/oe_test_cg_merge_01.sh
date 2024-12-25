@@ -21,6 +21,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "valgrind glibc-devel glibc-debuginfo gcc-c++"
+    if cg_merge --help | grep Deprecated;then
+        echo "current command is Deprecated!"
+        exit 0
+    fi
     g++ -g -o valgrind_test ./common/valgrind_test_01.cpp
     LOG_INFO "End of environmental preparation!"
 }
