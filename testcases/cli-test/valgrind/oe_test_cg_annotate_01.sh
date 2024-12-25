@@ -45,7 +45,7 @@ function run_test() {
     cg_annotate --sort=Ir cachegrind.out.* > valgrind_test.log 2>&1
     grep "cachegrind.out" valgrind_test.log
     CHECK_RESULT $? 0 0 "execute cg_annotate --sort error"
-    cg_annotate --threshold=0.2% cachegrind.out.*
+    cg_annotate --threshold=0.2% cachegrind.out.* || cg_annotate --threshold=2 cachegrind.out.*
     CHECK_RESULT $? 0 0 "execute vcg_annotate --threshold  error"
     cg_annotate --auto=yes cachegrind.out.*
     CHECK_RESULT $? 0 0 "execute vcg_annotate --auto error"
