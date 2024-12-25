@@ -18,22 +18,30 @@
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
+# 准备环境
 function deploy_env() {
     CA_Path=/etc/pki/CA
-    if [ ! -d ${CA_Path} ]; then
-        mkdir -p ${CA_Path}/private ${CA_Path}/newcerts
+    mkdir -p ${CA_Path}/private ${CA_Path}/newcerts
+    if [ -e /etc/pki/tls/openssl.cnf.bak ];then
+        rm -f /etc/pki/tls/openssl.cnf.bak
+    fi
+    if [ ! -e /etc/pki/tls/openssl.cnf ];then
+        LOG_WARN "openssl.cnf is missing.Try to reinstall openssl-libs"
+        dnf reinstall openssl-libs #注意openssl-libs不可以remove
     fi
     cp /etc/pki/tls/openssl.cnf /etc/pki/tls/openssl.cnf.bak
     sed -i '0,/^dir/s/\.\/demoCA/\/etc\/pki\/CA/' /etc/pki/tls/openssl.cnf
 }
 
+
+# 生成自签名 SSL 证书
 function createCA_and_Self_signed_certificate() {
     touch $CA_Path/index.txt
-    echo 01 >$CA_Path/serial
+    echo 01 > $CA_Path/serial
     openssl genrsa -out $CA_Path/private/cakey.pem 2048
-    CHECK_RESULT $?
     grep 'PRIVATE KEY' $CA_Path/private/cakey.pem
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to generate RSA private pem."
+
     expect <<-END
     log_file $CA_Path/testlog1
     spawn openssl req -x509 -key $CA_Path/private/cakey.pem -days 365 -out $CA_Path/cacert.pem -new
@@ -55,19 +63,21 @@ function createCA_and_Self_signed_certificate() {
     exit
 END
     grep 'certificate request' $CA_Path/testlog1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "testlog1 error."
     grep 'BEGIN CERTIFICATE' $CA_Path/cacert.pem
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to generate self-signed SSL certificate."
 }
 
+
+# 生成证书签名请求(CSR)
 function generate_PrivateKey_and_Certificate_Signing_Request() {
+    #applying = httpd or nginx
     applying=${1-httpd}
     build_path=${2-/etc/${applying}/ssl}
     mkdir "${build_path}"
-    openssl genrsa -out "${build_path}/${applying}.key" 2048
-    CHECK_RESULT $?
-    grep 'PRIVATE KEY' "${build_path}/${applying}.key"
-    CHECK_RESULT $?
+    openssl genrsa -out "${build_path}/${applying}.key" 2048 && grep 'PRIVATE KEY' "${build_path}/${applying}.key"
+    CHECK_RESULT $? 0 0 "Failed to generate RSA private key."
+
     expect <<-END
     log_file $build_path/testlog2
     spawn openssl req -key $build_path/${applying}.key -out $build_path/${applying}.csr -new
@@ -93,11 +103,13 @@ function generate_PrivateKey_and_Certificate_Signing_Request() {
     exit
 END
     grep 'certificate request' "${build_path}/testlog2"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "testlog2 error."
     grep 'BEGIN CERTIFICATE REQUEST' "${build_path}/${applying}.csr"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to generate certificate signing request."
 }
 
+
+# 将证书签名请求(CSR)通过证书颁发机构(CA)进行签署，生成一个有效的证书(CRT)
 function CA_Signature_Authentication() {
     applying=${1-httpd}
     build_path=${2-/etc/${applying}/ssl}
@@ -112,10 +124,11 @@ function CA_Signature_Authentication() {
     exit
 END
     grep 'Certificate Details' "${build_path}/testlog3"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "testlog3 error."
     grep 'BEGIN CERTIFICATE' "${build_path}/${applying}.crt"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to generate CRT file."
 }
+
 
 function Modify_application_configuration() {
     file=/etc/httpd/conf.d/ssl.conf
@@ -123,22 +136,34 @@ function Modify_application_configuration() {
     sed -i 's/\#ServerName www.example.com:443/ServerName www.linuxpanda.com:443/' $file
     sed -i 's#SSLCertificateFile /etc/pki/tls/certs/localhost.crt#SSLCertificateFile /etc/httpd/ssl/httpd.crt#' $file
     sed -i 's#SSLCertificateKeyFile /etc/pki/tls/private/localhost.key#SSLCertificateKeyFile /etc/httpd/ssl/httpd.key#' $file
+    
     file2=/etc/httpd/conf/httpd.conf
     sed -i 's/\#ServerName www.example.com:80/ServerName www.openeuler.org:80/' $file2
     sed -i 's/Require all denied/Require all granted/' $file2
-    cp /etc/hosts /etc/hosts.bak
-    echo "127.0.0.1   www.openeuler.org" >/etc/hosts
+    if [ -e /etc/hosts ];then
+        if [ -e /etc/hosts.bak ];then
+            mv -f /etc/hosts.bak /etc/hosts.bak.bak
+        fi
+        cp /etc/hosts /etc/hosts.bak
+    else
+        touch /etc/hosts.bak
+    fi
+    echo "127.0.0.1   www.openeuler.org" > /etc/hosts
     cp /usr/share/httpd/noindex/index.html /var/www/html/ && chmod 755 /var/www/html/index.html
     setenforce 0
 }
 
+
+# 恢复环境
 function clean_httpd_openssl() {
-    rm -f $CA_Path/index* $CA_Path/serial* $CA_Path/private/cakey.pem $CA_Path/cacert.pem $CA_Path/testlog1
+    rm -rf "${CA_Path}" "${build_path}"
     rm -rf /etc/httpd/ssl
     mv -f /etc/pki/tls/openssl.cnf.bak /etc/pki/tls/openssl.cnf
     mv -f /etc/hosts.bak /etc/hosts
 }
 
+
+# 生成一个自签名的 X.509 RSA 证书
 function generate_PublicKey() {
     expect <<-END
     log_file testlog
@@ -161,7 +186,7 @@ function generate_PublicKey() {
     exit
 END
     grep 'certificate request' testlog
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "testlog error."
     grep 'BEGIN CERTIFICATE' mycert-rsa.pem
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to generate X.509 RSA pem."
 }

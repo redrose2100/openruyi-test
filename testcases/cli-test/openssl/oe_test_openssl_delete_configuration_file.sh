@@ -14,20 +14,16 @@
 #@Date          :   2020-07-29
 #@License       :   Mulan PSL v2
 #@Desc          :   delete the ssl-related files from httpd configuration file,acess request(Implements https based on httpd and OpenSSL)
+#April's remind :   before running, you'd better to remove mod_ssl and httpd packages 
 #####################################
 # shellcheck disable=SC1091
 source "common/common_openssl.sh"
 
-function config_params() {
-    LOG_INFO "Start to config params of the case."
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     deploy_env
-    LOG_INFO "End to config params of the case."
-}
-
-function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "httpd mod_ssl"
     createCA_and_Self_signed_certificate
     generate_PrivateKey_and_Certificate_Signing_Request
@@ -40,21 +36,20 @@ function run_test() {
     LOG_INFO "Start to run test."
     rm -f /etc/httpd/conf.d/ssl.conf
     systemctl restart httpd 
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to restart httpd."
     systemctl status httpd | grep "active (running)"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Check httpd active failed."
     curl --cacert /etc/pki/CA/cacert.pem https://www.openeuler.org/index.html -I 2>&1 | grep -E "Connection refused|Couldn't connect"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "Failed to curl openeuler.org with cert."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
-    mv -f /etc/pki/tls/openssl.cnf.bak /etc/pki/tls/openssl.cnf
     clean_httpd_openssl
     systemctl stop httpd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

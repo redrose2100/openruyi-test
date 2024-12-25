@@ -15,39 +15,33 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   remove the mod_ssl.so module,restart service(Implements https based on httpd and OpenSSL)
 #####################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_openssl.sh"
-
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    deploy_env
-    LOG_INFO "End to config params of the case."
-}
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    deploy_env
     DNF_INSTALL "httpd mod_ssl"
     createCA_and_Self_signed_certificate
     generate_PrivateKey_and_Certificate_Signing_Request
     CA_Signature_Authentication
     Modify_application_configuration
-    rm -f /usr/lib64/httpd/modules/mod_ssl.so
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+    rm -f /usr/lib64/httpd/modules/mod_ssl.so
     systemctl restart httpd  2>&1 | grep 'failed'
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "httpd restart failed without mod_ssl.so."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    mv -f /etc/pki/tls/openssl.cnf.bak /etc/pki/tls/openssl.cnf
+    LOG_INFO "Start to restore the test environment." 
     clean_httpd_openssl
     systemctl stop httpd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

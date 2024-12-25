@@ -20,7 +20,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "Hello, world!" >word
+    echo "Hello, world!" > word
     openssl genrsa -out rsakey.pem -passout pass:123123 2048
     CHECK_RESULT $?
     grep 'PRIVATE KEY' rsakey.pem

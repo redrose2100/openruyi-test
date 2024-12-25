@@ -16,29 +16,29 @@
 #@Desc          :   Pressure load : concurrent operations
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 200); do
-        echo $i >word_$i
-        CHECK_RESULT $?
+        echo "$i" > word_"$i"
+        CHECK_RESULT $? 0 0 "Failed to create word_$i."
     done
     for i in $(seq 1 200); do
-        openssl enc -e -des3 -a -salt -in word_$i -out encword_$i -pass pass:123456 &
-        CHECK_RESULT $?
+        openssl enc -e -des3 -a -salt -in word_"$i" -out encword_"$i" -pass pass:123456 &
+        CHECK_RESULT $? 0 0 "Failed to create encword_$i."
     done
     SLEEP_WAIT 3
     for i in $(seq 1 200); do
-        grep "U2FsdGVkX1" encword_$i
-        CHECK_RESULT $?
+        grep "U2FsdGVkX1" encword_"$i"
+        CHECK_RESULT $? 0 0 "Failed to check encword_$i."
     done
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f word* encword*
+    rm -f ./word* ./encword*
     LOG_INFO "End to restore the test environment."
 }
 

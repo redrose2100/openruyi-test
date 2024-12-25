@@ -16,7 +16,6 @@
 #@Desc          :   Application scenarios: method of generating the private key,public key,and self-shared key(signature certificate) of the RSA algorithm
 #####################################
 # shellcheck disable=SC1091
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
 source "common/common_openssl.sh"
 
 function run_test() {

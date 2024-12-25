@@ -18,14 +18,9 @@
 # shellcheck disable=SC1091,SC2154
 source "common/common_openssl.sh"
 
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    deploy_env
-    LOG_INFO "End to config params of the case."
-}
-
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    deploy_env
     DNF_INSTALL nginx
     LOG_INFO "End to prepare the test environment."
 }
@@ -40,7 +35,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f "${CA_Path}/index*" "${CA_Path}/serial*" "${CA_Path}/private/cakey.pem" "${CA_Path}/cacert.pem" "${CA_Path}/testlog1"
+    rm -rf "${CA_Path}" "${build_path}"
     mv -f /etc/pki/tls/openssl.cnf.bak /etc/pki/tls/openssl.cnf
     rm -rf /etc/nginx/ssl
     DNF_REMOVE "$@"

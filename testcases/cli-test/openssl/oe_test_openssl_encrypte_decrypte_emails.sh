@@ -20,7 +20,7 @@ source "common/common_openssl.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cat >test.txt <<EOF
+    cat > test.txt <<EOF
     This is a file created by shell.
     We want to make a good world.   
     Byebye!

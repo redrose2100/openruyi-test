@@ -16,11 +16,11 @@
 #@Desc          :   Pressure load : different but related operations are performed concurrently
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cat >word <<EOF
+    cat > word <<EOF
     This is a file created by shell.
     We want to make a good world.
     Byebye!
@@ -30,17 +30,17 @@ EOF
     openssl enc -d -des3 -a -salt -in encword -out decword -pass pass:123456
     for i in $(seq 1 200); do
         {
-            openssl enc -e -des3 -a -salt -in word -out encword_$i -pass pass:123456
+            openssl enc -e -des3 -a -salt -in word -out encword_"$i" -pass pass:123456
             CHECK_RESULT $?
-            openssl enc -d -des3 -a -salt -in encword -out decword_$i -pass pass:123456
+            openssl enc -d -des3 -a -salt -in encword -out decword_"$i" -pass pass:123456
             CHECK_RESULT $?
         } &
     done
     SLEEP_WAIT 3
     for i in $(seq 1 200); do
-        grep "U2FsdGVkX1" encword_$i
+        grep "U2FsdGVkX1" encword_"$i"
         CHECK_RESULT $?
-        test -f decword_$i && diff decword_$i decword
+        test -f decword_"$i" && diff decword_"$i" decword
         CHECK_RESULT $?
     done
     LOG_INFO "End to run test."
@@ -48,7 +48,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f word encword* decword*
+    rm -f word ./encword* ./decword*
     LOG_INFO "End to restore the test environment."
 }
 

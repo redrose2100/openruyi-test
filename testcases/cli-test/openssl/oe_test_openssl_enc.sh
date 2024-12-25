@@ -17,7 +17,7 @@
 # @Desc      :   openssl encryption and decryption
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
@@ -28,17 +28,17 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     str1=$(echo "Welcom to linuxCareer.com" |openssl enc -base64)
-    CHECK_RESULT $str1 "Welcom to linuxCareer.com" 1 "encryption fail"
-    str2=$(echo $str1 | openssl enc -base64 -d)
-    CHECK_RESULT $str2 "Welcom to linuxCareer.com" 0 "decryption fail"
+    CHECK_RESULT "$str1" "Welcom to linuxCareer.com" 1 "encryption fail"
+    str2=$(echo "$str1" | openssl enc -base64 -d)
+    CHECK_RESULT "$str2" "Welcom to linuxCareer.com" 0 "decryption fail"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
 
