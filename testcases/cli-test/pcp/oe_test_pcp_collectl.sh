@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   (pcp-system-tools) (pcp-collectl)
 #####################################
-# shellcheck disable=SC1091,SC2154
+# shellcheck disable=SC1091,SC2154,SC2034
 
 source "common/common_pcp-system-tools.sh"
 
@@ -31,7 +31,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if [ "$VERSION_ID" != "22.03" ]; then
+    if rpm -ql pcp-system-tools | grep bin | grep pcp-collectl; then
         pcp-collectl --version 2>&1 | grep "$pcp_version"
         CHECK_RESULT $?
         pcp-collectl -a "$archive_data" -c 10 -i 2 | grep 'CPU'

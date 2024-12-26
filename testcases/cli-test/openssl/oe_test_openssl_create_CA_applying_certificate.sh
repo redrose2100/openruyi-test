@@ -40,7 +40,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f "${CA_Path}/index*" "${CA_Path}/serial*" "${CA_Path}/private/cakey.pem" "${CA_Path}/cacert.pem" "${CA_Path}/testlog1"
+    rm -f "${CA_Path}"/index* "${CA_Path}"/serial* "${CA_Path}"/private/cakey.pem "${CA_Path}"/cacert.pem "${CA_Path}"/testlog1
     mv -f /etc/pki/tls/openssl.cnf.bak /etc/pki/tls/openssl.cnf
     rm -rf /etc/nginx/ssl
     DNF_REMOVE "$@"

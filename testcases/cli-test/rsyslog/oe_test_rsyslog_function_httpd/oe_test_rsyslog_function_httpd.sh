@@ -64,6 +64,7 @@ EOF
     systemctl restart rsyslog
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
+    SLEEP_WAIT 20
     echo "hello world" >>/var/log/httpd/access_log
     systemctl restart httpd
     SLEEP_WAIT 20

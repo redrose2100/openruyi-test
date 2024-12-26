@@ -16,7 +16,7 @@
 # @Desc      :   Use of wildcards to filter logs
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -26,7 +26,7 @@ function run_test() {
     time=$(date +%s%N | cut -c 9-13)
     logger -t mail -p mail.info "mailinfo$time"
     SLEEP_WAIT 3
-    grep "mail\[" /var/log/test | grep mailinfo$time
+    grep "mail\[" /var/log/test | grep "mailinfo$time"
     CHECK_RESULT $?
     echo "new.!info  /var/log/test" >/etc/rsyslog.d/test.conf
     systemctl restart rsyslog
@@ -34,7 +34,8 @@ function run_test() {
     time=$(date +%s%N | cut -c 9-13)
     logger -t new -p new.info "mailinfo$time"
     SLEEP_WAIT 3
-    CHECK_RESULT "$(grep newinfo$time /var/log/test)" 1
+    grep "newinfo$time" /var/log/test
+    CHECK_RESULT $? 0 1
     echo "lpr.error,news.info  /var/log/test" >/etc/rsyslog.d/test.conf
     systemctl restart rsyslog
     CHECK_RESULT $?

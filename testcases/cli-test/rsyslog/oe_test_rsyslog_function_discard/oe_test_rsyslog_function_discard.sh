@@ -16,7 +16,7 @@
 # @Desc      :   Support filter discard
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -26,7 +26,8 @@ function run_test() {
     logger -t local3 -p local3.error "local3test"
     CHECK_RESULT $?
     SLEEP_WAIT 5
-    CHECK_RESULT "$(grep "local3test" /var/log/test)" 1
+    grep "local3test" /var/log/test
+    CHECK_RESULT $? 0 1
     LOG_INFO "End to run test."
 }
 
