@@ -33,7 +33,7 @@ function package_install() {
 
 function search_all_services() {
     while read -r package; do
-        rpm -ql "${package}" > /dev/null || echo "${package}" >> failed_install
+        rpm -ql "${package}" || echo "${package}" >> failed_install
         rpm -ql "${package}" | grep "/lib/systemd/system/" | grep -v "@" | grep -E "\.service$|\.target$|\.socket$" | awk -F '/' '{print $NF}' >> all_services
     done < update_list
 }
@@ -80,11 +80,12 @@ function check_service_reload() {
 function test_adapted_service() {
     workdir="$(pwd)"
     while read -r line; do
-        suite=$(echo "$line" | awk -F "/" '{print $NF}' | awk -F "." '{print $1}')
+        suite=$(echo "$line" | awk -F "/" '{print $NF}' | awk -F '.json' '{print $1}')
         case=$(echo "$line" | awk -F '"' '{print $(NF-1)}') 
         cd "${OET_PATH}" || exit 1
         bash mugen.sh -f "${suite}" -r "${case}" -x
         ls "${OET_PATH}"/results/"${suite}"/failed >>failed_case
+        ls "${OET_PATH}"/results/"${suite}"/skipped >>failed_case
     done < json_file
     cd "${workdir}" || exit 1
 }
