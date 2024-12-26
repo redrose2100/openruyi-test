@@ -38,11 +38,6 @@ EOF
     expect <<EOF
         spawn osc list
         expect {
-            "User*" {
-                send "test666\\r"
-            }
-        }
-        expect {
             "Password*" {
                 send "test666@123\\r"
             }
@@ -53,6 +48,7 @@ EOF
 }
 
 function clear_env() {
+    osc up
     cd "$currentDir" || exit 1
     rm -rf "$branches_path" /root/.config/osc
     DNF_REMOVE "$@"

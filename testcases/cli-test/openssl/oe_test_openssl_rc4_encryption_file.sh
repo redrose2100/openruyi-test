@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test rc4 encryption and decryption file
 # #######################################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL openssl
     mkdir /tmp/test
-    cd /tmp/test
+    cd /tmp/test || exit 1
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -32,26 +32,49 @@ function run_test() {
     openssl genrsa -out 1.key 1024
     test -e 1.key
     CHECK_RESULT $? 0 0 "Generation failure 1"
-    expect <<-END
-    spawn openssl enc -e -rc4 -in 1.key -out 1.key.enc
-    expect "password"
-    send "123456\\n"
-    expect "password"
-    send "123456\\n"
-    expect eof
-    exit
+    if rpm -qa openssl | grep 1.1.1; then
+        expect <<-END
+        spawn openssl enc -e -rc4 -in 1.key -out 1.key.enc
+        expect "password"
+        send "123456\\n"
+        expect "password"
+        send "123456\\n"
+        expect eof
+        exit
 END
-    test -e 1.key.enc
-    CHECK_RESULT $? 0 0 "Generation failure 2"
-    expect <<-END
-    spawn openssl enc -d -rc4 -in 1.key.enc -out 1.key.dec
-    expect "password"
-    send "123456\\n"
-    expect eof
-    exit
+        test -e 1.key.enc
+        CHECK_RESULT $? 0 0 "Generation failure 2"
+        expect <<-END
+        spawn openssl enc -d -rc4 -in 1.key.enc -out 1.key.dec
+        expect "password"
+        send "123456\\n"
+        expect eof
+        exit
 END
-    test -e 1.key.dec
-    CHECK_RESULT $? 0 0 "Generation failure 3"
+        test -e 1.key.dec
+        CHECK_RESULT $? 0 0 "Generation failure 3"
+    else
+        expect <<-END
+        spawn openssl enc -provider-path /usr/lib64/ossl-modules -provider legacy -provider default -e -rc4 -in 1.key -out 1.key.enc
+        expect "password"
+        send "123456\\n"
+        expect "password"
+        send "123456\\n"
+        expect eof
+        exit
+END
+        test -e 1.key.enc
+        CHECK_RESULT $? 0 0 "Generation failure 2"
+        expect <<-END
+        spawn openssl enc -provider-path /usr/lib64/ossl-modules -provider legacy -provider default -d -rc4 -in 1.key.enc -out 1.key.dec
+        expect "password"
+        send "123456\\n"
+        expect eof
+        exit
+END
+        test -e 1.key.dec
+        CHECK_RESULT $? 0 0 "Generation failure 3"
+    fi
     diff 1.key 1.key.dec
     CHECK_RESULT $? 0 0 "decryption failure"
     LOG_INFO "End of the test."
@@ -59,7 +82,7 @@ END
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /tmp/test
     LOG_INFO "Finish environment cleanup!"
 }

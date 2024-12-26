@@ -15,13 +15,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   pg_standby
 # ############################################
-
+# shellcheck disable=SC1091,SC2046
 source ../common/lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     postgresql_install
     mkdir -p /var/lib/pgsql/standby_log
+    if ! rpm -ql postgresql-contrib | grep bin | grep pg_standby; then
+        LOG_INFO "The command pg_standby does not exist."
+        exit 0
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 

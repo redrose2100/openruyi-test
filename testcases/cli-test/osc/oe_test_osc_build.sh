@@ -29,38 +29,22 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    osc branch openEuler:Mainline abrt "$branches_path" abrt | grep 'branched package'
+    osc branch openSUSE chrpath "$branches_path" chrpath | grep 'branched package'
     CHECK_RESULT $?
     cd "$branches_path" || exit 1
     osc up
     CHECK_RESULT $?
-    cd abrt || exit 1
+    cd chrpath || exit 1
     osc setlinkrev | grep 'revision'
     CHECK_RESULT $?
     SLEEP_WAIT 5
     osc up -S
     CHECK_RESULT $?
-    rename _service:tar_scm: '' _service:tar_scm:*
+    osc buildconfig chrpath | grep 'chrpath'
     CHECK_RESULT $?
-    rm -f _service
-    expect <<-END
-        log_file testlog
-        set timeout 1800
-        spawn osc build abrt.spec standard_${NODE1_FRAME}
-        expect "?"
-        send "1\\n"
-        expect "?"
-        send "1\\n"
-        expect eof
-        exit
-END
-    grep '/root/osc/buildroot/home/abuild/rpmbuild/SRPMS' testlog
+    osc rebuild "$branches_path" chrpath | grep 'ok'
     CHECK_RESULT $?
-    osc buildconfig abrt | grep 'abrt'
-    CHECK_RESULT $?
-    osc rebuild "$branches_path" abrt | grep 'ok'
-    CHECK_RESULT $?
-    osc restartbuild "$branches_path" abrt | grep 'ok'
+    osc restartbuild "$branches_path" chrpath | grep 'ok'
     CHECK_RESULT $?
     expect <<-END
         log_file testlog1
@@ -79,7 +63,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f testlog*
     cd .. || exit 1
-    osc rdelete "$branches_path" abrt -m "delete package_abrt" --force
+    osc rdelete "$branches_path" chrpath -m "delete package_chrpath" --force
+    osc up
     rm -rf /root/osc/
     clear_env
     LOG_INFO "End to restore the test environment."
