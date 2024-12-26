@@ -15,12 +15,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   ecpg
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     postgresql_install
+    if ! rpm -ql postgresql-devel | grep bin | grep ecpg; then
+        LOG_INFO "The command ecpg does not exist."
+        exit 0
+    fi
     su - postgres -c 'echo "EXEC SQL CREATE TABLE testecpg (a int, b varchar(50));" >test.sqc'
     LOG_INFO "End to prepare the test environment."
 }

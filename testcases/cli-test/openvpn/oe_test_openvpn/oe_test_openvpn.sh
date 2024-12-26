@@ -105,28 +105,29 @@ function run_test() {
     CHECK_RESULT $?
     P_SSH_CMD --node 2 --cmd "test -f key"
     CHECK_RESULT $?
+    if ! openvpn --help | grep "\--secret" | grep -i "DEPRECATED"; then
+        nohup openvpn --remote "${random2_ip}" --dev tun1 --ifconfig 10.4.0.1 10.4.0.2 --verb 5 --secret key >/dev/null 2>&1 &
+        SLEEP_WAIT 5
+        pgrep -f 'openvpn --remote'
+        CHECK_RESULT $?
+        P_SSH_CMD --node 2 --cmd "nohup openvpn --remote ${random_ip} --dev tun1 --ifconfig 10.4.0.2 10.4.0.1 --verb 5 --secret key >/dev/null 2>&1 &"
+        CHECK_RESULT $?
+        remote_pid=$(P_SSH_CMD --node 2 --cmd "pgrep -f 'openvpn --remote'" | tail -n 1 | awk -F '\r' '{print $1}')
+        CHECK_RESULT $?
 
-    nohup openvpn --remote "${random2_ip}" --dev tun1 --ifconfig 10.4.0.1 10.4.0.2 --verb 5 --secret key >/dev/null 2>&1 &
-    SLEEP_WAIT 5
-    pgrep -f 'openvpn --remote'
-    CHECK_RESULT $?
-    P_SSH_CMD --node 2 --cmd "nohup openvpn --remote ${random_ip} --dev tun1 --ifconfig 10.4.0.2 10.4.0.1 --verb 5 --secret key >/dev/null 2>&1 &"
-    CHECK_RESULT $?
-    remote_pid=$(P_SSH_CMD --node 2 --cmd "pgrep -f 'openvpn --remote'" | tail -n 1 | awk -F '\r' '{print $1}')
-    CHECK_RESULT $?
-
-    ping -c 3 10.4.0.2 >/dev/null
-    CHECK_RESULT $?
-    P_SSH_CMD --node 2 --cmd "ping -c 3 10.4.0.1 >/dev/null"
-    CHECK_RESULT $?
-    kill -9 "$(pgrep -f 'openvpn --remote')"
-    SLEEP_WAIT 15
-    pgrep -f 'openvpn --remote'
-    CHECK_RESULT $? 1
-    P_SSH_CMD --node 2 --cmd "kill -9 $remote_pid"
-    SLEEP_WAIT 15
-    P_SSH_CMD --node 2 --cmd "pgrep -f 'openvpn --remote'"
-    CHECK_RESULT $? 1
+        ping -c 3 10.4.0.2 >/dev/null
+        CHECK_RESULT $?
+        P_SSH_CMD --node 2 --cmd "ping -c 3 10.4.0.1 >/dev/null"
+        CHECK_RESULT $?
+        kill -9 "$(pgrep -f 'openvpn --remote')"
+        SLEEP_WAIT 15
+        pgrep -f 'openvpn --remote'
+        CHECK_RESULT $? 1
+        P_SSH_CMD --node 2 --cmd "kill -9 $remote_pid"
+        SLEEP_WAIT 15
+        P_SSH_CMD --node 2 --cmd "pgrep -f 'openvpn --remote'"
+        CHECK_RESULT $? 1
+    fi
 
     expect <<EOF
         spawn openssl req -nodes -new -x509 -keyout client.key -out ca.crt
