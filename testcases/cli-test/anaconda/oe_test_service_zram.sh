@@ -16,14 +16,22 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test zram.service restart
 # #############################################
-
-source "../common/common_lib.sh"
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL anaconda-core 
-    sed -i "s/MAX_RAM_ON=2097152/MAX_RAM_ON=4097152/g" /usr/libexec/anaconda/zramswapon
-    systemctl start zram.service
+    DNF_INSTALL anaconda-core
+    # anaconda-core 33.19版本有zram.service,36.16版本没有zram.service服务
+    if [ "$(rpm -q anaconda-core|cut -d '-' -f 3|cut -d '.' -f 1)" -ge  34 ];then
+        LOG_INFO "$(rpm -q anaconda-core) do not have zram.service,skip test."
+        exit 255
+    fi
+
+    memtotal_kb=$(grep MemTotal /proc/meminfo | grep -E --only-matching '[[:digit:]]+')
+    sed -i "s/MAX_RAM_ON=2097152/MAX_RAM_ON=${memtotal_kb}/g" /usr/libexec/anaconda/zramswapon
+    systemctl restart zram.service
+	sleep 2
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -36,7 +44,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    sed -i "s/MAX_RAM_ON=4097152/MAX_RAM_ON=2097152/g" /usr/libexec/anaconda/zramswapon
+    [ -e /usr/libexec/anaconda/zramswapon ] && sed -i "s/MAX_RAM_ON=${memtotal_kb}/MAX_RAM_ON=2097152/g" /usr/libexec/anaconda/zramswapon
+	systemctl restart zram.service
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
