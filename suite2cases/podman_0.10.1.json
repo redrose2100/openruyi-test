@@ -2,12 +2,6 @@
     "path": "$OET_PATH/testcases/cli-test/podman",
     "cases": [
         {
-            "name": "oe_test_service_podman"
-        },
-        {
-            "name": "oe_test_socket_podman"
-        },
-        {
             "name": "oe_test_podman_0.10.1_01"
         },
         {
@@ -177,9 +171,6 @@
         },
         {
             "name": "oe_test_podman_0.10.1"
-        },
-        {
-            "name": "oe_test_service_podman-clean-transient"
         }
     ]
 }
