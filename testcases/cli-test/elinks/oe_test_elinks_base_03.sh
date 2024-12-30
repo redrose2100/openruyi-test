@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of elinks command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -46,7 +46,7 @@ function run_test() {
 
     nohup elinks -no-references www.baidu.com >./info3.log 2>&1 &
     SLEEP_WAIT 2
-    fgrep "Refresh: [1]http://www.baidu.com/baidu.html" ./info3.log
+    grep -F  "百度搜索" ./info3.log
     CHECK_RESULT $? 0 0 "Check elinks -no-references failed"
 
     elinks -remote text -dump www.baidu.com | grep "http://www.beian.gov.cn/portal"
@@ -75,8 +75,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf *.log text
+    DNF_REMOVE "$@"
+    rm -rf -- *.log text
     LOG_INFO "Finish restore the test environment."
 }
 
