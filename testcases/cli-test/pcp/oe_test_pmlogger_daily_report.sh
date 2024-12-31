@@ -21,19 +21,14 @@ source "common/common_pcp.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    mkdir -p /var/log/pcp/ba
-    mkdir -p /usr/libexec/pcp/bin/
-    touch pmlogger_daily_report
-    chmod 744 pmlogger_daily_report
     DNF_INSTALL "pcp-zeroconf"
-    mv pmlogger_daily_report  rm -rf /usr/libexec/pcp/bin/pmlogger_daily_report
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     /usr/libexec/pcp/bin/pmlogger_daily_report -a yesterday
-    CHECK_RESULT $? 0 0 "-a option check failed" 
+    CHECK_RESULT $? 0 0 "-a option check failed"
     test -d /var/log/pcp/sa
     CHECK_RESULT $? 0 0 "/var/log/pcp/sa check failed"
     /usr/libexec/pcp/bin/pmlogger_daily_report -f momo.txt
@@ -62,7 +57,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/log/pcp/ba momo.txt dailyReport.txt
-    rm -rf /usr/libexec/pcp/bin/pmlogger_daily_report
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

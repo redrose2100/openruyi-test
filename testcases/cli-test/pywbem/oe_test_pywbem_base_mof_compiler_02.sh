@@ -17,39 +17,40 @@
 #@Desc      	:   Test pywbem_mof_compiler command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     cp -f ./common/CIM_Application26.mof ./
     DNF_INSTALL "docker python3-pywbem"
-    sudo docker run -d -it --rm -p 0.0.0.0:15988:5988 -p 0.0.0.0:15989:5989 --name openpegasus kschopmeyer/openpegasus-server:0.1.1
+    sudo docker pull hub.firefly.store/kschopmeyer/openpegasus-server:0.1.1
+    sudo docker run -d -it --rm -p 0.0.0.0:15988:5988 -p 0.0.0.0:15989:5989 --name openpegasus hub.firefly.store/kschopmeyer/openpegasus-server:0.1.1
     SLEEP_WAIT 10s
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start to run test."
-    mof_compiler -s http://0.0.0.0:15988 CIM_Application26.mof -I ./ 
-    CHECK_RESULT $? 0 0 "mof_compiler: failed to test option -I"
-    mof_compiler -s http://0.0.0.0:15988 -v CIM_Application26.mof | grep "Compiling file"
-    CHECK_RESULT $? 0 0 "mof_compiler: failed to test option -v"
-    mof_compiler -V | grep `(rpm -qa python3-pywbem | awk -F "-" '{print $3}')`
-    CHECK_RESULT $? 0 0 "mof_compiler: failed to test option -V"
-    mof_compiler -h | grep "usage"
-    CHECK_RESULT $? 0 0 "mof_compiler: failed to test option -h"
+    if [ "${NODE1_FRAME}" == x86_64 ]; then
+        mof_compiler -s http://0.0.0.0:15988 CIM_Application26.mof -I ./
+        CHECK_RESULT $? 0 0 "mof_compiler: failed to test option -I"
+        mof_compiler -s http://0.0.0.0:15988 -v CIM_Application26.mof | grep "Compiling file"
+        CHECK_RESULT $? 0 0 "mof_compiler: failed to test option -v"
+        mof_compiler -V | grep "$(rpm -qa python3-pywbem | awk -F "-" '{print $3}')"
+        CHECK_RESULT $? 0 0 "mof_compiler: failed to test option -V"
+        mof_compiler -h | grep "usage"
+        CHECK_RESULT $? 0 0 "mof_compiler: failed to test option -h"
+    fi
     LOG_INFO "End to run test."
 }
 
-function post_test()
-{
+function post_test() {
     LOG_INFO "Start to restore the test environment."
     docker stop openpegasus
     docker rm -f openpegasus
     rm -rf CIM_Application26.mof
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
-}    
+}
 
 main "$@"

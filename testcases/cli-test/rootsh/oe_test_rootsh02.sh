@@ -16,7 +16,7 @@
 #@Desc      	:   Test Command rootsh
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -48,7 +48,7 @@ function run_test() {
         exit 1
 EOF
     CHECK_RESULT $? 0 0 "Failed option: --initial"
-    cat /var/log/test.log | grep -E "Welcome"
+    grep -E "Welcome" /var/log/test.log
     CHECK_RESULT $? 0 0 "Failed option: --initial"
     rm -f /var/log/test.log
 
@@ -66,7 +66,7 @@ EOF
         exit 1
 EOF
     CHECK_RESULT $? 0 0 "Failed option: --user"
-    cat /var/log/test.log | grep -E "Welcome"
+    grep -E "Welcome" /var/log/test.log
     CHECK_RESULT $? 0 0 "Failed option: --user"
     rm -f /var/log/test.log
 
@@ -95,7 +95,7 @@ EOF
         exit 1
 EOF
     CHECK_RESULT $? 0 0 "Failed option: --logfile"
-    cat /var/log/test.log | grep -E "Welcome"
+    grep -E "Welcome" /var/log/test.log
     CHECK_RESULT $? 0 0 "Failed option: --logfile"
     rm -f /var/log/test.log
 
@@ -117,7 +117,7 @@ EOF
         exit 1
 EOF
     CHECK_RESULT $? 0 0 "Failed option: --logdir"
-    cat /var/log/test.log | grep -E "Welcome"
+    grep -E "Welcome" /var/log/test.log
     CHECK_RESULT $? 0 0 "Failed option: --logdir"
     rm -f /var/log/test.log
 
@@ -137,8 +137,9 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    userdel testUser
+    DNF_REMOVE "$@"
+    userdel -rf testUser
+    rm -rf /root/my_log
     LOG_INFO "End to restore the test environment."
 }
 
