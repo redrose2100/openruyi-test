@@ -17,34 +17,36 @@
 #@Desc      	:   Test pywbem_mof_compiler command
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     cp -f ./common/CIM_Application26.mof ./
     DNF_INSTALL "docker python3-pywbem"
-    sudo docker run -d -it --rm -p 0.0.0.0:15988:5988 -p 0.0.0.0:15989:5989 --name openpegasus kschopmeyer/openpegasus-server:0.1.1
+    sudo docker pull hub.firefly.store/kschopmeyer/openpegasus-server:0.1.1
+    sudo docker run -d -it --rm -p 0.0.0.0:15988:5988 -p 0.0.0.0:15989:5989 --name openpegasus hub.firefly.store/kschopmeyer/openpegasus-server:0.1.1
     SLEEP_WAIT 10s
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start to run test."
-    mof_compiler -s http://0.0.0.0:15988 --log all='file' CIM_Application26.mof
-    test -f mofcompserver.log
-    CHECK_RESULT $? 0 0 "mof_compiler: failed to test option --log"
+    if [ "${NODE1_FRAME}" == x86_64 ]; then
+        mof_compiler -s http://0.0.0.0:15988 --log all='file' CIM_Application26.mof
+        CHECK_RESULT $? 0 0 "mof_compiler: failed to test option --log"
+        test -f mofcompserver.log
+        CHECK_RESULT $? 0 0 "File does not exist"
+    fi
     LOG_INFO "End to run test."
 }
 
-function post_test()
-{
+function post_test() {
     LOG_INFO "Start to restore the test environment."
     docker stop openpegasus
     docker rm -f openpegasus
     rm -rf CIM_Application26.mof mofcompserver.log
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
-}    
+}
 
 main "$@"

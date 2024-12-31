@@ -30,27 +30,27 @@ function run_test() {
     LOG_INFO "Start to run test."
     ocamlcp -P a example.ml
     echo "example" >example.dump
-    ocamlprof -f s example.dump | grep "example"
+    ocamlprof.opt -f s example.dump | grep "example"
     CHECK_RESULT $?
-    ocamlprof -instrument -impl example.ml 2>&1 | grep "OCAML__prof_Profiling"
+    ocamlprof.opt -instrument -impl example.ml 2>&1 | grep "OCAML__prof_Profiling"
     CHECK_RESULT $?
-    ocamlprof -intf /usr/lib64/ocaml/filename.mli | grep "string"
+    ocamlprof.opt -intf /usr/lib64/ocaml/filename.mli | grep "string"
     CHECK_RESULT $?
-    ocamlprof -vnum ocamlprof.dump | grep "$ocaml_version"
+    ocamlprof.opt -vnum ocamlprof.dump | grep "$ocaml_version"
     CHECK_RESULT $?
-    ocamlprof -version ocamlprof.dump | grep "$ocaml_version"
+    ocamlprof.opt -version ocamlprof.dump | grep "$ocaml_version"
     CHECK_RESULT $?
     echo "example.dump" >tmpprof
-    ocamlprof -args tmpprof | grep "example"
+    ocamlprof.opt -args tmpprof | grep "example"
     CHECK_RESULT $?
-    ocamlprof -help | grep "ocamlprof"
+    ocamlprof.opt -help | grep "ocamlprof"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./example* a.out ocamlprof.dump example.dump tmpprof
     LOG_INFO "End to restore the test environment."
 }

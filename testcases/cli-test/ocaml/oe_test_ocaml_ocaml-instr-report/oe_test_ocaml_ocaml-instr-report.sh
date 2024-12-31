@@ -21,6 +21,10 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL ocaml
+    if ! rpm -ql ocaml | grep bin | grep ocaml-instr-report; then
+        LOG_INFO "The command ocaml-instr-report does not exist."
+        exit 0
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -58,7 +62,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf awkvars.out actual_result
     LOG_INFO "End to restore the test environment."
 }

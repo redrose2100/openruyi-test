@@ -11,26 +11,26 @@
 ####################################
 #@Author    	:   zhangchengjie&&zhuletian
 #@Contact   	:   2281900936@qq.com
-#@Date      	:   2022-08-15 
+#@Date      	:   2022-08-15
 #@License   	:   Mulan PSL v2
 #@Version   	:   1.0
 #@Desc      	:   Take the test copydatabase command
 #####################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-function pre_test()
-{
+function pre_test() {
     LOG_INFO "Start to prepare the test environment"
     DNF_INSTALL "xapian-core"
-    cp -r ./common/db[1..2] .
+    cp -r ./common/db* ./
     LOG_INFO "End to prepare the test environmnet"
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start to run test"
-    copydatabase ./db1 ./db2 --no-renumber 2>&1 | grep -E "db1: 100/100|db2: 100/100"
+    copydatabase --no-renumber ./db1 ./db2 result_file 2>&1 | grep -E "db1: 100/100|db2: 100/100"
     CHECK_RESULT $? 0 0 "option --no-renumber error"
+    test -d result_file
+    CHECK_RESULT $? 0 0 "Directory does not exist."
     copydatabase --help | grep Usage
     CHECK_RESULT $? 0 0 "option --help error"
     copydatabase --version | grep copydatabase
@@ -38,11 +38,10 @@ function run_test()
     LOG_INFO "End to run test"
 }
 
-function post_test()
-{
+function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf ./--no-renumber db[1..2]
+    DNF_REMOVE "$@"
+    rm -rf ./result_file ./db*
     LOG_INFO "End to restore the test environment."
 }
 
