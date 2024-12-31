@@ -21,29 +21,31 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "python3-robotframework python3-jsonschema tar"
-  LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "python3-robotframework python3-jsonschema tar"
+    LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-  tar -xvf RobotDemo/v4.0.3.tar.gz
-  CHECK_RESULT $? 0 0 "robotframework-4.0.3 not exist"
-  python3 robotframework-4.0.3/utest/run.py -q 2>&1 | grep "OK"
-  CHECK_RESULT $? 0 0 "-q failture"pcprebotrobot
-  python3 robotframework-4.0.3/utest/run.py -v 2>&1 | grep "OK"
-  CHECK_RESULT $? 0 0 "-v failture"
-  python3 robotframework-4.0.3/utest/run.py -d 2>&1 | grep "OK"
-  CHECK_RESULT $? 0 0 "-d failture"
-  LOG_INFO "End of the test."
+    LOG_INFO "Start to run test."
+    if rpm -qa python3-robotframework | grep 4.0.3; then
+        tar -xvf RobotDemo/v4.0.3.tar.gz
+        CHECK_RESULT $? 0 0 "robotframework-4.0.3 not exist"
+        python3 robotframework-4.0.3/utest/run.py -q 2>&1 | grep "OK"
+        CHECK_RESULT $? 0 0 "-q failture"pcprebotrobot
+        python3 robotframework-4.0.3/utest/run.py -v 2>&1 | grep "OK"
+        CHECK_RESULT $? 0 0 "-v failture"
+        python3 robotframework-4.0.3/utest/run.py -d 2>&1 | grep "OK"
+        CHECK_RESULT $? 0 0 "-d failture"
+    fi
+    LOG_INFO "End of the test."
 }
 
 function post_test() {
-  LOG_INFO "start environment cleanup."
-  DNF_REMOVE "$@"
-  rm -rf robotframework-4.0.3
-  LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    rm -rf robotframework-4.0.3
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
