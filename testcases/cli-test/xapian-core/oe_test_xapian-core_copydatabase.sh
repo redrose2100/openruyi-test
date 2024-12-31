@@ -29,7 +29,7 @@ function pre_test()
 function run_test()
 {
     LOG_INFO "Start to run test"
-    copydatabase ./db1 ./db2 --no-renumber 2>&1 | grep -E "db1: 100/100|db2: 100/100"
+    copydatabase --no-renumber ./db1 ./db2 newdatabase 2>&1 | grep -E "db1: 100/100|db2: 100/100" && test -d 
     CHECK_RESULT $? 0 0 "option --no-renumber error"
     copydatabase --help | grep Usage
     CHECK_RESULT $? 0 0 "option --help error"
@@ -42,7 +42,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf ./--no-renumber db[1..2]
+    rm -rf ./newdatabase db[1..2]
     LOG_INFO "End to restore the test environment."
 }
 
