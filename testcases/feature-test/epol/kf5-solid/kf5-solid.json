@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/kf5-solid",
+    "cases": [
+        {
+            "name": "list"
+        },
+        {
+            "name": "details"
+        },
+        {
+            "name": "nonportableinfo"
+        },
+        {
+            "name": "query"
+        },
+        {
+            "name": "mount"
+        },
+        {
+            "name": "unmount"
+        },
+        {
+            "name": "eject"
+        },
+        {
+            "name": "listen"
+        },
+        {
+            "name": "solid-power_1"
+        }
+    ]
+}

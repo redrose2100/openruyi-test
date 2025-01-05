@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/you-get",
+    "cases": [
+        {
+            "name": "you-get_1"
+        }
+    ]
+}

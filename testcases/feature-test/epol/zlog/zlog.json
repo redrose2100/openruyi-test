@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/zlog",
+    "cases": [
+        {
+            "name": "zlog-chk-conf_1"
+        }
+    ]
+}

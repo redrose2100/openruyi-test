@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/xfce4-notifyd",
+    "cases": [
+        {
+            "name": "xfce4-notifyd-config_1"
+        }
+    ]
+}

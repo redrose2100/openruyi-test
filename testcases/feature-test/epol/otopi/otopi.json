@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/otopi",
+    "cases": [
+        {
+            "name": "match"
+        },
+        {
+            "name": "query"
+        }
+    ]
+}

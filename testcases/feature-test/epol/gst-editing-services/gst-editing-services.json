@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/gst-editing-services",
+    "cases": [
+        {
+            "name": "+clip"
+        },
+        {
+            "name": "+effect"
+        },
+        {
+            "name": "+test-clip"
+        },
+        {
+            "name": "+title"
+        },
+        {
+            "name": "set-"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/python-pysmi",
+    "cases": [
+        {
+            "name": "mibcopy.py_1"
+        },
+        {
+            "name": "mibdump.py_1"
+        }
+    ]
+}

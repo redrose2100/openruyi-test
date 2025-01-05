@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/xfconf",
+    "cases": [
+        {
+            "name": "xfconf-query_1"
+        }
+    ]
+}

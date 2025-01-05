@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/python-pyserial",
+    "cases": [
+        {
+            "name": "pyserial-ports_1"
+        }
+    ]
+}

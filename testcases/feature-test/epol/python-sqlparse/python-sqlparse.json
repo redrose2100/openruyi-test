@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/python-sqlparse",
+    "cases": [
+        {
+            "name": "sqlformat_1"
+        }
+    ]
+}

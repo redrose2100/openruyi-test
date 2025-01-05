@@ -1,0 +1,35 @@
+{
+    "path": "$OET_PATH/testcases/percona-xtrabackup",
+    "cases": [
+        {
+            "name": "--apply-log"
+        },
+        {
+            "name": "--copy-back"
+        },
+        {
+            "name": "--move-back"
+        },
+        {
+            "name": "--decompress"
+        },
+        {
+            "name": "--decrypt"
+        },
+        {
+            "name": "xbcrypt_1"
+        },
+        {
+            "name": "-c"
+        },
+        {
+            "name": "-x"
+        },
+        {
+            "name": "backup"
+        },
+        {
+            "name": "prepare"
+        }
+    ]
+}

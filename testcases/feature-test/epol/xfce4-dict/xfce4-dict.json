@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/xfce4-dict",
+    "cases": [
+        {
+            "name": "xfce4-dict_1"
+        }
+    ]
+}

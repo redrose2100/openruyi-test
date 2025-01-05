@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/mosquitto",
+    "cases": [
+        {
+            "name": "dynsec"
+        },
+        {
+            "name": "mosquitto_passwd_1"
+        },
+        {
+            "name": "mosquitto_pub_1"
+        },
+        {
+            "name": "--help"
+        },
+        {
+            "name": "mosquitto_sub_1"
+        }
+    ]
+}

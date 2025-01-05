@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/caja",
+    "cases": [
+        {
+            "name": "caja_1"
+        },
+        {
+            "name": "caja-connect-server_1"
+        }
+    ]
+}

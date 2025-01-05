@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/nmstate",
+    "cases": [
+        {
+            "name": "commit"
+        },
+        {
+            "name": "edit"
+        },
+        {
+            "name": "rollback"
+        },
+        {
+            "name": "set"
+        },
+        {
+            "name": "apply"
+        },
+        {
+            "name": "show"
+        },
+        {
+            "name": "version"
+        },
+        {
+            "name": "varlink"
+        },
+        {
+            "name": "gc"
+        }
+    ]
+}

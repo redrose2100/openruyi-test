@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/octave",
+    "cases": [
+        {
+            "name": "octave_1"
+        },
+        {
+            "name": "octave-5.1.0_1"
+        },
+        {
+            "name": "octave-cli_1"
+        },
+        {
+            "name": "octave-cli-5.1.0_1"
+        }
+    ]
+}

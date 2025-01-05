@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/atril",
+    "cases": [
+        {
+            "name": "atril_1"
+        },
+        {
+            "name": "atril-previewer_1"
+        },
+        {
+            "name": "atril-thumbnailer_1"
+        }
+    ]
+}

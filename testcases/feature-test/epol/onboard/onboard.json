@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/onboard",
+    "cases": [
+        {
+            "name": "onboard_1"
+        },
+        {
+            "name": "onboard-settings_1"
+        }
+    ]
+}

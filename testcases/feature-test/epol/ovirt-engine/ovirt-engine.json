@@ -1,0 +1,50 @@
+{
+    "path": "$OET_PATH/testcases/ovirt-engine",
+    "cases": [
+        {
+            "name": "engine-cleanup_1"
+        },
+        {
+            "name": "engine-setup_1"
+        },
+        {
+            "name": "engine-upgrade-check_1"
+        },
+        {
+            "name": "list"
+        },
+        {
+            "name": "all"
+        },
+        {
+            "name": "get"
+        },
+        {
+            "name": "set"
+        },
+        {
+            "name": "merge"
+        },
+        {
+            "name": "help"
+        },
+        {
+            "name": "engine-vacuum_1"
+        },
+        {
+            "name": "aaa"
+        },
+        {
+            "name": "help"
+        },
+        {
+            "name": "info"
+        },
+        {
+            "name": "logger"
+        },
+        {
+            "name": "ovirt-register-sso-client-tool_1"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/xfce4-places-plugin",
+    "cases": [
+        {
+            "name": "xfce4-popup-places_1"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/opencv",
+    "cases": [
+        {
+            "name": "opencv_run_all_tests.sh_1"
+        },
+        {
+            "name": "opencv_test_calib3d_1"
+        },
+        {
+            "name": "opencv_test_ml_1"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/Thunar",
+    "cases": [
+        {
+            "name": "Thunar_1"
+        },
+        {
+            "name": "thunar_1"
+        }
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/xfce4-panel",
+    "cases": [
+        {
+            "name": "xfce4-panel_1"
+        },
+        {
+            "name": "xfce4-popup-applicationsmenu_1"
+        },
+        {
+            "name": "xfce4-popup-directorymenu_1"
+        },
+        {
+            "name": "xfce4-popup-windowmenu_1"
+        }
+    ]
+}

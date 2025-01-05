@@ -1,0 +1,200 @@
+{
+    "path": "$OET_PATH/testcases/botan2",
+    "cases": [
+        {
+            "name": "asn1print"
+        },
+        {
+            "name": "base32_dec"
+        },
+        {
+            "name": "base32_enc"
+        },
+        {
+            "name": "base58_dec"
+        },
+        {
+            "name": "base58_enc"
+        },
+        {
+            "name": "base64_dec"
+        },
+        {
+            "name": "base64_enc"
+        },
+        {
+            "name": "hex_dec"
+        },
+        {
+            "name": "hex_enc"
+        },
+        {
+            "name": "compress"
+        },
+        {
+            "name": "decompress"
+        },
+        {
+            "name": "encryption"
+        },
+        {
+            "name": "fec_decode"
+        },
+        {
+            "name": "fec_encode"
+        },
+        {
+            "name": "fec_info"
+        },
+        {
+            "name": "hash"
+        },
+        {
+            "name": "hmac"
+        },
+        {
+            "name": "config"
+        },
+        {
+            "name": "cpu_clock"
+        },
+        {
+            "name": "cpuid"
+        },
+        {
+            "name": "has_command"
+        },
+        {
+            "name": "version"
+        },
+        {
+            "name": "cc_decrypt"
+        },
+        {
+            "name": "cc_encrypt"
+        },
+        {
+            "name": "entropy"
+        },
+        {
+            "name": "http_get"
+        },
+        {
+            "name": "rng"
+        },
+        {
+            "name": "roughtime"
+        },
+        {
+            "name": "roughtime_check"
+        },
+        {
+            "name": "speed"
+        },
+        {
+            "name": "timing_test"
+        },
+        {
+            "name": "uuid"
+        },
+        {
+            "name": "factor"
+        },
+        {
+            "name": "gen_prime"
+        },
+        {
+            "name": "is_prime"
+        },
+        {
+            "name": "mod_inverse"
+        },
+        {
+            "name": "check_argon2"
+        },
+        {
+            "name": "check_bcrypt"
+        },
+        {
+            "name": "gen_argon2"
+        },
+        {
+            "name": "gen_bcrypt"
+        },
+        {
+            "name": "pbkdf_tune"
+        },
+        {
+            "name": "dl_group_info"
+        },
+        {
+            "name": "ec_group_info"
+        },
+        {
+            "name": "fingerprint"
+        },
+        {
+            "name": "gen_dl_group"
+        },
+        {
+            "name": "keygen"
+        },
+        {
+            "name": "pk_decrypt"
+        },
+        {
+            "name": "pk_encrypt"
+        },
+        {
+            "name": "pk_workfactor"
+        },
+        {
+            "name": "pkcs8"
+        },
+        {
+            "name": "sign"
+        },
+        {
+            "name": "verify"
+        },
+        {
+            "name": "tls_ciphers"
+        },
+        {
+            "name": "tls_client"
+        },
+        {
+            "name": "tls_client_hello"
+        },
+        {
+            "name": "tls_server"
+        },
+        {
+            "name": "tss_recover"
+        },
+        {
+            "name": "tss_split"
+        },
+        {
+            "name": "cert_info"
+        },
+        {
+            "name": "cert_verify"
+        },
+        {
+            "name": "gen_pkcs10"
+        },
+        {
+            "name": "gen_self_signed"
+        },
+        {
+            "name": "ocsp_check"
+        },
+        {
+            "name": "sign_cert"
+        },
+        {
+            "name": "trust_roots"
+        }
+    ]
+}

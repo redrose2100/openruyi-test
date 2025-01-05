@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/ukui-screensaver",
+    "cases": [
+        {
+            "name": "ukui-screensaver-command_1"
+        }
+    ]
+}
