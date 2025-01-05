@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/libyang",
+    "cases": [
+        {
+            "name": "yanglint_1"
+        },
+        {
+            "name": "yangre_1"
+        }
+    ]
+}

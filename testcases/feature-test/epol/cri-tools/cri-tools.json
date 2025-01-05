@@ -1,0 +1,98 @@
+{
+    "path": "$OET_PATH/testcases/cri-tools",
+    "cases": [
+        {
+            "name": "attach"
+        },
+        {
+            "name": "create"
+        },
+        {
+            "name": "exec"
+        },
+        {
+            "name": "version"
+        },
+        {
+            "name": "images"
+        },
+        {
+            "name": "image"
+        },
+        {
+            "name": "img"
+        },
+        {
+            "name": "inspect"
+        },
+        {
+            "name": "inspecti"
+        },
+        {
+            "name": "imagefsinfo"
+        },
+        {
+            "name": "inspectp"
+        },
+        {
+            "name": "logs"
+        },
+        {
+            "name": "port-forward"
+        },
+        {
+            "name": "ps"
+        },
+        {
+            "name": "pull"
+        },
+        {
+            "name": "run"
+        },
+        {
+            "name": "runp"
+        },
+        {
+            "name": "rm"
+        },
+        {
+            "name": "rmi"
+        },
+        {
+            "name": "rmp"
+        },
+        {
+            "name": "pods"
+        },
+        {
+            "name": "start"
+        },
+        {
+            "name": "info"
+        },
+        {
+            "name": "stop"
+        },
+        {
+            "name": "stopp"
+        },
+        {
+            "name": "update"
+        },
+        {
+            "name": "config"
+        },
+        {
+            "name": "stats"
+        },
+        {
+            "name": "completion"
+        },
+        {
+            "name": "help"
+        },
+        {
+            "name": "h"
+        }
+    ]
+}

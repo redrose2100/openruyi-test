@@ -1,0 +1,125 @@
+{
+    "path": "$OET_PATH/testcases/hbase",
+    "cases": [
+        {
+            "name": "start"
+        },
+        {
+            "name": "stop"
+        },
+        {
+            "name": "considerAsDead.sh_1"
+        },
+        {
+            "name": "shell"
+        },
+        {
+            "name": "hbck"
+        },
+        {
+            "name": "snapshot"
+        },
+        {
+            "name": "jshell"
+        },
+        {
+            "name": "classpath"
+        },
+        {
+            "name": "mapredcp"
+        },
+        {
+            "name": "pe"
+        },
+        {
+            "name": "ltt"
+        },
+        {
+            "name": "canary"
+        },
+        {
+            "name": "version"
+        },
+        {
+            "name": "completebulkload"
+        },
+        {
+            "name": "regionsplitter"
+        },
+        {
+            "name": "rowcounter"
+        },
+        {
+            "name": "cellcounter"
+        },
+        {
+            "name": "pre-upgrade"
+        },
+        {
+            "name": "hbtop"
+        },
+        {
+            "name": "CLASSNAME"
+        },
+        {
+            "name": "start"
+        },
+        {
+            "name": "stop"
+        },
+        {
+            "name": "restart"
+        },
+        {
+            "name": "autostart"
+        },
+        {
+            "name": "autorestart"
+        },
+        {
+            "name": "foreground_start"
+        },
+        {
+            "name": "autostart"
+        },
+        {
+            "name": "autorestart"
+        },
+        {
+            "name": "restart"
+        },
+        {
+            "name": "start"
+        },
+        {
+            "name": "stop"
+        },
+        {
+            "name": "hbase-jruby_1"
+        },
+        {
+            "name": "autostart"
+        },
+        {
+            "name": "start"
+        },
+        {
+            "name": "stop"
+        },
+        {
+            "name": "autostart"
+        },
+        {
+            "name": "start"
+        },
+        {
+            "name": "stop"
+        },
+        {
+            "name": "stop-hbase.sh_1"
+        },
+        {
+            "name": "zookeepers.sh_1"
+        }
+    ]
+}

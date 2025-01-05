@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/kiran-authentication-service",
+    "cases": [
+        {
+            "name": "kiran-authentication-daemon_1"
+        }
+    ]
+}

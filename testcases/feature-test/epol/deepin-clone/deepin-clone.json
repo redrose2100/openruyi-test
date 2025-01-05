@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/deepin-clone",
+    "cases": [
+        {
+            "name": "deepin-clone_1"
+        }
+    ]
+}

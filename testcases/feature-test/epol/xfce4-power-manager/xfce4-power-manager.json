@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/xfce4-power-manager",
+    "cases": [
+        {
+            "name": "xfce4-power-manager_1"
+        },
+        {
+            "name": "xfce4-power-manager-settings_1"
+        }
+    ]
+}

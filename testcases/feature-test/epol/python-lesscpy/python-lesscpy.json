@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/python-lesscpy",
+    "cases": [
+        {
+            "name": "lesscpy_1"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/gnome-maps",
+    "cases": [
+        {
+            "name": "gnome-maps_1"
+        }
+    ]
+}

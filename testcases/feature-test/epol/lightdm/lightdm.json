@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/lightdm",
+    "cases": [
+        {
+            "name": "switch-to-greeter"
+        },
+        {
+            "name": "switch-to-user"
+        },
+        {
+            "name": "switch-to-guest"
+        },
+        {
+            "name": "lock"
+        },
+        {
+            "name": "list-seats"
+        },
+        {
+            "name": "add-nested-seat"
+        },
+        {
+            "name": "add-local-x-seat"
+        },
+        {
+            "name": "add-seat"
+        }
+    ]
+}

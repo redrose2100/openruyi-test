@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/mate-control-center",
+    "cases": [
+        {
+            "name": "mate-appearance-properties_1"
+        },
+        {
+            "name": "mate-control-center_1"
+        },
+        {
+            "name": "mate-default-applications-properties_1"
+        },
+        {
+            "name": "mate-font-viewer_1"
+        },
+        {
+            "name": "mate-keyboard-properties_1"
+        },
+        {
+            "name": "mate-mouse-properties_1"
+        },
+        {
+            "name": "mate-thumbnail-font_1"
+        },
+        {
+            "name": "mate-typing-monitor_1"
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/tig",
+    "cases": [
+        {
+            "name": "log"
+        },
+        {
+            "name": "show"
+        },
+        {
+            "name": "reflog"
+        },
+        {
+            "name": "blame"
+        },
+        {
+            "name": "grep"
+        },
+        {
+            "name": "refs"
+        },
+        {
+            "name": "stash"
+        },
+        {
+            "name": "status"
+        }
+    ]
+}

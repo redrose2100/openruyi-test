@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/mate-system-monitor",
+    "cases": [
+        {
+            "name": "mate-system-monitor_1"
+        }
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/xfwm4",
+    "cases": [
+        {
+            "name": "xfwm4_1"
+        },
+        {
+            "name": "xfwm4-settings_1"
+        },
+        {
+            "name": "xfwm4-tweaks-settings_1"
+        },
+        {
+            "name": "xfwm4-workspace-settings_1"
+        }
+    ]
+}

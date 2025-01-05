@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/imsettings",
+    "cases": [
+        {
+            "name": "imsettings-info_1"
+        },
+        {
+            "name": "imsettings-reload_1"
+        },
+        {
+            "name": "imsettings-switch_1"
+        }
+    ]
+}

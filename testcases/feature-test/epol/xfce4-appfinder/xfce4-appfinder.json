@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/xfce4-appfinder",
+    "cases": [
+        {
+            "name": "xfce4-appfinder_1"
+        },
+        {
+            "name": "xfrun4_1"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/byzanz",
+    "cases": [
+        {
+            "name": "byzanz-playback_1"
+        },
+        {
+            "name": "byzanz-record_1"
+        }
+    ]
+}

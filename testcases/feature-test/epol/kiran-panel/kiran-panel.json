@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/kiran-panel",
+    "cases": [
+        {
+            "name": "kiran-desktop-item-edit_1"
+        },
+        {
+            "name": "kiran-panel-test-applets_1"
+        }
+    ]
+}

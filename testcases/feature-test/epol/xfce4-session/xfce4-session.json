@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/xfce4-session",
+    "cases": [
+        {
+            "name": "startxfce4_1"
+        },
+        {
+            "name": "xfce4-session_1"
+        },
+        {
+            "name": "xfce4-session-logout_1"
+        },
+        {
+            "name": "xfce4-session-settings_1"
+        }
+    ]
+}

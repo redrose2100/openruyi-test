@@ -1,0 +1,44 @@
+{
+    "path": "$OET_PATH/testcases/gnustep-make",
+    "cases": [
+        {
+            "name": "--find"
+        },
+        {
+            "name": "--debug"
+        },
+        {
+            "name": "gnustep-config_1"
+        },
+        {
+            "name": "--documentation"
+        },
+        {
+            "name": "--clean"
+        },
+        {
+            "name": "--failfast"
+        },
+        {
+            "name": "--debug"
+        },
+        {
+            "name": "--developer"
+        },
+        {
+            "name": "--verbose"
+        },
+        {
+            "name": "--sequential"
+        },
+        {
+            "name": "--find"
+        },
+        {
+            "name": "--debug"
+        },
+        {
+            "name": "tool"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/xfce4-terminal",
+    "cases": [
+        {
+            "name": "xfce4-terminal_1"
+        }
+    ]
+}

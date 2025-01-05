@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/xorg-x11-drv-synaptics",
+    "cases": [
+        {
+            "name": "synclient_1"
+        },
+        {
+            "name": "syndaemon_1"
+        }
+    ]
+}

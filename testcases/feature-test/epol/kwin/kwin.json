@@ -1,0 +1,95 @@
+{
+    "path": "$OET_PATH/testcases/kwin",
+    "cases": [
+        {
+            "name": "lock"
+        },
+        {
+            "name": "crashes"
+        },
+        {
+            "name": "help"
+        },
+        {
+            "name": "help-all"
+        },
+        {
+            "name": "version"
+        },
+        {
+            "name": "author"
+        },
+        {
+            "name": "license"
+        },
+        {
+            "name": "desktopfile"
+        },
+        {
+            "name": "xwayland"
+        },
+        {
+            "name": "socket"
+        },
+        {
+            "name": "wayland-fd"
+        },
+        {
+            "name": "xwayland-fd"
+        },
+        {
+            "name": "xwayland-display"
+        },
+        {
+            "name": "xwayland-xauthority"
+        },
+        {
+            "name": "replace"
+        },
+        {
+            "name": "x11-display"
+        },
+        {
+            "name": "wayland-display"
+        },
+        {
+            "name": "virtual"
+        },
+        {
+            "name": "width"
+        },
+        {
+            "name": "height"
+        },
+        {
+            "name": "scale"
+        },
+        {
+            "name": "output-count"
+        },
+        {
+            "name": "drm"
+        },
+        {
+            "name": "inputmethod"
+        },
+        {
+            "name": "lockscreen"
+        },
+        {
+            "name": "no-lockscreen"
+        },
+        {
+            "name": "no-global-shortcuts"
+        },
+        {
+            "name": "no-kactivities"
+        },
+        {
+            "name": "exit-with-session"
+        },
+        {
+            "name": "kwin_wayland_wrapper_1"
+        }
+    ]
+}

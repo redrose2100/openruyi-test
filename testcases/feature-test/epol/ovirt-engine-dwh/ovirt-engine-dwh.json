@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/ovirt-engine-dwh",
+    "cases": [
+        {
+            "name": "dwh-vacuum_1"
+        }
+    ]
+}

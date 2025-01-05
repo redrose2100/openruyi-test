@@ -1,0 +1,26 @@
+{
+    "path": "$OET_PATH/testcases/cufflinks",
+    "cases": [
+        {
+            "name": "compress_gtf_1"
+        },
+        {
+            "name": "cuffcompare_1"
+        },
+        {
+            "name": "cuffdiff_1"
+        },
+        {
+            "name": "cufflinks_1"
+        },
+        {
+            "name": "cuffmerge_1"
+        },
+        {
+            "name": "cuffquant_1"
+        },
+        {
+            "name": "gtf_to_sam_1"
+        }
+    ]
+}

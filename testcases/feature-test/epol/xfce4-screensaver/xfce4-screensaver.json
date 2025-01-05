@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/xfce4-screensaver",
+    "cases": [
+        {
+            "name": "xfce4-screensaver_1"
+        },
+        {
+            "name": "xfce4-screensaver-command_1"
+        },
+        {
+            "name": "xfce4-screensaver-configure_1"
+        },
+        {
+            "name": "xfce4-screensaver-preferences_1"
+        }
+    ]
+}

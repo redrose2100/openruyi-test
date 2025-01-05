@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/python-robotframework",
+    "cases": [
+        {
+            "name": "list"
+        },
+        {
+            "name": "show"
+        },
+        {
+            "name": "version"
+        }
+    ]
+}
