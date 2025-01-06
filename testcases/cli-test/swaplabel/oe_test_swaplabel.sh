@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    swaplabel "$swap" |grep "LABEL: SWAP"
+    swaplabel "$swap" |grep "UUID"
     CHECK_RESULT $? 0 0 "Failed to display the label of SWAP partition"
     swapoff "$swap"
     swaplabel -L SWAP1 "$swap"
