@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/gnome-photos",
+    "cases": [
+        {
+            "name": "gnome-photos_1"
+        }
+    ]
+}

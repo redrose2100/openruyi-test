@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/gnome-logs",
+    "cases": [
+        {
+            "name": "gnome-logs_1"
+        }
+    ]
+}

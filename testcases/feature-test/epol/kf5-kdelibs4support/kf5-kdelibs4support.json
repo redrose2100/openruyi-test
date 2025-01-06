@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/kf5-kdelibs4support",
+    "cases": [
+        {
+            "name": "kdebugdialog5_1"
+        },
+        {
+            "name": "kf5-config_1"
+        }
+    ]
+}

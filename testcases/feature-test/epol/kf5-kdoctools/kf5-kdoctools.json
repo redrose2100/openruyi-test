@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/kf5-kdoctools",
+    "cases": [
+        {
+            "name": "meinproc5_1"
+        }
+    ]
+}

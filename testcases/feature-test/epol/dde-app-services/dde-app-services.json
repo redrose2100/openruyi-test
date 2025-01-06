@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/dde-app-services",
+    "cases": [
+        {
+            "name": "dde-dconfig_1"
+        },
+        {
+            "name": "dde-dconfig-daemon_1"
+        }
+    ]
+}

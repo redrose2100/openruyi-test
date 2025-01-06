@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/kf5-kpackage",
+    "cases": [
+        {
+            "name": "kpackagetool5_1"
+        }
+    ]
+}

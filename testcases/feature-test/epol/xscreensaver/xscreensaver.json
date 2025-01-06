@@ -1,0 +1,50 @@
+{
+    "path": "$OET_PATH/testcases/xscreensaver",
+    "cases": [
+        {
+            "name": "activate"
+        },
+        {
+            "name": "deactivate"
+        },
+        {
+            "name": "cycle"
+        },
+        {
+            "name": "next"
+        },
+        {
+            "name": "prev"
+        },
+        {
+            "name": "select"
+        },
+        {
+            "name": "lock"
+        },
+        {
+            "name": "suspend"
+        },
+        {
+            "name": "exit"
+        },
+        {
+            "name": "restart"
+        },
+        {
+            "name": "time"
+        },
+        {
+            "name": "watch"
+        },
+        {
+            "name": "version"
+        },
+        {
+            "name": "xscreensaver-demo_1"
+        },
+        {
+            "name": "xscreensaver-settings_1"
+        }
+    ]
+}

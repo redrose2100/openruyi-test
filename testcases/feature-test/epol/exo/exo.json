@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/exo",
+    "cases": [
+        {
+            "name": "exo-desktop-item-edit_1"
+        }
+    ]
+}

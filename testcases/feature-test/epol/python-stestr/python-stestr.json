@@ -1,0 +1,86 @@
+{
+    "path": "$OET_PATH/testcases/python-stestr",
+    "cases": [
+        {
+            "name": "complete"
+        },
+        {
+            "name": "failing"
+        },
+        {
+            "name": "help"
+        },
+        {
+            "name": "init"
+        },
+        {
+            "name": "last"
+        },
+        {
+            "name": "list"
+        },
+        {
+            "name": "load"
+        },
+        {
+            "name": "run"
+        },
+        {
+            "name": "slowest"
+        },
+        {
+            "name": "complete"
+        },
+        {
+            "name": "failing"
+        },
+        {
+            "name": "help"
+        },
+        {
+            "name": "init"
+        },
+        {
+            "name": "last"
+        },
+        {
+            "name": "list"
+        },
+        {
+            "name": "load"
+        },
+        {
+            "name": "run"
+        },
+        {
+            "name": "slowest"
+        },
+        {
+            "name": "complete"
+        },
+        {
+            "name": "failing"
+        },
+        {
+            "name": "help"
+        },
+        {
+            "name": "init"
+        },
+        {
+            "name": "last"
+        },
+        {
+            "name": "list"
+        },
+        {
+            "name": "load"
+        },
+        {
+            "name": "run"
+        },
+        {
+            "name": "slowest"
+        }
+    ]
+}

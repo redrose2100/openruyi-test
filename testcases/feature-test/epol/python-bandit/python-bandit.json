@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/python-bandit",
+    "cases": [
+        {
+            "name": "bandit_1"
+        },
+        {
+            "name": "bandit-baseline_1"
+        },
+        {
+            "name": "bandit-config-generator_1"
+        }
+    ]
+}

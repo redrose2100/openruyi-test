@@ -1,0 +1,48 @@
+
+#!/usr/bin/bash
+# 请填写测试用例描述：测试 crictl start 命令，启动一个或多个已创建的容器
+
+# 测试框架固定行
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+# 测试前函数
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    # 安装待测试的软件包
+    DNF_INSTALL "cri-tools"
+    # 准备测试数据等,如果要创建文件请使用"./你要创建的文件"直接把文件创建到当前目录下
+    # 创建一个容器
+    crictl run --net=host --cpu=1 --memory=100Mi --image=busybox --name=test_container
+    CHECK_RESULT $? 0 0 "Failed to create container"
+    # 获取容器ID
+    container_id=$(crictl ps -q)
+    LOG_INFO "End of environmental preparation!"
+}
+
+# 测试函数
+function run_test() {
+    LOG_INFO "Start to run test."
+    # 测试内容,请尽可能详尽的测试命令的参数,如命令的参数组合,命令的参数顺序等
+    # 启动容器
+    crictl start $container_id
+    CHECK_RESULT $? 0 0 "Failed to start container"
+    # 检查容器状态
+    crictl ps | grep $container_id
+    CHECK_RESULT $? 0 0 "Container not running after start"
+    LOG_INFO "End of the test."
+}
+
+# 测试后函数
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    # 测试后环境恢复：
+        # 卸载安装的软件包
+        # 清理测试中间产物文件
+    crictl stop $container_id
+    crictl rm $container_id
+    DNF_REMOVE "cri-tools"
+    LOG_INFO "End of environment cleanup!"
+}
+
+# 测试框架固定行
+main "$@"

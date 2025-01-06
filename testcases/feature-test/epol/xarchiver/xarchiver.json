@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/xarchiver",
+    "cases": [
+        {
+            "name": "xarchiver_1"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/xfdashboard",
+    "cases": [
+        {
+            "name": "xfdashboard_1"
+        },
+        {
+            "name": "xfdashboard-settings_1"
+        }
+    ]
+}

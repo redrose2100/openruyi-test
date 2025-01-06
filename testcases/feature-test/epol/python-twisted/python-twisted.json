@@ -1,0 +1,152 @@
+{
+    "path": "$OET_PATH/testcases/python-twisted",
+    "cases": [
+        {
+            "name": "ckeygen_1"
+        },
+        {
+            "name": "conch"
+        },
+        {
+            "name": "dns"
+        },
+        {
+            "name": "ftp"
+        },
+        {
+            "name": "inetd"
+        },
+        {
+            "name": "mail"
+        },
+        {
+            "name": "manhole"
+        },
+        {
+            "name": "portforward"
+        },
+        {
+            "name": "procmon"
+        },
+        {
+            "name": "socks"
+        },
+        {
+            "name": "web"
+        },
+        {
+            "name": "words"
+        },
+        {
+            "name": "xmpp-router"
+        },
+        {
+            "name": "conch"
+        },
+        {
+            "name": "dns"
+        },
+        {
+            "name": "ftp"
+        },
+        {
+            "name": "inetd"
+        },
+        {
+            "name": "mail"
+        },
+        {
+            "name": "manhole"
+        },
+        {
+            "name": "portforward"
+        },
+        {
+            "name": "procmon"
+        },
+        {
+            "name": "socks"
+        },
+        {
+            "name": "web"
+        },
+        {
+            "name": "words"
+        },
+        {
+            "name": "xmpp-router"
+        },
+        {
+            "name": "conch"
+        },
+        {
+            "name": "dns"
+        },
+        {
+            "name": "ftp"
+        },
+        {
+            "name": "inetd"
+        },
+        {
+            "name": "mail"
+        },
+        {
+            "name": "manhole"
+        },
+        {
+            "name": "portforward"
+        },
+        {
+            "name": "procmon"
+        },
+        {
+            "name": "socks"
+        },
+        {
+            "name": "web"
+        },
+        {
+            "name": "words"
+        },
+        {
+            "name": "xmpp-router"
+        },
+        {
+            "name": "conch"
+        },
+        {
+            "name": "dns"
+        },
+        {
+            "name": "ftp"
+        },
+        {
+            "name": "inetd"
+        },
+        {
+            "name": "mail"
+        },
+        {
+            "name": "manhole"
+        },
+        {
+            "name": "portforward"
+        },
+        {
+            "name": "procmon"
+        },
+        {
+            "name": "socks"
+        },
+        {
+            "name": "web"
+        },
+        {
+            "name": "words"
+        },
+        {
+            "name": "xmpp-router"
+        }
+    ]
+}

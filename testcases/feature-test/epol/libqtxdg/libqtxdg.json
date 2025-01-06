@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/libqtxdg",
+    "cases": [
+        {
+            "name": "defapp"
+        },
+        {
+            "name": "open"
+        },
+        {
+            "name": "mimetype"
+        },
+        {
+            "name": "def-web-browser"
+        },
+        {
+            "name": "def-email-client"
+        },
+        {
+            "name": "def-file-manager"
+        }
+    ]
+}

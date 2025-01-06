@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/mate-utils",
+    "cases": [
+        {
+            "name": "mate-system-log_1"
+        },
+        {
+            "name": "mate-disk-usage-analyzer_1"
+        },
+        {
+            "name": "mate-panel-screenshot_1"
+        },
+        {
+            "name": "mate-screenshot_1"
+        },
+        {
+            "name": "mate-search-tool_1"
+        },
+        {
+            "name": "mate-dictionary_1"
+        }
+    ]
+}

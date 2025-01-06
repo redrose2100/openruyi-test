@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/dde-api",
+    "cases": [
+        {
+            "name": "dde-open_1"
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/mod_wsgi",
+    "cases": [
+        {
+            "name": "install-module"
+        },
+        {
+            "name": "module-config"
+        },
+        {
+            "name": "module-location"
+        },
+        {
+            "name": "setup-server"
+        },
+        {
+            "name": "start-server"
+        }
+    ]
+}

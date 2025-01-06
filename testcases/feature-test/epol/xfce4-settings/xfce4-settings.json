@@ -1,0 +1,38 @@
+{
+    "path": "$OET_PATH/testcases/xfce4-settings",
+    "cases": [
+        {
+            "name": "xfce4-accessibility-settings_1"
+        },
+        {
+            "name": "xfce4-appearance-settings_1"
+        },
+        {
+            "name": "xfce4-color-settings_1"
+        },
+        {
+            "name": "xfce4-display-settings_1"
+        },
+        {
+            "name": "xfce4-keyboard-settings_1"
+        },
+        {
+            "name": "xfce4-mime-helper_1"
+        },
+        {
+            "name": "xfce4-mime-settings_1"
+        },
+        {
+            "name": "xfce4-mouse-settings_1"
+        },
+        {
+            "name": "xfce4-settings-editor_1"
+        },
+        {
+            "name": "xfce4-settings-manager_1"
+        },
+        {
+            "name": "xfsettingsd_1"
+        }
+    ]
+}

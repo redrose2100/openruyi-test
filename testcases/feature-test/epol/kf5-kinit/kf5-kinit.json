@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/kf5-kinit",
+    "cases": [
+        {
+            "name": "kdeinit5_1"
+        },
+        {
+            "name": "kdeinit5_shutdown_1"
+        }
+    ]
+}

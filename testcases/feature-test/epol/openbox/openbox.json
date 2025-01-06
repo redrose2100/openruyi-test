@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/openbox",
+    "cases": [
+        {
+            "name": "obxprop_1"
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/kf5-plasma",
+    "cases": [
+        {
+            "name": "show"
+        },
+        {
+            "name": "install"
+        },
+        {
+            "name": "upgrade"
+        },
+        {
+            "name": "list"
+        },
+        {
+            "name": "remove"
+        },
+        {
+            "name": "generate-index"
+        },
+        {
+            "name": "remove-index"
+        },
+        {
+            "name": "appstream-metainfo"
+        },
+        {
+            "name": "appstream-metainfo-output"
+        }
+    ]
+}

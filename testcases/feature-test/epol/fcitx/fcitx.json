@@ -1,0 +1,35 @@
+{
+    "path": "$OET_PATH/testcases/fcitx",
+    "cases": [
+        {
+            "name": "fcitx4-config_1"
+        },
+        {
+            "name": "createPYMB_1"
+        },
+        {
+            "name": "fcitx_1"
+        },
+        {
+            "name": "fcitx-remote_1"
+        },
+        {
+            "name": "mb2org_1"
+        },
+        {
+            "name": "mb2txt_1"
+        },
+        {
+            "name": "readPYBase_1"
+        },
+        {
+            "name": "readPYMB_1"
+        },
+        {
+            "name": "scel2org_1"
+        },
+        {
+            "name": "txt2mb_1"
+        }
+    ]
+}

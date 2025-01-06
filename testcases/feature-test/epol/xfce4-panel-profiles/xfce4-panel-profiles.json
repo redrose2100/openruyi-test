@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/xfce4-panel-profiles",
+    "cases": [
+        {
+            "name": "save"
+        },
+        {
+            "name": "load"
+        }
+    ]
+}

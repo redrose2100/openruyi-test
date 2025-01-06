@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/mate-terminal",
+    "cases": [
+        {
+            "name": "mate-terminal_1"
+        },
+        {
+            "name": "mate-terminal.wrapper_1"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/python-dulwich",
+    "cases": [
+        {
+            "name": "dul-receive-pack_1"
+        },
+        {
+            "name": "dul-upload-pack_1"
+        }
+    ]
+}

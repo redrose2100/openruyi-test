@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/kf5-kdesignerplugin",
+    "cases": [
+        {
+            "name": "kgendesignerplugin_1"
+        }
+    ]
+}

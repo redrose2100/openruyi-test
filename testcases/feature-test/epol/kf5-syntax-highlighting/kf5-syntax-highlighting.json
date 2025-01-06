@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/kf5-syntax-highlighting",
+    "cases": [
+        {
+            "name": "kate-syntax-highlighter_1"
+        }
+    ]
+}

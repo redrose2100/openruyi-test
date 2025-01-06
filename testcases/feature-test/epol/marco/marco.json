@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/marco",
+    "cases": [
+        {
+            "name": "marco_1"
+        },
+        {
+            "name": "restart"
+        },
+        {
+            "name": "reload-theme"
+        },
+        {
+            "name": "enable-keybindings"
+        },
+        {
+            "name": "disable-keybindings"
+        },
+        {
+            "name": "toggle-verbose"
+        }
+    ]
+}

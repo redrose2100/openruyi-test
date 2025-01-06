@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/vamp-plugin-sdk",
+    "cases": [
+        {
+            "name": "vamp-rdf-template-generator_1"
+        },
+        {
+            "name": "-l"
+        },
+        {
+            "name": "--list"
+        },
+        {
+            "name": "--list-full"
+        },
+        {
+            "name": "--list-ids"
+        },
+        {
+            "name": "--list-outputs"
+        },
+        {
+            "name": "--list-by-category"
+        },
+        {
+            "name": "-p"
+        },
+        {
+            "name": "-v"
+        }
+    ]
+}
