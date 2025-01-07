@@ -28,6 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution biometric-authentication.service
+    test_reload biometric-authentication.service
     LOG_INFO "End to run test."
 }
 

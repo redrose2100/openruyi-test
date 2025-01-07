@@ -21,8 +21,11 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    pip install pingouin==0.5.3
+    pip install numpy==1.26.4
     systemctl stop firewalld
     DNF_INSTALL "gala-anteater kafka"
+    sed -i '3s/true/false/g' /etc/gala-anteater/module/slow_node_detection.job.json
     cp /opt/kafka/config/server.properties /opt/kafka/config/server.properties-bak
     cp /etc/gala-anteater/config/gala-anteater.yaml /etc/gala-anteater/config/gala-anteater.yaml-bak
     sed -i 's/#listeners=PLAINTEXT:\/\/:9092/listeners=PLAINTEXT:\/\/'"${NODE1_IPV4}"':9092/g' /opt/kafka/config/server.properties
@@ -38,12 +41,16 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution gala-anteater.service
+    test_reload gala-anteater.service
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    pip uninstall pingouin==0.5.3 -y
+    pip uninstall numpy==1.26.4 -y
     systemctl stop gala-anteater.service
+    sed -i '3s/false/true/g' /etc/gala-anteater/module/slow_node_detection.job.json
     pgrep -f -a "kafka-server-start|zookeeper-server-start" | awk '{print $1}' | xargs kill -9
     systemctl start firewalld
     mv -f /opt/kafka/config/server.properties-bak /opt/kafka/config/server.properties
