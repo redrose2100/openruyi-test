@@ -16,8 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test alertmanager.service restart
 # #############################################
-
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -29,7 +28,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution alertmanager.service 
+    test_execution alertmanager.service
+    test_reload alertmanager.service 
     LOG_INFO "End to run test."
 }
 
@@ -38,7 +38,7 @@ function post_test() {
     sed -i "s\ALERTMANAGER_OPTS --cluster.advertise-address=0.0.0.0:9093\ALERTMANAGER_OPTS\g" /usr/lib/systemd/system/alertmanager.service
     systemctl daemon-reload
     systemctl stop alertmanager.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

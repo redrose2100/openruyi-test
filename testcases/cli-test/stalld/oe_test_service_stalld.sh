@@ -16,8 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test stalld.service restart
 # #############################################
-
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,13 +27,14 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution stalld.service
+    test_reload stalld.service
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop stalld.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
