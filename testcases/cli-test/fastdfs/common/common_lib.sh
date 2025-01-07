@@ -18,18 +18,18 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function Pre_Test() {
-    DNF_INSTALL "fastdfs* libfdfsclient net-tools"
+    DNF_INSTALL fastdfs* libfdfsclient net-tools
     cp /etc/fdfs/client.conf ./client.conf
     cp /etc/fdfs/storage.conf ./storage.conf
     cp /etc/fdfs/tracker.conf ./tracker.conf
     mkdir -p /tmp/guochenyang/1 /tmp/guochenyang/2 /tmp/guochenyang/3
-    sed -i '/base_path/s/\/home\/yuqing\/fastdfs/\/tmp\/guochenyang\/1/g' ./client.conf
+    sed -i '/base_path/s/\/opt\/fastdfs/\/tmp\/guochenyang\/1/g' ./client.conf
     sed -i '/tracker_server =/d' ./client.conf
     sed -i "21atracker_server =${NODE1_IPV4}" ./client.conf
-    sed -i '/base_path/s/\/home\/yuqing\/fastdfs/\/tmp\/guochenyang\/2/g' ./tracker.conf
+    sed -i '/base_path/s/\/opt\/fastdfs/\/tmp\/guochenyang\/2/g' ./tracker.conf
     sed -i '/thread_stack_size/s/256KB/1024KB/g' ./tracker.conf
-    sed -i '/base_path/s/\/home\/yuqing\/fastdfs/\/tmp\/guochenyang\/3/g' ./storage.conf
-    sed -i '/store_path0/s/\/home\/yuqing\/fastdfs/\/tmp\/guochenyang\/3/g' ./storage.conf
+    sed -i '/base_path/s/\/opt\/fastdfs/\/tmp\/guochenyang\/3/g' ./storage.conf
+    sed -i '/store_path0/s/\/opt\/fastdfs/\/tmp\/guochenyang\/3/g' ./storage.conf
     sed -i '/tracker_server =/d' ./storage.conf
     sed -i "144atracker_server =${NODE1_IPV4}" ./storage.conf
     echo "hello" >./test1.txt
