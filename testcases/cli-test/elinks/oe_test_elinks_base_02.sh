@@ -22,6 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL elinks
+    SLEEP_WAIT 5
     echo > text
     LOG_INFO "End of environmental preparation!"
 }
@@ -29,7 +30,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    elinks -dump text -dump-color-mode 1 www.baidu.com | grep "http://zhidao.baidu.com"
+    elinks -dump text -dump-color-mode 1 www.baidu.com | grep "https://zhidao.baidu.com"
     CHECK_RESULT $? 0 0 "Check elinks -dump -dump-color-mode failed"
 
     elinks -dump text -dump-width 1 www.baidu.com | grep "http://wenku.baidu.com"
