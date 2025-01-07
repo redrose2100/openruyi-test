@@ -2,13 +2,28 @@
     "path": "$OET_PATH/testcases/cli-test/tuna",
     "cases": [
         {
-            "name": "oe_test_tuna_01"
+            "name": "oe_test_tuna_apply"
         },
         {
-            "name": "oe_test_tuna_02"
+            "name": "oe_test_tuna_include"
         },
         {
-            "name": "oe_test_tuna_03"
+            "name": "oe_test_tuna_run"
+        },
+        {
+            "name": "oe_test_tuna"
+        },
+        {
+            "name": "oe_test_tuna_show_irqs"
+        },
+        {
+            "name": "oe_test_tuna_show_threads_01"
+        },
+        {
+            "name": "oe_test_tuna_show_threads_02"
+        },
+        {
+            "name": "oe_test_tuna_spread"
         }
     ]
 }
