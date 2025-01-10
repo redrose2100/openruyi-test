@@ -163,6 +163,9 @@
         },
         {
             "name": "oe_test_target_core_pscsi"
+        },
+        {
+            "name": "oe_test_target_core_user"
         }
     ]
 }
