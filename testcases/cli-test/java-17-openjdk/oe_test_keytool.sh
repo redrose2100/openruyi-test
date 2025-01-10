@@ -16,11 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Verify the usage of the keytool command
 # ############################################
+#  shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     if dnf list | grep "java-17-openjdk"; then
         DNF_INSTALL "java-17-openjdk java-17-openjdk-devel java-17-openjdk-headless"
     else
@@ -143,6 +146,7 @@ EOF
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    export LANG=$OLD_LANG
     DNF_REMOVE "$@"
     rm -rf log1 log2 checklog mycert.cer mykeystore.jks mykeystore2.jks
     LOG_INFO "Finish environment cleanup!"

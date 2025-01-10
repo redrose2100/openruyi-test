@@ -15,7 +15,8 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   iperf3 command parameter automation use case
 ####################################
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+#  shellcheck disable=SC1091
+source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -29,7 +30,7 @@ function run_test() {
 
     iperf3 -c "$NODE2_IPV4" -n 1400 -V | grep "1400 bytes to send"
     CHECK_RESULT $? 0 0 "iperf3 -n execution failed."
-    iperf3 -c "$NODE2_IPV4" -k 1400 -V | grep "1400 blocks to send"
+    iperf3 -c "$NODE2_IPV4" -k 1400 -V | grep "1400 blocks\|bytes to send"
     CHECK_RESULT $? 0 0 "iperf3 -k execution failed."
     iperf3 -c "$NODE2_IPV4" -P 2 | grep -c connected | grep 2
     CHECK_RESULT $? 0 0 "iperf3 -P execution failed."
