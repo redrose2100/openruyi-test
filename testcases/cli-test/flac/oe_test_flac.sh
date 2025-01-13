@@ -22,11 +22,23 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL "flac"
+  rm -rf ./example.*
+  cp "$(find /usr -name "*.wav"  |tail -1)" ./example.wav
+  file ./example.wav
   LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
+  flac --version
+  CHECK_RESULT $? 0 0 "--version option failed"
+  flac example.wav
+  CHECK_RESULT $? 0 0 "wav file convert to falc failed"
+  test -e example.flac
+  CHECK_RESULT $? 0 0 "example.flac not exist"
+  flac -t example.flac
+  CHECK_RESULT $? 0 0 "flac -t exec failed"
+
   flac -d cron.flac
   test -e cron.wav
   CHECK_RESULT $? 0 0 "wav not exist"
@@ -38,8 +50,8 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  DNF_REMOVE
-  rm -rf cron.wav cron.ana
+  DNF_REMOVE "$@"
+  rm -rf cron.wav cron.ana example.*
   LOG_INFO "Finish environment cleanup!"
 }
 
