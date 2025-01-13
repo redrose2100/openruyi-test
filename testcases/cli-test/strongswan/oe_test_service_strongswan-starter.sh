@@ -22,7 +22,11 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL strongswan
-    service=strongswan-starter.service
+    if (systemctl list-unit-files | grep strongswan-starter.service);then
+        service=strongswan-starter.service
+    else
+        service=strongswan.service
+    fi
     touch {/etc/strongswan/ipsec.d/triplets.dat,/etc/tnc_config}
     LOG_INFO "End to prepare the test environment."
 }
