@@ -33,16 +33,33 @@ function run_test() {
   rsvg-convert --help
   CHECK_RESULT $? 0 0 "display help information failed"
   rsvg-convert example.svg -o out.png
-  CHECK_RESULT $? 0 0 "switch type failed"
+  CHECK_RESULT $? 0 0 "switch PNG type failed"
   file ./out.png |grep -i "PNG image data"
-  CHECK_RESULT $? 0 0 "The converted file type is incorrect"
+  CHECK_RESULT $? 0 0 "The converted file PNG type is incorrect"
+  rsvg-convert example.svg -o out1.png -w 1024
+  CHECK_RESULT $? 0 0 "switch PNG type with -w option failed"
+  file ./out1.png |grep -i "1024 x 1024"
+  CHECK_RESULT $? 0 0 "The converted file PNG type with -w option is incorrect"
+  rsvg-convert example.svg -o out2.png -w 1024 -h 768
+  CHECK_RESULT $? 0 0 "switch PNG type with -w/-h options failed"
+  file ./out2.png |grep -i "1024 x 768"
+  CHECK_RESULT $? 0 0 "The converted file PNG type with -w/-h options is incorrect"
+
+  rsvg-convert example.svg -o output1.pdf -f pdf
+  CHECK_RESULT $? 0 0 "switch PDF type failed"
+  file ./output1.pdf |grep -i "PDF document"
+  CHECK_RESULT $? 0 0 "The converted file PDF type is incorrect"
+  rsvg-convert example.svg -o output2.eps -f eps
+  CHECK_RESULT $? 0 0 "switch EPS type failed"
+  file ./output2.eps |grep -i "type EPS"
+  CHECK_RESULT $? 0 0 "The converted file EPS type is incorrect"
   LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
   DNF_REMOVE "$@"
-  rm -rf ./example.svg  ./out.png
+  rm -rf ./example.svg  ./out* 
   LOG_INFO "Finish environment cleanup!"
 }
 
