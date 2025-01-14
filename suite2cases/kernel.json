@@ -166,6 +166,9 @@
         },
         {
             "name": "oe_test_target_core_user"
+        },
+        {
+            "name": "oe_test_net_ifb"
         }
     ]
 }
