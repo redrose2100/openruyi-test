@@ -9,6 +9,9 @@
     },
     {
       "name": "oe_test_ffmpeg_02"
+    },
+    {
+      "name": "oe_test_ffmpeg_03"
     }
   ]
 }
