@@ -28,15 +28,25 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
   ffmpeg -i common/1.mp4 output.mkv
-  CHECK_RESULT $? 0 0 "Execution failure"
+  CHECK_RESULT $? 0 0 "convert to .mkv type failed"
   test -e output.mkv
-  CHECK_RESULT $? 0 0 "file not exite"
+  CHECK_RESULT $? 0 0 ".mkv file not exist"
+
+  ffmpeg -i common/1.mp4 output_01.avi
+  CHECK_RESULT $? 0 0 "convert to .avi type failed"
+  test -e output_01.avi
+  CHECK_RESULT $? 0 0 ".avi file not exist"
+ 
+  ffmpeg -i common/1.mp4 -vn output_02.mp3
+  CHECK_RESULT $? 0 0 "convert to .mp3 type failed"
+  test -e output_02.mp3
+  CHECK_RESULT $? 0 0 ".mp3 file not exist"
   LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  rm -rf output.mkv
+  rm -rf output*
   DNF_REMOVE "$@"
   LOG_INFO "Finish environment cleanup!"
 }
