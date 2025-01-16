@@ -9,6 +9,9 @@
         },
 	{
             "name": "oe_test_augeas_augtool01"
+	},
+	{
+	    "name": "oe_test_augeas_augparse"
 	}
       ]
 }
