@@ -15,7 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   pg_config
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/lib.sh
 
 function pre_test() {
@@ -34,7 +34,7 @@ function run_test() {
     CHECK_RESULT $?
     pg_config --configure | grep "build"
     CHECK_RESULT $?
-    pg_config --cc | grep "gcc"
+    pg_config --cc | grep -E "gcc|clang"
     CHECK_RESULT $?
     pg_config --cppflags | grep "D_GNU_SOURCE"
     CHECK_RESULT $?

@@ -15,7 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   initdb
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/lib.sh
 
 function pre_test() {
@@ -58,6 +58,7 @@ function run_test() {
     exit
 END
     CHECK_RESULT $?
+    SLEEP_WAIT 20
     test -d /var/lib/pgsql/data1 && rm -rf /var/lib/pgsql/data1
     su - postgres -c "initdb -D data1 -X /var/lib/pgsql/data1/log/"
     CHECK_RESULT $?
