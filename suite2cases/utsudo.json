@@ -21,6 +21,9 @@
         },
         {
             "name": "oe_test_utsudo_l"
+        },
+                {
+            "name": "oe_test_utsudoreplay_h"
         }
     ]
 }
