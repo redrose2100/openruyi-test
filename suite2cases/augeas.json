@@ -12,6 +12,9 @@
 	},
 	{
 	    "name": "oe_test_augeas_augparse"
+	},
+	{
+	    "name": "oe_test_augeas_augprint_01"
 	}
       ]
 }
