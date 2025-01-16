@@ -28,6 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution cockpit-wsinstance-http.service
+    test_reload cockpit-wsinstance-http.service
     LOG_INFO "End to run test."
 }
 

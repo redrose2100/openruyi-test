@@ -28,6 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution deepin-devicemanager-server.service
+    test_reload deepin-devicemanager-server.service
     LOG_INFO "End to run test."
 }
 

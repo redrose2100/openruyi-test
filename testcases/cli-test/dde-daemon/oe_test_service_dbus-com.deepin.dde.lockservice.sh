@@ -28,6 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution dbus-com.deepin.dde.lockservice.service
+    test_reload dbus-com.deepin.dde.lockservice.service
     LOG_INFO "End to run test."
 }
 

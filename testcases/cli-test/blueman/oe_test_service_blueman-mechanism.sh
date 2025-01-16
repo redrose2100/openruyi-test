@@ -28,6 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution blueman-mechanism.service
+    test_reload blueman-mechanism.service
     LOG_INFO "End to run test."
 }
 
