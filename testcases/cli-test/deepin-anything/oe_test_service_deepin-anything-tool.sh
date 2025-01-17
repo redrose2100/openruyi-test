@@ -28,6 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution deepin-anything-tool.service
+    test_reload deepin-anything-tool.service
     LOG_INFO "End to run test."
 }
 

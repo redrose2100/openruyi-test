@@ -31,6 +31,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution collectd.service
+    test_reload collectd.service
     LOG_INFO "End to run test."
 }
 

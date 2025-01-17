@@ -29,6 +29,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution booth-arbitrator.service
+    test_reload booth-arbitrator.service
     LOG_INFO "End to run test."
 }
 
