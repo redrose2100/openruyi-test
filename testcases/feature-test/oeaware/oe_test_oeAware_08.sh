@@ -21,15 +21,24 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "oeAware-manager"
-    sed -i '/enable_list/a\ - name: libpmua.so' /etc/oeAware/config.yaml
-    systemctl restart oeaware
-    SLEEP_WAIT 1
+    \cp -rf /etc/oeAware/config.yaml /etc/oeAware/config_ori.yaml
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    oeawarectl --query libpmua.so | grep "Plugin query failed, because plugin does not exist"
+    echo > /var/log/oeAware/server.log
+    sed -i '/enable_list/a\ - name: libpmua.so' /etc/oeAware/config.yaml
+    systemctl restart oeaware
+    SLEEP_WAIT 1
+    oeawarectl --query libpmua.so | grep "Plugin query failed, because plugin does not exist" && grep "plugin libpmua.so cannot be enabled, because it does not exist" /var/log/oeAware/server.log
+    CHECK_RESULT $? 0 0 "plugin query failed"
+    echo > /var/log/oeAware/server.log
+    \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
+    sed -i '/enable_list/a\ - name:' /etc/oeAware/config.yaml
+    systemctl restart oeaware
+    SLEEP_WAIT 1
+    grep "plugin null cannot be enabled, because it does not exist" /var/log/oeAware/server.log
     CHECK_RESULT $? 0 0 "plugin query failed"
     LOG_INFO "End to run test."
 }

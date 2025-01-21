@@ -21,26 +21,27 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "oeAware-manager"
+    echo > /var/log/oeAware/server.log
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so -print0 | xargs -0 chmod 400
+    find /usr/lib64/oeAware-plugin/ -name libthread_scenario.so -print0 | xargs -0 chmod 400
     \cp -rf /etc/oeAware/config.yaml /etc/oeAware/config_ori.yaml
-    sed -i '/enable_list/a\ - name: libthread_collector.so' /etc/oeAware/config.yaml
+    sed -i '/enable_list/a\ - name: libthread_scenario.so' /etc/oeAware/config.yaml
     systemctl restart oeaware
     SLEEP_WAIT 1
-    grep "plugin libthread_collector.so cannot be enabled, because it does not exist" /var/log/oeAware/server.log
-    CHECK_RESULT $? 0 0 "libthread_collector.so error exist in server log"
-    oeawarectl -l libthread_collector.so | grep "Plugin loaded failed, because plugin file permission is not the specified permission"
-    CHECK_RESULT $? 0 0 "Error: libthread_collector.so plugin loaded" 
+    grep "libthread_scenario.so plugin file permission is not the specified permission" /var/log/oeAware/server.log
+    CHECK_RESULT $? 0 0 "libthread_scenario.so error exist in server log"
+    oeawarectl -l libthread_scenario.so | grep "Plugin loaded failed, because plugin file permission is not the specified permission"
+    CHECK_RESULT $? 0 0 "Error: libthread_scenario.so plugin loaded" 
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so -print0 | xargs -0 chmod 440
+    find /usr/lib64/oeAware-plugin/ -name libthread_scenario.so -print0 | xargs -0 chmod 440
     \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
     systemctl restart oeaware
     rm -rf /etc/oeAware/config_ori.yaml
