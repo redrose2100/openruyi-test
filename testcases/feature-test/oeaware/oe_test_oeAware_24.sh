@@ -26,31 +26,31 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    chmod 777 /var/run/oeAware/oeAware-sock
+    chmod 777 /var/run/oeAware/oeAware-server
     systemctl restart oeaware
     SLEEP_WAIT 1
-    stat /var/run/oeAware/oeAware-sock | grep "0750"
+    stat /var/run/oeAware/oeAware-server | grep "0770"
     CHECK_RESULT $? 0 0 "Error: file permission is wrong"
     oeawarectl -q | grep "Show plugins and instances status"
     CHECK_RESULT $? 0 0 "Error: command oeawarectl -q"
 
-    chmod 400 /var/run/oeAware/oeAware-sock
+    chmod 400 /var/run/oeAware/oeAware-server
     systemctl restart oeaware
     SLEEP_WAIT 1
-    stat /var/run/oeAware/oeAware-sock | grep "0750"
+    stat /var/run/oeAware/oeAware-server | grep "0770"
     CHECK_RESULT $? 0 0 "Error: file permission is wrong"
     oeawarectl -q | grep "Show plugins and instances status"
     CHECK_RESULT $? 0 0 "Error: command oeawarectl -q"
 
-    mv /var/run/oeAware/oeAware-sock /var/run/oeAware/oeAware-sock1
+    mv /var/run/oeAware/oeAware-server /var/run/oeAware/oeAware-server1
     oeawarectl -q | grep "can't connect to server"
-    CHECK_RESULT $? 0 0 "Error: sock file is wrong"
+    CHECK_RESULT $? 0 0 "Error: server file is wrong"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    mv /var/run/oeAware/oeAware-sock1 /var/run/oeAware/oeAware-sock
+    mv /var/run/oeAware/oeAware-server1 /var/run/oeAware/oeAware-server
     systemctl restart oeaware
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

@@ -28,9 +28,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     \cp -rf /etc/oeAware/config.yaml /etc/oeAware/config_ori.yaml
     sed -i '/enable_list/a\ - name: lib.so\n   instances: \n     - thread_collector' /etc/oeAware/config.yaml
+    echo > /var/log/oeAware/server.log
     systemctl restart oeaware
     SLEEP_WAIT 1
-    oeawarectl -q | grep "thread_collector(available, running)"
+    oeawarectl -q | grep "thread_collector(available, close, count: 1)"
     CHECK_RESULT $? 1 0 "Instance running failed"
     grep "lib.so cannot be enabled, because it does not exist" /var/log/oeAware/server.log
     CHECK_RESULT $? 0 0 "error exist in server log "

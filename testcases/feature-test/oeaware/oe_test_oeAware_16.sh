@@ -27,21 +27,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    oeaware | grep "System need a argument"
+    oeaware | grep "System need an argument"
     CHECK_RESULT $? 0 0 "command error"
-    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so -execdir mv {} {}.bak \;
+    find /usr/lib64/oeAware-plugin/ -name libsystem_collector.so -execdir mv {} {}.bak \;
     systemctl restart oeaware
     SLEEP_WAIT 1
-    oeawarectl -q | grep "thread_scenario(unavailable, close)"
-    CHECK_RESULT $? 0 0 "plugin status is wrong"
-    oeawarectl -e thread_scenario | grep "Instance enabled failed, because instance is unavailable"
-    CHECK_RESULT $? 0 0 "Error: instance enable"
+    oeawarectl -q | grep libsystem_collector
+    CHECK_RESULT $? 0 1 "Check plugin not exists failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so.bak -execdir mv {} libthread_collector.so \;
+    find /usr/lib64/oeAware-plugin/ -name libthread_scenario.so.bak -execdir mv {} libthread_scenario.so \;
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

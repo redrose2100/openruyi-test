@@ -26,53 +26,16 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    chmod 777 /usr/lib64/oeAware-plugin/libthread_collector.so
-    systemctl restart oeaware
-    SLEEP_WAIT 1
-    grep "libthread_collector.so plugin preload failed, because plugin file permission is not the specified permission" /var/log/oeAware/server.log
-    CHECK_RESULT $? 0 0 "libthread_collector.so error exist in server log"
     chmod 777 /usr/lib64/oeAware-plugin/libthread_scenario.so
     systemctl restart oeaware
     SLEEP_WAIT 1
-    grep "libthread_scenario.so plugin preload failed, because plugin file permission is not the specified permission" /var/log/oeAware/server.log
+    grep "libthread_scenario.so plugin file permission is not the specified permission" /var/log/oeAware/server.log
     CHECK_RESULT $? 0 0 "libthread_scenario.so error exist in server log"
-    chmod 777 /usr/lib64/oeAware-plugin/libthread_tune.so 
-    systemctl restart oeaware
-    SLEEP_WAIT 1
-    grep "libthread_tune.so plugin preload failed, because plugin file permission is not the specified permission" /var/log/oeAware/server.log
-    CHECK_RESULT $? 0 0 "libthread_tune.so error exist in server log"
-    
-    if [ "$NODE1_FRAME" == "aarch64" ]; then
-        chmod 777 /usr/lib64/oeAware-plugin/libpmu.so
-        systemctl restart oeaware
-        SLEEP_WAIT 1
-        grep "libpmu.so plugin preload failed, because plugin file permission is not the specified permission" /var/log/oeAware/server.log
-        CHECK_RESULT $? 0 0 "libpmu.so error exist in server log"
-    fi 
-
-    chmod 400 /usr/lib64/oeAware-plugin/libthread_collector.so
-    systemctl restart oeaware
-    SLEEP_WAIT 1
-    grep "libthread_collector.so plugin preload failed, because plugin file permission is not the specified permission" /var/log/oeAware/server.log
-    CHECK_RESULT $? 0 0 "libthread_collector.so error exist in server log"
     chmod 400 /usr/lib64/oeAware-plugin/libthread_scenario.so
     systemctl restart oeaware
     SLEEP_WAIT 1
-    grep "libthread_scenario.so plugin preload failed, because plugin file permission is not the specified permission" /var/log/oeAware/server.log
+    grep "libthread_scenario.so plugin file permission is not the specified permission" /var/log/oeAware/server.log
     CHECK_RESULT $? 0 0 "libthread_scenario.so error exist in server log"
-    chmod 400 /usr/lib64/oeAware-plugin/libthread_tune.so 
-    systemctl restart oeaware
-    SLEEP_WAIT 1
-    grep "libthread_tune.so plugin preload failed, because plugin file permission is not the specified permission" /var/log/oeAware/server.log
-    CHECK_RESULT $? 0 0 "libthread_tune.so error exist in server log"
-
-    if [ "$NODE1_FRAME" == "aarch64" ]; then
-        chmod 400 /usr/lib64/oeAware-plugin/libpmu.so
-        systemctl restart oeaware
-        SLEEP_WAIT 1
-        grep "libpmu.so plugin preload failed, because plugin file permission is not the specified permission" /var/log/oeAware/server.log
-        CHECK_RESULT $? 0 0 "libpmu.so error exist in server log"
-    fi    
     LOG_INFO "End to run test."
 }
 

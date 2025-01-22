@@ -33,6 +33,7 @@ function run_test() {
     systemctl restart oeaware
     systemctl status oeaware | grep "active (running)"
     CHECK_RESULT $? 0 0 "restart oeaware failed"
+    SLEEP_WAIT 5
     test -f $log_path_new/server.log
     CHECK_RESULT $? 0 0 "logfile does not exist"
     LOG_INFO "End to run test."
@@ -41,7 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     mv /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
-    systemctl restart oeawar
+    systemctl restart oeaware
     DNF_REMOVE "$@"
     rm -rf $log_path_new
     LOG_INFO "End to restore the test environment."
