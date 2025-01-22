@@ -28,40 +28,44 @@ function run_test() {
     LOG_INFO "Start to run test."
     \cp -rf /etc/oeAware/config.yaml /etc/oeAware/config_ori.yaml
     log_level_new='1'
-    sed -i -e '/^log_level: / s/: .*/: '$log_level_new'/' /etc/oeAware/config.yaml
+    sed -i -e '/^log_level: / s/: .*/: '${log_level_new}'/' /etc/oeAware/config.yaml
     grep -F "log_level: 1" /etc/oeAware/config.yaml
     CHECK_RESULT $? 0 0 "modify config file failed"
     systemctl restart oeaware
     log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml | awk '{$1=$1};1')
-    test -f "$log_path"/server.log
-    CHECK_RESULT $? 0 0 "logfile does not exist"
+    SLEEP_WAIT 5
+    grep -F "log path: ""${log_path}"", log level: 1" "${log_path}"/server.log
+    CHECK_RESULT $? 0 0 "log_path modify failed"
 
     log_level_new='2'
-    sed -i -e '/^log_level: / s/: .*/: '$log_level_new'/' /etc/oeAware/config.yaml
+    sed -i -e '/^log_level: / s/: .*/: '${log_level_new}'/' /etc/oeAware/config.yaml
     grep -F "log_level: 2" /etc/oeAware/config.yaml
     CHECK_RESULT $? 0 0 "modify config file failed"
     systemctl restart oeaware
     log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml | awk '{$1=$1};1')
-    test -f "$log_path"/server.log
-    CHECK_RESULT $? 0 0 "logfile does not exist"
+    SLEEP_WAIT 5
+    grep -F "log path: ""${log_path}"", log level: 2" "${log_path}"/server.log
+    CHECK_RESULT $? 0 0 "log_path modify failed"
 
     log_level_new='3'
-    sed -i -e '/^log_level: / s/: .*/: '$log_level_new'/' /etc/oeAware/config.yaml
+    sed -i -e '/^log_level: / s/: .*/: '${log_level_new}'/' /etc/oeAware/config.yaml
     grep -F "log_level: 3" /etc/oeAware/config.yaml
     CHECK_RESULT $? 0 0 "modify config file failed"
     systemctl restart oeaware
     log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml | awk '{$1=$1};1')
-    test -f "$log_path"/server.log
-    CHECK_RESULT $? 0 0 "logfile does not exist"
+    SLEEP_WAIT 5
+    grep -F "log path: ""${log_path}"", log level: 3" "${log_path}"/server.log
+    CHECK_RESULT $? 0 0 "log_path modify failed"
 
     log_level_new='4'
-    sed -i -e '/^log_level: / s/: .*/: '$log_level_new'/' /etc/oeAware/config.yaml
+    sed -i -e '/^log_level: / s/: .*/: '${log_level_new}'/' /etc/oeAware/config.yaml
     grep -F "log_level: 4" /etc/oeAware/config.yaml
     CHECK_RESULT $? 0 0 "modify config file failed"
     systemctl restart oeaware
     log_path=$(awk -F ":" '/log_path/{print $2}' /etc/oeAware/config.yaml | awk '{$1=$1};1')
-    test -f "$log_path"/server.log
-    CHECK_RESULT $? 0 0 "logfile does not exist"
+    SLEEP_WAIT 5
+    grep -F "log path: ""${log_path}"", log level: 4" "${log_path}"/server.log
+    CHECK_RESULT $? 0 0 "log_path modify failed"
     LOG_INFO "End to run test."
 }
 

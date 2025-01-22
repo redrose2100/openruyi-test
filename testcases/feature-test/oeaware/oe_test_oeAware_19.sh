@@ -29,7 +29,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     oeawarectl -e thread_collector | grep "Instance enabled successfully"
     CHECK_RESULT $? 0 0 "Error: instance enable"
-    oeawarectl -r libthread_collector.so | grep "Plugin remove failed, because instance is running"
+    oeawarectl -r libsystem_collector.so | grep "Plugin remove failed, because instance is running"
     CHECK_RESULT $? 0 0 "Error: plugin remove"
     LOG_INFO "End to run test."
 }

@@ -21,7 +21,6 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "oeAware-manager"
-    systemctl start oeaware
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -29,16 +28,16 @@ function run_test() {
     LOG_INFO "Start to run test."
     oeawarectl -e thread_scenario | grep "Instance enabled successfully"
     CHECK_RESULT $? 0 0 "Error: plugin enable"
-    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so -execdir mv {} {}.bak \;
-    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so -execdir rm {} {} \;
+    find /usr/lib64/oeAware-plugin/ -name libsystem_collector.so -execdir mv {} {}.bak \;
+    find /usr/lib64/oeAware-plugin/ -name libsystem_collector.so -execdir rm {} {} \;
 
-    oeawarectl -q | grep "thread_scenario(available, running)"
+    oeawarectl -q | grep "thread_scenario(available, running, count: 1)"
     CHECK_RESULT $? 0 0 "Error: thread_scenario status is wrong"
-    oeawarectl -q | grep "thread_collector(available, running)"
+    oeawarectl -q | grep "thread_collector(available, running, count: 1)"
     CHECK_RESULT $? 0 0 "Error: thread_collectorn status is wrong"
     oeawarectl -d thread_collector | grep "Instance disabled successfully"
     CHECK_RESULT $? 0 0 "Error: plugin disable"
-    oeawarectl -q | grep "thread_collector(available, close)"
+    oeawarectl -q | grep "thread_collector(available, close, count: 1)"
     CHECK_RESULT $? 0 0 "Error: thread_collectorn status is wrong"
     LOG_INFO "End to run test."
 
@@ -46,7 +45,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    find /usr/lib64/oeAware-plugin/ -name libthread_collector.so.bak -execdir mv {} libthread_collector.so \;
+    find /usr/lib64/oeAware-plugin/ -name libsystem_collector.so.bak -execdir mv {} libsystem_collector.so \;
     systemctl restart oeaware
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

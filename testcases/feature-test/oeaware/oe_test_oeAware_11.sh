@@ -50,8 +50,7 @@ function run_test() {
 
         \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
         url="https://repo.oepkgs.net/openeuler/rpm/openEuler-22.03-LTS-SP10/extras/aarch64/Packages/n/numafast-v1.0.0-2.aarch64.rpm"
-        url="${url//\//\\\/}"
-        sed -i '/description: numafast/a\    url: '"$url"' ' /etc/oeAware/config.yaml
+        sed -i 's#url:.*#url: '"${url}"'#' /etc/oeAware/config.yaml
         systemctl restart oeaware
         SLEEP_WAIT 1
         oeawarectl --install numafast | grep "Download failed, please check url or your network"
@@ -66,9 +65,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
     systemctl restart oeaware
-    rm -rf /etc/oeAware/config_ori.yaml
     DNF_REMOVE "$@"
     rpm -e numafast
+    rm -rf /etc/oeAware/config_ori.yaml numafast
     LOG_INFO "End to restore the test environment."
 }
 

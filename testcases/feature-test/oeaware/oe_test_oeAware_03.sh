@@ -21,40 +21,29 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "oeAware-manager"
-    systemctl daemon-reload
-    systemctl start oeaware
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    oeawarectl -r libthread_tune.so | grep "Plugin remove successfully"
-    CHECK_RESULT $? 0 0 "Failed command: oeawarectl -r|--remove"
     oeawarectl -r libthread_scenario.so | grep "Plugin remove successfully"
-    CHECK_RESULT $? 0 0 "Failed command: oeawarectl -r|--remove"
+    CHECK_RESULT $? 0 0 "Failed command: oeawarectl -r"
     oeawarectl -l libthread_scenario.so | grep "Plugin loaded successfully"
-    CHECK_RESULT $? 0 0 "Failed command: oeawarectl -l|--load"
+    CHECK_RESULT $? 0 0 "plugin reload failed"
     oeawarectl -l libthread_scenario.so | grep "Plugin loaded failed, because plugin already loaded"
-    CHECK_RESULT $? 0 0 "Plugin loaded error"
-
+    CHECK_RESULT $? 0 0 "plugin repeated reload failed"
     oeawarectl -l test.so | grep "Plugin loaded failed, because plugin file does not exist"
     CHECK_RESULT $? 0 0 "Plugin loaded error"
-
     oeawarectl --query test.so | grep "Plugin query failed, because plugin does not exist"
     CHECK_RESULT $? 0 0 "Plugin query error"
-
     oeawarectl -e test | grep "Instance enabled failed, because instance is not loaded"
     CHECK_RESULT $? 0 0 "Instance enabled error"
-
     oeawarectl -d test | grep "Instance disabled failed, because instance is not loaded"
     CHECK_RESULT $? 0 0 "Instance disabled error"
-
     oeawarectl -i test | grep "Download failed, because unable to find a match: test"
     CHECK_RESULT $? 0 0 "Instance Download error"
-
     oeawarectl 2>&1 | grep "option error"
     CHECK_RESULT $? 0 0 "command error"
-
     oeawarectl -m 2>&1 | grep "unknown option"
     CHECK_RESULT $? 0 0 "command error"
     oeawarectl -? 2>&1 | grep "unknown option"

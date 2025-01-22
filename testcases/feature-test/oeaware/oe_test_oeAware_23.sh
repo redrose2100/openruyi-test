@@ -22,29 +22,45 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "oeAware-manager"
     systemctl start oeaware
-    echo -e "while true; do\n   oeawarectl -q\ndone" >test.sh
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    nohup sh test.sh >test.log 2>&1 & echo $! >test.pid
-    SLEEP_WAIT 5 "systemctl stop oeaware"
-    SLEEP_WAIT 5
-    grep -F "can't connect to server" test.log
-    CHECK_RESULT $? 0 0 "failed to disconnect to server"
-    systemctl restart oeaware
-    SLEEP_WAIT 5
-    oeawarectl -q | grep "Show plugins and instances status"
-    CHECK_RESULT $? 0 0 "oeaware service not restored"
+    oeawarectl analysis -h | grep -F "usage: oeawarectl analysis [options]"
+    CHECK_RESULT $? 0 0 "Check analysis -h failed"
+    oeawarectl analysis --help | grep -F "usage: oeawarectl analysis [options]"
+    CHECK_RESULT $? 0 0 "Check analysis --help failed"
+    oeawarectl analysis -t 1 | grep "Summary Analysis Report"
+    CHECK_RESULT $? 0 0 "Check analysis -t failed"
+    oeawarectl analysis -t 100 | grep "Summary Analysis Report"
+    CHECK_RESULT $? 0 0 "Check analysis -t failed" 
+    oeawarectl analysis -t 0 2>&1 | grep "Error: Invalid time value '0' (must be between 1 and 100)"
+    CHECK_RESULT $? 0 0 "Check analysis -t failed" 
+    oeawarectl analysis -t 101 2>&1 | grep "Error: Invalid time value '101' (must be between 1 and 100)"
+    CHECK_RESULT $? 0 0 "Check analysis -t failed" 
+    oeawarectl analysis --time  1 | grep "Summary Analysis Report"
+    CHECK_RESULT $? 0 0 "Check analysis --time failed"
+    oeawarectl analysis --time 100 | grep "Summary Analysis Report"
+    CHECK_RESULT $? 0 0 "Check analysis --time failed"
+    oeawarectl analysis --time 0 2>&1 | grep "Error: Invalid time value '0' (must be between 1 and 100)"
+    CHECK_RESULT $? 0 0 "Check analysis --time failed"
+    oeawarectl analysis --time 101 2>&1 | grep "Error: Invalid time value '101' (must be between 1 and 100)"
+    CHECK_RESULT $? 0 0 "Check analysis --time failed"
+    oeawarectl analysis -r | grep "Realtime Analysis Report"
+    CHECK_RESULT $? 0 0 "Check analysis -r failed"
+    oeawarectl analysis --realtime | grep "Realtime Analysis Report"
+    CHECK_RESULT $? 0 0 "Check analysis --realtime failed" 
+    oeawarectl analysis -v | grep "SDK(Analysis) Init result 0"
+    CHECK_RESULT $? 0 0 "Check analysis -v failed"
+    oeawarectl analysis --verbose | grep "SDK(Analysis) Init result 0"
+    CHECK_RESULT $? 0 0 "Check analysis --verbose failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    kill -9 "$(cat test.pid)"
-    rm -rf test.sh test.log test.pid
     LOG_INFO "End to restore the test environment."
 }
 
