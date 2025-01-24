@@ -19,6 +19,14 @@
 
 source "../common/common_lib.sh"
 
+function pre_test() {
+    file_system_type=$(df -T / | awk 'NR==2 {print $2}')
+    if [[ $file_system_type = "xfs" || $file_system_type = "overlay" ]]; then
+        LOG_INFO "The file system type do not meet the test requirements."
+        exit 255
+    fi
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     test_oneshot systemd-fsck-root.service 'active (exited)'
