@@ -40,7 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    rm -rf "$(ls | grep -vE '.xml|main|.sh|test')" /root/.m2
+    find . -mindepth 1 -maxdepth 1 ! -name "*.xml" ! -name "main" ! -name "*.sh" ! -name "test" -exec rm -rf {} + && rm -rf /root/.m2
     LOG_INFO "End to restore the test environment."
 }
 
