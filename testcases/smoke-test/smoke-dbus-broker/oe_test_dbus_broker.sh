@@ -63,8 +63,8 @@ function run_test() {
 }
 
 function post_test() {
-    LOG_INFO "test end"
     DNF_REMOVE "$@"
+    LOG_INFO "test end"
 }
 
 main "$@"

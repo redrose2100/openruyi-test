@@ -33,18 +33,18 @@ function run_test() {
     echo -e "cd /iscsi/${TARGET_IQN}/tpg1\nset attribute authentication=0 demo_mode_write_protect=0 generate_node_acls=1" | targetcli
     systemctl start iscsid
     iscsiadm --mode discovery --type st -p 127.0.0.1
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 'iscsiadm test is success'
     iscsiadm --mode node -p 127.0.0.1 -l
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 'iscsiadm test is success'
     iscsi-inq -e 0 iscsi://127.0.0.1/"${TARGET_IQN}"/0 -d 2
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 'iscsiadm test is success'
     iscsi-ls iscsi://127.0.0.1/"${TARGET_IQN}"/0 -d -s -U
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 'iscsiadm test is success'
     iscsi-perf iscsi://127.0.0.1/"${TARGET_IQN}"/0 -t 10
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 'iscsiadm test is success'
     iscsi-readcapacity16 iscsi://127.0.0.1/"${TARGET_IQN}"/0 -s
-    CHECK_RESULT $? 0 0
-    LOG_INFO "End to run test."
+    CHECK_RESULT $? 0 0 'iscsiadm test is success'
+    LOG_INFO "End to run test." 
 }
 
 function post_test() {
