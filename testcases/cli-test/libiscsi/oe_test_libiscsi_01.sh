@@ -11,7 +11,7 @@
 # #############################################
 # @Author    :   yanglijin
 # @Contact   :   yanglijin@huawei.com
-# @Date      :   2024/11/15
+# @Date      :   2025/02/06
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in libiscsi package
 # ############################################
