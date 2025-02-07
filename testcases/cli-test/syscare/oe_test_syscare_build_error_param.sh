@@ -20,6 +20,7 @@
 source "common/common_syscare.sh"
 
 function pre_test() {
+    LOG_INFO "test start"
     init_env
     download_and_compile_redis
     target='redis'
@@ -44,29 +45,29 @@ function run_test() {
 
     # syscare build --patch-description 为空编译失败
     syscare build --patch-name patch_${target}_${patch_name_0001} --source "${redis_src_name}" --debuginfo "${redis_debuginfo_name}" --patch ${patch_file} --patch-description
-    CHECK_RESULT $? 2
+    CHECK_RESULT $? 2 0 "syscare build fail"
 
     # syscare build --patch-requires 依赖为空编译失败
     syscare build --patch-name patch_${target}_${patch_name_0001} --source "${redis_src_name}" --debuginfo "${redis_debuginfo_name}" --patch ${patch_file} --patch-requires
-    CHECK_RESULT $? 2
+    CHECK_RESULT $? 2 0 "syscare build fail"
 
     # syscare --jobs -1编译失败
     syscare build --patch-name patch_${target}_${patch_name_0001} --source "${redis_src_name}" --debuginfo "${redis_debuginfo_name}" --patch ${patch_file} --jobs -1
-    CHECK_RESULT $? 2
+    CHECK_RESULT $? 2 0 "syscare build fail"
 
     # syscare build --patch-name为异常字符
     syscare build --patch-name "@^<>!$%^&*()+_=-" --source "${redis_src_name}" --debuginfo "${redis_debuginfo_name}" --patch ${patch_file}
-    CHECK_RESULT $? 255
+    CHECK_RESULT $? 255 0 "syscare build fail"
 
     # syscare build -s/--source 源码包不存在 -d/--debuginfo 包不存在
     syscare build --patch-name patch_${target}_${patch_name_0001} --source --debuginfo "${redis_debuginfo_name}" --patch ${patch_file}
-    CHECK_RESULT $? 2
+    CHECK_RESULT $? 2 0 "syscare build fail"
     syscare build --patch-name patch_${target}_${patch_name_0001} --source "${redis_src_name}"_1 --debuginfo "${redis_debuginfo_name}" --patch ${patch_file}
-    CHECK_RESULT $? 255
+    CHECK_RESULT $? 255 0 "syscare build fail"
     syscare build --patch-name patch_${target}_${patch_name_0001} --source "${redis_src_name}" --debuginfo --patch ${patch_file}
-    CHECK_RESULT $? 2
+    CHECK_RESULT $? 2 0 "syscare build fail"
     syscare build --patch-name patch_${target}_${patch_name_0001} --source "${redis_src_name}" --debuginfo "${redis_debuginfo_name}"_1 --patch ${patch_file}
-    CHECK_RESULT $? 255
+    CHECK_RESULT $? 255 0 "syscare build fail"
     popd || exit
 }
 
@@ -74,6 +75,8 @@ function post_test() {
     cd /root || exit
     rm -f syscare-build*
     cd - || exit
+    restore_env
+    LOG_INFO "test end"
 }
 
 main "$@"
