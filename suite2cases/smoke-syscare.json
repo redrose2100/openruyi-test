@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/smoke-test",
+    "cases": [
+        {
+            "name": "oe_test_syscare_basic_test"
+        }
+    ]
+}

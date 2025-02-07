@@ -20,7 +20,7 @@
 source "common/common_syscare.sh"
 
 function pre_test() {
-    LOG_INFO "test start"
+    LOG_INFO "Start to prepare the test environment."
     init_env
     download_and_compile_redis
     target='redis'
@@ -32,6 +32,7 @@ function pre_test() {
         patch="patch_name_$i"
         long_patch_name="$long_patch_name$patch"
     done
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
@@ -72,11 +73,12 @@ function run_test() {
 }
 
 function post_test() {
+    LOG_INFO "Start to restore the test environment."
     cd /root || exit
     rm -f syscare-build*
     cd - || exit
     restore_env
-    LOG_INFO "test end"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
