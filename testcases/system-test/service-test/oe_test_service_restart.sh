@@ -35,8 +35,7 @@ function run_test() {
     if [ -s ./new_service ]; then
         while read -r service; do
             LOG_INFO "Start testing ${service}"
-            check_service_restart "${service}"
-            check_service_reload "${service}"
+            check_new_service "${service}"
             LOG_INFO "End testing ${service}"
         done < ./new_service 
     else
