@@ -42,7 +42,7 @@ function select_services() {
     while read -r service; do
         name=${service%.*}
         type=${service##*.}
-        path=$(grep  -r -w \"oe_test_"$type"_"$name"\" "${OET_PATH}"/suite2cases/)
+        path=$(grep -w \"oe_test_"$type"_"$name"\" "${OET_PATH}"/suite2cases/*.json)
         echo "$path" >> file
         if [ -z "$path" ]; then
            echo "$service" >> new_service
@@ -53,7 +53,7 @@ function select_services() {
     sed -e '/^$/d' file > json_file
 }
 
-function check_service_restart() {
+function check_new_service() {
     service=$1
     systemctl cat "${service}" >systemd_file
     if grep "Type=oneshot" systemd_file; then
@@ -61,19 +61,7 @@ function check_service_restart() {
         test_oneshot "${service}" 'inactive (dead)'
     else
         test_execution "${service}"
-    fi
-}
-
-function check_service_reload() {
-    service=$1
-    if systemctl reload "${service}" 2>&1 | grep "Job type reload is not applicable"; then
         test_reload "${service}"
-    else
-        systemctl start "${service}"
-        systemctl reload "${service}"
-        CHECK_RESULT $? 0 0 "${service} reload failed"
-        systemctl status "${service}" | grep "Active: active"
-        CHECK_RESULT $? 0 0 "${service} reload causes the service status to change"
     fi
 }
 
