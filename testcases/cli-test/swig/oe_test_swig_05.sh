@@ -68,7 +68,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    rm -rf "$(ls | grep -vE ".sh|example.i")" example_im.d
+    find . -mindepth 1 -maxdepth 1 ! -name "*.sh" ! -name "example.i" -exec rm -rf {} +
     LOG_INFO "End to restore the test environment."
 }
 

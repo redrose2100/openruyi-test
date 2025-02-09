@@ -26,7 +26,7 @@ function deploy_env() {
 
 function clear_env() {
     DNF_REMOVE "$@"
-    rm -rf "$(ls | grep -vE '.sh|.java|.xml|expect_result|main|test')"
+    find . -mindepth 1 -maxdepth 1 ! -name "*.sh" ! -name "*.java" ! -name "*.xml" ! -name "expect_result" ! -name "main" ! -name "test" -exec rm -rf {} +
 }
 
 function compile_java() {
