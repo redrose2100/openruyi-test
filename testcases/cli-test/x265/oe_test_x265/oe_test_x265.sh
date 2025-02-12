@@ -47,13 +47,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check file2 failed"
     x265 --input test.y4m -o file3 --csv file3_csv && test -f file3_csv
     CHECK_RESULT $? 0 0 "Check file3 failed"
+    x265 --input test.y4m -o file4 --keyint 30 && test -f file4
+    CHECK_RESULT $? 0 0 "Check keyint 30 failed"
+    x265 --input test.y4m -o file5 --bitrate 5000 && test -f file5
+    CHECK_RESULT $? 0 0 "Check bitrate 5000 failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf file*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
