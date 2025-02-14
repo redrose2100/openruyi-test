@@ -62,7 +62,7 @@ function clear_env() {
         pwd
     )
     currentName=$(echo $currentDir | awk -F '/' '{print $NF}')
-    test "$currentName"x = "build"x && cd ../../ && {
+    test "$currentName"x = "build"x && cd .. && {
         rm -rf $(ls | grep -v ".sh")
     }
     DNF_REMOVE
