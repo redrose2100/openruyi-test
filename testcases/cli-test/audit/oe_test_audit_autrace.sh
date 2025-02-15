@@ -32,8 +32,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     autrace -r /bin/ls /root|grep ausearch    
     CHECK_RESULT $? 0 0 "file write failure"
-    pid=$(autrace -r /bin/ls /root|grep -Po '[0-9]*')    
+    tmp=$(autrace -r /bin/ls /root|grep -Po '[0-9]*')    
     CHECK_RESULT $? 0 0 "load rule failure"
+    array=($tmp)
+    pid=${array[-1]}
     ausearch -i -p "$pid" |grep ls
     CHECK_RESULT $? 0 0 "rule write failure"
     LOG_INFO "End to run test."
