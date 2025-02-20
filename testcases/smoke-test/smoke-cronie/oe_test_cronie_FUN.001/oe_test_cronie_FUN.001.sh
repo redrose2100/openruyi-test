@@ -24,6 +24,8 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL cronie
     systemctl status crond.service || systemctl restart crond.service
+    CRONPATH="/var/spool/cron/root"
+    echo "* * * * * $(pwd)/test_long.sh" > cron_task
     if [ -e "$CRONPATH" ]; then
         flag=1
         cp -ar "$CRONPATH" /var/spool/cron/root.bak
@@ -45,12 +47,13 @@ function run_test() {
     CHECK_RESULT $? 0 0
     echo y | crontab -i -r
     crontab -l | grep "test_long.sh"
-    CHECK_RESULT $? 0 0 
+    CHECK_RESULT $? 1 0 
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "Start to clean the test environment."
+    rm -rf cron_task
     DNF_REMOVE "$@"
     if [ $flag == 1 ]; then
         mv /var/spool/cron/root.bak "$CRONPATH"

@@ -7,6 +7,36 @@
     ],
     "cases": [
         {
+            "name": "oe_test_lvm2_snap_001",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_snap_002",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_snap_003",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_snap_004",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_snap_005",
+            "add disk": [
+                10
+            ]
+        },
+        {
             "name": "oe_test_service_blk-availability"
         },
         {
