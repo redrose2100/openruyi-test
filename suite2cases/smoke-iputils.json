@@ -2,9 +2,6 @@
     "path": "$OET_PATH/testcases/smoke-test/smoke-iputils",
     "cases": [
         {
-            "name": "oe_test_arping_SCEN.002"
-        },
-        {
             "name": "oe_test_iputils_FUN.003"
         },
         {

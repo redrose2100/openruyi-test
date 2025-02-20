@@ -16,7 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   lvm2 command test
 # ############################################
-source ./common/disk_lib.sh
+# shellcheck disable=SC2154
+source "$OET_PATH/testcases/cli-test/lvm2/common/disk_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     DNF_INSTALL lvm2
@@ -26,19 +27,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvcreate -y /dev/${local_disk}
+    pvcreate -y /dev/"${local_disk}" -ff
     CHECK_RESULT $?
     pvs | grep "/dev/${local_disk}"
     CHECK_RESULT $?
-    vgcreate test /dev/${local_disk}
+    vgcreate test /dev/"${local_disk}"
     CHECK_RESULT $?
     vgrename test test1 | grep "successfully renamed"
     CHECK_RESULT $?
     vgs 2>&1 | grep "test1"
     CHECK_RESULT $?
-    UUID=$(vgdisplay | grep "VG UUID" | sed -n 1p | awk {'print$3'})
+    UUID=$(vgdisplay | grep "VG UUID" | sed -n 1p | awk '{print $3}')
     CHECK_RESULT $?
-    vgrename ${UUID} new
+    vgrename "${UUID}" new
     CHECK_RESULT $?
     vgs 2>&1 | grep "new"
     CHECK_RESULT $?
@@ -59,9 +60,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     vgremove -f new
-    pvremove -f /dev/${local_disk}
-    DNF_REMOVE
+    pvremove -f /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

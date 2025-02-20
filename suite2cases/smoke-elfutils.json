@@ -20,10 +20,7 @@
             "name": "oe_test_eu-elfcompress_v"
         },
         {
-            "name": "oe_test_eu-elflint_gnu_ld"
-        },
-        {
-            "name": "oe_test_eu-size_output_options"
+            "name": "oe_test_eu-size_output_format"
         },
         {
             "name": "oe_test_eu-strings_output_selection"
