@@ -33,9 +33,9 @@ function run_test() {
     CHECK_RESULT $?
     vgcreate test /dev/"${local_disk}" /dev/"${local_disk1}"
     CHECK_RESULT $?
-    lvcreate -L 50MB -n lv1 test | grep 'Logical volume "lv1" created'
+    echo y | lvcreate -L 50MB -n lv1 test | grep 'Logical volume "lv1" created'
     CHECK_RESULT $?
-    pvmove /dev/"${local_disk}" /dev/"${local_disk1}" | grep "Moved:"
+    pvmove /dev/"${local_disk}" /dev/"${local_disk1}" 2>&1 | grep "Moved:"
     CHECK_RESULT $?
     pvmove -A y /dev/"${local_disk1}" /dev/"${local_disk}" | grep "Moved:"
     CHECK_RESULT $?

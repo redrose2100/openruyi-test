@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   lvm-snap merge error param
 # ############################################
+# shellcheck disable=SC2154
 source "$OET_PATH/testcases/cli-test/lvm2/common/disk_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
@@ -26,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvcreate -y /dev/"${local_disk}"
+    pvcreate -y /dev/"${local_disk}" -ff
     CHECK_RESULT $? 0 0 'pv is creat success'
     vgcreate -y vg_test /dev/"${local_disk}"
     CHECK_RESULT $? 0 0 'vg is creat success'
@@ -43,7 +44,6 @@ function run_test() {
     umount /home/snap_$$
     lvchange --refresh vg_test/lv_test
 
-    LOG_INFO "error param test"
     lvconvert -merge /dev/vg_test/lv_snap_test
     CHECK_RESULT $? 0 1 "error merge param"
     lvconvert --mergee /dev/vg_test/lv_snap_test
@@ -56,6 +56,7 @@ function run_test() {
     CHECK_RESULT $? 0 1 "error merge param"
     lvconvert --merge /dev/vg_test/lv_test
     CHECK_RESULT $? 0 1 "error merge param"
+    LOG_INFO "End executing testcase!"
 }
 
 function post_test() {

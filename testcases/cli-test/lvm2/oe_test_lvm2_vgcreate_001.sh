@@ -37,13 +37,13 @@ function run_test() {
     vgremove test -f
     vgcreate test /dev/"${local_disk}" --maxlogicalvolumes 3 | grep "successfully created"
     CHECK_RESULT $?
-    lvcreate -L 0.1MB -n lv test | grep "created"
+    echo y | lvcreate -L 0.1MB -n lv test | grep "created"
     CHECK_RESULT $?
-    lvcreate -L 0.1MB -n lv1 test | grep "created"
+    echo y | lvcreate -L 0.1MB -n lv1 test | grep "created"
     CHECK_RESULT $?
-    lvcreate -L 0.1MB -n lv2 test | grep "created"
+    echo y | lvcreate -L 0.1MB -n lv2 test | grep "created"
     CHECK_RESULT $?
-    lvcreate -L 0.1MB -n lv3 test | grep "Maximum number of logical volumes (3) reached in volume group test"
+    echo y | lvcreate -L 0.1MB -n lv3 test | grep "Maximum number of logical volumes (3) reached in volume group test"
     CHECK_RESULT $? 1
     CHECK_RESULT $?
     vgremove test -f
