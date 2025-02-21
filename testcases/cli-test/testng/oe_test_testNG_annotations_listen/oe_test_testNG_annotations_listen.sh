@@ -35,7 +35,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "IHookableImp.java source code compilation failed."
     javac -d . ../common/TExpListern.java
     CHECK_RESULT $? 0 0 "TExpListern.java source code compilation failed."
-    java -cp "${CLASSPATH}" org.testng.TestNG TExpListern.xml | grep "run: 1, Failures: 0, Skips: 0"
+    java -cp "${CLASSPATH}" org.testng.TestNG TExpListern.xml | grep "run: 1, Passes: 1, Failures: 0, Skips: 0"
     CHECK_RESULT $? 0 0 "testng execution use case failed."
 
     LOG_INFO "End to run test."

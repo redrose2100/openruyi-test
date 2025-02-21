@@ -56,7 +56,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    ant -f "${ant_path}/build.xml" | grep "run: 2, Failures: 0, Skips: 0"
+    ant -f "${ant_path}/build.xml" | grep "run: 2, Passes: 2, Failures: 0, Skips: 0"
     CHECK_RESULT $? 0 0 "testng execution use case failed."
 
     LOG_INFO "End to run test."

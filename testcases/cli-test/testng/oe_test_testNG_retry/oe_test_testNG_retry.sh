@@ -34,7 +34,7 @@ function run_test() {
     javac Retry.java
     CHECK_RESULT $? 0 0 "java source code compilation failed."
     java -cp "${CLASSPATH}" org.testng.TestNG Retry.xml
-    java -cp "${CLASSPATH}" org.testng.TestNG test-output/testng-failed.xml | grep "run: 1, Failures: 1, Skips: 0"
+    java -cp "${CLASSPATH}" org.testng.TestNG test-output/testng-failed.xml | grep "run: 1, Passes: 0, Failures: 1, Skips: 0"
     CHECK_RESULT $? 0 0 "testng execution use case failed"
 
     LOG_INFO "End to run test."
