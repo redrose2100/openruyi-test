@@ -51,6 +51,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check keyint 30 failed"
     x265 --input test.y4m -o file5 --bitrate 5000 && test -f file5
     CHECK_RESULT $? 0 0 "Check bitrate 5000 failed"
+    x265 --input test.y4m -o file6 --crf 25 && test -f file6
+    CHECK_RESULT $? 0 0 "Check CRF 25 failed"
+    x265 --input test.y4m -o file7 --output-depth 10 && test -f file7
+    CHECK_RESULT $? 0 0 "Check output-depth 10 failed"
+    x265 --input test.y4m -o file8 --preset ultrafast && test -f file8
+    CHECK_RESULT $? 0 0 "Check preset ultrafast failed"
     LOG_INFO "End to run test."
 }
 
