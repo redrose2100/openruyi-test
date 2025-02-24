@@ -169,6 +169,9 @@
         },
         {
             "name": "oe_test_net_ifb"
+        },
+        {
+            "name": "oe_test_net_veth"
         }
     ]
 }
