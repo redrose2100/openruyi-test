@@ -14,7 +14,7 @@
 # @Contact   :   1768492250@qq.com
 # @Date      :   2024/10/11
 # @License   :   Mulan PSL v2
-# @Desc      :   Test integritysetup.target restart
+# @Desc      :   Test netavark-dhcp-proxy.socket restart
 # #############################################
 # shellcheck disable=SC1091
 source "../common/common_lib.sh"
@@ -27,14 +27,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution integritysetup.target
-    test_reload integritysetup.target
+    test_execution netavark-dhcp-proxy.socket
+    test_reload netavark-dhcp-proxy.socket
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    systemctl stop integritysetup.target
+    systemctl stop netavark-dhcp-proxy.socket
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
