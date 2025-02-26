@@ -33,6 +33,8 @@ function run_test() {
   CHECK_RESULT $? 0 0 "chmod fail"
   utshell -c  "test -g file1"
   CHECK_RESULT $? 0 0 "file not SGID"
+  utshell -c  "test -u file1"
+  CHECK_RESULT $? 1 0 "file not SUID"
   LOG_INFO "End of the test."
 }
 
