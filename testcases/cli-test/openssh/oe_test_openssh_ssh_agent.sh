@@ -50,7 +50,7 @@ EOF
     CHECK_RESULT $?
     ssh-add -l | grep "SHA256"
     CHECK_RESULT $?
-    ssh-add -L | grep "ssh-rsa"
+    ssh-add -L | grep "ssh-ed*"
     CHECK_RESULT $?
     expect <<EOF
         set timeout 15
