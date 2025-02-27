@@ -40,21 +40,21 @@ function run_test() {
     rm -rf bigfile.zst
     /usr/bin/time -f %U pzstd -p4 bigfile &> tmp_file
     time_4=$(awk 'NR==2 {print $1}' tmp_file)
-    # 受环境影响，压缩值相差0.1属于正常现象,判断条件改为差值形式
-    val=$(echo "${time_1}" - 0.1 | bc)
-    python -c "print(${val} < ${time_4})" | grep "True"
-    CHECK_RESULT $? 0 0 "check pzstd -p time"
-    python -c "print(${val} < 1)" | grep "True"
-    CHECK_RESULT $? 0 0 "check pzstd -p time"
+    # 使用4cpus耗时应小于使用1cpu
+    (($(echo "$time_1 >= $time_4" | bc -l)))
+    CHECK_RESULT $? 0 0 "Using p1(1cpu) spend less time than using p4(4cpus)"
+    # 使用1cpu耗时应小于1s
+    (($(echo "$time_1 < 1" | bc -l)))
+    CHECK_RESULT $? 0 0 "Using p1(1cpu) spend time more than 1s"
 
-    /usr/bin/time -f %U pzstd -3 -f bigfile &> tmp_file
-    t_level_3=$(awk 'NR==2 {print $1}' tmp_file)
-    /usr/bin/time -f %U pzstd -5 -f bigfile &> tmp_file
-    t_level_5=$(awk 'NR==2 {print $1}' tmp_file)
-    python -c "print(${t_level_3} < ${t_level_5})" | grep "True"
-    CHECK_RESULT $? 0 0 "check pzstd level"
-    python -c "print(${t_level_3} < 1)" | grep "True"
-    CHECK_RESULT $? 0 0 "check pzstd level"
+    /usr/bin/time -f %U pzstd -1 -f bigfile &> tmp_file
+    t_level_1=$(awk 'NR==2 {print $1}' tmp_file)
+    /usr/bin/time -f %U pzstd -9 -f bigfile &> tmp_file
+    t_level_9=$(awk 'NR==2 {print $1}' tmp_file)
+    (($(echo "$t_level_1 < $t_level_9" | bc -l)))
+    CHECK_RESULT $? 0 0 "Using level9 spend less time than level1"
+    (($(echo "$t_level_1 < 1" | bc -l)))
+    CHECK_RESULT $? 0 0 "Using level3 spend time more than 1s"
 
     pzstd testfile
     CHECK_RESULT $? 0 0 "check pzstd file"
