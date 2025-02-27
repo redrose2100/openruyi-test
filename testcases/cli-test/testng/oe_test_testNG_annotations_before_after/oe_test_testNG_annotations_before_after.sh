@@ -33,7 +33,7 @@ function run_test() {
 
     javac -d . ../common/TExpBase.java
     CHECK_RESULT $? 0 0 "java source code compilation failed."
-    java -cp "${CLASSPATH}" org.testng.TestNG ../common/TExpBase.xml | grep "run: 2, Failures: 0, Skips: 0"
+    java -cp "${CLASSPATH}" org.testng.TestNG ../common/TExpBase.xml | grep "run: 2, Passes: 2, Failures: 0"
     CHECK_RESULT $? 0 0 "Use case execution failed."
 
     LOG_INFO "End to run test."

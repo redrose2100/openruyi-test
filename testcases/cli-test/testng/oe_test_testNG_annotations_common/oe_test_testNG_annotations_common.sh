@@ -33,7 +33,7 @@ function run_test() {
 
     javac -d . ../common/*.java
     CHECK_RESULT $? 0 0 "java source code compilation failed."
-    java -cp "${CLASSPATH}" org.testng.TestNG testngCommon.xml | grep "run: 35, Failures: 3, Skips: 0"
+    java -cp "${CLASSPATH}" org.testng.TestNG testngCommon.xml | grep "run: 35, Passes: 32, Failures: 3, Skips: 0"
     CHECK_RESULT $? 0 0 "testng execution use case failed."
 
     LOG_INFO "End to run test."
