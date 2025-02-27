@@ -89,16 +89,28 @@ def read_configure():
                 continue
             if node["MACHINE"] == "physical" and "HOST" in item:
                 continue
-
-            env_var += (
-                "export NODE"
-                + str(node["ID"])
-                + "_"
-                + item
-                + "="
-                + str(node[item])
-                + "\n"
-            )
+            if item == "PASSWORD":
+                env_var += (
+                    "export NODE"
+                    + str(node["ID"])
+                    + "_"
+                    + item
+                    + "="
+                    + "'"
+                    + str(node[item])
+                    + "'"
+                    + "\n"
+                )
+            else:
+                env_var += (
+                    "export NODE"
+                    + str(node["ID"])
+                    + "_"
+                    + item
+                    + "="
+                    + str(node[item])
+                    + "\n"
+                )
         if "COPY_ALL" in node.keys():
             env_var += (
                 "export NODE"

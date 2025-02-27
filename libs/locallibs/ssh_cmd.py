@@ -50,7 +50,7 @@ def pssh_conn(
     conn = paramiko.SSHClient()
     conn.set_missing_host_key_policy(paramiko.AutoAddPolicy)
     try:
-        conn.connect(ip, port, user, password, timeout=timeout)
+        conn.connect(ip, port, user, password[1:-1], timeout=timeout)
     except (
         paramiko.ssh_exception.NoValidConnectionsError,
         paramiko.ssh_exception.AuthenticationException,
