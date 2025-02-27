@@ -35,12 +35,18 @@ function run_test() {
   CHECK_RESULT $? 0 0 "step2 fail"
   test -e 2.dff
   CHECK_RESULT $? 0 0 "2.dff not exist"
+  wavpack --help |grep Usage
+  CHECK_RESULT $? 0 0 "wavpack --help execution failure"
+  wavpack --version |grep wavpack
+  CHECK_RESULT $? 0 0 "wavpack --version execution failure"
+  rm -rf test.wv;wavpack test.wav && test -e test.wv
+  CHECK_RESULT $? 0 0 "test.wv build failure"
   LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  DNF_REMOVE
+  DNF_REMOVE "$@" 
   rm -rf  test.wv 2.dff
   LOG_INFO "Finish environment cleanup!"
 }
