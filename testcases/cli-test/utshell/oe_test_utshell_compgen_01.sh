@@ -36,6 +36,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to view alias"
     su - test -c "compgen -b |grep -i wait"
     CHECK_RESULT $? 0 0 "View plugin failed"
+    su - test -c "compgen  -abckA function | grep -E 'tail|grep'"
+    CHECK_RESULT $? 0 0 "View all function failed"
     su - test -c "compgen -W "aa ab bb cc" -- \"a\" |grep -E 'aa|ab'"
     CHECK_RESULT $? 0 0 "Command execution failed"
 }
