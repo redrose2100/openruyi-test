@@ -72,7 +72,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
     rm -rf /var/lib/pgsql/*
-    DNF_REMOVE 1 "postgresql postgresql-server postgresql-devel postgresql-contrib"
+    DNF_REMOVE 1 "postgresql postgresql-server postgresql-private-devel postgresql-contrib"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
