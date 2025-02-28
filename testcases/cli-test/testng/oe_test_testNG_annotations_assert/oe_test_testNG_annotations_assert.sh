@@ -33,7 +33,7 @@ function run_test() {
 
     javac -d . ../common/TExpAssert.java
     CHECK_RESULT $? 0 0 "java source code compilation failed."
-    java -cp "${CLASSPATH}" org.testng.TestNG TExpAssert.xml | grep "run: 9, Failures: 3, Skips: 0"
+    java -cp "${CLASSPATH}" org.testng.TestNG TExpAssert.xml | grep "run: 9, Passes: 6, Failures:3"
     CHECK_RESULT $? 0 0 "testng execution use case failed."
 
     LOG_INFO "End to run test."
