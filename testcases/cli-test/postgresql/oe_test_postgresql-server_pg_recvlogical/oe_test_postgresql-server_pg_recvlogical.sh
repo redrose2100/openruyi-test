@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   pg_recvlogical
 # ############################################
+# shellcheck disable=SC1091
 
 source ../common/lib.sh
 
@@ -37,12 +38,12 @@ function run_test() {
     su - postgres -c "pg_recvlogical -d postgres --slot test --create-slot --start -f - &"
     CHECK_RESULT $?
     SLEEP_WAIT 10 "pgrep -f 'slot test'" 2
-    kill -9 $(pgrep -f 'slot test')
+    kill -9 "$(pgrep -f 'slot test')"
     su - postgres -c "pg_recvlogical -d postgres --drop-slot --slot test"
     su - postgres -c "pg_recvlogical -d postgres --slot test --create-slot --start  -f - -F 10 &"
     CHECK_RESULT $?
     SLEEP_WAIT 10 "pgrep -f 'slot test'" 2
-    kill -9 $(pgrep -f 'slot test')
+    kill -9 "$(pgrep -f 'slot test')"
     su - postgres -c "pg_recvlogical -d postgres --drop-slot --slot test"
     CHECK_RESULT $?
     su - postgres -c "pg_recvlogical -d postgres --slot test --create-slot"
@@ -50,17 +51,17 @@ function run_test() {
     su - postgres -c "pg_recvlogical -d postgres --slot test --start  -f - -I 0/A3FD7168 &"
     CHECK_RESULT $?
     SLEEP_WAIT 10 "pgrep -f 'slot test'" 2
-    kill -9 $(pgrep -f 'slot test')
+    kill -9 "$(pgrep -f 'slot test')"
     su - postgres -c "pg_recvlogical -d postgres --slot test --start  -n -f - &"
     CHECK_RESULT $?
     SLEEP_WAIT 10 "pgrep -f 'slot test'" 2
-    kill -9 $(pgrep -f 'slot test')
+    kill -9 "$(pgrep -f 'slot test')"
     su - postgres -c "pg_recvlogical -d postgres --drop-slot --slot test"
     CHECK_RESULT $?
     su - postgres -c "pg_recvlogical -d postgres --slot test --create-slot --start -f - -s 2 -v &"
     CHECK_RESULT $?
     SLEEP_WAIT 10 "pgrep -f 'slot test'" 2
-    kill -9 $(pgrep -f 'slot test')
+    kill -9 "$(pgrep -f 'slot test')"
     su - postgres -c "pg_recvlogical -d postgres --drop-slot -S test"
     CHECK_RESULT $?
     su - postgres -c "pg_recvlogical -d postgres --slot test --create-slot -h 127.0.0.1 -U postgres -w -p 5432"
@@ -73,7 +74,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/lib/pgsql/*
-    DNF_REMOVE 1 "postgresql postgresql-server postgresql-devel postgresql-contrib"
+    DNF_REMOVE 1 "postgresql postgresql-server postgresql-private-devel postgresql-contrib"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

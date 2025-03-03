@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   pg_ctl
 # ############################################
+# shellcheck disable=SC1091
 
 source ../common/lib.sh
 
@@ -59,7 +60,7 @@ function run_test() {
     CHECK_RESULT $?
     su - postgres -c "pg_ctl reload -D data1 -s"
     CHECK_RESULT $?
-    PID=$(su - postgres -c "pg_ctl -D data1 status" | grep "PID" | tr -cd "[0-9]")
+    PID=$(su - postgres -c "pg_ctl -D data1 status" | grep "PID" | tr -cd "0-9")
     su - postgres -c "pg_ctl kill INT ${PID}"
     CHECK_RESULT $?
     pg_ctl -V | grep "(PostgreSQL)"
@@ -72,7 +73,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-    DNF_REMOVE 1 "postgresql postgresql-server postgresql-devel postgresql-contrib"
+    DNF_REMOVE 1 "postgresql postgresql-server postgresql-private-devel postgresql-contrib"
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }

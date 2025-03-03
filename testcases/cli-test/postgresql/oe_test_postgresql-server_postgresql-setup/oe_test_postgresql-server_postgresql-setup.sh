@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   postgresql-setup pg_controldata pg_rewind
 # ############################################
+# shellcheck disable=SC1091
 
 source ../common/lib.sh
 
