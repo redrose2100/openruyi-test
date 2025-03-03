@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   psql
 # ############################################
+# shellcheck disable=SC1091
 
 source ../common/lib.sh
 
@@ -38,7 +39,7 @@ function run_test() {
     CHECK_RESULT $?
     su - postgres -c "psql -t -c \"select * from pg_roles;\"" | grep "postgres"
     CHECK_RESULT $?
-    su - postgres -c "psql -T “ss” -H -c \"select * from pg_roles;\"" | grep "rolname"
+    su - postgres -c "psql -T 'ss' -H -c 'select * from pg_roles;'" | grep "rolname"
     CHECK_RESULT $?
     su - postgres -c "psql -x -c \"select * from pg_roles;\"" | grep "rolname"
     CHECK_RESULT $?
@@ -52,7 +53,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-    DNF_REMOVE 1 "postgresql postgresql-server postgresql-devel postgresql-contrib"
+    DNF_REMOVE 1 "postgresql postgresql-server postgresql-private-devel postgresql-contrib"
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }

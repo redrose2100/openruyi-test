@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   psql
 # ############################################
+# shellcheck disable=SC1091
 
 source ../common/lib.sh
 
@@ -67,7 +68,7 @@ END
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-    DNF_REMOVE 1 "postgresql postgresql-server postgresql-devel postgresql-contrib"
+    DNF_REMOVE 1 "postgresql postgresql-server postgresql-private-devel postgresql-contrib"
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }
