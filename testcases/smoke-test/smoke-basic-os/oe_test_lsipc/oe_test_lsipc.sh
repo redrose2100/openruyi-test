@@ -23,26 +23,30 @@ function run_test() {
     LOG_INFO "Start testing..."
     lsipc
     CHECK_RESULT $? 0 0 "lsipc execute fail"
+    ## set lang to en, make shm (shared memory segment)
+    local ipcid
+    ipcid=$(LANG="" ipcmk -M 1m | awk '{print $NF}')
+    CHECK_RESULT $? 0 0 "failed to make shm segment" 1
     lsipc -m | grep "SIZE"
-    CHECK_RESULT $? 0 0 "lscpu --shmems execute fail"
+    CHECK_RESULT $? 0 0 "lsipc --shmems execute fail"
     lsipc -n | grep "RESOURCE"
-    CHECK_RESULT $? 0 0 "lscpu --newline execute fail"
+    CHECK_RESULT $? 0 0 "lsipc --newline execute fail"
     lsipc -q 
-    CHECK_RESULT $? 0 0 "lscpu --quene execute fail"
+    CHECK_RESULT $? 0 0 "lsipc --quene execute fail"
     lsipc -J | grep "ipclimits"
-    CHECK_RESULT $? 0 0 "lscpu --Json execute fail"
+    CHECK_RESULT $? 0 0 "lsipc --Json execute fail"
     lsipc -s
-    CHECK_RESULT $? 0 0 "lscpu --semaphores execute fail"
+    CHECK_RESULT $? 0 0 "lsipc --semaphores execute fail"
     lsipc -h | grep "help"
-    CHECK_RESULT $? 0 0 "lscpu --help execute fail"
+    CHECK_RESULT $? 0 0 "lsipc --help execute fail"
     lsipc -b | grep "USED"
-    CHECK_RESULT $? 0 0 "lscpu --byte execute fail"
+    CHECK_RESULT $? 0 0 "lsipc --byte execute fail"
     lsipc -V | grep "lsipc"
-    CHECK_RESULT $? 0 0 "lscpu --version execute fail"
+    CHECK_RESULT $? 0 0 "lsipc --version execute fail"
     lsipc -l 
-    CHECK_RESULT $? 0 0 "lscpu --list execute fail"
+    CHECK_RESULT $? 0 0 "lsipc --list execute fail"
     lsipc -r
-    CHECK_RESULT $? 0 0 "lscpu --raw execute fail"
+    CHECK_RESULT $? 0 0 "lsipc --raw execute fail"
     lsipc -m -P | grep PERMS
     CHECK_RESULT $? 0 0 "-m -p --numeric-perms execute fail"
     lsipc -m -c | grep OWNER
@@ -57,6 +61,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "-g -s --semaphores execute fail"
     lsipc -g -o RESOURCE | grep "SEMOPM"
     CHECK_RESULT $? 0 0 "-g -o --output[=<ап╠М>] execute fail"
+    ipcrm -m "$ipcid"
     LOG_INFO "Finish test!"
 }
 
