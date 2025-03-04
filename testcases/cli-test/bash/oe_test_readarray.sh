@@ -22,6 +22,8 @@ function run_test() {
     LOG_INFO "Start testing..."
     echo {a..z} | tr " " "\n" >test.log
     CHECK_RESULT $? 0 0 "echo fail"
+    readarray --help | grep -E "d 分隔符|d delim"
+    CHECK_RESULT $? 0 0 "readarray help fail"
     readarray myarr<test.log
     CHECK_RESULT $? 0 0 "readarray fail"
     echo "${myarr[@]}" | grep -E "[a-z]"
