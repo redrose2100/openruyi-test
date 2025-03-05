@@ -68,7 +68,7 @@ EOF
     CHECK_RESULT $?
     if [ "$VERSION_ID" != "22.03" ]; then
         expect <<EOF
-        spawn ccmake -C ../common/mysettings.cmake ../../common/
+        spawn ccmake -C ../../common/mysettings.cmake ../../common/
         expect "EMPTY CACHE" {send "c"}
         expect "*" {send "\r"}
         expect "*" {send "Debug\r"}
@@ -78,7 +78,7 @@ EOF
 EOF
     else
         expect <<EOF
-        spawn ccmake -C ../common/mysettings.cmake ../../common/
+        spawn ccmake -C ../../common/mysettings.cmake ../../common/
         expect "EMPTY CACHE" {send "c"}
         expect " " {send "e"}
         expect "*" {send "\r"}
