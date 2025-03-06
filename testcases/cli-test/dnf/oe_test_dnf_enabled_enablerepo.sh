@@ -26,11 +26,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    grep -B3 "enabled=1" /etc/yum.repos.d/*.repo | grep "name=OS"
+    grep -B4 "enabled=1" /etc/yum.repos.d/*.repo | grep "name=OS"
     CHECK_RESULT $?
     dnf repolist | grep OS
     CHECK_RESULT $?
-    grep -B3 "enabled=1" /etc/yum.repos.d/*.repo | grep "name=everything"
+    grep -B4 "enabled=1" /etc/yum.repos.d/*.repo | grep "name=everything"
     CHECK_RESULT $?
     dnf repolist | grep everything
     CHECK_RESULT $?
