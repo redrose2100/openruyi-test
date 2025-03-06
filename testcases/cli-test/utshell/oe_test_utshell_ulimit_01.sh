@@ -37,6 +37,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "ulimit -p fail"
     utshell -c "ulimit -s 9999 && ulimit -a | grep '9999'"
     CHECK_RESULT $? 0 0 "ulimit -s fail"
+    utshell -c "ulimit -S 5555 && ulimit -a | grep '5555'"
+    CHECK_RESULT $? 0 0 "ulimit -S fail"
+    utshell -c "ulimit -t 3600 && ulimit -a | grep '3600'"
+    CHECK_RESULT $? 0 0 "ulimit -t fail"
+    utshell -c "ulimit -u 888 && ulimit -a | grep '888'"
+    CHECK_RESULT $? 0 0 "ulimit -u fail"
+    utshell -c "ulimit -v 12345 && ulimit -a | grep '12345'"
+    CHECK_RESULT $? 0 0 "ulimit -v fail"
+    utshell -c "ulimit -q 999999 && ulimit -a | grep '999999'"
+    CHECK_RESULT $? 0 0 "ulimit -q fail"
 }
 
 function post_test() {
