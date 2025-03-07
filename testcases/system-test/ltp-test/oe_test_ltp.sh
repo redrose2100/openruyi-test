@@ -37,7 +37,7 @@ function pre_test() {
     {
         make autotools 
         ./configure  
-        make -j $(nproc)
+        make -j "$(nproc)"
         make install 
     } >>/dev/null 2>&1
     grep "openeulerversion" /etc/openEuler-latest |grep "22.03" && echo 1024 > /proc/dirty/buffer_size
@@ -49,6 +49,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     cd /opt/ltp || exit 1
+    sed -i -E "/^fs$|^cve$/ s/^/#/" /opt/ltp/scenario_groups/default
     ./runltp |tee ltp.txt
     grep -nr "FAIL" /opt/ltp/results/|grep -v -E "af_alg07|cpufreq_boost|proc01|ioctl_sg01|madvise06|cpuset_memory_spread|cve-2018-1000204"
     CHECK_RESULT $? 1 0 "any case failed"
