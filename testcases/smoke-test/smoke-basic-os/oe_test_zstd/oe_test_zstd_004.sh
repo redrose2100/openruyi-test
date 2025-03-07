@@ -42,16 +42,18 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check zstdcat zst -o file"
     zstdcat -f testfile.zst -o tmpfile
     CHECK_RESULT $? 0 0 "check zstdcat -f zst -o file"
-    zstdcat --rm testfile.zst
+    zstdcat --rm testfile.zst -o tmpfile1
     CHECK_RESULT $? 0 0 "check zstdcat --rm"
+    test "$(cat tmpfile1)" = "test_str"
+    CHECK_RESULT $? 0 0 "get fault result with --rm"
     test -f testfile.zst
-    CHECK_RESULT $? 0 1 "Return value error"
+    CHECK_RESULT $? 0 1 "testfile.zst should be removed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf testfile* tmpfile
+    rm -rf testfile* tmpfile*
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
