@@ -16,7 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Check XFS file system with XFS? Repair
 # ############################################
+# shellcheck disable=SC1091,SC2154
+
 source ../common/storage_disk_lib.sh
+
 function config_params() {
     LOG_INFO "Start loading data!"
     check_free_disk
@@ -27,7 +30,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     mkfs.xfs -f "/dev/${local_disk}"
     SLEEP_WAIT 2
-    echo -e "n\np\n1\n\n+200M\np\nw\n" | fdisk /dev/${local_disk}
+    echo -e "n\np\n1\n\n+500M\np\nw\n" | fdisk /dev/"${local_disk}"
     SLEEP_WAIT 2
     mkfs.xfs -f "/dev/${local_disk}1"
     SLEEP_WAIT 3
@@ -43,8 +46,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    echo -e "d\np\nw\n" | fdisk /dev/${local_disk}
+    echo -e "d\np\nw\n" | fdisk /dev/"${local_disk}"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
