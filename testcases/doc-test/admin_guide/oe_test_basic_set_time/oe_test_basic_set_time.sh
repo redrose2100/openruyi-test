@@ -22,6 +22,7 @@ function pre_test() {
     timedatectl set-ntp no
     SLEEP_WAIT 5
     localzone=$(timedatectl | sed -n '4p' | cut -d ":" -f 2 | awk '{print$1}')
+    current_time=$(timedatectl | grep "Local time" | awk -F" " '{print $4$5}')
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -56,6 +57,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    timedatectl set-time "${current_time}"
     timedatectl set-timezone "${localzone}"
     timedatectl set-ntp yes
     LOG_INFO "Finish environment cleanup."

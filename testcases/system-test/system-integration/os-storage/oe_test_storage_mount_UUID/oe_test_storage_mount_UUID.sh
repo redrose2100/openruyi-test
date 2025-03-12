@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Mount the file system according to UUID using mount
 # #############################################
+# shellcheck disable=SC1091,SC2154
 
 source ../common/storage_disk_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
@@ -26,7 +28,7 @@ function pre_test() {
 p
 
 
-+20M
++500M
 w" | fdisk /dev/"${local_disk}"
     mkfs.xfs -f /dev/"${local_disk}1"
     sleep 2
@@ -38,7 +40,7 @@ w" | fdisk /dev/"${local_disk}"
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    mount UUID=$UUID /tmp/data
+    mount UUID="$UUID" /tmp/data
     CHECK_RESULT $?
     df -h | grep "/tmp/data"
     CHECK_RESULT $?
@@ -55,4 +57,4 @@ w" | fdisk /dev/"${local_disk}"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

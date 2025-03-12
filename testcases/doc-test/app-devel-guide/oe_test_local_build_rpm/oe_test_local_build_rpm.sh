@@ -26,7 +26,7 @@ function pre_test() {
     test -d "${HOME}/rpmbuild" \
         && mv -f "${HOME}/rpmbuild" "$_RPMBUILD_BAKUP_DIR" \
         && LOG_INFO "Successfully move ${HOME}/rpmbuild to ${_RPMBUILD_BAKUP_DIR}."
-    DNF_INSTALL "rpmdevtools*"
+    DNF_INSTALL "rpmdevtools* tree texinfo"
     rpmdev-setuptree
     cp ../common/hello.spec "${HOME}/rpmbuild/SPECS"
     cd "${HOME}/rpmbuild/SOURCES" && wget http://ftp.gnu.org/gnu/hello/hello-2.10.tar.gz

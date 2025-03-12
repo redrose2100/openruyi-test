@@ -16,7 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Increase the size of the XFS file system
 # #############################################
+# shellcheck disable=SC1091,SC2154
+
 source ../common/storage_disk_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
@@ -26,13 +29,13 @@ function pre_test() {
 p
 
 
-+40M
++500M
 n
 
 p
 
 
-+40M
++500M
 w" | fdisk "/dev/${local_disk}"
     LOG_INFO "Environmental preparation is over."
 }
@@ -42,7 +45,7 @@ function run_test() {
     mkdir /home/pv
     pvcreate "/dev/${local_disk1}" -y
     vgcreate test "/dev/${local_disk1}" -y
-    lvcreate -L 20MiB -n lv1 test -y
+    lvcreate -L 300MiB -n lv1 test -y
     CHECK_RESULT $?
     mkfs.xfs -f /dev/mapper/test-lv1
     CHECK_RESULT $?
@@ -56,9 +59,9 @@ function run_test() {
     xfs_info /home/pv
     lvextend -L +10MiB /dev/mapper/test-lv1 "/dev/${local_disk2}" -y
     CHECK_RESULT $?
-    xfs_growfs /home/pv -D 5500 | grep "blocks changed from 5120 to 5500"
+    xfs_growfs /home/pv -D 78000 | grep "blocks changed from 76800 to 78000"
     CHECK_RESULT $?
-    xfs_growfs /home/pv | grep "data blocks changed from 5500 to"
+    xfs_growfs /home/pv | grep "data blocks changed from 78000 to"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
@@ -79,4 +82,4 @@ w" | fdisk "/dev/${local_disk}"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
