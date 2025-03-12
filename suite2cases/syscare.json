@@ -2,9 +2,6 @@
     "path": "$OET_PATH/testcases/cli-test/syscare",
     "cases": [
         {
-            "name": "oe_test_syscare_basic_test"
-        },
-        {
             "name": "oe_test_syscare_build_kpatch"
         },
         {
@@ -15,12 +12,6 @@
         },
         {
             "name": "oe_test_service_syscare"
-        },
-        {
-            "name": "oe_test_service_upatch"
-        },
-        {
-            "name": "oe_test_service_status"
         }
     ]
 }

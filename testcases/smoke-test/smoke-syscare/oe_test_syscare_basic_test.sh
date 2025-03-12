@@ -20,31 +20,33 @@
 source "common/common_syscare.sh"
 
 function pre_test() {
+    LOG_INFO "Start to prepare the test environment"
     init_env
+    LOG_INFO "End to prepare the test environment"
 }
 
 function run_test() {
     # 当前syscare制作补丁需要真实src源码包和对应debuginfo包，本用例仅验证syscare安装和命令行功能正常
-    LOG_INFO "Start to run test."
     syscare list
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "syscare test failed"
     syscare -h
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "syscare test failed"
     syscare -V
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "syscare test failed"
     syscare save
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "syscare test failed"
     syscare restore
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "syscare test failed"
     syscare build -h
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "syscare test failed"
     syscare build -V
-    CHECK_RESULT $?
-    LOG_INFO "End to run test."
+    CHECK_RESULT $? 0 0 "syscare test failed"
 }
 
 function post_test() {
-    LOG_INFO "test end"
+    LOG_INFO "Start to restore the test environment"
+    restore_env
+    LOG_INFO "End to restore the test environment"
 }
 
 main "$@"
