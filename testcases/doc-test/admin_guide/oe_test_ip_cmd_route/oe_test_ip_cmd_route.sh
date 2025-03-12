@@ -16,16 +16,20 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command test-ip route
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1090,SC2010
+
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function config_params() {
     LOG_INFO "Start loading data!"
-    test_eth1=$(ls /sys/class/net/ | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | grep -v $(ip route | grep ${NODE1_IPV4} | awk '{print$3}') | sed -n 1p)
+    test_eth1=$(ls /sys/class/net/ | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | grep -v "$(ip route | grep -v dhcp | grep "${NODE1_IPV4}" | awk '{print$3}')" | sed -n 1p)
     LOG_INFO "Loading data is complete!"
 }
+
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    ip addr add 192.168.2.100/24 dev ${test_eth1}
-    ip addr add 2001:222::2/64 dev ${test_eth1}
+    ip addr add 192.168.2.100/24 dev "${test_eth1}"
+    ip addr add 2001:222::2/64 dev "${test_eth1}"
     CHECK_RESULT $?
     ip -6 route add 2001:224::0/64 via 2001:222::1 mtu lock 1500
     CHECK_RESULT $?
@@ -40,8 +44,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    nmcli con delete ${test_eth1}
+    nmcli con delete "${test_eth1}"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

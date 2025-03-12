@@ -16,36 +16,39 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command test-ip addr
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1090,SC2010
+
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function config_params() {
     LOG_INFO "Start loading data!"
-    test_eth1=$(ls /sys/class/net/ | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | grep -v $(ip route | grep ${NODE1_IPV4} | awk '{print$3}') | sed -n 1p)
+    test_eth1=$(ls /sys/class/net/ | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | grep -v "$(ip route | grep -v dhcp | grep "${NODE1_IPV4}" | awk '{print$3}')" | sed -n 1p)
     LOG_INFO "Loading data is complete!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    ip addr add 192.168.2.100/24 dev ${test_eth1}
+    ip addr add 192.168.2.100/24 dev "${test_eth1}"
     CHECK_RESULT $?
-    ip addr add 2001:222::2/64 dev ${test_eth1}
+    ip addr add 2001:222::2/64 dev "${test_eth1}"
     CHECK_RESULT $?
-    ip addr show ${test_eth1} | grep "inet6" | grep "2001:222::2/64"
+    ip addr show "${test_eth1}" | grep "inet6" | grep "2001:222::2/64"
     CHECK_RESULT $?
-    ip -6 addr add 2001:223::2/64 dev ${test_eth1} home
+    ip -6 addr add 2001:223::2/64 dev "${test_eth1}" home
     CHECK_RESULT $?
-    ip addr show ${test_eth1} | grep "inet6" | grep "2001:223::2/64"
+    ip addr show "${test_eth1}" | grep "inet6" | grep "2001:223::2/64"
     CHECK_RESULT $?
-    ip addr del 2001:222::2/64 dev ${test_eth1}
+    ip addr del 2001:222::2/64 dev "${test_eth1}"
     CHECK_RESULT $?
-    ip -6 addr show dev ${test_eth1} | grep "192.168.2.100"
+    ip -6 addr show dev "${test_eth1}" | grep "192.168.2.100"
     CHECK_RESULT $? 0 1
     LOG_INFO "End of testcase execution!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    nmcli con delete ${test_eth1}
+    nmcli con delete "${test_eth1}"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
