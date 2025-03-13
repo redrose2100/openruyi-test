@@ -20,10 +20,8 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function init_env() {
-    packages=("elfutils-libelf-devel" "openssl-devel" "flex" "python3-devel" "rpm-build" "bison" "cmake" "make" "gcc" "kpatch-runtime" "telnet" "perl-devel" "bind-utils")
-    yum install -y ${packages[*]}
-    rpm -q syscare || yum install -y syscare
-    rpm -q syscare-build || yum install -y syscare-build
+    DNF_INSTALL "elfutils-libelf-devel openssl-devel flex python3-devel rpm-build bison cmake make gcc kpatch-runtime telnet perl-devel bind-utils syscare syscare-build"
+    systemctl start syscare.service
 }
 
 function download_and_compile_redis() {
@@ -42,4 +40,8 @@ function download_and_compile_redis() {
         rpm -ivh "$(ls | grep "^redis-[1-9].*$(arch).rpm")"
     }
     popd || return
+}
+
+function restore_env() {
+    DNF_REMOVE "$@"    
 }
