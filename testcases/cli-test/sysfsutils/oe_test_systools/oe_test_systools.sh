@@ -20,6 +20,12 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL sysfsutils
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     systool -h | grep systool
@@ -33,6 +39,12 @@ function run_test() {
     systool -m cpufreq -av | grep cpufreq
     CHECK_RESULT $? 0 0 "modules information query failed"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish restoring the test environment."
 }
 
 main "$@"
