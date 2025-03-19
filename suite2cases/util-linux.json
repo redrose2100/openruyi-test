@@ -5,7 +5,7 @@
             "name": "oe_test_service_fstrim"
         },
         {
-            "name": "oe_test_util-linux_fincore."
+            "name": "oe_test_util-linux_fincore"
         },
         {
             "name": "oe_test_service_uuidd"
