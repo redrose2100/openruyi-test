@@ -88,7 +88,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: backend export -U No Pass"
     dsconf localhost backend create -h  | grep  "usage: dsconf.*instance.*backend create" 
     CHECK_RESULT $? 0 0 "Check: backend create -h No Pass" 
-    dsconf localhost backend create --parent-suffix dc=com --suffix dc=exa,dc=com --be-name example2  | grep  "The database was sucessfully created" 
+    dsconf localhost backend create --parent-suffix dc=com --suffix dc=exa,dc=com --be-name example2  | grep  "The database was successfully created" 
     CHECK_RESULT $? 0 0 "Check: backend create -h No Pass"
     dsconf localhost backend delete -h  | grep  "usage: dsconf.*instance.*backend delete" 
     CHECK_RESULT $? 0 0 "Check: backend delete -h No Pass" 
