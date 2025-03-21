@@ -16,16 +16,17 @@
 #@Desc      	:   test command pngquant
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
 
+    DNF_INSTALL "pngquant libimagequant wget"
+
     mkdir output_test
     wget -P ./ https://pngquant.org/Ducati_side_shadow.png && mv Ducati_side_shadow.png test.png
     cp test.png test-copy.png
-    DNF_INSTALL "pngquant libimagequant"
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -57,7 +58,7 @@ function run_test()
 
     rm -f ./test-fs8.png
     pngquant --posterize 3 test.png
-    CHECK_RESULT "$(ls | grep -cE 'test-fs8.png')" 1 0 "Failed to run command: pngquant --posterize"
+    CHECK_RESULT "$(find . -maxdepth 1 | grep -cE 'test-fs8.png')" 1 0 "Failed to run command: pngquant --posterize"
 
     rm -f ./test-fs8.png
     pngquant --strip test.png
@@ -107,7 +108,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./test* ./output_test/
 
     LOG_INFO "End to restore the test environment."
