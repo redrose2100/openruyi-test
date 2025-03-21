@@ -29,7 +29,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     expect << EOF
-    spawn ssh -o PreferredAuthentications=publickey -o HostKeyAlgorithms=sm2 -o PubkeyAcceptedKeyTypes=sm2 -o Ciphers=sm4-ctr -o MACs=hmac-sm3 -o KexAlgorithms=sm2-sm3 -i ~/.ssh/id_sm2 ${NODE2_IPV4} "ip a | grep lo"
+    spawn ssh -o PreferredAuthentications=publickey -o HostKeyAlgorithms=sm2 -o PubkeyAcceptedKeyTypes=sm2 -o Ciphers=sm4-ctr -o MACs=hmac-sm3 -o KexAlgorithms=sm2-sm3 -i ~/.ssh/id_sm2 ${NODE2_IPV4} -p ${NODE2_SSH_PORT} "ip a | grep lo"
     expect "Are you sure you want to continue connecting*"
     send "yes\n"
     catch wait result;
