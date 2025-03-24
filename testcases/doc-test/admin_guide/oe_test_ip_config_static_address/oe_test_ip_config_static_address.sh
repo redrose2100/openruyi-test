@@ -16,25 +16,29 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   IP configuration static address
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1090,SC2010
+
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function config_params() {
     LOG_INFO "Start loading data!"
-    test_eth1=$(ls /sys/class/net/ | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | grep -v $(ip route | grep ${NODE1_IPV4} | awk '{print$3}') | sed -n 1p)
+    test_eth1=$(ls /sys/class/net/ | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | grep -v "$(ip route | grep -v dhcp | grep "${NODE1_IPV4}" | awk '{print$3}')" | sed -n 1p)
     LOG_INFO "Loading data is complete!"
 }
+
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    ip address add 192.168.0.10/24 dev ${test_eth1}
+    ip address add 192.168.0.10/24 dev "${test_eth1}"
     CHECK_RESULT $?
-    ip addr show dev ${test_eth1} | grep "192.168.0.10"
+    ip addr show dev "${test_eth1}" | grep "192.168.0.10"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    nmcli con delete ${test_eth1}
+    nmcli con delete "${test_eth1}"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

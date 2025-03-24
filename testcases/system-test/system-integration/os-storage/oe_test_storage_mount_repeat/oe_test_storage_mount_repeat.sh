@@ -16,7 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Mount repeatedly mounts and writes files after unmounting
 # #############################################
+# shellcheck disable=SC1091,SC2154
+
 source ../common/storage_disk_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
@@ -25,7 +28,7 @@ function pre_test() {
 p
 
 
-+20M
++500M
 w" | fdisk /dev/"${local_disk}"
     mkfs.xfs -f /dev/"${local_disk}1"
     sleep 2
@@ -38,7 +41,7 @@ w" | fdisk /dev/"${local_disk}"
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    for count_mount in $(seq 1 10); do
+    for _ in $(seq 1 10); do
         mount /tmp/data
         df -h | grep '/tmp/data'
         CHECK_RESULT $?
@@ -67,4 +70,4 @@ w" | fdisk /dev/"${local_disk}"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

@@ -16,9 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Backup XFS file system
 # #############################################
+# shellcheck disable=SC1090,SC1091,SC2154
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source ../common/storage_disk_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
@@ -28,7 +30,7 @@ function pre_test() {
 p
 
 
-+20M
++500M
 w" | fdisk "/dev/${local_disk}"
     mkfs.xfs -f "/dev/${local_disk}1"
     udevadm settle
@@ -51,9 +53,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     umount /home/data
     rm -rf /home/data /home/backup
-    dd if=/dev/zero of=/dev/${local_disk} bs=1M count=1
-    DNF_REMOVE
+    dd if=/dev/zero of=/dev/"${local_disk}" bs=1M count=1
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

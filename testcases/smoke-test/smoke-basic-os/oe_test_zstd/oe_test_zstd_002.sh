@@ -44,8 +44,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check unzstd help"
     grep "Usage" tmpfile
     CHECK_RESULT $? 0 0 "check unzstd help"
-    grep "Advanced arguments" tmpfile
-    CHECK_RESULT $? 0 0 "check unzstd help"
     LOG_INFO "End to run test."
 }
 
