@@ -2,7 +2,7 @@
     "path": "$OET_PATH/testcases/cli-test/kiran-authentication-service",
     "cases": [
         {
-            "name": "oe_test_service_kiran-system-daemon-authentication"
+            "name": "oe_test_service_kiran-authentication-daemon"
         }
     ]
 }

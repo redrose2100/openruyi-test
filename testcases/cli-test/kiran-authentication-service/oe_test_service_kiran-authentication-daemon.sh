@@ -27,14 +27,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution kiran-system-daemon-authentication.service
-    test_reload kiran-system-daemon-authentication.service
+    test_execution kiran-authentication-daemon.service
+    test_reload kiran-authentication-daemon.service
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    systemctl stop kiran-system-daemon-authentication.service
+    systemctl stop kiran-authentication-daemon.service
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
