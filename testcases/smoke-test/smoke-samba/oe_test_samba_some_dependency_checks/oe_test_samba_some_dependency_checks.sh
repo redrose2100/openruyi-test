@@ -18,7 +18,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    DNF_INSTALL "samba" "samba-client"
+    DNF_INSTALL "samba samba-client"
 }
 
 function run_test() {
@@ -36,7 +36,7 @@ function run_test() {
 }
 
 function post_test() {
-    DNF_REMOVE "samba" "samba-client"
+    DNF_REMOVE "$@"
     rm -rf samba*.rpm t*.log
 }
 
