@@ -29,10 +29,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl status dbus | grep running
     CHECK_RESULT $? 0 0 "Failed to run dbus service"
-    kill -9 "$(pgrep ^dbus)"
+    kill -9 "$(pgrep -u dbus)"
     CHECK_RESULT $? 0 0 "Failed to kill the dbus process"
     SLEEP_WAIT 3
-    pgrep dbus
+    pgrep -u dbus
     CHECK_RESULT $? 0 0 "Failed to exist dbus service"
     dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ListActivatableNames | grep array
     CHECK_RESULT $? 0 0 "Failed to execute dbus-send"
