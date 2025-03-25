@@ -30,6 +30,9 @@ interactive_command="dscreate interactive"
 
 expect <<EOD
 spawn \$interactive_command
+expect "SELinux labels will not be applied, continue?"
+send "yes\n"
+
 expect "Enter system's hostname"
 send "localhost\n"
 
