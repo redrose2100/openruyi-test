@@ -19,12 +19,22 @@
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
 
+function pre_test(){
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "glibc-devel gcc"
+    ver1=$(rpm -qi glibc-devel | grep -oP 'Version\s+:\s+\K[\d.]+')
+    echo "glibc-devel:$ver1"
+    ver2=$(rpm -qi gcc | grep -oP 'Version\s+:\s+\K[\d.]+')
+    echo "gcc:$ver2"
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     top &
     pidwait top &
     CHECK_RESULT $? 0 0 "pidwait execute fail"
-    top_pid=$(pgrep top)
+    top_pid=$(pgrep ^top)
     pidwait_pid=$(pgrep -f 'pidwait top')
     kill -9 "$top_pid" "$pidwait_pid"
     pidwait --help | grep -E "用法|Usage"
