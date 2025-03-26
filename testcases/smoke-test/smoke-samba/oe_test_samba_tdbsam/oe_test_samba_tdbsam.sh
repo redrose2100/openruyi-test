@@ -23,8 +23,7 @@ pass="Huawei12#$"
 smb_conf="/etc/samba/smb.conf"
 
 function pre_test() {
-    history=$(yum history | grep '[0-9]' | head -1 | awk '{print $1}')
-    DNF_INSTALL "samba" "samba-client" "firewalld"
+    DNF_INSTALL "samba samba-client firewalld samba-common-tools"
     systemctl stop firewalld
     iptables -F
     ip6tables -F
@@ -60,15 +59,15 @@ function run_test() {
     systemctl status smb
     CHECK_RESULT $? 0 0
 
-    echo ls | smbclient "//${ETS_LOCAL_IP}/${user}" -U "${user}%${pass}" | grep bashrc
+    echo ls | smbclient "//${NODE1_IPV4}/${user}" -U "${user}%${pass}" | grep bashrc
     CHECK_RESULT $? 0 0
 }
 
 function post_test() {
     systemctl stop smb
-    DNF_REMOVE "samba" "samba-client"
-    mv /etc/samba/smb.conf.bak /etc/samba/smb.conf
     systemctl restart firewalld
+    DNF_REMOVE "$@"
+    mv /etc/samba/smb.conf.bak /etc/samba/smb.conf
     sleep 3
     setenforce 1
     getenforce
