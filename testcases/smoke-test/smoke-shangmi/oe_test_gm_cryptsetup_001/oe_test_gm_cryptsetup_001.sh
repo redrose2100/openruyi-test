@@ -20,6 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    DNF_INSTALL cryptsetup
     dd if=/dev/zero of=img1 bs=10M count=10
     losetup /dev/loop5 img1
     dd if=/dev/zero of=img2 bs=10M count=10
@@ -80,6 +81,7 @@ function post_test() {
     losetup -d /dev/loop5
     losetup -d /dev/loop6
     rm -rf img1 img2 /home/{encrypted1,encrypted2}
+    DNF_REMOVE "$@"
 }
 
 main "$@"
