@@ -20,6 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
   LOG_INFO "Start to prepare the test environment."
+  DNF_INSTALL "dosfstools e2fsprogs xfsprogs"
   dd if=/dev/zero of=/home/testzone count=30 bs=10M
   losetup /dev/loop0 /home/testzone
   CHECK_RESULT $? 0 0 "log message: Failed install minimap2 "
@@ -54,6 +55,7 @@ function post_test() {
   LOG_INFO "Start to restore the test environment."
   losetup -d /dev/loop0
   rm -rf /home/testzone
+  DNF_REMOVE "$@"
   LOG_INFO "End to restore the test environment."
 }
 
