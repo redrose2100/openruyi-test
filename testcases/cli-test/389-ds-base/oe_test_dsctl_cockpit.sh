@@ -21,8 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "389-ds-base"
-    DNF_INSTALL cockpit
+    DNF_INSTALL "389-ds-base cockpit firewalld"
+    systemctl start firewalld
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
     ldconfig
     dscreate create-template 389_ds_test.inf
