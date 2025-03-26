@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL rpmlint
+    DNF_INSTALL "rpmlint wget"
     wget https://repo.openeuler.org/openEuler-20.03-LTS/everything/aarch64/Packages/LibRaw-0.19.0-9.oe1.aarch64.rpm
     wget https://repo.openeuler.org/openEuler-20.03-LTS/update/aarch64/Packages/LibRaw-0.19.0-10.oe1.aarch64.rpm
     LOG_INFO "End to prepare the test environment."
