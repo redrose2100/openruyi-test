@@ -15,11 +15,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   public library
 # #############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "jetty"
+    DNF_INSTALL "jetty curl"
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -28,17 +28,17 @@ function run_test() {
     cd /usr/share/jetty/demo-base || exit
     java -jar ../start.jar &
     PID="$!"
-    SLEEP_WAIT 10
+    SLEEP_WAIT 100
     curl http://0.0.0.0:8080/ | grep "JAAS Test"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "start.jar run failed."
     kill -9 ${PID}
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "kill java process failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
