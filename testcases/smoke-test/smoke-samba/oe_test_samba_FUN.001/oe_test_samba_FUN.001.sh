@@ -19,12 +19,12 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    DNF_INSTALL "samba" "samba-winbind"
+    DNF_INSTALL "samba samba-winbind"
     net -s /dev/null groupmap add sid=S-1-5-32-546 unixgroup=nobody type=builtin
 }
 
 function run_test() {
-    for i in $(seq 3); do
+    for _ in $(seq 3); do
         sleep 5
         systemctl restart smb
         CHECK_RESULT $? 0 0
@@ -40,7 +40,7 @@ function run_test() {
 }
 
 function post_test() {
-    DNF_REMOVE "samba" "samba-winbind"
+    DNF_REMOVE "$@"
 }
 
 main "$@"
