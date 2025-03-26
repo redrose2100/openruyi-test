@@ -283,6 +283,29 @@ static void TEST_PWR_COM_DcTaskMgr_1(void)
 }
 /************************** COMMON END************************/
 
+/***************************** CPU ***************************/
+static void TEST_PWR_CPU_GetInfo(void)
+{
+    int ret = -1;
+    PWR_CPU_Info *info = (PWR_CPU_Info *)malloc(sizeof(PWR_CPU_Info));
+    if (!info) {
+        return;
+    }
+    bzero(info, sizeof(PWR_CPU_Info));
+    ret = PWR_CPU_GetInfo(info);
+    PrintResult("PWR_CPU_GetInfo", ret);
+    printf("    arch: %s\n    coreNum: %d\n    maxFreq: %f\n    minFreq: %f\n    "
+        "modelName: %s\n    numaNum: %d\n    threadsPerCore: %d\n", info->arch,
+        info->coreNum, info->maxFreq, info->minFreq, info->modelName, info->numaNum,
+        info->threadsPerCore);
+    for (int i = 0; i < info->numaNum; i++) {
+        printf("    numa node[%d]  cpuList: %s\n", info->numa[i].nodeNo, info->numa[i].cpuList);
+    }
+    free(info);
+}
+/*************************** CPU END *************************/
+
+
 /***************************** SYS ***************************/
 static void TEST_SYS_GetRtPowerInfo(void)
 {
