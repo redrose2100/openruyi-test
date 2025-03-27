@@ -878,6 +878,9 @@
             "name": "oe_test_lsipc"
         },
 	{
+            "name": "oe_test_ipcmk"
+        },
+	{
 	     "name":"oe_test_lzo_002"
 	},
 	{
