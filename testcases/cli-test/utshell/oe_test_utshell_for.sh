@@ -27,6 +27,9 @@ function pre_test(){
 
 function run_test() {
     LOG_INFO "Start testing..."
+    utshell -c "help for" |grep for
+    CHECK_RESULT $? 0 0 "help for fail"
+
     cat > test_for.sh <<EOF
 #!/bin/utshell
 for i in alksdjflaksd flkasdf laksdf askdjf
