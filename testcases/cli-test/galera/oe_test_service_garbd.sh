@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test garbd.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -55,8 +55,10 @@ function pre_test() {
 EOF
     echo -e "GALERA_NODES=\"${NODE1_IPV4}:4567\"
 GALERA_GROUP=\"my_wsrep_cluster\"
-GALERA_OPTIONS=\"gmcast.listen_addr=tcp://0.0.0.0:4569\"
+GALERA_OPTIONS=\"gmcast.listen_addr=tcp://0.0.0.0:4569;base_dir=/var/lib/galera\"
 " >/etc/sysconfig/garb
+    mkdir /var/lib/galera
+    chown -R nobody:nobody /var/lib/galera
     systemctl restart mariadb
     service=garbd.service
     log_time=$(date '+%Y-%m-%d %T')
@@ -67,8 +69,8 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_restart ${service}
     test_enabled ${service}
-    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" \
-    | grep -v "access file(./gvwstate.dat) failed(No such file or directory)"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" |
+        grep -v "access file(./gvwstate.dat) failed(No such file or directory)"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload ${service}
     LOG_INFO "Finish test!"
@@ -78,7 +80,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop ${service}
     systemctl stop mariadb.service
-    rm -rf /var/lib/mysql/*
+    rm -rf /var/lib/mysql/* /var/lib/galera
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }

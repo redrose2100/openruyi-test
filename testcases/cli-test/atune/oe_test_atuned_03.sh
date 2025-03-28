@@ -16,11 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-atune
 # ############################################
-
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 source "./common/common_lib.sh"
 
-function pre_test(){
+function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_autund
     test_service="test_service"
@@ -31,27 +31,26 @@ function pre_test(){
 }
 
 function run_test() {
-    atune-adm define -h |grep DESCRIPTION
+    atune-adm define -h | grep DESCRIPTION
     CHECK_RESULT $? 0 0 "The help information is displayed incorrectly"
-    atune-adm define $test_service $test_app $test_scenario $profile_path > temp.log
+    atune-adm define $test_service $test_app $test_scenario $profile_path >temp.log
     grep "define a new application profile success" temp.log
     CHECK_RESULT $? 0 0 "atune-adm define command execution failure"
-    for ((i=0;i<${#ARRAY_SERVICE[@]};i++));do
-        atune-adm define ${ARRAY_SERVICE[i]} $test_app $test_scenario $profile_path > define.log
+    for ((i = 0; i < ${#ARRAY_SERVICE[@]}; i++)); do
+        atune-adm define "${ARRAY_SERVICE[i]}" $test_app $test_scenario $profile_path >define.log
         grep "define a new application profile success" define.log
         CHECK_RESULT $? 0 0 "define failure"
-        atune-adm undefine ${ARRAY_SERVICE[i]}-$test_app-$test_scenario >undefine.log
+        atune-adm undefine "${ARRAY_SERVICE[i]}"-$test_app-$test_scenario >undefine.log
         grep "delete application profile success" undefine.log
         CHECK_RESULT $? 0 0 "undefine failure"
     done
 }
 
 function post_test() {
-    project=$(atune-adm define $test_service $test_app $test_scenario $profile_path |awk -F " " '{print $1}')
-    atune-adm undefine $project
+    project=$(atune-adm define "$test_service" "$test_app" "$test_scenario" "$profile_path" | awk -F " " '{print $1}')
+    atune-adm undefine "$project"
     clean_autund
     rm -fr temp.log define.log undefine.log
 }
 
-main $@
-
+main "$@"
