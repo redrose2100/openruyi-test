@@ -3,9 +3,6 @@
     "machine num": 2,    
     "cases": [
         {
-            "name": "oe_test_service_spausedd"
-        },
-        {
             "name": "oe_test_service_corosync",
             "machine num": 2
         },
