@@ -16,28 +16,35 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test obsstoragesetup.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function env_pre() {
     flag=false
-    if [ $(getenforce | grep Enforcing) ]; then
+    if getenforce | grep Enforcing; then
         setenforce 0
         flag=true
     fi
-    DNF_INSTALL "mariadb-server obs-api obs-server"
-    mv /etc/my.cnf /etc/my.bak
-    systemctl start mariadb
+    if ! dnf install --assumeno mariadb-server obs-api obs-server | grep conflicting; then
+        DNF_INSTALL "mariadb-server obs-api obs-server"
+        mv /etc/my.cnf /etc/my.bak
+        systemctl start mariadb
+    else
+        DNF_INSTALL "mysql-server obs-api obs-server postgresql-libs"
+        rm -rf /var/lib/mysql/*
+        systemctl start mysqld
+    fi
     echo 'create database api_production;' | mysql
     systemctl start obssrcserver
-    sed -i 's/OBS_API_AUTOSETUP="no"/OBS_API_AUTOSETUP="yes"/g' /etc/sysconfig/obs-server
+    sed -i 's/OBS_API_AUTOSETUP=.*/OBS_API_AUTOSETUP="yes"/g' /etc/sysconfig/obs-server
     systemctl start obsapisetup
+    systemctl start obs-delayedjob-queue-consistency_check.service || systemctl stop obs-delayedjob-queue-consistency_check.service
 }
 
 function env_post() {
     systemctl stop mariadb obssrcserver obsapisetup
     sed -i 's/OBS_API_AUTOSETUP="yes"/OBS_API_AUTOSETUP="no"/g' /etc/sysconfig/obs-server
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     mv /etc/my.bak /etc/my.cnf
     rm -rf /var/lib/mysql/*
     if [ ${flag} = 'true' ]; then

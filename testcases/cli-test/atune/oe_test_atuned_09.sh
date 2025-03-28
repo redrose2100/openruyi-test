@@ -16,37 +16,37 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-atune-profile
 # ############################################
-
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 source "./common/common_lib.sh"
 
-function pre_test(){
+function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_autund
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    for ((i=0;i<${#ARRAY_PROFILE[@]};i++));do
-        atune-adm profile ${ARRAY_PROFILE[i]} >& temp.log
+    for ((i = 0; i < ${#ARRAY_PROFILE[@]}; i++)); do
+        atune-adm profile "${ARRAY_PROFILE[i]}" >&temp.log
         CHECK_RESULT $? 0 0 "atune-adm profile failure"
         grep -i "load profile ${ARRAY_PROFILE[i]} Faild" temp.log
         CHECK_RESULT $? 0 1 "load profile exist"
-        atune-adm list > temp.log
-        grep ${ARRAY_PROFILE[i]} temp.log | grep true
+        atune-adm list >temp.log
+        grep "${ARRAY_PROFILE[i]}" temp.log | grep true
         CHECK_RESULT $? 0 0 "ARRAY_PROFILE not found"
     done
-    atune-adm profile -h > temp.log
+    atune-adm profile -h >temp.log
     grep "active the specified profile and check the actived profile" temp.log
     CHECK_RESULT $? 0 0 "active the specified profile not found"
     array=("$SPECIAL_CHARACTERS" "$ULTRA_LONG_CHARACTERS")
-    for ((i=0;i<${#array[@]};i++));do
-        atune-adm profile ${array[i]} >& temp.log
+    for ((i = 0; i < ${#array[@]}; i++)); do
+        atune-adm profile "${array[i]}" >&temp.log
         CHECK_RESULT $? 0 1 "atune-adm profile success"
-        grep "load profile .* Faild" temp.log
+        grep -iE "load profile .* Faild|load profile .* failed" temp.log
         CHECK_RESULT $? 0 0 "load profile not found"
     done
-    atune-adm profile >& temp.log
+    atune-adm profile >&temp.log
     grep "only one workloadload type can be set" temp.log
     CHECK_RESULT $? 0 0 "only one workloadload type can be set not found"
 }
@@ -56,5 +56,4 @@ function post_test() {
     rm -fr temp.log
 }
 
-main $@
-
+main "$@"
