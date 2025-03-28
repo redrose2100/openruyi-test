@@ -23,9 +23,6 @@
             "name": "oe_test_service_instperf"
         },
         {
-            "name": "oe_test_service_zram"
-        },
-        {
             "name": "oe_test_target_anaconda"
         },
         {
