@@ -42,7 +42,7 @@ function run_test() {
         image_name=docker.io/library/busybox
         image_tag=latest
     else
-        image_name=docker.io/library/nginx
+        image_name=m.daocloud.io/docker.io/nginx
         image_tag=latest
     fi
     ctr images pull ${image_name}:${image_tag}
