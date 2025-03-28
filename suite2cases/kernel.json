@@ -172,6 +172,9 @@
         },
         {
             "name": "oe_test_net_veth"
+        },
+        {
+            "name": "oe_test_ngsm"
         }
     ]
 }
