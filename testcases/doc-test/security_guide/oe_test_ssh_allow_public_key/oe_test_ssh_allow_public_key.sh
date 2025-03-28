@@ -25,7 +25,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "grep 'PubkeyAuthentication yes' failed"
     expect <<EOF
 	set timeout 15
-        spawn ssh-keygen
+        spawn ssh-keygen -t rsa
         expect {
             "save the key" {
                 send "\\r"
@@ -43,7 +43,7 @@ function run_test() {
         }
         expect eof
 EOF
-    ls -l /root/.ssh | grep id_rsa
+    ls -l /root/.ssh/*id_rsa*
     CHECK_RESULT $? 0 0 "grep id_rsa failed"
     expect <<EOF
         set timeout 15
@@ -60,7 +60,7 @@ EOF
         }
         expect eof
 EOF
-    SSH_SCP ${NODE2_USER}@${NODE2_IPV4}:/root/.ssh/authorized_keys /home ${NODE2_PASSWORD}
+    SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/root/.ssh/authorized_keys /home "${NODE2_PASSWORD}"
     grep ssh-rsa /home/authorized_keys
     CHECK_RESULT $? 0 0 "grep ssh-rsa failed"
     expect <<EOF
@@ -87,7 +87,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start cleanning environment."
-    SSH_CMD "rm -rf /root/.ssh/authorized_keys" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "rm -rf /root/.ssh/authorized_keys" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -rf /root/.ssh/id_rsa /root/.ssh/id_rsa.pub /home/authorized_keys testlog
     LOG_INFO "Finish environment cleanup!"
 }
