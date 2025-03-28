@@ -30,6 +30,9 @@ function run_test() {
     LOG_INFO "Start to run test."
     sudo -u zookeeper bash /opt/zookeeper/bin/zkServer.sh start
     CHECK_RESULT $? 0 0 "ZooKeeper not enabled"
+    if [ "${NODE1_FRAME}" == "riscv64" ]; then
+        sleep 15
+    fi
     sudo -u zookeeper bash /opt/zookeeper/bin/zkServer.sh status
     CHECK_RESULT $? 0 0 "ZooKeeper JMX is turned off by default"
     python3 common/test1.py
