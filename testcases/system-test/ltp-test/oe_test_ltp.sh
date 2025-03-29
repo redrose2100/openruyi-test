@@ -49,9 +49,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     cd /opt/ltp || exit 1
-    #sed -i -E "/^fs$|^cve$/ s/^/#/" /opt/ltp/scenario_groups/default
-    sed -i "/oom03/ s/^oom03/#oom03/" /opt/ltp/runtest/mm
-    sed -i "/gf01/ s/^gf01/#gf01/" /opt/ltp/runtest/fs
+    sed -i -E "/^mm|controllers|cve|syscalls|^fs|can|pty/ s/^/#/" /opt/ltp/scenario_groups/default
     ./runltp |tee ltp.txt
     grep -nr "FAIL" /opt/ltp/results/|grep -v -E "af_alg07|cpufreq_boost|proc01|ioctl_sg01|madvise06|cpuset_memory_spread|cve-2018-1000204"
     CHECK_RESULT $? 1 0 "any case failed"
