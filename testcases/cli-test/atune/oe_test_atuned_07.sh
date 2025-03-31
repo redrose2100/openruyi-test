@@ -14,31 +14,35 @@
 # @Contact   :   zuohanxu@uniontech.com
 # @Date      :   2023.4.6
 # @License   :   Mulan PSL v2
-# @Desc      :   File system common command test-atune-rollback
+# @Desc      :   File system common command test-atune
 # ############################################
-
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 source "./common/common_lib.sh"
 
-function pre_test(){
+function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_autund
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    atune-adm rollback
-    CHECK_RESULT $? 0 0 "atune-adm rollback failure"
-    # There is no activated profile
-    atune-adm list > temp.log
-    cat temp.log | awk -F '|' '{print $4}' | grep true
-    CHECK_RESULT $? 0 1 "atune-adm list failure"
+    LOG_INFO "do test"
+    atune-adm analysis >analysis_file
+    CHECK_RESULT $? 0 0 "atune-adm analysis failure"
+    workload=$(grep "Current System Workload Characterization" analysis_file | awk '{print $(NF-1)}')
+    atune-adm list | grep -w "$workload" | grep true
+    CHECK_RESULT $? 0 0 "atune-adm list failure"
+    atune-adm check >temp.log
+    CHECK_RESULT $? 0 0 "atune-adm check failure"
+    grep -i "Check finished" temp.log
+    CHECK_RESULT $? 0 0 "Check finished not found"
     # Help info
-    atune-adm rollback -h > temp.log
-    grep "rollback the system config to the init state" temp.log
-    CHECK_RESULT $? 0 0 "atune-adm rollback -h failure"
+    atune-adm check -h >temp.log
+    grep "check system basic information" temp.log
+    CHECK_RESULT $? 0 0 "check system basic information not found"
     # Extra input
-    atune-adm rollback extra_input > temp.log
+    atune-adm check extra_input >temp.log
     grep "Incorrect Usage." temp.log
     CHECK_RESULT $? 0 0 "Incorrect Usage not found"
 }
@@ -47,5 +51,4 @@ function post_test() {
     rm -fr analysis_file temp.log
 }
 
-main $@
-
+main "$@"

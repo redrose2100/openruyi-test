@@ -45,7 +45,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "${service} start failed"
     if systemctl is-enabled "${service}" | grep "enabled"; then
         SLEEP_WAIT 5
-        symlink_file=$(systemctl disable "${service}" 2>&1 | awk '{print $2}' | awk '{print substr($0,1,length($0)-1)}')
+        symlink_file=$(systemctl disable "${service}" 2>&1 | awk '{print $2}' | awk '{print substr($0,1,length($0)-1)}' | sed 's/"//g')
         find "${symlink_file}"
         CHECK_RESULT $? 0 1 "${service} disable failed"
         systemctl enable "${service}"

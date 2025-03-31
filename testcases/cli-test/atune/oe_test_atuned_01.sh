@@ -12,35 +12,39 @@
 # #############################################
 # @Author    :   zuohanxu
 # @Contact   :   zuohanxu@uniontech.com
-# @Date      :   2023.4.6
+# @Date      :   2023.4.3
 # @License   :   Mulan PSL v2
-# @Desc      :   File system common command test-atune-collection
+# @Desc      :   File system common command test-atune
 # ############################################
-
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 source "./common/common_lib.sh"
 
-file_name="atuneTest"
-min_interval=1
-min_duration=10
-output_path=$(pwd)
-sys_disk=$(lsblk |awk 'NR==2' |awk '{print $1}')
-sys_network=${NODE1_NIC}
-function pre_test(){
+function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_autund
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    atune-adm collection -h |grep OPTIONS
-    CHECK_RESULT $? 0 0 "atune-adm collection -h failure"
-    atune-adm collection -f $file_name -i $min_interval -d $min_duration -o $output_path -b $sys_disk -n $sys_network -t default
-    CHECK_RESULT $? 0 0 "atune-adm collection failure"
+    for ((i = 0; i < ${#ARRAY_PROFILE[@]}; i++)); do
+        atune-adm info "${ARRAY_PROFILE[i]}" >temp.log
+        grep ".*A-Tune configuration" temp.log
+        CHECK_RESULT $? 0 0 "The output is not 0"
+    done
+
+    atune-adm info -h >temp.log
+    grep "display profile info corresponding to profile" temp.log
+    CHECK_RESULT $? 0 0 "atune-adm info -h command execution failed. Procedure"
+
+    atune-adm info >temp.log
+    grep "Incorrect Usage." temp.log
+    CHECK_RESULT $? 0 0 "atune-adm info command execution failed. Procedure"
 }
+
 function post_test() {
     clean_autund
+    rm -fr temp.log
 }
 
-main $@
-
+main "$@"
