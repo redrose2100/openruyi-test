@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/python3-ray",
+    "cases": [
+        {
+            "name": "oe_test_python3-ray_01"
+        },
+        {
+            "name": "oe_test_python3-ray_02"
+        }
+    ]
+}
