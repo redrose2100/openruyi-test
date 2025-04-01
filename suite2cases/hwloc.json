@@ -103,15 +103,6 @@
         },
         {
             "name": "oe_test_hwloc_base_hwloc-patch"
-        },
-        {
-            "name": "oe_test_hwloc_1.11.9_hwloc-assembler"
-        },
-        {
-            "name": "oe_test_hwloc_1.11.9_hwloc-distances_01"
-        },
-        {
-            "name": "oe_test_hwloc_1.11.9_hwloc-distances_02"
         }
     ]
 }
