@@ -16,6 +16,7 @@
 #@License   :   Mulan PSL v2
 #@Desc      :   Test hwloc-calc
 ##############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
@@ -44,7 +45,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwloc-calc --no-smt failed"
     hwloc-calc --cpukind 0 pu:0 | grep "0x"
     CHECK_RESULT $? 0 0 "hwloc-calc --cpukind <n> failed"
-    hwloc-calc --cpukind pu:0 Machine:0 | grep "0x"
+    hwloc-calc --cpukind 0 Machine:0 | grep "0x"
     CHECK_RESULT $? 0 0 "hwloc-calc --cpukind <type> failed"
     hwloc-calc --ni -I pu Machine:0 | grep "0"
     CHECK_RESULT $? 0 0 "hwloc-calc --ni failed"
