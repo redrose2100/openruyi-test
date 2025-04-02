@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL rsyslog
     systemctl start rsyslog
-    if [ "$(uname -m)" == "riscv64" ]; then
+    if [ -d /var/log/journal ]; then
         cp -f /var/log/journal/*/system.journal /var/log/journal/*/system.journal.bak
         cp -f /var/run/log/imjournal.state /var/run/log/imjournal.state.bak
         echo "" >/var/run/log/imjournal.state
@@ -41,12 +41,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Systemd-journald not started"
     systemctl restart rsyslog
     CHECK_RESULT $? 0 0 "Rsyslog not started"
-    if [ "$(uname -m)" == "riscv64" ]; then
-	test -f /var/log/journal/*/system.journal
+    if [ -d /var/log/journal ]; then
+        find /var/log/journal/ -name system.journal -type f
         CHECK_RESULT $? 0 0 "Failed to find system.journal"
         grep "[0-9]" /var/run/log/imjournal.state
     else
-	test -f /run/log/journal/*/system.journal
+        find /run/log/journal/ -name system.journal -type f
         CHECK_RESULT $? 0 0 "Failed to find system.journal"
         grep "[0-9]" /run/log/imjournal.state
     fi
@@ -56,7 +56,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    if [ "$(uname -m)" == "riscv64" ]; then
+    if [ -d /var/log/journal ]; then
         mv -f /var/log/journal/*/system.journal.bak /var/log/journal/*/system.journal
         mv -f /var/run/log/imjournal.state.bak /var/run/log/imjournal.state
     else
