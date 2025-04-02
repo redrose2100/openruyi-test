@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL aspell
+    DNF_INSTALL "aspell unzip"
     unzip common/aspell6-en-2020.12.07-0.zip
     cp -R ./aspell6-en-2020.12.07-0/* /usr/lib64/aspell-0.60
     OLD_LANG="${LANG}"
