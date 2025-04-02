@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Test hwloc-assembler
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
@@ -34,7 +35,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwloc-assembler -n failed"
     hwloc-assembler --force ./tmp/output2.xml ./common/host1.xml ./common/host2.xml && [ -e tmp/output2.xml ]
     CHECK_RESULT $? 0 0 "hwloc-assembler --force  failed"
-    hwloc-assembler -f ./tmp/output3.xml ./common/host1.xml ./common/host2.xml && [ -e /tmp/output3.xml ]
+    hwloc-assembler -f ./tmp/output3.xml ./common/host1.xml ./common/host2.xml && [ -e tmp/output3.xml ]
     CHECK_RESULT $? 0 0 "hwloc-assembler -f failed"
     hwloc-assembler --verbose ./tmp/output4.xml --name host1 ./common/host1.xml --name host2 ./common/host2.xml | grep "Importing"
     CHECK_RESULT $? 0 0 "hwloc-assembler --verbose  failed"
