@@ -16,6 +16,7 @@
 #@License   :   Mulan PSL v2
 #@Desc      :   Test hwloc-ps
 ##############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
@@ -31,9 +32,9 @@ function run_test() {
     hwloc_version=$(rpm -qa | grep hwloc | grep -oP '\d+\.\d+\.\d+' | head -n 1)
     hwloc-ps --version | grep "${hwloc_version}"
     CHECK_RESULT $? 0 0 "hwloc-ps --version falied"
-    hwloc-ps -h | grep "Usage:"
+    hwloc-ps -h 2>&1 | grep "Usage:"
     CHECK_RESULT $? 1 0 "hwloc-ps -h falied"
-    hwloc-ps --help | grep "Usage:"
+    hwloc-ps --help 2>&1 | grep "Usage:"
     CHECK_RESULT $? 1 0 "hwloc-ps --help falied"
     hwloc-ps --uid all -a | grep "Machine"
     CHECK_RESULT $? 0 0 "hwloc-ps --uid all failed"

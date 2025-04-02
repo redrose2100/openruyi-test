@@ -1,6 +1,5 @@
 {
     "path": "$OET_PATH/testcases/cli-test/hwloc",
-
     "cases": [
         {
             "name": "oe_test_hwloc_base_hwloc-info_01"
@@ -105,13 +104,43 @@
             "name": "oe_test_hwloc_base_hwloc-patch"
         },
         {
-            "name": "oe_test_hwloc_1.11.9_hwloc-assembler"
+            "name": "oe_test_hwloc_2.7.1_hwloc-annotate"
         },
         {
-            "name": "oe_test_hwloc_1.11.9_hwloc-distances_01"
+            "name": "oe_test_hwloc_2.7.1_hwloc-bind"
         },
         {
-            "name": "oe_test_hwloc_1.11.9_hwloc-distances_02"
+            "name": "oe_test_hwloc_2.7.1_hwloc-calc_01"
+        },
+        {
+            "name": "oe_test_hwloc_2.7.1_hwloc-calc_02"
+        },
+        {
+            "name": "oe_test_hwloc_2.7.1_hwloc-compress-dir"
+        },
+        {
+            "name": "oe_test_hwloc_2.7.1_hwloc-distrib"
+        },
+        {
+            "name": "oe_test_hwloc_2.7.1_hwloc-info"
+        },
+        {
+            "name": "oe_test_hwloc_2.7.1_hwloc-ls_01"
+        },
+        {
+            "name": "oe_test_hwloc_2.7.1_others"
+        },
+        {
+            "name": "oe_test_hwloc_2.7.1_hwloc-ps"
+        },
+        {
+            "name": "oe_test_hwloc_2.7.1_lstopo_01"
+        },
+        {
+            "name": "oe_test_hwloc_2.7.1_lstopo-no-graphics_01"
+        },
+        {
+            "name": "oe_test_hwloc_2.7.1_hwloc-gather-topology"
         }
     ]
 }
