@@ -23,6 +23,22 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL containerd
     log_time="$(date '+%Y-%m-%d %T')"
+    echo '{
+    "cniVersion": "0.4.0",
+    "name": "mynet",
+    "type": "bridge",
+    "bridge": "cni0",
+    "isGateway": true,
+    "ipMasq": true,
+    "ipam": {
+        "type": "host-local",
+        "subnet": "10.10.0.0/16",
+        "routes": [
+            { "dst": "0.0.0.0/0" }
+        ],
+        "gateway": "10.10.0.1"
+    }
+}' >/etc/cni/net.d/network.conf
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -40,6 +56,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop containerd.service
     DNF_REMOVE "$@"
+    rm -rf /etc/cni/net.d/network.conf
     LOG_INFO "End to restore the test environment."
 }
 
