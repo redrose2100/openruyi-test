@@ -16,12 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of freetds command
 # ############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+#shellcheck disable=SC1091
+source ./common.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "freetds"
+    common_pre
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -34,29 +34,29 @@ function run_test() {
     fisql -g 2>&1 | grep "fisql"
     CHECK_RESULT $? 0 0 "Check fisql -g failed"
 
-    echo "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" > inputFile.sql
-    fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile && fgrep "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile
+    echo "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" >inputFile.sql
+    fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile && grep -F "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile
     CHECK_RESULT $? 0 0 "Check fisql -e failed"
 
-    fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile1 -t 100 -s " " -w 80 && fgrep "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile1
+    fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile1 -t 100 -s " " -w 80 && grep -F "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile1
     CHECK_RESULT $? 0 0 "Check fisql -t -s -w failed"
 
-    fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile2 -t 100 -s " " -w 80 -E vi -I /etc/freetds.conf -y test -c go -H root && fgrep "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile2
+    fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile2 -t 100 -s " " -w 80 -E vi -I /etc/freetds.conf -y test -c go -H root && grep -F "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile2
     CHECK_RESULT $? 0 0 "Check fisql -E -I -y -c -H failed"
 
-    fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile3 -t 100 -s " " -w 80 -E vi -I /etc/freetds.conf -y test -c go -H root -h 1 && fgrep "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile3
+    fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile3 -t 100 -s " " -w 80 -E vi -I /etc/freetds.conf -y test -c go -H root -h 1 && grep -F "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile3
     CHECK_RESULT $? 0 0 "Check fisql -h failed"
 
     fisql -F -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile4 -z us_english && grep "Changed language setting to us_english" outFile4
     CHECK_RESULT $? 0 0 "Check fisql -F failed"
 
-    fisql -n -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile5 -t 100 -s " " -w 80 -E vi -h 1 -I /etc/freetds.conf -y test -c go -H root && fgrep "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile5
+    fisql -n -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile5 -t 100 -s " " -w 80 -E vi -h 1 -I /etc/freetds.conf -y test -c go -H root && grep -F "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile5
     CHECK_RESULT $? 0 0 "Check fisql -n failed"
 
-    fisql -X -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile6 -t 100 -s " " -w 80 -E vi -h 1 -I /etc/freetds.conf -y test -c go -H root && fgrep "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile6
+    fisql -X -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile6 -t 100 -s " " -w 80 -E vi -h 1 -I /etc/freetds.conf -y test -c go -H root && grep -F "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile6
     CHECK_RESULT $? 0 0 "Check fisql -X failed"
 
-    fisql -Y -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile7 -t 100 -s " " -w 80 -E vi -h 1 -I /etc/freetds.conf -y test -c go -H root && fgrep "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile7
+    fisql -Y -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile7 -t 100 -s " " -w 80 -E vi -h 1 -I /etc/freetds.conf -y test -c go -H root && grep -F "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile7
     CHECK_RESULT $? 0 0 "Check fisql -Y failed"
 
     LOG_INFO "End to run test."
@@ -64,8 +64,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
     rm -rf inputFile.sql outFile*
+    common_post
     LOG_INFO "Finish restore the test environment."
 }
 

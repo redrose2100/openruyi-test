@@ -22,13 +22,18 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL ceph-base
+    service=ceph-crash.service
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution ceph-crash.service 
-    test_reload ceph-crash.service 
+    log_time="$(date '+%Y-%m-%d %T')"
+    test_restart "${service}"
+    test_enabled "${service}"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v "Error initializing cluster client: ObjectNotFound"
+    CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
+    test_reload ceph-crash.service
     LOG_INFO "End to run test."
 }
 

@@ -16,13 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of freetds command
 # ############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+#shellcheck disable=SC1091
+source ./common.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "freetds"
-    echo "INSERT INTO [dbo].[test_user] ([id]) VALUES (10)" > inputFile.sql
+    common_pre
+    echo "INSERT INTO [dbo].[test_user] ([id]) VALUES (10)" >inputFile.sql
     bsqldb -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql
     LOG_INFO "End of environmental preparation!"
 }
@@ -36,7 +36,7 @@ function run_test() {
     freebcp test_user out 2.txt -U sa -P Hw123456 -S egServer70 -D test1 -o outFile1 -I /etc/freetds.conf -m 10 -c -e error.log -F 1 -L 5 -b 10 -t '\t' -r '\n' && grep "10" 2.txt
     CHECK_RESULT $? 0 0 "Check freebcp out -e -I -m -F -L -b -t -r failed"
 
-    freebcp test_user out 3.txt -U sa -P Hw123456 -S egServer70 -D test1 -d -c  && grep "10" 3.txt
+    freebcp test_user out 3.txt -U sa -P Hw123456 -S egServer70 -D test1 -d -c && grep "10" 3.txt
     CHECK_RESULT $? 0 0 "Check freebcp out -d -c failed"
 
     freebcp test_user out 5.txt -U sa -P Hw123456 -S egServer70 -D test1 -v | grep "freebcp version"
@@ -59,8 +59,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf inputFile.sql *.txt outFile*
+    common_post
+    rm -rf inputFile.sql ./*.txt ./outFile*
     LOG_INFO "Finish restore the test environment."
 }
 
