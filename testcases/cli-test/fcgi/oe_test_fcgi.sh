@@ -32,7 +32,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "gcc-c++ fcgi libtool tar"
+    DNF_INSTALL "gcc-c++ fcgi libtool tar wget"
     pre_fcgi
     LOG_INFO "End to prepare the test environment."
 }
