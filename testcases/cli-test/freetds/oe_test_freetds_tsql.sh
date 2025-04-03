@@ -16,13 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of freetds command
 # ############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+#shellcheck disable=SC1091
+source ./common.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "freetds"
-    echo "INSERT INTO [dbo].[test_user] ([id]) VALUES (20)" > inputFile.sql
+    common_pre
+    echo "INSERT INTO [dbo].[test_user] ([id]) VALUES (20)" >inputFile.sql
     bsqldb -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql
     LOG_INFO "End of environmental preparation!"
 }
@@ -50,7 +50,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    common_post
     rm -rf inputFile.sql 1.log pool.conf outFile*
     LOG_INFO "Finish restore the test environment."
 }
