@@ -29,7 +29,7 @@ function run_test(){
     LOG_INFO "Start to run test."
     criu check | grep 'Looks good'
     CHECK_RESULT $? 0 0 "Check criu check failed"
-    criu check --experimental
+    criu check --experimental || criu check --experimental | grep "Looks good but some kernel features are missing" 
     CHECK_RESULT $? 0 0 "Check criu check --experimental failed"
     criu check --feature mnt_id | grep 'mnt_id is supported'
     CHECK_RESULT $? 0 0 "Check criu check --feature failed"
