@@ -175,6 +175,9 @@
         },
         {
             "name": "oe_test_ngsm"
+        },
+        {
+            "name": "oe_test_nhdlc"
         }
     ]
 }
