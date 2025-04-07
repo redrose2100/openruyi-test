@@ -36,9 +36,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: --profile No Pass"
     boom -r root_device entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -r No Pass"
-    boom -root-device root_device entry show
+    boom --root-device root_device entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -root-device No Pass"
-    boom -rootdevice root_device entry show
+    boom --rootdevice root_device entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -rootdevice No Pass"
     boom -R "/boot/initramfs-%{version}.img" entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -R No Pass"
@@ -50,7 +50,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: --rows No Pass"
     boom --separator SEP entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --separator No Pass"
-    boom -s boom prifile show
+    boom -s boom profile show
     CHECK_RESULT $? 0 0 "L$LINENO: -s No Pass"
     boom --short-name boom profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --short-name No Pass"
@@ -58,7 +58,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: --shortname No Pass"
     boom -t boom entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -t No Pass"
-    boom -title boom entry show
+    boom --title boom entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -title No Pass"
     boom -u fc26 profile show
     CHECK_RESULT $? 0 0 "L$LINENO: -u No Pass"
