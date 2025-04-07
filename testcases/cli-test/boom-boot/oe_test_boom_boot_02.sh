@@ -34,8 +34,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: --machineid No Pass"
     boom -n "boom_profile" profile show
     CHECK_RESULT $? 0 0 "L$LINENO: -n No Pass"
-    boom -name "boom_profile" profile show
-    CHECK_RESULT $? 0 0 "L$LINENO: -name No Pass"
+    boom --name "boom_profile" profile show
+    CHECK_RESULT $? 0 0 "L$LINENO: --name No Pass"
     boom --name-prefixes profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --name-prefixes No Pass"
     boom  --nameprefixes profile show
@@ -50,8 +50,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "L$LINENO: --nodev  No Pass"
     boom -o Name profile show
     CHECK_RESULT $? 0 0 "L$LINENO: -o No Pass"
-    boom -options Name profile show
-    CHECK_RESULT $? 0 0 "L$LINENO: -options No Pass"
+    boom --options Name profile show
+    CHECK_RESULT $? 0 0 "L$LINENO: --options No Pass"
     boom --os-version 22.03 profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --os-version No Pass"
     boom --osversion 22.03 profile show
