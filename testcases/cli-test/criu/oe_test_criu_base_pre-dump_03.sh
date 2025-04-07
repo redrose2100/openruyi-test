@@ -22,6 +22,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
+    if criu check --experimental | grep "Looks good but some kernel features are missing"; then
+        echo "The environment is not support!"
+        exit 0
+    fi
     mkdir checkpoint_file
     test_process(){
         num=0

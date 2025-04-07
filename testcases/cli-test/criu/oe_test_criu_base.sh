@@ -29,14 +29,16 @@ function pre_test(){
 
 function run_test(){
     LOG_INFO "Start to run test."
-    criu lazy-pages -D checkpoint_file & pid=$!
-    CHECK_RESULT $? 0 0
-    kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check --lazy-pages failed."
-    criu cpuinfo dump
-    CHECK_RESULT $? 0 0 "Check cpuinfo dump failed."
-    criu cpuinfo check
-    CHECK_RESULT $? 0 0 "Check cpuinfo check failed."
+    if ! criu check --experimental | grep "Looks good but some kernel features are missing"; then
+        criu lazy-pages -D checkpoint_file & pid=$!
+        CHECK_RESULT $? 0 0
+        kill -9 $pid
+        CHECK_RESULT $? 0 0 "Check --lazy-pages failed."
+        criu cpuinfo dump
+        CHECK_RESULT $? 0 0 "Check cpuinfo dump failed."
+        criu cpuinfo check
+        CHECK_RESULT $? 0 0 "Check cpuinfo check failed."
+    fi
     criu -h | grep -E "Usage:"
     CHECK_RESULT $? 0 0 "Check -h failed."
     criu --help | grep -E "Usage:"

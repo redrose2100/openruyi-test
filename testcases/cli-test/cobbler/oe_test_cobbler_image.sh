@@ -24,6 +24,7 @@ function pre_test() {
     DNF_INSTALL "cobbler httpd"
     systemctl start httpd
     systemctl start cobblerd
+    SLEEP_WAIT 5
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -58,9 +59,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    cobbler image remove --name=OpenEuler3
     systemctl stop httpd
     systemctl stop cobblerd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

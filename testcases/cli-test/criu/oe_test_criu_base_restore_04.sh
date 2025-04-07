@@ -59,7 +59,7 @@ function run_test(){
     CHECK_RESULT $? 0 0 "Check criu restore --file-validation failed"
     criu restore -j --with-cpu-affinity & DUMP
     CHECK_RESULT $? 0 0 "Check criu restore --with-cpu-affinity failed"
-    criu restore -j --track-mem & DUMP
+    criu restore -j --track-mem & DUMP || criu restore -j --track-mem 2>&1 | grep "Tracking memory is not available. Consider omitting --track-mem option"
     CHECK_RESULT $? 0 0 "Check criu restore --track-mem failed"
     criu restore -j --page-server & DUMP
     CHECK_RESULT $? 0 0 "Check criu restore --page-server failed"
