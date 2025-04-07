@@ -17,10 +17,11 @@
 #@Desc          :   command test attr
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL attr
     touch test && ln -s test test.lnk
     LOG_INFO "End to prepare the test environment."
 }
