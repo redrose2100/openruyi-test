@@ -68,7 +68,13 @@
             "name": "oe_test_valgrind_21"
         },
         {
+            "name": "oe_test_valgrind_22"
+        },
+        {
             "name": "oe_test_cg_annotate_01"
+        },
+        {
+            "name": "oe_test_cg_annotate_02"
         },
         {
             "name": "oe_test_cg_merge_01"
@@ -80,7 +86,13 @@
             "name": "oe_test_callgrind_annotate_01"
         },
         {
+            "name": "oe_test_callgrind_annotate_02"
+        },
+        {
             "name": "oe_test_callgrind_control_01"
+        },
+        {
+            "name": "oe_test_callgrind_control_02"
         },
         {
             "name": "oe_test_ms_print_01"

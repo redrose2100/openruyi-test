@@ -1,8 +1,8 @@
 {
-    "path": "\"${OET_PATH}\"/testcases/cli-test/python-rsa",
+    "path": "${OET_PATH}/testcases/cli-test/python-rsa",
     "cases": [
         {
-            "name": "oe_test_python3-rsa_4.7.2"
+            "name": "oe_test_python3-rsa"
         }
     ]
 }
