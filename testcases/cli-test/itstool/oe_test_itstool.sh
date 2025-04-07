@@ -16,8 +16,9 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test itstool
 # #############################################
+# shellcheck disable=SC1090
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "itstool"
@@ -27,21 +28,29 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    itstool common/translate.xml -o out/out-o.pot && cat out/out-o.pot | grep 'content of value0'
+    itstool common/translate.xml -o out/out-o.pot
     CHECK_RESULT $? 0 0 "itstool -o failed"
-    itstool common/translate.xml --output=out/out--out.pot && cat out/out--out.pot | grep 'content of value0'
+    grep 'content of value0' out/out-o.pot
+    CHECK_RESULT $? 0 0 "Failed to generate out/out-o.pot"
+    itstool common/translate.xml --output=out/out--out.pot
     CHECK_RESULT $? 0 0 "itstool --output failed"
-    itstool -j common/IT-join-1.xml common/IT-join-1-cs.mo common/IT-join-1-de.mo -o out/out-j.xml && cat out/out-j.xml | grep 'Diese Nachricht'
+    grep 'content of value0' out/out--out.pot
+    CHECK_RESULT $? 0 0 "Failed to generate out/out--out.pot"
+    itstool -j common/IT-join-1.xml common/IT-join-1-cs.mo common/IT-join-1-de.mo -o out/out-j.xml
     CHECK_RESULT $? 0 0 "itstool -j failed"
-    itstool --join=common/IT-join-1.xml common/IT-join-1-cs.mo common/IT-join-1-de.mo -o out/out-j.xml && cat out/out-j.xml | grep 'Diese Nachricht'
+    grep 'Diese Nachricht' out/out-j.xml
+    CHECK_RESULT $? 0 0 "Failed to generate out/out-j.xml"
+    itstool --join=common/IT-join-1.xml common/IT-join-1-cs.mo common/IT-join-1-de.mo -o out/out-j.xml
     CHECK_RESULT $? 0 0 "itstool --join failed"
+    grep 'Diese Nachricht' out/out-j.xml
+    CHECK_RESULT $? 0 0 "Failed to generate out/out-j.xml"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf out
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

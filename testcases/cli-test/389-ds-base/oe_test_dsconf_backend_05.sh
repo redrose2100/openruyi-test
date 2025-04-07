@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test "dsconf" command
 # #############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
@@ -28,7 +29,7 @@ function pre_test() {
     dscreate create-template 389_ds_test.inf
     dscreate from-file 389_ds_test.inf
     dsconf localhost backend create --suffix dc=example,dc=com --be-name example
-    cat << EOF > users.ldif
+    cat <<EOF >users.ldif
     dn: cn=John Doe,ou=Users,dc=example,dc=com
     objectClass: top
     objectClass: person
@@ -60,52 +61,56 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dsconf localhost backend import -h | grep  "usage: dsconf.*instance.*backend import" 
-    CHECK_RESULT $? 0 0 "Check: backend import -h No Pass" 
-    dsconf localhost backend import -c 2 example user.ldif 2>&1| grep  "'int' object has no attribute 'encode'" 
-    CHECK_RESULT $? 0 0 "Check: backend import -h No Pass" 
-    dsconf localhost backend import -E example users.ldif | grep  "The import task has finished successfully" 
-    CHECK_RESULT $? 0 0 "Check: backend import -E No Pass" 
-    dsconf localhost backend import -O example users.ldif | grep  "The import task has finished successfully" 
-    CHECK_RESULT $? 0 0 "Check: backend import -O No Pass" 
-    dsconf localhost backend export -h | grep  "usage: dsconf.*instance.*backend export" 
-    CHECK_RESULT $? 0 0 "Check: backend export -h No Pass" 
-    dsconf localhost backend export -l a.ldif example | grep  "The export task has finished successfully" 
-    CHECK_RESULT $? 0 0 "Check: backend export -l No Pass" 
-    dsconf localhost backend export -C example | grep  "The export task has finished successfully" 
-    CHECK_RESULT $? 0 0 "Check: backend export -C No Pass" 
-    dsconf localhost backend export -E example | grep  "The export task has finished successfully" 
-    CHECK_RESULT $? 0 0 "Check: backend export -E No Pass" 
-    dsconf localhost backend export -m example | grep  "The export task has finished successfully" 
+    dsconf localhost backend import -h | grep "usage: dsconf.*instance.*backend import"
+    CHECK_RESULT $? 0 0 "Check: backend import -h No Pass"
+    dsconf localhost backend import -c 2 example user.ldif 2>&1 | grep "'int' object has no attribute 'encode'"
+    CHECK_RESULT $? 0 0 "Check: backend import -h No Pass"
+    dsconf localhost backend import -E example users.ldif | grep "The import task has finished successfully"
+    CHECK_RESULT $? 0 0 "Check: backend import -E No Pass"
+    dsconf localhost backend import -O example users.ldif | grep "The import task has finished successfully"
+    CHECK_RESULT $? 0 0 "Check: backend import -O No Pass"
+    dsconf localhost backend export -h | grep "usage: dsconf.*instance.*backend export"
+    CHECK_RESULT $? 0 0 "Check: backend export -h No Pass"
+    dsconf localhost backend export -l a.ldif example | grep "The export task has finished successfully"
+    CHECK_RESULT $? 0 0 "Check: backend export -l No Pass"
+    dsconf localhost backend export -C example | grep "The export task has finished successfully"
+    CHECK_RESULT $? 0 0 "Check: backend export -C No Pass"
+    dsconf localhost backend export -E example | grep "The export task has finished successfully"
+    CHECK_RESULT $? 0 0 "Check: backend export -E No Pass"
+    dsconf localhost backend export -m example | grep "The export task has finished successfully"
     CHECK_RESULT $? 0 0 "Check: backend export -m No Pass"
-    dsconf localhost backend export -N example | grep  "The export task has finished successfully" 
+    dsconf localhost backend export -N example | grep "The export task has finished successfully"
     CHECK_RESULT $? 0 0 "Check: backend export -N No Pass"
-    dsconf localhost backend export -r example | grep  "The export task has finished successfully" 
+    dsconf localhost backend export -r example | grep "The export task has finished successfully"
     CHECK_RESULT $? 0 0 "Check: backend export -r No Pass"
-    dsconf localhost backend export -u example | grep  "The export task has finished successfully" 
+    dsconf localhost backend export -u example | grep "The export task has finished successfully"
     CHECK_RESULT $? 0 0 "Check: backend export -u No Pass"
-    dsconf localhost backend export -U example | grep  "The export task has finished successfully" 
+    dsconf localhost backend export -U example | grep "The export task has finished successfully"
     CHECK_RESULT $? 0 0 "Check: backend export -U No Pass"
-    dsconf localhost backend create -h  | grep  "usage: dsconf.*instance.*backend create" 
-    CHECK_RESULT $? 0 0 "Check: backend create -h No Pass" 
-    dsconf localhost backend create --parent-suffix dc=com --suffix dc=exa,dc=com --be-name example2  | grep  "The database was successfully created" 
+    dsconf localhost backend create -h | grep "usage: dsconf.*instance.*backend create"
     CHECK_RESULT $? 0 0 "Check: backend create -h No Pass"
-    dsconf localhost backend delete -h  | grep  "usage: dsconf.*instance.*backend delete" 
-    CHECK_RESULT $? 0 0 "Check: backend delete -h No Pass" 
+    dsconf localhost backend create --parent-suffix dc=com --suffix dc=exa,dc=com --be-name example2 | grep "The database was successfully created"
+    CHECK_RESULT $? 0 0 "Check: backend create -h No Pass"
+    dsconf localhost backend delete -h | grep "usage: dsconf.*instance.*backend delete"
+    CHECK_RESULT $? 0 0 "Check: backend delete -h No Pass"
     if [ "$(rpm -qa 389-ds-base | awk -F- '{print $4}' | awk -F. '{print $1}')" -ge 3 ]; then
         (echo "Yes I am sure" | dsconf localhost backend delete --do-it example2) | grep "were successfully deleted"
     else
         (echo "Yes I am sure" | dsconf localhost backend delete example2) | grep "were successfully deleted"
     fi
-    dsconf localhost backend get-tree -h | grep  "usage: dsconf.*instance.*backend get-tree" 
-    CHECK_RESULT $? 0 0 "Check: backend get-tree -h No Pass" 
+    dsconf localhost backend get-tree -h | grep "usage: dsconf.*instance.*backend get-tree"
+    CHECK_RESULT $? 0 0 "Check: backend get-tree -h No Pass"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/lib/dirsrv/slapd-localhost/ldif/* users.ldif 389_ds_test.inf /etc/ld.so.conf.d/custom-libraries.conf
-    echo "Yes I am sure" | dsconf localhost backend delete example
+    if [ "$(rpm -qa 389-ds-base | awk -F- '{print $4}' | awk -F. '{print $1}')" -ge 3 ]; then
+        echo "Yes I am sure" | dsconf localhost backend delete --do-it example
+    else
+        echo "Yes I am sure" | dsconf localhost backend delete example
+    fi
     dsctl localhost remove --do-it
     ldconfig
     DNF_REMOVE "$@"
