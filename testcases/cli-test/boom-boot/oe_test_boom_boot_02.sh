@@ -26,49 +26,49 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run testcase:oe_test_boom_boot_02."
-    boom -m "$(cat /etc/machine-id)" entry show
+    boom entry show -m "$(cat /etc/machine-id)" 
     CHECK_RESULT $? 0 0 "L$LINENO: -m No Pass"
-    boom --machine-id "$(cat /etc/machine-id)" entry show
+    boom entry show --machine-id "$(cat /etc/machine-id)" 
     CHECK_RESULT $? 0 0 "L$LINENO: --machine-id No Pass"
-    boom --machineid "$(cat /etc/machine-id)" entry show
+    boom entry show --machineid "$(cat /etc/machine-id)" 
     CHECK_RESULT $? 0 0 "L$LINENO: --machineid No Pass"
-    boom -n "boom_profile" profile show
+    boom profile show -n "boom_profile" 
     CHECK_RESULT $? 0 0 "L$LINENO: -n No Pass"
-    boom -name "boom_profile" profile show
+    boom profile show --name "boom_profile" 
     CHECK_RESULT $? 0 0 "L$LINENO: -name No Pass"
-    boom --name-prefixes profile show
+    boom profile show --name-prefixes 
     CHECK_RESULT $? 0 0 "L$LINENO: --name-prefixes No Pass"
-    boom  --nameprefixes profile show
+    boom profile show --nameprefixes 
     CHECK_RESULT $? 0 0 "L$LINENO:  --nameprefixes No Pass"
-    boom --no-headings profile show
+    boom profile show --no-headings 
     CHECK_RESULT $? 0 0 "L$LINENO: --no-headings No Pass"
-    boom --noheadings profile show
+    boom profile show --noheadings 
     CHECK_RESULT $? 0 0 "L$LINENO: --noheadingsNo Pass"
-    boom --no-dev profile show
+    boom profile show --no-dev 
     CHECK_RESULT $? 0 0 "L$LINENO: --no-dev No Pass"
-    boom --nodev  profile show
+    boom profile show --nodev  
     CHECK_RESULT $? 0 0 "L$LINENO: --nodev  No Pass"
-    boom -o Name profile show
+    boom profile show -o Name 
     CHECK_RESULT $? 0 0 "L$LINENO: -o No Pass"
-    boom -options Name profile show
-    CHECK_RESULT $? 0 0 "L$LINENO: -options No Pass"
-    boom --os-version 22.03 profile show
+    boom profile show --options Name 
+    CHECK_RESULT $? 0 0 "L$LINENO: --options No Pass"
+    boom profile show --os-version "$(sed -n 's/^VERSION_ID=//p' /etc/os-release | tr -d '\"')" 
     CHECK_RESULT $? 0 0 "L$LINENO: --os-version No Pass"
-    boom --osversion 22.03 profile show
+    boom profile show --osversion "$(sed -n 's/^VERSION_ID=//p' /etc/os-release | tr -d '\"')" 
     CHECK_RESULT $? 0 0 "L$LINENO: --osversion No Pass"
-    boom -O Name profile show
+    boom profile show -O Name 
     CHECK_RESULT $? 0 0 "L$LINENO: -O No Pass"
-    boom --sort Name profile show
+    boom profile show --sort Name 
     CHECK_RESULT $? 0 0 "L$LINENO: --sort No Pass"
-    boom -I 22.03 profile show
+    boom profile show -I "$(sed -n 's/^VERSION_ID=//p' /etc/os-release | tr -d '\"')" 
     CHECK_RESULT $? 0 0 "L$LINENO: -O No Pass"
-    boom --os-version-id 22.03 profile show
+    boom profile show --os-version-id "$(sed -n 's/^VERSION_ID=//p' /etc/os-release | tr -d '\"')" 
     CHECK_RESULT $? 0 0 "L$LINENO: --os-version-id No Pass"
-    boom --osversionid 22.03 profile show
+    boom profile show --osversionid "$(sed -n 's/^VERSION_ID=//p' /etc/os-release | tr -d '\"')" 
     CHECK_RESULT $? 0 0 "L$LINENO: --osversionid No Pass"
-    boom -os-options profile show
+    boom profile show -os-options 
     CHECK_RESULT $? 0 0 "L$LINENO: --os-options No Pass"
-    boom -osoptions profile show
+    boom profile show -osoptions 
     CHECK_RESULT $? 0 0 "L$LINENO: --osoptions No Pass"
     LOG_INFO "End to run test."
 }
