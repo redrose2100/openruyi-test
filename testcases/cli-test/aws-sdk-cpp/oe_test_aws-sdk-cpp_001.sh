@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "aws-sdk-cpp g++"
+    DNF_INSTALL "aws-sdk-cpp g++ aws-sdk-cpp-devel"
     rm -rf /tmp/aws-sdk-cpp-test
     mkdir /tmp/aws-sdk-cpp-test
     LOG_INFO "End to prepare the test environment."
@@ -31,8 +31,8 @@ function run_test() {
     LOG_INFO "Start testing..."
     rpm -qa | grep aws-sdk-cpp
     CHECK_RESULT $? 0 0 "Return value error."
-    cp AwsSdkCppTest.cpp /tmp/test
-    cd /tmp/test || exit
+    cp AwsSdkCppTest.cpp /tmp/aws-sdk-cpp-test/
+    cd /tmp/aws-sdk-cpp-test/ || exit
     g++ -D_GLIBCXX_USE_CXX11_ABI=0 AwsSdkCppTest.cpp -o AwsSdkCppTest -laws-cpp-sdk-core -laws-cpp-sdk-s3
     test -e AwsSdkCppTest
     CHECK_RESULT $? 0 0 "Compilation failure"
