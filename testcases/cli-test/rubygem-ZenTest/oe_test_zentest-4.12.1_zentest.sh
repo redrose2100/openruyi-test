@@ -22,7 +22,7 @@ ORIGIN_SOURCE="https://rubygems.org/"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     # remove
-    sudo dnf autoremove gem
+    sudo dnf autoremove gem -y
     sudo rm -rf /usr/share/gems
     # install
     DNF_INSTALL "${GEM_PACKAGES} ${OTHER_DEPENDENCES}"

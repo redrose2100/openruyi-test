@@ -19,31 +19,31 @@
 OET_PATH=$(readlink -f "../../../")
 source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 source "${OET_PATH}/testcases/cli-test/qemu/common/common.sh"
-img_url="https://repo.openeuler.org/openEuler-22.03-LTS-SP3/virtual_machine_img/x86_64/openEuler-22.03-LTS-SP3-x86_64.qcow2.xz"
-filename=$(basename ${img_url})
+filename=$(basename "${img_url}")
 volume=${filename%.xz}
 enc_volume=${volume%.qcow2}_sm4_sm3.qcow2
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "curl xz socat expect"
-    LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "curl xz socat expect libvirt"
+    systemctl start libvirt
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start testing..."
+    LOG_INFO "Start to run test."
     uuid=$(uuidgen)
     test_crypto_qcow2_sm4_sm3 "${uuid}" "${enc_volume}"
     CHECK_RESULT $? 0 0 "qcow2 sm4 sm3 test failed" 
     deletesecvm "${uuid}"
-    LOG_INFO "Finish test!"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
-    LOG_INFO "start environment cleanup."
+    LOG_INFO "start to restore the test environment."
     cleanup "${enc_volume}" "${volume}"
     DNF_REMOVE "$@"
-    LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
