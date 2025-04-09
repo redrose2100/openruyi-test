@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "iputils"
+    DNF_INSTALL "iputils dmidecode"
     LOG_INFO "End to prepare the test environment."
 }
 
