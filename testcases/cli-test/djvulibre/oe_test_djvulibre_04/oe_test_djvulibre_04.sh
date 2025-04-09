@@ -15,12 +15,12 @@
 #@License   	:   Mulan PSL v2
 #@Desc          :   verification djvulibre's commnd
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2010
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL djvulibre
+    DNF_INSTALL "djvulibre hostname wget"
     cp ../common/test.pdf ./
     expect <<-END
     spawn any2djvu test.pdf
@@ -93,8 +93,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $(ls | grep -v '\.sh')
-    DNF_REMOVE
+    rm -rf "$(ls | grep -v '\.sh')"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
