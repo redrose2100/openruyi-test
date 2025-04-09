@@ -20,7 +20,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_env() {
-    DNF_INSTALL "binutils elfutils elfutils-libelf-devel libunwind-devel libcareplus libcareplus-devel"
+    DNF_INSTALL "binutils elfutils elfutils-libelf-devel gcc libunwind-devel libcareplus libcareplus-devel"
     libcare-ctl -h 2>&1 | grep "usage"
     cat >foo.c <<EOF
 #include <stdio.h>
