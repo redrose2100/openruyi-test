@@ -27,7 +27,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL "docker gcc"
+    DNF_INSTALL "docker gcc wget"
     if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
         TEST_TAG=24.03
         TEST_IMAGE=jchzhou/oerv

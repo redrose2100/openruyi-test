@@ -22,7 +22,7 @@ source ../common_lib/fsio_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     point_list="($(CREATE_FS))"
-    DNF_INSTALL docker
+    DNF_INSTALL "docker wget"
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then
         TEST_TAG=24.03
         TEST_IMAGE=jchzhou/oerv
