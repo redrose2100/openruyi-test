@@ -18,12 +18,12 @@
 # ############################################
 # shellcheck disable=SC1091,SC2010
 
-source "../common/common_junit.sh"
+source "${OET_PATH}/testcases/cli-test/junit/common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    DNF_INSTALL "hamcrest maven"
+    DNF_INSTALL "hamcrest maven wget"
     cp /etc/profile /etc/profile-bak
     export MAVEN_HOME=/usr/share/maven
     mkdir libs
@@ -35,12 +35,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mvn test >log
+
+    mvn test > log
     grep "BUILD SUCCESS" log
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "test build failed."
+
     mvn -Dtest=TestApp2 test >log
     grep "BUILD SUCCESS" log
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "test2 build failed."
+
     LOG_INFO "End of the test."
 }
 

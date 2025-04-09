@@ -18,7 +18,7 @@
 # ############################################
 # shellcheck disable=SC2086
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
     DNF_INSTALL junit
