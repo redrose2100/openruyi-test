@@ -3,23 +3,23 @@
     "machine type": "physical",
     "cases": [
         {
-            "name": "oe_test_interface_eagle_40",
+            "name": "oe_test_eagle_40",
             "machine type": "physical"
         },
         {
-            "name": "oe_test_interface_eagle_41",
+            "name": "oe_test_eagle_41",
             "machine type": "physical"
         },
         {
-            "name": "oe_test_interface_eagle_42",
+            "name": "oe_test_eagle_42",
             "machine type": "physical"
         },
         {
-            "name": "oe_test_interface_eagle_43",
+            "name": "oe_test_eagle_43",
             "machine type": "physical"
         },
         {
-            "name": "oe_test_interface_eagle_44",
+            "name": "oe_test_eagle_44",
             "machine type": "physical"
         }
     ]
