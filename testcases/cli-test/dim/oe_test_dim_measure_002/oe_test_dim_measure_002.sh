@@ -17,7 +17,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    DNF_INSTALL "dim_tools dim vdo kmod-kvdo"
+    DNF_INSTALL "dim_tools dim vdo kernel-devel kmod-kvdo"
     modprobe dim_monitor
 }
 
@@ -36,6 +36,7 @@ function run_test() {
     echo "measure obj=MODULE_TEXT name=kvdo" >> /etc/dim/policy
 
     ./dim_proc &
+    depmod -a
     modprobe kvdo
     echo 1 > /sys/kernel/security/dim/baseline_init
     CHECK_RESULT $? 0 0 "baseline_init failed."
@@ -76,10 +77,8 @@ function post_test() {
     DNF_REMOVE "$@"
     pkill -9 dim_proc
     rmmod kvdo dim_monitor dim_core
-    rm /usr/lib/modules/"$(uname -r)"/kernel/drivers/block/kvdo.ko
-    rm -rf /etc/dim/
     make -C /lib/modules/"$(uname -r)"/build M="$(pwd)"/../common/module clean
-    rm -rf dim_proc*
+    rm -rf dim_proc* /etc/dim/ /usr/lib/modules/"$(uname -r)"/kernel/drivers/block/kvdo.ko
 }
 
 main "$@"
