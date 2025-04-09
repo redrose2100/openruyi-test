@@ -32,7 +32,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     auditctl -w /tmp/somesocket -p rwxa -k "audit-socket"
     CHECK_RESULT $? 0 0 "Fail to set audit rule."
-    python -c "import socket as s; sock = s.socket(s.AF_UNIX); sock.bind('/tmp/somesocket')"
+    python3 -c "import socket as s; sock = s.socket(s.AF_UNIX); sock.bind('/tmp/somesocket')"
     CHECK_RESULT $? 0 0 "Fail to create socket file."
     ausearch -f somesocket -k "audit-socket" | grep "/tmp/somesocket" | grep CREATE
     CHECK_RESULT $? 0 0 "Fail to audit socket file."
