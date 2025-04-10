@@ -14,98 +14,43 @@
 # @Contact   :   lchutian@163.com
 # @Date      :   2021/01/04
 # @License   :   Mulan PSL v2
-# @Desc      :   verify the uasge of sosreport command
+# @Desc      :   verify the usage of sosreport command
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "sos tar"
+    DNF_INSTALL "sos tar hostname"
     LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+    name="sosreport-$(hostname -s)"
     sos report -h | grep -E "usage: sosreport \[options\]|-"
     CHECK_RESULT $?
-    if [ "${NODE1_FRAME}" == "riscv64" ]; then
-        name="sosreport-openeuler-riscv64"
-    else
-        name="sosreport-localhost"
-    fi
-    expect <<EOF
-    spawn sos report -a --case-id 001
-    expect "" {send "\r"}
-    expect "" {send "\r"}
-    sleep 200
-    expect eof
-EOF
-    test -f /var/tmp/$name-001-"$(date +%Y-%m-%d)"-*.tar.xz
+    sos report --batch -a --case-id 001
+    test -f /var/tmp/"${name}"-001-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
-    # sleep 150
-    expect <<EOF
-    spawn sos report --all-logs --case-id 002
-    expect "" {send "\r"}
-    expect "" {send "\r"}
-    sleep 240
-    expect eof
-EOF
-    test -f /var/tmp/$name-002-"$(date +%Y-%m-%d)"-*.tar.xz
-    CHECK_RESULT $?
-    # sleep 120
-    expect <<EOF
-    spawn sos report --all-logs --case-id 003
-    expect "" {send "\r"}
-    expect "" {send "\r"}
-    sleep 240
-    expect eof
-EOF
-    test -f /var/tmp/$name-003-"$(date +%Y-%m-%d)"-*.tar.xz
+    sos report --batch --all-logs --case-id 002
+    test -f /var/tmp/"${name}"-002-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
     sos report --batch
     CHECK_RESULT $?
-    test -f /var/tmp/$name-"$(date +%Y-%m-%d)"-*.tar.xz
+    test -f /var/tmp/"${name}"-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
-    # sleep 120
-    expect <<EOF
-    spawn sos report  --build --case-id build
-    expect "" {send "\r"}
-    expect "" {send "\r"}
-    sleep 240
-    expect eof
-EOF
-    test -d /var/tmp/$name-build-"$(date +%Y-%m-%d)"-*
+    sos report --batch --build --case-id build
+    test -d /var/tmp/"${name}"-build-"$(date +%Y-%m-%d)"-*
     CHECK_RESULT $?
-    # sleep 120
-    expect <<EOF
-    spawn sos report  --case-id test
-    expect "" {send "\r"}
-    expect "" {send "\r"}
-    sleep 240
-    expect eof
-EOF
-    test -f /var/tmp/$name-test-"$(date +%Y-%m-%d)"-*.tar.xz
+    sos report --batch --case-id test
+    test -f /var/tmp/"${name}"-test-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
-    # sleep 120
-    expect <<EOF
-    spawn sos report  -c never --case-id never
-    expect "" {send "\r"}
-    expect "" {send "\r"}
-    sleep 240
-    expect eof
-EOF
-    test -f /var/tmp/$name-never-"$(date +%Y-%m-%d)"-*.tar.xz
+    sos report --batch -c never --case-id never
+    test -f /var/tmp/"${name}"-never-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
-    # sleep 120
-    expect <<EOF
-    spawn sos report --config-file /etc/sos.conf --case-id config
-    expect "" {send "\r"}
-    expect "" {send "\r"}
-    sleep 240
-    expect eof
-EOF
-    test -f /var/tmp/$name-config-"$(date +%Y-%m-%d)"-*.tar.xz
+    sos report --batch --config-file /etc/sos.conf --case-id config
+    test -f /var/tmp/"${name}"-config-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
