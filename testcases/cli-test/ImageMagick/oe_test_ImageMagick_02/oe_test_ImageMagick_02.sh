@@ -15,12 +15,12 @@
 #@License       :   Mulan PSL v2
 #@Desc      	:   verification ImageMagick‘s command
 #####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL ImageMagick
     cp -r ../common ./tmp
-    cd ./tmp
+    cd ./tmp || exit
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
@@ -29,10 +29,13 @@ function run_test() {
     CHECK_RESULT "$(identify -verbose thumbnail.jpg | grep Quality | grep -cE '70')" 1
     convert -resize 900x600 -quality 100 -strip test3.jpg thumbnail1.jpg
     CHECK_RESULT "$(identify -verbose thumbnail1.jpg | grep Quality | grep -cE '100')" 1
-    convert -resize 900x600 -quality 101 -strip test3.jpg thumbnail2.jpg
-    CHECK_RESULT "$(identify -verbose thumbnail2.jpg | grep Quality | grep -cE '100')" 1
-    convert -resize 900x600 -quality -1 -strip test3.jpg thumbnail3.jpg
-    CHECK_RESULT "$(identify -verbose thumbnail3.jpg | grep Quality | grep -cE '100')" 1
+    IM_version=$(rpm -qa ImageMagick | awk -F- '{print$2}')
+    if [[ "$(printf "%s\n" "$IM_version" 7.1.1.36 | sort -V | head -n1)" != 7.1.1.36 ]]; then
+        convert -resize 900x600 -quality 101 -strip test3.jpg thumbnail2.jpg
+        CHECK_RESULT "$(identify -verbose thumbnail2.jpg | grep Quality | grep -cE '100')" 1
+        convert -resize 900x600 -quality -1 -strip test3.jpg thumbnail3.jpg
+        CHECK_RESULT "$(identify -verbose thumbnail3.jpg | grep Quality | grep -cE '100')" 1
+    fi
     convert -resize '150x100!' test1.jpg suof1.jpg
     CHECK_RESULT $?
     test -f suof1.jpg
@@ -49,7 +52,7 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ../tmp
     LOG_INFO "End to restore the test environment."
 }

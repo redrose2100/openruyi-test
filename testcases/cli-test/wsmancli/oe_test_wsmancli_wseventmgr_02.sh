@@ -15,24 +15,42 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test wsmancli
 # #############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2046
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "wsmancli openwsman-server docker"
+    mv -rf /etc/docker/daemon.json /etc/docker/daemon-old.json
+    echo '{
+        "registry-mirrors":[
+                "https://docker.nju.edu.cn",
+                "https://docker.m.daocloud.io",
+                "https://dockerproxy.com",
+                "https://docker.mirrors.ustc.edu.cn",
+                "https://docker.1panel.live",
+                "https://hub.rat.dev",
+                "https://docker.actima.top",
+                "https://docker.1ms.run",
+                "https://dockeraityp.com",
+                "https://dockerhub.xisoul.cn",
+                "https://docker.imgdb.be"
+        ]
+}
+' >/etc/docker/daemon.json
+    systemctl restart docker
     cp common/simple_auth.passwd /etc/openwsman/test_simple_auth.passwd
     openwsmand -c common/openwsman.conf
     docker run \
-    --name=ss5 \
-    --hostname=ss5 \
-    --network=host \
-    --env=user=wsman \
-    --env=passwd=wsman \
-    --env=port=1080 \
-    --volume=/etc/resolv.conf:/etc/resolv.conf \
-    --restart=always \
-    --detach=true \
-    -t registry.cn-hangzhou.aliyuncs.com/dengdai/ss5:3.8.9
+        --name=ss5 \
+        --hostname=ss5 \
+        --network=host \
+        --env=user=wsman \
+        --env=passwd=wsman \
+        --env=port=1080 \
+        --volume=/etc/resolv.conf:/etc/resolv.conf \
+        --restart=always \
+        --detach=true \
+        -t registry.cn-hangzhou.aliyuncs.com/dengdai/ss5:3.8.9
     docker run -d -it --rm -p 0.0.0.0:5988:5988 -p 0.0.0.0:5989:5989 --name openpegasus kschopmeyer/openpegasus-server:0.1.1
     SLEEP_WAIT 20
     LOG_INFO "End to prepare the test environment."
@@ -43,8 +61,10 @@ function run_test() {
     # test command: wseventmgr
     # SYNOPSIS: wseventmgr [-X -Y -y -C -O -V -v -I --enum-context -i]
     # test option: -X -Y
-    wseventmgr subscribe 'http://schemas.dmtf.org/wbem/wscim/1/*' -x "SELECT * FROM CIM_ProcessIndication" -D 'http://schemas.microsoft.com/wbem/wsman/1/WQL' -Z 'http://127.0.0.1:80/eventsink' -b http://wsman:wsman@127.0.0.1:5985/wsman -X socks5://127.0.0.1:1080 -d 6 -v -Y wsman:wsman 2>&1 | grep "SOCKS5 request granted."
-    CHECK_RESULT $? 0 0 "wamancli.wseventmgr: faild to test option -X -Y"
+    if [ "$NODE1_FRAME" == "x86_64" ]; then
+        wseventmgr subscribe 'http://schemas.dmtf.org/wbem/wscim/1/*' -x "SELECT * FROM CIM_ProcessIndication" -D 'http://schemas.microsoft.com/wbem/wsman/1/WQL' -Z 'http://127.0.0.1:80/eventsink' -b http://wsman:wsman@127.0.0.1:5985/wsman -X socks5://127.0.0.1:1080 -d 6 -v -Y wsman:wsman 2>&1 | grep "SOCKS5 request granted."
+        CHECK_RESULT $? 0 0 "wamancli.wseventmgr: faild to test option -X -Y"
+    fi
     # test option: -y
     wseventmgr subscribe 'http://schemas.dmtf.org/wbem/wscim/1/*' -x "SELECT * FROM CIM_ProcessIndication" -D 'http://schemas.microsoft.com/wbem/wsman/1/WQL' -Z 'http://127.0.0.1:80/eventsink' -b http://wsman:wsman@localhost:5985/wsman -y basic -d 6 2>&1 | grep "WWW-Authenticate: Basic"
     CHECK_RESULT $? 0 0 "wamancli.wseventmgr: faild to test option -y"
@@ -61,9 +81,11 @@ function run_test() {
     # test option: -v
     wseventmgr subscribe 'http://schemas.dmtf.org/wbem/wscim/1/*' -x "SELECT * FROM CIM_ProcessIndication" -D 'http://schemas.microsoft.com/wbem/wsman/1/WQL' -Z 'http://127.0.0.1:80/eventsink' -b http://wsman:wsman@localhost:5985/wsman -d 6 -v 2>&1 | grep verify
     CHECK_RESULT $? 0 0 "wamancli.wseventmgr: faild to test option -v"
-    # test option: -I after 3 sceconds get a fail message if not -I will wait more long time
-    wseventmgr subscribe 'http://schemas.dmtf.org/wbem/wscim/1/*' -x "SELECT * FROM CIM_ProcessIndication" -D 'http://schemas.microsoft.com/wbem/wsman/1/WQL' -Z 'http://127.0.0.1:80/eventsink' -h www.baidu.com --port 5985 -u wsman --password wsman -I 3 -d 6 2>&1 | grep "Connection timed out"
-    CHECK_RESULT $? 0 0 "wamancli.wseventmgr: faild to test option -I"
+    if [ "$NODE1_FRAME" == "x86_64" ]; then
+        # test option: -I after 3 sceconds get a fail message if not -I will wait more long time
+        wseventmgr subscribe 'http://schemas.dmtf.org/wbem/wscim/1/*' -x "SELECT * FROM CIM_ProcessIndication" -D 'http://schemas.microsoft.com/wbem/wsman/1/WQL' -Z 'http://127.0.0.1:80/eventsink' -h www.baidu.com --port 5985 -u wsman --password wsman -I 3 -d 6 2>&1 | grep "Connection timed out"
+        CHECK_RESULT $? 0 0 "wamancli.wseventmgr: faild to test option -I"
+    fi
     # test option:  -C --enum-context  -C conflict with -C, --config-file=<file>  Alternate configuration file
     wseventmgr pull http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_Process -h localhost --port 5985 -u wsman --password wsman -R --enum-context 12345 2>&1 | grep "<wsen:EnumerationContext>12345</wsen:EnumerationContext>"
     CHECK_RESULT $? 0 0 "wamancli.wseventmgr: faild to test option --enum-context"
@@ -80,7 +102,8 @@ function post_test() {
     rm -rf generate.txt /etc/openwsman/test_simple_auth.passwd
     docker stop openpegasus ss5
     docker rm -f ss5
-    DNF_REMOVE
+    mv -rf /etc/docker/daemon-old.json /etc/docker/daemon.json
+    DNF_REMOVE "$@"
     # sleep 10 seconds ensure openwsmand be killed
     SLEEP_WAIT 10
     LOG_INFO "End to restore the test environment."

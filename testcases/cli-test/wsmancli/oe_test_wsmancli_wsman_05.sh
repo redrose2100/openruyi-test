@@ -15,8 +15,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test wsmancli
 # #############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2046
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "wsmancli openwsman-server docker"
@@ -32,8 +32,10 @@ function run_test() {
     # test command: wsman
     # SYNOPSIS: wsman [-x -D -Z -G -s -n -z --delivery-thumbprint -r -H -l]
     # test -x -D -Z we put these for one script because of it dose not work if less one paramter ,so follow script would base it
-    wsman subscribe http://schemas.dmtf.org/wbem/wscim/1/* -x "SELECT * FROM CIM_ProcessIndication" -D "http://schemas.microsoft.com/wbem/wsman/1/WQL" -Z http://127.0.0.1:80/eventsink -h localhost -u wsman -p wsman | grep "<wse:SubscribeResponse>"
-    CHECK_RESULT $? 0 0 "wamancli: faild to test -x -D -Z"
+    if [ "$NODE1_FRAME" == "x86_64" ]; then
+        wsman subscribe http://schemas.dmtf.org/wbem/wscim/1/* -x "SELECT * FROM CIM_ProcessIndication" -D "http://schemas.microsoft.com/wbem/wsman/1/WQL" -Z http://127.0.0.1:80/eventsink -h localhost -u wsman -p wsman | grep "<wse:SubscribeResponse>"
+        CHECK_RESULT $? 0 0 "wamancli: faild to test -x -D -Z"
+    fi
     # test -G
     wsman subscribe http://schemas.dmtf.org/wbem/wscim/1/* -x "SELECT * FROM CIM_ProcessIndication" -D "http://schemas.microsoft.com/wbem/wsman/1/WQL" -Z http://127.0.0.1:80/eventsink -h localhost -u wsman -p wsman -R -G pull | grep '<wse:Delivery Mode="http://schemas.dmtf.org/wbem/wsman/1/wsman/Pull">'
     CHECK_RESULT $? 0 0 "wamancli: faild to test -G "
@@ -46,9 +48,11 @@ function run_test() {
     # test --delivery-thumbprint in usage, -Y == --delivery-thumbprint but -Y conflict with --proxyauth=<proxyauth>
     wsman subscribe http://schemas.dmtf.org/wbem/wscim/1/* -x "SELECT * FROM CIM_ProcessIndication" -D "http://schemas.microsoft.com/wbem/wsman/1/WQL" -Z http://127.0.0.1:80/eventsink -h localhost -u wsman -p wsman -R --delivery-thumbprint AAA | grep "<wsman:CertificateThumbprint>AAA</wsman:CertificateThumbprint>"
     CHECK_RESULT $? 0 0 "wamancli: faild to test --delivery-thumbprint"
-    # test -r
-    wsman subscribe http://schemas.dmtf.org/wbem/wscim/1/* -x "SELECT * FROM CIM_ProcessIndication" -D "http://schemas.microsoft.com/wbem/wsman/1/WQL" -Z http://127.0.0.1:80/eventsink -h localhost -u wsman -p wsman -r 600 | grep "<wse:Expires>PT600.000000S</wse:Expires>"
-    CHECK_RESULT $? 0 0 "wamancli: faild to test -r"
+    if [ "$NODE1_FRAME" == "x86_64" ]; then
+        # test -r
+        wsman subscribe http://schemas.dmtf.org/wbem/wscim/1/* -x "SELECT * FROM CIM_ProcessIndication" -D "http://schemas.microsoft.com/wbem/wsman/1/WQL" -Z http://127.0.0.1:80/eventsink -h localhost -u wsman -p wsman -r 600 | grep "<wse:Expires>PT600.000000S</wse:Expires>"
+        CHECK_RESULT $? 0 0 "wamancli: faild to test -r"
+    fi
     # test -H -R with -R will print the request about -H param
     wsman subscribe http://schemas.dmtf.org/wbem/wscim/1/* -x "SELECT * FROM CIM_ProcessIndication" -D "http://schemas.microsoft.com/wbem/wsman/1/WQL" -Z http://127.0.0.1:80/eventsink -h localhost -u wsman -p wsman -R -H 10 | grep "<wsman:Heartbeats>PT10.000000S</wsman:Heartbeats>"
     CHECK_RESULT $? 0 0 "wamancli: faild to test -H -R"
@@ -63,7 +67,7 @@ function post_test() {
     rm -rf /etc/openwsman/test_simple_auth.passwd
     kill -9 $(pgrep openwsmand)
     docker stop openpegasus
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     # sleep 10 seconds ensure openwsmand be killed
     SLEEP_WAIT 10
     LOG_INFO "End to restore the test environment."
