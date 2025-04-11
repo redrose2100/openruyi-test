@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   View system information
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start executing testcase!"
     grep 'NAME="openEuler"' /etc/os-release
@@ -25,9 +25,9 @@ function run_test() {
     CHECK_RESULT $?
     grep 'ID="openEuler"' /etc/os-release
     CHECK_RESULT $?
-    OS_VERSION_bak=${OS_VERSION} | awk '{print$1}'
+    OS_VERSION_bak=$(awk '{print $1}' <<< "${OS_VERSION}")
     CHECK_RESULT $?
-    grep VERSION_ID="${OS_VERSION_bak}" /etc/os-release
+    grep "VERSION_ID=\"${OS_VERSION_bak}\"" /etc/os-release
     CHECK_RESULT $?
     grep PRETTY_NAME="\"openEuler ${OS_VERSION}"\" /etc/os-release
     CHECK_RESULT $?
@@ -39,4 +39,4 @@ function run_test() {
     LOG_INFO "End of testcase execution!"
 }
 
-main $@
+main "$@"
