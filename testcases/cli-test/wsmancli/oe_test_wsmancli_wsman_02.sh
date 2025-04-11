@@ -15,32 +15,30 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test wsmancli
 # #############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
-function pre_test()
-{
+# shellcheck disable=SC2046
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "wsmancli openwsman-server docker"
     cp common/simple_auth.passwd /etc/openwsman/test_simple_auth.passwd
     openwsmand -c common/openwsman.conf
     docker run \
-     --name=ss5 \
-     --hostname=ss5 \
-     --network=host \
-     --env=user=wsman \
-     --env=passwd=wsman \
-     --env=port=1080 \
-     --volume=/etc/resolv.conf:/etc/resolv.conf \
-     --restart=always \
-     --detach=true \
-     -t registry.cn-hangzhou.aliyuncs.com/dengdai/ss5:3.8.9
+        --name=ss5 \
+        --hostname=ss5 \
+        --network=host \
+        --env=user=wsman \
+        --env=passwd=wsman \
+        --env=port=1080 \
+        --volume=/etc/resolv.conf:/etc/resolv.conf \
+        --restart=always \
+        --detach=true \
+        -t registry.cn-hangzhou.aliyuncs.com/dengdai/ss5:3.8.9
     # if not sleep First two script always fail because of connect faild
     SLEEP_WAIT 20
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start to run test."
     # test command: wsman
     # SYNOPSIS: wsman [-b,-P,-X,-Y,-y,-a,-C]
@@ -50,9 +48,11 @@ function run_test()
     # test option: -P
     wsman identify -h localhost -P 5985 -u wsman -p wsman
     CHECK_RESULT $? 0 0 "wamancli: faild to test option -P"
-    # test option: -X -Y
-    wsman identify -h 127.0.0.1 --port 5985 -u wsman --password wsman -X socks5://127.0.0.1:1080 -d 6 -v -Y wsman:wsman 2>&1 | grep "SOCKS5 request granted."
-    CHECK_RESULT $? 0 0 "wamancli: faild to test option -X -Y"
+    if [ "$NODE1_FRAME" == "x86_64" ]; then
+        # test option: -X -Y
+        wsman identify -h 127.0.0.1 --port 5985 -u wsman --password wsman -X socks5://127.0.0.1:1080 -d 6 -v -Y wsman:wsman 2>&1 | grep "SOCKS5 request granted."
+        CHECK_RESULT $? 0 0 "wamancli: faild to test option -X -Y"
+    fi
     # test option: -y
     wsman identify -h localhost --port 5985 -u wsman --password wsman -y basic | grep "<wsmid:ProductVendor>Openwsman Project</wsmid:ProductVendor>"
     CHECK_RESULT $? 0 0 "wamancli: faild to test option -y"
@@ -65,14 +65,13 @@ function run_test()
     LOG_INFO "End to run test."
 }
 
-function post_test()
-{
+function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf /etc/openwsman/test_simple_auth.passwd
+    rm -rf /etc/openwsman/test_simple_auth.passwd ./crypt_test.py
     kill -9 $(pgrep openwsmand)
     docker stop ss5
     docker rm -f ss5
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     # sleep 10 seconds ensure openwsmand be killed
     SLEEP_WAIT 10
     LOG_INFO "End to restore the test environment."

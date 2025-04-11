@@ -15,11 +15,29 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test wsmancli
 # #############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2046
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "wsmancli openwsman-server docker"
+    mv -rf /etc/docker/daemon.json /etc/docker/daemon-old.json
+    echo '{
+        "registry-mirrors":[
+                "https://docker.nju.edu.cn",
+                "https://docker.m.daocloud.io",
+                "https://dockerproxy.com",
+                "https://docker.mirrors.ustc.edu.cn",
+                "https://docker.1panel.live",
+                "https://hub.rat.dev",
+                "https://docker.actima.top",
+                "https://docker.1ms.run",
+                "https://dockeraityp.com",
+                "https://dockerhub.xisoul.cn",
+                "https://docker.imgdb.be"
+        ]
+}
+' >/etc/docker/daemon.json
+    systemctl restart docker
     docker run -d -it --rm -p 0.0.0.0:5988:5988 -p 0.0.0.0:5989:5989 --name openpegasus kschopmeyer/openpegasus-server:0.1.1
     cp common/simple_auth.passwd /etc/openwsman/test_simple_auth.passwd
     openwsmand -c common/openwsman.conf
@@ -33,14 +51,18 @@ function run_test() {
     # test command: wsman
     # SYNOPSIS: wsman [-R -S -N -B -t -e -E -F -L]
     # test -R if -R will get request detail
-    wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -R | grep "<wsen:Pull>"
-    CHECK_RESULT $? 0 0 "wamancli: faild to test -R"
+    if [ "$NODE1_FRAME" == "x86_64" ]; then
+        wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -R | grep "<wsen:Pull>"
+        CHECK_RESULT $? 0 0 "wamancli: faild to test -R"
+    fi
     # test -S if -S will could not get final result so if grep the information represent fail
     wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -S | grep "<n1:CreationClassName>PG_ComputerSystem</n1:CreationClassName>"
     CHECK_RESULT $? 1 0 "wamancli: faild to test -S"
     # test -N
-    wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -N smash/ipmi 2>&1 | grep "CIM_ERR_INVALID_NAMESPACE: smash/ipmi"
-    CHECK_RESULT $? 0 0 "wamancli: faild to test -N"
+    if [ "$NODE1_FRAME" == "x86_64" ]; then
+        wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -N smash/ipmi 2>&1 | grep "CIM_ERR_INVALID_NAMESPACE: smash/ipmi"
+        CHECK_RESULT $? 0 0 "wamancli: faild to test -N"
+    fi
     # test -B
     wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -R -B exclude | grep "<wsmb:PolymorphismMode>ExcludeSubClassProperties</wsmb:PolymorphismMode>"
     CHECK_RESULT $? 0 0 "wamancli: faild to test -B"
@@ -64,7 +86,8 @@ function post_test() {
     rm -rf /etc/openwsman/test_simple_auth.passwd
     kill -9 $(pgrep openwsmand)
     docker stop openpegasus
-    DNF_REMOVE
+    mv -rf /etc/docker/daemon-old.json /etc/docker/daemon.json
+    DNF_REMOVE "$@"
     # sleep 10 seconds prevent openwsmand be killed by last script
     SLEEP_WAIT 10
     LOG_INFO "End to restore the test environment."

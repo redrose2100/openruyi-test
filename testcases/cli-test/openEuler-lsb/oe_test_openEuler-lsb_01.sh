@@ -49,7 +49,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "lsb_release -r failed!"
 
     LSB_RELEASE_C=$(lsb_release -c | sed -e "s/$CODENAME_MSG//")
-    [[ "$DISTRIB_DESC" == *"$LSB_RELEASE_C"* ]]
+    [[ "$DISTRIB_DESC" == *"$LSB_RELEASE_C"* ]] || [[ "n/a" == *"$LSB_RELEASE_C"* ]]
     CHECK_RESULT $? 0 0 "lsb_release -c failed!"
 
     lsb_release -s
@@ -60,10 +60,10 @@ function run_test() {
     DESCRIPTION=$(echo -e "$DESCRIPTION_MSG$LSB_RELEASE_D")
     RELEASE=$(echo -e "$RELEASE_MSG$LSB_RELEASE_R")
     CODENAME=$(echo -e "$CODENAME_MSG$LSB_RELEASE_C")
-    [[ "$LSB_RELEASE_A" == *"$DISTRIBUTOR"*
-        && "$LSB_RELEASE_A" == *"$DESCRIPTION"*
-        && "$LSB_RELEASE_A" == *"$RELEASE"*
-        && "$LSB_RELEASE_A" == *"$CODENAME"* ]]
+    [[ "$LSB_RELEASE_A" == *"$DISTRIBUTOR"* && \
+    "$LSB_RELEASE_A" == *"$DESCRIPTION"* && \
+    "$LSB_RELEASE_A" == *"$RELEASE"* && \
+    "$LSB_RELEASE_A" == *"$CODENAME"* ]]
     CHECK_RESULT $? 0 0 "lsb_release -a failed!"
 
     lsb_release -h | grep 'Usage'

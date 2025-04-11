@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL rabbitmq-server
     setenforce 0
-    which firewalld && systemctl stop firewalld
+    command -v firewalld && systemctl stop firewalld
     systemctl restart rabbitmq-server
     LOG_INFO "End of environmental preparation!"
 }
@@ -58,6 +58,7 @@ function run_test() {
     CHECK_RESULT $?
     grep "rabbitmq_web_mqtt" /etc/rabbitmq/enabled_plugins
     CHECK_RESULT $? 1 0
+    systemctl restart rabbitmq-server
     rabbitmq-plugins set rabbitmq_web_mqtt
     CHECK_RESULT $?
     systemctl restart rabbitmq-server
@@ -83,10 +84,10 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     rabbitmq-plugins set
     systemctl stop rabbitmq-server
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /var/lib/rabbitmq/
-    kill -9 $(pgrep -u rabbitmq)
-    which firewalld && systemctl start firewalld
+    kill -9 "$(pgrep -u rabbitmq)"
+    command -v firewalld && systemctl start firewalld
     setenforce 1
     LOG_INFO "Finish environment cleanup!"
 }
