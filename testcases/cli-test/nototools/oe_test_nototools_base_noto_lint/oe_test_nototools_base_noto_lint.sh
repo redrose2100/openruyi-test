@@ -17,7 +17,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   TEST  noto_lint.py in nototools options
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common.sh"
 
 #Installation preparation for test objects, tools required for testing, etc.
@@ -55,7 +55,32 @@ function run_test() {
     noto_lint.py ./NotoSansLao-Regular.ttf --csv_header | grep -qE "Finished linting [[:digit:]]+ file"
     CHECK_RESULT $? 0 0 "option: --csv_header error"
 
-    echo "heloo"
+    echo '[
+  {
+    "weight": "Bold",
+    "width": "medium",
+    "is_google": true,
+    "vendor": "Google",
+    "char_version": "1.0",
+    "filepath": "./NotoSansLao-Regular.ttf",
+    "family": "Noto Sans Lao",
+    "style": "Regular",
+    "script": "CJK",
+    "variant": "Standard",
+    "slope": 0,
+    "fmt": "ttf",
+    "manufacturer": "Google",
+    "license_type": "SIL Open Font License",
+    "is_hinted": true,
+    "is_mono": false,
+    "is_UI": false,
+    "is_UI_metrics": false,
+    "is_display": false,
+    "is_cjk": true,
+    "subset": "CJK Unified Ideographs"
+  }
+]
+' >font1.json
     #Test the --font_props_file parameter
     noto_lint.py --font_props_file ./font1.json
     CHECK_RESULT $? 0 0 "option: --font_props_file error"
@@ -65,7 +90,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: --config_file error"
 
     #Test the --config lint_spec parameter
-    noto_lint.py --config lint_spec ./lint_config.spec
+    noto_lint.py --config condition
     CHECK_RESULT $? 0 0 "option: ---config lint_spec"
 
     #Test the --runlog parameter
@@ -112,6 +137,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     common_post
+    rm -rf font1.json
 
     LOG_INFO "End to restore the test environment."
 }
