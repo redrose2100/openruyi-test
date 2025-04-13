@@ -73,7 +73,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check: backend vlv-index del-index --parent-name --index-name --sort  No Pass" 
     dsconf localhost backend vlv-index del-search -h | grep  "usage: dsconf.*instance.*backend vlv-index del-search" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index del-search -h  No Pass" 
-    dsconf localhost backend vlv-index del-search --name my_vlv_search example | grep -iE "Successfully deleted VLV search and its indexes" 
+    dsconf localhost backend vlv-index del-search --name my_vlv_search example 2>&1 | grep -iE "Successfully deleted VLV search and its indexes" 
     CHECK_RESULT $? 0 0 "Check: backend vlv-index --just-names  No Pass" 
     dsconf localhost backend attr-encrypt -h | grep  "usage: dsconf.*instance.*backend attr-encrypt" 
     CHECK_RESULT $? 0 0 "Check: backend attr-encrypt -h  No Pass" 

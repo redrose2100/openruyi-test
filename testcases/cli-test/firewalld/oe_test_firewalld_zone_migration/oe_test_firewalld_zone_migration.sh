@@ -38,7 +38,7 @@ function pre_test() {
 
     tstz="zonetest"
     tstp="65535/tcp"
-
+    def_zone=$(firewall-cmd --list-all-zones | grep active | awk '{print $1}')
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -60,6 +60,8 @@ function run_test() {
 
     firewall-cmd --zone="$tstz" --add-source="${NODE2_IPV4}"
     firewall-cmd --zone="$tstz" --add-port="$tstp"
+    firewall-cmd --zone="${def_zone}" --remove-interface="${NODE1_NIC}"
+    firewall-cmd --zone="$tstz" --add-interface="${NODE1_NIC}"
     
     LOG_INFO "Current zone info:"
     firewall-cmd --list-all --zone="$tstz"
@@ -69,13 +71,14 @@ function run_test() {
 
     firewall-cmd --list-all --zone="$tstz" | grep "ports" | grep "$tstp"
     CHECK_RESULT "$?" 0 0 "add ports fail for $tstz"
-
+    
     LOG_INFO "CMD on node2: $CMD_String"
     LOG_INFO "expect fail"
     P_SSH_CMD --node 2 --cmd "${CMD_String}"
     CHECK_RESULT "$?" 0 1 "ssh NODE1_IPV4 succeeds unexpectedly. Firewalld zone migration failed"
 
     firewall-cmd --delete-zone="$tstz" --permanent
+    firewall-cmd --zone="${def_zone}" --add-interface="${NODE1_NIC}"
     firewall-cmd --reload
 
     LOG_INFO "CMD on node2: $CMD_String"
