@@ -14,80 +14,39 @@
 # @Contact   :   lchutian@163.com
 # @Date      :   2021/01/04
 # @License   :   Mulan PSL v2
-# @Desc      :   verify the uasge of sosreport command
+# @Desc      :   verify the usage of sosreport command
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "sos tar"
+    DNF_INSTALL "sos tar hostname"
     LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if [ "${NODE1_FRAME}" == "riscv64" ]; then
-        name="sosreport-openeuler-riscv64"
-    else
-        name="sosreport-localhost"
-    fi
-
-    expect <<EOF
-        spawn sos report --debug --case-id debug
-        expect "" {send "\r"}
-        expect "" {send "\r"}
-        sleep 240
-        expect eof
-EOF
-    test -f /var/tmp/$name-debug-"$(date +%Y-%m-%d)"-*.tar.xz
+    name="sosreport-$(hostname -s)"
+    sos report --batch --debug --case-id debug
+    test -f /var/tmp/"${name}"-debug-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
-    expect <<EOF
-        spawn sos report --desc "test description content" --case-id desc
-        expect "" {send "\r"}
-        expect "" {send "\r"}
-        sleep 240
-        expect eof
-EOF
-    test -f /var/tmp/$name-desc-"$(date +%Y-%m-%d)"-*.tar.xz
+    sos report --batch --desc "test description content" --case-id desc
+    test -f /var/tmp/"${name}"-desc-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
-    expect <<EOF
-        spawn sos report --experimental --case-id experimental
-        expect "" {send "\r"}
-        expect "" {send "\r"}
-        sleep 240
-        expect eof
-EOF
-    test -f /var/tmp/$name-experimental-"$(date +%Y-%m-%d)"-*.tar.xz
+    sos report --batch --experimental --case-id experimental
+    test -f /var/tmp/"${name}"-experimental-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
-    expect <<EOF
-        spawn sos report -e dnf,rpm,selinux,dovecot --case-id enable-plugins
-        expect "" {send "\r"}
-        expect "" {send "\r"}
-        sleep 240
-        expect eof
-EOF
-    test -f /var/tmp/$name-enable-plugins-"$(date +%Y-%m-%d)"-*.tar.xz
+    sos report --batch -e dnf,rpm,selinux,dovecot --case-id enable-plugins
+    test -f /var/tmp/"${name}"-enable-plugins-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
     sos report -l | grep -E "on|off|inactive"
     CHECK_RESULT $?
-    expect <<EOF
-        spawn sos report -k dnf.history-info --case-id plugin-option
-        expect "" {send "\r"}
-        expect "" {send "\r"}
-        sleep 240
-        expect eof
-EOF
-    test -f /var/tmp/$name-plugin-option-"$(date +%Y-%m-%d)"-*.tar.xz
+    sos report --batch -k dnf.history-info --case-id plugin-option
+    test -f /var/tmp/"${name}"-plugin-option-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
-    expect <<EOF
-        spawn sos report --label test-label --case-id 001
-        expect "" {send "\r"}
-        expect "" {send "\r"}
-        sleep 240
-        expect eof
-EOF
-    test -f /var/tmp/$name-test-label-001-"$(date +%Y-%m-%d)"-*.tar.xz
+    sos report --batch --label test-label --case-id 001
+    test -f /var/tmp/"${name}"-test-label-001-"$(date +%Y-%m-%d)"-*.tar.xz
     CHECK_RESULT $?
     sos report --list-presets
     CHECK_RESULT $?
