@@ -19,6 +19,12 @@
 #shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL ipset
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution ipset.service
@@ -37,6 +43,7 @@ function post_test() {
     sed -i 's\IPSET_SAVE_ON_RESTART=yes\IPSET_SAVE_ON_RESTART=no\g' /usr/lib/systemd/system/ipset.service
     systemctl daemon-reload
     systemctl reload ipset.service
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
