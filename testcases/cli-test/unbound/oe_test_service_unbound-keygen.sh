@@ -21,7 +21,7 @@ source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "unbound"
+    DNF_INSTALL "unbound policycoreutils"
     service=unbound-keygen.service
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
@@ -29,6 +29,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
+    rm -rf /etc/unbound/{unbound_control.key,unbound_control.pem,unbound_server.key,unbound_server.pem}
     systemctl restart "${service}"
     CHECK_RESULT $? 0 0 "${service} restart failed"
     SLEEP_WAIT 5
