@@ -18,25 +18,25 @@
 # @Desc      :   Encrypting existing data on a block device using LUKS with a detached header
 # #############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function config_params() {
     LOG_INFO "Start loading data!"
-    TEST_DISK="/dev/$(lsblk | grep disk | sed -n 2p | awk '{print$1}')"
+    TEST_DISK="/dev/$(lsblk -dn -o NAME,SIZE | awk '$2 != "0B" {print $1}' | sed -n 2p)"
     LOG_INFO "Loading data is complete!"
 }
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL cryptsetup-reencrypt
+    DNF_INSTALL cryptsetup
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    echo -e "n\n\np\n\n\n+100M\nn\n\np\n\n\n+100M\nw" | fdisk "${TEST_DISK}"
-    echo -e "\n\n" | cryptsetup-reencrypt --new --header "${TEST_DISK}"1 "${TEST_DISK}"2
-    CHECK_RESULT $? 0 0 "exec 'cryptsetup-reencrypt --new' failed"
-    echo -e "\n\n" | cryptsetup open --header "${TEST_DISK}"1 "${TEST_DISK}"2 test_encrypted
+    echo -e "n\np\n\n\n+100M\nn\np\n\n\n+100M\nw" | fdisk "${TEST_DISK}"
+    echo -n "openEuler123" | cryptsetup reencrypt --new --header "${TEST_DISK}"1 "${TEST_DISK}"2
+    CHECK_RESULT $? 0 0 "exec 'cryptsetup reencrypt --new' failed"
+    echo -n "openEuler123" | cryptsetup open --header "${TEST_DISK}"1 "${TEST_DISK}"2 test_encrypted
     CHECK_RESULT $? 0 0 "exec 'cryptsetup open --header' failed"
     mkdir /mnt/test_encrypted
     mkfs.ext4 /dev/mapper/test_encrypted
@@ -50,10 +50,10 @@ function post_test() {
     umount /mnt/test_encrypted
     cryptsetup close test_encrypted
     rm -rf /mnt/test_encrypted
-    mkfs.ext4 ${TEST_DISK}1 -F
+    mkfs.ext4 "${TEST_DISK}"1 -F
     echo -e "d\n\nd\n\nw" | fdisk "${TEST_DISK}"
-    DNF_REMOVE
-    mkfs.ext4 ${TEST_DISK} -F
+    DNF_REMOVE "$@"
+    mkfs.ext4 "${TEST_DISK}" -F
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
