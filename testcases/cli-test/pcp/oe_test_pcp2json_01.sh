@@ -34,7 +34,7 @@ function run_test() {
     CHECK_RESULT $?
     pcp2json --container=busybox -s 10 -t 2 vfs.inodes.count | grep '@metrics'
     CHECK_RESULT $?
-    pcp2json -h "$host_name" -s 10 -t 2 "$metric_name" | grep '@interval'
+    pcp2json -h "${NODE1_IPV4}" -s 10 -t 2 "$metric_name" | grep '@interval'
     CHECK_RESULT $?
     pcp2json -L -s 10 -t 2 "$metric_name" | grep '@timestamp'
     CHECK_RESULT $?
