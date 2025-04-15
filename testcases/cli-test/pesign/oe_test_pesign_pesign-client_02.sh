@@ -17,13 +17,13 @@
 # @Desc      :   verify the uasge of pesign command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL pesign
+    DNF_INSTALL "pesign unzip"
     mkdir pesigntest
-    cd pesigntest
+    cd pesigntest || exit
     cp ../common/baidu.zip ./
     cp ../common/grubx64.efi ./
     unzip baidu.zip
@@ -53,8 +53,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    ps -ef | grep grubx64.efi | grep -v grep | awk '{print $2}' | xargs kill -9
+    DNF_REMOVE "$@"
+    pgrep -f grubx64.efi | xargs -r kill -9
     cd ..
     rm -rf pesigntest
     LOG_INFO "Finish restore the test environment."
