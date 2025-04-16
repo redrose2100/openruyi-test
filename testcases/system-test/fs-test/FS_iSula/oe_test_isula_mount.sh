@@ -20,7 +20,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL "lcr iSulad"
+    DNF_INSTALL "lcr iSulad wget"
     systemctl start isulad
     echo "Architecture:${NODE1_FRAME}"
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then
