@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL elinks
+    SLEEP_WAIT 5
     echo > text
     LOG_INFO "End of environmental preparation!"
 }
