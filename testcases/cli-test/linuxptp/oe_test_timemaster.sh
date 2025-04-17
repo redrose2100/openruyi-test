@@ -15,11 +15,11 @@
 # @Desc      :   Test timemaster
 # #############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "linuxptp tar"
+    DNF_INSTALL "linuxptp tar chrony"
     tar -xvf ./common/data.tar.gz > /dev/null
     sed -i "s/interfaces enp3s0/interfaces ${NODE1_NIC}/g" ./data/timemaster.cnf
     LOG_INFO "End of environmental preparation!"
@@ -34,7 +34,7 @@ function run_test() {
     SLEEP_WAIT 10
     grep "started: ptp4l" tmp.txt
     CHECK_RESULT $? 0 0 "Check timemaster -f failed"
-    kill -9 $(pgrep -f "timemaster -f")
+    kill -9 "$(pgrep -f 'timemaster -f')"
     rm -f tmp.txt
     timemaster -f ./data/timemaster.cnf -n &>> tmp.txt
     grep "uds_address" tmp.txt
@@ -44,24 +44,24 @@ function run_test() {
     SLEEP_WAIT 10
     grep "started: ptp4l" tmp.txt
     CHECK_RESULT $? 0 0 "Check timemaster -l failed"
-    kill -9 $(pgrep -f "timemaster -f")
+    kill -9 "$(pgrep -f "timemaster -f")"
     rm -f tmp.txt
     timemaster -f ./data/timemaster.cnf -m &>> tmp.txt &
     SLEEP_WAIT 10
     grep "started: ptp4l" tmp.txt
     CHECK_RESULT $? 0 0 "Check timemaster -m failed"
-    kill -9 $(pgrep -f "timemaster -f")
+    kill -9 "$(pgrep -f "timemaster -f")"
     rm -f tmp.txt
     timemaster -f ./data/timemaster.cnf -q &
     SLEEP_WAIT 5
-    ps -ef | grep -v grep | grep timemaster
+    pgrep -fl timemaster
     CHECK_RESULT $? 0 0 "Check timemaster -q failed"
-    kill -9 $(pgrep -f "timemaster -f")
+    kill -9 "$(pgrep -f "timemaster -f")"
     LOG_INFO "Finish test!"
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./data
     LOG_INFO "Finish environment cleanup!"
 }
