@@ -22,8 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function config_params() {
     LOG_INFO "Start to prepare the database config."
     EXECUTE_T="60m"
-    free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
-    disk_name="/dev/"$free_disk
+    disk_name=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
     LOG_INFO "Finish to prepare the database config."
 }
 

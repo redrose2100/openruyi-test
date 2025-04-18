@@ -16,12 +16,11 @@
 #@Desc      	:   test one of devices on md is faulty
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to prepare the database config."
-    free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
-    disk_name="/dev/"$free_disk
+    disk_name=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
     LOG_INFO "Finish to prepare the database config."
 }
 
@@ -29,7 +28,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL mdadm
     mkdir /mnt/test_md
-    fdisk ${disk_name} << diskEof
+    fdisk "${disk_name}" << diskEof
 n
 p
 1
@@ -51,10 +50,10 @@ Y
 w
 diskEof
     mdadm --stop /dev/md1
-    echo y | mdadm -C -v /dev/md1 -l 1 -n 2 ${disk_name}1 ${disk_name}2
+    echo y | mdadm -C -v /dev/md1 -l 1 -n 2 "${disk_name}"1 "${disk_name}"2
     echo y | mkfs -t ext4 /dev/md1
     mount /dev/md1 /mnt/test_md
-    mdadm /dev/md1 -f ${disk_name}2
+    mdadm /dev/md1 -f "${disk_name}"2
     LOG_INFO "Finish to prepare the database config."
 }
 
@@ -63,11 +62,11 @@ function run_test() {
     mdadm -D /dev/md1 | tail -n 1 | grep faulty
     CHECK_RESULT $? 0 0 "Check md status failed."
     umount /dev/md1
-    mdadm -r /dev/md1 ${disk_name}2
+    mdadm -r /dev/md1 "${disk_name}"2
     CHECK_RESULT $? 0 0 "Check md status failed."
     mdadm -D /dev/md1 | tail -n 1 | grep remove
     CHECK_RESULT $? 0 0 "Check md infos failed."
-    mdadm -a /dev/md1 ${disk_name}3
+    mdadm -a /dev/md1 "${disk_name}"3
     CHECK_RESULT $? 0 0 "Check md status failed."
     mdadm -Dsv > /etc/mdadm.conf
     CHECK_RESULT $? 0 0 "Check md status failed."
@@ -82,10 +81,10 @@ function post_test() {
     umount /dev/md1
     mdadm --stop /dev/md1
     rm -rf /mnt/test_md
-    mdadm --misc --zero-superblock ${disk_name}1
-    mdadm --misc --zero-superblock ${disk_name}2
-    mdadm --misc --zero-superblock ${disk_name}3 
-    fdisk ${disk_name} << diskEof
+    mdadm --misc --zero-superblock "${disk_name}"1
+    mdadm --misc --zero-superblock "${disk_name}"2
+    mdadm --misc --zero-superblock "${disk_name}"3 
+    fdisk "${disk_name}" << diskEof
 d
 
 d
@@ -94,7 +93,7 @@ d
 
 w
 diskEof
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
