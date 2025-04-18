@@ -22,6 +22,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "pciutils"
     if ! lspci | grep -i audio; then
         LOG_INFO "No audio device available, the environment does not support testing"
         exit 255
