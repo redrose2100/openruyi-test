@@ -23,7 +23,7 @@ function run_test() {
     spawn ssh-keygen
     expect {
         "*save the key*" {
-            send "\n"
+            send "/root/.ssh/id_rsa\n"
         }
     }
     expect {

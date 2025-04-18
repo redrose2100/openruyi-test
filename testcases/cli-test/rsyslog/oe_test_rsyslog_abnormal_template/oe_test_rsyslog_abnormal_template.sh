@@ -16,14 +16,15 @@
 # @Desc      :   TCP forwarding, using custom template transports
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "net-tools"
     sed -i '/Framing Error in received TCP message from peer/d' /var/log/messages
     systemctl stop iptables
-    SSH_CMD "systemctl stop iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "systemctl stop iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    systemctl stop firewalld
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -42,11 +43,11 @@ EOF
     \$template test-template,"%timestamp:::date-rfc3339%  %HOSTNAME% %msgid% %msg%\n"
     local7.*  @@${NODE1_IPV4};test-template
 EOF
-    SSH_SCP client.conf ${NODE2_USER}@${NODE2_IPV4}:/etc/rsyslog.d/client.conf "${NODE2_PASSWORD}"
+    SSH_SCP client.conf "${NODE2_USER}"@"${NODE2_IPV4}":/etc/rsyslog.d/client.conf "${NODE2_PASSWORD}"
     SSH_CMD "
     systemctl restart rsyslog
-    logger -p local7.err "tcptesttemplate"
-    " ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    logger -p local7.err tcptesttemplate
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     SLEEP_WAIT 20
     grep "Framing Error in received TCP message from peer" /var/log/messages
@@ -56,9 +57,10 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    DNF_REMOVE "$@"
+    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -rf /etc/rsyslog.d/server.conf test.conf
+    systemctl start firewalld
     systemctl restart rsyslog
     LOG_INFO "End to restore the test environment."
 }

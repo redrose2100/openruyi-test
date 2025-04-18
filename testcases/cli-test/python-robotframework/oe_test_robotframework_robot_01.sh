@@ -51,10 +51,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to select the failed suite to re-execute from the previous output file"
     robot --runemptysuite --include -S output.xml data_driven.robot | grep "0 tests, 0 passed, 0 failed"
     CHECK_RESULT $? 0 0 "Suite execution failed"
-    robot -n Alias keyword_driven.robot 2>&1 | grep "have been deprecated"
-    CHECK_RESULT $? 0 0 "Alias failed"
-    robot -c critical keyword_driven.robot 2>&1 | grep "have been deprecated"
-    CHECK_RESULT $? 0 0 "Failure to perform the opposite"
+    if robot --help | grep -i '\-n --noncritical'; then
+        robot -n Alias keyword_driven.robot 2>&1 | grep "have been deprecated"
+        CHECK_RESULT $? 0 0 "Alias failed"
+    fi
+    if robot --help | grep -i '\-c --critical'; then
+        robot -c critical keyword_driven.robot 2>&1 | grep "have been deprecated"
+        CHECK_RESULT $? 0 0 "Failure to perform the opposite"
+    fi
     LOG_INFO "End of testcase execution!"
 }
 

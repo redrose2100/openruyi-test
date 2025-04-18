@@ -22,21 +22,22 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "flink"
-    systemctl stop firewalld 
+    systemctl stop firewalld
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
     cd /opt/apache-flink*/ || exit
-    ./bin/start-cluster.sh   
-    CHECK_RESULT $? 0 0 "Execution completion failed" 
+    ./bin/start-cluster.sh
+    CHECK_RESULT $? 0 0 "Execution completion failed"
+    SLEEP_WAIT 2
     ./bin/flink run examples/streaming/WordCount.jar
     CHECK_RESULT $? 0 0 "Failed to submit homework"
     tail log/flink-*-taskexecutor-*.out
     CHECK_RESULT $? 0 0 "View the returned results and report an error"
-    curl http://localhost:8081 |grep "LICENSE-2.0"
-    CHECK_RESULT $? 0 0 "curl http://localhost:8081 | grep \"LICENSE-2.0\"" 
+    curl http://localhost:8081 | grep "LICENSE-2.0"
+    CHECK_RESULT $? 0 0 "curl http://localhost:8081 | grep \"LICENSE-2.0\""
     LOG_INFO "Finish test!"
 }
 

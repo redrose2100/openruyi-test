@@ -14,6 +14,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc          :   verification fastdfs's commnd
 #####################################
+# shellcheck disable=SC1091
 source ../common/common_lib.sh
 
 function pre_test() {
@@ -27,12 +28,12 @@ function run_test() {
     LOG_INFO "Start to run test."
     fdfs_trackerd ./tracker.conf start
     CHECK_RESULT $? 0 0 "Check fdfs_trackerd start failed."
-    netstat -unltp | grep "fdfs_trackerd"
+    netstat -unltp | grep "fdfs_tracker"
     CHECK_RESULT $? 0 0 "Check fdfs_trackerd start error failed."
-    fdfs_storaged $storage_path/storage.conf start
+    fdfs_storaged "$storage_path"/storage.conf start
     CHECK_RESULT $? 0 0 "Check fdfs_storaged start failed."
-    SLEEP_WAIT 5
-    netstat -unltp | grep "storaged"
+    SLEEP_WAIT 10
+    netstat -unltp | grep "storage"
     CHECK_RESULT $? 0 0 "Check fdfs_storaged start error failed."
     fdfs_crc32 client.conf
     CHECK_RESULT $? 0 0 "Check fdfs_crc32 failed."
@@ -40,17 +41,17 @@ function run_test() {
     grep "Usage:" ./usage.txt
     CHECK_RESULT $? 0 0 "Check fdfs_download_file --help failed."
     appender_file=$(fdfs_upload_appender client.conf test1.txt)
-    fdfs_download_file client.conf $appender_file
+    fdfs_download_file client.conf "$appender_file"
     CHECK_RESULT $? 0 0 "Check fdfs_download_file failed."
     fdfs_file_info --help >./usage1.txt
     grep "Usage:" ./usage1.txt
     CHECK_RESULT $? 0 0 "Check fdfs_file_info --help failed."
-    fdfs_file_info client.conf $appender_file | grep "file type: appender"
+    fdfs_file_info client.conf "$appender_file" | grep "file type: appender"
     CHECK_RESULT $? 0 0 "Check fdfs_file_info failed."
     fdfs_delete_file --help >./usage2.txt
     grep "Usage:" ./usage2.txt
     CHECK_RESULT $? 0 0 "Check fdfs_delete_file --help failed."
-    fdfs_delete_file client.conf $appender_file
+    fdfs_delete_file client.conf "$appender_file"
     CHECK_RESULT $? 0 0 "Check fdfs_delete_file failed."
     fdfs_trackerd ./tracker.conf stop
     CHECK_RESULT $? 0 0 "Check fdfs_trackerd stop failed."
@@ -61,7 +62,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf *.txt
+    rm -rf ./*.txt
     Post_Test
     LOG_INFO "End to restore the test environment."
 }

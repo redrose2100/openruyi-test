@@ -16,17 +16,18 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test fetch-crl
 # #############################################
-
+# shellcheck disable=SC2010,SC2012,SC2046
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "fetch-crl tar"
-    tar -xvf common/data.tar.gz > /dev/null
+    tar -xvf common/data.tar.gz >/dev/null
     cp -f ./data/KEK.crl_url /etc/grid-security/certificates
     cp -f ./data/KEK.pem /etc/grid-security/certificates
     mkdir -p ./tmp1 ./tmp2 ./tmp3 ./tmp4
     systemctl start fetch-crl.service
+    SLEEP_WAIT 2
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -57,7 +58,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./data ./tmp*
     LOG_INFO "End to restore the test environment."
 }
