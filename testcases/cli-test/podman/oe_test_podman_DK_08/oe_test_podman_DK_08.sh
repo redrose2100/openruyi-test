@@ -23,8 +23,8 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    docker pull ubi8-minimal
-    docker run --name postgres -e POSTGRES_PASSWORD=secret -d ubi8-minimal
+    docker pull alpine
+    docker run --name postgres -e POSTGRES_PASSWORD=secret -d alpine
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -32,32 +32,32 @@ function run_test() {
     LOG_INFO "Start to run test."
     docker help | grep -E "docker|help"
     CHECK_RESULT $? 0 0 'check docker help | grep -E "docker|help" failed'
-    docker create ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker create ubi8-minimal failed'
+    docker create alpine
+    CHECK_RESULT $? 0 0 'check docker create alpine failed'
     docker ps -a | grep -i "Created"
     CHECK_RESULT $? 0 0 'check docker ps -a | grep -i "Created" failed'
-    ID=$(docker create --annotation HELLO=WORLD ubi8-minimal)
+    ID=$(docker create --annotation HELLO=WORLD alpine)
     docker inspect "$ID" | grep '"HELLO": "WORLD"'
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep failed"
-    docker create --attach STDIN ubi8-minimal ls
-    CHECK_RESULT $? 0 0 'check docker create --attach STDIN ubi8-minimal ls failed'
+    docker create --attach STDIN alpine ls
+    CHECK_RESULT $? 0 0 'check docker create --attach STDIN alpine ls failed'
     docker ps -a | grep ls
     CHECK_RESULT $? 0 0 'check docker ps -a | grep ls faield'
     podman_version=$(rpm -qa podman | awk -F- '{print $2}' | awk -F. '{print $1$2$3}')
     if [ "$podman_version" -gt 400 ]; then
-        ID=$(docker create --blkio-weight 15 ubi8-minimal ls)
+        ID=$(docker create --blkio-weight 15 alpine ls)
         docker inspect "$ID" | grep -i "Blkio.*Weight"
         CHECK_RESULT $? 0 0 'check "BlkioWeight": 15 test failed'
-        ID=$(docker create --blkio-weight-device /dev/:15 fedora ls)
+        ID=$(docker create --blkio-weight-device /dev/:15 alpine ls)
         docker inspect "$ID" | grep "weight"
         CHECK_RESULT $? 0 0 'check "weight": 15 test failed'
     else
         LOG_INFO "This version does not have this parameter."
     fi
-    ID=$(docker create --cap-add net_admin ubi8-minimal ls)
+    ID=$(docker create --cap-add net_admin alpine ls)
     docker inspect "$ID" | grep -A 1 "Add" | grep -i "net_admin"
     CHECK_RESULT $? 0 0 'check net_admin test failed'
-    ID=$(docker create --cap-drop net_admin ubi8-minimal ls)
+    ID=$(docker create --cap-drop net_admin alpine ls)
     docker inspect "$ID" | grep -iA 1 "Drop" | grep -i "net_admin"
     CHECK_RESULT $? 0 0 'check CapDrop test failed'
     LOG_INFO "End to run test."

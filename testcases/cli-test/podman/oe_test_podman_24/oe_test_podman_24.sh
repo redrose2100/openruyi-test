@@ -30,7 +30,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    id=$(podman create --name postgres -t ubi8-minimal | sed -n '$p')
+    id=$(podman create --name postgres -t alpine | sed -n '$p')
     test -z "${id}"
     CHECK_RESULT $? 1 0 "check ${id} failed"
     podman container stop postgres
@@ -39,17 +39,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check podman container rm postgres | grep ${id} failed"
     podman container ls | grep postgres
     CHECK_RESULT $? 1 0 'check podman container ls | grep postgres failed'
-    podman create --name postgres1 -t ubi8-minimal
+    podman create --name postgres1 -t alpine
     podman container stop postgres1
     CHECK_RESULT $? 0 0 'check podman container stop postgres1 failed'
     podman container cleanup postgres1
     CHECK_RESULT $? 0 0 'check podman container cleanup postgres1 failed'
-    podman create --name postgres2 -t ubi8-minimal
-    CHECK_RESULT $? 0 0 'check podman create --name postgres2 -t ubi8-minimal failed'
+    podman create --name postgres2 -t alpine
+    CHECK_RESULT $? 0 0 'check podman create --name postgres2 -t alpine failed'
     podman start postgres2
     podman exec -it postgres2 ls | grep "bin"
     CHECK_RESULT $? 0 0 'check podman exec -it postgres2 ls | grep "bin" failed'
-    podman exec --privileged postgres2 ls | grep "boot"
+    podman exec --privileged postgres2 ls | grep "bin"
     CHECK_RESULT $? 0 0 'check podman exec --privileged postgres2 ls failed'
     podman exec --user root postgres2 ls | grep "home"
     podman stop postgres2

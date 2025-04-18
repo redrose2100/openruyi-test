@@ -30,15 +30,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker create --name postgres -t ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker create --name postgres -t ubi8-minimal failed'
-    docker save -q -o alpine.tar ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker save -q -o alpine.tar ubi8-minimal failed'
+    docker create --name postgres -t alpine
+    CHECK_RESULT $? 0 0 'check docker create --name postgres -t alpine failed'
+    docker save -q -o alpine.tar alpine
+    CHECK_RESULT $? 0 0 'check docker save -q -o alpine.tar alpine failed'
     test -f ./alpine.tar
     CHECK_RESULT $? 0 0 'check test -f ./alpine.tar failed'
     docker inspect -f json postgres | grep "ID"
     CHECK_RESULT $? 0 0 'check docker inspect -f json postgres | grep "ID" failed'
-    docker inspect postgres --format "{{.ImageName}}" | grep "ubi8-minimal"
+    docker inspect postgres --format "{{.ImageName}}" | grep "alpine"
     CHECK_RESULT $? 0 0 'check docker inspect postgres --format failed'
     docker inspect postgres --type all --format "{{.Name}}" | grep postgres
     CHECK_RESULT $? 0 0 'check docker inspect postgres --type all --format failed'

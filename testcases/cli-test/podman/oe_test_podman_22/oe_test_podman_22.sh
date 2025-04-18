@@ -2,7 +2,7 @@
 
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
-# You can use it according to the ubi8-minimals and conditions of the Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
@@ -30,19 +30,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    podman search --limit 5 ubi8-minimal | wc -l | grep 6
-    CHECK_RESULT $? 0 0 'check podman search --limit 5 ubi8-minimal | wc -l | grep 6 failed'
-    podman search --no-trunc ubi8-minimal | grep "ubi8-minimal"
-    CHECK_RESULT $? 0 0 'check podman search --no-trunc ubi8-minimal | grep "dockerpull.org" failed'
-    podman search --authfile test.json ubi8-minimal | grep -i "DESCRIPTION"
-    CHECK_RESULT $? 0 0 'check podman search --authfile test.json ubi8-minimal | grep -i "DESCRIPTION" failed'
-    podman search --format json ubi8-minimal | grep "}"
+    podman search --limit 5 alpine | wc -l | grep 6
+    CHECK_RESULT $? 0 0 'check podman search --limit 5 alpine | wc -l | grep 6 failed'
+    podman search --no-trunc alpine | grep "alpine"
+    CHECK_RESULT $? 0 0 'check podman search --no-trunc alpine | grep "dockerpull.org" failed'
+    podman search --authfile test.json alpine | grep -i "DESCRIPTION"
+    CHECK_RESULT $? 0 0 'check podman search --authfile test.json alpine | grep -i "DESCRIPTION" failed'
+    podman search --format json alpine | grep "}"
     CHECK_RESULT $? 0 0 'check podman search --format json failed'
-    podman search --tls-verify=true ubi8-minimal | grep -i "ubi8-minimal"
+    podman search --tls-verify=true alpine | grep -i "alpine"
     CHECK_RESULT $? 0 0 'check podman search --tls-verify true failed'
-    podman pull ubi8-minimal
-    CHECK_RESULT $? 0 0 'check podman pull ubi8-minimal failed'
-    id=$(podman create --name postgres -t ubi8-minimal | sed -n '$p')
+    podman pull alpine
+    CHECK_RESULT $? 0 0 'check podman pull alpine failed'
+    id=$(podman create --name postgres -t alpine | sed -n '$p')
     test -z "${id}"
     CHECK_RESULT $? 1 0 'check id failed'
     podman start postgres | grep postgres
@@ -62,8 +62,8 @@ function run_test() {
     podman ps -a | grep postgres | grep Exited
     podman rm "${id}"
     CHECK_RESULT $? 0 0 "check podman rm ${id} failed"
-    podman search --limit 3 ubi8-minimal 2>&1 | grep "ubi8-minimal"
-    CHECK_RESULT $? 0 0 'check podman search --limit 3 fedora 2>&1 | grep "dockerpull.org/library/fedora" failed'
+    podman search --limit 3 alpine 2>&1 | grep "alpine"
+    CHECK_RESULT $? 0 0 'check podman search --limit 3 alpine 2>&1 | grep "alpine" failed'
     LOG_INFO "End executing testcase."
 }
 

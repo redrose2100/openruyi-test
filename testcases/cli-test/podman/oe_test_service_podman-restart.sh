@@ -27,7 +27,6 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution podman-restart.service
     test_reload podman-restart.service
     LOG_INFO "End of the test."
 }

@@ -30,7 +30,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    id=$(docker create --name postgres -t ubi8-minimal | sed -n '$p')
+    id=$(docker create --name postgres -t alpine | sed -n '$p')
     test -z "${id}"
     CHECK_RESULT $? 1 0 "check ${id} failed"
     docker container stop postgres
@@ -39,17 +39,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check docker container rm postgres | grep ${id} failed"
     docker container ls | grep postgres
     CHECK_RESULT $? 1 0 'check docker container ls | grep postgres failed'
-    docker create --name postgres1 -t ubi8-minimal
+    docker create --name postgres1 -t alpine
     docker container stop postgres1
     CHECK_RESULT $? 0 0 'check docker container stop postgres1 failed'
     docker container cleanup postgres1
     CHECK_RESULT $? 0 0 'check docker container cleanup postgres1 failed'
-    docker create --name postgres2 -t ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker create --name postgres2 -t ubi8-minimal failed'
+    docker create --name postgres2 -t alpine
+    CHECK_RESULT $? 0 0 'check docker create --name postgres2 -t alpine failed'
     docker start postgres2
     docker exec -it postgres2 ls | grep "bin"
     CHECK_RESULT $? 0 0 'check docker exec -it postgres2 ls | grep "bin" failed'
-    docker exec --privileged postgres2 ls | grep "boot"
+    docker exec --privileged postgres2 ls | grep "bin"
     CHECK_RESULT $? 0 0 'check docker exec --privileged postgres2 ls failed'
     docker exec --user root postgres2 ls | grep "home"
     docker stop postgres2
