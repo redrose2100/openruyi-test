@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "opensp"
+    DNF_INSTALL "opensp docbook-dtds"
     cp -r ../common/normal.sgml ./normal.sgml
     cp -r normal.sgml normal2.sgml
     printf "DOCUMENT normal.sgml\nDOCUMENT normal2.sgml" >catalogs
@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $?
     onsgmls -f error_info.log normal.sgml && test -f error_info.log
     CHECK_RESULT $?
-    test "$(onsgmls -v normal.sgml 2>&1 | grep -Eo "[0-9]\.[0-9]\.[0-9]")" == "$(rpm -qa opensp | awk -F "-" '{print$2}')"
+    test "$(onsgmls -v normal.sgml 2>&1 | grep -Eo "[0-9]\.[0-9]\.[0-9]" | head -n 1)" == "$(rpm -qa opensp | awk -F "-" '{print$2}')"
     CHECK_RESULT $?
     onsgmls --help | grep -i 'usage'
     CHECK_RESULT $?
@@ -51,7 +51,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE 
+    DNF_REMOVE "$@"
     rm -rf testdir catalogs normal*.sgml ./*.log
     LOG_INFO "Finish restoring the test environment."
 }

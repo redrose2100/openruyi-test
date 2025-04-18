@@ -16,16 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test fetch-crl
 # #############################################
-
+# shellcheck disable=SC2010
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "fetch-crl tar"
-    tar -xvf common/data.tar.gz > /dev/null
+    tar -xvf common/data.tar.gz >/dev/null
     cp -f ./data/KEK.crl_url /etc/grid-security/certificates
     cp -f ./data/KEK.pem /etc/grid-security/certificates
     systemctl start fetch-crl.service
+    SLEEP_WAIT 2
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -39,9 +40,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check clean-crl -V failed"
     clean-crl --version | grep "clean-crl version"
     CHECK_RESULT $? 0 0 "Check clean-crl --version failed"
-    fetch-crl -v -l ./data/ && clean-crl -l ./data/ && ls -al ./data/ | grep "*.r0"
+    fetch-crl -v -l ./data/ && clean-crl -l ./data/ && ls -al ./data/ | grep ".r0"
     CHECK_RESULT $? 1 0 "Check clean-crl -l failed"
-    fetch-crl -v -l ./data/ && clean-crl --cadir ./data/ && ls -al ./data/ | grep "*.r0"
+    fetch-crl -v -l ./data/ && clean-crl --cadir ./data/ && ls -al ./data/ | grep ".r0"
     CHECK_RESULT $? 1 0 "Check clean-crl --cadir failed"
     fetch-crl -v -l ./data/ && clean-crl -v -l ./data/ | grep "The following CRL like files are about to be deleted"
     CHECK_RESULT $? 0 0 "Check clean-crl -v failed"
@@ -56,7 +57,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./data
     LOG_INFO "End to restore the test environment."
 }
