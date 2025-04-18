@@ -16,24 +16,29 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test alsa-tools
 # ############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
 
-function pre_test()
-{
+function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "alsa-tools alsa-utils pulseaudio"
-    pulseaudio --daemonize --system
+    if ! lspci | grep -i audio; then
+        LOG_INFO "No audio device available, the environment does not support testing"
+        exit 255
+    else
+        DNF_INSTALL "alsa-tools alsa-utils pulseaudio"
+        pulseaudio --daemonize --system
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "start to run test."
-    aplay -L|grep "CARD"
+    aplay -L | grep "CARD"
     CHECK_RESULT $? 0 0 "aplay -L is failed!"
-    arecord -l|grep "card 0"
+    arecord -l | grep "card 0"
     CHECK_RESULT $? 0 0 "arecord -L is failed!"
-    amixer set Master 50%|grep "50%"
+    amixer set Master 50% | grep "50%"
     CHECK_RESULT $? 0 0 "amixer is failed!"
     arecord -d 5 test.wav
     CHECK_RESULT $? 0 0 "arecord is failed!"
@@ -43,8 +48,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "speaker-test is failed"
 }
 
-function post_test()
-{
+function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf test.wav
     DNF_REMOVE "$@"
