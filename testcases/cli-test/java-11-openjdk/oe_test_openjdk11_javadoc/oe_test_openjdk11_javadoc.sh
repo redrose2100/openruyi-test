@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    javadoc -help | grep -i "用法:"
+    javadoc -help | grep -iE "用法:|Usage:"
     CHECK_RESULT $? 0 0 "javadoc -help failed"
     javadoc -public Hello1.java -d public
     CHECK_RESULT $? 0 0 "javad -public failed"
