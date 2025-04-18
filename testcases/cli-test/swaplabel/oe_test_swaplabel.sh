@@ -21,13 +21,14 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    swap=$(blkid | grep swap |awk -F":" '{print $1}')
+    swap=$(blkid | grep swap | awk -F":" '{print $1}')
+    old_label=$(swaplabel /dev/mapper/openeuler-swap | grep -i label | awk -F ': ' '{print $NF}')
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    swaplabel "$swap" |grep "LABEL: SWAP"
+    swaplabel "$swap" | grep -E "LABEL: SWAP|UUID"
     CHECK_RESULT $? 0 0 "Failed to display the label of SWAP partition"
     swapoff "$swap"
     swaplabel -L SWAP1 "$swap"
@@ -35,9 +36,9 @@ function run_test() {
     swaplabel -U "$uuid" "$swap"
     CHECK_RESULT $? 0 0 "Failed to modify the label information of SWAP partition to SWAP1"
     swapon "$swap"
-    swaplabel "$swap" |grep "LABEL: SWAP1"
+    swaplabel "$swap" | grep "LABEL: SWAP1"
     CHECK_RESULT $? 0 0 "SWAP1 failed to filter label information for SWAP partition"
-    uuid1=$(swaplabel "$swap" |grep "UUID" |awk '{print $2}')
+    uuid1=$(swaplabel "$swap" | grep "UUID" | awk '{print $2}')
     [ "$uuid" == "$uuid1" ]
     CHECK_RESULT $? 0 0 "The uuid information of SWAP partition is the same before and after resetting"
     LOG_INFO "Finish test!"
@@ -45,7 +46,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    swaplabel -L SWAP "$swap"
+    swapoff "$swap"
+    swaplabel -L "$old_label" "$swap"
+    swapon "$swap"
     LOG_INFO "Finish environment cleanup!"
 }
 

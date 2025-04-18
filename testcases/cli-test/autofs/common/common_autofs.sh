@@ -16,7 +16,7 @@
 #@Desc          :   Public class
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
     DNF_INSTALL "nfs-utils net-tools" 2
@@ -38,20 +38,30 @@ EOF
     systemctl restart autofs
     systemctl restart nfs
     SLEEP_WAIT 5
+    currentDir=$(
+        cd "$(dirname "$0")" || exit 1
+        pwd
+    )
     cd /mnt01/nfs || exit 1
     df -h | grep "${NODE2_IPV4}:/shared"
 }
 
 function clear_env() {
+    cd "$currentDir" || exit 1
+    kill -9 "$(pgrep -f 'automount /mnt01/nfs')"
+    kill -9 "$(pgrep -f 'automount --foreground')"
+    umount /mnt01/nfs
     systemctl stop autofs
     systemctl stop nfs
     systemctl start firewalld
+    systemctl daemon-reload
     P_SSH_CMD --node 2 --cmd "rm -rf /shared;
-        > /etc/exports;
+        echo '' > /etc/exports;
         systemctl stop rpcbind;
         systemctl stop nfs;
-        systemctl start firewalld
-        "
-    DNF_REMOVE
-    rm -f /etc/auto.* /tmp/automount_pid /run/autofs.fifodevel
+        dnf remove nfs-utils net-tools -y
+        systemctl start firewalld;
+        systemctl daemon-reload;"
+    rm -rf /etc/auto.* /tmp/automount_pid /run/autofs.*
+    DNF_REMOVE "$@"
 }

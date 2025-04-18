@@ -20,7 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "itstool"
+    DNF_INSTALL "itstool docbook-dtds"
     mkdir out
     LOG_INFO "End to prepare the test environment."
 }
@@ -34,14 +34,14 @@ function run_test() {
     itstool -i common/import.its common/translate.xml | grep 'content of value1'
     CHECK_RESULT $? 0 0 "itstool -i failed"
     itstool --its common/import.its common/translate.xml | grep 'content of value1'
-    CHECK_RESULT $? 0 0 "itstool --its failed"   
-    itstool -m common/translate.mo -o out/ common/translate.xml && cat out/translate.xml | grep 'result of value0'
+    CHECK_RESULT $? 0 0 "itstool --its failed"
+    itstool -m common/translate.mo -o out/ common/translate.xml && grep 'result of value0' out/translate.xml
     CHECK_RESULT $? 0 0 "itstool -m failed"
-    itstool --merge=common/translate.mo -o out/ common/translate.xml && cat out/translate.xml | grep 'result of value0'
+    itstool --merge=common/translate.mo -o out/ common/translate.xml && grep 'result of value0' out/translate.xml
     CHECK_RESULT $? 0 0 "itstool --merge failed"
-    itstool -l 'lang1' -m common/translate.mo -o out/ common/translate.xml && cat out/translate.xml | grep 'lang1'
+    itstool -l 'lang1' -m common/translate.mo -o out/ common/translate.xml && grep 'lang1' out/translate.xml
     CHECK_RESULT $? 0 0 "itstool -l failed"
-    itstool --lang='lang1' -m common/translate.mo -o out/ common/translate.xml && cat out/translate.xml | grep 'lang1'
+    itstool --lang='lang1' -m common/translate.mo -o out/ common/translate.xml && grep 'lang1' out/translate.xml
     CHECK_RESULT $? 0 0 "itstool --lang failed"
     itstool -n common/translate.xml | grep 'content of value0'
     CHECK_RESULT $? 0 0 "itstool -n failed"
@@ -63,7 +63,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf out
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

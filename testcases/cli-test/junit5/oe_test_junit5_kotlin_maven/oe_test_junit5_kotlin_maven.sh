@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Used with maven to support kotlin programming language
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/lib.sh"
 
 function pre_test() {
@@ -29,6 +29,7 @@ function pre_test() {
     cp CalculatorTests.kt junit5-maven-kotlin/src/test/kotlin/com/example/project/
     cp Calculator.kt junit5-maven-kotlin/src/main/kotlin/com/example/project/
     cd junit5-maven-kotlin || exit 1
+    sed -i '/<mirrors>/a\<mirror>\n<id>aliyun-maven</id>\n<mirrorOf>*</mirrorOf>\n<url>https://maven.aliyun.com/repository/public</url>\n</mirror>' /etc/maven/settings.xml
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -48,7 +49,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     clean_maven
     rm -rf junit5-maven-kotlin /tmp/result
     LOG_INFO "Finish environment cleanup!"
