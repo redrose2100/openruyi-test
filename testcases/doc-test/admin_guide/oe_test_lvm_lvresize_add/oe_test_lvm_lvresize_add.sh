@@ -16,22 +16,27 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Add space to logical volume
 # ############################################
-source ../common/disk_lib.sh
+source "${OET_PATH}/testcases/doc-test/admin_guide/common/disk_lib.sh"
 function pre_test() {
     check_free_disk
     LOG_INFO "Start environment preparation."
-    pvcreate -y /dev/${local_disk1}
-    vgcreate openeulertest /dev/${local_disk1}
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        local_disk=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '2p')
+        local_disk1=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '3p')
+    fi
+    DNF_INSTALL lvm2
+    pvcreate -y "/dev/${local_disk1}"
+    vgcreate openeulertest "/dev/${local_disk1}"
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvdisplay | grep "PV Name" | grep /dev/${local_disk1}
+    pvdisplay | grep "PV Name" | grep "/dev/${local_disk1}"
     CHECK_RESULT $?
     vgdisplay | grep "VG Name" | grep openeulertest
     CHECK_RESULT $?
-    vgextend openeulertest /dev/${local_disk} -y
+    vgextend openeulertest "/dev/${local_disk}" -y
     lvcreate -y -L 50MB -n test openeulertest
     lvextend -y -L+1G /dev/openeulertest/test
     CHECK_RESULT $?
@@ -44,8 +49,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test
     vgremove -y openeulertest
-    pvremove /dev/${local_disk1} /dev/${local_disk}
+    pvremove "/dev/${local_disk1}" "/dev/${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
