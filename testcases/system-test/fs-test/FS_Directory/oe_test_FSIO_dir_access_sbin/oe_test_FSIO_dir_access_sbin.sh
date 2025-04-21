@@ -16,29 +16,34 @@
 #@Desc      	:   Take the test access of /sbin
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    cur_lang=$(echo $LANG)
+    cur_lang="${LANG}"
     export LANG=en_US.UTF-8
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ls -l /sbin | grep "/sbin -> usr/sbin"
+    [[ "$(readlink /sbin)" == "usr/sbin" ]]
     CHECK_RESULT $? 0 0 "/sbin is not soft link of /usr/sbin "
     diff /sbin /usr/sbin
     CHECK_RESULT $? 0 0 "The /sbin doesn't same with /usr/sbin."
-    actual_access=$(ls -l /usr/sbin | awk '{print $1}' | grep -v "total" | cut -c 1-10 | sort | uniq)
-    while read rows; do
+    actual_access=$(find /usr/sbin -mindepth 1 -maxdepth 1 -exec stat -c '%A' {} \; | sort | uniq)
+    if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
+        expect_file="./expect_access_riscv64"
+    else
+        expect_file="./expect_access"
+    fi
+    while read -r rows; do
         if [[ $actual_access =~ $rows ]]; then 
             continue
         fi
         CHECK_RESULT 1 0 0 "The access of file under /sbin is error."
         break
-    done <./expect_access
+    done < "$expect_file"
     
     LOG_INFO "End to run test."
 }
