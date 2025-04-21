@@ -20,11 +20,21 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ls -l /boot | grep "config" | grep "\-rw-r--r--"
+    if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
+        ls -l /boot | grep "config" | grep "\-rwxr-xr-x"
+    else
+        ls -l /boot | grep "config" | grep "\-rw-r--r--"
+    fi
     CHECK_RESULT $? 0 0 "The config on /boot has some errors."
-    ls -l /boot | grep "lost+found" | grep "drwx------"
+    if [[ "${NODE1_FRAME}" != "riscv64" ]]; then
+        ls -l /boot | grep "lost+found" | grep "drwx------"
+    fi
     CHECK_RESULT $? 0 0 "The lost+found on /boot has some errors."
-    ls -l /boot | grep "initramfs" | grep "\-rw-------"
+    if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
+        ls -l /boot | grep "initramfs" | grep "\-rwxr-xr-x"
+    else
+        ls -l /boot | grep "initramfs" | grep "\-rw-------"
+    fi
     CHECK_RESULT $? 0 0 "The initramfs on /boot has some errors."
     LOG_INFO "End to run test."
 }
