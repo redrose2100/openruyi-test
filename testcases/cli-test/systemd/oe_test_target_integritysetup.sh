@@ -17,11 +17,11 @@
 # @Desc      :   Test integritysetup.target restart
 # #############################################
 # shellcheck disable=SC1091
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL systemd
+    DNF_INSTALL "systemd systemd-cryptsetup"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,7 +35,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop integritysetup.target
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
