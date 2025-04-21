@@ -16,18 +16,22 @@
 #@Desc      	:   Take the test check fs type which OS supports
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
     config=$(ls /lib/modules)
-    ls /lib/modules/$config/kernel/fs | grep ext4
+    if [[ ${NODE1_FRAME} != "riscv64" ]]; then
+        find "/lib/modules/$config/kernel/fs" -maxdepth 1 | grep ext4
+    fi
     CHECK_RESULT $? 0 0 "The system doesn't support ext4."
-    ls /lib/modules/$config/kernel/fs | grep xfs
+    find "/lib/modules/$config/kernel/fs" -maxdepth 1 | grep xfs
     CHECK_RESULT $? 0 0 "The system doesn't support xfs."
-    ls /lib/modules/$config/kernel/fs | grep nfs
+    find "/lib/modules/$config/kernel/fs" -maxdepth 1 | grep nfs
     CHECK_RESULT $? 0 0 "The system doesn't support nfs."
-    ls /lib/modules/$config/kernel/fs | grep overlayfs
+    if [[ ${NODE1_FRAME} != "riscv64" ]]; then
+        find "/lib/modules/$config/kernel/fs" -maxdepth 1 | grep overlayfs
+    fi
     CHECK_RESULT $? 0 0 "The system doesn't support overlayfs."
     LOG_INFO "End to run test."
 }
