@@ -28,29 +28,29 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(docker create --dns 255.255.255.0 ubi8-minimal ls)
+    ID=$(docker create --dns 255.255.255.0 alpine ls)
     docker inspect "$ID" | grep "255.255.255.0"
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep '255.255.255.0' failed"
-    ID=$(docker create --dns-opt 8.8.8.8 ubi8-minimal ls)
+    ID=$(docker create --dns-opt 8.8.8.8 alpine ls)
     docker inspect "$ID" | grep "8.8.8.8"
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep '8.8.8.8' failed"
-    ID=$(docker create --dns-search domain ubi8-minimal ls)
+    ID=$(docker create --dns-search domain alpine ls)
     docker inspect "$ID" | grep "domain"
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep 'domain' failed"
-    ID=$(docker create --name ctr --env ENV*****=b ubi8-minimal printenv ENV*****)
+    ID=$(docker create --name ctr --env ENV*****=b alpine printenv ENV*****)
     docker inspect "$ID" | grep "ENV****"
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep "ENV****" failed"
     echo "ENV*****=b" >./a
-    ID=$(docker create --env-file ./a ubi8-minimal ls)
+    ID=$(docker create --env-file ./a alpine ls)
     docker inspect "$ID" | grep "ENV"
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep 'ENV' failed"
-    ID=$(docker create --expose 1 ubi8-minimal ls)
+    ID=$(docker create --expose 1 alpine ls)
     docker inspect "$ID" | grep "0"
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep '0' failed"
-    ID=$(docker create --uidmap 0:30000:7000 --gidmap 0:30000:7000 fedora echo hello)
+    ID=$(docker create --uidmap 0:30000:7000 --gidmap 0:30000:7000 alpine echo hello)
     docker inspect "$ID" | grep "gid"
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep 'gid' failed"
-    ID=$(docker create --group-add groups ubi8-minimal ls)
+    ID=$(docker create --group-add groups alpine ls)
     docker inspect "$ID" | grep -i group
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep -i group failed"
     LOG_INFO "End to run test."

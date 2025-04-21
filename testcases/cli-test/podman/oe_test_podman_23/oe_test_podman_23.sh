@@ -29,11 +29,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    podman pull ubi8-minimal
-    CHECK_RESULT $? 0 0 'check podman pull ubi8-minimal failed'
-    id=$(podman create --name postgres -t ubi8-minimal)
+    podman pull alpine
+    CHECK_RESULT $? 0 0 'check podman pull alpine failed'
+    id=$(podman create --name postgres -t alpine)
     test -z "${id}"
-    CHECK_RESULT $? 1 0 "check id=$(podman create --name postgres -t ubi8-minimal) failed"
+    CHECK_RESULT $? 1 0 "check id=$(podman create --name postgres -t alpine) failed"
     podman start postgres
     CHECK_RESULT $? 0 0 'check podman start postgres failed'
     podman top -l | grep "USER"

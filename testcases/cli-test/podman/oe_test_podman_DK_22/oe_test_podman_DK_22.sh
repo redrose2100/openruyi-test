@@ -2,7 +2,7 @@
 
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
-# You can use it according to the ubi8-minimals and conditions of the Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
@@ -30,19 +30,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker search --limit 5 ubi8-minimal | wc -l | grep 6
-    CHECK_RESULT $? 0 0 'check docker search --limit 5 ubi8-minimal | wc -l | grep 6 failed'
-    docker search --no-trunc ubi8-minimal | grep "ubi8-minimal"
-    CHECK_RESULT $? 0 0 'check docker search --no-trunc ubi8-minimal | grep "ubi8-minimal" failed'
-    docker search --authfile test.json ubi8-minimal | grep -i "DESCRIPTION"
-    CHECK_RESULT $? 0 0 'check docker search --authfile test.json ubi8-minimal | grep -i "DESCRIPTION" failed'
-    docker search --format json ubi8-minimal | grep "}"
+    docker search --limit 5 alpine | wc -l | grep 6
+    CHECK_RESULT $? 0 0 'check docker search --limit 5 alpine | wc -l | grep 6 failed'
+    docker search --no-trunc alpine | grep "alpine"
+    CHECK_RESULT $? 0 0 'check docker search --no-trunc alpine | grep "alpine" failed'
+    docker search --authfile test.json alpine | grep -i "DESCRIPTION"
+    CHECK_RESULT $? 0 0 'check docker search --authfile test.json alpine | grep -i "DESCRIPTION" failed'
+    docker search --format json alpine | grep "}"
     CHECK_RESULT $? 0 0 'check docker search --format json failed'
-    docker search --tls-verify=true ubi8-minimal | grep -i "ubi8-minimal"
+    docker search --tls-verify=true alpine | grep -i "alpine"
     CHECK_RESULT $? 0 0 'check docker search --tls-verify true failed'
-    docker pull ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker pull ubi8-minimal failed'
-    id=$(docker create --name postgres -t ubi8-minimal | sed -n '$p')
+    docker pull alpine
+    CHECK_RESULT $? 0 0 'check docker pull alpine failed'
+    id=$(docker create --name postgres -t alpine | sed -n '$p')
     test -z "${id}"
     CHECK_RESULT $? 1 0 'check id failed'
     docker start postgres | grep postgres
@@ -62,8 +62,8 @@ function run_test() {
     docker ps -a | grep postgres | grep Exited
     docker rm "${id}"
     CHECK_RESULT $? 0 0 "check docker rm ${id} failed"
-    docker search --limit 3 ubi8-minimal 2>&1 | grep "ubi8-minimal"
-    CHECK_RESULT $? 0 0 'check docker search --limit 3 fedora 2>&1 | grep "dockerpull.org/library/fedora" failed'
+    docker search --limit 3 alpine 2>&1 | grep "alpine"
+    CHECK_RESULT $? 0 0 'check docker search --limit 3 alpine 2>&1 | grep "alpine" failed'
     LOG_INFO "End executing testcase."
 }
 

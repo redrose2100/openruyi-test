@@ -27,22 +27,22 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(docker create --read-only ubi8-minimal ls)
+    ID=$(docker create --read-only alpine ls)
     docker inspect "$ID" | grep '"ReadonlyRootfs": true'
     CHECK_RESULT $? 0 0 'check ReadonlyRootfs failed'
-    docker create --rm ubi8-minimal ls
-    CHECK_RESULT $? 0 0 'check docker create --rm ubi8-minimal ls failed'
-    ID=$(docker create --security-opt apparmor=unconfined ubi8-minimal ls)
+    docker create --rm alpine ls
+    CHECK_RESULT $? 0 0 'check docker create --rm alpine ls failed'
+    ID=$(docker create --security-opt apparmor=unconfined alpine ls)
     docker inspect "$ID" | grep 'apparmor=unconfined'
     CHECK_RESULT $? 0 0 'check apparmor=unconfined failed'
-    ID=$(docker create --shm-size 65536k ubi8-minimal ls)
+    ID=$(docker create --shm-size 65536k alpine ls)
     docker inspect "$ID" | grep -i "Shm.*Size"
     CHECK_RESULT $? 0 0 'check ShmSize: 65536000 failed'
-    ID=$(docker create --stop-signal 20 ubi8-minimal ls)
+    ID=$(docker create --stop-signal 20 alpine ls)
     docker inspect "$ID" | grep '"StopSignal": 20'
     CHECK_RESULT $? 0 0 'check StopSignal failed'
-    docker create --stop-timeout 10 ubi8-minimal ls
-    CHECK_RESULT $? 0 0 'check docker create --stop-timeout 10 ubi8-minimal ls failed'
+    docker create --stop-timeout 10 alpine ls
+    CHECK_RESULT $? 0 0 'check docker create --stop-timeout 10 alpine ls failed'
     LOG_INFO "End to run test."
 }
 

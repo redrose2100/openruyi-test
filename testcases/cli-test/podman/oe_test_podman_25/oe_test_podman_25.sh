@@ -30,15 +30,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    podman create --name postgres -t ubi8-minimal
-    CHECK_RESULT $? 0 0 'check podman create --name postgres -t ubi8-minimal failed'
-    podman save -q -o alpine.tar ubi8-minimal
-    CHECK_RESULT $? 0 0 'check podman save -q -o alpine.tar ubi8-minimal failed'
+    podman create --name postgres -t alpine
+    CHECK_RESULT $? 0 0 'check podman create --name postgres -t alpine failed'
+    podman save -q -o alpine.tar alpine
+    CHECK_RESULT $? 0 0 'check podman save -q -o alpine.tar alpine failed'
     test -f ./alpine.tar
     CHECK_RESULT $? 0 0 'check test -f ./alpine.tar failed'
     podman inspect -f json postgres | grep "ID"
     CHECK_RESULT $? 0 0 'check podman inspect -f json postgres | grep "ID" failed'
-    podman inspect postgres --format "{{.ImageName}}" | grep "ubi8-minimal"
+    podman inspect postgres --format "{{.ImageName}}" | grep "alpine"
     CHECK_RESULT $? 0 0 'check podman inspect postgres --format failed'
     podman inspect postgres --type all --format "{{.Name}}" | grep postgres
     CHECK_RESULT $? 0 0 'check podman inspect postgres --type all --format failed'

@@ -34,10 +34,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    podman pull ubi8-minimal
-    CHECK_RESULT $? 0 0 'check podman pull ubi8-minimal failed'
-    podman run --name "${name}" ubi8-minimal
-    CHECK_RESULT $? 0 0 "check podman run --name ${name} ubi8-minimal failed"
+    podman pull alpine
+    CHECK_RESULT $? 0 0 'check podman pull alpine failed'
+    podman run --name "${name}" alpine
+    CHECK_RESULT $? 0 0 "check podman run --name ${name} alpine failed"
     podman ps -a | grep "${name}"
     CHECK_RESULT $? 0 0 "check podman ps -a | grep ${name} failed"
     podman stop "${name}" | grep "${name}"
