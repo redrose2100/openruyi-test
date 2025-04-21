@@ -22,7 +22,9 @@ source "common/common_pcp-system-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}'  | awk -F " " '{print $1}')
+    systemctl restart pmlogger
+    SLEEP_WAIT 60
+    archive_data=$(pcp -h "${NODE1_IPV4}" | grep 'primary logger:' | awk -F: '{print $NF}'  | awk -F " " '{print $1}')
     OLD_PATH=$PATH
     export PATH=/usr/libexec/pcp/bin/:$PATH
     LOG_INFO "End to prepare the test environment."
@@ -30,7 +32,6 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    SLEEP_WAIT 60
     pcp-pidstat -R -s 2 | grep 'policy'
     CHECK_RESULT $?
     pcp-pidstat -r -s 2 | grep 'VSize'
@@ -39,7 +40,7 @@ function run_test() {
     CHECK_RESULT $?
     pcp-pidstat -a "$archive_data" -Z Africa/Lagos -s 10 |grep 'UID'
     CHECK_RESULT $?
-    pcp-pidstat -a "$archive_data" -z -s 2 |grep '%CPU'
+    pcp-pidstat -a "$archive_data" -z -s 10 |grep '%CPU'
     CHECK_RESULT $?
     pcp-ipcs --help 2>&1 | grep 'Usage'
     CHECK_RESULT $?
