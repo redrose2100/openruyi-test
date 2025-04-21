@@ -15,34 +15,34 @@
 # @Desc          :   Public function
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 export FS_TYPE="ext3 ext4 xfs"
 export LANG=en_US.UTF-8
 
 function CREATE_LV() {
     lvname=$1
     vggroup=$2
-    lvcreate -n $lvname -L 0.5G $vggroup -y
+    lvcreate -n "$lvname" -L 0.5G "$vggroup" -y
 }
 
 function EXTEND_LV() {
     lvname=$1
-    lvextend -L 3G $lvname -y
+    lvextend -L 3G "$lvname" -y
 }
 
 function REDUCE_LV() {
     lvname=$1
-    lvreduce -L 0.1G $lvname -y
+    lvreduce -L 0.1G "$lvname" -y
 }
 
 function CHANGE_LV() {
     vggroup=$1
-    lvchange -p rw $lvname -y
+    lvchange -p rw "$lvname" -y
 }
 
 function DELETE_LV() {
     lvname=$1
-    lvremove $lvname -y
+    lvremove "$lvname" -y
 }
 
 function CONCURRENCY_THREAD() {
@@ -60,18 +60,18 @@ function CONCURRENCY_THREAD() {
         echo ""
     done >&3
     count=1
-    for j in $(seq 0 $concurrency_num); do
-        read -u3
+    for j in $(seq 0 "$concurrency_num"); do
+        read -r -u3
         {
             $command $count
             sleep 5
             echo "" >&3
         } &
-        count=$(($count + 1))
+        count=$((count + 1))
     done
     wait
     end_time=$(date +%s)
-    exec_time=$(expr $(($end_time - $start_time)))
+    exec_time=$((end_time - start_time))
     echo "Exectue $concurrency_num cmd for times: ""$exec_time"
     exec 3>&-
     exec 3<&-
@@ -83,71 +83,68 @@ function GET_CONSOLE() {
 
 function CREATE_VG() {
     cur_date=$(date +%Y%m%d%H%M%S)
-    free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
-    disk_name="/dev/"$free_disk
-    pvcreate $disk_name -f &>/dev/null
-    if [[ "$?" -eq "0" ]]; then
-        vggroup="test_vggroup"$cur_date
-        vgcreate $vggroup $disk_name >/dev/null
+    disk_name=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
+    if pvcreate "$disk_name" -f &>/dev/null; then
+        vggroup="test_vggroup$cur_date"
+        vgcreate "$vggroup" "$disk_name" >/dev/null
     else
-        vggroup=$(pvcreate $disk_name 2>&1 | grep "test_vggroup" | cut -d '"' -f 4)
+        vggroup=$(pvcreate "$disk_name" 2>&1 | grep "test_vggroup" | cut -d '"' -f 4)
     fi
-    printf $vggroup
+    printf "%s" "$vggroup"
 }
 
 function CREATE_FS() {
-    fs_type=${1-$FS_TYPE}
+    fs_type="${1:-$FS_TYPE}"
     cur_date=$(date +%Y%m%d%H%M%S)
     vggroup=$(CREATE_VG)
     count=1
     msg=$vggroup" "
-    for fs in ${fs_type[@]}; do
+    for fs in $fs_type; do
         lvname="test_lv"$count$cur_date
         point="/tmp/point"$count$cur_date
-        lvcreate -n $lvname -L 512M $vggroup -y >/dev/null
-        mkfs -t $fs /dev/$vggroup/$lvname >/dev/null
-        mkdir $point
-        mount /dev/$vggroup/$lvname $point >/dev/null
+        lvcreate -n "$lvname" -L 512M "$vggroup" -y >/dev/null
+        mkfs -t "$fs" /dev/"$vggroup"/"$lvname" >/dev/null
+        mkdir "$point"
+        mount /dev/"$vggroup"/"$lvname" "$point" >/dev/null
         msg=$msg$point" "
-        count=$(($count + 1))
+        count=$((count + 1))
     done
-    echo $msg
+    echo "$msg"
 }
 
 function REMOVE_FS() {
-    point_list=($1)
+    point_list=("$1")
     for i in $(seq 0 $((${#point_list[@]} - 1))); do
         tmp=${point_list[$i]}
-        lv=$(df -T | grep $tmp | awk '{print $1}')
+        lv=$(df -T | grep "$tmp" | awk '{print $1}')
         if [[ $lv == "" ]]; then
             continue
         fi
-        umount -f $tmp
-        rm -rf $tmp
-        DELETE_LV $lv
+        umount -f "$tmp"
+        rm -rf "$tmp"
+        DELETE_LV "$lv"
     done
 }
 
 function REMOVE_VG() {
     vggroup=$1
     [[ "$vggroup" != "" ]] && {
-        vgremove $vggroup -y
+        vgremove "$vggroup" -y
     }
     mounted=$(df -T | grep "test_vggroup" | awk '{print $7}')
     if [[ "$mounted" != "" ]]; then
         for m in $mounted; do
-            umount $m
+            umount "$m"
         done
         vggroup=$(df -T | grep "test_vggroup" | awk '{print $1}' | cut -d '-' -f 1 | cut -d '/' -f 4 | head -n 1)
-        vgremove $vggroup -y
+        vgremove "$vggroup" -y
     fi
 
-    lsblk | grep "test_vggroup" >/dev/null
-    [[ "$?" -eq "0" ]] && {
+    if lsblk | grep -q "test_vggroup"; then
         vggroup=$(lsblk | grep "test_vggroup" | awk '{print $1}' | head -n 1 | cut -d '-' -f 1)
         vggroup=${vggroup:2}
-        vgremove $vggroup -y
-    }
+        vgremove "$vggroup" -y
+    fi
     rm -rf /tmp/point*
 }
 
@@ -157,38 +154,38 @@ function GET_RANDOMNAME() {
     name=""
     for i in {a..z}; do
         ranList[$j]=$i
-        j=$(($j + 1))
+        j=$((j + 1))
     done
     for i in {A..Z}; do
         ranList[$j]=$i
-        j=$(($j + 1))
+        j=$((j + 1))
     done
     for i in {0..9}; do
         ranList[$j]=$i
-        j=$(($j + 1))
+        j=$((j + 1))
     done
 
-    for i in $(seq 1 $exp_len); do
-        index=$(($RANDOM % $j))
+    for i in $(seq 1 "$exp_len"); do
+        index=$((RANDOM % j))
         name=$name${ranList[$index]}
     done
-    printf $name
+    printf "%s" "$name"
 }
 
 function CREATE_LARGE_FILE() {
     dir=$1
-    max_path_len=$(getconf PATH_MAX $dir)
+    max_path_len=$(getconf PATH_MAX "$dir")
 
     for i in $(seq 1 100); do
-        text=$(GET_RANDOMNAME $max_path_len)
-        echo $text >>$dir/testFile
+        text=$(GET_RANDOMNAME "$max_path_len")
+        echo "$text" >>"$dir"/testFile
     done
 }
 
 function SET_BKG_MONITOR() {
     tmp_point=$1
-    top -d 2 >$tmp_point/cpu.log &
-    iostat -d 2 >$tmp_point/iostat.log &
+    top -d 2 >"$tmp_point"/cpu.log &
+    iostat -d 2 >"$tmp_point"/iostat.log &
 }
 
 function CHECK_BKG_MONITOR() {
@@ -196,23 +193,23 @@ function CHECK_BKG_MONITOR() {
     cpu_line=$2
     io_line=$3
     free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
-    top_pid=$(ps -ef | grep "top -d 2" | head -n 1 | awk '{print $2}')
-    iostat_pid=$(ps -ef | grep "iostat -d 2" | head -n 1 | awk '{print $2}')
-    kill -9 $top_pid $iostat_pid
+    top_pid=$(pgrep -f "top -d 2" | head -n 1)
+    iostat_pid=$(pgrep -f "iostat -d 2" | head -n 1)
+    kill -9 "$top_pid" "$iostat_pid"
     free_cpu=$(grep "Cpu" cpu.log | awk '{print $8}')
-    read_io=$(grep $free_disk iostat.log | awk '{print $3}')
-    wrtn_io=$(grep $free_disk iostat.log | awk '{print $4}')
-    for var in ${free_cpu[@]}; do
+    read_io=$(grep "$free_disk" iostat.log | awk '{print $3}')
+    wrtn_io=$(grep "$free_disk" iostat.log | awk '{print $4}')
+    for var in "${free_cpu[@]}"; do
         [[ $var -lt $cpu_line ]] && {
             return 1
         }
     done
-    for var in ${read_io[@]}; do
+    for var in "${read_io[@]}"; do
         [[ $var -gt $io_line ]] && {
             return 1
         }
     done
-    for var in ${wrtn_io[@]}; do
+    for var in "${wrtn_io[@]}"; do
         [[ $var -gt $io_line ]] && {
             return 1
         }
@@ -226,4 +223,4 @@ function ssh_cmd_node() {
     SSH_CMD "$cmd" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 }
 
-REMOVE_VG
+REMOVE_VG "$@"
