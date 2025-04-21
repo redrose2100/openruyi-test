@@ -19,12 +19,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "pcp-import-collectl2pcp tar"
+    DNF_INSTALL "pcp-import-collectl2pcp tar hostname wget"
     wget -nd http://jaist.dl.sourceforge.net/sourceforge/collectl/collectl-3.1.3.src.tar.gz
     tar zxvf collectl-3.1.3.src.tar.gz
-    cd collectl-3.1.3
+    cd collectl-3.1.3 || exit
     ./INSTALL
-    cd -
+    cd - || exit
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -32,11 +32,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     collectl -c 5 -f collect &
     SLEEP_WAIT 20
-    hostname=$(hostname | awk -F '.' '{print $1}')
-    inputfile=$(ls | grep "${hostname}")
-    test -f ${inputfile}
+    inputfile=$(ls collect-"$(hostname -s)"-*.raw.gz)
+    test -f "${inputfile}"
     CHECK_RESULT $?
-    collectl2pcp -v ${inputfile} collectpcp | grep "New instance"
+    collectl2pcp -v "${inputfile}" collectpcp | grep "New instance"
     CHECK_RESULT $?
     test -f collectpcp.0 -a -f collectpcp.index -a -f collectpcp.meta && rm -rf collectpcp.0 collectpcp.index collectpcp.meta
     CHECK_RESULT $?
@@ -45,7 +44,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./collect* ./wget-log* /opt/hp*
     LOG_INFO "End to restore the test environment."
 }
