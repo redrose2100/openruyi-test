@@ -22,8 +22,8 @@ source "../common/common_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    docker pull ubi8-minimal
-    docker run --name postgres ubi8-minimal
+    docker pull alpine
+    docker run --name postgres alpine
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -41,7 +41,7 @@ function run_test() {
     docker logs -t "$(docker ps -aq)"
     CHECK_RESULT $? 0 0 'check docker logs -t failed'
     docker start postgres
-    docker save -q -o alpine.tar ubi8-minimal
+    docker save -q -o alpine.tar alpine
     docker import --change CMD=/bin/bash --change ENTRYPOINT=/bin/sh --change LABEL=blue=image alpine.tar image-imported
     CHECK_RESULT $? 0 0 'check docker import --change CMD=/bin/bash --change ENTRYPOINT=/bin/sh failed'
     docker import -q --message "importing the alpine.tar tarball" alpine.tar image-imported

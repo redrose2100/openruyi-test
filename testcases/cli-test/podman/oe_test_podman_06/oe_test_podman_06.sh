@@ -22,8 +22,8 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman pull ubi8-minimal
-    podman run --name postgres ubi8-minimal
+    podman pull alpine
+    podman run --name postgres alpine
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -41,7 +41,7 @@ function run_test() {
     podman logs -t "$(podman ps -aq)"
     CHECK_RESULT $? 0 0 'check podman logs -t failed'
     podman start postgres
-    podman save -q -o alpine.tar ubi8-minimal
+    podman save -q -o alpine.tar alpine
     podman import --change CMD=/bin/bash --change ENTRYPOINT=/bin/sh --change LABEL=blue=image alpine.tar image-imported
     CHECK_RESULT $? 0 0 'check podman import --change CMD=/bin/bash --change ENTRYPOINT=/bin/sh --change LABEL=blue=image alpine.tar image-imported failed'
     podman import -q --message "importing the alpine.tar tarball" alpine.tar image-imported

@@ -28,31 +28,31 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(podman --cgroup-manager=cgroupfs create --cgroup-parent /tmp ubi8-minimal ls)
+    ID=$(podman --cgroup-manager=cgroupfs create --cgroup-parent /tmp alpine ls)
     podman inspect "$ID" | grep '"CgroupParent"'
     CHECK_RESULT $? 0 0 'check "CgroupParent" test failed'
-    ID=$(podman create --cidfile cidfile ubi8-minimal ls)
+    ID=$(podman create --cidfile cidfile alpine ls)
     grep "$ID" cidfile
     CHECK_RESULT $? 0 0 "check test $ID failed"
-    ID=$(podman create --conmon-pidfile ./ ubi8-minimal ls)
+    ID=$(podman create --conmon-pidfile ./ alpine ls)
     podman inspect "$ID" | grep "$ID"
     CHECK_RESULT $? 0 0 'check grep id failed'
-    ID=$(podman create --cpu-period 10000 ubi8-minimal ls)
+    ID=$(podman create --cpu-period 10000 alpine ls)
     podman inspect "$ID" | grep '"CpuPeriod": 10000'
     CHECK_RESULT $? 0 0 'check "CpuPeriod": 10000 test failed'
-    ID=$(podman create --cpu-quota 1001 ubi8-minimal ls)
+    ID=$(podman create --cpu-quota 1001 alpine ls)
     podman inspect "$ID" | grep '"CpuQuota": 1001'
     CHECK_RESULT $? 0 0 'check "CpuQuota": 1001 test failed'
-    ID=$(podman create --cpu-rt-period 1 ubi8-minimal ls)
+    ID=$(podman create --cpu-rt-period 1 alpine ls)
     podman inspect "$ID" | grep '"CpuRealtimePeriod": 1'
     CHECK_RESULT $? 0 0 'check "CpuRealtimePeriod": 1 test failed'
-    ID=$(podman create --cpu-rt-runtime 2 ubi8-minimal ls)
+    ID=$(podman create --cpu-rt-runtime 2 alpine ls)
     podman inspect "$ID" | grep '"CpuRealtimeRuntime": 2'
     CHECK_RESULT $? 0 0 'check "CpuRealtimeRuntime": 2 test failed'
-    ID=$(podman create --cpu-shares 3 ubi8-minimal ls)
+    ID=$(podman create --cpu-shares 3 alpine ls)
     podman inspect "$ID" | grep '"CpuShares": 3'
     CHECK_RESULT $? 0 0 'check "CpuShares": 3 test failed'
-    ID=$(podman create --cpus 4 ubi8-minimal ls)
+    ID=$(podman create --cpus 4 alpine ls)
     podman inspect "$ID" | grep '"CpuQuota": 400000'
     CHECK_RESULT $? 0 0 'check "CpuQuota": 400000 test failed'
     LOG_INFO "End to run test."

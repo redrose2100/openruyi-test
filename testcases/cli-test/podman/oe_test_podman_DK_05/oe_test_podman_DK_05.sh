@@ -23,19 +23,19 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    docker pull ubi8-minimal
-    docker run --name postgres -e POSTGRES_PASSWORD=secret -d ubi8-minimal
+    docker pull alpine
+    docker run --name postgres -e POSTGRES_PASSWORD=secret -d alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    docker save --compress --format docker-dir -o alp-dir ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker save --compress --format docker-dir -o alp-dir ubi8-minimal failed'
+    docker save --compress --format docker-dir -o alp-dir alpine
+    CHECK_RESULT $? 0 0 'check docker save --compress --format docker-dir -o alp-dir alpine failed'
     test -d alp-dir
     CHECK_RESULT $? 0 0 'check test -d alp-dir failed'
-    docker save -q -o alpine.tar ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker save -q -o alpine.tar ubi8-minimal failed'
+    docker save -q -o alpine.tar alpine
+    CHECK_RESULT $? 0 0 'check docker save -q -o alpine.tar alpine failed'
     test -f alpine.tar
     CHECK_RESULT $? 0 0 'check test -f alpine.tar failed'
     docker info | grep -E "host|insecure registries|registries|store"

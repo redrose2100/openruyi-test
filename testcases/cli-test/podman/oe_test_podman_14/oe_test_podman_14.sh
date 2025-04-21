@@ -27,34 +27,34 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(podman create --oom-kill-disable ubi8-minimal ls)
+    ID=$(podman create --oom-kill-disable alpine ls)
     podman inspect "$ID" | grep '"OomKillDisable": true'
     CHECK_RESULT $? 0 0 "check OomKillDisable failed"
-    ID=$(podman create --oom-score-adj 100 ubi8-minimal ls)
+    ID=$(podman create --oom-score-adj 100 alpine ls)
     podman inspect "$ID" | grep '"OomKillDisable":'
     CHECK_RESULT $? 0 0 "check OomKillDisable failed"
-    ID=$(podman create --pid host ubi8-minimal ls)
+    ID=$(podman create --pid host alpine ls)
     podman inspect "$ID" | grep '"PidMode": "host"'
     CHECK_RESULT $? 0 0 "check PidMode host failed"
-    ID=$(podman create --pids-limit 3 ubi8-minimal ls)
+    ID=$(podman create --pids-limit 3 alpine ls)
     podman inspect "$ID" | grep '"PidsLimit": 3'
     CHECK_RESULT $? 0 0 "check PidsLimit failed"
     podman pod create --infra=false
-    ID=$(podman create --pod $(podman pod list -lq) ubi8-minimal ls)
+    ID=$(podman create --pod $(podman pod list -lq) alpine ls)
     podman rm "$ID"
     CHECK_RESULT $? 0 0 "check podman rm $ID failed"
     podman pod rm $(podman pod list -q)
-    ID=$(podman create --privileged ubi8-minimal ls)
+    ID=$(podman create --privileged alpine ls)
     podman inspect "$ID" | grep '"Privileged": true'
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep Privileged: true failed"
-    ID=$(podman create --publish 23 ubi8-minimal ls)
+    ID=$(podman create --publish 23 alpine ls)
     podman inspect "$ID" | grep '23'
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep 23 failed"
-    ID=$(podman create --publish-all ubi8-minimal ls)
+    ID=$(podman create --publish-all alpine ls)
     podman inspect "$ID" | grep "PublishAllPorts"
     CHECK_RESULT $? 0 0 "check PublishAllPorts: false failed"
-    podman create -q ubi8-minimal ls
-    CHECK_RESULT $? 0 0 "check podman create -q ubi8-minimal ls failed"
+    podman create -q alpine ls
+    CHECK_RESULT $? 0 0 "check podman create -q alpine ls failed"
     LOG_INFO "End to run test."
 }
 

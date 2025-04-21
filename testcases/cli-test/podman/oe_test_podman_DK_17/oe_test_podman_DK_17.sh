@@ -22,29 +22,29 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    docker pull ubi8-minimal
-    docker run --name postgres ubi8-minimal
+    docker pull alpine
+    docker run --name postgres alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    docker image history --format=json ubi8-minimal | grep "created"
-    CHECK_RESULT $? 0 0 'check docker image history --format=json ubi8-minimal | grep "created" failed'
-    docker image history --human ubi8-minimal | grep "B"
-    CHECK_RESULT $? 0 0 'check docker image history --human ubi8-minimal | grep "B" failed'
-    docker image history --no-trunc ubi8-minimal | grep "$(docker images -aq)"
-    CHECK_RESULT $? 0 0 'check docker image history --no-trunc ubi8-minimal failed'
-    docker image history -q ubi8-minimal | grep "$(docker images -aq)"
-    CHECK_RESULT $? 0 0 'check docker image history -q ubi8-minimal  failed'
-    docker image ls --filter after=ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker image ls --filter after=ubi8-minimal failed'
-    docker image ls --all | grep "ubi8-minimal"
-    CHECK_RESULT $? 0 0 'check docker image ls --all | grep "ubi8-minimal" failed'
+    docker image history --format=json alpine | grep "created"
+    CHECK_RESULT $? 0 0 'check docker image history --format=json alpine | grep "created" failed'
+    docker image history --human alpine | grep "B"
+    CHECK_RESULT $? 0 0 'check docker image history --human alpine | grep "B" failed'
+    docker image history --no-trunc alpine | grep "$(docker images -aq)"
+    CHECK_RESULT $? 0 0 'check docker image history --no-trunc alpine failed'
+    docker image history -q alpine | grep "$(docker images -aq)"
+    CHECK_RESULT $? 0 0 'check docker image history -q alpine  failed'
+    docker image ls --filter after=alpine
+    CHECK_RESULT $? 0 0 'check docker image ls --filter after=alpine failed'
+    docker image ls --all | grep "alpine"
+    CHECK_RESULT $? 0 0 'check docker image ls --all | grep "alpine" failed'
     docker image ls --digests | grep "DIGEST"
     CHECK_RESULT $? 0 0 'check docker image ls --digests | grep "DIGEST" failed'
-    docker image ls --format json | grep "ubi8-minimal"
-    CHECK_RESULT $? 0 0 'check docker image ls --format json | grep "ubi8-minimal" failed'
+    docker image ls --format json | grep "alpine"
+    CHECK_RESULT $? 0 0 'check docker image ls --format json | grep "alpine" failed'
     docker image ls --no-trunc | grep "sha256"
     CHECK_RESULT $? 0 0 'check docker image ls --no-trunc | grep "sha256" failed'
     docker image ls --noheading | grep "TAG"

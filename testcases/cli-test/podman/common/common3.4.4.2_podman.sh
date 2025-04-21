@@ -15,16 +15,15 @@
 #####################################
 # shellcheck disable=SC1090
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
     DNF_INSTALL "podman podman-docker"
     echo -e "
-unqualified-search-registries = ['registry.access.redhat.com','docker.io']    
+unqualified-search-registries = ['docker.io']
 [[registry]]
 prefix = 'docker.io'
-#location = 'a74l47xi.mirror.aliyuncs.com'
-location = 'docker.211678.top'
+location = 'docker.1ms.run'
 " >/etc/containers/registries.conf
 }
 

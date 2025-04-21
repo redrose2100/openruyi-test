@@ -27,31 +27,31 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(podman create -t -i --name myctr ubi8-minimal ls)
+    ID=$(podman create -t -i --name myctr alpine ls)
     podman inspect "$ID" | grep '"Name": "myctr"'
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep -i group failed"
-    ID=$(podman create --hostname localhost ubi8-minimal ls)
+    ID=$(podman create --hostname localhost alpine ls)
     podman inspect "$ID" | grep '"Hostname": "localhost"'
     CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep -i group failed"
-    ID=$(podman create --image-volume bind ubi8-minimal ls)
+    ID=$(podman create --image-volume bind alpine ls)
     podman inspect "$ID" | grep -i bind
     CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep -i bind failed"
-    ID=$(podman create --ip "${NODE1_IPV4}" ubi8-minimal ls)
+    ID=$(podman create --ip "${NODE1_IPV4}" alpine ls)
     podman inspect "$ID" | grep -i ip
     CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep -i ip failed"
-    ID=$(podman create --ipc host ubi8-minimal ls)
+    ID=$(podman create --ipc host alpine ls)
     podman inspect "$ID" | grep '"IpcMode": "host"'
     CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep IpcMode: host failed"
-    ID=$(podman create --kernel-memory 1g ubi8-minimal ls)
+    ID=$(podman create --kernel-memory 1g alpine ls)
     podman inspect "$ID" | grep -i "Kernel.*Memory"
     CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep KernelMemory failed"
-    ID=$(podman create --label com.example.key=value ubi8-minimal ls)
+    ID=$(podman create --label com.example.key=value alpine ls)
     podman inspect "$ID" | grep '"com.example.key": "value"'
-    CHECK_RESULT $? 0 0 "podman create --label com.example.key=value ubi8-minimal ls failed"
+    CHECK_RESULT $? 0 0 "podman create --label com.example.key=value alpine ls failed"
     echo "com.example.key=value" >./a
-    ID=$(podman create --label-file ./a ubi8-minimal ls)
+    ID=$(podman create --label-file ./a alpine ls)
     podman inspect "$ID" | grep '"com.example.key": "value"'
-    CHECK_RESULT $? 0 0 "podman create --label-file ./a ubi8-minimal ls failed"
+    CHECK_RESULT $? 0 0 "podman create --label-file ./a alpine ls failed"
     LOG_INFO "End to run test."
 }
 
