@@ -16,7 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   free disk select and version compare
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2034,SC2086,SC2206,SC2119
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function check_free_disk() {
     disks=$(TEST_DISK)
