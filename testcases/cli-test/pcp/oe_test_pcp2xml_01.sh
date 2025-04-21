@@ -35,7 +35,7 @@ function run_test() {
     CHECK_RESULT $?
     pcp2xml --container=busybox -s 10 -t 2 vfs.inodes.count | grep 'source'
     CHECK_RESULT $?
-    pcp2xml -h "$host_name" -s 10 -t 2 "$metric_name" | grep 'timezone'
+    pcp2xml -h "${NODE1_IPV4}" -s 10 -t 2 "$metric_name" | grep 'timezone'
     CHECK_RESULT $?
     pcp2xml -L -s 10 -t 2 "$metric_name" | grep 'timestamp'
     CHECK_RESULT $?
