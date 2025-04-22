@@ -22,7 +22,13 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 set +e
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL cronie
+    DNF_INSTALL "cronie libselinux"
+    # 对selinux是否被禁用进行判断
+    setenforce 1  #如果在内核层禁用了selinux,那么这里是无法打开的
+    if [ "$(getenforce)" == "Disabled" ]; then
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
     systemctl status crond.service || systemctl restart crond.service
     CRONPATH="/var/spool/cron/root"
     echo "* * * * * $(pwd)/test_long.sh" > cron_task
