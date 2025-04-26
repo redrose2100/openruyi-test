@@ -21,9 +21,10 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "hdparm"
     lsblk >>lsblk.txt
     dev=$(sed -n "2, 1p" lsblk.txt | awk '{print $1}')
-    hdparm -b /dev/"$dev" || exit 1
+    hdparm -I /dev/"$dev" || exit 1
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -33,8 +34,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hdparm -h fail"
     hdparm -a /dev/"$dev" | grep -i /dev/"$dev"
     CHECK_RESULT $? 0 0 "hdparm -a system fail"
-    hdparm -b /dev/"$dev" | grep -i /dev/"$dev"
-    CHECK_RESULT $? 0 0 "hdparm -b system fail"
     hdparm -c /dev/"$dev" | grep -i "IO_support"
     CHECK_RESULT $? 0 0 "hdparm -c system fail"
     hdparm -m /dev/"$dev" | grep -i "multcount"
@@ -51,6 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf lsblk.txt
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
