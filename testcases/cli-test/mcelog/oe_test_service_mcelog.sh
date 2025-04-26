@@ -17,13 +17,13 @@
 # @Desc      :   Test mcelog.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    if [ "${NODE1_FRAME}" == aarch64 ]; then
+    if [[ "${NODE1_FRAME}" == aarch64 || ! -e /dev/mcelog ]]; then
         LOG_INFO "The environment does not support testing"
-        exit 0
+        exit 255
     else
         DNF_INSTALL mcelog
     fi
@@ -40,7 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop mcelog.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
