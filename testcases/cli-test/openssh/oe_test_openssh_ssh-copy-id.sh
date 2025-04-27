@@ -20,7 +20,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start to run test."
     expect <<EOF
-    spawn ssh-keygen
+    spawn ssh-keygen -t rsa
     expect {
         "*save the key*" {
             send "/root/.ssh/id_rsa\n"
