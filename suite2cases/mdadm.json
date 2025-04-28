@@ -1,9 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/mdadm",
-    "add disk":[2,2],
+    "add disk":[10,10],
     "cases": [
         {
-            "name": "oe_test_service_mdmonitor"
+            "name": "oe_test_service_mdmonitor",
+            "add disk":[10,10]
         },
         {
             "name": "oe_test_service_mdcheck_continue"
@@ -12,7 +13,8 @@
             "name": "oe_test_service_mdcheck_start"
         },
         {
-            "name": "oe_test_service_mdmonitor-oneshot"
+            "name": "oe_test_service_mdmonitor-oneshot",
+            "add disk":[10,10]
         }
     ]
 }
