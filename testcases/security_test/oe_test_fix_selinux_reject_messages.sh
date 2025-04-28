@@ -21,9 +21,14 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "httpd setroubleshoot-server"
+    DNF_INSTALL "httpd setroubleshoot-server audit libselinux"
     default_selinux_status=$(getenforce)
     [ "$default_selinux_status" == "Enforcing" ] || setenforce 1
+    # 如果在内核层禁用了selinux,那么这里是无法打开的
+    if [ "$(getenforce)" == "Disabled" ]; then
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
     cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf-bak
     sed -i "s/Listen 80/Listen 3131/g" /etc/httpd/conf/httpd.conf
     old_lang=$LANG
@@ -33,6 +38,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
+    systemctl start auditd
     systemctl restart httpd
     sealert -a /var/log/audit/audit.log | grep "[a-z]" >/tmp/prevent_info.txt
     grep "SELinux is preventing /usr/sbin/httpd from name_bind access on the tcp_socket port 3131" /tmp/prevent_info.txt
@@ -64,7 +70,7 @@ function post_test() {
         setenforce 0
     fi
     rm -rf /tmp/prevent_info.txt
-    [ ${RULE_FLAG} -eq 1 ] && auditctl -w /usr/bin/systemctl -p r -k httpd-start
+    [ "${RULE_FLAG}" -eq 1 ] && auditctl -w /usr/bin/systemctl -p r -k httpd-start
     export LANG=${old_lang}
     LOG_INFO "Finish environment cleanup!"
 }
