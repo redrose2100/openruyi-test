@@ -17,13 +17,27 @@
 # @Desc      :   Test lvm2-lvmpolld.socket restart
 # #############################################
 
-source "../common/common_lib.sh"
+
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL lvm2
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution lvm2-lvmpolld.socket
     test_reload lvm2-lvmpolld.socket
     LOG_INFO "End of the test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    systemctl stop lvm2-lvmpolld.socket
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

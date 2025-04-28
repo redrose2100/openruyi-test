@@ -17,13 +17,26 @@
 # @Desc      :   Test dm-event.socket restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL device-mapper-event
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution dm-event.socket
     test_reload dm-event.socket
     LOG_INFO "End of the test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    systemctl stop dm-event.service
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
