@@ -21,6 +21,14 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment"
+    if [ "${NODE1_FRAME}" != "x86_64" ]; then
+        # 非 x86 架构跳过测试
+        LOG_WARN "Testing cannot be performed if NODE1_FRAME not x86_64."
+        exit 255
+    fi
+    DNF_INSTALL "util-linux"
+    # 非 intel cpu 跳过测试
+    lscpu | grep -i intel || exit 255
     DNF_INSTALL "intel-cmt-cat"
     LOG_INFO "End to prepare the test environment"
 }
