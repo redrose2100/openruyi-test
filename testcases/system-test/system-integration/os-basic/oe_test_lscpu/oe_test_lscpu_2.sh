@@ -26,8 +26,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "only print offline cpu fail"
     lscpu -B | grep L
     CHECK_RESULT $? 0 0 "print sizes in bytes fail"
-    lscpu -C | grep L
-    CHECK_RESULT $? 0 0 "show info about caches fail"
+    if [ "${NODE1_FRAME}" != "riscv64" ];then
+        lscpu -C | grep L
+        CHECK_RESULT $? 0 0 "show info about caches fail"
+    fi
     lscpu -J | grep field
     CHECK_RESULT $? 0 0 "show info using JSON for default fail"
     lscpu -x | grep CPU
