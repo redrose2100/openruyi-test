@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL libosinfo
+    DNF_INSTALL "libosinfo wget"
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -29,8 +29,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     osinfo-detect --help | grep -E "Usage:|osinfo-detect \[OPTION…\]"
     CHECK_RESULT $?
-    nohup wget https://repo.openeuler.org/openEuler-20.03-LTS/ISO/aarch64/openEuler-20.03-LTS-aarch64-dvd.iso >/dev/null 2>&1 &
-    SLEEP_WAIT 20
+    wget https://repo.openeuler.org/openEuler-20.03-LTS/ISO/aarch64/openEuler-20.03-LTS-aarch64-dvd.iso
     osinfo-detect --format=plain openEuler-20.03-LTS-aarch64-dvd.iso
     CHECK_RESULT $?
     osinfo-detect --type=media openEuler-20.03-LTS-aarch64-dvd.iso
