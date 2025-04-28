@@ -19,7 +19,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "argus argus-clients tar"
+    DNF_INSTALL "argus argus-clients tar hostname"
     tar -xvf ./common/data.tar.gz > /dev/null
     LOG_INFO "End to prepare the test environment."
 }
