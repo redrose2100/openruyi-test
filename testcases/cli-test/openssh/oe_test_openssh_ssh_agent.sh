@@ -19,7 +19,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ssh-keygen -f ~/.ssh/id_rsa_agent -P '123456'
+    ssh-keygen -t rsa -f ~/.ssh/id_rsa_agent -P '123456'
     CHECK_RESULT $?
     expect <<EOF
         spawn ssh-copy-id -i /root/.ssh/id_rsa_agent.pub ${NODE2_USER}@${NODE2_IPV4}
