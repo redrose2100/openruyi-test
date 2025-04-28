@@ -22,7 +22,14 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "setroubleshoot-server policycoreutils-python-utils"
+    # 对selinux是否被禁用进行判断
+    setenforce 1  #如果在内核层禁用了selinux,那么这里是无法打开的
+    if [ "$(getenforce)" == "Disabled" ]; then
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
     DNF_INSTALL "setroubleshoot-server policycoreutils-python-utils" 2
+    SSH_CMD 'setenforce 1' "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" || exit 255
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     LOG_INFO "End of environmental preparation!"
@@ -58,7 +65,7 @@ function post_test() {
     setsebool httpd_use_cifs off
     P_SSH_CMD --node 2 --cmd "setsebool -P httpd_use_nfs off;setsebool -P httpd_use_cifs off"
     DNF_REMOVE "$@"
-    DNF_REMOVE 2 "setroubleshoot-server"
+    DNF_REMOVE 2 "$@"
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
