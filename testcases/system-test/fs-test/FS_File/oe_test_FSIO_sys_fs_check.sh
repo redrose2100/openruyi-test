@@ -16,34 +16,36 @@
 #@Desc      	:   Take the test check /sys/fs
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL lvm2
     cur_date=$(date +%Y%m%d%H%M%S)
     vggroup=$(CREATE_VG)
-    ext4_point=/tmp/ext4$cur_date
-    lvcreate -n "test_lv1"$cur_date -L 2G $vggroup -y >/dev/null
-    mkfs.ext4 /dev/$vggroup/test_lv1$cur_date >/dev/null
-    mkdir $ext4_point
-    origin=$(ls /sys/fs/ext4 | wc -l)
+    ext4_point="/tmp/ext4$cur_date"
+    lvcreate -n "test_lv1$cur_date" -L 2G "$vggroup" -y >/dev/null
+    mkfs.ext4 "/dev/$vggroup/test_lv1$cur_date" >/dev/null
+    mkdir "$ext4_point"
+    origin=$(find /sys/fs/ext4 -mindepth 1 -maxdepth 1 | wc -l)
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mount /dev/$vggroup/test_lv1$cur_date $ext4_point >/dev/null
+    mount "/dev/$vggroup/test_lv1$cur_date" "$ext4_point" >/dev/null
     CHECK_RESULT $? 0 0 "Mount failed."
-    actual=$(ls /sys/fs/ext4 | wc -l)
-    change=$(($actual-$origin))
+    actual=$(find /sys/fs/ext4 -mindepth 1 -maxdepth 1 | wc -l)
+    change=$((actual - origin))
     CHECK_RESULT $change 1 0 "Check change failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    umount -f $ext4_point
+    umount -f "$ext4_point"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
