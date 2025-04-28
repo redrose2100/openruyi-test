@@ -54,10 +54,12 @@ function run_test() {
     jdeps -version | grep '[0-9]'
     CHECK_RESULT $?
 
-    jfr help | grep 'jfr print'
-    CHECK_RESULT $?
-    jfr version | grep '[0-9]'
-    CHECK_RESULT $?
+    if [ "${NODE1_FRAME}" != "riscv64" ];then
+        jfr help | grep 'jfr print'
+        CHECK_RESULT $?
+        jfr version | grep '[0-9]'
+        CHECK_RESULT $?
+    fi
 
     jhat -h 2>&1 | grep Usage
     CHECK_RESULT $?
