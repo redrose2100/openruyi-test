@@ -17,7 +17,7 @@
 # @Desc      :   Test lsyncd.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -27,7 +27,7 @@ function pre_test() {
     sync{default.rsyncssh, source="/var/www/html", host="localhost", targetdir="/tmp/htmlcopy/"}
 EOF
     expect <<EOF
-    spawn ssh-keygen
+    spawn ssh-keygen -t rsa
     expect "Generating public/private rsa key pair. Enter file in which to save the key"
     send "\n"
     expect "Enter passphrase (empty for no passphrase):"
@@ -64,9 +64,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop lsyncd.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /var/www /var/log/lsyncd /tmp/htmlcopy /etc/lsyncd.conf
-    kill -9 $(ps -ef | grep "lsyncd" | grep -Ev "grep|bash" | awk '{print $2}')
+    kill -9 "$(pgrep lsyncd)"
     LOG_INFO "Finish environment cleanup!"
 }
 
