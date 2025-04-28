@@ -17,6 +17,15 @@
 # @Desc      :   secret-tool of libsecret basic function
 # ############################################
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2028
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "dbus-x11 gnome-keyring libsecret"
+    export "$(dbus-launch)"
+    eval "$(echo '\n' | gnome-keyring-daemon --unlock)"
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "start to run test."
@@ -34,6 +43,12 @@ EOF
     /usr/bin/secret-tool lookup my-login test
     CHECK_RESULT $? 0 1 "secret clear fail"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to clean the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to clean the test environment."
 }
 
 main "$@"
