@@ -26,18 +26,18 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    ls /usr/share/xml/scap/ssg/content/ | grep xml
+    ls /usr/share/xml/scap/ssg/content/*.xml
     CHECK_RESULT $? 0 0 "xml not exist"
-    oscap info /usr/share/xml/scap/ssg/content/ssg-ol7-ds.xml | grep Ref-Id
+    oscap info /usr/share/xml/scap/ssg/content/ssg-ol*-ds.xml | grep Ref-Id
     CHECK_RESULT $? 0 0 "exec 'oscap info failed'"
-    oscap info --profile pci-dss /usr/share/xml/scap/ssg/content/ssg-sl6-xccdf.xml | grep pci-dss
-    CHECK_RESULT $? 0 0 "exec 'oscap info --profile pci-dss /usr/share/xml/scap/ssg/content/ssg-sl6-xccdf.xml' failed"
+    oscap info --profile pci-dss /usr/share/xml/scap/ssg/content/ssg-sl*-xccdf.xml | grep pci-dss
+    CHECK_RESULT $? 0 0 "exec 'oscap info --profile pci-dss /usr/share/xml/scap/ssg/content/ssg-sl*-xccdf.xml' failed"
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
