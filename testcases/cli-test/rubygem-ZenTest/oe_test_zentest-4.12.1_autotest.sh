@@ -19,10 +19,8 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "rubygem-ZenTest tar rubygem-test-unit"
     tar -xvf ./common/data.tar.gz >/dev/null
-    if [ ! -d ~/.rubies ];then
-        mkdir -pv ~/.rubies
-    fi
     multigem
+    sed -i "/root_dir / aroot_dir = File.expand_path('..',__FILE__)" /usr/share/gems/gems/ZenTest-*/bin/multiruby
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
