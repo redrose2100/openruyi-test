@@ -16,11 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   A c++ SDK
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2034
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL libdap
+    DNF_INSTALL "libdap diffutils"
     LOG_INFO "End to prepare the test environment!"
 }
 
@@ -32,9 +33,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to obtain the DDS"
     getdap -a "https://e.gitee.com/open_euler/dashboard?issue=I4BVTY" 2>&1 | grep 'Attributes'
     CHECK_RESULT $? 0 0 "Failed to obtain the DAS"
-    getdap -x 'https://e.gitee.com/open_euler/dashboard?issue=I4BVTY' 2>&1 | grep 'DAP2'
+    getdap -x 'https://e.gitee.com/open_euler/dashboard?issue=I4BVTY' 2>&1 | grep -iE 'DAP2|DAP3'
     CHECK_RESULT $? 0 0 "Failed to obtain the DAP2"
-    getdap -B "https://e.gitee.com/open_euler/dashboard?issue=I4BVTY" 2>&1 | grep 'DAP2'
+    getdap -B "https://e.gitee.com/open_euler/dashboard?issue=I4BVTY" 2>&1 | grep -iE 'DAP2|DAP3'
     CHECK_RESULT $? 0 0 "Failed to get DAP2 without data"
     getdap -iv "https://e.gitee.com/open_euler/dashboard?issue=I4BVTY" 2>&1 | grep 'Server version'
     CHECK_RESULT $? 0 0 "Failed to obtain the Server version"
@@ -62,9 +63,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf aaa size*
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
