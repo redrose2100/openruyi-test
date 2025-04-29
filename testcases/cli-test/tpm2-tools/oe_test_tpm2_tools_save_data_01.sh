@@ -21,6 +21,10 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if [[ ! -e /dev/tpmrm0 || ! -e /dev/tpm0 ]];then
+        LOG_WARN "Testing cannot be performed if tpm device cannot be found."
+        exit 255
+    fi
     DNF_INSTALL "tpm2-tools"
     LOG_INFO "End to prepare the test environment."
 }
@@ -30,8 +34,6 @@ function run_test() {
     cat > key-file << EOF
 this is key.
 EOF
-    ls -l /dev/tpm0
-    CHECK_RESULT $? 0 0 "TPM device is not detected" 1
     tpm2_clear
     CHECK_RESULT $? 0 0 "Clean tpm's all data failed"
     tpm2_changeauth -c o uos_123
