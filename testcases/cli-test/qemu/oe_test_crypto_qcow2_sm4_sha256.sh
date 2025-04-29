@@ -25,7 +25,7 @@ volume=${filename%.xz}
 enc_volume=${volume%.qcow2}_sm4_sha256.qcow2
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+    LOG_INFO "start environmental preparation."
     DNF_INSTALL "curl xz socat expect"
     LOG_INFO "End of environmental preparation!"
 }
