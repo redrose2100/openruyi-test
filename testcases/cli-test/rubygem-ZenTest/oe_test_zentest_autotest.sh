@@ -20,6 +20,8 @@ function pre_test() {
     DNF_INSTALL "rubygem-ZenTest tar rubygem-test-unit"
     tar -xvf ./common/data.tar.gz > /dev/null
     multigem
+    sed -i "/root_dir / aroot_dir = File.expand_path('..',__FILE__)" /usr/share/gems/gems/ZenTest-*/bin/multiruby
+    gem install autotest
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
@@ -48,7 +50,7 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf tmp.txt lib/ data/
     LOG_INFO "End to restore the test environment."
 }
