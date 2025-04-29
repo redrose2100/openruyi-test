@@ -1,7 +1,6 @@
 #!/bin/bash
-VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
-img_url="https://repo.openeuler.org/openEuler-${VERSION_ID}/virtual_machine_img/$(uname -m)/openEuler-${VERSION_ID}-$(uname -m).qcow2.xz"
-filename=$(basename "${img_url}")
+img_url="https://repo.openeuler.org/openEuler-22.03-LTS-SP3/virtual_machine_img/x86_64/openEuler-22.03-LTS-SP3-x86_64.qcow2.xz"
+filename=$(basename ${img_url})
 volume=${filename%.xz}
 
 function create_domain_xml()

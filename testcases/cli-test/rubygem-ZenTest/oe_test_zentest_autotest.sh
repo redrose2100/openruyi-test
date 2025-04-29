@@ -21,6 +21,7 @@ function pre_test() {
     tar -xvf ./common/data.tar.gz > /dev/null
     multigem
     sed -i "/root_dir / aroot_dir = File.expand_path('..',__FILE__)" /usr/share/gems/gems/ZenTest-*/bin/multiruby
+    gem install autotest
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
