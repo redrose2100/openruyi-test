@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL lshw
+    DNF_INSTALL "dmidecode lshw pciutils"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -41,16 +41,23 @@ function run_test() {
             CHECK_RESULT $? 0 0 "The dmidecode command displays an incorrect CPU model"
             lshw -class processor | grep -i kunpeng
             CHECK_RESULT $? 0 0 "The lshw command displays an incorrect CPU model"
-        else
-            lscpu | grep -i model | grep -ci intel | grep 2
+        elif [ "$NODE1_FRAME"x == "riscv64"x ]; then
+            lscpu | grep -i Architecture | grep -i riscv64
             CHECK_RESULT $? 0 0 "The lscpu command displays an incorrect CPU model"
-            lspci | grep -i intel
-            CHECK_RESULT $? 0 0 "The lspci command displays an incorrect CPU model"
-            dmidecode -t processor | grep -i version | grep -i intel
+            dmidecode -t processor | grep -i Family | grep -i rv64
             CHECK_RESULT $? 0 0 "The dmidecode command displays an incorrect CPU model"
-            grep -i model /proc/cpuinfo | grep -i intel
+            grep -i isa /proc/cpuinfo | grep -i rv64
             CHECK_RESULT $? 0 0 "The /proc/cpuinfo displays an incorrect CPU model"
-            lshw -class processor | grep -i intel
+        else
+            lscpu | grep -i model | grep -ciE 'intel|amd' | grep 2
+            CHECK_RESULT $? 0 0 "The lscpu command displays an incorrect CPU model"
+            lspci | grep -iE 'intel|amd'
+            CHECK_RESULT $? 0 0 "The lspci command displays an incorrect CPU model"
+            dmidecode -t processor | grep -i version | grep -iE 'intel|amd'
+            CHECK_RESULT $? 0 0 "The dmidecode command displays an incorrect CPU model"
+            grep -i model /proc/cpuinfo | grep -iE 'intel|amd'
+            CHECK_RESULT $? 0 0 "The /proc/cpuinfo displays an incorrect CPU model"
+            lshw -class processor | grep -iE 'intel|amd'
             CHECK_RESULT $? 0 0 "The lshw command displays an incorrect CPU model"
         fi
     fi
