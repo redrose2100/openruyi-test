@@ -20,7 +20,13 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL setroubleshoot-server
+    DNF_INSTALL "setroubleshoot-server firewalld"
+    setenforce 1  #如果在内核层禁用了selinux,那么这里是无法打开的
+    selinux_status=$(getenforce)
+    if [ "${selinux_status}" == "Disabled" ]; then
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
     systemctl start firewalld
     LOG_INFO "End of environmental preparation!"
 }

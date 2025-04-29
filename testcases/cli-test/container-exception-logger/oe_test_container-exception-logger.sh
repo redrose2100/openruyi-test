@@ -24,13 +24,17 @@ function pre_test() {
     DNF_INSTALL "docker-engine wget"
     # read version from file
     . /etc/os-release
-    PRETTY_NAME=$(echo $PRETTY_NAME | tr -d '(' | tr -d ')' | tr ' ' -)
-    wget -q https://repo.openeuler.org/$PRETTY_NAME/docker_img/$NODE1_FRAME/openEuler-docker.$NODE1_FRAME.tar.xz
-    docker load < openEuler-docker.$NODE1_FRAME.tar.xz
-    IMAGE_NAME=$(docker images --format "{{.Repository}}:{{.Tag}}")
+    PRETTY_NAME=$(echo "$PRETTY_NAME" | tr -d '(' | tr -d ')' | tr ' ' -)
+    rm -rfv "openEuler-docker.$NODE1_FRAME.tar.xz"
+    wget -q "https://dl-cdn.openeuler.openatom.cn/$PRETTY_NAME/docker_img/$NODE1_FRAME/openEuler-docker.$NODE1_FRAME.tar.xz"
+    docker load < "openEuler-docker.$NODE1_FRAME.tar.xz"
+    IMAGE_NAME=$(tar -xJvf "openEuler-docker.$NODE1_FRAME.tar.xz" -O manifest.json | grep -Eo 'docker.io/library/openeuler[^"]+' | awk -F'/' '{print $NF}')
     # create Dockerfile to build image
+    rm -fv Dockerfile  
     cat <<EOF >Dockerfile
 FROM $IMAGE_NAME
+RUN sed -i "s|https://repo\.openeuler\.org|https://dl-cdn.openeuler.openatom.cn|g" /etc/yum.repos.d/*.repo
+RUN sed -i "s|http://repo\.openeuler\.org|https://dl-cdn.openeuler.openatom.cn|g" /etc/yum.repos.d/*.repo
 RUN yum install -y container-exception-logger && yum clean all
 EOF
     # Build an image to avoid repeated installation of container-expeption-logger
@@ -57,9 +61,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf Dockerfile openEuler-docker.$NODE1_FRAME.tar.xz
-    docker rmi openeuler-container-exception-logger $IMAGE_NAME
-    DNF_REMOVE
+    rm -rf Dockerfile "openEuler-docker.$NODE1_FRAME.tar.xz"
+    docker rmi openeuler-container-exception-logger "$IMAGE_NAME"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -26,7 +26,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    if [[ "${NODE1_MACHINE}" =~ "kvm" ]]; then
+    if [[ "$NODE1_FRAME" == "riscv64" ]]; then
+        # RISC-V 架构专用适配
+        lshw -c memory | grep "description: System memory"
+        CHECK_RESULT $?
+        lshw -c memory | grep "size:"
+        CHECK_RESULT $?
+        echo "INFO: RISC-V 上 lshw 无法显示每个内存 bank 的详细信息，仅提供总内存。"
+    elif [[ "${NODE1_MACHINE}" =~ "kvm" ]]; then
         lshw -c memory | grep "bank" -A 5 | grep "size"
         CHECK_RESULT $?
         lshw -c memory | grep "bank" -A 5 | grep "description:"
@@ -53,6 +60,12 @@ function run_test() {
         CHECK_RESULT $?
     fi
     LOG_INFO "End of testcase execution!"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

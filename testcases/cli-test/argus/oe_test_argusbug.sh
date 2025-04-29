@@ -19,7 +19,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "argus lsof net-snmp"
+    DNF_INSTALL "argus lsof net-snmp wget"
     echo "rocommunity qosient" > /etc/snmp/snmpd.conf 
     systemctl start snmpd
     sed -i 's/10.0.1.1/localhost/g' /usr/bin/argus-snmp

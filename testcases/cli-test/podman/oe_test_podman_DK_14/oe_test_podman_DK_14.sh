@@ -27,34 +27,34 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(docker create --oom-kill-disable ubi8-minimal ls)
+    ID=$(docker create --oom-kill-disable alpine ls)
     docker inspect "$ID" | grep '"OomKillDisable": true'
     CHECK_RESULT $? 0 0 "check OomKillDisable failed"
-    ID=$(docker create --oom-score-adj 100 ubi8-minimal ls)
+    ID=$(docker create --oom-score-adj 100 alpine ls)
     docker inspect "$ID" | grep '"OomKillDisable":'
     CHECK_RESULT $? 0 0 "check OomKillDisable failed"
-    ID=$(docker create --pid host ubi8-minimal ls)
+    ID=$(docker create --pid host alpine ls)
     docker inspect "$ID" | grep '"PidMode": "host"'
     CHECK_RESULT $? 0 0 "check PidMode host failed"
-    ID=$(docker create --pids-limit 3 ubi8-minimal ls)
+    ID=$(docker create --pids-limit 3 alpine ls)
     docker inspect "$ID" | grep '"PidsLimit": 3'
     CHECK_RESULT $? 0 0 "check PidsLimit failed"
     docker pod create --infra=false
-    ID=$(docker create --pod $(docker pod list -lq) ubi8-minimal ls)
+    ID=$(docker create --pod $(docker pod list -lq) alpine ls)
     docker rm "$ID"
     CHECK_RESULT $? 0 0 "check docker rm $ID failed"
     docker pod rm $(docker pod list -q)
-    ID=$(docker create --privileged ubi8-minimal ls)
+    ID=$(docker create --privileged alpine ls)
     docker inspect "$ID" | grep '"Privileged": true'
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep Privileged: true failed"
-    ID=$(docker create --publish 23 ubi8-minimal ls)
+    ID=$(docker create --publish 23 alpine ls)
     docker inspect "$ID" | grep '23'
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep 23 failed"
-    ID=$(docker create --publish-all ubi8-minimal ls)
+    ID=$(docker create --publish-all alpine ls)
     docker inspect "$ID" | grep "PublishAllPorts"
     CHECK_RESULT $? 0 0 "check PublishAllPorts: false failed"
-    docker create -q ubi8-minimal ls
-    CHECK_RESULT $? 0 0 "check docker create -q ubi8-minimal ls failed"
+    docker create -q alpine ls
+    CHECK_RESULT $? 0 0 "check docker create -q alpine ls failed"
     LOG_INFO "End to run test."
 }
 

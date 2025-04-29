@@ -17,7 +17,7 @@
 # @Desc      :   Compare the performance of running multiple test classes with placing the test classes in the test suite,and using the TestSuite class from junit and run it.
 # ############################################
 
-source "../common/common_junit.sh"
+source "${OET_PATH}/testcases/cli-test/junit/common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -27,24 +27,29 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+
     compile_java
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "compile java failed."
+
     execute_java TestRunnerTotal | grep -vE "TestJunit1Time|TestJunit2Time|TestJunit3Time|TestTotalTime" >actual_result
     diff actual_result expect_result1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "TestRunnerTotal's actual_result is not expected."
+
     execute_java | grep -v "SuiteTestTime" >actual_result
     diff actual_result expect_result2
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "execute_java is not expected."
+
     execute_java JunitTestSuite | grep -v "JunitTestSuiteTime" >actual_result
     diff actual_result expect_result3
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "JunitTestSuite's actual_result is not expected."
+
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    clear_env
+    clear_env "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

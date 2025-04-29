@@ -52,10 +52,11 @@ function run_test() {
     CHECK_RESULT $?
     automount -m -v $map_name | grep "autofs dump map information"
     CHECK_RESULT $?
-    touch /run/autofs.fifodevel
-    automount -l 2 devel | grep "Successfully set log priority for devel"
+    test -f /run/autofs.fifo-mnt01-nfs || touch /run/autofs.fifo-mnt01-nfs
+    automount /mnt01/nfs
+    automount -l 2 /mnt01/nfs | grep "Successfully set log priority"
     CHECK_RESULT $?
-    grep -a '2' /run/autofs.fifodevel
+    grep "$(pgrep -f "automount /mnt01/nfs")" /run/autofs-running
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

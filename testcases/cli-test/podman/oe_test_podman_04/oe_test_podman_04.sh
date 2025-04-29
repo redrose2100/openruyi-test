@@ -22,8 +22,8 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman pull ubi8-minimal
-    podman run --name postgres ubi8-minimal
+    podman pull alpine
+    podman run --name postgres alpine
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,8 +35,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 'check podman ps -q failed'
     podman ps -s | grep SIZE
     CHECK_RESULT $? 0 0 'check podman ps -s | grep SIZE failed'
-    podman run --name postgres2 ubi8-minimal
-    CHECK_RESULT $? 0 0 'check podman run --name postgres2 ubi8-minimal failed'
+    podman run --name postgres2 alpine
+    CHECK_RESULT $? 0 0 'check podman run --name postgres2 alpine failed'
     podman ps -a --sort names | awk '{print $NF}' | grep "postgres2"
     CHECK_RESULT $? 0 0 'check podman ps -a --sort names failed'
     podman ps -a | grep "postgres"

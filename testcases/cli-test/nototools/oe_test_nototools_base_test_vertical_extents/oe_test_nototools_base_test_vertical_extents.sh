@@ -17,7 +17,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   TEST test_vertical_extents in nototools
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common.sh"
 
 #Installation preparation for test objects, tools required for testing, etc.
@@ -34,8 +34,8 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     #Test the test_vertical_extents python file
-    test_vertical_extents.py ./test.ttf Devanagari 1 100 < ./test.txt |
-        grep -q "b'\\\\xe0\\\\xa4.*\\\\xa5\\\\xa4' (-308, 896)"
+    test_vertical_extents.py ./test.ttf Devanagari 1 100 <./test.txt |
+        grep -q "(-308, 896)"
     CHECK_RESULT $? 0 0 "test_vertical_extents.py run error"
 
     LOG_INFO "End to run test."

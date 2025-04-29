@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/cli-test/iputils",
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_iputils_ping_01"

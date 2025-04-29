@@ -17,7 +17,13 @@
 # @Desc      :   Test blk-availability.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL lvm2
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -29,6 +35,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop blk-availability.service
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

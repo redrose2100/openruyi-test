@@ -16,12 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Execute the blkid command to query the UUID of the logical volume
 # ############################################
-source ../common/disk_lib.sh
+source "${OET_PATH}/testcases/doc-test/admin_guide/common/disk_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
-    pvcreate -y /dev/${local_disk} /dev/${local_disk1}
-    vgcreate -y vg1 /dev/${local_disk} /dev/${local_disk1}
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        local_disk=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '2p')
+        local_disk1=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '3p')
+    fi
+    DNF_INSTALL lvm2
+    pvcreate -y "/dev/${local_disk}" "/dev/${local_disk1}"
+    vgcreate -y vg1 "/dev/${local_disk}" "/dev/${local_disk1}"
     lvcreate -y -L 2G -n lv1 vg1
     mkfs.ext4 /dev/vg1/lv1
     LOG_INFO "Environmental preparation is over."
@@ -46,9 +51,10 @@ function post_test() {
     rm -rf /tmp/test
     lvremove /dev/vg1/lv1 -y
     vgremove /dev/vg1
-    pvremove /dev/${local_disk} /dev/${local_disk1}
+    pvremove "/dev/${local_disk}" "/dev/${local_disk1}"
     sed -i "/$lv_uuid/d" /etc/fstab
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

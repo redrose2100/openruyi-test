@@ -32,7 +32,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "grep 'PubkeyAuthentication yes' failed"
     expect <<EOF
 	set timeout 15
-        spawn ssh-keygen
+        spawn ssh-keygen -t rsa
         expect {
             "save the key" {
                 send "\\r"
@@ -77,7 +77,7 @@ EOF
         }
         expect eof
 EOF
-    scp "${NODE2_USER}"@"${NODE2_IPV4}":/root/.ssh/authorized_keys /home "${NODE2_PASSWORD}"
+    SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/root/.ssh/authorized_keys /home "${NODE2_PASSWORD}"
     grep ssh-rsa /home/authorized_keys
     CHECK_RESULT $? 0 0 "grep ssh-rsa failed"
     expect <<EOF

@@ -29,11 +29,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker pull ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker pull ubi8-minimal failed'
-    id=$(docker create --name postgres -t ubi8-minimal)
+    docker pull alpine
+    CHECK_RESULT $? 0 0 'check docker pull alpine failed'
+    id=$(docker create --name postgres -t alpine)
     test -z "${id}"
-    CHECK_RESULT $? 1 0 "check id=$(docker create --name postgres -t ubi8-minimal) failed"
+    CHECK_RESULT $? 1 0 "check id=$(docker create --name postgres -t alpine) failed"
     docker start postgres
     CHECK_RESULT $? 0 0 'check docker start postgres failed'
     docker top -l | grep "USER"

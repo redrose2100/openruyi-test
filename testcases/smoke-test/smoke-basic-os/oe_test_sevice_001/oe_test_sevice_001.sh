@@ -17,7 +17,14 @@
 # @Desc      :   View the services provided by the system
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "audit"
+    systemctl start auditd.service
+    LOG_INFO "End of environmental preparation."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -27,4 +34,10 @@ function run_test() {
     LOG_INFO "Finish test!"
 }
 
-main $@
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"

@@ -22,20 +22,20 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman pull ubi8-minimal
+    podman pull alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    podman images 2>&1 | grep "ubi8-minimal"
-    CHECK_RESULT $? 0 0 'check podman images 2>&1 | grep "ubi8-minimal" failed'
-    podman pull -q ubi8-minimal | grep "$(podman images -q)"
-    CHECK_RESULT $? 0 0 'check podman pull -q ubi8-minimal failed'
-    podman pull --tls-verify ubi8-minimal | grep "$(podman images -q)"
-    CHECK_RESULT $? 0 0 "check podman pull --tls-verify ubi8-minimal failed"
-    podman run --name postgres ubi8-minimal
-    CHECK_RESULT $? 0 0 'check podman run --name postgres ubi8-minimal failed'
+    podman images 2>&1 | grep "alpine"
+    CHECK_RESULT $? 0 0 'check podman images 2>&1 | grep "alpine" failed'
+    podman pull -q alpine | grep "$(podman images -q)"
+    CHECK_RESULT $? 0 0 'check podman pull -q alpine failed'
+    podman pull --tls-verify alpine | grep "$(podman images -q)"
+    CHECK_RESULT $? 0 0 "check podman pull --tls-verify alpine failed"
+    podman run --name postgres alpine
+    CHECK_RESULT $? 0 0 'check podman run --name postgres alpine failed'
     podman images --all
     CHECK_RESULT $? 0 0 'check podman images --all failed'
     podman images --digests | grep -i "DIGEST"

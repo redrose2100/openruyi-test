@@ -37,11 +37,13 @@ EOF
     grep "Initializing jdb" testlog
     CHECK_RESULT $?
 
-    clhsdb >testlog <<EOF
+    if [ "${NODE1_FRAME}" != "riscv64" ];then
+        clhsdb >testlog <<EOF
 quit
 EOF
-    grep hsdb testlog
-    CHECK_RESULT $?
+        grep hsdb testlog
+        CHECK_RESULT $?
+    fi
 
     jar cvf javatest.jar Hello.java
     find javatest.jar

@@ -26,59 +26,59 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run testcase:oe_test_boom_boot_03."
-    boom profile show --osrelease "/boom/" 
+    boom --osrelease "/boom/" profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --osrelease No Pass"
-    boom profile show --os-release "/boom/" 
+    boom --os-release "/boom/" profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --os-release No Pass"
-    boom profile show -p 12345 
+    boom -p 12345 profile show
     CHECK_RESULT $? 0 0 "L$LINENO: -p No Pass"
-    boom profile show --profile 12345 
+    boom --profile 12345 profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --profile No Pass"
-    boom entry show -r root_device 
+    boom -r root_device entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -r No Pass"
-    boom entry show --root-device root_device 
+    boom -root-device root_device entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -root-device No Pass"
-    boom entry show --rootdevice root_device 
+    boom -rootdevice root_device entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -rootdevice No Pass"
-    boom entry show -R "/boot/initramfs-%{version}.img" 
+    boom -R "/boot/initramfs-%{version}.img" entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -R No Pass"
-    boom entry show --initramfs-pattern "/boot/initramfs-%{version}.img" 
+    boom --initramfs-pattern "/boot/initramfs-%{version}.img" entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --initramfs-pattern No Pass"
-    boom entry show --initramfspattern "/boot/initramfs-%{version}.img" 
+    boom --initramfspattern "/boot/initramfs-%{version}.img" entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --initramfspattern No Pass"
-    boom entry show --rows 
+    boom --rows entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --rows No Pass"
-    boom entry show --separator SEP 
+    boom --separator SEP entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --separator No Pass"
-    boom profile show -s boom 
+    boom -s boom prifile show
     CHECK_RESULT $? 0 0 "L$LINENO: -s No Pass"
-    boom profile show --short-name boom 
+    boom --short-name boom profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --short-name No Pass"
-    boom profile show --shortname boom 
+    boom --shortname boom profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --shortname No Pass"
-    boom entry show -t boom 
+    boom -t boom entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -t No Pass"
-    boom entry show --title boom 
+    boom -title boom entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -title No Pass"
-    boom profile show -u fc26 
+    boom -u fc26 profile show
     CHECK_RESULT $? 0 0 "L$LINENO: -u No Pass"
-    boom profile show --uname-pattern fc26 
+    boom --uname-pattern fc26 profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --uname-pattern No Pass"
-    boom profile show --unamepattern fc26 
+    boom --unamepattern fc26 profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --unamepattern No Pass"
-    boom profile show -V 
+    boom -V profile show
     CHECK_RESULT $? 0 0 "L$LINENO: -V No Pass"
-    boom profile show --verbose 
+    boom --verbose profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --verbose No Pass"
-    boom entry show -v 22.03 
+    boom -v "$(sed -n 's/^VERSION_ID=//p' /etc/os-release | tr -d '\"')" entry show
     CHECK_RESULT $? 0 0 "L$LINENO: -v No Pass"
-    boom entry show --version 22.03 
+    boom --version "$(sed -n 's/^VERSION_ID=//p' /etc/os-release | tr -d '\"')" entry show
     CHECK_RESULT $? 0 0 "L$LINENO: --version No Pass"
-    boom profile show -k " " 
+    boom -k " " profile show
     CHECK_RESULT $? 0 0 "L$LINENO: -k No Pass"
-    boom profile show --kernel-pattern " " 
+    boom --kernel-pattern " " profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --kernel-pattern No Pass"
-    boom profile show --kernelpattern " " 
+    boom --kernelpattern " " profile show
     CHECK_RESULT $? 0 0 "L$LINENO: --kernelpattern No Pass"
     LOG_INFO "End to run test."
 }

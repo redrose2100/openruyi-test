@@ -22,7 +22,7 @@ _RPMBUILD_BAKUP_DIR="${HOME}/.rpmbuild.$(date +'%s')"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "rpmdevtools"
+    DNF_INSTALL "rpmdevtools wget"
 
     test -d "${HOME}/rpmbuild" \
         && mv -f "${HOME}/rpmbuild" "$_RPMBUILD_BAKUP_DIR" \

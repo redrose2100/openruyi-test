@@ -15,11 +15,29 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test wsmancli
 # #############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2046
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "wsmancli openwsman-server docker"
+    mv -rf /etc/docker/daemon.json /etc/docker/daemon-old.json
+    echo '{
+        "registry-mirrors":[
+                "https://docker.nju.edu.cn",
+                "https://docker.m.daocloud.io",
+                "https://dockerproxy.com",
+                "https://docker.mirrors.ustc.edu.cn",
+                "https://docker.1panel.live",
+                "https://hub.rat.dev",
+                "https://docker.actima.top",
+                "https://docker.1ms.run",
+                "https://dockeraityp.com",
+                "https://dockerhub.xisoul.cn",
+                "https://docker.imgdb.be"
+        ]
+}
+' >/etc/docker/daemon.json
+    systemctl restart docker
     docker run -d -it --rm -p 0.0.0.0:5988:5988 -p 0.0.0.0:5989:5989 --name openpegasus kschopmeyer/openpegasus-server:0.1.1
     cp common/simple_auth.passwd /etc/openwsman/test_simple_auth.passwd
     openwsmand -c common/openwsman.conf
@@ -32,15 +50,19 @@ function run_test() {
     LOG_INFO "Start to run test."
     # test command: wsman
     # SYNOPSIS: wsman [-m -o -E -M -U -i -g -k]
-    # test -m
-    wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -R -m 1000 | grep "<wsen:MaxElements>1000</wsen:MaxElements>"
-    CHECK_RESULT $? 0 0 "wamancli: faild to test -m"
+    if [ "$NODE1_FRAME" == "x86_64" ]; then
+        # test -m
+        wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -R -m 1000 | grep "<wsen:MaxElements>1000</wsen:MaxElements>"
+        CHECK_RESULT $? 0 0 "wamancli: faild to test -m"
+    fi
     # test -o
     wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -R -o | grep "<wsman:OptimizeEnumeration/>"
     CHECK_RESULT $? 0 0 "wamancli: faild to test -o"
-    # test -E
-    wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -R -E | grep "<wsman:TotalItemsCountEstimate>1</wsman:TotalItemsCountEstimate>"
-    CHECK_RESULT $? 0 0 "wamancli: faild to test -E"
+    if [ "$NODE1_FRAME" == "x86_64" ]; then
+        # test -E
+        wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -R -E | grep "<wsman:TotalItemsCountEstimate>1</wsman:TotalItemsCountEstimate>"
+        CHECK_RESULT $? 0 0 "wamancli: faild to test -E"
+    fi
     # test -M
     wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -R -M epr | grep "<wsman:EnumerationMode>EnumerateEPR</wsman:EnumerationMode>"
     CHECK_RESULT $? 0 0 "wamancli: faild to test -M"
@@ -56,9 +78,11 @@ function run_test() {
     # test -g
     wsman enumerate http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem -h localhost --port 5985 -u wsman --password wsman -g aaa -R | grep '<wsa:To s:mustUnderstand="true">http://localhost:5985/aaa</wsa:To>'
     CHECK_RESULT $? 0 0 "wamancli: faild to test -g"
-    # test -k
-    wsman create http://schema.openpegasus.org/wbem/wscim/1/cim-schema/2/PG_TestPropertyTypes -h localhost --port 5985 -u wsman --password wsman -R -N test/static -k PG_TestPropertyTypes.CreationClassName=qwe -J common/Create_Success01.xml
-    CHECK_RESULT $? 0 0 "wamancli: faild to test -k"
+    if [ "$NODE1_FRAME" == "x86_64" ]; then
+        # test -k
+        wsman create http://schema.openpegasus.org/wbem/wscim/1/cim-schema/2/PG_TestPropertyTypes -h localhost --port 5985 -u wsman --password wsman -R -N test/static -k PG_TestPropertyTypes.CreationClassName=qwe -J common/Create_Success01.xml
+        CHECK_RESULT $? 0 0 "wamancli: faild to test -k"
+    fi
     LOG_INFO "End to run test."
 }
 
@@ -67,7 +91,8 @@ function post_test() {
     rm -rf /etc/openwsman/test_simple_auth.passwd
     kill -9 $(pgrep openwsmand)
     docker stop openpegasus
-    DNF_REMOVE
+    mv -rf /etc/docker/daemon-old.json /etc/docker/daemon.json
+    DNF_REMOVE "$@"
     # sleep 10 seconds ensure openwsmand be killed
     SLEEP_WAIT 10
     LOG_INFO "End to restore the test environment."

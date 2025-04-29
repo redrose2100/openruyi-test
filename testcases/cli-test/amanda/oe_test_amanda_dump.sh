@@ -21,6 +21,10 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if [ ! -e /dev/nst0 ]; then
+        LOG_WARN "System has no /dev/nst0 device. The environment does not support testing."
+        exit 255
+    fi
     DNF_INSTALL "amanda openssl"
     mkdir /etc/amanda
     mkdir -p /amanda /amanda/vtapes/slot{1,2,3,4} /amanda/holding /amanda/state/{curinfo,log,index} /etc/amanda/MyConfig

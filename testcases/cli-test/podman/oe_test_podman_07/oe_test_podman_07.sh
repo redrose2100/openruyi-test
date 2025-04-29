@@ -23,7 +23,7 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman run --name postgres -dt -p 80:80/tcp ubi8-minimal
+    podman run --name postgres -dt -p 80:80/tcp alpine
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -53,10 +53,10 @@ function run_test() {
     podman ps -a | grep "Exited"
     CHECK_RESULT $? 0 0 'check podman ps -a | grep "Exited" failed'
     podman start postgres
-    podman diff ubi8-minimal | grep -E "C|A"
-    CHECK_RESULT $? 0 0 'check podman diff ubi8-minimal | grep -E "C|A" failed'
-    podman diff --format json ubi8-minimal | grep -E "changed|added"
-    CHECK_RESULT $? 0 0 'check podman diff --format json ubi8-minimal failed'
+    podman diff alpine | grep -E "C|A"
+    CHECK_RESULT $? 0 0 'check podman diff alpine | grep -E "C|A" failed'
+    podman diff --format json alpine | grep -E "changed|added"
+    CHECK_RESULT $? 0 0 'check podman diff --format json alpine failed'
     podman version | grep "$(rpm -qa podman | awk -F "-" '{print $2}')"
     CHECK_RESULT $? 0 0 'check podman version failed'
     LOG_INFO "End to run test."

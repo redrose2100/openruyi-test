@@ -16,12 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Reduce LV
 # ############################################
-source ../common/disk_lib.sh
+source "${OET_PATH}/testcases/doc-test/admin_guide/common/disk_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
-    pvcreate -y /dev/${local_disk}
-    vgcreate openeulertest /dev/${local_disk} -y
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        local_disk=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '2p')
+    fi
+    DNF_INSTALL lvm2
+    pvcreate -y "/dev/${local_disk}"
+    vgcreate openeulertest "/dev/${local_disk}" -y
     lvcreate -L 1G -n test openeulertest -y
     mkfs.ext4 /dev/openeulertest/test
     LOG_INFO "Environmental preparation is over."
@@ -29,7 +33,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvdisplay | grep "PV Name" | grep /dev/${local_disk}
+    pvdisplay | grep "PV Name" | grep "/dev/${local_disk}"
     CHECK_RESULT $?
     vgdisplay | grep "VG Name" | grep openeulertest
     CHECK_RESULT $?
@@ -46,9 +50,10 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/duan
     vgremove -y openeulertest
-    pvremove /dev/${local_disk}
-    mkfs.ext4 /dev/${local_disk}
+    pvremove "/dev/${local_disk}"
+    mkfs.ext4 "/dev/${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

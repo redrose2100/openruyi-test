@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of elinks command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -29,7 +29,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    elinks -dump text -dump-color-mode 1 www.baidu.com | grep "http://zhidao.baidu.com"
+    elinks -dump text -dump-color-mode 1 www.baidu.com | grep "https://zhidao.baidu.com"
     CHECK_RESULT $? 0 0 "Check elinks -dump -dump-color-mode failed"
 
     elinks -dump text -dump-width 1 www.baidu.com | grep "http://wenku.baidu.com"
@@ -38,10 +38,10 @@ function run_test() {
     elinks -eval text www.baidu.com | grep "http://www.baidu.com/content-search"
     CHECK_RESULT $? 0 0 "Check elinks -eval failed"
 
-    elinks --help | fgrep "Usage: elinks [OPTION]"
+    elinks --help | grep -F "Usage: elinks [OPTION]"
     CHECK_RESULT $? 0 0 "Check elinks --help failed"
 
-    elinks -h | fgrep "Usage: elinks [OPTION]"
+    elinks -h | grep -F "Usage: elinks [OPTION]"
     CHECK_RESULT $? 0 0 "Check elinks -h failed"
 
     elinks -version | grep "ELinks [[:digit:]]"
@@ -68,8 +68,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf *.log text
+    DNF_REMOVE "$@"
+    rm -rf -- *.log text
     LOG_INFO "Finish restore the test environment."
 }
 

@@ -20,6 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "net-tools wget"
     frame="aarch64"
     [[ "${NODE1_FRAME}" = "${frame}" ]] && {
         LOG_INFO "tunctl doesn't support aarch64."
@@ -37,7 +38,6 @@ function pre_test() {
         wget "$path/$tunctl"
         rpm -ivh "$tunctl"
     fi
-    DNF_INSTALL "net-tools"
     LOG_INFO "End to prepare the test environment."
 }
 

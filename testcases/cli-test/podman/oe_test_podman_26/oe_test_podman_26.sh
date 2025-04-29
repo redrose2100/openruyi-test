@@ -27,8 +27,8 @@ function pre_test() {
     podman rm --all
     podman rmi --all
     echo '"auths": {}' >myauths.json
-    echo "FROM ubi8/ubi:latest
-RUN dnf install -y nano" >Dockerfile
+    echo "FROM alpine:latest
+RUN apk add nano" >Dockerfile
     cp -f Dockerfile Dockerfile.simple
     cp -f Dockerfile Dockerfile.in
     cp -f Dockerfile Containerfile.notsosimple

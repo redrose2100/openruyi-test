@@ -34,6 +34,7 @@ function run_test(){
     custodia-cli plugins --help | grep "usage: custodia-cli plugins"
     CHECK_RESULT $? 0 0 "Check custodia-cli plugins --help failed"
     custodia --debug &
+    SLEEP_WAIT 5
     custodia-cli --server /var/run/custodia/custodia.sock mkdir test
     CHECK_RESULT $? 0 0 "Check custodia-cli --server failed"
     custodia-cli --instance custodia mkdir test
@@ -54,6 +55,8 @@ function run_test(){
 
 function post_test(){
     LOG_INFO "Start to restore the test environment."
+    kill -9 "$(pgrep -f "custodia --debug")"
+    rm -rf /var/run/custodia/custodia.sock
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

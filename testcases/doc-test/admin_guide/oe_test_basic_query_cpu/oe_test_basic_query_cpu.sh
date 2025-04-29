@@ -30,17 +30,26 @@ function run_test() {
     CHECK_RESULT $?
     if [ "$NODE1_FRAME"x == "ppc64le"x ]; then
         lscpu | grep -i 'Model'
+    elif [ "$NODE1_FRAME"x == "riscv64"x ]; then
+        lscpu | grep "Architecture"
     else
         lscpu | grep "Vendor ID"
     fi
     CHECK_RESULT $?
-    lshw -c cpu | grep "capacity" | grep "Hz"
+    if [ "$NODE1_FRAME"x == "riscv64"x ]; then
+        echo "WARNING: RISC-V platform does not provide CPU frequency info via lshw or sysfs"
+    else
+        lshw -c cpu | grep "capacity" | grep "Hz"
+    fi
     CHECK_RESULT $?
     if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
         grep "0x48" /proc/cpuinfo
         CHECK_RESULT $?
     elif [ "$NODE1_FRAME"x == "ppc64le"x ]; then
         grep "$(lscpu |grep  'Model name' |awk -F ':' '{print $NF}' |sed 's/^[[:space:]]*//; s/[[:space:]]*$//')" /proc/cpuinfo
+        CHECK_RESULT $?
+    elif [ "$NODE1_FRAME"x == "riscv64"x ]; then
+        grep "isa" /proc/cpuinfo
         CHECK_RESULT $?
     else
         grep "$(lscpu | grep "GenuineIntel" | awk -F " " '{print$3}')" /proc/cpuinfo

@@ -28,13 +28,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    docker run --name postgres ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker run --name postgres ubi8-minimal failed'
-    docker pull ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker pull ubi8-minimal failed'
-    docker images --sort created | grep "ubi8-minimal"
+    docker run --name postgres alpine
+    CHECK_RESULT $? 0 0 'check docker run --name postgres alpine failed'
+    docker pull alpine
+    CHECK_RESULT $? 0 0 'check docker pull alpine failed'
+    docker images --sort created | grep "alpine"
     CHECK_RESULT $? 0 0 'check docker images --sort created failed'
-    docker images | grep "ubi8-minimal"
+    docker images | grep "alpine"
     CHECK_RESULT $? 0 0 'check docker images failed'
     docker stop postgres
     CHECK_RESULT $? 0 0 'check docker stop postgres failed'

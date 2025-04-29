@@ -16,18 +16,22 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Prevent LVM from allocating PE on PV
 # ############################################
-source ../common/disk_lib.sh
+source "${OET_PATH}/testcases/doc-test/admin_guide/common/disk_lib.sh"
 function pre_test() {
     LOG_INFO "Start loading data!"
     check_free_disk
-    pvcreate -f /dev/${local_disk}
-    vgcreate opentest /dev/${local_disk}
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        local_disk=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '2p')
+    fi
+    DNF_INSTALL lvm2
+    pvcreate -f /dev/"${local_disk}"
+    vgcreate opentest /dev/"${local_disk}"
     LOG_INFO "Loading data is complete!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvchange -x n /dev/${local_disk}
+    pvchange -x n /dev/"${local_disk}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
@@ -35,8 +39,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup.."
     vgremove opentest
-    pvremove /dev/${local_disk}
+    pvremove /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

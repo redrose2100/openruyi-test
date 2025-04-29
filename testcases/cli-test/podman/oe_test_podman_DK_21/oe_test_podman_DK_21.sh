@@ -30,12 +30,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker create --name postgres -t ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker create --name postgres -t ubi8-minimal failed'
-    docker create --name test1 -t ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker create --name test1 -t ubi8-minimal failed'
-    docker create --name new_name -t ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker create --name new_name -t ubi8-minimal failed'
+    docker create --name postgres -t alpine
+    CHECK_RESULT $? 0 0 'check docker create --name postgres -t alpine failed'
+    docker create --name test1 -t alpine
+    CHECK_RESULT $? 0 0 'check docker create --name test1 -t alpine failed'
+    docker create --name new_name -t alpine
+    CHECK_RESULT $? 0 0 'check docker create --name new_name -t alpine failed'
     docker ps -a | grep -E "postgres|test1|new_name"
     CHECK_RESULT $? 0 0 'check docker ps -all | grep -E "postgres|test1|new_name" failed'
     docker start postgres new_name test1

@@ -17,10 +17,11 @@
 # @Desc      :   Test alsa-restore.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL pciutils
     if ! lspci | grep -i audio; then
         LOG_INFO "The environment does not support testing"
         exit 1
@@ -41,7 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     mv /etc/alsa/state-daemon.conf_bak /etc/alsa/state-daemon.conf
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

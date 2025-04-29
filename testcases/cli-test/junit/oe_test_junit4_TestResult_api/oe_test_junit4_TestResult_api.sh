@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # ############################################
 
-source "../common/common_junit.sh"
+source "${OET_PATH}/testcases/cli-test/junit/common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -26,18 +26,22 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+
     compile_java
-    CHECK_RESULT $?
-    execute_java >actual_result
+    CHECK_RESULT $? 0 0 "compile java failed."
+
+    # shellcheck disable=SC2120,SC2119
+    execute_java > actual_result
     diff actual_result expect_result
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "execute java failed."
+
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    clear_env
+    clear_env "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

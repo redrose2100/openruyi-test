@@ -23,19 +23,19 @@ source "../common/common_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman pull ubi8-minimal
+    podman pull alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    docker images 2>&1 | grep "ubi8-minimal"
+    docker images 2>&1 | grep "alpine"
     CHECK_RESULT $? 0 0 'check docker images 2>&1 failed'
-    docker pull -q ubi8-minimal | grep "$(docker images -q)"
-    CHECK_RESULT $? 0 0 'check docker pull -q ubi8-minimal failed'
-    docker pull --tls-verify ubi8-minimal | grep "$(docker images -q)"
-    CHECK_RESULT $? 0 0 'check ocker pull --tls-verify ubi8-minimal failed'
-    docker run --name postgres ubi8-minimal
+    docker pull -q alpine | grep "$(docker images -q)"
+    CHECK_RESULT $? 0 0 'check docker pull -q alpine failed'
+    docker pull --tls-verify alpine | grep "$(docker images -q)"
+    CHECK_RESULT $? 0 0 'check ocker pull --tls-verify alpine failed'
+    docker run --name postgres alpine
     CHECK_RESULT $? 0 0 'check docker run --name postgres failed'
     docker images --all
     CHECK_RESULT $? 0 0 'check docker images --all failed'

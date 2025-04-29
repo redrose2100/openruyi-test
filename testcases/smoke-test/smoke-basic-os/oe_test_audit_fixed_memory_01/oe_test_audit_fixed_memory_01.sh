@@ -20,6 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL audit
     auditctl rate_limit=0
     auditctl backlog_wait_time=0
     echo "
@@ -52,6 +53,7 @@ function post_test() {
     rm -rf audit_shell audit_log
     kill -9 "$(jobs -l | grep audit_shell | awk '{print $2}')"
     kill -9 "$(pgrep -f "sudo ls /root/")"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

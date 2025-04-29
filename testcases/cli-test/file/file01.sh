@@ -20,6 +20,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare test requirements."
+    DNF_INSTALL tar
     arch=$(uname -m)
     case "$arch" in
 	x86_64) 
@@ -52,6 +53,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf hello.txt hello.tar.gz
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

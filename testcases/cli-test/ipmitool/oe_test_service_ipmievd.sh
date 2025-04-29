@@ -20,6 +20,10 @@
 source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
+    if [[ ! -e /dev/ipmi0 && ! -e /dev/ipmi/0 && ! -e /dev/ipmidev/0 ]];then
+        LOG_WARN "Testing cannot be performed if machine don't support ipmi."
+        exit 255
+    fi
     LOG_INFO "Start environmental preparation."
     modprobe ipmi_watchdog
     modprobe ipmi_poweroff

@@ -29,31 +29,31 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(podman create --log-driver=k8s-file ubi8-minimal ls)
+    ID=$(podman create --log-driver=k8s-file alpine ls)
     podman inspect "$ID" | grep -i driver
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep -i driver failed"
-    ID=$(podman create --log-opt max-size=10mb ubi8-minimal ls)
+    ID=$(podman create --log-opt max-size=10mb alpine ls)
     podman inspect "$ID" | grep -i log
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep -i log failed"
-    ID=$(podman create --memory 5MB ubi8-minimal ls)
+    ID=$(podman create --memory 5MB alpine ls)
     podman inspect "$ID" | grep '"Memory": 5242880'
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep Memory failed"
-    ID=$(podman create --memory-reservation 5g ubi8-minimal ls)
+    ID=$(podman create --memory-reservation 5g alpine ls)
     podman inspect "$ID" | grep '"MemoryReservation": 5368709120'
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep Memory failed"
-    ID=$(podman create --memory 2g --memory-swap 4g ubi8-minimal ls)
+    ID=$(podman create --memory 2g --memory-swap 4g alpine ls)
     podman inspect "$ID" | grep '"MemorySwap": 4294967296'
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep MemorySwap failed"
-    ID=$(podman create --memory-swappiness 4 ubi8-minimal ls)
+    ID=$(podman create --memory-swappiness 4 alpine ls)
     podman inspect "$ID" | grep '"MemorySwappiness": 4'
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep MemorySwappiness failed"
-    ID=$(podman create --mount type=bind,source=/tmp/host,destination=/tmp/container ubi8-minimal ls)
+    ID=$(podman create --mount type=bind,source=/tmp/host,destination=/tmp/container alpine ls)
     podman inspect "$ID" | grep '/tmp/host'
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep /tmp/host failed"
-    ID=$(podman create --name example ubi8-minimal ls)
+    ID=$(podman create --name example alpine ls)
     podman inspect "$ID" | grep '"Name": "example"'
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep Name example failed"
-    ID=$(podman create --net bridge ubi8-minimal ls)
+    ID=$(podman create --net bridge alpine ls)
     podman inspect "$ID" | grep '"NetworkMode": "bridge"'
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep Nameexample failed"
     LOG_INFO "End to run test."

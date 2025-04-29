@@ -21,7 +21,13 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "setroubleshoot-server httpd"
+    DNF_INSTALL "setroubleshoot-server httpd libselinux"
+    setenforce 1
+    # 如果在内核层禁用了selinux,那么这里是无法打开的
+    if [ "$(getenforce)" == "Disabled" ]; then
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
     test -f /srv/www1 || rm -rf /srv/www1
     rdport=$(GET_FREE_PORT "$NODE1_IPV4")
     LOG_INFO "End of environmental preparation!"
@@ -47,7 +53,7 @@ function run_test() {
     CHECK_RESULT $?
     systemctl start httpd
     CHECK_RESULT $?
-    SLEEP_WAIT 5
+    SLEEP_WAIT 20
     systemctl status httpd | grep "running"
     CHECK_RESULT $?
     semanage port -a -t http_port_t -p tcp "$rdport"

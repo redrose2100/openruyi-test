@@ -28,31 +28,31 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(docker --cgroup-manager=cgroupfs create --cgroup-parent /tmp ubi8-minimal ls)
+    ID=$(docker --cgroup-manager=cgroupfs create --cgroup-parent /tmp alpine ls)
     docker inspect "$ID" | grep '"CgroupParent"'
     CHECK_RESULT $? 0 0 "check docker inspect $ID failed"
-    ID=$(docker create --cidfile cidfile ubi8-minimal ls)
+    ID=$(docker create --cidfile cidfile alpine ls)
     grep "$ID" cidfile
     CHECK_RESULT $? 0 0 "check grep $ID cidfile failed"
-    ID=$(docker create --conmon-pidfile ./ ubi8-minimal ls)
+    ID=$(docker create --conmon-pidfile ./ alpine ls)
     docker inspect "$ID" | grep "$ID"
     CHECK_RESULT $? 0 0 "check docker inspect $ID | grep $ID failed"
-    ID=$(docker create --cpu-period 10000 ubi8-minimal ls)
+    ID=$(docker create --cpu-period 10000 alpine ls)
     docker inspect "$ID" | grep '"CpuPeriod": 10000'
     CHECK_RESULT $? 0 0 "check docker inspect $ID CpuPeriod failed"
-    ID=$(docker create --cpu-quota 1001 ubi8-minimal ls)
+    ID=$(docker create --cpu-quota 1001 alpine ls)
     docker inspect "$ID" | grep '"CpuQuota": 1001'
     CHECK_RESULT $? 0 0 "check docker inspect $ID CpuQuota failed"
-    ID=$(docker create --cpu-rt-period 1 ubi8-minimal ls)
+    ID=$(docker create --cpu-rt-period 1 alpine ls)
     docker inspect "$ID" | grep '"CpuRealtimePeriod": 1'
     CHECK_RESULT $? 0 0 "check docker inspect $ID CpuRealtimePeriod failed"
-    ID=$(docker create --cpu-rt-runtime 2 ubi8-minimal ls)
+    ID=$(docker create --cpu-rt-runtime 2 alpine ls)
     docker inspect "$ID" | grep '"CpuRealtimeRuntime": 2'
     CHECK_RESULT $? 0 0 "check docker inspect $ID CpuRealtimeRuntime failed"
-    ID=$(docker create --cpu-shares 3 ubi8-minimal ls)
+    ID=$(docker create --cpu-shares 3 alpine ls)
     docker inspect "$ID" | grep '"CpuShares": 3'
     CHECK_RESULT $? 0 0 "check docker inspect $ID CpuShares failed"
-    ID=$(docker create --cpus 4 ubi8-minimal ls)
+    ID=$(docker create --cpus 4 alpine ls)
     docker inspect "$ID" | grep '"CpuQuota": 400000'
     CHECK_RESULT $? 0 0 "check docker inspect $ID failed"
     LOG_INFO "End to run test."

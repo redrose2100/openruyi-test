@@ -17,11 +17,11 @@
 # @Desc      :   verify the uasge of aspell command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL aspell
+    DNF_INSTALL "aspell unzip"
     unzip common/aspell6-en-2020.12.07-0.zip
     cp -R ./aspell6-en-2020.12.07-0/* /usr/lib64/aspell-0.60
     OLD_LANG=$LANG
@@ -71,7 +71,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf aspell6-en-2020.12.07-0 2.txt
     export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."

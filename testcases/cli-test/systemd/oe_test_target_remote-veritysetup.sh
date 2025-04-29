@@ -17,7 +17,13 @@
 # @Desc      :   Test remote-veritysetup.target restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL systemd-cryptsetup
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -29,6 +35,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     systemctl stop remote-veritysetup.target
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

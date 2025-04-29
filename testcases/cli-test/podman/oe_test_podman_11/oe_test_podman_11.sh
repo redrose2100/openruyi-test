@@ -28,29 +28,29 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(podman create --dns 255.255.255.0 ubi8-minimal ls)
+    ID=$(podman create --dns 255.255.255.0 alpine ls)
     podman inspect "$ID" | grep "255.255.255.0"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep '255.255.255.0' failed"
-    ID=$(podman create --dns-opt 8.8.8.8 ubi8-minimal ls)
+    ID=$(podman create --dns-opt 8.8.8.8 alpine ls)
     podman inspect "$ID" | grep "8.8.8.8"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep '8.8.8.8' failed"
-    ID=$(podman create --dns-search domain ubi8-minimal ls)
+    ID=$(podman create --dns-search domain alpine ls)
     podman inspect "$ID" | grep "domain"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep '8.8.8.8' failed"
-    ID=$(podman create --name ctr --env ENV*****=b ubi8-minimal printenv ENV*****)
+    ID=$(podman create --name ctr --env ENV*****=b alpine printenv ENV*****)
     podman inspect "$ID" | grep "ENV****"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep "ENV****" failed"
     echo "ENV*****=b" >./a
-    ID=$(podman create --env-file ./a ubi8-minimal ls)
+    ID=$(podman create --env-file ./a alpine ls)
     podman inspect "$ID" | grep "ENV"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep 'ENV' failed"
-    ID=$(podman create --expose 1 ubi8-minimal ls)
+    ID=$(podman create --expose 1 alpine ls)
     podman inspect "$ID" | grep "0"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep '0' failed"
-    ID=$(podman create --uidmap 0:30000:7000 --gidmap 0:30000:7000 fedora echo hello)
+    ID=$(podman create --uidmap 0:30000:7000 --gidmap 0:30000:7000 alpine echo hello)
     podman inspect "$ID" | grep "gid"
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep 'gid' failed"
-    ID=$(podman create --group-add groups ubi8-minimal ls)
+    ID=$(podman create --group-add groups alpine ls)
     podman inspect "$ID" | grep -i group
     CHECK_RESULT $? 0 0 "check podman inspect $ID | grep -i group failed"
     LOG_INFO "End to run test."

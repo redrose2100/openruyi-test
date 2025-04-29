@@ -20,17 +20,21 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
-    DNF_INSTALL "tpm-tools trousers cmake make gcc-c++ gmp-devel"
+    DNF_INSTALL "tpm-tools trousers cmake make gcc-c++ gmp-devel wget unzip kernel-devel-$(uname -r)"
     wget https://github.com/PeterHuewe/tpm-emulator/archive/v0.7.5.zip
     unzip v0.7.5.zip
-    test -d tpm-emulator-0.7.5 && cd tpm-emulator-0.7.5
+    test -d tpm-emulator-0.7.5 && cd tpm-emulator-0.7.5 || exit
     if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
         sed -i "s/\$(shell uname -m)/arm64/g" tpmd_dev/linux/Makefile
+    elif [ "${NODE1_FRAME}"x == "riscv64"x ]; then
+        sed -i "s/\$(shell uname -m)/riscv/g" tpmd_dev/linux/Makefile
     else
         sed -i "s/\$(shell uname -m)/x86/g" tpmd_dev/linux/Makefile
     fi
     sed -i "s/-Wall -Werror/-Wall -Wno-error/g" tpmd_dev/linux/Makefile
-    mkdir build && cd build
+    sed -i '/MODULE_SUPPORTED_DEVICE/d' tpmd_dev/linux/tpmd_dev.c
+    sed -i 's|-Wall|-Wall -fcommon|' CMakeLists.txt
+    mkdir build && cd build || exit
     cmake .. && make && make install
     tpmd deactivated
     tpmd clear
@@ -44,7 +48,7 @@ function deploy_env() {
         pgrep -f 'tpmd -d'
     fi
     if [ -n "$(pgrep -f 'tcsd -e')" ]; then
-        kill -9 $pid_tcsd
+        kill -9 "$(pgrep -f 'tcsd -e')"
     else
         nohup tcsd -e -f >/dev/null 2>&1 &
         SLEEP_WAIT 10
@@ -55,15 +59,15 @@ function deploy_env() {
 }
 
 function clear_env() {
-    kill -9 $(pgrep -f 'tpmd -d')
-    kill -9 $(pgrep -f 'tcsd -e')
+    kill -9 "$(pgrep -f 'tpmd -d')"
+    kill -9 "$(pgrep -f 'tcsd -e')"
     currentDir=$(
-        cd "$(dirname $0)" || exit 1
+        cd "$(dirname "$0")" || exit 1
         pwd
     )
-    currentName=$(echo $currentDir | awk -F '/' '{print $NF}')
+    currentName=$(echo "$currentDir" | awk -F '/' '{print $NF}')
     test "$currentName"x = "build"x && cd ../../ && {
-        rm -rf $(ls | grep -v ".sh")
+        find . -mindepth 1 -maxdepth 1 ! -name "*.sh" -exec rm -rf "{}" +
     }
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 }

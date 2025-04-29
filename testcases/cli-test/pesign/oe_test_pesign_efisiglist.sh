@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL pesign
+    DNF_INSTALL "pesign unzip"
     mkdir pesigntest
     cd pesigntest || exit
     cp ../common/baidu.zip ./

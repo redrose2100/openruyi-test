@@ -14,6 +14,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc          :   verification fastdfs's commnd
 #####################################
+# shellcheck disable=SC1091
 source ../common/common_lib.sh
 
 function pre_test() {
@@ -27,12 +28,12 @@ function run_test() {
     LOG_INFO "Start to run test."
     fdfs_trackerd ./tracker.conf start
     CHECK_RESULT $? 0 0 "Check fdfs_trackerd start failed."
-    netstat -unltp | grep "fdfs_trackerd"
+    netstat -unltp | grep "fdfs_tracker"
     CHECK_RESULT $? 0 0 "Check fdfs_trackerd start error failed."
-    fdfs_storaged $storage_path/storage.conf start
+    fdfs_storaged "$storage_path"/storage.conf start
     CHECK_RESULT $? 0 0 "Check fdfs_storaged start failed."
-    SLEEP_WAIT 5
-    netstat -unltp | grep "storaged"
+    SLEEP_WAIT 10
+    netstat -unltp | grep "storage"
     CHECK_RESULT $? 0 0 "Check fdfs_storaged start error failed."
     fdfs_test1 --help >./usage.txt
     grep "Usage:" ./usage.txt
@@ -56,7 +57,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf *.txt
+    rm -rf ./*.txt
     Post_Test
     LOG_INFO "End to restore the test environment."
 }
