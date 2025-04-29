@@ -25,7 +25,7 @@ volume=${filename%.xz}
 enc_volume=${volume%.qcow2}_sm4_sm3.qcow2
 
 function pre_test() {
-    LOG_INFO "start environmental preparation."
+    LOG_INFO "Start environmental preparation."
     DNF_INSTALL "curl xz socat expect"
     LOG_INFO "End of environmental preparation!"
 }
@@ -40,7 +40,7 @@ function run_test() {
 }
 
 function post_test() {
-    LOG_INFO "Start environment cleanup."
+    LOG_INFO "start environment cleanup."
     cleanup "${enc_volume}" "${volume}"
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
