@@ -23,6 +23,7 @@ function pre_test() {
         mkdir -pv ~/.rubies
     fi
     multigem
+    sed -i "/root_dir / aroot_dir = File.expand_path('..',__FILE__)" /usr/share/gems/gems/ZenTest-*/bin/multiruby
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {

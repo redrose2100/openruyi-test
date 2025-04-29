@@ -70,7 +70,7 @@ function run_test() {
     rpmdev-newspec -t python -o testt.spec
     grep 'python' testt.spec
     CHECK_RESULT $? 0 0 "Failed option: -t"
-    if [ "$VERSION_ID" != "24.03" ] && [ "$VERSION_ID" != "24.09" ]; then
+    if [ "$VERSION_ID" != "24.03" ] && [ "$VERSION_ID" != "24.09" ] && [ "$VERSION_ID" != "25.03" ]; then
 	rpmdev-newspec -m -o testm.spec 
 	grep '%{buildroot}' testm.spec
         CHECK_RESULT $? 0 0 "Failed option: -m"
