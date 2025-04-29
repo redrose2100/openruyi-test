@@ -34,26 +34,26 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker run --name "${name}" ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker run --name ubi8-minimal failed'
+    docker run --name "${name}" alpine
+    CHECK_RESULT $? 0 0 'check docker run --name alpine failed'
     docker ps -a | grep "${name}"
     CHECK_RESULT $? 0 0 'check docker ps -a failed'
     docker stop "${name}" | grep "${name}"
     CHECK_RESULT $? 0 0 'check docker stop name failed'
     docker rm "${name}"
     CHECK_RESULT $? 0 0 'check docker rm failed'
-    docker run --name "${name}"1 ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker run --name name1 ubi8-minimal failed'
+    docker run --name "${name}"1 alpine
+    CHECK_RESULT $? 0 0 'check docker run --name name1 alpine failed'
     docker ps -a | grep "${name}"1
     CHECK_RESULT $? 0 0 'check docker ps -a failed'
     docker stop "${name}"1 | grep "${name}"1
     CHECK_RESULT $? 0 0 'check docker stop name1 failed'
     docker rm --all
     CHECK_RESULT $? 0 0 'check docker rm --all failed'
-    docker run --name "${name}"2 ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker run --name name2 ubi8-minimal failed'
-    docker run --name "${name}"3 ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker run --name name3 ubi8-minimal failed'
+    docker run --name "${name}"2 alpine
+    CHECK_RESULT $? 0 0 'check docker run --name name2 alpine failed'
+    docker run --name "${name}"3 alpine
+    CHECK_RESULT $? 0 0 'check docker run --name name3 alpine failed'
     docker stop "${name}"2 "${name}"3
     CHECK_RESULT $? 0 0 'check docker stop name2 name3 failed'
     docker rm "${name}"2 "${name}"3

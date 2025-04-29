@@ -22,28 +22,28 @@ source "../common/common3.4.4.2_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    podman pull ubi8-minimal
+    podman pull alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    podman image history --format=json ubi8-minimal | grep "created"
-    CHECK_RESULT $? 0 0 'check podman image history --format=json ubi8-minimal | grep "created" failed'
-    podman image history --human ubi8-minimal | grep "B"
-    CHECK_RESULT $? 0 0 'check podman image history --human ubi8-minimal | grep "B" failed'
-    podman image history --no-trunc ubi8-minimal | grep "$(podman images -aq)"
-    CHECK_RESULT $? 0 0 "check podman image history --no-trunc ubi8-minimal failed"
-    podman image history -q ubi8-minimal | grep "$(podman images -aq)"
-    CHECK_RESULT $? 0 0 "check podman image history -q ubi8-minimal failed"
-    podman image ls --filter after=ubi8-minimal
-    CHECK_RESULT $? 0 0 'check podman image ls --filter after=ubi8-minimal failed'
-    podman image ls --all | grep "ubi8-minimal"
-    CHECK_RESULT $? 0 0 'check podman image ls --all | grep "ubi8-minimal" failed'
+    podman image history --format=json alpine | grep "created"
+    CHECK_RESULT $? 0 0 'check podman image history --format=json alpine | grep "created" failed'
+    podman image history --human alpine | grep "B"
+    CHECK_RESULT $? 0 0 'check podman image history --human alpine | grep "B" failed'
+    podman image history --no-trunc alpine | grep "$(podman images -aq)"
+    CHECK_RESULT $? 0 0 "check podman image history --no-trunc alpine failed"
+    podman image history -q alpine | grep "$(podman images -aq)"
+    CHECK_RESULT $? 0 0 "check podman image history -q alpine failed"
+    podman image ls --filter after=alpine
+    CHECK_RESULT $? 0 0 'check podman image ls --filter after=alpine failed'
+    podman image ls --all | grep "alpine"
+    CHECK_RESULT $? 0 0 'check podman image ls --all | grep "alpine" failed'
     podman image ls --digests | grep "DIGEST"
     CHECK_RESULT $? 0 0 'check podman image ls --digests | grep "DIGEST" failed'
-    podman image ls --format json | grep "ubi8-minimal"
-    CHECK_RESULT $? 0 0 'check podman image ls --format json | grep "ubi8-minimal" failed'
+    podman image ls --format json | grep "alpine"
+    CHECK_RESULT $? 0 0 'check podman image ls --format json | grep "alpine" failed'
     podman image ls --no-trunc | grep "sha256"
     CHECK_RESULT $? 0 0 'check podman image ls --no-trunc | grep "sha256" failed'
     podman image ls --noheading | grep "TAG"

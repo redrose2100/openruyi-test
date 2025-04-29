@@ -28,7 +28,7 @@ function pre_test() {
     DNF_INSTALL "${GEM_PACKAGES} ${OTHER_DEPENDENCES}"
     gem sources --add ${SOURCE_URL} --remove ${ORIGIN_SOURCE}
     bundle config mirror.${ORIGIN_SOURCE} ${SOURCE_URL}
-    yum groupinstall "Development Tools" -y
+    sudo yum groupinstall "Development Tools" -y
     tar -xvf ./common/data.tar.gz >/dev/null
     LOG_INFO "End to prepare the test environment."
 }
@@ -46,8 +46,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check zentest -t failed"
     version=$(ruby --version | awk '{print $2}' | cut -c1-3)
     if [[ $(echo "${version} >= 2.6" | bc) -eq 1 ]] && [[ $(echo "${version} < 4.0" | bc) -eq 1 ]]; then
-        rails new demo
+        rails new demo --minimal --skip-bundle
         pushd demo || exit
+        bundle config set --local path 'vendor/bundle'
+        bundle add concurrent-ruby -v 1.3.4 # concurrent-ruby 1.3.5 bug https://github.com/rails/rails/issues/54260
+        bundle install
         zentest -r ./db/seeds.rb | grep "Number of errors"
         CHECK_RESULT $? 0 0 "Check zentest -r failed"
         popd || exit

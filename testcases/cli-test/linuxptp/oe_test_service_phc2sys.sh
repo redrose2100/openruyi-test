@@ -24,7 +24,7 @@ function pre_test() {
     eth_name=$(ip a | grep "${NODE1_IPV4}" | awk '{print $NF}')
     if [ "$(ethtool -T "${eth_name}" | grep 'PTP Hardware Clock' | awk '{print $4}')" == none ]; then
         LOG_INFO "The environment does not support testing"
-        exit 1
+        exit 255
     else
         DNF_INSTALL linuxptp
         sed -i "s\-f /etc/ptp4l.conf -i eth0\-f /etc/ptp4l.conf -i ${eth_name}\g" /etc/sysconfig/ptp4l
@@ -44,7 +44,7 @@ function post_test() {
     systemctl stop phc2sys.service
     systemctl stop ptp4l.service
     sed -i "s\-f /etc/ptp4l.conf -i ${eth_name}\-f /etc/ptp4l.conf -i eth0\g" /etc/sysconfig/ptp4l
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -22,7 +22,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "sysstat"
-    device_name=$(lsblk -nr -o NAME|head -n 1)
+    device_name=$(lsblk -dn -o NAME,SIZE | awk '$2 != "0B" {print $1}')
     LOG_INFO "End of environmental preparation!"
 }
 

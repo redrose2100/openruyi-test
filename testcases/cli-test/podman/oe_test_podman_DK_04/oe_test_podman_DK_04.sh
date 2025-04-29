@@ -22,8 +22,8 @@ source "../common/common_podman.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    docker pull ubi8-minimal
-    docker run --name postgres ubi8-minimal
+    docker pull alpine
+    docker run --name postgres alpine
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,8 +35,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 'check docker ps -q failed'
     docker ps -s | grep SIZE
     CHECK_RESULT $? 0 0 'check docker ps -s | grep SIZE failed'
-    docker run --name postgres2 ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker run --name postgres2 ubi8-minimal failed'
+    docker run --name postgres2 alpine
+    CHECK_RESULT $? 0 0 'check docker run --name postgres2 alpine failed'
     docker ps -a --sort names | awk '{print $NF}' | grep "postgres2"
     CHECK_RESULT $? 0 0 'check docker ps -a --sort names | grep "postgres2" failed'
     docker ps -a | grep "postgres"

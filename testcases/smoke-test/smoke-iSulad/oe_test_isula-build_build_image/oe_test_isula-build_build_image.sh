@@ -22,9 +22,9 @@ source ../common/prepare_isulad.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     if yum list | grep -q "docker-runc"; then
-        DNF_INSTALL "isula-build docker-runc iSulad"
+        DNF_INSTALL "isula-build docker-runc iSulad wget"
     else
-        DNF_INSTALL "isula-build runc iSulad"
+        DNF_INSTALL "isula-build runc iSulad wget"
     fi
 
     if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then

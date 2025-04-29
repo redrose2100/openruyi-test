@@ -17,7 +17,7 @@
 # @Desc      :   Execute command in container
 # ############################################
 
-source ../common/prepare_isulad.sh
+source "${OET_PATH}/testcases/smoke-test/smoke-iSulad/common/prepare_isulad.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_isulad_env
@@ -27,24 +27,24 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase!"
     run_isulad_container
-    expect -c "
-    log_file testlog
-    spawn isula attach ${containerId}
-    sleep 1
-    expect {
-    \"\" {send \"\r\";  
-    expect \"\*#*\" {send \"ls\r\"}
-    expect \"\*#*\" {send \"exit\r\"}
-}
-}
-"
+    expect <<EOF > testlog
+spawn isula attach "${containerId}"
+set timeout 10
+send "\r"
+expect "#"
+send "ls\r"
+expect "#"
+send "exit\r"
+expect eof
+EOF
+    CHECK_RESULT $?
     grep -E 'bin|home' testlog
     CHECK_RESULT $?
 
-    isula start ${containerId}
-    isula inspect -f {{.State.Status}} ${containerId} | grep running
+    isula start "${containerId}"
+    isula inspect -f '{{.State.Status}}' "${containerId}" | grep running
     CHECK_RESULT $?
-    isula exec -it ${containerId} /bin/sh -c "ls /  | grep bin" | grep bin
+    isula exec -it "${containerId}" /bin/sh -c "ls /  | grep bin" | grep bin
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
@@ -52,9 +52,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     clean_isulad_env
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testlog
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

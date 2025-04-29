@@ -34,10 +34,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    docker pull ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker pull ubi8-minimal failed'
-    docker run --name "${name}" ubi8-minimal
-    CHECK_RESULT $? 0 0 'check docker run --name name ubi8-minimal failed'
+    docker pull alpine
+    CHECK_RESULT $? 0 0 'check docker pull alpine failed'
+    docker run --name "${name}" alpine
+    CHECK_RESULT $? 0 0 'check docker run --name name alpine failed'
     docker ps -a | grep "${name}"
     CHECK_RESULT $? 0 0 'check docker ps -a failed'
     docker stop "${name}" | grep "${name}"

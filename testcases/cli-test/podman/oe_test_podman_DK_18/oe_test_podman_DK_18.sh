@@ -24,8 +24,8 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     echo '{"auth":{}}' >myauths.json
     deploy_env
-    podman pull ubi8-minimal
-    podman run --name postgres -e POSTGRES_PASSWORD=secret -d ubi8-minimal
+    podman pull alpine
+    podman run --name postgres -e POSTGRES_PASSWORD=secret -d alpine
     LOG_INFO "End to prepare the test environment."
 }
 

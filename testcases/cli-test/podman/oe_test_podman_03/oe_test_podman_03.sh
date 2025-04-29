@@ -24,40 +24,44 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     echo '"auth":{}' >myauths.json
-    podman pull ubi8-minimal
-    podman run --name postgres -e POSTGRES_PASSWORD=secret -d ubi8-minimal
+    podman pull alpine
+    podman run --name postgres -e POSTGRES_PASSWORD=secret -d alpine
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    podman push ubi8-minimal dir:/tmp/myimage 2>&1 | grep "signatures"
-    CHECK_RESULT $? 0 0 'check podman push ubi8-minimal dir:/tmp/myimage  failed'
-    podman push --authfile myauths.json ubi8-minimal dir:/tmp/myimage
-    CHECK_RESULT $? 0 0 'check podman push --authfile temp-auths/myauths.json ubi8-minimal dir:/tmp/myimage failed'
+    podman push alpine dir:/tmp/myimage 2>&1 | grep "signatures"
+    CHECK_RESULT $? 0 0 'check podman push alpine dir:/tmp/myimage  failed'
+    podman push --authfile myauths.json alpine dir:/tmp/myimage
+    CHECK_RESULT $? 0 0 'check podman push --authfile temp-auths/myauths.json alpine dir:/tmp/myimage failed'
     test -f /tmp/myimage/manifest.json && rm -rf /tmp/myimage/manifest.json
     CHECK_RESULT $? 0 0 'check test -f /tmp/myimage/manifest.json && rm -rf /tmp/myimage/manifest.json failed'
-    podman push --format oci ubi8-minimal dir:/tmp/myimage
-    CHECK_RESULT $? 0 0 'check podman push --format oci ubi8-minimal dir:/tmp/myimage failed'
+    podman push --format oci alpine dir:/tmp/myimage
+    CHECK_RESULT $? 0 0 'check podman push --format oci alpine dir:/tmp/myimage failed'
     grep "oci" /tmp/myimage/manifest.json && rm -rf /tmp/myimage/manifest.json
     CHECK_RESULT $? 0 0 'check grep "oci" /tmp/myimage/manifest.json && rm -rf /tmp/myimage/manifest.json failed'
-    podman push --compress ubi8-minimal dir:/tmp/myimage
-    CHECK_RESULT $? 0 0 'check podman push --compress ubi8-minimal dir:/tmp/myimage failed'
-    grep "image.rootfs.diff.tar.gzip" /tmp/myimage/manifest.json
-    CHECK_RESULT $? 0 0 'check grep "image.rootfs.diff.tar.gzip" /tmp/myimage/manifest.json failed'
-    podman push -q ubi8-minimal dir:/tmp/myimage
-    CHECK_RESULT $? 0 0 'check podman push -q ubi8-minimal dir:/tmp/myimage failed'
+    # ubi8-minimal image don't support riscv64
+    if [[ "$NODE1_FRAME" == "x86_64" || "$NODE1_FRAME" == "aarch64" ]]; then
+        docker pull ubi8-minimal
+        docker push --compress ubi8-minimal dir:/tmp/myimage
+        CHECK_RESULT $? 0 0 'check docker push --compress ubi8-minimal failed'
+        grep "image.rootfs.diff.tar.gzip" /tmp/myimage/manifest.json
+        CHECK_RESULT $? 0 0 'check grep "image.rootfs.diff.tar.gzip" /tmp/myimage/manifest.json failed'
+    fi
+    podman push -q alpine dir:/tmp/myimage
+    CHECK_RESULT $? 0 0 'check podman push -q alpine dir:/tmp/myimage failed'
     test -f /tmp/myimage/manifest.json
     CHECK_RESULT $? 0 0 'check test -f /tmp/myimage/manifest.json failed'
-    podman push --remove-signatures ubi8-minimal dir:/tmp/myimage 2>&1 | grep "Writing manifest"
-    CHECK_RESULT $? 0 0 'check podman push --remove-signatures ubi8-minimal dir:/tmp/myimage failed'
-    podman push --tls-verify ubi8-minimal dir:/tmp/myimage 2>&1 | grep "Copying blob"
-    CHECK_RESULT $? 0 0 'check podman push --tls-verify ubi8-minimal dir:/tmp/myimage failed'
-    podman push --creds postgres:screte ubi8-minimal dir:/tmp/myimage 2>&1 | grep "Writing manifest"
-    CHECK_RESULT $? 0 0 'check podman push --creds postgres:screte ubi8-minimal dir:/tmp/myimage failed'
+    podman push --remove-signatures alpine dir:/tmp/myimage 2>&1 | grep "Writing manifest"
+    CHECK_RESULT $? 0 0 'check podman push --remove-signatures alpine dir:/tmp/myimage failed'
+    podman push --tls-verify alpine dir:/tmp/myimage 2>&1 | grep "Copying blob"
+    CHECK_RESULT $? 0 0 'check podman push --tls-verify alpine dir:/tmp/myimage failed'
+    podman push --creds postgres:screte alpine dir:/tmp/myimage 2>&1 | grep "Writing manifest"
+    CHECK_RESULT $? 0 0 'check podman push --creds postgres:screte alpine dir:/tmp/myimage failed'
     rm -rf /tmp/myimage
-    podman push --cert-dir /tmp ubi8-minimal dir:/tmp/myimage
-    CHECK_RESULT $? 0 0 'check podman push --cert-dir /tmp ubi8-minimal dir:/tmp/myimage failed'
+    podman push --cert-dir /tmp alpine dir:/tmp/myimage
+    CHECK_RESULT $? 0 0 'check podman push --cert-dir /tmp alpine dir:/tmp/myimage failed'
     test -d /tmp/myimage
     CHECK_RESULT $? 0 0 'check test -d /tmp/myimage failed'
     LOG_INFO "End to run test."

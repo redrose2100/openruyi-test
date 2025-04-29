@@ -16,14 +16,14 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   freeradius-utils command parameter automation use case
 ####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "freeradius freeradius-utils"
     systemctl start radiusd
-    SLEEP_WAIT 1
+    SLEEP_WAIT 3
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -51,7 +51,7 @@ function run_test() {
     echo "Message-Authenticator = 0x00" | radclient 127.0.0.1 status testing123
     [ "$(cat /tmp/radsniff.pid)" -eq "$(pgrep -f "radsniff -P" | grep -v grep)" ]
     CHECK_RESULT $? 0 0 "radsniff -P execution failed."
-    kill -9 $(cat /tmp/radsniff.pid)
+    kill -9 "$(cat /tmp/radsniff.pid)"
 
     LOG_INFO "End to run test."
 }
@@ -60,7 +60,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     systemctl stop radiusd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /etc/raddb
     rm -rf /var/log/radius
     rm -rf /tmp/radsniff.pid

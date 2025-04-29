@@ -31,7 +31,6 @@ function pre_test() {
         DEPS+="runc "
     fi
     DNF_INSTALL "${DEPS}"
-
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -39,7 +38,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     nohup containerd &
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then
-        image_name=docker.io/library/busybox
+        image_name=m.daocloud.io/docker.io/busybox
         image_tag=latest
     else
         image_name=m.daocloud.io/docker.io/nginx
@@ -48,7 +47,6 @@ function run_test() {
     ctr images pull ${image_name}:${image_tag}
     ctr images ls | grep 'docker.io'
     CHECK_RESULT $? 0 0 "Image removal failed"
-        
     ctr c create ${image_name}:${image_tag} nginx-container
     ctr c ls | grep 'nginx-container'
     CHECK_RESULT $? 0 0 "Container creation failed"

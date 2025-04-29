@@ -16,13 +16,15 @@
 # @Desc      :   Use properties instead of filtering logs
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "net-tools"
     systemctl stop iptables
-    SSH_CMD "systemctl stop iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "systemctl stop iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    iptables -F
+    systemctl stop firewalld
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -40,22 +42,23 @@ EOF
     SSH_CMD "
     echo  ':msg,contains,'abd' @@${NODE1_IPV4}' > /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
-    logger -t local5 -p local5.info 'local5infoabd"$time"'
-    " ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    logger -t local5 -p local5.info 'local5infoabd$time'
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     SLEEP_WAIT 20
-    grep -a local5infoabd$time /var/log/messages
+    grep -a local5infoabd"$time" /var/log/messages
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    DNF_REMOVE "$@"
+    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -rf /etc/rsyslog.d/server.conf
     systemctl restart rsyslog
     systemctl start iptables
+    systemctl start firewalld
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

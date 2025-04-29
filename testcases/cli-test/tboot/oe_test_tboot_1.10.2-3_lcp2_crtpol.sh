@@ -17,10 +17,18 @@
 # @Desc      :   verify the uasge of tboot command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
+    if [ "${NODE1_FRAME}" != "x86_64" ]; then
+        # 非 x86 架构跳过测试
+        LOG_WARN "Testing cannot be performed if NODE1_FRAME not x86_64."
+        exit 255
+    fi
+    DNF_INSTALL "util-linux"
+    # 非 intel cpu 跳过测试
+    lscpu | grep -i intel || exit 255
     DNF_INSTALL tboot
     LOG_INFO "End to prepare the test environment!"
 }
@@ -36,8 +44,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Een to restore the test environment."
 }
 
-main $@
+main "$@"

@@ -34,26 +34,26 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    podman run --name "${name}" ubi8-minimal
-    CHECK_RESULT $? 0 0 "check podman run --name ${name} ubi8-minimal failed"
+    podman run --name "${name}" alpine
+    CHECK_RESULT $? 0 0 "check podman run --name ${name} alpine failed"
     podman ps -a | grep "${name}"
     CHECK_RESULT $? 0 0 "check podman ps -a | grep ${name} failed"
     podman stop "${name}" | grep "${name}"
     CHECK_RESULT $? 0 0 "check podman stop ${name} | grep ${name} failed"
     podman rm "${name}"
     CHECK_RESULT $? 0 0 "check podman rm ${name} failed"
-    podman run --name "${name}"1 ubi8-minimal
-    CHECK_RESULT $? 0 0 "check podman run --name ${name}1 ubi8-minimal failed"
+    podman run --name "${name}"1 alpine
+    CHECK_RESULT $? 0 0 "check podman run --name ${name}1 alpine failed"
     podman ps -a | grep "${name}"1
     CHECK_RESULT $? 0 0 "check podman ps -a | grep ${name}1 failed"
     podman stop "${name}"1 | grep "${name}"1
     CHECK_RESULT $? 0 0 "check podman stop ${name}1 | grep ${name}1 failed"
     podman rm --all
     CHECK_RESULT $? 0 0 "check podman rm --all failed"
-    podman run --name "${name}"2 ubi8-minimal
-    CHECK_RESULT $? 0 0 "check podman run --name ${name}2 ubi8-minimal failed"
-    podman run --name "${name}"3 ubi8-minimal
-    CHECK_RESULT $? 0 0 "check podman run --name ${name}3 ubi8-minimal failed"
+    podman run --name "${name}"2 alpine
+    CHECK_RESULT $? 0 0 "check podman run --name ${name}2 alpine failed"
+    podman run --name "${name}"3 alpine
+    CHECK_RESULT $? 0 0 "check podman run --name ${name}3 alpine failed"
     podman stop "${name}"2 "${name}"3
     CHECK_RESULT $? 0 0 "check podman stop ${name}2 ${name}3 failed"
     podman rm "${name}"2 "${name}"3

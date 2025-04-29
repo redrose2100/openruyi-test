@@ -16,14 +16,26 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test chronyd.service restart
 # #############################################
-
+#shellcheck disable=SC1091
 source "../common/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL chrony
+    LOG_INFO "End to prepare the database config."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution chronyd.service
     test_reload chronyd.service
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

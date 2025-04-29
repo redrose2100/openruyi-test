@@ -27,7 +27,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL "iSulad gcc lcr"
+    DNF_INSTALL "iSulad gcc lcr wget"
 
     systemctl start isulad
     echo "Architecture:${NODE1_FRAME}"

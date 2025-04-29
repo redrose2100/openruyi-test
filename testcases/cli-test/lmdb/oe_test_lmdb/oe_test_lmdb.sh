@@ -16,20 +16,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   lmdb basic function
 # ############################################
+# shellcheck disable=SC2002
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL lmdb
+    DNF_INSTALL "lmdb unzip"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mkdir lmdb && cd lmdb
+    mkdir lmdb && cd lmdb || exit
     cp ../students.zip ./ && unzip students.zip
-    ls -l students | grep -E 'data.mdb|lock.mdb'
+    find students | grep -E 'data.mdb|lock.mdb'
     CHECK_RESULT $? 0 0 "Decompression failed"
     mdb_stat students/
     CHECK_RESULT $? 0 0 "Failed to view LMDB data"
@@ -40,8 +41,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to view LMDB data"
     rm -fr test
     mdb_dump students -f test
-    result=$(cat test | grep wc -l)
-    CHECK_RESULT $result 0 1 "Failed to export LMDB data"
+    result=$(cat test| wc -l)
+    CHECK_RESULT "$result" 0 1 "Failed to export LMDB data"
     mdb_load -f test -N -T students
     ent=$(mdb_stat students | grep 'Entries' |awk -F: '{print $2}')
     entries=$((ent - ent_copy))
@@ -52,9 +53,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf lmdb students_copy test
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

@@ -27,14 +27,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    podman run --name postgres ubi8-minimal
-    CHECK_RESULT $? 0 0 'check podman run --name postgres ubi8-minimal failed'
-    podman pull ubi8-minimal
-    CHECK_RESULT $? 0 0 'check pull ubi8-minimal failed'
-    podman images --sort created | grep "ubi8-minimal"
+    podman run --name postgres alpine
+    CHECK_RESULT $? 0 0 'check podman run --name postgres alpine failed'
+    podman pull alpine
+    CHECK_RESULT $? 0 0 'check pull alpine failed'
+    podman images --sort created | grep "alpine"
     CHECK_RESULT $? 0 0 'check podman images --sort created failed'
-    podman images | grep "ubi8-minimal"
-    CHECK_RESULT $? 0 0 'check podman images | grep "ubi8-minimal" failed'
+    podman images | grep "alpine"
+    CHECK_RESULT $? 0 0 'check podman images | grep "alpine" failed'
     podman stop postgres
     CHECK_RESULT $? 0 0 'check podman stop postgres failed'
     podman commit postgres images1

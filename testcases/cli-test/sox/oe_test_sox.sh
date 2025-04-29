@@ -16,12 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test sox
 # ############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "sox"
+  DNF_INSTALL "sox pciutils"
   LOG_INFO "End of environmental preparation!"
 }
 
@@ -29,13 +30,17 @@ function run_test() {
   LOG_INFO "Start to run test."
   sox common/input.mp3 output.wav
   CHECK_RESULT $? 0 0 "sox failure"
-  test -e  output.wav
+  test -e output.wav
   CHECK_RESULT $? 0 0 "output.wav not exist"
-  sox output.wav -d
-  CHECK_RESULT $? 0 0 "output.wav play failure"
+  if ! lspci | grep -i audio; then
+    LOG_INFO "No audio device available"
+  else
+    sox output.wav -d
+    CHECK_RESULT $? 0 0 "output.wav play failure"
+  fi
   sox output.wav output2.wav trim 10 20
   CHECK_RESULT $? 0 0 "Cropping audio failed"
-  test -e  output2.wav
+  test -e output2.wav
   CHECK_RESULT $? 0 0 "output2.wav not exist"
   LOG_INFO "End of the test."
 }
@@ -43,7 +48,7 @@ function run_test() {
 function post_test() {
   LOG_INFO "start environment cleanup."
   DNF_REMOVE "$@"
-  rm -rf  output*.wav
+  rm -rf output*.wav
   LOG_INFO "Finish environment cleanup!"
 }
 

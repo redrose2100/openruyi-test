@@ -14,6 +14,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc          :   verification fastdfs's commnd
 #####################################
+# shellcheck disable=SC1091
 source ../common/common_lib.sh
 
 function pre_test() {
@@ -27,18 +28,18 @@ function run_test() {
     LOG_INFO "Start to run test."
     fdfs_trackerd ./tracker.conf start
     CHECK_RESULT $? 0 0 "Check fdfs_trackerd start failed."
-    netstat -unltp | grep "fdfs_trackerd"
+    netstat -unltp | grep "fdfs_tracker"
     CHECK_RESULT $? 0 0 "Check fdfs_trackerd start error failed."
-    fdfs_storaged $storage_path/storage.conf start
+    fdfs_storaged "$storage_path"/storage.conf start
     CHECK_RESULT $? 0 0 "Check fdfs_storaged start failed."
-    SLEEP_WAIT 5
-    netstat -unltp | grep "storaged"
+    SLEEP_WAIT 10
+    netstat -unltp | grep "storage"
     CHECK_RESULT $? 0 0 "Check fdfs_storaged start error failed."
     fdfs_append_file --help >./usage.txt
     grep "Usage:" ./usage.txt
     CHECK_RESULT $? 0 0 "Check fdfs_append_file --help failed."
     appender_file=$(fdfs_upload_appender client.conf test1.txt)
-    fdfs_append_file client.conf $appender_file test2.txt
+    fdfs_append_file client.conf "$appender_file" test2.txt
     CHECK_RESULT $? 0 0 "Check fdfs_append_file failed."
     fdfs_appender_test --help >./usage1.txt
     grep "Usage:" ./usage1.txt
@@ -52,14 +53,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check fdfs_appender_test1 client.conf failed."
     fdfs_trackerd ./tracker.conf stop
     CHECK_RESULT $? 0 0 "Check fdfs_trackerd stop failed."
-    fdfs_storaged $storage_path/storage.conf stop
+    fdfs_storaged "$storage_path"/storage.conf stop
     CHECK_RESULT $? 0 0 "Check fdfs_storaged stop failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf *.txt
+    rm -rf ./*.txt
     Post_Test
     LOG_INFO "End to restore the test environment."
 }

@@ -16,24 +16,30 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Create LV
 # #############################################
-source ../common/disk_lib.sh
+source "${OET_PATH}/testcases/doc-test/admin_guide/common/disk_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        local_disk=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '2p')
+        local_disk1=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '3p')
+        local_disk2=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '4p')
+    fi
+    DNF_INSTALL lvm2
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvcreate /dev/${local_disk} /dev/${local_disk1} -y
+    pvcreate "/dev/${local_disk}" "/dev/${local_disk1}" -y
     CHECK_RESULT $?
-    pvcreate /dev/${local_disk2} -f
+    pvcreate "/dev/${local_disk2}" -f
     CHECK_RESULT $?
-    pvdisplay | grep "PV Name" | grep /dev/${local_disk}
+    pvdisplay | grep "PV Name" | grep "/dev/${local_disk}"
     CHECK_RESULT $?
-    pvdisplay | grep "PV Name" | grep /dev/${local_disk1}
+    pvdisplay | grep "PV Name" | grep "/dev/${local_disk1}"
     CHECK_RESULT $?
-    vgcreate openeulertest /dev/${local_disk} /dev/${local_disk1} /dev/${local_disk2}
+    vgcreate openeulertest "/dev/${local_disk}" "/dev/${local_disk1}" "/dev/${local_disk2}"
     CHECK_RESULT $?
     lvcreate -y -L 50MB -n test openeulertest
     CHECK_RESULT $?
@@ -53,10 +59,11 @@ function post_test() {
     umount /dev/openeulertest/test
     lvremove openeulertest/test -y
     vgremove openeulertest -y
-    pvremove /dev/${local_disk} /dev/${local_disk1} -y
-    mkfs.ext4 /dev/${local_disk1}
-    mkfs.ext4 /dev/${local_disk}
+    pvremove "/dev/${local_disk}" "/dev/${local_disk1}" -y
+    mkfs.ext4 "/dev/${local_disk1}"
+    mkfs.ext4 "/dev/${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

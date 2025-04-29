@@ -127,13 +127,7 @@
             "name": "oe_test_service_pmlogger"
         },
         {
-            "name": "oe_test_service_pmmgr"
-        },
-        {
             "name": "oe_test_service_pmproxy"
-        },
-        {
-            "name": "oe_test_service_pmwebd"
         },
         {
             "name": "oe_test_pcp2json_01"

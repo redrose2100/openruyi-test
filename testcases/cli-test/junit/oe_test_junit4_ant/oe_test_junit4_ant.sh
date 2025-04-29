@@ -17,7 +17,7 @@
 # @Desc      :   Junit+ant integration testing
 # ############################################
 
-source "../common/common_junit.sh"
+source "${OET_PATH}/testcases/cli-test/junit/common/common_junit.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -31,20 +31,24 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ant test >log
+    ant test > log
     grep "Tests run: 2, Failures: 0, Errors: 0, Skipped: 0"$'\n'"BUILD SUCCESSFUL" log
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "build failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /usr/share/ant/lib/junit.jar
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     mv /etc/profile-bak /etc/profile -f
     source /etc/profile
-    rm -rf $(ls | grep -vE ".xml|.java|.sh")
+    for file in *; do
+        if echo "${file}" | grep -vE ".xml|.java|.sh"; then
+            rm -rf "${file}"
+        fi
+    done
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

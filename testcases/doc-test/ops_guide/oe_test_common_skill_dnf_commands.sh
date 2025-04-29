@@ -38,13 +38,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to displays the disabled OS repository"
     dnf config-manager --enable OS
     CHECK_RESULT $? 0 0 "Failed to set the OS repository to be available"
-    expect <<-EOF
-    spawn dnf install tree
-    set timeout 300
-    expect "Is this ok"
-    send "y\\n"
-    expect eof
-EOF
+    dnf install tree -y | grep "Installed"
     CHECK_RESULT $? 0 0 "Failed to install the RPM pkg"
     expect <<-EOF
     spawn dnf reinstall tree

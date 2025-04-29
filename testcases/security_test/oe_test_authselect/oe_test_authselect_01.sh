@@ -17,10 +17,11 @@
 # @Desc      :   File system common command test-authselect
 # ############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL authselect
     lang="$LANG"
     LANG=en_US.UTF-8
     LOG_INFO "End of environmental preparation!"
@@ -41,6 +42,7 @@ function run_test() {
 }
 
 function post_test() {
+    DNF_REMOVE "$@"
     LANG=$lang
 }
 

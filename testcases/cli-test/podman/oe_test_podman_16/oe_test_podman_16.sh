@@ -28,35 +28,35 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ID=$(podman create --tmpfs /tmp:rw ubi8-minimal ls)
+    ID=$(podman create --tmpfs /tmp:rw alpine ls)
     podman inspect "$ID" | grep "/tmp:rw"
     CHECK_RESULT $? 0 0 'check /tmp:rw failed'
-    ID=$(podman create --userns host ubi8-minimal ls)
+    ID=$(podman create --userns host alpine ls)
     podman inspect "$ID" | grep 'UsernsMode'
     CHECK_RESULT $? 0 0 'check UsernsMode failed'
-    ID=$(podman create --uts host ubi8-minimal ls)
+    ID=$(podman create --uts host alpine ls)
     podman inspect "$ID" | grep '"UTSMode": "host"'
     CHECK_RESULT $? 0 0 'check UTSMode host failed'
-    ID=$(podman create --name example ubi8-minimal ls)
+    ID=$(podman create --name example alpine ls)
     podman inspect "$ID" | grep '"Name": "example"'
     CHECK_RESULT $? 0 0 'check Name - example failed'
-    ID=$(podman create --volume /tmp:/tmp:z ubi8-minimal ls)
+    ID=$(podman create --volume /tmp:/tmp:z alpine ls)
     podman inspect "$ID" | grep -i '"destination": "/tmp"'
     CHECK_RESULT $? 0 0 'check destination failed'
-    ID=$(podman create --workdir /tmp ubi8-minimal ls)
+    ID=$(podman create --workdir /tmp alpine ls)
     podman inspect "$ID" | grep '"WorkingDir": "/tmp"'
     CHECK_RESULT $? 0 0 'check WorkingDir failed'
     podman rmi -f "$(podman images -q)"
     CHECK_RESULT $? 0 0 "check podman rmi -f $(podman images -q) failed"
-    podman images | grep "ubi8-minimal"
-    CHECK_RESULT $? 1 0 'check podman images | grep "ubi8-minimal" failed'
-    podman pull ubi8-minimal
-    podman images | grep "ubi8-minimal"
-    CHECK_RESULT $? 0 0 'check podman images | grep "ubi8-minimal" failed'
+    podman images | grep "alpine"
+    CHECK_RESULT $? 1 0 'check podman images | grep "alpine" failed'
+    podman pull alpine
+    podman images | grep "alpine"
+    CHECK_RESULT $? 0 0 'check podman images | grep "alpine" failed'
     podman rmi --all
     CHECK_RESULT $? 0 0 'check podman rmi --all failed'
-    podman images | grep "ubi8-minimal"
-    CHECK_RESULT $? 1 0 'check podman images | grep "ubi8-minimal" faileds'
+    podman images | grep "alpine"
+    CHECK_RESULT $? 1 0 'check podman images | grep "alpine" faileds'
     LOG_INFO "End to run test."
 }
 

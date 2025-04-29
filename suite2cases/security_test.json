@@ -40,7 +40,8 @@
             "name": "oe_test_selinux_disable"
         },
         {
-            "name": "oe_test_selinux_booleands"
+            "name": "oe_test_selinux_booleands",
+            "machine num": 2
         },
         {
             "name": "oe_test_identify_selinux_rejects"

@@ -23,8 +23,14 @@ function pre_test() {
     useradd test
     su - test -c "touch /home/test/testfile"
     echo 123 > /home/test/testfile
+    DNF_INSTALL "libselinux"
     status01="$(getenforce)"
-    setenforce  Enforcing 
+    # 对selinux是否被禁用进行判断
+    setenforce Enforcing  #如果在内核层禁用了selinux,那么这里是无法打开的
+    if [ "$(getenforce)" == "Disabled" ]; then
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -49,6 +55,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf test
     setenforce "${status01}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

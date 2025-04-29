@@ -20,7 +20,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL docker
+    DNF_INSTALL "docker wget"
     cur_lang=$LANG
     export LANG=en_US.UTF-8
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then

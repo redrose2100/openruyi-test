@@ -17,10 +17,15 @@
 # @Desc      :   Test qemu-guest-agent.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    # 检查是否存在 org.qemu.guest_agent.0 设备，不存在时跳过用例
+    if [ ! -e /dev/virtio-ports/org.qemu.guest_agent.0 ]; then
+        LOG_WARN "org.qemu.guest_agent.0 device not detected."
+        exit 255
+    fi
     DNF_INSTALL qemu-guest-agent
     LOG_INFO "End of environmental preparation!"
 }
@@ -35,7 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop qemu-guest-agent.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
