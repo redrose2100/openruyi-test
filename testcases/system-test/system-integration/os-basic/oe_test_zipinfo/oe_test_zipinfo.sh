@@ -19,6 +19,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "zip unzip"
     echo "aabbcc" >/tmp/test.txt
     zip /tmp/test.zip /tmp/test.txt
     LOG_INFO "End to prepare the test environment."
@@ -54,6 +55,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/test.txt
     rm -rf /tmp/test.zip
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

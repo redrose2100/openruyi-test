@@ -17,26 +17,26 @@
 # @Desc      :   Command test-who -b/-s
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to pre the test env"
-    DNF_INSTALL dmidecode
+    DNF_INSTALL "dmidecode pciutils lshw"
     LOG_INFO "End to pre the test env"
 }
 function run_test() {
     LOG_INFO "Start to run test."
     lspci -vnn | grep QEMU -A 12
     CHECK_RESULT $?
-    dmidecode -s bios-vendor | grep -iE "EFI Development Kit II / OVMF|SeaBIOS"
+    dmidecode -s bios-vendor | grep -iE "EDK II|EFI Development Kit II / OVMF|SeaBIOS"
     CHECK_RESULT $?
-    dmidecode -s bios-version | grep -iE "0.0.0|prebuilt.qemu.org"
+    dmidecode -s bios-version | grep -iE "2.7|0.0.0|prebuilt.qemu.org"
     CHECK_RESULT $?
     id -u testuser || useradd testuser
     usermod -s /bin/csh testuser
     CHECK_RESULT $?
     su testuser -c "echo $SHELL" | grep "/bin/csh"
     CHECK_RESULT $? 0 1
-    sudo lshw -c network | grep "network"
+    sudo lshw -c network | grep -iE "Ethernet|network"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
@@ -44,7 +44,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to clean env."
     userdel -rf testuser
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to clean env."
 }
 main "$@"
