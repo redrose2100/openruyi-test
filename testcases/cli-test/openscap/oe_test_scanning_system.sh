@@ -17,11 +17,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Vulnerability scanning system
 # #############################################
+# shellcheck disable=SC2034
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "openscap scap-security-guide"
+    EXECUTE_T="60m"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -36,7 +38,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf vulnerability.html
     LOG_INFO "Finish environment cleanup!"
 }

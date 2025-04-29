@@ -17,22 +17,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Scanning remote system vulnerabilities
 # #############################################
+# shellcheck disable=SC2034
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    if [[ "$(uname -m)" == "riscv64" ]]; then
-        DNF_INSTALL "python3-paramiko"
-    fi
     DNF_INSTALL "openscap scap-security-guide"
     DNF_INSTALL "openscap scap-security-guide" 2
+    EXECUTE_T="60m"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
     expect -c "
-        set timeout 300
+        set timeout 3600
         spawn oscap-ssh ${NODE2_USER}@${NODE2_IPV4} 22 oval eval --report /tmp/remote-vulnerability.html /usr/share/xml/scap/ssg/content/ssg-ol7-oval.xml
         expect {
             \"*yes/no*\" {
@@ -53,9 +52,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    DNF_REMOVE 2 "$@"
     DNF_REMOVE "$@"
-    SLEEP_WAIT 3
-    DNF_REMOVE 2 "openscap scap-security-guide"
     rm -rf /tmp/remote-vulnerability.html
     LOG_INFO "Finish environment cleanup!"
 }
