@@ -21,6 +21,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        # riscv64 架构跳过测试
+        LOG_WARN "minimap2 don't support riscv64"
+        exit 255
+    fi
     DNF_INSTALL "minimap2"
     minimap2 --v
     CHECK_RESULT $? 0 0 "log message: Failed install minimap2 "
