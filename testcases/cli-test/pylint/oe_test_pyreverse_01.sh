@@ -39,14 +39,19 @@ function run_test() {
     find . -name "classes.dot" | grep "classes.dot"
     CHECK_RESULT $? 0 0 "L$LINENO: -f No Pass"
     rm -rf classes.dot
-    pyreverse --class pylint.checkers.classes.ClassChecker pylint
-    find . -name "pylint.checkers.classes.ClassChecker.dot" | grep "pylint.checkers.classes.ClassChecker.dot"
-    CHECK_RESULT $? 0 0 "L$LINENO: -class No Pass"
-    rm -rf pylint.checkers.classes.ClassChecker.dot
-    pyreverse -c pylint.checkers.classes.ClassChecker pylint
-    find . -name "pylint.checkers.classes.ClassChecker.dot" | grep "pylint.checkers.classes.ClassChecker.dot"
-    CHECK_RESULT $? 0 0 "L$LINENO: -c No Pass"
-    rm -rf pylint.checkers.classes.ClassChecker.dot
+    # pylint>=3.0 上游 bug
+    # https://github.com/pylint-dev/pylint/issues/9797
+    # https://gitee.com/openeuler/mugen/issues/IBPTZN
+    if [[ $(python3 -c "import pylint; print(pylint.__version__.split('.')[0])") == "2" ]] ; then
+        pyreverse --class pylint.checkers.classes.ClassChecker pylint
+        find . -name "pylint.checkers.classes.ClassChecker.dot" | grep "pylint.checkers.classes.ClassChecker.dot"
+        CHECK_RESULT $? 0 0 "L$LINENO: -class No Pass"
+        rm -rf pylint.checkers.classes.ClassChecker.dot
+        pyreverse -c pylint.checkers.classes.ClassChecker pylint
+        find . -name "pylint.checkers.classes.ClassChecker.dot" | grep "pylint.checkers.classes.ClassChecker.dot"
+        CHECK_RESULT $? 0 0 "L$LINENO: -c No Pass"
+        rm -rf pylint.checkers.classes.ClassChecker.dot
+    fi
     pyreverse --show-ancestors 1 string
     find . -name "classes.dot" | grep "classes.dot"
     CHECK_RESULT $? 0 0 "L$LINENO: --show-ancestors No Pass"
