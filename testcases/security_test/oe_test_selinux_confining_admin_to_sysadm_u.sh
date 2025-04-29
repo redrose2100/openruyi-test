@@ -28,7 +28,13 @@ ${NODE1_PASSWORD}
 EOF
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL policycoreutils-python-utils
+    DNF_INSTALL "libselinux policycoreutils-python-utils"
+    # 对selinux是否被禁用进行判断
+    setenforce 1  #如果在内核层禁用了selinux,那么这里是无法打开的
+    if [ "$(getenforce)" == "Disabled" ]; then
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
     LOG_INFO "End of environmental preparation."
 }
 
