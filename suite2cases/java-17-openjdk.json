@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_keytool"
+        },
+        {
+            "name": "oe_test_openjdk17_javadoc"
         }
     ]
 }
