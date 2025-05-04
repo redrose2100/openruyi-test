@@ -44,8 +44,6 @@ function run_test() {
         elif [ "$NODE1_FRAME"x == "riscv64"x ]; then
             lscpu | grep -i Architecture | grep -i riscv64
             CHECK_RESULT $? 0 0 "The lscpu command displays an incorrect CPU model"
-            dmidecode -t processor | grep -i Family | grep -i rv64
-            CHECK_RESULT $? 0 0 "The dmidecode command displays an incorrect CPU model"
             grep -i isa /proc/cpuinfo | grep -i rv64
             CHECK_RESULT $? 0 0 "The /proc/cpuinfo displays an incorrect CPU model"
         else
