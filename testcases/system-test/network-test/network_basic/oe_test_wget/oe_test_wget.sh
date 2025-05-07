@@ -18,6 +18,12 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL wget
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     wget www.baidu.com
@@ -30,6 +36,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf index.html
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
