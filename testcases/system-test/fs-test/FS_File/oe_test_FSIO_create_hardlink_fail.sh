@@ -16,42 +16,44 @@
 #@Desc      	:   Take the test create hard link file failed
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "lvm2"
     cur_date=$(date +%Y%m%d%H%M%S)
-    point_list=($(CREATE_FS "ext3 ext4 xfs"))
+    read -r -a point_list <<< "$(CREATE_FS "ext3 ext4 xfs")"
     ext3_point=${point_list[1]}
     ext4_point=${point_list[2]}
     xfs_point=${point_list[3]}
-    echo "test ext3" >$ext3_point/testFile1
-    echo "test ext4" >$ext4_point/testFile1
-    echo "test xfs" >$xfs_point/testFile1
-    mkdir $ext3_point/testDir
+    echo "test ext3" >"$ext3_point/testFile1"
+    echo "test ext4" >"$ext4_point/testFile1"
+    echo "test xfs" >"$xfs_point/testFile1"
+    mkdir "$ext3_point/testDir"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ln $ext3_point/testDir /tmp/hard_link$cur_date 2>&1 | grep "hard link not allowed for directory"
+    ln "$ext3_point/testDir" "/tmp/hard_link$cur_date" 2>&1 | grep "hard link not allowed for directory"
     CHECK_RESULT $? 0 0 "Create hard link for directory unexpectly."
-    ln $ext3_point/testnonexist /tmp/hard_link$cur_date 2>&1 | grep "No such file or directory"
+    ln "$ext3_point/testnonexist" "/tmp/hard_link$cur_date" 2>&1 | grep "No such file or directory"
     CHECK_RESULT $? 0 0 "Create hard link for non-exist directory unexpectly."
-    ln $ext3_point/testFile1 $ext4_point/hardFile 2>&1 | grep "Invalid cross-device link"
+    ln "$ext3_point/testFile1" "$ext4_point/hardFile" 2>&1 | grep "Invalid cross-device link"
     CHECK_RESULT $? 0 0 "Create hard link between ext3 and ext4 unexpectly."
-    ln $ext4_point/testFile1 $xfs_point/hardFile 2>&1 | grep "Invalid cross-device link"
+    ln "$ext4_point/testFile1" "$xfs_point/hardFile" 2>&1 | grep "Invalid cross-device link"
     CHECK_RESULT $? 0 0 "Create hard link between ext4 and xfs unexpectly."
-    ln $xfs_point/testFile1 $ext3_point/hardFile 2>&1 | grep "Invalid cross-device link"
+    ln "$xfs_point/testFile1" "$ext3_point/hardFile" 2>&1 | grep "Invalid cross-device link"
     CHECK_RESULT $? 0 0 "Create hard link between xfs and ext3 unexpectly."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
+    list="${point_list[*]}"
     REMOVE_FS "$list"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
