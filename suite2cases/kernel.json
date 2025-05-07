@@ -178,6 +178,9 @@
         },
         {
             "name": "oe_test_nhdlc"
+        },
+        {
+            "name": "oe_test_hinic3"
         }
     ]
 }
