@@ -16,11 +16,12 @@
 #@Desc      	:   Take filefrag
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    point_list=($(CREATE_FS))
+    DNF_INSTALL "lvm2 xfsprogs"
+    read -r -a point_list <<< "$(CREATE_FS "ext3 ext4 xfs")"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -28,8 +29,8 @@ function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         var=${point_list[$i]}
-        echo "$var" >$var/testFile
-        filefrag -v $var/testFile
+        echo "$var" >"$var/testFile"
+        filefrag -v "$var/testFile"
         CHECK_RESULT $? 0 0 "Check filefrag of $var/testFile failed."
     done
     LOG_INFO "End to run test."
@@ -37,10 +38,11 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
+    list="${point_list[*]}"
     REMOVE_FS "$list"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
 
