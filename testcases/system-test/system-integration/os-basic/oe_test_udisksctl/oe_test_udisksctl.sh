@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "udisks2"
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."
@@ -42,6 +43,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

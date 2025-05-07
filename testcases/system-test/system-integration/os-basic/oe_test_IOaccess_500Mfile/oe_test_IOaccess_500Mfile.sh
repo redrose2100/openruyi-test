@@ -14,12 +14,14 @@
 # @Contact   :   xcl_job@163.com
 # @Date      :   2020-04-09
 # @License   :   Mulan PSL v2
-# @Desc      :   500M file continuous cp,dd,tar,zip,unzip
+# @Desc      :   500M file continuous cp,dd,zip,unzip
 # ############################################
+# shellcheck disable=SC2012,SC2010
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to pre test."
+    DNF_INSTALL "unzip zip"
     testfile1=myfile$(date +%Y%m%d)
     testfile2=mycpfile$(date +%Y%m%d)
     LOG_INFO "Start to pre test."
@@ -27,40 +29,40 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for i in $(seq 1 10); do
-        dd if=/dev/urandom of=${testfile1} bs=1M count=500
+    for _ in $(seq 1 10); do
+        dd if=/dev/urandom of="${testfile1}" bs=1M count=500
         CHECK_RESULT $?
-        ls -l ${testfile1} | awk '{print$5}' | grep -w 524288000
+        ls -l "${testfile1}" | awk '{print$5}' | grep -w 524288000
         CHECK_RESULT $?
-        dd if=/dev/zero of=${testfile1} bs=1M count=500
+        dd if=/dev/zero of="${testfile1}" bs=1M count=500
         CHECK_RESULT $?
-        ls -l ${testfile1} | awk '{print$5}' | grep -w 524288000
-        CHECK_RESULT $?
-    done
-
-    file_size=$(ls -l ${testfile1} | awk '{print$5}')
-
-    for i in $(seq 1 10); do
-        rm -rf ${testfile2}
-        cp ${testfile1} ${testfile2}
-        CHECK_RESULT $?
-        ls -l ${testfile2} | grep ${file_size}
+        ls -l "${testfile1}" | awk '{print$5}' | grep -w 524288000
         CHECK_RESULT $?
     done
 
-    for i in $(seq 1 10); do
-        rm -rf ${testfile1}.zip
-        zip ${testfile1}.zip ${testfile1}
+    file_size=$(ls -l "${testfile1}" | awk '{print$5}')
+
+    for _ in $(seq 1 10); do
+        rm -rf "${testfile2}"
+        cp "${testfile1}" "${testfile2}"
         CHECK_RESULT $?
-        test -f ${testfile1}.zip
+        ls -l "${testfile2}" | grep "${file_size}"
         CHECK_RESULT $?
     done
 
-    for i in $(seq 1 10); do
-        rm -rf ${testfile1}
-        unzip ${testfile1}.zip
+    for _ in $(seq 1 10); do
+        rm -rf "${testfile1}".zip
+        zip "${testfile1}".zip "${testfile1}"
         CHECK_RESULT $?
-        ls -l ${testfile1} | grep ${file_size}
+        test -f "${testfile1}".zip
+        CHECK_RESULT $?
+    done
+
+    for _ in $(seq 1 10); do
+        rm -rf "${testfile1}"
+        unzip "${testfile1}".zip
+        CHECK_RESULT $?
+        ls -l "${testfile1}" | grep "${file_size}"
         CHECK_RESULT $?
     done
     LOG_INFO "End to run test."
@@ -68,7 +70,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf ${testfile1} ${testfile2} ${testfile1}.zip
+    rm -rf "${testfile1}" "${testfile2}" "${testfile1}".zip
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

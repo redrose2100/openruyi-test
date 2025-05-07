@@ -18,6 +18,12 @@
 # ############################################
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL lsscsi
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "start to run test."
     lsscsi -g 2>/tmp/error.log
@@ -41,6 +47,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/error.log
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

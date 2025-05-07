@@ -18,6 +18,13 @@
 # ############################################
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "pciutils"
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "start to run test."
     lspci | grep -i bridge
@@ -33,6 +40,12 @@ function run_test() {
     lspci -vvv | grep -A3 -i bridge
     CHECK_RESULT $? 0 0 "show pci device detail info fail"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
