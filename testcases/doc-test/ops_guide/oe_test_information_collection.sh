@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     Default_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "net-tools dhcp"
+    DNF_INSTALL "net-tools dhcp dmidecode lshw ethtool pciutils"
     LOG_INFO "End to prepare the test environment."
 }
 
