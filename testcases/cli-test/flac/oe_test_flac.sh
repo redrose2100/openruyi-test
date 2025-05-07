@@ -23,7 +23,7 @@ function pre_test() {
   LOG_INFO "Start environmental preparation."
   DNF_INSTALL "flac"
   rm -rf ./example.*
-  cp "$(find /usr -name "*.wav"  |tail -1)" ./example.wav
+  cp ./common/test.wav ./example.wav
   file ./example.wav
   LOG_INFO "End of environmental preparation!"
 }
