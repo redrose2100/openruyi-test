@@ -19,6 +19,12 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     service auditd start
@@ -36,6 +42,7 @@ function post_test() {
     LOG_INFO "Start to restore the tet environment."
     auditctl -D
     service auditd stop
+    DNF_REMOVE "$@"
     LOG_INFO "Finish to restore the tet environment."
 }
 
