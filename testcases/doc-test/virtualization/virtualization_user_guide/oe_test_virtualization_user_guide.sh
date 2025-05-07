@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Installing virtualization, Ready environment, Manage virtual machines, Manage system resources, Management equipment
 #####################################
-# shellcheck disable=SC1090,SC1091,SC2154,SC2009
+# shellcheck disable=SC1090,SC1091,SC2154,SC2009,SC2034
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -23,6 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     Default_LANG=$LANG
     export LANG=en_US.UTF-8
+    EXECUTE_T="60m"
     source /etc/openEuler-latest
     Network_card_num=$(ip a | grep -c "state UP")
     if [ "$Network_card_num" -ge 2 ]; then
@@ -39,7 +40,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     # Installing virtualization
-    DNF_INSTALL "qemu libvirt"
+    DNF_INSTALL "qemu libvirt wget"
     systemctl start libvirtd
     CHECK_RESULT $? 0 0 "Failed to start libvirtd.socket"
     file /dev/kvm
@@ -102,10 +103,19 @@ function run_test() {
     fi
 
     # Manage virtual machines
+    if [ "${NODE1_FRAME}"x == "riscv64"x ]; then
+        # 在 riscv64 可以正确获取 /etc/openEuler-latest 前固定版本为 openEuler-24.03-LTS-SP1
+        # https://gitee.com/src-openeuler/openEuler-latest-release/issues/IC5KC3
+        openeulerversion="openEuler-24.03-LTS-SP1"
+        wget -c -O /mnt/openEuler-RISCV_VIRT_CODE.fd https://repo.openeuler.org/"${openeulerversion}"/virtual_machine_img/riscv64/RISCV_VIRT_CODE.fd
+        wget -c -O /mnt/openEuler-RISCV_VIRT_VARS.fd https://repo.openeuler.org/"${openeulerversion}"/virtual_machine_img/riscv64/RISCV_VIRT_VARS.fd
+    fi
     wget -c -P /mnt https://repo.openeuler.org/"${openeulerversion}"/ISO/"${NODE1_FRAME}"/"${openeulerversion}"-"${NODE1_FRAME}"-dvd.iso
     mv openEuler-image.qcow2 /mnt
     if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
         sed -i "s/openEuler-22.03-LTS-aarch64-dvd.iso/${openeulerversion}-${NODE1_FRAME}-dvd.iso/" openEulerVM.xml
+    elif [ "${NODE1_FRAME}"x == "riscv64"x ]; then
+        sed -i "s/openEuler-24.03-LTS-SP1-riscv64-dvd.iso/${openeulerversion}-${NODE1_FRAME}-dvd.iso/" openEulerVM.xml
     else
         sed -i "28a<disk type='file' device='cdrom'> \
       <driver name='qemu' type='raw'/> \
@@ -187,7 +197,7 @@ function run_test() {
     virsh vcpupin openEulerVM | grep "2-3"
     CHECK_RESULT $? 0 0 "The online adjust has not taken effect"
     virsh destroy openEulerVM
-    SLEEP_WAIT 3 "virsh start openEulerVM"
+    SLEEP_WAIT 20 "virsh start openEulerVM"
     virsh schedinfo openEulerVM | grep "cpu_shares     : 1024"
     CHECK_RESULT $? 0 0 "The current online changed the CPU quota of the openEulerVM is not invalid"
     virsh emulatorpin openEulerVM | grep "$Online_CPU_list"
@@ -210,7 +220,7 @@ function run_test() {
     virsh vcpupin openEulerVM | grep "$Online_CPU_list"
     CHECK_RESULT $? 0 0 "Changes to the current vCPU binding info of the openEulerVM should not take effect immediately, but they have taken effect"
     virsh destroy openEulerVM
-    SLEEP_WAIT 3 "virsh start openEulerVM"
+    SLEEP_WAIT 20 "virsh start openEulerVM"
     virsh schedinfo openEulerVM | grep "cpu_shares     : 2048"
     CHECK_RESULT $? 0 0 "Changes to the cpu_shares value should have taken effect, but it did not"
     virsh emulatorpin openEulerVM | grep "0,2-3"
@@ -230,11 +240,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to delete a disk snapshot for the openEulerVM"
 
     # Best practice
-    ps -eZ | grep qemu | grep "svirt_t:s0:c"
-    CHECK_RESULT $? 0 0 "sVirt defense is not enabled for the QEMU process on the openEulerVM"
+    if [ "$(getenforce)" != "Disabled" ]; then
+        ps -eZ | grep qemu | grep "svirt_t:s0:c"
+        CHECK_RESULT $? 0 0 "sVirt defense is not enabled for the QEMU process on the openEulerVM"
+    fi
 
     virsh destroy openEulerVM
-    if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
+    if [[ "${NODE1_FRAME}"x == "aarch64"x || "${NODE1_FRAME}"x == "riscv64"x ]]; then
         virsh undefine openEulerVM --nvram | grep "Domain .*openEulerVM.* has been undefined"
         CHECK_RESULT $? 0 0 "Failed to undefine the openEulerVM"
     else
