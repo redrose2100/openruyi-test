@@ -16,27 +16,29 @@
 #@Desc      	:   Take the test mount ext3
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}"/testcases/system-test/fs-test/common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    point_list=($(CREATE_FS ext3))
+    DNF_INSTALL lvm2
+    read -r -a point_list <<< "$(CREATE_FS ext3)"
     vggroup=${point_list[0]}
     ext4_point=${point_list[1]}
-    lv=$(lsblk | grep $vggroup | awk '{print $1}' | cut -d '-' -f 2)
+    lv=$(lsblk | grep "$vggroup" | awk '{print $1}' | cut -d '-' -f 2)
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    size1=$(df -i | grep /dev/mapper/$vggroup-$lv | awk '{print $2}')
-    umount /dev/$vggroup/$lv
-    e2fsck -fp /dev/$vggroup/$lv
-    lvresize -L +1G /dev/$vggroup/$lv
-    resize2fs /dev/$vggroup/$lv 6262
+    e4defrag "$ext4_point"
+    size1=$(df -i | grep "/dev/mapper/$vggroup-$lv" | awk '{print $2}')
+    umount "/dev/$vggroup/$lv"
+    e2fsck -fp "/dev/$vggroup/$lv"
+    lvresize -L +1G "/dev/$vggroup/$lv"
+    resize2fs "/dev/$vggroup/$lv" 6262
     CHECK_RESULT $? 0 0 "Change size of ext3 failed."
-    mount /dev/$vggroup/$lv $ext4_point
-    size2=$(df -i | grep /dev/mapper/$vggroup-$lv | awk '{print $2}')
+    mount "/dev/$vggroup/$lv" "$ext4_point"
+    size2=$(df -i | grep "/dev/mapper/$vggroup-$lv" | awk '{print $2}')
     [[ "$size1" -ne "$size2" ]]
     CHECK_RESULT $? 0 0 "Resize for ext3 failed."
     LOG_INFO "End to run test."
@@ -44,8 +46,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
+    list="${point_list[*]}"
     REMOVE_FS "$list"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -16,34 +16,35 @@
 #@Desc      	:   Take the test mount ext4
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}"/testcases/system-test/fs-test/common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL lvm2
     cur_date=$(date +%Y%m%d%H%M%S)
     vggroup=$(CREATE_VG)
     lv="test_lv"$cur_date
-    lvcreate -n $lv -L 2G $vggroup -y >/dev/null   
-    mkfs.ext4 /dev/$vggroup/$lv
+    lvcreate -n "$lv" -L 2G "$vggroup" -y >/dev/null   
+    mkfs.ext4 "/dev/$vggroup/$lv"
     ext4_point="/mnt/test"$cur_date
-    mkdir $ext4_point
+    mkdir "$ext4_point"
     data=('remount-ro' 'continue' 'panic')
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for var in ${data[@]}; do
-        mount -t ext4 -o errors=$var /dev/$vggroup/$lv $ext4_point
+    for var in "${data[@]}"; do
+        mount -t ext4 -o errors="$var" "/dev/$vggroup/$lv" "$ext4_point"
         CHECK_RESULT $? 0 0 "Mount ext4 by errors=$var failed."
-        umount -f /dev/$vggroup/$lv
+        umount -f "/dev/$vggroup/$lv"
     done
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $ext4_point
+    rm -rf "$ext4_point"
     LOG_INFO "End to restore the test environment."
 }
 

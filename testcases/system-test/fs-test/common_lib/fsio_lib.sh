@@ -18,6 +18,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 export FS_TYPE="ext3 ext4 xfs"
 export LANG=en_US.UTF-8
+DNF_INSTALL lvm2
 
 function CREATE_LV() {
     lvname=$1
