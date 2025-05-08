@@ -39,6 +39,7 @@ function run_test() {
     # Installing StratoVirt
     DNF_INSTALL stratovirt
     stratovirt -version | grep "StratoVirt"
+    SLEEP_WAIT 20
     CHECK_RESULT $? 0 0 "Failed to install StratoVirt"
 
     # Ready environment
@@ -46,6 +47,7 @@ function run_test() {
     if ! ls /dev/vhost-vsock | grep "/dev/vhost-vsock"; then
         Mmio_Sign=1
         modprobe vhost_vsock
+	SLEEP_WAIT 20
         CHECK_RESULT $? 0 0 "Failed to import device /dev/vhost-vsock"
     fi
     CHECK_RESULT $? 0 0 "The /dev/vhost-vsock device does not exist"
@@ -53,23 +55,29 @@ function run_test() {
     # Creating a kernel Image
     cd /home || exit
     git clone https://gitee.com/openeuler/kernel.git
+    SLEEP_WAIT 20
     CHECK_RESULT $? 0 0 "Failed to git clone kernel"
     cd kernel || exit
     git checkout "$openeulerversion" 2>&1 | grep "Switched to a new branch"
+    SLEEP_WAIT 20
     CHECK_RESULT $? 0 0 "Failed to switch the kernel version to $openeulerversion"
     git clone https://gitee.com/openeuler/stratovirt.git
+    SLEEP_WAIT 20
     CHECK_RESULT $? 0 0 "Failed to git clone stratovirt"
     mv stratovirt/docs/kernel_config/* .
     kernel_v=$(echo "$kernelversion" | awk -F'-' '{print $1}' | awk -F'.' 'OFS="."{$NF="";print}' | awk '{print substr($0, 1, length($0)-1)}')
     cp standard_vm/kernel_config_"${kernel_v}"_"${NODE1_FRAME}" kernel.config
     DNF_INSTALL "make gcc flex bison"
     make olddefconfig | grep "configuration written to .config"
+    SLEEP_WAIT 20
     CHECK_RESULT $? 0 0 "Failed to configure and compile the Linux kernel"
     DNF_INSTALL "elfutils-libelf-devel openssl-devel dwarves"
     make -j vmlinux && objcopy -O binary vmlinux vmlinux.bin
+    SLEEP_WAIT 20
     CHECK_RESULT $? 0 0 "Failed to convert the kernel image to PE format"
     if [ "${NODE1_FRAME}"x == "x86_64"x ]; then
         make -j bzImage
+	SLEEP_WAIT 20
         CHECK_RESULT $? 0 0 "Failed to convert the kernel image to bzImzge format"
     fi
     # Create a rootfs image
@@ -83,6 +91,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to mount a file image"
     alpine_minirootfs_pkg=$(curl -s http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/"${NODE1_FRAME}"/ |grep -E '^<a' |awk -F'"' '{print $2}' | grep -E "alpine-minirootfs-[0-9].[0-9]+.[0-9]-${NODE1_FRAME}.tar.gz$" | sort | tail -1)
     wget http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/"${NODE1_FRAME}"/"${alpine_minirootfs_pkg}"
+    SLEEP_WAIT 20
     CHECK_RESULT $? 0 0 "Failed to get alpine-mini rootfs"
     DNF_INSTALL tar
     tar -zxvf alpine-minirootfs*.tar.gz
@@ -118,6 +127,7 @@ EOF
         -device virtio-blk-device,drive=rootfs,id=blk1 \
         -qmp unix:/tmp/stratovirt.socket,server,nowait \
         -serial stdio
+    SLEEP_WAIT 20
     CHECK_RESULT $? 0 0 "Failed to run StratoVirt"
     LOG_INFO "End to run test."
 }
