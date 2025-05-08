@@ -38,7 +38,7 @@ function create_stratovirt_vm() {
     -device virtio-blk-device,drive=rootfs,id=blk1 \
     -qmp unix:/tmp/stratovirt.socket,server,nowait \
     -serial stdio
-        sleep 5
+        sleep 60
         expect "StratoVirt login:"
         send "root\\n"
         sleep 5

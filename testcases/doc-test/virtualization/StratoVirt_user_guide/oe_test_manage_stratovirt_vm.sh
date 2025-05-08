@@ -30,6 +30,7 @@ function run_test() {
     create_stratovirt_vm &
     SLEEP_WAIT 20
     grep -iE "root@StratoVirt" testlog
+    SLEEP_WAIT 20
     CHECK_RESULT $? 0 0 'Failed to create and start a stratovirt VM'
     expect <<-EOF
         log_file testlog1
