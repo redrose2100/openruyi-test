@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL greatsql-mysql-router
+    DNF_INSTALL "greatsql-mysql-router greatsql-server"
     LOG_INFO "End to prepare the test environment."
 }
 

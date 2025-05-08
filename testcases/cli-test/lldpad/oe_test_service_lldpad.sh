@@ -16,11 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test lldpad.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    modprobe -r ip_vti
     DNF_INSTALL lldpad
     LOG_INFO "End of environmental preparation!"
 }
@@ -44,7 +45,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload lldpad.service
     systemctl stop lldpad.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -22,6 +22,7 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL containerd
+    mkdir -p /etc/cni/net.d/
     log_time="$(date '+%Y-%m-%d %T')"
     echo '{
     "cniVersion": "0.4.0",

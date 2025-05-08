@@ -23,13 +23,13 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL lsyncd
     mkdir -p /tmp/htmlcopy
-    cat >> /etc/lsyncd.conf << EOF
+    cat >>/etc/lsyncd.conf <<EOF
     sync{default.rsyncssh, source="/var/www/html", host="localhost", targetdir="/tmp/htmlcopy/"}
 EOF
     expect <<EOF
     spawn ssh-keygen -t rsa
     expect "Generating public/private rsa key pair. Enter file in which to save the key"
-    send "\n"
+    send "/root/.ssh/id_rsa\n"
     expect "Enter passphrase (empty for no passphrase):"
     send "\n"
     expect "Enter same passphrase again:"

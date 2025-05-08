@@ -27,7 +27,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution irqbalance.service
+    service=irqbalance.service
+    log_time="$(date '+%Y-%m-%d %T')"
+    test_restart "${service}"
+    test_enabled "${service}"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -viE "DEBUG|INFO|WARNING|Cannot change IRQ .* affinity: Input/output error"
+    CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload irqbalance.service
     LOG_INFO "Finish test!"
 }
