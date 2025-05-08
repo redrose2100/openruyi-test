@@ -16,11 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test dnf-makecache.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    if rpm -ql cyrus-sasl; then
+        flag=true
+        DNF_REMOVE 1 "cyrus-sasl"
+    fi
     service=dnf-makecache.service
     status='inactive (dead)'
     log_time=$(date '+%Y-%m-%d %T')
@@ -36,6 +40,14 @@ function run_test() {
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v "Failed determining last makecache time" | grep -v "_sasl_plugin_load failed on sasl_canonuser_init"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    if [ "${flag}" = "true" ]; then
+        DNF_INSTALL "cyrus-sasl"
+    fi
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

@@ -22,6 +22,7 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "kuasar"
+    mkdir /run/kuasar-vmm/
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -36,6 +37,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop kuasar-vmm.service
     DNF_REMOVE "$@"
+    rm -rf /run/kuasar-vmm/
     LOG_INFO "End to restore the test environment."
 }
 

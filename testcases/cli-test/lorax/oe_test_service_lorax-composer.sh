@@ -21,12 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "lorax-composer python3-devel"
+    DNF_INSTALL "lorax-composer python3-devel python3-ansible-runner python3-pycdlib python3-setuptools"
     if rpm -ql cyrus-sasl; then
         flag=true
         dnf remove -y cyrus-sasl
     fi
-    pip3 install rpmfluff pycdlib ansible_runner
+    pip3 install rpmfluff -i https://mirrors.aliyun.com/pypi/simple/
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -40,7 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop lorax-composer.service
-    pip3 uninstall rpmfluff pycdlib ansible_runner -y
+    pip3 uninstall rpmfluff -y
     if [ "${flag}" = "true" ]; then
         dnf install -y cyrus-sasl
     fi

@@ -22,9 +22,9 @@ source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "freeipmi ipmitool"
-    ipmitool lan print
+    ipmitool lan print | grep -i "Address.*:"
     ret=$?
-    if [ $ret -ne 0 ] ;then
+    if [ $ret -ne 0 ]; then
         LOG_WARN "System has not bmc device.The environment does not support testing"
         exit 255
     fi
