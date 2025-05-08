@@ -16,11 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test dnf-automatic-download.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    if rpm -ql cyrus-sasl; then
+        flag=true
+        DNF_REMOVE 1 "cyrus-sasl"
+    fi
     DNF_INSTALL "dnf-automatic"
     service=dnf-automatic-download.service
     log_time=$(date '+%Y-%m-%d %T')
@@ -41,7 +45,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    if [ "${flag}" = "true" ]; then
+        DNF_INSTALL "cyrus-sasl"
+    fi
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

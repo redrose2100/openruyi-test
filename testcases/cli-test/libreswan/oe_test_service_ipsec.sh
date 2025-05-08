@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ipsec.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -31,10 +31,7 @@ function run_test() {
     systemctl start ipsec.service
     sed -i 's\ExecStart=/usr/libexec/ipsec/pluto\ExecStart=/usr/libexec/ipsec/pluto --debug\g' /usr/lib/systemd/system/ipsec.service
     systemctl daemon-reload
-    systemctl reload ipsec.service
-    CHECK_RESULT $? 0 0 "ipsec.service reload failed"
-    systemctl status ipsec.service | grep "Active: active"
-    CHECK_RESULT $? 0 0 "ipsec.service reload causes the service status to change"
+    test_reload ipsec.service
     LOG_INFO "Finish test!"
 }
 
@@ -43,7 +40,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/libexec/ipsec/pluto --debug\ExecStart=/usr/libexec/ipsec/pluto\g' /usr/lib/systemd/system/ipsec.service
     systemctl daemon-reload
     systemctl reload ipsec.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
