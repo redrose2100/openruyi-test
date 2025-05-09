@@ -27,6 +27,8 @@ function pre_test() {
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     EXECUTE_T="600m"
+    pretty_name=$(grep "^PRETTY_NAME=" /etc/os-release | cut -d= -f2- | tr -d '"')
+    version_info=$(echo "$pretty_name" | sed -E 's/ \(.*\)/-\1/; s/ /-/g; s/[()]//g')
     test -z "${test_repo}" || official_repo=${test_repo}
     mv -f /etc/yum.repos.d/*.repo ./
     if [ "${test_mode}" == "update" ]; then
