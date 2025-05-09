@@ -1,3 +1,4 @@
+#!/usr/bin/bash
 # Copyright (c) 2023 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -21,7 +22,7 @@ function pre_test(){
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "gcc"
     mkdir /tmp/gcc_test
-    lang=$(echo $LANG)
+    lang="$LANG"
     LANG=en_US.UTF-8
     LOG_INFO "End of environmental preparation!"
 }
@@ -38,19 +39,23 @@ int main(void)
 }
 EOF
     gcc -Wall main.c -o main >/tmp/gcc_test/log1 2>&1
-    grep "warning: ‘i’ is used uninitialized in this function" /tmp/gcc_test/log1
+    grep "warning: ‘i’ is used uninitialized" /tmp/gcc_test/log1
     CHECK_RESULT $? 0 0 "Warning display failure"
     gcc -Wall -Werror main.c -o main >/tmp/gcc_test/log2 2>&1
-    grep "error: ‘i’ is used uninitialized in this function" /tmp/gcc_test/log2
+    grep "error: ‘i’ is used uninitialized" /tmp/gcc_test/log2
     CHECK_RESULT $? 0 0 "Error display failure"
     ./main
     gcc -save-temps main.c >/tmp/gcc_test/log3 2>&1
-    grep "warning: ‘i’ is used uninitialized in this function" /tmp/gcc_test/log3
+    grep "warning: ‘i’ is used uninitialized" /tmp/gcc_test/log3
     gcc -save-temps main.c
-    file=("a.out" "main.i" "main.o" "main.s")
-    for i in ${file[@]}
+    if [ "$(gcc -dumpversion)" -ge 11 ]; then
+        file=("a.out" "a-main.i" "a-main.o" "a-main.s")
+    else
+        file=("a.out" "main.i" "main.o" "main.s")
+    fi
+    for i in "${file[@]}"
     do
-        test -f $i
+        test -f "$i"
         CHECK_RESULT $? 0 0 "File does not exist"
     done
     gcc -Wall -v main.c -o main >/tmp/gcc_test/log4 2>&1
@@ -59,11 +64,17 @@ EOF
 }
 
 function post_test() {
-    DNF_REMOVE
+    LOG_INFO "start environment cleanup."
     LANG=$lang
     rm -rf /tmp/gcc_test
-    rm -rf a.out main*
+    if [ "$(gcc -dumpversion)" -ge 11 ]; then
+        rm -rf a.out main* a-main*
+    else
+        rm -rf a.out main*
+    fi
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
 
