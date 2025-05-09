@@ -16,19 +16,25 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test the basic functions of ip6tables-save
 # ############################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL iptables
+    ip6tables-save > iptables_rules.v6
     LOG_INFO "End to prepare the test environment."
 }
 	
 function run_test() {
     LOG_INFO "Start to run test."
-    ip6tables-save | grep -A 200 nat | grep -A 100 mangle | grep -A 80 raw | grep -A 60 security | grep filter
-    CHECK_RESULT $? 0 0 "Incomplete display"
+    ip6tables -A INPUT -p tcp --dport 80 -j ACCEPT
+    ip6tables-save | grep "dport 80"
+    CHECK_RESULT $? 0 0 "Rule added successfully"
+    ip6tables-restore < iptables_rules.v6
+    ip6tables-save | grep -v "dport 80"
+    CHECK_RESULT $? 0 0 "Rule recovery successful"
     ip6tables-save -t filter | grep filter
     CHECK_RESULT $? 0 0 "Failed to display filter"
     ip6tables-save -t filter | grep -E "nat|mangle|raw|security"
@@ -38,7 +44,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    rm -f iptables_rules.v6
     LOG_INFO "Finish environment cleanup!"
 }
 
