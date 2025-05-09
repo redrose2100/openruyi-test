@@ -22,6 +22,24 @@ function run_test() {
     LOG_INFO "Start to run test."
     ss | grep "State"
     CHECK_RESULT $? 0 0 "Check ss failed."
+    ss -o |grep "timer"
+    CHECK_RESULT $? 0 0 "Check ss -o failed."
+    ss -m |grep "skmem"
+    CHECK_RESULT $? 0 0 "Check ss -m failed."
+    ss -p |grep "pid"
+    CHECK_RESULT $? 0 0 "Check ss -p failed."
+    ss -t state established
+    CHECK_RESULT $? 0 0 "Check ss -t state established failed."
+    ss -t state listening
+    CHECK_RESULT $? 0 0 "Check ss -t state listening failed."
+    ss -t sport = :22
+    CHECK_RESULT $? 0 0 "Check ss -t sport failed."
+    ss -t dport = :80
+    CHECK_RESULT $? 0 0 "Check ss -t dport failed."
+    ss -4 -t
+    CHECK_RESULT $? 0 0 "Check ss -4 -t failed."
+    ss -6 -t  
+    CHECK_RESULT $? 0 0 "Check ss -6 -t failed."
     LOG_INFO "End to run test."
 }
 
