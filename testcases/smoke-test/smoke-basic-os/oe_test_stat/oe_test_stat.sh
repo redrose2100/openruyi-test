@@ -29,7 +29,25 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to execute stat -c"
     stat --format "%Z" /etc/passwd
     CHECK_RESULT $? 0 0 "Failed to execute stat --format"
+
+    ln -s non_existent_file broken_link
+    stat -L broken_link
+    CHECK_RESULT $? 1 0 "Failed to test broken link with -L option"
+    mkdir test_dir
+    ln -s test_dir dir_link
+    stat -L dir_link
+    CHECK_RESULT $? 0 0 "Failed to test directory link with -L option"
+    attr_1=$(stat /usr/bin/yum |grep -iE 'Access|权限' |awk -F '/' '{print $1}' | awk -F '(' '{print $2}')
+    attr_2=$(stat -L /usr/bin/yum |grep -iE 'Access|权限' |awk -F '/' '{print $1}' | awk -F '(' '{print $2}')
+    CHECK_RESULT "${attr_1}" "${attr_2}" 1 "Failed to test access for file and dir with -L option"
     LOG_INFO "End to run test."
 }
+
+function post_test() {
+  LOG_INFO "start environment cleanup."
+  rm -rf test_dir broken_link dir_link
+  LOG_INFO "Finish environment cleanup!"
+}
+
 
 main "$@"
