@@ -589,7 +589,8 @@
             "name": "oe_test_basic_UserMgmt_permission"
         },
         {
-            "name": "oe_test_system_monitor_share_total"
+            "name": "oe_test_system_monitor_share_total",
+            "add disk": [2]
         },
         {
             "name": "oe_test_disk_graphics_card"
