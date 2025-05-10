@@ -61,6 +61,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     ctr task kill nginx-container
     ctr c rm nginx-container
+    umount -lf /run/containerd/io.containerd.runtime.v2.task/default/nginx-container/rootfs
+    rm -rf "/run/containerd/io.containerd.runtime.v2.task/default/nginx-container"
     ctr images rm ${image_name}:${image_tag}
     ps -ef | grep -v 'grep' | grep 'containerd' | grep -v 'oe_test_containerd' | grep -v "mugen.sh" | awk '{print $2}' | xargs -I {} kill -9 {}
     DNF_REMOVE "$@"
