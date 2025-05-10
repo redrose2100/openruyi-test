@@ -17,10 +17,10 @@
 # @Desc      :   SSH authentication using a key pair in place of a password
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
 	LOG_INFO "Start to prepare the test environment."
-	DNF_INSTALL "openssh-server openssh-clients openssh"
+	DNF_INSTALL "openssh-server openssh-clients openssh libselinux"
 	systemctl start sshd
 	LOG_INFO "End to prepare the test environment."
 }
@@ -29,11 +29,13 @@ function run_test() {
 	LOG_INFO "Start to run test."
 	sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
 	CHECK_RESULT $?
-	setsebool -P use_nfs_home_dirs 1
-	CHECK_RESULT $?
+	if [ "$(getenforce)" != "Disabled" ];then
+		setsebool -P use_nfs_home_dirs 1
+		CHECK_RESULT $?
+	fi
 	systemctl reload sshd
 	CHECK_RESULT $?
-	SSH_CMD "ls" ${NODE1_IPV4} ${NODE1_PASSWORD} ${NODE1_USER}
+	SSH_CMD "ls" "${NODE1_IPV4}" "${NODE1_PASSWORD}" "${NODE1_USER}"
 	CHECK_RESULT $? 0 1
 	LOG_INFO "End to run test."
 }
@@ -43,7 +45,8 @@ function post_test() {
 	sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 	systemctl reload sshd
 	systemctl restart sshd
+	DNF_REMOVE "$@"
 	LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
