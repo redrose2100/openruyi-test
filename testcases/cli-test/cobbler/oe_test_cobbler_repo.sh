@@ -21,10 +21,23 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    setenforce 0
     DNF_INSTALL "cobbler httpd"
     systemctl start httpd
     systemctl start cobblerd
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        mkdir -p /etc/systemd/system/httpd.service.d
+        echo -e "[Service]\nEnvironment=OPTIONS=" > "/etc/systemd/system/httpd.service.d/override.conf"
+        mkdir -p /etc/pki/tls/certs /etc/pki/tls/private
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048   -keyout /etc/pki/tls/private/localhost.key   -out /etc/pki/tls/certs/localhost.crt   -subj "/CN=localhost"
+        systemctl daemon-reexec
+        systemctl daemon-reload
+        systemctl restart httpd
+        systemctl restart cobblerd
+        cobbler sync
+    fi
     cat /etc/yum.repos.d/*.repo > /etc/yum.repos.d/openEuler_test.repo
+    SLEEP_WAIT 5
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -64,8 +77,8 @@ function post_test() {
     systemctl stop httpd
     systemctl stop cobblerd
     rm -rf /etc/yum.repos.d/openEuler_test.repo
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main "$@"i
+main "$@"
