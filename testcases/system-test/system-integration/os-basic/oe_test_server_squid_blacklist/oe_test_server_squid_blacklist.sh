@@ -17,7 +17,7 @@
 # @Desc      :   Configuring the domain blacklist in Squid
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "squid firewalld"
@@ -29,10 +29,9 @@ function run_test() {
     LOG_INFO "Start to run test."
     sed -i 's/#cache_dir ufs \/var\/spool\/squid 120 16 256/cache_dir ufs \/var\/spool\/squid 100 16 256/g' /etc/squid/squid.conf
     CHECK_RESULT $?
-    echo 'acl domain_blacklist dstdomain "/tmp/squid/domain_blacklist.txt" http_access deny all domain_blacklist' >>/etc/squid/squid.conf
+    sed -i '1i acl domain_blacklist dstdomain "/etc/squid/domain_blacklist.txt"\nhttp_access deny all domain_blacklist' /etc/squid/squid.conf
     CHECK_RESULT $?
-    mkdir /tmp/squid
-    echo "new.baidu.com" >/tmp/squid/domain_blacklist.txt
+    echo "news.baidu.com" >/etc/squid/domain_blacklist.txt
     CHECK_RESULT $?
     firewall-cmd --permanent --add-port=3128/tcp
     CHECK_RESULT $?
@@ -41,16 +40,16 @@ function run_test() {
     systemctl enable --now squid
     CHECK_RESULT $?
     curl -o baidu -L "https://news.baidu.com" -x "${NODE1_IPV4}:3128" --insecure
-    CHECK_RESULT $? 7
+    CHECK_RESULT $? 56
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf /tmp/squid baidu
+    rm -rf /etc/squid/domain_blacklist.txt baidu
     sed -i "/domain_blacklist.txt/d" /etc/squid/squid.conf
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
