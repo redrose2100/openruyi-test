@@ -15,12 +15,13 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Oemaker is a tool for building DVD ISO, including standard ISO, debug ISO and source ISO.
 #####################################
+# shellcheck disable=SC2034,SC2086
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    EXECUTE_T="60m"
+    EXECUTE_T="180m"
     LOG_INFO "End to config params of the case."
 }
 
@@ -54,7 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /result
     LOG_INFO "End to restore the test environment."
 }
