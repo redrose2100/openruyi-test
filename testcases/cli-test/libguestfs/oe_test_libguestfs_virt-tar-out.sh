@@ -30,9 +30,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-tar-out -d openEuler-2003 /etc/ qemu-4.2.0.tar
+    virt-tar-out -d openEuler-24.03-LTS-SP1 /etc/ qemu-4.2.0.tar
     CHECK_RESULT $? 0 0 "Check virt-tar-out -d failed"
-    virt-tar-out -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /etc/ qemu-4.2.0.tar
+    virt-tar-out -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 /etc/ qemu-4.2.0.tar
     CHECK_RESULT $? 0 0 "Check virt-tar-out -a failed"
     virt-tar-out -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
     CHECK_RESULT $? 0 0 "Check virt-tar-out -V failed"

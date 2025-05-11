@@ -31,16 +31,16 @@ function run_test() {
     device=$( fdisk -l 2> /dev/null | grep "Device" -A 1 | grep -o "/dev/[a-z0-9]*") 
     guestunmount --help | grep 'guestunmount'
     CHECK_RESULT $? 0 0 "Check guestunmount --help failed"
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt
+    guestmount -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -m $device --ro /mnt
     guestunmount -q /mnt
     CHECK_RESULT $? 0 0 "Check guestunmount -q failed"
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt
+    guestmount -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -m $device --ro /mnt
     guestunmount --no-retry /mnt/
     CHECK_RESULT $? 0 0 "Check guestunmount --no-retry failed"
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt
+    guestmount -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -m $device --ro /mnt
     guestunmount --retry=5 /mnt/
     CHECK_RESULT $? 0 0 "Check guestunmount --retry failed"
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt
+    guestmount -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -m $device --ro /mnt
     guestunmount -v /mnt
     CHECK_RESULT $? 0 0 "Check guestunmount -v failed"
     guestunmount -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')

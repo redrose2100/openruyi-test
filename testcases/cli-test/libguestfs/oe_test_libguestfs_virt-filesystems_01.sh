@@ -28,25 +28,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-filesystems -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-filesystems -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-filesystems -a failed"
-    virt-filesystems --all -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-filesystems --all -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-filesystems --all failed"
-    virt-filesystems --blkdevs -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-filesystems --blkdevs -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-filesystems --blkdevs failed"
-    virt-filesystems -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-filesystems -c test:///default -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-filesystems -c failed"
-    virt-filesystems --csv -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-filesystems --csv -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-filesystems --csv failed"
-    virt-filesystems -d openEuler-2003
+    virt-filesystems -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-filesystems -d failed"
-    virt-filesystems --echo-keys -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-filesystems --echo-keys -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-filesystems --echo-keys failed"
-    virt-filesystems --extra -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-filesystems --extra -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-filesystems --extra failed"
-    virt-filesystems --filesystems -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-filesystems --filesystems -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-filesystems -a failed"
-    virt-filesystems --format=qcow2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-filesystems --format=qcow2 -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-filesystems --format failed"
     LOG_INFO "End of the test."
 }

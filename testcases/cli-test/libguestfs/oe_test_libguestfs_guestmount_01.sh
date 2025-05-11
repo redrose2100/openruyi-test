@@ -29,28 +29,28 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     device=$( fdisk -l 2> /dev/null | grep "Device" -A 1 | grep -o "/dev/[a-z0-9]*") 
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt
+    guestmount -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -m $device --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount -a -m --ro failed"
     guestunmount /mnt
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 --fd=1 -m $device --ro /mnt
+    guestmount -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 --fd=1 -m $device --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount --fd failed"
     guestunmount /mnt
-    guestmount -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt
+    guestmount -c test:///default -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -m $device --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount -c failed"
     guestunmount /mnt
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 --dir-cache-timeout 5 -m $device --ro /mnt
+    guestmount -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 --dir-cache-timeout 5 -m $device --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount --dir-cache-timeout failed"
     guestunmount /mnt
-    guestmount -d openEuler-2003 -i --ro /mnt
+    guestmount -d openEuler-24.03-LTS-SP1 -i --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount -d failed"
     guestunmount /mnt
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 --echo-keys -m $device --ro /mnt
+    guestmount -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 --echo-keys -m $device --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount --echo-keys failed"
     guestunmount /mnt
-    guestmount --format=qcow2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt
+    guestmount --format=qcow2 -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -m $device --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount --format failed"
     guestunmount /mnt
-    guestmount --fuse-help -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt 2>&1 | grep 'usage: guestmount'
+    guestmount --fuse-help -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -m $device --ro /mnt 2>&1 | grep 'usage: guestmount'
     CHECK_RESULT $? 0 0 "Check guestmount --fuse-help failed"
     guestmount --help | grep 'guestmount: FUSE module for libguestfs'
     CHECK_RESULT $? 0 0 "Check guestmount --help failed"

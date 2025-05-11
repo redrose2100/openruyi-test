@@ -28,17 +28,17 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    guestfish --key ID:key:KEY_STRING -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --key ID:key:KEY_STRING -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --key failed"
-    guestfish --keys-from-stdin -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --keys-from-stdin -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --keys-from-stdin failed"
     guestfish --listen | grep 'GUESTFISH_PID'
     CHECK_RESULT $? 0 0 "Check guestfish --listen failed"
-    guestfish -N fs:ext4 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish -N fs:ext4 -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish -N failed"
-    guestfish -n -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish -n -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish -n failed"
-    guestfish --no-dest-paths -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --no-dest-paths -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --no-dest-paths failed"
     LOG_INFO "End of the test."
 }

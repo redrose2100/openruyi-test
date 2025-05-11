@@ -28,23 +28,23 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    guestfish --pipe-error -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --pipe-error -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --pipe-error failed"
-    guestfish --progress-bars -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --progress-bars -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --progress-bars failed"
-    guestfish --no-progress-bars -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --no-progress-bars -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --no-progress-bars failed"
-    guestfish --selinux -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --selinux -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --selinux failed"
-    guestfish --ro -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --ro -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --ro failed"
-    guestfish -v -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish -v -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish -v failed"
     guestfish -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
     CHECK_RESULT $? 0 0 "Check guestfish -V failed"
-    guestfish --rw -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --rw -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --rw failed"
-    guestfish -x -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish -x -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish -x failed"
     LOG_INFO "End of the test."
 }
