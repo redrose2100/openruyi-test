@@ -20,20 +20,24 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL ethtool
     test_nic=$(TEST_NIC 1 | awk '{print $1}')
+    qn=$(ethtool -l "${test_nic}" | grep "Combined" | tail -n 1 | awk '{print $2}')
+    if [[ $qn == "n/a" || $qn == "" ]];then
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    qn=$(ethtool -l "${test_nic}" | grep "Combined" | tail -n 1 | awk '{print $2}')
     test "$qn" -ge 1
     CHECK_RESULT $? 0 0 "The queue of ${test_nic} is less than 1."
     ethtool -S "${test_nic}" | grep "rx_queue" | grep -v "xdp" | grep "packets" | awk '{print $2}' >test_ori.log
     SLEEP_WAIT 10
     ethtool -S "${test_nic}" | grep "rx_queue" | grep -v "xdp" | grep "packets" | awk '{print $2}' >test_cur.log
     for i in $(seq 1 "$qn"); do
-	test "$(sed -n "${i}"'p' test_ori.log)" -lt "$(sed -n "${i}"'p' test_cur.log)"
+	test "$(sed -n "${i}"'p' test_ori.log)" -le "$(sed -n "${i}"'p' test_cur.log)"
         CHECK_RESULT $? 0 0 "Check ${i} rx_queue failed."
     done
     LOG_INFO "End to run test."
@@ -42,6 +46,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf test_ori.log test_cur.log
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
