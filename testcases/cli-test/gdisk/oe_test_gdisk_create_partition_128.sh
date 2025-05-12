@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "${OET_PATH}"/testcases/cli-test/gdisk/common_lib.sh
 
 function pre_test() {
-	DNF_INSTALL gdisk
+	DNF_INSTALL "gdisk parted"
 	get_unused_disk
 	[ -z "$unused_disk" ] && echo "no unused disk" && exit 1
 }
@@ -29,6 +29,7 @@ function pre_test() {
 function run_test() {
 	create_partition 128 10M
 	partprobe
+	lsblk
 	num=$(lsblk | grep -c "${unused_disk#/dev/}")
 	CHECK_RESULT "$num" 129
 	for i in $(seq 1 128); do
@@ -55,7 +56,7 @@ function run_test() {
 function post_test() {
 	rm -rf mount_tmp*
 	partprobe
-	DNF_REMOVE
+	DNF_REMOVE "$@"
 }
 
 main "$@"
