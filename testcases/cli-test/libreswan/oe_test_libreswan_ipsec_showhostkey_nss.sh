@@ -16,21 +16,33 @@
 #@Desc      	:   Check ipsec showhostkey/nss/cavp
 #####################################
 
-source ./common/common_lib.sh
+source "${OET_PATH}"/testcases/cli-test/libreswan/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
     SET_CONF
     ADD_CONN
-    ipsec rsasigkey &> getkey
-    ckaid=$(tail -n 1 getkey | awk '{print $12}')
 
     LOG_INFO "End to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+
+    # test ipsec nss
+    rm -f /var/lib/ipsec/nss/*.db
+    ipsec initnss >/dev/null
+    CHECK_RESULT $? 0 0 "Check ipsec initnss failed."
+    ipsec checknss --nssdir /var/lib/ipsec/nss >/dev/null
+    CHECK_RESULT $? 0 0 "Check ipsec checknss failed."
+    test -f /var/lib/ipsec/nss/key4.db
+    CHECK_RESULT $? 0 0 "Create db file failed."
+    ipsec import --nssdir /var/lib/ipsec/nss
+    CHECK_RESULT $? 0 0 "Check ipsec import failed."
+
+    ipsec rsasigkey &> getkey
+    ckaid=$(tail -n 1 getkey | awk '{print $12}')
 
     # test ipsec showhostkey
     ipsec showhostkey --version >/dev/null
@@ -39,24 +51,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ipsec pluto --dump failed."
     ipsec showhostkey --list
     CHECK_RESULT $? 0 0 "Check ipsec pluto --list failed."
-    ipsec showhostkey --left --ckaid $ckaid --nssdir /var/lib/ipsec/nss <<EOF
+    ipsec showhostkey --left --ckaid "$ckaid" --nssdir /var/lib/ipsec/nss <<EOF
 test
 test
 EOF
     CHECK_RESULT $? 0 0 "Check ipsec pluto --left failed."
-    ipsec showhostkey --ipseckey --ckaid $ckaid >/dev/null
+    ipsec showhostkey --ipseckey --ckaid "$ckaid" >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec pluto --ipseckey failed."
-
-    # test ipsec nss
-    ipsec checknss --nssdir /var/lib/ipsec/nss >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec checknss failed."
-    ls /var/lib/ipsec/nss | grep key4.db
-    CHECK_RESULT $? 0 0 "Create db file failed."
-    ipsec import --nssdir /var/lib/ipsec/nss
-    CHECK_RESULT $? 0 0 "Check ipsec import failed."
-    rm -f /var/lib/ipsec/nss/*.db
-    ipsec initnss >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec initnss failed."
 
     # test ipsec ipsec cavp
     ipsec cavp -h >/dev/null
