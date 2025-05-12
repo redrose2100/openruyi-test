@@ -36,12 +36,7 @@
         },
         {
             "name": "oe_test_httpd_verify_web",
-            "add disk": [
-                2,
-                2,
-                2,
-                2
-            ]
+            "machine num": 2
         },
         {
             "name": "oe_test_basic_Hwclcok_setting"
