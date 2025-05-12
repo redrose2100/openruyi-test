@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node>
+    <interface name="org.example.MyInterface">
+        <method name="Echo">
+            <arg direction="in" type="s" name="message" />
+            <arg direction="out" type="s" name="response" />
+        </method>
+        
+        <method name="Add">
+            <arg direction="in" type="ii" name="a" />
+            <arg direction="in" type="ii" name="b" />
+            <arg direction="out" type="i" name="sum" />
+        </method>
+        
+        <signal name="DataReceived">
+            <arg type="ay" name="data" />
+        </signal>
+        
+        <property name="Status" type="s" access="read" />
+    </interface>
+</node>
