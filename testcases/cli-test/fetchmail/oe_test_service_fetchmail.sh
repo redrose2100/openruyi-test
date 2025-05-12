@@ -33,8 +33,24 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution fetchmail.service
-    test_reload fetchmail.service
+    service=fetchmail.service
+    systemctl restart "${service}"
+    CHECK_RESULT $? 0 0 "${service} restart failed"
+    SLEEP_WAIT 5
+    systemctl status "${service}" | grep "Active: active"
+    CHECK_RESULT $? 0 0 "${service} restart failed"
+    systemctl stop "${service}"
+    CHECK_RESULT $? 0 0 "${service} stop failed"
+    SLEEP_WAIT 5
+    systemctl status "${service}" | grep -E "Active: inactive|Active: failed"
+    CHECK_RESULT $? 0 0 "${service} stop failed"
+    systemctl start "${service}"
+    CHECK_RESULT $? 0 0 "${service} start failed"
+    SLEEP_WAIT 5
+    systemctl status "${service}" | grep "Active: active"
+    CHECK_RESULT $? 0 0 "${service} start failed"
+    test_enabled "${service}"
+    test_reload "${service}"
     LOG_INFO "End to run test."
 }
 
