@@ -17,7 +17,7 @@
 # @Desc      :   Test xmllint format xml
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -31,12 +31,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to dmraid help"
     dmraid -V |grep "1.0.0.rc16"
     CHECK_RESULT $? 0 0 "Failed to version "
-    num1=$(dmraid -s)
-    num2="no raid disks"
-    if [ "$num1" = "$num2" ]
-    then
-      echo "raid不存在"
-    else
+    if [ "$(dmraid -s)" == 0  ]; then
       dmraid -n |grep devs
       CHECK_RESULT $? 0 0 "Failed to raid "
     fi
@@ -45,7 +40,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
