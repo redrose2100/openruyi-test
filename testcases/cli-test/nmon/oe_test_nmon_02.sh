@@ -15,12 +15,16 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test for nmon
 #####################################
+# shellcheck disable=SC2119,SC2143
 
 source "${OET_PATH}/testcases/cli-test/nmon/common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb sysstat"
+    disks=$(TEST_DISK)
+    disk_list=("$disks")
+    local_disk=${disk_list[0]}
+    DNF_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb sysstat pciutils"
     env_pre
     LOG_INFO "End of environmental preparation!"
 }
@@ -52,7 +56,7 @@ EOF
     test -f ./template/interactive_-s
     CHECK_RESULT $? 0 0 "Failed option: -s"
 
-    if [[ "$NODE1_FRAME" == "x86_64" || "$NODE1_FRAME" == "aarch64" ]]; then
+    if [[ ( "$NODE1_FRAME" == "x86_64" || "$NODE1_FRAME" == "aarch64" ) && $(lspci | grep -i vga | grep -i nvidia) ]]; then
         expect <<EOF
     spawn ./nmon_openEuler
     send "a\r"
@@ -139,7 +143,7 @@ EOF
     test -f ./template/interactive_D_5 && test -f ./template/interactive_D_6
     CHECK_RESULT $? 0 0 "Failed option: D"
 
-    echo "userDefinedDiskGroups $(lsblk -l | grep disk | awk '{print $1}')" >./template/uddg
+    echo "userDefinedDiskGroups $local_disk" >./template/uddg
     expect <<EOF
     spawn nmon -g ./template/uddg
     send "g\r"
@@ -155,12 +159,11 @@ EOF
     test -f ./template/interactive_g_1 && test -f ./template/interactive_g_2
     CHECK_RESULT $? 0 0 "Failed option: g"
 
-    disk=$(lsblk -l | grep 'disk' | awk '{print $1}' | sed ':t;N;s/\n/\|/;b t')
-    notdisk=$(iostat -d | grep -vE "$disk" | grep -vE 'Linux|Device|^$' | awk '{print $1}' | sed ':t;N;s/\n/\|/;b t')
+    notdisk=$(iostat -d | grep -vE "$local_disk" | grep -vE 'Linux|Device|^$' | awk '{print $1}' | sed ':t;N;s/\n/\|/;b t')
     expect <<EOF
     spawn nmon -g auto
     send "dG\r"
-    expect -re "$disk" {
+    expect -re "$local_disk" {
         exec touch ./template/interactive_G_1
     }
     if {"$notdisk"==""} {
