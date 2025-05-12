@@ -105,6 +105,9 @@
             "name": "oe_test_qla2xxx"
         },
         {
+            "name": "oe_test_qla3xxx"
+        },
+        {
             "name": "oe_test_tcm_loop"
         },
         {
