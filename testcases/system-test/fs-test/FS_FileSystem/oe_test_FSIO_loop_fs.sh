@@ -21,10 +21,11 @@ source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "lvm2 xfsprogs"
     cur_date=$(date +%Y%m%d%H%M%S)
     virtualfs="/mnt/virtualfs_""$cur_date"
     dd if=/dev/zero of="$virtualfs" bs=1M count=350
-    point="/mnt/point_""$cur_date"
+    point="/mnt/point_$cur_date"
     mkdir "$point"
     list=('ext3' 'ext4' 'xfs')
     LOG_INFO "Finish to prepare the database config."
@@ -56,6 +57,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf "$loop" "$point" "$virtualfs"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

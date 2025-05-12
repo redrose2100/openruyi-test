@@ -16,43 +16,43 @@
 #@Desc      	:   Take the test mount xfs
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL xfsdump
     cur_date=$(date +%Y%m%d%H%M%S)
-    point_list=($(CREATE_FS xfs))
+    read -r -a point_list <<< "$(CREATE_FS xfs)"
     xfs_point=${point_list[1]}
-    testFile1="testFile1"$cur_date
-    testFile2="testFile2"$cur_date
-    echo "Test xfs tmp1" > $xfs_point/$testFile1
-    echo "Test xfs tmp2" > $xfs_point/$testFile2
-    temp=/tmp/test_tmp$cur_date
-    mkdir $temp
-    disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
+    testFile1="testFile1$cur_date"
+    testFile2="testFile2$cur_date"
+    echo "Test xfs tmp1" > "$xfs_point/$testFile1"
+    echo "Test xfs tmp2" > "$xfs_point/$testFile2"
+    temp="/tmp/test_tmp$cur_date"
+    mkdir "$temp"
+    disk=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    xfsdump -f $temp/xfs_dump $xfs_point -L dump_test -M $disk
-    rm -rf $xfs_point/$testFile2
-    xfsrestore -f $temp/xfs_dump $xfs_point
+    xfsdump -f "$temp/xfs_dump" "$xfs_point" -L dump_test -M "$disk"
+    rm -rf "${xfs_point:?}/${testFile2:?}"
+    xfsrestore -f "$temp/xfs_dump" "$xfs_point"
     CHECK_RESULT $? 0 0 "Restore data for xfs failed."
-    ls $xfs_point | grep $testFile2
+    [[ -e "$xfs_point/$testFile2" ]]
     CHECK_RESULT $? 0 0 "Check file exist for xfs failed."
-    grep "xfs tmp2" $xfs_point/$testFile2
+    grep "xfs tmp2" "$xfs_point/$testFile2"
     CHECK_RESULT $? 0 0 "Check files for xfs failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
+    list="${point_list[*]}"
     REMOVE_FS "$list"
-    rm -rf $temp
-    DNF_REMOVE
+    rm -rf "$temp"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

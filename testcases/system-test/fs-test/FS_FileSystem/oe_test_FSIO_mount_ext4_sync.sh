@@ -16,34 +16,35 @@
 #@Desc      	:   Take the test mount ext4
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}"/testcases/system-test/fs-test/common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     cur_date=$(date +%Y%m%d%H%M%S)
     vggroup=$(CREATE_VG)
     lv="test_lv"$cur_date
-    lvcreate -n $lv -L 2G $vggroup -y >/dev/null   
-    mkfs.ext4 /dev/$vggroup/$lv
+    lvcreate -n "$lv" -L 2G "$vggroup" -y >/dev/null   
+    mkfs.ext4 "/dev/$vggroup/$lv"
     ext4_point="/mnt/test"$cur_date
-    mkdir $ext4_point
+    mkdir "$ext4_point"
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mount -t ext4 -o sync /dev/$vggroup/$lv $ext4_point
+    mount -t ext4 -o sync "/dev/$vggroup/$lv" "$ext4_point"
     CHECK_RESULT $? 0 0 "Mount ext4 by sync failed."
-    dd if=/dev/zero of=$ext4_point/testFile bs=1M count=1024
+    dd if=/dev/zero of="$ext4_point/testFile" bs=1M count=1024
     CHECK_RESULT $? 0 0 "Write file failed."
-    umount -f /dev/$vggroup/$lv
+    umount -f "/dev/$vggroup/$lv"
     CHECK_RESULT $? 0 0 "Umount failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $ext4_point 
+    rm -rf "$ext4_point"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

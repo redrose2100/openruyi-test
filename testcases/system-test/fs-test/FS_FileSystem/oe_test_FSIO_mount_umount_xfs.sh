@@ -16,40 +16,42 @@
 #@Desc      	:   Take the test create xfs
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "lvm2 xfsprogs"
     cur_date=$(date +%Y%m%d%H%M%S)
     vggroup=$(CREATE_VG)
-    lv="test_lv"$cur_date
-    lvcreate -n $lv -L 2G $vggroup -y >/dev/null   
-    mkfs.xfs /dev/$vggroup/$lv
-    xfs_mount="/mnt/xfs_mount"$cur_date
-    mkdir $xfs_mount
+    lv="test_lv$cur_date"
+    lvcreate -n "$lv" -L 2G "$vggroup" -y >/dev/null   
+    mkfs.xfs "/dev/$vggroup/$lv"
+    xfs_mount="/mnt/xfs_mount$cur_date"
+    mkdir "$xfs_mount"
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mount -t xfs /dev/$vggroup/$lv $xfs_mount
+    mount -t xfs "/dev/$vggroup/$lv" "$xfs_mount"
     CHECK_RESULT $? 0 0 "mount xfs failed."
-    df -h | grep $xfs_mount
+    df -h | grep "$xfs_mount"
     CHECK_RESULT $? 0 0 "Check mount infos failed."
-    umount $xfs_mount
+    umount "$xfs_mount"
     CHECK_RESULT $? 0 0 "umount xfs failed."
-    uuid=$(blkid | grep /dev/mapper/$vggroup-$lv | awk '{print $2}' | cut -d '"' -f 2)
-    mount UUID=$uuid $xfs_mount
-    df -h | grep $xfs_mount
+    uuid=$(blkid | grep "/dev/mapper/$vggroup-$lv" | awk '{print $2}' | cut -d '"' -f 2)
+    mount UUID="$uuid" "$xfs_mount"
+    df -h | grep "$xfs_mount"
     CHECK_RESULT $? 0 0 "Check mount infos failed."
-    umount $xfs_mount
+    umount "$xfs_mount"
     CHECK_RESULT $? 0 0 "umount xfs failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $xfs_mount
+    rm -rf "$xfs_mount"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
