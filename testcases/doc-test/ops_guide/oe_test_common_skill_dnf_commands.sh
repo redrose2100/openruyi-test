@@ -88,7 +88,7 @@ EOF
     CHECK_RESULT $? 0 0 "Failed to list the available pkgs"
     dnf list --installed | grep -v "arch\|x86_64\|src" | grep "Installed"
     CHECK_RESULT $? 0 0 "Failed to list the installed pkgs"
-    if dnf repolist | grep update; then
+    if [[ $(dnf check-update -q) != "" ]]; then
         dnf list --updates | grep "Available Upgrades"
         CHECK_RESULT $? 0 0 "Failed to list the updatable pkgs"
     else
