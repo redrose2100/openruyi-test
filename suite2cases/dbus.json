@@ -21,6 +21,9 @@
         },
         {
             "name": "oe_test_dbus_dbus-x11"
+	},
+	{
+	    "name": "oe_test_dbus-glib"	
         }
     ]
 }
