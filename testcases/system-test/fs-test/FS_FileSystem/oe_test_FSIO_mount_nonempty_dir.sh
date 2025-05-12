@@ -16,20 +16,21 @@
 #@Desc      	:   Take the test mount fs on non-empty directory
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}"/testcases/system-test/fs-test/common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL lvm2
     cur_date=$(date +%Y%m%d%H%M%S)
     vggroup=$(CREATE_VG)
     list=('ext3' 'ext4' 'xfs')
     count=1
-    for var in ${list[@]}; do
-        lvcreate -n lv$count$cur_date -L 2G $vggroup -y >/dev/null 
-        mkfs -t $var /dev/$vggroup/lv$count$cur_date
-        mkdir /mnt/point$count$cur_date
-        echo "test" > /mnt/point$count$cur_date/testFile
-        count=$(($count+1))
+    for var in "${list[@]}"; do
+        lvcreate -n "lv$count$cur_date" -L 2G "$vggroup" -y >/dev/null 
+        mkfs -t "$var" "/dev/$vggroup/lv$count$cur_date"
+        mkdir "/mnt/point$count$cur_date"
+        echo "test" > "/mnt/point$count$cur_date/testFile"
+        count=$((count + 1))
     done
     LOG_INFO "Finish to prepare the database config."
 }
@@ -37,23 +38,24 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     count=1
-    for var in ${list[@]}; do
-        mount /dev/$vggroup/lv$count$cur_date /mnt/point$count$cur_date
+    for var in "${list[@]}"; do
+        mount "/dev/$vggroup/lv$count$cur_date" "/mnt/point$count$cur_date"
         CHECK_RESULT $? 0 0 "Mount $var on non-empty directory failed."
-        test -f /mnt/point$count$cur_date/testFile
+        test -f "/mnt/point$count$cur_date/testFile"
         CHECK_RESULT $? 1 0 "Check file on $var after mount failed."
-        umount /mnt/point$count$cur_date
+        umount "/mnt/point$count$cur_date"
         CHECK_RESULT $? 0 0 "Umount $var on non-empty directory failed."
-        grep "test" /mnt/point$count$cur_date/testFile
+        grep "test" "/mnt/point$count$cur_date/testFile"
         CHECK_RESULT $? 0 0 "Check file on $var after umount failed."
-        count=$(($count+1))
+        count=$((count + 1))
     done
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf /mnt/point1$cur_date /mnt/point2$cur_date /mnt/point3$cur_date
+    rm -rf "/mnt/point1$cur_date" "/mnt/point2$cur_date" "/mnt/point3$cur_date"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

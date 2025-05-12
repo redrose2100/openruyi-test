@@ -16,34 +16,36 @@
 #@Desc      	:   Take the test mkfs on dd
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "lvm2 xfsprogs"
     cur_date=$(date +%Y%m%d%H%M%S)
-    loop1="/mnt/loop1_"$cur_date
-    loop2="/mnt/loop2_"$cur_date
-    loop3="/mnt/loop3_"$cur_date
+    loop1="/mnt/loop1_$cur_date"
+    loop2="/mnt/loop2_$cur_date"
+    loop3="/mnt/loop3_$cur_date"
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dd if=/dev/zero of=$loop1 bs=1M count=10
-    mkfs.ext3 $loop1
+    dd if=/dev/zero of="$loop1" bs=1M count=10
+    mkfs.ext3 "$loop1"
     CHECK_RESULT $? 0 0 "mkfs ext3 on virtual block failed."
-    dd if=/dev/zero of=$loop2 bs=1M count=10
-    mkfs.ext4 $loop2
+    dd if=/dev/zero of="$loop2" bs=1M count=10
+    mkfs.ext4 "$loop2"
     CHECK_RESULT $? 0 0 "mkfs ext4 on virtual block failed."
-    dd if=/dev/zero of=$loop3 bs=1M count=4096
-    mkfs.xfs $loop3
+    dd if=/dev/zero of="$loop3" bs=1M count=4096
+    mkfs.xfs "$loop3"
     CHECK_RESULT $? 0 0 "mkfs xfs on virtual block failed."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf $loop1 $loop2 $loop3
+    rm -rf "$loop1 $loop2 $loop3"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

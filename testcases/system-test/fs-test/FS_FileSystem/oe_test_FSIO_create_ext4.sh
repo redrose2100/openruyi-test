@@ -16,23 +16,30 @@
 #@Desc      	:   Take the test create ext4
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}"/testcases/system-test/fs-test/common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL lvm2
     vggroup=$(CREATE_VG)
-    lv="test_lv"$cur_date
-    lvcreate -n $lv -L 2G $vggroup -y >/dev/null
+    lv="test_lv$cur_date"
+    lvcreate -n "$lv" -L 2G "$vggroup" -y >/dev/null
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mkfs.ext4 /dev/$vggroup/$lv
+    mkfs.ext4 "/dev/$vggroup/$lv"
     CHECK_RESULT $? 0 0 "mkfs.ext4 failed"
-    blkid | grep /dev/mapper/$vggroup-$lv | grep "TYPE=\"ext4\""
+    blkid | grep "/dev/mapper/$vggroup-$lv" | grep "TYPE=\"ext4\""
     CHECK_RESULT $? 0 0 "Check lv infos failed"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

@@ -16,24 +16,28 @@
 #@Desc      	:   Take the test mount xfs
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    point_list=($(CREATE_FS xfs))
+    DNF_INSTALL "lvm2 xfsprogs"
+    read -r -a point_list <<< "$(CREATE_FS xfs)"
     vggroup=${point_list[0]}
-    xfs_point=${point_list[1]}
-    lv=$(lsblk | grep $vggroup | awk '{print $1}' | cut -d '-' -f 2)
+    lv=$(lsblk | grep "$vggroup" | awk '{print $1}' | cut -d '-' -f 2)
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    size1=$(df -i | grep /dev/mapper/$vggroup-$lv | awk '{print $2}')
-    lvextend -L +1G /dev/$vggroup/$lv
-    xfs_growfs /dev/$vggroup/$lv
+    size1=$(df -i | grep "/dev/.*$vggroup-$lv" | awk '{print $2}')
+    mountpoints=$(mount | grep test_vggroup | awk '{print $3}')
+    for mp in $mountpoints; do
+        dev=$(df "$mp" | awk 'NR==2 {print $1}')
+        lvextend -L +1G "$dev"
+        xfs_growfs "$mp"
+    done
     CHECK_RESULT $? 0 0 "Change size of xfs failed."
-    size2=$(df -i | grep /dev/mapper/$vggroup-$lv | awk '{print $2}')
+    size2=$(df -i | grep "/dev/.*$vggroup-$lv" | awk '{print $2}')
     [[ "$size1" -ne "$size2" ]] 
     CHECK_RESULT $? 0 0 "Resize for xfs failed."
     LOG_INFO "End to run test."
@@ -41,8 +45,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
+    list="${point_list[*]})"
     REMOVE_FS "$list"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

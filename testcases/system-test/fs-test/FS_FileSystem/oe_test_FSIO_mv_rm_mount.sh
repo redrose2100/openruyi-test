@@ -16,32 +16,34 @@
 #@Desc      	:   Take the test mv/rm mounted point
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    cur_lang=$LANG
+    DNF_INSTALL lvm2
+    cur_lang="$LANG"
     export LANG=en_US.UTF-8
-    point_list=($(CREATE_FS ext3))
+    read -r -a point_list <<< "$(CREATE_FS ext3)"
     ext3_point=${point_list[1]}
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mv $ext3_point /mnt/testmv$cur_date 2>&1 | grep "Device or resource busy"
+    mv "$ext3_point" "/mnt/testmv$cur_date" 2>&1 | grep "Device or resource busy"
     CHECK_RESULT $? 0 0 "Move mounted point unexpectly."
-    rm -rf $ext3_point 2>&1 | grep "Device or resource busy"
+    rm -rf "$ext3_point" 2>&1 | grep "Device or resource busy"
     CHECK_RESULT $? 0 0 "Remove mounted point unexpectly."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
+    list="${point_list[*]})"
     REMOVE_FS "$list"
-    rm -rf /mnt/testmv$cur_date
-    export LANG=$cur_lang
+    rm -rf "/mnt/testmv$cur_date"
+    export LANG="$cur_lang"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

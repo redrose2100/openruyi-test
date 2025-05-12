@@ -16,11 +16,13 @@
 #@Desc      	:   Take the test umount fs when file is opened
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    point_list=($(CREATE_FS))
+    DNF_INSTALL lvm2
+    IFS=' ' read -ra fs_args <<< "$FS_TYPE"
+    read -ra point_list <<< "$(CREATE_FS "${fs_args[@]}")"
     LOG_INFO "Finish to prepare the database config."
 }
 
@@ -28,9 +30,9 @@ function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         var=${point_list[$i]}
-        echo "test" > $var/testFile
-        nohup vi $var/testFile &
-        umount $var
+        echo "test" > "$var/testFile"
+        nohup vi "$var/testFile" &
+        umount "$var"
         CHECK_RESULT $? 0 0 "Umount fs $var failed."
     done
     LOG_INFO "End to run test."
@@ -38,9 +40,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
-    REMOVE_FS "$list"
+    REMOVE_FS "${point_list[@]}"
     rm -f ./nohup.out
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -16,35 +16,37 @@
 #@Desc      	:   Take the test mount ext3
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}"/testcases/system-test/fs-test/common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    cur_lang=$LANG
+    DNF_INSTALL lvm2
+    cur_lang="$LANG"
     export LANG=en_US.UTF-8
     cur_date=$(date +%Y%m%d%H%M%S)
     vggroup=$(CREATE_VG)
     lv="test_lv"$cur_date
-    lvcreate -n $lv -L 2G $vggroup -y >/dev/null   
-    mkfs.ext3 /dev/$vggroup/$lv
+    lvcreate -n "$lv" -L 2G "$vggroup" -y >/dev/null   
+    mkfs.ext3 "/dev/$vggroup/$lv"
     ext3_point="/mnt/test"$cur_date
-    mkdir $ext3_point
+    mkdir "$ext3_point"
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mount -t ext3 -o ro /dev/$vggroup/$lv $ext3_point
+    mount -t ext3 -o ro "/dev/$vggroup/$lv" "$ext3_point"
     CHECK_RESULT $? 0 0 "Mount ext3 by ro failed."
-    touch $ext3_point/testFile 2>&1 | grep "Read-only file system"
+    touch "$ext3_point/testFile" 2>&1 | grep "Read-only file system"
     CHECK_RESULT $? 0 0 "Create file when ext3 is readonly unexpectly."
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    REMOVE_FS $ext3_point
-    export LANG=$cur_lang
+    REMOVE_FS "$ext3_point"
+    export LANG="$cur_lang"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

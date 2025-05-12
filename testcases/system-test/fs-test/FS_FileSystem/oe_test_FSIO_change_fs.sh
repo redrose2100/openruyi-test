@@ -16,29 +16,36 @@
 #@Desc      	:   Take the test change fs
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}"/testcases/system-test/fs-test/common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "lvm2 xfsprogs"
     cur_date=$(date +%Y%m%d%H%M%S)
     vggroup=$(CREATE_VG)
-    lv1="test_lv1"$cur_date
-    lvcreate -n $lv1 -L 2G $vggroup -y >/dev/null
-    mkfs.ext3 /dev/$vggroup/$lv1
+    lv1="test_lv1$cur_date"
+    lvcreate -n "$lv1" -L 2G "$vggroup" -y >/dev/null
+    mkfs.ext3 "/dev/$vggroup/$lv1"
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    echo y | mkfs.ext4 /dev/$vggroup/$lv1
+    echo y | mkfs.ext4 "/dev/$vggroup/$lv1"
     CHECK_RESULT $? 0 0 "mkfs from ext3 to ext4 failed."
-    echo y | mkfs.ext3 /dev/$vggroup/$lv1
+    echo y | mkfs.ext3 "/dev/$vggroup/$lv1"
     CHECK_RESULT $? 0 0 "mkfs from ext4 to ext3 failed."
-    mkfs.xfs /dev/$vggroup/$lv1 -f
+    mkfs.xfs "/dev/$vggroup/$lv1" -f
     CHECK_RESULT $? 0 0 "mkfs from ext3 to xfs failed."
-    echo y | mkfs.ext4 /dev/$vggroup/$lv1
+    echo y | mkfs.ext4 "/dev/$vggroup/$lv1"
     CHECK_RESULT $? 0 0 "mkfs from xfs to ext4 failed."
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
