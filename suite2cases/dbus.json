@@ -21,9 +21,13 @@
         },
         {
             "name": "oe_test_dbus_dbus-x11"
-	},
-	{
-	    "name": "oe_test_dbus-glib"	
+        },
+        {
+            "name": "oe_test_busctl"
+        },
+        {
+            "name": "oe_test_dbus-glib"	
         }
     ]
 }
+ 
