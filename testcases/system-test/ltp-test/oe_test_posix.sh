@@ -23,7 +23,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     EXECUTE_T="120m"
-    DNF_INSTALL "zlib gcc-c++ bc m4 flex byacc bison keyutils-libs-devel lksctp-tools-devel xfsprogs-devel libacl-devel openssl-devel numactl-devel libaio-devel glibc-devel libcap-devel findutils libtirpc libtirpc-devel kernel-headers glibc-headers hwloc-devel patch numactl tar make automake cmake time psmisc"
+    DNF_INSTALL "zlib gcc-c++ bc m4 flex byacc bison keyutils-libs-devel lksctp-tools-devel xfsprogs-devel libacl-devel openssl-devel numactl-devel libaio-devel glibc-devel libcap-devel findutils libtirpc libtirpc-devel kernel-headers glibc-headers hwloc-devel patch numactl tar make automake cmake time psmisc git"
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     current_path=$(cd "$(dirname "$0")" || exit 1
