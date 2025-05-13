@@ -17,21 +17,34 @@
 # @Desc      :   system monitor share total
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/testcases/system-test/system-integration/os-basic/common/disk_lib.sh"
+
+function config_params() {
+    LOG_INFO "Start to config the test environment."
+    check_free_disk
+    LOG_INFO "Start to config the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
     sudo ipcs -m | grep "Shared Memory Segments"
     CHECK_RESULT $?
-    ps -eo 'stat,pid,comm,args,pcpu' | sed -n 1p | awk -F " " {'print$1'} | grep "STAT"
+    ps -eo 'stat,pid,comm,args,pcpu' | sed -n 1p | awk -F " " '{print$1}' | grep "STAT"
     CHECK_RESULT $?
-    ps -eo 'pcpu,pid,comm,args' | sort -rk1 | sed -n 1p | awk -F " " {'print$1'} | grep "%CPU"
+    ps -eo 'pcpu,pid,comm,args' | sort -rk1 | sed -n 1p | awk -F " " '{print$1}' | grep "%CPU"
     CHECK_RESULT $?
-    ps -eo 'pmem,pid,comm,args' | sort -rk1 | sed -n 1p | awk -F " " {'print$1'} | grep "%MEM"
+    ps -eo 'pmem,pid,comm,args' | sort -rk1 | sed -n 1p | awk -F " " '{print$1}' | grep "%MEM"
     CHECK_RESULT $?
-    grep  '\[mq-deadline\] kyber bfq none' /sys/block/vda/queue/scheduler
+    echo mq-deadline > /sys/block/"${local_disk}"/queue/scheduler
+    grep '\[mq-deadline\]' /sys/block/"${local_disk}"/queue/scheduler
     CHECK_RESULT $?
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
