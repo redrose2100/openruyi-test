@@ -19,26 +19,37 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL dmidecode
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
     dmidecode -h | grep -i "Usage: dmidecode"
     CHECK_RESULT $? 0 0 "dmidecode -h fail"
-    dmidecode -t system | grep -i "Getting SMBIOS data from sysfs"
+    dmidecode -t system | grep -E "Getting SMBIOS data from sysfs|Found SMBIOS entry point"
     CHECK_RESULT $? 0 0 "dmidecode -t system fail"
-    dmidecode -t bios | grep -i "Getting SMBIOS data from sysfs"
+    dmidecode -t bios | grep -E "Getting SMBIOS data from sysfs|Found SMBIOS entry point in EFI"
     CHECK_RESULT $? 0 0 "dmidecode -t bios fail"
-    dmidecode -t baseboard | grep -i "Getting SMBIOS data from sysfs"
+    dmidecode -t baseboard | grep -E "Getting SMBIOS data from sysfs|Found SMBIOS entry point in EFI"
     CHECK_RESULT $? 0 0 "dmidecode -t baseboard fail"
-    dmidecode -t chassis | grep -i "Getting SMBIOS data from sysfs"
+    dmidecode -t chassis | grep -E "Getting SMBIOS data from sysfs|Found SMBIOS entry point in EFI"
     CHECK_RESULT $? 0 0 "dmidecode -t chassis fail"
-    dmidecode -t processor | grep -i "Getting SMBIOS data from sysfs"
+    dmidecode -t processor | grep -E "Getting SMBIOS data from sysfs|Found SMBIOS entry point in EFI"
     CHECK_RESULT $? 0 0 "dmidecode -t processor fail"
-    dmidecode -t memory | grep -i "Getting SMBIOS data from sysfs"
+    dmidecode -t memory | grep -E "Getting SMBIOS data from sysfs|Found SMBIOS entry point in EFI"
     CHECK_RESULT $? 0 0 "dmidecode -t memory fail"
-    dmidecode -t cache | grep -i "Getting SMBIOS data from sysfs"
+    dmidecode -t cache | grep -E "Getting SMBIOS data from sysfs|Found SMBIOS entry point in EFI"
     CHECK_RESULT $? 0 0 "dmidecode -t cache fail"
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
