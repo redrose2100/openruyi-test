@@ -18,6 +18,13 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL firewalld
+    systemctl start firewalld
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     firewall-cmd --add-port=80/tcp --permanent
@@ -31,6 +38,12 @@ function run_test() {
     firewall-cmd --query-port=80/tcp | grep "no"
     CHECK_RESULT $? 0 0 "Check port 8080 status closed failed."
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
