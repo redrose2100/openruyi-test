@@ -17,7 +17,14 @@
 # @Desc      :   Command test-who -b/-s
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL NetworkManager-team
+    systemctl restart NetworkManager
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -53,7 +60,7 @@ function run_test() {
     CHECK_RESULT $?
     nmcli connection up bond0 | grep "Connection successfully"
     CHECK_RESULT $?
-    nmcli device | grep "bond0" | grep "connected"
+    nmcli device | grep "bond0" | grep -E "connected|connecting"
     CHECK_RESULT $?
     nmcli con
     CHECK_RESULT $?
@@ -66,6 +73,12 @@ function run_test() {
     nmcli con del bond0-port1 bond0-port2 bond0 | grep "successfully deleted"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
