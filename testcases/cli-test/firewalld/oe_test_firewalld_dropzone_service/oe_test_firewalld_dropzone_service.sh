@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL httpd
+    DNF_INSTALL "httpd firewalld"
     sudo systemctl start httpd
     sudo systemctl start firewalld
     zone1=$(sudo firewall-cmd --get-zone-of-interface="$NODE1_NIC")
@@ -45,11 +45,11 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     sudo firewall-cmd -remove-service=http --zone=drop
-    if [ ! -z "$zone1" ]; then
+    if [ -n "$zone1" ]; then
         sudo firewall-cmd --zone="$zone1" --change-interface="$NODE1_NIC"
     fi
     sudo systemctl stop httpd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

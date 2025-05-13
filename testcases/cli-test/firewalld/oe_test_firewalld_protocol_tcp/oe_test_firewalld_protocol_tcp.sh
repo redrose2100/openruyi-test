@@ -21,8 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nmap
-    DNF_INSTALL nmap 2
+    DNF_INSTALL "nmap firewalld"
+    DNF_INSTALL "nmap firewalld" 2
     sudo systemctl start firewalld
     zone_name=$(sudo firewall-cmd --get-default-zone)
     LOG_INFO "End of environmental preparation!"
@@ -44,10 +44,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    sudo firewall-cmd --zone=${zone_name} --remove-protocol=tcp | grep success
+    sudo firewall-cmd --zone="${zone_name}" --remove-protocol=tcp | grep success
     rm -rf /tmp/tmp_log
-    DNF_REMOVE
-    DNF_REMOVE 2 nmap
+    DNF_REMOVE "$@"
+    DNF_REMOVE 2 "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

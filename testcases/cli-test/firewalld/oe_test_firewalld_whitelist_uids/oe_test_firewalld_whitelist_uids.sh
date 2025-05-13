@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL firewalld
     sudo systemctl start firewalld
     useradd sec040
     uid=$(grep sec040 /etc/passwd | awk -F ":" '{print $3}')
@@ -43,6 +44,7 @@ function post_test() {
     userdel -rf sec040
     sudo firewall-cmd --reload
     sudo systemctl start firewalld
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

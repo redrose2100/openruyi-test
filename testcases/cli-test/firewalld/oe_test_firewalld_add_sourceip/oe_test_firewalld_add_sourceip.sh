@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL firewalld
     sudo systemctl start firewalld
     zone_name=$(sudo firewall-cmd --get-zones | awk '{print $1}')
     LOG_INFO "End of environmental preparation!"
@@ -34,6 +35,12 @@ function run_test() {
     sudo firewall-cmd --zone="${zone_name}" --remove-source=9.82.227.222 | grep success
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
+}
+
+function post_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_REMOVE "$@"
+    LOG_INFO "End of environmental preparation!"
 }
 
 main "$@"

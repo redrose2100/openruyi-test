@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL httpd
+    DNF_INSTALL "httpd firewalld"
     sudo systemctl start httpd
     sudo systemctl start firewalld
     LOG_INFO "End of environmental preparation!"
@@ -32,7 +32,7 @@ function run_test() {
     SSH_CMD "curl http://$NODE1_IPV4" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 1
     sudo firewall-cmd  --zone=public --add-service=http
-    sudo firewall-cmd  --zone=public --add-rich-rule='rule family="ipv4" source address='${NODE2_IPV4}' service name="http" accept'
+    sudo firewall-cmd  --zone=public --add-rich-rule='rule family="ipv4" source address='"${NODE2_IPV4}"' service name="http" accept'
     firewall-cmd --query-service http
     CHECK_RESULT $? 0 0
     SSH_CMD "curl http://$NODE1_IPV4" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
@@ -43,11 +43,11 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     sudo firewall-cmd  --zone=public --remove-service=http
-    sudo firewall-cmd  --zone=public --remove-rich-rule='rule family="ipv4" source address='${NODE2_IPV4}' service name="http" accept'
+    sudo firewall-cmd  --zone=public --remove-rich-rule='rule family="ipv4" source address='"${NODE2_IPV4}"' service name="http" accept'
     systemctl restart firewalld
     firewall-cmd --reload
     sudo systemctl stop httpd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

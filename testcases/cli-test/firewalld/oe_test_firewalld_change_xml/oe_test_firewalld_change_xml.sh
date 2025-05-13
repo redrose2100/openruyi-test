@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL httpd
+    DNF_INSTALL "httpd firewalld"
     sudo systemctl start httpd
     sudo systemctl start firewalld
     cp /etc/firewalld/zones/public.xml /etc/firewalld/zones/public.xml-bak
@@ -30,6 +30,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
+    sudo firewall-cmd --permanent --remove-port=80/tcp
+    sudo firewall-cmd --reload
     SSH_CMD "curl http://$NODE1_IPV4" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 1
     echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>
@@ -59,10 +61,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     sudo systemctl stop httpd
-    DNF_REMOVE
     mv /etc/firewalld/zones/public.xml-bak /etc/firewalld/zones/public.xml -f
     sudo firewall-cmd --reload
     sudo systemctl start firewalld
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

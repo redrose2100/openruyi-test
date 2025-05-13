@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL httpd
+    DNF_INSTALL "httpd firewalld audit"
     sudo systemctl start httpd
     sudo systemctl start firewalld auditd
     LOG_INFO "End of environmental preparation!"
@@ -45,7 +45,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     sudo firewall-cmd --zone=public --remove-rich-rule='rule service name=http log limit value=1/m audit accept'
     sudo systemctl stop httpd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

@@ -27,7 +27,7 @@ function pre_test() {
     }
 
     LOG_INFO "Start firewalld"
-
+    DNF_INSTALL firewalld
     # Origin status of firewalld
     origin="start"
     systemctl is-active firewalld || {
@@ -100,6 +100,7 @@ function post_test() {
 
     LOG_INFO "Restore firewalld status to: $origin"
     systemctl $origin firewalld
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

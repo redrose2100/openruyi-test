@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL firewalld
     sudo systemctl start firewalld
     LOG_INFO "End of environmental preparation!"
 }
@@ -33,6 +34,12 @@ function run_test() {
     sudo firewall-cmd --list-all --zone=home | grep home
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
+}
+
+function post_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_REMOVE "$@"
+    LOG_INFO "End of environmental preparation!"
 }
 
 main "$@"

@@ -1,4 +1,4 @@
-~#!/usr/bin/bash
+#!/usr/bin/bash
 
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
@@ -21,11 +21,11 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL httpd
+    DNF_INSTALL "httpd firewalld"
     sudo systemctl start httpd
     sudo systemctl start firewalld
-    service_name_id=$(echo $((RANDOM % $(echo $(sudo firewall-cmd --get-services) | awk -F ' ' '{print NF}'))))
-    service_name=$(echo $(sudo firewall-cmd --get-services) | awk -F ' ' "{print \$$service_name_id}")
+    service_name_id=$((RANDOM % $(sudo firewall-cmd --get-services | awk '{print NF}')))
+    service_name=$(sudo firewall-cmd --get-services | awk -v id="$service_name_id" '{print $id}')
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -51,6 +51,8 @@ function run_test() {
     CHECK_RESULT $?
     sudo firewall-cmd --remove-service=http
     sudo firewall-cmd --runtime-to-permanent
+    sudo firewall-cmd --permanent --remove-port=80/tcp
+    sudo firewall-cmd --reload
     SSH_CMD "curl http://$NODE1_IPV4" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 1
     LOG_INFO "Finish testcase execution."
@@ -61,7 +63,7 @@ function post_test() {
     sudo systemctl stop httpd
     sudo firewall-cmd --reload
     sudo systemctl start firewalld
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

@@ -21,8 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nmap
-    DNF_INSTALL nmap 2
+    DNF_INSTALL "nmap firewalld"
+    DNF_INSTALL "nmap firewalld" 2
     sudo systemctl start firewalld
     LOG_INFO "End of environmental preparation!"
 }
@@ -48,10 +48,10 @@ function post_test() {
     sudo firewall-cmd --zone=public --remove-port=4990-6666/udp
     sudo firewall-cmd --reload
     sudo systemctl start firewalld
-    kill -9 $(pgrep -f 'nc -4u -l 5555')
+    kill -9 "$(pgrep -f 'nc -4u -l 5555')"
     rm -rf /tmp/nc_log
-    DNF_REMOVE
-    DNF_REMOVE 2 nmap
+    DNF_REMOVE "$@"
+    DNF_REMOVE 2 "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
