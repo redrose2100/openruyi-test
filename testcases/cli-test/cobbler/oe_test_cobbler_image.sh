@@ -21,9 +21,21 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    setenforce 0
     DNF_INSTALL "cobbler httpd"
     systemctl start httpd
     systemctl start cobblerd
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        mkdir -p /etc/systemd/system/httpd.service.d
+        echo -e "[Service]\nEnvironment=OPTIONS=" > "/etc/systemd/system/httpd.service.d/override.conf"
+        mkdir -p /etc/pki/tls/certs /etc/pki/tls/private
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048   -keyout /etc/pki/tls/private/localhost.key   -out /etc/pki/tls/certs/localhost.crt   -subj "/CN=localhost"
+        systemctl daemon-reexec
+        systemctl daemon-reload
+        systemctl restart httpd
+        systemctl restart cobblerd
+        cobbler sync
+    fi
     SLEEP_WAIT 5
     LOG_INFO "End of environmental preparation!"
 }
