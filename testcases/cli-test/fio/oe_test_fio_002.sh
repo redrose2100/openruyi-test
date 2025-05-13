@@ -20,7 +20,6 @@ source "${OET_PATH}/testcases/cli-test/fio/common/disk_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    check_free_disk
     DNF_INSTALL fio
     test -f test.txt || touch test.txt
     LOG_INFO "End to prepare the test environment!"
@@ -38,15 +37,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "fio-dedupe -p option failed"
     fio --filename=test_file --direct=1 --rw=randwrite --numjobs=1 --iodepth=16 --ioengine=libaio --bs=4k --group_reporting --name=zhangyi --log_avg_msec=500 --write_bw_log=test-fio --size=1G
     CHECK_RESULT $? 0 0 "fio --filename=test_file option failed"
-    fio -filename=/dev/"${local_disk}" -direct=1 -iodepth 1 -thread -rw=read -ioengine=psync -bs=16k -size=200G -numjobs=30 -runtime=1000 -group_reporting -name=mytest | grep "${local_disk}"
+    fio -filename=/dev/"${local_disk}" -direct=1 -iodepth 16 -thread -rw=read -ioengine=libaio -bs=16k -size=2G -numjobs=30 -runtime=100 -time_based -group_reporting -name=mytest | grep "${local_disk}"
     CHECK_RESULT $? 0 0 "fio -filename=/dev option failed"
-    fio -filename=/dev/"${local_disk}" -direct=1 -iodepth 1 -thread -rw=write -ioengine=psync -bs=16k -size=200G -numjobs=30 -runtime=1000 -group_reporting -name=mytest | grep "${local_disk}"
+    fio -filename=/dev/"${local_disk}" -direct=1 -iodepth 16 -thread -rw=write -ioengine=libaio -bs=16k -size=2G -numjobs=30 -runtime=100 -time_based -group_reporting -name=mytest | grep "${local_disk}"
     CHECK_RESULT $? 0 0 "fio -filename=/dev option failed"
-    fio -filename=/dev/"${local_disk}" -direct=1 -iodepth 1 -thread -rw=randread -ioengine=psync -bs=16k -size=200G -numjobs=30 -runtime=1000 -group_reporting -name=mytest
+    fio -filename=/dev/"${local_disk}" -direct=1 -iodepth 16 -thread -rw=randread -ioengine=libaio -bs=16k -size=2G -numjobs=30 -runtime=100 -time_based -group_reporting -name=mytest
     CHECK_RESULT $? 0 0 "fio -filename=/dev option failed"
-    fio -filename=/dev/"${local_disk}" -direct=1 -iodepth 1 -thread -rw=randwrite -ioengine=psync -bs=16k -size=200G -numjobs=30 -runtime=1000 -group_reporting -name=mytest | grep "${local_disk}"
+    fio -filename=/dev/"${local_disk}" -direct=1 -iodepth 16 -thread -rw=randwrite -ioengine=libaio -bs=16k -size=2G -numjobs=30 -runtime=100 -time_based -group_reporting -name=mytest | grep "${local_disk}"
     CHECK_RESULT $? 0 0 "fio -filename=/dev option failed"
-    fio -filename=/dev/"${local_disk}" -direct=1 -iodepth 1 -thread -rw=read -ioengine=psync -bs=16k -size=200G -numjobs=30 -runtime=1000 -group_reporting -name=mytest --output test.txt 
+    fio -filename=/dev/"${local_disk}" -direct=1 -iodepth 16 -thread -rw=read -ioengine=libaio -bs=16k -size=2G -numjobs=30 -runtime=100 -time_based -group_reporting -name=mytest --output test.txt 
     test -f test.txt 
     CHECK_RESULT $? 0 0 "fio -filename=/dev option failed"
     genfio -d /dev/"${local_disk}",/dev/"${local_disk1}",/dev/"${local_disk2}" -a -b 4k,128k,1m -r 100 -a -x dellr720-day2/

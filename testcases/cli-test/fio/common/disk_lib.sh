@@ -23,9 +23,11 @@ export local_disk3
 
 function check_free_disk() {
     disks=$(TEST_DISK "$@")
-    disk_list=("$disks")
+    read -r -a disk_list <<< "$(echo "$disks" | tr ' ' '\n' | grep -v '^nbd' | tr '\n' ' ')"
     local_disk=${disk_list[0]}
     local_disk1=${disk_list[1]}
     local_disk2=${disk_list[2]}
     local_disk3=${disk_list[3]}
 }
+
+check_free_disk "$@"
