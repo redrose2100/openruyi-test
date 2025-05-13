@@ -17,13 +17,13 @@
 # @Desc      :   Test priority option in configuration file
 # ##################################
 
-source "common/common_dnf.sh"
+source "${OET_PATH}/testcases/cli-test/dnf/common/common_dnf.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    line1=$(grep -nA4 "name=OS" /etc/yum.repos.d/*.repo | grep "gpgkey" | awk -F "-" '{print $1}')
-    line2=$(grep -nA4 "name=everything" /etc/yum.repos.d/*.repo | grep "gpgkey" | awk -F "-" '{print $1}')
+    line1=$(grep -nA7 "name=OS" /etc/yum.repos.d/*.repo | grep "gpgkey" | awk -F "-" '{print $1}')
+    line2=$(grep -nA7 "name=everything" /etc/yum.repos.d/*.repo | grep "gpgkey" | awk -F "-" '{print $1}')
     sed -i "${line1} apriority=1" /etc/yum.repos.d/*.repo
     sed -i "${line2} apriority=2" /etc/yum.repos.d/*.repo
     LOG_INFO "Finish preparing the test environment."

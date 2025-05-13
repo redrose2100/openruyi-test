@@ -29,7 +29,17 @@ function add_low_repo() {
     dnf repolist|grep "^LOW_OS"
     result_value=$?
     if ((result_value !="0"));then
-        echo "
+        if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+            echo "
+[LOW_OS]
+name=LOW_OS
+baseurl=https://repo.huaweicloud.com/openeuler/openEuler-24.03-LTS/OS/\$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-24.03-LTS/OS/\$basearch/RPM-GPG-KEY-openEuler
+" >>/etc/yum.repos.d/openEuler_update.repo
+        else
+            echo "
 [LOW_OS]
 name=LOW_OS
 baseurl=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/OS/\$basearch/
@@ -37,12 +47,23 @@ enabled=1
 gpgcheck=1
 gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/OS/\$basearch/RPM-GPG-KEY-openEuler
 " >>/etc/yum.repos.d/openEuler_update.repo
+        fi
     fi
 
     dnf repolist|grep "^update"
     result_value=$?
     if ((result_value !="0"));then
-        echo "
+        if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+            echo "
+[update]
+name=update
+baseurl=https://repo.huaweicloud.com/openeuler/openEuler-24.03-LTS/update/\$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-24.03-LTS/OS/\$basearch/RPM-GPG-KEY-openEuler
+" >>/etc/yum.repos.d/openEuler_update.repo
+        else
+            echo "
 [update]
 name=update
 baseurl=https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS-SP3/update/\$basearch/
@@ -50,11 +71,22 @@ enabled=1
 gpgcheck=1
 gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS-SP3/OS/\$basearch/RPM-GPG-KEY-openEuler
 " >>/etc/yum.repos.d/openEuler_update.repo
+        fi
     fi
     dnf repolist|grep "^debuginfo"
     result_value=$?
     if ((result_value !="0"));then
-        echo "
+        if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+            echo "
+[debuginfo]
+name=debuginfo
+baseurl=https://repo.huaweicloud.com/openeuler/openEuler-24.03-LTS/debuginfo/\$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-24.03-LTS/debuginfo/\$basearch/RPM-GPG-KEY-openEuler
+" >>/etc/yum.repos.d/openEuler_update.repo
+        else
+            echo "
 [debuginfo]
 name=debuginfo
 baseurl=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/debuginfo/\$basearch/
@@ -62,6 +94,7 @@ enabled=1
 gpgcheck=1
 gpgkey=https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP1/debuginfo/\$basearch/RPM-GPG-KEY-openEuler
 " >>/etc/yum.repos.d/openEuler_update.repo
+        fi
     fi
 }
 
