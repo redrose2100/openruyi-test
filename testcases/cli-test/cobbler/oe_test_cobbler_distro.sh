@@ -21,10 +21,16 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    setenforce 0
+    if [ ! -e /dev/cdrom ]; then
+        LOG_INFO "/dev/cdrom doesn't exist, skipping test."
+        exit 255
+    fi
     DNF_INSTALL "cobbler httpd"
     mount /dev/cdrom /mnt
     systemctl start httpd
     systemctl start cobblerd
+    SLEEP_WAIT 5
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -66,7 +72,7 @@ function post_test() {
     umount /dev/cdrom
     systemctl stop httpd
     systemctl stop cobblerd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
