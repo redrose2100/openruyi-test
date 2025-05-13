@@ -20,12 +20,12 @@
 source "../common/common_easymock.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "easymock junit5 maven"
+    DNF_INSTALL "easymock junit5 maven wget"
     java_version=$(rpm -qa java* | grep "java-.*-openjdk" -m1 | awk -F '-' '{print $2}')
     DNF_INSTALL java-"${java_version}"-devel
     mkdir libs
     cp -rf "$(rpm -ql junit5 | grep junit-jupiter-api.jar)" "$(rpm -ql easymock | grep easymock.jar)" libs
-    wget https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
+    wget --no-check-certificate https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
     mv hamcrest-core-1.3.jar libs/
     LOG_INFO "End to prepare the test environment."
 }
