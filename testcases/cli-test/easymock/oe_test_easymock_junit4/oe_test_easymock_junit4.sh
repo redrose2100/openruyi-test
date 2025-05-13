@@ -21,10 +21,10 @@ source "../common/common_easymock.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    DNF_INSTALL maven
+    DNF_INSTALL "maven wget"
     mkdir libs
     cp -rf "$(rpm -ql junit | grep junit.jar)" "$(rpm -ql easymock | grep easymock.jar)" libs
-    wget https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
+    wget --no-check-certificate https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
     mv hamcrest-core-1.3.jar libs/
     LOG_INFO "End to prepare the test environment."
 }
