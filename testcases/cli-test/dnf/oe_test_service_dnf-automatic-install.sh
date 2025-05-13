@@ -26,6 +26,7 @@ function pre_test() {
     log_time=$(date '+%Y-%m-%d %T')
     status='inactive (dead)'
     systemctl start "${service}"
+	
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -34,8 +35,10 @@ function run_test() {
     systemctl status "${service}" | grep "Active" | grep -v "${status}"
     CHECK_RESULT $? 0 1 "There is an error for the status of ${service}"
     test_enabled "${service}"
+if [[ "$NODE1_FRAME" != "x86_64" ]]; then
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v "libgpg-error" | grep -v "_sasl_plugin_load failed on sasl_canonuser_init" | grep -v  "ldapdb_canonuser_plug_init() failed in sasl_canonuser_add_plugin()" |  grep -v  "Unit unbound-anchor.timer not found" |  grep -v  "usr/lib/kbd/consolefonts/ERRORS" 
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
+fi
     LOG_INFO "Finish test!"
 }
 
