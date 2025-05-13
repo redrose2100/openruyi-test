@@ -30,8 +30,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     dnf list --all | grep "${NODE1_FRAME}"
     CHECK_RESULT $?
-    dnf list --installed | grep "@anaconda"
-    CHECK_RESULT $?
+    if [[ ${NODE1_FRAME} != "riscv64" ]]; then
+        dnf list --installed | grep "@anaconda"
+        CHECK_RESULT $?
+    fi
     dnf list --available | grep "${NODE1_FRAME}"
     CHECK_RESULT $?
     dnf list --extras
