@@ -7,15 +7,11 @@
         {
             "name": "oe_test_augeas_augmatch"
         },
-	{
+        {
             "name": "oe_test_augeas_augtool01"
-	},
-	{
-	    "name": "oe_test_augeas_augparse"
-	},
-	{
-            "name": "oe_test_augeas_augprint_01" 		
-	}
-      ]
+        },
+        {
+            "name": "oe_test_augeas_augparse"
+        }
+    ]
 }
-

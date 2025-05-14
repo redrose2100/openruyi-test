@@ -33,11 +33,19 @@ function ver() {
 function run_test() {
     LOG_INFO "Start to run test."
     local version exp
-    version=$(rpm -q augeas|cut -d "-" -f 2)
+    version=$(rpm -q augeas | cut -d "-" -f 2)
     exp="1.14.0"
     if [[ $(ver "$version") -ge $(ver "$exp") ]]; then
         augprint /etc/hosts | grep "127.0.0.1"
         CHECK_RESULT $? 0 0 "augprint failed."
+        augprint --lens=simplelines /etc/hosts | grep simplelines
+        CHECK_RESULT $? 0 0 "Simplelines camera failed to parse/etc/hosts file"
+        augprint --regexp=12 /etc/hosts | grep Loopback
+        CHECK_RESULT $? 0 0 "Find and output the content or node error that matches regular expression 12 in the/etc/hosts file"
+        augprint --pretty /etc/hosts | grep localhost
+        CHECK_RESULT $? 0 0 "The generated output command script will have a more readable format for error reporting"
+        augprint --noseq /etc/hosts | grep localhost
+        CHECK_RESULT $? 0 0 "Using * instead of seq:: * in path expression yields an error message"
     else
         LOG_ERROR "augeas version $version lower than $exp"
     fi
