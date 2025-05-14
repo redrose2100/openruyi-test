@@ -42,6 +42,7 @@ function run_test() {
     CHECK_RESULT $?
     mysql -e "CREATE DATABASE test45;use test45;CREATE TABLE mytexttable (id INT NOT NULL,txt TEXT NOT NULL,PRIMARY KEY (id),FULLTEXT (txt)) ENGINE=MyISAM;"
     CHECK_RESULT $?
+    pushd /var/lib/mysql/test45 || exit 1
     myisam_ftdump mytexttable 1
     CHECK_RESULT $?
     myisam_ftdump -c mytexttable 1 | sort -r
@@ -54,6 +55,7 @@ function run_test() {
     CHECK_RESULT $?
     myisam_ftdump -s mytexttable 1
     CHECK_RESULT $?
+    popd || exit 1
     myisam_ftdump -? | grep "Synonym for -h"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
