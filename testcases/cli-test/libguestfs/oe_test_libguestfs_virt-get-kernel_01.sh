@@ -28,21 +28,21 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-get-kernel -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-get-kernel -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-get-kernel -a failed"
-    virt-get-kernel -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-get-kernel -c test:///default -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-get-kernel -c failed"
-    virt-get-kernel -d openEuler-2003
+    virt-get-kernel -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-get-kernel -d failed"
-    virt-get-kernel --echo-keys -d openEuler-2003
+    virt-get-kernel --echo-keys -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --echo-keys failed"
-    virt-get-kernel --format=qcow2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-get-kernel --format=qcow2 -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --format failed"
     virt-get-kernel --help 2>&1 | grep 'virt-get-kernel'
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --help failed"
-    virt-get-kernel --key ID:key:KEY_STRING -d openEuler-2003
+    virt-get-kernel --key ID:key:KEY_STRING -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --key failed"
-    virt-get-kernel --keys-from-stdin -d openEuler-2003
+    virt-get-kernel --keys-from-stdin -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --keys-from-stdin failed"
     virt-get-kernel --machine-readable 2>&1 | grep 'virt'
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --machine-readable failed"

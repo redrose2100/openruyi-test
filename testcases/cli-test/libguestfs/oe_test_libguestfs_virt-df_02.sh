@@ -28,13 +28,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-df --uuid /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-df --uuid /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-df virt-df --help failed"
-    virt-df -v /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-df -v /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-df virt-df -v failed"
     virt-df -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
     CHECK_RESULT $? 0 0 "Check virt-df virt-df -V failed"
-    virt-df -x /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-df -x /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-df virt-df -x failed"
     LOG_INFO "End of the test."
 }

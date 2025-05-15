@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     libguestfs_pre_test
     echo "hello" >a.txt
-    virt-copy-in -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 a.txt /etc
+    virt-copy-in -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 a.txt /etc
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
     LOG_INFO "End of environmental preparation!"
@@ -30,25 +30,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-sysprep -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-sysprep -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-sysprep -a failed"
-    virt-sysprep --append-line '/etc/hosts:10.0.0.1 foo' -d openEuler-2003
+    virt-sysprep --append-line '/etc/hosts:10.0.0.1 foo' -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
-    virt-sysprep -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-sysprep -c test:///default -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-sysprep --append-line failed"
-    virt-sysprep --chmod 755:/etc/a.txt -d openEuler-2003
+    virt-sysprep --chmod 755:/etc/a.txt -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep --chmod failed"
-    virt-sysprep --color -d openEuler-2003
+    virt-sysprep --color -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep --color failed"
-    virt-sysprep --commands-from-file /etc/a.txt -d openEuler-2003
+    virt-sysprep --commands-from-file /etc/a.txt -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep --commands-from-file failed"
-    virt-sysprep -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 --copy /etc/a.txt:/opt
+    virt-sysprep -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 --copy /etc/a.txt:/opt
     CHECK_RESULT $? 0 0 "Check virt-sysprep --copy failed"
-    virt-sysprep -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 --copy-in a.txt:/etc
+    virt-sysprep -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 --copy-in a.txt:/etc
     CHECK_RESULT $? 0 0 "Check virt-sysprep --copy-in failed"
-    virt-sysprep -d openEuler-2003
+    virt-sysprep -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep -d failed"
-    virt-sysprep -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 --delete /etc/a.txt
+    virt-sysprep -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 --delete /etc/a.txt
     CHECK_RESULT $? 0 0 "Check virt-sysprep --delete failed"
     LOG_INFO "End of the test."
 }

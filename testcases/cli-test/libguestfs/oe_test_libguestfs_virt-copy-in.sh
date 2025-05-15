@@ -29,9 +29,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-copy-in -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 a.txt /etc
+    virt-copy-in -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 a.txt /etc
     CHECK_RESULT $? 0 0 "Check virt-copy-in -a failed"
-    virt-copy-in -d openEuler-2003 a.txt /etc
+    virt-copy-in -d openEuler-24.03-LTS-SP1 a.txt /etc
     CHECK_RESULT $? 0 0 "Check virt-copy-in -d failed"
     virt-copy-in -h 2>&1 | grep 'display a list of commands'
     CHECK_RESULT $? 0 0 "Check virt-copy-in -h failed"

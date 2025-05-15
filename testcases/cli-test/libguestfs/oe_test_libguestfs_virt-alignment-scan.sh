@@ -28,27 +28,27 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-alignment-scan -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -a failed"
-    virt-alignment-scan -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan -c test:///default -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -c failed"
-    virt-alignment-scan -d openEuler-2003
+    virt-alignment-scan -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -d failed"
-    virt-alignment-scan --format=raw -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan --format=raw -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan --format failed"
     virt-alignment-scan --help 2>&1 | grep 'virt-alignment-sca'
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan --help failed"
-    virt-alignment-scan -P 2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan -P 2 -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -P failed"
-    virt-alignment-scan -q -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan -q -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -q failed"
     virt-alignment-scan --uuid
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan --uuid failed"
-    virt-alignment-scan -v -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan -v -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -v failed"
     virt-alignment-scan --version 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan --version failed"
-    virt-alignment-scan -x -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan -x -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -x failed"
     LOG_INFO "End of the test."
 }

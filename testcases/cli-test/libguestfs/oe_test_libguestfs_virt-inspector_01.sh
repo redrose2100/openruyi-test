@@ -29,13 +29,13 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    virt-inspector -v -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-inspector -v -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-inspector -v failed"
     virt-inspector -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
     CHECK_RESULT $? 0 0 "Check virt-inspector -V failed"
-    virt-inspector -x -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-inspector -x -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-inspector -x failed"
-    virt-inspector -d openEuler-2003 | virt-inspector --xpath '//filesystems'
+    virt-inspector -d openEuler-24.03-LTS-SP1 | virt-inspector --xpath '//filesystems'
     CHECK_RESULT $? 0 0 "Check virt-inspector --xpath failed"
 
     LOG_INFO "End of the test."

@@ -31,7 +31,7 @@ function run_test() {
   LOG_INFO "Start to run test."
   unzip /tmp/test/master.zip -d /tmp/test
   CHECK_RESULT $? 0 0 "Unzip file failed"
-  cp ./common/test.sh /tmp/test/package-master/logstash-6.6.1/bin
+  cp ..//common/test.sh /tmp/test/package-master/logstash-6.6.1/bin
   cd /tmp/test/package-master/logstash-6.6.1/bin || return
   chmod 777 logstash
   bash test.sh

@@ -29,13 +29,13 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    virt-get-kernel -o /etc/ -d openEuler-2003
+    virt-get-kernel -o /etc/ -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-get-kernel -o failed"
-    virt-get-kernel --prefix pre -d openEuler-2003
+    virt-get-kernel --prefix pre -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --prefix failed"
     virt-get-kernel -q -d openEuler-2003
     CHECK_RESULT $? 0 0 "Check virt-get-kernel -q failed"
-    virt-get-kernel --unversioned-names -d openEuler-2003
+    virt-get-kernel --unversioned-names -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --unversioned-names failed"
     virt-get-kernel -V | grep $(rpm -q libguestfs --queryformat '%{version}\n') 2>&1
     CHECK_RESULT $? 0 0 "Check virt-get-kernel -V failed"

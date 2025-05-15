@@ -28,23 +28,23 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-df -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-df -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-df virt-df -a failed"
-    virt-df -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-df -c test:///default -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-df virt-df -c failed"
-    virt-df --csv -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-df --csv -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-df virt-df --csv failed"
-    virt-df -d openEuler-2003
+    virt-df -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-df virt-df -d failed"
-    virt-df --format=qcow2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-df --format=qcow2 -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-df virt-df --format failed"
-    virt-df -h /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-df -h /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-df virt-df -h failed"
-    virt-df -i /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-df -i /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-df virt-df -i failed"
-    virt-df --one-per-guest /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-df --one-per-guest /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-df virt-df --one-per-guest failed"
-    virt-df -P 2 /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-df -P 2 /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-df virt-df -P failed"
     virt-df --help 2>&1 | grep 'virt-df'
     CHECK_RESULT $? 0 0 "Check virt-df virt-df --help failed"

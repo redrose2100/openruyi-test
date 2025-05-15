@@ -23,12 +23,12 @@ function libguestfs_pre_test(){
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     libguestfs_pre_test_no_install
-    virt-install --name openEuler-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/openEuler-20.03-LTS-SP3.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole --graphics none
+    virt-install --name openEuler-2403 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/openEuler-24.03-LTS-SP1.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole --graphics none
     virsh destroy openEuler-2003
 }
 
 function libguestfs_pre_test_no_install() {
-    DNF_INSTALL 'libguestfs virt-manager qemu libvirt openssl-devel numactl numactl-devel libcap-ng-devel traceroute iperf3 python3-paramiko edk2-devel qemu-guest-agent virt-install.noarch'
+    DNF_INSTALL 'libguestfs virt-manager qemu libvirt openssl-devel numactl numactl-devel libcap-ng-devel traceroute iperf3 python3-paramiko edk2-devel qemu-guest-agent virt-install.noarch guestfs-tools'
     if test "$(uname -i)"X == "aarch64"X; then
       LOG_INFO "arm install edk2 pkg"
       DNF_INSTALL edk2-aarch64.noarch
@@ -38,32 +38,32 @@ function libguestfs_pre_test_no_install() {
     chown root:root /home/kvm/images
     chmod 755 /home/kvm/images
     LOG_INFO "get $(arch) qcow2 libguestfs pkg"
-    if [ ! -f "./common/openEuler-20.03-LTS-SP3-$(arch).qcow2" ];then
-      wget https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP3/virtual_machine_img/"$(arch)"/openEuler-20.03-LTS-SP3-"$(arch)".qcow2.xz --no-check-certificate -O ./common/openEuler-20.03-LTS-SP3-"$(arch)".qcow2.xz 
-      xz -d ./common/openEuler-20.03-LTS-SP3-"$(arch)".qcow2.xz
+    if [ ! -f "./common/openEuler-24.03-LTS-SP1-$(arch).qcow2" ];then
+      wget https://repo.huaweicloud.com/openeuler/openEuler-24.03-LTS-SP1/virtual_machine_img/"$(arch)"/openEuler-24.03-LTS-SP1-"$(arch)".qcow2.xz --no-check-certificate -O ./common/openEuler-24.03-LTS-SP1-"$(arch)".qcow2.xz 
+      xz -d ./common/openEuler-24.03-LTS-SP1-"$(arch)".qcow2.xz
     else
       LOG_INFO "qcow2 file already exists"
     fi
-    cp ./common/openEuler-20.03-LTS-SP3-"$(arch)".qcow2 /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    cp ./common/openEuler-24.03-LTS-SP1-"$(arch)".qcow2 /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
 }
 
 function libguestfs_post_test() {
     export LANG=$OLD_LANG
-    virsh start openEuler-2003
-    virsh destroy openEuler-2003
-    virsh undefine openEuler-2003 --nvram
+    virsh start openEuler-2403
+    virsh destroy openEuler-2403
+    virsh undefine openEuler-2403 --nvram
     unset LIBGUESTFS_DEBUG LIBGUESTFS_TRACE
     DNF_REMOVE "$@"
     rm -rf /home/kvm/images/ a.txt ./*.xz initramfs* output p2v* pidfile* pre-*  qemu-4.2.0* test1.img vmlinuz* file*  
 }
 
 function libguestfs_post_test_diff() {
-    virsh start openEuler-2003
-    virsh start openEuler-2003-1
-    virsh destroy openEuler-2003
-    virsh undefine openEuler-2003 --nvram
-    virsh destroy openEuler-2003-1
-    virsh undefine openEuler-2003-1 --nvram
+    virsh start openEuler-2403
+    virsh start openEuler-2403-1
+    virsh destroy openEuler-2403
+    virsh undefine openEuler-2403 --nvram
+    virsh destroy openEuler-2403-1
+    virsh undefine openEuler-2403-1 --nvram
     unset LIBGUESTFS_BACKEND LIBGUESTFS_DEBUG LIBGUESTFS_TRACE
     DNF_REMOVE "$@"
     rm -rf /home/kvm/images/ a.txt ./*.xz initramfs* output p2v* pidfile* pre-*  qemu-4.2.0* test1.img vmlinuz*

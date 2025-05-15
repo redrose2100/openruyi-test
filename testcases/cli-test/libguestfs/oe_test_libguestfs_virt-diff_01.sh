@@ -21,8 +21,8 @@ source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     libguestfs_pre_test
-    cp /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
-    virt-install --name openEuler-2003-1 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole --graphics none
+    cp /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 /home/kvm/images/openEuler-24.03-LTS-SP1-1.qcow2
+    virt-install --name openEuler-24.03-LTS-SP1-1 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/openEuler-24.03-LTS-SP1-1.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole --graphics none
     virsh destroy openEuler-2003-1
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
@@ -31,21 +31,21 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-diff -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -A /home/kvm/images/openEuler-24.03-LTS-SP1-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-diff -a -A failed"
-    virt-diff --all -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff --all -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -A /home/kvm/images/openEuler-24.03-LTS-SP1-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-diff -d -D failed"
-    virt-diff --atime -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff --atime -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -A /home/kvm/images/openEuler-24.03-LTS-SP1-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-diff --atime failed"
-    virt-diff --checksum=crc -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff --checksum=crc -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -A /home/kvm/images/openEuler-24.03-LTS-SP1-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-diff --checksum failed"
-    virt-diff -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff -c test:///default -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -A /home/kvm/images/openEuler-24.03-LTS-SP1-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-diff -c failed"
-    virt-diff --csv -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff --csv -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -A /home/kvm/images/openEuler-24.03-LTS-SP1-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-diff --csv failed"
-    virt-diff --dir-links -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff --dir-links -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -A /home/kvm/images/openEuler-24.03-LTS-SP1-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-diff --dir-links failed"
-    virt-diff --dir-times -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff --dir-times -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -A /home/kvm/images/openEuler-24.03-LTS-SP1-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-diff --dir-times failed"
     LOG_INFO "End of the test."
 }

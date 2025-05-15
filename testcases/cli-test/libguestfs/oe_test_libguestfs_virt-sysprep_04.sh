@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     libguestfs_pre_test
     echo "hello" >a.txt
-    virt-copy-in -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 a.txt /etc
+    virt-copy-in -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 a.txt /etc
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
     LOG_INFO "End of environmental preparation!"
@@ -30,25 +30,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-sysprep --password root:password -d openEuler-2003
+    virt-sysprep --password root:password -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep --password failed"
-    virt-sysprep --password-crypto md5 -d openEuler-2003
+    virt-sysprep --password-crypto md5 -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep --password-crypto failed"
-    virt-sysprep -q -d openEuler-2003
+    virt-sysprep -q -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep -q failed"
-    virt-sysprep --root-password password -d openEuler-2003
+    virt-sysprep --root-password password -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep --root-password failed"
-    virt-sysprep --run-command cat -d openEuler-2003
+    virt-sysprep --run-command cat -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep ---run-command failed"
-    virt-sysprep --scriptdir /etc/tmp -d openEuler-2003
+    virt-sysprep --scriptdir /etc/tmp -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep --scriptdir failed"
-    virt-sysprep --scrub /etc/a.txt -d openEuler-2003
+    virt-sysprep --scrub /etc/a.txt -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep --scrub failed"
-    virt-sysprep --selinux-relabel -d openEuler-2003
+    virt-sysprep --selinux-relabel -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep --selinux-relabel failed"
-    virt-sysprep --timezone Europe/London -d openEuler-2003
+    virt-sysprep --timezone Europe/London -d openEuler-24.03-lTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep --timezone failed"
-    virt-sysprep --touch /etc/a.txt -d openEuler-2003
+    virt-sysprep --touch /etc/a.txt -d openEuler-24.03-LTS-SP1
     CHECK_RESULT $? 0 0 "Check virt-sysprep --touch failed"
     LOG_INFO "End of the test."
 }
