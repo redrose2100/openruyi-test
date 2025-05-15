@@ -16,13 +16,13 @@
 # @Desc      :   verify the uasge of libguestfs virt-sysprep command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     libguestfs_pre_test
     echo "hello" >a.txt
-    virt-copy-in -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 a.txt /etc
+    virt-copy-in -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 a.txt /etc
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
     LOG_INFO "End of environmental preparation!"
@@ -30,33 +30,33 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-sysprep --keys-from-stdin -d openEuler-2003
+    virt-sysprep --keys-from-stdin -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep --keys-from-stdin failed"
-    virt-sysprep --list-operations -d openEuler-2003
+    virt-sysprep --list-operations -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep --list-operations failed"
-    virt-sysprep --mkdir /etc/dir -d openEuler-2003
+    virt-sysprep --mkdir /etc/dir -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep --mkdir failed"
-    virt-sysprep --mount-options /mnt -d openEuler-2003
+    virt-sysprep --mount-options /mnt -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep --mount-options failed"
-    virt-sysprep -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 --move /etc/a.txt:/opt
+    virt-sysprep -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 --move /etc/a.txt:/opt
     CHECK_RESULT $? 0 0 "Check virt-sysprep --move failed"
-    virt-sysprep --no-logfile -d openEuler-2003
+    virt-sysprep --no-logfile -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep -help failed"
-    virt-sysprep --no-network -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-sysprep --no-network -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-sysprep --no-network failed"
-    virt-sysprep --no-selinux-relabel -d openEuler-2003
+    virt-sysprep --no-selinux-relabel -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep --no-selinux-relabel failed"
-    virt-sysprep --operation ssh-hostkeys -d openEuler-2003
+    virt-sysprep --operation ssh-hostkeys -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep --operation failed"
-    virt-sysprep --password root:password -d openEuler-2003
+    virt-sysprep --password root:password -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep --password failed"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"

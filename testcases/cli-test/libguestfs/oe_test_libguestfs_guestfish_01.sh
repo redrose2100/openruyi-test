@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of libguestfs guestfish command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -32,18 +32,18 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check guestfish -h failed"
     guestfish -h cat | grep 'cat'
     CHECK_RESULT $? 0 0 "Check guestfish -h cat failed"
-    guestfish --csh -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --csh -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --csh failed"
-    guestfish -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish -c test:///default -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish -c failed"
     guestfish -d openEuler-2003 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish -d failed"
-    guestfish --echo-keys -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --echo-keys -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --echo-keys failed"
     echo "--help" >file.txt
-    guestfish -f file.txt -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish -f file.txt -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish -f failed"
-    guestfish --format=qcow2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -i cat /etc/group
+    guestfish --format=qcow2 -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 -i cat /etc/group
     CHECK_RESULT $? 0 0 "Check guestfish --format failed"
     guestfish --help 2>&1 | grep 'guest filesystem shell'
     CHECK_RESULT $? 0 0 "Check guestfish --help failed"
@@ -52,8 +52,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"

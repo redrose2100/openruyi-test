@@ -16,14 +16,14 @@
 # @Desc      :   verify the uasge of libguestfs virt-copy-out command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     libguestfs_pre_test
     echo "hello" >a.txt
-    virt-copy-in -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 a.txt /etc
-    virt-copy-in -d openEuler-2003 a.txt /etc
+    virt-copy-in -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 a.txt /etc
+    virt-copy-in -d openEuler-2403 a.txt /etc
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
     LOG_INFO "End of environmental preparation!"
@@ -31,13 +31,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-copy-out -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /etc/a.txt ./
+    virt-copy-out -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 /etc/a.txt ./
     CHECK_RESULT $? 0 0 "Check virt-copy-out -a failed"
-    virt-copy-out -d openEuler-2003 /etc/a.txt ./
+    virt-copy-out -d openEuler-2403 /etc/a.txt ./
     CHECK_RESULT $? 0 0 "Check virt-copy-out -d failed"
     virt-copy-out -h 2>&1 | grep 'display a list of commands'
     CHECK_RESULT $? 0 0 "Check virt-copy-out -h failed"
-    virt-copy-out -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-copy-out -V | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-copy-out -V failed"
 
     LOG_INFO "End of the test."
@@ -45,8 +45,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"
