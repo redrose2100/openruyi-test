@@ -20,20 +20,18 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
-    DNF_INSTALL "tpm-tools trousers cmake make gcc-c++ gmp-devel wget unzip kernel-devel-$(uname -r)"
+    DNF_INSTALL "tpm-tools trousers cmake make gcc-c++ gmp-devel wget unzip kernel-devel-$(uname -r) patch"
     wget https://github.com/PeterHuewe/tpm-emulator/archive/v0.7.5.zip
     unzip v0.7.5.zip
-    test -d tpm-emulator-0.7.5 && cd tpm-emulator-0.7.5 || exit
-    if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
-        sed -i "s/\$(shell uname -m)/arm64/g" tpmd_dev/linux/Makefile
-    elif [ "${NODE1_FRAME}"x == "riscv64"x ]; then
-        sed -i "s/\$(shell uname -m)/riscv/g" tpmd_dev/linux/Makefile
-    else
-        sed -i "s/\$(shell uname -m)/x86/g" tpmd_dev/linux/Makefile
-    fi
+    wget https://github.com/PeterHuewe/tpm-emulator/archive/v0.7.4.zip
+    unzip v0.7.4.zip
+    test -d tpm-emulator-0.7.4 && cd tpm-emulator-0.7.4 || exit
+    patch -p1 < "$OET_PATH"/testcases/cli-test/tpm-tools/common/0001-Fix-compilation-under-3.19-kernels-till-now.patch
+    test -d ../tpm-emulator-0.7.5 && cp ../tpm-emulator-0.7.5/tpmd/unix/tpmd.c tpmd/unix/tpmd.c || exit
+    patch -p1 < "$OET_PATH"/testcases/cli-test/tpm-tools/common/0002-Use-stable-kernel-api-for-userspace-socket-communica.patch
     sed -i "s/-Wall -Werror/-Wall -Wno-error/g" tpmd_dev/linux/Makefile
     sed -i '/MODULE_SUPPORTED_DEVICE/d' tpmd_dev/linux/tpmd_dev.c
-    sed -i 's|-Wall|-Wall -fcommon|' CMakeLists.txt
+    sed -i 's|-Wall -Werror|-Wall -Wno-error -fcommon|' CMakeLists.txt
     mkdir build && cd build || exit
     cmake .. && make && make install
     tpmd deactivated
