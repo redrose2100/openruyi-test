@@ -36,14 +36,14 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     output1=$(ls -l /tmp)
-    echo "$output1" | grep "test01" | awk '{print $1}' | grep "drwxrwxrwx"
+    echo "$output1" | grep "test01" | awk '{print $1}' | grep -e "drwxrwxrwx"
     CHECK_RESULT $? 1 0 "dir default mod is drwxrwxrwx"
     output2=$(ls -l /tmp/test01)
     per01=$(echo "$output2" | grep "test02" | awk '{print $1}')
 
     chmod 777 /tmp/test01
     output3=$(ls -l /tmp)
-    echo "$output3" | grep "test01" | awk '{print $1}' | grep "drwxrwxrwx"
+    echo "$output3" | grep "test01" | awk '{print $1}' | grep -e "drwxrwxrwx"
     CHECK_RESULT $? 0 0 "after chmod check /tmp/test01 mod fail"
     output4=$(ls -l /tmp/test01)
     per02=$(echo "$output4"  | grep "test02" | awk '{print $1}')
@@ -52,23 +52,23 @@ function run_test() {
 
     chmod -R 777 /tmp/test01
     output5=$(ls -l /tmp)
-    echo "$output5" | grep "test01" | awk '{print $1}' | grep "drwxrwxrwx"
+    echo "$output5" | grep "test01" | awk '{print $1}' | grep -e "drwxrwxrwx"
     CHECK_RESULT $? 0 0 "check chmod -R change test01 mod fail"
     output6=$(ls -l /tmp/test01)
-    echo "$output6" | grep "test02" | awk '{print $1}' | grep "drwxrwxrwx"
+    echo "$output6" | grep "test02" | awk '{print $1}' | grep -e "drwxrwxrwx"
     CHECK_RESULT $? 0 0 "check chmod -R change test02 mod fail"
 
     chmod +x /tmp/test02/test03/test03.txt
     output7=$(ls -l /tmp/test02/test03)
-    echo "$output7" | grep "test03.txt" | awk '{print $1}' | grep "rwxr-xr-x"
+    echo "$output7" | grep "test03.txt" | awk '{print $1}' | grep -e "rwxr-xr-x"
     CHECK_RESULT $? 0 0 "The access of /tmp/test02/test03/test03.txt is error."
     chmod u-x /tmp/test02/test03/test03.txt
     output8=$(ls -l /tmp/test02/test03)
-    echo "$output8" | grep "test03.txt" | awk '{print $1}' | grep "rw-r-xr-x"
+    echo "$output8" | grep "test03.txt" | awk '{print $1}' | grep -e "rw-r-xr-x"
     CHECK_RESULT $? 0 0 "The access of /tmp/test02/test03/test03.txt is error."
     chmod o-w /tmp/test02/test03/test03.txt
     output9=$(ls -l /tmp/test02/test03)
-    echo "$output9"  | grep "test03.txt" | awk '{print $1}' | grep "rw-r-xr-x"
+    echo "$output9"  | grep "test03.txt" | awk '{print $1}' | grep -e "rw-r-xr-x"
     CHECK_RESULT $? 0 0 "The access of /tmp/test02/test03/test03.txt is error."
 
     chmod --help 2>&1 | grep "Usage"
