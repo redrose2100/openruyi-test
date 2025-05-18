@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpry"
+    DNF_INSTALL "httpry wget"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -37,43 +37,43 @@ function run_test() {
     SLEEP_WAIT 5
     grep "baidu" tmp.txt
     CHECK_RESULT $? 0 0 "Check httpry -b failed"
-    kill -9 $(ps -ef | grep "httpry -b" | grep -v "grep" | awk -F " " '{print $2}')
+    pkill -9 -f "httpry -b"
     rm -f index* tmp.txt log.file
-    httpry -i ${NODE1_NIC} -b tmp.txt -o log.file -d
+    httpry -i "${NODE1_NIC}" -b tmp.txt -o log.file -d
     for((i=1;i<=3;i++)); do
         wget www.baidu.com
     done
     SLEEP_WAIT 5
     grep "baidu" tmp.txt
     CHECK_RESULT $? 0 0 "Check httpry -i failed"
-    kill -9 $(ps -ef | grep "httpry -i" | grep -v "grep" | awk -F " " '{print $2}')
+    pkill -9 -f "httpry -i"
     rm -f index* tmp.txt log.file
-    httpry -i ${NODE1_NIC} -b tmp.txt -o log.file -d
+    httpry -i "${NODE1_NIC}" -b tmp.txt -o log.file -d
     wget www.baidu.com
     wget www.baidu.com
     SLEEP_WAIT 5
     httpry -r tmp.txt | grep "baidu"
     CHECK_RESULT $? 0 0 "Check httpry -r failed"
-    kill -9 $(ps -ef | grep "httpry -i" | grep -v "grep" | awk -F " " '{print $2}')
+    pkill -9 -f "httpry -i"
     rm -f index* tmp.txt log.file
     httpry -o output.txt -d
     test -f output.txt
     CHECK_RESULT $? 0 0 "Check httpry -o failed"
-    kill -9 $(ps -ef | grep "httpry -o" | grep -v "grep" | awk -F " " '{print $2}')
+    pkill -9 -f "httpry -o"
     rm -f index* output.txt
-    httpry -i ${NODE1_NIC} -m get -b tmp.txt -o log.file -d
+    httpry -i "${NODE1_NIC}" -m get -b tmp.txt -o log.file -d
     for((i=1;i<=3;i++)); do
         wget www.baidu.com
     done
     SLEEP_WAIT 5
     grep "baidu" tmp.txt
     CHECK_RESULT $? 0 0 "Check httpry -m failed"
-    kill -9 $(ps -ef | grep "httpry -i" | grep -v "grep" | awk -F " " '{print $2}')
+    pkill -9 -f "httpry -i"
     rm -f index* tmp.txt log.file
     httpry -o output.txt -d
     test -f /run/httpry.pid
     CHECK_RESULT $? 0 0 "Check httpry -d failed"
-    kill -9 $(ps -ef | grep "httpry -o" | grep -v "grep" | awk -F " " '{print $2}')
+    pkill -9 -f "httpry -o"
     rm -f index* output.txt
     httpry -n 2 -t 2 -b tmp.txt -o log.file -d
     for((i=1;i<=3;i++)); do
@@ -82,13 +82,13 @@ function run_test() {
     SLEEP_WAIT 2
     grep "baidu" tmp.txt
     CHECK_RESULT $? 0 0 "Check httpry -t failed"
-    kill -9 $(ps -ef | grep "httpry -n" | grep -v "grep" | awk -F " " '{print $2}')
+    pkill -9 -f "httpry -n"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -f /run/httpry.pid index* tmp.txt log.file
     LOG_INFO "End to restore the test environment."
 }
