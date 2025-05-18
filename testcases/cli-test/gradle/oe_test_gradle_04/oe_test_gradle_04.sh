@@ -28,7 +28,7 @@ function run_test() {
     expect <<-END
     log_file gradle_log
     spawn gradle base --scan
-    expect " "
+    expect "Do you accept these terms?"
     send "yes\n"
     expect eof
 END
