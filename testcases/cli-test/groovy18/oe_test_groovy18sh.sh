@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test groovy
 # #############################################
+# shellcheck disable=SC2034
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    EXECUTE_T="60m"
     DNF_INSTALL "groovy18 tar"
     tar -xvf common/data.tar.gz >/dev/null
     LOG_INFO "End to prepare the test environment."
