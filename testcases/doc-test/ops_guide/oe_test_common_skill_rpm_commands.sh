@@ -33,7 +33,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to import gpgkey"
     yumdownloader nano | grep "nano"
     CHECK_RESULT $? 0 0 "Failed to download nano pkg"
-    rpm --checksig "$(ls nano*)" | grep -i "digests signatures OK"
+    rpm --checksig "$(ls nano*)" | grep -iE "digests signatures OK|digests OK"
     CHECK_RESULT $? 0 0 "Failed to check RPM signature"
     rpm -e gpg-pubkey
     CHECK_RESULT $? 0 0 "Failed to delete gpgkey"
