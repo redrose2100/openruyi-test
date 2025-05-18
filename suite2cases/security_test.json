@@ -34,7 +34,8 @@
             "name": "oe_test_selinux_change_permissive"
         },
         {
-            "name": "oe_test_selinux_change_enforcing"
+            "name": "oe_test_selinux_change_enforcing",
+            "machine num": 2
         },
         {
             "name": "oe_test_selinux_disable"

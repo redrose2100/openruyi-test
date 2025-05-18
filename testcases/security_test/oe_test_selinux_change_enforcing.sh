@@ -21,7 +21,11 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "libselinux audit httpd" 2
     SSH_CMD "cp /etc/selinux/config /etc/selinux/config-bak" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.bak" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "setenforce 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "getenforce | grep Disabled" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" && exit 255
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -31,8 +35,10 @@ function run_test() {
 SELINUXTYPE=targeted'>/etc/selinux/config" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SLEEP_WAIT 1
     SSH_CMD "reboot &" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    REMOTE_REBOOT_WAIT 2 15
+    REMOTE_REBOOT_WAIT 2 60
     SSH_CMD "setsebool -P nfs_export_all_rw off;setsebool -P nfs_export_all_rw on" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "sed -i 's|Listen 80|Listen 1924|' /etc/httpd/conf/httpd.conf" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "systemctl restart httpd" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SLEEP_WAIT 10
     SSH_CMD "ausearch -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR -ts today>/tmp/log.log 2>&1 &" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
@@ -45,10 +51,11 @@ SELINUXTYPE=targeted'>/etc/selinux/config" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    SSH_CMD "cp /etc/httpd/conf/httpd.conf.bak /etc/httpd/conf/httpd.conf" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "mv -f /etc/selinux/config-bak /etc/selinux/config" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "rm -rf /tmp/log.log" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "reboot &" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    REMOTE_REBOOT_WAIT 2 15
+    REMOTE_REBOOT_WAIT 2 60
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
