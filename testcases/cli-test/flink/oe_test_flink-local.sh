@@ -30,6 +30,12 @@ function run_test() {
     LOG_INFO "Start testing..."
     cd /opt/apache-flink*/ || exit
     ./bin/start-cluster.sh
+    if [ "${NODE1_FRAME}" == "riscv64" ]; then
+        wget --no-check-certificate https://repo1.maven.org/maven2/org/apache/flink/flink-runtime-web/1.17.1/flink-runtime-web-1.17.1.jar -P /opt/apache-flink*/lib/
+        FLINK_ENV_JAVA_OPTS="-Xmx4G" ./bin/start-cluster.sh
+    else
+        ./bin/start-cluster.sh
+    fi
     CHECK_RESULT $? 0 0 "Execution completion failed"
     SLEEP_WAIT 2
     ./bin/flink run examples/streaming/WordCount.jar
