@@ -17,11 +17,15 @@
 # @Desc      :   Test systemd-fsck-root.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_oneshot systemd-fsck-root.service 'active (exited)'
+    if [ -e /dev/mapper/openeuler-root ] ; then
+        test_oneshot systemd-fsck-root.service 'active (exited)'
+    else
+        test_oneshot systemd-fsck-root.service 'inactive (dead)'
+    fi
     LOG_INFO "Finish test!"
 }
 
