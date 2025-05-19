@@ -21,6 +21,10 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    if [ "${NODE2_FRAME}" == "riscv64" ];then
+        LOG_WARN "Testing cannot be performed on riscv64"
+        exit 255
+    fi
     P_SSH_CMD --cmd "cp /etc/selinux/config /etc/selinux/config-bak" --node 2
     LOG_INFO "End of environmental preparation!"
 }
