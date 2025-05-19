@@ -23,6 +23,7 @@ function pre_test() {
 
     LOG_INFO "Start firewalld on node 2"
 
+    DNF_INSTALL firewalld 2
     # Origin status of firewalld
     origin="enable"
     P_SSH_CMD --node 2 --cmd "firewall-cmd --state" || {
@@ -78,6 +79,7 @@ function run_test() {
 
 function post_test() {
     P_SSH_CMD --node 2 --cmd "systemctl $origin firewalld --now"
+    DNF_REMOVE 2 "$@"
 }
 
 main "$@"

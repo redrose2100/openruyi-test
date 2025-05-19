@@ -20,6 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL firewalld
     sudo systemctl start firewalld
     LOG_INFO "End of environmental preparation!"
 }
@@ -27,7 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     sudo firewall-cmd --lockdown-on
-    sudo firewall-cmd --list-lockdown-whitelist-commands | grep "/usr/bin/python3 -Es /usr/bin/firewall-cmd*"
+    sudo firewall-cmd --list-lockdown-whitelist-commands | grep "/usr/bin/python3 -Es /usr/bin/firewall-cmd"
     CHECK_RESULT $? 0 1
     sudo firewall-cmd --add-lockdown-whitelist-command='/usr/bin/python3 -Es /usr/bin/firewall-cmd*' | grep success
     CHECK_RESULT $?
@@ -47,6 +48,7 @@ function post_test() {
     sudo firewall-cmd --reload
     sudo firewall-cmd --lockdown-off
     sudo firewall-cmd --remove-service=dhcp
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

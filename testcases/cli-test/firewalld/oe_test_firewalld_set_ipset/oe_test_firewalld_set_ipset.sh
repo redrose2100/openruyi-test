@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL httpd
+    DNF_INSTALL "httpd firewalld"
     sudo systemctl start httpd
     sudo systemctl start firewalld
     source_ip=${NODE1_IPV4%\.*\.*}.0.0

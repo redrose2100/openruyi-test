@@ -21,8 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL net-tools
-    SSH_CMD "sudo dnf install -y net-tools" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    DNF_INSTALL "net-tools firewalld"
+    SSH_CMD "sudo dnf install -y net-tools firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     test $? -ne 0 && exit 1
     sudo systemctl start firewalld
     net_cards=$(TEST_NIC 1)
@@ -85,7 +85,7 @@ function post_test() {
     sudo ip addr del 192.168.100.1 dev "$net_card2"
     sudo ip addr del 192.168.100.10/24 dev "$NODE1_NIC"
     DNF_REMOVE "$@"
-    SSH_CMD "sudo ip addr del 192.168.100.2 dev $remote_net_card2;sudo ip addr del 192.168.100.20/24 dev $NODE2_NIC;sudo route del default  gw 192.168.100.1;sleep 2;sudo dnf remove -y net-tools" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "sudo ip addr del 192.168.100.2 dev $remote_net_card2;sudo ip addr del 192.168.100.20/24 dev $NODE2_NIC;sudo route del default  gw 192.168.100.1;sleep 2;sudo dnf remove -y net-tools firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     mv /etc/sysctl.conf.bak /etc/sysctl.conf
     sudo firewall-cmd --reload
     systemctl restart firewalld
