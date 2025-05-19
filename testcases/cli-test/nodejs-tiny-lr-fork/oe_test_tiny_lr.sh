@@ -17,7 +17,7 @@
 # @Desc      :   Test tiny-lr
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,20 +28,20 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    tiny-lr -v ${versionnum}
+    tiny-lr -v "${versionnum}"
     CHECK_RESULT $? 0 0 "Check tiny-lr -V failed"
-    tiny-lr --version ${versionnum}
+    tiny-lr --version "${versionnum}"
     CHECK_RESULT $? 0 0 "Check tiny-lr --version failed"
     tiny-lr -p 25555 > port.info &
-    SLEEP_WAIT 1
+    SLEEP_WAIT 5
     grep "Listening on 25555" port.info
     CHECK_RESULT $? 0 0 "Check tiny-lr -p failed"
     tiny-lr --port 26666 > port.info &
-    SLEEP_WAIT 1
+    SLEEP_WAIT 5
     grep "Listening on 26666" port.info
     CHECK_RESULT $? 0 0 "Check tiny-lr --port failed"
     tiny-lr --pid pid.info &
-    SLEEP_WAIT 1
+    SLEEP_WAIT 5
     grep -e "^[0-9].*[0-9]$" pid.info
     CHECK_RESULT $? 0 0 "Check tiny-lr --pid failed"
     update-livereload
@@ -51,9 +51,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -f *.info *.pid
-    kill -9 $(ps -ef | grep -v grep | grep -v nodejs-tiny-lr-fork | grep tiny-lr | awk '{print $2}')
+    DNF_REMOVE "$@"
+    rm -f -- *.info *.pid
+    pgrep -f tiny-lr | grep -v nodejs-tiny-lr-fork | xargs -r kill -9
     LOG_INFO "End to restore the test environment."
 }
 
