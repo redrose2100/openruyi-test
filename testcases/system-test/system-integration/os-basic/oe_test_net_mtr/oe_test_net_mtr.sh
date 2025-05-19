@@ -17,7 +17,7 @@
 # @Desc      :   Command test mtr
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "mtr"
@@ -30,20 +30,21 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check mtr version error"
     mtr -h
     CHECK_RESULT $? 0 0 "check mtr help error"
-    mtr -r  dns.google -c 15 > mtr.tmp1 2>&1
-    CHECK_RESULT $? 0 0 "execute -r -c cmd error"
-    s_value=$(grep "_gateway" mtr.tmp1 | awk '{print $4}')
-    CHECK_RESULT ${s_value} 15 0 "check log error after execute -r -c"
-    mtr -r -s 50 dns.google
-    CHECK_RESULT $? 0 0 "execute -r -s cmd error"
-    mtr --xml dns.google > mtr.tmp2 2>&1
-    CHECK_RESULT $? 0 0 "execute --xml cmd error"
-    grep "_gateway" mtr.tmp2  | grep '<HUB' | grep '>'
-    CHECK_RESULT $? 0 0 "check log error after execute --xml"
-    mtr --csv dns.google > mtr.tmp3 2>&1
-    CHECK_RESULT $? 0 0 "execute --csv cmd error"
-    target_value=$(grep "_gateway" mtr.tmp3 | awk -F ',' '{print $6}')
-    CHECK_RESULT ${target_value} "_gateway" 0 "check log error after execute --csv"
+    gateway=$(ip route | grep default | awk '{print $3}')
+    mtr -n -r dns.google -c 15 > mtr.tmp1 2>&1
+    CHECK_RESULT $? 0 0 "execute -n -r -c cmd error"
+    s_value=$(grep "$gateway" mtr.tmp1 | awk '{print $4}')
+    CHECK_RESULT "${s_value}" 15 0 "check log error after execute -n -r -c"
+    mtr -n -r -s 50 dns.google
+    CHECK_RESULT $? 0 0 "execute -n -r -s cmd error"
+    mtr -n --xml dns.google > mtr.tmp2 2>&1
+    CHECK_RESULT $? 0 0 "execute -n --xml cmd error"
+    grep "$gateway" mtr.tmp2  | grep '<HUB' | grep '>'
+    CHECK_RESULT $? 0 0 "check log error after execute -n --xml"
+    mtr -n --csv dns.google > mtr.tmp3 2>&1
+    CHECK_RESULT $? 0 0 "execute -n --csv cmd error"
+    target_value=$(grep "$gateway" mtr.tmp3 | awk -F ',' '{print $6}')
+    CHECK_RESULT "${target_value}" "$gateway" 0 "check log error after execute --csv"
     mtr -T -r dns.google 
     CHECK_RESULT $? 0 0 "execute -T -r cmd error"
     mtr -u -r dns.google
@@ -54,7 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf mtr.tmp*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
