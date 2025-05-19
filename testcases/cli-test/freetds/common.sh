@@ -95,7 +95,7 @@ TraceFile=stderr" >/etc/odbc.ini
         cp -rf /etc/odbc.ini /root/.odbc.ini
     else
         LOG_INFO "Mssql server only supports x86 architecture"
-        exit 1
+        exit 255
     fi
 }
 
