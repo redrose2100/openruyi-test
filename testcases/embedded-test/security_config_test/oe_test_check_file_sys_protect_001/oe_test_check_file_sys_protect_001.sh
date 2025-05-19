@@ -58,7 +58,7 @@ function run_test() {
     su - tester1 -c "echo $LD_LIBRARY_PATH | grep '[^\n]'"
     CHECK_RESULT $? 0 1 "check tester1 LD_LIBRARY_PATH value fail"
 
-    echo $PATH | tr ':' '\n' | grep -w -E "\.|\.\.|/tmp"
+    echo "$PATH" | tr ':' '\n' | grep -w -E "\.|\.\.|/tmp"
     CHECK_RESULT $? 0 1 "check PATH value fail"
 
     LOG_INFO "Finish testcase execution."
