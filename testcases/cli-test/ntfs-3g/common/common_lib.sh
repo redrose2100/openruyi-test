@@ -20,22 +20,22 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function get_disk() {
-    disks=$(TEST_DISK)
-    disk_list=($disks)
+    disks=$(TEST_DISK "$@")
+    read -r -a disk_list <<< "$(echo "$disks" | tr ' ' '\n' | grep -v '^nbd' | tr '\n' ' ')"
     disk1=${disk_list[0]}
     disk2=${disk_list[1]}
     DNF_INSTALL ntfs-3g
-    mkntfs --fast /dev/${disk1}
-    mkntfs --fast /dev/${disk2}
+    mkntfs --fast /dev/"${disk1}"
+    mkntfs --fast /dev/"${disk2}"
 }
 
 function check_file_and_umount_disk() {
     disk=$1
     dir=$2
     file=$3
-    ntfs-3g /dev/${disk} ${dir}
-    test -f ${dir}/${file}
+    ntfs-3g /dev/"${disk}" "${dir}"
+    test -f "${dir}"/"${file}"
     CHECK_RESULT $? 0 0 "Check file failed."
-    rm -rf ${dir}/${file}
-    umount ${dir}
+    rm -rf "${dir:?}/${file:?}"
+    umount "${dir}"
 }
