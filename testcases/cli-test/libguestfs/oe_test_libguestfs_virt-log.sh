@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of libguestfs virt-log command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -28,35 +28,35 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-log -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-log -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-log --help failed"
-    virt-log -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-log -c test:///default -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-log --help failed"
-    virt-log -d openEuler-2003
+    virt-log -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-log --help failed"
-    virt-log --echo-keys -d openEuler-2003
+    virt-log --echo-keys -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-log --help failed"
-    virt-log --format=qcow2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-log --format=qcow2 -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-log --help failed"
     virt-log --help 2>&1 | grep 'help'
     CHECK_RESULT $? 0 0 "Check virt-log --help failed"
-    virt-log --key ID:key:KEY_STRING -d openEuler-2003
+    virt-log --key ID:key:KEY_STRING -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-log --help failed"
-    virt-log --keys-from-stdin -d openEuler-2003
+    virt-log --keys-from-stdin -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-log --help failed"
-    virt-log -v -d openEuler-2003
+    virt-log -v -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-log --help failed"
-    virt-log -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-log -V 2>&1 | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-log --help failed"
-    virt-log -x -d openEuler-2003
+    virt-log -x -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-log --help failed"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"

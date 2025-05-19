@@ -16,13 +16,13 @@
 # @Desc      :   verify the uasge of libguestfs virt-sysprep command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     libguestfs_pre_test
     echo "hello" >a.txt
-    virt-copy-in -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 a.txt /etc
+    virt-copy-in -a /home/kvm/images/openEuler-24.03-LTS-SP1.qcow2 a.txt /etc
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
     LOG_INFO "End of environmental preparation!"
@@ -30,25 +30,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-sysprep --truncate /etc/a.txt -d openEuler-2003
+    virt-sysprep --truncate /etc/a.txt -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep --truncate failed"
-    virt-sysprep --truncate-recursive /etc/ -d openEuler-2003
+    virt-sysprep --truncate-recursive /etc/ -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep --truncate-recursive failed"
-    virt-sysprep -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-sysprep -V | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-sysprep -V failed"
-    virt-sysprep -v -d openEuler-2003
+    virt-sysprep -v -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep -v failed"
-    virt-sysprep --write /etc/a.txt:"hello" -d openEuler-2003
+    virt-sysprep --write /etc/a.txt:"hello" -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep --write failed"
-    virt-sysprep -x -d openEuler-2003
+    virt-sysprep -x -d openEuler-2403
     CHECK_RESULT $? 0 0 "Check virt-sysprep -x failed"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"
