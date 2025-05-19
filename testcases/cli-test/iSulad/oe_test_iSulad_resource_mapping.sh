@@ -23,13 +23,14 @@ source "./common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL hostname
     iSulad_install
     if [ "${NODE1_FRAME}" == "riscv64" ]; then
-        TEST_IMAGE=jchzhou/oerv
-        TEST_TAG=24.03    
+        TEST_IMAGE=debian
+        TEST_TAG=trixie
     else
         TEST_IMAGE=centos
-        TEST_TAG=latest
+        TEST_TAG=7
     fi
 
     localhostname=$(hostname)
