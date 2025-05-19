@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL sssd-tools
+    DNF_INSTALL "sssd-tools sssd-ldap tar"
     cp -ar /etc/sssd/sssd.conf /etc/sssd/sssd.conf.bak
     LOG_INFO "End to prepare the test environment."
 }
