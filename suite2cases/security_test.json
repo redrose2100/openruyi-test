@@ -31,7 +31,8 @@
             "name": "oe_test_selinux_sec_sestatus"
         },
         {
-            "name": "oe_test_selinux_change_permissive"
+            "name": "oe_test_selinux_change_permissive",
+            "machine num": 2
         },
         {
             "name": "oe_test_selinux_change_enforcing"

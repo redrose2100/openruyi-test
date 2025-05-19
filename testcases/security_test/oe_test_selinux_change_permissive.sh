@@ -21,6 +21,8 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    # can't enable when selinux disabled on kernel
+    SSH_CMD "setenforce 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" || exit 255
     SSH_CMD "cp /etc/selinux/config /etc/selinux/config-bak" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "End of environmental preparation!"
 }
