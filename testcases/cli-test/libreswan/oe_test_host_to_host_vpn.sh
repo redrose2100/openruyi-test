@@ -21,9 +21,9 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libreswan
+    DNF_INSTALL "libreswan firewalld"
     systemctl start firewalld
-    DNF_INSTALL libreswan 2
+    DNF_INSTALL "libreswan firewalld" 2
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -38,7 +38,7 @@ function run_test() {
     firewall-cmd --runtime-to-permanent | grep "success"
     CHECK_RESULT $?
     left_ckaid=$(ipsec newhostkey --nssdir /etc/ipsec.d/ 2>&1 | awk '/Generated/{print $7}')
-    left_rsa=$(ipsec showhostkey --left --ckaid $left_ckaid --nssdir /etc/ipsec.d/ | grep leftrsasigkey | awk -F "leftrsasigkey=" '{print $2}' | sed 's/^[ \t]*//g')
+    left_rsa=$(ipsec showhostkey --left --ckaid "$left_ckaid" --nssdir /etc/ipsec.d/ | grep leftrsasigkey | awk -F "leftrsasigkey=" '{print $2}' | sed 's/^[ \t]*//g')
 
     P_SSH_CMD --cmd 'systemctl start firewalld;systemctl enable ipsec --now' --node 2
     CHECK_RESULT $?
@@ -46,18 +46,18 @@ function run_test() {
     CHECK_RESULT $?
     P_SSH_CMD --cmd "ipsec newhostkey --nssdir /etc/ipsec.d/ 2>&1 | grep Generated | cut -d ' ' -f 7 >/tmp/key.txt" --node 2
     CHECK_RESULT $?
-    SSH_SCP ${NODE2_USER}@${NODE2_IPV4}:/tmp/key.txt /tmp ${NODE2_PASSWORD}
+    SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/key.txt /tmp "${NODE2_PASSWORD}"
     right_ckaid=$(cat /tmp/key.txt)
 
     P_SSH_CMD --cmd "ipsec showhostkey --right --ckaid ${right_ckaid} --nssdir /etc/ipsec.d/ | grep rightrsasigkey > /tmp/rsa.txt" --node 2
     CHECK_RESULT $?
-    SSH_SCP ${NODE2_USER}@${NODE2_IPV4}:/tmp/rsa.txt /tmp ${NODE2_PASSWORD}
-    right_rsa=$(cat /tmp/rsa.txt | awk -F "rightrsasigkey=" '{print $2}' | sed 's/^[ \t]*//g')
+    SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/rsa.txt /tmp "${NODE2_PASSWORD}"
+    right_rsa=$(awk -F "rightrsasigkey=" '{print $2}' /tmp/rsa.txt | sed 's/^[ \t]*//g')
 
     echo -e "conn mytunnel\\n    leftid=@west\\n    left=${NODE1_IPV4}\\n    leftrsasigkey=${left_rsa}\\n    
     rightid=@east\\n    right=${NODE2_IPV4}\\n    rightrsasigkey=${right_rsa}\\n    
     authby=rsasig\\n    auto=start" >/etc/ipsec.d/my_host-to-host.conf
-    SSH_SCP /etc/ipsec.d/my_host-to-host.conf ${NODE2_USER}@${NODE2_IPV4}:/etc/ipsec.d/ ${NODE2_PASSWORD}
+    SSH_SCP /etc/ipsec.d/my_host-to-host.conf "${NODE2_USER}"@"${NODE2_IPV4}":/etc/ipsec.d/ "${NODE2_PASSWORD}"
 
     ipsec auto --add mytunnel
     CHECK_RESULT $?
@@ -79,8 +79,8 @@ function post_test() {
     firewall-cmd --remove-service="ipsec"
     firewall-cmd --runtime-to-permanent
     P_SSH_CMD "systemctl stop ipsec;firewall-cmd --remove-service=ipsec;firewall-cmd --runtime-to-permanent" 2
-    DNF_REMOVE
-    DNF_REMOVE 2 libreswan
+    DNF_REMOVE "$@"
+    DNF_REMOVE 2 "$@"
     rm -rf /tmp/key.txt /tmp/rsa.txt /etc/ipsec.d/* /var/lib/ipsec/nss/*.db
     P_SSH_CMD "rm -rf /tmp/key.txt /tmp/rsa.txt /etc/ipsec.d/* /var/lib/ipsec/nss/*.db" 2
 
