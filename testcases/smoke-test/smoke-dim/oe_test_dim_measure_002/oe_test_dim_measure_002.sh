@@ -17,8 +17,9 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    DNF_INSTALL "dim_tools dim vdo"
-    modprobe dim_monitor
+    DNF_INSTALL "dim_tools dim vdo kmod-kvdo"
+    lsmod | grep dim_core || insmod "$(rpm -ql dim | grep dim_core.ko)"
+    lsmod | grep dim_monitor || insmod "$(rpm -ql dim | grep dim_monitor.ko)"
 }
 
 function run_test() {
@@ -36,6 +37,7 @@ function run_test() {
     echo "measure obj=MODULE_TEXT name=kvdo" >> /etc/dim/policy
 
     ./dim_proc &
+    depmod -a
     modprobe kvdo
     echo 1 > /sys/kernel/security/dim/baseline_init
     CHECK_RESULT $? 0 0 "baseline_init failed."
