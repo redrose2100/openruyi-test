@@ -17,11 +17,15 @@
 # @Desc      :   Test firebird-superserver.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL firebird
+    if ! systemctl list-unit-files | grep -q '^firebird-superserver\.service'; then
+        LOG_INFO "firebird-superserver.service not available. Firebird may be too new and no longer provide this legacy service. Skipping test."
+        exit 255
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -34,7 +38,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
