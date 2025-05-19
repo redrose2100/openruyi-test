@@ -52,7 +52,7 @@ function run_test() {
     grep "LD_LIBRARY_PATH" /etc/profile
     CHECK_RESULT $? 0 1 "check LD_LIBRARY_PATH set in /etc/profile fail"
 
-    echo $LD_LIBRARY_PATH | grep '[^\n]'
+    echo "$LD_LIBRARY_PATH" | grep '[^\n]'
     CHECK_RESULT $? 0 1 "check root LD_LIBRARY_PATH value fail"
 
     su - tester1 -c "echo $LD_LIBRARY_PATH | grep '[^\n]'"
