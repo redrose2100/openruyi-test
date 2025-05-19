@@ -20,8 +20,8 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL net-tools
-    SSH_CMD "sudo dnf install -y httpd net-tools
+    DNF_INSTALL "net-tools firewalld"
+    SSH_CMD "sudo dnf install -y httpd net-tools firewalld
         sudo systemctl start httpd
         sudo systemctl stop firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     sudo systemctl start firewalld
@@ -89,10 +89,10 @@ function post_test() {
     sudo firewall-cmd --direct --passthrough ipv4 -t nat -D PREROUTING -d "$NODE1_IPV4" -p tcp --dport 80 -j DNAT --to-destination 192.168.100.2:80
     sudo firewall-cmd --direct --passthrough ipv4 -t nat -F
     sudo firewall-cmd --zone=external --remove-masquerade
-    if [ ! -z "$zone1" ]; then
+    if [ -n "$zone1" ]; then
         sudo firewall-cmd --zone="$zone1" --change-interface="$NODE1_NIC"
     fi
-    if [ ! -z "$zone2" ]; then
+    if [ -n "$zone2" ]; then
         sudo firewall-cmd --zone="$zone2" --change-interface="$net_card2"
     else
         sudo firewall-cmd --zone=internal --remove-interface="$net_card2"
@@ -101,9 +101,9 @@ function post_test() {
     sudo systemctl start firewalld
     sudo ip addr del 192.168.100.1 dev "$net_card2"
     sudo systemctl stop httpd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /tmp/ip_remote
-    SSH_CMD "sudo systemctl stop httpd;sudo ip addr del 192.168.100.2 dev $remote_net_card2;sudo route del -net 192.168.100.0 netmask 255.255.255.0 gw 192.168.100.1;sudo yum remove -y net-tools httpd;rm -rf /root/ip_remote" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "sudo systemctl stop httpd;sudo ip addr del 192.168.100.2 dev $remote_net_card2;sudo route del -net 192.168.100.0 netmask 255.255.255.0 gw 192.168.100.1;sudo yum remove -y net-tools httpd firewalld;rm -rf /root/ip_remote" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

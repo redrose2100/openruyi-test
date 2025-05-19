@@ -16,10 +16,12 @@
 #@Desc          :   Permanent firewalld rules in effect
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
+    DNF_INSTALL firewalld 2
+    P_SSH_CMD --node 2 --cmd "systemctl start firewalld"
     CHECK_RESULT "$(P_SSH_CMD --node 2 --cmd "firewall-cmd --state")" "running" 0 "firewalld.service not running"
     RichRule='rule family="ipv6" port port="11" protocol="tcp" mark set=11/11'
     P_SSH_CMD --node 2 --cmd "firewall-cmd --remove-rich-rule='${RichRule}'"

@@ -17,7 +17,13 @@
 # @Desc      :   Test firewalld.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL firewalld
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -39,6 +45,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/sbin/firewalld --debug\ExecStart=/usr/sbin/firewalld\g' /usr/lib/systemd/system/firewalld.service
     systemctl daemon-reload
     systemctl reload firewalld.service
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

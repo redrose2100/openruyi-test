@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL firewalld
     sudo systemctl start firewalld
     useradd whitetestuser
     LOG_INFO "End of environmental preparation!"
@@ -42,6 +43,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf whitetestuser
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

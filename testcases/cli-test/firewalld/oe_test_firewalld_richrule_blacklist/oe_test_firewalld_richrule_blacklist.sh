@@ -21,8 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nmap
-    DNF_INSTALL nmap 2
+    DNF_INSTALL "nmap firewalld"
+    DNF_INSTALL "nmap firewalld" 2
     sudo systemctl start firewalld
     source_ip=${NODE1_IPV4%\.*\.*}.0.0
     LOG_INFO "End of environmental preparation!"
