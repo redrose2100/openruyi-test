@@ -16,12 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Xmlsec1 Encrypt xml
 # ############################################
-
+# shellcheck disable=SC2046
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "xmlsec1 xmlsec1-openssl xmlsec1-openssl-devel libxml2 libxslt gcc"
+    DNF_INSTALL "xmlsec1 xmlsec1-openssl xmlsec1-openssl-devel libxml2 libxslt gcc unzip"
     pwd=$(pwd)
     LOG_INFO "End to prepare the test environment."
 }
@@ -34,7 +34,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "execution failed"
     unzip xmlsec1.zip
     cd xmlsec1 || exit
-    gcc "$(xml2-config --cflags --libs)" "$(xslt-config --cflags --libs)" -lxmlsec1 -g -D__XMLSEC_FUNCTION__=__FUNCTION__ -DXMLSEC_NO_XKMS=1 -DXMLSEC_CRYPTO_OPENSSL -DXMLSEC_CRYPTO_DYNAMIC_LOADING=1 -DUNIX_SOCKETS -DXMLSEC_NO_SIZE_T sign.c -o sign1
+    gcc $(xml2-config --cflags --libs) $(xslt-config --cflags --libs) -lxmlsec1 -g -D__XMLSEC_FUNCTION__=__FUNCTION__ -DXMLSEC_NO_XKMS=1 -DXMLSEC_CRYPTO_OPENSSL -DXMLSEC_CRYPTO_DYNAMIC_LOADING=1 -DUNIX_SOCKETS -DXMLSEC_NO_SIZE_T sign.c -o sign1
     CHECK_RESULT $? 0 0 "execution failed"
     ./sign1 sign1-tmpl.xml rsakey.pem > sign1-res.xml
     CHECK_RESULT $? 0 0 "execution failed"
