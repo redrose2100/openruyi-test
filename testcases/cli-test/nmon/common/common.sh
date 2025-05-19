@@ -28,13 +28,18 @@ function env_pre() {
     systemctl start nfs-server
     rpmdev-setuptree
     cp ./common/libnvidia-ml.spec "${HOME}/rpmbuild/SPECS/"
+    if [[ $(lspci | grep -i vga | grep -i nvidia) == "" ]];then
+        cp /usr/bin/nmon ./nmon_openEuler
+        mkdir template
+        return
+    fi
     if [[ "$NODE1_FRAME" == "x86_64" ]]; then
         export ARCH=X86
         wget -P "${HOME}/rpmbuild/SOURCES/" https://cn.download.nvidia.com/XFree86/Linux-x86_64/470.74/NVIDIA-Linux-x86_64-470.74.run
     elif [[ "$NODE1_FRAME" == "aarch64" ]]; then
         export ARCH=ARM
         wget -P "${HOME}/rpmbuild/SOURCES/" https://cn.download.nvidia.com/XFree86/aarch64/470.74/NVIDIA-Linux-aarch64-470.74.run
-    else 
+    else
         cp /usr/bin/nmon ./nmon_openEuler
         mkdir template
         return
