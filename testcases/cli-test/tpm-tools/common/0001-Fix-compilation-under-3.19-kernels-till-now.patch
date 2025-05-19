@@ -1,0 +1,98 @@
+From 89a542e2be52698e131f4e7c242d52e4cfbf0651 Mon Sep 17 00:00:00 2001
+From: Aorimn <aorimn@gmail.com>
+Date: Sun, 11 Oct 2015 22:00:58 +0200
+Subject: [PATCH 1/2] Fix compilation under 3.19 kernels till now
+
+From the 3.19 kernel version, the msghdr structure changed, removing the
+'struct iovec msg_iov' member for a new 'struct iov_iter msg_iter' member.
+The initialization of the msg_iter structure is done through the
+iov_iter_init function.
+
+From the 4.1 kernel version, the prototype of the sock_sendmsg function
+has changed from:
+int sock_sendmsg(struct socket *sock, struct msghdr *msg, size_t size)
+to
+int sock_sendmsg(struct socket *sock, struct msghdr *msg)
+Its counterpart, sock_recvmsg, didn't change however.
+---
+ tpmd_dev/linux/tpmd_dev.c | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
+
+diff --git a/tpmd_dev/linux/tpmd_dev.c b/tpmd_dev/linux/tpmd_dev.c
+index 1ab71e6..537008f 100644
+--- a/tpmd_dev/linux/tpmd_dev.c
++++ b/tpmd_dev/linux/tpmd_dev.c
+@@ -25,6 +25,8 @@
+ #include <linux/net.h>
+ #include <linux/un.h>
+ 
++#include <linux/version.h>
++
+ #include "config.h"
+ 
+ #define TPM_DEVICE_MINOR  224
+@@ -81,7 +83,7 @@ static int tpmd_connect(char *socket_name)
+   }
+   addr.sun_family = AF_UNIX;
+   strncpy(addr.sun_path, socket_name, sizeof(addr.sun_path));
+-  res = tpmd_sock->ops->connect(tpmd_sock, 
++  res = tpmd_sock->ops->connect(tpmd_sock,
+     (struct sockaddr*)&addr, sizeof(struct sockaddr_un), 0);
+   if (res != 0) {
+     error("sock_connect() failed: %d\n", res);
+@@ -108,9 +110,17 @@ static int tpmd_handle_command(const uint8_t *in, uint32_t in_size)
+   memset(&msg, 0, sizeof(msg));
+   iov.iov_base = (void*)in;
+   iov.iov_len = in_size;
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,19,0)
+   msg.msg_iov = &iov;
+   msg.msg_iovlen = 1;
++#else
++  iov_iter_init(&msg.msg_iter, WRITE, &iov, 1, 1);
++#endif
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0)
+   res = sock_sendmsg(tpmd_sock, &msg, in_size);
++#else
++  res = sock_sendmsg(tpmd_sock, &msg);
++#endif
+   if (res < 0) {
+     error("sock_sendmsg() failed: %d\n", res);
+     return res;
+@@ -122,8 +132,12 @@ static int tpmd_handle_command(const uint8_t *in, uint32_t in_size)
+   memset(&msg, 0, sizeof(msg));
+   iov.iov_base = (void*)tpm_response.data;
+   iov.iov_len = tpm_response.size;
+-  msg.msg_iov = &iov;
+-  msg.msg_iovlen = 1;
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,19,0)
++   msg.msg_iov = &iov;
++   msg.msg_iovlen = 1;
++#else
++  iov_iter_init(&msg.msg_iter, WRITE, &iov, 1, 1);
++#endif
+   oldmm = get_fs();
+   set_fs(KERNEL_DS);
+   res = sock_recvmsg(tpmd_sock, &msg, tpm_response.size, 0);
+@@ -194,7 +208,7 @@ static ssize_t tpm_write(struct file *file, const char *buf, size_t count, loff_
+     kfree(tpm_response.data);
+     tpm_response.data = NULL;
+   }
+-  if (tpmd_handle_command(buf, count) != 0) { 
++  if (tpmd_handle_command(buf, count) != 0) {
+     count = -EILSEQ;
+     tpm_response.data = NULL;
+   }
+@@ -241,8 +255,8 @@ struct file_operations fops = {
+ };
+ 
+ static struct miscdevice tpm_dev = {
+-  .minor      = TPM_DEVICE_MINOR, 
+-  .name       = TPM_DEVICE_ID, 
++  .minor      = TPM_DEVICE_MINOR,
++  .name       = TPM_DEVICE_ID,
+   .fops       = &fops,
+ };
+ 
+-- 
+2.49.0
+
