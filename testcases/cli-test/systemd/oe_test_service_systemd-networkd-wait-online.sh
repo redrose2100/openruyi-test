@@ -27,8 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution systemd-networkd-wait-online.service
-    test_reload systemd-networkd-wait-online.service
+    test_oneshot systemd-networkd-wait-online.service 'inactive (dead)'
     LOG_INFO "End to run test."
 }
 
