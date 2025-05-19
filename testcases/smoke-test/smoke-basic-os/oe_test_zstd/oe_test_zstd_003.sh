@@ -21,7 +21,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL zstd
+    if [ "${NODE1_MACHINE}" == "kvm" ] && [ "${NODE1_FRAME}" == "riscv64" ]; then
+        LOG_INFO "The environment does not support testing"
+        exit 255
+    fi
+    DNF_INSTALL "time zstd"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,26 +39,32 @@ function run_test() {
     grep "PZSTD version" tmp_file
     CHECK_RESULT $? 0 0 "check pztsd -V" 
     echo teststr > testfile
-    /usr/bin/time -f %U pzstd -p1 bigfile &> tmp_file
+    /usr/bin/time -f %e pzstd -p1 bigfile &> tmp_file
     time_1=$(awk 'NR==2 {print $1}' tmp_file)
     rm -rf bigfile.zst
-    /usr/bin/time -f %U pzstd -p4 bigfile &> tmp_file
-    time_4=$(awk 'NR==2 {print $1}' tmp_file)
-    # 使用4cpus耗时应小于使用1cpu
-    (($(echo "$time_1 >= $time_4" | bc -l)))
-    CHECK_RESULT $? 0 0 "Using p1(1cpu) spend less time than using p4(4cpus)"
-    # 使用1cpu耗时应小于1s
-    (($(echo "$time_1 < 1" | bc -l)))
-    CHECK_RESULT $? 0 0 "Using p1(1cpu) spend time more than 1s"
+    if [ "$(nproc)" -ge 4 ];then
+        /usr/bin/time -f %e pzstd -p4 bigfile &> tmp_file
+        time_4=$(awk 'NR==2 {print $1}' tmp_file)
+        # 使用4cpus耗时应小于使用1cpu
+        (($(echo "$time_1 >= $time_4" | bc -l)))
+        CHECK_RESULT $? 0 0 "Using p1(1cpu) spend less time than using p4(4cpus)"
+    fi
+    if [ "${NODE1_FRAME}" != "riscv64" ];then
+        # 使用1cpu耗时应小于1s
+        (($(echo "$time_1 < 1" | bc -l)))
+        CHECK_RESULT $? 0 0 "Using p1(1cpu) spend time more than 1s"
+    fi
 
-    /usr/bin/time -f %U pzstd -1 -f bigfile &> tmp_file
+    /usr/bin/time -f %e pzstd -1 -f bigfile &> tmp_file
     t_level_1=$(awk 'NR==2 {print $1}' tmp_file)
-    /usr/bin/time -f %U pzstd -9 -f bigfile &> tmp_file
+    /usr/bin/time -f %e pzstd -9 -f bigfile &> tmp_file
     t_level_9=$(awk 'NR==2 {print $1}' tmp_file)
     (($(echo "$t_level_1 < $t_level_9" | bc -l)))
     CHECK_RESULT $? 0 0 "Using level9 spend less time than level1"
-    (($(echo "$t_level_1 < 1" | bc -l)))
-    CHECK_RESULT $? 0 0 "Using level3 spend time more than 1s"
+    if [ "${NODE1_FRAME}" != "riscv64" ];then
+        (($(echo "$t_level_1 < 1" | bc -l)))
+        CHECK_RESULT $? 0 0 "Using level3 spend time more than 1s"
+    fi
 
     pzstd testfile
     CHECK_RESULT $? 0 0 "check pzstd file"
