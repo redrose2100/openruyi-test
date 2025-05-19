@@ -17,31 +17,42 @@
 # @Desc      :   The system log is recorded in a fixed log file
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+	grep Storage /etc/systemd/journald.conf | grep -E "Storage=auto|Storage=persistent" || exit 1
+	if [ -d /run/log/journal ];then
+		journallog_path="/run/log/journal"
+	else
+		journallog_path="/var/log/journal"
+	fi
+    LOG_INFO "End of environmental preparation!"
+}
+
+
 function run_test() {
 	LOG_INFO "Start executing testcase."
-	grep Storage /etc/systemd/journald.conf | grep -E "Storage=auto|Storage=persistent"
-	CHECK_RESULT $?
-	folder=$(ls /run/log/journal/)
-	cp -r /run/log/journal/$folder /run/log/journal/${folder}bak
-	rm -rf /run/log/journal/$folder
+	folder=$(find "${journallog_path}/" -mindepth 1 -maxdepth 1 -type d | head -n 1)
+	cp -r "${folder}" "${folder}bak"
+	rm -rf "${journallog_path:?}/${folder:?}"
 	systemctl restart systemd-journald.service
-	if [ ! -d "/run/log/journal/$folder" ]; then
+	if [ ! -d "${folder}" ]; then
 		((exec_result++))
-		cp -r /run/log/journal/${folder}bak /run/log/journal/${folder}
+		cp -r "${folder}bak" "${folder}"
 	fi
-	CHECK_RESULT $(ls -la /run/log/journal/${folder} | grep "^-" | grep "journal" | wc -l) 1
-	sudo journalctl --file /run/log/journal/${folder}/system.journal >systemlog1
-	logsize=$(ls -l systemlog1 | awk '{print $5}')
-	test $logsize -gt 0
+	CHECK_RESULT "$(find "${folder}" -maxdepth 1 -type f -name "*journal" | wc -l)" 1
+	sudo journalctl --file "${folder}/system.journal" | tee systemlog1
+	logsize=$(stat -c%s systemlog1)
+	test "${logsize}" -gt 0
 	CHECK_RESULT $?
 	LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
 	LOG_INFO "start environment cleanup."
-	rm -rf /run/log/journal/${folder}bak systemlog1
+	rm -rf "${folder}bak" systemlog1
 	LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
