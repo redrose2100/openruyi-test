@@ -86,7 +86,7 @@ function test_enabled() {
 function test_reload() {
     service=$1
     systemctl start "${service}"
-    if systemctl cat "${service}" | grep -q "ExecReload"; then
+    if systemctl show "${service}" -p CanReload | grep CanReload=yes  ; then
         systemctl reload "${service}"
         CHECK_RESULT $? 0 0 "reload unit ${service} failed"
     else 
