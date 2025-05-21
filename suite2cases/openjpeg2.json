@@ -6,6 +6,9 @@
         },           
         {
             "name": "oe_test_openjpeg2-tools_01"
+	},
+	{
+	    "name": "oe_test_openjpeg2-tools_02"	
         }
     ]
 }
