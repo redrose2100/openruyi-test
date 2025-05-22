@@ -17,10 +17,14 @@
 # @Desc      :   Test tsdb
 # #############################################
 
-source "./common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/prometheus2/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    if [[ "$(dnf info prometheus2 | grep ^Version | awk '{print $3}')" != "2.20.0" ]]; then
+        LOG_WARN "The current prometheus2 version is not 2.20.0, which is not supported for tsdb testing. Exiting."
+        exit 255
+    fi
     DNF_INSTALL prometheus2
     LOG_INFO "End of environmental preparation!"
 }
@@ -40,7 +44,9 @@ function run_test() {
     tsdb bench write ./20kseries.json | grep 'completed' 2>&1
     CHECK_RESULT $? 0 0 "Failed to use command: bench write, with arg: file."
     tsdb bench write ./20kseries.json --out ./out_of_bench_write
-    CHECK_RESULT "$(ls ./out_of_bench_write | grep -cE 'block.prof|cpu.prof|mem.prof|mutex.prof|storage')" 5 0 "Failed to use command: bench write, with flag: --out."
+    shopt -s nullglob
+    files=(./out_of_bench_write/*block.prof ./out_of_bench_write/*cpu.prof ./out_of_bench_write/*mem.prof ./out_of_bench_write/*mutex.prof ./out_of_bench_write/*storage)
+    CHECK_RESULT "$(( ${#files[@]} ))" 5 0 "Failed to use command: bench write, with flag: --out."
     tsdb bench write ./20kseries.json --metrics=100 | grep 'completed'
     CHECK_RESULT $? 0 0 "Failed to use command: bench write, with flag: --metrics."
     tsdb ls --help 2>&1 | grep 'usage: tsdb ls'
@@ -57,7 +63,7 @@ function run_test() {
     CHECK_RESULT "$(tsdb analyze ./out_of_bench_write/storage | grep -cE 'Block ID|Duration|Series|Label names|Postings|Postings entries')" 8 0 "Failed to use command: analyze, with arg: db path"
     CHECK_RESULT "$(tsdb analyze --limit=1 | wc -l)" 24 0 "Failed to use command: analyze, with flag: --limit"
     block_id=$(tsdb ls| awk '{if(NR==2) print $1}')
-    tsdb analyze ./benchout/storage $block_id | grep "Block ID: ${block_id}"
+    tsdb analyze ./benchout/storage "$block_id" | grep "Block ID: ${block_id}"
     CHECK_RESULT $? 0 0 "Failed to use command: analyze, with arg: block id"
     LOG_INFO "Finish test!"
 } 
@@ -66,7 +72,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf ./benchout
     rm -rf ./out_of_bench_write
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
