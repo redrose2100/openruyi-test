@@ -1022,6 +1022,9 @@
 	},
 	{
 	    "name": "oe_test_lslogins_5"
+	},
+	{
+	    "name": "oe_test_zipgrep"
 	}
     ]
 }
