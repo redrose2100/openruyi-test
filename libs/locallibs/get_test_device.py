@@ -57,7 +57,7 @@ def get_test_nic(node=1):
             ).replace("\n", " ")
         else:
             output = subprocess.getoutput(
-                "lshw -class network | grep -A 5 'description: Ethernet interface' | grep 'logical name:' | awk '{print $NF}' | grep -v '"
+                "ip link | grep 'state UP' | awk -F': ' '{print $2}' | grep -v '"
                 + os.environ.get("NODE" + str(node) + "_NIC")
                 + "'"
             ).replace("\n", " ")
@@ -83,7 +83,7 @@ def get_test_nic(node=1):
         else:
             output = ssh_cmd.pssh_cmd(
                 conn,
-                "lshw -class network | grep -A 5 'description: Ethernet interface' | grep 'logical name:' | awk '{print $NF}' | grep -v '"
+                "ip link | grep 'state UP' | awk -F': ' '{print $2}' | grep -v '"
                 + os.environ.get("NODE" + str(node) + "_NIC")
                 + "'",
             )[1].replace("\n", " ")
