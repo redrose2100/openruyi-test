@@ -32,6 +32,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "List the rules in a chain or all chains fail"
     arptables -F
     CHECK_RESULT $? 0 0 "Delete all rules in  chain or all chains fail"
+    arptables -A INPUT --source-ip 192.168.1.100 -j DROP
+    CHECK_RESULT $? 0 0 "Failed to add arptables rule"
+    arptables -L | grep -q "192.168.1.100"
+    CHECK_RESULT $? 0 0 "Added rule not found in listing"
+    arptables -D INPUT --source-ip 192.168.1.100 -j DROP
+    CHECK_RESULT $? 0 0 "Failed to delete arptables rule"
+    arptables -L | grep -q "192.168.1.100"
+    CHECK_RESULT $? 1 0 "Deleted rule still exists in listing"
     LOG_INFO "End to run test."
 }
 
