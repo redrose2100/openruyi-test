@@ -186,6 +186,9 @@
             "name": "oe_test_mlx4_core"
         },
         {
+            "name": "oe_test_mlx5_core"
+        },
+        {
             "name": "oe_test_hinic3"
         }
     ]
