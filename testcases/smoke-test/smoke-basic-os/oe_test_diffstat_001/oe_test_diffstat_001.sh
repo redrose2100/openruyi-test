@@ -35,6 +35,14 @@ function run_test() {
     echo -e "abc\n456\njqk" >./diff_test2/test.txt
     diff diff_test1 diff_test2 | diffstat | grep "2 insertions(+), 2 deletions(-)"
     CHECK_RESULT $? 0 0 "The file content is abnormal"
+    diff diff_test1 diff_test2 | diffstat -l | grep "test.txt"
+    CHECK_RESULT $? 0 0 "diffstat -l 输出异常"
+    diff diff_test1 diff_test2 | diffstat -p1 | grep "test.txt"
+    CHECK_RESULT $? 0 0 "diffstat -p1 输出异常"
+    echo "" | diffstat | grep "0 files changed"
+    CHECK_RESULT $? 0 0 "diffstat 空输入输出异常"
+    diffstat --invalid 2>&1 | grep -E "invalid|unrecognized|illegal"
+    CHECK_RESULT $? 0 0 "diffstat 未能正确处理无效参数"
     LOG_INFO "Finish test!"
 }
 
