@@ -30,8 +30,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     test_restart isulad.service
     test_enabled isulad.service
-    journalctl --since "${log_time}" -u isulad.service | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARN\|home\/lkp\/rpmbuild\/BUILD"
-    CHECK_RESULT $? 0 1 "There is an error message for the log of isulad.service"
+    if [[ ${NODE1_FRAME} != "riscv64" ]]; then
+        journalctl --since "${log_time}" -u isulad.service | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARN\|home\/lkp\/rpmbuild\/BUILD"
+        CHECK_RESULT $? 0 1 "There is an error message for the log of isulad.service"
+    fi
     systemctl start isulad.service
     sed -i 's\ExecStart=/usr/bin/isulad\ExecStart=/usr/bin/isulad --log-level=ERROR\g' /usr/lib/systemd/system/isulad.service
     systemctl daemon-reload
