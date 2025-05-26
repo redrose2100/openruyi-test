@@ -48,6 +48,19 @@ function run_test() {
     CHECK_RESULT $? 0 0 "get attr failed"
     setfattr -x user.oe -h test
     CHECK_RESULT $? 0 0 "remove attr failed"
+    attr -s "persistent" -V "survives" test
+    CHECK_RESULT $? 0 0 "add persistent attr failed"
+    sync && sleep 1
+    attr -g "persistent" test | grep "survives"
+    CHECK_RESULT $? 0 0 "persistent attr not preserved"
+    attr -r "persistent" test
+    special_value="special@chars#\$%^&123"
+    attr -s "special" -V "$special_value" test
+    CHECK_RESULT $? 0 0 "add attr with special chars failed"
+    retrieved_value=$(attr -g "special" test 2>&1 | tail -1)
+    [[ "$retrieved_value" == "$special_value" ]]
+    CHECK_RESULT $? 0 0 "special chars not preserved correctly"
+    attr -r "special" test
     LOG_INFO "End to run test."
 }
 
