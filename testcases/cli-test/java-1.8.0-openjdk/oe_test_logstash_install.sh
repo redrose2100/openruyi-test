@@ -21,7 +21,11 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start to prepare the test environment."
-  DNF_INSTALL "java-1.8.0-openjdk expect"
+  if [ "${NODE1_FRAME}" == "riscv64" ]; then
+    LOG_WARN "Testing cannot be performed if NODE1_FRAME is riscv64"
+    exit 255
+  fi
+  DNF_INSTALL "java-1.8.0-openjdk expect wget unzip"
   mkdir /tmp/test
   wget -P /tmp/test https://gitee.com/sunqingwei811/package/repository/archive/master.zip
   LOG_INFO "Finish preparing the test environment."
