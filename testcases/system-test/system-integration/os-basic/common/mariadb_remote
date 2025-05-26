@@ -19,19 +19,16 @@
 expect -c "
     log_file testlog
     set timeout 10
-    spawn mysql -h ${NODE1_IPV4} -u root -p
-    expect {
-        \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
-        "Maria*" { send "create database test;\r"
-        expect "Maria*" { send "use test;\r"}
-        expect "Maria*" { send "create table testtable(id int(3), name char(8));\r"}
-        expect "Maria*" { send "insert into testtable values(\'01\',\'zhang\');\r"}
-        expect "Maria*" { send "insert into testtable values(\'02\',\'lisi\');\r"}
-        expect "Maria*" { send "select * from testtable;\r"}
-        expect "Maria*" { send "delete from testtable where id=\'01\';\r"}
-        expect "Maria*" { send "select * from testtable;\r"}
-        expect "Maria*" { send "exit\r"}
-}
-}
+    spawn mysql -h local_ip -u root -p
+    expect \"Enter*\" { send \"local_password\r\"}
+    expect \"Maria*\" { send \"create database test;\r\"}
+    expect \"Maria*\" { send \"use test;\r\"}
+    expect \"Maria*\" { send \"create table testtable(id int(3), name char(8));\r\"}
+    expect \"Maria*\" { send \"insert into testtable values(\'01\',\'zhang\');\r\"}
+    expect \"Maria*\" { send \"insert into testtable values(\'02\',\'lisi\');\r\"}
+    expect \"Maria*\" { send \"select * from testtable;\r\"}
+    expect \"Maria*\" { send \"delete from testtable where id=\'01\';\r\"}
+    expect \"Maria*\" { send \"select * from testtable;\r\"}
+    expect \"Maria*\" { send \"exit\r\"}
 expect eof
 "
