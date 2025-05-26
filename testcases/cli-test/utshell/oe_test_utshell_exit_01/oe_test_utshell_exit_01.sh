@@ -49,6 +49,7 @@ EOF
 function post_test() {
   LOG_INFO "start environment cleanup."
   export LANG=${OLD_LANG}
+  rm -rf test.sh
   DNF_REMOVE "$@"
   LOG_INFO "Finish environment cleanup!"
 }
