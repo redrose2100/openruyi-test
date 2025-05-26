@@ -36,7 +36,7 @@ expect <<EOF
         set timeout 600
         spawn sosreport
         expect {
-            "\退\出" {
+            "quit." {
                 send "\\r"
             }
         }

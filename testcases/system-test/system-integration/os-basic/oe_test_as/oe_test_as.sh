@@ -22,7 +22,30 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "binutils"
-    cat > hello.s << eof
+    if [ "$NODE1_FRAME" == "riscv64" ]; then
+        cat > hello.s << EOF
+        .section .text
+        .globl _start
+
+_start:
+        # write(fd=1, buf=message, count=13)
+        li      a7, 64           # syscall number for write
+        li      a0, 1            # stdout
+        la      a1, message      # buffer
+        li      a2, 13           # length
+        ecall
+
+        # exit(code=0)
+        li      a7, 93           # syscall number for exit
+        li      a0, 0
+        ecall
+
+        .section .data
+message:
+        .ascii "Hello, world\\n"
+EOF
+    else
+        cat > hello.s << EOF
         .global _start
 
         .text
@@ -40,7 +63,8 @@ _start:
         syscall
 message:
         .ascii  "Hello, world\n"
-eof
+EOF
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
