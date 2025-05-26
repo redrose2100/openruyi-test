@@ -17,7 +17,7 @@
 # @Desc      :   Test arpwatch.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -29,12 +29,27 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_execution arpwatch.service
     test_reload arpwatch.service
+    systemctl start arpwatch.service
+    test -f /var/lib/arpwatch/arp.dat
+    CHECK_RESULT $? 0 0 "Check arpwatch data file failed"
+    if ip link show | grep -q "eth0"; then
+        arpwatch -i eth0
+    else
+        first_interface=$(ip link show | grep -v "lo" | awk -F: '$0 !~ "^ " {print $2}' | head -n 1 | tr -d ' ')
+        arpwatch -i "$first_interface"
+    fi
+    CHECK_RESULT $? 0 0 "Check arpwatch interface monitoring failed"
+    initial_size=$(stat -c %s /var/lib/arpwatch/arp.dat)
+    ping -c 4 127.0.0.1
+    current_size=$(stat -c %s /var/lib/arpwatch/arp.dat)
+    test "$current_size" -ge "$initial_size"
+    CHECK_RESULT $? 0 0 "Check arpwatch data recording failed"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
