@@ -29,6 +29,10 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     Default_LANG=$LANG
     export LANG=en_US.UTF-8
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        LOG_WARN "There is no kernel.config for riscv64 in stratovirt."
+        exit 255
+    fi
     source /etc/openEuler-latest
     Mmio_Sign=0
     LOG_INFO "End to prepare the test environment."

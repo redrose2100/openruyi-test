@@ -21,9 +21,13 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_env(){
     DNF_INSTALL "stratovirt nmap"
-    source /etc/openEuler-latest
+    openeulerversion=$(grep "^PRETTY_NAME=" /etc/os-release | cut -d= -f2- | tr -d '"' | sed -E 's/ ([0-9]+\.[0-9]+) \(([^)]+)\)/-\1-\2/' | tr ' ' '-')
     wget https://repo.openeuler.org/"$openeulerversion"/stratovirt_img/"${NODE1_FRAME}"/vmlinux.bin
     wget https://repo.openeuler.org/"$openeulerversion"/stratovirt_img/"${NODE1_FRAME}"/"$openeulerversion"-stratovirt-"${NODE1_FRAME}".img.xz
+    if [[ ! -f vmlinux.bin || ! -f "$openeulerversion"-stratovirt-"${NODE1_FRAME}".img.xz ]]; then
+        LOG_WARN "Required image files (vmlinux.bin or stratovirt .img.xz) are missing. Cannot proceed with the test."
+        exit 255
+    fi
     xz -d "$openeulerversion"-stratovirt-"${NODE1_FRAME}".img.xz
 }
 
@@ -34,7 +38,7 @@ function create_stratovirt_vm() {
         spawn stratovirt \
     -kernel vmlinux.bin \
     -append console=ttyS0 root=/dev/vda rw reboot=k panic=1 \
-    -drive file=$openeulerversion-stratovirt-${NODE1_FRAME}.img,id=rootfs,readonly=false \
+    -drive file="$openeulerversion"-stratovirt-"${NODE1_FRAME}".img,id=rootfs,readonly=false \
     -device virtio-blk-device,drive=rootfs,id=blk1 \
     -qmp unix:/tmp/stratovirt.socket,server,nowait \
     -serial stdio
