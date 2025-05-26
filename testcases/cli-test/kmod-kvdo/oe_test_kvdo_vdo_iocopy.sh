@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "vdo kmod-kvdo"
+    DNF_INSTALL "vdo kmod-kvdo lvm2 xfsprogs"
     free_disks=$(TEST_DISK 1)
     free_disk=/dev/$(echo "${free_disks}" | awk -F " " '{for(i=1;i<=NF;i++) if ($i!~/[0-9]/)j=i;print $j}')
     test -z "${free_disk}" && exit 1
@@ -63,15 +63,14 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    kill -9 "$(pgrep -f cp_result)"
-    if [ -d /mnt ]; then
-    rm -rf "${STEAMROOT:?}/"*
+    if [ -n "$(pgrep -f cp_result)" ]; then
+        kill -9 "$(pgrep -f cp_result)"
     fi
     umount /mnt
     lvremove -f /dev/vg_test/lv_test
     vgremove -f vg_test
     pvremove -f "${free_disk}"
-    DNF_REMOVE "$&"
+    DNF_REMOVE "$@"
     rm -rf cp_result*
     LOG_INFO "Finish environment cleanup!"
 }
