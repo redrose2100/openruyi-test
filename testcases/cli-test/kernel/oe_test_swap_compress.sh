@@ -21,6 +21,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if [ ! -e /dev/openeuler/swap ];then
+        LOG_WARN "Testing cannot be performed if /dev/openeuler/swap not exist."
+        exit 255
+    fi
     swapoff /dev/dm-1
     LOG_INFO "End to prepare the test environment."
 }
