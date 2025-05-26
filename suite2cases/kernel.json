@@ -24,6 +24,7 @@
         },
         {
             "name": "oe_test_io_sched",
+            "add disk":[10],
             "machine type": "physical"
         },
         {
