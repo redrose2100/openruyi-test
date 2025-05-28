@@ -16,13 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Using the way of clip to assign PV
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start loading data!"
-    check_free_disk
-    pvcreate -y /dev/${local_disk3}
-    vgcreate opentest /dev/${local_disk3}
-    vgextend opentest /dev/${local_disk} /dev/${local_disk1} /dev/${local_disk2} -y
+    DNF_INSTALL lvm2
+    pvcreate -y /dev/"${local_disk3}"
+    vgcreate opentest /dev/"${local_disk3}"
+    vgextend opentest /dev/"${local_disk}" /dev/"${local_disk1}" /dev/"${local_disk2}" -y
     LOG_INFO "Loading data is complete!"
 }
 
@@ -50,8 +50,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf testlog
     vgremove -y opentest
-    pvremove /dev/${local_disk3} /dev/${local_disk} /dev/${local_disk2} /${local_disk1}
+    pvremove /dev/"${local_disk3}" /dev/"${local_disk}" /dev/"${local_disk2}" /"${local_disk1}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

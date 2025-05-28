@@ -16,11 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Resize PV
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk 
-    mkfs.ext4 -F /dev/${local_disk}
+    DNF_INSTALL lvm2
+    mkfs.ext4 -F /dev/"${local_disk}"
     pvcreate -y /dev/"${local_disk}"
     LOG_INFO "Environmental preparation is over."
 }
@@ -39,6 +39,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     pvremove /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 main "$@"

@@ -17,18 +17,18 @@
 # @Desc      :   Perform multi-user SMB mount
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    SSH_CMD "yum install -y samba; sed -i '/testsamba/d' /etc/security/opasswd;useradd testsamba;
+    SSH_CMD "yum install -y samba policycoreutils; sed -i '/testsamba/d' /etc/security/opasswd;useradd testsamba;
 	(echo ${NODE1_PASSWORD};echo ${NODE1_PASSWORD}) | smbpasswd -a testsamba -s" \
-        ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+        "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "cp -a /etc/samba/smb.conf /etc/samba/smb.conf.bak;echo  \\\" \\\" >> /etc/samba/smb.conf;
 	echo  \\\"\\[testsamba\\]\\\" >> /etc/samba/smb.conf;echo  \\\"\\tcomment = public stuff\\\" >> /etc/samba/smb.conf;
-	echo  \\\"\\tpath = /home/testsamba\\\" >> /etc/samba/smb.conf" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+	echo  \\\"\\tpath = /home/testsamba\\\" >> /etc/samba/smb.conf" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "systemctl start smb;systemctl enable smb;systemctl stop firewalld;
 	setsebool samba_export_all_ro on;setsebool samba_export_all_rw on;chmod 755 /home/testsamba" \
-        ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+        "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     DNF_INSTALL cifs-utils
     systemctl stop firewalld
     mkdir -p /home/client
@@ -64,8 +64,8 @@ function post_test() {
     umount /home/client
     rmdir /home/client
     SSH_CMD "systemctl stop smb; rm -f /etc/samba/smb.conf;mv /etc/samba/smb.conf.bak /etc/samba/smb.conf;
-    yum remove samba -y; userdel -r testsamba; systemctl start firewalld" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_REMOVE
+    yum remove samba policycoreutils -y; userdel -r testsamba; systemctl start firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    DNF_REMOVE "$@"
     rm -f /root/smb.cred /etc/fstab
     mv /etc/fstab.bak /etc/fstab
     systemctl start firewalld
@@ -73,4 +73,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

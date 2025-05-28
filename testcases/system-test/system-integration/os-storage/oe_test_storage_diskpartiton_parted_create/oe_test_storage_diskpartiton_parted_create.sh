@@ -16,10 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Use partedshell to create a partition
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    check_free_disk 
+    DNF_INSTALL parted
     LOG_INFO "Loading data is complete!"
 }
 
@@ -31,21 +31,22 @@ expect \"Yes\/No*\"
 send \"yes\r\"
 expect eof
 "
-    parted /dev/${local_disk} mkpart primary 200MiB 400MiB
+    parted /dev/"${local_disk}" mkpart primary 200MiB 400MiB
     CHECK_RESULT $?
-    lsblk | grep ${local_disk}1 | grep "200M"
+    lsblk | grep "${local_disk}1" | grep "200M"
     CHECK_RESULT $?
     udevadm settle
     CHECK_RESULT $?
-    grep ${local_disk}1 /proc/partitions
+    grep "${local_disk}1" /proc/partitions
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    echo -e "d\nw\n" | fdisk /dev/${local_disk}
-    dd if=/dev/zero of=/dev/${local_disk} bs=1M count=1
+    echo -e "d\nw\n" | fdisk /dev/"${local_disk}"
+    dd if=/dev/zero of=/dev/"${local_disk}" bs=1M count=1
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

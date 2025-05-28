@@ -17,19 +17,26 @@
 # @Desc      :   Print LVM information command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
-    LOG_INFO "Start pre testcase!"
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL lvm2
     list_array=(devtypes formats help segtypes tags version)
-    LOG_INFO "Start pre testcase!"
+    LOG_INFO "Environmental preparation is over."
 }
 function run_test() {
     LOG_INFO "Start executing testcase!"
     for cmd in ${list_array[*]}; do
-        lvm ${cmd}
+        lvm "${cmd}"
         CHECK_RESULT $?
     done
     LOG_INFO "End of testcase execution!"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup."
 }
 
 main "$@"

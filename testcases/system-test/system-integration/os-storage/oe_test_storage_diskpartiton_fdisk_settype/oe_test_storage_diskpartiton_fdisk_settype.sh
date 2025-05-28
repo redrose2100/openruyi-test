@@ -17,27 +17,27 @@
 # @Desc      :   Use fdisk to set the partition type
 # ############################################
 
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    check_free_disk
+    DNF_INSTALL parted
     LOG_INFO "Loading data is complete!"
 }
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    echo -e "m\np\nn\np\n1\n2048\n+1G\np\nn\np\n2\n\n+500M\np\nw\n" | fdisk /dev/${local_disk} >log1
-    grep -iE "${local_disk}1|${local_disk}2" log1 | wc -l | grep 3
+    echo -e "m\np\nn\np\n1\n2048\n+1G\np\nn\np\n2\n\n+500M\np\nw\n" | fdisk /dev/"${local_disk}" >log1
+    grep -icE "${local_disk}1|${local_disk}2" log1 | grep -q "^3$"
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    echo -e "print\ntype\n2\nL\n1\nw\n" | fdisk /dev/${local_disk} >log2
+    echo -e "print\ntype\n2\nL\n1\nw\n" | fdisk /dev/"${local_disk}" >log2
     partprobe
     CHECK_RESULT $?
 
-    fdisk --list /dev/${local_disk} | grep ${local_disk}2 | awk -F " " '{print$7}' | grep -i fat
+    fdisk --list /dev/"${local_disk}" | grep "${local_disk}2" | awk -F " " '{print$7}' | grep -i fat
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
@@ -45,9 +45,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     SLEEP_WAIT 2
-    echo -e "m\np\nd\n1\nd\nw\n" | fdisk /dev/${local_disk}
+    echo -e "m\np\nd\n1\nd\nw\n" | fdisk /dev/"${local_disk}"
     SLEEP_WAIT 2
     rm -rf log1 log2
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

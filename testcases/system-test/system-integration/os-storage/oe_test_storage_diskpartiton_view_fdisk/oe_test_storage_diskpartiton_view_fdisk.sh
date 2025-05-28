@@ -16,13 +16,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   View partition-fdisk
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    fdisk -l | grep -iE "da|db|/dev/mapper" | grep -iE "EFI|LVM"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        fdisk -l | grep -iE "da|db|/dev/mapper" | grep -iE "Linux"
+    else
+        fdisk -l | grep -iE "da|db|/dev/mapper" | grep -iE "EFI|LVM"
+    fi
     CHECK_RESULT $?
 
-    fdisk -lu | grep -iE "da|db|/dev/mapper" | grep -iE "EFI|LVM"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        fdisk -lu | grep -iE "da|db|/dev/mapper" | grep -iE "Linux"
+    else
+        fdisk -lu | grep -iE "da|db|/dev/mapper" | grep -iE "EFI|LVM"
+    fi
     CHECK_RESULT $?
 
     fdisk -v | grep "fdisk from"

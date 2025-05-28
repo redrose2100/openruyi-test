@@ -16,12 +16,19 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Enable periodic block discard
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+export local_disk
+export local_disk1
+export local_disk2
+export local_disk3
+
 function check_free_disk() {
-    disks=$(TEST_DISK)
-    disk_list=($disks)
+    disks=$(TEST_DISK "$@")
+    read -r -a disk_list <<< "$(echo "$disks" | tr ' ' '\n' | grep -v '^nbd' | tr '\n' ' ')"
     local_disk=${disk_list[0]}
     local_disk1=${disk_list[1]}
     local_disk2=${disk_list[2]}
     local_disk3=${disk_list[3]}
 }
+
+check_free_disk "$@"

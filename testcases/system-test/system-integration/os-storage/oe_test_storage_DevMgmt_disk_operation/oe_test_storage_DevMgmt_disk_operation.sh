@@ -16,10 +16,9 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Disk operation:parted/fdisk
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    check_free_disk
     DISK_A="/dev/${local_disk}"
     ADD_DISK="/dev/${local_disk1}"
     LOG_INFO "Loading data is complete!"
@@ -27,9 +26,10 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    mkfs.ext4 -F ${DISK_A}
-    mkfs.ext4 -F ${ADD_DISK}
-    fdisk ${ADD_DISK} <<EOF
+    DNF_INSTALL parted
+    mkfs.ext4 -F "${DISK_A}"
+    mkfs.ext4 -F "${ADD_DISK}"
+    fdisk "${ADD_DISK}" <<EOF
 n
 p
 1
@@ -42,7 +42,7 @@ EOF
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    parted ${DISK_A} >log 2>&1 <<EOF
+    parted "${DISK_A}" >log 2>&1 <<EOF
 print
 select ${ADD_DISK}
 print
@@ -52,9 +52,9 @@ EOF
     CHECK_RESULT $? 1
     grep "Using ${ADD_DISK}" log
     CHECK_RESULT $?
-    grep ${ADD_DISK} -A 9 log | grep Table
+    grep "${ADD_DISK}" -A 9 log | grep Table
     CHECK_RESULT $?
-    parted ${ADD_DISK} >log 2>&1 <<EOF
+    parted "${ADD_DISK}" >log 2>&1 <<EOF
 mklabel msdos
 mklabel gpt
 mkpart primary 400MiB 600MiB
@@ -64,9 +64,9 @@ EOF
     grep -iE 'error|fail' log
     CHECK_RESULT $? 1
     udevadm settle
-    CHECK_RESULT $(cat /proc/partitions | grep -iE "${local_disk}|${local_disk1}1|${local_disk1}2" | wc -l) 3
+    CHECK_RESULT "$(grep -iEc "${local_disk}|${local_disk1}1|${local_disk1}2" /proc/partitions)" 3
 
-    fdisk ${ADD_DISK} >log 2>&1 <<EOF
+    fdisk "${ADD_DISK}" >log 2>&1 <<EOF
 type
 1
 30
@@ -78,7 +78,7 @@ quit
 EOF
     grep -iE 'error|fail' log
     CHECK_RESULT $? 1
-    parted ${ADD_DISK} >log 2>&1 <<EOF
+    parted "${ADD_DISK}" >log 2>&1 <<EOF
 print
 resizepart 1 300M
 print
@@ -86,7 +86,7 @@ quit
 EOF
     grep -iE 'error|fail' log
     CHECK_RESULT $? 1
-    test $(cat /proc/partitions | grep -i ${local_disk1}1 | awk '{print$3}') -gt 204800
+    test "$(awk -v part="${local_disk1}1" '$4 == part {print $3}' /proc/partitions)" -gt 204800
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
@@ -100,6 +100,7 @@ d
 w
 EOF
     rm -rf log
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

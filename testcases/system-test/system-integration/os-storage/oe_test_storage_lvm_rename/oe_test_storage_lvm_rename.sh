@@ -16,10 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Rname LVM LV
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
+    DNF_INSTALL lvm2
     pvcreate /dev/"${local_disk}" -y
     vgcreate openeulertest /dev/"${local_disk}" -y
     lvcreate -L 50MB -n test openeulertest -y
@@ -42,6 +42,7 @@ function post_test() {
     lvremove -y openeulertest/test1
     vgremove -y openeulertest
     pvremove -y /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

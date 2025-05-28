@@ -16,10 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Rename VG
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
+    DNF_INSTALL lvm2
     pvcreate -y /dev/"${local_disk}"
     vgcreate openeulertest /dev/"${local_disk}"
     LOG_INFO "Environmental preparation is over."
@@ -40,6 +40,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     vgremove -y openeulertest1
     pvremove /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

@@ -16,18 +16,18 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Use partedshell to view the partition table
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    check_free_disk
-    DISK1=/dev/${local_disk}
-    DISK2=/dev/${local_disk1}
+    DNF_INSTALL parted
+    DISK1=/dev/"${local_disk}"
+    DISK2=/dev/"${local_disk1}"
     LOG_INFO "Loading data is complete!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    echo -e "print\nselect ${DISK2}\nprint\n" | parted ${DISK1} >log
+    echo -e "print\nselect ${DISK2}\nprint\n" | parted "${DISK1}" >log
     grep "Disk" log | grep "${DISK2}"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
@@ -36,6 +36,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf log
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

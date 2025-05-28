@@ -17,13 +17,13 @@
 # @Desc      :   Merge 2 VGS
 # ############################################
 
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    pvcreate -y /dev/${local_disk} /dev/${local_disk1}
-    vgcreate openeuler1 /dev/${local_disk}
-    vgcreate openeulertest /dev/${local_disk1}
+    DNF_INSTALL lvm2
+    pvcreate -y /dev/"${local_disk}" /dev/"${local_disk1}"
+    vgcreate openeuler1 /dev/"${local_disk}"
+    vgcreate openeulertest /dev/"${local_disk1}"
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -39,8 +39,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     vgremove -y openeulertest
     vgremove -y openeuler1
-    pvremove /dev/${local_disk} /dev/${local_disk1}
+    pvremove /dev/"${local_disk}" /dev/"${local_disk1}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

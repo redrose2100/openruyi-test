@@ -16,13 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Converting a mirrored LVM device to a RAID1 volume
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    pvcreate -y /dev/${local_disk1}
-    vgcreate openeulertest /dev/${local_disk1} -y
-    vgextend openeulertest /dev/${local_disk} -y
+    DNF_INSTALL lvm2
+    pvcreate -y /dev/"${local_disk1}"
+    vgcreate openeulertest /dev/"${local_disk1}" -y
+    vgextend openeulertest /dev/"${local_disk}" -y
     lvcreate -m1 -n test -L 1G openeulertest --type mirror -y
     LOG_INFO "Environmental preparation is over."
 }
@@ -42,8 +42,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test
     vgremove -y openeulertest
-    pvremove /dev/${local_disk1} /dev/${local_disk}
+    pvremove /dev/"${local_disk1}" /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

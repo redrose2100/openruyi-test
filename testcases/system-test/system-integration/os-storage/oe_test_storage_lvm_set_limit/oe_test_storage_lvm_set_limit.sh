@@ -16,15 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Set the upper limit of IO used by raid type volume in the background
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    pvcreate /dev/${local_disk1} -y
-    vgcreate openeulertest /dev/${local_disk1} -y
-    vgextend openeulertest /dev/${local_disk} -y
-    vgextend openeulertest /dev/${local_disk3} -y
-    vgextend openeulertest /dev/${local_disk2} -y
+    DNF_INSTALL lvm2
+    pvcreate /dev/"${local_disk1}" -y
+    vgcreate openeulertest /dev/"${local_disk1}" -y
+    vgextend openeulertest /dev/"${local_disk}" -y
+    vgextend openeulertest /dev/"${local_disk3}" -y
+    vgextend openeulertest /dev/"${local_disk2}" -y
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -48,9 +48,10 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test
     vgremove -y openeulertest
-    pvremove /dev/${local_disk1} /dev/${local_disk2} /dev/${local_disk} /dev/${local_disk3}
+    pvremove /dev/"${local_disk1}" /dev/"${local_disk2}" /dev/"${local_disk}" /dev/"${local_disk3}"
     rm -rf testlog
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

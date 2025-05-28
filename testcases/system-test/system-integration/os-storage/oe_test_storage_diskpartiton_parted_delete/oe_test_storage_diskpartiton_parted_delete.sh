@@ -17,25 +17,25 @@
 # @Desc      :   Use parted shell to delete partition
 # ############################################
 
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    check_free_disk
+    DNF_INSTALL "lvm2 parted"
     LOG_INFO "Loading data is complete!"
 }
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    echo "m\np\nn\np\n1\n\n+500M\np\nn\np\n2\n\n+500M\np\nn\np\n3\n\n+500M\np\nw\n" | fdisk /dev/${local_disk} >log1
+    printf "m\np\nn\np\n1\n\n+500M\np\nn\np\n2\n\n+500M\np\nn\np\n3\n\n+500M\np\nw\n" | fdisk "/dev/${local_disk}" >log1
     grep -iE "${local_disk}1|${local_disk}2|${local_disk}3" log1
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    echo -e "print\nrm 3\nprint\nquit\n" | parted /dev/${local_disk} >log2
+    echo -e "print\nrm 3\nprint\nquit\n" | parted "/dev/${local_disk}" >log2
     CHECK_RESULT $?
-    lsblk | grep ${local_disk}3
+    lsblk | grep "${local_disk}3"
     CHECK_RESULT $? 1
     LOG_INFO "End of testcase execution!"
 }
@@ -43,8 +43,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     SLEEP_WAIT 2
-    echo -e "d\n1\nd\n2\nd\nw\n" | fdisk /dev/${local_disk}
+    echo -e "d\n1\nd\n2\nd\nw\n" | fdisk "/dev/${local_disk}"
     rm -rf log1 log2
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
