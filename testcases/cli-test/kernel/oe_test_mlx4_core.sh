@@ -10,9 +10,9 @@
 # See the Mulan PSL v2 for more detaitest -f.
 
 # #############################################
-# @Author    :   chengweibin
-# @Contact   :   chengweibin@uniontech.com
-# @Date      :   2025/05/12
+# @Author    :   yangxi
+# @Contact   :   yangxi@uniontech.com
+# @Date      :   2025/05/29
 # @License   :   Mulan PSL v2
 # @Desc      :   Test kernel-mellanox drive（mlx4_core）
 # #############################################
@@ -35,6 +35,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep mlx4_core
     CHECK_RESULT $? 0 0 "Module not loaded"
+    
+    # Check module parameters
+    sysfs_path="/sys/module/mlx4_core/parameters"
+    test -d "$sysfs_path"
+    CHECK_RESULT $? 0 0 "Module parameters directory not found"
+    
     rmmod mlx4_core
     CHECK_RESULT $? 0 0 "Module uninstall failed"
     lsmod | grep mlx4_core
@@ -49,3 +55,4 @@ function post_test() {
 }
 
 main "$@"
+
