@@ -17,7 +17,7 @@
 # @Desc      :   Test to get web address information
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -33,7 +33,7 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Failed to execute wget"
         test -f index.html && rm -rf index.html
         CHECK_RESULT $? 0 0 "Failed to execute wget"
-        let flag+=1
+        flag=$((flag + 1))
     done
     curl www.baidu.com | grep "baidu"
     CHECK_RESULT $? 0 0 "Failed to execute curl"
@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to execute ping"
     host www.baidu.com | grep "baidu.com"
     CHECK_RESULT $? 0 0 "Failed to execute host"
-    nslookup www.baidu.com | grep "canonical name"
+    nslookup www.baidu.com | grep -i "name"
     CHECK_RESULT $? 0 0 "Failed to execute nslookup"
     traceroute www.baidu.com | grep "traceroute to"
     CHECK_RESULT $? 0 0 "Failed to execute traceroute"
@@ -52,7 +52,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
