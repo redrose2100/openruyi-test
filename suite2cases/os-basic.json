@@ -1028,6 +1028,9 @@
 	},
 	{
 	    "name": "oe_test_lslogins_6"
+	},
+	{
+	    "name": "oe_test_zforce"
 	}
     ]
 }
