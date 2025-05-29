@@ -37,6 +37,12 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Error printing directory path containing library files"
   odbc_config --libs |grep "lib64"
   CHECK_RESULT $? 0 0 "Error printing preprocessor flags, I_opts, and compiler options"
+  odbcinst -j | grep -q "unixODBC"
+  CHECK_RESULT $? 0 0 "odbcinst tool validation failed"
+  odbcinst -q -d | grep -i "mysql"
+  CHECK_RESULT $? 0 0 "mysql driver not found"
+  odbcinst -q -d -n "MySql" | grep -i "mysql"
+  CHECK_RESULT $? 0 0 "mysql odbc driver not detected"
   LOG_INFO "End of the test."
 }
 
