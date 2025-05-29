@@ -16,10 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Replace the raid volume with a bad disk
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
+    DNF_INSTALL lvm2
     mkfs.ext4 -F /dev/"${local_disk}"
     pvcreate /dev/"${local_disk}" -y
     vgcreate openeulertest /dev/"${local_disk}"
@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    vgextend openeulertest /dev/${local_disk2} /dev/"${local_disk1}" -y
+    vgextend openeulertest /dev/"${local_disk2}" /dev/"${local_disk1}" -y
     lvcreate --type mirror -m 1 -L 50MB -n test openeulertest -y
     CHECK_RESULT $?
     expect -c "
@@ -65,8 +65,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test
     vgremove -y openeulertest
-    pvremove -y /dev/${local_disk2} "${local_disk1}" /dev/"${local_disk}"
+    pvremove -y /dev/"${local_disk2}" "${local_disk1}" /dev/"${local_disk}"
     rm -rf testlog*
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

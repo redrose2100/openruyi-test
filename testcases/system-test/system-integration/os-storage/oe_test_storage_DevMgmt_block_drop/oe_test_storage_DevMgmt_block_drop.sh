@@ -16,10 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Enable online block dropping
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
+    DNF_INSTALL xfsprogs
     echo -e "n\np\n1\n\n+20M\np\nw\n" | fdisk "/dev/${local_disk}"
     mkfs.xfs -f "/dev/${local_disk1}"
     SLEEP_WAIT 3
@@ -49,6 +49,7 @@ function post_test() {
     rm -rf /home/data
     mv /etc/fstab.bak /etc/fstab -f
     echo -e "d\np\nw\n" | fdisk "/dev/${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

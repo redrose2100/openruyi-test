@@ -22,6 +22,7 @@ source ../common/storage_disk_lib.sh
 
 function config_params() {
     LOG_INFO "Start loading data!"
+    DNF_INSTALL xfsprogs
     check_free_disk
     LOG_INFO "Loading data is complete!"
 }
@@ -47,6 +48,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     echo -e "d\np\nw\n" | fdisk /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

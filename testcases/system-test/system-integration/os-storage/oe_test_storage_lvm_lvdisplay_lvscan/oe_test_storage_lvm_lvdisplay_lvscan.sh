@@ -16,12 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Dispaly LV Information
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    pvcreate -y /dev/${local_disk1}
-    vgcreate openeulertest /dev/${local_disk1}
+    DNF_INSTALL lvm2
+    pvcreate -y /dev/"${local_disk1}"
+    vgcreate openeulertest /dev/"${local_disk1}"
     lvcreate -y -L 50MB -n test openeulertest
     LOG_INFO "Environmental preparation is over."
 }
@@ -39,8 +39,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test
     vgremove -y openeulertest
-    pvremove -y /dev/${local_disk1}
+    pvremove -y /dev/"${local_disk1}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

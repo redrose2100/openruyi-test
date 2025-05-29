@@ -17,18 +17,18 @@
 # @Desc      :   Manually replace the device in a raid volume
 # ############################################
 
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    pvcreate -y /dev/${local_disk}
-    vgcreate openeulertest /dev/${local_disk}
+    DNF_INSTALL lvm2
+    pvcreate -y /dev/"${local_disk}"
+    vgcreate openeulertest /dev/"${local_disk}"
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    vgextend openeulertest /dev/${local_disk2} /dev/${local_disk1} -y
+    vgextend openeulertest /dev/"${local_disk2}" /dev/"${local_disk1}" -y
     expect -c "
     set timeout 30
     log_file testlog
@@ -72,8 +72,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test
     vgremove -y openeulertest
-    pvremove -y /dev/${local_disk} /dev/${local_disk2} /dev/${local_disk1}
+    pvremove -y /dev/"${local_disk}" /dev/"${local_disk2}" /dev/"${local_disk1}"
     rm -rf testlog*
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

@@ -16,11 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   List persistent named properties
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    check_free_disk
-    mkfs.ext4 -F /dev/${local_disk}
+    mkfs.ext4 -F /dev/"${local_disk}"
     LOG_INFO "Loading data is complete!"
 }
 
@@ -37,7 +36,11 @@ function run_test() {
     SLEEP_WAIT 2
     lsblk --fs "/dev/${local_disk}1" | awk '{if (NR>1){print$NF}}' | grep -E '[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}'
     CHECK_RESULT $?
-    file /dev/disk/by-id/* | grep "/dev/disk/by-id/dm-name-openeuler"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        file /dev/disk/by-id/* | grep "/dev/disk/by-id/lvm-pv-uuid"
+    else
+        file /dev/disk/by-id/* | grep "/dev/disk/by-id/dm-name-openeuler"
+    fi
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
@@ -47,4 +50,4 @@ function post_test() {
     echo -e "d\nw" | fdisk "/dev/${local_disk}"
     LOG_INFO "Finish environment cleanup."
 }
-main $@
+main "$@"

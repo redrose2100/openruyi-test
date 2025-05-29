@@ -16,13 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Ext4 compatibility
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    mkfs.ext4 -F /dev/${local_disk}
+    mkfs.ext4 -F /dev/"${local_disk}"
     echo -e "n\np\n1\n\n+1200M\np\nw\n" | fdisk /dev/"${local_disk}"
-    LOGi_INFO "Environmental preparation is over."
+    LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
@@ -46,4 +45,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

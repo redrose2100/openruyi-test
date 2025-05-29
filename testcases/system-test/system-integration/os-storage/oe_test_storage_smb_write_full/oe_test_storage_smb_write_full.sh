@@ -20,7 +20,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    remote_disk=$(lsblk | grep disk | sed -n 2p | awk '{print$1}')
+    remote_disk=$(lsblk -dn -o NAME | grep -v '^nbd' | sed -n '2p')
     LOG_INFO "Loading data is complete!"
 }
 

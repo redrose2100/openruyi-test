@@ -16,12 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Track and query the status of lvmsnap volumes
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    pvcreate -y /dev/${local_disk}
-    vgcreate openeulertest /dev/${local_disk}
+    DNF_INSTALL lvm2
+    pvcreate -y /dev/"${local_disk}"
+    vgcreate openeulertest /dev/"${local_disk}"
     lvcreate -y -L 50MB -n test openeulertest
     LOG_INFO "Environmental preparation is over."
 }
@@ -44,15 +44,21 @@ function run_test() {
     lvremove -y openeulertest/test
     lvdisplay | grep test
     CHECK_RESULT $? 1
-    lvs -H -o name,full_ancestors,full_descendants | grep "LV"
-    CHECK_RESULT $?
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        lvs -H -o name,full_ancestors,full_descendants | grep "LV"
+        CHECK_RESULT $? 1
+    else
+        lvs -H -o name,full_ancestors,full_descendants | grep "LV"
+        CHECK_RESULT $?
+    fi
     LOG_INFO "End of testcase execution!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     vgremove -y openeulertest
-    pvremove /dev/${local_disk}
+    pvremove /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

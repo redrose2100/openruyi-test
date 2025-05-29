@@ -16,30 +16,30 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Create LVM cache volume
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start loading data!"
-    check_free_disk 
+    DNF_INSTALL lvm2
     LOG_INFO "Loading data is complete!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvcreate -y /dev/${local_disk} /dev/${local_disk1}
-    pvdisplay | grep "PV Name" | grep /dev/${local_disk}
+    pvcreate -y /dev/"${local_disk}" /dev/"${local_disk1}"
+    pvdisplay | grep "PV Name" | grep /dev/"${local_disk}"
     CHECK_RESULT $?
-    vgcreate openeulertest /dev/${local_disk} /dev/${local_disk1}
+    vgcreate openeulertest /dev/"${local_disk}" /dev/"${local_disk1}"
     vgdisplay | grep "VG Name" | grep openeulertest
     CHECK_RESULT $?
-    lvcreate -y -L 50MB -n test openeulertest /dev/${local_disk}
-    lvcreate --type cache-pool -L 1G -n cpool openeulertest /dev/${local_disk1} -y
+    lvcreate -y -L 50MB -n test openeulertest /dev/"${local_disk}"
+    lvcreate --type cache-pool -L 1G -n cpool openeulertest /dev/"${local_disk1}" -y
     lvs -a -o name,size,attr,devices openeulertest
     CHECK_RESULT $?
     lvconvert -y --type cache --cachepool cpool openeulertest/test
     CHECK_RESULT $?
     lvs -a -o name,size,attr,devices openeulertest
     CHECK_RESULT $?
-    lvconvert --type thin-pool openeulertest/test /dev/${local_disk} -y
+    lvconvert --type thin-pool openeulertest/test /dev/"${local_disk}" -y
     lvs -a -o name,size,attr,devices openeulertest
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
@@ -48,8 +48,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     vgremove -y openeulertest
-    pvremove -y /dev/${local_disk1} /dev/${local_disk}
+    pvremove -y /dev/"${local_disk1}" /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

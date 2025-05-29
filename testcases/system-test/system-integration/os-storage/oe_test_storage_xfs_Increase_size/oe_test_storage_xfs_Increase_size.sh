@@ -23,7 +23,7 @@ source ../common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
-    DNF_INSTALL xfsdump
+    DNF_INSTALL "xfsdump lvm2"
     echo "n
 
 p
@@ -78,7 +78,7 @@ function post_test() {
 d
 
 w" | fdisk "/dev/${local_disk}"
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

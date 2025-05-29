@@ -16,21 +16,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Separate the image of a raid volume and convert it to an LV
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk 
-    mkfs.ext4 -F /dev/${local_disk}
-    mkfs.ext4 -F /dev/${local_disk1}
-    mkfs.ext4 -F /dev/${local_disk2}
-    pvcreate -y /dev/${local_disk1} /dev/${local_disk}
-    vgcreate openeulertest /dev/${local_disk1} /dev/${local_disk} -y
+    DNF_INSTALL lvm2
+    mkfs.ext4 -F /dev/"${local_disk}"
+    mkfs.ext4 -F /dev/"${local_disk1}"
+    mkfs.ext4 -F /dev/"${local_disk2}"
+    pvcreate -y /dev/"${local_disk1}" /dev/"${local_disk}"
+    vgcreate openeulertest /dev/"${local_disk1}" /dev/"${local_disk}" -y
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    vgextend openeulertest /dev/${local_disk2} -y
+    vgextend openeulertest /dev/"${local_disk2}" -y
     CHECK_RESULT $?
     lvcreate --type mirror -m 1 -L 50MB -n test openeulertest -y
     CHECK_RESULT $?
@@ -61,7 +61,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test openeulertest/test1
     vgremove -y openeulertest
-    pvremove /dev/${local_disk1} /dev/${local_disk2} /dev/${local_disk} -y
+    pvremove /dev/"${local_disk1}" /dev/"${local_disk2}" /dev/"${local_disk}" -y
     rm -rf testlog*
     LOG_INFO "Finish environment cleanup."
 }

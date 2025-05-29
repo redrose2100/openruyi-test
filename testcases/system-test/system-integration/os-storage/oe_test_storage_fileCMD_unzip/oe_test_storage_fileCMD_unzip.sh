@@ -17,9 +17,10 @@
 # @Desc      :   File system common command test-unzip
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "zip unzip"
     cp -r /usr/bin .
     zip bin.zip bin
     rm -rf bin
@@ -46,7 +47,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /home/bin bin.zip bin
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

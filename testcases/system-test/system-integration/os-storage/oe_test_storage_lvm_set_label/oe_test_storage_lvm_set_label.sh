@@ -19,6 +19,7 @@
 source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL lvm2
     check_free_disk 2
     mkfs.ext4 -F /dev/"${local_disk}"
     mkfs.ext4 -F /dev/"${local_disk1}"
@@ -43,6 +44,7 @@ function post_test() {
     lvremove openeulertest/test -y
     vgremove openeulertest -y
     pvremove /dev/"${local_disk}" /dev/"${local_disk1}" -y
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

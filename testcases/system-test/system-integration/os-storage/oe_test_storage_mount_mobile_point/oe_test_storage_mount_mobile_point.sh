@@ -16,10 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Mobile mount point
 # #############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
+    DNF_INSTALL xfsprogs
     mkfs.xfs -f /dev/"${local_disk2}"
     sleep 2
     mkfs.xfs -f /dev/"${local_disk3}"
@@ -31,7 +31,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     mount /dev/"${local_disk3}" /mnt
-    CHECL_RESULT $?
+    CHECK_RESULT $?
     mount --make-private /mnt
     CHECK_RESULT $?
     mkdir /mnt/data /mnt/boot
@@ -44,7 +44,7 @@ function run_test() {
 
     findmnt | grep /dev/"${local_disk2}" | grep "/mnt/boot"
     CHECK_RESULT $? 0 0 "local_disk"
-    test -f ${OET_PATH}/libs/locallibs/mugen_log.py
+    test -f "${OET_PATH}"/libs/locallibs/mugen_log.py
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
@@ -58,7 +58,8 @@ function post_test() {
     umount /mnt
     SLEEP_WAIT 3
     rm -rf /mnt/data /mnt/boot
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

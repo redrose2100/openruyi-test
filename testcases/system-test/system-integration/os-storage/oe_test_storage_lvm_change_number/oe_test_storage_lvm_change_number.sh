@@ -16,20 +16,20 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Change the number of mirrors for the raid volume
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    pvcreate -y /dev/${local_disk1}
-    vgcreate openeulertest /dev/${local_disk1} -y
+    DNF_INSTALL lvm2
+    pvcreate -y /dev/"${local_disk1}"
+    vgcreate openeulertest /dev/"${local_disk1}" -y
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    vgextend openeulertest /dev/${local_disk} -y
+    vgextend openeulertest /dev/"${local_disk}" -y
     CHECK_RESULT $?
-    vgextend openeulertest /dev/${local_disk3} -y
+    vgextend openeulertest /dev/"${local_disk3}" -y
     CHECK_RESULT $?
     lvcreate -L 50MB -n test openeulertest -y
     CHECK_RESULT $?
@@ -66,9 +66,10 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test
     vgremove -y openeulertest
-    pvremove /dev/${local_disk1} /dev/${local_disk} /dev/${local_disk3}
+    pvremove /dev/"${local_disk1}" /dev/"${local_disk}" /dev/"${local_disk3}"
     rm -rf testlog
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

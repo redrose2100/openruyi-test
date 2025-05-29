@@ -16,20 +16,20 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Using tag to merge snapshots
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    mkfs.ext4 -F /dev/${local_disk}
-    mkfs.ext4 -F /dev/${local_disk1}
-    pvcreate -y /dev/${local_disk}
-    vgcreate openeulertest /dev/${local_disk}
+    DNF_INSTALL lvm2
+    mkfs.ext4 -F /dev/"${local_disk}"
+    mkfs.ext4 -F /dev/"${local_disk1}"
+    pvcreate -y /dev/"${local_disk}"
+    vgcreate openeulertest /dev/"${local_disk}"
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    vgextend openeulertest /dev/${local_disk1} -y
+    vgextend openeulertest /dev/"${local_disk1}" -y
     CHECK_RESULT $?
     lvcreate -y --type mirror -m 1 -L 50MB -n test openeulertest
     expect -c "
@@ -72,9 +72,10 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test
     vgremove -y openeulertest
-    pvremove -y /dev/${local_disk} ${local_disk1}
+    pvremove -y /dev/"${local_disk}" "${local_disk1}"
     rm -rf testlog*
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
