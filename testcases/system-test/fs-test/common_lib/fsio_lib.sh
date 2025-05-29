@@ -94,7 +94,11 @@ function CREATE_VG() {
 }
 
 function CREATE_FS() {
-    fs_type="${1:-$FS_TYPE}"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        fs_type="ext3 ext4"
+    else
+        fs_type="${1:-$FS_TYPE}"
+    fi
     cur_date=$(date +%Y%m%d%H%M%S)
     vggroup=$(CREATE_VG)
     count=1
@@ -127,6 +131,7 @@ function REMOVE_FS() {
 }
 
 function REMOVE_VG() {
+    DNF_INSTALL lvm2
     vggroup=$1
     [[ "$vggroup" != "" ]] && {
         vgremove "$vggroup" -y

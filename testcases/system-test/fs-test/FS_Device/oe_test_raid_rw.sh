@@ -21,8 +21,7 @@ source ../common_lib/fsio_lib.sh
 
 function config_params() {
     LOG_INFO "Start to prepare the database config."
-    free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
-    disk_name="/dev/"$free_disk
+    disk_name=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
     LOG_INFO "Finish to prepare the database config."
 }
 
@@ -35,6 +34,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if [ "${NODE1_FRAME}" == "riscv64" ]; then
+        FS_TYPE="ext3 ext4"
+    fi
     for fs in ${FS_TYPE[@]}; do
         fdisk "${disk_name}" << diskEof
 n
