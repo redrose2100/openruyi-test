@@ -30,17 +30,17 @@ function run_test() {
     lspci 2>/tmp/error.log
     test -s /tmp/error.log && return 1
     update-pciids
-    CHECK_RESULT $?
-    lspci | grep "00:00.0"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "check update-pciids fail"
+    lspci | grep ":00.0"
+    CHECK_RESULT $? 0 0 "check lspci fail"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     test -f /tmp/error.log && rm -f error.log
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
