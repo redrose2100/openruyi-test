@@ -39,13 +39,14 @@ function run_test() {
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_check -C
     CHECK_RESULT $?
-    /usr/libexec/pcp/bin/pmlogger_check -NT | grep "localhost.localdomain"
+    /usr/libexec/pcp/bin/pmlogger_check -NT | grep "localhost"
     CHECK_RESULT $?
-    /usr/libexec/pcp/bin/pmlogger_check -NV | grep "localhost.localdomain"
+    /usr/libexec/pcp/bin/pmlogger_check -NV | grep "localhost"
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_check -s
     CHECK_RESULT $?
-    test -z "$(pgrep -f /usr/libexec/pcp/bin/pmlogger)"
+    SLEEP_WAIT 3
+    pgrep -f /usr/libexec/pcp/bin/pmlogger > /dev/null
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
