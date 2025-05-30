@@ -38,7 +38,7 @@ function pre_test() {
         P_SSH_CMD --node 2 --cmd "setenforce 0"
         flag_result4=1
     fi
-    sed -i "s/data_source \"my cluster\" localhost/data_source \"cluster01\" ${NODE1_IPV4}/g" /etc/ganglia/gmetad.conf
+    sed -i "s/data_source \"my cluster\" localhost/data_source \"cluster01\" ${NODE1_IPV4} ${NODE2_IPV4}/g" /etc/ganglia/gmetad.conf
     SLEEP_WAIT 10
     service gmond restart
     service httpd restart
@@ -52,7 +52,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ganglia2pcp -f gangpcp -d ./ -Z UTC -h localhost /var/lib/ganglia/rrds/unspecified/${NODE2_IPV4}/
+    ganglia2pcp -f gangpcp -d ./ -Z UTC -h localhost /var/lib/ganglia/rrds/unspecified/"${NODE2_IPV4}/"
     CHECK_RESULT $?
     grep -aE "localhost|UTC" gangpcp.index
     CHECK_RESULT $?
@@ -63,7 +63,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /var/lib/ganglia
     if [ $flag_result1 -eq 1 ]; then
         systemctl start firewalld
