@@ -16,10 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   swap management
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    check_free_disk
+    if [ ! -e /dev/openeuler/swap ];then
+        LOG_WARN "Testing cannot be performed if /dev/openeuler/swap not exist."
+        exit 255
+    fi
     LOG_INFO "Loading data is complete!"
 }
 
@@ -33,27 +36,27 @@ p
 +1G
 w
 HGG
-    mkfs.ext4 -F /dev/${local_disk1}
+    mkfs.ext4 -F /dev/"${local_disk1}"
     SLEEP_WAIT 3
-    value=`lsblk | grep openeuler | sed -n '$p' |  awk -F "└─" {'print $2'} | awk -F " " {'print $1'}`
-    openeuler=`lsblk | grep openeuler | sed -n '$p' |  awk -F "└─" {'print $2'} | awk -F " " {'print $1'} | awk -F "-" {'print  $1'}`
+    value=$(lsblk | grep openeuler | sed -n '$p' | awk -F "└─" '{split($2,a," "); print a[1]}')
+    openeuler=$(lsblk | grep openeuler | sed -n '$p' | awk -F "└─" '{print $2}' | awk -F " " '{print $1}' | awk -F "-" '{print $1}')
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    swapon /dev/mapper/${value}
-    swapoff -v /dev/mapper/${value}
+    swapon /dev/mapper/"${value}"
+    swapoff -v /dev/mapper/"${value}"
     CHECK_RESULT $?
-    lvresize -f /dev/${openeuler}/swap -L -100M
+    lvresize -f /dev/"${openeuler}"/swap -L -100M
     CHECK_RESULT $?
-    lsblk | grep ${value} | awk '{print$4}' | grep G
+    lsblk | grep "${value}" | awk '{print$4}' | grep G
     CHECK_RESULT $?
-    mkswap /dev/mapper/${value}
+    mkswap /dev/mapper/"${value}"
     CHECK_RESULT $?
-    swapon -v /dev/mapper/${value}
+    swapon -v /dev/mapper/"${value}"
 
-    CHECK_RESULT $(grep -c dm /proc/swaps) 1
+    CHECK_RESULT "$(grep -c dm /proc/swaps)" 1
 
     pvcreate -y "/dev/${local_disk1}"
     SLEEP_WAIT 3
@@ -72,7 +75,7 @@ function run_test() {
     CHECK_RESULT $?
     swapon -v /dev/vg0/lv_test
     CHECK_RESULT $?
-    CHECK_RESULT $(grep -c dm /proc/swaps) 2
+    CHECK_RESULT "$(grep -c dm /proc/swaps)" 2
 
     dd if=/dev/zero of=/swapfile bs=1024 count=65536
     mkswap /swapfile

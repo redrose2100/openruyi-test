@@ -18,11 +18,11 @@
 # #############################################
 # shellcheck disable=SC1091,SC2154
 
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
+    DNF_INSTALL xfsprogs
     echo "n
 
 p

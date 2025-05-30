@@ -16,15 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Activate a logical volume with a missing device
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    pvcreate -y /dev/${local_disk} /dev/${local_disk1}
-    vgcreate openeulertest /dev/${local_disk}
-    vgcreate opentest /dev/${local_disk1}
-    lvcreate -y -L 50MB -n test openeulertest /dev/${local_disk}
-    lvcreate -y -L 50MB -n test1 opentest /dev/${local_disk1}
+    pvcreate -y /dev/"${local_disk}" /dev/"${local_disk1}"
+    vgcreate openeulertest /dev/"${local_disk}"
+    vgcreate opentest /dev/"${local_disk1}"
+    lvcreate -y -L 50MB -n test openeulertest /dev/"${local_disk}"
+    lvcreate -y -L 50MB -n test1 opentest /dev/"${local_disk1}"
     LOG_INFO "Loading data is complete!"
 }
 
@@ -43,8 +42,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     vgremove -y openeulertest
     vgremove -y opentest
-    pvremove /dev/${local_disk} /dev/${local_disk1}
+    pvremove /dev/"${local_disk}" /dev/"${local_disk1}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

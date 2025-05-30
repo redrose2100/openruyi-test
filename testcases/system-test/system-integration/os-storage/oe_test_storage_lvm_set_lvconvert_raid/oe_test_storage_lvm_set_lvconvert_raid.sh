@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Convert a linear volume to a raid volume
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    pvcreate /dev/${local_disk1}
-    vgcreate openeulertest /dev/${local_disk1} -y
+    DNF_INSTALL lvm2
+    pvcreate /dev/"${local_disk1}"
+    vgcreate openeulertest /dev/"${local_disk1}" -y
     lvcreate -L 50MB -n test openeulertest -y
-    vgextend openeulertest /dev/${local_disk} -y
+    vgextend openeulertest /dev/"${local_disk}" -y
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -47,9 +47,10 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove -y openeulertest/test
     vgremove -y openeulertest
-    pvremove /dev/${local_disk1} /dev/${local_disk}
+    pvremove /dev/"${local_disk1}" /dev/"${local_disk}"
     rm -rf testlog
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

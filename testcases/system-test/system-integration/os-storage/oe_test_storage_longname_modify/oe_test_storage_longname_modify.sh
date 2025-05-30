@@ -16,15 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Modify persistent named properties
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    echo -e "n\np\n1\n\n\nw\n" | fdisk /dev/${local_disk}
+    DNF_INSTALL xfsprogs
+    echo -e "n\np\n1\n\n\nw\n" | fdisk /dev/"${local_disk}"
     mkfs.ext2 -F "/dev/${local_disk}1"
-    echo -e "n\np\n1\n\n\nt\n82\nw\n" | fdisk /dev/${local_disk2}
+    echo -e "n\np\n1\n\n\nt\n82\nw\n" | fdisk /dev/"${local_disk2}"
     mkswap "/dev/${local_disk2}1"
-    echo -e "n\np\n1\n\n\nw\n" | fdisk /dev/${local_disk3}
+    echo -e "n\np\n1\n\n\nw\n" | fdisk /dev/"${local_disk3}"
     mkfs.xfs -f "/dev/${local_disk3}1"
     LOG_INFO "Environmental preparation is over."
 }
@@ -40,7 +40,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to view the uuid of the file system"
     lsblk --fs "/dev/${local_disk}1" | awk '{if (NR>1){print $4}}' | sed -n '$p' | grep "new-label"
     CHECK_RESULT $? 0 0 "Failed to view the label of the file system"
-    lsblk --fs "/dev/${local_disk2}1" | grep ${local_disk2}1
+    lsblk --fs "/dev/${local_disk2}1" | grep "${local_disk2}1"
     CHECK_RESULT $? 0 0 "Failed to view file system type"
     swaplabel --uuid 11114983-9331-4a61-8123-96ac6a817c41 --label new-label "/dev/${local_disk2}1"
     CHECK_RESULT $? 0 0 "Failed to modify the label and uuid of the file system"
@@ -66,6 +66,7 @@ function post_test() {
     echo -e "d\n\nd\n\nd\n\np\nw\n" | fdisk "/dev/${local_disk}"
     echo -e "d\n\nd\n\nd\n\np\nw\n" | fdisk "/dev/${local_disk2}"
     echo -e "d\n\nd\n\nd\n\np\nw\n" | fdisk "/dev/${local_disk3}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
-main $@
+main "$@"

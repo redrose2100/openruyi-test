@@ -17,24 +17,24 @@
 # @Desc      :   Create LVM of raidl type
 # ############################################
 
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    mkfs.ext4 -F /dev/${local_disk}
-    mkfs.ext4 -F /dev/${local_disk1}
-    mkfs.ext4 -F /dev/${local_disk2}
-    mkfs.ext4 -F /dev/${local_disk3}
-    pvcreate /dev/${local_disk1} -y
-    vgcreate openeulertest /dev/${local_disk1} -y
+    DNF_INSTALL "lvm2 expect"
+    mkfs.ext4 -F /dev/"${local_disk}"
+    mkfs.ext4 -F /dev/"${local_disk1}"
+    mkfs.ext4 -F /dev/"${local_disk2}"
+    mkfs.ext4 -F /dev/"${local_disk3}"
+    pvcreate /dev/"${local_disk1}" -y
+    vgcreate openeulertest /dev/"${local_disk1}" -y
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    vgextend openeulertest /dev/${local_disk} -y
-    vgextend openeulertest /dev/${local_disk3} -y
-    vgextend openeulertest /dev/${local_disk2} -y
+    vgextend openeulertest /dev/"${local_disk}" -y
+    vgextend openeulertest /dev/"${local_disk3}" -y
+    vgextend openeulertest /dev/"${local_disk2}" -y
     expect -c "
     set timeout 30
     log_file testlog
@@ -71,9 +71,10 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     lvremove openeulertest/test openeulertest/test1 openeulertest/test2 -y
     vgremove openeulertest -y
-    pvremove /dev/${local_disk1} /dev/${local_disk2} /dev/${local_disk} /dev/${local_disk3}
+    pvremove /dev/"${local_disk1}" /dev/"${local_disk2}" /dev/"${local_disk}" /dev/"${local_disk3}"
     rm -rf testlog*
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

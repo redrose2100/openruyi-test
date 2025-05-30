@@ -17,11 +17,10 @@
 # @Desc      :   Restore XFS file system from backup
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
     DNF_INSTALL xfsdump
     echo "n
 
@@ -58,8 +57,8 @@ function post_test() {
     echo "d
 
 w" | fdisk "/dev/${local_disk}"
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

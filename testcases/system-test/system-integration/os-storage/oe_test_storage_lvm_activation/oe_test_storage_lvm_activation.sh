@@ -16,13 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Logical volume activation
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test env"
+    DNF_INSTALL lvm2
     check_free_disk
-    pvcreate -y /dev/${local_disk}
-    vgcreate openeulertest /dev/${local_disk}
-    lvcreate -y -L 50MB -n test openeulertest /dev/${local_disk}
+    pvcreate -y /dev/"${local_disk}"
+    vgcreate openeulertest /dev/"${local_disk}"
+    lvcreate -y -L 50MB -n test openeulertest /dev/"${local_disk}"
     LOG_INFO "End to prepare the test env"
 }
 
@@ -42,8 +43,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     vgremove -y openeulertest
-    pvremove /dev/${local_disk}
+    pvremove /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

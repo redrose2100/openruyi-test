@@ -19,7 +19,6 @@
 source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    check_free_disk
     mkfs.ext4 -F /dev/"${local_disk}"
     mkfs.ext4 -F /dev/"${local_disk1}"
     LOG_INFO "Loading data is complete!"
@@ -27,6 +26,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL lvm2
     pvcreate -y /dev/"${local_disk}" /dev/"${local_disk1}"
     vgcreate openeulertest /dev/"${local_disk}"
     lvcreate -L 50MB -n test openeulertest -y
@@ -52,6 +52,7 @@ function post_test() {
     vgremove -y openeulertest
     pvremove /dev/"${local_disk}"
     pvremove /dev/"${local_disk1}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 

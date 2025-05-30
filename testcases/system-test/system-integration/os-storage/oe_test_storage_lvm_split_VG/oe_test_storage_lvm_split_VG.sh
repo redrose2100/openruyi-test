@@ -16,30 +16,30 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Split a VG: put one PV in the VG into another PV
 # ############################################
-source ../common/storage_disk_lib.sh
+source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    check_free_disk
-    pvcreate -y /dev/${local_disk1} /dev/${local_disk}
-    vgcreate openeulertest /dev/${local_disk1}
+    DNF_INSTALL lvm2
+    pvcreate -y /dev/"${local_disk1}" /dev/"${local_disk}"
+    vgcreate openeulertest /dev/"${local_disk1}"
     lvcreate -L 50MB -n test openeulertest -y
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    pvscan | grep /dev/${local_disk1}
+    pvscan | grep /dev/"${local_disk1}"
     CHECK_RESULT $?
-    vgextend openeulertest /dev/${local_disk} -y
-    pvdisplay | grep ${local_disk}
+    vgextend openeulertest /dev/"${local_disk}" -y
+    pvdisplay | grep "${local_disk}"
     CHECK_RESULT $?
-    pvmove /dev/${local_disk1} /dev/${local_disk}
+    pvmove /dev/"${local_disk1}" /dev/"${local_disk}"
     CHECK_RESULT $?
-    pvscan | grep /dev/${local_disk} | grep openeulertest
+    pvscan | grep /dev/"${local_disk}" | grep openeulertest
     CHECK_RESULT $?
     lvchange -a n /dev/openeulertest/test
     CHECK_RESULT $?
-    vgsplit openeulertest openeulertest1 /dev/${local_disk1}
+    vgsplit openeulertest openeulertest1 /dev/"${local_disk1}"
     CHECK_RESULT $?
     vgdisplay | grep openeulertest1
     CHECK_RESULT $?
@@ -57,8 +57,9 @@ function post_test() {
     umount /dev/openeulertest1/openeuler1
     lvremove -y openeulertest/test openeulertest1/openeuler1
     vgremove -y openeulertest openeulertest1
-    pvremove /dev/${local_disk1} /dev/${local_disk}
+    pvremove /dev/"${local_disk1}" /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
