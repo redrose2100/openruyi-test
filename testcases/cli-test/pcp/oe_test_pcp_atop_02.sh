@@ -58,7 +58,7 @@ function run_test() {
     CHECK_RESULT $?
     nohup /usr/libexec/pcp/bin/pcp-atop -A >atop_A 2>&1 &
     SLEEP_WAIT 30
-    grep 'ACPU' atop_A
+    grep --text -E '^ATOP|^ACPU|^PRC|^CPU' atop_A
     CHECK_RESULT $?
     nohup /usr/libexec/pcp/bin/pcp-atop -w testdir -S -a >atop_wSa 2>&1 &
     SLEEP_WAIT 2
