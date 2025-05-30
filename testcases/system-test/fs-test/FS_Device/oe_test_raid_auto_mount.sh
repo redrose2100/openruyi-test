@@ -22,13 +22,16 @@ source ../common_lib/fsio_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL mdadm 2
-    test_disk="/dev/"$(TEST_DISK 2)
+    test_disk=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
     ssh_cmd_node "mkdir /mnt/test_md"
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if [ "${NODE1_FRAME}" == "riscv64" ]; then
+        FS_TYPE="ext3 ext4"
+    fi
     for fs in ${FS_TYPE[@]}; do
         ssh_cmd_node "cp /etc/fstab /etc/fstab.bak"
         ssh_cmd_node "fdisk $test_disk << diskEof
@@ -37,13 +40,11 @@ p
 1
 
 +350M
-Y
 n
 p
 2
 
 +350M
-Y
 w
 diskEof"
         ssh_cmd_node "echo y | mdadm -C -v /dev/md0 -l 1 -n 2 ${test_disk}1 ${test_disk}2"
@@ -59,8 +60,7 @@ diskEof"
         ssh_cmd_node "mount /dev/md0 /mnt/test_md"
         CHECK_RESULT $? 0 0 "Mount md failed."
         ssh_cmd_node "echo '/dev/md0 /mnt/test_md $fs defaults 0 0' >> /etc/fstab"
-        REMOTE_REBOOT 2 60
-        REMOTE_REBOOT_WAIT 2 60
+        ssh_cmd_node "reboot"
         SLEEP_WAIT 60
         ssh_cmd_node "df -iT | grep /dev/md0"
         CHECK_RESULT $? 0 0 "Auto mount md when reboot failed."
@@ -84,8 +84,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     ssh_cmd_node "rm -rf /mnt/test_md"
     DNF_REMOVE 2 "$@"
-    REMOTE_REBOOT 2 60
-    REMOTE_REBOOT_WAIT 2 60
+    ssh_cmd_node "reboot"
+    SLEEP_WAIT 60
     LOG_INFO "End to restore the test environment."
 }
 
