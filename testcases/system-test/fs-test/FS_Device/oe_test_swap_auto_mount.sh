@@ -21,7 +21,7 @@ source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    test_disk="/dev/"$(TEST_DISK 2)
+    test_disk=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
     ssh_cmd_node "cp /etc/fstab /etc/fstab.bak"
     ssh_cmd_node "fdisk $test_disk << diskEof
 n
@@ -40,9 +40,8 @@ function run_test() {
     LOG_INFO "Start to run test."
     ssh_cmd_node "echo '$dmname swap swap defaults 0 0' >> /etc/fstab"
     CHECK_RESULT $? 0 0 "Add mount swap on /etc/fstab failed."
-    REMOTE_REBOOT 2 180
-    REMOTE_REBOOT_WAIT 2 180
-    SLEEP_WAIT 60
+    ssh_cmd_node "reboot"
+    SLEEP_WAIT 120
     ssh_cmd_node "swapon -v | grep '$dmname'"
     CHECK_RESULT $? 0 0 "Add swap failed."
     LOG_INFO "End to run test."
@@ -57,8 +56,8 @@ w
 diskEof"
     ssh_cmd_node "$rm_cmd"
     ssh_cmd_node "mv -f /etc/fstab.bak /etc/fstab"
-    REMOTE_REBOOT 2 180
-    REMOTE_REBOOT_WAIT 2 180
+    ssh_cmd_node "reboot"
+    SLEEP_WAIT 120
     LOG_INFO "End to restore the test environment."
 }
 

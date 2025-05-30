@@ -16,17 +16,19 @@
 #@Desc      	:   Create snapshot and rw
 #####################################
 
-source ../common_lib/fsio_lib.sh
+source "${OET_PATH}"/testcases/system-test/fs-test/common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
-    point_list=($(CREATE_FS))
+    DNF_INSTALL lvm2
+    free_disk=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
+    IFS=' ' read -ra fs_args <<< "$FS_TYPE"
+    read -ra point_list <<< "$(CREATE_FS "${fs_args[@]}")"
     group_name=$(vgdisplay | grep "test_vggroup" | grep "VG Name" | tail -n 1 | awk '{print $3}')
     for i in $(seq 1 $((${#point_list[@]}  - 1))); do
         var=${point_list[$i]}
-        echo "test write file" > ${var}/test_file
-        mkdir ${var}/test_dir
+        echo "test write file" > "${var}"/test_file
+        mkdir "${var}"/test_dir
     done
     mkdir /mnt/test_snap_dir 
     LOG_INFO "Finish to prepare the database config."
@@ -36,14 +38,14 @@ function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 $((${#point_list[@]}  - 1))); do
         var=${point_list[$i]}
-        lv_name=$(df -iT | grep $var | awk '{print $1}')
-        fs_type=$(df -iT | grep $var | awk '{print $2}')
-        lvcreate -L 1G -n test_snap -s ${lv_name}
+        lv_name=$(df -iT | grep "$var" | awk '{print $1}')
+        fs_type=$(df -iT | grep "$var" | awk '{print $2}')
+        lvcreate -L 1G -n test_snap -s "${lv_name}"
         CHECK_RESULT $? 0 0 "Create snapshot failed."
         if [[ $fs_type == "xfs" ]]; then 
-            mount -o nouuid /dev/${group_name}/test_snap /mnt/test_snap_dir 
+            mount -o nouuid /dev/"${group_name}"/test_snap /mnt/test_snap_dir 
         else 
-            mount /dev/${group_name}/test_snap /mnt/test_snap_dir 
+            mount /dev/"${group_name}"/test_snap /mnt/test_snap_dir 
         fi
         CHECK_RESULT $? 0 0 "Mount snapshot failed."
         grep "test" /mnt/test_snap_dir/test_file
@@ -52,16 +54,16 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Check directory in snapshot failed."
         umount /mnt/test_snap_dir 
         CHECK_RESULT $? 0 0 "Umount snapshot failed."
-        lvremove /dev/${group_name}/test_snap -y
+        lvremove /dev/"${group_name}"/test_snap -y
     done
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    list=$(echo ${point_list[@]})
-    REMOVE_FS "$list"
+    REMOVE_FS "${point_list[@]}"
     rm -rf /mnt/test_snap_dir 
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

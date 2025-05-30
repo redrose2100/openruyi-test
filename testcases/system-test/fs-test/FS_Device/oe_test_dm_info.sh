@@ -16,10 +16,14 @@
 #@Desc      	:   Check available dm on system
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if ! lsblk | grep -q "openeuler"; then
+        LOG_ERROR "The case exit because it is not suitable for this device."
+        exit 255
+    fi
     fdisk -l > fdisk_log
     grep -q "openeuler-root" fdisk_log && grep -q "openeuler-swap" fdisk_log
     CHECK_RESULT $? 0 0 "Check fdisk -l failed."
