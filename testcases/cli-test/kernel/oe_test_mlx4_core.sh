@@ -34,6 +34,9 @@ function run_test() {
     modprobe mlx4_core
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep mlx4_core
+    sysfs_path="/sys/module/mlx4_core/parameters"
+    test -d "$sysfs_path"
+    CHECK_RESULT $? 0 0 "Module parameters directory not found"
     CHECK_RESULT $? 0 0 "Module not loaded"
     rmmod mlx4_core
     CHECK_RESULT $? 0 0 "Module uninstall failed"
