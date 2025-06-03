@@ -21,16 +21,17 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    pip install pingouin==0.5.3
-    pip install numpy==1.26.4
+    pip install -i https://mirrors.aliyun.com/pypi/simple pingouin==0.5.3
+    pip install -i https://mirrors.aliyun.com/pypi/simple numpy==1.26.4
     systemctl stop firewalld
     DNF_INSTALL "gala-anteater kafka"
     sed -i '3s/true/false/g' /etc/gala-anteater/module/slow_node_detection.job.json
+    sed -i '3s/true/false/g' /etc/gala-anteater/module/container_disruption.job.json
     cp /opt/kafka/config/server.properties /opt/kafka/config/server.properties-bak
     cp /etc/gala-anteater/config/gala-anteater.yaml /etc/gala-anteater/config/gala-anteater.yaml-bak
     sed -i 's/#listeners=PLAINTEXT:\/\/:9092/listeners=PLAINTEXT:\/\/'"${NODE1_IPV4}"':9092/g' /opt/kafka/config/server.properties
     cd /opt/kafka/bin/ || exit 0
-    ./zookeeper-server-start.sh  -daemon /opt/kafka/config/zookeeper.properties >/dev/null 2>&1 &
+    ./zookeeper-server-start.sh -daemon /opt/kafka/config/zookeeper.properties >/dev/null 2>&1 &
     SLEEP_WAIT 300
     ./kafka-server-start.sh -daemon /opt/kafka/config/server.properties >/dev/null 2>&1 &
     SLEEP_WAIT 5
@@ -51,6 +52,7 @@ function post_test() {
     pip uninstall numpy==1.26.4 -y
     systemctl stop gala-anteater.service
     sed -i '3s/false/true/g' /etc/gala-anteater/module/slow_node_detection.job.json
+    sed -i '3s/false/true/g' /etc/gala-anteater/module/container_disruption.job.json
     pgrep -f -a "kafka-server-start|zookeeper-server-start" | awk '{print $1}' | xargs kill -9
     systemctl start firewalld
     mv -f /opt/kafka/config/server.properties-bak /opt/kafka/config/server.properties

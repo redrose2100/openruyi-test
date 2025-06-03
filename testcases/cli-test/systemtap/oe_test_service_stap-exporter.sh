@@ -20,7 +20,6 @@
 
 source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
-
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     current_kernel=$(uname -r)
@@ -43,7 +42,27 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution stap-exporter.service
+    service=stap-exporter.service
+    log_time="$(date '+%Y-%m-%d %T')"
+    systemctl restart "${service}"
+    CHECK_RESULT $? 0 0 "${service} restart failed"
+    SLEEP_WAIT 20
+    systemctl status "${service}" | grep "starting run" || SLEEP_WAIT 40
+    systemctl status "${service}" | grep "Active: active"
+    CHECK_RESULT $? 0 0 "${service} restart failed"
+    systemctl stop "${service}"
+    CHECK_RESULT $? 0 0 "${service} stop failed"
+    SLEEP_WAIT 5
+    systemctl status "${service}" | grep "Active: inactive"
+    CHECK_RESULT $? 0 0 "${service} stop failed"
+    systemctl start "${service}"
+    CHECK_RESULT $? 0 0 "${service} start failed"
+    SLEEP_WAIT 10
+    systemctl status "${service}" | grep "Active: active"
+    CHECK_RESULT $? 0 0 "${service} start failed"
+    test_enabled "${service}"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
+    CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload stap-exporter.service
     LOG_INFO "Finish test!"
 }

@@ -2,7 +2,7 @@
     "path": "$OET_PATH/testcases/cli-test/gala-anteater",
     "cases": [
         {
-            "name": "oe_test_service_anteater"
+            "name": "oe_test_service_gala-anteater"
         }
     ]
 }
