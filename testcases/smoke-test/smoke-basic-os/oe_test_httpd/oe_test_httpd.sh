@@ -29,11 +29,17 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     systemctl start httpd
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "httpd start fail"
     curl -o index.html localhost
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "curl -o index.html fail"
     grep -q "Test Page" index.html
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "grep -q 'Test Page' fail"
+    systemctl status httpd | grep "active (running)"
+    CHECK_RESULT $? 0 0 "httpd status fail"
+    httpd -v | grep "Server version"
+    CHECK_RESULT $? 0 0 "httpd version fail"
+    httpd -t
+    CHECK_RESULT $? 0 0 "httpd config syntax fail"
     LOG_INFO "Finish test!"
 }
 
@@ -41,9 +47,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop httpd
     rm -rf index.html
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     getenforce | grep Enforcing || setenforce 1
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
