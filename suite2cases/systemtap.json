@@ -1,10 +1,8 @@
 {
     "path": "$OET_PATH/testcases/cli-test/systemtap",
-    "machine type": "physical", 
     "cases": [
         {
-            "name": "oe_test_service_stap-exporter",
-            "machine type": "physical"
+            "name": "oe_test_service_stap-exporter"
         },
         {
             "name": "oe_test_service_stap-server"

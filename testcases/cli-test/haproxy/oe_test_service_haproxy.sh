@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test haproxy.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -33,6 +33,7 @@ function run_test() {
     systemctl daemon-reload
     systemctl reload haproxy.service
     CHECK_RESULT $? 0 0 "haproxy.service reload failed"
+    SLEEP_WAIT 3
     systemctl status haproxy.service | grep "Active: active"
     CHECK_RESULT $? 0 0 "haproxy.service reload causes the service status to change"
     LOG_INFO "Finish test!"
@@ -43,7 +44,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/sbin/haproxy -D\ExecStart=/usr/sbin/haproxy\g' /usr/lib/systemd/system/haproxy.service
     systemctl daemon-reload
     systemctl reload haproxy.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

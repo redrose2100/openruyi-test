@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test systemd-boot-check-no-failures.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -51,8 +51,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Job type reload is not applicable for unit ${service}"
     P_SSH_CMD --node 2 --cmd "systemctl status ${service} | grep 'Active: active'"
     CHECK_RESULT $? 0 0 "Check ${service} status failed"
-    P_SSH_CMD --node 2 --cmd "test 0 -eq \$(journalctl --since '${log_time}' -u ${service} | grep -v 'Health check: no failed units' |
-        grep -v '${service}: Succeeded' | grep -v 'Check if Any System Units Failed' | grep -i -c 'fail\|error')"
+    P_SSH_CMD --node 2 --cmd "test 0 -eq \$(journalctl --since '${log_time}' -u ${service} | grep -vE 'Health check: no failed units|${service}: Succeeded|Check if Any System Units Failed|${service}: Deactivated successfully' | grep -icE 'fail|error')"
     CHECK_RESULT $? 0 0 "There is an error message for the log of ${service}"
     LOG_INFO "Finish test!"
 }

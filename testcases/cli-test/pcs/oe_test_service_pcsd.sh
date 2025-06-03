@@ -16,11 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test pcsd.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    if rpm -ql cyrus-sasl; then
+        flag=true
+        dnf remove -y cyrus-sasl
+    fi
     DNF_INSTALL pcs
     LOG_INFO "End of environmental preparation!"
 }
@@ -35,7 +39,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop pcsd.service
-    DNF_REMOVE
+    if [ "${flag}" = "true" ]; then
+        dnf install -y cyrus-sasl
+    fi
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
