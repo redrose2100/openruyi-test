@@ -16,12 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test multipathd.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL multipath-tools
+    if ! lsmod | grep dm_multipath; then
+        flag=true
+        modprobe dm_multipath
+    fi
     service=multipathd.service
     log_time=$(date '+%Y-%m-%d %T')
     disk_name=$(lsblk | grep disk | awk '{print $1}' | tr '\n' '|' | sed 's@|$@@')
@@ -31,7 +35,7 @@ function pre_test() {
 	find_multipaths yes
 }
 blacklist_exceptions {
-        property "\(SCSI_IDENT_\|ID_WWN\)"
+        property \"\(SCSI_IDENT_\|ID_WWN\)\"
 }
 blacklist {
 	devnode \"^${disk_name}\"
@@ -62,9 +66,11 @@ function post_test() {
     systemctl reload multipathd.service
     mv /etc/multipath.bak /etc/multipath.conf
     systemctl stop multipathd.service
-    DNF_REMOVE
+    if [ "${flag}" = "true" ]; then
+        modprobe -r dm_multipat
+    fi
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
-

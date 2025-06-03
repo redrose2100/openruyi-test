@@ -16,13 +16,18 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test dbus.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     service=dbus.service
     log_time=$(date '+%Y-%m-%d %T')
+    flag=false
+    if systemctl status dbus.socket | grep "active (running)"; then
+        systemctl stop dbus.socket
+        flag=true
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -47,6 +52,9 @@ function post_test() {
     sed -i "s\ExecStart=/usr/bin/dbus-daemon --session\ExecStart=/usr/bin/dbus-daemon\g" /usr/lib/systemd/system/"${service}"
     systemctl daemon-reload
     systemctl reload "${service}"
+    if [[ "$flag" == "true" ]]; then
+        systemctl start dbus.socket
+    fi
     LOG_INFO "Finish environment cleanup!"
 }
 

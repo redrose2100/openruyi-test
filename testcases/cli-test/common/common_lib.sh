@@ -50,10 +50,11 @@ function test_restart() {
 function test_oneshot() {
     service=$1
     status=$2
+    log_time="$(date '+%Y-%m-%d %T')"
     systemctl status "${service}" | grep "Active" | grep -v "${status}"
     CHECK_RESULT $? 0 1 "There is an error for the status of ${service}"
     test_enabled "${service}"
-    journalctl -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
 }
 
@@ -61,14 +62,14 @@ function test_enabled() {
     service=$1
     state="$(systemctl is-enabled "${service}")"
     if [ "${state}" == "enabled" ]; then
-	symlink_file=$(systemctl disable "${service}" 2>&1 | grep "Removed" | awk '{print $2}' | awk '{print substr($0,1,length($0)-1)}' | tr -d '"')
+        symlink_file=$(systemctl disable "${service}" 2>&1 | grep "Removed" | awk '{print $2}' | awk '{print substr($0,1,length($0)-1)}' | tr -d '"')
         find ${symlink_file}
         CHECK_RESULT $? 0 1 "${service} disable failed"
         systemctl enable "${service}"
         find ${symlink_file}
         CHECK_RESULT $? 0 0 "${service} enable failed"
     elif [ "${state}" == "disabled" ]; then
-	symlink_file=$(systemctl enable "${service}" 2>&1 | grep "Created symlink" | awk '{print $3}' | tr -d '"')
+        symlink_file=$(systemctl enable "${service}" 2>&1 | grep "Created symlink" | awk '{print $3}' | tr -d '"')
         find ${symlink_file}
         CHECK_RESULT $? 0 0 "${service} enable failed"
         systemctl disable "${service}"
@@ -86,10 +87,10 @@ function test_enabled() {
 function test_reload() {
     service=$1
     systemctl start "${service}"
-    if systemctl show "${service}" -p CanReload | grep CanReload=yes  ; then
+    if systemctl show "${service}" -p CanReload | grep CanReload=yes; then
         systemctl reload "${service}"
         CHECK_RESULT $? 0 0 "reload unit ${service} failed"
-    else 
+    else
         systemctl reload "${service}" 2>&1 | grep "Job type reload is not applicable"
         CHECK_RESULT $? 0 0 "Job type reload is not applicable for unit ${service}"
     fi
