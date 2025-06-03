@@ -17,11 +17,11 @@
 # @Desc      :   Test auth.socket restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL authd
+    DNF_INSTALL "authd net-tools nmap-ncat"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -33,12 +33,20 @@ function run_test() {
     CHECK_RESULT $?
     systemctl status auth.socket | grep "Active: active"
     CHECK_RESULT $?
+    ss -tunlp | grep ":113"
+    CHECK_RESULT $? 0 0 "Auth service is not listening on default port 113"
+    pgrep -f "authd"
+    CHECK_RESULT $? 0 0 "Auth service process is not running"
+    systemctl show auth.socket | grep -E "Listen|Socke"
+    CHECK_RESULT $? 0 0 "Auth socket configuration error"
+    systemctl show auth.socket --property=LoadState | grep "loaded"
+    CHECK_RESULT $? 0 0 "Auth socket load state error"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
