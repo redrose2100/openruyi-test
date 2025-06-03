@@ -27,20 +27,24 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-  augparse -t /usr/share/augeas/lenses/dist/xorg.aug  |grep Module 
+  augparse -t /usr/share/augeas/lenses/dist/xorg.aug |grep Module 
   CHECK_RESULT $? 0 0 "Augparse tracking output error"
   augparse --notypecheck /usr/share/augeas/lenses/dist/xorg.aug
   CHECK_RESULT $? 0 0 "Type check error for disabling lens"
   augparse /usr/share/augeas/lenses/dist/rx.aug 
   CHECK_RESULT $? 0 0 "Augparse execution failed"
+  augparse /usr/share/augeas/lenses/dist/xorg.aug /usr/share/augeas/lenses/dist/rx.aug
+  CHECK_RESULT $? 0 0 "Augparse failed to handle multiple input files"  
+  augparse /tmp/invalid_lens.aug 2>&1 | grep -q "error"
+  CHECK_RESULT $? 0 0 "Augparse should report error for invalid lens file"  
   LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
+  rm -f /tmp/invalid_lens.aug
   DNF_REMOVE "$@"
   LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
-
