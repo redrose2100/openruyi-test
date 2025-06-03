@@ -33,8 +33,30 @@ function run_test()
 
     journalctl -b --no-pager > boot_log
     CHECK_RESULT $? 0 0 "journalctl -b failed"
+    grep -i "systemd" boot_log
+    CHECK_RESULT $? 0 0 "boot log content check failed"
+    
+    # 测试时间范围过滤
+    journalctl --since "1 hour ago" --no-pager > time_log
+    CHECK_RESULT $? 0 0 "journalctl time filter failed"
+    grep "localhost.localdomain" time_log
+    CHECK_RESULT $? 0 0 "time filter log content check failed"
+    
+    # 测试优先级过滤
+    journalctl -p err --no-pager > priority_log
+    CHECK_RESULT $? 0 0 "journalctl priority filter failed"
+    grep -i "error" priority_log
+    CHECK_RESULT $? 0 0 "priority filter log content check failed"
+    
+    # 测试输出格式
+    journalctl -o json --no-pager > json_log
+    CHECK_RESULT $? 0 0 "journalctl json output failed"
+    grep "{" json_log
+    CHECK_RESULT $? 0 0 "json format check failed"
+    
     LOG_INFO "Finish test!"
 }
+
 function post_test()
 {
     LOG_INFO "start environment cleanup."
