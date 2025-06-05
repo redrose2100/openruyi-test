@@ -17,16 +17,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   freetds common prepare
 # #############################################
-# shellcheck disable=SC2153
+# shellcheck disable=SC2153,SC1090
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function common_pre() {
     if [ "$NODE1_FRAME" == "x86_64" ]; then
         OLD_LANG=$LANG
         export LANG=en_US.UTF-8
-        yum install -y policycoreutils-python-utils
+        DNF_INSTALL "policycoreutils-python-utils freetds openldap openldap-devel unixODBC unixODBC-devel"
         curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/9/mssql-server-2022.repo
-        DNF_INSTALL "freetds mssql-server openldap openldap-devel unixODBC"
+        DNF_INSTALL mssql-server
         SLEEP_WAIT 5
         echo "[egServer70]
         host = localhost
@@ -38,13 +38,13 @@ function common_pre() {
         expect "*Yes/No*" {send "Yes\r"}
         expect "*Enter the SQL Server*" {send "Hw123456\r"}
         expect "*Confirm the SQL Server*" {send "Hw123456\r"}
-        sleep 20
+        sleep 30
         expect eof
 EOF
         systemctl status mssql-server
         wget -O /etc/yum.repos.d/msprod.repo https://packages.microsoft.com/config/rhel/9/prod.repo
         expect <<EOF
-        spawn yum install -y mssql-tools unixODBC-devel
+        spawn yum install -y mssql-tools
         expect "*YES or NO*" {send "YES\r"}
         expect "*YES or NO*" {send "YES\r"}
         expect eof
@@ -108,8 +108,8 @@ function common_post() {
     expect eof
 EOF
     systemctl stop mssql-server
-    dnf remove -y mssql-tools unixODBC-devel policycoreutils-python-utils
     DNF_REMOVE "$@"
+    dnf remove -y mssql-server mssql-tools
     rm -rf /etc/yum.repos.d/msprod.repo /etc/yum.repos.d/mssql-server.repo /opt/mssql /opt/mssql-tools
     export LANG=$OLD_LANG
     export PATH=$OLD_PATH
