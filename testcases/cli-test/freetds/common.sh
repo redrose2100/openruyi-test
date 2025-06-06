@@ -46,7 +46,7 @@ EOF
         expect <<EOF
         spawn yum install -y mssql-tools
         expect "*YES or NO*" {send "YES\r"}
-        expect "*YES or NO*" {send "YES\r"}
+        expect "*Do you accept*" {send "YES\r"}
         expect eof
 EOF
         SLEEP_WAIT 5
