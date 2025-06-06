@@ -29,6 +29,8 @@ function pre_test(){
 
 function run_test() {
     LOG_INFO "Start testing..."
+    utshell -c "continue" | grep -E "for.*?while.*?utils"
+    CHECK_RESULT $? 1 0 "continue command failed"
     cat > test_for1.sh <<EOF
 #!/bin/utshell
 for((i=3;i>0;i--)); do
