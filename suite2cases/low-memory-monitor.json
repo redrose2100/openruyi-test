@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/low-memory-monitor",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_service_low-memory-monitor",
+            "machine num": 2
+        }
+    ]
+}

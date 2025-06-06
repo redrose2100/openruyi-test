@@ -26,6 +26,9 @@
             "name": "oe_test_service_dracut-shutdown"
         },
 	{
+            "name": "oe_test_service_dracut-shutdown-onfailure"
+        },
+	{
 	    "name": "oe_test_service_dracut-initramfs"
 	}
     ]
