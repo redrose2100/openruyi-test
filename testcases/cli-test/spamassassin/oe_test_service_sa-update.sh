@@ -28,7 +28,26 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution sa-update.service
+    log_time="$(date '+%Y-%m-%d %T')"
+    service=sa-update.service
+    P_SSH_CMD --node 1 --cmd "systemctl restart ${service}"
+    CHECK_RESULT $? 0 0 "${service} restart failed"
+    SLEEP_WAIT 5
+    systemctl status "${service}" | grep "Active: active"
+    CHECK_RESULT $? 0 0 "${service} restart failed"
+    P_SSH_CMD --node 1 --cmd "systemctl stop ${service}"
+    CHECK_RESULT $? 0 0 "${service} stop failed"
+    SLEEP_WAIT 5
+    systemctl status "${service}" | grep "Active: inactive"
+    CHECK_RESULT $? 0 0 "${service} stop failed"
+    P_SSH_CMD --node 1 --cmd "systemctl start ${service}"
+    CHECK_RESULT $? 0 0 "${service} start failed"
+    SLEEP_WAIT 5
+    systemctl status "${service}" | grep "Active: active"
+    CHECK_RESULT $? 0 0 "${service} start failed"
+    test_enabled "${service}"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
+    CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload sa-update.service
     LOG_INFO "End to run test."
 }

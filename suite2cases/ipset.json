@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_ipset_01"
+        },
+        {
+            "name": "oe_test_service_ipset"
         }
     ]
 }
