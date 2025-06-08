@@ -35,7 +35,14 @@ function run_test() {
   CHECK_RESULT $? 0 0 "create svg failed"
   ttf2svg --help
   CHECK_RESULT $? 0 0 "display help information failed"
-  LOG_INFO "End of the test."
+  ttf2svg "${tff_filename}" -o char.svg -l 65 -h 65  # ASCII 65 = 'A'
+  CHECK_RESULT $? 0 0 "convert specific character failed"
+  grep -q "<svg" char.svg
+  CHECK_RESULT $? 0 0 "generated SVG does not contain valid SVG tag"
+  ttf2svg "${tff_filename}" -o id.svg -id "custom-font"
+  CHECK_RESULT $? 0 0 "set font ID failed"
+  grep -q "id=\"custom-font\"" id.svg
+  CHECK_RESULT $? 0 0 "font ID parameter not applied"
 }
 
 function post_test() {
