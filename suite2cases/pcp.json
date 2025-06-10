@@ -224,6 +224,27 @@
         },
         {
             "name": "oe_test_service_pcp-reboot-init"
+        },
+        {
+            "name": "oe_test_service_pmfind"
+        },
+        {
+            "name": "oe_test_service_pmie_check"
+        },
+        {
+            "name": "oe_test_service_pmie_daily"
+        },
+        {
+            "name": "oe_test_service_pmie_farm_check"
+        },
+        {
+            "name": "oe_test_service_pmlogger_check"
+        },
+        {
+            "name": "oe_test_service_pmlogger_daily"
+        },
+        {
+            "name": "oe_test_service_pmlogger_farm_check"
         }
     ]
 }
