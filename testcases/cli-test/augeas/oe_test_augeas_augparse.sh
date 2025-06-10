@@ -37,12 +37,25 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Augparse failed to handle multiple input files"  
   augparse /tmp/invalid_lens.aug 2>&1 | grep -q "error"
   CHECK_RESULT $? 0 0 "Augparse should report error for invalid lens file"  
+  augparse --nostdinc -I /tmp/test_lenses /tmp/test_lenses/test.aug
+  CHECK_RESULT $? 0 0 "Augparse failed to handle --nostdinc option with custom include path"
+  touch /tmp/empty.aug && augparse /tmp/empty.aug
+  CHECK_RESULT $? 0 0 "Augparse should handle empty lens file"
+  dd if=/dev/urandom of=/tmp/large_lens.aug bs=1M count=1 &>/dev/null
+  augparse /tmp/large_lens.aug 2>&1 | grep -q "error"
+  CHECK_RESULT $? 0 0 "Augparse should detect errors in large invalid files"
+  augparse --version | grep -q "augparse"
+  CHECK_RESULT $? 0 0 "Augparse should show version info"
+  augparse --help | grep -q "Usage:"
+  CHECK_RESULT $? 0 0 "Augparse should show help information"
+
   LOG_INFO "End of the test."
 }
 
+
 function post_test() {
   LOG_INFO "start environment cleanup."
-  rm -f /tmp/invalid_lens.aug
+  rm -f /tmp/invalid_lens.aug /tmp/empty.aug /tmp/large_lens.aug
   DNF_REMOVE "$@"
   LOG_INFO "Finish environment cleanup!"
 }
