@@ -39,6 +39,14 @@ function run_test() {
   test -f output.tex
   CHECK_RESULT $? 0 0 "output.tex not exist"
   grep "end" output.tex
+  unrtf --text input.rtf > output.txt
+  test -f output.txt
+  CHECK_RESULT $? 0 0 "output.txt not exist"
+  unrtf --html input.txt > output.rtf
+  test -f output.rtf
+  CHECK_RESULT $? 0 0 "output.rtf not exist"
+  unrtf --noremap input.rtf  | grep test
+  CHECK_RESULT $? 0 0 "the retrieval of test failed"
   LOG_INFO "End of the test."
 }
 
