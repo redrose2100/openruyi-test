@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of rdoc command
 # ############################################
+# shellcheck disable=SC1091
 
 source "../common/common_ruby.sh"
 
@@ -23,7 +24,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL rubygem-rdoc
     VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
-    if [ $VERSION_ID != "22.03" || $VERSION_ID != "24.03" ]; then
+    if [[ $VERSION_ID != "22.03" && $VERSION_ID != "24.03" ]]; then
       path_rdoc=/root/.rdoc
     else
       path_rdoc=/root/.local/share/rdoc
@@ -86,8 +87,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     delete_files
     rm -rf /root/.rdoc/ .rdoc_options /usr/share/ri/site /root/.local
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
