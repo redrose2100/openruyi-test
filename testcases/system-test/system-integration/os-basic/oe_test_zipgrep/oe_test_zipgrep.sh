@@ -38,6 +38,12 @@ function run_test() {
     res2=$(zipgrep -i "test_2" testfile_zipgrep.zip)
     [ "$res2" == "testfile_zipgrep:Test_2" ]
     CHECK_RESULT $? 0 0 "zipgrep error"
+    zipgrep -n "Test_2" testfile_zipgrep.zip | grep -q "testfile_zipgrep:2:Test_2"
+    CHECK_RESULT $? 0 0 "Line number display failed"
+    zipgrep -c "test" testfile_zipgrep.zip | awk -F: '{print $2}' | grep 1
+    CHECK_RESULT $? 0 0 "count failed"
+    zipgrep -n  testfile_zipgrep.zip | wc -l | grep -q 2
+    CHECK_RESULT $? 0 0 "Empty pattern should match all lines"
     LOG_INFO "End to run test."
 }
 
