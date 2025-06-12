@@ -1034,6 +1034,9 @@
 	},
 	{
 	    "name": "oe_test_lssubsys"
+	},
+	{
+	    "name": "oe_test_zdiff"
 	}
     ]
 }
