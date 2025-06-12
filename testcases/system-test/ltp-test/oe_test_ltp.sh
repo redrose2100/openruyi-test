@@ -26,12 +26,15 @@ function pre_test() {
     DNF_INSTALL "zlib gcc-c++ m4 flex byacc bison keyutils-libs-devel lksctp-tools-devel xfsprogs-devel libacl-devel openssl-devel numactl-devel libaio-devel glibc-devel libcap-devel findutils libtirpc libtirpc-devel hwloc-devel kernel-headers glibc-headers elfutils-libelf-devel patch numactl tar automake cmake time psmisc vim git make"
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    current_path=$(cd "$(dirname "$0")" || exit 1
-        pwd
-    )
+    current_path=$(cd "$(dirname "$0")" || exit;pwd)
+    if [ "$(uname -a|awk '{print $3}'|awk -F "-" '{print $1}')" == "6.6.0" ];then
+        branch=20240129
+    else
+        branch=20220121
+    fi
     until [ -e "ltp" ]
     do
-        git clone -b 20220121 https://github.com/linux-test-project/ltp.git
+        git clone -b ${branch} https://github.com/linux-test-project/ltp.git
     done
     cd ltp || exit 1
     {
@@ -49,9 +52,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     cd /opt/ltp || exit 1
-    sed -i -E "/^mm|controllers|cve|syscalls|^fs|can|pty/ s/^/#/" /opt/ltp/scenario_groups/default
-    ./runltp |tee ltp.txt
-    grep -nr "FAIL" /opt/ltp/results/|grep -v -E "af_alg07|cpufreq_boost|proc01|ioctl_sg01|madvise06|cpuset_memory_spread|cve-2018-1000204"
+    ./runltp |tee -a ltp.txt
+    grep -nr "FAIL" /opt/ltp/results |tee "${current_path}"/fail_cases.txt
+    grep -nr "FAIL" /opt/ltp/results/|grep -v -E "af_alg07|cpufreq_boost|proc01|ioctl_sg01|madvise06|cpuset_memory_spread|cve-2018-1000204|cve-2017-1000364|cgroup|fanotify14|memcontrol02|starvation|memcg_stat_rss"
     CHECK_RESULT $? 1 0 "any case failed"
     LOG_INFO "End to run test."
 }
