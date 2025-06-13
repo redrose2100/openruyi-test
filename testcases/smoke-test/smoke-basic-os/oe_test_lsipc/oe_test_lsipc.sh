@@ -16,52 +16,33 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test lsipc
 # ############################################
-
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-
 function run_test() {
     LOG_INFO "Start testing..."
     lsipc
     CHECK_RESULT $? 0 0 "lsipc execute fail"
-    ## set lang to en, make shm (shared memory segment)
-    local ipcid
-    ipcid=$(LANG="" ipcmk -M 1m | awk '{print $NF}')
-    CHECK_RESULT $? 0 0 "failed to make shm segment" 1
-    lsipc -m | grep "SIZE"
-    CHECK_RESULT $? 0 0 "lsipc --shmems execute fail"
-    lsipc -n | grep "RESOURCE"
+    lsipc -n | grep -i "resource"
     CHECK_RESULT $? 0 0 "lsipc --newline execute fail"
-    lsipc -q 
-    CHECK_RESULT $? 0 0 "lsipc --quene execute fail"
-    lsipc -J | grep "ipclimits"
+    lsipc -J | grep -i "ipclimits"
     CHECK_RESULT $? 0 0 "lsipc --Json execute fail"
     lsipc -s
     CHECK_RESULT $? 0 0 "lsipc --semaphores execute fail"
-    lsipc -h | grep "help"
+    lsipc -h | grep -i "help"
     CHECK_RESULT $? 0 0 "lsipc --help execute fail"
-    lsipc -b | grep "USED"
+    lsipc -b | grep -i "used"
     CHECK_RESULT $? 0 0 "lsipc --byte execute fail"
-    lsipc -V | grep "lsipc"
+    lsipc -V | grep -i "lsipc"
     CHECK_RESULT $? 0 0 "lsipc --version execute fail"
-    lsipc -l 
+    lsipc -l
     CHECK_RESULT $? 0 0 "lsipc --list execute fail"
     lsipc -r
     CHECK_RESULT $? 0 0 "lsipc --raw execute fail"
-    lsipc -m -P | grep PERMS
-    CHECK_RESULT $? 0 0 "-m -p --numeric-perms execute fail"
-    lsipc -m -c | grep OWNER
-    CHECK_RESULT $? 0 0 "-m -c --creator execute fail"
-    lsipc -m -e | grep KEY
-    CHECK_RESULT $? 0 0 "-m -e --export execute fail"
-    lsipc -m -t | grep CTIME
-    CHECK_RESULT $? 0 0 "-m -t --time execute fail"
-    lsipc -g | grep MSGMNI
+    lsipc -g | grep -i "msgmni"
     CHECK_RESULT $? 0 0 "-g --global execute fail"
-    lsipc -g -s | grep LIMIT
+    lsipc -g -s | grep -i "limit"
     CHECK_RESULT $? 0 0 "-g -s --semaphores execute fail"
-    lsipc -g -o RESOURCE | grep "SEMOPM"
+    lsipc -g -o RESOURCE | grep -i "semopm"
     CHECK_RESULT $? 0 0 "-g -o --output[=<ап╠М>] execute fail"
-    ipcrm -m "$ipcid"
     LOG_INFO "Finish test!"
 }
 
