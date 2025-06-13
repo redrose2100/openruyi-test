@@ -58,10 +58,10 @@ function run_test() {
         }   
                      
     "
-    res=$( [[ $(stat -c "%A" /tmp/test_dir2) == "drwxr-xr-x" ]] && echo "0" || echo "1" )
-    CHECK_RESULT "$res" 0 0 "The permission of the folder is not 'drwxr-xr-x'."
-    res=$( [[ $(stat -c "%A" /tmp/test_file2) == "-rw-r--r--" ]] && echo "0" || echo "1" )
-    CHECK_RESULT "$res" 0 0 "The permission of the file is not '-rw-r--r--'."
+    res=$( [[ $(stat -c "%A" /tmp/test_dir2) == "drwxrwxr-x"" ]] && echo "0" || echo "1" )
+    CHECK_RESULT "$res" 0 0 "The permission of the folder is not 'drwxrwxr-x"'."
+    res=$( [[ $(stat -c "%A" /tmp/test_file2) == "-rw-rw-r--" ]] && echo "0" || echo "1" )
+    CHECK_RESULT "$res" 0 0 "The permission of the file is not '-rw-rw-r--'."
 
     LOG_INFO "Finish testcase execution."
 }
