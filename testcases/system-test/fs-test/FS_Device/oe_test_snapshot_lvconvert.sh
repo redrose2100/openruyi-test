@@ -15,13 +15,13 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   lvconvert snapshot
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/testcases/system-test/fs-test/common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL lvm2
-    free_disk=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
     IFS=' ' read -ra fs_args <<< "$FS_TYPE"
     read -ra point_list <<< "$(CREATE_FS "${fs_args[@]}")"
     group_name=$(vgdisplay | grep "test_vggroup" | grep "VG Name" | tail -n 1 | awk '{print $3}')
@@ -54,7 +54,7 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Check directory in snapshot failed."
         echo "add file" >/mnt/test_snap_dir/test_touch_ss
         umount /mnt/test_snap_dir
-        "$var"
+        umount "$var"
         lvconvert --merge /dev/"${group_name}"/test_snap
         CHECK_RESULT $? 0 0 "lvconvert snapshot failed."
         mount "$lv_name" "$var"
