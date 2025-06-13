@@ -51,7 +51,8 @@
             "name": "oe_test_snapshot_dump"
         },
         {
-            "name": "oe_test_snapshot_lvconvert"
+            "name": "oe_test_snapshot_lvconvert",
+            "add disk": [20]
         },
         {
             "name": "oe_test_snapshot_rw"
