@@ -37,6 +37,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "recode execute fail"
     cat page.html
     CHECK_RESULT $? 0 0 "page.html generation failed"
+    recode --version | grep -q "recode"
+    CHECK_RESULT $? 0 0 "Version check failed"
+    recode -l | head -5 >/dev/null 2>&1
+    CHECK_RESULT $? 0 0 "recode -l command failed"
+    recode -T 2>/dev/null
+    CHECK_RESULT $? 0 0 "Subset detection test failed"
     LOG_INFO "Finish test!"
 }
 
