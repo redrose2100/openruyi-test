@@ -17,7 +17,7 @@
 # @Desc      :   Test man-db.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -28,7 +28,18 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     test_oneshot man-db.service 'inactive (dead)'
+
+
+    apropos bash | grep -q "bash"
+    CHECK_RESULT $? 0 0 "apropos command failed after service restart"
+
+    man vi | head -n 10 | grep -i 'VI'
+    CHECK_RESULT $? 0 0 "man command failed after service restart"
+
+    whatis vi |grep -q "vi"
+    CHECK_RESULT $? 0 0 "whatis command failed after service restart"
+
     LOG_INFO "Finish test!"
 }
-
 main "$@"
+
