@@ -40,9 +40,15 @@ function run_test() {
     recode --version | grep -q "recode"
     CHECK_RESULT $? 0 0 "Version check failed"
     recode -l | head -5 >/dev/null 2>&1
-    CHECK_RESULT $? 0 0 "recode -l command failed"
+    CHECK_RESULT $? 0 0 "recode -l command failed"    
     recode -T 2>/dev/null
     CHECK_RESULT $? 0 0 "Subset detection test failed"
+    echo "测试" | recode -sI UTF-8..GB2312
+    CHECK_RESULT $? 0 0 "Strict mode with iconv failed"
+    echo "©" | recode -qf UTF-8..ASCII
+    CHECK_RESULT $? 0 0 "Combined flags  test failed"
+    echo "¥" | recode -f UTF-8..ASCII 
+    CHECK_RESULT $? 0 0 "Currency symbol force-recode failed"
     LOG_INFO "Finish test!"
 }
 
