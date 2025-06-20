@@ -449,7 +449,10 @@
             "name": "oe_test_target_integritysetup"
         },
         {
-            "name": "oe_test_service_systemd_growfs-root"
+            "name": "oe_test_service_systemd-growfs-root"
+        },
+        {
+            "name": "oe_test_service_systemd-tmpfiles-setup-dev-early"
         }
     ]
 }

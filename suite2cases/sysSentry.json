@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/sysSentry",
+    "cases": [
+        {
+            "name": "oe_test_service_sysSentry"
+        },
+        {
+            "name": "oe_test_service_xalarmd"
+        }
+    ]
+}

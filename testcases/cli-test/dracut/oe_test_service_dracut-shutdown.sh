@@ -16,13 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test dracut-shutdown.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     service=dracut-shutdown.service
     log_time=$(date '+%Y-%m-%d %T')
+    systemctl restart "${service}"
+    rm -rf /run/initramfs/bin/sh
     LOG_INFO "End of environmental preparation!"
 }
 

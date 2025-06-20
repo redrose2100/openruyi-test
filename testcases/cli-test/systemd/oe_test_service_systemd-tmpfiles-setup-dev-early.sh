@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2025. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -10,32 +10,32 @@
 # See the Mulan PSL v2 for more detaitest -f.
 
 # #############################################
-# @Author    :   zhangpanting
-# @Contact   :   1768492250@qq.com
-# @Date      :   2024/10/11
+# @Author    :   liujingjing
+# @Contact   :   liujingjing25812@163.com
+# @Date      :   2025/6/9
 # @License   :   Mulan PSL v2
-# @Desc      :   Test systemd-growfs-root.service restart
+# @Desc      :   Test systemd-tmpfiles-setup-dev-early.service restart
 # #############################################
 # shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
+    LOG_INFO "Start environmental preparation."
     DNF_INSTALL systemd-udev
-    LOG_INFO "End to prepare the test environment."
+    service=systemd-tmpfiles-setup-dev-early.service
+    systemctl start "${service}"
+    LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."
-    test_execution systemd-growfs-root.service
-    test_reload systemd-growfs-root.service
-    LOG_INFO "End to run test."
+    LOG_INFO "Start testing..."
+    test_oneshot "${service}" "active (exited)"
+    LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    systemctl stop systemd-growfs-root.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
