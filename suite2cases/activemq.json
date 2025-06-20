@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_activemq_fun_01"
-        }
+        },
+        {
+            "name": "oe_test_activemq_fun_02"
+	}
     ]
 }
