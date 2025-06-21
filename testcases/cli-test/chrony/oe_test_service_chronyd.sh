@@ -17,7 +17,7 @@
 # @Desc      :   Test chronyd.service restart
 # #############################################
 #shellcheck disable=SC1091
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -29,6 +29,10 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_execution chronyd.service
     test_reload chronyd.service
+    chronyc tracking | grep -q "Leap status\s*:\s*Normal"
+    CHECK_RESULT $? 0 0 "chrony time synchronization not normal"
+    chronyc sources | grep -q "\^\*"
+    CHECK_RESULT $? 0 0 "No active NTP server connection"
     LOG_INFO "Finish test!"
 }
 
