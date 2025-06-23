@@ -187,6 +187,9 @@
         },
         {
             "name": "oe_test_hinic3"
+	},
+	{
+            "name": "oe_test_rnpm"		
         }
     ]
 }
