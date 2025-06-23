@@ -17,7 +17,7 @@
 # @Desc      :   Test saslauthd.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -27,15 +27,22 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution saslauthd.service
-    test_reload saslauthd.service
+    systemctl start saslauthd.service
+    CHECK_RESULT $? 0 0 "saslauthd.service start failed"
+    test -f /etc/saslauthd.conf || test -f /etc/sysconfig/saslauthd
+    CHECK_RESULT $? 0 0 "saslauthd configuration file missing"
+    ln -s /etc/pam.d/system-auth /etc/pam.d/smtp
+    testsaslauthd -s smtp -u root -p 'uostest12#$'
+    CHECK_RESULT $? 0 0 "testsaslauthd authentication failed"
     LOG_INFO "Finish test!"
 }
 
+
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
+
