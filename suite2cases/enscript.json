@@ -2,7 +2,10 @@
     "path": "$OET_PATH/testcases/cli-test/enscript",
     "cases": [
         {
-            "name": "oe_test_enscript"
+            "name": "oe_test_enscript01"
+        },
+	{
+            "name": "oe_test_enscript02"
         }
     ]
 }
