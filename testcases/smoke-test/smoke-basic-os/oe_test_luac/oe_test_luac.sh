@@ -21,6 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     echo -n -e "print('Hello, world')" >script.lua
+    echo "function add(a,b) return a+b end" > lib1.lua
+    echo "function sub(a,b) return a-b end" > lib2.lua
     LOG_INFO "End of environment preparation."
 }
 
@@ -36,12 +38,19 @@ function run_test() {
     CHECK_RESULT $? 0 0 "luac parse only fail"
     luac -s -o script.luac script.lua
     CHECK_RESULT $? 0 0 "luac -s -o fail"
+    luac -o stdin.luac - < script.lua
+    CHECK_RESULT $? 0 0 "STDIN compilation failed"
+    luac -l -l script.lua
+    CHECK_RESULT $? 0 0 "Verbose listing failed"
+    luac -o combined.luac lib1.lua lib2.lua
+    luac -l combined.luac | grep -qE "add|sub"
+    CHECK_RESULT $? 0 0 "Multi-file compilation failed"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf script.luac script.lua luac.out
+    rm -rf script* combined.luac  lib*.lua luac.out
     LOG_INFO "Finish environment cleanup!"
 }
 
