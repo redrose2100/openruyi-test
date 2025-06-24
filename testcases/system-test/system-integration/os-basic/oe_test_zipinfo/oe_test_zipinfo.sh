@@ -48,6 +48,13 @@ function run_test()
     CHECK_RESULT $? 0 0 "zipinfo -C command execution failure"
     zipinfo -t /tmp/test.zip |grep "file"
     CHECK_RESULT $? 0 0 "zipinfo -t command execution failure"
+    zipinfo -M /tmp/test.zip | head -n 1 | grep -i archive
+    CHECK_RESULT $? 0 0 "zipinfo -M paging failed"
+    zipinfo -T /tmp/test.zip | grep -q "[0-9]\{8\}\.[0-9]\{6\}"
+    CHECK_RESULT $? 0 0 "zipinfo -T timestamp format mismatch"
+    echo "COMMENT" | zip -z /tmp/test.zip
+    zipinfo -2z /tmp/test.zip | grep  COMMENT
+    CHECK_RESULT $? 0 0 "zipinfo -2z comment integration failed"
     LOG_INFO "End to run test."
 }
 
