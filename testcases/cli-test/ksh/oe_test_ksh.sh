@@ -17,7 +17,7 @@
 # @Desc      :   Command test ksh
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL ksh
@@ -28,11 +28,16 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
+    ksh -c 'echo "ksh is working"' | grep -q "ksh is working"
+    CHECK_RESULT $? 0 0 "ksh shell failed to start"
+    ksh -c 'ls /' | grep -q "bin"
+    CHECK_RESULT $? 0 0 "ksh failed to execute basic shell command"
+    ksh -c 'export MY_VAR="Hello, ksh"; echo $MY_VAR'  | grep -q "Hello, ksh"
+    CHECK_RESULT $? 0 0 "ksh failed to handle environment variable"
+
     chmod 750 ./testfile
-   
     ./testfile > tmp.log
     CHECK_RESULT $? 0 0 "excute testfile error"
-   
     grep "hello world" tmp.log
     CHECK_RESULT $? 0 0 "query msg error"
     LOG_INFO "End to run test."
@@ -41,7 +46,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf tmp.log
-    DNF_REMOVE
+    DNF_REMOVE  "$@"
     LOG_INFO "Finish environment cleanup!"
 
 }
