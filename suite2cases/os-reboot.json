@@ -1,0 +1,162 @@
+{
+    "path": "$OET_PATH/testcases/system-test/os-reboot",
+    "machine type": "physical",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_cold_halt_poweroff",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_cold_init0",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_cold_ipmi_off",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_cold_ipmi_poweroff",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_cold_poweroff_force",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_cold_poweroff_nowtmp",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_cold_reboot_poweroff",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_cold_shutdown_force",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_cold_shutdown_h",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_cold_shutdown_poweroff",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_cold_systemctl_poweroff",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_halt_force",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_halt_nowtmp",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_halt_reboot",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_init6",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_ipmi_halt",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_ipmi_reset",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_poweroff_halt",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_poweroff_reboot",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_reboot_force",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_reboot_halt",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_reboot_nowtmp",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_shutdown_halt",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_shutdown_reboot",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_systemctl_halt",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_hot_systemctl_reboot",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_reboot_50_times",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_reboot_delayed",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_reboot_press",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_reboot_task_trigger",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_reboot_timed",
+            "machine type": "physical",
+            "machine num": 2
+        }
+    ]
+}
