@@ -26,6 +26,7 @@ function deploy_env {
     systemctl enable pmlogger
     systemctl start pmlogger
     SLEEP_WAIT 10
-    archive_data=$(pcp -h "${NODE1_IPV4}" | grep 'primary logger:' | awk -F: '{print $NF}')
+    host_name=$(hostname)
+    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}')
     metric_name=disk.dev.write
 }
