@@ -16,11 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test rdisc.service restart
 # #############################################
-
+#shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
+    if ! systemctl list-unit-files | grep -q '^rdisc\.service'; then
+        LOG_INFO "rdisc.service not found, exiting test..."
+        exit 255
+    fi
     test_execution rdisc.service
     test_reload rdisc.service
     LOG_INFO "Finish test!"

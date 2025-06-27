@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of keyring-python3 command
 # ############################################
-
+#shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
@@ -30,38 +30,42 @@ function run_test() {
     LOG_INFO "Start to run test."
     mkdir demo
     CHECK_RESULT $?
+    if ! command -v keyring-python3 &> /dev/null; then
+        echo "keyring-python3 command not found, skipping..."
+        exit 255
+    fi
     keyring-python3 --help | grep -E "Usage: keyring|-"
     CHECK_RESULT $?
     keyring-python3 --list-backend | grep "keyring"
     CHECK_RESULT $?
     KEYRING_BACKEND=$(keyring --list-backend | grep -E "keyrings.alt.*priority: 0.5" | awk '{print $1}')
     expect <<EOF
-        spawn keyring-python3 set system username -b $KEYRING_BACKEND
+        spawn keyring-python3 set system username -b "$KEYRING_BACKEND"
         expect "Password for 'username' in 'system':" {send "test3\r"}
         expect eof
 EOF
-    keyring-python3 get system username -b $KEYRING_BACKEND
+    keyring-python3 get system username -b "$KEYRING_BACKEND"
     CHECK_RESULT $?
     expect <<EOF
-        spawn keyring-python3 del system username -b $KEYRING_BACKEND
+        spawn keyring-python3 del system username -b "$KEYRING_BACKEND"
         expect " " {send "test3\r"}
         expect eof
 EOF
-    keyring-python3 get system username -b $KEYRING_BACKEND
+    keyring-python3 get system username -b "$KEYRING_BACKEND"
     CHECK_RESULT $? 1
     expect <<EOF
-        spawn keyring-python3 set system username -b $KEYRING_BACKEND -p demo
+        spawn keyring-python3 set system username -b "$KEYRING_BACKEND" -p demo
         expect "Password for 'username' in 'system':" {send "apple3\r"}
         expect eof
 EOF
-    keyring-python3 get system username -b $KEYRING_BACKEND -p demo
+    keyring-python3 get system username -b "$KEYRING_BACKEND" -p demo
     CHECK_RESULT $?
     expect <<EOF
-        spawn keyring-python3 del system username -b $KEYRING_BACKEND -p demo
+        spawn keyring-python3 del system username -b "$KEYRING_BACKEND" -p demo
         expect " " {send "apple3\r"}
         expect eof
 EOF
-    keyring-python3 get system username -b $KEYRING_BACKEND -p demo
+    keyring-python3 get system username -b "$KEYRING_BACKEND" -p demo
     CHECK_RESULT $? 1
     LOG_INFO "End of the test."
 }
@@ -70,8 +74,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf demo
     pip3 uninstall keyrings.alt -y
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

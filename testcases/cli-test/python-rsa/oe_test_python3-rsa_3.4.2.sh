@@ -29,6 +29,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     openssl genrsa -out myprivatekey.pem 512
     CHECK_RESULT $?
+    if ! command -v pyrsa-priv2pub-3 &> /dev/null;then
+            echo"pyrsa-priv2pub-3 command not found,skipping..."
+            exit 255
+    fi
     pyrsa-priv2pub-3 -i myprivatekey.pem -o mypublicekey.pem && ls mypublicekey.pem
     CHECK_RESULT $?
     pyrsa-keygen-3 --pubout=publickey.pem -o privatekey.pem 1024 && ls privatekey.pem

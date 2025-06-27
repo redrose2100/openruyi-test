@@ -56,7 +56,7 @@ function run_test() {
     P_SSH_CMD --cmd  "ifconfig ${NODE2_NIC} | grep netmask >/tmp/right_mask.txt" --node 2
     CHECK_RESULT $?
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/right_mask.txt /tmp "${NODE2_PASSWORD}"
-    P_SSH_CMD --cmd  "ip -6 route show dev ${NODE1_NIC} | head -n 1 | awk '{print $1}'>/tmp/right6_mask.txt" --node 2
+    P_SSH_CMD --cmd  "ip -6 route show dev ${NODE1_NIC} | head -n 1 | awk '{print \$1}'>/tmp/right6_mask.txt" --node 2
     CHECK_RESULT $?
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/right6_mask.txt /tmp "${NODE2_PASSWORD}"
     right_mask=$(awk '{print $4}' /tmp/right_mask.txt)

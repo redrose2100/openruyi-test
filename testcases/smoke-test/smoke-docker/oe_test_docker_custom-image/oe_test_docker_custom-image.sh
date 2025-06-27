@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   add case docker_custom-image
 # ############################################
-
+#shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
@@ -29,7 +29,7 @@ RUN touch test
 EOF
     else
     cat > Dockerfile << EOF
-FROM centos:latest
+FROM registry.cn-hangzhou.aliyuncs.com/acs/centos:latest
 RUN touch test
 EOF
     fi
