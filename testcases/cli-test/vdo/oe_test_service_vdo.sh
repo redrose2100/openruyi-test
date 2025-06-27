@@ -16,12 +16,19 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test vdo.service restart
 # #############################################
+# shellcheck disable=SC1091
 
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL vdo
+    if rpm -ql vdo | grep -q "vdo.service"; then
+        LOG_INFO "vdo.service exists"
+    else
+        LOG_INFO "vdo.service is not exist"
+        exit 255
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
