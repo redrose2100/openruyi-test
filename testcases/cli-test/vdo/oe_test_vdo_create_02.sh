@@ -9,7 +9,6 @@
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-
 # #############################################
 # @Author    :   cuikeyu
 # @Contact   :   cky2536184321@163.com
@@ -17,22 +16,18 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test vdo
 # #############################################
-
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
-
+# shellcheck disable=SC1091
+source "common/common_vdo.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "vdo"
-    dd if=/dev/zero of=vdo_test_device bs=1M count=10240
-    losetup /dev/loop0 vdo_test_device
-    vdo create -n my_vdo_volume --device /dev/loop0
+    deploy_env
     LOG_INFO "End to prepare the test environment"
 }
 
 function run_test() {
     LOG_INFO "Start to run testcase:oe_test_vdo_create_02."
-    vdo remove -n my_vdo_volume 
+    vdo remove -n my_vdo_volume
 
     vdo create -n my_vdo_volume --device /dev/loop0 --deduplication enabled | grep "Creating"
     CHECK_RESULT $? 0 0 "Check vdo create --deduplication failed"
@@ -41,7 +36,7 @@ function run_test() {
     vdo create -n my_vdo_volume --device /dev/loop0 --emulate512 enabled | grep "Creating"
     CHECK_RESULT $? 0 0 "Check vdo create --emulate512 failed"
     vdo remove -n my_vdo_volume
-    
+
     vdo create -n my_vdo_volume --device /dev/loop0 --force | grep "Creating"
     CHECK_RESULT $? 0 0 "Check vdo create --force failed"
     vdo remove -n my_vdo_volume
@@ -62,7 +57,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check vdo create --vdoAckThreads failed"
     vdo remove -n my_vdo_volume
 
-    vdo create -n my_vdo_volume --device /dev/loop0  --vdoBioRotationInterval 64 | grep "Creating"
+    vdo create -n my_vdo_volume --device /dev/loop0 --vdoBioRotationInterval 64 | grep "Creating"
     CHECK_RESULT $? 0 0 "Check vdo create --vdoBioRotationInterval failed"
     vdo remove -n my_vdo_volume
 
@@ -72,17 +67,13 @@ function run_test() {
 
     vdo create -n my_vdo_volume --device /dev/loop0 --vdoCpuThreads 2 | grep "Creating"
     CHECK_RESULT $? 0 0 "Check vdo create --vdoCpuThreads failed"
-    
+
     LOG_INFO "End to run test."
 }
 
-
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    vdo remove -n my_vdo_volume
-    losetup -d /dev/loop0
-    rm vdo_test_device -f
-    DNF_REMOVE "$@"
+    clear_env
     LOG_INFO "End to restore the test environment."
 }
 

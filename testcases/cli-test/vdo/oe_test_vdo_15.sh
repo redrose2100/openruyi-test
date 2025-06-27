@@ -9,7 +9,6 @@
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-
 # #############################################
 # @Author    :   cuikeyu
 # @Contact   :   cky2536184321@163.com
@@ -19,7 +18,6 @@
 # #############################################
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
-
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -44,8 +42,12 @@ function run_test() {
     vdoformat /dev/loop0 --slab-bits=19 --force | grep "defaulted"
     CHECK_RESULT $? 0 0 "Check vdoformat --slab-bits failed"
 
-    vdoformat /dev/loop0 --uds-checkpoint-frequency=10 --force
-    CHECK_RESULT $? 0 0 "Check vdoformat --uds-checkpoint-frequency failed"
+    if vdoformat --help | grep "uds-checkpoint-frequency"; then
+        vdoformat /dev/loop0 --uds-checkpoint-frequency=10 --force
+        CHECK_RESULT $? 0 0 "Check vdoformat --uds-checkpoint-frequency failed"
+    else
+        LOG_INFO "vdoformat --uds-checkpoint-frequency option is not exist"
+    fi
 
     vdoformat /dev/loop0 --uds-memory-size=0.5 --force | grep "Logical blocks"
     CHECK_RESULT $? 0 0 "Check vdoformat --uds-memory-size failed"
@@ -55,10 +57,9 @@ function run_test() {
 
     vdoformat --version | grep "vdoformat version"
     CHECK_RESULT $? 0 0 "Check vdoformat --version -a failed"
-    
+
     LOG_INFO "End to run test."
 }
-
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
