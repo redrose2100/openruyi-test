@@ -30,10 +30,10 @@ function run_test() {
     busctl status | grep "BusAddress"
     CHECK_RESULT $? 0 0 'busctl status failed.'
 
-    busctl tree $bus | grep "└─/org"
+    busctl tree $bus | grep -E "└─ */org"
     CHECK_RESULT $? 0 0 'busctl tree failed.'
 
-    busctl tree -q | grep "└─/org"
+    busctl tree -q | grep -E "└─ */org"
     CHECK_RESULT $? 0 0 'busctl tree failed.'
 
 }
