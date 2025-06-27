@@ -1049,6 +1049,9 @@
 	},
 	{
 	    "name": "oe_test_ab_4"
+	},
+	{
+	    "name": "oe_test_zcmp"
 	}
     ]
 }
