@@ -19,7 +19,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function postgresql_install() {
-    DNF_INSTALL "postgresql postgresql-server postgresql-private-devel postgresql-contrib"
+    DNF_INSTALL "postgresql postgresql-server postgresql-server-devel postgresql-private-devel postgresql-contrib"
     rm -rf /tmp/.s.PGSQL*
     /usr/bin/postgresql-setup --initdb
     sed -i 's/ident/trust/g' /var/lib/pgsql/data/pg_hba.conf
@@ -30,7 +30,7 @@ function postgresql_install() {
     send "createdb testdb\n"
     expect "postgres"
     send "psql testdb\n"
-    expect "postgres"
+    expect "testdb"
     send "create table test (id int, val numeric);\n"
     expect "CREATE TABLE"
     send "create index on test(id);\n"
@@ -45,7 +45,7 @@ function postgresql_install() {
     expect "INSERT 0 1"
     send "CREATE SCHEMA myschema;\n"
     expect "CREATE SCHEMA"
-    send "create table myschema.test (id int, val numeric) with oids;\n"
+    send "create table myschema.test (id int, val numeric);\n"
     expect "CREATE TABLE"
     send "insert into myschema.test select generate_series(1,100),random();\n"
     expect "INSERT 0 100"

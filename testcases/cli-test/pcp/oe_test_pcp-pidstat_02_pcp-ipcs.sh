@@ -22,9 +22,7 @@ source "common/common_pcp-system-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    systemctl restart pmlogger
-    SLEEP_WAIT 60
-    archive_data=$(pcp -h "${NODE1_IPV4}" | grep 'primary logger:' | awk -F: '{print $NF}'  | awk -F " " '{print $1}')
+    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}'  | awk -F " " '{print $1}')
     OLD_PATH=$PATH
     export PATH=/usr/libexec/pcp/bin/:$PATH
     LOG_INFO "End to prepare the test environment."
