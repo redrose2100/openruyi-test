@@ -190,6 +190,9 @@
             "name": "oe_test_mlx5_core"
         },
         {
+            "name": "oe_test_mlxfw"
+        },
+        {
             "name": "oe_test_hinic3"
 	},
 	{
