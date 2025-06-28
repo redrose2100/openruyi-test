@@ -39,11 +39,11 @@ function run_test()
 		    SLEEP_WAIT 1
 	    done
 	    CHECK_RESULT $? 0 0 "search failed"
-	    grep -iE "Audit daemon is low on disk space for logging" /var/log/messages
+	    grep -iE "Audit daemon log file is larger than max size" /var/log/messages
 	    CHECK_RESULT $? 0 0 "grep first failed"
     else
 	    create_logfile
-	    grep -iE "Audit daemon is low on disk space for logging" /var/log/messages
+	    grep -iE "Audit daemon log file is larger than max size" /var/log/messages
 	    CHECK_RESULT $? 0 0 "grep second failed"
 	    search_log test
 	    CHECK_RESULT $? 0 0 "search second failed"
