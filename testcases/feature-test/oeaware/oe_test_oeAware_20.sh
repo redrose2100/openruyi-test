@@ -30,7 +30,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Error: libthread_collector.so plugin remove"
     oeawarectl -e thread_scenario | grep "Instance enabled successfully"
     CHECK_RESULT $? 0 0 "Error: thread_scenario plugin enable"
-    oeawarectl -q thread_scenario | grep "thread_scenario(available, running, count: 1)"
+    oeawarectl -q |grep thread_scenario | grep "thread_scenario(available, running, count: 1)"
     CHECK_RESULT $? 0 0 "Error: thread_scenario enabled failed"
     oeawarectl -l libsystem_collector.so | grep "Plugin loaded successfully"
     CHECK_RESULT $? 0 0 "Error: libthread_collector.so plugin load"
