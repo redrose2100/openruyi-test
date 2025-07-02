@@ -30,7 +30,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Error: plugin enable"
     find /usr/lib64/oeAware-plugin/ -name libsystem_collector.so -execdir mv {} {}.bak \;
     find /usr/lib64/oeAware-plugin/ -name libsystem_collector.so -execdir rm {} {} \;
-
+    SLEEP_WAIT 3
     oeawarectl -q | grep "thread_scenario(available, running, count: 1)"
     CHECK_RESULT $? 0 0 "Error: thread_scenario status is wrong"
     oeawarectl -q | grep "thread_collector(available, running, count: 1)"

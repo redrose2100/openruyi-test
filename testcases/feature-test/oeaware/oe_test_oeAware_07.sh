@@ -30,14 +30,14 @@ function run_test() {
     \cp -rf /etc/oeAware/config.yaml /etc/oeAware/config_ori.yaml
     sed -i '/enable_list/a\ - name: libthread_scenario.so' /etc/oeAware/config.yaml
     systemctl restart oeaware
-    SLEEP_WAIT 1
+    SLEEP_WAIT 3
     oeawarectl -q | grep "thread_scenario(available, running, count: 1)"
     CHECK_RESULT $? 0 0 "restart oeaware failed"
 
     \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
     sed -i '/enable_list/a\ - name: libsystem_collector.so\n - name: libthread_scenario.so' /etc/oeAware/config.yaml
     systemctl restart oeaware
-    SLEEP_WAIT 1
+    SLEEP_WAIT 3
     oeawarectl -q | grep "thread_scenario(available, running, count: 1)"
     CHECK_RESULT $? 0 0 "restart oeaware failed"
     oeawarectl -q | grep -Pz "thread_collector\(available, running, count: 1\)[\S\s]*kernel_config\(available, close, count: 1\)[\S\s]*command_collector\(available, running, count: 1\)"
@@ -46,14 +46,14 @@ function run_test() {
     \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
     sed -i '/enable_list/a\ - name: libsystem_collector.so\n   instances:\n      - thread_collector\n      - command_collector ' /etc/oeAware/config.yaml
     systemctl restart oeaware
-    SLEEP_WAIT 1
+    SLEEP_WAIT 3
     oeawarectl -q | grep -Pz "thread_collector\(available, running, count: 1\)[\S\s]*kernel_config\(available, close, count: 0\)[\S\s]*command_collector\(available, running, count: 1\)"
     CHECK_RESULT $? 0 0 "restart oeaware failed"
     
     \cp -rf /etc/oeAware/config_ori.yaml /etc/oeAware/config.yaml
     sed -i '/enable_list/a\ - name: libsystem_collector.so\n   instances:\n      - thread_collector\n      - command_collector\n      - kernel_config' /etc/oeAware/config.yaml
     systemctl restart oeaware
-    SLEEP_WAIT 1
+    SLEEP_WAIT 3
     oeawarectl -q | grep -Pz "thread_collector\(available, running, count: 1\)[\S\s]*kernel_config\(available, close, count: 1\)[\S\s]*command_collector\(available, running, count: 1\)"
     CHECK_RESULT $? 0 0 "restart oeaware failed"
     LOG_INFO "End to run test."
