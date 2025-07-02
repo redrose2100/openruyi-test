@@ -17,9 +17,11 @@
 # @Desc      :   Date command line test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     time=$(date "+%Y-%m-%d %H:%M:%S")
     LOG_INFO "End to prepare the test environment."
 }
@@ -45,6 +47,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     date -s "$time"
     hwclock -w
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish restoring the test environment."
 }
 

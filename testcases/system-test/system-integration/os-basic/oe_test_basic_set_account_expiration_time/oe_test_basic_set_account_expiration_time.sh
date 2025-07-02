@@ -17,10 +17,12 @@
 # @Desc      :   account_expiration time
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     grep -w testuser /etc/passwd || useradd testuser
     LOG_INFO "End to prepare the test environment."
 }
@@ -39,8 +41,8 @@ function run_test() {
     CHECK_RESULT $?
     usermod -e 04/01/2023 testuser
     CHECK_RESULT $?
-    expire_date=$(date -d"+4 day" "+%b %d, %Y") 
-    sudo chage -l testuser | grep "Password expires" | grep "$expire_date"   
+    expire_date=$(date -d"+4 day" "+%b %d, %Y")
+    sudo chage -l testuser | grep "Password expires" | grep "$expire_date"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
@@ -48,8 +50,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to clean the test environment."
     userdel -rf testuser
+    export LANG=${OLD_LANG}
     LOG_INFO "Start to clean the test environment."
 }
-
 
 main "$@"
