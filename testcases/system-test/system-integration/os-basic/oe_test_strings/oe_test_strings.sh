@@ -19,13 +19,13 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL binutils
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start testing..."
-    strings /bin/ls |grep -i libc
+    strings /bin/ls | grep -i libc
     CHECK_RESULT $? 0 0 "gzexe function error"
     strings -f /usr/bin/top | grep libc
     CHECK_RESULT $? 0 0 "gzexe function error"
@@ -34,6 +34,7 @@ function run_test()
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

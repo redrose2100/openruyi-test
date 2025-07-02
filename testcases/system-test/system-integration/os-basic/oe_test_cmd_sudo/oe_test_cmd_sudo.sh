@@ -17,12 +17,14 @@
 # @Desc      :   Service management common command test -sudo
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     grep "test:" /etc/passwd && userdel -rf test
     useradd test
-    echo ${NODE1_PASSWORD} | passwd test --stdin
+    echo "${NODE1_PASSWORD}" | passwd test --stdin
     cp /etc/sudoers /etc/sudoers.bak
     echo "test  ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers
     LOG_INFO "End to prepare the test environment."
@@ -43,6 +45,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     userdel -rf test
     mv /etc/sudoers.bak /etc/sudoers
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

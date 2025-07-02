@@ -5,7 +5,13 @@
             "name": "oe_test_service_clamav-clamonacc"
         },
         {
+            "name": "oe_test_service_clamonacc"
+        },
+        {
             "name": "oe_test_service_clamav-milter"
+        },
+        {
+            "name": "oe_test_service_clamav-freshclam"
         },
         {
             "name": "oe_test_clamav_clamav-milter"
