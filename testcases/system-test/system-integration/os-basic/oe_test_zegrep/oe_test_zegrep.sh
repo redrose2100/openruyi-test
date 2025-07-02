@@ -21,7 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    cat << EOF > /tmp/testfile.txt
+    DNF_INSTALL zip
+    cat <<EOF >/tmp/testfile.txt
 line 1
 Line 2
 LIne 3
@@ -32,23 +33,21 @@ EOF
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start testing..."
     cd /tmp || exit
     line=$(zegrep -i "LINE" testfile.zip | wc -l)
     CHECK_RESULT "${line}" 5 0 "zegrep function error"
-    zegrep -i "line" testfile.zip 
+    zegrep -i "line" testfile.zip
     CHECK_RESULT $? 0 0 "zegrep function error"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf /tmp/testfile.txt
-    rm -rf /tmp/testfile.zip
+    rm -rf /tmp/testfile.txt /tmp/testfile.zip
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
-

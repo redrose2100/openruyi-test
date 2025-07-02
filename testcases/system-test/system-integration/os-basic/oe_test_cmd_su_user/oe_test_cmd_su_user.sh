@@ -17,9 +17,11 @@
 # @Desc      :   Service Management Common Command Test -su
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     grep "testuser:" /etc/passwd && userdel -rf testuser
     groupdel testuser
     LOG_INFO "End to prepare the test environment."
@@ -28,7 +30,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     useradd testuser
-    echo $NODE1_PASSWORD | passwd testuser --stdin
+    echo "$NODE1_PASSWORD" | passwd testuser --stdin
     su - testuser -c "whoami | grep testuser"
     CHECK_RESULT $?
 
@@ -45,6 +47,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     userdel -r testuser
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

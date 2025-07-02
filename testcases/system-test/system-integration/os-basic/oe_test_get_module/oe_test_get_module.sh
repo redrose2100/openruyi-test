@@ -17,30 +17,31 @@
 # ############################################
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
-function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
-    LOG_INFO "End to prepare the test environment."
-}
-
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start to run test."
-    modinfo kvm|grep sig
-    CHECK_RESULT $? 0 1 "modinfo function error"
-    modinfo kvm|grep parm
+    if [[ "${NODE1_FRAME}" == "aarch64" ]]; then
+        modinfo kvm | grep sig
+        CHECK_RESULT $? 0 1 "modinfo function error"
+        if [ "$(rpm -qa kmod | awk -F- '{print $2}')" -ge "30" ]; then
+            modinfo drm | grep sig
+            CHECK_RESULT $? 0 0 "modinfo function error"
+        else
+            modinfo drm | grep sig
+            CHECK_RESULT $? 0 1 "modinfo function error"
+        fi
+    else
+        modinfo kvm | grep sig
+        CHECK_RESULT $? 0 0 "modinfo function error"
+        modinfo drm | grep sig
+        CHECK_RESULT $? 0 0 "modinfo function error"
+    fi
+    modinfo kvm | grep parm
     CHECK_RESULT $? 0 0 "modinfo function error"
-    modinfo drm|grep sig
-    CHECK_RESULT $? 0 1 "modinfo function error"
-    modinfo drm|grep parm
+    modinfo drm | grep parm
     CHECK_RESULT $? 0 0 "modinfo function error"
-    modinfo nfnetlink|grep sig
+    modinfo nfnetlink | grep sig
     CHECK_RESULT $? 0 0 "modinfo function error"
     LOG_INFO "End to run test."
-}
-
-function post_test() {
-    LOG_INFO "start environment cleanup."
-    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
