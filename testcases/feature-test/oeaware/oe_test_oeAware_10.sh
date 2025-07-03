@@ -25,7 +25,7 @@ function pre_test() {
     DNF_INSTALL "oeAware-manager numactl"
     if [ "${NODE1_FRAME}" != "aarch64" ]; then
         LOG_INFO "The environment does not support testing"
-        exit 0
+        exit 255
     fi
     LOG_INFO "End to prepare the test environment."
 }
