@@ -17,9 +17,11 @@
 # @Desc      :   Use for Git installation
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL git
     LOG_INFO "End to prepare the test environment."
 }
@@ -59,7 +61,7 @@ function run_test() {
     git status | grep "nothing to commit"
     CHECK_RESULT $?
     git log | grep "added a line of words"
-    CHECK_RESULT $(git log | grep -c commit) 2
+    CHECK_RESULT "$(git log | grep -c commit)" 2
     cd - || exit 1
     LOG_INFO "End to run test."
 }
@@ -67,8 +69,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf test_openEuler
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

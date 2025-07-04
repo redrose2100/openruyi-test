@@ -17,7 +17,7 @@
 # @Desc      :   Modify the existing Tunde configuration file
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function config_params() {
     LOG_INFO "Start to config the test environment."
     old_profile=$(tuned-adm active | awk '{print $4}')
@@ -41,6 +41,11 @@ radeon_powersave=dpm-balanced, auto" >/etc/tuned/my-profile_new/tuned.conf
     test -d /etc/tuned/modified-profile || mkdir /etc/tuned/modified-profile
     echo "[main]
 include=my-profile_new" >/etc/tuned/modified-profile/tuned.conf
+    if rpm -qa tuned | grep 2.24.1; then
+        test -d /etc/tuned/profiles || mkdir /etc/tuned/profiles
+        mv -f /etc/tuned/modified-profile /etc/tuned/profiles
+        mv -f /etc/tuned/my-profile_new /etc/tuned/profiles
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -57,10 +62,14 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf /etc/tuned/modified-profile /etc/tuned/my-profile_new 
+    if rpm -qa tuned | grep 2.24.1; then
+        rm -rf /etc/tuned/profiles
+    else
+        rm -rf /etc/tuned/modified-profile /etc/tuned/my-profile_new
+    fi
     tuned-adm profile "$old_profile"
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
