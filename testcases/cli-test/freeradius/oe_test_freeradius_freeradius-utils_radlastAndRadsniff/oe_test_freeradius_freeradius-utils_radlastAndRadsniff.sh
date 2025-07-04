@@ -16,7 +16,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   freeradius-utils command parameter automation use case
 ####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -31,15 +31,15 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    [ $(radlast | grep -c "oot") -gt $(radlast -t "00:00" | grep -c "oot") ]
+    [ "$(radlast | grep -c "oot")" -ge "$(radlast -t "00:00" | grep -c "oot")" ]
     CHECK_RESULT $? 0 0 "radlast -t execution failed."
     radlast -x | grep -e "runlevel" -e "shutdown"
     CHECK_RESULT $? 0 0 "radlast -x execution failed."
     radlast -h | grep "\-a"
     CHECK_RESULT $? 0 0 "radlast -h execution failed."
-    radlast -V | grep $(last -V | awk '{print $NF}')
+    radlast -V | grep "$(last -V | awk '{print $NF}')"
     CHECK_RESULT $? 0 0 "radlast -V execution failed."
-    radsniff -a | grep $(ifconfig | sed -n '1p' | awk -F ':' '{print $1}')
+    radsniff -a | grep "$(ifconfig | sed -n '1p' | awk -F ':' '{print $1}')"
     CHECK_RESULT $? 0 0 "radsniff -a execution failed."
     systemctl start radiusd
     SLEEP_WAIT 1
@@ -60,7 +60,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     systemctl stop radiusd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /etc/raddb
     rm -rf /var/log/radius
     rm -rf /tmp/test
