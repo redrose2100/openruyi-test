@@ -20,22 +20,21 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start environmental preparation."
+	LOG_INFO "Start environmental preparation."
 	grep Storage /etc/systemd/journald.conf | grep -E "Storage=auto|Storage=persistent" || exit 1
-	if [ -d /run/log/journal ];then
+	if [ -d /run/log/journal ]; then
 		journallog_path="/run/log/journal"
 	else
 		journallog_path="/var/log/journal"
 	fi
-    LOG_INFO "End of environmental preparation!"
+	LOG_INFO "End of environmental preparation!"
 }
-
 
 function run_test() {
 	LOG_INFO "Start executing testcase."
 	folder=$(find "${journallog_path}/" -mindepth 1 -maxdepth 1 -type d | head -n 1)
 	cp -r "${folder}" "${folder}bak"
-	rm -rf "${journallog_path:?}/${folder:?}"
+	rm -rf "${folder:?}"
 	systemctl restart systemd-journald.service
 	if [ ! -d "${folder}" ]; then
 		((exec_result++))

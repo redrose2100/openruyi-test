@@ -17,7 +17,7 @@
 # @Desc      :   Restart and stop the OpenSSH service repeatedly
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "openssh-server openssh-clients openssh"
@@ -26,12 +26,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for i in $(seq 1 10); do
+    for _ in $(seq 1 10); do
         systemctl enable sshd
         systemctl start sshd
         CHECK_RESULT $?
         systemctl status sshd | grep running
         CHECK_RESULT $?
+        SLEEP_WAIT 2
         systemctl restart sshd
         CHECK_RESULT $?
         systemctl stop sshd
@@ -51,4 +52,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

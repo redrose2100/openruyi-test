@@ -16,10 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test nmcli device
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/net_lib.sh
 function config_params() {
     LOG_INFO "Start to config params of the case."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     get_free_eth 1
     test_eth=${LOCAL_ETH[0]}
     LOG_INFO "End to config params of the case."
@@ -29,19 +31,25 @@ function run_test() {
     LOG_INFO "Start to run test."
     nmcli device help 2>&1 | grep Usage
     CHECK_RESULT $?
-    nmcli dev status | grep ${test_eth}
+    nmcli dev status | grep "${test_eth}"
     CHECK_RESULT $?
-    nmcli d show | grep ${test_eth}
+    nmcli d show | grep "${test_eth}"
     CHECK_RESULT $?
-    nmcli d show ${test_eth} | grep ${test_eth}
+    nmcli d show "${test_eth}" | grep "${test_eth}"
     CHECK_RESULT $?
-    nmcli -f DEVICE,TYPE device | grep ${test_eth} | grep ethernet
+    nmcli -f DEVICE,TYPE device | grep "${test_eth}" | grep ethernet
     CHECK_RESULT $?
-    nmcli -t d show ${test_eth} | grep ${test_eth}
+    nmcli -t d show "${test_eth}" | grep "${test_eth}"
     CHECK_RESULT $?
-    nmcli -p d show ${test_eth} | grep "Device details"
+    nmcli -p d show "${test_eth}" | grep "Device details"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    export LANG=${OLD_LANG}
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
