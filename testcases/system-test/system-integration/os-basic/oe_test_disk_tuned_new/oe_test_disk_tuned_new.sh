@@ -17,12 +17,12 @@
 # @Desc      :   Create a new tuned profile
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL tuned
     systemctl enable --now tuned
-    mkdir /etc/tuned/my-profile
+    mkdir -p /etc/tuned/my-profile
     old_profile=$(tuned-adm active | awk '{print $4}')
     echo "[main]
 summary=General non-specialized tuned profile
@@ -33,11 +33,15 @@ energy_perf_bias=normal
 timeout=10
 [video]
 radeon_powersave=dpm-balanced, auto" >/etc/tuned/my-profile/tuned.conf
+    if rpm -qa tuned | grep 2.24.1; then
+        test -d /etc/tuned/profiles || mkdir -p /etc/tuned/profiles
+        mv -f /etc/tuned/my-profile /etc/tuned/profiles
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."     
+    LOG_INFO "Start to run test."
     tuned-adm profile my-profile
     CHECK_RESULT $?
     tuned-adm active | grep "my-profile"
@@ -51,9 +55,13 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf tuned_log /etc/tuned
+    if rpm -qa tuned | grep 2.24.1; then
+        rm -rf /etc/tuned/profiles
+    else
+        rm -rf tuned_log /etc/tuned/my-profile
+    fi
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

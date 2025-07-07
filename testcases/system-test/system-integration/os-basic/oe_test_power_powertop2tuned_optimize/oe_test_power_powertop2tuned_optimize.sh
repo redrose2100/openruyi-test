@@ -17,10 +17,11 @@
 # @Desc      :   Optimizing power consumption using the powertop2tuned utility
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "powertop tuned"
+    old_profile=$(tuned-adm active | awk '{print $4}')
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -28,6 +29,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     powertop2tuned new_profile_name --force
     CHECK_RESULT $?
+    if rpm -qa tuned | grep 2.24.1; then
+        test -d /etc/tuned/profiles || mkdir -p /etc/tuned/profiles
+        mv -f /etc/tuned/new_profile_name /etc/tuned/profiles
+    fi
     tuned-adm profile new_profile_name
     CHECK_RESULT $?
     LOG_INFO "End to run test."
@@ -35,8 +40,14 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    if rpm -qa tuned | grep 2.24.1; then
+        rm -rf /etc/tuned/profiles
+    else
+        rm -rf /etc/tuned/new_profile_name
+    fi
+    tuned-adm profile "$old_profile"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
