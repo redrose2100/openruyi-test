@@ -16,7 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Track and query the status of lvmsnap volumes
 # ############################################
+# shellcheck disable=SC1090,SC2154
+
 source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL lvm2

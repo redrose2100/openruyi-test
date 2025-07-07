@@ -16,27 +16,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-cat
 # ############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    if [ "$(uname -m)" == "riscv64" ]; then
-        grep "root:x:0:0:Super User:/root:/bin/bash" /etc/passwd
-        CHECK_RESULT $?
-        cat -n /etc/passwd | grep "root:x:0:0:Super User:/root:/bin/bash"
-        CHECK_RESULT $?
-    else
-    	grep "root:x:0:0:root:/root:/bin/bash" /etc/passwd
-    	CHECK_RESULT $?
-    	cat -n /etc/passwd | grep "root:x:0:0:root:/root:/bin/bash"
-    	CHECK_RESULT $?
-    fi
-
+    grep -E "root:x:0:0:Super User:/root:/bin/bash|root:x:0:0:root:/root:/bin/bash" /etc/passwd
+    CHECK_RESULT $?
+    cat -n /etc/passwd | grep -E "root:x:0:0:Super User:/root:/bin/bash|root:x:0:0:root:/root:/bin/bash"
+    CHECK_RESULT $?
     num01="$(cat -n /etc/passwd | tail -n 1 | awk '{print $1}')"
     _=$((num01 + 10)) >/dev/null
     CHECK_RESULT $?
 
-    cat --help | grep -i "Usage"
+    cat --help | grep -i "Usage\|用法"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }

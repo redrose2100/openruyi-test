@@ -16,33 +16,36 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-dd
 # ############################################
+# shellcheck disable=SC1091,SC2154
+
 source ../common/storage_disk_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
-    echo -e "n\np\n1\n\n+1G\np\nw\n" | fdisk /dev/${local_disk}
-    mkfs.ext4 -F /dev/${local_disk}1
-    mount /dev/${local_disk}1 /mnt
+    echo -e "n\np\n1\n\n+1G\np\nw\n" | fdisk /dev/"${local_disk}"
+    mkfs.ext4 -F /dev/"${local_disk}"1
+    mount /dev/"${local_disk}"1 /mnt
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    umount /dev/${local_disk}1
+    umount /dev/"${local_disk}"1
     CHECK_RESULT $?
-    echo "y" | sudo mkfs -t ext3 /dev/${local_disk}1
+    echo "y" | sudo mkfs -t ext3 /dev/"${local_disk}"1
     CHECK_RESULT $?
-    dd if=/dev/zero of=/dev/${local_disk}1 count=1 bs=512
+    dd if=/dev/zero of=/dev/"${local_disk}"1 count=1 bs=512
     CHECK_RESULT $?
-    dd --help | grep -i "Usage"
+    dd --help | grep -i "Usage\|用法"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    echo -e "d\np\nw\n" | fdisk /dev/${local_disk}
+    echo -e "d\np\nw\n" | fdisk /dev/"${local_disk}"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

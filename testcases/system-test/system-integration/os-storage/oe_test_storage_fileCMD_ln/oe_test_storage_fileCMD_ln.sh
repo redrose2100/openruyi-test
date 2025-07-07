@@ -16,7 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-ln
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1090,SC2010
+
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     ln -s Music /home
@@ -27,7 +30,7 @@ function run_test() {
     LOG_INFO "Start executing testcase!"
     ls -l /home | grep Music
     CHECK_RESULT $?
-    ln --help | grep "Usage"
+    ln --help | grep "Usage\|用法"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
@@ -38,4 +41,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
