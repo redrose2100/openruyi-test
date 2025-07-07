@@ -16,7 +16,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   freeradius-utils command parameter automation use case
 ####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -39,6 +39,7 @@ function run_test() {
     echo "Message-Authenticator = 0x00" | radclient -t 0.001 127.0.0.1 status testing123 
     CHECK_RESULT $? 0 0 "radclient -t execution failed."
     replay_times=5
+    SLEEP_WAIT 5
     a=$(echo "Message-Authenticator = 0x00" | radclient -t 0.0000000000000000000000000000000000000000000000000000000001 -r ${replay_times} 127.0.0.1 status testing123 | grep -c "Sent")
     [ "${replay_times}" -eq "${a}" ]
     CHECK_RESULT $? 0 0 "radclient -r execution failed."
@@ -47,7 +48,7 @@ function run_test() {
     echo "testing123" >/tmp/test
     echo "Message-Authenticator = 0x00" | radclient -S /tmp/test 127.0.0.1 status | grep "Received Access-Accept"
     CHECK_RESULT $? 0 0 "radclient -S execution failed."
-    radclient -v | grep $(rpm -q freeradius-utils | awk -F '-' '{print $3}')
+    radclient -v | grep "$(rpm -q freeradius-utils | awk -F '-' '{print $3}')"
     CHECK_RESULT $? 0 0 "radclient -v execution failed."
     echo "Message-Authenticator = 0x00" | radclient -x 127.0.0.1 status testing123 | grep "Message-Authenticator"
     CHECK_RESULT $? 0 0 "radclient -x execution failed."
@@ -61,7 +62,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     systemctl stop radiusd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /etc/raddb
     rm -rf /var/log/radius
     rm -rf /tmp/test

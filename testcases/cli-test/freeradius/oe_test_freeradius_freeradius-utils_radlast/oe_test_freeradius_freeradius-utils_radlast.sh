@@ -50,8 +50,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "radlast -n execution failed."
     radlast -R | awk '{print $3}' | grep -e "Mon" -e "Tue" -e "Wed" -e "Sat" -e "Sun" -e "Thu" -e "Sat" -e "Fri"
     CHECK_RESULT $? 0 0 "radlast -R execution failed."
-    a=$(radlast -s "00:00" | grep "logged in" | sed -n '$p' | awk '{print $(NF-3)}')
-    b=$(radlast -s "00:00" | grep "logged in" | sed -n '$p' | awk '{print $(NF-3)}' | awk -F ':' '{print $1":"$2+1}')
+    a=$(radlast | grep "logged in" | sed -n '$p' | awk '{print $(NF-3)}')
+    b=$(radlast | grep "logged in" | sed -n '$p' | awk '{print $(NF-3)}' | awk -F ':' '{print $1":"$2+1}')
     [ "$(radlast -s "$b" | grep "logged in" | sed -n '$p' | awk '{print $(NF-3)}')" != "$a" ]
     CHECK_RESULT $? 0 0 "radlast -s execution failed."
 

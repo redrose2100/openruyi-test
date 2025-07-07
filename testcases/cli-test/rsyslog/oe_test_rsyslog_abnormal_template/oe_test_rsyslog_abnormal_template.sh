@@ -59,7 +59,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
     SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    rm -rf /etc/rsyslog.d/server.conf test.conf
+    rm -rf /etc/rsyslog.d/server.conf test.conf client.conf
     systemctl start firewalld
     systemctl restart rsyslog
     LOG_INFO "End to restore the test environment."

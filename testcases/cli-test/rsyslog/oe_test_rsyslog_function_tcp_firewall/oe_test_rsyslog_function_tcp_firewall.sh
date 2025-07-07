@@ -15,15 +15,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Open the firewall, support TCP protocol
 # ############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2086
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "net-tools"
     sed -i '/22/i\-A INPUT -p tcp -m state --state NEW -m tcp --dport 514 -j ACCEPT' /etc/sysconfig/iptables
     systemctl restart iptables
-    SSH_CMD "systemctl start iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "systemctl start iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -42,9 +42,9 @@ EOF
     echo  'local6.* @@${NODE1_IPV4}' > /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
     logger -t tcp -p local6.err "tcptest$time"
-    " ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
-    SLEEP_WAIT 20
+    SLEEP_WAIT 30
     grep "tcptest$time" /var/log/messages
     CHECK_RESULT $?
     LOG_INFO "End to run test."
@@ -52,11 +52,11 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     sed -i "/-A INPUT -p tcp -m state --state NEW -m tcp --dport 514 -j ACCEPT/d" /etc/sysconfig/iptables
     CHECK_RESULT $?
     systemctl restart iptables
-    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -rf /etc/rsyslog.d/server.conf
     systemctl restart rsyslog
     LOG_INFO "End to restore the test environment."
