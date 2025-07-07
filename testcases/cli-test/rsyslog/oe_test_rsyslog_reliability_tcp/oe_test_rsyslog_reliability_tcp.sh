@@ -15,8 +15,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Configure TCP forwarding, server side failure, after recovery, the message normal forwarding
 # ############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2086
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -34,8 +34,8 @@ EOF
     echo  'local6.* @@${NODE1_IPV4}' > /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
     logger -t tcp -p local6.err "tcptest$time"
-    " ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    SLEEP_WAIT 20
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SLEEP_WAIT 30
     grep -a "tcptest$time" /var/log/messages
     LOG_INFO "End to prepare the test environment."
 }
@@ -43,14 +43,16 @@ EOF
 function run_test() {
     LOG_INFO "Start to run test."
     systemctl start iptables
+    iptables -I INPUT -p tcp --dport 514 -j DROP
     time=$(date +%s%N | cut -c 9-13)
-    SSH_CMD "logger -t tcp -p local6.err "tcptest$time"" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "logger -t tcp -p local6.err "tcptest$time"" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
-    SLEEP_WAIT 20
+    SLEEP_WAIT 30
     grep "tcptest$time" /var/log/messages
     CHECK_RESULT $? 1
+    iptables -D INPUT -p tcp --dport 514 -j DROP
     systemctl stop iptables
-    SLEEP_WAIT 20
+    SLEEP_WAIT 30
     grep "tcptest$time" /var/log/messages
     CHECK_RESULT $?
     LOG_INFO "End to run test."
@@ -58,12 +60,12 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     SSH_CMD "
     rm -rf /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
     systemctl start iptables
-    " ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -rf /etc/rsyslog.d/server.conf
     systemctl restart rsyslog
     systemctl start iptables

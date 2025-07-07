@@ -16,7 +16,9 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   freeradius command parameter automation use case
 ####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+# shellcheck disable=SC2009
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -27,50 +29,53 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     radiusd -d /etc/raddb
-    ps -ef | grep "radiusd -d" | grep -v grep
+    pgrep -f "radiusd -d" | grep -v grep
     CHECK_RESULT $? 0 0 "radiusd -d execution failed."
-    kill -9 $(pgrep -f "radiusd -d")
+    kill -9 "$(pgrep -f "radiusd -d")"
     radiusd -D /usr/share/freeradius
-    ps -ef | grep "radiusd -D" | grep -v grep
+    pgrep -f "radiusd -D" | grep -v grep
     CHECK_RESULT $? 0 0 "radiusd -D execution failed."
-    kill -9 $(pgrep -f "radiusd -D")
+    kill -9 "$(pgrep -f "radiusd -D")"
     radiusd -f &
-    ps -ef | grep "radiusd -f" | grep -v grep
+    SLEEP_WAIT 2
+    pgrep -f "radiusd -f" | grep -v grep
     CHECK_RESULT $? 0 0 "radiusd -f execution failed."
-    kill -9 $(pgrep -f "radiusd -f")
+    kill -9 "$(pgrep -f "radiusd -f")"
     radiusd -h | grep -i "usage"
     CHECK_RESULT $? 0 0 "radiusd -h execution failed."
     rdport=$(GET_FREE_PORT "$NODE1_IPV4")
     radiusd -i "$NODE1_IPV4" -p "${rdport}"
-    ps -ef | grep "radiusd -i" | grep -v grep
+    pgrep -f "radiusd -i" | grep -v grep
     CHECK_RESULT $? 0 0 "radiusd -i -p execution failed."
-    kill -9 $(pgrep -f "radiusd -i")
+    kill -9 "$(pgrep -f "radiusd -i")"
     radiusd -l /tmp/test.log
-    ps -ef | grep "radiusd -l" | grep -v grep && [ -s /tmp/test.log ]
+    pgrep -f "radiusd -l" | grep -v grep && [ -s /tmp/test.log ]
     CHECK_RESULT $? 0 0 "radiusd -l execution failed."
-    kill -9 $(pgrep -f "radiusd -l")
+    kill -9 "$(pgrep -f "radiusd -l")"
     cp /etc/raddb/radiusd.conf /etc/raddb/test.conf
     radiusd -n test
     SLEEP_WAIT 5
-    ps -ef | grep "radiusd -n" | grep -v grep
+    pgrep -f "radiusd -n" | grep -v grep
     CHECK_RESULT $? 0 0 "radiusd -n execution failed."
-    kill -9 $(pgrep -f "radiusd -n")
+    kill -9 "$(pgrep -f "radiusd -n")"
     radiusd -P
     result1=$(cat /var/run/radiusd/radiusd.pid)
-    result2=$(ps -ef | grep "radiusd -P" | grep -v grep | awk '{print $2}')
+    SLEEP_WAIT 5
+    result2=$(ps -ef |grep "radiusd -P" | grep -v grep | awk '{print $2}')
+    echo "$result2"
     [ "${result1}" -eq "${result2}" ]
     CHECK_RESULT $? 0 0 "radiusd -P execution failed."
-    kill -9 "${result1}"
+    kill -9 "${result2}"
     radiusd -s &
     [ "$(ps -ef | grep "radiusd -s" | grep -v grep | awk '{print $3}')" -ne 1 ]
     CHECK_RESULT $? 0 0 "radiusd -s execution failed."
-    kill -9 $(pgrep -f "radiusd -s")
+    kill -9 "$(pgrep -f "radiusd -s")"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /etc/raddb
     rm -rf /var/log/radius
     rm -rf /tmp/test.log

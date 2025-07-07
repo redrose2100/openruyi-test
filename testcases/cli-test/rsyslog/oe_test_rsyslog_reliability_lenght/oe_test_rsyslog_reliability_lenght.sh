@@ -16,7 +16,8 @@
 # @Desc      :   The default message length is 2k, exceeding the message length will be discarded
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2012,SC2086
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -31,7 +32,7 @@ EOF
     SSH_CMD "
     systemctl stop iptables && echo 'local6.* @@${NODE1_IPV4}' > /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
-    " ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     time=$(date +%s%N | cut -c 9-13)
     string=$(head -c 1536 /dev/urandom | od -A n -t x | tr -d ' ' | sed ':a;N;s/\n/ /g;ta')
     LOG_INFO "End to prepare the test environment."
@@ -39,20 +40,22 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    SSH_CMD "logger -t tcp -p local6.err '$time$string'" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "logger -t tcp -p local6.err "$time$string"" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
-    SLEEP_WAIT 20
+    SLEEP_WAIT 30
     grep "tcp\[" /var/log/messages | grep "$time" >test.txt
+    CHECK_RESULT $?
     size=$(ls -l "test.txt" | awk '{print $5}')
-    [ $size -gt 0 ] && [ $size -lt 3072 ]
+    CHECK_RESULT $?
+    [ "$size" -gt 0 ] && [ "$size" -lt 3072 ]
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    DNF_REMOVE "$@"
+    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -rf /etc/rsyslog.d/server.conf test.txt
     systemctl restart rsyslog
     systemctl start iptables
