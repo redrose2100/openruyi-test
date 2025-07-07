@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-chmod
 # ############################################
+# shellcheck disable=SC1090,SC2034,SC2010
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     test -d /tmp/test01/test02/test03 || mkdir -p /tmp/test01/test02/test03
     per01=$(ls -l /tmp | grep "test01" | awk -F ' ' '{print $1}')
@@ -31,15 +33,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    echo $per03 | grep "drwxrwxrwx"
+    echo "$per03" | grep "drwxrwxrwx"
     CHECK_RESULT $?
     [ "$per02" == "$per04" ]
     CHECK_RESULT $?
-    echo $per05 | grep "drwxrwxrwx" 
+    echo "$per05" | grep "drwxrwxrwx" 
     CHECK_RESULT $?
-    echo $per06 | grep  "drwxr-xr-x" 
+    echo "$per06" | grep  "drwxr-xr-x" 
     CHECK_RESULT $?
-    chmod --help | grep -i "Usage"
+    chmod --help | grep -i "Usage\|用法"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
@@ -50,4 +52,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

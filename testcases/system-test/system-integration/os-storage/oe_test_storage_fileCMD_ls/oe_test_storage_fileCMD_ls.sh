@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test -ls
 # ############################################
+# shellcheck disable=SC1090,SC2010,SC2012,SC2126
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start pre testcase!"
     num01=$(ls -a | grep "\." | grep -v "\.sh" | wc -l)
@@ -30,9 +32,9 @@ function run_test() {
     CHECK_RESULT $?
     [[ $num02 -eq 9 ]]
     CHECK_RESULT $?
-    ls --help | grep "Usage"
+    ls --help | grep "Usage\|用法"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
-main $@
+main "$@"
