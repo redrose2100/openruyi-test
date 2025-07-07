@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-mkdir
 # ############################################
+# shellcheck disable=SC1090,SC2010
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     mkdir test1 test2
@@ -36,7 +38,7 @@ function run_test() {
     CHECK_RESULT $?
     ls -l | grep "test5" | grep "drwxrwxrwx"
     CHECK_RESULT $?
-    mkdir --help | grep "Usage"
+    mkdir --help | grep "Usage\|用法"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
@@ -47,4 +49,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

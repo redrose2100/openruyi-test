@@ -16,12 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-rmdir
 # ############################################
+# shellcheck disable=SC1090,SC2010
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     current_path=$(
-        cd "$(dirname $0)" || exit 1
+        cd "$(dirname "$0")" || exit 1
         pwd
     )
     cd ~ || exit 1
@@ -39,15 +41,15 @@ function run_test() {
     rmdir -p test1/test2 && ls | grep "test1"
     CHECK_RESULT $? 1
 
-    rmdir --help | grep "Usage"
+    rmdir --help | grep "Usage\|用法"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    cd ${current_path} || exit 1
+    cd "${current_path}" || exit 1
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
