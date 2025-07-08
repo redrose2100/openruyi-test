@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of libguestfs virt-ls command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -31,8 +31,7 @@ function run_test() {
 
     virt-ls --format=qcow2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /etc
     CHECK_RESULT $? 0 0 "Check virt-ls -a failed"
-    device=$( fdisk -l 2> /dev/null | grep "Device" -A 1 | grep -o "/dev/[a-z0-9]*") 
-    virt-ls -m $device -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /
+    virt-ls -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /
     CHECK_RESULT $? 0 0 "Check virt-ls -m failed"
     virt-ls -lR -d openEuler-2003 --checksum=md5 --time-days /etc/ | awk '$6 <= 7'
     CHECK_RESULT $? 0 0 "Check virt-ls -lR failed"
@@ -57,8 +56,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"

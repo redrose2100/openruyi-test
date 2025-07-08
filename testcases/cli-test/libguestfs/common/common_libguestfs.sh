@@ -21,14 +21,20 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function libguestfs_pre_test(){
     OLD_LANG=$LANG
+    setenforce 0
     export LANG=en_US.UTF-8
     libguestfs_pre_test_no_install
-    virt-install --name openEuler-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/openEuler-20.03-LTS-SP3.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole --graphics none
+    virt-install --name openEuler-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/openEuler-20.03-LTS-SP3.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole --graphics none --os-variant unknown
     virsh destroy openEuler-2003
 }
 
 function libguestfs_pre_test_no_install() {
     DNF_INSTALL 'libguestfs virt-manager qemu libvirt openssl-devel numactl numactl-devel libcap-ng-devel traceroute iperf3 python3-paramiko edk2-devel qemu-guest-agent virt-install.noarch'
+    
+    if yum list available guestfs-tools >/dev/null 2>&1; then
+        DNF_INSTALL guestfs-tools
+    fi
+
     if test "$(uname -i)"X == "aarch64"X; then
       LOG_INFO "arm install edk2 pkg"
       DNF_INSTALL edk2-aarch64.noarch
