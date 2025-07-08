@@ -21,17 +21,20 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "itstool"
+    if ! rpm -qa itstool | grep "2.0.4"; then
+        exit 255
+    fi
     mkdir out
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    itstool common/translate.xml > out/out-o.pot && cat out/out-o.pot | grep 'content of value0'
+    itstool common/translate.xml >out/out-o.pot && grep 'content of value0' out/out-o.pot
     CHECK_RESULT $? 0 0 "itstool > failed"
-    itstool -j common/IT-join-1.xml common/IT-join-1-cs.mo common/IT-join-1-de.mo > out/out-j.xml && cat out/out-j.xml | grep 'Diese Nachricht'
+    itstool -j common/IT-join-1.xml common/IT-join-1-cs.mo common/IT-join-1-de.mo >out/out-j.xml && grep 'Diese Nachricht' out/out-j.xml
     CHECK_RESULT $? 0 0 "itstool -j failed"
-    itstool --join=common/IT-join-1.xml common/IT-join-1-cs.mo common/IT-join-1-de.mo > out/out-j.xml && cat out/out-j.xml | grep 'Diese Nachricht'
+    itstool --join=common/IT-join-1.xml common/IT-join-1-cs.mo common/IT-join-1-de.mo >out/out-j.xml && grep 'Diese Nachricht' out/out-j.xml
     CHECK_RESULT $? 0 0 "itstool --join failed"
     LOG_INFO "End to run test."
 }
@@ -39,7 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf out
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

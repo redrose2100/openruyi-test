@@ -16,10 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test nmcli configuration vlan
 # ############################################
+# shellcheck disable=SC1091
 
 source ../common/net_lib.sh
 function config_params() {
     LOG_INFO "Start to config params of the case."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     get_free_eth 1
     test_eth=${LOCAL_ETH[0]}
     con_name='vlan10'
@@ -28,51 +31,52 @@ function config_params() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    nmcli connection add type vlan con-name ${con_name} ifname ${con_name} vlan.parent ${test_eth} vlan.id 10 | grep successfully
+    nmcli connection add type vlan con-name "${con_name}" ifname "${con_name}" vlan.parent "${test_eth}" vlan.id 10 | grep successfully
     CHECK_RESULT $?
-    nmcli connection modify ${con_name} ipv4.address '192.0.2.1/24'
+    nmcli connection modify "${con_name}" ipv4.address '192.0.2.1/24'
     CHECK_RESULT $?
-    nmcli connection show ${con_name} | grep "ipv4.address" | grep "192.0.2.1"
+    nmcli connection show "${con_name}" | grep "ipv4.address" | grep "192.0.2.1"
     CHECK_RESULT $?
-    nmcli connection modify ${con_name} ipv4.gateway '192.0.2.254'
+    nmcli connection modify "${con_name}" ipv4.gateway '192.0.2.254'
     CHECK_RESULT $?
-    nmcli connection show ${con_name} | grep "ipv4.gateway" | grep "192.0.2.254"
+    nmcli connection show "${con_name}" | grep "ipv4.gateway" | grep "192.0.2.254"
     CHECK_RESULT $?
-    nmcli connection modify ${con_name} ipv4.dns '192.0.2.253'
+    nmcli connection modify "${con_name}" ipv4.dns '192.0.2.253'
     CHECK_RESULT $?
-    nmcli connection show ${con_name} | grep "ipv4.dns" | grep "192.0.2.253"
+    nmcli connection show "${con_name}" | grep "ipv4.dns" | grep "192.0.2.253"
     CHECK_RESULT $?
-    nmcli connection modify ${con_name} ipv4.method manual
+    nmcli connection modify "${con_name}" ipv4.method manual
     CHECK_RESULT $?
-    nmcli connection show ${con_name} | grep "ipv4.method" | grep "manual"
-    CHECK_RESULT $?
-
-    nmcli connection modify ${con_name} ipv6.address '2001:db8::1/32'
-    CHECK_RESULT $?
-    nmcli connection show ${con_name} | grep "ipv6.address" | grep "2001:db8::1"
-    CHECK_RESULT $?
-    nmcli connection modify ${con_name} ipv6.gateway '2001:db8::fffe'
-    CHECK_RESULT $?
-    nmcli connection show ${con_name} | grep "ipv6.gateway" | grep "2001:db8::fffe"
-    CHECK_RESULT $?
-    nmcli connection modify ${con_name} ipv6.dns '2001:db8::fffd'
-    CHECK_RESULT $?
-    nmcli connection show ${con_name} | grep "ipv6.dns" | grep "2001:db8::fffd"
-    CHECK_RESULT $?
-    nmcli connection modify ${con_name} ipv6.method manual
-    CHECK_RESULT $?
-    nmcli connection show ${con_name} | grep "ipv6.method" | grep "manual"
+    nmcli connection show "${con_name}" | grep "ipv4.method" | grep "manual"
     CHECK_RESULT $?
 
-    nmcli connection up ${con_name}
+    nmcli connection modify "${con_name}" ipv6.address '2001:db8::1/32'
+    CHECK_RESULT $?
+    nmcli connection show "${con_name}" | grep "ipv6.address" | grep "2001:db8::1"
+    CHECK_RESULT $?
+    nmcli connection modify "${con_name}" ipv6.gateway '2001:db8::fffe'
+    CHECK_RESULT $?
+    nmcli connection show "${con_name}" | grep "ipv6.gateway" | grep "2001:db8::fffe"
+    CHECK_RESULT $?
+    nmcli connection modify "${con_name}" ipv6.dns '2001:db8::fffd'
+    CHECK_RESULT $?
+    nmcli connection show "${con_name}" | grep "ipv6.dns" | grep "2001:db8::fffd"
+    CHECK_RESULT $?
+    nmcli connection modify "${con_name}" ipv6.method manual
+    CHECK_RESULT $?
+    nmcli connection show "${con_name}" | grep "ipv6.method" | grep "manual"
+    CHECK_RESULT $?
+
+    nmcli connection up "${con_name}"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    nmcli connection up ${test_eth}
-    nmcli con delete ${con_name}
+    nmcli connection up "${test_eth}"
+    nmcli con delete "${con_name}"
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

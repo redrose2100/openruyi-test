@@ -17,9 +17,11 @@
 # @Desc      :   Modity User Group test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     grep -w testuser1 /etc/passwd && userdel -r /home/testuser1
     grep -w testgroup1 /etc/group && groupdel testgroup1
     useradd testuser1
@@ -59,7 +61,8 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     groupdel testgroup2
     userdel -r testuser1
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

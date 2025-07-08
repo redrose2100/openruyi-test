@@ -18,6 +18,14 @@
 # ############################################
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function config_params() {
+    LOG_INFO "Start to config params of the case."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    LOG_INFO "End to config params of the case."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     who | grep "$(users | awk '{print$1}')"
@@ -32,6 +40,12 @@ function run_test() {
     who --help | grep "Usage"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    export LANG=${OLD_LANG}
+    LOG_INFO "Finish environment cleanup."
 }
 
 main "$@"
