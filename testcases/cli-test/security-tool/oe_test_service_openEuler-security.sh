@@ -18,8 +18,11 @@
 # #############################################
 
 source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "security-tool"
+    log_time=$(date '+%Y-%m-%d %T')
     service=openEuler-security.service
     systemctl restart "${service}"
     systemctl stop "${service}"
@@ -38,7 +41,7 @@ function run_test() {
     systemctl disable "${service}"
     find "${symlink_file}"
     CHECK_RESULT $? 0 1 "${service} disable failed"
-    journalctl -u "${service}" | grep -i "fail\\|error" | grep -v "net.ipv4.icmp_ignore_bogus_error_responses"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\\|error" | grep -v "net.ipv4.icmp_ignore_bogus_error_responses"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload openEuler-security.service
     LOG_INFO "Finish test!"
@@ -47,6 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop "${service}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
