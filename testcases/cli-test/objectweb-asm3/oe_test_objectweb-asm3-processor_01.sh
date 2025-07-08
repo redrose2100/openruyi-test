@@ -28,7 +28,7 @@ function pre_test() {
 function run_test() {
   LOG_INFO "Start to run test."
   cd /usr/share/java/objectweb-asm3 || exit
-  objectweb-asm3-processor code xml -in asm.jar -out output.xml 
+  objectweb-asm3-processor code xml -in asm.jar -out asm.xml 
   CHECK_RESULT $? 0 0 "Error converting bytecode from code format to XML format"
   objectweb-asm3-processor xml code -in output.xml -out output.jar 
   CHECK_RESULT $? 0 0 "Error converting bytecode from XML format to code format"
