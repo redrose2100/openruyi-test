@@ -24,7 +24,7 @@ function run_test() {
     kernel_name=$(uname -r)
     test -f /usr/lib/modules/"${kernel_name}"/kernel/fs/ceph/ceph.ko.xz
     CHECK_RESULT $? 0 0 "file does not exist"
-    modinfo ceph |grep -i version
+    modinfo ceph |grep -i vermagic
     CHECK_RESULT $? 0 0 "Information display failed"
     modprobe ceph
     CHECK_RESULT $? 0 0 "Module not loaded"

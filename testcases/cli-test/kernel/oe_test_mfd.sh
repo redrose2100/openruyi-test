@@ -27,7 +27,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "file does not exist"
     modprobe mfd_core
     CHECK_RESULT $? 0 0 "Information display failed"
-    modinfo  mfd_core|grep version
+    modinfo  mfd_core|grep vermagic
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep mfd_core
     CHECK_RESULT $? 0 0 "Module loaded failed"
