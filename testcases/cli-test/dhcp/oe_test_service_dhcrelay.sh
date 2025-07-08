@@ -17,10 +17,11 @@
 # @Desc      :   Test dhcrelay.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL dhcp
     cp /lib/systemd/system/dhcrelay.service /etc/systemd/system/
     ip addr add 192.168.0.1 dev "${NODE1_NIC}"
     sed -i 's\dhcrelay -d --no-pid\dhcrelay -d --no-pid 192.168.0.1 \g' /etc/systemd/system/dhcrelay.service
@@ -39,6 +40,7 @@ function post_test() {
     systemctl stop dhcrelay.service
     rm -rf /etc/systemd/system/dhcrelay.service
     ip addr del 192.168.0.1 dev "${NODE1_NIC}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
