@@ -39,15 +39,27 @@ function run_test()
 {
     LOG_INFO "Start to run test."
 
-    # test po4a-display-pod
-    po4a-display-pod -h | grep -i "Usage"
-    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-pod -h"
+    if [[ "$(which po4a-display-pod 2>/dev/null)" != "" ]];then
+        # test po4a-display-pod
+        po4a-display-pod -h | grep -i "Usage"
+        CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-pod -h"
 
-    po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt | grep -i "translated"
-    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt"
+        po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt | grep -i "translated"
+        CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt"
 
-    po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split | grep -i "translated"
-    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split"
+        po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split | grep -i "translated"
+        CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-pod -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split"
+    else
+        # test po4a-display-pod
+        po4apod-display-po -h | grep -i "Usage"
+        CHECK_RESULT $? 0 0 "Failed to run command: po4apod-display-po -h"
+
+        po4apod-display-po -p tmp/translation_Esp.po -m tmp/master.txt | grep -i "translated"
+        CHECK_RESULT $? 0 0 "Failed to run command: po4apod-display-po -p tmp/translation_Esp.po -m tmp/master.txt"
+
+        po4apod-display-po -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split | grep -i "translated"
+        CHECK_RESULT $? 0 0 "Failed to run command: po4apod-display-po -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split"
+    fi
 
     # test msguntypot
     msguntypot -h | grep -Pz "Usage:\n.*msguntypot"

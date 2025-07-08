@@ -34,16 +34,25 @@ function pre_test()
 function run_test()
 {
     LOG_INFO "Start to run test."
+    if [[ "$(which po4a-display-man 2>/dev/null)" != "" ]];then
+        po4a-display-man -h | grep -i "Usage: "
+        CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-man -h"
 
-    po4a-display-man -h | grep -i "Usage: "
-    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-man -h"
+        po4a-display-man -p tmp/translation_Esp.po -m tmp/master.txt | grep "Hola, Mundo"
+        CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-man -p tmp/translation_Esp.po"
 
-    po4a-display-man -p tmp/translation_Esp.po -m tmp/master.txt | grep "Hola, Mundo"
-    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-man -p tmp/translation_Esp.po"
+        po4a-display-man -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split | grep "Hola, Mundo"
+        CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-man -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split"
+    else
+        po4aman-display-po -h | grep -i "Usage: "
+        CHECK_RESULT $? 0 0 "Failed to run command: po4aman-display-po -h"
 
-    po4a-display-man -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split | grep "Hola, Mundo"
-    CHECK_RESULT $? 0 0 "Failed to run command: po4a-display-man -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split"
+        po4aman-display-po -p tmp/translation_Esp.po -m tmp/master.txt | grep "Hola, Mundo"
+        CHECK_RESULT $? 0 0 "Failed to run command: po4aman-display-po -p tmp/translation_Esp.po"
 
+        po4aman-display-po -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split | grep "Hola, Mundo"
+        CHECK_RESULT $? 0 0 "Failed to run command: po4aman-display-po -p tmp/translation_Esp.po -m tmp/master.txt -o tabs=split"
+    fi
     LOG_INFO "End to run test."
 }
 
