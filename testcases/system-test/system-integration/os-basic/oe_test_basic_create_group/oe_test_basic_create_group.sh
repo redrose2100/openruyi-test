@@ -17,7 +17,15 @@
 # @Desc      :   Create User Group test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function config_params() {
+    LOG_INFO "Start to config params of the case."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    LOG_INFO "End to config params of the case."
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase!"
     grep -w testgroup /etc/group && groupdel testgroup
@@ -48,7 +56,8 @@ function post_test() {
     groupdel testgroup
     groupdel testgroup1
     groupdel testgroup2
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
