@@ -16,15 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test samba.service restart
 # #############################################
-# shellcheck disable=SC1091
-source "../common/common_lib.sh"
+
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     host_name=$(hostname)
     hostname OE-TESTD
     echo "${NODE1_IPV4} TESTAD.LOCAL" >>/etc/hosts
-    DNF_INSTALL "samba-tools samba-dc python3-samba-dc krb5-server"
+    DNF_INSTALL "samba-common-tools samba-dc python3-samba-dc krb5-server"
     mv /etc/samba/smb.conf /etc/samba/smb.conf_bak
     expect <<EOF
         set timeout 600
