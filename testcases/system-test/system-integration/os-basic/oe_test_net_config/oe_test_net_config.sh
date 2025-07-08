@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Add/remove virtual network card
 # ############################################
+# shellcheck disable=SC1091
 
 source ../common/net_lib.sh
 function config_params() {
@@ -27,25 +28,27 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    SSH_CMD "yum install -y net-tools" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    DNF_INSTALL net-tools 2
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    SSH_CMD "ifconfig ${vir_eth}:1 ${ip_set}/24 broadcast 255.255.255.0 up" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    P_SSH_CMD --node 2 --cmd "ifconfig ${vir_eth}:1 ${ip_set}/24 broadcast 255.255.255.0 up"
     CHECK_RESULT $?
-    ping -c 3 ${ip_set}
+    SLEEP_WAIT 3
+    ping -c 3 "${ip_set}"
     CHECK_RESULT $?
-    SSH_CMD "ifconfig ${vir_eth}:1 down" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    ping -c 3 ${ip_set}
+    P_SSH_CMD --node 2 --cmd "ifconfig ${vir_eth}:1 down"
+    SLEEP_WAIT 3
+    ping -c 3 "${ip_set}"
     CHECK_RESULT $? 1
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    SSH_CMD "yum remove -y net-tools" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    DNF_REMOVE "$@" 2
     LOG_INFO "End to restore the test environment."
 }
 

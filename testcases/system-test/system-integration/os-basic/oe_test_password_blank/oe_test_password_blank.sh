@@ -17,9 +17,11 @@
 # @Desc      :   Password setting-blank password
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     grep "testuser:" /etc/passwd && userdel -rf testuser
     groupdel testuser
     LOG_INFO "End to prepare the test environment."
@@ -46,6 +48,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     userdel -r testuser
     rm -rf testlog
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

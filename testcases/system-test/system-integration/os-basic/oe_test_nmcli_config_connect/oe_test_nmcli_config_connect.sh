@@ -16,10 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test nmcli configure Ethernet connection
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/net_lib.sh
 function config_params() {
     LOG_INFO "Start to config params of the case."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     get_free_eth 1
     test_eth=${LOCAL_ETH[0]}
     con_name="ethernet-${test_eth}"
@@ -28,40 +30,41 @@ function config_params() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    nmcli con add type ethernet ifname ${test_eth} | grep successfully
+    nmcli con add type ethernet ifname "${test_eth}" | grep successfully
     CHECK_RESULT $?
-    nmcli con mod ${con_name} ipv4.dns "8.8.8.8 8.8.4.4"
+    nmcli con mod "${con_name}" ipv4.dns "8.8.8.8 8.8.4.4"
     CHECK_RESULT $?
-    nmcli con mod ${con_name} ipv6.dns "2001:4860:4860::8888 2001:4860:4860::8844"
+    nmcli con mod "${con_name}" ipv6.dns "2001:4860:4860::8888 2001:4860:4860::8844"
     CHECK_RESULT $?
-    nmcli con mod ${con_name} +ipv4.dns "8.8.8.8 8.8.4.4"
+    nmcli con mod "${con_name}" +ipv4.dns "8.8.8.8 8.8.4.4"
     CHECK_RESULT $?
-    nmcli con mod ${con_name} +ipv6.dns "2001:4860:4860::8888 2001:4860:4860::8844"
+    nmcli con mod "${con_name}" +ipv6.dns "2001:4860:4860::8888 2001:4860:4860::8844"
     CHECK_RESULT $?
-    nmcli con up ${con_name} ifname ${test_eth}
+    nmcli con up "${con_name}" ifname "${test_eth}"
     CHECK_RESULT $?
-    nmcli device status | grep ${test_eth} | grep ${con_name}
+    nmcli device status | grep "${test_eth}" | grep "${con_name}"
     CHECK_RESULT $?
-    nmcli -p con show ${con_name} | grep "8.8.8.8"
+    nmcli -p con show "${con_name}" | grep "8.8.8.8"
     CHECK_RESULT $?
-    nmcli -p con show ${con_name} | grep "2001:4860:4860::8888"
+    nmcli -p con show "${con_name}" | grep "2001:4860:4860::8888"
     CHECK_RESULT $?
-    echo -e "quit\\nyes\\n" | nmcli con edit type ethernet con-name ${test_eth}
+    echo -e "quit\\nyes\\n" | nmcli con edit type ethernet con-name "${test_eth}"
     CHECK_RESULT $?
-    nmcli con modify ${con_name} ipv4.dhcp-hostname host-name ipv6.dhcp-hostname host-name
+    nmcli con modify "${con_name}" ipv4.dhcp-hostname host-name ipv6.dhcp-hostname host-name
     CHECK_RESULT $?
-    nmcli con modify ${con_name} ipv4.dhcp-client-id client-ID-string
+    nmcli con modify "${con_name}" ipv4.dhcp-client-id client-ID-string
     CHECK_RESULT $?
-    nmcli con modify ${con_name} ipv4.ignore-auto-dns yes ipv6.ignore-auto-dns yes
+    nmcli con modify "${con_name}" ipv4.ignore-auto-dns yes ipv6.ignore-auto-dns yes
     CHECK_RESULT $?
-    echo -e "quit\\nyes\\n" | nmcli con edit type ethernet con-name ${test_eth}
+    echo -e "quit\\nyes\\n" | nmcli con edit type ethernet con-name "${test_eth}"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    nmcli con delete ${con_name}
+    nmcli con delete "${con_name}"
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

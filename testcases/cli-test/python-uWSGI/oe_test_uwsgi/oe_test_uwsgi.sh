@@ -23,7 +23,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL python3-uWSGI
-    pip3 install uwsgitop --default-timeout=100
+    pip3 install -i https://mirrors.aliyun.com/pypi/simple uwsgitop --default-timeout=100
     firewall-cmd --state | grep "not running"
     firewalld_status=$?
     systemctl stop firewalld

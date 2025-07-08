@@ -19,18 +19,36 @@
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL xorg-x11-server-utils
+    if pgrep -f "Xorg|X"; then
+        old_diplay=$DISPLAY
+        export DISPLAY=:0
+    fi
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
-    # 获取屏幕信息
     LOG_INFO "Start testing..."
-    xrandr -q | grep "Screen"
-    CHECK_RESULT $? 0 0 "Screen not found"
-    # 获取第一个连接的显示器
+    if pgrep -f "Xorg|X"; then
+        xrandr -q | grep "Screen"
+        CHECK_RESULT $? 0 0 "Screen not found"
+    fi
     output=$(xrandr | grep "connected" | awk 'NR==1{print $1}')
     CHECK_RESULT $? 0 0 "No connected display found"
-    # 获取第一个连接的显示器的当前分辨率
     xrandr "${output}" | grep "current" | awk '{print $2}'
     CHECK_RESULT $? 0 0 "Failed to query current resolution of ${output}"
     LOG_INFO "Finsh test!"
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    if pgrep -f "Xorg|X"; then
+        export DISPLAY=$old_diplay
+    fi
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

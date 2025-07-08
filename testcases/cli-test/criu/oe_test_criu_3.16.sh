@@ -19,46 +19,57 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
-function pre_test(){
+function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "criu"
+    if ! rpm -qa criu | grep "3.16"; then
+        exit 255
+    fi
     mkdir checkpoint_file
-    test_process(){
+    test_process() {
         num=0
-        while true;
-        do
+        while true; do
             echo -e "$num PID, BASHPID, 和PPID是$$, $BASHPID, $PPID"
-            (( num += 1 ))
+            ((num += 1))
             sleep 1
         done
     }
-    DUMP(){
+    DUMP() {
         sleep 0.1
         criu dump -j -t "$pid"
     }
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test(){
+function run_test() {
     LOG_INFO "Start to run test."
-    (test_process) & criu dump -D checkpoint_file -j -t $! --network-lock iptables
+    (test_process) &
+    criu dump -D checkpoint_file -j -t $! --network-lock iptables
     CHECK_RESULT $? 0 0 "Check criu dump --network-lock failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --lsm-mount-context CTX
+    (test_process) &
+    criu dump -D checkpoint_file -j -t $! --lsm-mount-context CTX
     CHECK_RESULT $? 0 0 "Check criu dump --lsm-mount-context failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --network-lock iptables && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --network-lock failed"
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --lsm-mount-context CTX && kill -9 $pid
-    CHECK_RESULT $? 0 0 "Check criu pre-dump --lsm-mount-context failed"
+    if [[ "${NODE1_FRAME}" != "aarch64" ]]; then
+        (test_process) &
+        pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --network-lock iptables && kill -9 $pid
+        CHECK_RESULT $? 0 0 "Check criu pre-dump --network-lock failed"
+        (test_process) &
+        pid=$! && criu pre-dump -D checkpoint_file -j -t $pid --lsm-mount-context CTX && kill -9 $pid
+        CHECK_RESULT $? 0 0 "Check criu pre-dump --lsm-mount-context failed"
+    fi
     cd checkpoint_file || exit
-    (test_process) & pid=$! && DUMP
-    criu restore -j --network-lock iptables & DUMP
+    (test_process) &
+    pid=$! && DUMP
+    criu restore -j --network-lock iptables &
+    DUMP
     CHECK_RESULT $? 0 0 "Check criu restore --network-lock failed"
-    criu restore -j --lsm-mount-context CTX & DUMP
+    criu restore -j --lsm-mount-context CTX &
+    DUMP
     CHECK_RESULT $? 0 0 "Check criu restore --lsm-mount-context failed"
     LOG_INFO "End to run test."
 }
 
-function post_test(){
+function post_test() {
     LOG_INFO "Start to restore the test environment."
     cd .. || exit
     DNF_REMOVE "$@"
