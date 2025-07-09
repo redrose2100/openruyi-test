@@ -16,10 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in docker package
 # ############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
 
 source "../common/common_podman.sh"
+source "../common/versioncheck.sh"
+
+
 function pre_test() {
+    version_check
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     podman pull ubi8-minimal
@@ -28,6 +32,7 @@ function pre_test() {
 }
 
 function run_test() {
+    version_check
     LOG_INFO "Start to run test."
     docker save --compress --format oci-dir -o alp-dir ubi8-minimal
     CHECK_RESULT $?

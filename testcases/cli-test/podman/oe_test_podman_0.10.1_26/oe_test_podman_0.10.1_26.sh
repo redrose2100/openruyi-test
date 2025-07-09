@@ -16,11 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   podman build
 # ############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
 
 source ../common/common_podman.sh
+source "../common/versioncheck.sh"
+
 
 function pre_test() {
+    version_check
     LOG_INFO "Start environment preparation."
     deploy_env
     DNF_INSTALL "cpp"
@@ -34,6 +37,7 @@ RUN ls" >Dockerfile
 }
 
 function run_test() {
+    version_check
     LOG_INFO "Start executing testcase."
     podman build . >>test.log
     CHECK_RESULT $?

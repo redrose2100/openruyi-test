@@ -16,9 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   docker rm Test
 # ############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
 
 source ../common/common_podman.sh
+source "../common/versioncheck.sh"
+
+
 function config_params() {
     LOG_INFO "Start loading data!"
     name="postgres"
@@ -26,6 +29,7 @@ function config_params() {
 }
 
 function pre_test() {
+    version_check
     LOG_INFO "Start environment preparation."
     deploy_env
     docker rm -all
@@ -33,6 +37,7 @@ function pre_test() {
 }
 
 function run_test() {
+    version_check
     LOG_INFO "Start executing testcase."
     value=$(docker run --name "${name}" -e POSTGRES_PASSWORD=secret -td ubi8-minimal)
     CHECK_RESULT $?
