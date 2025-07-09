@@ -16,26 +16,39 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   View partition-fdisk
 # ############################################
+# shellcheck disable=SC1090
+
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase!"
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then
         fdisk -l | grep -iE "da|db|/dev/mapper" | grep -iE "Linux"
+        CHECK_RESULT $?
+        fdisk -lu | grep -iE "da|db|/dev/mapper" | grep -iE "Linux"
+        CHECK_RESULT $?
     else
         fdisk -l | grep -iE "da|db|/dev/mapper" | grep -iE "EFI|LVM"
-    fi
-    CHECK_RESULT $?
-
-    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
-        fdisk -lu | grep -iE "da|db|/dev/mapper" | grep -iE "Linux"
-    else
+        CHECK_RESULT $?
         fdisk -lu | grep -iE "da|db|/dev/mapper" | grep -iE "EFI|LVM"
+        CHECK_RESULT $?
     fi
-    CHECK_RESULT $?
-
     fdisk -v | grep "fdisk from"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    export LANG=${OLD_LANG}
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

@@ -16,18 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Resize ext3 file system
 # ############################################
+# shellcheck disable=SC1091,SC2154
+
 source ../common/storage_disk_lib.sh
-function config_params() {
-    LOG_INFO "Start loading data!"
-    check_free_disk
-    LOG_INFO "Loading data is complete!"
-}
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    echo -e "n\np\n1\n\n+60M\np\nw\n" | fdisk /dev/${local_disk}
     old_lang=$LANG
     export LANG=en_US.utf-8
+    echo -e "n\np\n1\n\n+60M\np\nw\n" | fdisk /dev/"${local_disk}"
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -39,7 +36,7 @@ function run_test() {
     CHECK_RESULT $?
     systemsize=$(resize2fs -P "/dev/${local_disk}1" 2>&1 | sed -n 'p' | awk -F ": " '{if (NR>1) print $NF}')
     CHECK_RESULT $?
-    resize2fs "/dev/${local_disk}1" $[${systemsize}+10]
+    resize2fs "/dev/${local_disk}1" $((systemsize+10))
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }

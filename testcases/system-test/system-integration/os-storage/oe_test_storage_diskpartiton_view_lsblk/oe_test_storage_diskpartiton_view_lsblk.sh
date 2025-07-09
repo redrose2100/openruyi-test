@@ -16,25 +16,36 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   View partition-lsblk
 # ############################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase!"
     lsblk | grep -iE "disk|part|lvm"
     CHECK_RESULT $?
-
     lsblk -l | grep -iE "TYPE|MOUNTPOINT"
     CHECK_RESULT $?
-
     lsblk -a | grep -iE "disk|part|lvm"
     CHECK_RESULT $?
-
     lsblk -h | grep Usage
     CHECK_RESULT $?
-
     lsblk -t | grep SCHED
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
-main $@
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    export LANG=${OLD_LANG}
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
