@@ -16,10 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Backup / restore database
 # ############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
 
 source ../common/common_podman.sh
+source "../common/versioncheck.sh"
+
+
 function pre_test() {
+    version_check
     LOG_INFO "Start environment preparation."
     deploy_env
     docker rm -all
@@ -27,6 +31,7 @@ function pre_test() {
 }
 
 function run_test() {
+    version_check
     LOG_INFO "Start executing testcase."
     docker pod create --infra=false
     CHECK_RESULT $?
