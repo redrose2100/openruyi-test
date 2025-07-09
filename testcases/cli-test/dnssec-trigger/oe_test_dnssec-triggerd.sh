@@ -16,8 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test dnssec-trigger-control command
 # #############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function config_params() {
+    LOG_INFO "Start to config params of the case."
+    cp /etc/resolv.conf /etc/resolv.conf.bak
+    LOG_INFO "End to config params of the case."
+}
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -38,6 +45,7 @@ function run_test() {
     SLEEP_WAIT 3
     dnssec-triggerd -d &
     CHECK_RESULT $? 0 0 "Failed to check the dnssec-triggerd -d"
+    SLEEP_WAIT 3
     pgrep -f "dnssec-triggerd -d"
     CHECK_RESULT $? 0 0 "Failed to check the dnssec-triggerd -d process"
     pgrep -f "dnssec-triggerd -d" | xargs kill -9
@@ -51,15 +59,13 @@ function run_test() {
     SLEEP_WAIT 5
     dnssec-triggerd -u
     CHECK_RESULT $? 0 0 "Failed to check the dnssec-triggerd -u"
-    pgrep -f "dnssec-triggerd -d"
-    CHECK_RESULT $? 0 0 "Failed to check the dnssec-triggerd -d process"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    rm -rf dnssec-triggerd
+    mv /etc/resolv.conf.bak /etc/resolv.conf
     LOG_INFO "End to restore the test environment."
 }
 

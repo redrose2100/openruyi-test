@@ -16,9 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Use partedshell to view the partition table
 # ############################################
-source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
+# shellcheck disable=SC1091,SC2154
+
+source ../common/storage_disk_lib.sh
+
 function config_params() {
     LOG_INFO "Start loading data!"
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL parted
     DISK1=/dev/"${local_disk}"
     DISK2=/dev/"${local_disk1}"
@@ -35,6 +40,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    export LANG=${OLD_LANG}
     rm -rf log
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."

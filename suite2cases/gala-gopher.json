@@ -1,17 +1,21 @@
 {
     "path": "$OET_PATH/testcases/cli-test/gala-gopher",
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_service_gopher"
         },
-	{
-	    "name": "oe_test_galagopher_tcpprobe"
-	},
-	{
-	    "name": "oe_test_galagopher_stackprobe"
-	},
         {
-            "name": "oe_test_galagopher_endpoint"
+            "name": "oe_test_galagopher_tcpprobe",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_galagopher_stackprobe",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_galagopher_endpoint",
+            "machine num": 2
         },
         {
             "name": "oe_test_galagopher_ioprobe"
@@ -20,22 +24,27 @@
             "name": "oe_test_galagopher_jvmprobe"
         },
         {
-            "name": "oe_test_galagopher_redis"
+            "name": "oe_test_galagopher_redis",
+            "machine num": 2
         },
         {
-            "name": "oe_test_galagopher_system_info"
+            "name": "oe_test_galagopher_system_info",
+            "machine num": 2
         },
         {
-            "name": "oe_test_galagopher_taskprobe"
+            "name": "oe_test_galagopher_taskprobe",
+            "machine num": 2
         },
         {
-            "name": "oe_test_galagopher_tprofiling"
+            "name": "oe_test_galagopher_tprofiling",
+            "machine num": 2
         },
         {
             "name": "oe_test_galagopher_docker"
         },
         {
-            "name": "oe_test_galagopher_guassdb"
+            "name": "oe_test_galagopher_guassdb",
+            "machine num": 2
         }
     ]
 }
