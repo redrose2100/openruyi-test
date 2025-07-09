@@ -21,6 +21,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if [ "${NODE1_FRAME}" == "riscv64" ];then
+        LOG_WARN "Testing cannot be performed if NODE1_FRAME is riscv64"
+        exit 255
+    fi
     hostName_bak=$(hostname)
     hostnamectl set-hostname cloud.kubeedge
     echo "${NODE1_IPV4}  cloud.kubeedge" >>/etc/hosts
