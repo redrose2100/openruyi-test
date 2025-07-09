@@ -16,10 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test podman command
 # ############################################
+# shellcheck disable=SC1091,SC2119
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "../common/versioncheck.sh"
+
 
 function pre_test() {
+    version_check
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "podman podman-docker"
     cat >> /etc/containers/registries.conf << EOF
@@ -30,6 +34,7 @@ EOF
 }
 
 function run_test() {
+    version_check
     LOG_INFO "Start testing..."
     podman --help | grep "USAGE:"
     CHECK_RESULT $? 0 0 "podman  -help failed"

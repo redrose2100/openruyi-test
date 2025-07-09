@@ -16,9 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   docker-search
 # ############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
 
 source ../common/common_podman.sh
+source "../common/versioncheck.sh"
+
+
 function config_params() {
     LOG_INFO "Start loading data!"
     name="postgres"
@@ -26,6 +29,7 @@ function config_params() {
 }
 
 function pre_test() {
+    version_check
     LOG_INFO "Start environment preparation."
     deploy_env
     docker rm -all
@@ -33,6 +37,7 @@ function pre_test() {
 }
 
 function run_test() {
+    version_check
     LOG_INFO "Start executing testcase."
     docker search --limit 5 registry.access.redhat.com/ubi8-minimal | wc -l | grep 5
     CHECK_RESULT $?

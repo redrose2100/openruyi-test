@@ -16,10 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in podman package
 # ############################################
+# shellcheck disable=SC1091,SC2119
 
 source "${OET_PATH}/testcases/cli-test/podman/common/common_podman.sh"
+source "../common/versioncheck.sh"
+
 
 function pre_test() {
+    version_check
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     SLEEP_WAIT 3
@@ -27,6 +31,7 @@ function pre_test() {
 }
 
 function run_test() {
+    version_check
     LOG_INFO "Start to run test."
     ID=$(podman create --cpuset-cpus 0 ubi8-minimal ls)
     podman inspect "$ID" | grep -i '"CpuSetCpus": "0"'
