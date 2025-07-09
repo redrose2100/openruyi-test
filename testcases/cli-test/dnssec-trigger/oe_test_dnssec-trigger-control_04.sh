@@ -20,6 +20,12 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+function config_params() {
+    LOG_INFO "Start to config params of the case."
+    cp /etc/resolv.conf /etc/resolv.conf.bak
+    LOG_INFO "End to config params of the case."
+}
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL dnssec-trigger
@@ -56,6 +62,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop dnssec-triggerd
     DNF_REMOVE "$@"
+    mv /etc/resolv.conf.bak /etc/resolv.conf
     LOG_INFO "End to restore the test environment."
 }
 

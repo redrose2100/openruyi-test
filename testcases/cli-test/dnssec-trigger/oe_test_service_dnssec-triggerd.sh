@@ -19,6 +19,12 @@
 # shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
+function config_params() {
+    LOG_INFO "Start to config params of the case."
+    cp /etc/resolv.conf /etc/resolv.conf.bak
+    LOG_INFO "End to config params of the case."
+}
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "dnssec-trigger python3-gobject"
@@ -42,6 +48,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE "$@"
     setenforce 1
+    mv /etc/resolv.conf.bak /etc/resolv.conf
     LOG_INFO "Finish environment cleanup!"
 }
 
