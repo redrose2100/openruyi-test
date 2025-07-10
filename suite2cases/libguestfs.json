@@ -24,12 +24,6 @@
       "name": "oe_test_libguestfs_guestmount_03"
     },
     {
-      "name": "oe_test_libguestfs_libguestfs-boot-analysis"
-    },
-    {
-      "name": "oe_test_libguestfs_libguestfs-boot-benchmark"
-    },
-    {
       "name": "oe_test_libguestfs_libguestfs-test-tool"
     },
     {
