@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   system monitor share total
 # ############################################
-
+# shellcheck disable=SC2154
 source "${OET_PATH}/testcases/system-test/system-integration/os-basic/common/disk_lib.sh"
 
 function config_params() {
     LOG_INFO "Start to config the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     check_free_disk
     LOG_INFO "Start to config the test environment."
 }
@@ -35,7 +37,7 @@ function run_test() {
     CHECK_RESULT $?
     ps -eo 'pmem,pid,comm,args' | sort -rk1 | sed -n 1p | awk -F " " '{print$1}' | grep "%MEM"
     CHECK_RESULT $?
-    echo mq-deadline > /sys/block/"${local_disk}"/queue/scheduler
+    echo mq-deadline >/sys/block/"${local_disk}"/queue/scheduler
     grep '\[mq-deadline\]' /sys/block/"${local_disk}"/queue/scheduler
     CHECK_RESULT $?
     LOG_INFO "End to run test."
@@ -44,6 +46,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 

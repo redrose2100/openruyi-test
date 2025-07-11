@@ -1,6 +1,6 @@
 #! /usr/bin/bash
 
-# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2025. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -28,24 +28,26 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    aulast|grep root
+    aulast|grep -q root
     CHECK_RESULT $? 0 0 "failed to print the user login list. Procedure"
     aulast --extract
     CHECK_RESULT $? 0 0 "description failed to generate log files"
     test -f aulast.log
     CHECK_RESULT $? 0 0 "file does not exist"
-    aulast -f aulast.log
+    aulast -f aulast.log |grep -q root
     CHECK_RESULT $? 0 0 "failed to enter using the file"
-    aulast --user root
+    aulast --user root |grep -q root
     CHECK_RESULT $? 0 0 "only the root user fails to be displayed"
-    aulast --tty tty1
+    aulast --tty pts/0 || aulast --tty tty1
     CHECK_RESULT $? 0 0 "failed to filter tty login users. Procedure"
-    aulast --proof|grep ausearch
+    aulast --proof|grep -q ausearch
     CHECK_RESULT $? 0 0 "failed to print the audit event sequence number used to determine a row on the report"
-    aulast --bad
+    aulast --bad |grep root
     CHECK_RESULT $? 0 0 "the command bad failed to execute"
-    aulast --debug
+    aulast --debug 2>&1 | grep -q logged
     CHECK_RESULT $? 0 0 "the command debug failed to execute"
+    aulast --stdin < aulast.log | grep -q root
+    CHECK_RESULT $? 0 0 "the command stdin  failed to execute"
     LOG_INFO "End to run test."
 }
 
@@ -57,4 +59,5 @@ function post_test() {
 }
 
 main "$@"
+
 

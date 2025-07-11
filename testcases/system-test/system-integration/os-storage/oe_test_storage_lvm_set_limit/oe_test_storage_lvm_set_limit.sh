@@ -16,7 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Set the upper limit of IO used by raid type volume in the background
 # ############################################
+# shellcheck disable=SC1090,SC2154
+
 source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL lvm2

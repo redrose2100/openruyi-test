@@ -1046,6 +1046,15 @@
 	},
 	{
 	    "name": "oe_test_ab_3"
+	},
+	{
+	    "name": "oe_test_ab_4"
+	},
+	{
+	    "name": "oe_test_zcmp"
+	},
+	{
+	    "name": "oe_test_xxd"
 	}
     ]
 }

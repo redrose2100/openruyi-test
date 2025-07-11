@@ -47,7 +47,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check clamconf version failed."
     clamconf -h
     CHECK_RESULT $? 0 0 "Check clamconf help message failed."
-    clamconf -n | grep -i "CFLAGS"
+    clamconf -n | grep "Software settings"
     CHECK_RESULT $? 0 0 "Check clamconf non-default config failed."
 
     LOG_INFO "End to run test."

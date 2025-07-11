@@ -17,8 +17,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-cp
 # ############################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     test -f test1 || touch test1
@@ -36,7 +38,7 @@ function run_test() {
     CHECK_RESULT $?
     test -d /home/test2/test3
     CHECK_RESULT $?
-    cp --help | grep "Usage"
+    cp --help | grep "Usage\|用法"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
@@ -47,4 +49,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

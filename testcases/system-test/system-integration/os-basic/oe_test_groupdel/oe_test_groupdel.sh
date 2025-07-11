@@ -17,9 +17,11 @@
 # @Desc      :   Delete User Group test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     grep "testgroup:" /etc/group && groupdel testgroup
     groupadd testgroup
     LOG_INFO "End to prepare the test environment."
@@ -36,6 +38,12 @@ function run_test() {
     groupdel --help | grep "Usage: groupdel"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    export LANG=${OLD_LANG}
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

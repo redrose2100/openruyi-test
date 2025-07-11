@@ -16,13 +16,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-sort
 # ############################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase!"
     sort /proc/cpuinfo
     CHECK_RESULT $?
-
     sort -c /proc/cpuinfo 2>&1 | grep disorder
     CHECK_RESULT $?
     sort -f /proc/cpuinfo
@@ -34,4 +42,10 @@ function run_test() {
     LOG_INFO "End of testcase execution!"
 }
 
-main $@
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    export LANG=${OLD_LANG}
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"

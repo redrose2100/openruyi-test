@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "binutils"
     if [ "$NODE1_FRAME" == "riscv64" ]; then
-        cat > hello.s << EOF
+        cat >hello.s <<EOF
         .section .text
         .globl _start
 
@@ -44,8 +44,28 @@ _start:
 message:
         .ascii "Hello, world\\n"
 EOF
+    elif [ "$NODE1_FRAME" == "aarch64" ]; then
+        cat >hello.s <<EOF
+        .global _start
+
+        .text
+_start:
+        # write(1, message, 13)
+        mov     x8, #64
+        mov     x0, #1
+        ldr     x1, =message
+        mov     x2, #13
+        svc     #0
+
+        # exit(0)
+        mov     x8, #93
+        mov     x0, #0
+        svc     #0
+message:
+        .ascii  "Hello, world\n"
+EOF
     else
-        cat > hello.s << EOF
+        cat >hello.s <<EOF
         .global _start
 
         .text

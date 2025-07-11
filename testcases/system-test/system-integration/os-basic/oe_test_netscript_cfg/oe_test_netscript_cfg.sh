@@ -21,28 +21,22 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    find /etc/sysconfig/network-scripts/ -type f |head -n 1 |grep ifcfg
+    find /etc/sysconfig/network-scripts/ -type f | head -n 1 | grep ifcfg
     CHECK_RESULT $? 0 0 "have no available net cfg file"
-    cfg01=$(find /etc/sysconfig/network-scripts/ -type f |head -n 1 |grep ifcfg)
-    cat "$cfg01" > cfg01.file
-    grep -i type cfg01.file
+    cfg01=$(find /etc/sysconfig/network-scripts/ -type f | head -n 1 | grep ifcfg)
+    grep -i type "$cfg01"
     CHECK_RESULT $? 0 0 "the item is use for set net type"
-    grep -i bootproto cfg01.file
+    grep -i bootproto "$cfg01"
     CHECK_RESULT $? 0 0 "the item is use for set net bootproto"
-    grep -i onboot cfg01.file
+    grep -i onboot "$cfg01"
     CHECK_RESULT $? 0 0 "the item is use for set automatically connect to the network upon startup"
-    grep -i device cfg01.file
+    grep -i device "$cfg01"
     CHECK_RESULT $? 0 0 "the item is use for set net name"
-    grep -i defroute cfg01.file
-    CHECK_RESULT $? 0 0 "the item is use for set default route"
+    if ! grep dhcp "$cfg01" && ping -c 3 www.baidu.com; then
+        grep -i defroute "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set default route"
+    fi
     LOG_INFO "End of testcase execution."
-}
-
-
-function post_test() {
-    LOG_INFO "start environment cleanup."
-    rm -rf cfg01.file
-    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

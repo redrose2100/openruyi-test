@@ -9,7 +9,6 @@
 # MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-
 # #############################################
 # @Author    :   cuikeyu
 # @Contact   :   cky2536184321@163.com
@@ -17,16 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test vdo
 # #############################################
-
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
-
+# shellcheck disable=SC1091
+source "common/common_vdo.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "vdo"
-    dd if=/dev/zero of=vdo_test_device bs=1M count=10240
-    losetup /dev/loop0 vdo_test_device
-    vdo create -n my_vdo_volume --device /dev/loop0
+    deploy_env
     touch /var/log/vdo_deactivate.log
     LOG_INFO "End to prepare the test environment"
 }
@@ -45,11 +40,11 @@ function run_test() {
 
     vdo deactivate -n my_vdo_volume -f /etc/vdoconf.yml | grep "already deactivated"
     CHECK_RESULT $? 0 0 "Check vdo deactivate -f failed"
-    
+
     vdo activate -n my_vdo_volume
     vdo deactivate -n my_vdo_volume --logfile /var/log/vdo_deactivate.log | grep "Deactivating VDO"
     CHECK_RESULT $? 0 0 "Check vdo deactivate --logfile failed"
-    
+
     vdo deactivate --verbose -n my_vdo_volume | grep "already deactivated"
     CHECK_RESULT $? 0 0 "Check vdo deactivate --verbose failed"
     vdo activate -n my_vdo_volume
@@ -57,14 +52,10 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
-
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     sudo rm /var/log/vdo_deactivate.log
-    vdo remove -n my_vdo_volume
-    losetup -d /dev/loop0
-    rm vdo_test_device -f
-    DNF_REMOVE "$@"
+    clear_env
     LOG_INFO "End to restore the test environment."
 }
 

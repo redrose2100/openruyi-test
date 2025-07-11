@@ -19,15 +19,15 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    echo "sdfasssdaasdfs312322342443sdfas" > /tmp/test.txt
+    DNF_INSTALL tar
+    echo "sdfasssdaasdfs312322342443sdfas" >/tmp/test.txt
     tar -jcvf /tmp/test.tar.bz2 /tmp/test.txt
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start testing..."
-    bzless /tmp/test.tar.bz2|grep sdf
+    bzless /tmp/test.tar.bz2 | grep sdf
     CHECK_RESULT $? 0 0 "bzless function error"
     LOG_INFO "Finish test!"
 }
@@ -35,6 +35,7 @@ function run_test()
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/test.txt test.tar.bz2
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/sdl-config",
+    "cases": [
+        {
+            "name": "oe_test_sdl-config"
+        }
+
+      ]
+}
+

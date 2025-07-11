@@ -31,11 +31,10 @@ function run_test() {
   LOG_INFO "Start to run test."
   createrepo_c DIR-algorithm
   CHECK_RESULT $? 0 0 "createrepo fail"
-  CHECK_RESULT "$(grep -i "checksum type=" DIR-algorithm/repodata/repomd.xml |awk -F '"' '{print $2}' |uniq)" "sha256" 0 "default algorithm fail"
-
+  CHECK_RESULT "$(grep -r -i "checksum type=" DIR-algorithm |awk -F '"' '{print $2}' |uniq)" "sha256" 0 "default algorithm fail"
   createrepo_c -s sha512 DIR-algorithm
   CHECK_RESULT $? 0 0 "createrepo fail"
-  CHECK_RESULT "$(grep -i "checksum type=" DIR-algorithm/repodata/repomd.xml |awk -F '"' '{print $2}' |uniq)" "sha512" 0 "chage algorithm fail"
+  CHECK_RESULT "$(grep -r -i "checksum type=" DIR-algorithm |awk -F '"' '{print $2}' |uniq)" "sha512" 0 "chage algorithm fail"
   LOG_INFO "End of the test."
 }
 

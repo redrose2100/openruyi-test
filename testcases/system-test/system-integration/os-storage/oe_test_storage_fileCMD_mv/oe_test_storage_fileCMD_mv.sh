@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-mv
 # ############################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
     mkdir test1
@@ -42,7 +44,7 @@ function run_test() {
     CHECK_RESULT $? 1
     test -d /home/haha
     CHECK_RESULT $?
-    mv --help | grep "Usage"
+    mv --help | grep "Usage\|用法"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
@@ -53,4 +55,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

@@ -16,10 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Use nmcli to manage network connections after the installation process
 # ############################################
-
+# shellcheck disable=SC1091
 source ../common/net_lib.sh
 function config_params() {
     LOG_INFO "Start to config params of the case."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     get_free_eth 1
     test_eth=${LOCAL_ETH[0]}
     con_name="ethernet-${test_eth}"
@@ -28,13 +30,13 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    nmcli con show ${con_name} && nmcli con delete ${con_name}
+    nmcli con show "${con_name}" && nmcli con delete "${con_name}"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    nmcli con add type ethernet ifname ${test_eth} | grep successfully
+    nmcli con add type ethernet ifname "${test_eth}" | grep successfully
     CHECK_RESULT $?
     nmcli -a con add >log <<EOF
 ethernet
@@ -46,20 +48,20 @@ no
 EOF
     grep successfully log
     CHECK_RESULT $?
-    nmcli con mod ${con_name} ipv4.method auto
+    nmcli con mod "${con_name}" ipv4.method auto
     CHECK_RESULT $?
-    nmcli connection show ${con_name} | grep ipv4.method | grep auto
+    nmcli connection show "${con_name}" | grep ipv4.method | grep auto
     CHECK_RESULT $?
-    nmcli connection edit ${con_name} >log <<EOF
+    nmcli connection edit "${con_name}" >log <<EOF
 print
 help
 quit
 EOF
     grep -c "nmcli>" log | grep 3
     CHECK_RESULT $?
-    CHECK_RESULT $(nmcli con show | grep -c ${con_name}) 1
-    num_nmcli=$(nmcli con show ${con_name} | grep -c connection)
-    test $num_nmcli -gt 10
+    CHECK_RESULT "$(nmcli con show | grep -c "${con_name}")" 1
+    num_nmcli=$(nmcli con show "${con_name}" | grep -c connection)
+    test "$num_nmcli" -gt 10
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
@@ -67,7 +69,8 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf log
-    nmcli con delete ${con_name}
+    nmcli con delete "${con_name}"
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 
