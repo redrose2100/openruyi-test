@@ -21,9 +21,9 @@ source "${OET_PATH}/testcases/feature-test/mm_uce/common/common.sh"
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    if [ "${NODE1_MACHINE}" != "physical" ]; then
+    if [[ "${NODE1_MACHINE}" != "physical" || "${NODE1_FRAME}" == riscv64 ]]; then
         LOG_INFO "The environment does not support testing"
-        exit 1
+        exit 255
     fi
     DNF_INSTALL "kernel-devel gcc"
     make -C ./common 
