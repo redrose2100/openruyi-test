@@ -17,8 +17,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Allow public key authentication
 # ############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     grep "^test:" /etc/passwd && userdel -rf test
@@ -64,7 +66,7 @@ EOF
     CHECK_RESULT $? 0 0 "grep id_rsa failed"
     expect <<EOF
         set timeout 15
-        spawn ssh-copy-id -i /root/.ssh/id_rsa.pub "${NODE2_USER}"@"${NODE2_IPV4}"
+        spawn ssh-copy-id -i /root/.ssh/id_rsa.pub ${NODE2_USER}@${NODE2_IPV4}
         expect {
             "*yes/no*" {
                 send "yes\\r"
