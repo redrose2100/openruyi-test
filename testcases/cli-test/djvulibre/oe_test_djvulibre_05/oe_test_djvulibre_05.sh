@@ -15,7 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc          :   verification djvulibre's commnd
 #####################################
-# shellcheck disable=SC2010
+# shellcheck disable=SC1090
+
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -26,7 +27,7 @@ function pre_test() {
     spawn any2djvu test.pdf
     expect "]:"
     send "yes\n"
-    sleep 10
+    sleep 90
     expect eof
 END
     LOG_INFO "End to prepare the test environment."
@@ -35,8 +36,7 @@ END
 function run_test() {
     test -f test.djvu
     CHECK_RESULT $? 0 0 "Check test.djvu not exist."
-    djvused --help >result 2>&1
-    grep "Usage: djvused" result && rm -rf result
+    djvused --help 2>&1 | grep "Usage: djvused"
     CHECK_RESULT $? 0 0 "Check djvused --help failed."
     djvused test.djvu -e output-all >file.dsed
     CHECK_RESULT $? 0 0 "Check djvused -e failed."
@@ -44,13 +44,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check file.dsed not exist."
     djvused test.djvu -f file.dsed -s
     CHECK_RESULT $? 0 0 "Check djvused -f failed."
-    djvuserve >result 2>&1
-    grep "Usage: djvuserve" result && rm -rf result
+    djvuserve 2>&1 | grep "Usage: djvuserve"
     CHECK_RESULT $? 0 0 "Check djvuserve help failed."
     djvuserve test.djvu | grep "Location: test.djvu"
     CHECK_RESULT $? 0 0 "Check djvused failed."
-    djvutoxml --help >result 2>&1
-    grep "Usage: djvutoxml" result && rm -rf result
+    djvutoxml --help 2>&1 | grep "Usage: djvutoxml"
     CHECK_RESULT $? 0 0 "Check djvutoxml --help failed."
     djvutoxml --with-anno test.djvu djvutoxml
     CHECK_RESULT $? 0 0 "Check djvutoxml --with-anno failed."
@@ -64,11 +62,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check djvutoxml --page failed."
     test -f djvutoxml2
     CHECK_RESULT $? 0 0 "Check djvutoxml2 not exist."
-    djvutxt >result 2>&1
-    grep "Usage: djvutxt" result && rm -rf result
-    CHECK_RESULT $?  0 0 "Check djvutxt failed."
+    djvutxt 2>&1 | grep "Usage: djvutxt"
+    CHECK_RESULT $? 0 0 "Check djvutxt failed."
     djvutxt -page=1 test.djvu djvutxt1
-    CHECK_RESULT $?  0 0 "Check djvutxt --page failed."
+    CHECK_RESULT $? 0 0 "Check djvutxt --page failed."
     test -f djvutxt1
     CHECK_RESULT $? 0 0 "Check djvutxt1 not exist."
     djvutxt -detail=char test.djvu djvutxt2
@@ -84,8 +81,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf "$(ls | grep -v '\.sh')"
+    rm -f djvutxt* ./test* file.dsed djvutoxml*
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
+
 main "$@"

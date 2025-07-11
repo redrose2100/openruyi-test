@@ -15,7 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc          :   verification djvulibre's commnd
 #####################################
-# shellcheck disable=SC2010
+# shellcheck disable=SC1090
+
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -26,7 +27,7 @@ function pre_test() {
     spawn any2djvu test.pdf
     expect "]:"
     send "yes\n"
-    sleep 10
+    sleep 90
     expect eof
 END
     LOG_INFO "End to prepare the test environment."
@@ -36,17 +37,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     test -f test.djvu
     CHECK_RESULT $? 0 0 "Check test.djvu not exist."
-    djvudump >result 2>&1
-    grep "Usage: djvudump" result && rm -rf result
+    djvudump 2>&1 | grep "Usage: djvudump"
     CHECK_RESULT $? 0 0 "Check djvudump failed."
-    djvuextract --help >result 2>&1
-    grep "Usage:" result && rm -rf result
+    djvuextract --help 2>&1 | grep "Usage:"
     CHECK_RESULT $? 0 0 "Check djvuextract --help failed."
-    djvumake --help >result 2>&1
-    grep "Usage: djvumake" result && rm -rf result
+    djvumake --help 2>&1 | grep "Usage: djvumake"
     CHECK_RESULT $? 0 0 "Check djvumake --help failed."
-    djvups --help >result 2>&1
-    grep "Usage: djvups" result && rm -rf result
+    djvups --help 2>&1 | grep "Usage: djvups"
     CHECK_RESULT $? 0 0 "Check djvups --help failed."
     djvups -color=yes test.djvu djvups1.ps
     CHECK_RESULT $? 0 0 "Check djvups -color=yes failed."
@@ -93,8 +90,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf "$(ls | grep -v '\.sh')"
+    rm -f djvups* ./test*
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
+
 main "$@"

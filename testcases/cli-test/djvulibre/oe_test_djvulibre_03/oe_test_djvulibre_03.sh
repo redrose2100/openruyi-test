@@ -15,7 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc          :   verification djvulibre's commnd
 #####################################
-# shellcheck disable=SC2010
+# shellcheck disable=SC1090
+
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -26,7 +27,7 @@ function pre_test() {
     spawn any2djvu test.pdf
     expect "]:"
     send "yes\n"
-    sleep 10
+    sleep 90
     expect eof
 END
     LOG_INFO "End to prepare the test environment."
@@ -35,8 +36,7 @@ END
 function run_test() {
     test -f test.djvu
     CHECK_RESULT $? 0 0 "Check test.djvu not exist."
-    ddjvu --help >result 2>&1
-    grep "Usage: ddjvu" result && rm -rf result
+    ddjvu --help 2>&1 | grep "Usage: ddjvu"
     CHECK_RESULT $? 0 0 "Check ddjvu --help failed."
     ddjvu -verbose test.djvu ddjvu1
     CHECK_RESULT $? 0 0 "Check ddjvu -verbose failed."
@@ -66,11 +66,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ddjvu -skip failed."
     test -f ddjvu6
     CHECK_RESULT $? 0 0 "Check ddjvu6 not exist."
-    djvm --help >result 2>&1
-    grep "Usage:" result && rm -rf result
+    djvm --help 2>&1 | grep "Usage:"
     CHECK_RESULT $? 0 0 "Check djvm --help failed."
-    djvmcvt --help >result 2>&1
-    grep "Usage:" result && rm -rf result
+    djvmcvt --help 2>&1 | grep "Usage:"
     CHECK_RESULT $? 0 0 "Check djvmcvt --help failed."
     djvmcvt -b test.djvu djvmcvt.djvu
     CHECK_RESULT $? 0 0 "Check djvmcvt -b failed."
@@ -85,8 +83,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf "$(ls | grep -v '\.sh')"
+    rm -f ddjvu* test* ./*.djvu ./*.iff
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
+
 main "$@"

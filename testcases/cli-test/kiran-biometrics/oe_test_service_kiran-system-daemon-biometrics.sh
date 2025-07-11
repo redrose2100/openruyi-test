@@ -17,11 +17,16 @@
 # @Desc      :   Test kiran-system-daemon-biometrics.service restart
 # #############################################
 # shellcheck disable=SC1091
+
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL kiran-biometrics
+    if ! rpm -qa axel | grep axel; then
+        echo "kiran-biometrics does not exist"
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,7 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop kiran-system-daemon-biometrics.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
