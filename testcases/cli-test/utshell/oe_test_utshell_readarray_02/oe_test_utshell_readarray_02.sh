@@ -25,6 +25,10 @@ function pre_test(){
     useradd -m -s /bin/utshell test
     su - test -c "echo \$0" |grep -i utshell
     CHECK_RESULT $? 0 0 "Not using the utshell environment"
+    cp ./common/testread.sh /home/test
+    script_file="/home/test/testread.sh"
+    chmod 755 "$script_file"
+    chown test:test "$script_file"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -33,7 +37,6 @@ function run_test() {
     su - test -c "echo 'test' >alpha.log"
     su - test -c "readarray < alpha.log -d '\\t' target_array"
     CHECK_RESULT $? 0 0 "Execution failed"
-    script_file="$(pwd)/common/testread.sh"
     su - test -c "bash ${script_file} |grep -i test"
     CHECK_RESULT $? 0 0 "Execution failed"
 }
@@ -41,6 +44,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf test
+    rm -rf "$script_file"
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
