@@ -15,7 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc          :   verification djvulibre's commnd
 #####################################
-# shellcheck disable=SC2010
+# shellcheck disable=SC1090
+
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -33,7 +34,7 @@ function run_test() {
     spawn any2djvu http://barak.pearlmutter.net/papers mesh-preprint.ps.gz
     expect "]:"
     send "yes\n"
-    sleep 10
+    sleep 300
     expect eof
 END
     CHECK_RESULT $? 0 0 "Check any2djvu failed."
@@ -43,21 +44,20 @@ END
     spawn any2djvu test.pdf
     expect "]:"
     send "yes\n"
+    sleep 60
     expect eof
 END
     CHECK_RESULT $? 0 0 "Check any2djvu test.pdf failed."
     test -f test.djvu
     CHECK_RESULT $? 0 0 "Check test.djvu not exist."
-    bzz --help >result 2>&1
-    grep -E "DjVuLibre|Usage" result && rm -rf result
+    bzz --help 2>&1 | grep -E "DjVuLibre|Usage"
     CHECK_RESULT $? 0 0 "Check bzz --help failed."
     bzz -e test.djvu bzz
     CHECK_RESULT $? 0 0 "Check bzz -e failed."
     bzz -d test.djvu bzz.djvu
     bzz -d bzz.djvu bzz1
     CHECK_RESULT $? 0 0 "Check bzz -d failed."
-    c44 --help >result 2>&1
-    grep -E "DjVuLibre|Usage: c44" result && rm -rf result
+    c44 --help 2>&1 | grep -E "DjVuLibre|Usage: c44"
     CHECK_RESULT $? 0 0 "Check c44 --help failed."
     c44 -crcbdelay 10 test1.jpg
     CHECK_RESULT $? 0 0 "Check c44 -crcbdelay failed."
@@ -81,8 +81,9 @@ END
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf "$(ls | grep -v '\.sh')"
+    rm -f bzz* mesh* test*
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
+
 main "$@"
