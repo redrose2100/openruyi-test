@@ -21,7 +21,7 @@ source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    test_disk="/dev/"$(TEST_DISK 2)
+    test_disk=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
     ssh_cmd_node "fdisk $test_disk << diskEof
 n
 p
@@ -42,11 +42,15 @@ w
 diskEof"
     ssh_cmd_node "mkfs.ext3 ${test_disk}1"
     ssh_cmd_node "mkfs.ext4 ${test_disk}2"
-    ssh_cmd_node "mkfs -t xfs -f ${test_disk}3"
+    if [[ ${NODE1_FRAME} != "riscv64" ]]; then
+        ssh_cmd_node "mkfs -t xfs -f ${test_disk}3"
+    fi
     ssh_cmd_node "mkdir /mnt/test_ext3 /mnt/test_ext4 /mnt/test_xfs"
     ssh_cmd_node "mount ${test_disk}1 /mnt/test_ext3"
     ssh_cmd_node "mount ${test_disk}2 /mnt/test_ext4"
-    ssh_cmd_node "mount ${test_disk}3 /mnt/test_xfs"
+    if [[ ${NODE1_FRAME} != "riscv64" ]]; then
+        ssh_cmd_node "mount ${test_disk}3 /mnt/test_xfs"
+    fi
     LOG_INFO "Finish to prepare the database config."
 }
 
@@ -55,8 +59,8 @@ function run_test() {
     LOG_INFO "Start to run test."
     ssh_cmd_node "df -iT | grep '${test_disk}'"
     CHECK_RESULT $? 0 0 "Check fs is mounted failed."
-    REMOTE_REBOOT 2
-    REMOTE_REBOOT_WAIT 2
+    ssh_cmd_node "reboot"
+    SLEEP_WAIT 60
     ssh_cmd_node "df -iT | grep '${test_disk}'"
     CHECK_RESULT $? 1 0 "Check fs is mounted after reboot."
     LOG_INFO "End to run test."
@@ -64,8 +68,13 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    ssh_cmd_node "umount /mnt/test_ext3 /mnt/test_ext4 /mnt/test_xfs"
-    ssh_cmd_node "rm -rf /mnt/test_ext3 /mnt/test_ext4 /mnt/test_xfs"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        ssh_cmd_node "umount /mnt/test_ext3 /mnt/test_ext4"
+        ssh_cmd_node "rm -rf /mnt/test_ext3 /mnt/test_ext4"
+    else
+        ssh_cmd_node "umount /mnt/test_ext3 /mnt/test_ext4 /mnt/test_xfs"
+        ssh_cmd_node "rm -rf /mnt/test_ext3 /mnt/test_ext4 /mnt/test_xfs"
+    fi
     ssh_cmd_node "fdisk $test_disk << diskEof
 d
 
@@ -75,8 +84,8 @@ d
 
 w
 diskEof"
-    REMOTE_REBOOT 2
-    REMOTE_REBOOT_WAIT 2
+    ssh_cmd_node "reboot"
+    SLEEP_WAIT 60
     LOG_INFO "End to restore the test environment."
 }
 
