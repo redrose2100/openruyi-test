@@ -19,6 +19,15 @@
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if [ ! -f "/usr/lib/modules/$(uname -r)/kernel/drivers/acpi/acpi_ipmi.ko.xz" ]; then
+        LOG_WARN "acpi_ipmi module not found on this platform, skipping test."
+        exit 255
+    fi
+    LOG_INFO "Finish preparing the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)

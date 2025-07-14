@@ -19,6 +19,15 @@
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if grep regmap-i2c /lib/modules/"$(uname -r)"/modules.builtin; then
+        LOG_WARN "regmap-i2c is builtin, skipping module load/unload steps"
+        exit 255
+    fi
+    LOG_INFO "Finish preparing the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)
