@@ -18,6 +18,15 @@
 # ############################################
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if [ ! -d "/sys/devices/system/memory" ]; then
+        LOG_WARN "Memory hotplug not supported on this platform, skipping test."
+        exit 255
+    fi
+    LOG_INFO "Finish preparing the test environment."
+}
+
 function run_test() {
     LOG_INFO "start to run test."
     lsmem -V | grep lsmem
