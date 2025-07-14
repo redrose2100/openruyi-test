@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test fetch-crl
 # #############################################
-
+#shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
@@ -32,7 +32,7 @@ function run_test() {
     # test -b
     httpry -b tmp.txt -o log.file -d
     for((i=1;i<=3;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 5
     grep "baidu" tmp.txt
@@ -41,7 +41,7 @@ function run_test() {
     rm -f index* tmp.txt log.file
     httpry -i "${NODE1_NIC}" -b tmp.txt -o log.file -d
     for((i=1;i<=3;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 5
     grep "baidu" tmp.txt
@@ -49,8 +49,8 @@ function run_test() {
     pkill -9 -f "httpry -i"
     rm -f index* tmp.txt log.file
     httpry -i "${NODE1_NIC}" -b tmp.txt -o log.file -d
-    wget www.baidu.com
-    wget www.baidu.com
+    curl www.baidu.com
+    curl www.baidu.com
     SLEEP_WAIT 5
     httpry -r tmp.txt | grep "baidu"
     CHECK_RESULT $? 0 0 "Check httpry -r failed"
@@ -63,7 +63,7 @@ function run_test() {
     rm -f index* output.txt
     httpry -i "${NODE1_NIC}" -m get -b tmp.txt -o log.file -d
     for((i=1;i<=3;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 5
     grep "baidu" tmp.txt
@@ -77,7 +77,7 @@ function run_test() {
     rm -f index* output.txt
     httpry -n 2 -t 2 -b tmp.txt -o log.file -d
     for((i=1;i<=3;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 2
     grep "baidu" tmp.txt

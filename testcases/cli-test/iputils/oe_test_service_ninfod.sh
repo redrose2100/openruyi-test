@@ -16,11 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ninfod.service restart
 # #############################################
-
+#shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    if ! dnf provides iputils-ninfod &>/dev/null; then
+        LOG_INFO "Package iputils-ninfod cannot be downloaded, skipping test."
+        exit 255
+    fi
     DNF_INSTALL iputils-ninfod
     LOG_INFO "End of environmental preparation!"
 }

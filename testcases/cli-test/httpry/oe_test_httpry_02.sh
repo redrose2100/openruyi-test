@@ -30,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     httpry -i "${NODE1_NIC}" -f timestamp,source-ip,dest-ip,direction,host,request-uri,user-agent -o tmp.log -b tmp.txt -d
     for((i=1;i<=3;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 5
     httpry -r tmp.txt | grep "baidu"
@@ -40,7 +40,7 @@ function run_test() {
     # test -F
     httpry -i "${NODE1_NIC}" -b tmp.txt -o tmp.log -F -d
     for((i=1;i<=3;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 10
     grep "baidu" tmp.txt
@@ -50,7 +50,7 @@ function run_test() {
     # test -n
     httpry -i "${NODE1_NIC}" -b tmp.txt -n 3 -o tmp.log -d
     for((i=1;i<=4;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 5
     grep "baidu" tmp.txt
@@ -60,7 +60,7 @@ function run_test() {
     # test -p
     httpry -n 2 -p -o tmp.log -b tmp.txt -d
     for((i=1;i<=3;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 2
     grep "baidu" tmp.txt
@@ -74,7 +74,7 @@ function run_test() {
     # test -s
     httpry -n 2 -s -o tmp.log -b tmp.txt -d
     for((i=1;i<=3;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 2
     grep "baidu" tmp.txt
@@ -84,7 +84,7 @@ function run_test() {
     # test -l
     httpry -s -l 20 -o tmp.log -b tmp.txt -d
     for((i=1;i<=3;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 15
     grep "baidu" tmp.txt
@@ -94,7 +94,7 @@ function run_test() {
     # test -P
     httpry -n 2 -P PID -o tmp.log -b tmp.txt -d
     for((i=1;i<=3;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 2
     grep "baidu" tmp.txt
@@ -105,7 +105,7 @@ function run_test() {
     useradd testdemo
     httpry -n 2 -o tmp.log -u testdemo -b tmp.txt -d
     for((i=1;i<=3;i++)); do
-        wget www.baidu.com
+        curl www.baidu.com
     done
     SLEEP_WAIT 2
     grep "baidu" tmp.txt
