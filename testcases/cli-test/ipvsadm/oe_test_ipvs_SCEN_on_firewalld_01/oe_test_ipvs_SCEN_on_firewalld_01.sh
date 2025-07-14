@@ -57,15 +57,15 @@ function run_test() {
     SLEEP_WAIT 2
     P_SSH_CMD --node 4 --cmd "rm -rf /tmp/result_curl.txt && bash -x /tmp/GET_CURL_RESULT.sh;mv /tmp/result_curl.txt /tmp/result_curl1.txt"
     SFTP get --localdir ./ --remotefile result_curl1.txt --remotedir /tmp --node 4
-    CHECK_RESULT "$(grep -cE "${ipvs_ip2}" ./result1_curl.txt)" 0
-    CHECK_RESULT "$(grep -cE "${ipvs_ip3}" ./result1_curl.txt)" 3
+    CHECK_RESULT "$(grep -cE "${ipvs_ip2}" ./result_curl1.txt)" 0
+    CHECK_RESULT "$(grep -cE "${ipvs_ip3}" ./result_curl1.txt)" 3
     SLEEP_WAIT 2
     P_SSH_CMD --node 3 --cmd "systemctl start firewalld"
     SLEEP_WAIT 2
     P_SSH_CMD --node 4 --cmd "rm -rf /tmp/result_curl.txt && bash -x /tmp/GET_CURL_RESULT.sh;mv /tmp/result_curl.txt /tmp/result_curl1.txt"
     SFTP get --localdir ./ --remotefile result_curl1.txt --remotedir /tmp --node 4
-    CHECK_RESULT "$(grep -cE "${ipvs_ip2}" ./result2_curl.txt)" 0
-    CHECK_RESULT "$(grep -cE "${ipvs_ip3}" ./result2_curl.txt)" 0
+    CHECK_RESULT "$(grep -cE "${ipvs_ip2}" ./result_curl1.txt)" 0
+    CHECK_RESULT "$(grep -cE "${ipvs_ip3}" ./result_curl1.txt)" 0
     LOG_INFO "End to run test."
 }
 
