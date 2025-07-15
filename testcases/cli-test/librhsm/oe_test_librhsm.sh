@@ -21,6 +21,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if ! dnf provides glib &>/dev/null; then
+        LOG_INFO "Package glib cannot be downloaded, skipping test."
+        exit 255
+    fi
     DNF_INSTALL "meson glib json-glib-debuginfo json-glib-debugsource json-glib-devel json-glib-help glib-help ninja-build"
     LOG_INFO "End to prepare the test environment."
 }
