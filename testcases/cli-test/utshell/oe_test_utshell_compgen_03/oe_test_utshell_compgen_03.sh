@@ -23,6 +23,11 @@ function pre_test(){
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "utshell"
     useradd -m -s /bin/utshell test
+    cp ./common/test.sh /home/test
+    script_file="/home/test/test.sh"
+    chmod 755 "$script_file"
+    chown test:test "$script_file"
+
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -31,8 +36,7 @@ function run_test() {
     su - test -c "complete -W 'aa bb cc dd' ee && complete -p |grep -i ee"
     CHECK_RESULT $? 0 0 "There is no such statement"
     su - test -c "complete -r && complete -p |grep -i ee"
-    CHECK_RESULT $? 0 1 "There is no such statement"
-    script_file="$(pwd)/common/test.sh"
+    CHECK_RESULT $? 1 0 "There is no such statement"
     su - test -c "bash ${script_file}"
     CHECK_RESULT $? 0 0 "Command execution failed"
 }
@@ -40,6 +44,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf test
+    rm -rf "$script_file"
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
