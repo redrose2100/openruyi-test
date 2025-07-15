@@ -34,6 +34,7 @@ function run_test() {
     grep "CUSTOM_PERIODIC_MONITOR=\"on\"" /etc/sysconfig/sysmonitor || oe_err "CUSTOM_PERIODIC_MONITOR=on check failed"
     add_daemon_custommonitor daemon1
     add_periodic_custommonitor periodic1
+    sleep 5
     monitor_restart
     sleep 15
     pgrep -a -f daemon1 || oe_err "daemon1 start failed"
