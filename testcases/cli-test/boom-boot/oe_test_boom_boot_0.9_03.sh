@@ -18,11 +18,17 @@
 ###################################
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}/testcases/cli-test/boom-boot/common/checkenv.sh"
+
+
 function pre_test() {
+    # 判断boom-boot版本是否为0.9, 如果不是skip退出
+    checkversion09
     LOG_INFO "Start to prepare the test environment"
     DNF_INSTALL "boom-boot"
     LOG_INFO "End to prepare the test environment"
 }
+
 
 function run_test() {
     LOG_INFO "Start to run testcase:oe_test_boom_boot_03."
@@ -83,10 +89,14 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
+
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
     rm -rf boom.*
     LOG_INFO "End to restore the test environment."
 }
+
+
 main "$@"
+
