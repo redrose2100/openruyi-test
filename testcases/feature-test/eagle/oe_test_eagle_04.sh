@@ -22,8 +22,8 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "eagle"
     cp /etc/eagle/eagle_config.ini /etc/eagle/eagle_config.ini_bak
-    mkdir bak
-    chmod 777 bak
+    mkdir /home/bak
+    chmod 777 /home/bak
     echo "while true
 do
   systemctl restart eagle
@@ -35,14 +35,15 @@ done" > test.sh
 function run_test() {
     LOG_INFO "Start to run test."
     sed -i 's#log_path=.*#log_path=/tmp#' /etc/eagle/eagle_config.ini
-    sed -i 's#bak_log_path=.*#bak_log_path='"$(pwd)"'/bak#' /etc/eagle/eagle_config.ini
+    sed -i 's#bak_log_path=.*#bak_log_path=/home/bak#' /etc/eagle/eagle_config.ini
     sed -i 's/file_size=.*/file_size=1/' /etc/eagle/eagle_config.ini
+    sed -i 's/config_update_interval=.*/config_update_interval=5/' /etc/eagle/eagle_config.ini
     systemctl restart eagle
-    SLEEP_WAIT 5
+    SLEEP_WAIT 10
     sh test.sh &
-    SLEEP_WAIT 500
-    ls "$(pwd)/"bak
-    num=$(find "$(pwd)"/bak -name 'eagle.log*' | wc -l)
+    SLEEP_WAIT 800
+    ls /home/bak
+    num=$(find /home/bak -name 'eagle.log*' | wc -l)
     test -f /tmp/eagle.log -a "${num}" -ge 1
     CHECK_RESULT $? 0 0 "Check bak_log_path failed"
     LOG_INFO "End to run test."
@@ -52,7 +53,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     kill -9 "$(pgrep -f test.sh)"
     mv -f /etc/eagle/eagle_config.ini_bak /etc/eagle/eagle_config.ini
-    rm -rf bak test.sh
+    rm -rf /home/bak test.sh
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

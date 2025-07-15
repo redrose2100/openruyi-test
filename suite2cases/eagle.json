@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/feature-test/eagle",
+    "machine type": "physical",
     "cases": [
         {
             "name": "oe_test_eagle_01"
