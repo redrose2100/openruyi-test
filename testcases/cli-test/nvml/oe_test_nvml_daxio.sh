@@ -15,11 +15,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of nvml command
 # ############################################
+# shellcheck disable=SC2119
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if ! yum list nvml &>/dev/null; then
+         echo "skip unsupported arm arch"
+         exit 255
+    fi
     DNF_INSTALL nvml
     LOG_INFO "End to prepare the test environment."
 }
@@ -30,9 +36,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check daxio -h failed"
     daxio --help 2>&1 | grep 'Usage: daxio'
     CHECK_RESULT $? 0 0 "Check daxio --help failed"
-    daxio -V | grep $(rpm -q nvml --queryformat '%{version}\n')
+    daxio -V | grep "$(rpm -q nvml --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check daxio -V failed"
-    daxio --version | grep $(rpm -q nvml --queryformat '%{version}\n')
+    daxio --version | grep "$(rpm -q nvml --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check daxio --version failed"
     LOG_INFO "End to run test."
 }
@@ -43,4 +49,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
