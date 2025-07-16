@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-inputfile="/home/test/alpha.log"
+inputfile="./alpha.log"
 exec {fd}<"$inputfile"
 readarray -u ${fd} -d',' abc
 echo "${abc[*]}"
