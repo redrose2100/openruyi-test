@@ -1055,6 +1055,9 @@
 	},
 	{
 	    "name": "oe_test_xxd"
+	},
+	{
+	    "name": "oe_test_xmlwf"
 	}
     ]
 }
