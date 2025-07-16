@@ -84,11 +84,13 @@ function run_test() {
     CHECK_RESULT $?
     sleep 1
     tcpdump -nne -i "${node1_net_card2}" host 192.0.2.2 | grep VRRP >tcpdump_pack &
+    pid1=$!
     SLEEP_WAIT 3
     tcpdump -nne -i "${node1_net_card3}" host 192.0.2.2 | grep VRRP >tcpdump_pack2 &
+    pid2=$!
     SLEEP_WAIT 3
     SLEEP_WAIT 30
-    kill -9 "$(pgrep -f 'tcpdump -nne -i')"
+    kill -9 "$pid1" "$pid2"
     (grep "192.0.2.2 > 192.0.2.1: VRRPv2" tcpdump_pack >/dev/null && grep "192.0.2.1 > 192.0.2.2: VRRPv2" tcpdump_pack >/dev/null) ||
         (grep "192.0.2.2 > 192.0.2.1: VRRPv2" tcpdump_pack2 >/dev/null && grep "192.0.2.1 > 192.0.2.2: VRRPv2" tcpdump_pack2 >/dev/null)
     CHECK_RESULT $?
