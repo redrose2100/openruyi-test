@@ -15,15 +15,21 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Test hwloc-distances
 #####################################
+# shellcheck disable=SC2119
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/hwloc/common/checkenv.sh"
+
 
 function pre_test()
 {
+    # 判断 hwloc 版本是否为1.11.9, 如果不是skip退出
+    checkversion1119
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "hwloc"
     LOG_INFO "End to prepare the test environment."
 }
+
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -50,6 +56,7 @@ function run_test() {
     LOG_INFO "Finish test!"
 }
 
+
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
@@ -57,4 +64,6 @@ function post_test()
     LOG_INFO "End to restore the test environment."
 }
 
+
 main "$@"
+
