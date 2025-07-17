@@ -16,10 +16,24 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test dbcheck
 # #############################################
+# shellcheck disable=SC2119
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
+
+# 判断 bacula 版本是否为9.4.4, 如果不是skip退出 
+checkversion944() {
+    BACULA_VERSION=$(yum info bacula-common 2>/dev/null  | grep -E '^Version' | awk '{print $NF}' | head -1)
+    REQUIRED_VERSION=9.4.4
+    if [[ "$BACULA_VERSION" != "$REQUIRED_VERSION" ]]; then
+        echo "当前仓库 bacula 版本为 ${BACULA_VERSION}，不等于${REQUIRED_VERSION}，跳过测试"
+        exit 255
+    fi
+}
+
+
 function pre_test() {
+    checkversion944
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
@@ -38,6 +52,7 @@ function pre_test() {
     systemctl start bacula-dir.service bacula-sd.service bacula-fd.service
     LOG_INFO "End to prepare the test environment."
 }
+
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -74,6 +89,7 @@ EOF
     LOG_INFO "End to run test."
 }
 
+
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=$OLD_LANG
@@ -88,4 +104,6 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
+
 main "$@"
+
