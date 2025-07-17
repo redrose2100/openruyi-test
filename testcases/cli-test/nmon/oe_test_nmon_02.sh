@@ -22,7 +22,7 @@ source "${OET_PATH}/testcases/cli-test/nmon/common/common.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     disks=$(TEST_DISK)
-    disk_list=("$disks")
+    read -ra disk_list <<<"$disks"
     local_disk=${disk_list[0]}
     DNF_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb sysstat pciutils"
     env_pre
@@ -31,7 +31,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    expect<<EOF
+    expect <<EOF
     spawn nmon -b
     send "q"
     expect eof
@@ -56,7 +56,7 @@ EOF
     test -f ./template/interactive_-s
     CHECK_RESULT $? 0 0 "Failed option: -s"
 
-    if [[ ( "$NODE1_FRAME" == "x86_64" || "$NODE1_FRAME" == "aarch64" ) && $(lspci | grep -i vga | grep -i nvidia) ]]; then
+    if [[ ("$NODE1_FRAME" == "x86_64" || "$NODE1_FRAME" == "aarch64") && $(lspci | grep -i vga | grep -i nvidia) ]]; then
         expect <<EOF
     spawn ./nmon_openEuler
     send "a\r"
@@ -138,9 +138,9 @@ EOF
     send "q"
     expect eof
 EOF
-    test -f ./template/interactive_D_1 && test -f ./template/interactive_D_2 && \
-    test -f ./template/interactive_D_3 && test -f ./template/interactive_D_4 && \
-    test -f ./template/interactive_D_5 && test -f ./template/interactive_D_6
+    test -f ./template/interactive_D_1 && test -f ./template/interactive_D_2 &&
+        test -f ./template/interactive_D_3 && test -f ./template/interactive_D_4 &&
+        test -f ./template/interactive_D_5 && test -f ./template/interactive_D_6
     CHECK_RESULT $? 0 0 "Failed option: D"
 
     echo "userDefinedDiskGroups $local_disk" >./template/uddg
@@ -159,7 +159,7 @@ EOF
     test -f ./template/interactive_g_1 && test -f ./template/interactive_g_2
     CHECK_RESULT $? 0 0 "Failed option: g"
 
-    notdisk=$(iostat -d | grep -vE "$local_disk" | grep -vE 'Linux|Device|^$' | awk '{print $1}' | sed ':t;N;s/\n/\|/;b t')
+    notdisk=$(iostat -d | grep -vE "${local_disk:0:2}" | grep -vE 'Linux|Device|^$' | awk '{print $1}' | sed ':t;N;s/\n/\|/;b t')
     expect <<EOF
     spawn nmon -g auto
     send "dG\r"
@@ -245,9 +245,9 @@ EOF
     send "q"
     expect eof
 EOF
-    test -f ./template/interactive_k_1 && test -f ./template/interactive_k_2 && \
-    test -f ./template/interactive_k_3 && test -f ./template/interactive_k_4 && \
-    test -f ./template/interactive_k_5
+    test -f ./template/interactive_k_1 && test -f ./template/interactive_k_2 &&
+        test -f ./template/interactive_k_3 && test -f ./template/interactive_k_4 &&
+        test -f ./template/interactive_k_5
     CHECK_RESULT $? 0 0 "Failed option: k"
 
     expect <<EOF
@@ -340,7 +340,7 @@ EOF
     test -f ./template/interactive_o
     CHECK_RESULT $? 0 0 "Failed option: o"
 
-expect <<EOF
+    expect <<EOF
     spawn nmon
     send "q\r"
     expect eof
@@ -357,7 +357,7 @@ EOF
     lsb_1=$(lsb_release -i | cut -d ':' -f 2 | xargs)
     lsb_2=$(lsb_release -d | cut -d ':' -f 2 | xargs)
     lsb_3=$(lsb_release -r | cut -d ':' -f 2 | xargs)
-    lsb_4=$(lsb_release -c | cut -d ':' -f 2 | xargs) 
+    lsb_4=$(lsb_release -c | cut -d ':' -f 2 | xargs)
     expect <<EOF
     spawn nmon
     send "r\r"
@@ -400,14 +400,14 @@ EOF
     send "q"
     expect eof
 EOF
-    test -f ./template/interactive_r_1 && test -f ./template/interactive_r_2 && \
-    test -f ./template/interactive_r_3 && test -f ./template/interactive_r_4 && \
-    test -f ./template/interactive_r_5 && test -f ./template/interactive_r_6 && \
-    test -f ./template/interactive_r_7 && test -f ./template/interactive_r_8 && \
-    test -f ./template/interactive_r_9 && test -f ./template/interactive_r_10 && \
-    test -f ./template/interactive_r_11 && test -f ./template/interactive_r_12
+    test -f ./template/interactive_r_1 && test -f ./template/interactive_r_2 &&
+        test -f ./template/interactive_r_3 && test -f ./template/interactive_r_4 &&
+        test -f ./template/interactive_r_5 && test -f ./template/interactive_r_6 &&
+        test -f ./template/interactive_r_7 && test -f ./template/interactive_r_8 &&
+        test -f ./template/interactive_r_9 && test -f ./template/interactive_r_10 &&
+        test -f ./template/interactive_r_11 && test -f ./template/interactive_r_12
     CHECK_RESULT $? 0 0 "Failed option: r"
-    
+
     expect <<EOF
     spawn nmon
     send "t\r"
@@ -444,9 +444,9 @@ EOF
     send "q"
     expect eof
 EOF
-    test -f ./template/interactive_T_1 && test -f ./template/interactive_T_2 && \
-    test -f ./template/interactive_T_3 && test -f ./template/interactive_T_4 && \
-    test -f ./template/interactive_T_5 && test -f ./template/interactive_T_6
+    test -f ./template/interactive_T_1 && test -f ./template/interactive_T_2 &&
+        test -f ./template/interactive_T_3 && test -f ./template/interactive_T_4 &&
+        test -f ./template/interactive_T_5 && test -f ./template/interactive_T_6
     CHECK_RESULT $? 0 0 "Failed option: T"
 
     expect <<EOF
@@ -511,4 +511,3 @@ function post_test() {
 }
 
 main "$@"
-
