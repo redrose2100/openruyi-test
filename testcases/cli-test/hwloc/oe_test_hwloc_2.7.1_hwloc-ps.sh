@@ -20,8 +20,7 @@
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
-function pre_test()
-{
+function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "hwloc"
     LOG_INFO "End to prepare the test environment."
@@ -33,9 +32,9 @@ function run_test() {
     hwloc-ps --version | grep "${hwloc_version}"
     CHECK_RESULT $? 0 0 "hwloc-ps --version falied"
     hwloc-ps -h 2>&1 | grep "Usage:"
-    CHECK_RESULT $? 1 0 "hwloc-ps -h falied"
+    CHECK_RESULT $? 0 0 "hwloc-ps -h falied"
     hwloc-ps --help 2>&1 | grep "Usage:"
-    CHECK_RESULT $? 1 0 "hwloc-ps --help falied"
+    CHECK_RESULT $? 0 0 "hwloc-ps --help falied"
     hwloc-ps --uid all -a | grep "Machine"
     CHECK_RESULT $? 0 0 "hwloc-ps --uid all failed"
     hwloc-ps --uid 0 -a | grep "Machine"
@@ -55,8 +54,7 @@ function run_test() {
     LOG_INFO "Finish test!"
 }
 
-function post_test()
-{
+function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

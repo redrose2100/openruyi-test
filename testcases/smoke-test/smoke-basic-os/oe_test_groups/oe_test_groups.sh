@@ -26,32 +26,32 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    current_group=$(grep "$current_user" /etc/group | awk -F":" '{print $1}')
+    current_group=$(grep "$current_user" /etc/group | awk -F":" '{print $1}' | head -n 1)
     groups
-    CHECK_RESULT $? 0 0  "test groups fail"
+    CHECK_RESULT $? 0 0 "test groups fail"
     user_group=$(groups)
     test "${user_group}" == "${current_group}"
-    CHECK_RESULT $? 0 0  "test current user group fail"
+    CHECK_RESULT $? 0 0 "test current user group fail"
 
     useradd test_user1
     groups test_user1
-    CHECK_RESULT $? 0 0  "test test_user1 groups fail"
+    CHECK_RESULT $? 0 0 "test test_user1 groups fail"
     user_group1=$(grep "test_user1" /etc/group | awk -F":" '{print $1}')
     user_group=$(groups test_user1 | awk '{print $NF}')
     test "${user_group}" == "${user_group1}"
-    CHECK_RESULT $? 0 0  "test test_user1 group fail"
+    CHECK_RESULT $? 0 0 "test test_user1 group fail"
 
     useradd -m -g root test_user2
     groups test_user2
-    CHECK_RESULT $? 0 0  "test test_user2 groups fail"
+    CHECK_RESULT $? 0 0 "test test_user2 groups fail"
     user_group=$(groups test_user2 | awk '{print $NF}')
     test "${user_group}" == "root"
-    CHECK_RESULT $? 0 0  "test test_user2 group fail"
+    CHECK_RESULT $? 0 0 "test test_user2 group fail"
 
     groups --help
-    CHECK_RESULT $? 0 0  "test args --help fail"
+    CHECK_RESULT $? 0 0 "test args --help fail"
     groups --version
-    CHECK_RESULT $? 0 0  "test args --version fail"
+    CHECK_RESULT $? 0 0 "test args --version fail"
     LOG_INFO "Finish test."
 }
 
@@ -66,6 +66,3 @@ function post_test() {
 }
 
 main "$@"
-
-
-
