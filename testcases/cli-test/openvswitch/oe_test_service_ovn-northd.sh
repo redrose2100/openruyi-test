@@ -16,21 +16,27 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ovn-northd.service restart
 # #############################################
+# shellcheck disable=SC2119
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/openvswitch/common/checkenv.sh"
+
 
 function pre_test() {
+    # 如果openvswitch版本大于等于 2.12.0-22，跳过ovn测试用例。 因为此版本后ovn被移除。
+    checkversion2120
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL openvswitch-ovn-central
     service=ovn-northd.service
     log_time=$(date '+%Y-%m-%d %T')
     flag=false
-    if [ $(getenforce | grep Enforcing) ]; then
+    if getenforce | grep -q Enforcing ; then
         setenforce 0
         flag=true
     fi
     LOG_INFO "End of environmental preparation!"
 }
+
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -50,14 +56,17 @@ function run_test() {
     LOG_INFO "Finish test!"
 }
 
+
 function post_test() {
     LOG_INFO "start environment cleanup."
     service "${service}" stop
     DNF_REMOVE
-    if [ ${flag} = 'true' ]; then
+    if [ "${flag}" = 'true' ]; then
         setenforce 1
     fi
     LOG_INFO "Finish environment cleanup!"
 }
 
+
 main "$@"
+
