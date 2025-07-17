@@ -15,14 +15,15 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   mcelog is a tool used to check for hardware error on x86 Linux.
 #####################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if [ "${NODE1_FRAME}" != "x86_64" ]; then
         echo "Non X86 architecture,this function is not supported"
-        exit
+        exit 255
     else
         DNF_INSTALL "mcelog gcc gcc-c++ flex dialog git"
     fi
@@ -56,7 +57,7 @@ function run_test() {
     CHECK_RESULT $?
     SLEEP_WAIT 3 "test -f /var/log/mcelog -a -f haha.txt" 2
     CHECK_RESULT $?
-    test $(pgrep -f "mcelog --ignorenodev --daemon") -eq $(cat haha.txt)
+    test "$(pgrep -f 'mcelog --ignorenodev --daemon')" -eq "$(cat haha.txt)"
     CHECK_RESULT $?
     mcelog --client
     CHECK_RESULT $?
@@ -64,7 +65,7 @@ function run_test() {
     CHECK_RESULT $?
     mcelog --ascii --file /var/log/mcelog | grep 'Hardware event'
     CHECK_RESULT $?
-    kill -9 $(pgrep -f "mcelog --ignorenodev --daemon")
+    kill -9 "$(pgrep -f 'mcelog --ignorenodev --daemon')"
     LOG_INFO "End to run test."
 }
 
@@ -72,7 +73,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     echo "0" >/sys/devices/system/machinecheck/machinecheck0/tolerant
     rm -f correct /var/log/mcelog haha.txt
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

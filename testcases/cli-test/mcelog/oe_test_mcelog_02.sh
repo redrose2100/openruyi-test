@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   mcelog is a tool used to check for hardware error on x86 Linux.
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
@@ -22,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if [ "${NODE1_FRAME}" != "x86_64" ]; then
         echo "Non X86 architecture,this function is not supported"
-        exit
+        exit 255
     else
         DNF_INSTALL mcelog
     fi
@@ -47,26 +48,26 @@ function run_test() {
     CHECK_RESULT $?
     mcelog_id1=$(pgrep -f "mcelog --daemon --syslog-error --dmi --no-imc-log --filter --num-errors N")
     CHECK_RESULT $?
-    kill -9 $mcelog_id1
+    kill -9 "$mcelog_id1"
     CHECK_RESULT $?
     mcelog --daemon --no-syslog --no-dmi --no-filter
     CHECK_RESULT $?
     mcelog_id2=$(pgrep -f "mcelog --daemon --no-syslog --no-dmi --no-filter")
     CHECK_RESULT $?
-    kill -9 $mcelog_id2
+    kill -9 "$mcelog_id2"
     CHECK_RESULT $?
     mcelog --is-cpu-supported
     CHECK_RESULT $?
     nohup mcelog --daemon --foreground &
     CHECK_RESULT $?
-    kill -9 $(pgrep -f "mcelog --daemon --foreground")
+    kill -9 "$(pgrep -f 'mcelog --daemon --foreground')"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
