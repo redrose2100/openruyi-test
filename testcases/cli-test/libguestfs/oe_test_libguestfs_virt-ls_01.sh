@@ -23,33 +23,40 @@ function pre_test() {
     libguestfs_pre_test
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+      VIRT_NAME="openEuler-2403"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+      VIRT_NAME="openEuler-2003"
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    virt-ls --format=qcow2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /etc
+    virt-ls --format=qcow2 -a /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /etc
     CHECK_RESULT $? 0 0 "Check virt-ls -a failed"
-    virt-ls -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /
+    virt-ls -a /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /
     CHECK_RESULT $? 0 0 "Check virt-ls -m failed"
-    virt-ls -lR -d openEuler-2003 --checksum=md5 --time-days /etc/ | awk '$6 <= 7'
+    virt-ls -lR -d "${VIRT_NAME}" --checksum=md5 --time-days /etc/ | awk '$6 <= 7'
     CHECK_RESULT $? 0 0 "Check virt-ls -lR failed"
-    virt-ls -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /etc
+    virt-ls -c test:///default -a /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /etc
     CHECK_RESULT $? 0 0 "Check virt-ls -c failed"
-    virt-ls --csv -lR -d openEuler-2003 --time-days /etc/ | awk '$6 <= 7'
+    virt-ls --csv -lR -d "${VIRT_NAME}" --time-days /etc/ | awk '$6 <= 7'
     CHECK_RESULT $? 0 0 "Check virt-ls --csv failed"
-    virt-ls -d openEuler-2003 /etc
+    virt-ls -d "${VIRT_NAME}" /etc
     CHECK_RESULT $? 0 0 "Check virt-ls -d failed"
-    virt-ls -lR -d openEuler-2003 --echo-keys /etc/ | awk '$6 <= 7'
+    virt-ls -lR -d "${VIRT_NAME}" --echo-keys /etc/ | awk '$6 <= 7'
     CHECK_RESULT $? 0 0 "Check virt-ls --echo-keys failed"
-    virt-ls -lR --extra-stats -d openEuler-2003 /etc/ | awk '$6 <= 7'
+    virt-ls -lR --extra-stats -d "${VIRT_NAME}" /etc/ | awk '$6 <= 7'
     CHECK_RESULT $? 0 0 "Check virt-ls --extra-stats failed"
-    virt-ls --format=qcow2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /etc
+    virt-ls --format=qcow2 -a /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /etc
     CHECK_RESULT $? 0 0 "Check virt-ls --format failed"
     virt-ls --help | grep 'virt-ls: list'
     CHECK_RESULT $? 0 0 "Check virt-ls --help failed"
-    virt-ls -h -lR -d openEuler-2003 --time-days /etc/ | awk '$6 <= 7'
+    virt-ls -h -lR -d "${VIRT_NAME}" --time-days /etc/ | awk '$6 <= 7'
     CHECK_RESULT $? 0 0 "Check virt-ls -h failed"
     LOG_INFO "End of the test."
 }
