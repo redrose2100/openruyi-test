@@ -15,29 +15,35 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   oeAware test
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "oeAware-manager"
+    if yum list oeAware-manager; then
+        DNF_INSTALL "oeAware-manager"
+    else
+        echo "oeAware-manager does not exist"
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
+
 function run_test() {
     LOG_INFO "Start to run test."
     test1=$(oeawarectl --query test.so)
     CHECK_RESULT "$test1" "Plugin query failed, because plugin does not exist." 0 "test1 failed"
-    test2=$(oeawarectl --query libthread_collector.so | grep "libthread_collector.so")
-    CHECK_RESULT "$test2" "libthread_collector.so" 0 "test2 failed"
-    test2=$(oeawarectl --query libthread_collector.so | grep "thread_collector(available, close)")
-    CHECK_RESULT "$test2" "	thread_collector(available, close)" 0 "test2 failed"
-    test3=$(oeawarectl -q | grep "libthread_tune.so")
-    CHECK_RESULT "$test3" "libthread_tune.so" 0 "test3 failed"
+    test2=$(oeawarectl --query libsystem_collector.so | grep "libsystem_collector.so")
+    CHECK_RESULT "$test2" "libsystem_collector.so" 0 "test2 failed"
+    test2=$(oeawarectl --query libsystem_collector.so | grep "thread_collector(available, close, count: 0)")
+    CHECK_RESULT "$test2" "	thread_collector(available, close, count: 0)" 0 "test2 failed"
+    test3=$(oeawarectl -q | grep "libsystem_tune.so")
+    CHECK_RESULT "$test3" "libsystem_tune.so" 0 "test3 failed"
     test3=$(oeawarectl -q | grep "libthread_scenario.so")
     CHECK_RESULT "$test3" "libthread_scenario.so" 0 "test3 failed"
-    test3=$(oeawarectl -q | grep "libthread_collector.so")
-    CHECK_RESULT "$test3" "libthread_collector.so" 0 "test3 failed"
-    
+    test3=$(oeawarectl -q | grep "libsystem_collector.so")
+    CHECK_RESULT "$test3" "libsystem_collector.so" 0 "test3 failed"
     LOG_INFO "End to run test."
 }
 
