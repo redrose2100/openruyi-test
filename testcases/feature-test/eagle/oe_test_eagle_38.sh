@@ -20,6 +20,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if ! [ "${NODE1_FRAME}" = "aarch64" ] && [ "${NODE1_MACHINE}" = "physical" ]; then
+       echo "eagle仅支持aarch64架构和物理机!"
+       exit 255
+    fi
     if ! test -d /sys/fs/cgroup/cpu/watt_sched; then
         echo "the environment is not support!"
         exit 0
@@ -44,6 +48,7 @@ function run_test() {
     test "${watt_threshold_cur}" = 3 -a "${watt_interval_ms_cur}" = 360 -a "${watt_domain_mask_cur}" = 1
     CHECK_RESULT $? 0 0 "parameter watt_threshold、watt_interval_ms、watt_domain_mask set failed"
     systemctl stop eagle
+    SLEEP_WAIT 5
     watt_threshold_cur=$(cat /proc/sys/kernel/sched_util_low_pct)
     watt_interval_ms_cur=$(cat /sys/fs/cgroup/cpu/watt_sched/cpu.affinity_period_ms)
     watt_domain_mask_cur=$(cat /sys/fs/cgroup/cpu/watt_sched/cpu.affinity_domain_mask)

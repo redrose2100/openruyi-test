@@ -21,9 +21,9 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "$NODE1_FRAME" == "riscv64" ]; then
-        LOG_ERROR "The case exit because it is not suitable for riscv64"
-	    exit 255
+    if [[ "$NODE1_FRAME" == "riscv64" || "$NODE1_FRAME" == "aarch64" ]]; then
+        LOG_ERROR "The case exit because it is not suitable for riscv64 and aarch64"
+	exit 255
     fi
     DNF_INSTALL dmidecode
     LOG_INFO "End to prepare the test environment."

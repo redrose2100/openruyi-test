@@ -20,6 +20,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if ! [ "${NODE1_FRAME}" = "aarch64" ] && [ "${NODE1_MACHINE}" = "physical" ]; then
+       echo "eagle仅支持aarch64架构和物理机!"
+       exit 255
+    fi
     if ! test -f /sys/fs/cgroup/cpu/cpu.dynamic_affinity_mode; then
         echo "the environment is not support!"
         exit 0
@@ -27,8 +31,8 @@ function pre_test() {
     DNF_INSTALL "eagle"
     cp /etc/eagle/eagle_config.ini /etc/eagle/eagle_config.ini_bak
     cp /etc/eagle/eagle_policy.ini /etc/eagle/eagle_policy.ini_bak
-    mkdir plugin
-    cp -r -p /etc/eagle/plugin/* plugin
+    mkdir /home/plugin
+    cp -r -p /etc/eagle/plugin/* /home/plugin
     mv /etc/eagle/plugin /etc/eagle/plugin_bak 
     sed -i 's/config_update_interval=.*/config_update_interval=5/' /etc/eagle/eagle_config.ini
     LOG_INFO "End to to prepare the test environment."
@@ -37,12 +41,12 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     echo > /var/log/eagle/eagle.log
-    sed -i 's#plugin_path=.*#plugin_path='"$(pwd)"'/plugins#' /etc/eagle/eagle_config.ini
+    sed -i 's#plugin_path=.*#plugin_path=/home/plugins#' /etc/eagle/eagle_config.ini
     SLEEP_WAIT 80
     grep "plugin_path in config is invalid. ret:4" /var/log/eagle/eagle.log
     CHECK_RESULT $? 0 0 "Check plugin_path is not exists failed"
 
-    sed -i 's#plugin_path=.*#plugin_path='"$(pwd)"'/plugin#' /etc/eagle/eagle_config.ini
+    sed -i 's#plugin_path=.*#plugin_path=/home/plugin#' /etc/eagle/eagle_config.ini
     sed -i 's/watt_threshold =.*/watt_threshold = 37/' /etc/eagle/eagle_policy.ini
     SLEEP_WAIT 5
     grep 37 /proc/sys/kernel/sched_util_low_pct
@@ -54,7 +58,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     mv -f /etc/eagle/eagle_config.ini_bak /etc/eagle/eagle_config.ini
     mv -f /etc/eagle/eagle_policy.ini_bak /etc/eagle/eagle_policy.ini
-    rm -rf plugin
+    rm -rf /home/plugin
     mv /etc/eagle/plugin_bak /etc/eagle/plugin
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
