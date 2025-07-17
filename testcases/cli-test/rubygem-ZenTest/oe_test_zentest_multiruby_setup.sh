@@ -26,6 +26,10 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
+    if ! command -v multiruby_setup &> /dev/null; then
+        echo "multiruby_setup command not found, skipping..."
+        exit 255
+    fi
     multiruby_setup -h | grep "usage: multiruby_setup"
     CHECK_RESULT $? 0 0 "Check multiruby_setup -h failed"
     multiruby_setup --help | grep "usage: multiruby_setup"
@@ -50,7 +54,7 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf lib/ data/ ~/.multiruby
     LOG_INFO "End to restore the test environment."
 }

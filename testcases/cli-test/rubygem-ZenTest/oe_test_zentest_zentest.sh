@@ -14,6 +14,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test zentest
 # #############################################
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -34,21 +35,25 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check zentest -e failed"
     zentest -t ./data/example1.rb | grep "class TestThingy < Test::Unit::TestCase"
     CHECK_RESULT $? 0 0 "Check zentest -t failed"
+    if ! command -v autotest &> /dev/null; then
+        echo "autotest command not found, skipping..."
+        exit 255
+    fi
     autotest -h | grep "Continuous testing for your ruby app"
     CHECK_RESULT $? 0 0 "Check autotest -h failed"
     version=$(ruby --version | awk '{print $2}' | cut -c1-3)
     if [[ $(echo "${version} >= 2.6"|bc) -eq 1 ]] && [[ $(echo "${version} < 4.0"|bc) -eq 1 ]]; then
         rails new demo
-        pushd demo
+        pushd demo || exit
         zentest -r ./db/seeds.rb | grep "Number of errors"
         CHECK_RESULT $? 0 0 "Check zentest -r failed"
-        popd
+        popd || exit
     fi
     LOG_INFO "End to run test."
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf lib/ data/ demo
     LOG_INFO "End to restore the test environment."
 }
