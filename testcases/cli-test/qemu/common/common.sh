@@ -1,236 +1,233 @@
 #!/bin/bash
-img_url="https://repo.openeuler.org/openEuler-22.03-LTS-SP3/virtual_machine_img/x86_64/openEuler-22.03-LTS-SP3-x86_64.qcow2.xz"
-filename=$(basename ${img_url})
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
+img_url="https://repo.openeuler.org/openEuler-22.03-LTS-SP3/virtual_machine_img/$(arch)/openEuler-22.03-LTS-SP3-$(arch).qcow2.xz"
+filename=$(basename "${img_url}")
 volume=${filename%.xz}
 
-function create_domain_xml()
-{
+function create_domain_xml() {
     # 检查是否提供了足够的参数
     if [ "$#" -ne 2 ]; then
         echo "Usage: $0 UUID VOLUME_PATH"
         exit 1
     fi
-    
+
     # 读取参数
     UUID=$1
     VOLUME=$2
-    
+
     # 指定模板文件和输出文件
     TEMPLATE_FILE="common/template.xml"
     OUTPUT_FILE="domain_${UUID}.xml"
-    
+
     # 读取模板文件并替换占位符，然后写入到新的文件
-    sed "s|\${uuid}|${UUID}|g; s|\${volume}|${VOLUME}|g" $TEMPLATE_FILE > "$OUTPUT_FILE"
+    sed "s|\${uuid}|${UUID}|g; s|\${volume}|${VOLUME}|g" $TEMPLATE_FILE >"$OUTPUT_FILE"
 }
 
-function create_secret_xml()
-{
+function create_secret_xml() {
     # 检查是否提供了足够的参数
     if [ "$#" -ne 2 ]; then
         echo "Usage: $0 UUID VOLUME_PATH"
         exit 1
     fi
-    
+
     # 读取参数
     UUID=$1
     VOLUME=$2
-    
+
     # 指定模板文件和输出文件
     TEMPLATE_FILE="common/secret.xml"
     OUTPUT_FILE="secxml_${UUID}.xml"
-    
+
     # 读取模板文件并替换占位符，然后写入到新的文件
-    sed "s|\${uuid}|${UUID}|g; s|\${volume}|${VOLUME}|g" $TEMPLATE_FILE > "$OUTPUT_FILE"
+    sed "s|\${uuid}|${UUID}|g; s|\${volume}|${VOLUME}|g" $TEMPLATE_FILE >"$OUTPUT_FILE"
 }
 
-function createsecvm_with_sm4_sm3()
-{
+function createsecvm_with_sm4_sm3() {
     # 检查是否提供了足够的参数
     if [ "$#" -ne 3 ]; then
         echo "Usage: $0 UUID VOLUME_PATH ENC_VOLUME_PATH"
         exit 1
     fi
-    
+
     # 读取参数
     uuid=$1
     volume=$2
     sec_volume=$3
-    
-    if [ ! -f "${volume}" ];then
-      printf "not exist %s!\n" "${volume}"
-      exit 1
+
+    if [ ! -f "${volume}" ]; then
+        printf "not exist %s!\n" "${volume}"
+        exit 1
     fi
-    
+
     #sec_volume="${volume%.qcow2}_enc_sm34.qcow2"
     create_secret_xml "${uuid}" "${sec_volume}"
-    secuuid=$(virsh secret-list |grep "${sec_volume}"|cut -d " " -f2)
-    
-    if [ -n "${secuuid}" ];then
-    	virsh secret-undefine "${secuuid}"
+    secuuid=$(virsh secret-list | grep "${sec_volume}" | cut -d " " -f2)
+
+    if [ -n "${secuuid}" ]; then
+        virsh secret-undefine "${secuuid}"
     fi
     virsh secret-define secxml_"${uuid}".xml
     secret_set "${uuid}"
-    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=sm4,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sm3 "${volume}"  "${sec_volume}" || { printf "qemu-img convert sec img error\n";exit 1; }
+    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=sm4,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sm3 "${volume}" "${sec_volume}" || {
+        printf "qemu-img convert sec img error\n"
+        exit 1
+    }
     create_domain_xml "${uuid}" "${sec_volume}"
     virsh define domain_"${uuid}".xml
     virsh start "${uuid}"
 }
 
-function createsecvm_with_sm4_sha256()
-{
+function createsecvm_with_sm4_sha256() {
     # 检查是否提供了足够的参数
     if [ "$#" -ne 3 ]; then
         echo "Usage: $0 UUID VOLUME_PATH ENC_VOLUME_PATH"
         exit 1
     fi
-    
+
     # 读取参数
     uuid=$1
     volume=$2
     sec_volume=$3
 
-    if [ ! -f "${volume}" ];then
-      printf "not exist %s\n" "${volume}"
-      exit 1
+    if [ ! -f "${volume}" ]; then
+        printf "not exist %s\n" "${volume}"
+        exit 1
     fi
-    
+
     #sec_volume="${volume%.qcow2}_enc_sm4.qcow2"
     create_secret_xml "${uuid}" "${sec_volume}"
-    secuuid=$(virsh secret-list |grep "${sec_volume}"|cut -d " " -f2)
-    
-    if [ -n "${secuuid}" ];then
-    	virsh secret-undefine "${secuuid}"
+    secuuid=$(virsh secret-list | grep "${sec_volume}" | cut -d " " -f2)
+
+    if [ -n "${secuuid}" ]; then
+        virsh secret-undefine "${secuuid}"
     fi
     virsh secret-define secxml_"${uuid}".xml
-    secret_set "${uuid}" 
-    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=sm4,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sha256  "${volume}"  "${enc_volume}" || { printf "qemu-img convert sec img error\n";exit 1; }
+    secret_set "${uuid}"
+    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=sm4,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sha256 "${volume}" "${enc_volume}" || {
+        printf "qemu-img convert sec img error\n"
+        exit 1
+    }
     create_domain_xml "${uuid}" "${sec_volume}"
     virsh define domain_"${uuid}".xml
     virsh start "${uuid}"
 }
 
-
-function createsecvm_with_aes_sm3()
-{
+function createsecvm_with_aes_sm3() {
     # 检查是否提供了足够的参数
     if [ "$#" -ne 3 ]; then
         echo "Usage: $0 UUID VOLUME_PATH ENC_VOLUME_PATH"
         exit 1
     fi
-    
+
     # 读取参数
     uuid=$1
     volume=$2
     sec_volume=$3
-    
-    if [ ! -f "${volume}" ];then
-      printf "not exist %s\n" "${volume}"
-      exit 1
+
+    if [ ! -f "${volume}" ]; then
+        printf "not exist %s\n" "${volume}"
+        exit 1
     fi
-    
+
     #sec_volume="${volume%.qcow2}_enc_aes_sm3.qcow2"
     create_secret_xml "${uuid}" "${sec_volume}"
-    secuuid=$(virsh secret-list |grep "${sec_volume}"|cut -d " " -f2)
-    
-    if [ -n "${secuuid}" ];then
-    	virsh secret-undefine "${secuuid}"
+    secuuid=$(virsh secret-list | grep "${sec_volume}" | cut -d " " -f2)
+
+    if [ -n "${secuuid}" ]; then
+        virsh secret-undefine "${secuuid}"
     fi
     virsh secret-define secxml_"${uuid}".xml
     secret_set "${uuid}"
-    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=aes-256,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sm3 "${volume}"  "${enc_volume}" || { printf "qemu-img convert sec img error\n"; exit 1; }
+    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=aes-256,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sm3 "${volume}" "${enc_volume}" || {
+        printf "qemu-img convert sec img error\n"
+        exit 1
+    }
     create_domain_xml "${uuid}" "${sec_volume}"
     virsh define domain_"${uuid}".xml
     virsh start "${uuid}"
 }
 
-function secret_set()
-{
+function secret_set() {
     if [ "$#" -ne 1 ]; then
         echo "Usage: $0 UUID"
         exit 1
     fi
-    
+
     # 读取参数
     uuid=$1
-    seuuid=$(echo -n "${uuid}" |base64)
+    seuuid=$(echo -n "${uuid}" | base64)
     echo "${seuuid}" >/tmp/secuuid_"${uuid}"
     virsh secret-set-value "${uuid}" --file /tmp/secuuid_"${uuid}"
     rm -f /tmp/secuuid_"${uuid}"
 }
 
-function download_openeuler_img()
-{
-    if [ ! -e "${volume}" ];then
+function download_openeuler_img() {
+    if [ ! -e "${volume}" ]; then
         curl -C - -O -fsSL "${img_url}"
         xz -d "${volume}".xz
     fi
 }
 
-function test_crypto_qcow2_sm4_sha256()
-{
+function test_crypto_qcow2_sm4_sha256() {
     uuid=$1
     enc_volume=$2
-    if [ ! -e "${volume}" ];then
+    if [ ! -e "${volume}" ]; then
         download_openeuler_img
     fi
-    createsecvm_with_sm4_sha256 "${uuid}" "$(pwd)/${volume}" "$(pwd)/${enc_volume}"  
+    createsecvm_with_sm4_sha256 "${uuid}" "$(pwd)/${volume}" "$(pwd)/${enc_volume}"
     get_openeuler_runing "${uuid}"
 }
 
-function test_crypto_qcow2_aes_sm3()
-{
+function test_crypto_qcow2_aes_sm3() {
     uuid=$1
     enc_volume=$2
-    if [ ! -e "${volume}" ];then
+    if [ ! -e "${volume}" ]; then
         download_openeuler_img
     fi
-    createsecvm_with_aes_sm3 "${uuid}" "$(pwd)/${volume}" "$(pwd)/${enc_volume}"  
+    createsecvm_with_aes_sm3 "${uuid}" "$(pwd)/${volume}" "$(pwd)/${enc_volume}"
     get_openeuler_runing "${uuid}"
 }
 
-function test_crypto_qcow2_sm4_sm3()
-{
+function test_crypto_qcow2_sm4_sm3() {
     uuid=$1
     enc_volume=$2
-    if [ ! -e "${volume}" ];then
+    if [ ! -e "${volume}" ]; then
         download_openeuler_img
     fi
     createsecvm_with_sm4_sm3 "${uuid}" "$(pwd)/${volume}" "$(pwd)/${enc_volume}"
     get_openeuler_runing "${uuid}"
 }
 
-function get_openeuler_runing()
-{
+function get_openeuler_runing() {
     uuid=$1
-    if virsh domstate "${uuid}"|grep -q running;then
-       get_openeuler_vendor "${uuid}"
-       return 0
+    if virsh domstate "${uuid}" | grep -q running; then
+        get_openeuler_vendor "${uuid}"
+        return 0
     else
-       return 1
-    fi 
+        return 1
+    fi
 }
 
-function get_openeuler_vendor()
-{
+function get_openeuler_vendor() {
     uuid=$1
     serial_device=$(virsh dumpxml "${uuid}" | sed -n "s/.*tty='\(\/dev\/pts\/[0-9]\+\)'.*/\1/p")
-    username="root" 
-    password="openEuler12#$" 
+    username="root"
+    password="openEuler12#$"
     command="echo __START__; cat /etc/os-release; echo __END__"
     timeout=120
-    
+
     # 检查是否成功提取串口设备路径
     if [ -z "$serial_device" ]; then
         echo "未能提取到串口设备路径。请检查虚拟机的串口配置。
     "
         exit 1
     fi
-    
+
     # 将变量传递给 Expect 脚本
     export username password command timeout serial_device
-    
+
     # 运行 Expect 脚本
-    expect << 'EOF'
+    expect <<'EOF'
         log_user 1
         #exp_internal 1;   
     
@@ -303,52 +300,47 @@ function get_openeuler_vendor()
             }
         }
 EOF
-    
+
     # 获取 Expect 脚本的退出码
     RESULT=$?
-    
+
     # 根据 Expect 脚本的退出码执行操作
     if [ "$RESULT" -eq 0 ]; then
         exit 0
     else
         exit 1
     fi
-    
+
 }
 
-function destroy_vm()
-{
+function destroy_vm() {
     uuid=$1
-    if virsh list |grep -q "${uuid}";then
-      virsh destroy "${uuid}"
+    if virsh list | grep -q "${uuid}"; then
+        virsh destroy "${uuid}"
     fi
 }
 
-function undefine_vm()
-{
+function undefine_vm() {
     uuid=$1
-    if virsh list --inactive|grep -q "${uuid}";then
-      virsh undefine "${uuid}"
+    if virsh list --inactive | grep -q "${uuid}"; then
+        virsh undefine "${uuid}"
     fi
 }
 
-function deletesecvm()
-{
+function deletesecvm() {
     uuid=$1
     destroy_vm "${uuid}"
     undefine_vm "${uuid}"
 }
 
-function delete_openeuler_img()
-{
+function delete_openeuler_img() {
     local sec_volume=$1
     local volume=$2
-    rm -f "${sec_volume}" 
-    rm -f "${volume}" 
+    rm -f "${sec_volume}"
+    rm -f "${volume}"
 }
 
-function cleanup()
-{
+function cleanup() {
     local sec_volume=$1
     local volume=$2
     delete_openeuler_img "${sec_volume}" "${volume}"

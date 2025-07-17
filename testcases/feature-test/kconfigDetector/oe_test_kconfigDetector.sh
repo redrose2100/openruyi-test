@@ -15,8 +15,8 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Test kconfigDetector
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2002,SC2010
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -27,14 +27,15 @@ function pre_test() {
     mkdir -p "${srcpath}"
     mkdir -p "${outpath}"
     mkdir -p "${filepath}"
+    # jq is used to parse the check result json file
+    DNF_INSTALL "kconfigDetector jq git"
+    if ! rpm -q kconfigDetector; then
+        exit 255
+    fi
     # download kernel sourcecode
     git clone --branch openEuler-22.09 --depth 1 https://gitee.com/openeuler/kernel "${srcpath}"
     # prepare config file to check
     cp -r testfile* "${filepath}"
-
-    # jq is used to parse the check result json file
-    DNF_INSTALL "kconfigDetector jq"
-
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -105,7 +106,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf "/tmp/testkconfig"
 
     LOG_INFO "End to restore the test environment."
