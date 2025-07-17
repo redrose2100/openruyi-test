@@ -39,7 +39,7 @@ function run_test() {
     grep -Ir "vmlinuz" /boot | awk -F 'cfg:' '{print $NF}' | grep linux >testlog2
     CHECK_RESULT $? 0 0 "Failed to find vmlinuz in /boot"
     diff -Bw testlog1 testlog2 || grep -f testlog1 testlog2
-    CHECK_RESULT $? 0 1 "Files are different"
+    CHECK_RESULT $? 0 0 "Files are different"
     LOG_INFO "End to run test."
 }
 
