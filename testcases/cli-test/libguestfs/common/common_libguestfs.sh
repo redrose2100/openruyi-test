@@ -24,8 +24,13 @@ function libguestfs_pre_test(){
     setenforce 0
     export LANG=en_US.UTF-8
     libguestfs_pre_test_no_install
-    virt-install --name openEuler-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/openEuler-20.03-LTS-SP3.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole --graphics none --os-variant unknown
-    virsh destroy openEuler-2003
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        virt-install --name openEuler-2403 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/openEuler-24.03-LTS-SP1.qcow2,bus=virtio,format=qcow2 --virt-type qemu --network=bridge:virbr0 --force --import --autostart --noautoconsole --graphics none --os-variant unknown
+        virsh destroy openEuler-2403
+    else
+        virt-install --name openEuler-2003 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/openEuler-20.03-LTS-SP3.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole --graphics none --os-variant unknown
+        virsh destroy openEuler-2003
+    fi
 }
 
 function libguestfs_pre_test_no_install() {
@@ -39,37 +44,66 @@ function libguestfs_pre_test_no_install() {
       LOG_INFO "arm install edk2 pkg"
       DNF_INSTALL edk2-aarch64.noarch
     fi    
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        LOG_INFO "riscv install qemu-system-riscv pkg"
+        DNF_INSTALL qemu-system-riscv
+    fi
     systemctl start libvirtd
     mkdir -p /home/kvm/images
     chown root:root /home/kvm/images
     chmod 755 /home/kvm/images
     LOG_INFO "get $(arch) qcow2 libguestfs pkg"
-    if [ ! -f "./common/openEuler-20.03-LTS-SP3-$(arch).qcow2" ];then
-      wget https://repo.huaweicloud.com/openeuler/openEuler-20.03-LTS-SP3/virtual_machine_img/"$(arch)"/openEuler-20.03-LTS-SP3-"$(arch)".qcow2.xz --no-check-certificate -O ./common/openEuler-20.03-LTS-SP3-"$(arch)".qcow2.xz 
-      xz -d ./common/openEuler-20.03-LTS-SP3-"$(arch)".qcow2.xz
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+    fi
+
+    QCOW2_NAME="openEuler-${OS_VERSION}-$(arch).qcow2"
+    QCOW2_PATH="./common/${QCOW2_NAME}"
+    QCOW2_URL="https://repo.huaweicloud.com/openeuler/openEuler-${OS_VERSION}/virtual_machine_img/$(arch)/${QCOW2_NAME}.xz"
+
+    if [ ! -f "${QCOW2_PATH}" ]; then
+      wget "${QCOW2_URL}" --no-check-certificate -O "${QCOW2_PATH}.xz"
+      xz -d "${QCOW2_PATH}.xz"
     else
       LOG_INFO "qcow2 file already exists"
     fi
-    cp ./common/openEuler-20.03-LTS-SP3-"$(arch)".qcow2 /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    cp "${QCOW2_PATH}" "/home/kvm/images/openEuler-${OS_VERSION}.qcow2"
 }
 
 function libguestfs_post_test() {
     export LANG=$OLD_LANG
-    virsh start openEuler-2003
-    virsh destroy openEuler-2003
-    virsh undefine openEuler-2003 --nvram
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        virsh start openEuler-2403
+        virsh destroy openEuler-2403
+        virsh undefine openEuler-2403 --nvram
+    else
+        virsh start openEuler-2003
+        virsh destroy openEuler-2003
+        virsh undefine openEuler-2003 --nvram
+    fi
     unset LIBGUESTFS_DEBUG LIBGUESTFS_TRACE
     DNF_REMOVE "$@"
     rm -rf /home/kvm/images/ a.txt ./*.xz initramfs* output p2v* pidfile* pre-*  qemu-4.2.0* test1.img vmlinuz* file*  
 }
 
 function libguestfs_post_test_diff() {
-    virsh start openEuler-2003
-    virsh start openEuler-2003-1
-    virsh destroy openEuler-2003
-    virsh undefine openEuler-2003 --nvram
-    virsh destroy openEuler-2003-1
-    virsh undefine openEuler-2003-1 --nvram
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        virsh start openEuler-2403
+        virsh start openEuler-2403-1
+        virsh destroy openEuler-2403
+        virsh undefine openEuler-2403 --nvram
+        virsh destroy openEuler-2403-1
+        virsh undefine openEuler-2403-1 --nvram
+    else
+        virsh start openEuler-2003
+        virsh start openEuler-2003-1
+        virsh destroy openEuler-2003
+        virsh undefine openEuler-2003 --nvram
+        virsh destroy openEuler-2003-1
+        virsh undefine openEuler-2003-1 --nvram
+    fi
     unset LIBGUESTFS_BACKEND LIBGUESTFS_DEBUG LIBGUESTFS_TRACE
     DNF_REMOVE "$@"
     rm -rf /home/kvm/images/ a.txt ./*.xz initramfs* output p2v* pidfile* pre-*  qemu-4.2.0* test1.img vmlinuz*

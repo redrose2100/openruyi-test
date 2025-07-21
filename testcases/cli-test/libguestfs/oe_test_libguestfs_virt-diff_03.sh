@@ -15,15 +15,31 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs virt-diff command
 # ############################################
+# shellcheck disable=SC2034
 
 source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="240m"
     libguestfs_pre_test
-    cp /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
-    virt-install --name openEuler-2003-1 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2,bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole --graphics none --os-variant unknown
-    virsh destroy openEuler-2003-1
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        DNF_INSTALL "unzip"
+        wget https://gitlab.com/api/v4/projects/giomasce%2Fdqib/jobs/artifacts/master/download?job=convert_riscv64-virt -O debian_riscv.zip --no-check-certificate
+        unzip -j debian_riscv.zip dqib_riscv64-virt/image.qcow2 -d /home/kvm/images/
+        mv /home/kvm/images/image.qcow2 /home/kvm/images/debian-riscv.qcow2
+        virt-install --name debian-riscv64 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/debian-riscv.qcow2,bus=virtio,format=qcow2 --virt-type qemu  --network=bridge:virbr0 --force --import --noautoconsole --graphics none --os-variant unknown
+        virsh destroy debian-riscv64
+        cp "/home/kvm/images/debian-riscv.qcow2" "/home/kvm/images/debian-riscv-1.qcow2"
+        virt-install --name debian-riscv64-1 --ram 2048 --vcpus=2 --disk path=/home/kvm/images/debian-riscv-1.qcow2,bus=virtio,format=qcow2 --virt-type qemu  --network=bridge:virbr0 --force --import --noautoconsole --graphics none --os-variant unknown
+        virsh destroy debian-riscv64-1
+        OS_NAME="debian-riscv"
+    else
+        cp "/home/kvm/images/openEuler-20.03-LTS-SP3.qcow2" "/home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2"
+        virt-install --name openEuler-2003-1 --ram 2048 --vcpus=2 --disk path="/home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2",bus=virtio,format=qcow2 --network=bridge:virbr0 --force --import --autostart --noautoconsole --graphics none --os-variant unknown
+        virsh destroy openEuler-2003-1
+        OS_NAME="openEuler-20.03-LTS-SP3"
+    fi
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
     LOG_INFO "End of environmental preparation!"
@@ -31,19 +47,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-diff --time-relative -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff --time-relative -a "/home/kvm/images/${OS_NAME}.qcow2" -A "/home/kvm/images/${OS_NAME}-1.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-diff --time-relative failed"
-    virt-diff --time-t -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff --time-t -a "/home/kvm/images/${OS_NAME}.qcow2" -A "/home/kvm/images/${OS_NAME}-1.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-diff --time-t failed"
-    virt-diff --uids -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff --uids -a "/home/kvm/images/${OS_NAME}.qcow2" -A "/home/kvm/images/${OS_NAME}-1.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-diff --uids failed"
-    virt-diff -v -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff -v -a "/home/kvm/images/${OS_NAME}.qcow2" -A "/home/kvm/images/${OS_NAME}-1.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-diff -v failed"
     virt-diff -V 2>&1 | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-diff -V failed"
-    virt-diff -x -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff -x -a "/home/kvm/images/${OS_NAME}.qcow2" -A "/home/kvm/images/${OS_NAME}-1.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-diff -x failed"
-    virt-diff --xattrs -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -A /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-diff --xattrs -a "/home/kvm/images/${OS_NAME}.qcow2" -A "/home/kvm/images/${OS_NAME}-1.qcow2"
     LOG_INFO "End of the test."
 }
 

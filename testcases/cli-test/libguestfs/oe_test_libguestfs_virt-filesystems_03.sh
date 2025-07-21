@@ -16,31 +16,36 @@
 # @Desc      :   verify the uasge of libguestfs virt-filesystems command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     libguestfs_pre_test
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-filesystems -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-filesystems -V 2>&1 | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-filesystems -V failed"
-    virt-filesystems --vgs -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-filesystems --vgs -a /home/kvm/images/openEuler-"${OS_VERSION}".qcow2
     CHECK_RESULT $? 0 0 "Check virt-filesystems --vgs failed"
-    virt-filesystems -x -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-filesystems -x -a /home/kvm/images/openEuler-"${OS_VERSION}".qcow2
     CHECK_RESULT $? 0 0 "Check virt-filesystems -x failed"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"
