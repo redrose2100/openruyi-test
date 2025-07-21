@@ -43,7 +43,7 @@ EOF
     logger -t tcp -p local6.err "tcptest$time"
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
-    SLEEP_WAIT 30
+    SLEEP_WAIT 60
     grep "tcptest$time" /var/log/messages
     CHECK_RESULT $?
     LOG_INFO "End to run test."
