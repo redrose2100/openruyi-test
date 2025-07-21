@@ -36,8 +36,8 @@ function run_test() {
     # start iperf
     deploy_iperf
     systemctl stop firewalld
-    stdbuf -oL iperf -V -s -p 5001 -i 1 &> log_iperf &
-    SSH_CMD "iperf -c ${NODE1_IPV4} -i 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    stdbuf -oL iperf3 -V -s -p 5001 -i 1 &> log_iperf &
+    SSH_CMD "iperf3 -c ${NODE1_IPV4} -i 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     curl "${NODE1_IPV4}":8888 > system_info
 
     while read line; do
