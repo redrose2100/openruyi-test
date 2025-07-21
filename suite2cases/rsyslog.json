@@ -5,10 +5,12 @@
             "name": "oe_test_rsyslog_abnormal_config"
         },
         {
-            "name": "oe_test_rsyslog_abnormal_template"
+            "name": "oe_test_rsyslog_abnormal_template",
+            "machine num": 2
         },
         {
-            "name": "oe_test_rsyslog_function_attribute"
+            "name": "oe_test_rsyslog_function_attribute",
+            "machine num": 2
         },
         {
             "name": "oe_test_rsyslog_function_discard"
@@ -17,7 +19,8 @@
             "name": "oe_test_rsyslog_function_facility"
         },
         {
-            "name": "oe_test_rsyslog_function_httpd"
+            "name": "oe_test_rsyslog_function_httpd",
+            "machine num": 2
         },
         {
             "name": "oe_test_rsyslog_function_imfile"
@@ -32,22 +35,26 @@
             "name": "oe_test_rsyslog_function_rainerscript"
         },
         {
-            "name": "oe_test_rsyslog_function_relp"
+            "name": "oe_test_rsyslog_function_relp",
+            "machine num": 2
         },
         {
             "name": "oe_test_rsyslog_function_shell"
         },
         {
-            "name": "oe_test_rsyslog_function_tcp"
+            "name": "oe_test_rsyslog_function_tcp",
+            "machine num": 2
         },
         {
-            "name": "oe_test_rsyslog_function_tcp_firewall"
+            "name": "oe_test_rsyslog_function_tcp_firewall",
+            "machine num": 2
         },
         {
             "name": "oe_test_rsyslog_function_template"
         },
         {
-            "name": "oe_test_rsyslog_function_udp"
+            "name": "oe_test_rsyslog_function_udp",
+            "machine num": 2
         },
         {
             "name": "oe_test_rsyslog_function_wildcard"
@@ -65,10 +72,12 @@
             "name": "oe_test_rsyslog_parameter04"
         },
         {
-            "name": "oe_test_rsyslog_reliability_lenght"
+            "name": "oe_test_rsyslog_reliability_lenght",
+            "machine num": 2
         },
         {
-            "name": "oe_test_rsyslog_reliability_network"
+            "name": "oe_test_rsyslog_reliability_network",
+            "machine num": 2
         },
         {
             "name": "oe_test_rsyslog_reliability_operation"
@@ -77,7 +86,8 @@
             "name": "oe_test_rsyslog_reliability_restart"
         },
         {
-            "name": "oe_test_rsyslog_reliability_tcp"
+            "name": "oe_test_rsyslog_reliability_tcp",
+            "machine num": 2
         },
         {
             "name": "oe_test_service_rsyslog"

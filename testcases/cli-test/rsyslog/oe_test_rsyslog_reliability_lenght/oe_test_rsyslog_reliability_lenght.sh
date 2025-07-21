@@ -30,7 +30,7 @@ EOF
     systemctl restart rsyslog
     netstat -anpt | grep 514 | grep rsyslogd
     SSH_CMD "
-    systemctl stop iptables && echo 'local6.* @@${NODE1_IPV4}' > /etc/rsyslog.d/client.conf
+    systemctl stop iptables; echo 'local6.* @@${NODE1_IPV4}' > /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     time=$(date +%s%N | cut -c 9-13)
@@ -40,7 +40,7 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    SSH_CMD "logger -t tcp -p local6.err "$time$string"" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "logger -t tcp -p local6.err $time$string" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     SLEEP_WAIT 30
     grep "tcp\[" /var/log/messages | grep "$time" >test.txt
