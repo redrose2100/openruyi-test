@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of libguestfs virt-copy-in command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -24,26 +24,33 @@ function pre_test() {
     echo "hello" >a.txt
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+      VIRT_NAME="openEuler-2403"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+      VIRT_NAME="openEuler-2003"
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-copy-in -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 a.txt /etc
+    virt-copy-in -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" a.txt /etc
     CHECK_RESULT $? 0 0 "Check virt-copy-in -a failed"
-    virt-copy-in -d openEuler-2003 a.txt /etc
+    virt-copy-in -d "${VIRT_NAME}" a.txt /etc
     CHECK_RESULT $? 0 0 "Check virt-copy-in -d failed"
     virt-copy-in -h 2>&1 | grep 'display a list of commands'
     CHECK_RESULT $? 0 0 "Check virt-copy-in -h failed"
-    virt-copy-in -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-copy-in -V | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-copy-in -V failed"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"

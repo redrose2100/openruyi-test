@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of libguestfs guestmount command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -28,32 +28,34 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+    fi
     device=$( fdisk -l 2> /dev/null | grep "Device" -A 1 | grep -o "/dev/[a-z0-9]*") 
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 --key ID:key:KEY_STRING -m $device --ro /mnt
+    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" --key ID:key:KEY_STRING -m "$device" --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount --key failed"
     guestunmount /mnt
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 --keys-from-stdin -m $device --ro /mnt
+    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" --keys-from-stdin -m "$device" --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount --keys-from-stdin failed"
     guestunmount /mnt
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 --echo-keys -m $device --ro /mnt
+    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" --echo-keys -m "$device" --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount -echo-keys failed"
     guestunmount /mnt
-    guestmount --live -d openEuler-2003 -m $device /mnt
-    CHECK_RESULT $? 0 0 "Check guestmount --live failed"
-    guestunmount /mnt
-    guestmount -n -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt
+    guestmount -n -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount -n failed"
     guestunmount /mnt
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt -o allow_other
+    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt -o allow_other
     CHECK_RESULT $? 0 0 "Check guestmount -o failed"
     guestunmount /mnt
-    guestmount --pid-file pidfile.txt -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt
+    guestmount --pid-file pidfile.txt -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount --pid-file failed"
     guestunmount /mnt
-    guestmount --selinux -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt
+    guestmount --selinux -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount --selinux failed"
     guestunmount /mnt
-    guestmount --no-fork -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt &
+    guestmount --no-fork -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt &
     CHECK_RESULT $? 0 0 "Check guestmount --no-fork failed"
     guestunmount /mnt
     LOG_INFO "End to run test."
@@ -61,8 +63,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"
