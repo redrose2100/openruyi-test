@@ -17,7 +17,7 @@
 # @Desc      :   Test conntrackd.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -31,6 +31,12 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_execution conntrackd.service
     test_reload conntrackd.service
+
+    conntrack -L -p tcp >/dev/null 2>&1
+    CHECK_RESULT $? 0 0 "conntrack protocol filter test failed"
+
+    conntrackd -s >/dev/null 2>&1
+    CHECK_RESULT $? 0 0 "conntrackd statistics test failed"
     LOG_INFO "Finish test!"
 }
 
@@ -38,7 +44,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i "s\Interface ${NODE1_NIC}\Interface eth2\g" /etc/conntrackd/conntrackd.conf
     sed -i "s\IPv4_interface ${NODE1_IPV4}\IPv4_interface 192.168.100.100\g"  /etc/conntrackd/conntrackd.conf
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
