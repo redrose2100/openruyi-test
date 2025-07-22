@@ -16,10 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test "readnsstate" command
 # ##################################
+# shellcheck disable=SC2119
+
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/389-ds-base/common/checkenv.sh"
+
 
 function pre_test() {
+    # 判断 389-ds-base 版本是否为1.4.3开头, 如果不是skip退出 
+    checkversion143
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "389-ds-base"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
@@ -33,12 +39,14 @@ function pre_test() {
     LOG_INFO "End to prepare the test environment."
 }
 
+
 function run_test() {
     LOG_INFO "Start to run test."
     readnsstate /etc/dirsrv/slapd-localhost/dse.ldif | grep "nsState is"
     CHECK_RESULT $? 0 0 "L$LINENO: readnsstate No Pass"
     LOG_INFO "End to run test."
 }
+
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
@@ -49,4 +57,6 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
+
 main "$@"
+

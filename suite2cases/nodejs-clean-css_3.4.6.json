@@ -2,10 +2,10 @@
     "path": "$OET_PATH/testcases/cli-test/nodejs-clean-css",
     "cases": [
         {
-            "name": "oe_test_cleancss_01"
+            "name": "oe_test_cleancss_3.4.6_01"
         },
         {
-            "name": "oe_test_cleancss_02"
+            "name": "oe_test_cleancss_3.4.6_02"
         }
     ]
 }
