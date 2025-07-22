@@ -14,7 +14,7 @@
 # @Contact   :   fuyahong@uniontech.com
 # @Date      :   2025/04/30
 # @License   :   Mulan PSL v2
-# @Desc      :   Test jose use
+# @Desc      :   Test jose jwk use
 # #############################################
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
@@ -29,19 +29,33 @@ function run_test() {
 	LOG_INFO "Start testing..."
 	#generate RSA private key
 	jose jwk gen -i '{"alg":"RS256"}' -o rsa.jwk
+	CHECK_RESULT $? 0 0 "jose jwk gen rsa failed"
+    test -s rsa.jwk
+    CHECK_RESULT $? 0 0 "rsa.jwk not generated"
+
 	#convert RSA JWK to PEM
 	jose jwk pub -i rsa.jwk -o rsa.pub.pem
+	CHECK_RESULT $? 0 0 "jose jwk pub to pem failed"
+	test -s rsa.pub.pem    
+	CHECK_RESULT $? 0 0 "rsa.pub.pem not generated"
+
 	#generate ES(P-256) private key
 	jose jwk gen -i '{"alg":"ES256"}' -o ec.jwk
-	test -e rsa.jwk && test -e rsa.pub.pem && test -e ec.jwk 
-        CHECK_RESULT $? 0 0 "check jwk gen rsa failed"
+	CHECK_RESULT $? 0 0 "jose jwk gen ec failed"
+    test -s ec.jwk
+    CHECK_RESULT $? 0 0 "ec.jwk not generated"
+
+	# 异常场景
+    jose jwk gen -i '{"alg":"INVALID"}' 2>&1 | grep -i "JWK generation failed!"
+    CHECK_RESULT $? 0 0 "invalid alg not detected"
+	
 	LOG_INFO "Finish test!"
 }
 
 function post_test() {
 	LOG_INFO "start environment cleanup."
 	rm -rf rsa.jwk rsa.pub.pem ec.jwk
-	DNF REMOVE "$@"
+	DNF_REMOVE "$@"
 	LOG_INFO "Finish environment cleanup!"
 }
 
