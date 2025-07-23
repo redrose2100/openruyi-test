@@ -16,12 +16,13 @@
 #@Version   	:   1.0
 #@Desc      	:   user build connection
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+#shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL audispd-plugins
     path=$(find / -name af_unix.conf)
     sed -i 's/active = no/active = yes/g' "${path}"
     service auditd restart
@@ -36,7 +37,7 @@ function run_test()
     LOG_INFO "Start to run test."
     nohup unbuffer ./audit_socket >log 2>&1 &
     SLEEP_WAIT 1
-    cat log | grep "start audit thread now!"
+    grep "start audit thread now!" log
     CHECK_RESULT $? 0 0 "grep failed"
     auditctl -w /home/test -p a
     {
@@ -48,7 +49,7 @@ function run_test()
 	    fi 
 	    SLEEP_WAIT 1
     done
-    if [ $i -eq 15 ];then
+    if [ "$i" -eq 15 ];then
 	    CHECK_RESULT 1 0 0 "i failed"
     fi
     [ -f 1.txt ] && {
@@ -56,7 +57,7 @@ function run_test()
             grep -wq "/home/test" 1.txt && break
             SLEEP_WAIT 1
         done
-        [ $j -eq 30 ] && CHECK_RESULT 1 0 0 "grep j failed"
+        [ "$j" -eq 30 ] && CHECK_RESULT 1 0 0 "grep j failed"
     }
     LOG_INFO "End to run test."
 }
@@ -68,7 +69,7 @@ function post_test()
     sed -i 's/active = yes/active = no/g' "${path}"
     service auditd restart
     auditctl -D
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
