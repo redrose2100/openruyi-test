@@ -15,6 +15,9 @@
 	},
 	{
             "name": "oe_test_augeas_augtool02"
+	},
+	{
+	    "name": "oe_test_augeas_augmatch_01"	
 	}
     ]
 }
