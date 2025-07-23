@@ -22,6 +22,9 @@
         {
             "name": "oe_test_who"
         },
+	    {
+	        "name": "oe_test_w"
+	    },
         {
             "name": "oe_test_dircolors"
         },
@@ -979,6 +982,9 @@
 	   "name": "oe_test_udisksctl"
 	},
 	{
+	   "name": "oe_test_free"
+    },
+    {
 	   "name": "oe_test_c++_stl"
 	},
 	{
