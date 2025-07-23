@@ -15,16 +15,20 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfish guestunmount command
 # ############################################
+# shellcheck disable=SC2119
 
 source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     libguestfs_pre_test
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
+    mkdir -p /mnt/testguestmount/
     LOG_INFO "End of environmental preparation!"
 }
+
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -33,20 +37,19 @@ function run_test() {
     else
       OS_VERSION="20.03-LTS-SP3"
     fi
-    device=$( fdisk -l 2> /dev/null | grep "Device" -A 1 | grep -o "/dev/[a-z0-9]*") 
     guestunmount --help | grep 'guestunmount'
     CHECK_RESULT $? 0 0 "Check guestunmount --help failed"
-    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt
-    guestunmount -q /mnt
+    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -i --ro /mnt/testguestmount
+    guestunmount -q /mnt/testguestmount
     CHECK_RESULT $? 0 0 "Check guestunmount -q failed"
-    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt
-    guestunmount --no-retry /mnt/
+    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -i --ro /mnt/testguestmount
+    guestunmount --no-retry /mnt/testguestmount/
     CHECK_RESULT $? 0 0 "Check guestunmount --no-retry failed"
-    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt
-    guestunmount --retry=5 /mnt/
+    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -i --ro /mnt/testguestmount
+    guestunmount --retry=5 /mnt/testguestmount/
     CHECK_RESULT $? 0 0 "Check guestunmount --retry failed"
-    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt
-    guestunmount -v /mnt
+    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -i --ro /mnt/testguestmount
+    guestunmount -v /mnt/testguestmount
     CHECK_RESULT $? 0 0 "Check guestunmount -v failed"
     guestunmount -V 2>&1 | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check guestunmount -V failed"
@@ -54,10 +57,13 @@ function run_test() {
     LOG_INFO "End of the test."
 }
 
+
 function post_test() {
    LOG_INFO "Start to restore the test environment."
    libguestfs_post_test "$@"
    LOG_INFO "Finish to restore the test environment."
 }
 
+
 main "$@"
+

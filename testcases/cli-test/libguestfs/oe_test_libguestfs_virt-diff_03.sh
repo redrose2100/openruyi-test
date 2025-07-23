@@ -17,7 +17,11 @@
 # ############################################
 # shellcheck disable=SC2034
 
+TIMEOUT="90m"
+
+
 source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
