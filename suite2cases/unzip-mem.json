@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/unzip-mem",
+    "cases": [
+        {
+            "name": "oe_test_unzip-mem"
+        }
+
+      ]
+}
+
