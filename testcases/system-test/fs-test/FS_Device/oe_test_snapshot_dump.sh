@@ -15,14 +15,14 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Dump data by snapshot
 #####################################
-
+# shellcheck disable=SC2153
 source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     DNF_INSTALL "dump xfsdump lvm2"
-    IFS=' ' read -ra fs_args <<< "$FS_TYPE"
-    read -ra point_list <<< "$(CREATE_FS "${fs_args[@]}")"
+    IFS=' ' read -ra fs_args <<<"$FS_TYPE"
+    read -ra point_list <<<"$(CREATE_FS "${fs_args[@]}")"
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         var=${point_list[$i]}
         echo "test write file" >"${var}"/test_file
@@ -64,9 +64,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list="${point_list[*]}"
     REMOVE_FS "$list"
+    REMOVE_VG "$@"
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-
