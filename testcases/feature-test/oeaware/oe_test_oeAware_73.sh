@@ -4,7 +4,7 @@ source "${OET_PATH}"/testcases/feature-test/oeaware/common/common.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if ["${NODE1_FRAME}"="x86_64"];then
+    if [ "$(uname -m)" = "x86_64" ];then
         echo "the environment does not support testing"
         exit 255
     fi
@@ -22,6 +22,7 @@ function run_test() {
     oeawarectl analysis -t 3 | grep "use dynamic smt"
     CHECK_RESULT $? 0 0 "Check SMT suggestion failed."
     stress-ng --cpu $(( cpu_count*(thresh+3)/100 )) -t 30 &
+    SLEEP_WAIT 5
     oeawarectl analysis -t 3 | grep "use dynamic smt"
     CHECK_RESULT $? 0 1 "Check SMT suggestion failed."
     LOG_INFO "End to run test."

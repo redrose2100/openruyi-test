@@ -1,0 +1,124 @@
+.\" smcr.8
+.\"
+.\"
+.\" Copyright IBM Corp. 2020
+.\" Author(s):  Guvenc Gulce <guvenc@linux.ibm.com>
+.\" ----------------------------------------------------------------------
+.\"
+.TH SMCR 8 "June 2020" "smc-tools" "Linux Programmer's Manual"
+
+.SH NAME
+
+smcr \- Print information about SMC-R link groups, links and devices
+
+.SH SYNOPSIS
+.B smcr
+.RI "[ " OPTIONS " ] " OBJECT " { " COMMAND " | "
+.BR help " }"
+.sp
+
+.IR OBJECT " := { "
+.BR info " | " linkgroup " | " device " | " stats " | " ueid " }"
+.sp
+
+.IR OPTIONS " := { "
+\fB\-v\fR[\fIersion\fR] |
+\fB\-a\fR[\fIbsolute\fR] |
+\fB\-d\fR[\fIetails\fR] |
+\fB\-dd\fR[\fIetails\fR] }
+
+.SH OPTIONS
+
+.TP
+.BR "\-v" , " -version"
+Print the version of the
+.B smcr
+utility and exit.
+
+.TP
+.BR "\-a", " \-absolute"
+Print absolute statistic value (valid only for stats).
+
+.TP
+.BR "\-d", " \-details"
+Print detailed information.
+
+.TP
+.BR "\-dd", " \-ddetails"
+Print more detailed information.
+
+.SH SMCR - COMMAND SYNTAX
+
+.SS
+.I OBJECT
+
+.TP
+.B device
+One or more SMC-R devices.
+
+.TP
+.B info
+Generic SMC information.
+
+.TP
+.B linkgroup
+One or more SMC-R link groups or links.
+
+.TP
+.B stats
+SMC-R statistics.
+
+.TP
+.B ueid
+Work with User defined Enterprise IDs (UEID).
+
+.PP
+The names of all objects can be abbreviated down to
+a unique stem. For example
+.B device
+can be abbreviated to
+.B dev
+or just
+.B d.
+For more information about individual objects see the man pages in
+.B SEE ALSO
+section.
+
+.SS
+.I COMMAND
+
+Specifies the action to perform on the object.
+The set of possible actions depends on the object type.
+For most objects you can specify the
+.BR " show " or " link-show"
+command. Use the
+.B help
+command for an object to print information about the available actions and the specific syntax for that object.
+.sp
+If no command is given, a default command 
+is assumed.
+
+.SH RETURN CODES
+Successful
+.IR smcr
+commands return 0 and display the
+requested link group, link or device information.
+If an error occurs,
+.IR smcr
+writes a message to stderr and completes with a return code other than 0. Possible 
+error messages to stderr in case of non-zero return code:
+.TP
+.BR "SMC module not loaded"
+Either kernel is not supporting the
+.IR smcr
+tool or the smc kernel module is not loaded.
+.P
+.SH SEE ALSO
+.BR af_smc (7),
+.BR smcd (8),
+.BR smcr (8),
+.BR smcr-device (8),
+.BR smcr-info (8),
+.BR smcr-linkgroup (8)
+.BR smcr-stats (8),
+.BR smcr-ueid (8)

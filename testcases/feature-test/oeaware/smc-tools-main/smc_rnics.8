@@ -1,0 +1,123 @@
+.\" Copyright IBM Corp. 2018
+
+.TH SMC_RNICS 8 "October 2018" "smc-tools" "Linux Programmer's Manual"
+
+
+.SH NAME
+smc_rnics \- list, enable and disable (R)NICS as used by SMC-R and SMC-D
+
+
+.SH SYNOPSIS
+.B smc_rnics
+.RB [ \-ahrv ]
+.RB [ \-d
+.IR FID ]
+.RB [ \-e
+.IR FID ]
+.RI [ FID ]
+
+
+.SH DESCRIPTION
+The SMC protocol requires an (R)NIC for the (R)DMA traffic.
+Use
+.B smc_rnics
+to handle, and to identify hotplugged (R)NICs.
+
+
+.SH OPTIONS
+By default,
+.B smc_rnics
+shows all enabled (R)NICs in the system.
+.TP
+.I FID
+Limit output to the specified function ID
+.RI ( FID ).
+.TP
+.BR "\-a, \-\-all"
+Include disabled and unknown devices in output
+.TP
+.BR "\-d, \-\-disable " \fIFID
+Set (R)NIC
+.I FID
+offline.
+.TP
+.BR "\-e, \-\-enable " \fIFID
+Set (R)NIC
+.I FID
+online. Note that devices other than (R)NICs are not displayed by default and
+therefore, once enabled, will not appear in further output unless option
+.BR -a
+or
+.BR -r
+is specified.
+.TP
+.BR "\-h, \-\-help"
+Display a brief
+.B smc_rnics
+usage information.
+.TP
+.BR "\-I, \-\-IB-dev"
+Display IB device information.
+.TP
+.BR "\-r, \-\-rawids"
+Display raw PCI vendor and device codes in column. Note that this will
+also include unknown devices.
+.TP
+.BR "\-v, \-\-version"
+Display version information.
+
+.SH OUTPUT
+.SS "FID"
+Function ID.
+
+.SS "Power"
+Indicates whether the PCI slot is on (1) or off (0). See option
+.B -e
+on how to enable a device that is offline.
+
+.SS "PCI_ID"
+PCI ID in BDF (Bus:Device.Function) notation.
+
+.SS "PCHID"
+Physical channel identifier, or virtual channel identifier (VCHID) for
+ISM devices.
+
+.SS "Type"
+Device type in human readable form. See option
+.B -r
+to switch to display of PCI vendor and device instead.
+
+.SS "PPrt"
+Corresponding physical port of an RNIC, if applicable. Starts counting at 0.
+
+.SS "IPrt"
+Corresponding Infiniband port of an RNIC, if applicable. Starts counting at 1.
+
+.SS "PNET_ID"
+Physical network ID. Has an asterisk
+.B *
+appended if defined via
+.BR smc_pnet .
+
+.SS "Net-Dev"
+Network interface in Linux, if applicable.
+
+.SS "IB-Dev"
+Infiniband interface in Linux, if applicable.
+
+
+.SH RETURN CODES
+On success,
+.B smc_rnics
+returns 0.
+If an error occurs, a return code other than 0 is returned.
+.P
+
+
+.SH SEE ALSO
+.BR af_smc (7),
+.BR smc_pnet (8),
+.BR smc_run (8),
+.BR smcd (8),
+.BR smcr (8),
+.BR smcss (8)

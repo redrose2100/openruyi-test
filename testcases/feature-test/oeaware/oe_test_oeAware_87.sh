@@ -4,7 +4,7 @@ source "${OET_PATH}"/testcases/feature-test/oeaware/common/common.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if ["${NODE1_FRAME}"="x86_64"];then
+    if [ "$(uname -m)" = "x86_64" ];then
         echo "the environment does not support testing"
         exit 255
     fi

@@ -1,0 +1,177 @@
+.\" smc_pnet.8
+.\"
+.\"
+.\" Copyright IBM Corp. 2017, 2019
+.\" Author(s):  Thomas Richter <tmricht@linux.ibm.com>
+.\"             Ursula Braun <ubraun@linux.ibm.com>
+.\" ----------------------------------------------------------------------
+.\"
+
+.TH SMC_PNET 8 "January 2017" "smc-tools" "Linux Programmer's Manual"
+
+.SH NAME
+smc_pnet \- create, destroy, and change the SMC PNET table
+
+.SH SYNOPSIS
+
+.B smc_pnet
+{ \fB\-a\fR | \fB\-\-add\fR \fI<pnetid>\fR }
+{ \fB\-I\fR | \fB\-\-interface\fR <ethernet-interface> }
+.P
+.B smc_pnet
+{ \fB\-a\fR | \fB\-\-add\fR \fI<pnetid>\fR }
+{ \fB\-D\fR | \fB\-\-ibdevice\fR <infiniband-or-ISM-device> }
+[ \fB\-P\fR | \fB\-\-ibport\fR <infiniband-port> ]
+.P
+.B smc_pnet
+{ \fB\-a\fR | \fB\-\-add\fR \fI<pnetid>\fR }
+{ \fB\-I\fR | \fB\-\-interface\fR <ethernet-interface> }
+{ \fB\-D\fR | \fB\-\-ibdevice\fR <infiniband-or-ISM-device> }
+[ \fB\-P\fR | \fB\-\-ibport\fR <infiniband-port> ]
+.P
+.B smc_pnet
+{ \fB\-s\fR | \fB\-\-show\fR \fI<pnetid>\fR }
+.P
+.B smc_pnet
+{ \fB\-d\fR | \fB\-\-delete\fR \fI<pnetid>\fR }
+.P
+.B smc_pnet
+{ \fB\-f\fR | \fB\-\-flush\fR }
+.P
+.B smc_pnet
+{ \fB\-v\fR | \fB\-\-version\fR }
+.P
+.B smc_pnet
+{ \fB\-h\fR | \fB\-\-help\fR }
+
+.SH DESCRIPTION
+The SMC protocol requires grouping of standard Ethernet and RoCE networks or ISM
+devices.
+Such groups are called \fIPhysical Networks\fR (PNETs). The mapping is configured
+within a table called \fIpnet table\fR. Any available Ethernet interface can be
+combined with an available RDMA-capable network interface card (RNIC) or a
+DMA-capable ISM device, if they
+belong to the same Converged Ethernet fabric. To configure mapping of a RoCE Adapter
+port or an ISM device to a standard Ethernet interface, both devices need to have
+the same PNET ID; either hardware-defined or user-defined using the pnet table.
+Hardware-defined PNET IDs cannot be overwritten.
+.P
+The
+.B smc_pnet
+command configures the pnet table.
+
+.SH OPTIONS
+By default,
+.B smc_pnet
+shows all entries of the pnet table.
+.TP
+.IR <pnetid>
+defines a name for a grouping of Ethernet interface and RNICs or ISM devices.
+A PNET ID consists of up to 16 alphanumeric uppercase characters without blanks.
+.TP
+.BR "\-a, \-\-add"
+creates a new PNET ID definition to the pnet table (if it does not already exist).
+Only one PNET ID can be defined for a certain
+Ethernet interface, a certain InfiniBand device port or a certain ISM device.
+Adding more than one PNET ID fails. Hardware defined PNET IDs cannot be overwritten.
+.TP
+.BR "\-s, \-\-show"
+shows a certain PNET ID definition in the pnet table.
+.TP
+.BR "\-d, \-\-delete"
+deletes an existing PNET ID definition from the pnet table.
+.TP
+.BR "\-f, \-\-flush"
+removes all PNET ID definitions from the pnet table.
+.TP
+.BR "\-I, \-\-interface <ethernet-interface>"
+specifies the name of the Ethernet interface to be added for a certain PNET
+ID
+definition.
+.TP
+.BR "\-D, \-\-ibdevice <infiniband-or-ISM-device>"
+specifies the ID of the InfiniBand device or ISM device.
+.TP
+.BR "\-P, \-\-ibport <infiniband-port>"
+specifies the port number of the InfiniBand device port. Valid numbers are
+1 or 2.
+The default value is 1.
+.TP
+.BR "\-v, \-\-version"
+displays smc_pnet program version.
+.TP
+.BR "\-h, \-\-help"
+displays a brief smc_pnet usage information.
+
+.SH EXAMPLES
+.B Define PNET ID ABC for the ethernet device names encf500 and bond0, and define
+.B PNET ID ABC for the InfiniBand device ID 0001:00:00.0 (port 2) and the ISM
+.B device ID 0004:00:00.0:
+.RS 4
+.PP
+.nf
+$ smc_pnet \-a ABC \-I encf500
+$ smc_pnet \-a ABC \-I bond0
+$ smc_pnet \-a ABC \-D 0001:00:00:00.0 \-P 2
+$ smc_pnet \-a ABC \-D 0004:00:00:00.0
+.RE
+.PP
+.
+.B Show all pnet table entries:
+.RS 4
+.PP
+.nf
+$ smc_pnet
+ABC encf500 n/a 255
+ABC bond0 n/a 255
+ABC n/a 0001:00:00.0 2
+ABC n/a 0004:00:00.0 1
+.RE
+.PP
+.
+.B Define PNET ID XYZ for the ethernet interface name vlan0201 and the InfiniBand
+.B device ID 0001:00:00.0 (port 1):
+.RS 4
+.PP
+$ smc_pnet \-a XYZ \-I vlan0201 \-D 0001:00:00.0 \-P 1
+.RE
+.PP
+.
+.B Show all entries for PNET ID XYZ:
+.RS 4
+.PP
+.nf
+$ smc_pnet \-s XYZ
+XYZ vlan0201 n/a 255
+XYZ n/a 0001:00:00.0 1
+.RE
+.PP
+.
+.B Delete all pnet table entries with PNET ID named ABC:
+.RS 4
+.PP
+$ smc_pnet \-d ABC
+.RE
+.PP
+.
+.B Delete all entries in the pnet table:
+.RS 4
+.PP
+$ smc_pnet \-f
+.RE
+.PP
+.
+.
+.SH RETURN CODES
+Successful \fBsmc_pnet\fR commands return 0.
+If an error occurs, \fBsmc_pnet\fR writes a message to stderr and 
+completes with a return code other than 0.
+.P
+.SH SEE ALSO
+.BR af_smc (7),
+.BR smc_chk (8)
+.BR smc_rnics (8),
+.BR smc_run (8),
+.BR smcd (8),
+.BR smcr (8),
+.BR smcss (8)

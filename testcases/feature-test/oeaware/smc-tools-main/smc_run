@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# SMC Tools - Shared Memory Communication Tools
+#
+# Copyright IBM Corp. 2017, 2018
+#
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+LIB_NAME="libsmc-preload.so"
+VERSION="1.8.4";
+
+
+function usage() {
+        echo;
+        echo "Usage: smc_run [ OPTIONS ] COMMAND";
+        echo;
+        echo "Run COMMAND using SMC for TCP sockets";
+        echo;
+        echo "   -d         enable debug mode";
+        echo "   -h         display this message";
+        echo "   -r <SIZE>  request receive buffer size in Bytes";
+        echo "   -t <SIZE>  request transmit buffer size in Bytes";
+        echo "   -v         display version info";
+}
+
+function check_size() {
+	if [[ ! "$1" =~ ^[0-9]+[k|K|m|M]?$ ]]; then
+		echo "Error: Invalid buffer size specified: '$1'";
+		exit 1;
+	fi
+	return
+}
+
+function adjust_core_net_max() {
+	case ${2: -1} in
+		k | K)	(( OPTARG=${2%?}*1024 ));;
+		m | M)	(( OPTARG=${2%?}*1048576 ));;
+		*)
+	esac
+	if [ `sysctl -n net.core.$1_max` -lt $OPTARG ]; then
+		sysctl -w net.core.$1_max=$OPTARG >/dev/null;
+	fi
+}
+
+#
+# Verify command line arguments and specify the preload library debug mode
+# if necessary.
+#
+SMC_DEBUG=0;
+while getopts "dhr:t:v" opt; do
+	case $opt in
+		d)
+			SMC_DEBUG=1;;
+		h)	usage;
+			exit 0;;
+		r)	check_size $OPTARG;
+			adjust_core_net_max rmem $OPTARG;
+			export SMC_RCVBUF=$OPTARG;;
+		t)	check_size $OPTARG;
+			adjust_core_net_max wmem $OPTARG;
+			export SMC_SNDBUF=$OPTARG;;
+		v)	echo "smc_run utility, smc-tools-$VERSION";
+			exit;;
+		\?)	echo "`basename "$0"`: Error: Invalid option: -$OPTARG";
+			exit 1;;
+	esac
+done
+
+shift $(expr $OPTIND - 1);
+if [ $# -eq 0 ]; then
+	echo "`basename "$0"`: Error: Missing command parameter";
+	exit 1;
+fi
+
+export SMC_DEBUG;
+#
+# Execute the specified command.
+#
+export LD_PRELOAD=$LD_PRELOAD:$LIB_NAME;
+
+exec "$@"
+exit $?;
