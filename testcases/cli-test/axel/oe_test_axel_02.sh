@@ -23,10 +23,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL axel
-    if ! rpm -qa axel | grep axel; then
+    if ! yum list axel; then
         echo "axel does not exist"
         exit 255
+    else
+        DNF_INSTALL axel
     fi
     lang_tmp=$LANG
     if locale -a | grep "^zh_CN.utf8$" >/dev/null 2>&1; then

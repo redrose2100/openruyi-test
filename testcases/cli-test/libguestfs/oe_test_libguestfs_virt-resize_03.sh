@@ -15,14 +15,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs virt-resize command
 # ############################################
+# shellcheck disable=SC2034
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="240m"
     libguestfs_pre_test_no_install
-    cp /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
-    qemu-img create -f qcow2 /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2 50G
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+    fi
+    cp /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /home/kvm/images/openEuler-"${OS_VERSION}"-1.qcow2
+    qemu-img create -f qcow2 /home/kvm/images/openEuler-"${OS_VERSION}"-1.qcow2 50G
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
     LOG_INFO "End of environmental preparation!"
@@ -30,19 +37,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-resize -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-resize -V | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-resize -V failed"
-    virt-resize -v /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-resize -v /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /home/kvm/images/openEuler-"${OS_VERSION}"-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-resize -v failed"
-    virt-resize -x /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /home/kvm/images/openEuler-20.03-LTS-SP3-1.qcow2
+    virt-resize -x /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /home/kvm/images/openEuler-"${OS_VERSION}"-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-resize -x failed"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test_resize
+    libguestfs_post_test_resize "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"

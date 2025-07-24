@@ -50,7 +50,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF REMOVE "$@"
+    DNF_REMOVE "$@"
     kill -9 "$(pgrep -f iotoptest)"
     rm -rf test iotoptest
     LOG_INFO "End to restore the test environment."

@@ -16,33 +16,40 @@
 # @Desc      :   verify the uasge of libguestfs virt-get-kernel command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     libguestfs_pre_test
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+      VIRT_NAME="openEuler-2403"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+      VIRT_NAME="openEuler-2003"
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-get-kernel -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-get-kernel -a /home/kvm/images/openEuler-"${OS_VERSION}".qcow2
     CHECK_RESULT $? 0 0 "Check virt-get-kernel -a failed"
-    virt-get-kernel -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-get-kernel -c test:///default -a /home/kvm/images/openEuler-"${OS_VERSION}".qcow2
     CHECK_RESULT $? 0 0 "Check virt-get-kernel -c failed"
-    virt-get-kernel -d openEuler-2003
+    virt-get-kernel -d "${VIRT_NAME}"
     CHECK_RESULT $? 0 0 "Check virt-get-kernel -d failed"
-    virt-get-kernel --echo-keys -d openEuler-2003
+    virt-get-kernel --echo-keys -d "${VIRT_NAME}"
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --echo-keys failed"
-    virt-get-kernel --format=qcow2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-get-kernel --format=qcow2 -a /home/kvm/images/openEuler-"${OS_VERSION}".qcow2
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --format failed"
     virt-get-kernel --help 2>&1 | grep 'virt-get-kernel'
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --help failed"
-    virt-get-kernel --key ID:key:KEY_STRING -d openEuler-2003
+    virt-get-kernel --key ID:key:KEY_STRING -d "${VIRT_NAME}"
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --key failed"
-    virt-get-kernel --keys-from-stdin -d openEuler-2003
+    virt-get-kernel --keys-from-stdin -d "${VIRT_NAME}"
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --keys-from-stdin failed"
     virt-get-kernel --machine-readable 2>&1 | grep 'virt'
     CHECK_RESULT $? 0 0 "Check virt-get-kernel --machine-readable failed"
@@ -51,8 +58,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"

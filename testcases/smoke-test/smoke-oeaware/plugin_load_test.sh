@@ -15,29 +15,36 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   oeAware test
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "oeAware-manager"
+    if yum list oeAware-manager; then
+        DNF_INSTALL "oeAware-manager"
+    else
+        echo "oeAware-manager does not exist"
+        exit 255
+    fi
     touch /lib64/oeAware-plugin/test
     LOG_INFO "End to prepare the test environment."
 }
+
 function run_test() {
     LOG_INFO "Start to run test."
     test1=$(oeawarectl -l test.so)
     CHECK_RESULT "$test1" "Plugin loaded failed, because plugin file does not exist." 0 "test1 failed"
-    test2=$(oeawarectl -l libthread_collector.so)
+    test2=$(oeawarectl -l libsystem_collector.so)
     CHECK_RESULT "$test2" "Plugin loaded failed, because plugin already loaded." 0 "test2 failed"
     test3=$(oeawarectl -l test)
     CHECK_RESULT "$test3" "Plugin loaded failed, because file is not a plugin file." 0 "test3 failed"
-    test4=$(oeawarectl -r libthread_tune.so)
+    test4=$(oeawarectl -r libsystem_tune.so)
     CHECK_RESULT "$test4" "Plugin remove successfully." 0 "test4 failed"
-    test5=$(oeawarectl -l libthread_tune.so)
+    test5=$(oeawarectl -l libsystem_tune.so)
     CHECK_RESULT "$test5" "Plugin loaded successfully." 0 "test5 failed"
-    test6=$(oeawarectl -q | grep libthread_tune.so)
-    CHECK_RESULT "$test6" "libthread_tune.so" 0 "test6 failed"
+    test6=$(oeawarectl -q | grep libsystem_tune.so)
+    CHECK_RESULT "$test6" "libsystem_tune.so" 0 "test6 failed"
     LOG_INFO "End to run test."
 }
 

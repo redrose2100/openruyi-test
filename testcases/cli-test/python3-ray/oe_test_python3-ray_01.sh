@@ -21,8 +21,10 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    DNF_INSTALL "python3-ray"
-
+    DNF_INSTALL "python3-ray python-setproctitle"
+    if ! rpm -q python3-ray; then
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -39,7 +41,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     ray stop
-    DNF_REMOVE "$@" 
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }

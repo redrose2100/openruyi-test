@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL httpd
     systemctl start httpd
     TEST_DIR="/var/www/html/ab_test"
     mkdir -p "$TEST_DIR"
@@ -52,7 +53,7 @@ function run_test() {
     ab -u "$POST_DATA" -T "application/x-www-form-urlencoded" "$BASE_URL"
     CHECK_RESULT $? 0 0 "Test -u option (PUT data)"
     ab -n 1 -v 2 "$BASE_URL" | grep header
-    CHECK_RESULT $? 0 0 "Test -v option (verbosity)"    
+    CHECK_RESULT $? 0 0 "Test -v option (verbosity)"
     LOG_INFO "End to run test."
 }
 
@@ -61,7 +62,8 @@ function post_test() {
     sudo systemctl stop httpd
     sudo rm -rf "/var/www/html/ab_test"
     rm -rf "$TMP_DIR"
-    export LANG="$OLD_LANG"    
+    export LANG="$OLD_LANG"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

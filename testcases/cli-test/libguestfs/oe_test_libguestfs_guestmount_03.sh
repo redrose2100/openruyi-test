@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of libguestfs guestmount command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -28,13 +28,18 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+    fi
     device=$( fdisk -l 2> /dev/null | grep "Device" -A 1 | grep -o "/dev/[a-z0-9]*") 
-    guestmount -v -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --ro /mnt
+    guestmount -v -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount -v failed"
     guestunmount /mnt
-    guestmount -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    guestmount -V 2>&1 | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check guestmount -V failed"
-    guestmount -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 -m $device --rw /mnt
+    guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --rw /mnt
     CHECK_RESULT $? 0 0 "Check guestmount -m failed"
     guestunmount /mnt
     LOG_INFO "End to run test."
@@ -42,8 +47,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"

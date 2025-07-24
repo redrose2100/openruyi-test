@@ -16,17 +16,18 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test qemu-crypto-aes-sm3
 # #############################################
-OET_PATH=$(readlink -f "../../../")
-source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 source "${OET_PATH}/testcases/cli-test/qemu/common/common.sh"
-img_url="https://repo.openeuler.org/openEuler-22.03-LTS-SP3/virtual_machine_img/x86_64/openEuler-22.03-LTS-SP3-x86_64.qcow2.xz"
-filename=$(basename ${img_url})
-volume=${filename%.xz}
-enc_volume=${volume%.qcow2}_aes_sm3.qcow2
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "curl xz socat expect"
+    img_url="https://repo.openeuler.org/openEuler-22.03-LTS-SP3/virtual_machine_img/$(arch)/openEuler-22.03-LTS-SP3-$(arch).qcow2.xz"
+    filename=$(basename "${img_url}")
+    volume=${filename%.xz}
+    enc_volume=${volume%.qcow2}_aes_sm3.qcow2
+    DNF_INSTALL "curl xz socat expect libvirt qemu-img"
+    systemctl start libvirtd
+    SLEEP_WAIT 3
+    systemctl stop firewalld
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -34,14 +35,14 @@ function run_test() {
     LOG_INFO "Start testing..."
     uuid=$(uuidgen)
     test_crypto_qcow2_aes_sm3 "${uuid}" "${enc_volume}"
-    CHECK_RESULT $? 0 0 "qcow2 aes sm3 test failed" 
+    CHECK_RESULT $? 0 0 "qcow2 aes sm3 test failed"
     deletesecvm "${uuid}"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    cleanup "${enc_volume}" "${volume}" 
+    cleanup "${enc_volume}" "${volume}"
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }

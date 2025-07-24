@@ -15,25 +15,32 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs virt-v2v-copy-to-local command
 # ############################################
+# shellcheck disable=SC2119
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/libguestfs/common/checkenv.sh"
+
 
 function pre_test() {
+    # libguestfs 1.42版本后不再支持virt-v2v, virt-p2v and the boot analysis tools 命令工具
+    checkversion142
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL 'libguestfs virt-manager'
     LOG_INFO "End of environmental preparation!"
 }
 
+
 function run_test() {
     LOG_INFO "Start to run test."
     virt-v2v-copy-to-local --help 2>&1 | grep 'virt-v2v-copy-to-local'
     CHECK_RESULT $? 0 0 "Check virt-v2v-copy-to-local --help failed"
-    virt-v2v-copy-to-local -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-v2v-copy-to-local -V | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-v2v-copy-to-local -V failed"
-    virt-v2v-copy-to-local --version | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-v2v-copy-to-local --version | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-v2v-copy-to-local --version failed"
     LOG_INFO "End of the test."
 }
+
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
@@ -41,4 +48,6 @@ function post_test() {
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+
+main "$@"
+

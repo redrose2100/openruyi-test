@@ -56,7 +56,7 @@ EOF
 function post_test() {
 	LOG_INFO "start environment cleanup."
 	rm -rf input.txt output*.ps 
-	DNF REMOVE "$@"
+	DNF_REMOVE "$@"
 	LOG_INFO "Finish environment cleanup!"
 }
 

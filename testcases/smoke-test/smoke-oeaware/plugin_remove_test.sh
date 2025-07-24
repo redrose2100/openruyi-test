@@ -15,21 +15,28 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   oeAware test
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "oeAware-manager"
+    if yum list oeAware-manager; then
+        DNF_INSTALL "oeAware-manager"
+    else
+        echo "oeAware-manager does not exist"
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
+
 function run_test() {
     LOG_INFO "Start to run test."
     test1=$(oeawarectl -r test.so)
     CHECK_RESULT "$test1" "Plugin remove failed, because plugin does not exist." 0 "test1 failed"
-    test2=$(oeawarectl -r libthread_collector.so)
-    CHECK_RESULT "$test2" "Plugin remove failed, because instance with pre-dependency." 0 "test2 failed"
-    test3=$(oeawarectl -r libthread_tune.so)
+    test2=$(oeawarectl -r libsystem_collector.so)
+    CHECK_RESULT "$test2" "Plugin remove successfully." 0 "test2 failed"
+    test3=$(oeawarectl -r libsystem_tune.so)
     CHECK_RESULT "$test3" "Plugin remove successfully." 0 "test3 failed"
     LOG_INFO "End to run test."
 }

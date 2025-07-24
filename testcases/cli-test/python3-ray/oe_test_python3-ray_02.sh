@@ -21,8 +21,10 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    DNF_INSTALL "python3-ray pytest python3-psutil"
-
+    DNF_INSTALL "python3-ray pytest python3-psutil python-setproctitle"
+    if ! rpm -q python3-ray; then
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -37,7 +39,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE "$@" 
+    DNF_REMOVE "$@"
     unset RAY_MINIMAL
 
     LOG_INFO "End to restore the test environment."

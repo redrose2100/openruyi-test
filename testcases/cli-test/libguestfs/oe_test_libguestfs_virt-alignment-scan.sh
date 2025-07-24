@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of libguestfs virt-alignment-scan command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -28,35 +28,42 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-alignment-scan -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+      VIRT_NAME="openEuler-2403"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+      VIRT_NAME="openEuler-2003"
+    fi
+    virt-alignment-scan -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -a failed"
-    virt-alignment-scan -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan -c test:///default -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -c failed"
-    virt-alignment-scan -d openEuler-2003
+    virt-alignment-scan -d "${VIRT_NAME}"
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -d failed"
-    virt-alignment-scan --format=raw -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan --format=raw -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan --format failed"
     virt-alignment-scan --help 2>&1 | grep 'virt-alignment-sca'
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan --help failed"
-    virt-alignment-scan -P 2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan -P 2 -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -P failed"
-    virt-alignment-scan -q -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan -q -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -q failed"
     virt-alignment-scan --uuid
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan --uuid failed"
-    virt-alignment-scan -v -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan -v -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -v failed"
-    virt-alignment-scan --version 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-alignment-scan --version 2>&1 | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan --version failed"
-    virt-alignment-scan -x -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-alignment-scan -x -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2"
     CHECK_RESULT $? 0 0 "Check virt-alignment-scan -x failed"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"

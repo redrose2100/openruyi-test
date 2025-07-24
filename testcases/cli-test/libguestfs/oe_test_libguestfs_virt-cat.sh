@@ -16,13 +16,20 @@
 # @Desc      :   verify the uasge of libguestfs virt-cat command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     libguestfs_pre_test
     echo "hello" >a.txt
-    virt-copy-in -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 a.txt /etc
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+      VIRT_NAME="openEuler-2403"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+      VIRT_NAME="openEuler-2003"
+    fi
+    virt-copy-in -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" a.txt /etc
     virt-copy-in -d openEuler-2003 a.txt /etc
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
@@ -31,35 +38,35 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-cat -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /etc/a.txt
+    virt-cat -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" /etc/a.txt
     CHECK_RESULT $? 0 0 "Check virt-cat -a failed"
-    virt-cat -c test:///default -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /etc/a.txt
+    virt-cat -c test:///default -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" /etc/a.txt
     CHECK_RESULT $? 0 0 "Check virt-cat -c failed"
-    virt-cat -d openEuler-2003 /etc/a.txt
+    virt-cat -d "${VIRT_NAME}" /etc/a.txt
     CHECK_RESULT $? 0 0 "Check virt-cat -d failed"
-    virt-cat --echo-keys -d openEuler-2003 /etc/a.txt
+    virt-cat --echo-keys -d "${VIRT_NAME}" /etc/a.txt
     CHECK_RESULT $? 0 0 "Check virt-cat --echo-keys failed"
-    virt-cat --format=qcow2 -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /etc/a.txt
+    virt-cat --format=qcow2 -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" /etc/a.txt
     CHECK_RESULT $? 0 0 "Check virt-cat --format failed"
     virt-cat --help 2>&1 | grep "virt-cat"
     CHECK_RESULT $? 0 0 "Check virt-cat --help failed"
-    virt-cat --key ID:key:KEY_STRING -d openEuler-2003 /etc/a.txt
+    virt-cat --key ID:key:KEY_STRING -d "${VIRT_NAME}" /etc/a.txt
     CHECK_RESULT $? 0 0 "Check virt-cat --key failed"
-    virt-cat --keys-from-stdin -d openEuler-2003 /etc/a.txt
+    virt-cat --keys-from-stdin -d "${VIRT_NAME}" /etc/a.txt
     CHECK_RESULT $? 0 0 "Check virt-cat --keys-from-stdin failed"
-    virt-cat -v -d openEuler-2003 /etc/a.txt
+    virt-cat -v -d "${VIRT_NAME}" /etc/a.txt
     CHECK_RESULT $? 0 0 "Check virt-cat -v failed"
-    virt-cat -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-cat -V 2>&1 | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-cat -V failed"
-    virt-cat -x -d openEuler-2003 /etc/a.txt
+    virt-cat -x -d "${VIRT_NAME}" /etc/a.txt
     CHECK_RESULT $? 0 0 "Check virt-cat -x failed"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"

@@ -21,8 +21,9 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    echo "test1" > testfile_zcmp_1
-    echo "test2" > testfile_zcmp_2
+    DNF_INSTALL tar
+    echo "test1" >testfile_zcmp_1
+    echo "test2" >testfile_zcmp_2
     tar -cvf testfile_zcmp_1.tar testfile_zcmp_1
     tar -cvf testfile_zcmp_2.tar testfile_zcmp_2
     tar -cvf testfile_zcmp_3.tar testfile_zcmp_1
@@ -41,6 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f testfile_zcmp_1 testfile_zcmp_2 testfile_zcmp_1.tar testfile_zcmp_2.tar testfile_zcmp_3.tar
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

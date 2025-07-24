@@ -2,7 +2,7 @@
     "path": "$OET_PATH/testcases/cli-test/jose",
     "cases": [
         {
-            "name": "oe_test_jose"
+            "name": "oe_test_jose_01"
         }
     ]
 }

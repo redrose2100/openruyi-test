@@ -20,7 +20,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "net-tools"
+    DNF_INSTALL "net-tools iptables"
+    DNF_INSTALL "iptables" 2
     systemctl stop iptables
     cat >/etc/rsyslog.d/server.conf <<EOF
     \$ModLoad imtcp
@@ -61,6 +62,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
+    DNF_REMOVE "$@" 2
     SSH_CMD "
     rm -rf /etc/rsyslog.d/client.conf
     systemctl restart rsyslog

@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL httpd
     systemctl start httpd
     TEST_FILE="/var/www/html/test.html"
     echo "Hello, World!" | sudo tee "$TEST_FILE" >/dev/null
@@ -46,7 +47,7 @@ function run_test() {
     ab -n 1 http://invalid-host/test.html 2>&1 | grep "Could not resolve host"
     CHECK_RESULT $? 0 1 "Handle invalid host error"
     ab --invalid-option 2>&1 | grep "Invalid option"
-    CHECK_RESULT $? 0 1 "Handle invalid option error"   
+    CHECK_RESULT $? 0 1 "Handle invalid option error"
     LOG_INFO "End to run test."
 }
 
@@ -55,6 +56,7 @@ function post_test() {
     systemctl stop httpd
     rm -f "$TEST_FILE"
     export LANG="$OLD_LANG"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

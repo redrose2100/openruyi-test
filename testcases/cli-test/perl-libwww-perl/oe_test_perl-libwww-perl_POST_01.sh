@@ -17,13 +17,13 @@
 # @Desc      :   verify the uasge of perl-libwww-perl command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "perl-libwww-perl perl-CPAN"
+    DNF_INSTALL "perl-libwww-perl perl-CPAN tar"
     tar -zxvf common/HTML-Tree-5.07.tar.gz
-    cd HTML-Tree-5.07
+    cd HTML-Tree-5.07 || exit 1
     perl Build.PL
     ./Build
     ./Build test
@@ -51,7 +51,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check POST -C failed"
     POST -m GET -i "$(date +"%F %T")" http://www.baidu.com | grep 'meta'
     CHECK_RESULT $? 0 0 "Check POST -i failed"
-    echo name=admin | POST -f -c application/x-www-form-urlencoded www.baidu.com | fgrep "<hr><center>nginx</center>"
+    echo name=admin | POST -f -c application/x-www-form-urlencoded www.baidu.com | grep -F "<hr><center>nginx</center>"
     CHECK_RESULT $? 0 0 "Check POST -i failed"
     POST -m GET -o html www.baidu.com | grep 'content'
     CHECK_RESULT $? 0 0 "Check POST -o failed"
@@ -60,10 +60,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    cd ..
+    cd .. || exit 1
     rm -rf HTML-Tree-5.07
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

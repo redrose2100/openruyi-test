@@ -16,22 +16,28 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ovn-controller-vtep.service restart
 # #############################################
+# shellcheck disable=SC2119
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/openvswitch/common/checkenv.sh"
+
 
 function pre_test() {
+    # 如果openvswitch版本大于等于 2.12.0-22，跳过ovn测试用例。 因为此版本后ovn被移除。
+    checkversion2120
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL openvswitch-ovn-vtep
     service=ovn-controller-vtep.service
     log_time=$(date '+%Y-%m-%d %T')
     flag=false
-    if [ $(getenforce | grep Enforcing) ]; then
+    if getenforce | grep -q Enforcing ; then
         setenforce 0
         flag=true
     fi
     userdel -rf openvswitch_ovn; useradd openvswitch_ovn
     LOG_INFO "End of environmental preparation!"
 }
+
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -91,6 +97,7 @@ EOF
     LOG_INFO "Finish test!"
 }
 
+
 function post_test() {
     LOG_INFO "start environment cleanup."
     su - openvswitch_ovn <<EOF
@@ -102,7 +109,7 @@ function post_test() {
 END
 EOF
     userdel -rf openvswitch_ovn
-    if [ ${flag} = 'true' ]; then
+    if [ "${flag}" = 'true' ]; then
         setenforce 1
     fi
     rm -rf /tmp/testlog*
@@ -110,4 +117,6 @@ EOF
     LOG_INFO "Finish environment cleanup!"
 }
 
+
 main "$@"
+

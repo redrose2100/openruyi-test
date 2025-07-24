@@ -22,17 +22,17 @@ source ../common_lib/fsio_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     point_list=("$(CREATE_FS)")
-    mkdir /mnt/test_snap_dir 
+    mkdir /mnt/test_snap_dir
     LOG_INFO "Finish to prepare the database config."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    for i in $(seq 1 $((${#point_list[@]}  - 1))); do
+    for i in $(seq 1 $((${#point_list[@]} - 1))); do
         var=${point_list[$i]}
         lv_name=$(df -iT | grep "$var" | awk '{print $1}')
         fs_type=$(df -iT | grep "$var" | awk '{print $2}')
-        blkid > info_log
+        blkid >info_log
         grep "$lv_name" info_log | grep "$fs_type"
         CHECK_RESULT $? 0 0 "Check blkid info for $lv_name failed."
     done
@@ -43,6 +43,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list=${point_list[*]}
     REMOVE_FS "$list"
+    REMOVE_VG "$@"
     rm -rf info_log /mnt/test_snap_dir
     LOG_INFO "End to restore the test environment."
 }

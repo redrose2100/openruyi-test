@@ -15,30 +15,36 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   oeAware test
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "oeAware-manager"
+    if yum list oeAware-manager; then
+        DNF_INSTALL "oeAware-manager"
+    else
+        echo "oeAware-manager does not exist"
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    test1=$(oeawarectl -e thread_collector)
-    CHECK_RESULT "$test1" "Instance enabled successfully." 0 "test1 failed"
-    test2=$(oeawarectl -e thread_collector)
-    CHECK_RESULT "$test2" "Instance enabled failed, because instance is already enabled." 0 "test2 failed"
-    test3=$(oeawarectl -e test)
-    CHECK_RESULT "$test3" "Instance enabled failed, because instance is not loaded." 0 "test3 failed"
-    test4=$(oeawarectl -e thread_tune)
-    CHECK_RESULT "$test4" "Instance enabled successfully." 0 "test4 failed"
+    oeawarectl -e thread_collector | grep "Instance enabled successfully"
+    CHECK_RESULT $? 0 0 "thread_collector plugin enable failed"
+    oeawarectl -e thread_collector | grep "Instance enabled failed, because instance is already enabled"
+    CHECK_RESULT $? 0 0 "thread_collector plugin repeat enable failed"
+    oeawarectl -e test | grep "Instance enabled failed, because instance is not loaded"
+    CHECK_RESULT $? 0 0 "test plugin enable failed"
+    oeawarectl -e stealtask_tune | grep "Instance enabled successfully"
+    CHECK_RESULT $? 0 0 "stealtask_tune plugin enable failed"
     systemctl stop oeaware
-    rm -f /lib64/oeAware-plugin/libthread_collector.so
+    rm -f /lib64/oeAware-plugin/libsystem_tune.so
     systemctl start oeaware
-    sleep 1
-    test5=$(oeawarectl -e thread_tune)
-    CHECK_RESULT "$test5" "Instance enabled failed, because instance is unavailable." 0 "test5 failed"
+    SLEEP_WAIT 1
+    oeawarectl -e stealtask_tune | grep "Instance enabled failed, because instance is not loaded"
+    CHECK_RESULT $? 0 0 "stealtask_tune plugin enable failed"
     LOG_INFO "End to run test."
 }
 

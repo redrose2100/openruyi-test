@@ -34,7 +34,7 @@ function run_test() {
     rmid -help 2>&1 | grep Usage
     CHECK_RESULT $?
     rmid -port 1111 -log portlog &
-    SLEEP_WAIT 3
+    SLEEP_WAIT 10
     rmid -stop -port 1111
     CHECK_RESULT $?
     find portlog

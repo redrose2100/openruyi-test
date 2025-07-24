@@ -15,24 +15,30 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   oeAware test
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "oeAware-manager"
+    if yum list oeAware-manager; then
+        DNF_INSTALL "oeAware-manager"
+    else
+        echo "oeAware-manager does not exist"
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
     LOG_INFO "Start to run test."
     test1=$(oeawarectl --list | grep "numafast")
     CHECK_RESULT "$test1" "numafast" 0 "test1 failed"
-    test2=$(oeawarectl --list | grep "libthread_collector.so")
-    CHECK_RESULT "$test2" "libthread_collector.so" 0 "test2 failed"
+    test2=$(oeawarectl --list | grep "libsystem_collector.so")
+    CHECK_RESULT "$test2" "libsystem_collector.so" 0 "test2 failed"
     test3=$(oeawarectl --list | grep "libthread_scenario.so")
     CHECK_RESULT "$test3" "libthread_scenario.so" 0 "test3 failed"
-    test4=$(oeawarectl --list | grep "libthread_tune.so")
-    CHECK_RESULT "$test4" "libthread_tune.so" 0 "test4 failed"
+    test4=$(oeawarectl --list | grep "libsystem_tune.so")
+    CHECK_RESULT "$test4" "libsystem_tune.so" 0 "test4 failed"
     test5=$(oeawarectl --list | grep "libpmu.so")
     CHECK_RESULT "$test5" "libpmu.so" 0 "test5 failed"
     LOG_INFO "End to run test."

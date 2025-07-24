@@ -35,12 +35,19 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Generate union error for two regular expressions"
   fadot -o json "a(b|c)"  |grep "b-c"
   CHECK_RESULT $? 0 0 "Output regular expression information in JSON format with error message"
+  fadot -o example "[0-9]" | grep -q -E "[0-9]"
+  CHECK_RESULT $? 0 0 "Example generation failed"
+  fadot -n -o show "a{2,3}" | grep -q "aa(a|())"
+  CHECK_RESULT $? 0 0 "Non-minimized expansion failed"
+  fadot -f /tmp/regex_test.dot -o show "a(b|c)" && grep -q "digraph" /tmp/regex_test.dot
+  CHECK_RESULT $? 0 0 "DOT file generation failed"
   LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
   DNF_REMOVE "$@"
+  rm -rf /tmp/regex_test.dot
   LOG_INFO "Finish environment cleanup!"
 }
 

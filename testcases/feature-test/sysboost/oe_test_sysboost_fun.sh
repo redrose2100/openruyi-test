@@ -23,44 +23,46 @@ shopt -s expand_aliases
 
 function pre_test() {
     DNF_INSTALL "sysboost bash-relocation coreutils-relocation ncurses-relocation zlib-relocation openssl-relocation"
-
-    cat << EOF > /etc/sysboost.d/bash.toml
+    if ! rpm -q sysboost bash-relocation coreutils-relocation ncurses-relocation zlib-relocation openssl-relocation; then
+        exit 255
+    fi
+    cat <<EOF >/etc/sysboost.d/bash.toml
 elf_path = "/usr/bin/bash"
 mode = "static-nolibc"
 libs = ["/usr/lib64/libtinfo.so.6"]
 EOF
 
-    cat << EOF > /etc/sysboost.d/od.toml
+    cat <<EOF >/etc/sysboost.d/od.toml
 elf_path = "/usr/bin/od"
 mode = "static-nolibc"
 libs = []
 EOF
 
-    cat << EOF > /etc/sysboost.d/rm.toml
+    cat <<EOF >/etc/sysboost.d/rm.toml
 elf_path = "/usr/bin/rm"
 mode = "static-nolibc"
 libs = []
 EOF
 
-    cat << EOF > /etc/sysboost.d/sort.toml
+    cat <<EOF >/etc/sysboost.d/sort.toml
 elf_path = "/usr/bin/sort"
 mode = "static-nolibc"
 libs = ["/usr/lib64/libcrypto.so.3","/usr/lib64/libz.so.1"]
 EOF
 
-    cat << EOF > /etc/sysboost.d/tee.toml
+    cat <<EOF >/etc/sysboost.d/tee.toml
 elf_path = "/usr/bin/tee"
 mode = "static-nolibc"
 libs = []
 EOF
 
-    cat << EOF > /etc/sysboost.d/wc.toml
+    cat <<EOF >/etc/sysboost.d/wc.toml
 elf_path = "/usr/bin/wc"
 mode = "static-nolibc"
 libs = []
 EOF
 
-    cat << EOF > bashtest.sh
+    cat <<EOF >bashtest.sh
 #!/usr/bin/bash
 sleep 60
 EOF
@@ -102,6 +104,9 @@ function run_test() {
 }
 
 function post_test() {
+    if ! rpm -q sysboost bash-relocation coreutils-relocation ncurses-relocation zlib-relocation openssl-relocation; then
+        exit 255
+    fi
     pstree -p ${pid} | awk -F'[()]' '{for(i=0;i<=NF;i++) if ($i~/(^[0-9])+/) print $i}' | xargs kill -9
     systemctl stop sysboost
     for commands in bash od rm sort tee wc; do

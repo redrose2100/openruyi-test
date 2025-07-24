@@ -16,26 +16,33 @@
 # @Desc      :   verify the uasge of libguestfs virt-inspector command
 # ############################################
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     libguestfs_pre_test
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+      VIRT_NAME="openEuler-2403"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+      VIRT_NAME="openEuler-2003"
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    virt-inspector -v -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-inspector -v -a /home/kvm/images/openEuler-"${OS_VERSION}".qcow2
     CHECK_RESULT $? 0 0 "Check virt-inspector -v failed"
-    virt-inspector -V | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-inspector -V | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-inspector -V failed"
-    virt-inspector -x -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2
+    virt-inspector -x -a /home/kvm/images/openEuler-"${OS_VERSION}".qcow2
     CHECK_RESULT $? 0 0 "Check virt-inspector -x failed"
-    virt-inspector -d openEuler-2003 | virt-inspector --xpath '//filesystems'
+    virt-inspector -d "${VIRT_NAME}" | virt-inspector --xpath '//filesystems'
     CHECK_RESULT $? 0 0 "Check virt-inspector --xpath failed"
 
     LOG_INFO "End of the test."
@@ -43,8 +50,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test
+    libguestfs_post_test "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

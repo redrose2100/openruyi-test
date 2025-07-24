@@ -20,7 +20,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-        cat >test.txt<<EOF
+    DNF_INSTALL tar
+    cat >test.txt <<EOF
 sdfassaaasd1223123223424435rrte
 13cdeff
 iAbc123
@@ -28,17 +29,16 @@ iAbc123
 EOF
     zip test.zip test.txt
     tar -cvf test.tar.gz test.txt
-    xz  -k test.txt
+    xz -k test.txt
     gzip -k test.txt
     bzip2 -k test.txt
     LOG_INFO "End to prepare the test environment."
 }
 
-function run_test()
-{
+function run_test() {
     LOG_INFO "Start testing..."
     zgrep assa test.zip
-    CHECK_RESULT $? 0 0 "zgrep assa error" 
+    CHECK_RESULT $? 0 0 "zgrep assa error"
     zgrep -an "^[0-9]" test.tar.gz
     CHECK_RESULT $? 0 0 "zgrep tar.gz error"
     zgrep -ia "abc" test.tar.gz test.txt.xz
@@ -51,6 +51,7 @@ function run_test()
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf test.*
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
