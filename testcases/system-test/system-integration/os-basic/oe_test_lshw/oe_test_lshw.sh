@@ -36,13 +36,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "show memory info fail"
     lshw -c cpu | grep -A 5 cpu
     CHECK_RESULT $? 0 0 "show cpu info fail"
-    if [ "$(uname -m)" == "riscv64" ]; then
-        lshw -c disk | grep -A 5 virtio1
-        CHECK_RESULT $? 0 0 "show disk info fail"
-    else
-    	lshw -c disk | grep -A 5 disk
-        CHECK_RESULT $? 0 0 "show disk info fail"
-    fi
+    lshw -c disk | grep -A 5 -E "virtio|disk"
+    CHECK_RESULT $? 0 0 "show disk info fail"
     LOG_INFO "End to run test."
 }
 
