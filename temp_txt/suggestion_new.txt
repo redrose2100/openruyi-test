@@ -1,0 +1,18 @@
+==================================================Analysis Suggestion===================================================
++---------------------+---------------------+---------------------+
+|suggestion           |operation            |result               |
++---------------------+---------------------+---------------------+
+|Use numafast         |step 1: if  `oeaware |Optimizes memory acc |
+|                     |ctl -q | grep tune_n |ess locality with lo |
+|                     |uma_mem_access` not  |w scheduling overhea |
+|                     |exist, install numaf |d                    |
+|                     |ast                  |                     |
+|                     |install : `oeawarect |                     |
+|                     |l -i numafast`       |                     |
+|                     |load :    `oeawarect |                     |
+|                     |l -l libtune_numa.so |                     |
+|                     |`                    |                     |
+|                     |step 2: enable insta |                     |
+|                     |nce `oeaware -e tune |                     |
+|                     |_numa_mem_access`    |                     |
++---------------------+---------------------+---------------------+
