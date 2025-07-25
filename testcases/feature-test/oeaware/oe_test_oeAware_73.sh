@@ -16,7 +16,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    local cpu_count=$(lscpu | grep -w 'CPU:' | awk '{print $2}')
+    local cpu_count
+    cpu_count=$(lscpu | grep -w 'CPU:' | awk '{print $2}')
     local thresh=70
     sed -i "/dynamic_smt:/ { n; s/\( *threshold:\)[[:space:]]*.*/  threshold: ${thresh}/; }" /etc/oeAware/analysis_config.yaml
     oeawarectl analysis -t 3 | grep "use dynamic smt"
