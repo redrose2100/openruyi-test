@@ -21,14 +21,12 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    touch xmllint_bad.xml
     cat > xmllint_bad.xml << EOF
 <root>
     <item>Test</item>
     <unclosed_tag>Error
 </root>
 EOF
-    touch xmllint_good.xml
     cat > xmllint_good.xml << EOF
 <root>
     <item>Test</item>
