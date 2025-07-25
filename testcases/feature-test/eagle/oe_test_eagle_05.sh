@@ -20,8 +20,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_FRAME}" != "aarch64" ]; then
-       echo "eagle仅支持aarch64!"
+    if ! [ "${NODE1_FRAME}" = "aarch64" ] && [ "${NODE1_MACHINE}" = "physical" ]; then
+       echo "eagle仅支持aarch64架构和物理机!"
        exit 255
     fi
     DNF_INSTALL "eagle"
