@@ -35,7 +35,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check disabling numa failed"
     oeawarectl -d numa_sched_tune | grep "Instance disabled successfully."
     CHECK_RESULT $? 0 0 "Check disabling numa failed"
-    cat /sys/kernel/debug/sched_features | grep "PARAL"
+    grep "PARAL" /sys/kernel/debug/sched_features 
     CHECK_RESULT $? 0 0 "Check disabling numa failed"
 
     echo NO_PARAL > /sys/kernel/debug/sched_features
