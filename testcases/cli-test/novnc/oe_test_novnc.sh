@@ -71,8 +71,8 @@ function run_test() {
         expect eof
 EOF
 
-    IS_FREE_PORT "${vncConnPort}" ""
-    CHECK_RESULT $? 1 0 "vnc server doesn't start up"
+    pgrep -f "vnc.*${vncConnPort}"
+    CHECK_RESULT $? 0 0 "vnc server doesn't start up"
 
     # --listen --vnc --web
     novnc_server --listen "${novncLisPort}" --vnc localhost:"${vncConnPort}" --web /usr/share/novnc &
