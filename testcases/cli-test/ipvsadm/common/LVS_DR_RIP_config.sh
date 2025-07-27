@@ -10,7 +10,7 @@ start)
     dnf -y install httpd
     systemctl start httpd
     systemctl stop firewalld
-    ip addr add ipvs_vip/24 dev ipvs_eth
+    ip addr add ipvs_vip/32 dev lo
     server1=serveripvs_ip
     echo "$server1" >/var/www/html/index.html
     check_http=$(curl localhost)
@@ -21,7 +21,7 @@ start)
     fi
     ;;
 stop)
-    ip addr del ipvs_vip/24 dev ipvs_eth
+    ip addr del ipvs_vip/32 dev lo
     echo "0" >/proc/sys/net/ipv4/conf/lo/arp_ignore
     echo "0" >/proc/sys/net/ipv4/conf/lo/arp_announce
     echo "0" >/proc/sys/net/ipv4/conf/all/arp_ignore
