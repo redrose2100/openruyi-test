@@ -17,17 +17,22 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   TEST generate_website_2_data.py in nototools options
 # #############################################
+# shellcheck disable=SC2119
 
-source "../common/common.sh"
+
+source "${OET_PATH}/testcases/cli-test/nototools/common/common.sh"
+
 
 #Installation preparation for test objects, tools required for testing, etc.
 function pre_test() {
+    # 由于 nototools 依赖python2的专有库， 如pango， 目前操作系统已不维护python2包导致很多地方出错， 所以跳过
+    # 参考 https://gitee.com/src-openeuler/nototools/issues/I8LQC4
+    exit 255
     LOG_INFO "Start to prepare the test environment."
-    
     common_pre
-
     LOG_INFO "End to prepare the test environment."
 }
+
 
 # Execution of test points
 function run_test() {
@@ -97,12 +102,13 @@ function run_test() {
     # Test the --debug parameter
     for i in "ttf" "TTC" "otf"
     do
-        generate_website_2_data.py --debug ${i}
+        generate_website_2_data.py --debug "${i}"
         CHECK_RESULT $? 0 0 "option: --debug ${i} error"
     done
     
     LOG_INFO "End to run test."
 }
+
 
 # 后置处理，恢复测试环境
 function post_test() {
@@ -113,4 +119,6 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
+
 main "$@"
+
