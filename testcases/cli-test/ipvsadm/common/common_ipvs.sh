@@ -41,7 +41,9 @@ function build_env() {
     P_SSH_CMD --node 2 --cmd "ip addr add $ipvs_ip2/24 dev ${eth_use2}"
     P_SSH_CMD --node 3 --cmd "ip addr add $ipvs_ip3/24 dev ${eth_use3}"
     P_SSH_CMD --node 4 --cmd "ip addr add $ipvs_ip4/24 dev ${eth_use4}"
-    DNF_INSTALL "ipvsadm httpd"
+    DNF_INSTALL "ipvsadm httpd firewalld"
+    DNF_INSTALL "firewalld" 2
+    DNF_INSTALL "firewalld" 3
     systemctl start httpd
     systemctl stop firewalld
     ipvsadm
@@ -64,6 +66,8 @@ function clean_env() {
     rm -rf /etc/sysconfig/ipvsadm ./result_*
     ip addr del "$ipvs_vip"/24 dev "${NODE1_NIC}"
     DNF_REMOVE "$@"
+    DNF_REMOVE "$@" 2
+    DNF_REMOVE "$@" 3
     P_SSH_CMD --node 2 --cmd "
     bash -x /tmp/LVS_DR_RIP_config.sh stop;
     ip addr del $ipvs_ip2/24 dev ${eth_use2};"
