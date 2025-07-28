@@ -17,7 +17,7 @@
 # @Desc      :   Test derby.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -27,14 +27,37 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution derby.service
+    if [ "$NODE1_FRAME" == "riscv64" ]; then
+        service=derby.service
+        log_time="$(date '+%Y-%m-%d %T')"
+        systemctl restart "${service}"
+        CHECK_RESULT $? 0 0 "${service} restart failed"
+        SLEEP_WAIT 5
+        systemctl status "${service}" | grep "Active: active"
+        CHECK_RESULT $? 0 0 "${service} restart failed"
+        systemctl stop "${service}"
+        CHECK_RESULT $? 0 0 "${service} stop failed"
+        SLEEP_WAIT 5
+        systemctl status "${service}" | grep -E "Active: inactive|code=exited, status=143"
+        CHECK_RESULT $? 0 0 "${service} stop failed"
+        systemctl start "${service}"
+        CHECK_RESULT $? 0 0 "${service} start failed"
+        SLEEP_WAIT 5
+        systemctl status "${service}" | grep "Active: active"
+        CHECK_RESULT $? 0 0 "${service} start failed"
+        test_enabled "${service}"
+        journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v "exit-code"
+        CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
+    else
+        test_execution derby.service
+    fi
     test_reload derby.service
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
