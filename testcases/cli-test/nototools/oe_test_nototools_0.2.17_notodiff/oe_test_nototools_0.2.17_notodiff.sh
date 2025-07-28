@@ -17,11 +17,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   TEST notodiff in nototools options
 # #############################################
+# shellcheck disable=SC2119,SC2035
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
 
 # Preloaded data, parameter configuration
 function config_params() {
+    # 由于 nototools 依赖python2的专有库， 如pango， 目前操作系统已不维护python2包导致很多地方出错， 所以跳过
+    # 参考 https://gitee.com/src-openeuler/nototools/issues/I8LQC4
+    exit 255
     LOG_INFO "Start to config params of the case."
 
     TMP_DIR="$(mktemp -d -t nototools.XXXXXXXXXXXX)"
@@ -32,6 +38,7 @@ function config_params() {
     LOG_INFO "End to config params of the case."
 }
 
+
 #Installation preparation for test objects, tools required for testing, etc.
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -41,6 +48,7 @@ function pre_test() {
 
     LOG_INFO "End to prepare the test environment."
 }
+
 
 # Execution of test points
 function run_test() {
@@ -83,20 +91,20 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: --out-lines error"
 
     #Test the -w parameter
-    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} -w ${MISS_LIST} | grep -q "15 differences in glyph shape"
+    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} -w "${MISS_LIST}" | grep -q "15 differences in glyph shape"
     CHECK_RESULT $? 0 0 "option: -w error"
-    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} --allowlist ${MISS_LIST} | grep -q "15 differences in glyph shape"
+    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} --allowlist "${MISS_LIST}" | grep -q "15 differences in glyph shape"
     CHECK_RESULT $? 0 0 "option: --allowlist error"
 
     #Test the --font-size parameter
     for i in "64" "128"
     do
-        notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} -t rendered --font-size ${i} | grep -q "3 differences in glyph shape"
+        notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} -t rendered --font-size "${i}" | grep -q "3 differences in glyph shape"
         CHECK_RESULT $? 0 0 "option: --font-size ${i} error"
     done
     
     #Test the --render-path parameter
-    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} -t rendered  --render-path ${TMP_DIR} | grep -q "3 differences in glyph shape"
+    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} -t rendered  --render-path "${TMP_DIR}" | grep -q "3 differences in glyph shape"
     CHECK_RESULT $? 0 0 "option: --render-path error"
 
     #Test the --diff-threshold parameter
@@ -106,21 +114,24 @@ function run_test() {
     #Test the --verbose parameter
     for i in "debug" "info" "warning" "critical" "error"
     do
-        notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} --verbose ${i} | grep -q "17 differences in glyph shape"
+        notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} --verbose "${i}" | grep -q "17 differences in glyph shape"
         CHECK_RESULT $? 0 0 "option: --verbose ${i} error"
     done
 
     LOG_INFO "End to run test."
 }
 
+
 # 后置处理，恢复测试环境
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -rf ${TMP_DIR}
+    rm -rf "${TMP_DIR}"
     common_post
 
     LOG_INFO "End to restore the test environment."
 }
 
+
 main "$@"
+
