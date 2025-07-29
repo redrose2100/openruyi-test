@@ -68,9 +68,13 @@ function createsecvm_with_sm4_sm3() {
     fi
     virsh secret-define secxml_"${uuid}".xml
     secret_set "${uuid}"
-    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=sm4,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sm3 "${volume}" "${sec_volume}" || {
-        printf "qemu-img convert sec img error\n"
-        exit 1
+    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=sm4,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sm3 "${volume}" "${sec_volume}" >testlog 2>&1 || {
+        if grep -iE "Algorithm 'sm4' not supported|Parameter 'hash-alg' does not accept value 'sm3'|qcow2: Invalid parameter 'sm4'" testlog; then
+            exit 255
+        else
+            printf "qemu-img convert sec img error\n"
+            exit 1
+        fi
     }
     create_domain_xml "${uuid}" "${sec_volume}"
     virsh define domain_"${uuid}".xml
@@ -103,9 +107,13 @@ function createsecvm_with_sm4_sha256() {
     fi
     virsh secret-define secxml_"${uuid}".xml
     secret_set "${uuid}"
-    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=sm4,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sha256 "${volume}" "${enc_volume}" || {
-        printf "qemu-img convert sec img error\n"
-        exit 1
+    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=sm4,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sha256 "${volume}" "${enc_volume}" >testlog 2>&1 || {
+        if grep -E "Algorithm 'sm4' not supported|qcow2: Invalid parameter 'sm4'" testlog; then
+            exit 255
+        else
+            printf "qemu-img convert sec img error\n"
+            exit 1
+        fi
     }
     create_domain_xml "${uuid}" "${sec_volume}"
     virsh define domain_"${uuid}".xml
@@ -138,9 +146,13 @@ function createsecvm_with_aes_sm3() {
     fi
     virsh secret-define secxml_"${uuid}".xml
     secret_set "${uuid}"
-    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=aes-256,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sm3 "${volume}" "${enc_volume}" || {
-        printf "qemu-img convert sec img error\n"
-        exit 1
+    qemu-img convert -O qcow2 --object secret,id=sec0,data="${uuid}" -o encrypt.format=luks,encrypt.key-secret=sec0,encrypt.cipher-alg=aes-256,encrypt.cipher-mode=xts,encrypt.ivgen-alg=plain64,encrypt.hash-alg=sm3 "${volume}" "${enc_volume}" >testlog 2>&1 || {
+        if grep -iE "PBKDF does not support hash algorithm sm3|Parameter 'hash-alg' does not accept value 'sm3'|qcow2: Invalid parameter 'sm3'" testlog; then
+            exit 255
+        else
+            printf "qemu-img convert sec img error\n"
+            exit 1
+        fi
     }
     create_domain_xml "${uuid}" "${sec_volume}"
     virsh define domain_"${uuid}".xml
@@ -338,6 +350,7 @@ function delete_openeuler_img() {
     local volume=$2
     rm -f "${sec_volume}"
     rm -f "${volume}"
+    rm -rf testlog
 }
 
 function cleanup() {

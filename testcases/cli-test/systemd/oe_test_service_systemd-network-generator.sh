@@ -28,8 +28,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution "${service}"
-    test_reload "${service}"
+    if [[ $(rpm -qa systemd | awk -F- '{print $2}') == "243" ]]; then
+        test_oneshot "${service}" 'inactive (dead)'
+    else
+        test_execution "${service}"
+        test_reload "${service}"
+    fi
     LOG_INFO "End to run test."
 }
 
