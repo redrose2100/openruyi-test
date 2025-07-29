@@ -28,10 +28,14 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test_execution systemd-networkd.service
-    systemctl reload systemd-networkd.service
-    CHECK_RESULT $? 0 0 "nscd.service reload failed"
-    systemctl status systemd-networkd.service | grep "Active: active"
-    CHECK_RESULT $? 0 0 "nscd.service reload causes the service status to change"
+    if [[ $(rpm -qa systemd | awk -F- '{print $2}') == "243" ]]; then
+        test_reload systemd-networkd.service
+    else
+        systemctl reload systemd-networkd.service
+        CHECK_RESULT $? 0 0 "nscd.service reload failed"
+        systemctl status systemd-networkd.service | grep "Active: active"
+        CHECK_RESULT $? 0 0 "nscd.service reload causes the service status to change"
+    fi
     LOG_INFO "End to run test."
 }
 
