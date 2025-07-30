@@ -1067,6 +1067,9 @@
         },
 	{
 	    "name": "oe_test_xmllint"
+	},
+	{
+	    "name": "oe_test_xml2-config"
 	}
     ]
 }
