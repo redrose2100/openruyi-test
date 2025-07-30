@@ -194,6 +194,7 @@ def end_benchmark(proc, name):
             print(res.replace("\n", ""))
 
     elif name == "stress-ng":
+        proc.wait()
         if proc.returncode != 0:
             print(proc.stderr.decode())
 
@@ -238,7 +239,7 @@ def write_schmata(ctrl_grp, resource, cpuno, cnt, dom_id=-1):
     if "MB" in resource:
         cnt = ("%s:%d=%d" % (resource, dom_id, cnt))
 
-    elif "PRIO" in resource or "MIN" in resource:
+    elif "PRIO" in resource or "MIN" in resource or "MAX" in resource:
         level = int(resource[1])
         dom_id = find_cpu_to_cacheid(cpuno, level)
         cnt = ("%s:%d=%d" % (resource, dom_id, cnt))

@@ -122,6 +122,7 @@ def start_benchmark(ip_addr, dev_ip_addr, remote_ip_addr):
     return proc
 
 def end_benchmark(proc):
+    proc.wait()
     if proc.returncode != 0:
         print(proc.stderr.decode())
         return -1
