@@ -32,20 +32,20 @@ function common_config_params() {
 
 # Test environment preparation
 function common_pre() {
-    DNF_INSTALL "mtx rpm-build rpmdevtools git zlib-devel gcc kernel-devel"
+    DNF_INSTALL "mtx rpm-build rpmdevtools git zlib-devel gcc kernel-devel lsscsi kernel-headers"
     test -d "${HOME}/rpmbuild" \
         && mv -f "${HOME}/rpmbuild" "$_MTX_COMMON_RPMBUILD_BAKUP_DIR" \
         && LOG_INFO "Successfully move ${HOME}/rpmbuild to ${_MTX_COMMON_RPMBUILD_BAKUP_DIR}."
     rpmdev-setuptree
-    git clone https://gitee.com/src-openeuler/mhvtl.git ./tmp/mhvtl
-    cp ./tmp/mhvtl/1.7-0_release.tar.gz ./tmp/mhvtl/build-kernel-module.patch ./tmp/mhvtl/build-mhvtl-module.patch "${HOME}/rpmbuild/SOURCES"
+    git clone https://gitee.com/zhtianyu/mhvtl.git ./tmp/mhvtl
+    cp ./tmp/mhvtl/1.7-2_release.tar.gz ./tmp/mhvtl/build-kernel-module.patch "${HOME}/rpmbuild/SOURCES"
     rpmbuild -bb ./tmp/mhvtl/*.spec
     dnf install "${HOME}/rpmbuild/RPMS/$(arch)"/*.rpm -y
     systemctl start mhvtl.target
     # waite ....
-    SLEEP_WAIT 5s
+    SLEEP_WAIT 10
     # Looking for manipulator equipment
-    PATH_MEDIUMX=$(lsscsi -g | grep "${DRIVER_MEDIUMX}" | grep -oE "/dev/sg.*" || exit 1)
+    PATH_MEDIUMX=$(lsscsi -g | grep "${DRIVER_MEDIUMX}" | grep -oE "/dev/sg.*" | xargs || exit 1)
     # Looking for drive devices
     PATH_TAPE=$(lsscsi -g | grep -m 1 "${DRIVER_TAPE}" | grep -oE "/dev/st[0-9]*" || exit 1)
     echo "$PATH_TAPE"
