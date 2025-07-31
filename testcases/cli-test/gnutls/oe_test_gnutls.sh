@@ -31,6 +31,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Return value error"
     gnutls-cli --insecure www.baidu.com
     CHECK_RESULT $? 0 0 "connection fail" 
+    gnutls-cli --version
+    CHECK_RESULT $? 0 0 "Failed to get gnutls-cli version"
+    gnutls-cli --print-cert --insecure www.baidu.com </dev/null | grep -i "Certificate"
+    CHECK_RESULT $? 0 0 "Failed to retrieve certificate information"
+    gnutls-cli --priority NORMAL --insecure www.baidu.com </dev/null | grep -i "Handshake was completed"
+    CHECK_RESULT $? 0 0 "Handshake failed"
+    gnutls-cli --list </dev/null | grep -i "Ciphers"
+    CHECK_RESULT $? 0 0 "Failed to list cipher suites"
     LOG_INFO "End to run test."
 }
 
@@ -39,6 +47,5 @@ function post_test() {
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
-
 main "$@"
 
