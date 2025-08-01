@@ -1,0 +1,16 @@
+cloud-init
+cloud-init-help
+kernel-rt
+kernel-rt-devel
+kernel-rt-headers
+kernel-rt-source
+kernel-rt-tools
+kernel-rt-tools-devel
+sysmaster
+devmaster
+install-scripts
+python3-dnf-plugin-local
+grub-bls
+grub2-efi-ia32
+grub2-efi-x64
+gcc_secure

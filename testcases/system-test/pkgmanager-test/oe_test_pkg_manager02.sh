@@ -25,11 +25,16 @@ source ./common/pkg.conf
 Default_LANG=$LANG
 export LANG=en_US.UTF-8
 
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     EXECUTE_T="720m"
+    rm -rf /home/{pkg_manager_folder,src,src_epol} /root/rpmbuild
+    sed -i 's/\r$//' ./common/escape.pkg
+    yum clean all
     LOG_INFO "End to prepare the test environment."
 }
+
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -46,11 +51,13 @@ function run_test() {
         cfg_openEuler_repo "${version_info}"
         cfg_openEuler_update_test_repo "${version_info}"
     fi
-    SSH_CMD "rm -rf /etc/yum.repos.d/* " "${NODE2_IPV4}"
-    SSH_SCP /etc/yum.repos.d "${NODE2_USER}"@"${NODE2_IPV4}":/etc/ "${NODE2_PASSWORD}" 22
+
     CHECK_RESULT $? 0 0 "Failed to configure the repo source !"
     # Get the package lists
     get_related_lists
+    SSH_CMD "rm -rf /etc/yum.repos.d/* " "${NODE2_IPV4}"
+    SSH_SCP /etc/yum.repos.d "${NODE2_USER}"@"${NODE2_IPV4}":/etc/ "${NODE2_PASSWORD}" 22
+    SSH_CMD "test -d /home/pkg_manager_folder && rm -rf /home/pkg_manager_folder/ " "${NODE2_IPV4}"
     SSH_SCP /home/pkg_manager_folder "${NODE2_USER}"@"${NODE2_IPV4}":/home/ "${NODE2_PASSWORD}" 22
     CHECK_RESULT $? 0 0 "Failed to get lists !"
     # Upgrade packages
@@ -64,9 +71,9 @@ function run_test() {
     # Downgrade packages
     downgrade_test_pkg
     test -s /home/pkg_manager_folder/downgrade_fail_list
-    CHECK_RESULT $? 1 0 "Remove packages error !"
+    CHECK_RESULT $? 1 0 "Downgrade packages error !"
     test -s /home/pkg_manager_folder/EPOL_downgrade_fail_list
-    CHECK_RESULT $? 1 0 "Remove epol packages error !"
+    CHECK_RESULT $? 1 0 "Downgrade epol packages error !"
     # Remove packages
     uninstall_pkg
     test -s /home/pkg_manager_folder/remove_fail_list
@@ -77,10 +84,12 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
+
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=$Default_LANG
     LOG_INFO "End to restore the test environment."
 }
+
 
 main "$@"
