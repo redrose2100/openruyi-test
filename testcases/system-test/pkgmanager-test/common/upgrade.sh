@@ -16,11 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   For remote upgrade
 # ############################################
-# shellcheck disable=SC1091,SC2154
+# shellcheck disable=SC1091,SC2154,SC2181,SC2154
 
 source ./noproblem_list
 source /etc/openEuler-latest
 export LANG=en_US.UTF-8
+
 
 upgrade_test_pkg() {
     target_ver=$(find /etc/yum.repos.d | sort | tail -n 1 | awk -F '/' '{print $4}' | awk -F '.repo' '{print $1}')
@@ -38,10 +39,16 @@ upgrade_test_pkg() {
     yum clean all
     # Install last version
     while read -r pkg; do
-        yum install -y "$pkg" >>install_log 2>&1
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -ne 0 ]; then
+            yum install -y "$pkg" >>install_log 2>&1
+        fi
     done <update_list
     test -s EPOL_update_list && while read -r pkg; do
-        yum install -y "$pkg" >>EPOL_install_log 2>&1
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -ne 0 ]; then
+            yum install -y "$pkg" >>EPOL_install_log 2>&1
+        fi
     done <EPOL_update_list
     # Upgrade test version
     if [ "${openeulerversion}"x == "${target_ver}"x ]; then
@@ -51,14 +58,42 @@ upgrade_test_pkg() {
         mv /etc/yum.repos.d/"${target_ver}".repo.bak /etc/yum.repos.d/"${target_ver}".repo
     fi
     while read -r pkg; do
-        noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
-        yum upgrade -y "${pkg}" >"${pkg}"_upgrade_log 2>&1
-        grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_upgrade_log | grep -v "Curl error\|Unable to find a match:\|${noproblem_info}" && echo "${pkg}" >>upgrade_fail_list
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -eq 0 ]; then
+            echo "${pkg} Escape error !!!" >"${pkg}"_upgrade_log
+            echo "${pkg}" >>upgrade_fail_list
+        else
+            # noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
+            yum upgrade -y "${pkg}" >"${pkg}"_upgrade_log 2>&1
+            grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_upgrade_log |grep -v "${be_common}"|grep -v "${pkg_name}"|grep -v "${other}" && echo "${pkg}" >>upgrade_fail_list
+        fi
+        
     done <update_list
     test -s EPOL_update_list && while read -r pkg; do
-        noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
-        yum upgrade -y "${pkg}" >"${pkg}"_EPOL_upgrade_log 2>&1
-        grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_EPOL_upgrade_log | grep -v "Curl error\|Unable to find a match:\|${noproblem_info}" && echo "${pkg}" >>EPOL_upgrade_fail_list
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -eq 0 ]; then
+            echo "${pkg} Escape error !!!" >"${pkg}"_EPOL_upgrade_log
+            echo "${pkg}" >>EPOL_upgrade_fail_list
+        else
+            # noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
+            yum upgrade -y "${pkg}" >"${pkg}"_EPOL_upgrade_log 2>&1
+            grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_EPOL_upgrade_log |grep -v "${be_common}"|grep -v "${pkg_name}"|grep -v "${other}" && echo "${pkg}" >>EPOL_upgrade_fail_list
+        fi
+        
+    done <EPOL_update_list
+    while read -r pkg; do
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -ne 0 ]; then
+            yum upgrade -y "${pkg}" >"${pkg}"_EPOL_upgrade_log2 2>&1
+        fi
+    done <update_list
+    test -s EPOL_update_list && while read -r pkg; do
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -ne 0 ]; then
+            yum upgrade -y "${pkg}" >"${pkg}"_EPOL_upgrade_log2 2>&1
+        fi
     done <EPOL_update_list
 }
+
+
 upgrade_test_pkg

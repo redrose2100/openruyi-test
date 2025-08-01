@@ -16,25 +16,39 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   For remote uninstall
 # ############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2181,SC2154
 
 source ./noproblem_list
 export LANG=en_US.UTF-8
+
 
 function uninstall_pkg() {
     while read -r pkg; do
         grep "^${pkg}$" anaconda_list || echo "${pkg}" >>removeList
     done <update_list
     while read -r pkg; do
-        noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
-        yum remove -y "${pkg}" --skip-broken >"${pkg}"_remove_log 2>&1
-        grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_remove_log | grep -v "perl-Error\|texlive-parskip\|Curl error\|Unable to find a match:\|${noproblem_info}" && echo "${pkg}" >>remove_fail_list
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -eq 0 ]; then
+            echo "${pkg} Escape error !!!" >"${pkg}"_remove_log
+            echo "${pkg}" >>remove_fail_list
+        else
+            # noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
+            yum remove -y "${pkg}" --skip-broken >"${pkg}"_remove_log 2>&1
+            grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_remove_log |grep -v "${be_common}"|grep -v "${pkg_name}"|grep -v "${other}" && echo "${pkg}" >>remove_fail_list
+        fi
     done <removeList
     test -s EPOL_update_list && while read -r pkg; do
-        noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
-        yum remove -y "${pkg}" --skip-broken >"${pkg}"_EPOL_remove_log 2>&1
-        grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_EPOL_remove_log | grep -v "Curl error\|Unable to find a match:\|${noproblem_info}" && echo "${pkg}" >>EPOL_remove_fail_list
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -eq 0 ]; then
+            echo "${pkg} Escape error !!!" >"${pkg}"_EPOL_remove_log
+            echo "${pkg}" >>EPOL_remove_fail_list
+        else
+            # noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
+            yum remove -y "${pkg}" --skip-broken >"${pkg}"_EPOL_remove_log 2>&1
+            grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_EPOL_remove_log |grep -v "${be_common}"|grep -v "${pkg_name}"|grep -v "${other}" && echo "${pkg}" >>EPOL_remove_fail_list
+        fi
     done <EPOL_update_list
 }
+
 
 uninstall_pkg
