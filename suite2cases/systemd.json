@@ -453,6 +453,18 @@
         },
         {
             "name": "oe_test_service_systemd-tmpfiles-setup-dev-early"
+        },
+        {
+            "name": "oe_test_service_systemd-journal-remote"
+        },
+        {
+            "name": "oe_test_service_systemd-journal-upload"
+        },
+        {
+            "name": "oe_test_service_quotaon"
+        },
+        {
+            "name": "oe_test_service_systemd-quotacheck"
         }
     ]
 }
