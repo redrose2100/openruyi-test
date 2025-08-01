@@ -16,21 +16,37 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   For remote downgrade
 # ############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2181,SC2154
+
 
 source ./noproblem_list
 export LANG=en_US.UTF-8
 
+
 function downgrade_pkg() {
-    noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
     while read -r pkg; do
-        yum downgrade -y "${pkg}" >"${pkg}"_downgrade_log 2>&1
-        grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_downgrade_log | grep -v "perl-Error\|texlive-parskip\|Curl error\|Unable to find a match:\|${noproblem_info}" && echo "${pkg}" >>downgrade_fail_list
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -eq 0 ]; then
+            echo "${pkg} Escape error !!!" >"${pkg}"_downgrade_log
+            echo "${pkg}" >>downgrade_fail_list
+        else
+            # noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
+            yum downgrade -y "${pkg}" >"${pkg}"_downgrade_log 2>&1
+            grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_downgrade_log |grep -v "${be_common}"|grep -v "${pkg_name}"|grep -v "${other}" && echo "${pkg}" >>downgrade_fail_list
+        fi
     done <update_list
     test -s EPOL_update_list && while read -r pkg; do
-        yum downgrade -y "${pkg}" >EPOL_"${pkg}"_downgrade_log 2>&1
-        grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_EPOL_downgrade_log | grep -v "perl-Error\|texlive-parskip\|Curl error\|Unable to find a match:\|${noproblem_info}" && echo "${pkg}" >>EPOL_downgrade_fail_list
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -eq 0 ]; then
+            echo "${pkg} Escape error !!!" >EPOL_"${pkg}"_downgrade_log
+            echo "${pkg}" >>EPOL_downgrade_fail_list
+        else
+            # noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
+            yum downgrade -y "${pkg}" >EPOL_"${pkg}"_downgrade_log 2>&1
+            grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_EPOL_downgrade_log |grep -v "${be_common}"|grep -v "${pkg_name}"|grep -v "${other}" && echo "${pkg}" >>EPOL_downgrade_fail_list
+        fi
     done <EPOL_update_list
 }
+
 
 downgrade_pkg

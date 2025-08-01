@@ -16,22 +16,40 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   For remote installation
 # ############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2181,SC2154
 
 source ./noproblem_list
+source /etc/openEuler-latest
 export LANG=en_US.UTF-8
+
 
 install_test_pkg() {
     cd /home/pkg_manager_folder || exit
+    # dnf config-manager --disable "${openeulerversion}_source_${test_update_repo}"
+    # test -s EPOL_update_list && dnf config-manager --disable "${openeulerversion}_EPOL_source_${test_EPOL_update_repo}"
     while read -r pkg; do
-        noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
-        yum install -y "${pkg}" >"${pkg}"_install_log 2>&1
-        grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_install_log | grep -v "perl-Error\|texlive-parskip\|Curl error\|Unable to find a match:\|${noproblem_info}" && echo "${pkg}" >>install_fail_list
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -eq 0 ]; then
+            # escape pkg default error
+            echo "${pkg} Escape error !!!" >"${pkg}"_install_log
+            echo "${pkg}" >>install_fail_list
+        else
+            # noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
+            yum install -y "${pkg}" >"${pkg}"_install_log 2>&1
+            grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_install_log |grep -v "${be_common}"|grep -v "${pkg_name}"|grep -v "${other}" && echo "${pkg}" >>install_fail_list
+        fi
     done <update_list
     test -s EPOL_update_list && while read -r pkg; do
-        noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
-        yum install -y "${pkg}" >"${pkg}"_EPOL_install_log 2>&1
-        grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_EPOL_install_log | grep -v "Curl error\|Unable to find a match:\|${noproblem_info}" && echo "${pkg}" >>EPOL_install_fail_list
+        grep -Pq "^${pkg}$" escape.pkg
+        if [ $? -eq 0 ]; then
+            # escape pkg default error
+            echo "${pkg} Escape error !!!" >"${pkg}"_EPOL_install_log
+            echo "${pkg}" >>EPOL_install_fail_list
+        else
+            # noproblem_info=$(eval echo '$'"${pkg}"_noproblem)
+            yum install -y "${pkg}" >"${pkg}"_EPOL_install_log 2>&1
+            grep -inE "fail|error|warn|fatal|problem|Invalid|Skip|no such|Cound not|conflicts|not found" "${pkg}"_EPOL_install_log |grep -v "${be_common}"|grep -v "${pkg_name}"|grep -v "${other}" && echo "${pkg}" >>EPOL_install_fail_list
+        fi
     done <EPOL_update_list
 
     rpm -ql "$(cat update_list)" | grep "\.ko$" | grep -vE "TUTORIAL|gtkrc|mc.hint|README|tutor|kernel" >ko.list
@@ -48,5 +66,6 @@ install_test_pkg() {
         fi
     done <ko.list
 }
+
 
 install_test_pkg
