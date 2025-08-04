@@ -24,7 +24,7 @@ function pre_test() {
     DNF_INSTALL pciutils
     if ! lspci | grep -i audio; then
         LOG_INFO "The environment does not support testing"
-        exit 1
+        exit 255
     else
         DNF_INSTALL alsa-utils
         mv /etc/alsa/state-daemon.conf /etc/alsa/state-daemon.conf_bak

@@ -42,17 +42,17 @@ function get_unused_port() {
 }
 
 function deploy_iperf() {
-    which iperf || yum install -y iperf
-    pkill -9 iperf
-    SSH_CMD "which iperf || yum install -y iperf" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SSH_CMD "pkill -9 iperf" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    which iperf3 || yum install -y iperf
+    pkill -9 iperf3
+    SSH_CMD "which iperf3 || yum install -y iperf3" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "pkill -9 iperf3" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 }
 
 function clean_iperf() {
-    pkill -9 iperf
-    SSH_CMD "pkill -9 iperf" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    which iperf || yum remove -y iperf
-    SSH_CMD "which iperf || yum remove -y iperf" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    pkill -9 iperf3
+    SSH_CMD "pkill -9 iperf3" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    which iperf3 || yum remove -y iperf3
+    SSH_CMD "which iperf3 || yum remove -y iperf3" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 }
 
 function is_support_rest() {
