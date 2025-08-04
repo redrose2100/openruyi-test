@@ -35,6 +35,12 @@ function run_test() {
     unzip-mem -p /tmp/test_archive.zip test_file1.txt | grep -q "Test file 1 content"
     CHECK_RESULT $? 0 0 "File extraction test failed"
     unzip-mem -t /tmp/test_archive.zip    
+    unzip-mem -C /tmp/test_archive.zip "test_file*.txt" -p | grep -qE "Test file 1 content|Test file 2 content"
+    CHECK_RESULT $? 0 0 "Multi-file content extraction failed"
+    unzip-mem -j /tmp/test_archive.zip -p test_file1.txt | grep -q "Test file 1 content"
+    CHECK_RESULT $? 0 0 "Junk paths (-j) extraction failed"
+    unzip-mem -v /tmp/test_archive.zip | grep -q -E "Length|Size|Ratio"
+    CHECK_RESULT $? 0 0 "Verbose mode output check failed"
     LOG_INFO "End of the test."
 }
 
@@ -46,4 +52,3 @@ function post_test() {
 }
 
 main "$@"
-
