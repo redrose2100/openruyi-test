@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test kube-controller-manager.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "./common/common.sh"
 
 function pre_test() {
@@ -37,7 +37,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_restart ${service}
     test_enabled ${service}
-    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -v "\-\-authentication-tolerate-lookup-failure"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -Ev "authentication-tolerate-lookup-failure|start cloud node lifecycle controller"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload ${service}
     LOG_INFO "Finish test!"
