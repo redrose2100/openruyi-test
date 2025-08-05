@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test kube-proxy.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "./common/common.sh"
 
 function pre_test() {
