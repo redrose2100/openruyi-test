@@ -1070,6 +1070,9 @@
 	},
 	{
 	    "name": "oe_test_xml2-config"
+	},
+	{
+	    "name": "oe_test_certtool_1"
 	}
     ]
 }
