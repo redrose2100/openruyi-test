@@ -23,9 +23,10 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL tar
     touch testfile_zforce
-    echo "This is test for zforce" >testfile_zforce
+    echo "This is test for zforce" > testfile_zforce
     tar -czvf testfile_zforce.tar testfile_zforce
     zip testfile_zforce.zip testfile_zforce
+    bzip2 -k  testfile_zforce
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -39,6 +40,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "zforce error"
     ls testfile_zforce.zip.gz
     CHECK_RESULT $? 0 0 "zforce error"
+    zforce testfile_zforce.bz2
+    CHECK_RESULT $? 0 0 "Failed to process .bz2 file"
+    [ ! -f testfile_zforce.bz2.gz ]
+    CHECK_RESULT $? 0 0 "Bz2.gz file not created"
+    cp testfile_zforce.tar.gz testfile_zforce_copy.tar.gz
+    zforce testfile_zforce_copy.tar.gz
+    CHECK_RESULT $? 0 0 "Error handling existing .gz file"
+    [ ! -f testfile_zforce_copy.tar.gz.gz ]
+    CHECK_RESULT $? 0 0 "Incorrectly double-compressed .gz file"
+    zforce --version 2>&1  | grep -i zforce
+    CHECK_RESULT $? 0 0 "zforce verison check failed"
     LOG_INFO "End to run test."
 }
 
