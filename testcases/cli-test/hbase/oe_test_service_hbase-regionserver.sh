@@ -17,7 +17,7 @@
 # @Desc      :   Test hbase-regionserver.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -48,6 +48,15 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_execution hbase-regionserver.service
     test_reload hbase-regionserver.service
+    LOG_INFO "Testing HBase version information..."
+    hbase version | grep -i "HBase"
+    CHECK_RESULT $? 0 0 "HBase version check failed"
+    LOG_INFO "Testing HBase help command..."
+    hbase --help | grep -E "Usage|用法"
+    CHECK_RESULT $? 0 0 "HBase help command check failed"
+    LOG_INFO "Testing HBase shell startup..."
+    echo "version" | hbase shell -n | grep -i "HBase"
+    CHECK_RESULT $? 0 0 "HBase shell startup check failed"
     LOG_INFO "Finish test!"
 }
 
@@ -56,8 +65,9 @@ function post_test() {
     systemctl stop hadoop-namenode.service
     systemctl stop hadoop-datanode.service
     systemctl stop zookeeper.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
+
