@@ -1076,6 +1076,9 @@
 	},
 	{
 	    "name": "oe_test_certtool_1"
+	},
+	{
+	    "name": "oe_test_certtool_2"
 	}
     ]
 }
