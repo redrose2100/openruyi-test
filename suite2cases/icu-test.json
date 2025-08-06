@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/system-test/icu-test",
+    "cases": [
+        {
+            "name": "oe_test_icu_01"
+        }
+
+    ]
+}
+
