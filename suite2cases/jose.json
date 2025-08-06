@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_jose_02"
+        },
+        {
+            "name": "oe_test_jose_03"
         }
     ]
 }
