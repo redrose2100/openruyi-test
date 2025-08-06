@@ -3,6 +3,9 @@
   "cases": [
       {
           "name": "oe_test_dosfsck"
+      },
+      {
+          "name": "oe_test_dosfsck_02"
       }
   ]
 }
