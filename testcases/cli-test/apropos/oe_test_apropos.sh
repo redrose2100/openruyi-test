@@ -35,6 +35,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to search for entries matching tar"
     apropos -M /usr/share/man ll
     CHECK_RESULT $? 0 0 "Failed to set the search path entry"
+    apropos -w "ls*" | grep -q "ls"
+    CHECK_RESULT $? 0 0 "Wildcard search failed"
+    apropos -C /etc/manpath.config "ls" | grep -q "ls"
+    CHECK_RESULT $? 0 0 "Config file not applied"
+    apropos -d "ls" 2>&1 | grep -q "debug"
+    CHECK_RESULT $? 0 0 "Debug mode output failed"
     LOG_INFO "End of the test."
 }
 
