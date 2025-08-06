@@ -36,7 +36,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF REMOVE
+    DNF_REMOVE "$@"
     kill -9 "$(pgrep ping)"
     LOG_INFO "End to restore the test environment."
 }

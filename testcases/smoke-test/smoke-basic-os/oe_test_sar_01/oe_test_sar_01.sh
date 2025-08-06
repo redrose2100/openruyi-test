@@ -16,7 +16,7 @@
 #@Desc      	:   Brazil daylight time rules are normal
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -32,14 +32,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Using ‘sar’ to check CPU information: failed!"
     grep -E "user|nice|system|iowait|steal|idle" sar.log
     CHECK_RESULT $? 0 0 "Check CPU information: failed!"
-    test $(grep -v "Average" sar.log| sed -n '4,$p' | wc -l) == 5
+    [ "$(grep -v "Average" sar.log | sed -n '4,$p' | wc -l)" -eq 5 ]
     CHECK_RESULT $? 0 0 "Check 5 times : failed!"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF REMOVE
+    DNF_REMOVE "$@"
     rm -rf sar.log
     export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
