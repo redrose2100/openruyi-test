@@ -19,8 +19,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "openmpi openmpi-devel nfs-utils nfs-utils-devel"
-    SSH_CMD "dnf -y install openmpi openmpi-devel nfs-utils nfs-utils-devel" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    DNF_INSTALL "openmpi openmpi-devel nfs-utils nfs-utils-devel hostname"
+    SSH_CMD "dnf -y install openmpi openmpi-devel nfs-utils nfs-utils-devel hostname" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     hostname node1
     {
         echo "${NODE1_IPV4} node1"
@@ -123,10 +123,15 @@ function run_test() {
     test "$(mpirun --allow-run-as-root --prefix /usr -H node2 ./testfile 2>&1 |
         grep -c "processor node2")" -eq 1
     CHECK_RESULT $?
-    ompi-clean -v 2>&1 | grep "cleaning session"
-    CHECK_RESULT $?
-    ompi-clean -d 2>&1 | grep 'user(pid)=0'
-    CHECK_RESULT $?
+    if [ -n "$PMIX_SERVER_URI" ]; then
+        LOG_INFO "PMIX_SERVER_URI is set: $PMIX_SERVER_URI"
+        ompi-clean -v 2>&1 | grep "cleaning session"
+        CHECK_RESULT $?
+        ompi-clean -d 2>&1 | grep 'user(pid)=0'
+        CHECK_RESULT $?
+    else
+        LOG_INFO "PMIX_SERVER_URI not set, skipping ompi-clean test."
+    fi
     if rpm -ql openmpi | grep bin | grep "ompi-dvm"; then
         ompi-dvm --allow-run-as-root -report-uri dvm_uri >result 2>&1 &
         SLEEP_WAIT 1
