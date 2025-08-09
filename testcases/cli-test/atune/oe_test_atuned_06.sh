@@ -23,13 +23,13 @@ source "./common/common_lib.sh"
 file_name="atuneTest"
 min_interval=1
 min_duration=10
-sys_disk=$(lsblk | awk 'NR==2' | awk '{print $1}')
+sys_disk=$(lsblk -no NAME "$(df --output=source / | awk 'NR==2')" | head -1 | sed 's/[0-9]*$//')
 sys_network=${NODE1_NIC}
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_autund
     systemctl start atune-rest
-    SLEEP_WAIT 10
+    SLEEP_WAIT 30
     LOG_INFO "End of environmental preparation!"
 }
 
