@@ -22,13 +22,12 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "iftop bind-utils ipcalc"
-    IFS=' ' read -r -a net_cards <<<"$(TEST_NIC)"
+    IFS=' ' read -r -a net_cards <<< "$(TEST_NIC 1)"
     ipv4_addr_1=$(nmcli device show "${net_cards[0]}" | grep IP4.ADDRESS | awk '{print $2}' | cut -d '/' -f1)
     ipv4_addr_2=$(nmcli device show "${net_cards[1]}" | grep IP4.ADDRESS | awk '{print $2}' | cut -d '/' -f1)
     ipv4_target_addr=$(host huawei.com | grep 'has address' | awk '{print $4}')
     ipv4_target_network=$(ipcalc -n "$ipv4_target_addr"/24 | cut -d '=' -f2)
-    IFS='.' read -r -a target_addr <<<"$ipv4_target_addr"
-    ipv4_target_hostname="${target_addr[3]}.${target_addr[2]}.${target_addr[1]}.${target_addr[0]}"
+    ipv4_target_hostname="hwclouds-dns"
     ipv6_target_addr=$(host huawei.com | grep 'IPv6' | awk '{print $5}')
     ipv6_target_network=$(ipcalc -n "$ipv6_target_addr"/64 | cut -d '=' -f2)
     LOG_INFO "End of environmental preparation!"
@@ -52,8 +51,8 @@ function run_test() {
     if [ $dns_resolution_work -eq 0 ]; then
         ping "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
         echo 'dns-resolution: no' >./iftoprc
-        iftop -t -s 1 -c ./iftoprc 2>&1 | grep "${ipv4_target_hostname}"
-        CHECK_RESULT $? 0 1 "Failed to use config directive: dns-resolution"
+        iftop -t -s 1 -c ./iftoprc 2>&1 | grep "${ipv4_target_addr}"
+        CHECK_RESULT $? 0 0 "Failed to use config directive: dns-resolution"
     else
         LOG_WARN "DNS RESOLUTION NOT WORK."
     fi
@@ -179,8 +178,11 @@ EOF
     ping "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
     expect <<EOF
         spawn iftop -n -c ./iftoprc
-        expect "${ipv4_target_addr}" {
-            exec touch ./config_net_filter
+        expect {
+            -timeout 30
+            "${ipv4_target_addr}" { exec touch ./config_net_filter }
+            "TX:" { exp_continue }
+            timeout { exit 1 }
         }
         send "q"
         expect eof
@@ -201,14 +203,14 @@ EOF
 EOF
     ls ./config_net_filter6
     CHECK_RESULT $? 0 0 "Failed to use config directive: net-filter6"
-    rm -f ./config_net_filter6
-    pkill -f 'ping'
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    rm -f ./config_net_filter6
+    pkill -f 'ping'
+    DNF_REMOVE "$@"
     rm -f ./iftoprc
     LOG_INFO "Finish environment cleanup!"
 }
