@@ -45,10 +45,13 @@ function common_pre() {
     # waite ....
     SLEEP_WAIT 5s
     # Looking for manipulator equipment
-    PATH_MEDIUMX=$(lsscsi -g | grep "${DRIVER_MEDIUMX}" | grep -oE "/dev/sg.*" || exit 1)
+    PATH_MEDIUMX=$(lsscsi -g | grep "${DRIVER_MEDIUMX}" | grep -oE "/dev/sg.*")
     # Looking for drive devices
-    PATH_TAPE=$(lsscsi -g | grep -m 1 "${DRIVER_TAPE}" | grep -oE "/dev/st[0-9]*" || exit 1)
-    echo "$PATH_TAPE"
+    PATH_TAPE=$(lsscsi -g | grep -m 1 "${DRIVER_TAPE}" | grep -oE "/dev/st[0-9]*")
+    if [ -z "$PATH_MEDIUMX" ] || [ -z "$PATH_TAPE" ]; then
+        LOG_ERROR "Failed to find mediumx device (model: ${DRIVER_MEDIUMX}) or tape device (model: ${DRIVER_TAPE})."
+        exit 255
+    fi
 }
 
 # Test common functions
