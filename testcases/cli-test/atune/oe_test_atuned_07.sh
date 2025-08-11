@@ -23,6 +23,8 @@ source "./common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     deploy_autund
+    systemctl start atune-rest
+    SLEEP_WAIT 30
     LOG_INFO "End of environmental preparation!"
 }
 
