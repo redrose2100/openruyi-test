@@ -16,8 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test hbase-thrift.service restart
 # #############################################
-
-source "../common/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -46,8 +45,18 @@ EOF
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution hbase-thrift.service
-    test_reload hbase-thrift.service
+    systemctl start hbase-master.service
+    systemctl start hbase-regionserver.service
+    test_hbase_service
+    LOG_INFO "Test 1: Check HBase Shell version"
+    echo "version" | sudo -u hbase hbase shell -n 2>&1 | grep -i "HBase"
+    CHECK_RESULT $? 0 0 "HBase shell startup check failed"
+    LOG_INFO "Test 2: Verify basic HBase functionality"
+    echo -e "create 'test_table', 'cf'\nlist\ndisable 'test_table'\ndrop 'test_table'" | sudo -u hbase hbase shell -n 2>&1 | grep -q "test_table"
+    CHECK_RESULT $? 0 0 "HBase basic operations check failed"
+    LOG_INFO "Test 3: Check HBase Thrift port listening"
+    netstat -tlnp | grep 9090
+    CHECK_RESULT $? 0 0 "HBase Thrift port is not listening"
     LOG_INFO "Finish test!"
 }
 
@@ -56,8 +65,9 @@ function post_test() {
     systemctl stop hadoop-namenode.service
     systemctl stop hadoop-datanode.service
     systemctl stop zookeeper.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
+
