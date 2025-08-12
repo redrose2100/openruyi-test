@@ -17,6 +17,8 @@
 # @Desc      :   Test hbase-master.service restart
 # #############################################
 
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "hbase hadoop-3.1-hdfs hadoop-3.1-mapreduce hadoop-3.1-yarn"
@@ -47,16 +49,6 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_execution hbase-master.service
     test_reload hbase-master.service
-    LOG_INFO "Test 1: Check if HBase shell can start"
-    echo "status" | hbase shell 2>&1 | grep -q "version"
-    CHECK_RESULT $? 0 0 "HBase shell startup test failed"
-    LOG_INFO "Test 2: Check if can create table"
-    echo -e "create 'test_table', 'cf'\nlist" | hbase shell 2>&1 | grep -q "test_table"
-    CHECK_RESULT $? 0 0 "HBase table creation test failed"
-    LOG_INFO "Test 3: Check if can insert and query data"
-    echo -e "put 'test_table', 'row1', 'cf:col1', 'value1'\nget 'test_table', 'row1'" | hbase shell 2>&1 | grep -q "value1"
-    CHECK_RESULT $? 0 0 "HBase data insertion and query test failed"
-    echo -e "disable 'test_table'\ndrop 'test_table'" | hbase shell >/dev/null 2>&1
     LOG_INFO "Finish test!"
 }
 

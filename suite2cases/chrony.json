@@ -8,6 +8,9 @@
         {
             "name": "oe_test_service_chrony-wait",
             "machine num": 2
-        }
+        },
+	{
+	    "name": "oe_test_chrony_1"
+	}
     ]
 }
