@@ -21,6 +21,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        LOG_INFO "riscv64 docker image not support system-container, skip test."
+        exit 255
+    fi
     DNF_INSTALL "iSulad syscontainer-tools lxcfs-tools lxcfs tar lcr"
     sed -i '/runc/s/runc/lcr/' /etc/isulad/daemon.json
     if [[ ${NODE1_FRAME} == "aarch64" ]]; then
