@@ -15,6 +15,9 @@
         },
         {
             "name": "oe_test_service_hbase-zookeeper"
-        }
+        },
+	{
+	    "name": "oe_test_hbase-master_1"
+	}
     ]
 }
