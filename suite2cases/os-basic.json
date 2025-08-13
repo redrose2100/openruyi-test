@@ -1082,6 +1082,9 @@
 	},
 	{
 	    "name": "oe_test_certtool_3"
+	},
+	{
+	    "name": "oe_test_update-crypto-policies"
 	}
     ]
 }
