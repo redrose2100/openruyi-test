@@ -31,6 +31,7 @@ function run_test() {
     dd if=/dev/zero of=/tmp/test_dirty_page_file_1 bs=10K count=100
     dirty1=$(grep Dirty /proc/meminfo | awk '{print $2}')
     sysctl vm.dirty_background_ratio=0
+    sysctl -p
     SLEEP_WAIT 30
     dirty2=$(grep Dirty /proc/meminfo | awk '{print $2}')
     dd if=/dev/zero of=/tmp/test_dirty_page_file_2 bs=10K count=100
@@ -45,9 +46,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     sysctl vm.dirty_background_ratio="$ori"
+    sysctl -p
     rm -f /tmp/test_dirty_page_file*
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-
