@@ -160,5 +160,5 @@ def run_max_test(resource):
     else:
         benchmark = "stress-ng"
 
-    cnt = [0, 100]
+    cnt = [1, 100]
     return run_feat_test(feat, resource, cnt[0], cnt[1], benchmark)
