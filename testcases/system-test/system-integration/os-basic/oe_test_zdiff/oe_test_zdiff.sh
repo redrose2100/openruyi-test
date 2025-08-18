@@ -34,13 +34,25 @@ function run_test() {
     CHECK_RESULT $? 0 1 "zipgrep error"
     zdiff testfile_zdiff_1.zip testfile_zdiff_1.zip
     CHECK_RESULT $? 0 0 "zipgrep error"
+    zdiff testfile_zdiff_1.zip testfile_zdiff_1
+    CHECK_RESULT $? 0 2 "Mixed comparison failed"
+    zdiff --help | grep -q "Usage:"
+    CHECK_RESULT $? 0 0 "Help output missing"
+    zdiff --version | grep -q "[0-9]\.[0-9]"
+    CHECK_RESULT $? 0 0 "Version check failed"
+    mkdir -p testdir
+    cp testfile_zdiff_1.zip testdir/
+    zdiff -r testdir testdir 2>/dev/null
+    CHECK_RESULT $? 0 0 "Recursive compare failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f testfile_zdiff_1 testfile_zdiff_2 testfile_zdiff_1.zip testfile_zdiff_2.zip
+    rm -rf testfile_*
+    rm -rf testdir
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
+
