@@ -21,7 +21,7 @@ source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "clamav clamd"
+    DNF_INSTALL "clamav* clamd"
     echo "LogSyslog yes
 TCPSocket 3310
 TCPAddr ${NODE1_IPV4}
