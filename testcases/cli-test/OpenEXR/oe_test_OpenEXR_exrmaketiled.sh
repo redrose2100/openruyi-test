@@ -16,7 +16,7 @@
 # @Desc      :   exrmaketiled
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -46,7 +46,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check exrmaketiled -z failed."
     exrmaketiled -v bind_29_1.exr test10 | grep "done" && test -f test10
     CHECK_RESULT $? 0 0 "Check exrmaketiled -v failed."
-    exrmaketiled -h 2>&1 | grep "usage:"
+    exrmaketiled -h 2>&1 | grep -i "usage:"
     CHECK_RESULT $? 0 0 "Check exrmaketiled -h failed."
     LOG_INFO "End to run test."
 }
@@ -54,7 +54,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf test*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

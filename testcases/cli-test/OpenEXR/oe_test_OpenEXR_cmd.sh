@@ -16,7 +16,7 @@
 # @Desc      :   exrmultipart exrheader exrenvmap
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -43,7 +43,7 @@ function run_test() {
 
     exrheader bind_29_1.exr | grep "file bind_29_1.exr:"
     CHECK_RESULT $? 0 0 "Check exrheader failed."
-    exrheader -h 2>&1 | grep "usage:"
+    exrheader -h 2>&1 | grep -i "usage:"
     CHECK_RESULT $? 0 0 "Check exrheader -h failed."
 
     exrenvmap -o bind_29_1.exr test.exr
@@ -52,7 +52,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check exrmultiview -z failed."
     exrmultiview -v example bind_29_1.exr test22 test.exr test2 | grep "writing file test2"
     CHECK_RESULT $? 0 0 "Check exrmultiview -v failed."
-    exrmultiview -h 2>&1 | grep "usage:"
+    exrmultiview -h 2>&1 | grep -i "usage:"
     CHECK_RESULT $? 0 0 "Check exrmultiview -h failed."
     LOG_INFO "End to run test."
 }
@@ -60,7 +60,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf test*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

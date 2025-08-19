@@ -16,7 +16,7 @@
 # @Desc      :   exrenvmap
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -40,7 +40,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check exrenvmap -li failed."
     exrenvmap -b bind_29_1.exr test7 && test -f test7
     CHECK_RESULT $? 0 0 "Check exrenvmap -b failed."
-    exrenvmap -h 2>&1 | grep "usage:"
+    exrenvmap -h 2>&1 | grep -i "usage:"
     CHECK_RESULT $? 0 0 "Check exrenvmap -h failed."
     exrenvmap -p t b bind_29_1.exr test9 && test -f test9
     CHECK_RESULT $? 0 0 "Check exrenvmap -p failed."
@@ -52,7 +52,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf test*
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

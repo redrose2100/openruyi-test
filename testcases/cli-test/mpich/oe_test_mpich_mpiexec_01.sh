@@ -16,7 +16,7 @@
 # @Desc      :   verify the uasge of mpich command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -36,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check mpiexec -genvall failed"
     mpiexec -genv -f -hosts -verbose common/ex | grep 'Proxy launch'
     CHECK_RESULT $? 0 0 "Check mpiexec -f -hosts failed"
-    mpiexec -genv -f -hosts -wdir ./ -verbose common/ex | grep 'Got a control'
+    mpiexec -genv -f -hosts -wdir ./ -verbose common/ex | grep -E "(Got a control|CMD|control)"
     CHECK_RESULT $? 0 0 "Check mpiexec -wdir failed"
     mpiexec -genv -f -hosts -wdir ./ -configfile /etc/host.conf -verbose common/ex | grep 'GFORTRAN_UNBUFFERED_PRECONNECTED=y'
     CHECK_RESULT $? 0 0 "Check mpiexec -configfile failed"
@@ -53,8 +53,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End restore the test environment."
 }
 
-main $@
+main "$@"

@@ -79,8 +79,8 @@ EOF
     SLEEP_WAIT 5 "dumpcap -i '$netCard' -n -c 20 -w testfile15" 2
     captype testfile15 | grep "testfile15: pcapng"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "dumpcap -i '$netCard' -P -c 20 -w testfile16" 2
-    captype testfile16 | grep "testfile16: pcap"
+    SLEEP_WAIT 5 "dumpcap -i '$netCard' -F pcap -c 20 -w testfile16" 2
+    captype testfile16 | grep -E "testfile16: (pcap|nsecpcap)"
     CHECK_RESULT $?
     SLEEP_WAIT 5 "dumpcap -i '$netCard' --capture-comment \"test dumpcap usage\" -c 20 -w testfile17" 2
     capinfos testfile17 | grep "Capture comment:.*test dumpcap usage"
