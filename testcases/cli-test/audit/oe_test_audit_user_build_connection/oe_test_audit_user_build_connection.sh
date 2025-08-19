@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    export TCLLIBPATH="/usr/lib64/tcl8.6/expect5.45.4"
     DNF_INSTALL audispd-plugins
     path=$(find / -name af_unix.conf)
     sed -i 's/active = no/active = yes/g' "${path}"

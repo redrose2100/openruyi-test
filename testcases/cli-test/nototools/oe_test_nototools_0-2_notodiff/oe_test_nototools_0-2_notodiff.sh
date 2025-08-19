@@ -17,6 +17,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   TEST notodiff in nototools options
 # #############################################
+# shellcheck disable=SC1091
 
 source "../common/common.sh"
 
@@ -37,6 +38,10 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     common_pre
+    pkg_version=$(python3 -c "import notofonttools; print(notofonttools.__version__)" 2>/dev/null)
+    if [[ "$pkg_version" != "0-2" ]]; then
+        exit 255
+    fi
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -70,9 +75,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: --diff-type gpos error"
 
     #Test the -m parameter
-    notodiff --before test_input/test_input_1 --after test_input/test_input_2 -m *.ttf | grep -q "17 differences in glyph shape"
+    notodiff --before test_input/test_input_1 --after test_input/test_input_2 -m ./*.ttf | grep -q "17 differences in glyph shape"
     CHECK_RESULT $? 0 0 "option: -m error"
-    notodiff --before test_input/test_input_1 --after test_input/test_input_2 --match *.ttf | grep -q "17 differences in glyph shape"
+    notodiff --before test_input/test_input_1 --after test_input/test_input_2 --match ./*.ttf | grep -q "17 differences in glyph shape"
     CHECK_RESULT $? 0 0 "option: --match error"
 
     #Test the -l parameter
@@ -82,9 +87,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: --out-lines error"
 
     #Test the -w parameter
-    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} -w ${MISS_LIST} | grep -q "15 differences in glyph shape"
+    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} -w "${MISS_LIST}" | grep -q "15 differences in glyph shape"
     CHECK_RESULT $? 0 0 "option: -w error"
-    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} --whitelist ${MISS_LIST} | grep -q "15 differences in glyph shape"
+    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} --whitelist "${MISS_LIST}" | grep -q "15 differences in glyph shape"
     CHECK_RESULT $? 0 0 "option: -w error"
 
     #Test the --font-size parameter
@@ -95,7 +100,7 @@ function run_test() {
     done
     
     #Test the --render-path parameter
-    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} -t rendered  --render-path ${TMP_DIR} | grep -q "3 differences in glyph shape"
+    notodiff --before test_input/test_input_1/${TEST_FILE_1} --after test_input/test_input_1/${TEST_FILE_2} -t rendered  --render-path "${TMP_DIR}" | grep -q "3 differences in glyph shape"
     CHECK_RESULT $? 0 0 "option: --render-path error"
 
     #Test the --diff-threshold parameter
@@ -116,7 +121,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -rf ${TMP_DIR}
+    rm -rf "${TMP_DIR}"
     common_post
 
     LOG_INFO "End to restore the test environment."
