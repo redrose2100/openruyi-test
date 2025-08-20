@@ -35,6 +35,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "The compiler flags required for compiling SDL programs are incorrect"
     sdl-config --static-libs | grep SDL
     CHECK_RESULT $? 0 0 "The compiler flags required for compiling SDL programs are incorrect"
+    sdl-config --prefix | grep -q "/usr"
+    CHECK_RESULT $? 0 0 "SDL prefix path is invalid"
+    sdl-config --exec-prefix | grep -q "/usr"
+    CHECK_RESULT $? 0 0 "SDL exec-prefix path is invalid"
+    sdl-config --help 2>&1 | grep -q -i "usage"
+    CHECK_RESULT $? 0 0 "Help message missing"
     LOG_INFO "End to run test."
 }
 
