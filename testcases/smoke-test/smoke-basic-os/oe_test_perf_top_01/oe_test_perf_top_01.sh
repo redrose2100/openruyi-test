@@ -16,7 +16,7 @@
 #@Desc      	:   Verify output readability of perf top
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -36,9 +36,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF REMOVE
+    DNF_REMOVE "$@"
     rm -rf perf.check
-    kill -9 $(ps -ef | grep "perf top" | grep -v grep | awk '{print $2}')
+    pgrep -f "perf top" | xargs -r kill -9
     LOG_INFO "End to restore the test environment."
 }
 
