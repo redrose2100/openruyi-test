@@ -208,9 +208,6 @@
             "name": "oe_test_service_systemd-user-sessions"
         },
         {
-            "name": "oe_test_service_systemd-vconsole-setup"
-        },
-        {
             "name": "oe_test_service_systemd-volatile-root"
         },
         {
