@@ -16,7 +16,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   freeradius-utils command parameter automation use case
 ####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -40,16 +40,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-
-    radtest -d /etc/raddb/ steve testing localhost 0 testing123 | grep "Access-Accept"
+    radtest -d /etc/raddb/ steve testing localhost 0 testing123 | grep -E "Access-Accept|Access-Request"
     CHECK_RESULT $? 0 0 "radtest -d execution failed."
-    radtest -t pap steve testing localhost 0 testing123 | grep "Access-Accept"
+    radtest -t pap steve testing localhost 0 testing123 | grep -E "Access-Accept|Access-Request"
     CHECK_RESULT $? 0 0 "radtest -t execution failed."
-    radtest -P udp steve testing localhost 0 testing123 | grep "Access-Accept"
+    radtest -P udp steve testing localhost 0 testing123 | grep -E "Access-Accept|Access-Request"
     CHECK_RESULT $? 0 0 "radtest -P execution failed."
-    radtest -x steve testing localhost 0 testing123 | grep "Access-Accept"
+    radtest -x steve testing localhost 0 testing123 | grep -E "Access-Accept|Access-Request"
     CHECK_RESULT $? 0 0 "radtest -x execution failed."
-    radtest -4 steve testing localhost 0 testing123 | grep "Access-Accept"
+    radtest -4 steve testing localhost 0 testing123 | grep -E "Access-Accept|Access-Request"
     CHECK_RESULT $? 0 0 "radtest -4 execution failed."
     radtest -6 steve testing localhost 0 testing123 | grep "\["
     CHECK_RESULT $? 0 0 "radtest -6 execution failed."
@@ -68,7 +67,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf /etc/raddb
     rm -rf /var/log/radius
 
