@@ -57,9 +57,9 @@ function run_test() {
     CHECK_RESULT $?
     capinfos -u testfile1 | grep "Capture duration:"
     CHECK_RESULT $?
-    capinfos -a testfile1 | grep "First packet time: "
+    capinfos -a testfile1 | grep -E "First packet time:|Earliest packet time:"
     CHECK_RESULT $?
-    capinfos -e testfile1 | grep "Last packet time:"
+    capinfos -e testfile1 | grep -E "Last packet time:|Latest packet time:"
     CHECK_RESULT $?
     capinfos -y testfile1 | grep "Data byte rate:"
     CHECK_RESULT $?

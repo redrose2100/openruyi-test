@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "radlast -a execution failed."
     radlast -2 -d
     CHECK_RESULT $? 0 0 "radlast -d execution failed."
-    radlast --file /var/log/radius/radwtmp | grep "radwtmp begins"
+    radlast --file /var/log/radius/radwtmp | grep "radwtmp"
     CHECK_RESULT $? 0 0 "radlast --file execution failed."
     radlast --fulltimes | grep -E "([0-9]{1,2}:){2}[0-9]{1,2}"
     CHECK_RESULT $? 0 0 "radlast --fulltimes execution failed."

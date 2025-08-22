@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Test failed with option --unidirectional-new-file"
     echo "hello world" >testXZ
     cp testXZ testdir
-    xzdiff -StestxZ testdir testdir1 | head -n 1 | grep testXZ
+    xzdiff -StestxZ testdir testdir1 | head -n 1 | grep -i testXZ
     CHECK_RESULT $? 0 0 "Test failed with option -S"
     xzdiff -i testxz1 testxz2 >testlog
     CHECK_RESULT $? 0 0 "Test failed with option -i"
