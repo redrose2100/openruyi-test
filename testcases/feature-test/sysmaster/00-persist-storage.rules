@@ -1,0 +1,4 @@
+SUBSYSTEM!="block", GOTO="end"
+IMPORT{builtin}=="blkid"
+ENV{ID_FS_UUID_ENC}=="?*", SYMLINK+="test/$env{ID_FS_UUID_ENC}"
+LABEL="end"
