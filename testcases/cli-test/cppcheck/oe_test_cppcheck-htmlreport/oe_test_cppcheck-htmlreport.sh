@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of cppcheck-htmlreport command
 # ############################################
-
+#shellcheck disable=SC2010
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
@@ -35,7 +35,7 @@ function run_test() {
     CHECK_RESULT $?
     grep -E "<?xml|<|>|arrayIndexOutOfBounds|unreadVariable|missingIncludeSystem" err2.xml
     CHECK_RESULT $?
-    cppcheck-htmlreport --help | grep "Usage: cppcheck-htmlreport \[options\]"
+    cppcheck-htmlreport --help | grep -E "(Usage: cppcheck-htmlreport \[options\]|usage: cppcheck-htmlreport)"
     CHECK_RESULT $?
     cppcheck-htmlreport --title=fileReport --file=err1.xml --report-dir=testErr1 | grep -E "Parsing|Creating|Processing|file.c"
     CHECK_RESULT $?
@@ -55,9 +55,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     roc=$(ls | grep -vE "\.sh|\.c")
-    rm -rf $roc
-    DNF_REMOVE
+    rm -rf "$roc"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

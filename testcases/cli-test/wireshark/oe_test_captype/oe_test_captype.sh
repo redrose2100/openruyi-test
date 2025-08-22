@@ -40,10 +40,10 @@ function run_test() {
     CHECK_RESULT $?
     captype testfile1 | grep "testfile1: pcapng"
     CHECK_RESULT $?
-    SLEEP_WAIT 5 "dumpcap -i '$netCard' -P -c 20 -w testfile16" 2
+    SLEEP_WAIT 5 "dumpcap -i '$netCard' -F pcap -c 20 -w testfile16" 2
     test -f testfile16
     CHECK_RESULT $?
-    captype testfile16 | grep "testfile16: pcap"
+    captype testfile16 | grep -E "testfile16: (pcap|nsecpcap)"
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }

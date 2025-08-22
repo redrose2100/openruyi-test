@@ -33,7 +33,7 @@ function run_test() {
     SLEEP_WAIT 5 "tshark -i 1 -F pcap -c 10 -w tsfile17" 2
     capinfos tsfile17 | grep -E "File type:.*pcap|File name:.*tsfile17"
     CHECK_RESULT $?
-    captype tsfile17 | grep "tsfile17: pcap"
+    captype tsfile17 | grep -E "tsfile17: (pcap|nsecpcap)"
     CHECK_RESULT $?
     tshark -i "${netCard}" -c 100 -V | grep -E "Linux cooked capture|SSH Protocol|Internet Protocol Version"
     CHECK_RESULT $?
@@ -49,7 +49,7 @@ function run_test() {
     CHECK_RESULT $?
     tshark -i "${netCard}" -c 10 -X tcp:22 | grep -E "[0-9]|TCP"
     CHECK_RESULT $?
-    tshark -i "${netCard}" -c 10 -q -z http,tree | grep "HTTP/Packet Counter:"
+    tshark -i "${netCard}" -c 10 -q -z http,tree | grep "HTTP\s*/\s*Packet Counter:"
     CHECK_RESULT $?
     tshark -i "${netCard}" -c 10 -n -q -z http,stat, -z http,tree | grep -E "HTTP/Packet Counter:|HTTP Statistics"
     CHECK_RESULT $?

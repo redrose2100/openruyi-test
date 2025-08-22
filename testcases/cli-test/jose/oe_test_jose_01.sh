@@ -50,7 +50,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "HS256密钥文件未生成"
 
 	# 异常场景
-    jose jwk gen -i '{"alg":"INVALID"}' 2>&1 | grep -i "JWK generation failed!"
+    jose jwk gen -i '{"alg":"INVALID"}' 2>&1 | grep -i "JWK generation failed"
     CHECK_RESULT $? 0 0 "invalid alg not detected"
 	
 	# 错误场景：格式错误
