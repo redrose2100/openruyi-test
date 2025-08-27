@@ -55,18 +55,12 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
 
-    if [ "$NODE1_FRAME" == "x86_64" ];then
+    if [ "$NODE2_FRAME" == "x86_64" ];then
       grub_cfg="/boot/grub2/grub.cfg"
     else
       grub_cfg="/boot/efi/EFI/openEuler/grub.cfg"
     fi
-    # 删除 grub.cfg 中第一个 menuentry
-    SSH_CMD "awk '
-  /^menuentry / && !done {del=1; next}
-  del && /}/ {del=0; done=1; next}
-  !del {print}
-' ${grub_cfg} > grub.new && sudo mv grub.new ${grub_cfg}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-
+    SSH_CMD "sudo grub2-mkconfig -o ${grub_cfg}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "sudo rm /boot/initrd_withoutsd.img" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
     REMOTE_REBOOT 2 60
