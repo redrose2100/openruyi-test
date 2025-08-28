@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_bolt"
+        },
+        {
+            "name": "oe_test_bolt_01"
         }
     ]
 }
