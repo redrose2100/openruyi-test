@@ -23,6 +23,8 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL lksctp-tools
+    export TCLLIBPATH=/usr/lib64/tcl8.6
+
     LOG_INFO "End to prepare the test environment."
 }
 

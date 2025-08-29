@@ -24,7 +24,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL rubygem-rdoc
     VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
-    if [[ $VERSION_ID != "22.03" && $VERSION_ID != "24.03" ]]; then
+    if [[ $VERSION_ID != "22.03" && $VERSION_ID != "24.03" && $VERSION_ID != "25.09" ]]; then
       path_rdoc=/root/.rdoc
     else
       path_rdoc=/root/.local/share/rdoc

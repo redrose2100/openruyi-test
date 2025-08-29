@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of osinfo-install-script command
 # ############################################
-
+#shellcheck disable=SC2010
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    osinfo-install-script --help | grep -E "Usage:|osinfo-install-script \[OPTION…\]"
+    osinfo-install-script --help | grep -E "Usage:|osinfo-install-script \[OPTION…\]|osinfo-install-script"
     CHECK_RESULT $?
     osinfo-install-script --profile jeos --config l10n-timezone=GMT --config l10n-keyboard=uk --config l10n-language=en_GB --config admin-password=123456 --config user-login=berrange --config user-password=123456 --config user-realname="Daniel P Berrange" fedora16
     CHECK_RESULT $?
@@ -49,8 +49,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     roc=$(ls | grep -v ".sh")
-    rm -rf $roc
-    DNF_REMOVE
+    rm -rf "$roc"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 

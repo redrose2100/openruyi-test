@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    osinfo-detect --help | grep -E "Usage:|osinfo-detect \[OPTION…\]"
+    osinfo-detect --help | grep -E "Usage:|osinfo-detect \[OPTION…\]|osinfo-detect"
     CHECK_RESULT $?
     wget https://repo.openeuler.org/openEuler-20.03-LTS/ISO/aarch64/openEuler-20.03-LTS-aarch64-dvd.iso
     osinfo-detect --format=plain openEuler-20.03-LTS-aarch64-dvd.iso

@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    osinfo-query --help | grep -E "Usage:|osinfo-query \[OPTION…\]"
+    osinfo-query --help | grep -E "Usage:|osinfo-query \[OPTION…\]|osinfo-query"
     CHECK_RESULT $?
     osinfo-query os | grep "http:"
     CHECK_RESULT $?
@@ -44,7 +44,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 

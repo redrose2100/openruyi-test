@@ -23,6 +23,7 @@ function mariadb_init() {
 	rm -rf /var/lib/mysql/mariadb
     fi
     DNF_INSTALL "mariadb mariadb-server"
+    mv /etc/my.cnf /etc/my.bak
     systemctl start mariadb
     mysqladmin -u root password '123456'
     mysql -uroot -hlocalhost -p123456 <<EOF
