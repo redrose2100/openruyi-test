@@ -3,6 +3,12 @@
     "cases": [
         {
             "name": "oe_test_activemq_fun_01"
-        }
+        },
+	{
+	    "name": "oe_test_activemq_jmx_rest"
+	},
+	{
+	    "name": "oe_test_activemq_jms_connectivity"
+	}
     ]
 }
