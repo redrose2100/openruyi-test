@@ -30,6 +30,9 @@
         },
         {
             "name": "oe_test_mkfs_001"
+        },
+        {
+            "name": "oe_test_util-linux_chcpu"
         }
     ]
 }
