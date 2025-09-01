@@ -1088,6 +1088,9 @@
 	},
 	{
 	    "name": "oe_test_certtool_4"
+	},
+	{
+	    "name": "oe_test_certutil"
 	}
     ]
 }
