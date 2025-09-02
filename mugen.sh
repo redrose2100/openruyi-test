@@ -158,6 +158,7 @@ function exec_case() {
 
     SLEEP_WAIT $TIMEOUT "$cmd"
     ret_code=$?
+    sync
 
     exec 1>&6 6>&-
     exec 2>&7 7>&-
@@ -170,9 +171,11 @@ function exec_case() {
             done
         fi
         LOG_WARN "The case execution timeout."
+        sync
     }
 
     generate_result_file "$test_suite" "$case_name" "$ret_code"
+    sync
 }
 
 function run_test_case() {
@@ -180,6 +183,43 @@ function run_test_case() {
     local test_suite=$1
     local test_case=$2
     export exec_result
+
+    local progress_file="${OET_PATH}/last_case.txt"     # 进度文件
+    local last_case=""
+
+    # 如果有进度文件，读出上次的case
+    if [ -f "$progress_file" ]; then
+        last_case=$(cut -d'|' -f2 "$progress_file")
+    fi
+
+    log_path="${OET_PATH}/logs/${test_suite}/${test_case}"
+    mkdir -p "${log_path}"
+
+
+    # 如果当前case是导致重启的 → 只执行post_test
+    if [[ "$test_case" == "$last_case" ]]; then
+        suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)
+        mapfile -t case_path < <(find "${suite_path}" -name "${test_case}.*" | sed -e "s#/${test_case}.\(sh\|py\)##")
+        pushd "${case_path[*]}" >/dev/null || return 1
+        if grep -q "function post_test" "${test_case}.sh"; then
+            LOG_INFO "Only running post_test for case: $test_case"
+            . <(grep -vE '^main[[:space:]]*"\$@"' "${test_case}.sh") 
+
+            # 新建重启日志日志直接写入文件
+            logfile="$log_path/reboot-$(date +%Y-%m-%d-%T).log"
+            {
+                LOG_INFO ">>> Reboot"
+                post_test
+            } >>"$logfile" 2>&1
+        else
+            LOG_WARN "No post_test function defined in $test_case.sh"
+        fi
+        popd >/dev/null || return 1
+        return 0
+    fi
+    # 每个case执行前写入进度文件并强制刷盘
+    echo "${test_suite}|${test_case}" > "$progress_file"
+    sync "$progress_file"
 
     if [[ -z "$test_suite" || -z "$test_case" ]]; then
         LOG_ERROR "Parameter(test suite or test case) loss."
@@ -211,8 +251,6 @@ function run_test_case() {
 
     ((CASE_NUM++))
 
-    log_path="${OET_PATH}/logs/${test_suite}/${test_case}"
-    mkdir -p "${log_path}"
 
     LOG_INFO "start to run testcase:$test_case."
 
@@ -290,6 +328,8 @@ function run_test_case() {
     fi
 
     LOG_INFO "End to run testcase:$test_case."
+
+    [ -f "$progress_file" ] && rm -f "$progress_file"
 }
 
 function run_test_suite() {
@@ -316,14 +356,42 @@ function run_test_suite() {
         this_copy=true
     fi
 
-    for test_case in $(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name | shuf); do
+    local order_file="${OET_PATH}/case_order.txt"       # 顺序文件
+    local progress_file="${OET_PATH}/last_case.txt"     # 进度文件
+    local last_suite=""
+    local last_case=""
+    local start_from=1
+
+    # 如果有进度文件，找到对应行号
+    if [ -f "$progress_file" ]; then
+        last_case=$(cut -d'|' -f2 "$progress_file")
+        if [ -n "$last_case" ]; then
+            start_from=$(grep -n "^${last_case}$" "$order_file" | cut -d':' -f1)
+            [ -z "$start_from" ] && start_from=1
+        fi
+    fi
+
+    # 生成或读取本次顺序
+    if [ ! -f "$order_file" ]; then
+        python3 "${OET_PATH}/libs/locallibs/suite_case.py" --suite "$test_suite" --key cases-name | shuf > "$order_file"
+    fi
+
+    local line_no=0
+    while read -r test_case; do
+        ((line_no++))
+        if (( line_no < start_from )); then
+            continue
+        fi
         run_test_case "$test_suite" "$test_case"
-    done
+    done < "$order_file"
 
     if $this_copy; then
         remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
         P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir"
     fi
+    # 清理顺序和进度文件
+    [ -f "$progress_file" ] && rm -f "$progress_file"
+    [ -f "$order_file" ] && rm -f "$order_file"
 }
 
 function run_all_cases() {
@@ -434,6 +502,16 @@ function copy_libs_to_node1() {
         SFTP put --node 1 --remotedir /mugen_re/ --localdir "${OET_PATH}"/libs/
     fi
 }
+
+progress_file="${OET_PATH}/last_case.txt"
+if [ -f "$progress_file" ]; then
+    last_suite=$(cut -d'|' -f1 "$progress_file")
+    load_conf
+    copy_libs_to_node1
+    run_test_suite "$last_suite"
+    statistic_result
+    exit
+fi
 
 while getopts "c:af:r:dxb:s:m" option; do
     case $option in
