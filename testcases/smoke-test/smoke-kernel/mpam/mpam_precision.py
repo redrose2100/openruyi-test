@@ -41,7 +41,7 @@ def run_l3_precision_test():
     print("run_precision_test L3MAX begin:")
 
     mkdir_ctrl_group("p1", "")
-    for i in range(0, 101):
+    for i in range(1, 101):
         print("echo L3MAX:1=%d" % i)
         ret = os.system("echo L3MAX:1=%d > /sys/fs/resctrl/p1/schemata" % i)
         if ret:

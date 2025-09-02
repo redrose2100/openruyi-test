@@ -45,11 +45,15 @@ def get_rmid_group(ctrl_grp, mon_group):
     return int(rmid)
 
 def read_threshold(res):
-    path = ("%s/info/%s_MON/max_threshold_occupancy" % (resctrl_path, res))
+    try:
+        path = ("%s/info/%s_MON/max_threshold_occupancy" % (resctrl_path, res))
 
-    fp = open(path)
-    size = fp.read()
-    fp.close()
+        fp = open(path)
+        size = fp.read()
+        fp.close()
+
+    except FileNotFoundError:
+        return -1
 
     return int(size)
 
@@ -73,12 +77,10 @@ def run_limit_test():
     pmg = get_pmg_number()
 
     size = read_threshold("L3")
-    if size < 0:
-        return -1
-
-    ret = disable_threshold("L3")
-    if ret:
-        return -1
+    if size > 0:
+        ret = disable_threshold("L3")
+        if ret:
+            return -1
 
     # create mon_group under root ctrl group
     print("ctrl_grp root rmid: %d" % get_rmid_group("", ""))
@@ -121,9 +123,10 @@ def run_limit_test():
         if mpam_lib.rmdir_ctrl_group(ctrl_grp, ""):
             return -1
 
-    ret = write_threshold("L3", size)
-    if ret:
-        return -1
+    if size > 0:
+        ret = write_threshold("L3", size)
+        if ret:
+            return -1
 
     print("Pass: Check run_limit_test")
     return 0

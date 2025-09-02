@@ -121,18 +121,6 @@ def get_cpu_id():
     return output.split()[4]
 
 def start_benchmark(cpuno, numa_id, name, resource):
-    if os.system("which numactl") == 1:
-        return -1
-
-    if os.system("which taskset") == 1:
-        return -1
-
-    if os.system("which bw_mem") == 1:
-        return -1
-
-    if os.system("which stress-ng") == 1:
-        return -1
-
     if name == "bw_mem":
         if resource == "L2":
             size = "4096M"
@@ -154,12 +142,14 @@ def start_benchmark(cpuno, numa_id, name, resource):
 
     elif name == "stress-ng":
         size_KB = get_cache_size(cpuno, resource)
+        cpu_list = find_cpu_to_cache_sharelist(cpuno, resource)
+
         print("%s size: %s" % (resource, size_KB))
 
         if resource == "L2":
             command = "taskset -c %d stress-ng --cache 1 --aggressive -t 20s" % cpuno
         else:
-            command = "numactl -N %d stress-ng --cache 6 --aggressive -t 20s" % numa_id
+            command = "numactl -C %s stress-ng --cache 6 --aggressive -t 20s" % cpu_list
         print(command)
 
     try:
@@ -194,20 +184,37 @@ def end_benchmark(proc, name):
             print(res.replace("\n", ""))
 
     elif name == "stress-ng":
+        proc.wait()
         if proc.returncode != 0:
             print(proc.stderr.decode())
 
     return
 
-def find_cpu_to_cacheid(cpuno, cache_level):
-    cacheid_p = ("%s%d/cache/index%d/id" %
-                (cache_topology, cpuno, cache_level))
+def find_cpu_to_cacheid(cpuno, resource):
+    if resource[0] != 'L':
+        return -1
+
+    cacheid_p = ("%s%d/cache/index%c/id" %
+                (cache_topology, cpuno, resource[1]))
 
     fp = open(cacheid_p)
     cache_id = fp.read()
     fp.close()
 
     return int(cache_id)
+
+def find_cpu_to_cache_sharelist(cpuno, resource):
+    if resource[0] != 'L':
+        return -1
+
+    cacheid_p = ("%s%d/cache/index%c/shared_cpu_list" %
+                (cache_topology, cpuno, resource[1]))
+
+    fp = open(cacheid_p)
+    cpu_list = fp.read()
+    fp.close()
+
+    return cpu_list
 
 def read_resource_monitor_val(ctrl_group, resource, id, monitor):
     monitor_p = ("%s/%s/mon_data/mon_%s_%02d/%s" %
@@ -221,8 +228,7 @@ def read_resource_monitor_val(ctrl_group, resource, id, monitor):
 
 def read_monitor_val(cpuno, resource, ctrl_group, monitor, dom_id=-1):
     if resource[0] == 'L':
-        level = int(resource[1])
-        dom_id = find_cpu_to_cacheid(cpuno, level)
+        dom_id = find_cpu_to_cacheid(cpuno, resource)
 
     val = read_resource_monitor_val(ctrl_group, resource, dom_id, monitor)
     if not val:
@@ -238,14 +244,12 @@ def write_schmata(ctrl_grp, resource, cpuno, cnt, dom_id=-1):
     if "MB" in resource:
         cnt = ("%s:%d=%d" % (resource, dom_id, cnt))
 
-    elif "PRIO" in resource or "MIN" in resource:
-        level = int(resource[1])
-        dom_id = find_cpu_to_cacheid(cpuno, level)
+    elif "PRIO" in resource or "MIN" in resource or "MAX" in resource:
+        dom_id = find_cpu_to_cacheid(cpuno, resource)
         cnt = ("%s:%d=%d" % (resource, dom_id, cnt))
 
     else:
-        level = int(resource[1])
-        dom_id = find_cpu_to_cacheid(cpuno, level)
+        dom_id = find_cpu_to_cacheid(cpuno, resource)
         cnt = ("%s:%d=%x" % (resource, dom_id, cnt))
 
     print(path, cnt)

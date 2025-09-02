@@ -115,7 +115,7 @@ def mpam_test_main(argv):
 
     if "max" in argv:
         if "L3" in argv:
-            if "920G" == mpam_lib.get_cpu_id():
+            if mpam_lib.get_cpu_id() in ["950", "920G"]:
                 if run_max_test("L3"):
                     return -1
 
@@ -124,7 +124,7 @@ def mpam_test_main(argv):
             if run_min_test("MB"):
                 return -1
         if "L3" in argv:
-            if "920G" == mpam_lib.get_cpu_id():
+            if mpam_lib.get_cpu_id() in ["950", "920G"]:
                 if run_min_test("L3"):
                     return -1
 
@@ -148,7 +148,7 @@ def mpam_test_main(argv):
             if run_precision_test():
                 return -1
         if "L3" in argv:
-            if "920G" == mpam_lib.get_cpu_id():
+            if mpam_lib.get_cpu_id() in ["950", "920G"]:
                 if run_l3_precision_test():
                     return -1
 
