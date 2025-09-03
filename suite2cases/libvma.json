@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_vma"
+        },
+{
+            "name": "oe_test_vma_stats_01"
         }
     ]
 }
