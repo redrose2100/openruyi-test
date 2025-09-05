@@ -36,14 +36,14 @@ function run_test()
     po4a-normalize -f text tmp/master.txt --blank
     grep 'hello world' po4a-normalize.po
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-normalize -f text tmp/master.txt --blank"
-    grep -Pz 'msgstr "."' po4a-normalize.po
+    grep -Pz 'msgstr "[^ "]{1}"' po4a-normalize.po
     CHECK_RESULT $? 1 0 "Failed to run command: po4a-normalize -f text tmp/master.txt --blank"
     rm -rf po4a-normalize.output  po4a-normalize.po
 
     po4a-normalize -f text tmp/master.txt -b
     grep 'hello world' po4a-normalize.po
     CHECK_RESULT $? 0 0 "Failed to run command: po4a-normalize -f text tmp/master.txt -b"
-    grep -Pz 'msgstr "."' po4a-normalize.po
+    grep -Pz 'msgstr "[^ "]{1}"' po4a-normalize.po
     CHECK_RESULT $? 1 0 "Failed to run command: po4a-normalize -f text tmp/master.txt -b"
     rm -rf po4a-normalize.output  po4a-normalize.po
 
