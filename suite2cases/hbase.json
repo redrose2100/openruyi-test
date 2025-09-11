@@ -14,6 +14,9 @@
             "name": "oe_test_service_hbase-thrift"
         },
         {
+            "name": "oe_test_hbase-thrift02"
+        },
+	{
             "name": "oe_test_service_hbase-zookeeper"
         },
 	{
