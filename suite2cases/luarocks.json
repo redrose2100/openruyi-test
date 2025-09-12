@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_luarocks"
+        },
+        {
+            "name": "oe_test_luarocks_01"
         }
     ]
 }
