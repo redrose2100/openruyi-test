@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_hsqldb"
+        },
+        {
+            "name": "oe_test_hsqldb01"
         }
     ]
 }
