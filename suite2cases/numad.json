@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_numad"
+        },
+        {
+            "name": "oe_test_command_numad"
         }
     ]
 }
