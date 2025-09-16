@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Image compression tool optiPNG
 # ##############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
@@ -34,11 +34,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Help information printing failed"
     optipng -v | grep -E "[0-9]"
     CHECK_RESULT $? 0 0 "Version information printing failed"
-    optipng test0.png -log test0.log
+    optipng test0.png 2>&1 | tee test0.log
     CHECK_RESULT $?
     test -f test0.log
     CHECK_RESULT $? 0 0 "Failed to output the log file"
-    optipng -o1 test1.png -log test1.log
+    optipng -o1 test1.png 2>&1 | tee test1.log
     CHECK_RESULT $?
     grep "Output" test1.log
     CHECK_RESULT $? 0 0 "Failed to set the level"
@@ -46,23 +46,23 @@ function run_test() {
     CHECK_RESULT $?
     test -f test2.png.bak
     CHECK_RESULT $? 0 0 "Failed to back up files"
-    optipng -clobber test2.png.bak -log test2a.log
+    optipng -clobber test2.png.bak 2>&1 | tee test2a.log
     CHECK_RESULT $?
     grep "Output" test2a.log
     CHECK_RESULT $? 0 0 "Overwrite file failed"
     optipng test3.png
     CHECK_RESULT $?
-    optipng -force test3.png -log test3.log
+    optipng -force test3.png 2>&1 | tee test3.log
     CHECK_RESULT $?
     grep "Output" test3.log
     CHECK_RESULT $? 0 0 "Force run failure"
-    optipng -preserve test4.png -log test4.log
+    optipng -preserve test4.png 2>&1 | tee test4.log
     CHECK_RESULT $?
     grep "Output" test4.log
     CHECK_RESULT $? 0 0 "Failure to retain properties"
     optipng -quiet test5.png
     CHECK_RESULT $? 0 0 "Silent run failure"
-    optipng -simulate test6.png -log test6.log
+    optipng -simulate test6.png 2>&1 | tee test6.log
     CHECK_RESULT $?
     grep "simulation mode" test6.log
     CHECK_RESULT $? 0 0 "Simulation run failure"

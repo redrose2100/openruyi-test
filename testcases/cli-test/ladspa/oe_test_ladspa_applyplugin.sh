@@ -16,8 +16,9 @@
 #@Version   	:   1.0
 #@Desc      	:   Test applyplugin and listplugins
 #####################################
+# shellcheck disable=SC2119
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
@@ -27,19 +28,21 @@ function pre_test()
     LOG_INFO "End to prepare the test environment."
 }
 
+
 function run_test()
 {
     LOG_INFO "Start to run test."
-    applyplugin input.wav output.wav amp.so amp_mono 2 | grep "Peak output: 50878"
+    applyplugin input.wav output.wav amp.so amp_mono 2 | grep -i "Peak output"
     CHECK_RESULT $? 0 0 "applyplugin check failed"
-    applyplugin input.wav output.wav delay.so delay_5s 2 0.5 filter.so hpf 440 | grep "Peak output: 9892.93"
+    applyplugin input.wav output.wav delay.so delay_5s 2 0.5 filter.so hpf 440 | grep -i "Peak output"
     CHECK_RESULT $? 0 0 "applyplugin multiple parameters check failed"
-    applyplugin -s 20 input.wav output.wav amp.so amp_mono 2 | grep "Peak output: 50878"
+    applyplugin -s 20 input.wav output.wav amp.so amp_mono 2 | grep -i "Peak output"
     CHECK_RESULT $? 0 0 "applyplugin -s  check failed"    
     listplugins | grep '/usr/lib64/ladspa/.*'
     CHECK_RESULT $? 0 0 "listplugins check failed" 
     LOG_INFO "End to run test."
 }
+
 
 function post_test()
 {

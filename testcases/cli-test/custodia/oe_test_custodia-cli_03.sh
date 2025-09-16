@@ -18,12 +18,16 @@
 # ##################################
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}/testcases/cli-test/custodia/common/checkenv.sh"
+
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
+    checkcustodia    
     DNF_INSTALL "custodia"
     LOG_INFO "End to prepare the test environment."
 }
+
 
 function run_test(){
     LOG_INFO "Start to run test."
@@ -53,6 +57,7 @@ function run_test(){
     LOG_INFO "End to run test."
 }
 
+
 function post_test(){
     LOG_INFO "Start to restore the test environment."
     kill -9 "$(pgrep -f "custodia --debug")"
@@ -61,4 +66,6 @@ function post_test(){
     LOG_INFO "End to restore the test environment."
 }
 
+
 main "$@"
+
