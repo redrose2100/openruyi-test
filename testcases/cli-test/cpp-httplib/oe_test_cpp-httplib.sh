@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "cpp-httplib g++"
+  DNF_INSTALL "cpp-httplib g++ cpp-httplib-devel"
   LOG_INFO "End of environmental preparation!"
 }
 
