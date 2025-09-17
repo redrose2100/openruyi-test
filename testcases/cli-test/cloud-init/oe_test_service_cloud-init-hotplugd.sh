@@ -28,8 +28,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution cloud-init-hotplugd.service
-    test_reload cloud-init-hotplugd.service
+    if systemctl cat cloud-init-hotplugd.service | grep "Type=oneshot";then
+        test_oneshot cloud-init-hotplugd.service 'inactive (dead)'
+    else
+        test_execution cloud-init-hotplugd.service
+        test_reload cloud-init-hotplugd.service
+    fi
     LOG_INFO "End to run test."
 }
 
