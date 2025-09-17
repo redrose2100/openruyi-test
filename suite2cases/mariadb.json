@@ -9,6 +9,12 @@
         },
         {
             "name": "oe_test_mariadb-table"
+        },
+        {
+            "name": "oe_test_socket_mariadb-extra"
+        },
+        {
+            "name": "oe_test_socket_mariadb"
         }
     ]
 }

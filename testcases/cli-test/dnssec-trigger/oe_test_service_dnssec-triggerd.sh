@@ -29,7 +29,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "dnssec-trigger python3-gobject"
     setenforce 0
-    sed -i 's/control-enable.*/control-enable:yes\ncontrol-use-cert:"no"/g' /etc/unbound/unbound.conf
+    sed -i 's/.*control-enable.*/control-enable:yes\ncontrol-use-cert:"no"/g' /etc/unbound/unbound.conf
     LOG_INFO "End of environmental preparation!"
 }
 
