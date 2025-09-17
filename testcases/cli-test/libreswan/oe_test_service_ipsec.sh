@@ -22,12 +22,16 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL libreswan
+    log_time="$(date '+%Y-%m-%d %T')"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution ipsec.service
+    test_restart ipsec.service
+    test_enabled ipsec.service
+    journalctl --since "${log_time}" -u ipsec.service | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING\|xfrmi is not supported\|IPTFS ipsec SA error"
+    CHECK_RESULT $? 0 1 "There is an error message for the log of ipsec.service"
     systemctl start ipsec.service
     sed -i 's\ExecStart=/usr/libexec/ipsec/pluto\ExecStart=/usr/libexec/ipsec/pluto --debug\g' /usr/lib/systemd/system/ipsec.service
     systemctl daemon-reload
