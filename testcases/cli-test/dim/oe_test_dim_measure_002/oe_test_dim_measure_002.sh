@@ -17,7 +17,9 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    DNF_INSTALL "dim_tools dim vdo kernel-devel kmod-kvdo"
+    # kmod 正常安装需提前安装好， kernel依赖包
+    DNF_INSTALL "kernel-headers-$(uname -r) kernel-devel-$(uname -r)"
+    DNF_INSTALL "dim_tools dim vdo kmod-kvdo"
     modprobe dim_monitor
 }
 
