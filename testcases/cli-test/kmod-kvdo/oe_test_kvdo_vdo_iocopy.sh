@@ -22,6 +22,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    # kmod 正常安装需提前安装好， kernel-devel依赖包
+    DNF_INSTALL "kernel-headers-$(uname -r) kernel-devel-$(uname -r)"
     DNF_INSTALL "vdo kmod-kvdo lvm2 xfsprogs"
     free_disks=$(TEST_DISK 1)
     free_disk=/dev/$(echo "${free_disks}" | awk -F " " '{for(i=1;i<=NF;i++) if ($i!~/[0-9]/)j=i;print $j}')
