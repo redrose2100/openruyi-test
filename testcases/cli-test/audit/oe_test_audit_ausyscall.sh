@@ -42,6 +42,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "retrieval failed read"
     ausyscall write |grep write
     CHECK_RESULT $? 0 0 "retrieval failed write"
+    ausyscall --dump |grep recv
+    CHECK_RESULT $? 0 0 "--dump command execution failed"
+    ausyscall open |grep open
+    CHECK_RESULT $? 0 0 "failed to retrieve system call for 'open'"
     LOG_INFO "End to run test."
 }
 
@@ -52,4 +56,5 @@ function post_test() {
 }
 
 main "$@"
+
 
