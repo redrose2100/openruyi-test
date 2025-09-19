@@ -36,6 +36,10 @@ function run_test() {
     LOG_INFO "Start executing testcase!"
     systemctl status mysqld | grep running
     CHECK_RESULT $?
+    if ! command -v mysql_ssl_rsa_setup &> /dev/null; then
+        echo "错误：mysql_ssl_rsa_setup 命令不存在" >&2
+        exit 255
+    fi
     mysql_ssl_rsa_setup --help | grep "mysql_ssl_rsa_setup"
     CHECK_RESULT $?
     mysql -e "show variables like 'have_ssl';" >test.txt

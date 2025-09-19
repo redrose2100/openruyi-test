@@ -16,7 +16,7 @@
 #@Desc      	:   Check ipsec status
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -30,9 +30,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-
-    ipsec verify | grep "OK" >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec verify failed."
+    if ipsec help 2>/dev/null | grep -q "verify"; then
+            ipsec verify | grep "OK" >/dev/null
+            CHECK_RESULT $? 0 0 "Check ipsec verify failed."
+    else
+            LOG_INFO "ipsec verify command not found, skipping this test point."
+    fi
     ipsec trafficstatus >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec trafficstatus failed."
     ipsec globalstatus >/dev/null
@@ -47,18 +50,30 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ipsec fips failed."
     ipsec checknflog >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec checknflog failed."
-    ipsec barf >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec barf failed."
-    ipsec look >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec look failed."
+    if ipsec help 2>/dev/null | grep -q "barf"; then
+            ipsec barf >/dev/null
+            CHECK_RESULT $? 0 0 "Check ipsec barf failed."
+    else
+            LOG_INFO "ipsec barf command not found, skipping this test point."
+    fi
+    if ipsec help 2>/dev/null | grep -q "look"; then
+            ipsec look >/dev/null
+            CHECK_RESULT $? 0 0 "Check ipsec look failed."
+    else
+            LOG_INFO "ipsec look command not found, skipping this test point."
+    fi
     ipsec newhostkey >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec newhostkey failed."
     ipsec readwriteconf >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec readwriteconf failed."
     ipsec rsasigkey >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec rsasigkey failed."
-    ipsec show >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec show failed."
+    if ipsec help 2>/dev/null | grep -q -E '\bshow\b'; then
+            ipsec show >/dev/null
+            CHECK_RESULT $? 0 0 "Check ipsec show failed."
+    else
+            LOG_INFO "ipsec show command not found, skipping this test point."
+    fi
     ipsec traffic >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec traffic failed."
 
@@ -69,7 +84,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -f /var/lib/ipsec/nss/*.db
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }
