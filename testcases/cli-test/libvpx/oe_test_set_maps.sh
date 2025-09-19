@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test vpxdec of libvpx
 # #############################################
+# shellcheck disable=SC1091
 
 source "../common/common_lib.sh"
 
@@ -29,6 +30,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if ! command -v decode_with_drops &> /dev/null || \
+    ! command -v set_maps &> /dev/null || \
+    ! command -v decode_to_md5 &> /dev/null || \
+    ! command -v vp8_simple_decoder &> /dev/null; then
+        LOG_ERROR "One or more required commands are missing."
+        exit 255
+    fi
     decode_with_drops  data/vp8.ivf  tmp/1.ivf 2-1 2>&1 | grep 'Processed 25 frames.'
     CHECK_RESULT $? 0 0 "Failed option: decode_with_drops"
     set_maps vp8 352 288 data/1.ivf tmp/1.ivf 2>&1 | grep 'Processed 1 frames'
@@ -43,7 +51,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp data
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

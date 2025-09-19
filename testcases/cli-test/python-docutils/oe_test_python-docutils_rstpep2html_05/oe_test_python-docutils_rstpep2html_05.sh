@@ -27,6 +27,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if ! command -v rstpep2html &> /dev/null; then
+        echo "错误：rstpep2html 命令不存在" >&2
+        exit 255
+    fi
     rstpep2html --template=template_html.txt pep.rst test1.html
     CHECK_RESULT $?
     grep '<table class="docinfo"' test1.html
@@ -56,7 +60,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.html ./*.rst ./*.log ./*.txt ./*.css
     LOG_INFO "Finish restoring the test environment."
 }

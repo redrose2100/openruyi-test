@@ -15,6 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Check ipsec addconn
 #####################################
+#shellcheck disable=SC1091
 
 source ./common/common_lib.sh
 
@@ -29,7 +30,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    SSH_CMD "ipsec auto --config /etc/ipsec.d/test-vm.secrets --add test-vm-test" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "ipsec auto --config /etc/ipsec.d/test-vm.secrets --add test-vm-test" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     ipsec auto --config /etc/ipsec.d/test-vm.secrets --add test-vm-test >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec auto --add failed."
     # Execute twice up cmd to get connection
@@ -38,10 +39,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ipsec auto --up failed."
     ipsec auto --status | grep "test-vm-test" >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec auto --status failed."
-    ipsec auto --showonly --replace test-vm-test >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec auto --replace failed."
-    ipsec auto --showonly --ready >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec auto --ready failed."
+    if ipsec auto --showonly --listall 2>&1 | grep -q 'unknown option "--showonly"'; then
+            LOG_INFO "ipsec auto --showonly is not supported, skipping related tests."
+    else
+            ipsec auto --showonly --replace test-vm-test >/dev/null
+            CHECK_RESULT $? 0 0 "Check ipsec auto --replace failed."
+            ipsec auto --showonly --ready >/dev/null
+            CHECK_RESULT $? 0 0 "Check ipsec auto --ready failed."
+            ipsec auto --showonly --status --verbose >/dev/null
+            CHECK_RESULT $? 0 0 "Check ipsec auto --showonly --status --verbose failed."
+
+    fi
     ipsec auto --down test-vm-test
     CHECK_RESULT $? 0 0 "Check ipsec auto --down failed."
     ipsec auto --delete test-vm-test >/dev/null
@@ -50,8 +58,6 @@ function run_test() {
     # test to check detail messages
     ipsec auto --listall >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec auto --listall failed."
-    ipsec auto --showonly --status --verbose >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec auto --showonly --status --verbose failed."
     ipsec auto --status --config /etc/ipsec.conf >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec auto --status --config failed."
 
@@ -61,7 +67,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    REVERT_CONF
+    REVERT_CONF "$@"
 
     LOG_INFO "End to restore the test environment."
 }

@@ -30,6 +30,16 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if ! command -v vp8_simple_encoder &> /dev/null || \
+    ! command -v vp8_twopass_encoder &> /dev/null || \
+    ! command -v vp8cx_set_ref &> /dev/null || \
+    ! command -v vp9_lossless_encoder &> /dev/null || \
+    ! command -v vp9_spatial_svc_encoder &> /dev/null || \
+    ! command -v vp9cx_set_ref &> /dev/null || \
+    ! command -v vpx_temporal_svc_encoder &> /dev/null; then
+        LOG_ERROR "One or more VP8/VP9 commands are missing, skipping test block."
+        exit 255
+    fi
     vp8_simple_encoder vp8 352 288 data/1.mp4 tmp/1.ivf 0 1 25 2>&1 | grep 'Processed 25 frames.'
     CHECK_RESULT $? 0 0 "Failed option: vp8_simple_encoder"
     vp8_twopass_encoder vp8 352 288 data/1.mp4 tmp/1.ivf 20 2>&1 | grep 'Pass 1 complete. Processed 20 frames.'
@@ -38,7 +48,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: vp8cx_set_ref"
     vp9_lossless_encoder 352 288 data/1.ivf tmp/1.ivf | grep 'Processed 1 frames'
     CHECK_RESULT $? 0 0 "Failed option: vp9_lossless_encoder"
-    vp9_spatial_svc_encoder -f 10 -w 352 -h 288 -s 0 -sl 2 -t 10/1 -b 20 -k 1 -tl 0 -tlm 0 -th 6 -aq 1 -d 8 -sp 5 -bl 1 data/1.mp4 tmp/1.ivf | grep 'Frame cnt and encoding time/FPS'
+    vp9_spatial_svc_encoder -f 10 -w 352 -h 288 -s 0 -sl 2 -t 10/1 -b 20 -k 1 -tl 0 -tlm 0 -th 6 -aq 1 -d 8 -sp 5 -bl 1 data/1.mp4 -o tmp/1.ivf | grep 'Frame cnt and encoding time/FPS'
     CHECK_RESULT $? 0 0 "Failed option: vp8_simple_decoder"
     vp9cx_set_ref 352 288 data/1.ivf tmp/1.ivf 25 30 | grep 'Processed 1 frames.'
     CHECK_RESULT $? 0 0 "Failed option: vp9cx_set_ref"

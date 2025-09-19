@@ -28,6 +28,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if ! command -v rstpep2html &> /dev/null; then
+        echo "错误：rstpep2html 命令不存在" >&2
+        exit 255
+    fi
     rstpep2html --language=fr pep.rst test1.html && grep 'sommaire' test1.html
     CHECK_RESULT $?
     rstpep2html --record-dependencies=recordlist.log pep.rst test2.html && grep 'pep.css' recordlist.log

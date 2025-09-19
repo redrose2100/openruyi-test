@@ -25,7 +25,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ipsec --help 2>&1 | grep "man ipsec <command> or ipsec <command>"
+    ipsec --help 2>&1 | grep -E "man ipsec <command> or ipsec <command> | man ipsec {command} or ipsec {command}"
     CHECK_RESULT $?
     ipsec --version | grep "$(rpm -q libreswan | awk -F '-' '{print $2}')"
     CHECK_RESULT $?
@@ -41,8 +41,12 @@ function run_test() {
     CHECK_RESULT $?
     ipsec stop | grep stop
     CHECK_RESULT $?
-    ipsec barf | grep pluto
-    CHECK_RESULT $?
+    if ipsec help 2>/dev/null | grep -q "barf"; then
+            ipsec barf | grep pluto
+            CHECK_RESULT $?
+    else
+            LOG_INFO "ipsec barf command not found, skipping this test point."
+    fi  
     ipsec auto 2>&1 | grep "ipsec auto"
     CHECK_RESULT $?
     LOG_INFO "End of the test."
@@ -51,7 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/lib/ipsec/nss/*.db
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 

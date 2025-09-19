@@ -16,7 +16,7 @@
 #@Desc      	:   Check ipsec algparse
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
@@ -58,15 +58,23 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ipsec algparse --impair failed."
     ipsec algparse --ignore >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec algparse --ignore failed."
-    ipsec algparse -p1 >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec algparse -p1 failed."
-    ipsec algparse -p2 >/dev/null
-    CHECK_RESULT $? 0 0 "Check ipsec algparse -p2 failed."
+    if ipsec algparse -p1 --listall 2>&1 | grep -q 'unknown option: -p1'; then
+            LOG_INFO "ipsec algparse -p1 is not supported, skipping related tests."
+    else
+            ipsec algparse -p1 >/dev/null
+            CHECK_RESULT $? 0 0 "Check ipsec algparse -p1 failed."
+    fi
+    if ipsec algparse -p2 --listall 2>&1 | grep -q 'unknown option: -p2'; then
+            LOG_INFO "ipsec algparse -p2 is not supported, skipping related tests."
+    else
+            ipsec algparse -p2 >/dev/null
+            CHECK_RESULT $? 0 0 "Check ipsec algparse -p2 failed."
+    fi
     ipsec algparse -h >/dev/null
     CHECK_RESULT $? 0 0 "Check ipsec algparse -h failed."
 
     # test for -d option deleted, the help message cannot grep directly, so output it into file
-    ipsec algparse -h &> testlog && cat testlog | grep "\-d \-\-debug"
+    ipsec algparse -h &> testlog && grep "\-d \-\-debug" testlog
     CHECK_RESULT $? 1 0 "Check ipsec algparse -h -d deleted failed."
 
     LOG_INFO "End to run test."
@@ -76,7 +84,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -f testlog
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }

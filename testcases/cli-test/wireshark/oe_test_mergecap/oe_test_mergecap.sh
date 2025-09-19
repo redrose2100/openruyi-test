@@ -24,13 +24,18 @@ function pre_test() {
     DNF_INSTALL wireshark
     generate_traffic &
     WIRESHARK_TRAFFIC_PID=$!
-    version=$(rpm -qa wireshark | awk -F "-" '{print$2}')
+    system_version=$(grep VERSION_ID /etc/os-release | cut -d'"' -f2)
+    if [ "$system_version" = "25.09" ]; then
+            version=$(rpm -qa 'wireshark-qt*' | head -1 | awk -F '-' '{print $3}')
+    else
+            version=$(rpm -qa wireshark | awk -F "-" '{print$2}')
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mergecap --help | grep "Usage: mergecap \[options\]"
+    mergecap --help | grep -i "Usage: mergecap \[options\]"
     CHECK_RESULT $?
     mergecap --version | grep "$version"
     CHECK_RESULT $?

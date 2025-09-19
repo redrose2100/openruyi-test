@@ -15,13 +15,15 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Geos command line and basic function verification
 ####################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "gcc-c++ libstdc++-devel geos geos-devel"
-
+    geos_version=$(geos-config --version | awk '{print $1}')
+    target_version="3.13.0"
+    version_ge=$(echo -e "$geos_version\n$target_version" | sort -V | head -n1)
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -38,9 +40,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "geos-config --clibs execution failed."
     geos-config --cclibs | grep "\-lgeos"
     CHECK_RESULT $? 0 0 "geos-config --cclibs execution failed."
-    geos-config --static-clibs | grep "\-lgeos_c \-lgeos \-lm"
+    if [ "$version_ge" = "$target_version" ]; then
+            geos-config --static-clibs | grep "\-lgeos_c \-lgeos \-lstdc++ \-lm"
+    else
+            geos-config --static-clibs | grep "\-lgeos_c \-lgeos \-lm"
+    fi
     CHECK_RESULT $? 0 0 "geos-config --static-clibs execution failed."
-    geos-config --static-cclibs | grep "\-lgeos \-lm"
+    if [ "$version_ge" = "$target_version" ]; then
+            geos-config --static-cclibs | grep "\-lgeos \-lstdc++ \-lm"
+    else
+            geos-config --static-cclibs | grep "\-lgeos \-lm"
+    fi
     CHECK_RESULT $? 0 0 "geos-config --static-cclibs execution failed."
     geos-config --cflags | grep "\-I/usr/include"
     CHECK_RESULT $? 0 0 "geos-config --cflags execution failed."
@@ -61,7 +71,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./geos_test /tmp/geosfile
 
     LOG_INFO "End to restore the test environment."
