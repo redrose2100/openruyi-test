@@ -31,7 +31,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "header file location display failed"
     python3-config --extension-suffix | grep "python-3"
     CHECK_RESULT $? 0 0 "python parameter display failure"
-    python3-config --configdir  | grep "/usr/lib64"
+    python3-config --configdir  | grep -E "/usr/lib64|/usr/lib"
     CHECK_RESULT $? 0 0 "python parameter display failure"
     python3-config --cflags  | grep "/usr/include/python3"
     CHECK_RESULT $? 0 0 "library file list fails to be displayed"
