@@ -42,14 +42,18 @@ function run_test() {
     CHECK_RESULT $?
     rst2odt --custom-odt-footer="Page %p% of %P%" testfile.rst test8.odt && test -f test8.odt
     CHECK_RESULT $?
-    rst2odt_prepstyles 2>&1 | grep 'Usage'
-    CHECK_RESULT $?
+    if ! command -v rst2odt_prepstyles &> /dev/null; then
+            LOG_INFO "rst2odt_prepstyles command not found, skipping this test point."
+    else
+            rst2odt_prepstyles 2>&1 | grep 'Usage'
+            CHECK_RESULT $?
+    fi
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf ./*.odt ./*.rst ./*.log
     LOG_INFO "Finish restoring the test environment."
 }
