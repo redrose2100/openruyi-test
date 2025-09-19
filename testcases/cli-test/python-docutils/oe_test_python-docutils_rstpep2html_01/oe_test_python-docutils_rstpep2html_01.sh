@@ -28,6 +28,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if ! command -v rstpep2html &> /dev/null; then
+        echo "错误：rstpep2html 命令不存在" >&2
+        exit 255
+    fi
     rstpep2html --title=testtitle pep.rst test1.html && test -f test1.html
     CHECK_RESULT $?
     rstpep2html -g pep.rst test2.html && grep "docutils.sourceforge" test2.html

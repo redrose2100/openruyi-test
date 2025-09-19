@@ -16,7 +16,7 @@
 # @Desc      :   TEST aec
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 # Installation Preparation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -27,6 +27,10 @@ function pre_test() {
 # Execution of test points
 function run_test() {
     LOG_INFO "Start to run test."
+    if ! command -v aec &> /dev/null; then
+        echo "错误：aec 命令不存在" >&2
+        exit 255
+    fi
     aec 2>&1 | grep "OPTIONS"
     CHECK_RESULT $? 0 0 "aec help error"
     aec -n 01 -j 16 -r 16 common/test_p256n01.dat tmp/test_p256n01-basic.rz
@@ -59,7 +63,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ./tmp
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

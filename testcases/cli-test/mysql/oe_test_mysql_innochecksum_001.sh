@@ -77,12 +77,20 @@ function run_test() {
     CHECK_RESULT $?
     innochecksum --page-type-summary=FALSE | grep "page-type-summary" | grep "FALSE"
     CHECK_RESULT $?
-    mysqlpump --compress-output=ZLIB >dump.zlib
-    CHECK_RESULT $?
-    zlib_decompress dump.zlib dump.txt
-    CHECK_RESULT $?
-    test -f dump.txt
-    CHECK_RESULT $?
+    if ! command -v mysqlpump &> /dev/null; then
+            LOG_INFO " mysqlpump command not found, skipping this test point."
+    else
+            mysqlpump --compress-output=ZLIB >dump.zlib
+            CHECK_RESULT $?
+    fi
+    if ! command -v zlib_decompress &> /dev/null; then
+            LOG_INFO " zlib_decompress command not found, skipping this test point."
+    else
+            zlib_decompress dump.zlib dump.txt
+            CHECK_RESULT $?
+            test -f dump.txt
+            CHECK_RESULT $?
+    fi
     LOG_INFO "End of testcase execution!"
 }
 

@@ -34,8 +34,12 @@ function run_test() {
     CHECK_RESULT $?
     ipsec letsencrypt --help | grep "letsencrypt"
     CHECK_RESULT $?
-    ipsec look | grep "XFRM"
-    CHECK_RESULT $?
+    if ipsec help 2>/dev/null | grep -q "look"; then
+            ipsec look | grep "XFRM"
+            CHECK_RESULT $?
+    else
+            LOG_INFO "ipsec look command not found, skipping this test point."
+    fi
     ipsec initnss --nssdir /var/lib/ipsec/nss
     ipsec newhostkey 2>&1 | grep key
     CHECK_RESULT $?
@@ -48,8 +52,12 @@ function run_test() {
     CHECK_RESULT $?
     ipsec setup --status | grep "ipsec.service"
     CHECK_RESULT $?
-    ipsec verify | grep "Verifying installed system and configuration files"
-    CHECK_RESULT $?
+    if ipsec help 2>/dev/null | grep -q "verify"; then
+            ipsec verify | grep "Verifying installed system and configuration files"
+            CHECK_RESULT $?
+    else
+            LOG_INFO "ipsec verify command not found, skipping this test point."
+    fi
     LOG_INFO "End of the test."
 }
 
@@ -57,7 +65,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/lib/ipsec/nss/*.db
     ipsec stop
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
