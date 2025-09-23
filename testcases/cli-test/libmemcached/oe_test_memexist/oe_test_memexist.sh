@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of memexist command
 # ############################################
-
-source "../common/common_libmemcached.sh"
+# shellcheck disable=SC2119
+source "${OET_PATH}/testcases/cli-test/libmemcached/common/common_libmemcached.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -42,9 +42,9 @@ function run_test() {
 EOF
     memexist --quiet --servers=127.0.0.1 user_id user_name
     CHECK_RESULT $?
-    memexist --verbose --servers=127.0.0.1 user_id user_name | grep -E "Found key user_id|Found key user_name"
+    memexist --verbose --servers=127.0.0.1 user_id user_name 2>&1 | grep -E "Found key .*user_id|Found key .*user_name"
     CHECK_RESULT $?
-    memexist --debug --servers=127.0.0.1 user_id user_name | grep -E "Found key user_id|Found key user_name"
+    memexist --debug --servers=127.0.0.1 user_id user_name 2>&1 | grep -E "Found key .*user_id|Found key .*user_name"
     CHECK_RESULT $?
     memexist --servers=127.0.0.1 user_id user_name
     CHECK_RESULT $?
@@ -57,4 +57,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

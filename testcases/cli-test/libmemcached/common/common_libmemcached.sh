@@ -17,19 +17,16 @@
 # @Version   :   1.0
 # @Desc      :   public class integration
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
     DNF_INSTALL "libmemcached memcached telnet net-tools"
-    memcached -d -u root -m 512 -p 11211
+    systemctl start memcached.service
     SLEEP_WAIT 5
     netstat -an | grep 11211
-    pgrep -f 'memcached -d -u'
 }
 
 function clear_env() {
-    kill -9 $(pgrep -f 'memcached -d -u')
-    rm -rf $(ls | grep -vE ".sh|config")
     DNF_REMOVE
 }

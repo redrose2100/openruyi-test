@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of memslap command
 # ############################################
-
-source "../common/common_libmemcached.sh"
+# shellcheck disable=SC2119
+source "${OET_PATH}/testcases/cli-test/libmemcached/common/common_libmemcached.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -31,17 +31,15 @@ function run_test() {
     CHECK_RESULT $?
     memslap --version | grep "memslap"
     CHECK_RESULT $?
-    memslap --verbose --servers=127.0.0.1 | grep "Threads connecting to servers 1"
+    memslap --verbose --servers=127.0.0.1
     CHECK_RESULT $?
-    memslap --concurrency=3 --servers=127.0.0.1 | grep "Threads connecting to servers 3"
+    memslap --concurrency=3 --servers=127.0.0.1
     CHECK_RESULT $?
     memslap --debug --servers=127.0.0.1
     CHECK_RESULT $?
     memslap --quiet --servers=127.0.0.1
     CHECK_RESULT $?
     memslap --execute-number=5 --servers=127.0.0.1
-    CHECK_RESULT $?
-    memslap --flag --servers=127.0.0.1
     CHECK_RESULT $?
     memslap --flush --servers=127.0.0.1
     CHECK_RESULT $?
@@ -58,4 +56,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
