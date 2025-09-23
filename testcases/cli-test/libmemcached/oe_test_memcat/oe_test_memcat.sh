@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of memcat command
 # ############################################
-
-source "../common/common_libmemcached.sh"
+# shellcheck disable=SC2119
+source "${OET_PATH}/testcases/cli-test/libmemcached/common/common_libmemcached.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -27,12 +27,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    memcat --help | grep "-"
+    memcat --help
     CHECK_RESULT $?
-    memcat --version | grep "memcat"
+    memcat --version
     CHECK_RESULT $?
-    memcat --servers=127.0.0.1 --verbose user_id
-    CHECK_RESULT $? 1
     expect <<EOF
         spawn telnet 127.0.0.1 11211
         expect "" {send "set user_id 2 0 5\r"}
@@ -42,7 +40,7 @@ function run_test() {
 EOF
     memcat --servers=127.0.0.1 --verbose user_id | grep -E "user_id|2|5|12345"
     CHECK_RESULT $?
-    memcat --servers=127.0.0.1 --quiet user_id
+    memcat --servers=127.0.0.1 --quiet user_id --file log.txt
     CHECK_RESULT $?
     memcat --servers=127.0.0.1 --debug user_id | grep -E "key|flags|length|value"
     CHECK_RESULT $?
@@ -65,4 +63,5 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
+

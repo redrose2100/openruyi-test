@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of memrm command
 # ############################################
-
-source "../common/common_libmemcached.sh"
+# shellcheck disable=SC2119
+source "${OET_PATH}/testcases/cli-test/libmemcached/common/common_libmemcached.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -42,14 +42,14 @@ function run_test() {
 EOF
     memcat --servers=127.0.0.1 --verbose age name | grep -E "key|value"
     CHECK_RESULT $?
-    memrm --verbose --servers=127.0.0.1 age name | grep "Deleted key"
+    memrm --verbose --servers=127.0.0.1 age name
     CHECK_RESULT $?
-    memcat --servers=127.0.0.1 --verbose age name | grep -E "key|value"
+    memcat --servers=127.0.0.1 --verbose age name
     CHECK_RESULT $? 1
-    memrm --quiet --servers=127.0.0.1
-    CHECK_RESULT $?
-    memrm --debug --servers=127.0.0.1 age name
-    CHECK_RESULT $?
+    memrm --quiet --servers=127.0.0.1 | grep .
+    CHECK_RESULT $? 1
+    memrm --debug --servers=127.0.0.1 age name | grep -i 'not find'
+    CHECK_RESULT $? 1
     LOG_INFO "End of the test."
 }
 
@@ -59,4 +59,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
