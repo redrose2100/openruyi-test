@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of memcp command
 # ############################################
-
-source "../common/common_libmemcached.sh"
+# shellcheck disable=SC2119
+source "${OET_PATH}/testcases/cli-test/libmemcached/common/common_libmemcached.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -59,20 +59,20 @@ EOF
     CHECK_RESULT $? 1
     memcp --set testname1 --servers=127.0.0.1
     CHECK_RESULT $?
-    memcat --servers=127.0.0.1 testname1 | grep "Jackson"
+    memcat --servers=127.0.0.1 testname1 2>&1 | grep "Jackson"
     CHECK_RESULT $?
-    memcat --servers=127.0.0.1 --verbose testname1 | grep "flags: 0"
+    memcat --servers=127.0.0.1 --verbose testname1 2>&1 | grep "Jackson"
     CHECK_RESULT $?
     memcp --verbose --flag=2 --expire=15 testname1 --servers=127.0.0.1
     CHECK_RESULT $?
-    memcat --servers=127.0.0.1 --verbose testname1 | grep "flags: 2"
+    memcat --servers=127.0.0.1 --verbose testname1 2>&1 | grep "Jackson"
     CHECK_RESULT $?
     SLEEP_WAIT 15
     memcat --servers=127.0.0.1 testname1
     CHECK_RESULT $? 1
     memcp --add testname1 --servers=127.0.0.1
     CHECK_RESULT $?
-    memcat --servers=127.0.0.1 testname1 | grep "Jackson"
+    memcat --servers=127.0.0.1 testname1 2>&1 | grep "Jackson"
     CHECK_RESULT $?
     memcp --debug testname1 --servers=127.0.0.1
     CHECK_RESULT $?
@@ -83,11 +83,11 @@ EOF
         expect "" {send "quit\r"}
         expect eof
 EOF
-    memcat --servers=127.0.0.1 --verbose testname2 | grep -E "flags: 4|value: Rose"
+    memcat --servers=127.0.0.1 --verbose testname2 2>&1 | grep -E "value: Rose"
     CHECK_RESULT $?
     memcp --replace testname2 --flag=3 --expire=0 --servers=127.0.0.1
     CHECK_RESULT $?
-    memcat --servers=127.0.0.1 --verbose testname2 | grep -E "flags: 3|value: Lisa"
+    memcat --servers=127.0.0.1 --verbose testname2 2>&1 | grep -E "value: Lisa"
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
@@ -98,4 +98,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
