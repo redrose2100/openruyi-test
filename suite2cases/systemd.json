@@ -175,7 +175,8 @@
             "name": "oe_test_service_systemd-timesyncd"
         },
         {
-            "name": "oe_test_service_systemd-time-wait-sync"
+            "name": "oe_test_service_systemd-time-wait-sync",
+            "machine num": 2
         },
         {
             "name": "oe_test_service_systemd-tmpfiles-clean"

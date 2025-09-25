@@ -22,6 +22,9 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL systemd
+    if ! rpm -ql systemd | grep factory-reset.target;then
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 

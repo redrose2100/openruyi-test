@@ -22,6 +22,9 @@ source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "systemd systemd-cryptsetup"
+    if ! rpm -ql systemd-cryptsetup | grep integritysetup.target;then
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 

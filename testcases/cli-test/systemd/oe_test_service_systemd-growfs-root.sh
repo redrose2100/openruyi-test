@@ -22,6 +22,9 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL systemd-udev
+    if ! rpm -ql systemd-udev | grep systemd-growfs-root.service;then
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
