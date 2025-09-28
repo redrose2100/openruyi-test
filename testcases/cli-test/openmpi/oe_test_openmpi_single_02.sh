@@ -31,6 +31,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if ! command -v orte-clean &> /dev/null || \
+    ! command -v orte-server &> /dev/null || \
+    ! command -v orted &> /dev/null || \
+    ! command -v orterun &> /dev/null; then
+        LOG_ERROR "One or more required commands are missing."
+        exit 255
+    fi
     orte-clean -h | grep "ompi-clean \[OPTIONS\]"
     CHECK_RESULT $?
     orte-server -h | grep "Usage"

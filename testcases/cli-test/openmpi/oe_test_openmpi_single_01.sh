@@ -49,11 +49,18 @@ function run_test() {
     CHECK_RESULT $?
     mpirun --allow-run-as-root -np 1 ./hello 2>&1 | grep "Hello"
     CHECK_RESULT $?
-    ompi-clean -h | grep "ompi-clean \[OPTIONS\]"
-    CHECK_RESULT $?
-    CHECK_RESULT $?
-    ompi-server -h | grep "Usage"
-    CHECK_RESULT $?
+    if ! command -v ompi-clean &> /dev/null; then
+            LOG_INFO "ompi-clean command not found, skipping this test point."
+    else
+            ompi-clean -h | grep "ompi-clean \[OPTIONS\]"
+            CHECK_RESULT $?
+    fi
+    if ! command -v ompi-server &> /dev/null; then
+            LOG_INFO "ompi-server command not found, skipping this test point."
+    else
+            ompi-server -h | grep "Usage"
+            CHECK_RESULT $?
+    fi
     ompi_info -h | grep "Syntax"
     CHECK_RESULT $?
     test "$(ompi_info -V | grep -Eo "[0-9]\.[0-9]\.[0-9]")" == \

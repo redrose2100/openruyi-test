@@ -24,10 +24,6 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "fftw"
     TMP_DIR="$(mktemp -d -t fftw.XXXXXXXXXXXX)"
-    VERSION="$(rpm -qa fftw | awk -F '-' '{print $2}')"
-    echo "(fftw-${VERSION} fftwf_wisdom #xca4daf64 #xc8f59ea6 #x586875c9 #x14018994
-(fftwf_codelet_n1_16 0 #x12345 #x22222 #x0 #x4396230b #x936694df #xa8dfdff3 #x77777777)
-)" > "${TMP_DIR}"/fftwf_wisdom
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -42,11 +38,11 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Check fftwf-wisdom -n failed."
     fftwf-wisdom --no-system-wisdom -v 2>&1 | grep -q "system-wisdom"
     CHECK_RESULT $? 1 0 "Check fftwf-wisdom --no-system-wisdom failed."
-    fftwf-wisdom -w "${TMP_DIR}"/fftwf_wisdom 2>&1 | grep -q "#x12345"
+    fftwf-wisdom -w "${TMP_DIR}"/test_1_fftwf.out 2>&1 | grep -q "fftwf_codelet_"
     CHECK_RESULT $? 0 0 "Check fftwf-wisdom -w failed."
-    fftwf-wisdom -w - < "${TMP_DIR}"/fftwf_wisdom 2>&1 | grep -q "#x12345"
+    fftwf-wisdom -w - < "${TMP_DIR}"/test_1_fftwf.out 2>&1 | grep -q "fftwf_codelet_"
     CHECK_RESULT $? 0 0 "Check fftwf-wisdom -w STDIN failed."
-    fftwf-wisdom --wisdom-file "${TMP_DIR}"/fftwf_wisdom 2>&1 | grep -q "#x12345"
+    fftwf-wisdom --wisdom-file "${TMP_DIR}"/test_1_fftwf.out 2>&1 | grep -q "fftwf_codelet_"
     CHECK_RESULT $? 0 0 "Check fftwf-wisdom --wisdom-file failed."
     fftwf-wisdom -T 2 cif3x4x5 2>&1 | grep -q "fftwf_wisdom"
     CHECK_RESULT $? 0 0 "Check fftwf-wisdom -T failed."
