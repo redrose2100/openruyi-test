@@ -40,6 +40,13 @@ SUCCESS_NUM=0
 FAIL_NUM=0
 SKIP_NUM=0
 
+cleanup() {
+    rm -f "${OET_PATH}/last_case.txt" "${OET_PATH}/case_order.txt"
+    exit 1
+}
+# 捕获 Ctrl+C (SIGINT) 和 kill (SIGTERM)
+trap cleanup INT TERM
+
 function usage() {
     printf "Usage:  \n
     -c: configuration environment of test framework\n
@@ -377,13 +384,14 @@ function run_test_suite() {
     fi
 
     local line_no=0
-    while read -r test_case; do
+    mapfile -t test_cases < "$order_file"
+    for test_case in "${test_cases[@]}"; do
         ((line_no++))
         if (( line_no < start_from )); then
             continue
         fi
         run_test_case "$test_suite" "$test_case"
-    done < "$order_file"
+    done
 
     if $this_copy; then
         remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
