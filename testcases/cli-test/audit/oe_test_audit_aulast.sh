@@ -21,8 +21,9 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    OLD_LANG=$LANG
-    export LANG=en_US.UTF-8    
+    OLD_LANG="$LANG"
+    export LANG=en_US.UTF-8   
+    echo "wrong_pass" | ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@localhost "exit" 2>/dev/null 
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -54,7 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to clean the test environment."
     rm -rf aulast.log
-    export LANG=${OLD_LANG}
+    export LANG="${OLD_LANG}"
     LOG_INFO "End to clean the test environment."
 }
 

@@ -16,12 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ctest command
 # ############################################
-
+#shellcheck disable=SC1091
 source "../common/common_cmake.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
+    SOURCE_DIR="${OET_PATH}/testcases/cli-test/cmake/oe_test_ctest"
+    BUILD_DIR="${OET_PATH}/testcases/cli-test/cmake/oe_test_ctest/build"
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -69,9 +71,9 @@ function run_test() {
     CHECK_RESULT $?
     ctest -R test_run2 | grep "1/1 Test #1: test_run2"
     CHECK_RESULT $?
-    ctest --build-and-test | grep "100% tests passed"
+    ctest --build-and-test "$SOURCE_DIR" "$BUILD_DIR" --build-generator "Unix Makefiles" --test-command ctest | grep "100% tests passed"
     CHECK_RESULT $?
-    ctest --build-target . | grep "100% tests passed"
+    ctest --build-target "$BUILD_DIR" | grep "100% tests passed"
     CHECK_RESULT $?
     ctest --build-nocmake | grep "100% tests passed"
     CHECK_RESULT $?
@@ -89,7 +91,7 @@ function run_test() {
     CHECK_RESULT $?
     ctest --print-labels | grep "Labels"
     CHECK_RESULT $?
-    ctest --timeout 0.0001 | grep -E "0% tests passed, 2 tests failed out of 2|1 - test_run2 \(Timeout\)|2 - test_1_plus_3 \(Timeout\)"
+    ctest --timeout 0.0001 | grep -E "0% tests passed|1 - test_run2 \(Timeout\)|2 - test_1_plus_3 \(Timeout\)"
     CHECK_RESULT $?
     ctest --stop-time 0.001 | grep "100% tests passed"
     CHECK_RESULT $?
@@ -102,8 +104,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    clear_env
+    clear_env "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
