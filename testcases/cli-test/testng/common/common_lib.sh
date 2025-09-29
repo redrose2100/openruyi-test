@@ -29,7 +29,8 @@ function pre_env() {
     fi
     testng_jar=$(rpm -ql testng | grep testng.jar)
     jcommander_jar=$(rpm -ql beust-jcommander | grep beust-jcommander.jar)
-    export CLASSPATH=${testng_jar}:${jcommander_jar}:.
+    resource_path="${OET_PATH}"/testcases/cli-test/testng/common/resources/
+    export CLASSPATH=${testng_jar}:${jcommander_jar}:${resource_path}:.
 }
 
 function clean_env() {
