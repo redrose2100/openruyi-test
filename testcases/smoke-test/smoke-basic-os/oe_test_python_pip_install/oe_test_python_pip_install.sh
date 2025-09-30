@@ -57,7 +57,7 @@ function run_test() {
     pip3 uninstall -y requests
     pip3 install --upgrade requests | grep Successfully
     CHECK_RESULT $? 0 0 "Failed to repead execute pip3 install --upgrade"
-    pip3 install --ignore-installed requests | grep "Installing collected packages" | grep certifi | grep idna | grep charset-normalizer | grep urllib3 | grep requests
+    pip3 install --ignore-installed requests | grep "Installing collected packages" | grep certifi | grep idna | grep -E "charset[-_]normalizer" | grep urllib3 | grep requests
     CHECK_RESULT $? 0 0 "Failed to execute pip3 install --ignore-installed"
     LOG_INFO "End to run test."
 }
