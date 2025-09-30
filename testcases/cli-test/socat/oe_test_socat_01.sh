@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of socat command
 # ############################################
-# shellcheck disable=SC2009,SC2035
+# shellcheck disable=SC2009,SC2035,SC2102
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
@@ -45,7 +45,7 @@ function run_test() {
     SLEEP_WAIT 5
     socat -4 tcp:127.0.0.1:4001 open:a.txt,create
     CHECK_RESULT $? 0 0 "Check socat -4 failed"
-    socat -u open:a.txt tcp-listen:4002,reuseaddr &
+    nohup socat -u TCP6-LISTEN:4002,bind=[::1],reuseaddr open:a.txt &
     SLEEP_WAIT 5
     socat -6 tcp:'[::1]':4002 open:a.txt,create
     CHECK_RESULT $? 0 0 "Check socat -6 failed"
