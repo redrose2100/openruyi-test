@@ -42,6 +42,12 @@ function run_test() {
     CHECK_RESULT $? 1 0 "xmllint error"
     xmllint xmllint_good.xml
     CHECK_RESULT $? 0 0 "xmllint error"
+    xmllint --format xmllint_good.xml
+    CHECK_RESULT $? 0 0 "xmllint format output"
+    xmllint --noblanks xmllint_good.xml
+    CHECK_RESULT $? 0 0 "xmllint noblanks output"
+    xmllint --noent xmllint_good.xml
+    CHECK_RESULT $? 0 0 "xmllint noent option"
     LOG_INFO "End to run test."
 }
 
