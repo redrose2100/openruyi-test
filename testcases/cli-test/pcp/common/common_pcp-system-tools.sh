@@ -26,7 +26,7 @@ function deploy_env {
     systemctl enable pmlogger
     systemctl start pmlogger
     SLEEP_WAIT 20
-    host_name=$(hostname)
+    host_name=localhost.localdomain
     pcp_version=$(rpm -qa pcp | awk -F '-' '{print $2}')
 }
 

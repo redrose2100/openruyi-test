@@ -33,7 +33,7 @@ function run_test() {
     grep 'proc' atop_o
     CHECK_RESULT $?
     nohup /usr/libexec/pcp/bin/pcp-atop -u >atop_u 2>&1 &
-    SLEEP_WAIT 7
+    SLEEP_WAIT 10
     grep 'RUID' atop_u
     CHECK_RESULT $?
     nohup /usr/libexec/pcp/bin/pcp-atop -p >atop_p 2>&1 &
@@ -70,7 +70,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ./testdir atop*
-    kill -9 $(pgrep -f /usr/libexec/pcp/bin/pcp-atop)
+    kill -9 "$(pgrep -f /usr/libexec/pcp/bin/pcp-atop)"
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

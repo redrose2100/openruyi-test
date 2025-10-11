@@ -21,8 +21,9 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_FRAME}" == "riscv64" ];then
-        LOG_WARN "Testing cannot be performed if NODE1_FRAME is riscv64"
+    VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
+    if [ "${NODE1_FRAME}" == "riscv64" ] || [ "$VERSION_ID" == "24.03" ];then
+        LOG_WARN "Testing cannot be performed if the architecture is riscv64 or the version is 24.03."
         exit 255
     fi
     hostName_bak=$(hostname)

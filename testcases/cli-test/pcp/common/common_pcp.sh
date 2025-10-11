@@ -15,8 +15,8 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Public class
 #####################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2034
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function deploy_env {
     DNF_INSTALL pcp
@@ -25,6 +25,6 @@ function deploy_env {
     systemctl enable pmlogger
     systemctl start pmlogger
     SLEEP_WAIT 10
-    host_name=$(hostname)
+    host_name=localhost.localdomain
     pcp_version=$(rpm -qa pcp | awk -F '-' '{print $2}')
 }

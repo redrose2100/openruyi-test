@@ -22,9 +22,16 @@ source "common/common_pcp-system-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}'  | awk -F " " '{print $1}')
-    OLD_PATH=$PATH
-    export PATH=/usr/libexec/pcp/bin/:$PATH
+    OLD_PATH="$PATH"
+    export PATH="/usr/libexec/pcp/bin/:$PATH"
+    cd /usr/libexec/pcp/pmdas/proc && yes "yes" | ./Install >/dev/null 2>&1
+    CONFIG_FILE="/etc/pcp/pmlogger/$(hostname).conf"
+    echo "include proc" >> "${CONFIG_FILE}"
+    echo "proc.sample 1" >> "${CONFIG_FILE}"
+    systemctl restart pmlogger
+    pmlogger_check -V
+    SLEEP_WAIT 20
+    archive_data=$(pcp -h "$host_name" | grep 'primary logger:' | awk -F: '{print $NF}'  | awk -F " " '{print $1}').0
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -54,7 +61,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    PATH=${OLD_PATH}
+    PATH="${OLD_PATH}"
+    rm -rf "${CONFIG_FILE}"
     LOG_INFO "End to restore the test environment."
 }
 
