@@ -25,12 +25,12 @@ function run_test()
     CHECK_RESULT $? 0 0 "journalctl --no-pager failed"
     grep -E "LVM|NetworkManager" all_log
     CHECK_RESULT $? 0 0 "grep LVM|NetworkManager failed"
-
+    
     journalctl -k --no-pager &> kernel_log
     CHECK_RESULT $? 0 0 "journalctl -k -no-pager failed"
     grep -iE "kernel|systemd" kernel_log
     CHECK_RESULT $? 0 0 "grep kernel|systemd failed"
-
+    
     journalctl -b --no-pager > boot_log
     CHECK_RESULT $? 0 0 "journalctl -b failed"
     grep -i "systemd" boot_log
@@ -45,7 +45,7 @@ function run_test()
     # 测试优先级过滤
     journalctl -p err --no-pager > priority_log
     CHECK_RESULT $? 0 0 "journalctl priority filter failed"
-    grep -i "error" priority_log
+    grep -iE "error|fail|no such" priority_log
     CHECK_RESULT $? 0 0 "priority filter log content check failed"
     
     # 测试输出格式

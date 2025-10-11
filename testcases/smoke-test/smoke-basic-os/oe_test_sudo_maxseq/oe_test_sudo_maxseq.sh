@@ -34,7 +34,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     flag=1
     while ((flag < 200)); do
-        su -c "sudo ls" testuser
+        su -c "sudo ls" testuser </dev/null
         (( flag+=1 ))
     done
     count=$(ls /var/log/sudo-io/00/00 | wc -l | grep 100)
