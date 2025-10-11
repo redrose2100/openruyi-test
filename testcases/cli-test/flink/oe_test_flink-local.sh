@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "flink"
+    DNF_INSTALL "flink wget"
     systemctl stop firewalld
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,7 +29,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     cd /opt/apache-flink*/ || exit
-    ./bin/start-cluster.sh
     if [ "${NODE1_FRAME}" == "riscv64" ]; then
         wget --no-check-certificate https://repo1.maven.org/maven2/org/apache/flink/flink-runtime-web/1.17.1/flink-runtime-web-1.17.1.jar -P /opt/apache-flink*/lib/
         FLINK_ENV_JAVA_OPTS="-Xmx4G" ./bin/start-cluster.sh
