@@ -45,6 +45,7 @@ function run_test() {
     getenforce | grep Enforcing && setenforce 0
     systemctl restart rsyncd
     CHECK_RESULT $?
+    SLEEP_WAIT 5
     rsync -a "$0" "$(hostname)"::test
     CHECK_RESULT $?
     diff "$0" "${des_dir}"/"$0"
