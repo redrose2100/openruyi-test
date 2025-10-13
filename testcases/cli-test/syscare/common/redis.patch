@@ -1,8 +1,8 @@
-From fba15850e5c31666e4c3560a3be7fd034fa7e2b6 Mon Sep 17 00:00:00 2001
+From 5674b0057ff2903d43eaff802017eddf37c360f8 Mon Sep 17 00:00:00 2001
 From: Oran Agra <oran@redislabs.com>
-Date: Mon, 4 Oct 2021 12:10:31 +0300
+Date: Wed, 9 Jun 2021 17:31:39 +0300
 Subject: [PATCH] Prevent unauthenticated client from easily consuming lots of
- memory (CVE-2021-32675) (#9588)
+ memory (CVE-2021-32675)
 
 This change sets a low limit for multibulk and bulk length in the
 protocol for unauthenticated connections, so that they can't easily
@@ -17,11 +17,11 @@ The new limits are 10 arguments of 16kb each (instead of 1m of 512mb)
  4 files changed, 36 insertions(+), 7 deletions(-)
 
 diff --git a/src/networking.c b/src/networking.c
-index 8cfb0e331..9c1b46052 100644
+index a61678dab2b..b02397c96f4 100644
 --- a/src/networking.c
 +++ b/src/networking.c
-@@ -107,6 +107,15 @@ static void clientSetDefaultAuth(client *c) {
-                        !(c->user->flags & USER_FLAG_DISABLED);
+@@ -97,6 +97,15 @@ void linkClient(client *c) {
+     raxInsert(server.clients_index,(unsigned char*)&id,sizeof(id),c,NULL);
  }
  
 +int authRequired(client *c) {
@@ -36,7 +36,7 @@ index 8cfb0e331..9c1b46052 100644
  client *createClient(connection *conn) {
      client *c = zmalloc(sizeof(client));
  
-@@ -1913,6 +1922,10 @@ int processMultibulkBuffer(client *c) {
+@@ -1744,6 +1753,10 @@ int processMultibulkBuffer(client *c) {
              addReplyError(c,"Protocol error: invalid multibulk length");
              setProtocolError("invalid mbulk count",c);
              return C_ERR;
@@ -47,7 +47,7 @@ index 8cfb0e331..9c1b46052 100644
          }
  
          c->qb_pos = (newline-c->querybuf)+2;
-@@ -1961,6 +1974,10 @@ int processMultibulkBuffer(client *c) {
+@@ -1791,6 +1804,10 @@ int processMultibulkBuffer(client *c) {
                  addReplyError(c,"Protocol error: invalid bulk length");
                  setProtocolError("invalid bulk length",c);
                  return C_ERR;
@@ -59,12 +59,12 @@ index 8cfb0e331..9c1b46052 100644
  
              c->qb_pos = newline-c->querybuf+2;
 diff --git a/src/server.c b/src/server.c
-index 709aa8703..2ae3768c8 100644
+index 93148f8e3ed..c8768b1824b 100644
 --- a/src/server.c
 +++ b/src/server.c
-@@ -4623,13 +4623,8 @@ int processCommand(client *c) {
-     int is_may_replicate_command = (c->cmd->flags & (CMD_WRITE | CMD_MAY_REPLICATE)) ||
-                                    (c->cmd->proc == execCommand && (c->mstate.cmd_flags & (CMD_WRITE | CMD_MAY_REPLICATE)));
+@@ -3590,13 +3590,8 @@ int processCommand(client *c) {
+     int is_denyloading_command = !(c->cmd->flags & CMD_LOADING) ||
+                                  (c->cmd->proc == execCommand && (c->mstate.cmd_inv_flags & CMD_LOADING));
  
 -    /* Check if the user is authenticated. This check is skipped in case
 -     * the default user is flagged as "nopass" and is active. */
@@ -79,10 +79,10 @@ index 709aa8703..2ae3768c8 100644
          if (!(c->cmd->flags & CMD_NO_AUTH)) {
              rejectCommand(c,shared.noautherr);
 diff --git a/src/server.h b/src/server.h
-index 6520a84d3..f37147275 100644
+index a16f2885829..530355421a8 100644
 --- a/src/server.h
 +++ b/src/server.h
-@@ -2091,6 +2091,7 @@ void protectClient(client *c);
+@@ -1743,6 +1743,7 @@ void protectClient(client *c);
  void unprotectClient(client *c);
  void initThreadedIO(void);
  client *lookupClientByID(uint64_t id);
@@ -91,10 +91,10 @@ index 6520a84d3..f37147275 100644
  #ifdef __GNUC__
  void addReplyErrorFormat(client *c, const char *fmt, ...)
 diff --git a/tests/unit/auth.tcl b/tests/unit/auth.tcl
-index 805fcf38c..6fa5e0c13 100644
+index 9080d4bf7e9..530ca7c8d91 100644
 --- a/tests/unit/auth.tcl
 +++ b/tests/unit/auth.tcl
-@@ -24,6 +24,22 @@ start_server {tags {"auth external:skip"} overrides {requirepass foobar}} {
+@@ -24,4 +24,20 @@ start_server {tags {"auth"} overrides {requirepass foobar}} {
          r set foo 100
          r incr foo
      } {101}
@@ -115,10 +115,3 @@ index 805fcf38c..6fa5e0c13 100644
 +        $rr close
 +    }
  }
- 
- start_server {tags {"auth_binary_password external:skip"}} {
--- 
-2.33.0
-
-
-

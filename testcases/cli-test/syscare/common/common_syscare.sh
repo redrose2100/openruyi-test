@@ -20,7 +20,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function init_env() {
-    DNF_INSTALL "elfutils-libelf-devel openssl-devel flex python3-devel rpm-build bison cmake make gcc kpatch-runtime telnet perl-devel bind-utils syscare syscare-build"
+    DNF_INSTALL "elfutils-libelf-devel openssl-devel flex python3-devel rpm-build bison cmake make gcc kpatch-runtime telnet perl-devel bind-utils syscare syscare-build wget"
     systemctl start syscare.service
 }
 
@@ -28,16 +28,17 @@ function download_and_compile_redis() {
     pushd ./ || return
     cd /root || return
     ls | grep redis | grep 'src.rpm' || {
-        openeulerversion=$(grep openeulerversion /etc/openEuler-latest | awk -F '=' '{print $2}')
-        wget -r -np -nd -nH --accept="redis-4.0.14*.src.rpm" https://repo.openeuler.org/${openeulerversion}/source/Packages/
+        rpmdev-setuptree
+        wget https://dl-cdn.openeuler.openatom.cn/openEuler-20.03-LTS-SP2/update/source/Packages/redis6-6.0.11-4.oe1.src.rpm
         redis_src_rpm=$(ls | grep "^redis.*src.rpm")
         rpm -ivh ${redis_src_rpm}
         cd /root/rpmbuild/SPECS || return
-        rpmbuild -ba redis.spec
+        dnf -y builddep redis6.spec
+        rpmbuild -ba redis6.spec
         cp /root/rpmbuild/SRPMS/* /root/
-        cp "/root/rpmbuild/RPMS/$(arch)/*" /root/
+        cp "/root/rpmbuild/RPMS/$(arch)"/* /root/
         cd /root || return
-        rpm -ivh "$(ls | grep "^redis-[1-9].*$(arch).rpm")"
+        rpm -ivh "$(ls | grep "^redis6-[1-9].*$(arch).rpm")"
     }
     popd || return
 }
