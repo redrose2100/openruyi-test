@@ -1,7 +1,0 @@
-tcp_curr_estab
-tcp_in_segs
-tcp_out_segs
-tcp_retrans_segs
-tcp_in_errs
-udp_indata_grams
-udp_outdata_grams
