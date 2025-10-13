@@ -37,12 +37,12 @@ function pre_test() {
 
 function run_test() {
     # syscare build制作补丁-使用错误的参数
-    cp common/redis.patch ./
+    cp common/redis.patch /root/
     pushd ./ || exit
     cd /root || exit
     # 获取补丁制作必备包
     redis_src_name=$(ls -lt | grep -E "redis.*src.rpm" | head -n 1 | awk '{print $NF}')
-    redis_debuginfo_name=$(ls | grep redis-debuginfo | awk '{print $NF}')
+    redis_debuginfo_name=$(ls | grep redis | grep debuginfo | awk '{print $NF}')
 
     # syscare build --patch-description 为空编译失败
     syscare build --patch-name patch_${target}_${patch_name_0001} --source "${redis_src_name}" --debuginfo "${redis_debuginfo_name}" --patch ${patch_file} --patch-description
