@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
+# Author: wenrenjie@huawei.com
+# Create: 2025/09/08
+# resctrl分组下，schemata配置内存带宽全部域 MBPRI为最大值
+
+. mpam_lib.sh
+tst_begin_test
+
+fn_main(){
+    mount -t resctrl resctrl $mpam_dir
+
+    for ((i=0; i<$ENV_NUMA_NUM; i++)); do
+        echo "MBPRI:$i=7" > $mpam_dir/schemata
+        grep -w MBPRI $mpam_dir/schemata | grep -q "$i=`printf "%05d" 7`"
+        if [ $? -eq 0 ]; then
+            tst_res TPASS "根分组 MBPRI numa $i 配置为最大值成功"
+        else
+            tst_res TFAIL "根分组 MBPRI numa $i 配置为最大值失败"
+        fi
+    done
+
+    umount $mpam_dir
+}
+
+fn_main
+
+tst_check_dmesg
+tst_exit
