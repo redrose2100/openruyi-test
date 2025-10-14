@@ -52,6 +52,7 @@ function run_test() {
     CHECK_RESULT 0
     nginx -t -q
     CHECK_RESULT 0
+    cp -pv /usr/share/nginx/html/index.html /tmp/oe_test_nginx_cli_index.html.bak
     echo "hello world1" >/usr/share/nginx/html/index.html
     curl localhost 2>&1 | grep "hello"
     CHECK_RESULT 0
@@ -73,6 +74,7 @@ function run_test() {
     nginx -s reopen
     ls /var/log/nginx/access.log
     CHECK_RESULT 0
+    cp -pv /etc/nginx/nginx.conf /tmp/oe_test_nginx_cli_nginx.conf.bak
     echo "abc" >>/etc/nginx/nginx.conf
     nginx -s reload
     CHECK_RESULT $? 1
@@ -99,7 +101,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     pkill -9 nginx
     DNF_REMOVE nginx
-    rm -rf /root/nginx.conf
+    rm -rf /root/nginx.conf /usr/share/nginx/html/index.html /etc/nginx/nginx.conf
+    mv /tmp/oe_test_nginx_cli_index.html.bak /usr/share/nginx/html/index.html
+    mv /tmp/oe_test_nginx_cli_nginx.conf.bak /etc/nginx/nginx.conf
     LOG_INFO "Finish restoring the test environment."
 }
 
