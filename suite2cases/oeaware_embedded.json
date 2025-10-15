@@ -1,0 +1,38 @@
+{
+    "path": "$OET_PATH/testcases/feature-test/oeaware_embedded",
+    "cases": [
+        {
+            "name": "oe_test_oeAware_embedded_01"
+        },
+        {
+            "name": "oe_test_oeAware_embedded_02"
+        },
+        {
+            "name": "oe_test_oeAware_embedded_03"
+        },
+        {
+            "name": "oe_test_oeAware_embedded_04"
+        },
+        {
+            "name": "oe_test_oeAware_embedded_05"
+        },
+        {
+            "name": "oe_test_oeAware_embedded_06"
+        },
+        {
+            "name": "oe_test_oeAware_embedded_07"
+        },
+        {
+            "name": "oe_test_oeAware_embedded_08"
+        },
+        {
+            "name": "oe_test_oeAware_embedded_09"
+        },
+        {
+            "name": "oe_test_oeAware_embedded_10"
+        },
+        {
+            "name": "oe_test_oeAware_embedded_11"
+        }
+    ]
+}
