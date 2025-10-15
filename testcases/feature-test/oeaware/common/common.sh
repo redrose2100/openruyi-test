@@ -121,4 +121,78 @@ function post_nginx() {
     LOG_INFO "End to restore the test environment."
 }
 
+function create_docker() {
+    instance_num=$1
+    numa0=$2
+    version=$(grep PRETTY_NAME /etc/os-release | awk -F '"' '{print $2}' | sed 's/[()]//g;s/ /-/g')
+    docker_img="https://dl-cdn.openeuler.openatom.cn/${version}/docker_img/$(uname -i)/openEuler-docker.$(uname -i).tar.xz"
+    wget --no-check-certificate "${docker_img}"
+    img=$(docker load -i openEuler-docker.$(uname -i).tar.xz | grep "Loaded image")
+    img_name=$(echo "${img}" | awk '{print $3}')
+     
+    for((i=1;i<="${instance_num}";i++))
+    do
+        docker run -itd --cpuset-cpus="${numa0}" --cpus=4 --name docker_name${i} --privileged -u root "${img_name}" /bin/bash
+        docker cp /etc/yum.repos.d/openEuler.repo "docker_name${i}":/etc/yum.repos.d/
+        docker exec -it -u root docker_name${i} /bin/bash -c "dnf install -y stress-ng"
+    done    
+}
+
+function docker_load() { 
+    num=$1
+    for((i=1;i<="${num}";i++))
+    do
+        docker exec -d -u root docker_name"${i}" /bin/bash -c "stress-ng --cpu 4"
+        SLEEP_WAIT 5
+    done
+}
+
+function check_docker() {
+    num=$1
+    interval_num=$2
+    start=0
+    end=0
+    total=0
+    for((m=1;m<="${num}";m++))
+    do
+        end=$(echo "${start}+${interval_num}" | bc)
+        for((n=1;n<="${num}";n++))
+        do
+            dockerid=$(docker ps -a | grep docker_name"${n}" | awk '{print $1}')
+            if grep "${start}-${end}" /sys/fs/cgroup/cpuset/docker/"${dockerid}"*/cpuset.preferred_cpus;then
+                CHECK_RESULT $? 0 0 "Error: Check enable load_based_scheduling_tune failed"
+		total=$((total+1))
+                break 
+            fi
+        done
+        start=$(echo "${end}+1" | bc)
+    done
+    test "${total}" -eq "${num}"
+    CHECK_RESULT $? 0 0 "Error: Check enable load_based_scheduling_tune failed"
+}
+
+function clean_docker() {
+    docker stop $(docker ps -aq)
+    docker rm $(docker ps -aq)
+    docker rmi $(docker images -q)
+    rm -rf openEuler-docker.aarch64.tar.xz
+}
+
+function check_numa() {
+    mapfile -t numalist < <(lscpu | grep "NUMA node[0-9]" | awk '{print $4}')
+    mapfile -t pidlist < <(pgrep -f test_numa | tail -n +2)
+    n=$1
+    succ=0
+    for pid in "${pidlist[@]}";do
+        for numa in "${numalist[@]}";do
+            if taskset -pc "${pid}" | grep "current affinity list: ${numa}";then
+		    succ=$((succ+1))
+		break
+	    fi
+        done
+    done
+    test "${succ}" -eq "${n}"
+    CHECK_RESULT $? 0 0 "Error: Check memory balance failed"
+}
+
 main "$@"
