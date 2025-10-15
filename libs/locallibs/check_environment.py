@@ -42,11 +42,10 @@ def get_suitejson_info_and_check(suite_file, case):
     # 获取执行测试用例所需要的环境信息
     for case_datas in suite_datas['cases']:
         if case_datas["name"] == case:
-            machine_num_required = case_datas.get('machine num', 1)
-            machine_type_required = case_datas.get('machine type', 'kvm')
-            network_interface_num_required = case_datas.get(
-                'add network interface', 0)
-            disk_num_required = len(case_datas.get('add disk', []))
+            machine_num_required = case_datas.get('machine num', suite_datas.get('machine num', 1))
+            machine_type_required = case_datas.get('machine type', suite_datas.get('machine type', 'kvm'))
+            network_interface_num_required_add = case_datas.get('add network interface', suite_datas.get('add network interface', 0))
+            disk_num_required_add = len(case_datas.get('add disk', suite_datas.get('add disk', [])))
             break
     else:
         raise Exception("testcase not found")
@@ -72,11 +71,11 @@ def get_suitejson_info_and_check(suite_file, case):
         mugen_log.logging(
             "error", "The type of machines don't meet the requirements for executing the testcase.")
         sys.exit(1)
-    elif int(network_interface_num) < network_interface_num_required:
+    elif int(network_interface_num) < network_interface_num_required_add:
         mugen_log.logging(
             "error", "The number of network interface don't meet the requirements for executing the testcase.")
         sys.exit(1)
-    elif int(disk_num) < disk_num_required:
+    elif int(disk_num) < disk_num_required_add:
         mugen_log.logging(
             "error", "The number of disk don't meet the requirements for executing the testcase.")
         sys.exit(1)
