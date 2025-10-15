@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test cloud-init-main.service restart
 # #############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
@@ -41,6 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+    rm -rf /etc/ssh/sshd_config.d
     systemctl restart sshd
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
