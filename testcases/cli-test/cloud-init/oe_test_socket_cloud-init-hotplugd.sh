@@ -16,7 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test cloud-init-hotplugd.socket restart
 # #############################################
-#shellcheck disable=SC1091
+# shellcheck disable=SC1091
+
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -35,6 +36,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop cloud-init-hotplugd.socket
+    sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+    rm -rf /etc/ssh/sshd_config.d
+    systemctl restart sshd
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
