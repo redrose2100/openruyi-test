@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_mac-robber"
+        },
+        {
+            "name": "oe_test_mac-robber_01"
         }
     ]
 }
