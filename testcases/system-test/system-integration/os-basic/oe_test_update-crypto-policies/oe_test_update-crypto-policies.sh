@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "crypto-policies-scripts"    
     update-crypto-policies --set DEFAULT
     LOG_INFO "End to prepare the test environment."
 }
@@ -33,14 +34,22 @@ function run_test() {
     CHECK_RESULT $? 0 0 "update-crypto-policies error"
     update-crypto-policies --show |grep LEGACY
     CHECK_RESULT $? 0 0 "update-crypto-policies error"
+    update-crypto-policies --is-applied
+    CHECK_RESULT $? 0 0 "Crypto policy is not applied"
+    update-crypto-policies --check
+    CHECK_RESULT $? 0 0 "Crypto policy files do not match"
+    update-crypto-policies --set LEGACY --no-reload
+    CHECK_RESULT $? 0 0 "update-crypto-policies set LEGACY with no-reload failed"
+    update-crypto-policies --help | grep -i usage
+    CHECK_RESULT $? 0 0 "update-crypto-policies help failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     update-crypto-policies --set DEFAULT
+    DNF_REMOVE "$@"    
     LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
-
