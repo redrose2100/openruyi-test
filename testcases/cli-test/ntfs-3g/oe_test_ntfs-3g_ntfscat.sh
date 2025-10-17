@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfscat ntfs-3g.probe command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -31,34 +31,29 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfscat --help failed."
     ntfscat --version 2>&1 | grep "ntfscat v"
     CHECK_RESULT $? 0 0 "Check ntfscat --version failed."
-    ntfscat /dev/${disk1} --inode 5 --attribute INDEX_ROOT
+    ntfscat /dev/"${disk1}" --inode 5 --attribute INDEX_ROOT
     CHECK_RESULT $? 0 0 "Check ntfscat --attribute failed."
-    ntfscat /dev/${disk1} --inode 15 --attribute-name ""
+    ntfscat /dev/"${disk1}" --inode 15 --attribute-name ""
     CHECK_RESULT $? 0 0 "Check ntfscat --attribute-name failed."
-    ntfscat /dev/${disk1} --inode 4 --force
+    ntfscat /dev/"${disk1}" --inode 4 --force
     CHECK_RESULT $? 0 0 "Check ntfscat --force failed."
-    ntfscat /dev/${disk1} --inode 4 --quiet
+    ntfscat /dev/"${disk1}" --inode 4 --quiet
     CHECK_RESULT $? 0 0 "Check ntfscat --quiet failed."
-    ntfscat /dev/${disk1} --inode 4 --verbose
+    ntfscat /dev/"${disk1}" --inode 4 --verbose
     CHECK_RESULT $? 0 0 "Check ntfscat --verbose failed."
     ntfs-3g.probe --help 2>&1 | grep "Usage:.*ntfs-3g.probe"
     CHECK_RESULT $? 0 0 "Check ntfs-3g.probe --help failed."
-    ntfs-3g.probe --readonly /dev/${disk1}
+    ntfs-3g.probe --readonly /dev/"${disk1}"
     CHECK_RESULT $? 0 0 "Check ntfs-3g.probe --readonly failed."
-    ntfs-3g.probe --readwrite /dev/${disk1}
+    ntfs-3g.probe --readwrite /dev/"${disk1}"
     CHECK_RESULT $? 0 0 "Check ntfscat ntfs-3g.probe --readwrite failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

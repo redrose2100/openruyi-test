@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfsfallocate command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     get_disk
     mkdir -p /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows
+    ntfs-3g /dev/"${disk1}" /mnt/windows
     touch /mnt/windows/database.db
     umount /mnt/windows
     LOG_INFO "Finish preparing the test environment."
@@ -35,33 +35,27 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfsfallocate -h failed."
     ntfsfallocate -V 2>&1 | grep "ntfsfallocate v"
     CHECK_RESULT $? 0 0 "Check ntfsfallocate -V failed."
-    ntfsfallocate -l 100M /dev/${disk1} database.db | grep "ntfsfallocate completed successfully"
+    ntfsfallocate -l 100M /dev/"${disk1}" database.db | grep "ntfsfallocate completed successfully"
     CHECK_RESULT $? 0 0 "Check ntfsfallocate -l failed."
-    ntfsfallocate -l 101M /dev/${disk1} database.db -f | grep "ntfsfallocate completed successfully"
+    ntfsfallocate -l 101M /dev/"${disk1}" database.db -f | grep "ntfsfallocate completed successfully"
     CHECK_RESULT $? 0 0 "Check ntfsfallocate -f failed."
-    ntfsfallocate -l 102M /dev/${disk1} database.db -n | grep "ntfsfallocate completed successfully"
+    ntfsfallocate -l 102M /dev/"${disk1}" database.db -n | grep "ntfsfallocate completed successfully"
     CHECK_RESULT $? 0 0 "Check ntfsfallocate -n failed."
-    ntfsfallocate -l 103M /dev/${disk1} database.db -o 1 | grep "ntfsfallocate completed successfully"
+    ntfsfallocate -l 103M /dev/"${disk1}" database.db -o 1 | grep "ntfsfallocate completed successfully"
     CHECK_RESULT $? 0 0 "Check ntfsfallocate -o failed."
-    ntfsfallocate -l 104M /dev/${disk1} database.db -v | grep "ntfsfallocate completed successfully"
+    ntfsfallocate -l 104M /dev/"${disk1}" database.db -v | grep "ntfsfallocate completed successfully"
     CHECK_RESULT $? 0 0 "Check ntfsfallocate -v failed."
-    ntfsfallocate -l 105M /dev/${disk1} database.db -vv | grep "ntfsfallocate completed successfully"
+    ntfsfallocate -l 105M /dev/"${disk1}" database.db -vv | grep "ntfsfallocate completed successfully"
     CHECK_RESULT $? 0 0 "Check ntfsfallocate -vv failed."
-    ntfsfallocate -l 106M /dev/${disk1} database.db 256 | grep "ntfsfallocate completed successfully"
+    ntfsfallocate -l 106M /dev/"${disk1}" database.db 256 | grep "ntfsfallocate completed successfully"
     CHECK_RESULT $? 0 0 "Check ntfsfallocate attr-name failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    rm -rf /mnt/windows
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

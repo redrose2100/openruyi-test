@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfslabel ntfscmp command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -31,25 +31,25 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfslabel --help failed"
     ntfslabel --version 2>&1 | grep "ntfslabel v"
     CHECK_RESULT $? 0 0 "Check ntfslabel --version failed"
-    ntfslabel --no-action /dev/${disk1} 5
+    ntfslabel --no-action /dev/"${disk1}" 5
     CHECK_RESULT $? 0 0 "Check ntfslabel --no-action failed"
-    ntfslabel --force /dev/${disk1} 5
+    ntfslabel --force /dev/"${disk1}" 5
     CHECK_RESULT $? 0 0 "Check ntfslabel --force failed"
-    ntfslabel --new-serial /dev/${disk1} 5 | grep "New serial number"
+    ntfslabel --new-serial /dev/"${disk1}" 5 | grep "New serial number"
     CHECK_RESULT $? 0 0 "Check ntfslabel --new-serial failed"
-    ntfslabel --new-half-serial /dev/${disk1} 5 | grep "New serial number"
+    ntfslabel --new-half-serial /dev/"${disk1}" 5 | grep "New serial number"
     CHECK_RESULT $? 0 0 "Check ntfslabel --new-half-serial failed"
-    ntfslabel --quiet /dev/${disk1} 5
+    ntfslabel --quiet /dev/"${disk1}" 5
     CHECK_RESULT $? 0 0 "Check ntfslabel --quiet failed"
-    ntfslabel --verbose /dev/${disk1} 5 | grep "Serial number"
+    ntfslabel --verbose /dev/"${disk1}" 5 | grep "Serial number"
     CHECK_RESULT $? 0 0 "Check ntfslabel --verbose failed"
     ntfscmp --help 2>&1 | grep "Usage: ntfscmp \[OPTIONS\]"
     CHECK_RESULT $? 0 0 "Check ntfscmp --help failed"
     ntfscmp --version 2>&1 | grep "ntfscmp v"
     CHECK_RESULT $? 0 0 "Check ntfscmp --version failed"
-    ntfscmp --no-progress-bar /dev/${disk1} /dev/${disk2} | grep "ntfscmp"
+    ntfscmp --no-progress-bar /dev/"${disk1}" /dev/"${disk2}" | grep "ntfscmp"
     CHECK_RESULT $? 0 0 "Check ntfscmp --no-progress-bar failed"
-    ntfscmp --verbose /dev/${disk1} /dev/${disk2} | grep "100.00 percent completed"
+    ntfscmp --verbose /dev/"${disk1}" /dev/"${disk2}" | grep "100.00 percent completed"
     CHECK_RESULT $? 0 0 "Check ntfscmp --verbose failed"
     LOG_INFO "End of the test."
 }
@@ -57,17 +57,12 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    expect <<EOF
     spawn mkfs.ext4 /dev/${disk2}
     send "y\n"
     expect eof
 EOF
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

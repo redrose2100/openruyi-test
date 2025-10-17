@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfswipe command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -27,34 +27,29 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ntfswipe --undel /dev/${disk1} | grep "bytes were wiped"
+    ntfswipe --undel /dev/"${disk1}" | grep "bytes were wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --undel failed."
-    ntfswipe --all /dev/${disk1} | grep "bytes were wiped"
+    ntfswipe --all /dev/"${disk1}" | grep "bytes were wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --all failed."
-    ntfswipe --count 3 /dev/${disk1} | grep "bytes would be wiped"
+    ntfswipe --count 3 /dev/"${disk1}" | grep "bytes would be wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --count failed."
-    ntfswipe --bytes 3 /dev/${disk1} | grep "bytes would be wiped"
+    ntfswipe --bytes 3 /dev/"${disk1}" | grep "bytes would be wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --bytes failed."
-    ntfswipe --no-action /dev/${disk1} | grep "bytes would be wiped"
+    ntfswipe --no-action /dev/"${disk1}" | grep "bytes would be wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --no-action failed."
-    ntfswipe --force /dev/${disk1} | grep "bytes would be wiped"
+    ntfswipe --force /dev/"${disk1}" | grep "bytes would be wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --force failed."
-    ntfswipe --quiet /dev/${disk1} | grep "bytes would be wiped"
+    ntfswipe --quiet /dev/"${disk1}" | grep "bytes would be wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --quiet failed."
-    ntfswipe --verbose /dev/${disk1} | grep "bytes would be wiped"
+    ntfswipe --verbose /dev/"${disk1}" | grep "bytes would be wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --verbose failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

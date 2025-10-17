@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfsmove command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     get_disk
     mkdir -p /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows
+    ntfs-3g /dev/"${disk1}" /mnt/windows
     touch /mnt/windows/test.txt
     umount /mnt/windows
     LOG_INFO "Finish preparing the test environment."
@@ -35,37 +35,31 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfsmove --help failed."
     ntfsmove --version 2>&1 | grep "ntfsmove v"
     CHECK_RESULT $? 0 0 "Check ntfsmove --version failed."
-    ntfsmove --start /dev/${disk1} test.txt | grep "success"
+    ntfsmove --start /dev/"${disk1}" test.txt | grep "success"
     CHECK_RESULT $? 0 0 "Check ntfsmove --start failed."
-    ntfsmove --best /dev/${disk1} test.txt | grep "success"
+    ntfsmove --best /dev/"${disk1}" test.txt | grep "success"
     CHECK_RESULT $? 0 0 "Check ntfsmove --best failed."
-    ntfsmove --end /dev/${disk1} test.txt | grep "success"
+    ntfsmove --end /dev/"${disk1}" test.txt | grep "success"
     CHECK_RESULT $? 0 0 "Check ntfsmove --end failed."
-    ntfsmove --cluster 5 /dev/${disk1} test.txt | grep "success"
+    ntfsmove --cluster 5 /dev/"${disk1}" test.txt | grep "success"
     CHECK_RESULT $? 0 0 "Check ntfsmove --cluster failed."
-    ntfsmove --no-dirty /dev/${disk1} test.txt | grep "success"
+    ntfsmove --no-dirty /dev/"${disk1}" test.txt | grep "success"
     CHECK_RESULT $? 0 0 "Check ntfsmove --no-dirty failed."
-    ntfsmove --no-action /dev/${disk1} test.txt | grep "success"
+    ntfsmove --no-action /dev/"${disk1}" test.txt | grep "success"
     CHECK_RESULT $? 0 0 "Check ntfsmove --no-action failed."
-    ntfsmove --force /dev/${disk1} test.txt | grep "success"
+    ntfsmove --force /dev/"${disk1}" test.txt | grep "success"
     CHECK_RESULT $? 0 0 "Check ntfsmove --force failed."
-    ntfsmove --quiet /dev/${disk1} test.txt | grep "success"
+    ntfsmove --quiet /dev/"${disk1}" test.txt | grep "success"
     CHECK_RESULT $? 0 0 "Check ntfsmove --quiet failed."
-    ntfsmove --verbose /dev/${disk1} test.txt | grep "success"
+    ntfsmove --verbose /dev/"${disk1}" test.txt | grep "success"
     CHECK_RESULT $? 0 0 "Check ntfsmove --verbose failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    rm -rf /mnt/windows
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

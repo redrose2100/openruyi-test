@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfsclone ntfsfix command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -27,27 +27,27 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ntfsclone --overwrite /dev/${disk1} /dev/${disk2} --new-serial 2>&1 | grep "Syncing"
+    ntfsclone --overwrite /dev/"${disk1}" /dev/"${disk2}" --new-serial 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --new-serial failed."
-    ntfsclone --overwrite /dev/${disk1} /dev/${disk2} --new-half-serial 2>&1 | grep "Syncing"
+    ntfsclone --overwrite /dev/"${disk1}" /dev/"${disk2}" --new-half-serial 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --new-half-serial failed."
-    ntfsclone --overwrite /dev/${disk1} /dev/${disk2} --preserve-timestamps 2>&1 | grep "Syncing"
+    ntfsclone --overwrite /dev/"${disk1}" /dev/"${disk2}" --preserve-timestamps 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --preserve-timestamps failed."
-    ntfsclone --overwrite /dev/${disk1} /dev/${disk2} --quiet 2>&1 | grep "Syncing"
+    ntfsclone --overwrite /dev/"${disk1}" /dev/"${disk2}" --quiet 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --quiet failed."
-    ntfsclone --overwrite /dev/${disk1} /dev/${disk2} --force 2>&1 | grep "Syncing"
+    ntfsclone --overwrite /dev/"${disk1}" /dev/"${disk2}" --force 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --force failed."
-    ntfsclone --overwrite /dev/${disk1} /dev/${disk2} --full-logfile 2>&1 | grep "Syncing"
+    ntfsclone --overwrite /dev/"${disk1}" /dev/"${disk2}" --full-logfile 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --full-logfile failed."
     ntfsfix --help 2>&1 | grep "Usage: ntfsfix \[options\]"
     CHECK_RESULT $? 0 0 "Check ntfsfix --help failed."
     ntfsfix --version 2>&1 | grep "ntfsfix v"
     CHECK_RESULT $? 0 0 "Check ntfsfix --version failed."
-    ntfsfix --clear-bad-sectors /dev/${disk1} | grep "NTFS partition /dev/${disk1} was processed successfully"
+    ntfsfix --clear-bad-sectors /dev/"${disk1}" | grep "NTFS partition /dev/${disk1} was processed successfully"
     CHECK_RESULT $? 0 0 "Check ntfsfix --clear-bad-sectors failed."
-    ntfsfix --clear-dirty /dev/${disk1} | grep "NTFS partition /dev/${disk1} was processed successfully"
+    ntfsfix --clear-dirty /dev/"${disk1}" | grep "NTFS partition /dev/${disk1} was processed successfully"
     CHECK_RESULT $? 0 0 "Check ntfsfix --clear-dirty failed."
-    ntfsfix --no-action /dev/${disk1} | grep "NTFS partition /dev/${disk1} was processed successfully"
+    ntfsfix --no-action /dev/"${disk1}" | grep "NTFS partition /dev/${disk1} was processed successfully"
     CHECK_RESULT $? 0 0 "Check ntfsfix --no-action failed."
     LOG_INFO "End of the test."
 }
@@ -55,17 +55,12 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    expect <<EOF
     spawn mkfs.ext4 /dev/${disk2}
     send "y\n"
     expect eof
 EOF
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

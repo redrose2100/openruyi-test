@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfsls command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     get_disk
     mkdir -p /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows
+    ntfs-3g /dev/"${disk1}" /mnt/windows
     mkdir /mnt/windows/test
     touch {/mnt/windows/test/test1.txt,/mnt/windows/test/test2.py}
     umount /mnt/windows
@@ -36,39 +36,33 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfsls --help failed."
     ntfsls --version 2>&1 | grep "ntfsls v"
     CHECK_RESULT $? 0 0 "Check ntfsls --version failed."
-    ntfsls /dev/${disk1} --all | grep "test"
+    ntfsls /dev/"${disk1}" --all | grep "test"
     CHECK_RESULT $? 0 0 "Check ntfsls --all failed."
-    ntfsls /dev/${disk1} --classify | grep "test\/"
+    ntfsls /dev/"${disk1}" --classify | grep "test\/"
     CHECK_RESULT $? 0 0 "Check ntfsls --classify failed."
-    ntfsls /dev/${disk1} --force | grep "test"
+    ntfsls /dev/"${disk1}" --force | grep "test"
     CHECK_RESULT $? 0 0 "Check ntfsls --force failed."
-    ntfsls /dev/${disk1} --inode | grep "test"
+    ntfsls /dev/"${disk1}" --inode | grep "test"
     CHECK_RESULT $? 0 0 "Check ntfsls --inode failed."
-    ntfsls /dev/${disk1} --long | grep "test"
+    ntfsls /dev/"${disk1}" --long | grep "test"
     CHECK_RESULT $? 0 0 "Check ntfsls --long failed."
-    ntfsls /dev/${disk1} --path test | grep "test" 
+    ntfsls /dev/"${disk1}" --path test | grep "test"
     CHECK_RESULT $? 0 0 "Check ntfsls --path failed."
-    ntfsls /dev/${disk1} --quiet --path test | grep "test"
+    ntfsls /dev/"${disk1}" --quiet --path test | grep "test"
     CHECK_RESULT $? 0 0 "Check ntfsls --quiet failed."
-    ntfsls /dev/${disk1} --recursive | grep "test"
+    ntfsls /dev/"${disk1}" --recursive | grep "test"
     CHECK_RESULT $? 0 0 "Check ntfsls --recursive failed."
-    ntfsls /dev/${disk1} --system | grep "Volume"
+    ntfsls /dev/"${disk1}" --system | grep "Volume"
     CHECK_RESULT $? 0 0 "Check ntfsls --system failed."
-    ntfsls /dev/${disk1} --dos --path test | grep "test"
+    ntfsls /dev/"${disk1}" --dos --path test | grep "test"
     CHECK_RESULT $? 0 0 "Check ntfsls --dos --path failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    rm -rf /mnt/windows
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

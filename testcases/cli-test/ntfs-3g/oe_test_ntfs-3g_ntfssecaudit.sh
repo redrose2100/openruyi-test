@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfssecaudit command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     get_disk
     mkdir -p /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows
+    ntfs-3g /dev/"${disk1}" /mnt/windows
     mkdir /mnt/windows/test
     touch {test.txt,/mnt/windows/test.txt,/mnt/windows/test/a.txt}
     umount /mnt/windows
@@ -40,33 +40,28 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfssecaudit -t failed."
     ntfssecaudit -h test.txt | grep "No errors were found"
     CHECK_RESULT $? 0 0 "Check ntfssecaudit -h failed."
-    ntfssecaudit -arv /dev/${disk1} | grep "No errors were found"
+    ntfssecaudit -arv /dev/"${disk1}" | grep "No errors were found"
     CHECK_RESULT $? 0 0 "Check ntfssecaudit -arv failed."
-    ntfssecaudit -v /dev/${disk1} test.txt | grep "No errors were found"
+    ntfssecaudit -v /dev/"${disk1}" test.txt | grep "No errors were found"
     CHECK_RESULT $? 0 0 "Check ntfssecaudit -v failed."
-    ntfssecaudit -rv /dev/${disk1} test | grep "No errors were found"
+    ntfssecaudit -rv /dev/"${disk1}" test | grep "No errors were found"
     CHECK_RESULT $? 0 0 "Check ntfssecaudit -rv failed."
-    ntfssecaudit -bv /dev/${disk1} test | grep "No errors were found"
+    ntfssecaudit -bv /dev/"${disk1}" test | grep "No errors were found"
     CHECK_RESULT $? 0 0 "Check ntfssecaudit -bv failed."
-    ntfssecaudit -sev /dev/${disk1} test.txt | grep "No errors were found"
+    ntfssecaudit -sev /dev/"${disk1}" test.txt | grep "No errors were found"
     CHECK_RESULT $? 0 0 "Check ntfssecaudit -sev failed."
-    ntfssecaudit /dev/${disk1} 777 test.txt | grep "No errors were found"
+    ntfssecaudit /dev/"${disk1}" 777 test.txt | grep "No errors were found"
     CHECK_RESULT $? 0 0 "Check ntfssecaudit perms file failed."
-    ntfssecaudit -rv /dev/${disk1} 777 test | grep "No errors were found"
+    ntfssecaudit -rv /dev/"${disk1}" 777 test | grep "No errors were found"
     CHECK_RESULT $? 0 0 "Check ntfssecaudit perms directory failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    rm -rf /mnt/windows test.txt
-    DNF_REMOVE
+    clear_env
+    rm -rf test.txt
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

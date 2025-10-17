@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of mkntfs command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -31,38 +31,33 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check mkntfs --help failed."
     mkntfs --version 2>&1 | grep "mkntfs v"
     CHECK_RESULT $? 0 0 "Check mkntfs --version failed."
-    mkntfs --fast /dev/${disk1} | grep "mkntfs completed successfully"
+    mkntfs --fast /dev/"${disk1}" | grep "mkntfs completed successfully"
     CHECK_RESULT $? 0 0 "Check mkntfs --fast failed."
-    mkntfs --quick /dev/${disk1} | grep "mkntfs completed successfully"
+    mkntfs --quick /dev/"${disk1}" | grep "mkntfs completed successfully"
     CHECK_RESULT $? 0 0 "Check mkntfs --quick failed."
-    mkntfs --label 5 /dev/${disk1} | grep "mkntfs completed successfully"
+    mkntfs --label 5 /dev/"${disk1}" | grep "mkntfs completed successfully"
     CHECK_RESULT $? 0 0 "Check mkntfs --label failed."
-    mkntfs --enable-compression /dev/${disk1} | grep "mkntfs completed successfully"
+    mkntfs --enable-compression /dev/"${disk1}" | grep "mkntfs completed successfully"
     CHECK_RESULT $? 0 0 "Check mkntfs --enable-compression failed."
-    mkntfs --no-indexing /dev/${disk1} | grep "mkntfs completed successfully"
+    mkntfs --no-indexing /dev/"${disk1}" | grep "mkntfs completed successfully"
     CHECK_RESULT $? 0 0 "Check mkntfs --no-indexing failed."
-    mkntfs --no-action /dev/${disk1} | grep "Running in READ-ONLY mode"
+    mkntfs --no-action /dev/"${disk1}" | grep "Running in READ-ONLY mode"
     CHECK_RESULT $? 0 0 "Check mkntfs --no-action failed."
-    mkntfs --fast /dev/${disk1} --cluster-size 512 --sector-size 256 --partition-start 256 --heads 10 --sectors-per-track 16 --mft-zone-multiplier 10 --zero-time --force | grep "mkntfs completed successfully"
+    mkntfs --fast /dev/"${disk1}" --cluster-size 512 --sector-size 256 --partition-start 256 --heads 10 --sectors-per-track 16 --mft-zone-multiplier 10 --zero-time --force | grep "mkntfs completed successfully"
     CHECK_RESULT $? 0 0 "Check mkntfs --cluster-size --sector-size --partition-start --heads --sectors-per-track --mft-zone-multiplier --zero-time --force failed."
-    mkntfs --fast /dev/${disk1} --quiet
+    mkntfs --fast /dev/"${disk1}" --quiet
     CHECK_RESULT $? 0 0 "Check mkntfs --quiet failed."
-    mkntfs --fast /dev/${disk1} --verbose | grep "mkntfs completed successfully"
+    mkntfs --fast /dev/"${disk1}" --verbose | grep "mkntfs completed successfully"
     CHECK_RESULT $? 0 0 "Check mkntfs --verbose failed."
-    mkntfs --fast /dev/${disk1} --license | grep "This program"
+    mkntfs --fast /dev/"${disk1}" --license | grep "This program"
     CHECK_RESULT $? 0 0 "Check mkntfs --license failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

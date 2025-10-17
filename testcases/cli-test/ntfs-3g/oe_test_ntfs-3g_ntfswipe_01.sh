@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfswipe command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -31,34 +31,29 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfswipe --help failed."
     ntfswipe --version 2>&1 | grep "ntfswipe v"
     CHECK_RESULT $? 0 0 "Check ntfswipe --version failed."
-    ntfswipe --info /dev/${disk1} | grep "bytes would be wiped"
+    ntfswipe --info /dev/"${disk1}" | grep "bytes would be wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --info failed."
-    ntfswipe --directory /dev/${disk1} | grep "bytes were wiped"
+    ntfswipe --directory /dev/"${disk1}" | grep "bytes were wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --directory failed."
-    ntfswipe --logfile /dev/${disk1} | grep "bytes were wiped"
+    ntfswipe --logfile /dev/"${disk1}" | grep "bytes were wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --logfile failed."
-    ntfswipe --mft /dev/${disk1} | grep "bytes were wiped" 
+    ntfswipe --mft /dev/"${disk1}" | grep "bytes were wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --mft failed."
-    ntfswipe --pagefile /dev/${disk1} | grep "bytes were wiped" 
+    ntfswipe --pagefile /dev/"${disk1}" | grep "bytes were wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --pagefile failed."
-    ntfswipe --tails /dev/${disk1} | grep "bytes were wiped" 
+    ntfswipe --tails /dev/"${disk1}" | grep "bytes were wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --tails failed."
-    ntfswipe --unused /dev/${disk1} | grep "bytes were wiped" 
+    ntfswipe --unused /dev/"${disk1}" | grep "bytes were wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --unused failed."
-    ntfswipe --unused-fast /dev/${disk1} | grep "bytes were wiped" 
+    ntfswipe --unused-fast /dev/"${disk1}" | grep "bytes were wiped"
     CHECK_RESULT $? 0 0 "Check ntfswipe --unused-fast failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfsundelete command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     get_disk
     mkdir -p /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows
+    ntfs-3g /dev/"${disk1}" /mnt/windows
     touch /mnt/windows/test.txt
     rm -rf /mnt/windows/test.txt
     umount /mnt/windows
@@ -36,35 +36,30 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfsundelete --help failed."
     ntfsundelete --version 2>&1 | grep "ntfsundelete v"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --version failed."
-    ntfsundelete --scan /dev/${disk1} --force | grep "test.txt"
+    ntfsundelete --scan /dev/"${disk1}" --force | grep "test.txt"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --scan failed."
-    ntfsundelete --percentage 10 /dev/${disk1} --force | grep "test.txt"
+    ntfsundelete --percentage 10 /dev/"${disk1}" --force | grep "test.txt"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --percentage failed."
-    ntfsundelete --match test.txt /dev/${disk1} --force | grep "test.txt"
+    ntfsundelete --match test.txt /dev/"${disk1}" --force | grep "test.txt"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --match failed."
-    ntfsundelete --case --match test.txt /dev/${disk1} --force | grep "test.txt"
+    ntfsundelete --case --match test.txt /dev/"${disk1}" --force | grep "test.txt"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --case failed."
-    ntfsundelete --size 0 /dev/${disk1} --force | grep "test.txt"
+    ntfsundelete --size 0 /dev/"${disk1}" --force | grep "test.txt"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --size failed."
-    ntfsundelete --time 2021y /dev/${disk1} --force | grep "test.txt"
+    ntfsundelete --time 2021y /dev/"${disk1}" --force | grep "test.txt"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --time failed."
-    ntfsundelete --undelete --match test.txt /dev/${disk1} --force | grep "Undeleted 'test.txt' successfully to test.txt"
+    ntfsundelete --undelete --match test.txt /dev/"${disk1}" --force | grep "Undeleted 'test.txt' successfully to test.txt"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --undelete failed."
-    ntfsundelete --inode 7 /dev/${disk1} --force | grep "test.txt"
+    ntfsundelete --inode 7 /dev/"${disk1}" --force | grep "test.txt"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --inode failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    rm -rf /mnt/windows test.txt*
-    DNF_REMOVE
+    clear_env
+    rm -rf test.txt*
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
