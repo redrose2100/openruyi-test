@@ -224,9 +224,6 @@ function run_test_case() {
         popd >/dev/null || return 1
         return 0
     fi
-    # 每个case执行前写入进度文件并强制刷盘
-    echo "${test_suite}|${test_case}" > "$progress_file"
-    sync "$progress_file"
 
     if [[ -z "$test_suite" || -z "$test_case" ]]; then
         LOG_ERROR "Parameter(test suite or test case) loss."
@@ -258,6 +255,9 @@ function run_test_case() {
 
     ((CASE_NUM++))
 
+    # 每个case执行前写入进度文件并强制刷盘
+    echo "${test_suite}|${test_case}" > "$progress_file"
+    sync "$progress_file"
 
     LOG_INFO "start to run testcase:$test_case."
 
