@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfs-3g command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -28,52 +28,52 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ntfs-3g /dev/${disk1} /mnt/windows -o locale=1
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o locale=1
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o locale failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o recover
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o recover
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o recover failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o norecover
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o norecover
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o norecover failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o emove_hiberfile
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o emove_hiberfile
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o emove_hiberfile failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o atime
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o atime
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o atime failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o noatime
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o noatime
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o noatime failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o relatime
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o relatime
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o relatime failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o delay_mtime
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o delay_mtime
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o delay_mtime failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o show_sys_files
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o show_sys_files
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o show_sys_files failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o hide_hid_files
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o hide_hid_files
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o hide_hid_files failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
@@ -83,14 +83,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    rm -rf /mnt/windows
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

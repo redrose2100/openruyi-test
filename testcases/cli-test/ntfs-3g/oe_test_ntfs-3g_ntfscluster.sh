@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfscluster command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     get_disk
     mkdir -p /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows
+    ntfs-3g /dev/"${disk1}" /mnt/windows
     touch /mnt/windows/test.txt
     umount /mnt/windows
     LOG_INFO "Finish preparing the test environment."
@@ -35,33 +35,27 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfscluster --help failed."
     ntfscluster --version 2>&1 | grep "ntfscluster v"
     CHECK_RESULT $? 0 0 "Check ntfscluster --version failed."
-    ntfscluster --info /dev/${disk1} --force | grep "percentage metadata"
+    ntfscluster --info /dev/"${disk1}" --force | grep "percentage metadata"
     CHECK_RESULT $? 0 0 "Check ntfscluster --info failed."
-    ntfscluster --cluster 0-500 /dev/${disk1} --force | grep "Searching for cluster range 0-500"
-    CHECK_RESULT $? 0 0 "Check ntfscluster --cluster failed." 
-    ntfscluster --sector 0-500 /dev/${disk1} --force | grep "Searching for sector range 0-500"
+    ntfscluster --cluster 0-500 /dev/"${disk1}" --force | grep "Searching for cluster range 0-500"
+    CHECK_RESULT $? 0 0 "Check ntfscluster --cluster failed."
+    ntfscluster --sector 0-500 /dev/"${disk1}" --force | grep "Searching for sector range 0-500"
     CHECK_RESULT $? 0 0 "Check ntfscluster --sector failed."
-    ntfscluster --inode 5 /dev/${disk1} --force | grep "resident"
+    ntfscluster --inode 5 /dev/"${disk1}" --force | grep "resident"
     CHECK_RESULT $? 0 0 "Check ntfscluster --inode failed."
-    ntfscluster --filename test.txt /dev/${disk1} --force
+    ntfscluster --filename test.txt /dev/"${disk1}" --force
     CHECK_RESULT $? 0 0 "Check ntfscluster --filename failed."
-    ntfscluster --info /dev/${disk1} --force --quiet | grep "percentage metadata"
+    ntfscluster --info /dev/"${disk1}" --force --quiet | grep "percentage metadata"
     CHECK_RESULT $? 0 0 "Check ntfscluster --quiet failed."
-    ntfscluster --info /dev/${disk1} --force --verbose | grep "percentage metadata"
+    ntfscluster --info /dev/"${disk1}" --force --verbose | grep "percentage metadata"
     CHECK_RESULT $? 0 0 "Check ntfscluster --verbose failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    rm -rf /mnt/windows
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

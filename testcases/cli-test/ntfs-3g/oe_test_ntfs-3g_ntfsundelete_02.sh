@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfsundelete command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     get_disk
     mkdir -p /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows
+    ntfs-3g /dev/"${disk1}" /mnt/windows
     touch /mnt/windows/test.txt
     rm -rf /mnt/windows/test.txt
     umount /mnt/windows
@@ -32,40 +32,35 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ntfsundelete /dev/${disk1} --copy 5-7 --output debug --force | grep "MFT extracted to file debug"
+    ntfsundelete /dev/"${disk1}" --copy 5-7 --output debug --force | grep "MFT extracted to file debug"
     CHECK_RESULT $? 0 0 "Check ntfsundelete -output failed."
-    ntfsundelete --optimistic /dev/${disk1} --force | grep "test.txt"
+    ntfsundelete --optimistic /dev/"${disk1}" --force | grep "test.txt"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --optimistic failed."
-    ntfsundelete /dev/${disk1} -c 5-7 --destination ./ --force | grep "MFT extracted to file"
+    ntfsundelete /dev/"${disk1}" -c 5-7 --destination ./ --force | grep "MFT extracted to file"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --destination failed."
-    ntfsundelete --undelete --byte 3 --match test.txt /dev/${disk1} --force | grep "Undeleted 'test.txt' successfully to test.txt"
+    ntfsundelete --undelete --byte 3 --match test.txt /dev/"${disk1}" --force | grep "Undeleted 'test.txt' successfully to test.txt"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --byte failed."
-    ntfsundelete --undelete --truncate --match test.txt /dev/${disk1} --force | grep "Undeleted 'test.txt' successfully to test.txt"
+    ntfsundelete --undelete --truncate --match test.txt /dev/"${disk1}" --force | grep "Undeleted 'test.txt' successfully to test.txt"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --truncate failed."
-    ntfsundelete --parent --verbose /dev/${disk1} --force | grep "Files with potentially recoverable content"
+    ntfsundelete --parent --verbose /dev/"${disk1}" --force | grep "Files with potentially recoverable content"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --parent failed."
-    ntfsundelete /dev/${disk1} --copy 5-7 -o debug --force | grep "MFT extracted to file debug"
+    ntfsundelete /dev/"${disk1}" --copy 5-7 -o debug --force | grep "MFT extracted to file debug"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --copy failed."
     rm -rf test.txt*
-    ntfsundelete --undelete --quiet --match test.txt /dev/${disk1} --force
+    ntfsundelete --undelete --quiet --match test.txt /dev/"${disk1}" --force
     CHECK_RESULT $? 0 0 "Check ntfsundelete --quiet failed."
     test -f test.txt
     CHECK_RESULT $? 0 0 "Check file failed."
-    ntfsundelete --verbose /dev/${disk1} --force | grep "Files with potentially recoverable content"
+    ntfsundelete --verbose /dev/"${disk1}" --force | grep "Files with potentially recoverable content"
     CHECK_RESULT $? 0 0 "Check ntfsundelete --verbose failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    rm -rf /mnt/windows test.txt* mft debug*
-    DNF_REMOVE
+    clear_env
+    rm -rf test.txt* mft debug*
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfs-3g command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -32,42 +32,42 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfs-3g --help failed."
     ntfs-3g --version 2>&1 | grep "ntfs-3g"
     CHECK_RESULT $? 0 0 "Check ntfs-3g --version failed."
-    ntfs-3g /dev/${disk1} /mnt/windows -o uid=1000,gid=1000
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o uid=1000,gid=1000
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o uid gid failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o umask=0777
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o umask=0777
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o umask failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o dmask=0777
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o dmask=0777
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o dmask failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o usermapping=test.txt
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o usermapping=test.txt
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o usermapping failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o permissions
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o permissions
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o permissions failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o ro
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o ro
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o ro failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o acl
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o acl
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o acl failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    ntfs-3g /dev/${disk1} /mnt/windows -o inherit
+    ntfs-3g /dev/"${disk1}" /mnt/windows -o inherit
     CHECK_RESULT $? 0 0 "Check ntfs-3g -o inherit failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
@@ -77,14 +77,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    rm -rf /mnt/windows
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
