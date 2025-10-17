@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfscp command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -35,36 +35,31 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfscp --help failed."
     ntfscp --version 2>&1 | grep "ntfscp v"
     CHECK_RESULT $? 0 0 "Check ntfscp --version failed."
-    ntfscp /dev/${disk1} ${file} ${file} --attribute 256
+    ntfscp /dev/"${disk1}" ${file} ${file} --attribute 256
     CHECK_RESULT $? 0 0 "Check ntfscp --attribute failed."
-    check_file_and_umount_disk ${disk1} ${dir} ${file}
-    ntfscp /dev/${disk1} ${file} ${file} --attr-name stream
+    check_file_and_umount_disk "${disk1}" ${dir} ${file}
+    ntfscp /dev/"${disk1}" ${file} ${file} --attr-name stream
     CHECK_RESULT $? 0 0 "Check ntfscp --attr-name failed."
-    check_file_and_umount_disk ${disk1} ${dir} ${file}
-    ntfscp /dev/${disk1} ${file} ${file} --no-action
+    check_file_and_umount_disk "${disk1}" ${dir} ${file}
+    ntfscp /dev/"${disk1}" ${file} ${file} --no-action
     CHECK_RESULT $? 0 0 "Check ntfscp --no-action failed."
-    ntfscp /dev/${disk1} ${file} ${file} --force
+    ntfscp /dev/"${disk1}" ${file} ${file} --force
     CHECK_RESULT $? 0 0 "Check ntfscp --force failed."
-    check_file_and_umount_disk ${disk1} ${dir} ${file}
-    ntfscp /dev/${disk1} ${file} ${file} --quiet
+    check_file_and_umount_disk "${disk1}" ${dir} ${file}
+    ntfscp /dev/"${disk1}" ${file} ${file} --quiet
     CHECK_RESULT $? 0 0 "Check ntfscp --quiet failed."
-    check_file_and_umount_disk ${disk1} ${dir} ${file}
-    ntfscp /dev/${disk1} ${file} ${file} --verbose
+    check_file_and_umount_disk "${disk1}" ${dir} ${file}
+    ntfscp /dev/"${disk1}" ${file} ${file} --verbose
     CHECK_RESULT $? 0 0 "Check ntfscp --verbose failed."
-    check_file_and_umount_disk ${disk1} ${dir} ${file}
+    check_file_and_umount_disk "${disk1}" ${dir} ${file}
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
+    clear_env
     rm -rf ${dir} ${file}
-    DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

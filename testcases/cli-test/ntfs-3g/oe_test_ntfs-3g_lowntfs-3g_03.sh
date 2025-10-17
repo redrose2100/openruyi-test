@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of lowntfs-3g command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -28,72 +28,72 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    lowntfs-3g /dev/${disk1} /mnt/windows -o hide_dot_files
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o hide_dot_files
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o hide_dot_files failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o windows_names
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o windows_names
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o windows_names failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o allow_other
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o allow_other
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o allow_other failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o max_read=1000
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o max_read=1000
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o max_read failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o silent
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o silent
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o silent failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o no_def_opts
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o no_def_opts
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o no_def_opts failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o streams_interface=none
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o streams_interface=none
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o streams_interface failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o user_xattr
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o user_xattr
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o user_xattr failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o efs_raw
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o efs_raw
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o efs_raw failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o compression
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o compression
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o compression failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o nocompression
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o nocompression
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o nocompression failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o big_writes
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o big_writes
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o big_writes failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o debug
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o debug
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o debug failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
     umount /mnt/windows
-    lowntfs-3g /dev/${disk1} /mnt/windows -o ignore_case
+    lowntfs-3g /dev/"${disk1}" /mnt/windows -o ignore_case
     CHECK_RESULT $? 0 0 "Check lowntfs-3g -o ignore_case failed."
     df -h | grep "/dev/${disk1}"
     CHECK_RESULT $? 0 0 "Check disk mount failed."
@@ -103,14 +103,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    rm -rf /mnt/windows
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

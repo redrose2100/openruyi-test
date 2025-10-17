@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfsclone command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -31,21 +31,21 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfsclone --help failed."
     ntfsclone --version 2>&1 | grep "ntfsclone v"
     CHECK_RESULT $? 0 0 "Check ntfsclone --version failed."
-    ntfsclone --output test.txt /dev/${disk1} 2>&1 | grep "Syncing"
+    ntfsclone --output test.txt /dev/"${disk1}" 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --output failed."
-    ntfsclone --overwrite /dev/${disk1} /dev/${disk2} 2>&1 | grep "Syncing"
+    ntfsclone --overwrite /dev/"${disk1}" /dev/"${disk2}" 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --overwrite failed."
-    ntfsclone --save-image --output backup.img /dev/${disk1} 2>&1 | grep "Syncing"
+    ntfsclone --save-image --output backup.img /dev/"${disk1}" 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --save-image failed."
-    ntfsclone --restore-image --overwrite /dev/${disk1} backup.img 2>&1 | grep "Syncing"
+    ntfsclone --restore-image --overwrite /dev/"${disk1}" backup.img 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --restore-image failed."
-    ntfsclone --metadata --output ntfsmeta.img /dev/${disk1} 2>&1 | grep "Syncing"
+    ntfsclone --metadata --output ntfsmeta.img /dev/"${disk1}" 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --metadata failed."
-    ntfsclone --overwrite /dev/${disk1} /dev/${disk2} --rescue 2>&1 | grep "Syncing"
+    ntfsclone --overwrite /dev/"${disk1}" /dev/"${disk2}" --rescue 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --rescue failed."
     ntfsclone --restore-image backup.img --no-action 2>&1 | grep "completed"
     CHECK_RESULT $? 0 0 "Check ntfsclone --no-action failed."
-    ntfsclone --metadata --overwrite ntfsmeta.img /dev/${disk1} --ignore-fs-check 2>&1 | grep "Syncing"
+    ntfsclone --metadata --overwrite ntfsmeta.img /dev/"${disk1}" --ignore-fs-check 2>&1 | grep "Syncing"
     CHECK_RESULT $? 0 0 "Check ntfsclone --ignore-fs-check failed."
     LOG_INFO "End of the test."
 }
@@ -53,18 +53,13 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    expect <<EOF
     spawn mkfs.ext4 /dev/${disk2}
     send "y\n"
     expect eof
 EOF
+    clear_env
     rm -rf test.txt backup.img ntfsmeta.img
-    DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"

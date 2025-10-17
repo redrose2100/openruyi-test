@@ -22,8 +22,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function get_disk() {
     disks=$(TEST_DISK "$@")
     read -r -a disk_list <<< "$(echo "$disks" | tr ' ' '\n' | grep -v '^nbd' | tr '\n' ' ')"
-    disk1=${disk_list[0]}
-    disk2=${disk_list[1]}
+    disk_name1=${disk_list[0]}
+    disk_name2=${disk_list[1]}
+    echo -e 'n\np\n1\n\n\nw' | fdisk /dev/"${disk_name1}"
+    echo -e 'n\np\n1\n\n\nw' | fdisk /dev/"${disk_name2}"
+    disk1=${disk_name1}1
+    disk2=${disk_name2}1
     DNF_INSTALL ntfs-3g
     mkntfs --fast /dev/"${disk1}"
     mkntfs --fast /dev/"${disk2}"
@@ -38,4 +42,16 @@ function check_file_and_umount_disk() {
     CHECK_RESULT $? 0 0 "Check file failed."
     rm -rf "${dir:?}/${file:?}"
     umount "${dir}"
+}
+
+function clear_env() {
+    expect <<EOF
+    spawn mkfs.ext4 /dev/${disk1}
+    send "y\n"
+    expect eof
+EOF
+    rm -rf /mnt/windows
+    echo -e "d\n\nw\n" | fdisk /dev/"${disk_name1}"
+    echo -e "d\n\nw\n" | fdisk /dev/"${disk_name2}"
+    DNF_REMOVE "$@"
 }

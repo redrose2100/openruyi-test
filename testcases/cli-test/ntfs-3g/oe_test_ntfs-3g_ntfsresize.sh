@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of ntfsresize command
 # ############################################
-
+# shellcheck disable=SC1091,SC2154
 source "common/common_lib.sh"
 
 function pre_test() {
@@ -31,11 +31,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check ntfsresize --help failed."
     ntfsresize --version 2>&1 | grep "ntfsresize v"
     CHECK_RESULT $? 0 0 "Check ntfsresize --version failed."
-    ntfsresize --check /dev/${disk1} | grep "ntfsresize"
+    ntfsresize --check /dev/"${disk1}" | grep "ntfsresize"
     CHECK_RESULT $? 0 0 "Check ntfsresize --check failed."
-    ntfsresize --info /dev/${disk1} | grep "Device name"
+    ntfsresize --info /dev/"${disk1}" | grep "Device name"
     CHECK_RESULT $? 0 0 "Check ntfsresize --info failed."
-    ntfsresize --info-mb-only /dev/${disk1} | grep "Minsize"
+    ntfsresize --info-mb-only /dev/"${disk1}" | grep "Minsize"
     CHECK_RESULT $? 0 0 "Check ntfsresize --info-mb-only failed."
     expect <<EOF
     spawn ntfsresize --size 5G /dev/${disk1}
@@ -44,9 +44,9 @@ function run_test() {
     expect eof
 EOF
     CHECK_RESULT $? 0 0 "Check ntfsresize --size failed."
-    ntfsresize --expand /dev/${disk1} | grep "ntfsresize"
+    ntfsresize --expand /dev/"${disk1}" | grep "ntfsresize"
     CHECK_RESULT $? 0 0 "Check ntfsresize --expand failed."
-    ntfsresize --no-action /dev/${disk1} --force | grep "Device name"
+    ntfsresize --no-action /dev/"${disk1}" --force | grep "Device name"
     CHECK_RESULT $? 0 0 "Check ntfsresize --no-action failed."
     expect <<EOF
     spawn ntfsresize --bad-sectors /dev/${disk1} --force
@@ -55,22 +55,17 @@ EOF
     expect eof
 EOF
     CHECK_RESULT $? 0 0 "Check ntfsresize --bad-sectors failed."
-    ntfsresize --no-progress-bar /dev/${disk1} --force | grep "Device name"
+    ntfsresize --no-progress-bar /dev/"${disk1}" --force | grep "Device name"
     CHECK_RESULT $? 0 0 "Check ntfsresize --no-progress-bar failed."
-    ntfsresize --verbose /dev/${disk1} --force | grep "Device name"
+    ntfsresize --verbose /dev/"${disk1}" --force | grep "Device name"
     CHECK_RESULT $? 0 0 "Check ntfsresize --verbose failed."
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    expect <<EOF
-    spawn mkfs.ext4 /dev/${disk1}
-    send "y\n"
-    expect eof
-EOF
-    DNF_REMOVE
+    clear_env
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
