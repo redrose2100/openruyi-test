@@ -49,6 +49,12 @@ function run_test() {
     docker exec -it "${sysmaster_docker_id}" sctl restart sshd.service
     CHECK_RESULT $? 0 0 "sctl restart sshd.service failed"
 
+    docker stop "${sysmaster_docker_id}"
+    CHECK_RESULT $? 0 0 "docker stop failed"
+
+    docker rm "${sysmaster_docker_id}"
+    CHECK_RESULT $? 0 0 "docker rm failed"
+
     LOG_INFO "End to run test."
 }
 
