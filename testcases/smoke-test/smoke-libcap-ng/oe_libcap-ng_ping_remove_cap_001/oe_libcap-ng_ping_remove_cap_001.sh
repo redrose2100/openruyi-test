@@ -49,7 +49,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check filecap failed"
 
     #切换user用户执行ping命令
-    su - "$testuser" -c "ping -c1 localhost" | grep "1 packets transmitted*"
+    su - "$testuser" -c "ping -c1 localhost" | grep -E "1 packets transmitted*\|已发送 1 个包"
     CHECK_RESULT $? 0 0 "Check 1 packets transmitted failed"
 }
 
