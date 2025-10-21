@@ -29,6 +29,7 @@ export LANG=en_US.UTF-8
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     EXECUTE_T="720m"
+    cp /etc/yum.repos.d/openEuler.repo /tmp/openEuler.repo.bak
     rm -rf /home/{pkg_manager_folder,src,src_epol} /root/rpmbuild
     yum clean all
     # clean the dos \r ending.
@@ -46,6 +47,7 @@ function run_test() {
     cfg_openEuler_update_test_repo
     CHECK_RESULT $? 0 0 "Failed to configure the repo source !"
     # Get the package lists
+    yum makecache
     get_related_lists
     SSH_CMD "rm -rf /etc/yum.repos.d/* " "${NODE2_IPV4}"
     SSH_SCP /etc/yum.repos.d "${NODE2_USER}"@"${NODE2_IPV4}":/etc/ "${NODE2_PASSWORD}" 22
@@ -93,15 +95,14 @@ function run_test() {
     CHECK_RESULT $? 1 0 "EPOL packages install error !"
     test -s /home/pkg_manager_folder/ko_fail_list
     CHECK_RESULT $? 1 0 "Check ko insmod fail !"
-    SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 600 22
-    SLEEP_WAIT 600
+    REMOTE_REBOOT 2 120
     # Remove packages
     uninstall_pkg
     test -s /home/pkg_manager_folder/remove_fail_list
     CHECK_RESULT $? 1 0 "Remove packages error !"
     test -s /home/pkg_manager_folder/EPOL_remove_fail_list
     CHECK_RESULT $? 1 0 "Remove epol packages error !"
-    SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 600 22
+    REMOTE_REBOOT 2 120
     LOG_INFO "End to run test."
 }
 
@@ -109,6 +110,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=$Default_LANG
+    rm -rf /etc/yum.repos.d/*
+    mv /tmp/openEuler.repo.bak /etc/yum.repos.d/openEuler.repo
     LOG_INFO "End to restore the test environment."
 }
 

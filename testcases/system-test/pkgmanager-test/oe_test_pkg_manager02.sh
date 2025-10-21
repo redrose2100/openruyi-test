@@ -29,6 +29,7 @@ export LANG=en_US.UTF-8
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     EXECUTE_T="720m"
+    cp /etc/yum.repos.d/openEuler.repo /tmp/openEuler.repo.bak
     rm -rf /home/{pkg_manager_folder,src,src_epol} /root/rpmbuild
     sed -i 's/\r$//' ./common/escape.pkg
     yum clean all
@@ -54,6 +55,7 @@ function run_test() {
 
     CHECK_RESULT $? 0 0 "Failed to configure the repo source !"
     # Get the package lists
+    yum makecache
     get_related_lists
     SSH_CMD "rm -rf /etc/yum.repos.d/* " "${NODE2_IPV4}"
     SSH_SCP /etc/yum.repos.d "${NODE2_USER}"@"${NODE2_IPV4}":/etc/ "${NODE2_PASSWORD}" 22
@@ -66,8 +68,7 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Packages upgrade error !"
     test -s /home/pkg_manager_folder/EPOL_upgrade_fail_list
     CHECK_RESULT $? 1 0 "EPOL packages upgrade error !"
-    SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 600 22
-    SLEEP_WAIT 120
+    REMOTE_REBOOT 2 120
     # Downgrade packages
     downgrade_test_pkg
     test -s /home/pkg_manager_folder/downgrade_fail_list
@@ -80,13 +81,15 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Remove packages error !"
     test -s /home/pkg_manager_folder/EPOL_remove_fail_list
     CHECK_RESULT $? 1 0 "Remove epol packages error !"
-    SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 600 22
+    REMOTE_REBOOT 2 120
     LOG_INFO "End to run test."
 }
 
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    rm -rf /etc/yum.repos.d/*
+    mv /tmp/openEuler.repo.bak /etc/yum.repos.d/openEuler.repo
     export LANG=$Default_LANG
     LOG_INFO "End to restore the test environment."
 }

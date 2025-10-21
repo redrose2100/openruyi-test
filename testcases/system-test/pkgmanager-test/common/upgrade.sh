@@ -38,7 +38,7 @@ upgrade_test_pkg() {
     fi
     yum clean all
     # Install last version
-    while read -r pkg; do
+    test -s update_list && while read -r pkg; do
         grep -Pq "^${pkg}$" escape.pkg
         if [ $? -ne 0 ]; then
             yum install -y "$pkg" >>install_log 2>&1
@@ -57,7 +57,7 @@ upgrade_test_pkg() {
     else
         mv /etc/yum.repos.d/"${target_ver}".repo.bak /etc/yum.repos.d/"${target_ver}".repo
     fi
-    while read -r pkg; do
+    test -s update_list && while read -r pkg; do
         grep -Pq "^${pkg}$" escape.pkg
         if [ $? -eq 0 ]; then
             echo "${pkg} Escape error !!!" >"${pkg}"_upgrade_log
@@ -81,7 +81,7 @@ upgrade_test_pkg() {
         fi
         
     done <EPOL_update_list
-    while read -r pkg; do
+    test -s update_list && while read -r pkg; do
         grep -Pq "^${pkg}$" escape.pkg
         if [ $? -ne 0 ]; then
             yum upgrade -y "${pkg}" >"${pkg}"_EPOL_upgrade_log2 2>&1
