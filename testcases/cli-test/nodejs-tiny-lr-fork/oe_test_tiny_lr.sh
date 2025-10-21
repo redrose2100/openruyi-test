@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test tiny-lr
 # #############################################
+# shellcheck disable=SC1090,SC2009
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -53,7 +54,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
     rm -f -- *.info *.pid
-    pgrep -f tiny-lr | grep -v nodejs-tiny-lr-fork | xargs -r kill -9
+    ps aux | grep "tiny-lr" | grep -v "nodejs-tiny-lr-fork" | grep -v grep | awk '{print $2}' | xargs -r kill -9
     LOG_INFO "End to restore the test environment."
 }
 
