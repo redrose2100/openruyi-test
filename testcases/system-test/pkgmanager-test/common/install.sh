@@ -27,7 +27,7 @@ install_test_pkg() {
     cd /home/pkg_manager_folder || exit
     # dnf config-manager --disable "${openeulerversion}_source_${test_update_repo}"
     # test -s EPOL_update_list && dnf config-manager --disable "${openeulerversion}_EPOL_source_${test_EPOL_update_repo}"
-    while read -r pkg; do
+    test -s update_list && while read -r pkg; do
         grep -Pq "^${pkg}$" escape.pkg
         if [ $? -eq 0 ]; then
             # escape pkg default error
@@ -52,9 +52,9 @@ install_test_pkg() {
         fi
     done <EPOL_update_list
 
-    rpm -ql "$(cat update_list)" | grep "\.ko$" | grep -vE "TUTORIAL|gtkrc|mc.hint|README|tutor|kernel" >ko.list
+    test -s update_list && rpm -ql "$(cat update_list)" | grep "\.ko$" | grep -vE "TUTORIAL|gtkrc|mc.hint|README|tutor|kernel" >ko.list
     test -s EPOL_update_list && rpm -ql "$(cat EPOL_update_list)" | grep "\.ko$" | grep -vE "TUTORIAL|gtkrc|mc.hint|README|tutor" >>ko.list
-    while read -r ko_file; do
+    test -s ko.list && while read -r ko_file; do
         mod=$(echo "${ko_file}" | awk -F/ '{print $NF}' | awk -F '.ko' '{print $1}')
         modprobe "${mod}"
         if lsmod | grep -w "${mod}"; then

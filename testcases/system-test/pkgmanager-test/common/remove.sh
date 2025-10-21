@@ -23,10 +23,10 @@ export LANG=en_US.UTF-8
 
 
 function uninstall_pkg() {
-    while read -r pkg; do
+    test -s update_list && while read -r pkg; do
         grep "^${pkg}$" anaconda_list || echo "${pkg}" >>removeList
     done <update_list
-    while read -r pkg; do
+    test -s removeList && while read -r pkg; do
         grep -Pq "^${pkg}$" escape.pkg
         if [ $? -eq 0 ]; then
             echo "${pkg} Escape error !!!" >"${pkg}"_remove_log
