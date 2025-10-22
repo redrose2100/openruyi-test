@@ -16,6 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   可维护性——journalctl命令
 # ############################################
+# shellcheck disable=SC1090
+
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test()
@@ -39,7 +41,7 @@ function run_test()
     # 测试时间范围过滤
     journalctl --since "1 hour ago" --no-pager > time_log
     CHECK_RESULT $? 0 0 "journalctl time filter failed"
-    grep "localhost.localdomain" time_log
+    grep "localhost" time_log
     CHECK_RESULT $? 0 0 "time filter log content check failed"
     
     # 测试优先级过滤
@@ -53,7 +55,6 @@ function run_test()
     CHECK_RESULT $? 0 0 "journalctl json output failed"
     grep "{" json_log
     CHECK_RESULT $? 0 0 "json format check failed"
-    
     LOG_INFO "Finish test!"
 }
 

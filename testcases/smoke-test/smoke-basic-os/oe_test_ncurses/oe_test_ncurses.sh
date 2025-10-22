@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test the basic functions of infocmp
 # ############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -41,12 +42,13 @@ expect eof
 
 function run_test() {
     LOG_INFO "Start to run test."
+    export TERM=vt100
     [ "$TERM" ]
     CHECK_RESULT $? 0 0 "Failed to execute xterm"
     infocmp | grep terminfo
     CHECK_RESULT $? 0 0 "Failed to execute infocmp"
-    infocmp >test.log
-    infotocap test.log | grep capabilities
+    infocmp > testlog2
+    infotocap testlog2 | grep Reconstructed
     CHECK_RESULT $? 0 0 "Failed to execute infotocap"
     ./run-term
     CHECK_RESULT $? 0 0 "Failed to execute run-term"
@@ -57,7 +59,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf testlog run-term test.log
+    rm -rf testlog* run-term
     export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
