@@ -31,8 +31,9 @@ function pre_test() {
     chown -R mysql:mysql /data
     chown -R mysql:mysql /var/log/mariadb/
     cd - || exit
-    DNF_INSTALL mariadb-server
     rm -rf /var/lib/mysql/*
+    DNF_INSTALL mariadb-server
+    SLEEP_WAIT 3
     systemctl start mariadb
     mysqladmin -uroot password "${NODE1_PASSWORD}"
     LOG_INFO "Environmental preparation is over."
@@ -43,7 +44,7 @@ function run_test() {
     expect -c "
     set timeout 10
     log_file testlog
-    spawn mysql -u root -p 
+    spawn mysql -u root -p
     expect {
         \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
         expect \"Maria*\" { send \"CREATE DATABASE db1;\r\"}
@@ -59,13 +60,13 @@ function run_test() {
 }
 }
 expect eof
-"
+    "
     grep '\|'  testlog | grep "Database" -A 5 | grep -cwE 'db1|db2|db3'
     CHECK_RESULT $?
     expect -c "
     set timeout 10
     log_file testlog1
-    spawn mysql -u root -p 
+    spawn mysql -u root -p
     expect {
         \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
         expect \"Maria*\" { send \"grant all privileges on *.* to 'root'@'$NODE1_IPV4' IDENTIFIED BY '$NODE1_PASSWORD' WITH GRANT OPTION;\r\"}
@@ -74,7 +75,7 @@ expect eof
 }
 }
 expect eof
-"
+    "
     grep -iE "error|fail" testlog1
     CHECK_RESULT $? 1
     mysqldump -uroot -p"${NODE1_PASSWORD}" --all-databases >alldb.sql
@@ -87,35 +88,35 @@ expect eof
     CHECK_RESULT $?
     grep "CREATE DATABASE .* $(db3)" alldb.sql
     CHECK_RESULT $?
-
+    
     mysqldump -uroot -p"${NODE1_PASSWORD}" --databases db1 >db1.sql
     grep "CREATE TABLE $(tb1)" db1.sql
     CHECK_RESULT $?
     grep "CREATE DATABASE .* $(db1)" db1.sql
     CHECK_RESULT $?
-
+    
     mysqldump -uroot -p"${NODE1_PASSWORD}" db1 tb1 >db1tb1.sql
     CHECK_RESULT $?
     grep "CREATE TABLE $(tb1)" db1tb1.sql
     CHECK_RESULT $?
-
+    
     rm -rf db1.sql
     mysqldump -uroot -p"${NODE1_PASSWORD}" -d db1 >db1.sql
     grep "CREATE TABLE $(tb1)" db1.sql
     CHECK_RESULT $?
-
+    
     rm -rf db1.sql
     mysqldump -uroot -p"${NODE1_PASSWORD}" -t db1 >db1.sql
     CHECK_RESULT $?
     grep "INSERT INTO $(tb1)" db1.sql
     CHECK_RESULT $?
-
+    
     mysql -uroot -p"${NODE1_PASSWORD}" -t db3 <db1.sql
     CHECK_RESULT $?
     expect -c "
     log_file testlogm
     set timeout 10
-    spawn mysql -u root -p 
+    spawn mysql -u root -p
     expect {
         \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
         expect \"Maria*\" { send \"use db3;\r\"}
@@ -124,7 +125,7 @@ expect eof
 }
 }
 expect
-"
+    "
     grep "tb1" testlogm
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
@@ -134,7 +135,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     expect -c "
     set timeout 10
-    spawn mysql -u root -p 
+    spawn mysql -u root -p
     expect {
         \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
         expect \"Maria*\" { send \"DROP DATABASE db1;\r\"}
@@ -144,12 +145,12 @@ function post_test() {
 }
 }
 expect eof
-"
+    "
     setenforce 1
     DNF_REMOVE "$@"
-    userdel -r mysql
+    userdel -rf mysql
     groupdel mysql
-    rm -rf db1.sql db1tb1.sql alldb.sql data tmp run testlog*
+    rm -rf db1.sql db1tb1.sql alldb.sql data tmp run log testlog*
     LOG_INFO "Finish environment cleanup."
 }
 

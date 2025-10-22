@@ -21,6 +21,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL lshw
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -30,7 +32,7 @@ function run_test() {
     CHECK_RESULT $?
     if [ "$NODE1_FRAME"x == "ppc64le"x ]; then
         lscpu | grep -i 'Model'
-    elif [ "$NODE1_FRAME"x == "riscv64"x ]; then
+        elif [ "$NODE1_FRAME"x == "riscv64"x ]; then
         lscpu | grep "Architecture"
     else
         lscpu | grep "Vendor ID"
@@ -45,10 +47,10 @@ function run_test() {
     if [ "${NODE1_FRAME}"x == "aarch64"x ]; then
         grep "0x48" /proc/cpuinfo
         CHECK_RESULT $?
-    elif [ "$NODE1_FRAME"x == "ppc64le"x ]; then
+        elif [ "$NODE1_FRAME"x == "ppc64le"x ]; then
         grep "$(lscpu |grep  'Model name' |awk -F ':' '{print $NF}' |sed 's/^[[:space:]]*//; s/[[:space:]]*$//')" /proc/cpuinfo
         CHECK_RESULT $?
-    elif [ "$NODE1_FRAME"x == "riscv64"x ]; then
+        elif [ "$NODE1_FRAME"x == "riscv64"x ]; then
         grep "isa" /proc/cpuinfo
         CHECK_RESULT $?
     else
@@ -61,6 +63,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE "$@"
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 

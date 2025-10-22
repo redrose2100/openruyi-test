@@ -16,9 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Password setting - password empty
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     grep -w testuser /etc/passwd && userdel -r testuser
     grep -w testuser /etc/group && groupdel -r testuser
     LOG_INFO "Environmental preparation is over."
@@ -36,7 +38,7 @@ function run_test() {
     }
     }
     expect eof
-"
+    "
     grep -iE "No password supplied|No password has been supplied" testlog
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
@@ -46,7 +48,8 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -r testuser
     rm -rf testlog
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

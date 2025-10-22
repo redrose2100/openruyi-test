@@ -21,7 +21,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     systemctl stop firewalld
     systemctl disable firewalld
-
+    
     setenforce 0
     groupadd mysql
     useradd -g mysql mysql
@@ -33,10 +33,10 @@ function pre_test() {
     chown -R mysql:mysql /data
     chown -R mysql:mysql /var/log/mariadb/
     cd - || exit
-    DNF_INSTALL mariadb-server
-    CHECK_RESULT $?
     rm -rf /var/lib/mysql/*
+    DNF_INSTALL mariadb-server
     systemctl start mariadb
+    SLEEP_WAIT 3
     mysqladmin -uroot password "${NODE1_PASSWORD}"
     LOG_INFO "Environmental preparation is over."
 }
@@ -46,7 +46,7 @@ function run_test() {
     expect -c "
     set timeout 10
     log_file testlog
-    spawn mysql -u root -p 
+    spawn mysql -u root -p
     expect {
         \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
         expect \"Maria*\" { send \"CREATE DATABASE databaseexample;\r\"}
@@ -58,7 +58,7 @@ function run_test() {
 }
 }
 expect eof
-"
+    "
     grep -v changed testlog | grep -w "Database" -A 5 | grep -w databaseexample
     CHECK_RESULT $?
     grep "USE databaseexample" -A 2 testlog | grep "Database changed"
@@ -71,9 +71,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     setenforce 1
     DNF_REMOVE "$@"
-    userdel -r mysql
+    userdel -rf mysql
     groupdel mysql
-    rm -rf testlog
+    rm -rf testlog data tmp run log
     LOG_INFO "Finish environment cleanup."
 }
 

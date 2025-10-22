@@ -16,19 +16,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Nmcli configure dynamic IP connection
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function config_params() {
     LOG_INFO "Start loading data!"
     con_name='test_con'
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     LOG_INFO "Loading data is complete!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    nmcli connection add type ethernet con-name ${con_name} ifname ${NODE1_NIC} | grep successfully
+    nmcli connection add type ethernet con-name "${con_name}" ifname "${NODE1_NIC}" | grep successfully
     CHECK_RESULT $?
-
-    nmcli con up ${con_name}
+    
+    nmcli con up "${con_name}"
     CHECK_RESULT $?
     nmcli device status | grep "${con_name}" | grep "connected"
     CHECK_RESULT $?
@@ -37,8 +39,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    nmcli con delete ${con_name}
+    nmcli con delete "${con_name}"
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
