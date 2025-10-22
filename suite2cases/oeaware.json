@@ -215,6 +215,42 @@
             "machine type": "physical"
         },
         {
+            "name": "oe_test_oeAware_60",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_oeAware_61",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_oeAware_62",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_oeAware_63",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_oeAware_64",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_oeAware_65",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_oeAware_66",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_oeAware_68",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_oeAware_69",
+            "machine type": "physical"
+        },
+        {
             "name": "oe_test_oeAware_100",
             "machine type": "physical"
         },
