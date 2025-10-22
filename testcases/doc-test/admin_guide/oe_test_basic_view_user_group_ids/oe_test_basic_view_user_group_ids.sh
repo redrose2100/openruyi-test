@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   View user and group id
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function config_params() {
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     id_num=$(id | grep -iE 'uid|gid' | awk -F "=" '{print$2}' | awk -F '(' '{print$1}')
     LOG_INFO "Loading data is complete!"
 }
@@ -25,13 +27,19 @@ function run_test() {
     LOG_INFO "Start executing testcase!"
     id | grep "uid"
     CHECK_RESULT $?
-    id -g | grep ${id_num}
+    id -g | grep "${id_num}"
     CHECK_RESULT $?
-    id -G | grep ${id_num}
+    id -G | grep "${id_num}"
     CHECK_RESULT $?
     id --help | grep "Usage:"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
-main $@
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    export LANG=${OLD_LANG}
+    LOG_INFO "Finish environment cleanup."
+}
+
+main "$@"

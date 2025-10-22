@@ -22,6 +22,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start loading data!"
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     test_eth1=$(ls /sys/class/net/ | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | grep -v "$(ip route | grep -v dhcp | grep "${NODE1_IPV4}" | awk '{print$3}')" | sed -n 1p)
     test_eth2=$(ls /sys/class/net/ | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | grep -v "$(ip route | grep -v dhcp | grep "${NODE1_IPV4}" | awk '{print$3}')" | sed -n 2p)
     LOG_INFO "Loading data is complete!"
@@ -43,6 +45,8 @@ function run_test() {
     CHECK_RESULT $?
     modprobe --help
     CHECK_RESULT $?
+    systemctl status NetworkManager
+    nmcli connection show
     ifdown "${test_eth1}"
     ifdown "${test_eth2}"
     cp -r ifcfg-bond0 /etc/sysconfig/network-scripts/
@@ -51,6 +55,7 @@ function run_test() {
     sed -i "s/test_eth1/${test_eth1}/g" /etc/sysconfig/network-scripts/ifcfg-bond0-slave-port1
     sed -i "s/test_eth2/${test_eth2}/g" /etc/sysconfig/network-scripts/ifcfg-bond0-slave-port2
     CHECK_RESULT $?
+    SLEEP_WAIT 3
     ifup "${test_eth1}" | grep successfully
     CHECK_RESULT $?
     ifup "${test_eth2}" | grep successfully
@@ -74,6 +79,7 @@ function post_test() {
     nmcli con delete bond0-slave-port2
     nmcli con delete "${test_eth1}"
     nmcli con delete "${test_eth2}"
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup."
 }
 

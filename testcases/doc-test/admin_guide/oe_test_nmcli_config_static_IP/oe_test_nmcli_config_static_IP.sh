@@ -16,38 +16,41 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Nmcli configure static IP connection
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function config_params() {
     LOG_INFO "Start loading data!"
     con_name='test_con'
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     LOG_INFO "Loading data is complete!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    nmcli connection add type ethernet con-name ${con_name} ifname ${NODE1_NIC} ip4 192.0.2.100/24 gw4 192.0.2.1 ip6 2001:db8::100/64 gw6 2001:db8::1 | grep successfully
+    nmcli connection add type ethernet con-name "${con_name}" ifname "${NODE1_NIC}" ip4 192.0.2.100/24 gw4 192.0.2.1 ip6 2001:db8::100/64 gw6 2001:db8::1 | grep successfully
     CHECK_RESULT $?
-    nmcli con mod ${con_name} ipv4.dns "192.0.2.253 192.0.2.252"
+    nmcli con mod "${con_name}" ipv4.dns "192.0.2.253 192.0.2.252"
     CHECK_RESULT $?
-    nmcli con show ${con_name} | grep "ipv4.dns" | grep "192.0.2.253,192.0.2.252"
+    nmcli con show "${con_name}" | grep "ipv4.dns" | grep "192.0.2.253,192.0.2.252"
     CHECK_RESULT $?
-    nmcli con mod ${con_name} ipv6.dns "2001:db8::fffc 2001:db8::fffd"
+    nmcli con mod "${con_name}" ipv6.dns "2001:db8::fffc 2001:db8::fffd"
     CHECK_RESULT $?
-    nmcli con show ${con_name} | grep "ipv6.dns" | grep "2001:db8::fffc,2001:db8::fffd"
+    nmcli con show "${con_name}" | grep "ipv6.dns" | grep "2001:db8::fffc,2001:db8::fffd"
     CHECK_RESULT $?
-    nmcli con up ${con_name} ifname ${NODE1_NIC}
+    nmcli con up "${con_name}" ifname "${NODE1_NIC}"
     CHECK_RESULT $?
     nmcli device status | grep "${con_name}" | grep "connected"
     CHECK_RESULT $?
-    nmcli -p con show ${con_name} | grep "Connection profile details"
+    nmcli -p con show "${con_name}" | grep "Connection profile details"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    nmcli con delete ${con_name}
+    nmcli con delete "${con_name}"
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

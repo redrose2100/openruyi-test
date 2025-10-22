@@ -21,26 +21,27 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     systemctl stop firewalld
     systemctl disable firewalld
-
+    
     setenforce 0
     groupadd mysql
     useradd -g mysql mysql
     echo "${NODE1_PASSWORD}" | passwd --stdin mysql
-
+    
     test -d /data/mariadb || mkdir -p /data/mariadb
     cd /data/mariadb || exit
     mkdir data tmp run log
     chown -R mysql:mysql /data
     chown -R mysql:mysql /var/log/mariadb/
     cd - || exit
-    DNF_INSTALL mariadb-server
     rm -rf /var/lib/mysql/*
+    DNF_INSTALL mariadb-server
     systemctl start mariadb
+    SLEEP_WAIT 3
     mysqladmin -uroot password "${NODE1_PASSWORD}"
     expect -c "
     set timeout 10
     log_file testlog
-    spawn mysql -u root -p 
+    spawn mysql -u root -p
     expect {
         \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
         expect \"Maria*\" { send \"CREATE USER 'userexample'@'localhost' IDENTIFIED BY '123456';\r\"}
@@ -49,7 +50,7 @@ function pre_test() {
 }
 }
 expect eof
-"
+    "
     grep "SELECT USER" -A 10 testlog | grep -w userexample | grep localhost
     rm -rf testlog
     LOG_INFO "Environmental preparation is over."
@@ -60,7 +61,7 @@ function run_test() {
     expect -c "
     set timeout 10
     log_file testlog
-    spawn mysql -u root -p 
+    spawn mysql -u root -p
     expect {
         \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
         expect \"Maria*\" { send \"GRANT SELECT,INSERT ON *.* TO 'userexample'@'localhost';\r\"}
@@ -69,14 +70,14 @@ function run_test() {
 }
 }
 expect eof
-"
+    "
     grep "SHOW GRANTS FOR" -A 10 testlog | grep -w userexample | grep localhost | grep SELECT | grep INSERT
     CHECK_RESULT $?
     rm -rf testlog
     expect -c "
     set timeout 10
     log_file testlog
-    spawn mysql -u root -p 
+    spawn mysql -u root -p
     expect {
         \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
 	    expect \"Maria*\" { send \"REVOKE INSERT ON *.* FROM 'userexample'@'localhost';\r\"}
@@ -85,7 +86,7 @@ expect eof
 }
 }
 expect eof
-"
+    "
     CHECK_RESULT $?
     grep "SHOW GRANTS FOR" -A 10 testlog | grep -w userexample | grep localhost | grep SELECT
     CHECK_RESULT $?
@@ -98,7 +99,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     expect -c "
     set timeout 10
-    spawn mysql -u root -p 
+    spawn mysql -u root -p
     expect {
         \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
         expect \"Maria*\" { send \"DROP USER 'userexample'@'localhost';\r\"}
@@ -106,12 +107,12 @@ function post_test() {
 }
 }
 expect eof
-"
+    "
     setenforce 1
     DNF_REMOVE "$@"
-    userdel -r mysql
+    userdel -rf mysql
     groupdel mysql
-    rm -rf testlog
+    rm -rf testlog data tmp run log
     LOG_INFO "Finish environment cleanup."
 }
 

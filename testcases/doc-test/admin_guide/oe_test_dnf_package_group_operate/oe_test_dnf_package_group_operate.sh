@@ -16,7 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Package group operations
 # #############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to config params of the case."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    LOG_INFO "End to config params of the case."
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase."
     dnf group install -y "Development Tools" --nobest
@@ -32,4 +40,10 @@ function run_test() {
     LOG_INFO "End of testcase execution."
 }
 
-main $@
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    export LANG=${OLD_LANG}
+    LOG_INFO "Finish environment cleanup."
+}
+
+main "$@"
