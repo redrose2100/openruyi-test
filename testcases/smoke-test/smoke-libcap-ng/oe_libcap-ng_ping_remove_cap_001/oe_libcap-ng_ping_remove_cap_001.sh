@@ -18,6 +18,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   ping命令移除capabilities，普通用户执行ping
 # ############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 testuser=user"$RANDOM"
@@ -25,7 +26,7 @@ path=/usr/bin/ping
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    which filecap || DNF_INSTALL "libcap-ng libcap-ng-utils"
+    filecap || DNF_INSTALL "libcap-ng libcap-ng-utils"
     useradd "$testuser"
     grep "$testuser" /etc/shadow
     CHECK_RESULT $? 0 0 "Check testuser failed"
@@ -49,7 +50,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check filecap failed"
 
     #切换user用户执行ping命令
-    su - "$testuser" -c "ping -c1 localhost" | grep "1 packets transmitted*"
+    su - "$testuser" -c "ping -c1 localhost" | grep -E "1 packets transmitted|已发送 1 个包"
     CHECK_RESULT $? 0 0 "Check 1 packets transmitted failed"
 }
 
