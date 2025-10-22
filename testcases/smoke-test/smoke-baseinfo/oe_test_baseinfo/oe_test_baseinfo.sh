@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Basic information of test system
 # ############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -51,7 +52,7 @@ function run_test() {
         CHECK_RESULT $? 0 0 "The time zone isn't Tokyo"
         timedatectl set-timezone "$old_zone"
         CHECK_RESULT $? 0 0 "Failed to recover time zone"
-        localectl status | grep -i "us"
+        localectl status | grep -i "System Locale"
         CHECK_RESULT $? 0 0 "The system language does not belong to us"
         localectl list-locales | grep zh
         CHECK_RESULT $? 0 0 "The system language does not contain Chinese"
