@@ -19,12 +19,14 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start prepare the test environment!"
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     time="$(date "+%Y-%m-%d %H:%M:%S")"
     year="$(echo "${time}" | awk '{print$1}' | cut -d "-" -f1)"
     LOG_INFO "End of prepare the test environment!"
 }
 function run_test() {
-    LOG_INFO "Start executing testcase!" 
+    LOG_INFO "Start executing testcase!"
     date | grep "${year}"
     CHECK_RESULT $?
     date01=$(date | awk -F ' ' '{print $1,$2,$3}')
@@ -45,6 +47,12 @@ function run_test() {
     hwclock -w
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    export LANG=${OLD_LANG}
+    LOG_INFO "Finish environment cleanup."
 }
 
 main "$@"

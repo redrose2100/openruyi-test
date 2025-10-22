@@ -21,15 +21,15 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     systemctl stop firewalld
     systemctl disable firewalld
-
+    
     setenforce 0
     groupadd mysql
     useradd -g mysql mysql
     echo "${NODE1_PASSWORD}" | passwd --stdin mysql
-
+    
     test -d /data && rm -rf /data
     mkdir /data
-
+    
     test -d /data/mariadb || mkdir -p /data/mariadb
     cd /data/mariadb || exit
     mkdir data tmp run log
@@ -45,6 +45,7 @@ function run_test() {
     DNF_INSTALL mariadb-server
     CHECK_RESULT $?
     systemctl start mariadb
+    SLEEP_WAIT 3
     mysqladmin -uroot password "${NODE1_PASSWORD}"
     CHECK_RESULT $?
     expect -c "
@@ -60,7 +61,7 @@ function run_test() {
 }
 }
 expect eof
-"
+    "
     grep -i "error" testlog
     CHECK_RESULT $? 1
     expect -c "
@@ -75,7 +76,7 @@ expect eof
 }
 }
 expect eof
-"
+    "
     grep -iE "fail|error" testlog
     CHECK_RESULT $? 1
     sql_pid=$(pgrep -f mysql)
@@ -87,9 +88,9 @@ expect eof
 function post_test() {
     LOG_INFO "start environment cleanup."
     setenforce 1
-    userdel -r mysql
+    userdel -rf mysql
     groupdel mysql
-    rm -rf testlog
+    rm -rf testlog data tmp run log
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }

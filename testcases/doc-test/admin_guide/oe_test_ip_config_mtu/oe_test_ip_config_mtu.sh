@@ -23,6 +23,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
     test_eth1=$(ls /sys/class/net/ | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | grep -v "$(ip route | grep -v dhcp | grep "${NODE1_IPV4}" | awk '{print$3}')" | sed -n 1p)
+    init_mtu=$(ip addr show "$test_eth1" | grep mtu |awk -F ' ' '{print $5}')
     LOG_INFO "Loading data is complete!"
 }
 
@@ -37,9 +38,9 @@ function run_test() {
     CHECK_RESULT $?
     ip addr add 2001:222::2/64 dev "${test_eth1}"
     CHECK_RESULT $? 0 1
-    ip link set dev "${test_eth1}" mtu 1500
+    ip link set dev "${test_eth1}" mtu "${init_mtu}"
     CHECK_RESULT $?
-    ip addr show "${test_eth1}" | grep mtu | grep 1500
+    ip addr show "${test_eth1}" | grep mtu | grep "${init_mtu}"
     CHECK_RESULT $?
     ip addr add 2001:222::2/64 dev "${test_eth1}"
     CHECK_RESULT $?

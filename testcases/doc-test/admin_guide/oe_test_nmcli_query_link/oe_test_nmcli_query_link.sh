@@ -22,22 +22,23 @@ function config_params() {
     LOG_INFO "Start loading data!"
     interface_num=0
     test_eth=""
-
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     for interface in /sys/class/net/*; do
         interface_name=$(basename "$interface")
-
+        
         if [[ $interface_name =~ ^(lo|docker|bond|vlan|virbr|br).* ]]; then
             continue
         fi
-
+        
         ((interface_num++))
         test_eth="$interface_name"
-
+        
         if [ "$interface_num" -eq 1 ]; then
             break
         fi
     done
-
+    
     if [ "$interface_num" -ne 1 ]; then
         test_eth=$(ip route | awk -v node_ip="${NODE1_IPV4}" '$0 !~ node_ip { print $3; exit }')
     fi
@@ -48,7 +49,7 @@ function run_test() {
     LOG_INFO "Start executing testcase!"
     nmcli con add type ethernet ifname "${test_eth}" | grep successfully
     CHECK_RESULT $?
-
+    
     nmcli general status | grep "connected"
     CHECK_RESULT $?
     nmcli connection show | grep "ethernet-${test_eth}"
@@ -69,6 +70,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     nmcli con delete "$(nmcli con show | grep ethernet- | awk -F " " '{print$1}')"
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup."
 }
 
