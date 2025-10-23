@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Testing rabbitmq-server command parameters
 # #############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -29,7 +30,7 @@ function pre_test() {
     DNF_INSTALL rabbitmq-server
     systemctl stop firewalld
     sed -i "/${name_host}/d" /etc/hosts
-    hostname | grep -i ${name_host} || hostnamectl set-hostname ${name_host_1}
+    hostnamectl set-hostname ${name_host_1}
     export NODENAME=rabbit@${name_host_1}
     echo -e "${NODE1_IPV4}" "${name_host_1}" >>/etc/hosts
     echo -e "${NODE2_IPV4}" "${name_host_2}" >>/etc/hosts
@@ -39,7 +40,7 @@ function pre_test() {
     dnf install -y rabbitmq-server
     which firewalld && systemctl stop firewalld
     sed -i '/${name_host}/d' /etc/hosts
-    hostname | grep -i ${name_host} || hostnamectl set-hostname ${name_host_2}
+    hostnamectl set-hostname ${name_host_2}
     export NODENAME=rabbit@${name_host_2}
     echo -e ${NODE1_IPV4} ${name_host_1} >>/etc/hosts
     echo -e ${NODE2_IPV4} ${name_host_2} >>/etc/hosts
@@ -110,4 +111,5 @@ function post_test() {
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "Finish environment cleanup!"
 }
+
 main "$@"
