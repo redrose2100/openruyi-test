@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Query CPU configure test-lscpu
 # ############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -53,10 +54,12 @@ function run_test() {
         CHECK_RESULT $?
     fi
     if [[ "$(dmidecode -s system-product-name)" =~ "KVM" ]]; then
-        cpu_num1=$(lshw -c cpu | grep -c 'description')
-        cpu_num2=$(lscpu | grep "^CPU(s):" | awk -F ' ' '{print $2}')
-        cpu_num3=$(lshw -c cpu | grep -iw "cores" |awk '{print $2}'| awk -F '=' '{print$2}')
-        [ "${cpu_num1}" -eq "${cpu_num2}" ] || [ "${cpu_num3}" -eq "${cpu_num2}" ]
+        cpu_num1=$(lscpu | grep "^CPU(s):" | awk -F ' ' '{print $2}')
+        sockets_num=$(lshw -c cpu | grep -c 'physical id')
+        enabledcores_num=$(lshw -c cpu | grep -iw "enabledcores" | awk '{print $2}'| awk -F '=' '{print$2}' | head -n 1)
+        threads_num=$(lshw -c cpu | grep -iw "threads" | awk '{print $4}'| awk -F '=' '{print$2}' | head -n 1)
+        cpu_num2=$((sockets_num * enabledcores_num * threads_num))
+        [ "${cpu_num1}" -le "${cpu_num2}" ]
         CHECK_RESULT $?
     fi
     Disk_name=$(lshw -c disk | grep 'logical name' | grep -v 'sr0' | grep -v 'cdrom' | awk -F ': ' 'NR==1{print $2}')
