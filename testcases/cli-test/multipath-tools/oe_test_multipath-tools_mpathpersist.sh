@@ -16,34 +16,35 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in multipath-tools package
 # ############################################
-
+# shellcheck disable=SC1091,SC2010
 source "common_multipath-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    test_mapper=$(ls /dev/mapper | grep mpath | head -n 1)
+    SLEEP_WAIT 3
+    test_mapper=$(ls /dev/mapper | grep mpath |grep -v "[0-9]" | tail -n 1)
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    mpathpersist --out --register --param-sark=12cdbe /dev/mapper/${test_mapper}
+    mpathpersist --out --register --param-sark=12cdbe /dev/mapper/"${test_mapper}"
     CHECK_RESULT $?
-    mpathpersist -v0 -i -k /dev/mapper/${test_mapper} | grep "0x12cdbe"
+    mpathpersist -v0 -i -k /dev/mapper/"${test_mapper}"  | grep "0x12cdbe"
     CHECK_RESULT $?
-    mpathpersist -i -k -H /dev/mapper/${test_mapper} | grep -2 "12cdbe"
+    mpathpersist -i -k -H /dev/mapper/"${test_mapper}"  | grep -2 "12cdbe"
     CHECK_RESULT $?
-    mpathpersist --out --reserve --param-rk=12cdbe --prout-type=8 -d /dev/mapper/${test_mapper}
+    mpathpersist --out --reserve --param-rk=12cdbe --prout-type=8 -d /dev/mapper/"${test_mapper}"
     CHECK_RESULT $?
-    mpathpersist -i -r /dev/mapper/${test_mapper} | grep -1 "Key"
+    mpathpersist -i -r /dev/mapper/"${test_mapper}"  | grep -1 "Key"
     CHECK_RESULT $?
-    mpathpersist -i -c /dev/mapper/${test_mapper} | grep -A 20 "Report"
+    mpathpersist -i -c /dev/mapper/"${test_mapper}"  | grep -A 20 "Report"
     CHECK_RESULT $?
-    mpathpersist --out --release --param-rk=12cdbe --prout-type=8 -d /dev/mapper/${test_mapper}
+    mpathpersist --out --release --param-rk=12cdbe --prout-type=8 -d /dev/mapper/"${test_mapper}"
     CHECK_RESULT $?
-    mpathpersist --out --register-ignore -K 12cdbe -S 0 /dev/mapper/${test_mapper}
+    mpathpersist --out --register-ignore -K 12cdbe -S 0 /dev/mapper/"${test_mapper}"
     CHECK_RESULT $?
-    mpathpersist -v0 -i -k /dev/mapper/${test_mapper} | grep "0x12cdbe"
+    mpathpersist -v0 -i -k /dev/mapper/"${test_mapper}"  | grep "0x12cdbe"
     CHECK_RESULT $? 0 1
     LOG_INFO "End to run test."
 }

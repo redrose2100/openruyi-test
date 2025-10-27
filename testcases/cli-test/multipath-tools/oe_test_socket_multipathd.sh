@@ -16,12 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test multipathd.socket restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL multipath-tools
+    systemctl stop multipathd.service
+    SLEEP_WAIT 3
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -35,7 +37,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop multipathd.socket
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

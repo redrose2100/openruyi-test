@@ -16,39 +16,40 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in kpartx binary package
 # ############################################
-
+# shellcheck disable=SC1091,SC2010
 source "common_multipath-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     local_disks=$(TEST_DISK 1)
-    local_disk=$(echo $local_disks | awk -F " " '/sd[a-z]/ {for(i=1;i<=NF;i++) if ($i~/sd/ && $i!~/[0-9]/)j=i;print $j}')
+    local_disk=$(echo "$local_disks" | awk -F " " '/sd[a-z]/ {for(i=1;i<=NF;i++) if ($i~/sd/ && $i!~/[0-9]/)j=i;print $j}')
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    kpartx -a -f -v /dev/${local_disk} | grep " map ${local_disk}1"
+    kpartx -a -f -v /dev/"${local_disk}" | grep " map ${local_disk}1"
     CHECK_RESULT $?
-    kpartx -u /dev/${local_disk}
+    kpartx -u /dev/"${local_disk}"
     CHECK_RESULT $?
-    lsblk | grep ${local_disk}1
+    lsblk | grep "${local_disk}"1
     CHECK_RESULT $?
-    kpartx -l /dev/${local_disk} | grep "${local_disk}1"
+    kpartx -l /dev/"${local_disk}" | grep "${local_disk}1"
     CHECK_RESULT $?
-    kpartx -n /dev/${local_disk} | grep "${local_disk}1"
+    kpartx -n /dev/"${local_disk}" | grep "${local_disk}1"
     CHECK_RESULT $?
-    kpartx -s /dev/${local_disk} | grep "/dev/${local_disk}"
+    kpartx -s /dev/"${local_disk}" | grep "/dev/${local_disk}"
     CHECK_RESULT $?
-    kpartx -g /dev/${local_disk} | grep "${local_disk}"
+    kpartx -g /dev/"${local_disk}" | grep "${local_disk}"
     CHECK_RESULT $?
-    kpartx -p p /dev/${local_disk} | grep "${local_disk}p"
+    kpartx -p p /dev/"${local_disk}" | grep "${local_disk}p"
     CHECK_RESULT $?
-    kpartx -r /dev/${local_disk} | grep "${local_disk}"
+    kpartx -r /dev/"${local_disk}" | grep "${local_disk}"
     CHECK_RESULT $?
-    kpartx -d /dev/${local_disk}
+    ls -l /dev/mapper/
+    kpartx -d /dev/"${local_disk}"
     CHECK_RESULT $?
-    ls -l /dev/mapper/ | grep "${local_disk}1 \-> "
+    ls -l /dev/mapper/ | grep "${local_disk}1 -> "
     CHECK_RESULT $? 1
     LOG_INFO "End to run test."
 }
