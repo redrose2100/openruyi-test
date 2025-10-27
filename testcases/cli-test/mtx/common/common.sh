@@ -33,9 +33,12 @@ function common_config_params() {
 # Test environment preparation
 function common_pre() {
     DNF_INSTALL "mtx rpm-build rpmdevtools git zlib-devel gcc kernel-devel lsscsi kernel-headers"
+    if ! lsscsi -g | grep "$DRIVER_MEDIUMX";then
+        exit 255
+    fi
     test -d "${HOME}/rpmbuild" \
-        && mv -f "${HOME}/rpmbuild" "$_MTX_COMMON_RPMBUILD_BAKUP_DIR" \
-        && LOG_INFO "Successfully move ${HOME}/rpmbuild to ${_MTX_COMMON_RPMBUILD_BAKUP_DIR}."
+    && mv -f "${HOME}/rpmbuild" "$_MTX_COMMON_RPMBUILD_BAKUP_DIR" \
+    && LOG_INFO "Successfully move ${HOME}/rpmbuild to ${_MTX_COMMON_RPMBUILD_BAKUP_DIR}."
     rpmdev-setuptree
     git clone https://gitee.com/zhtianyu/mhvtl.git ./tmp/mhvtl
     cp ./tmp/mhvtl/1.7-2_release.tar.gz ./tmp/mhvtl/build-kernel-module.patch "${HOME}/rpmbuild/SOURCES"
@@ -62,8 +65,8 @@ function common_test() {
 function common_post() {
     rm -rf ./tmp "${HOME}/rpmbuild"
     test -d "$_MTX_COMMON_RPMBUILD_BAKUP_DIR" \
-        && mv -f "$_MTX_COMMON_RPMBUILD_BAKUP_DIR" "${HOME}/rpmbuild" \
-        && LOG_INFO "Successfully move ${_MTX_COMMON_RPMBUILD_BAKUP_DIR} to ${HOME}/rpmbuild."
+    && mv -f "$_MTX_COMMON_RPMBUILD_BAKUP_DIR" "${HOME}/rpmbuild" \
+    && LOG_INFO "Successfully move ${_MTX_COMMON_RPMBUILD_BAKUP_DIR} to ${HOME}/rpmbuild."
     systemctl stop mhvtl.target
     DNF_REMOVE "$@"
 }

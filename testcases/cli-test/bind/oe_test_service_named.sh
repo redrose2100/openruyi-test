@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test named.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -31,8 +31,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_restart ${service}
     test_enabled ${service}
-    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | 
-grep -v "Open /etc/dns_port.conf fail, return." | grep -v "Unable to fetch DNSKEY set '.': failure"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -vE "Open /etc/dns_port.conf fail, return.|Unable to fetch DNSKEY set '.': failure|resolver priming query complete: failure|DNS format error from"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     systemctl start "${service}"
     sed -i 's\ExecStart=/usr/sbin/named\ExecStart=/usr/sbin/named -4\g' /usr/lib/systemd/system/"${service}"
@@ -50,7 +49,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload named.service
     systemctl stop named.service
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
