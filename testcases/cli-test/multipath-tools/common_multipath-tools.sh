@@ -19,16 +19,16 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
     remote_disks=$(TEST_DISK 2)
-    remote_disk=/dev/$(echo $remote_disks | awk -F " " '{for(i=1;i<=NF;i++) if ($i!~/[0-9]/)j=i;print $j}')
-    P_SSH_CMD --node 2 --cmd "dnf install -y scsi-target-utils; 
-        echo -e 'n\np\n1\n\n+2000M\nw' | fdisk ${remote_disk}; 
-        echo -e '<target iqn.2013-12.com.make:ws.httpd>\nbacking-store ${remote_disk}\n</target>' >>/etc/tgt/targets.conf; 
-        systemctl restart tgtd; 
-        systemctl stop firewalld;"
+    remote_disk=/dev/$(echo "$remote_disks" | awk -F " " '{for(i=1;i<=NF;i++) if ($i!~/[0-9]/)j=i;print $j}')
+    P_SSH_CMD --node 2 --cmd "dnf install -y scsi-target-utils;
+        echo -e 'n\np\n1\n\n+2000M\nw' | fdisk ${remote_disk};
+        echo -e '<target iqn.2013-12.com.make:ws.httpd>\nbacking-store ${remote_disk}\n</target>' >>/etc/tgt/targets.conf;
+        systemctl restart tgtd;
+    systemctl stop firewalld;"
     DNF_REMOVE "iscsi-initiator-utils"
     DNF_INSTALL "iscsi-initiator-utils multipath-tools device-mapper-event device-mapper"
     systemctl restart iscsid
-    iscsiadm -m discovery -t sendtargets -p ${NODE2_IPV4}
+    iscsiadm -m discovery -t sendtargets -p "${NODE2_IPV4}"
     iscsiadm -m node -T iqn.2013-12.com.make:ws.httpd -l
     mpathconf --enable --with_multipathd y
     service multipathd start
@@ -57,7 +57,7 @@ devices {
                rr_min_io               100
                product_blacklist       LUNZ
        }
-}" >/etc/multipath.conf
+    }" >/etc/multipath.conf
     lsmod | grep dm_multipath || modprobe dm_multipath
     modprobe dm_multipath
     service multipathd restart
@@ -68,7 +68,6 @@ function clear_env() {
     P_SSH_CMD --node 2 --cmd "dnf remove -y scsi-target-utils; echo -e 'd\nw\n' | fdisk ${remote_disk}"
     iscsiadm -m node --logoutall=all
     multipath -F
-    DNF_REMOVE
-    del_file=$(ls | grep -vE ".sh")
-    rm -rf ${del_file} /tmp/disk1
+    DNF_REMOVE "$@"
+    rm -rf /tmp/disk1
 }

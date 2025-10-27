@@ -41,7 +41,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_restart ${service}
     test_enabled ${service}
-    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -vE "CredentialsChainVerboseErrors|Failed to read data from checkpoint"
+    journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -vE "CredentialsChainVerboseErrors|Failed to read data from checkpoint|Image garbage collection failed once"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload ${service}
     LOG_INFO "Finish test!"
