@@ -21,10 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "iftop bind-utils ipcalc"
+    DNF_INSTALL "iftop bind-utils ipcalc binutils"
     IFS=' ' read -r -a net_cards <<< "$(TEST_NIC 1)"
     ipv4_addr_1=$(nmcli device show "${net_cards[0]}" | grep IP4.ADDRESS | awk '{print $2}' | cut -d '/' -f1)
     ipv4_addr_2=$(nmcli device show "${net_cards[1]}" | grep IP4.ADDRESS | awk '{print $2}' | cut -d '/' -f1)
+    nmcli device connect "${net_cards[0]}"
+    nmcli device connect "${net_cards[1]}"
     ipv4_target_addr=$(host huawei.com | grep 'has address' | awk '{print $4}')
     ipv4_target_network=$(ipcalc -n "$ipv4_target_addr"/24 | cut -d '=' -f2)
     ipv4_target_hostname="hwclouds-dns"
@@ -39,6 +41,7 @@ function run_test() {
     iftop -t -s 1 2>&1 | grep "Listening on"
     CHECK_RESULT $? 0 0 "Failed to use config directive: interface"
     ping "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
+    SLEEP_WAIT 1
     dns_resolution_work=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
@@ -51,6 +54,7 @@ function run_test() {
     if [ $dns_resolution_work -eq 0 ]; then
         ping "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
         echo 'dns-resolution: no' >./iftoprc
+        SLEEP_WAIT 1
         iftop -t -s 1 -c ./iftoprc 2>&1 | grep "${ipv4_target_addr}"
         CHECK_RESULT $? 0 0 "Failed to use config directive: dns-resolution"
     else
@@ -93,6 +97,7 @@ EOF
     result=1
     ping -I "${ipv4_addr_1}" "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
     ping -I "${ipv4_addr_2}" "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
+    SLEEP_WAIT 1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
         output=$(iftop -t -s 1 -n -c ./iftoprc 2>&1)
@@ -118,12 +123,15 @@ EOF
     CHECK_RESULT $? 0 0 "Failed to use config directive: link-local"
     ping -I "${ipv4_addr_1}" "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
     echo 'hide-source: yes' >./iftoprc
-    iftop -t -s 1 -n -c ./iftoprc 2>&1 | grep -B 1 "${ipv4_target_addr}"
+    SLEEP_WAIT 1
+    iftop -t -s 10 -n -c ./iftoprc 2>&1 | grep -B 1 "${ipv4_target_addr}"
     CHECK_RESULT $? 0 0 "Failed to use config directive: hide-source"
     pkill -f 'ping'
+    SLEEP_WAIT 1
     ping -I "${ipv4_addr_1}" "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
     echo 'hide-destination: yes' >./iftoprc
-    iftop -t -s 1 -n -c ./iftoprc 2>&1 | grep -A 1 "${ipv4_addr_1}"
+    SLEEP_WAIT 3
+    iftop -t -s 10 -n -c ./iftoprc 2>&1 | grep -A 1 "${ipv4_addr_1}"
     CHECK_RESULT $? 0 0 "Failed to use config directive: hide-destination"
     pkill -f 'ping'
     echo 'bandwidth-unit: bytes' >./iftoprc
@@ -176,23 +184,17 @@ EOF
     rm -f ./config_max_bandwidth
     echo "net-filter: ${ipv4_target_network}/24" >./iftoprc
     ping "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
-    expect <<EOF
-        spawn iftop -n -c ./iftoprc
-        expect {
-            -timeout 30
-            "${ipv4_target_addr}" { exec touch ./config_net_filter }
-            "TX:" { exp_continue }
-            timeout { exit 1 }
-        }
-        send "q"
-        expect eof
-EOF
-    ls ./config_net_filter
+    SLEEP_WAIT 1
+    iftop -n -c ./iftoprc > iftop_log 2>&1 &
+    SLEEP_WAIT 3
+    SLEEP_WAIT 10  
+    strings iftop_log | grep "${ipv4_target_addr}"
     CHECK_RESULT $? 0 0 "Failed to use config directive: net-filter"
-    rm -f ./config_net_filter
+    kill -9 "$(pgrep -f 'iftop -n -c')"
     pkill -f 'ping'
     echo "net-filter6: $ipv6_target_network" >./iftoprc
     ping -6 "$ipv6_target_addr" -c 100 >/dev/null 2>&1 &
+    SLEEP_WAIT 1
     expect <<EOF
         spawn iftop -c ./iftoprc
         expect "$ipv6_target_network" {
@@ -211,7 +213,7 @@ function post_test() {
     rm -f ./config_net_filter6
     pkill -f 'ping'
     DNF_REMOVE "$@"
-    rm -f ./iftoprc
+    rm -rf ./iftoprc ./config_net_filter6 ./iftop_log
     LOG_INFO "Finish environment cleanup!"
 }
 

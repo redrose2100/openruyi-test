@@ -1,19 +1,19 @@
 {
     "path": "$OET_PATH/testcases/cli-test/iftop",
     "machine num": 2,
-    "add network interface": 1,
+    "add network interface": 2,
     "cases": [
         {
             "name": "oe_test_iftop_text_mode",
             "machine num": 2,
-            "add network interface": 1
+            "add network interface": 2
         },
         {
             "name": "oe_test_iftop_gui"
         },
         {
             "name": "oe_test_iftop_config",
-            "add network interface": 1
+            "add network interface": 2
         }
     ]
 }
