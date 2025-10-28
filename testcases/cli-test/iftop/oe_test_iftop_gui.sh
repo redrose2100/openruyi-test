@@ -21,12 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "iftop bind-utils ipcalc"
+    DNF_INSTALL "iftop bind-utils ipcalc binutils"
     # net_name=$(ip addr|grep "UP group default"|awk -F ":" '{print $2}')
     ipv4_target_addr=$(host huawei.com | grep 'has address' | awk '{print $4}')
     ipv4_target_network=$(ipcalc -n "$ipv4_target_addr"/24 | cut -d '=' -f2)
     ip_vir4=$(ip addr | grep 22 | grep inet | grep "global dynamic" | awk '{print $2}' | awk -F "/" '{print $1}')
-    ip_vir6=$(ip addr | grep 64 | grep inet6 | grep "scope link" | awk '{print $2}' | awk -F "/" '{print $1}')
+    ip_vir6=$(ip addr | grep 64 | grep inet6 | grep "scope link" | awk '{print $2}' | awk -F "/" '{print $1}' | head -n 1)
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -46,33 +46,24 @@ EOF
     ping "$ipv4_target_addr" -c 100 >/dev/null 2>&1 &
     SLEEP_WAIT 2
     kill -9 "$(pgrep -f 'iftop -b')"
-    expect <<EOF
-        spawn iftop -n -F $ipv4_target_network/24
-        expect "$ip_vir4" {
-            exec touch ./opt_F
-        }
-        send "q"
-        expect eof
-EOF
-    SLEEP_WAIT 1
-    ls ./opt_F
+    iftop -n -F "$ipv4_target_network"/24 > iftop_log 2>&1 &
+    SLEEP_WAIT 3
+    SLEEP_WAIT 10
+    strings iftop_log | grep "${ip_vir4}"
     CHECK_RESULT $? 0 0 "Failed to use option: -F"
-    rm -f ./opt_F
     pkill -f 'ping'
     kill -9 "$(pgrep -f 'iftop -n -F')"
+    rm -rf iftop_log
     ping -6 "$ip_vir6"/64 -c 100 >/dev/null 2>&1 &
-    expect <<EOF
-        spawn iftop -G $ip_vir6
-        expect "$ip_vir4" {
-            exec touch ./opt_G
-        }
-        send "q"
-        expect eof
-EOF
-    ls ./opt_G
+    SLEEP_WAIT 2
+    iftop -G "$ip_vir6" > iftop_log 2>&1 &
+    SLEEP_WAIT 3
+    SLEEP_WAIT 10
+    strings iftop_log | grep "${ip_vir4}"
     CHECK_RESULT $? 0 0 "Failed to use option: -G"
-    rm -f ./opt_G
     pkill -f 'ping'
+    kill -9 "$(pgrep -f 'iftop -G')"
+    rm -rf iftop_log
     expect <<EOF
         spawn iftop -l
         expect "Listening on" {
@@ -84,18 +75,10 @@ EOF
     ls ./opt_l
     CHECK_RESULT $? 0 0 "Failed to use option: -l"
     rm -f ./opt_l
-    expect <<EOF
-        spawn iftop
-        send "?"
-        expect "iftop, version 1.0pre4" {
-            exec touch ./gui_question_mark
-        }
-        send "q"
-        expect eof
-EOF
-    ls ./gui_question_mark
+    printf "\n\n\n?\n\nq" | iftop >iftop_log
+    strings iftop_log | grep "display"
     CHECK_RESULT $? 0 0 "Failed to use GUI key: ?"
-    rm -f ./gui_question_mark
+    rm -f ./iftop_log
     expect <<EOF
         spawn iftop -u packets
         expect "Kp" {
@@ -107,18 +90,10 @@ EOF
     ls ./gui_u
     CHECK_RESULT $? 0 0 "Failed to use option: -u"
     rm -f ./gui_u
-    expect <<EOF
-        spawn iftop
-        send "h"
-        expect "iftop, version 1.0pre4" {
-            exec touch ./gui_h
-        }
-        send "q"
-        expect eof
-EOF
-    ls ./gui_h
+    printf "\n\n\nh\n\nq" |iftop >iftop_log
+    strings iftop_log | grep "display"
     CHECK_RESULT $? 0 0 "Failed to use GUI key: h"
-    rm -f ./gui_h
+    rm -f ./iftop_log
     expect <<EOF
         spawn iftop
         send "n"
@@ -351,9 +326,9 @@ EOF
     rm -f ./gui_1
     expect <<EOF
         spawn iftop
-        send "2"  
+        send "2"
         expect "Sort by col 2" {
-            exec touch ./gui_2  
+            exec touch ./gui_2
         }
         send "q"
         expect eof
@@ -363,9 +338,9 @@ EOF
     rm -f ./gui_2
     expect <<EOF
         spawn iftop
-        send "3"  
+        send "3"
         expect "Sort by col 3" {
-            exec touch ./gui_3  
+            exec touch ./gui_3
         }
         send "q"
         expect eof
@@ -375,9 +350,9 @@ EOF
     rm -f ./gui_3
     expect <<EOF
         spawn iftop
-        send "o"  
+        send "o"
         expect "Order frozen" {
-            exec touch ./gui_o  
+            exec touch ./gui_o
         }
         send "q"
         expect eof
@@ -395,3 +370,4 @@ function post_test() {
 }
 
 main "$@"
+

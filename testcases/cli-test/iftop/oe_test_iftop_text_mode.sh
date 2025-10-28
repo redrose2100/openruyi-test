@@ -27,6 +27,7 @@ function pre_test() {
     ipv4_addr_2=$(nmcli device show "${net_cards[1]}" | grep IP4.ADDRESS | awk '{print $2}' | cut -d '/' -f1)
     ipv4_target_addr=$(host huawei.com | grep 'has address' | awk '{print $4}')
     ipv4_target_hostname="hwclouds-dns"
+    P_SSH_CMD --node 2 --cmd "find /var/log/messages || touch /var/log/messages"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -37,6 +38,7 @@ function run_test() {
     iftop -t -s 1 2>&1 | grep 'Listening on'
     CHECK_RESULT $? 0 0 "Failed to use option: -s and -t"
     ping "$ipv4_target_addr" -c 100 >/dev/null 2>&1 &
+    SLEEP_WAIT 1
     dns_resolution_work=1
     for ((i = 0; i < 100; i++)); do
         SLEEP_WAIT 1
@@ -48,6 +50,7 @@ function run_test() {
     pkill -f 'ping'
     if [ $dns_resolution_work -eq 0 ]; then
         ping "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
+        SLEEP_WAIT 1
         iftop -t -s 1 -n 2>&1 | grep "$ipv4_target_hostname"
         CHECK_RESULT $? 0 1 "Failed to use option: -n"
     else
@@ -57,7 +60,7 @@ function run_test() {
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/syslog" & } && iftop -t -s 1 -P | grep ":ssh"; then
+        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && iftop -t -s 1 -P | grep ":ssh"; then
             result=0
             break
         fi
@@ -66,7 +69,7 @@ function run_test() {
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/syslog" & } && iftop -t -s 1 -P -N | grep ":22"; then
+        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && iftop -t -s 1 -P -N | grep ":22"; then
             result=0
             break
         fi
@@ -74,7 +77,9 @@ function run_test() {
     CHECK_RESULT $result 0 0 "Failed to use option: -N"
     result=1
     ping -I "${ipv4_addr_1}" "${ipv4_target_addr}" -c 100 > /dev/null 2>&1 &
+    SLEEP_WAIT 1
     ping -I "${ipv4_addr_2}" "${ipv4_target_addr}" -c 100 > /dev/null 2>&1 &
+    SLEEP_WAIT 1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
         output=$(iftop -t -s 1 -n -p 2>&1)
@@ -87,6 +92,7 @@ function run_test() {
     pkill -f 'ping'
     result=1
     ping -I "${ipv4_addr_1}" "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
+    SLEEP_WAIT 1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
         if iftop -t -s 1 -B -n 2>&1 | grep "${ipv4_addr_1}" | grep 'B'; then
@@ -96,14 +102,16 @@ function run_test() {
     done
     CHECK_RESULT $result 0 0 "Failed to use option: -B"
     pkill -f 'ping'
+    SLEEP_WAIT 1
     ping -I "${ipv4_addr_1}" "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
+    SLEEP_WAIT 1
     iftop -t -s 1 -i "${net_cards[0]}" 2>&1 | grep "Listening on ${net_cards[0]}"
     CHECK_RESULT $? 0 0 "Failed to use option: -i"
     pkill -f 'ping'
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if  { P_SSH_CMD --node 2 --cmd "tail -f /var/log/syslog" & } && iftop -t -s 1 -P -N -f "dst port 22" 2>&1 | grep ":22"; then
+        if  { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && iftop -t -s 1 -P -N -f "dst port 22" 2>&1 | grep ":22"; then
             result=0
             break
         fi
