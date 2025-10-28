@@ -20,11 +20,18 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    DNF_INSTALL "openssl-devel gcc"
     echo "abcdefghi" > data
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+    gcc -o sm4_openssl test_openssl.c -lcrypto
+    CHECK_RESULT $? 0 0 "Failed to compile sm4_openssl program" 
+    ./sm4_openssl | grep -v 'Hello, SM4 encryption|ac dd 54 ed 2a 2a f7 a9 0e 25 31 4f 1e 41 42 6f ce f5 80 ac e9 fb d4 a7 37 96 1e 22 bb 4b 01 24'
+    CHECK_RESULT $? 0 0 "sm4 openssl test failed"
+    openssl list -cipher-algorithms | grep SM
+    CHECK_RESULT $? 0 0 "check sm cipher algorithms failed"
     openssl ecparam -name SM2 -out SM2.pem
     CHECK_RESULT $? 0 0 "generate sm2 parameters failed"
     openssl req -config ./openssl.cnf -nodes -subj '/C=AA/ST=BB/O=CC/OU=DD/CN=root ca' -keyout CA.key -newkey sm2:SM2.pem -new -out CA.csr
@@ -64,7 +71,8 @@ function run_test() {
 }
 
 function post_test() {
-    rm -rf *.crt *.csr *.key *.srl *.pem data*
+    DNF_REMOVE "$@"
+    rm -rf *.crt *.csr *.key *.srl *.pem data* sm4_openssl
 }
 
 main "$@"
