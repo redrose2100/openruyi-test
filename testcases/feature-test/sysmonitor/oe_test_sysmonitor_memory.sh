@@ -21,6 +21,7 @@ source "${OET_PATH}/testcases/feature-test/sysmonitor/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
+    DNF_INSTALL stress-ng
     mem_prefun
     pressure_clear
 }
@@ -41,6 +42,7 @@ function post_test() {
     grep "msg:memory usage" "${sysmonitor_log:-}"
     pressure_clear
     mem_postfun
+    DNF_REMOVE "$@"
 }
 
 main "$@"
