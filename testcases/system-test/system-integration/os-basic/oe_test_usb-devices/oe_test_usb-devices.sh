@@ -19,6 +19,14 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL usbutils
+    LOG_INFO "End to prepare the test environment."
+}
+
+
 function run_test() {
     LOG_INFO "Start to run test."
     usb-devices | grep Bus
@@ -34,6 +42,12 @@ function run_test() {
     usb-devices | grep SerialNumber
     CHECK_RESULT $? 0 0 "usb-devices error"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
