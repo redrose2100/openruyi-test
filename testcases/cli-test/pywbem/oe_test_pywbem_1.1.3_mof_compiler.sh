@@ -23,6 +23,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     cp -f ./common/CIM_Application26.mof ./
     DNF_INSTALL "docker python3-pywbem"
+    PYWBEM_VERSION=$(yum info python3-pywbem 2>/dev/null  | grep -E '^Version' | awk '{print $NF}' | head -1)
+    REQUIRED_VERSION=1.1.3
+    if [[ "$PYWBEM_VERSION" != "$REQUIRED_VERSION" ]]; then
+        echo "当前仓库 python3-pywbem 版本为 ${PYWBEM_VERSION}，不等于${REQUIRED_VERSION}，跳过测试"
+        exit 255
+    fi
     sudo docker pull hub.firefly.store/kschopmeyer/openpegasus-server:0.1.1
     sudo docker run -d -it --rm -p 0.0.0.0:15988:5988 -p 0.0.0.0:15989:5989 --name openpegasus hub.firefly.store/kschopmeyer/openpegasus-server:0.1.1
     SLEEP_WAIT 10s

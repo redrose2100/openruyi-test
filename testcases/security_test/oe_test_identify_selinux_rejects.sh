@@ -23,6 +23,10 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     default_selinux_status=$(getenforce)
     [ "${default_selinux_status}" == "Enforcing" ] || setenforce 1
+    if [ "$(getenforce)" == "Disabled" ]; then
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 

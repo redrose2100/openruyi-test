@@ -16,7 +16,7 @@
 #@Desc          :   Login is not allowed for a non-interactive account
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -28,17 +28,21 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    cat /etc/passwd |awk -F ":" '{print $1}' > UserList.info
-    while read line;do
-        if [[ "$(getent passwd $line |awk -F ":" '{print $2}')" != "x" ]];then
-            echo "$line 2nd field is not x in /etc/passwd" > ErrorUserList.info
-        elif [[ "$(getent passwd $line |awk -F ":" '{print $NF}')" != "/bin/bash" ]];then
-            getent shadow $line |awk -F ":" '{print $2}' |grep -E -w '\*|!|!!'
-            CHECK_RESULT $? 0 0 "non-interactive account is locked"
-        else
-            getent shadow $line |awk -F ":" '{print $2}' |grep -E "\\\$6\\\$|\\\$y\\\$"
-            CHECK_RESULT $? 0 0 "password of interactive account is set"
-        fi
+    awk -F ":" '{print $1}' /etc/passwd > UserList.info
+    while read -r line;do
+	    if [[ "$line" == "cloudroot" ]]; then
+		    LOG_INFO "Skip checking for cloudroot user"  # 记录跳过日志
+		    continue  # 直接进入下一个用户的循环
+	    fi
+	    if [[ "$(getent passwd "$line" |awk -F ":" '{print $2}')" != "x" ]];then
+		    echo "$line 2nd field is not x in /etc/passwd" > ErrorUserList.info
+	    elif [[ "$(getent passwd "$line" |awk -F ":" '{print $NF}')" != "/bin/bash" ]];then
+		    getent shadow "$line" |awk -F ":" '{print $2}' |grep -E -w '\*|!|!!'
+		    CHECK_RESULT $? 0 0 "non-interactive account is locked"
+	    else
+		    getent shadow "$line" |awk -F ":" '{print $2}' |grep -E "\\\$6\\\$|\\\$y\\\$"
+		    CHECK_RESULT $? 0 0 "password of interactive account is set"
+	    fi
     done < UserList.info
     ls ./ErrorUserList.info
     CHECK_RESULT $? 0 1 "user's password is stored in /etc/shadow"

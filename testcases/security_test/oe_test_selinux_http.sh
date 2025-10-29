@@ -32,6 +32,10 @@ function pre_test() {
     cp /usr/share/httpd/noindex/index.html /var/test_www/html
     default_selinux_status=$(getenforce)
     [ "$default_selinux_status" == "Enforcing" ] || setenforce 1
+    if [ "$(getenforce)" == "Disabled" ]; then
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
