@@ -34,7 +34,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     sudo -l | grep "commands on" | grep "User root"
     CHECK_RESULT $?
-    su - test -c "sudo -l --stdin | grep 'commands on' | grep 'User test'"
+    su - test -c "export LANG=en_US.UTF-8;sudo -l --stdin | grep 'commands on' | grep 'User test'"
     CHECK_RESULT $?
     sudo --help | grep -i "usage"
     CHECK_RESULT $?
