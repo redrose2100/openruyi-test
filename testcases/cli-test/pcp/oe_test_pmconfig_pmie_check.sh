@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   pcp testing(pmconfig,pmie_check)
 #####################################
-
+#shellcheck disable=SC1091
 source "common/common_pcp.sh"
 
 function pre_test() {
@@ -36,26 +36,26 @@ function run_test() {
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmie_check -c /etc/pcp/pmie/control.d/local
     CHECK_RESULT $?
-    test -n $(pgrep -f /usr/bin/pmie)
+    test -n "$(pgrep -f /usr/bin/pmie)"
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmie_check -l /var/log/pcp/pmie/pmie_check.log
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmie_check -C
     CHECK_RESULT $?
-    /usr/libexec/pcp/bin/pmie_check -NV | grep "/var/log/pcp/pmie/$host_name"
+    /usr/libexec/pcp/bin/pmie_check -NV | grep "/var/log/pcp/pmie/$(hostname)"
     CHECK_RESULT $?
-    /usr/libexec/pcp/bin/pmie_check -NT | grep "/var/log/pcp/pmie/$host_name"
+    /usr/libexec/pcp/bin/pmie_check -NT | grep "/var/log/pcp/pmie/$(hostname)"
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmie_check -s
     CHECK_RESULT $?
-    test -z $(pgrep -f /usr/bin/pmie)
+    test -z "$(pgrep -f /usr/bin/pmie)"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

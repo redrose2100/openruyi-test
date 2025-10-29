@@ -53,10 +53,15 @@ function run_test(){
     CHECK_RESULT $? 0 0 "Check criu dump --file-validation failed"
     (test_process) & criu dump -D checkpoint_file -j -t $! --with-cpu-affinity
     CHECK_RESULT $? 0 0 "Check criu dump --with-cpu-affinity failed"
-    (test_process) & criu dump -D checkpoint_file -j -t $! --track-mem || (test_process) & criu dump -D checkpoint_file -j -t $! --track-mem 2>&1 | grep "Tracking memory is not available. Consider omitting --track-mem option"
-    CHECK_RESULT $? 0 0 "Check criu dump --track-mem failed"
-    pre_name='checkpoint_file' && pre_path=$(readlink -f $pre_name)
-    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t $pid
+    if [ "${NODE1_FRAME}" == x86_64 ]; then
+            (test_process) & criu dump -D checkpoint_file -j -t $! --track-mem
+            CHECK_RESULT $? 0 0 "Check criu dump --track-mem failed"
+    else
+            (test_process) & criu dump -D checkpoint_file -j -t $! --track-mem || (test_process) & criu dump -D checkpoint_file -j -t $! --track-mem 2>&1 | grep "Tracking memory is not available. Consider omitting --track-mem option"
+            CHECK_RESULT $? 0 0 "Check criu dump --track-mem failed"
+    fi
+    pre_name='checkpoint_file' && pre_path=$(readlink -f "$pre_name")
+    (test_process) & pid=$! && criu pre-dump -D checkpoint_file -j -t "$pid"
     criu dump -D checkpoint_file_2 -j -t $pid --prev-images-dir "$pre_path"
     CHECK_RESULT $? 0 0 "Check criu dump --prev-images-dir failed"
     LOG_INFO "End to run test."

@@ -39,9 +39,9 @@ function run_test() {
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_check -C
     CHECK_RESULT $?
-    /usr/libexec/pcp/bin/pmlogger_check -NT | grep "localhost"
+    /usr/libexec/pcp/bin/pmlogger_check -NT | grep "$(hostname)"
     CHECK_RESULT $?
-    /usr/libexec/pcp/bin/pmlogger_check -NV | grep "localhost"
+    /usr/libexec/pcp/bin/pmlogger_check -NV | grep "$(hostname)"
     CHECK_RESULT $?
     /usr/libexec/pcp/bin/pmlogger_check -s
     CHECK_RESULT $?

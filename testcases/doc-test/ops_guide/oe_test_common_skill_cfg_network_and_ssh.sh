@@ -55,8 +55,8 @@ function run_test() {
     ip route list | grep "192.168.2.0/24"
     CHECK_RESULT $? 1 0 "Failed to delete a static route to the network"
     if [ -f /etc/sysconfig/network-scripts/ifcfg-"${Network_card_name}" ];then
-        grep "TYPE=Ethernet" /etc/sysconfig/network-scripts/ifcfg-"${Network_card_name}"
-        CHECK_RESULT $? 0 0 "Failed to get network info for the ifcfg file"
+	    grep -qE 'TYPE=Ethernet|DEVICE=eth[0-9]' /etc/sysconfig/network-scripts/ifcfg-"${Network_card_name}"
+	    CHECK_RESULT $? 0 0 "Failed to get network info for the ifcfg file"
     fi
     # Configure SSH
     cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
