@@ -17,13 +17,19 @@
 # @Desc      :   command lssubsys
 # ############################################
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}/testcases/system-test/system-integration/os-basic/oe_test_lssubsys/checkenv.sh"
+
 
 function pre_test() {
+    # 高版本2.0版本之后，已从libcgroup迁移到systemd管理cgroups
+    checkversion200
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
+    DNF_INSTALL libcgroup
     export LANG=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."
 }
+
 
 function run_test() {
     LOG_INFO "start to run test."
@@ -46,10 +52,13 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
+
 function post_test() {
     LOG_INFO "start environment cleanup."
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 
+
 main "$@"
+
