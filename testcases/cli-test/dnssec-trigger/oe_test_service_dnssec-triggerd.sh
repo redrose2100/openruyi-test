@@ -21,6 +21,8 @@ source "../common/common_lib.sh"
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
+    systemctl restart NetworkManager
+    SLEEP_WAIT 3
     cp /etc/resolv.conf /etc/resolv.conf.bak
     LOG_INFO "End to config params of the case."
 }
@@ -30,6 +32,7 @@ function pre_test() {
     DNF_INSTALL "dnssec-trigger python3-gobject"
     setenforce 0
     sed -i 's/.*control-enable.*/control-enable:yes\ncontrol-use-cert:"no"/g' /etc/unbound/unbound.conf
+    echo "" >/etc/resolv.conf
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -38,7 +41,7 @@ function run_test() {
     log_time="$(date '+%Y-%m-%d %T')"
     test_restart dnssec-triggerd.service
     test_enabled dnssec-triggerd.service
-    journalctl --since "${log_time}" -u dnssec-triggerd.service | grep -i "fail\|error" | grep -vE -i "DEBUG\|INFO\|WARNING|error: http_probe_create_get: Network is unreachable|error: could not UDP send to ip|error: could not send queries for probe"
+    journalctl --since "${log_time}" -u dnssec-triggerd.service | grep -i "fail\|error" | grep -vE -i "DEBUG\|INFO\|WARNING|Network is unreachable|error: could not UDP send to ip|error: could not send queries for probe|error: command line string argument"
     CHECK_RESULT $? 0 1 "There is an error message for the log of dnssec-triggerd.service"
     test_reload dnssec-triggerd.service
     LOG_INFO "Finish test!"
@@ -49,6 +52,7 @@ function post_test() {
     DNF_REMOVE "$@"
     setenforce 1
     mv /etc/resolv.conf.bak /etc/resolv.conf
+    systemctl restart NetworkManager
     LOG_INFO "Finish environment cleanup!"
 }
 

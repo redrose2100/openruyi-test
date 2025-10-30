@@ -14,7 +14,7 @@
 # @Contact   :   1003254035@qq.com
 # @Date      :   2023/02/21
 # @License   :   Mulan PSL v2
-# @Desc      :   Test dnssec-trigger-control-setup command 
+# @Desc      :   Test dnssec-trigger-control-setup command
 # #############################################
 # shellcheck disable=SC1090
 
@@ -22,6 +22,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
+    systemctl restart NetworkManager
+    SLEEP_WAIT 3
     cp /etc/resolv.conf /etc/resolv.conf.bak
     LOG_INFO "End to config params of the case."
 }
@@ -64,6 +66,7 @@ function post_test() {
     DNF_REMOVE "$@"
     rm -rf dnssec-trigger-control-setup*.log dnssec-triggerd
     mv /etc/resolv.conf.bak /etc/resolv.conf
+    systemctl restart NetworkManager
     LOG_INFO "End to restore the test environment."
 }
 
