@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test dnssec-triggerd-keygen.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -54,7 +54,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
+    systemctl restart NetworkManager
     LOG_INFO "Finish environment cleanup!"
 }
 
