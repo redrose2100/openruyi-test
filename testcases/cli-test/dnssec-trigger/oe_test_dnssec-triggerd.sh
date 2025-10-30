@@ -22,6 +22,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
+    systemctl restart NetworkManager
+    SLEEP_WAIT 3
     cp /etc/resolv.conf /etc/resolv.conf.bak
     LOG_INFO "End to config params of the case."
 }
@@ -66,6 +68,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
     mv /etc/resolv.conf.bak /etc/resolv.conf
+    systemctl restart NetworkManager
     LOG_INFO "End to restore the test environment."
 }
 

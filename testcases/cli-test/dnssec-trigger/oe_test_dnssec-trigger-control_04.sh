@@ -14,7 +14,7 @@
 # @Contact   :   1003254035@qq.com
 # @Date      :   2023/02/21
 # @License   :   Mulan PSL v2
-# @Desc      :   Test dnssec-trigger-control command 
+# @Desc      :   Test dnssec-trigger-control command
 # #############################################
 # shellcheck disable=SC1090
 
@@ -23,12 +23,15 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function config_params() {
     LOG_INFO "Start to config params of the case."
     cp /etc/resolv.conf /etc/resolv.conf.bak
+    systemctl restart NetworkManager
+    SLEEP_WAIT 3
     LOG_INFO "End to config params of the case."
 }
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL dnssec-trigger
+    echo "" >/etc/resolv.conf
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -53,7 +56,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to check the reprobe"
     dnssec-trigger-control  test_tcp -s 127.0.0.1
     CHECK_RESULT $? 0 0 "Failed to check the test_tcp -s"
-    dnssec-trigger-control  test_tcp -c ./dnssec-trigger.conf 
+    dnssec-trigger-control  test_tcp -c ./dnssec-trigger.conf
     CHECK_RESULT $? 0 0 "Failed to check the test_tcp -c"
     LOG_INFO "End to run test."
 }
@@ -62,7 +65,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop dnssec-triggerd
     DNF_REMOVE "$@"
-    mv /etc/resolv.conf.bak /etc/resolv.conf
+    mv -f /etc/resolv.conf.bak /etc/resolv.conf
+    systemctl restart NetworkManager
     LOG_INFO "End to restore the test environment."
 }
 

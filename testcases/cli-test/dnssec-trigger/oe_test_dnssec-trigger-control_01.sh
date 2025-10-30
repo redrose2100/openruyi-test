@@ -22,6 +22,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
+    systemctl restart NetworkManager
+    SLEEP_WAIT 3
     cp /etc/resolv.conf /etc/resolv.conf.bak
     LOG_INFO "End to config params of the case."
 }
@@ -29,6 +31,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL dnssec-trigger
+    echo "" >/etc/resolv.conf
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -67,7 +70,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop dnssec-triggerd
     DNF_REMOVE "$@"
-    mv /etc/resolv.conf.bak /etc/resolv.conf
+    mv -f /etc/resolv.conf.bak /etc/resolv.conf
+    systemctl restart NetworkManager
     LOG_INFO "End to restore the test environment."
 }
 
