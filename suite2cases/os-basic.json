@@ -1093,6 +1093,9 @@
 	    "name": "oe_test_certutil"
 	},
 	{
+	    "name": "oe_test_unzstd"
+	},
+	{
 	    "name": "oe_test_corelist_1"
 	}
 
