@@ -16,18 +16,23 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-chown
 # ############################################
+# shellcheck disable=SC1090,SC2012
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start pre testcase!"
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     grep -w test /etc/passwd || useradd test
-    echo ${NODE1_PASSWORD} | passwd test --stdin
+    echo "${NODE1_PASSWORD}" | passwd test --stdin
     test -d tmp/tmp01 || mkdir -p tmp/tmp01
     sudo chown -R test:test tmp
     own_user02=$(ls -l tmp | tail -n 1 | awk -F ' ' '{print $3}')
     own_group02=$(ls -l tmp | tail -n 1 | awk -F ' ' '{print $4}')
     LOG_INFO "End pre testcase!"
 }
+
 function run_test() {
     LOG_INFO "Start executing testcase!"
     [ "$own_user02" == "test" ]
@@ -41,9 +46,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    export LANG=${OLD_LANG}
     userdel -r test
     rm -rf tmp
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
