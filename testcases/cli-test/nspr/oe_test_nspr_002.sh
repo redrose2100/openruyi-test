@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
+    find /root/.bash_history || touch /root/.bash_history
     cat > /tmp/test_nspr2.cpp  <<EOF
 #include "nspr.h"
 #include <iostream>
@@ -75,12 +76,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Return value error"
     cd /tmp && g++ test_nspr2.cpp -o test_nspr2 -I /usr/include/nspr4 -L /usr/lib64 -lnspr4
     test -f /tmp/test_nspr2
-    CHECK_RESULT $? 0 0 "compile testfile fail"    
+    CHECK_RESULT $? 0 0 "compile testfile fail"
     ./test_nspr2 > test
     test -f /tmp/test
     CHECK_RESULT $? 0 0 "Generate test fail "
     grep "/root/.bash_history  File" /tmp/test
-    CHECK_RESULT $? 0 0 "information is error"   
+    CHECK_RESULT $? 0 0 "information is error"
 }
 
 function post_test() {
