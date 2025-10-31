@@ -13,15 +13,22 @@
 # @Date      :   2023/10/12
 # @Desc      :   dim measure test
 # ##################################
-# shellcheck disable=SC2002,SC2119
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC2002,SC2119,SC1090
+
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    dnf config-manager --disable update
     DNF_INSTALL "dim_tools dim vdo kmod-kvdo"
-    lsmod | grep dim_core || insmod "$(rpm -ql dim | grep dim_core.ko)"
-    lsmod | grep dim_monitor || insmod "$(rpm -ql dim | grep dim_monitor.ko)"
-    depmod -a
-    modprobe kvdo
+    if dnf list --installed | grep dim_tools; then
+        lsmod | grep dim_core || insmod "$(rpm -ql dim | grep dim_core.ko)"
+        lsmod | grep dim_monitor || insmod "$(rpm -ql dim | grep dim_monitor.ko)"
+        depmod -a
+        modprobe kvdo
+    else
+        echo "dim does not exist, function is unavailable"
+        exit 255
+    fi
 }
 
 function run_test() {
@@ -67,6 +74,7 @@ function run_test() {
 }
 
 function post_test() {
+    dnf config-manager --enable update
     rmmod dim_monitor dim_core kvdo
     rm /usr/lib/modules/"$(uname -r)"/kernel/drivers/block/kvdo.ko
     rm -rf /etc/dim/
@@ -74,4 +82,3 @@ function post_test() {
 }
 
 main "$@"
-
