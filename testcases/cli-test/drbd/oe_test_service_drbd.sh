@@ -21,6 +21,10 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    if ! dnf list available drbd-utils &> /dev/null; then
+            echo "仓库中不存在 drbd-utils 包，跳过用例"
+            exit 255
+    fi
     DNF_INSTALL "drbd-utils kmod-drbd90"
     depmod -a
     modprobe drbd

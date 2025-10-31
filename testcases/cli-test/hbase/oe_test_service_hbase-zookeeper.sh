@@ -16,7 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test hbase-zookeeper.service restart
 # #############################################
-
+#shellcheck disable=SC1091
+#shellcheck disable=SC2119
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -46,7 +47,18 @@ EOF
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution hbase-zookeeper.service
+    systemctl restart hbase-zookeeper.service
+    CHECK_RESULT $? 0 0 " hbase-zookeeper.service restart failed"
+    systemctl status hbase-zookeeper.service | grep "Active: active"
+    CHECK_RESULT $? 0 0 " hbase-zookeeper.service restart failed"
+    systemctl stop hbase-zookeeper.service
+    CHECK_RESULT $? 0 0 " hbase-zookeeper.service stop failed"
+    systemctl status hbase-zookeeper.service | grep "Active: inactive"
+    CHECK_RESULT $? 0 0 " hbase-zookeeper.service stop failed"
+    systemctl start hbase-zookeeper.service
+    CHECK_RESULT $? 0 0 "hbase-zookeeper.service start failed"
+    systemctl status hbase-zookeeper.service | grep "Active: active"
+    CHECK_RESULT $? 0 0 "hbase-zookeeper.service start failed"
     test_reload hbase-zookeeper.service
     LOG_INFO "Finish test!"
 }

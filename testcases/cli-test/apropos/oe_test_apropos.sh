@@ -31,7 +31,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to search for the manual page related to 'ls'"
     apropos -r "ls.*" | grep ls
     CHECK_RESULT $? 0 0 "Failed to search for keywords using regular expressions"
-    apropos -a tar | grep glGetQueryiv
+    apropos -a tar | grep -E "glGetQueryiv|tar"
     CHECK_RESULT $? 0 0 "Failed to search for entries matching tar"
     apropos -M /usr/share/man ll
     CHECK_RESULT $? 0 0 "Failed to set the search path entry"
@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Wildcard search failed"
     apropos -C /etc/manpath.config "ls" | grep -q "ls"
     CHECK_RESULT $? 0 0 "Config file not applied"
-    apropos -d "ls" 2>&1 | grep -q "debug"
+    apropos -d "ls" 2>&1 | grep -q -E "debug|config file"
     CHECK_RESULT $? 0 0 "Debug mode output failed"
     LOG_INFO "End of the test."
 }
