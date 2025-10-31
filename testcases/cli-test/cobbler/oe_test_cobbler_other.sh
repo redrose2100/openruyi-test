@@ -25,44 +25,49 @@ function pre_test() {
     DNF_INSTALL "cobbler httpd"
     systemctl start httpd
     systemctl start cobblerd
+    SLEEP_WAIT 5
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-     LOG_INFO "Start to run testcase."
-     cobbler aclsetup --adduser=root --addgroup=root --removeuser=root --removegroup=root | grep "aclsetup"
-     CHECK_RESULT $? 0 0 "Failed option: aclsetup"
-     cobbler buildiso | grep "buildiso"
-     CHECK_RESULT $? 0 0 "Failed option: buildiso"
-     test -f generated.iso
-     CHECK_RESULT $? 0 0 "Failed option: buildiso"
-     cobbler import --name=openEuler --arch=x86_64 | grep "import"
-     CHECK_RESULT $? 0 0 "Failed option: import"
-     cobbler list | grep "distros" 
-     CHECK_RESULT $? 0 0 "Failed option: list"
-     cobbler report | grep "distros"
-     CHECK_RESULT $? 0 0 "Failed option: report"
-     cobbler reposync --only=only | grep "reposync"
-     CHECK_RESULT $? 0 0 "Failed option: reposync"
-     cobbler sync --verbose | grep "sync"
-     CHECK_RESULT $? 0 0 "Failed option: sync"
-     cobbler validate-autoinstalls | grep "validate_autoinstall"
-     CHECK_RESULT $? 0 0 "Failed option: validate-autoinstalls"
-     cobbler version | grep "Cobbler [[:digit:]]*"
-     CHECK_RESULT $? 0 0 "Failed option: version"
-     cobbler signature update | grep "signatures"
-     CHECK_RESULT $? 0 0 "Failed option: signature update"
-     cobbler signature reload --filename=test.json | grep "Signatures were successfully loaded" 
-     CHECK_RESULT $? 0 0 "Failed option: signature reload"
-     cobbler signature report | grep "signatures"
-     CHECK_RESULT $? 0 0 "Failed option: signature report"
-     cobbler get-loaders --force |grep "get_loaders"
-     CHECK_RESULT $? 0 0 "Failed option: get-loaders"
-     cobbler hardlink | grep "hardlink"
-     CHECK_RESULT $? 0 0 "Failed option: hardlink"    
-     cobbler replicate --master=${NODE1_IPV4} | grep "replicate"
-     CHECK_RESULT $? 0 0 "Failed option: replicate"
-     LOG_INFO "End to run testcase."
+    LOG_INFO "Start to run testcase."
+    cobbler aclsetup --adduser=root --addgroup=root --removeuser=root --removegroup=root | grep "aclsetup"
+    CHECK_RESULT $? 0 0 "Failed option: aclsetup"
+    if [[ "${NODE1_FRAME}" == "x86_64" ]]; then
+        cobbler buildiso | grep "buildiso"
+        CHECK_RESULT $? 0 0 "Failed option: buildiso"
+        test -f generated.iso
+        CHECK_RESULT $? 0 0 "Failed option: buildiso"
+    fi
+    cobbler import --name=openEuler --arch=x86_64 | grep "import"
+    CHECK_RESULT $? 0 0 "Failed option: import"
+    cobbler list | grep "distros"
+    CHECK_RESULT $? 0 0 "Failed option: list"
+    cobbler report | grep "distros"
+    CHECK_RESULT $? 0 0 "Failed option: report"
+    cobbler reposync --only=only | grep "reposync"
+    CHECK_RESULT $? 0 0 "Failed option: reposync"
+    cobbler sync --verbose | grep "sync"
+    CHECK_RESULT $? 0 0 "Failed option: sync"
+    cobbler validate-autoinstalls | grep "validate_autoinstall"
+    CHECK_RESULT $? 0 0 "Failed option: validate-autoinstalls"
+    cobbler version | grep "Cobbler [[:digit:]]*"
+    CHECK_RESULT $? 0 0 "Failed option: version"
+    cobbler signature update | grep "signatures"
+    CHECK_RESULT $? 0 0 "Failed option: signature update"
+    cobbler signature reload --filename=test.json | grep "Signatures were successfully loaded"
+    CHECK_RESULT $? 0 0 "Failed option: signature reload"
+    cobbler signature report | grep "signatures"
+    CHECK_RESULT $? 0 0 "Failed option: signature report"
+    if cobbler --help | grep get-loaders;then
+        cobbler get-loaders --force |grep "get_loaders"
+        CHECK_RESULT $? 0 0 "Failed option: get-loaders"
+    fi
+    cobbler hardlink | grep "hardlink"
+    CHECK_RESULT $? 0 0 "Failed option: hardlink"
+    cobbler replicate --master="${NODE1_IPV4}" | grep "replicate"
+    CHECK_RESULT $? 0 0 "Failed option: replicate"
+    LOG_INFO "End to run testcase."
 }
 
 function post_test() {
@@ -70,7 +75,7 @@ function post_test() {
     rm -rf test.json generated.iso
     systemctl stop httpd
     systemctl stop cobblerd
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
