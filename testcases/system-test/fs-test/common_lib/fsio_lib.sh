@@ -95,11 +95,7 @@ function CREATE_VG() {
 }
 
 function CREATE_FS() {
-    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
-        fs_type="ext3 ext4"
-    else
-        fs_type="${1:-$FS_TYPE}"
-    fi
+    fs_type="${1:-$FS_TYPE}"
     cur_date=$(date +%Y%m%d%H%M%S)
     vggroup=$(CREATE_VG)
     count=1
