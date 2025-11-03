@@ -21,6 +21,12 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
     LOG_INFO "Start to config params of the case."
+    setenforce 1
+    selinux_status=$(getenforce)
+    if [ "${selinux_status}" == "Disabled" ]; then
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
     firewall-cmd --add-port=6443/tcp --zone=public --permanent
     firewall-cmd --add-port=8472/udp --zone=public --permanent
     firewall-cmd --reload
@@ -33,7 +39,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL k3s
+    DNF_INSTALL "k3s hostname"
     hostName_bak=$(hostname)
     hostnamectl set-hostname server
     P_SSH_CMD --cmd "yum install -y k3s" --node 2
@@ -76,7 +82,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     firewall-cmd --remove-port=6443/tcp --zone=public --permanent
     firewall-cmd --remove-port=8472/udp --zone=public --permanent
-    firewall-cmd --reload
+    firewall-cmd --rceload
     P_SSH_CMD --cmd "firewall-cmd --remove-port=6443/tcp --zone=public --permanent" --node 2
     P_SSH_CMD --cmd "firewall-cmd --remove-port=8472/udp --zone=public --permanent" --node 2
     P_SSH_CMD --cmd "firewall-cmd --reload" --node 2
