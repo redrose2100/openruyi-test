@@ -16,12 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-touch
 # ############################################
+# shellcheck disable=SC1090,SC2012
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     current_path=$(
-        cd "$(dirname $0)" || exit 1
+        cd "$(dirname "$0")" || exit 1
         pwd
     )
     cd ~ || exit 1
@@ -49,9 +53,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    export LANG=${OLD_LANG}
     rm -rf test1
-    cd ${current_path} || exit 1
+    cd "${current_path}" || exit 1
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
