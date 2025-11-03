@@ -98,13 +98,13 @@ server {
     cd smc-tools-main || exit 1
     make -j
     cd - || exit 1
-    cp /etc/oeAware/preload.yaml /etc/oeAware/preload.yaml_bak
+    cp /etc/oeAware/plugin/preload.yaml /etc/oeAware/plugin/preload.yaml_bak
     echo ' - apppath: "/usr/sbin/nginx"
    sopath:
      - "'$(pwd)'/smc-tools-main/libsmc-preload.so"
  - apppath: "/usr/bin/wrk"
    sopath:
-     - "'$(pwd)'/smc-tools-main/libsmc-preload.so"' > /etc/oeAware/preload.yaml
+     - "'$(pwd)'/smc-tools-main/libsmc-preload.so"' > /etc/oeAware/plugin/preload.yaml
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -112,7 +112,7 @@ function post_nginx() {
     LOG_INFO "Start to restore the test environment."
     rm -rf $(ls | grep -E "smc-tools-main|server")
     mv -f /etc/nginx/nginx.conf_bak /etc/nginx/nginx.conf
-    mv -f /etc/oeAware/preload.yaml_bak /etc/oeAware/preload.yaml
+    mv -f /etc/oeAware/plugin/preload.yaml_bak /etc/oeAware/plugin/preload.yaml
     if [ ${flag} = 'true' ]; then
         setenforce 1
     fi
@@ -132,9 +132,9 @@ function create_docker() {
      
     for((i=1;i<="${instance_num}";i++))
     do
-        docker run -itd --cpuset-cpus="${numa0}" --cpus=4 --name docker_name${i} --privileged -u root "${img_name}" /bin/bash
+        docker run -itd --cpuset-cpus="${numa0}" --cpus=4 --name docker_name"${i}" --privileged -u root "${img_name}" /bin/bash
         docker cp /etc/yum.repos.d/openEuler.repo "docker_name${i}":/etc/yum.repos.d/
-        docker exec -it -u root docker_name${i} /bin/bash -c "dnf install -y stress-ng"
+        docker exec -it -u root docker_name"${i}" /bin/bash -c "dnf install -y stress-ng"
     done    
 }
 

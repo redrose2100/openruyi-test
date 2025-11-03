@@ -95,8 +95,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     oeawarectl -d tune_numa_mem_access
     rm -rf test_mem_access
-    mv /etc/numafast.yaml_bak /etc/numafast.yaml
-    mv /etc/oeAware/config.yaml_bak /etc/oeAware/config.yaml
+    mv -f /etc/numafast.yaml_bak /etc/numafast.yaml
+    mv -f /etc/oeAware/config.yaml_bak /etc/oeAware/config.yaml
     rpm -e numafast
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

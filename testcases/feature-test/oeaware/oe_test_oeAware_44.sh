@@ -27,10 +27,10 @@ function pre_test() {
     systemctl start oeaware
     gcc -shared -fPIC common/libhello.c -o libhello.so
     gcc common/main.c -o main
-    cp /etc/oeAware/preload.yaml /etc/oeAware/preload.yaml_bak
+    cp /etc/oeAware/plugin/preload.yaml /etc/oeAware/plugin/preload.yaml_bak
     echo ' - apppath: "'$(pwd)'/main"
    sopath:
-     - "'$(pwd)'/libhello.so"' > /etc/oeAware/preload.yaml
+     - "'$(pwd)'/libhello.so"' > /etc/oeAware/plugin/preload.yaml
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -52,7 +52,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf libhello.so main
-    mv -f /etc/oeAware/preload.yaml_bak /etc/oeAware/preload.yaml
+    mv -f /etc/oeAware/plugin/preload.yaml_bak /etc/oeAware/plugin/preload.yaml
     export LANG="${LANG_OLD}"
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

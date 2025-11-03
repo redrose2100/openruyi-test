@@ -27,7 +27,7 @@ function pre_test() {
     DNF_INSTALL "oeAware-manager numactl"
     systemctl restart oeaware
     oeawarectl -i numafast
-    cp /etc/numafast.yaml_bak /etc/numafast.yaml_bak
+    cp /etc/numafast.yaml /etc/numafast.yaml_bak
     LOG_INFO "End to prepare the test environment."
 }
 

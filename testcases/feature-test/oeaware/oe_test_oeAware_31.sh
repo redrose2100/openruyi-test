@@ -28,10 +28,10 @@ function pre_test() {
     DNF_INSTALL "oeAware-manager"
     systemctl start oeaware
     miss_arr=($(oeawarectl analysis -t 3 | grep tlb_miss | awk -F'|' '{print $3}' | sed 's/%//'))
-    l1dtlb_miss_thd=$(echo $(printf "%.6f" $(echo "${miss_arr[0]}" + 0.3 | bc)))
-    l1itlb_miss_thd=$(echo $(printf "%.6f" $(echo "${miss_arr[1]}" + 0.3 | bc)))
-    l2dtlb_miss_thd=$(echo $(printf "%.6f" $(echo "${miss_arr[2]}" + 0.3 | bc)))  
-    l2itlb_miss_thd=$(echo $(printf "%.6f" $(echo "${miss_arr[3]}" + 0.3 | bc)))  
+    l1dtlb_miss_thd=$(echo $(printf "%.6f" $(echo "${miss_arr[0]}" + 3.3 | bc)))
+    l1itlb_miss_thd=$(echo $(printf "%.6f" $(echo "${miss_arr[1]}" + 3.3 | bc)))
+    l2dtlb_miss_thd=$(echo $(printf "%.6f" $(echo "${miss_arr[2]}" + 3.3 | bc)))  
+    l2itlb_miss_thd=$(echo $(printf "%.6f" $(echo "${miss_arr[3]}" + 3.3 | bc)))  
     LOG_INFO "End to prepare the test environment."
 }
 

@@ -21,13 +21,13 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_FRAME}" = "x86_64" ]; then
-        echo "The environment does not support testing"
+    DNF_INSTALL "oeAware-manager numactl redis perf"
+    if ! perf list | grep arm_spe;then
+        LOG_INFO "The environment does not support testing"
         exit 255
     fi
     LANG_OLD="${LANG}"
     export LANG=en_US.utf8
-    DNF_INSTALL "oeAware-manager numactl redis"
     systemctl start oeaware
     numa_nodes=$(lscpu | grep "NUMA node(s)" | awk '{print $3}')
     oeawarectl -i numafast

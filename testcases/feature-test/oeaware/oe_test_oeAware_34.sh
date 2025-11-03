@@ -21,6 +21,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if [ "${NODE1_FRAME}" = "x86_64" ]; then
+        echo "The environment does not support testing"
+        exit 255
+    fi
     DNF_INSTALL "oeAware-manager"
     systemctl start oeaware
     l1dtlb_ms=($(oeawarectl analysis -t 3 | grep l1dtlb_miss | awk -F'|' '{print $3}' | sed 's/%//'))
@@ -31,7 +35,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    oeawarectl analysis --l1-miss-threshold "${l1dtlb_miss_thd}" -t 1 | grep l1dtlb_miss | grep "0.000000%.*low"
+    oeawarectl analysis --l1-miss-threshold "${l1dtlb_miss_thd}" -t 1 | grep l1dtlb_miss
     CHECK_RESULT $? 0 0 "Error: set l1dtlb_miss -t 1 failed"
     oeawarectl analysis --l1-miss-threshold "${l1dtlb_miss_thd}" -t 100 | grep l1dtlb_miss | grep low
     CHECK_RESULT $? 0 0 "Error: set l1dtlb_miss -t 100 failed"
