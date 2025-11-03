@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   oeAware test
 #####################################
+# shellcheck disable=SC2086
 
 source "${OET_PATH}"/testcases/feature-test/oeaware/common/common.sh
 
@@ -47,7 +48,7 @@ function run_test() {
     check_docker "${num}" "${interval_num}" 
     dockerid=$(docker ps -a | grep docker_name4 | awk '{print $1}')
     file="/sys/fs/cgroup/cpuset/docker/${dockerid}*/cpuset.preferred_cpus"
-    test -f "${file}" && test ! -s "${file}"
+    test -f ${file} && test ! -s ${file}
     CHECK_RESULT $? 0 0 "Error: Check enable load_based_scheduling_tune failed"
     LOG_INFO "End to run test."
 }

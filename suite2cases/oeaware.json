@@ -243,6 +243,10 @@
             "machine type": "physical"
         },
         {
+            "name": "oe_test_oeAware_67",
+            "machine type": "physical"
+        },
+        {
             "name": "oe_test_oeAware_68",
             "machine type": "physical"
         },

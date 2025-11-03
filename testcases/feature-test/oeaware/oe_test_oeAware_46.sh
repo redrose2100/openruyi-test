@@ -27,18 +27,18 @@ function pre_test() {
     systemctl start oeaware
     gcc -shared -fPIC common/libhello.c -o libhello.so
     gcc common/main.c -o main
-    cp /etc/oeAware/preload.yaml /etc/oeAware/preload.yaml_bak
+    cp /etc/oeAware/plugin/preload.yaml /etc/oeAware/plugin/preload.yaml_bak
     echo ' - apppath: "'$(pwd)'/main"
    sopath:
      - "'$(pwd)'/libhello.so"
-     - "/usr/lib64/libc.so.6"' > /etc/oeAware/preload.yaml
+     - "/usr/lib64/libc.so.6"' > /etc/oeAware/plugin/preload.yaml
     echo > /var/log/oeAware/server.log
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    oeawarectl -e preload_tune | grep "Instance enabled failed, because instance init environment failed"
+    oeawarectl -e preload_tune | grep "Instance enabled failed, because conflicting shared object"
     CHECK_RESULT $? 0 0 "Error: Check preload_tune enable failed"
     grep "shared object libc.so.6 already exists in $(pwd)/main" /var/log/oeAware/server.log
     CHECK_RESULT $? 0 0 "Error: Check preload_tune enable failed"
@@ -48,7 +48,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf libhello* main
-    mv -f /etc/oeAware/preload.yaml_bak /etc/oeAware/preload.yaml
+    mv -f /etc/oeAware/plugin/preload.yaml_bak /etc/oeAware/plugin/preload.yaml
     export LANG="${LANG_OLD}"
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
