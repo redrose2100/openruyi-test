@@ -1097,6 +1097,9 @@
 	},
 	{
 	    "name": "oe_test_corelist_1"
+	},
+	{
+	    "name": "oe_test_corelist_2"
 	}
 
     ]
