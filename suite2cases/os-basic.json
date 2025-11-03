@@ -1096,6 +1096,9 @@
 	    "name": "oe_test_unzstd"
 	},
 	{
+	    "name": "oe_test_unpigz"
+	},
+	{
 	    "name": "oe_test_corelist_1"
 	},
 	{
