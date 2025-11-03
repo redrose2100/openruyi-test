@@ -9,6 +9,9 @@
             },
             {
                 "name": "oe_test_erlang_01"
+            },
+	    { 
+                "name": "oe_test_erlang_02" 
             }
         ]
     }
