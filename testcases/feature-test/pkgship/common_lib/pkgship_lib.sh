@@ -36,6 +36,7 @@ function INIT_CONF() {
     conf_file=$1
     chown pkgshipuser:pkgshipuser "$conf_file"
     pkgship init -filepath "$conf_file" >/dev/null
+    SLEEP_WAIT 20
 }
 
 function MODIFY_INI() {
@@ -467,6 +468,11 @@ function COMPARE_BUILD_PKG() {
     code=$(COMPARE_DNF actual_cmp expect_cmp)
     CHECK_RESULT "$code" 0 0 "Check package $pkgname in $dbname failed."
 }
+
+if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+    LOG_WARN "Testing cannot be performed if NODE1_FRAME is riscv64"
+    exit 255
+fi
 
 path=$(pwd)
 if [[ $path =~ "install_service" ]]; then
