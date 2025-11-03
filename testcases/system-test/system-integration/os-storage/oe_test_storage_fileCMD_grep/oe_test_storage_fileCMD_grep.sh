@@ -16,8 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-grep
 # ############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase!"
     if [ "$NODE1_FRAME" == "ppc64le" ];then 
@@ -34,6 +43,12 @@ function run_test() {
     grep --help | grep "Usage"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution!"
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    export LANG=${OLD_LANG}
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
