@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command certtool01
 # ############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -23,6 +24,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     cur_lang=$LANG
     export LANG=en_US.UTF-8
+    DNF_INSTALL gnutls-utils
     TEST_DIR="/tmp/certtool_test"
     CA_KEY="$TEST_DIR/ca.key"
     CA_CERT="$TEST_DIR/ca.crt"
@@ -87,6 +89,7 @@ EOF
 function post_test() {
     LOG_INFO "Start environment cleanup."
     export LANG=$cur_lang
+    DNF_REMOVE "$@"
     rm -rf $TEST_DIR "$TMPFILE1" "$TMPFILE2" "$TMPFILE3" "$TMPFILE4"
     LOG_INFO "Finish environment cleanup!"
 }
