@@ -161,7 +161,7 @@ function exec_case() {
 
     exec 6>&1
     exec 7>&2
-    exec >>"$log_path"/"$(date +%Y-%m-%d-%T)".log 2>&1
+    exec >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1
 
     SLEEP_WAIT $TIMEOUT "$cmd"
     ret_code=$?
@@ -213,7 +213,7 @@ function run_test_case() {
             . <(grep -vE '^main[[:space:]]*"\$@"' "${test_case}.sh") 
 
             # 新建重启日志日志直接写入文件
-            logfile="$log_path/reboot-$(date +%Y-%m-%d-%T).log"
+            logfile="$log_path/reboot-$(date +%Y-%m-%d_%H-%M-%S).log"
             {
                 LOG_INFO ">>> Reboot"
                 post_test
@@ -262,13 +262,13 @@ function run_test_case() {
     LOG_INFO "start to run testcase:$test_case."
 
     if [ -z "${case_path[*]}" ]; then
-        echo -e "Can't find the test script:$test_case, Please confirm whether the code is submitted." >>"$log_path"/"$(date +%Y-%m-%d-%T)".log 2>&1
+        echo -e "Can't find the test script:$test_case, Please confirm whether the code is submitted." >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1
         exec_case "exit 255" "$log_path" "$test_case" "$test_suite"
         return 1
     else
         CHECK_ENV "${OET_PATH}/suite2cases/$test_suite.json" "${test_case}"
         if [ $? -ne 0 ]; then
-            echo -e "The test environment don't meet the requirements, please check your environment." >>"$log_path"/"$(date +%Y-%m-%d-%T)".log 2>&1
+            echo -e "The test environment don't meet the requirements, please check your environment." >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1
             exec_case "exit 255" "$log_path" "$test_case" "$test_suite"
             return 1
         fi
