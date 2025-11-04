@@ -72,7 +72,7 @@ function exec_case() {
     exec 6>&1
     exec 7>&2
 
-    exec >"$log_path"/"$(date +%Y-%m-%d-%T)".log 2>&1
+    exec >"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1
 
     timeout --preserve-status $TIMEOUT $cmd
     ret_code=$?
