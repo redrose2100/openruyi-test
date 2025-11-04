@@ -16,7 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   swap management
 # ############################################
+# shellcheck disable=SC1090,SC2154
+
 source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
+
 function config_params() {
     LOG_INFO "Start loading data!"
     if [ ! -e /dev/openeuler/swap ];then
@@ -38,8 +41,8 @@ w
 HGG
     mkfs.ext4 -F /dev/"${local_disk1}"
     SLEEP_WAIT 3
-    value=$(lsblk | grep openeuler | sed -n '$p' | awk -F "└─" '{split($2,a," "); print a[1]}')
-    openeuler=$(lsblk | grep openeuler | sed -n '$p' | awk -F "└─" '{print $2}' | awk -F " " '{print $1}' | awk -F "-" '{print $1}')
+    value=$(lsblk | grep swap | awk -F "└─|├─" '{split($2,a," "); print a[1]}')
+    openeuler=$(lsblk | grep swap | awk -F "└─|├─" '{print $2}' | awk -F " " '{print $1}' | awk -F "-" '{print $1}')
     LOG_INFO "Environmental preparation is over."
 }
 
