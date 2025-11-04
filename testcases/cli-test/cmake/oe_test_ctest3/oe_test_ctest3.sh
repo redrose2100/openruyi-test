@@ -78,7 +78,7 @@ function run_test() {
     CHECK_RESULT $?
     ctest3 --build-nocmake | grep "100% tests passed"
     CHECK_RESULT $?
-    ctest3 -build-run-dir "$BUILD_DIR" | grep "100% tests passed"
+    ctest3 --build-run-dir "$BUILD_DIR" | grep "100% tests passed"
     CHECK_RESULT $?
     ctest3 --build-two-config | grep "100% tests passed"
     CHECK_RESULT $?
