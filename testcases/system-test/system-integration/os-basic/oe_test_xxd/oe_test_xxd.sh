@@ -21,7 +21,6 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL vim-common 
     echo "test_xxd" > testfile_xxd
     LOG_INFO "End to prepare the test environment."
 }
@@ -33,13 +32,18 @@ function run_test() {
     res1=$(xxd -p testfile_xxd)
     [ "$res1" == "746573745f7878640a" ]
     CHECK_RESULT $? 0 0 "test xxd error"
+    echo "1234567890" | xxd -c 4 | grep -q "00000000: 3132 3334"
+    CHECK_RESULT $? 0 0 "xxd column setting failed"
+    echo "A" | xxd -b | grep -q "01000001"
+    CHECK_RESULT $? 0 0 "xxd binary output failed"
+    echo "ABCD" | xxd -e | grep -q "44434241"
+    CHECK_RESULT $? 0 0 "xxd endianness setting failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f testfile_xxd
-    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
