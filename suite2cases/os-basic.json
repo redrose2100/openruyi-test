@@ -1103,6 +1103,9 @@
 	},
 	{
 	    "name": "oe_test_corelist_2"
+	},
+	{
+	    "name": "oe_test_corelist_3"
 	}
 
     ]
