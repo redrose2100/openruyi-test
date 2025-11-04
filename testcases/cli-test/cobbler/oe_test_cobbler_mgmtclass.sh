@@ -48,13 +48,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: mgmtclass copy"
     cobbler mgmtclass list | grep "OpenEuler2"
     CHECK_RESULT $? 0 0 "Failed option: mgmtclass copy"
-    cobbler mgmtclass edit --name=openEuler1 --owners=tom
+    cobbler mgmtclass edit --name=OpenEuler1 --owners=tom
     CHECK_RESULT $? 0 0 "Failed option: mgmtclass edit"
-    cobbler mgmtclass report --name=openEuler1 | grep "tom"
+    cobbler mgmtclass report --name=OpenEuler1 | grep "tom"
     CHECK_RESULT $? 0 0 "Failed option: mgmtclass edit"
     cobbler mgmtclass list | grep "OpenEuler"
     CHECK_RESULT $? 0 0 "Failed option: mgmtclass list"
-    cobbler mgmtclass find | grep "OpenEuler"
+    cobbler mgmtclass find --name=OpenEuler* | grep "OpenEuler"
     CHECK_RESULT $? 0 0 "Failed option: mgmtclass find"
     cobbler mgmtclass remove --name=OpenEuler1
     CHECK_RESULT $? 0 0 "Failed option: mgmtclass remove"

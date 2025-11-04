@@ -51,13 +51,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: repo copy"
     cobbler repo list | grep "OpenEuler2"
     CHECK_RESULT $? 0 0 "Failed option: repo copy"
-    cobbler repo edit --name=openEuler1 --owners=tom
+    cobbler repo edit --name=OpenEuler1 --owners=tom
     CHECK_RESULT $? 0 0 "Failed option: repo edit"
-    cobbler repo report --name=openEuler1 | grep "tom"
+    cobbler repo report --name=OpenEuler1 | grep "tom"
     CHECK_RESULT $? 0 0 "Failed option: repo edit"
     cobbler repo list | grep "OpenEuler"
     CHECK_RESULT $? 0 0 "Failed option: repo list"
-    cobbler repo find | grep "OpenEuler"
+    cobbler repo find --name=OpenEuler* | grep "OpenEuler"
     CHECK_RESULT $? 0 0 "Failed option: repo find"
     cobbler repo remove --name=OpenEuler1
     CHECK_RESULT $? 0 0 "Failed option: repo remove"
