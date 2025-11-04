@@ -16,7 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Disk operation:parted/fdisk
 # ############################################
+# shellcheck disable=SC1090,SC2154
+
 source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
+
 function config_params() {
     LOG_INFO "Start loading data!"
     DISK_A="/dev/${local_disk}"
@@ -26,6 +29,8 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL parted
     mkfs.ext4 -F "${DISK_A}"
     mkfs.ext4 -F "${ADD_DISK}"
@@ -93,6 +98,7 @@ EOF
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    export LANG=${OLD_LANG}
     fdisk "${ADD_DISK}" <<EOF
 d
 1

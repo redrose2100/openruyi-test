@@ -16,7 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Query disk attributes: lsblk
 # ############################################
+# shellcheck disable=SC1090,SC2154
+
 source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/storage_disk_lib.sh
+
 function config_params() {
     LOG_INFO "Start loading data!"
     if [ ! -e /dev/openeuler/swap ];then
@@ -25,7 +28,7 @@ function config_params() {
     fi
     DNF_INSTALL xfsprogs
     new_uuid=12d59867-ff81-40d8-a7e7-45e971d31255
-    value=$(lsblk | grep openeuler | sed -n '$p' | awk -F '└─' '{split($2,a," "); print a[1]}')
+    value=$(lsblk | grep swap | awk -F '└─|├─' '{split($2,a," "); print a[1]}')
     LOG_INFO "Loading data is complete!"
 }
 
@@ -52,7 +55,7 @@ function run_test() {
     sleep 2
     lsblk --output +UUID /dev/"${local_disk1}" | awk '{if (NR>1){print$NF}}' | grep ${new_uuid}
     CHECK_RESULT $?
-    swapoff /dev//mapper/"${value}"
+    swapoff /dev/mapper/"${value}"
     swaplabel -U ${new_uuid} -L new-label /dev/mapper/"${value}"
     udevadm settle
     sleep 2
