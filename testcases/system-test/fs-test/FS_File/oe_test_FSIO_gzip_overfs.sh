@@ -21,7 +21,12 @@ source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "lvm2"
-    read -r -a point_list <<< "$(CREATE_FS "ext3 ext4 xfs")"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        TEST_FS="ext3 ext4"
+    else
+        TEST_FS="ext3 ext4 xfs"
+    fi
+    read -r -a point_list <<< "$(CREATE_FS "${TEST_FS}")"
     ext3_point=${point_list[1]}
     ext4_point=${point_list[2]}
     xfs_point=${point_list[3]}
@@ -37,18 +42,21 @@ function run_test() {
     gzip -dv "$ext4_point/testFile1.gz" > "$ext3_point/testFile2"
     find "$ext3_point" -maxdepth 1 -name "testFile2"
     CHECK_RESULT $? 0 0 "Decompress gzip file in $ext3_point failed."
-    gzip -c "$ext3_point/testFile1" > "$xfs_point/testFile1.gz"
-    find "$xfs_point" -maxdepth 1 -name "testFile1.gz"
-    CHECK_RESULT $? 0 0 "Compress file by gzip in $xfs_point failed."
-    gzip -dv "$xfs_point/testFile1.gz" > "$ext3_point/testFile3"
-    find "$ext3_point" -maxdepth 1 -name "testFile3"
-    CHECK_RESULT $? 0 0 "Decompress gzip file in $ext3_point failed."
-    gzip -c "$ext4_point/testFile1" > "$xfs_point/testFile2.gz"
-    find "$xfs_point" -maxdepth 1 -name "testFile2.gz"
-    CHECK_RESULT $? 0 0 "Compress file by gzip in $xfs_point failed."
-    gzip -dv "$xfs_point/testFile2.gz" > "$ext4_point/testFile2"
-    find "$ext4_point" -maxdepth 1 -name "testFile2"
-    CHECK_RESULT $? 0 0 "Decompress gzip file in $ext4_point failed."
+    if [[ ${NODE1_FRAME} != "riscv64" ]]; then
+        gzip -c "$ext3_point/testFile1" > "$xfs_point/testFile1.gz"
+        find "$xfs_point" -maxdepth 1 -name "testFile1.gz"
+        CHECK_RESULT $? 0 0 "Compress file by gzip in $xfs_point failed."
+        gzip -dv "$xfs_point/testFile1.gz" > "$ext3_point/testFile3"
+        find "$ext3_point" -maxdepth 1 -name "testFile3"
+        CHECK_RESULT $? 0 0 "Decompress gzip file in $ext3_point failed."
+        gzip -c "$ext4_point/testFile1" > "$xfs_point/testFile2.gz"
+        find "$xfs_point" -maxdepth 1 -name "testFile2.gz"
+        CHECK_RESULT $? 0 0 "Compress file by gzip in $xfs_point failed."
+        gzip -dv "$xfs_point/testFile2.gz" > "$ext4_point/testFile2"
+        find "$ext4_point" -maxdepth 1 -name "testFile2"
+        CHECK_RESULT $? 0 0 "Decompress gzip file in $ext4_point failed."
+    fi
+
     LOG_INFO "End to run test."
 }
 

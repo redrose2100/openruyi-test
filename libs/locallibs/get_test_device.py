@@ -107,13 +107,13 @@ def get_test_disk(node=1):
     """
     if os.environ.get("NODE" + str(node) + "_LOCALTION") == "local":
         used_disk = subprocess.getoutput(
-            "lsblk -l | grep -e '/.*\|\[.*\]' | awk '{print $1}' | tr -d '[0-9]' | uniq | sed -e ':a;N;$!ba;s/\\n/ /g'"
+            r"lsblk -l | grep -e '/.*\|\[.*\]' | awk '{print $1}' | tr -d '[0-9]' | uniq | sed -e ':a;N;$!ba;s/\\n/ /g'"
         )
 
         test_disk = subprocess.getoutput(
-            "lsblk -n | grep 'disk' | grep -v 'mmcblk.*\|mtdblock.*\|nbd.*\|└─.*\|"
+            r"lsblk -n | grep 'disk' | grep -v 'mmcblk.*\|mtdblock.*\|nbd.*\|└─.*\|"
             + used_disk.replace(" ", "\|")
-            + "' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'"
+            + r"' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'"
         )
     else:
         conn = ssh_cmd.pssh_conn(
@@ -124,13 +124,13 @@ def get_test_disk(node=1):
         )
         used_disk = ssh_cmd.pssh_cmd(
             conn,
-            "lsblk -l | grep -e '/.*\|\[.*\]' | awk '{print $1}' | tr -d '[0-9]' | uniq | sed -e ':a;N;$!ba;s/\\n/ /g'",
+            r"lsblk -l | grep -e '/.*\|\[.*\]' | awk '{print $1}' | tr -d '[0-9]' | uniq | sed -e ':a;N;$!ba;s/\\n/ /g'",
         )[1]
         test_disk = ssh_cmd.pssh_cmd(
             conn,
-            "lsblk -n | grep 'disk' | grep -v 'mmcblk.*\|mtdblock.*\|nbd.*\|└─.*\|"
+            r"lsblk -n | grep 'disk' | grep -v 'mmcblk.*\|mtdblock.*\|nbd.*\|└─.*\|"
             + used_disk.replace(" ", "\|")
-            + "' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'",
+            + r"' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'",
         )[1]
 
     return test_disk
