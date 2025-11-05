@@ -15,18 +15,20 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of nvml command
 # ############################################
-# shellcheck disable=SC2119
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
-
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if ! yum list nvml &>/dev/null; then
-         echo "skip unsupported arm arch"
-         exit 255
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    if [ "$NODE1_FRAME"x == "aarch64"x ]; then
+        echo "skip unsupported arm arch"
+        exit 255
+    else
+        DNF_INSTALL nvml
     fi
-    DNF_INSTALL nvml
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -45,7 +47,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    export LANG=${OLD_LANG}
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
