@@ -16,16 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   network cfg file test
 # #############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    find /etc/sysconfig/network-scripts/ -type f | head -n 1 | grep ifcfg
+    find /etc/sysconfig/network-scripts/ -type f | grep ifcfg | head -n 1
     CHECK_RESULT $? 0 0 "have no available net cfg file"
-    cfg01=$(find /etc/sysconfig/network-scripts/ -type f | head -n 1 | grep ifcfg)
-    grep -i type "$cfg01"
-    CHECK_RESULT $? 0 0 "the item is use for set net type"
+    cfg01=$(find /etc/sysconfig/network-scripts/ -type f | grep ifcfg | head -n 1)
+    grep -i NAME "$cfg01"
+    CHECK_RESULT $? 0 0 "the item is use for set net NAME"
     grep -i bootproto "$cfg01"
     CHECK_RESULT $? 0 0 "the item is use for set net bootproto"
     grep -i onboot "$cfg01"
