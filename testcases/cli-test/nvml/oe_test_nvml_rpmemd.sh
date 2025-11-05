@@ -15,15 +15,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of nvml command
 # ############################################
-# shellcheck disable=SC2119
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 source "${OET_PATH}/testcases/cli-test/nvml/common/checkenv.sh"
 
-
-checkversion4rpma(){
-    NVML_VERSION=$(yum info nvml 2>/dev/null  | grep -E '^Version' | awk '{print $NF}' | head -1)
-    # 1.13.0及以后的版本不再支持rpma 
+checkversion4rpma() {
+    NVML_VERSION=$(yum info nvml 2>/dev/null | grep -E '^Version' | awk '{print $NF}' | head -1)
+    # 1.13.0及以后的版本不再支持rpma
     compareversions "$NVML_VERSION" "1.13.0"
     result=$?
 
@@ -36,15 +35,16 @@ checkversion4rpma(){
     fi
 }
 
-
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if ! yum list nvml &>/dev/null; then
-         echo "skip unsupported arm arch"
-         exit 255
-    fi
-    DNF_INSTALL nvml
-    cat >rpmemd.conf <<EOL
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
+    if [ "$NODE1_FRAME"x == "aarch64"x ]; then
+        echo "skip unsupported arm arch"
+        exit 255
+    else
+        DNF_INSTALL nvml
+        cat >rpmemd.conf <<EOL
   log-file = /var/log/rpmemd.log
   poolset-dir = $HOME
   persist-apm = no
@@ -52,6 +52,7 @@ function pre_test() {
   use-syslog = yes
   log-level = err
 EOL
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -74,9 +75,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    export LANG=${OLD_LANG}
     rm -rf rpmemd.conf log.* blk.*
     pkill -f "rpmemd -c rpmemd.conf" || true
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
