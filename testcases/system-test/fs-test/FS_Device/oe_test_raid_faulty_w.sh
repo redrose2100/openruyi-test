@@ -34,14 +34,14 @@ n
 p
 1
 
-100000
-Y
++100MB
+y
 n
 p
 2
 
-200000
-Y
++100MB
+y
 w
 diskEof
     echo y | mdadm -C -v /dev/md1 -l 1 -n 2 "${disk_name}"1 "${disk_name}"2
