@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_espeak_ng"
+        },
+        {
+            "name": "oe_test_espeak_ng_2"
         }
     ]
 }
