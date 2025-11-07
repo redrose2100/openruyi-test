@@ -1109,6 +1109,9 @@
 	},
 	{
 	    "name": "oe_test_corelist_4"
+	},
+	{
+	    "name": "oe_test_fc-list_1"
 	}
 
     ]
