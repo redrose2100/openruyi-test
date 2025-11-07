@@ -27,7 +27,7 @@ ULTRA_LONG_CHARACTERS="000000000000000000000000000000000000000000000000000000000
 function deploy_autund()
 {
     DNF_INSTALL "atune atune-engine polkit lshw"
-    disk_name=$(lsblk -no NAME "$(df --output=source / | awk 'NR==2')" | head -1 | sed 's/[0-9]*$//')
+    disk_name=$(lsblk -l | grep -e '/.*\|\[.*\]' | awk '{print $1}' | tr -d '0-9' | uniq | grep -vE "root|swap|home|openeuler")
     cp /etc/atuned/atuned.cnf /etc/atuned/atuned.cnf.bak
     cp /etc/atuned/engine.cnf /etc/atuned/engine.cnf.bak
     sed -i "s/^disk =.*/disk = ${disk_name}/g" /etc/atuned/atuned.cnf
@@ -36,7 +36,7 @@ function deploy_autund()
     sed -i "s/engine_tls = true/engine_tls = false/g" /etc/atuned/atuned.cnf
     sed -i "s/engine_tls = true/engine_tls = false/g" /etc/atuned/engine.cnf
     creat_ca
-    systemctl start atuned 
+    systemctl start atuned
     systemctl status atuned |grep running
     CHECK_RESULT $? 0 0 "atuned service startup failure"
     systemctl start atune-engine
@@ -57,21 +57,21 @@ function clean_autund() {
 function creat_ca() {
     CERT_PATH=demo
     mkdir $CERT_PATH
-
+    
     ### 2) 生成CA的RSA密钥对
     openssl genrsa -out $CERT_PATH/ca.key 2048
-
+    
     ### 3) 生成CA根证书
     openssl req -new -x509 -days 3650 -subj "/CN=ca" -key $CERT_PATH/ca.key -out $CERT_PATH/ca.crt
-
+    
     ### 4) 生成服务器证书
-
+    
     # ip地址可以根据实际情况修改
-
+    
     IP_ADDR=localhost
     openssl genrsa -out $CERT_PATH/server.key 2048
     cp /etc/pki/tls/openssl.cnf $CERT_PATH
-
+    
     if test $IP_ADDR == localhost; then
         printf "[SAN]\nsubjectAltName=DNS:%s\n" "$IP_ADDR" >> "$CERT_PATH/openssl.cnf"
         echo "subjectAltName=DNS:$IP_ADDR" > $CERT_PATH/extfile.cnf
@@ -79,20 +79,20 @@ function creat_ca() {
         printf "[SAN]\nsubjectAltName=IP:%s\n" "$IP_ADDR" >> "$CERT_PATH/openssl.cnf"
         echo "subjectAltName=IP:$IP_ADDR" > $CERT_PATH/extfile.cnf
     fi
-
+    
     openssl req -new -subj "/CN=$IP_ADDR" -config $CERT_PATH/openssl.cnf \
-                     -key $CERT_PATH/server.key -out $CERT_PATH/server.csr
+    -key $CERT_PATH/server.key -out $CERT_PATH/server.csr
     openssl x509 -req -sha256 -CA $CERT_PATH/ca.crt -CAkey $CERT_PATH/ca.key -CAcreateserial -days 3650 \
-                     -extfile $CERT_PATH/extfile.cnf -in $CERT_PATH/server.csr -out $CERT_PATH/server.crt
+    -extfile $CERT_PATH/extfile.cnf -in $CERT_PATH/server.csr -out $CERT_PATH/server.crt
     rm -rf $CERT_PATH/*.srl $CERT_PATH/*.csr $CERT_PATH/*.cnf
-
+    
     ### 5) 生成客户端证书
     # ip地址可以根据实际情况修改
     IP_ADDR=localhost
     openssl genrsa -out $CERT_PATH/client.key 2048
     cp /etc/pki/tls/openssl.cnf $CERT_PATH
-
-
+    
+    
     if test $IP_ADDR == localhost; then
         printf "[SAN]\nsubjectAltName=DNS:%s\n" "$IP_ADDR" >> "$CERT_PATH/openssl.cnf"
         echo "subjectAltName=DNS:$IP_ADDR" > $CERT_PATH/extfile.cnf
@@ -100,11 +100,11 @@ function creat_ca() {
         printf "[SAN]\nsubjectAltName=IP:%s\n" "$IP_ADDR" >> "$CERT_PATH/openssl.cnf"
         echo "subjectAltName=IP:$IP_ADDR" > $CERT_PATH/extfile.cnf
     fi
-
+    
     openssl req -new -subj "/CN=$IP_ADDR" -config $CERT_PATH/openssl.cnf \
-                -key $CERT_PATH/client.key -out $CERT_PATH/client.csr
+    -key $CERT_PATH/client.key -out $CERT_PATH/client.csr
     openssl x509 -req -sha256 -CA $CERT_PATH/ca.crt -CAkey $CERT_PATH/ca.key -CAcreateserial -days 3650 \
-                -extfile $CERT_PATH/extfile.cnf -in $CERT_PATH/client.csr -out $CERT_PATH/client.crt
+    -extfile $CERT_PATH/extfile.cnf -in $CERT_PATH/client.csr -out $CERT_PATH/client.crt
     rm -rf $CERT_PATH/*.srl $CERT_PATH/*.csr $CERT_PATH/*.cnf
     cp -ar "$(pwd)/demo/ca.crt" demo/server* /etc/atuned/rest_certs/
     cp -ar "$(pwd)/demo/ca.crt" demo/client* /etc/atuned/engine_certs/
