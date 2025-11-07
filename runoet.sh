@@ -22,9 +22,14 @@ OET_PATH=$(
 )
 export OET_PATH
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
-[[ -d "/etc/mugen" ]] && export conf_file="/etc/mugen/mugen.json" || export conf_file="${OET_PATH}/conf/mugen.json"
+if [[ -d "/etc/mugen" ]]; then
+    export conf_file="/etc/mugen/mugen.json"
+else
+    export conf_file="${OET_PATH}/conf/mugen.json"
+fi
+
 REPOSITORY="https://gitee.com/openeuler/integration-test.git"
 
 TIMEOUT="30m"
@@ -39,20 +44,20 @@ function usage() {
 }
 
 function deploy_conf() {
-    python3 ${OET_PATH}/libs/locallibs/write_conf.py "$@"
+    python3 "${OET_PATH}"/libs/locallibs/write_conf.py "$@"
     test $? -ne 0 && exit 1
 }
 
 function load_conf() {
-    rm -rf ${OET_PATH}/results
+    rm -rf "${OET_PATH}"/results
 
-    export_var=$(python3 ${OET_PATH}/libs/locallibs/read_conf.py env-var)
+    export_var=$(python3 "${OET_PATH}"/libs/locallibs/read_conf.py env-var)
     test $? -ne 0 && exit 1
 
     $export_var
 
-    env_conf="$(echo -e $conf_file | sed -e 's/json/env/')"
-    printf "%s\n" "$export_var" >$env_conf
+    env_conf=$(echo -e "$conf_file" | sed -e 's/json/env/')
+    printf "%s\n" "$export_var" > "$env_conf"
 
 }
 
@@ -72,9 +77,9 @@ function exec_case() {
     exec 6>&1
     exec 7>&2
 
-    exec >"$log_path"/"$(date +%Y-%m-%d-%T)".log 2>&1
+    exec >"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1
 
-    timeout --preserve-status $TIMEOUT $cmd
+    timeout --preserve-status "$TIMEOUT" "$cmd"
     ret_code=$?
 
     exec 1>&6 6>&-
@@ -84,16 +89,16 @@ function exec_case() {
         LOG_WARN "The case execution timeout."
     }
 
-    if [ $ret_code -eq 0 ]; then
+    if [ "$ret_code" -eq 0 ]; then
         LOG_INFO "The case exit by code $ret_code."
         ((SUCCESS_NUM++))
-        mkdir -p ${OET_PATH}/results/succeed
-        touch ${OET_PATH}/results/succeed/${case_name}
+        mkdir -p "${OET_PATH}"/results/succeed
+        touch "${OET_PATH}"/results/succeed/"${case_name}"
     else
         LOG_ERROR "The case exit by code $ret_code."
         ((FAIL_NUM++))
-        mkdir -p ${OET_PATH}/results/failed
-        touch ${OET_PATH}/results/failed/${case_name}
+        mkdir -p "${OET_PATH}"/results/failed
+        touch "${OET_PATH}"/results/failed/"${case_name}"
     fi
 }
 
@@ -109,7 +114,7 @@ function run_test_case() {
 
     ((CASE_NUM++))
 
-    suite_path=$(python3 ${OET_PATH}/libs/locallibs/suite_case.py --suite $test_suite --key path)
+    suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)
     test $? -ne 0 && return 1
     test -d "$suite_path" || {
         LOG_ERROR "Path value:${suite_path} in a JSON file that does not exist in the environment."
@@ -121,22 +126,24 @@ function run_test_case() {
         return 1
     fi
 
-    case_path=($(find ${suite_path} -name "${test_case}.*" | sed -e "s#/${test_case}.\(sh\|py\)##"))
+    mapfile -t case_path < <(
+        find "${suite_path}" -name "${test_case}.*" | sed -e "s#/${test_case}.\(sh\|py\)##"
+    )
     test ${#case_path[@]} -gt 1 && {
         LOG_ERROR "Multiple identical test case scripts have been found under the test suite. Please check your use case scripts."
         return 1
     }
 
-    log_path=${OET_PATH}/logs/${test_suite}/${test_case}
-    mkdir -p ${log_path}
+    log_path="${OET_PATH}/logs/${test_suite}/${test_case}"
+    mkdir -p "${log_path}"
 
     LOG_INFO "start to run testcase:$test_case."
 
-    pushd "$case_path" >/dev/null || return 1
+    pushd "${case_path[0]}" >/dev/null || return 1
 
     local time_out
-    time_out=$(grep -w --fixed-strings EXECUTE_T ${test_case}.* 2>/dev/nul | awk -F '=' '{print $NF}' | tr -d '"')
-    test -n "$time_out" && TIMEOUT=$time_out
+    time_out=$(grep -w --fixed-strings EXECUTE_T "${test_case}".* 2>/dev/nul | awk -F '=' '{print $NF}' | tr -d '"')
+    test -n "$time_out" && TIMEOUT="$time_out"
 
     local script_type
     script_type=$(find . -name "${test_case}.*" | awk -F '.' '{print $NF}')
@@ -159,18 +166,20 @@ function run_test_case() {
 function run_test_suite() {
     local test_suite=$1
 
-    [ -z "$(find $OET_PATH/suite2cases -name ${test_suite}.json)" ] && {
+    [ -z "$(find "$OET_PATH"/suite2cases -name "${test_suite}".json)" ] && {
         LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
         return 1
     }
 
-    for test_case in $(python3 ${OET_PATH}/libs/locallibs/suite_case.py --suite $test_suite --key cases-name | shuf); do
+    for test_case in $(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name | shuf); do
         run_test_case "$test_suite" "$test_case"
     done
 }
 
 function run_all_cases() {
-    test_suites=($(find ${OET_PATH}/suite2cases/ -type f -name "*.json" | awk -F '/' '{print $NF}' | sed -e 's/.json$//g'))
+    mapfile -t test_suites < <(
+        find "${OET_PATH}/suite2cases/" -type f -name "*.json" -printf '%f\n' | sed 's/\.json$//'
+    )
     test ${#test_suites[@]} -eq 0 && {
         LOG_ERROR "Can't find recording about test_suites."
         return 1
@@ -186,13 +195,13 @@ function statistic_result() {
 
     LOG_INFO "A total of ${CASE_NUM} use cases were executed, with ${SUCCESS_NUM} successes and ${FAIL_NUM} failures."
 
-    [ ${FAIL_NUM} -ne 0 ] && exit 1
+    [ "${FAIL_NUM}" -ne 0 ] && exit 1
 }
 
 while getopts "c:af:r:dx" option; do
-    case $option in
+    case "$option" in
     c)
-        deploy_conf ${*//-c/}
+        deploy_conf "${*//-c/}"
         ;;
     d)
         echo "$@" | grep -q -e '^ *-d *$' || {
@@ -215,9 +224,9 @@ while getopts "c:af:r:dx" option; do
         ;;
 
     f)
-        test_suite=$OPTARG
+        test_suite="$OPTARG"
 
-        echo $test_suite | grep -q -e '-a\| -r \|-x\|-d' && {
+        echo "$test_suite" | grep -q -e '-a\| -r \|-x\|-d' && {
             usage
             exit 1
         }
@@ -228,13 +237,13 @@ while getopts "c:af:r:dx" option; do
 
         echo "$@" | grep -q -e ' -r ' || {
             load_conf
-            run_test_suite $test_suite
+            run_test_suite "$test_suite"
             statistic_result
         }
         ;;
     r)
-        test_case=$OPTARG
-        echo $test_case | grep -q -e '-a\|-f\|-x\|-d' && {
+        test_case="$OPTARG"
+        echo "$test_case" | grep -q -e '-a\|-f\|-x\|-d' && {
             usage
             exit 1
         }
@@ -244,7 +253,7 @@ while getopts "c:af:r:dx" option; do
         }
 
         load_conf
-        run_test_case $test_suite $test_case
+        run_test_case "$test_suite" "$test_case"
         statistic_result
         ;;
     x)
