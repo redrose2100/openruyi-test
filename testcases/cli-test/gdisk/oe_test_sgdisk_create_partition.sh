@@ -15,32 +15,33 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   gdisk test for sgdisk create partition function
 # #############################################
-# shellcheck disable=SC2120,SC2119
+# shellcheck disable=SC2120,SC2119,SC2154
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "${OET_PATH}"/testcases/cli-test/gdisk/common_lib.sh
 
 function pre_test() {
-	DNF_INSTALL gdisk
-	get_unused_disk
-	[ -z "$unused_disk" ] && echo "no unused disk" && exit 1
+    DNF_INSTALL gdisk
+    get_unused_disk
+    [ -z "$unused_disk" ] && echo "no unused disk" && exit 1
 }
 
 function run_test() {
-	sgdisk -n 1:0:+1G "$unused_disk"
-	CHECK_RESULT $?
-	sgdisk -p "$unused_disk"
-	CHECK_RESULT $?
-	lsblk | grep "${unused_disk#/dev/}1"
-	CHECK_RESULT $?
-	sgdisk -d 1 "$unused_disk"
-	CHECK_RESULT $?
-	lsblk | grep "${unused_disk#/dev/}1"
-	CHECK_RESULT $? 0 1
+    sgdisk -n 1:0:+1G "$unused_disk"
+    CHECK_RESULT $?
+    sgdisk -p "$unused_disk"
+    CHECK_RESULT $?
+    SLEEP_WAIT 2
+    lsblk | grep "${unused_disk#/dev/}1"
+    CHECK_RESULT $?
+    sgdisk -d 1 "$unused_disk"
+    CHECK_RESULT $?
+    lsblk | grep "${unused_disk#/dev/}1"
+    CHECK_RESULT $? 0 1
 }
 
 function post_test() {
-	DNF_REMOVE
+    DNF_REMOVE "$@"
 }
 
 main "$@"

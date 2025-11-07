@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/cli-test/netsniff-ng",
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_astraceroute_01"

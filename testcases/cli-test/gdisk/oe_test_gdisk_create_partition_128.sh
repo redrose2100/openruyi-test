@@ -15,48 +15,48 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   gdisk test for create partition with max value 128
 # #############################################
-# shellcheck disable=SC2120,SC2119,SC2320
+# shellcheck disable=SC2120,SC2119,SC2320,SC2154
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "${OET_PATH}"/testcases/cli-test/gdisk/common_lib.sh
 
 function pre_test() {
-	DNF_INSTALL "gdisk parted"
-	get_unused_disk
-	[ -z "$unused_disk" ] && echo "no unused disk" && exit 1
+    DNF_INSTALL "gdisk parted"
+    get_unused_disk
+    [ -z "$unused_disk" ] && echo "no unused disk" && exit 1
 }
 
 function run_test() {
-	create_partition 128 10M
-	partprobe
-	lsblk
-	num=$(lsblk | grep -c "${unused_disk#/dev/}")
-	CHECK_RESULT "$num" 129
-	for i in $(seq 1 128); do
-		echo y | mkfs.ext4 "${unused_disk}$i"
-		CHECK_RESULT $?
-		mkdir "mount_tmp_$i"
-		mount "${unused_disk}$i" "mount_tmp_$i"
-		CHECK_RESULT $?
-		touch "mount_tmp_$i/testfile"
-		CHECK_RESULT $?
-		echo 123 >"mount_tmp_$i/testfile"
-		CHECK_RESULT $?
-		CHECK_RESULT "$(cat "mount_tmp_$i/testfile")" 123
-		rm -rf "mount_tmp_$i/testfile"
-		CHECK_RESULT $?
-	done
-	for i in $(seq 1 128); do
-		umount -l "mount_tmp_$i"
-		CHECK_RESULT $?
-		delete_partition "$i"
-	done
+    create_partition 128 10M
+    partprobe
+    SLEEP_WAIT 10
+    num=$(lsblk | grep -c "${unused_disk#/dev/}")
+    CHECK_RESULT "$num" 129
+    for i in $(seq 1 128); do
+        echo y | mkfs.ext4 "${unused_disk}$i"
+        CHECK_RESULT $?
+        mkdir "mount_tmp_$i"
+        mount "${unused_disk}$i" "mount_tmp_$i"
+        CHECK_RESULT $?
+        touch "mount_tmp_$i/testfile"
+        CHECK_RESULT $?
+        echo 123 >"mount_tmp_$i/testfile"
+        CHECK_RESULT $?
+        CHECK_RESULT "$(cat "mount_tmp_$i/testfile")" 123
+        rm -rf "mount_tmp_$i/testfile"
+        CHECK_RESULT $?
+    done
+    for i in $(seq 1 128); do
+        umount -l "mount_tmp_$i"
+        CHECK_RESULT $?
+        delete_partition "$i"
+    done
 }
 
 function post_test() {
-	rm -rf mount_tmp*
-	partprobe
-	DNF_REMOVE "$@"
+    rm -rf mount_tmp*
+    partprobe
+    DNF_REMOVE "$@"
 }
 
 main "$@"
