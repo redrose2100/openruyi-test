@@ -49,16 +49,22 @@ HGG
 function run_test() {
     LOG_INFO "Start executing testcase."
     swapon /dev/mapper/"${value}"
+    # 禁用当前swap分区
     swapoff -v /dev/mapper/"${value}"
     CHECK_RESULT $?
+    # 执行 wipefs 擦除签名
+    wipefs -a /dev/mapper/openeuler-swap
+    CHECK_RESULT $?
+    # 将当前swap分区缩减100M
     lvresize -f /dev/"${openeuler}"/swap -L -100M
     CHECK_RESULT $?
     lsblk | grep "${value}" | awk '{print$4}' | grep G
     CHECK_RESULT $?
+    # 重新创建swap分区
     mkswap /dev/mapper/"${value}"
     CHECK_RESULT $?
+    # 启用swap分区
     swapon -v /dev/mapper/"${value}"
-
     CHECK_RESULT "$(grep -c dm /proc/swaps)" 1
 
     pvcreate -y "/dev/${local_disk1}"
@@ -92,6 +98,7 @@ function run_test() {
     CHECK_RESULT $?
 
     swapoff -v /dev/vg0/lv_test
+    wipefs -a /dev/vg0/lv_test
     lvreduce -f /dev/vg0/lv_test -L -500M
     CHECK_RESULT $?
     mkswap /dev/vg0/lv_test
@@ -104,6 +111,7 @@ function run_test() {
 
     swapoff -v /dev/vg0/lv_test
     SLEEP_WAIT 1
+    wipefs -a /dev/vg0/lv_test
     lvremove -y /dev/vg0/lv_test
     CHECK_RESULT $?
     sed -i "/lv_test/d" /etc/fstab
