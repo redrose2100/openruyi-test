@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test "tuna" command
 # ##################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -25,6 +26,14 @@ function pre_test() {
     export LANG=en_US.UTF-8
     DNF_INSTALL "tuna"
     systemctl restart sshd.service
+    if tuna include -S 0; then
+        socket_id=0
+    else
+        tuna include -S 0 > log 2>&1
+        socket_id=$(awk -F": " '{print $NF}' < log | awk -F"," '{print $NF}')
+    fi
+    # 禁用自动优化中断分配irqbalance服务
+    systemctl stop irqbalance
     LOG_INFO "End to prepare the test environment"
 }
 
@@ -34,20 +43,23 @@ function run_test() {
     CHECK_RESULT $? 0 0 "tuna spread -h No Pass"
     tuna spread --help | grep "usage: tuna spread"
     CHECK_RESULT $? 0 0 "tuna spread --help No Pass"
-    irqs_id=$(tuna show_irqs | awk '{print$1}' | tail -n 1)
+    irqs_id=$(tuna show_irqs | grep virtio2-config | awk '{print $1}')
+    irqs_id_cpu_affinity=$(tuna show_irqs | grep virtio2-config | awk '{print $NF}')
     tuna spread -c 0 -q "$irqs_id"
     CHECK_RESULT $? 0 0 "tuna spread -c -q No Pass"
-    tuna show_irqs -q "$irqs_id" | grep "$irqs_id" | grep -w 0
+    tuna show_irqs -q "${irqs_id}" | grep "${irqs_id}" | awk '{print $NF}' | grep -w 0
     CHECK_RESULT $? 0 0 "tuna show_irqs -q No Pass"
-    tuna spread -S 0 --irqs "$irqs_id"
+    tuna spread -c "${irqs_id_cpu_affinity}" -q "${irqs_id}"
+    CHECK_RESULT $? 0 0 "Restore irqs_id_cpu_affinity to default value"
+    tuna spread -S "${socket_id}" --irqs "$irqs_id"
     CHECK_RESULT $? 0 0 "tuna spread -S --irqs No Pass"
-    tuna show_irqs -q "$irqs_id" | grep "$irqs_id" | grep -w 0
+    tuna show_irqs -q "${irqs_id}" | grep "${irqs_id}" | awk '{print $NF}' | grep -w 0
     CHECK_RESULT $? 0 0 "tuna show_irqs -q No Pass"
     tuna spread --cpus 0 -t sshd
     CHECK_RESULT $? 0 0 "tuna spread -cpus -t No Pass"
     tuna show_threads -t sshd | grep sshd | awk '{print $4}' | grep -w 0
     CHECK_RESULT $? 0 0 "tuna show_threads -t No Pass"
-    tuna spread --sockets 0 --threads sshd
+    tuna spread --sockets "${socket_id}" --threads sshd
     CHECK_RESULT $? 0 0 "tuna spread --sockets --threads No Pass"
     tuna show_threads -t sshd | grep sshd | awk '{print $4}' | grep -w 0
     CHECK_RESULT $? 0 0 "tuna show_threads -t No Pass"
@@ -69,6 +81,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
+    rm -f log
+    # 启用自动优化中断分配irqbalance服务
+    systemctl start irqbalance
     LOG_INFO "End to restore the test environment."
 }
 
