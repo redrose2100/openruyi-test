@@ -11,10 +11,10 @@
 
 # #############################################
 # @Author    :   zhoulimin
-# @Contact   :   limin@isrc.iscas.ac.cn 
+# @Contact   :   limin@isrc.iscas.ac.cn
 # @Date      :   2022-09-07
 # @License   :   Mulan PSL v2
-# @Desc      :   The test of dejagnu package 
+# @Desc      :   The test of dejagnu package
 # #############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
@@ -38,9 +38,9 @@ function pre_test() {
     ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" ]]; then
         CALC=common/calc_x86_64
-    elif [[ "$ARCH" == "riscv64" ]]; then
+        elif [[ "$ARCH" == "riscv64" ]]; then
         CALC=common/calc_riscv64
-    elif [[ "$ARCH" == "aarch64" ]]; then
+        elif [[ "$ARCH" == "aarch64" ]]; then
         CALC=common/calc_aarch64
     else
         LOG_ERROR "Unsupported architecture: $ARCH"
@@ -77,14 +77,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option : --ignore"
     runtest CALC=${CALC} --log_dialog --srcdir common --outdir tmp 2>&1 | grep "calc: add 1 2 3"
     CHECK_RESULT $? 0 0 "Failed option : --log_dialog"
-    runtest CALC=${CALC} -v --mail "${mailAddress1}" --srcdir common --outdir tmp 
+    runtest CALC=${CALC} -v --mail "${mailAddress1}" --srcdir common --outdir tmp
     SLEEP_WAIT 3
-    grep "To: ""${USER}""@$(hostname)" /var/spool/mail/"${USER}"
+    grep "To: ${USER}@$(hostname)" /var/spool/mail/"${USER}"
     CHECK_RESULT $? 0 0 "Failed option : --mail (to one host)"
-    runtest CALC=${CALC} -v --mail "${mailAddress1}","${mailAddress2}" --srcdir common --outdir tmp 
-    SLEEP_WAIT 3
-    grep "To: mufiyemailuser@localhost\(\.localdomain\)\?, root@localhost\(\.localdomain\)\?" /var/spool/mail/root && \
-    grep "To: mufiyemailuser@localhost\(\.localdomain\)\?, root@localhost\(\.localdomain\)\?" /var/spool/mail/mufiyemailuser
+    runtest CALC=${CALC} -v --mail "${mailAddress1}","${mailAddress2}" --srcdir common --outdir tmp
+    SLEEP_WAIT 10
+    grep "To: mufiyemailuser@$(hostname), root@$(hostname)" /var/spool/mail/root && \
+    grep "To: mufiyemailuser@$(hostname), root@$(hostname)" /var/spool/mail/mufiyemailuser
     CHECK_RESULT $? 0 0 "Failed option : --mail (to multihost)"
     LOG_INFO "End to run test."
 }

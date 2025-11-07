@@ -21,9 +21,15 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL "hdparm"
     lsblk >>lsblk.txt
     dev=$(sed -n "2, 1p" lsblk.txt | awk '{print $1}')
+    if [[ "${dev}" =~ "vd" ]]; then
+        LOG_INFO "The hdparm command does not support virtual disks of the virtio type."
+        exit 255
+    fi
     hdparm -I /dev/"$dev" || exit 1
     LOG_INFO "End of environmental preparation!"
 }
@@ -34,8 +40,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hdparm -h fail"
     hdparm -a /dev/"$dev" | grep -i /dev/"$dev"
     CHECK_RESULT $? 0 0 "hdparm -a system fail"
-    hdparm -c /dev/"$dev" | grep -i "IO_support"
-    CHECK_RESULT $? 0 0 "hdparm -c system fail"
+    if ! hdparm -I /dev/sda | grep "DMA: not supported";then
+        hdparm -c /dev/"$dev" | grep -i "IO_support"
+        CHECK_RESULT $? 0 0 "hdparm -c system fail"
+    fi
     hdparm -m /dev/"$dev" | grep -i "multcount"
     CHECK_RESULT $? 0 0 "hdparm -m system fail"
     hdparm -V /dev/"$dev" | grep -i "hdparm"
@@ -51,6 +59,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf lsblk.txt
     DNF_REMOVE "$@"
+    export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -18,14 +18,15 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "netsniff-ng tar"
-    DNF_INSTALL netsniff-ng 2
+    DNF_INSTALL "netsniff-ng expect" 2
     tar -xvf ./common/data.tar.gz > /dev/null
-    SSH_SCP ./common/curvetunInfo.sh ${NODE2_USER}@${NODE2_IPV4}:/tmp/curvetunInfo.sh ${NODE2_PASSWORD}
-    SSH_SCP ./common/curvetunDepoly.sh ${NODE2_USER}@${NODE2_IPV4}:/tmp/curvetunDepoly.sh ${NODE2_PASSWORD}
-    SSH_SCP ./common/curvetunClient.sh ${NODE2_USER}@${NODE2_IPV4}:/tmp/curvetunClient.sh ${NODE2_PASSWORD}
-    SSH_CMD "bash -x /tmp/curvetunDepoly.sh" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    SSH_CMD "bash -x /tmp/curvetunInfo.sh" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    SSH_SCP ${NODE2_USER}@${NODE2_IPV4}:/tmp/curvetunServer.info . ${NODE2_PASSWORD}
+    SSH_SCP ./common/curvetunInfo.sh "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/curvetunInfo.sh "${NODE2_PASSWORD}"
+    SSH_SCP ./common/curvetunDepoly.sh "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/curvetunDepoly.sh "${NODE2_PASSWORD}"
+    SSH_SCP ./common/curvetunClient.sh "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/curvetunClient.sh "${NODE2_PASSWORD}"
+    SSH_SCP ./common/curvetunServer.sh "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/curvetunServer.sh "${NODE2_PASSWORD}"
+    SSH_CMD "bash -x /tmp/curvetunDepoly.sh" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "bash -x /tmp/curvetunInfo.sh" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/curvetunServer.info . "${NODE2_PASSWORD}"
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
@@ -74,34 +75,34 @@ EOF
     CHECK_RESULT $? 0 0 "Check curvetun -t failed"
     clientKey=$(curvetun -x | sed -n "3p" | awk -F ';' '{print $2}')
     clientStr="tunclient;${clientKey}"
-    LOG_INFO ${clientStr}
-    SSH_CMD "bash -x /tmp/curvetunServer.sh '${clientStr}'"  ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    SSH_SCP ${NODE2_USER}@${NODE2_IPV4}:/tmp/curvetunServer.info /tmp/curvetunServer.info ${NODE2_PASSWORD}
-    serverKey=$(cat /tmp/curvetunServer.info | awk -F "=" '{print $2}')
+    SSH_CMD "bash -x /tmp/curvetunServer.sh '${clientStr}'"  "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/curvetunServer.info /tmp/curvetunServer.info "${NODE2_PASSWORD}"
+    serverKey=$(awk -F "=" '{print $2}' /tmp/curvetunServer.info)
     serverStr="myfirstserver;${NODE2_IPV4};6666;udp;${serverKey}"
-    echo ${serverStr} > ~/.curvetun/servers
-    SSH_CMD "nohup curvetun -s -p 6666 -6 -D" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER} 4
+    echo "${serverStr}" > ~/.curvetun/servers
+    SSH_CMD "nohup curvetun -s -p 6666 -6 -D" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 4
     SLEEP_WAIT 5
-    SSH_CMD "ps -ef | grep 'curvetun -s -p' | grep -v 'grep'" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "ps -ef | grep 'curvetun -s -p' | grep -v 'grep'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 0 "Check curvetun -D failed"
-    SSH_CMD "ps -ef | grep 'curvetun -s -p' | grep -v 'grep'" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER} > log.info
+    SSH_CMD "ps -ef | grep 'curvetun -s -p' | grep -v 'grep'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" > log.info
     pidnum=$(grep "curvetun -s -p 6666" log.info | awk -F " " '{print $2}')
-    SSH_CMD "kill -9 ${pidnum}" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "kill -9 ${pidnum}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -f log.info
-    SSH_CMD "nohup curvetun -s -p 6666 -6 --nofork" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER} 4
+    SSH_CMD "nohup curvetun -s -p 6666 -6 --nofork" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 4
     SLEEP_WAIT 5
-    SSH_CMD "ps -ef | grep 'curvetun -s -p' | grep -v 'grep'" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "ps -ef | grep 'curvetun -s -p' | grep -v 'grep'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 0 "Check curvetun --nofork failed"
-    SSH_CMD "ps -ef | grep 'curvetun -s -p' | grep -v 'grep'" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER} > log.info
+    SSH_CMD "ps -ef | grep 'curvetun -s -p' | grep -v 'grep'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" > log.info
     pidnum=$(grep "curvetun -s -p 6666" log.info | awk -F " " '{print $2}')
-    SSH_CMD "kill -9 ${pidnum}" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "kill -9 ${pidnum}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -f log.info
     LOG_INFO "End to run test."
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    DNF_REMOVE 2
+    DNF_REMOVE "$@"
+    dnf install -y expect python3-paramiko
+    DNF_REMOVE 2 "$@"
     rm -rf ./data/ ./common/*.sh curvetunServer.info
     LOG_INFO "End to restore the test environment."
 }

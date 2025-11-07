@@ -23,7 +23,7 @@ source "./common/common_lib.sh"
 file_name="atuneTest"
 min_interval=1
 min_duration=10
-sys_disk=$(lsblk -no NAME "$(df --output=source / | awk 'NR==2')" | head -1 | sed 's/[0-9]*$//')
+sys_disk=$(lsblk -l | grep -e '/.*\|\[.*\]' | awk '{print $1}' | tr -d '0-9' | uniq | grep -vE "root|swap|home|openeuler")
 sys_network=${NODE1_NIC}
 function pre_test() {
     LOG_INFO "Start environment preparation."
