@@ -48,13 +48,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: package copy"
     cobbler package list | grep "OpenEuler2"
     CHECK_RESULT $? 0 0 "Failed option: package copy"
-    cobbler package edit --name=openEuler1 --owners=tom
+    cobbler package edit --name=OpenEuler1 --owners=tom
     CHECK_RESULT $? 0 0 "Failed option: package edit"
-    cobbler package report --name=openEuler1 | grep "tom"
+    cobbler package report --name=OpenEuler1 | grep "tom"
     CHECK_RESULT $? 0 0 "Failed option: package edit"
     cobbler package list | grep "OpenEuler"
     CHECK_RESULT $? 0 0 "Failed option: package list"
-    cobbler package find | grep "OpenEuler"
+    cobbler package find --name=OpenEuler* | grep "OpenEuler"
     CHECK_RESULT $? 0 0 "Failed option: package find"
     cobbler package remove --name=OpenEuler1
     CHECK_RESULT $? 0 0 "Failed option: package remove"

@@ -48,13 +48,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: image copy"
     cobbler image list | grep "OpenEuler2"
     CHECK_RESULT $? 0 0 "Failed option: image copy"
-    cobbler image edit --name=openEuler1 --owners=tom
+    cobbler image edit --name=OpenEuler1 --owners=tom
     CHECK_RESULT $? 0 0 "Failed option: image edit"
-    cobbler image report --name=openEuler1 | grep "tom"
+    cobbler image report --name=OpenEuler1 | grep "tom"
     CHECK_RESULT $? 0 0 "Failed option: image edit"
     cobbler image list | grep "OpenEuler"
     CHECK_RESULT $? 0 0 "Failed option: image list"
-    cobbler image find | grep "OpenEuler"
+    cobbler image find --name=OpenEuler* | grep "OpenEuler"
     CHECK_RESULT $? 0 0 "Failed option: image find"
     cobbler image remove --name=OpenEuler1
     CHECK_RESULT $? 0 0 "Failed option: image remove"
