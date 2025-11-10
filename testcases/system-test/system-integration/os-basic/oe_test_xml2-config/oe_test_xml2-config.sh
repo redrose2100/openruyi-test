@@ -19,6 +19,12 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+	LOG_INFO "Start environmental preparation."
+	DNF_INSTALL "libxml2-devel"
+	LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     res1=$(xml2-config --cflags)
@@ -28,7 +34,23 @@ function run_test() {
     res2=$(xml2-config --libs)
     [ "$res2" == "-lxml2 -lz -llzma -lm" ]
     CHECK_RESULT $? 0 0 "xml2-config error"
+    xml2-config --modules | grep -E "^[01]$"
+    CHECK_RESULT $? 0 0 "xml2-config modules returned invalid value"
+    xml2-config --prefix  | grep usr
+    CHECK_RESULT $? 0 0 "xml2-config prefix failed"
+    xml2-config --exec-prefix | grep usr
+    CHECK_RESULT $? 0 0 "xml2-config exec-prefix failed"
+    xml2-config --version | grep -E "^[0-9]+\.[0-9]+\.[0-9]+"
+    CHECK_RESULT $? 0 0 "xml2-config version format error"
+    xml2-config --help | grep -qi "Usage:"
+    CHECK_RESULT $? 0 0 "xml2-config help failed"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
