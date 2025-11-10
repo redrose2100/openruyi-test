@@ -51,13 +51,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: file copy"
     cobbler file list | grep "OpenEuler2"
     CHECK_RESULT $? 0 0 "Failed option: file copy"
-    cobbler file edit --name=openEuler1 --owners=tom
+    cobbler file edit --name=OpenEuler1 --owners=tom
     CHECK_RESULT $? 0 0 "Failed option: file edit"
-    cobbler file report --name=openEuler1 | grep "tom"
+    cobbler file report --name=OpenEuler1 | grep "tom"
     CHECK_RESULT $? 0 0 "Failed option: file edit"
     cobbler file list | grep "OpenEuler"
     CHECK_RESULT $? 0 0 "Failed option: file list"
-    cobbler file find | grep "OpenEuler"
+    cobbler file find --name=OpenEuler* | grep "OpenEuler"
     CHECK_RESULT $? 0 0 "Failed option: file find"
     cobbler file remove --name=OpenEuler1
     CHECK_RESULT $? 0 0 "Failed option: file remove"
@@ -67,7 +67,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: file rename"
     cobbler file list | grep "OpenEuler3"
     CHECK_RESULT $? 0 0 "Failed option: file rename"
-    cobbler file report --name=openEuler3 | grep "Name"
+    cobbler file report --name=OpenEuler3 | grep "Name"
     CHECK_RESULT $? 0 0 "Failed option: distro report"
     LOG_INFO "End to run testcase."
 }
