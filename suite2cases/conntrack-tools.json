@@ -6,6 +6,9 @@
         },
 	{
 	    "name": "oe_test_conntrack_basic_commands"
+	},
+	{
+		"name": "oe_test_conntrack_events"
 	}
     ]
 }
