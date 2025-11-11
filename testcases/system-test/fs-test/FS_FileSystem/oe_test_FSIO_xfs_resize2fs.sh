@@ -20,6 +20,10 @@ source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        LOG_WARN "Current arch (${NODE1_FRAME}) does not support xfs with dax, skipping test."
+        exit 255
+    fi
     DNF_INSTALL "lvm2 xfsprogs"
     read -r -a point_list <<< "$(CREATE_FS xfs)"
     vggroup=${point_list[0]}
@@ -47,7 +51,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list="${point_list[*]})"
     REMOVE_FS "$list"
-    DNF_REMOVE "$@"
+    # shellcheck disable=SC2119
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
