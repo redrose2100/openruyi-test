@@ -21,6 +21,16 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
+    case "$VERSION_ID" in
+        20.03|20.09|22.03|22.09|23.03|23.09|24.03|24.09|25.03)
+        ;;
+        *)
+        # 自 25.09 版本起，mocha 已被弃用
+        LOG_WARN "mocha has been deprecated in this version"
+        exit 255
+        ;;
+    esac
     DNF_INSTALL mocha
     LOG_INFO "End of environmental preparation!"
 }
