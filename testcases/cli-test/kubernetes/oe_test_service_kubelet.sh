@@ -24,12 +24,12 @@ function pre_test() {
     swapoff -a
     kube_version=$(dnf info kubernetes |grep -wi version |awk '{print $NF}')
     if [[ "$(printf '%s\n' "$kube_version" "1.21" | sort -V | head -n1)" == "1.21" ]];then
-        DNF_INSTALL "containerd kubernetes-kubelet conntrack-tools cri-tools"
+        DNF_INSTALL "containerd kubernetes-kubelet conntrack-tools cri-tools iptables"
         systemctl start containerd
         crictl config runtime-endpoint unix:///run/containerd/containerd.sock
         crictl config image-endpoint unix:///run/containerd/containerd.sock
     else
-        DNF_INSTALL "docker-engine kubernetes-kubelet conntrack-tools"
+        DNF_INSTALL "docker-engine kubernetes-kubelet conntrack-tools iptables"
         systemctl start docker
     fi
     service=kubelet.service
