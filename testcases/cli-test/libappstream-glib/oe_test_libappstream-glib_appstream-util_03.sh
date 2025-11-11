@@ -17,11 +17,12 @@
 # @Desc      :   verify the uasge of libappstream-glib command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libappstream-glib
+    DNF_INSTALL "libappstream-glib lshw"
+    export G_MESSAGES_DEBUG=As
     cp -r ./common ./glibtest
     LOG_INFO "End of environmental preparation!"
 }
@@ -64,6 +65,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    # shellcheck disable=SC2119
     DNF_REMOVE
     rm -rf glibtest screenshots
     LOG_INFO "Finish restore the test environment."

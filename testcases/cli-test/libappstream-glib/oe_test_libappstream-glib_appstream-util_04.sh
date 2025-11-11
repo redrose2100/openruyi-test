@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL libappstream-glib
+    export G_MESSAGES_DEBUG=As
     cp -r ./common ./glibtest
     LOG_INFO "End of environmental preparation!"
 }
