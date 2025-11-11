@@ -29,6 +29,7 @@ function conf_common() {
     )
     cert_path=/etc/kubernetes/pki
     mkdir -p ${cfssl_path} ${cert_path}
+    command -v hostname || DNF_INSTALL hostname 1
     host_name=$(hostname)
     name_host=k8snode1
     hostname | grep -i ${name_host} || hostnamectl set-hostname ${name_host}
@@ -39,6 +40,7 @@ function kubernetes_install() {
 }
 
 function certificate_prepare() {
+    command -v wget || DNF_INSTALL wget 1
     wget --no-check-certificate https://github.com/cloudflare/cfssl/archive/v1.5.0.tar.gz -O ${pkg_path}
     test -f ${pkg_path} || {
         LOG_INFO "Download failed!"
