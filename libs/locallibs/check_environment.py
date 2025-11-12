@@ -58,9 +58,7 @@ def get_suitejson_info_and_check(suite_file, case):
         "echo " + network_interface_name + " | awk '{print NF}'"
     )
     disk_name = get_test_device.get_test_disk(1)
-    disk_num = subprocess.getoutput(
-        "echo " + disk_name + " | awk '{print NF}'"
-    )
+    disk_num = len(disk_name.split())
 
     # 校验当前环境是否满足执行测试用例的条件
     if int(machine_num) < machine_num_required:
