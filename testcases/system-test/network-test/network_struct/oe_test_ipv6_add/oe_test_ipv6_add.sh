@@ -15,6 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Add ipv6
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -53,6 +54,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    ip link set "${test_nic}" up
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
