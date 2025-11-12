@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/zsh",
+    "cases": [
+        {
+            "name": "oe_test_zsh"
+        }
+
+      ]
+}
+
