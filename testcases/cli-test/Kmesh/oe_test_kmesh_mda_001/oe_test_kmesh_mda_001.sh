@@ -20,6 +20,11 @@ source ../libs/common.sh
 
 function pre_test() {
     DNF_INSTALL Kmesh
+    KO_FILES=$(find /lib/modules /usr/lib/modules -name "*kmesh*.ko" 2>/dev/null)
+    if [ -z "$KO_FILES" ]; then
+            echo "未找到 Kmesh 相关 .ko 文件，退出码 255"
+            exit 255
+    fi
     wget -P ../pkg https://gitee.com/openeuler/Kmesh/blob/master/test/testcases/kmesh/pkg/fortio-1.38.1-1."$(arch)".rpm
     yum localinstall -y ../pkg/fortio-*"$(arch)".rpm
 }
