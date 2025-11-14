@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test the basic functions of augeas
 # ############################################
+# shellcheck disable=SC1090,SC2119
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
@@ -40,7 +41,7 @@ function run_test() {
         CHECK_RESULT $? 0 0 "augprint failed."
         augprint --lens=simplelines /etc/hosts | grep simplelines
         CHECK_RESULT $? 0 0 "Simplelines camera failed to parse/etc/hosts file"
-        augprint --regexp=12 /etc/hosts | grep Loopback
+        augprint --regexp=12 /etc/hosts | grep "ipaddr=~regexp"
         CHECK_RESULT $? 0 0 "Find and output the content or node error that matches regular expression 12 in the/etc/hosts file"
         augprint --pretty /etc/hosts | grep localhost
         CHECK_RESULT $? 0 0 "The generated output command script will have a more readable format for error reporting"
@@ -54,7 +55,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
