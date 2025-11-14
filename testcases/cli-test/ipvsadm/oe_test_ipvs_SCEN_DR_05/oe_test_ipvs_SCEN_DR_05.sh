@@ -51,7 +51,7 @@ function run_test() {
     sed -i 's/ipvs_vip/$ipvs_vip/g' /tmp/GET_CURL_RESULT.sh;
     bash -x /tmp/GET_CURL_RESULT.sh;"
     SFTP get --localdir ./ --remotefile result_curl.txt --remotedir /tmp --node 4
-    CHECK_RESULT "$(wc -l ./result_curl.txt | grep -cE "6")" 1
+    CHECK_RESULT "$(wc -l ./result_curl.txt | grep -wcE "6")" 1
     LOG_INFO "End to run test."
 }
 

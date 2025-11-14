@@ -28,6 +28,10 @@ function RANDOM_IP() {
 }
 
 function build_env() {
+    if grep cloudroot /etc/passwd;then
+        LOG_INFO "Network support is unavailable in the CloudPods environment."
+        exit 255
+    fi
     ipvs_vip=$(RANDOM_IP)
     ipvs_ip1=$(RANDOM_IP)
     ipvs_ip2=$(RANDOM_IP)
@@ -60,6 +64,10 @@ function clean_tun_env() {
 }
 
 function clean_env() {
+    if grep cloudroot /etc/passwd;then
+        LOG_INFO "Network support is unavailable in the CloudPods environment."
+        exit 255
+    fi
     systemctl start firewalld
     systemctl stop httpd
     ipvsadm -C

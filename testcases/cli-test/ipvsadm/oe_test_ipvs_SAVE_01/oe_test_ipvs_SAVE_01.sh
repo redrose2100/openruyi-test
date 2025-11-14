@@ -23,17 +23,17 @@ function run_test() {
     SSH_SCP ../common/SAVE_RESROER.sh "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/SAVE_RESROER.sh "${NODE2_PASSWORD}"
     SSH_CMD "bash -x /tmp/SAVE_RESROER.sh start" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/etc/sysconfig/ipvsadm ./ipvsadm "${NODE2_PASSWORD}"
-    CHECK_RESULT "$(wc -l ./ipvsadm | grep -cE '2')" 1
+    CHECK_RESULT "$(wc -l ./ipvsadm | grep -wcE '2')" 1
     SLEEP_WAIT 5
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/ipvsadm_restore.txt ./ipvsadm_restore.txt "${NODE2_PASSWORD}"
-    CHECK_RESULT "$(grep -cE 'Route' ./ipvsadm_restore.txt)" 1
-    CHECK_RESULT "$(grep -cE 'rr' ./ipvsadm_restore.txt)" 1
+    CHECK_RESULT "$(grep -wcE 'Route' ./ipvsadm_restore.txt)" 1
+    CHECK_RESULT "$(grep -wcE 'rr' ./ipvsadm_restore.txt)" 1
     SSH_CMD "ipvsadm -C && systemctl reboot &" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SLEEP_WAIT 60
     SSH_CMD "ipvsadm -R < /etc/sysconfig/ipvsadm && ipvsadm>>/tmp/ipvsadm_restore1.txt " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/ipvsadm_restore1.txt ./ipvsadm_restore1.txt "${NODE2_PASSWORD}"
-    CHECK_RESULT "$(grep -cE 'Route' ./ipvsadm_restore1.txt)" 1
-    CHECK_RESULT "$(grep -cE 'rr' ./ipvsadm_restore1.txt)" 1
+    CHECK_RESULT "$(grep -wcE 'Route' ./ipvsadm_restore1.txt)" 1
+    CHECK_RESULT "$(grep -wcE 'rr' ./ipvsadm_restore1.txt)" 1
     LOG_INFO "End to run test."
 }
 function post_test() {
