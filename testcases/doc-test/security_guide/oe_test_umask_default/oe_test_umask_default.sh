@@ -58,10 +58,11 @@ function run_test() {
         }   
                      
     "
-    res=$( [[ $(stat -c "%A" /tmp/test_dir2) == "drwxrwxr-x" ]] && echo "0" || echo "1" )
-    CHECK_RESULT "$res" 0 0 "The permission of the folder is not 'drwxrwxr-x'."
-    res=$( [[ $(stat -c "%A" /tmp/test_file2) == "-rw-rw-r--" ]] && echo "0" || echo "1" )
-    CHECK_RESULT "$res" 0 0 "The permission of the file is not '-rw-rw-r--'."
+    # 普通用户umask权限比0002严格即可，一般默认0022，因此校验0022
+    res=$( [[ $(stat -c "%A" /tmp/test_dir2) == "drwxr-xr-x" ]] && echo "0" || echo "1" )
+    CHECK_RESULT "$res" 0 0 "The default permission of the folder is not 'drwxr-xr-x'."
+    res=$( [[ $(stat -c "%A" /tmp/test_file2) == "-rw-r--r--" ]] && echo "0" || echo "1" )
+    CHECK_RESULT "$res" 0 0 "The default permission of the file is not '-rw-r--r--'."
 
     LOG_INFO "Finish testcase execution."
 }

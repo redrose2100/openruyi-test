@@ -30,10 +30,12 @@ function pre_test()
 function run_test()
 {
     LOG_INFO "Start to run test."
+    uid="$(id -u tester1)"
     
     su - tester1 -c pwd
     CHECK_RESULT $? 0 0 "change failed"
-    grep -e "session opened for user tester1" /var/log/secure
+    SLEEP_WAIT 5
+    grep -e "session opened for user tester1(uid=$uid)" /var/log/secure
     CHECK_RESULT $? 0 0 "grep failed"
     
     LOG_INFO "End to run test."

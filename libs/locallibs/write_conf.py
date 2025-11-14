@@ -79,7 +79,7 @@ def write_conf(ip, password, port=22, user="root", run_remote=False, copy_all=Tr
     else:
         ENV_DATA = {"NODE": []}
 
-    if subprocess.getstatusoutput("ip a | grep " + ip)[0] == 0:
+    if subprocess.getstatusoutput("ip a | grep " + ip + "/")[0] == 0:
         NODE_DATA["LOCALTION"] = "local"
     elif run_remote:
         NODE_DATA["LOCALTION"] = "local"

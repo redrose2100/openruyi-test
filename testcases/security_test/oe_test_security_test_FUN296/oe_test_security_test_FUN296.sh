@@ -51,6 +51,7 @@ function post_test()
 
     userdel -rf test
     rm -rf testlog
+    rm -rf /run/faillock/test
 
     LOG_INFO "End to restore the test environment."
 }
