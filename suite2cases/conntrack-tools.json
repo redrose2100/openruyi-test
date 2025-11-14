@@ -9,6 +9,9 @@
 	},
 	{
 		"name": "oe_test_conntrack_events"
+	},
+	{
+		"name": "oe_test_conntrack_parameters"
 	}
     ]
 }
