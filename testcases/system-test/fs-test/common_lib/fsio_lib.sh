@@ -14,6 +14,7 @@
 # @License       :   Mulan PSL v2
 # @Desc          :   Public function
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 export FS_TYPE="ext3 ext4 xfs"
@@ -84,7 +85,7 @@ function GET_CONSOLE() {
 
 function CREATE_VG() {
     cur_date=$(date +%Y%m%d%H%M%S)
-    disk_name=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
+    disk_name=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | sort | awk 'NR==2')
     if pvcreate "$disk_name" -f &>/dev/null; then
         vggroup="test_vggroup$cur_date"
         vgcreate "$vggroup" "$disk_name" >/dev/null

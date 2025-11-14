@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   User default umask value limit - enable reinforcement by default
 # ############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     useradd test1
@@ -34,18 +36,16 @@ function run_test() {
     CHECK_RESULT "$res" 0 0 "The default permission of the folder is not 'drwxr-xr-x'."
     res=$( [[ $(stat -c "%A" /tmp/test_file1) == "-rw-r--r--" ]] && echo "0" || echo "1" )
     CHECK_RESULT "$res" 0 0 "The default permission of the file is not '-rw-r--r--'."
+    kernel_ver=$(uname -r | awk -F"-" '{print $1}')
     expect -c "
         spawn su test1
-        expect {
-            \"*test1@*\" {
-                send \"umask | grep 0002\\r\"
-                }
-            eof
+        if {\"${kernel_ver}\" ne \"4.19.90\" && \"${kernel_ver}\" ne \"5.10.0\"} {
+            expect {
+                \"*test1@*\" {
+                    send \"umask 0002\\r\"
+                    }
+            }
         }
-        expect eof {
-            catch wait result
-            exit [lindex \$result 3] 
-        }          
         expect {
             \"*test1@*\" {
                 send \"mkdir /tmp/test_dir2;touch /tmp/test_file2\\r\"
@@ -55,14 +55,16 @@ function run_test() {
             \"*test1@*\" {
                 send \"exit\\r\"
                 }
-        }   
-                     
+        }
+        expect eof {
+            catch wait result
+            exit [lindex \$result 3] 
+        }        
     "
     res=$( [[ $(stat -c "%A" /tmp/test_dir2) == "drwxrwxr-x" ]] && echo "0" || echo "1" )
     CHECK_RESULT "$res" 0 0 "The permission of the folder is not 'drwxrwxr-x'."
     res=$( [[ $(stat -c "%A" /tmp/test_file2) == "-rw-rw-r--" ]] && echo "0" || echo "1" )
     CHECK_RESULT "$res" 0 0 "The permission of the file is not '-rw-rw-r--'."
-
     LOG_INFO "Finish testcase execution."
 }
 

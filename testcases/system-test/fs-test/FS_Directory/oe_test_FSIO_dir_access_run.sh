@@ -15,8 +15,9 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test access of /run
 #####################################
+# shellcheck disable=SC1090,SC2010
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -26,7 +27,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "The utmp on /run has some errors."
     dir=('fsck' 'log' 'mount' 'systemd' 'udev' 'user')
     for i in $(seq 0 $((${#dir[@]} - 1))); do
-        ls -l /run | grep ${dir[$i]} | grep -q 'drwxr-xr-x'
+        ls -l /run | grep "${dir[$i]}" | grep -q 'drwxr-xr-x'
         CHECK_RESULT $? 0 0 "The access of /${dir[$i]} is false."
     done
     LOG_INFO "End to run test."
