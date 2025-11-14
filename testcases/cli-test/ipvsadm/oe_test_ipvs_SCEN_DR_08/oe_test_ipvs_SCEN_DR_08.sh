@@ -50,8 +50,8 @@ function run_test() {
     sed -i 's/ipvs_vip/$ipvs_vip/g' /tmp/GET_CURL_RESULT.sh;
     bash -x /tmp/GET_CURL_RESULT.sh;"
     SFTP get --localdir ./ --remotefile result_curl.txt --remotedir /tmp --node 4
-    CHECK_RESULT "$(grep -cE "${ipvs_ip2}" ./result_curl.txt)" 0
-    CHECK_RESULT "$(grep -cE "${ipvs_ip3}" ./result_curl.txt)" 6
+    CHECK_RESULT "$(grep -wcE "${ipvs_ip2}" ./result_curl.txt)" 0
+    CHECK_RESULT "$(grep -wcE "${ipvs_ip3}" ./result_curl.txt)" 6
     LOG_INFO "End to run test."
 }
 
