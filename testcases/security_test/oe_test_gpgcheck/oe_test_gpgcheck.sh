@@ -26,11 +26,14 @@ function pre_test() {
     DNF_INSTALL "createrepo wget"
     rpm -qa |grep gpg-pubkey || rpm --import "$(rpm -qa |grep gpg-keys |xargs rpm -ql |grep -i euler)"
     yumdownloader libatomic
-    if [ "$(arch)" = "riscv64" ]; then
-        wget https://repo.tarsier-infra.isrc.ac.cn/openEuler-RISC-V/testing/20221028/v0.1/repo/22.09/mainline/riscv64/libatomic-10.3.1-12.oe2209.riscv64.rpm -O libatomic-10.3.1-12.el10.riscv64.rpm
+    arch=$(uname -m)
+    if [ "${arch}" = "riscv64" ]; then
+        url="https://repo.tarsier-infra.isrc.ac.cn/openEuler-RISC-V/testing/20221028/v0.1/repo/22.09/mainline/riscv64"
     else
-        wget https://rpmfind.net/linux/centos-stream/10-stream/BaseOS/"$(arch)"/os/Packages/libatomic-14.1.1-5.el10."$(arch)".rpm
+        url="https://rpmfind.net/linux/centos-stream/10-stream/BaseOS/${arch}/os/Packages"
     fi
+    pkg=$(curl -skL "$url" | grep "libatomic" | head -n 1 | sed -n 's/.*href="\([^"]*\.rpm\)".*/\1/p')
+    wget --no-check-certificate "$url"/"$pkg"
     LOG_INFO "End to prepare the test environment."
 }
 

@@ -16,7 +16,7 @@
 #@Desc      	:   user identification
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
@@ -51,6 +51,7 @@ function post_test()
 
     userdel -rf test
     rm -rf testlog
+    rm -rf /run/faillock/test
 
     LOG_INFO "End to restore the test environment."
 }
