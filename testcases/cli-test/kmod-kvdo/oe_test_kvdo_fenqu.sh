@@ -26,16 +26,17 @@ function pre_test() {
     DNF_INSTALL "kernel-headers-$(uname -r) kernel-devel-$(uname -r)"
     DNF_INSTALL "lvm2 vdo kmod-kvdo parted xfsprogs" 2
     TEST_NODE2_DISKS=$(TEST_DISK 2)
-    TEST_NODE2_DISK=/dev/$(echo "${TEST_NODE2_DISKS}" | awk -F " " '{for(i=1;i<=NF;i++) if ($i!~/[0-9]/)j=i;print $j}')
-    test -z "${TEST_NODE2_DISK}" && exit 1
+    TEST_NODE2_DISKS_CLEAN=$(echo "${TEST_NODE2_DISKS}" | tr '\n' ' ' | sed 's/[ ]*$//')
+    ALL_DISKS_PATH=$(echo "${TEST_NODE2_DISKS_CLEAN}" | sed 's/[^ ]*/\/dev\/&/g')
+    test -z "${ALL_DISKS_PATH}" && exit 1
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    SSH_CMD "pvcreate --yes ${TEST_NODE2_DISK}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "pvcreate --yes ${ALL_DISKS_PATH}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
-    SSH_CMD "vgcreate vg0 --yes ${TEST_NODE2_DISK}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "vgcreate vg0 --yes ${ALL_DISKS_PATH}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     SSH_CMD "lvcreate --type=vdo --yes --name=vdo1 --size=5g vg0" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
@@ -68,7 +69,7 @@ function post_test() {
     partprobe /dev/mapper/vg0-vdo1
     lvremove -f mapper/vg0-vdo1
     vgremove -f vg0
-    pvremove -f ${TEST_NODE2_DISK}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    pvremove -f ${ALL_DISKS_PATH}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     DNF_REMOVE 2 "$@"
     LOG_INFO "Finish environment cleanup!"
 }

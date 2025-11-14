@@ -23,6 +23,7 @@ source "${OET_PATH}/testcases/feature-test/sysmonitor/common.sh"
 function pre_test() {
     mem_prefun
     pressure_clear
+    DNF_INSTALL "stress-ng"
 }
 
 # 测试点的执行
