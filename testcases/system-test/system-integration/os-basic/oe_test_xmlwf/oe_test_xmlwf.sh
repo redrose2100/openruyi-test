@@ -45,6 +45,18 @@ function run_test() {
     CHECK_RESULT $? 0 0 "xmlwf error"
     xmlwf xmlwf_good.xml
     CHECK_RESULT $? 0 0 "xmlwf error"
+    xmlwf -n xmlwf_bad.xml | grep -q "mismatched tag"
+    CHECK_RESULT $? 0 0 "xmlwf namespace bad  processing failed"
+    xmlwf -n xmlwf_good.xml
+    CHECK_RESULT $? 0 0 "xmlwf namespace good processing failed"
+    xmlwf -p xmlwf_bad.xml | grep -q "mismatched tag"
+    CHECK_RESULT $? 0 0 "xmlwf external DTD bad processing failed"
+    xmlwf -p xmlwf_good.xml
+    CHECK_RESULT $? 0 0 "xmlwf external DTD good processing failed"
+    xmlwf -x xmlwf_bad.xml | grep -q "mismatched tag"
+    CHECK_RESULT $? 0 0 "xmlwf external entities bad processing failed"
+    xmlwf -x xmlwf_good.xml
+    CHECK_RESULT $? 0 0 "xmlwf external entities good processing failed"
     LOG_INFO "End to run test."
 }
 
