@@ -69,8 +69,8 @@ def sleep_wait(wait_time, cmd=None, mode=1):
         sys.exit(exitcode)
 
     if cmd and mode == 2:
-        init = 0
-        while init < wait_time:
+        init = 1
+        while init <= wait_time:
             time.sleep(1)
             exitcode, output = subprocess.getstatusoutput(cmd)
             if exitcode == 0:
