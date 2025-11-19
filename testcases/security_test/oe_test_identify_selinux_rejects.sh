@@ -44,6 +44,11 @@ function run_test() {
         CHECK_RESULT $?
         semodule -B
         SLEEP_WAIT 20
+        echo "Port 2222" >> /etc/ssh/sshd_config
+        systemctl reload sshd
+        SLEEP_WAIT 5
+        sed -i '/^Port 2222$/d' /etc/ssh/sshd_config
+        systemctl reload sshd
         ausearch -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR -ts recent >log4 2>&1
         grep 'no matches' log4
         CHECK_RESULT $? 0 1

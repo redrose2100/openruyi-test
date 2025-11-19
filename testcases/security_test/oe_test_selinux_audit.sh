@@ -38,6 +38,7 @@ function run_test() {
     sed -i 's|Listen 80|Listen 1924|' /etc/httpd/conf/httpd.conf
     systemctl restart httpd
     CHECK_RESULT $? 1 0
+    SLEEP_WAIT 5
     ausearch -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR > selinux_log
     CHECK_RESULT $?
     test "$(grep -c AVC selinux_log)" -gt 0
