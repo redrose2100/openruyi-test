@@ -1,0 +1,61 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2025. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+####################################
+#@Author        :   yangxi
+#@Contact       :   244349477@qq.com
+#@Date          :   2025-10-11
+#@License       :   Mulan PSL v2
+#@Desc          :   Take the test gnome-shell
+#####################################
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "gnome-shell elinks lynx"
+    if [[ "$(uname -m)" == "riscv64" ]]; then
+        echo "/usr/lib64/mutter-12" > /etc/ld.so.conf.d/mutter-riscv64.conf
+        ldconfig
+    fi
+    OLD_LANG="${LANG}"
+    export LANG="en_US.UTF-8"
+    LOG_INFO "End to prepare the database config."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+    timeout 5s gnome-shell --replace >/dev/null 2>&1 &
+    CHECK_RESULT $? 0 0 "Check gnome-shell basic startup failed."
+    which gnome-shell >/dev/null 2>&1
+    CHECK_RESULT $? 0 0 "Check gnome-shell command existence failed."
+    local mode_count
+    mode_count=$(gnome-shell --list-modes | wc -l)
+    test "$mode_count" -gt 0
+    CHECK_RESULT $? 0 0 "Check gnome-shell modes count failed."
+    gnome-shell --version > /tmp/gnome_version.txt
+    test -s /tmp/gnome_version.txt
+    CHECK_RESULT $? 0 0 "Check gnome-shell version output failed."
+    rm -f /tmp/gnome_version.txt
+    pkill -f "gnome-shell --replace"
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    export LANG="${OLD_LANG}"
+    rm -f /tmp/gnome_version.txt
+    pkill -f "gnome-shell --replace"
+    # shellcheck disable=SC2119
+    DNF_REMOVE  
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
+
