@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_gnome-shell"
+        },
+        {
+            "name": "oe_test_gnome-shell_01"
         }
     ]
 }
