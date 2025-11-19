@@ -21,7 +21,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function config_params() {
     LOG_INFO "Start loading data!"
-    TEST_DISK="/dev/$(lsblk -dn -o NAME,SIZE | awk '$2 != "0B" {print $1}' | sed -n 2p)"
+    TEST_DISK="$(lsblk -dn -o NAME,TYPE | awk '$2=="disk" {print "/dev/"$1}' | sed -n 2p)"
     LOG_INFO "Loading data is complete!"
 }
 

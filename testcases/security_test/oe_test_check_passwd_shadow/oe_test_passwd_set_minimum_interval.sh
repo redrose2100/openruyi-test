@@ -81,7 +81,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
     rm -rf getfile can_set_getfile cannot_set_minimum_interval.sh can_set_minimum_interval.sh
-    userdel set_minimum_interval10
+    userdel -rf set_minimum_interval10
     timedatectl set-ntp true
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

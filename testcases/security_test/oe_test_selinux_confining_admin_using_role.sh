@@ -82,6 +82,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rfZ example
     rm -rf testlog /etc/sudoers.d/example
+    rm -rf /run/faillock/example
     export LANG=${OLD_LANG}
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
