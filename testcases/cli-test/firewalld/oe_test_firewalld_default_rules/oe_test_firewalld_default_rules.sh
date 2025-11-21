@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Default rules for firewall
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -37,7 +38,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check default zone fail"
 
     NODE1_Interface=$(ip a |grep "${NODE1_IPV4}" -B2 |head -1 |awk -F ":" '{print $2}' |awk '{print $1}')
-    firewall-cmd --list-all |grep interfaces |awk '{print $NF}'|grep "${NODE1_Interface}"
+    firewall-cmd --list-all |grep interfaces |awk '{print $2}'|grep "${NODE1_Interface}"
     CHECK_RESULT $? 0 0 "check values of interfaces in runtime public zone fail"
     firewall-cmd --list-all --permanent |grep interfaces |awk '{print $1}'|grep "interfaces:"
     CHECK_RESULT $? 0 0 "check values of interfaces in permanent public zone fail"
