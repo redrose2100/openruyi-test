@@ -34,7 +34,14 @@ function run_test() {
     CHECK_RESULT $?
     irb --single-irb ../common/hello.rb | grep -i "hello"
     CHECK_RESULT $?
-    irb --tracer ../common/hello.rb | grep "hello.rb(main):003:0>"
+    expect <<-END
+        log_file testlog
+        spawn irb --tracer ../common/hello.rb
+        expect "*oe_test_irb_03*"
+        send "exit\\n"
+        expect eof
+END
+    grep "hello.rb(main):003:0>" testlog
     CHECK_RESULT $?
     irb --back-trace-limit 2 ../common/hello.rb | grep "Hello World"
     CHECK_RESULT $?
