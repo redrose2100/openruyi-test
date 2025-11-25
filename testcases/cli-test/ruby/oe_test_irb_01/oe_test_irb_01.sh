@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of irb command
 # ############################################
+# shellcheck disable=SC1091,SC2119
 
 source "../common/common_ruby.sh"
 
@@ -33,9 +34,23 @@ function run_test() {
     CHECK_RESULT $?
     irb --help | grep -E "Usage:|-"
     CHECK_RESULT $?
-    irb -d ../common/hello.rb | grep "hello.rb"
+    expect <<-END
+        log_file testlog1
+        spawn irb -d ../common/hello.rb
+        expect "*oe_test_irb_01*"
+        send "exit\\n"
+        expect eof
+END
+    grep "hello.rb" testlog1
     CHECK_RESULT $?
-    irb -f -d ../common/hello.rb | grep "hello"
+    expect <<-END
+        log_file testlog2
+        spawn irb -f -d ../common/hello.rb
+        expect "*oe_test_irb_01*"
+        send "exit\\n"
+        expect eof
+END
+    grep "hello" testlog2
     CHECK_RESULT $?
     irb ../common/test.rb | grep "uninitialized constant Prime"
     CHECK_RESULT $?
@@ -59,4 +74,4 @@ function post_test() {
     LOG_INFO "Finish restoring the test environment."
 }
 
-main $@
+main "$@"
