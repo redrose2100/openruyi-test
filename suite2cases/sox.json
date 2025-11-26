@@ -7,8 +7,11 @@
         {
    	    "name": "oe_test_sox01"
         },
-	{
+	    {
 	    "name": "oe_test_sox02"
+        },
+	    {
+	    "name": "oe_test_sox03"
         }
     ]
 }
