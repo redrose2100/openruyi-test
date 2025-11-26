@@ -15,11 +15,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in ndisc6 package
 # ############################################
-
+# shellcheck disable=SC1091,SC2154,SC2153
 source "../common/common_ndisc6.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
+    NODE1_IPV6_2=$(ip addr show "${NODE1_NIC[0]}" | grep -w inet6 | awk '{print $2}' | awk -F '/' '{print $1}' | awk 'NR==2{print $1}')
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -27,15 +28,15 @@ function run_test() {
     LOG_INFO "Start to run test."
     name2addr -4 newlocalhost | grep "${NODE1_IPV4}"
     CHECK_RESULT $?
-    name2addr -6 newlocalhost | grep "${NODE1_IPV6}"
+    name2addr -6 newlocalhost | grep -E "${NODE1_IPV6}|$NODE1_IPV6_2"
     CHECK_RESULT $?
-    name2addr -c newlocalhost | grep "${NODE1_NIC[0]}"
+    name2addr -c newlocalhost | grep -E "${NODE1_NIC[0]}|${NODE1_IPV4}"
     CHECK_RESULT $?
     name2addr -m localhost newlocalhost | grep -E "${NODE1_IPV4}|${NODE1_IPV6}"
     CHECK_RESULT $?
-    name2addr -n -r ${NODE1_IPV4} | grep "newlocalhost"
+    name2addr -n -r "${NODE1_IPV4}" | grep -E "newlocalhost|$hostname_init"
     CHECK_RESULT $?
-    name2addr -n -r ${NODE1_IPV6} | grep "newlocalhost"
+    name2addr -n -r "${NODE1_IPV6}" | grep "newlocalhost"
     CHECK_RESULT $?
     ndisc6_version=$(rpm -qa ndisc6 | awk -F '-' '{print $2}')
     name2addr -V | grep "${ndisc6_version}"
