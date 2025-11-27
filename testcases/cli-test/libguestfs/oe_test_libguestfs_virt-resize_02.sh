@@ -15,13 +15,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs virt-resize command
 # ############################################
-# shellcheck disable=SC2034
+# shellcheck disable=SC2034,SC1090
 
 source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     EXECUTE_T="240m"
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     libguestfs_pre_test_no_install
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then
       OS_VERSION="24.03-LTS-SP1"
@@ -53,7 +55,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check virt-resize --output-format failed"
     virt-resize -q /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /home/kvm/images/openEuler-"${OS_VERSION}"-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-resize -q failed"
-    device=$( fdisk -l 2> /dev/null | grep "Device" -A 1 | grep -o "/dev/[a-z0-9]*")
+    device=$(fdisk -l 2> /dev/null | grep "Device" -A 1 | grep -o "/dev/[a-z0-9]*" | head -n 1)
     virt-resize --resize-force "$device"=+128K /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /home/kvm/images/openEuler-"${OS_VERSION}"-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-resize --resize-force failed"
     virt-resize --unknown-filesystems ignore /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /home/kvm/images/openEuler-"${OS_VERSION}"-1.qcow2
@@ -63,6 +65,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    export LANG=$OLD_LANG
     libguestfs_post_test_resize "$@"
     LOG_INFO "Finish to restore the test environment."
 }
