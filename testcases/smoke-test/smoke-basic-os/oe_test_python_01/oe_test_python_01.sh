@@ -40,7 +40,7 @@ function run_test() {
         expect ">>>" {send "exit()\r"}
         expect eof
 EOF
-    grep "${system_name}" ./testlog
+    grep -i "${system_name}" ./testlog
     CHECK_RESULT $? 0 0 "system_name display failed"
     grep "${system_version}" ./testlog
     CHECK_RESULT $? 0 0 "system_version display failed"

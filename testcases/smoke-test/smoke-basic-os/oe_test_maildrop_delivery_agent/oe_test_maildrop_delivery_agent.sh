@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test the basic functions of maildrop
 # ############################################
+# shellcheck disable=SC2119
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
@@ -27,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    echo hello | maildrop -V 10 -f ${NODE1_IPV4} -d root -A "Header: value" 2>&1 | grep "maildrop:"
+    echo hello | maildrop -V 10 -f "${NODE1_IPV4}" -d root -A "Header: value" 2>&1 | grep "maildrop:"
     CHECK_RESULT $? 0 0 "Service not started"
     grep -A 5 "Header: value" /var/mail/root | grep hello
     CHECK_RESULT $? 0 0 "Failed to display hello"
@@ -38,7 +39,6 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/mail/root
     DNF_REMOVE
-    rm -rf /etc/yum.repos.d/openeuler.repo
     LOG_INFO "End to restore the test environment."
 }
 

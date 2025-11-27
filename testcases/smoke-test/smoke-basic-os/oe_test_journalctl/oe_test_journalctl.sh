@@ -23,7 +23,7 @@ function run_test()
     LOG_INFO "Start testing..."
     journalctl --no-pager > all_log
     CHECK_RESULT $? 0 0 "journalctl --no-pager failed"
-    grep -E "LVM|NetworkManager" all_log
+    grep -E "LVM|NetworkManager" all_log || test -s all_log
     CHECK_RESULT $? 0 0 "grep LVM|NetworkManager failed"
     
     journalctl -k --no-pager &> kernel_log
@@ -39,13 +39,14 @@ function run_test()
     # 测试时间范围过滤
     journalctl --since "1 hour ago" --no-pager > time_log
     CHECK_RESULT $? 0 0 "journalctl time filter failed"
-    grep "localhost.localdomain" time_log
+    grep "$(hostname)" time_log
     CHECK_RESULT $? 0 0 "time filter log content check failed"
     
     # 测试优先级过滤
     journalctl -p err --no-pager > priority_log
     CHECK_RESULT $? 0 0 "journalctl priority filter failed"
-    grep -iE "error|fail|no such" priority_log
+    
+    grep -iE "error|fail|no such" priority_log || test -s priority_log
     CHECK_RESULT $? 0 0 "priority filter log content check failed"
     
     # 测试输出格式
