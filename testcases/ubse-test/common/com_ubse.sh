@@ -147,13 +147,33 @@ function start_ubse(){
 
 function display_node_role(){
     local nodeId=$1
+    local role=$2
     result=$(P_SSH_CMD --cmd "ubsectl display cluster" --node "$nodeId")
-    extracted_date=$(echo "$result" | awk 'BEGIN {FS=" +|\$|\$"} R>2 && $2 != "-" {print $1 "}')
-
+    info=$(echo "$result" | sed 's/-//g' | awk 'NF' | tr -s ' ')
+    extracted_date=$(awk 'NR>1 && $1 ~ /^[^$(]/ {print $1, $2}' <<< "$info")
+    declare -A node_role_dict
+    
+    while IFS= read -r line; do
+        nodeId_res=$(echo "$line" | awk -F'[()]' '{print $2}')
+        role_res=$(echo "$line" | awk '{print $2}')
+        if [ "$role_res" == "$role" ]; then 
+            echo "$nodeId_res"
+            return 0
+        fi
+    done <<< "$extracted_date"
+    echo "false"
 }
 
 function return_nodes_by_role(){
+    local nodeId=$1
     for i in $(seq 1 60); do
-        
+        masterId=$(display_node_role "$nodeId" "master")
+        standbyId=$(display_node_role "$nodeId" "standby")
+        if [ "$masterId" != "false" ] && [ "$standbyId" != "false" ]; then
+            echo "$masterId $standbyId"
+            return 0
+        fi
+        sleep 6
     done
+    exit 1
 }
