@@ -12,6 +12,9 @@
         },
 	    {
 	    "name": "oe_test_sox03"
+        },
+	    {
+	    "name": "oe_test_sox04"
         }
     ]
 }
