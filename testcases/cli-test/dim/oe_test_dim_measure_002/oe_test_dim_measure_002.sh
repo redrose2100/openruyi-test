@@ -13,10 +13,11 @@
 # @Date      :   2023/10/12
 # @Desc      :   dim measure tampered test
 # ##################################
-# shellcheck disable=SC2002,SC2119
+# shellcheck disable=SC2002,SC2119,SC2034
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    EXECUTE_T="100m"
     # kmod 正常安装需提前安装好， kernel依赖包
     DNF_INSTALL "kernel-headers-$(uname -r) kernel-devel-$(uname -r)"
     DNF_INSTALL "dim_tools dim vdo kmod-kvdo"
