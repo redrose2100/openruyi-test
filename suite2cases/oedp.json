@@ -1,6 +1,7 @@
 {
     "path": "$OET_PATH/testcases/feature-test/oedp",
-    "machine num": 2,
+    "machine num": 3,
+    "machine type": "physical",
     "cases": [
         {
             "name": "oe_test_oedp_01"
@@ -41,6 +42,12 @@
         },
         {
             "name": "oe_test_oedp_13"
+        },
+        {
+            "name": "oe_test_oedp_14",
+            "machine num": 3
+
         }
+
     ]
 }
