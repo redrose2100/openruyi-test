@@ -1,5 +1,5 @@
-sed -i 's/\r$//' ./common/com_start_ubse.sh
-source ./common/com_start_ubse.sh
+sed -i 's/\r$//' ./common/com_ubse.sh
+source ./common/com_ubse.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     P_SSH_CMD --cmd "systemctl stop ubse" --node 1
@@ -11,6 +11,7 @@ function run_test(){
     LOG_INFO "Start to run test."
     res=$(start_ubse 1)
     echo "Start result:$res"
+    sleep 120
     res1=$(P_SSH_CMD --cmd "ubsectl check memory" --node 1)
     dict=$(echo "$res1" | convert_cli_output_to_json)
     node_status=$(echo "$dict" | jq -r '.[] | select(.node == "-(2)") | .status')
