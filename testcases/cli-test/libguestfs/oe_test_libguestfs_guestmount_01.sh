@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs guestmount command
 # ############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
@@ -33,7 +34,7 @@ function run_test() {
     else
       OS_VERSION="20.03-LTS-SP3"
     fi
-    device=$( fdisk -l 2> /dev/null | grep "Device" -A 1 | grep -o "/dev/[a-z0-9]*") 
+    device=$(fdisk -l 2> /dev/null | grep "Device" -A 1 | grep -o "/dev/[a-z0-9]*" | head -n 1) 
     guestmount -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount -a -m --ro failed"
     guestunmount /mnt
