@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/minimap2",
-    "cases": [
-        {
-            "name": "oe_test_minimap2"
-        }
-    ]
-}

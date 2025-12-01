@@ -1,8 +1,0 @@
-{
-    "path": "${OET_PATH}/testcases/cli-test/dmidecode",
-    "cases": [
-        {
-            "name": "oe_test_dmidecode"
-        }
-    ]
-}

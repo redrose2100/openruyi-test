@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/prometheus2",
-    "cases": [
-        {
-            "name": "oe_test_service_prometheus"
-        }
-    ]
-}
