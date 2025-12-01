@@ -1,8 +1,0 @@
-{
-  "path": "$OET_PATH/testcases/cli-test/ninja-build",
-  "cases": [
-    {
-      "name": "oe_test_ninja-build_ninja"
-    }
-  ]
-}

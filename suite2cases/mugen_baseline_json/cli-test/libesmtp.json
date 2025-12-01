@@ -1,8 +1,0 @@
-{
-    "path": "${OET_PATH}/testcases/cli-test/libesmtp",
-    "cases": [
-        {
-            "name": "oe_test_libesmtp"
-        }
-    ]
-}

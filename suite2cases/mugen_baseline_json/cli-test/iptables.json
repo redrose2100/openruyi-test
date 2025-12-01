@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/iptables",
-    "cases": [
-        {
-            "name": "oe_test_ip6tables-save"
-	    }
-    ]
-}
