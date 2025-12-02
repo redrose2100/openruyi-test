@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_gpm"
+        },
+        {
+            "name": "oe_test_gpm_01"
         }
     ]
 }
