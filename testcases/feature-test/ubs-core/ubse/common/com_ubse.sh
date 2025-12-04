@@ -3,7 +3,7 @@ function get_package(){
     local node1=$1
     files=("ubs-engine-1.0.0-1.aarch64.rpm" "ubs-engine-client-libs-1.0.0-1.aarch64.rpm" "ubs-engine-client-devel-1.0.0-1.aarch64.rpm" "python3-ubs-engine-1.0.0-1.noarch.rpm")
     for file in "${files[@]}"; do
-        result=$(P_SSH_CMD --cmd "ls /root/manager/$file" --node $node1)
+        result=$(P_SSH_CMD --cmd "ls /root/manager/$file" --node "$node1")
         if echo "$result" | grep -q "No such file or directory"; then
             echo "Fail $file not found on node $node1"
             exit 1
@@ -16,7 +16,7 @@ function get_package(){
 function get_version(){
     local node1=$1
     local rpm_name=$2
-    result=$(P_SSH_CMD --cmd "rpm -qi $rpm_name" --node $node1)
+    result=$(P_SSH_CMD --cmd "rpm -qi $rpm_name" --node "$node1")
     if echo "$result" | grep -q "Version"; then
         version=$(echo "$result" | grep "Version" | awk -F: '{print $2}' | tr -d ' ')
         release=$(echo "$result" | grep "Release" | awk -F: '{print $2}' | tr -d ' ')
@@ -29,39 +29,39 @@ function get_version(){
 function install_rpm(){
     local node1=$1
     return_values=()
-    return_info1=$(get_version $node1 "ubs-engine")
+    return_info1=$(get_version "$node1" "ubs-engine")
     read -r version_ubse_engine release_ubse_engine <<< "$return_info1"
     if [ "$version_ubse_engine" = "false" ]; then
-         P_SSH_CMD --cmd "rpm -ivh /root/manager/ubs-engine-1.0.0-1.aarch64.rpm" --node $node1
+         P_SSH_CMD --cmd "rpm -ivh /root/manager/ubs-engine-1.0.0-1.aarch64.rpm" --node "$node1"
     fi
-    return_info1=$(get_version $node1 "ubs-engine")
+    return_info1=$(get_version "$node1" "ubs-engine")
     read -r version_ubse_engine release_ubse_engine <<< "$return_info1"
     return_values+=("$version_ubse_engine")
 
-    return_info2=$(get_version $node1 "ubs-engine-client-libs")
+    return_info2=$(get_version "$node1" "ubs-engine-client-libs")
     read -r version_ubse_engine_libs release_ubse_engine_libs <<< "$return_info2"
     if [ "$version_ubse_engine_libs" = "false" ]; then
-        P_SSH_CMD --cmd "rpm -ivh /root/manager/ubs-engine-client-libs-1.0.0-1.aarch64.rpm" --node $node1
+        P_SSH_CMD --cmd "rpm -ivh /root/manager/ubs-engine-client-libs-1.0.0-1.aarch64.rpm" --node "$node1"
     fi
-    return_info2=$(get_version $node1 "ubs-engine")
+    return_info2=$(get_version "$node1" "ubs-engine")
     read -r version_ubse_engine_libs release_ubse_engine_libs <<< "$return_info1"
     return_values+=("$version_ubse_engine_libs")
 
-    return_info3=$(get_version $node1 "ubs-engine-client-devel")
+    return_info3=$(get_version "$node1" "ubs-engine-client-devel")
     read -r version_ubse_engine_devel release_ubse_engine_devel <<< "$return_info3"
     if [ "$version_ubse_engine_devel" = "false" ]; then
-        P_SSH_CMD --cmd "rpm -ivh /root/manager/ubs-engine-client-devel-1.0.0-1.aarch64.rpm" --node $node1
+        P_SSH_CMD --cmd "rpm -ivh /root/manager/ubs-engine-client-devel-1.0.0-1.aarch64.rpm" --node "$node1"
     fi
-    return_info3=$(get_version $node1 "ubs-engine")
+    return_info3=$(get_version "$node1" "ubs-engine")
     read -r version_ubse_engine_devel release_ubse_engine_devel <<< "$return_info1"
     return_values+=("$version_ubse_engine_devel")
 
-    return_info4=$(get_version $node1 "python3-ubs-engine")
+    return_info4=$(get_version "$node1" "python3-ubs-engine")
     read -r version_python3 release_python3 <<< "$return_info4"
     if [ "$version_python3" = "false" ]; then
-        P_SSH_CMD --cmd "rpm -ivh /root/manager/python3-ubs-engine-1.0.0-1.noarch.rpm" --node $node1
+        P_SSH_CMD --cmd "rpm -ivh /root/manager/python3-ubs-engine-1.0.0-1.noarch.rpm" --node "$node1"
     fi
-    return_info4=$(get_version $node1 "python3-ubs-engine")
+    return_info4=$(get_version "$node1" "python3-ubs-engine")
     read -r version_python3 release_python3 <<< "$return_info4"
     return_values+=("$version_python3")
     echo "${return_values[@]}"
@@ -121,7 +121,7 @@ function check_ubse_status(){
 
 function stop_ubse(){
     local nodeId=$1
-    pid=$(get_ubse_pid $nodeId) 
+    pid=$(get_ubse_pid "$nodeId") 
     if [ "$pid" != "false" ]; then
         count=$(get_count "$nodeId" "Deactivated successfully")
         exec_service "$nodeId" "stop"
