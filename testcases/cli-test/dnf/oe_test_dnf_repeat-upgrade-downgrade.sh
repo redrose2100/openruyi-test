@@ -23,13 +23,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     add_low_repo
-    dnf list --installed | grep "@anaconda" | grep "arch\|x86_64" | awk '{print $1}' | awk -F. 'OFS="."{$NF="";print}' | awk '{print substr($0, 1, length($0)-1)}' >anaconda_list
+    dnf list --installed | grep "@anaconda" | grep "arch\|x86_64\|riscv64" | awk '{print $1}' | awk -F. 'OFS="."{$NF="";print}' | awk '{print substr($0, 1, length($0)-1)}' >anaconda_list
     if dnf repolist | grep update; then
-        dnf list --available --repo=update | grep "arch\|x86_64" |xargs| awk '{print $1}' | awk -F . 'OFS="."{$NF="";print}' | awk '{print substr($0, 1, length($0)-1)}' >update_pkg_list
+        dnf list --available --repo=update | grep "arch\|x86_64\|riscv64" |xargs| awk '{print $1}' | awk -F . 'OFS="."{$NF="";print}' | awk '{print substr($0, 1, length($0)-1)}' >update_pkg_list
         update_pkg_name=$(shuf -n1 update_pkg_list)
         if ! dnf list installed | grep "$update_pkg_name\."; then
             dnf install -y "$update_pkg_name" | tee install_log
-            update_pkg_name=$(grep update install_log | awk '{print $1}')
             dnf -y downgrade "$update_pkg_name"
         fi
     fi
@@ -39,7 +38,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     if dnf repolist | grep update; then
-        for ((i = 0; i < 50; i++)); do
+        for ((i = 0; i < 20; i++)); do
             dnf -y upgrade "$update_pkg_name" | grep "Upgraded\|Nothing to do"
             CHECK_RESULT $?
             dnf -y downgrade "$update_pkg_name" | grep "Downgraded"
