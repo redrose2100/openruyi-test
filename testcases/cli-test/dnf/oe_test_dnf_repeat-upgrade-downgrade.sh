@@ -29,7 +29,7 @@ function pre_test() {
         update_pkg_name=$(shuf -n1 update_pkg_list)
         if ! dnf list installed | grep "$update_pkg_name\."; then
             dnf install -y "$update_pkg_name" | tee install_log
-            update_pkg_name=$(grep update install_log | awk '{print $1}')
+            update_pkg_name=$(grep update install_log | head -n 1 | awk '{print $1}')
             dnf -y downgrade "$update_pkg_name"
         fi
     fi
