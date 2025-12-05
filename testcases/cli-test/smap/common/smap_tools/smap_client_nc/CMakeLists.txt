@@ -1,0 +1,6 @@
+project(smap_client_nc)
+cmake_minmum_required(VERSION 3.13)
+aux_source_directory(${CMAKE_CURRENT_LIST_DIR} SMAP_CLIENT_NC_SRCS)
+include_directories(${CMAKE_CURRENT_LIST_DIR})
+add_executable(smap_client_nc ${SMAP_CLIENT_NC_SRCS})
+target_link_libraries(smap_client_nc PUBLIC smap)

@@ -1,0 +1,71 @@
+{
+    "path": "${OET_PATH}/testcases/cli-test/smap",
+    "cases": [
+        {
+            "name": "tc_smap_func_feature_set_smap_remote_numa_info_001"
+        },
+        {
+            "name": "tc_smap_func_feature_set_smap_remote_numa_info_002"
+        },
+        {
+            "name": "tc_smap_func_feature_set_run_mode_001"
+        },
+        {
+            "name": "tc_smap_func_feature_set_run_mode_002"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_add_process_tracking_001"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_remove_process_tracking_001"
+        },
+        {
+            "name": "tc_smap_func_feature_enable_node_001"
+        },
+        {
+            "name": "tc_smap_func_feature_enable_node_002"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_init_001"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_init_002"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_migrate_out_001"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_migrate_out_002"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_migrate_out_sync_001"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_query_process_config_001"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_query_vm_freq_001"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_remove_001"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_remove_002"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_migrate_back_001"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_enable_process_migrate_001"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_enable_process_migrate_002"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_migrate_pid_remote_numa_001"
+        },
+        {
+            "name": "tc_smap_func_feature_smap_migrate_remote_numa_001"
+        }
+    ]
+}
