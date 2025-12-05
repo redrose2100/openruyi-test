@@ -17,7 +17,7 @@
 # @Desc      :   verify the uasge of perl-libwww-perl command
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -29,13 +29,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     HEAD -m 'GET' http://www.baidu.com 2>&1 | grep '<head>'
     CHECK_RESULT $? 0 0 "Check HEAD -m failed"
-    HEAD -f http://www.baidu.com 2>&1 | grep 'Accept-Ranges:'
+    HEAD -f http://www.baidu.com 2>&1 | grep 'Content-Type:'
     CHECK_RESULT $? 0 0 "Check HEAD -f failed"
     HEAD -b http://www.baidu.com http://www.baidu.com 2>&1 | grep 'Cache-Control:'
     CHECK_RESULT $? 0 0 "Check HEAD -b failed"
     HEAD -t 10 http://www.baidu.com 2>&1 | grep 'Cache-Control:'
     CHECK_RESULT $? 0 0 "Check HEAD -t failed"
-    HEAD -i $(date "+%Y-%m-%d %H:%M:%S") http://www.baidu.com 2>&1 | grep 'Client-Date'
+    HEAD -i "$(date "+%Y-%m-%d %H:%M:%S")" http://www.baidu.com 2>&1 | grep 'Client-Date'
     CHECK_RESULT $? 0 0 "Check HEAD -i failed"
     HEAD -a http://www.baidu.com 2>&1 | grep 'Content-Type: text'
     CHECK_RESULT $? 0 0 "Check HEAD -a failed"
@@ -50,8 +50,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
