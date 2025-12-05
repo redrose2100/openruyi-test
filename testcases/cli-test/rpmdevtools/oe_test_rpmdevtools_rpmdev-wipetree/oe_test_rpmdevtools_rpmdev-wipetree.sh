@@ -15,11 +15,13 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   test rpmdev-wipetree rpmelfsym rpmfile rpminfo rpmls rpmpeek rpmsodiff rpmsoname
 #####################################
+# shellcheck disable=SC2034
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="120m"
     DNF_INSTALL "rpmdevtools gcc"
     useradd user_test
     su user_test -c "mkdir -p /home/user_test/rpmbuild/RPMS/${NODE1_FRAME}"
@@ -97,13 +99,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: -r"
     rpminfo -ro "${pkg_name1}" | grep "PIC"
     CHECK_RESULT $? 0 0 "Failed option: -ro"
-    rpminfo -s -o record1 ${pkg_name1}
+    rpminfo -s -o record1 "${pkg_name1}"
     num_record1=$(find . -maxdepth 1 -name 'record1*' | wc -l)
     test "${num_record1}" -ge 1
     CHECK_RESULT $? 0 0 "Failed option: -s "
     rpminfo -t "${pkg_name1}" | grep "PIC"
     CHECK_RESULT $? 0 0 "Failed option: -t"
-    rpminfo -T ./tmp_dir ${pkg_name1}
+    rpminfo -T ./tmp_dir "${pkg_name1}"
 
     rpmls -l "${pkg_name}"*rpm | grep "${pkg_name}"
     CHECK_RESULT $? 0 0 "Failed command: rpmls"
