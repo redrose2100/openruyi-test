@@ -1,4 +1,5 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+ubse_script_dir="$OET_PATH/testcases/feature-test/ubs-core/ubse/common"
 function get_package(){
     local node1=$1
     files=("ubs-engine-1.0.0-1.aarch64.rpm" "ubs-engine-client-libs-1.0.0-1.aarch64.rpm" "ubs-engine-client-devel-1.0.0-1.aarch64.rpm" "python3-ubs-engine-1.0.0-1.noarch.rpm")
@@ -208,4 +209,40 @@ function convert_cli_output_to_json(){
         END {
             printf "\n]\n";
         }'
+}
+
+function check_memory() {
+    local nodeId=$1
+    result=$(P_SSH_CMD --cmd "ubsectl check memory" --node "$nodeId")
+    echo "$result"
+}
+
+function check_mem_nodes_num() {
+    local nodeId=$1
+    local nodeSize=$2
+    for _ in $(seq 1 60); do
+        ok_num=$(check_memory "$nodeId" | grep -v nok | grep -c ok)
+        if [ "$ok_num" == $((nodeSize)) ]; then
+            echo "true"
+            return 0
+        fi
+        sleep 6
+    done
+    echo "false"
+    exit 1
+}
+
+function mem_borrow_common() {
+    local nodeId=$1
+    local cmd=$2
+    local cmd_list="expect -c '
+            spawn python ${ubse_script_dir}/ubse_mem_app.py
+            expect \"ubse_mem_app>\"
+            send \"${cmd}\n\"
+            expect \"ubse_mem_app>\"
+            send \"exit\n\"
+            expect eof
+            '"
+    result=$(P_SSH_CMD --node "${nodeId}" --cmd "${cmd_list}")
+    echo "$result"
 }

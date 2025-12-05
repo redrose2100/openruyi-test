@@ -1,5 +1,6 @@
-sed -i 's/\r$//' ./common/com_ubse.sh
-source ./common/com_ubse.sh
+#!/usr/bin/bash
+
+source "$OET_PATH/testcases/feature-test/ubs-core/ubse/common/com_ubse.sh"
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     P_SSH_CMD --cmd "systemctl stop ubse" --node 1
