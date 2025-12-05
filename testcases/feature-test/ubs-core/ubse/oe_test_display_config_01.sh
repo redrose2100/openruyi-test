@@ -1,7 +1,7 @@
-sed -i 's/\r$//' ./common/com_ubse.sh
-sed -i 's/\r$//' ./common/com_ubse_cli.sh
-source ./common/com_ubse.sh
-source ./common/com_ubse_cli.sh
+#!/usr/bin/bash
+
+source "$OET_PATH/testcases/ubse-test/common/com_ubse.sh"
+source "$OET_PATH/testcases/ubse-test/common/com_ubse_cli.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     stop_ubse 1
