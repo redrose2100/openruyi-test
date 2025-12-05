@@ -185,6 +185,93 @@ class NUMAManager:
         # 确保大小是页面大小的倍数
         page_size = os.sysconf("SC_PAGESIZE")
         aligned_size = ((size_bytes + page_size -1) // page_size) * page_size
+        # 检查节点是否可用
+        if not self.is_numa_node_available(numa_id):
+            raise ValueError(f"NUMA {numa_id} not available")
+        try:
+            # 使用 Python mmap 分配匿名内存
+
+        
+        ###########################720行
+        try:
+            self.lib_ubse = ctypes.CDLL(lib_path)
+        except OSError as ex:
+            logger.error(f"Unable to load library {lib_path} : {ex}")
+            raise
+        self.set__function_prototypes()
+    
+    def set__function_prototypes(self):
+        """设置C函数的参数类型和返回值类型"""
+        # 定义函数原型
+        self.lib_ubse.ubs_engine_client_initialize.argtypes = [ctypes.c_char_p]
+        self.lib_ubse.ubs_engine_client_initialize.restype =  ctypes.c_int32
+
+        self.lib_ubse.ubs_error_name.argtypes = [ctypes.c_int32] # int32_t error
+        self.lib_ubse.ubs_error_name.restype = ctypes.c_char_p # const char * 
+
+        self.lib_ubse.ubs_error_string.argtypes = [ctypes.c_int32] # int32_t error
+        self.lib_ubse.ubs_error_string.restype = ctypes.c_char_p # const char *
+
+        # node
+        self.lib_ubse.ubs_topo_node_local_get.argtypes = [ctypes.POINTER(UbsTopoNodeT)]
+        self.lib_ubse.ubs_topo_node_local_get.restype = ctypes.c_int32
+
+        self.lib_ubse.ubs_topo_node_list.argtypes = [ctypes.POINTER(ctypes.POINTER(UbsTopoNodeT)),
+                                                     ctypes.POINTER(ctypes.c_uint32)]
+        self.lib_ubse.ubs_topo_node_list.restype = ctypes.c_int32
+
+        self.lib_ubse.ubs_topo_link_list.argtypes = [
+            ctypes.POINTER(ctypes.POINTER(UbsTopoLinkT)),
+            ctypes.POINTER(ctypes.c_uint32)
+        ]
+        self.lib_ubse.ubs_topo_link_list.restype = ctypes.c_int32
+
+        self.lib_ubse.ubs_mem_numastat_get.argtypes = [
+            ctypes.c_uint32,
+            ctypes.POINTER(ctypes.POINTER(UbsMemNumastatT)),
+            ctypes.POINTER(ctypes.c_uint32)
+        ]
+        self.lib_ubse.ubs_mem_numastat_get.restype = ctypes.c_int32
+
+        # fd
+        self.lib_ubse.ubs_mem_fd_create.argtypes = [
+            ctypes.c_char_p, # name
+            ctypes.c_uint64, # size
+            ctypes.POINTER(UbsMemFdOwnerT), # owner
+            ctypes.c_uint32, # mode
+            UbsMemDistanceT, # distance
+            ctypes.POINTER(UbsMemFdDescT) # desc
+        ]
+        self.lib_ubse.ubs_mem_fd_create.restype = ctypes.c_int32
+
+        self.lib_ubse.ubs_mem_fd_create_with_lender.argtypes = [
+            ctypes.c_char_p, # const char *name
+            ctypes.POINTER(UbsMemFdOwnerT), # const ubse_mem_fd_owner_t *owner
+            ctypes.c_uint32, # mode_t mode (使用c_uint32表示mode_t)
+            ctypes.POINTER(UbsMemLenderT), # const ubse_mem_lender_t *lender
+            ctypes.c_uint32, # uint32_t lender_cnt
+            ctypes.POINTER(UbsMemFdDescT) # ubse_mem_fd_desc_t *fd_desc
+        ]
+        self.lib_ubse.ubs_mem_fd_create_with_lender.restype = ctypes.c_int
+
+        self.lib_ubse.ubs_mem_fd_delete.argtypes = [ctypes.c_char_p]
+        self.lib_ubse.ubs_mem_fd_delete.restype = ctypes.c_int32
+
+        self.lib_ubse.ubs_mem_fd_get.argtypes = [ctypes.c_char_p, ctypes.POINTER(UbsMemFdDescT)]
+        self.lib_ubse.ubs_mem_fd_get.restype = ctypes.c_int32
+
+        self.lib_ubse.ubs_mem_fd_list.argtypes = [ctypes.POINTER(ctypes.POINTER(UbsMemFdDescT)),
+                                                  ctypes.POINTER(ctypes.c_uint32)]
+        self.lib_ubse.ubs_mem_fd_list.restype = ctypes.c_int32
+
+
+        self.lib_ubse.ubs_mem_numa_create_with_lender.argtypes = [
+            ctypes.c_char_p, # const char *name
+            ctypes.POINTER(UbsMemLenderT), # const ubse_mem_lender_t * lender
+            ctypes.c_uint32, # uint32_t lender_cnt
+            ctypes.POINTER(UbsMemNumaDescT) # ubse_mem_numa_desc_t *numa_desc
+        ]
+
 
 
 
