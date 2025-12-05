@@ -1,0 +1,26 @@
+{
+    "path": "${OET_PATH}/testcases/smoke-test/smoke-migrate",
+    "cases": [
+        {
+            "name": "oe_test_migrate_content_hugepage"
+        },
+        {
+            "name": "oe_test_migrate_memlink_balloon"
+        },
+        {
+            "name": "oe_test_migrate_memlink_fpr"
+        },
+        {
+            "name": "oe_test_migrate_mode_iterative"
+        },
+        {
+            "name": "oe_test_migrate_mode_onecopy"
+        },
+        {
+            "name": "oe_test_migrate_mode_tcp"
+        },
+        {
+            "name": "oe_test_migrate_status_circle"
+        }
+    ]
+}
