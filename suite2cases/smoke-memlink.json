@@ -1,0 +1,20 @@
+{
+    "path": "${OET_PATH}/testcases/smoke-test/smoke-memlink",
+    "cases": [
+        {
+            "name": "oe_test_memlink_balloon"
+        },
+        {
+            "name": "oe_test_memlink_fpr"
+        },
+        {
+            "name": "oe_test_memlink_dumpxml_proportion"
+        },
+        {
+            "name": "oe_test_memlink_oom_running"
+        },
+        {
+            "name": "oe_test_memlink_oom_start"
+        }
+    ]
+}
