@@ -1,0 +1,11 @@
+{
+    "path": "${OET_PATH}/testcases/smoke-test/smoke-ubnative",
+    "cases": [
+        {
+            "name": "oe_test_ubnative_ping"
+        },
+        {
+            "name": "oe_test_ubnative_vmlife"
+        }
+    ]
+}
