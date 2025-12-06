@@ -16,7 +16,7 @@
 #@Desc      	:   Test 2M hugepage vm urma migrate status circle
 #####################################
 
-source ../common/common.sh
+source "${OET_PATH}"/testcases/smoke-test/smoke-migrate/common/common.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."

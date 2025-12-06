@@ -16,13 +16,14 @@
 #@Desc      	:   Public function
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 test_qemu_dir="/home/test_qemu"
 config_dir="${test_qemu_dir}/config"
 image_dir="${test_qemu_dir}/image"
 image_path="${image_dir}/openEuler.qcow2"
-image_download_url=$(sed 's|everything/aarch64/|virtual_machine_img/aarch64/openEuler-24.03-LTS-SP3-aarch64.qcow2.xz|g' <<< $(grep -A 5 "\[openEuler\]" /etc/yum.repos.d/openEuler.repo | grep baseurl | cut -d= -f2))
+repo_baseurl=$(grep -A 5 "\[openEuler\]" /etc/yum.repos.d/openEuler.repo | grep baseurl | cut -d= -f2)
+image_download_url="${repo_baseurl//everything\/aarch64\//virtual_machine_img\/aarch64\/openEuler-24.03-LTS-SP3-aarch64.qcow2.xz}"
 
 vm_ip="192.168.1.101"
 vm_user="root"

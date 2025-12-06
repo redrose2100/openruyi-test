@@ -16,7 +16,7 @@
 #@Desc      	:   Test vm urma onecopy migrate
 #####################################
 
-source ../common/common.sh
+source "${OET_PATH}"/testcases/smoke-test/smoke-migrate/common/common.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."

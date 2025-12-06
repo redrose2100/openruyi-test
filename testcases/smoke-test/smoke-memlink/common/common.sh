@@ -16,7 +16,7 @@
 #@Desc      	:   Public function
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 test_qemu_dir="/home/test_qemu"
 config_dir="${test_qemu_dir}/config"
@@ -98,16 +98,14 @@ function pre_init() {
 }
 
 function backup_cfg() {
-    local bak_files="$@"
-    for file in ${bak_files}; do
+    for file in "$@"; do
         cp -arvf "${file}" "${BACKUP_DIR}" && LOG_ERROR "${file} backup success!"
     done
 }
 
 function recover_cfg() {
-    local bak_files="$@"
-    for file in ${bak_files}; do
-        mv "${BACKUP_DIR}/$(basename $file)" "${file}" && LOG_ERROR "${file} recover success!"
+    for file in "$@"; do
+        mv "${BACKUP_DIR}/$(basename "$file")" "${file}" && LOG_ERROR "${file} recover success!"
     done
 }
 
@@ -144,7 +142,7 @@ function change_cfgs() {
         value=${option_value#*=}
         sed -i "/^${option}=/ s/=.*/=${QUOTA_STR}${value}${QUOTA_STR}/" "$cfg_file" || LOG_ERROR "change_cfgs: [$cfg_file] $option_value mod failed"
     done
-    diff --color "${cfg_file}" "${BACKUP_DIR}/$(basename ${cfg_file})"
+    diff --color "${cfg_file}" "${BACKUP_DIR}/$(basename "$cfg_file")"
 }
 
 function wait_exec() {

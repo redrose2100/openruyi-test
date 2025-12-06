@@ -16,7 +16,7 @@
 #@Desc      	:   Test ub vm ping
 #####################################
 
-source ../common/common.sh
+source "${OET_PATH}"/testcases/smoke-test/smoke-ubnative/common/common.sh
 
 vm_name="ub_one_ubd"
 bus_instance="cc08-a000-0-0-000000-0000000000000003"
@@ -48,7 +48,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check vm ub bus failed"
 
     ub_dev_guid=$(cat /sys/bus/ub/devices/"$ub_dev_id"/guid)
-    vm_ub_dev_guid=$(echo "$ub_dev_guid" | sed 's/-[^-]*$/-0000000000000002/')
+    vm_ub_dev_guid="${ub_dev_guid%-*}-0000000000000002"
     vm_sshx "cat /sys/bus/ub/devices/00002/guid | grep $vm_ub_dev_guid"
     CHECK_RESULT $? 0 0 "check vm ub dev failed"
 

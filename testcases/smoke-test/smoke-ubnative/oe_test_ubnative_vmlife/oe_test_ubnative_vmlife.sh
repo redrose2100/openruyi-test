@@ -16,7 +16,7 @@
 #@Desc      	:   Test ub vm life cycle
 #####################################
 
-source ../common/common.sh
+source "${OET_PATH}"/testcases/smoke-test/smoke-ubnative/common/common.sh
 
 vm_name="ub_one_ubd"
 bus_instance="cc08-a000-0-0-000000-0000000000000003"

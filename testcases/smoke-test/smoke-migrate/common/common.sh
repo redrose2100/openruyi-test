@@ -16,7 +16,7 @@
 #@Desc      	:   Public function
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 test_qemu_dir="/home/test_qemu"
 config_dir="${test_qemu_dir}/config"
