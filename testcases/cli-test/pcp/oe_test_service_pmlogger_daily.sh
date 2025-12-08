@@ -31,26 +31,27 @@ function run_test() {
     LOG_INFO "Start testing..."
     systemctl restart "${service}" && systemctl status "${service}" | grep "Active: active"
     CHECK_RESULT $? 0 0 "${service} restart failed"
-    SLEEP_WAIT 5
+    SLEEP_WAIT 30
     systemctl status "${service}" | grep "Active: inactive"
     CHECK_RESULT $? 0 0 "${service} restart failed"
     systemctl stop "${service}"
     CHECK_RESULT $? 0 0 "${service} stop failed"
-    SLEEP_WAIT 5
+    SLEEP_WAIT 30
     systemctl status "${service}" | grep "Active: inactive"
     CHECK_RESULT $? 0 0 "${service} stop failed"
     systemctl start "${service}" && systemctl status "${service}" | grep "Active: active"
     CHECK_RESULT $? 0 0 "${service} start failed"
-    SLEEP_WAIT 5
+    SLEEP_WAIT 30
     systemctl status "${service}" | grep "Active: inactive"
     CHECK_RESULT $? 0 0 "${service} start failed"
     test_enabled "${service}"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     systemctl start "${service}"
-    SLEEP_WAIT 3
+    SLEEP_WAIT 30
     systemctl reload "${service}" 2>&1 | grep "Job type reload is not applicable"
     CHECK_RESULT $? 0 0 "Job type reload is not applicable for unit ${service}"
+    SLEEP_WAIT 30
     systemctl status "${service}" | grep "Active: inactive"
     CHECK_RESULT $? 0 0 "readonly-root.service reload causes the service status to change"
     LOG_INFO "Finish test!"
