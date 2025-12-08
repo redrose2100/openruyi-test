@@ -33,7 +33,7 @@ function pre_test() {
         url="https://rpmfind.net/linux/centos-stream/10-stream/BaseOS/${arch}/os/Packages"
     fi
     pkg=$(curl -skL "$url" | grep "libatomic" | head -n 1 | sed -n 's/.*href="\([^"]*\.rpm\)".*/\1/p')
-    wget --no-check-certificate "$url"/"$pkg"
+    wget --no-check-certificate "$url"/"$pkg" -O libatomic_el10.rpm
     LOG_INFO "End to prepare the test environment."
 }
 
