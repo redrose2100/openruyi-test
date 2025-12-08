@@ -43,9 +43,9 @@ function run_test() {
     CHECK_RESULT $?
     pcp-pidstat -k -s 2 | grep 'StkSize'
     CHECK_RESULT $?
-    pcp-pidstat -a "$archive_data" -Z Africa/Lagos -s 10 |grep 'UID'
+    pcp-pidstat -a "$archive_data" -Z Africa/Lagos -s 20 |grep 'UID'
     CHECK_RESULT $?
-    pcp-pidstat -a "$archive_data" -z -s 10 |grep '%CPU'
+    pcp-pidstat -a "$archive_data" -z -s 20 |grep '%CPU'
     CHECK_RESULT $?
     pcp-ipcs --help 2>&1 | grep 'Usage'
     CHECK_RESULT $?
