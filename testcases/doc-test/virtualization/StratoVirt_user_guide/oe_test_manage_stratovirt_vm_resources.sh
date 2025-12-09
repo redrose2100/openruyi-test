@@ -22,64 +22,69 @@ source common/common_stratovirt.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     pre_env
+    create_stratovirt_vm &
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    create_stratovirt_vm &
-    SLEEP_WAIT 20
-    grep -iE "root@StratoVirt" testlog
-    CHECK_RESULT $? 0 0 'Failed to create and start a stratovirt VM'
+
     expect <<-EOF
-        log_file testlog1
         spawn ncat -U /tmp/stratovirt.socket
         expect "*QMP*"
-        send "{\"execute\": \"blockdev-add\", \"arguments\": {\"node-name\": \"drive-0\", \"file\": {\"driver\": \"file\", \"filename\": \"vmlinux.bin\"}, \"cache\": {\"direct\": true}, \"read-only\": false}}\\n"
+        send "{\"execute\":\"blockdev-add\",\"arguments\":{\"node-name\":\"drive-0\",\"file\":{\"driver\":\"file\",\"filename\":\"vmlinux.bin\"},\"cache\":{\"direct\":false},\"read-only\":false}}\\n"
         expect "*return*"
-        send "{\"execute\": \"device_add\", \"arguments\": {\"id\": \"drive-0\", \"driver\": \"virtio-blk-mmio\", \"addr\": \"0x1\"}}\\n"
+        send "{\"execute\":\"device_add\",\"arguments\":{\"id\":\"drive-0\",\"driver\":\"virtio-blk-mmio\",\"addr\":\"0x1\"}}\\n"
         expect "*return*"
-        send "{\"execute\": \"device_del\", \"arguments\": {\"id\":\"drive-0\"}}\\n"
+        send "{\"execute\":\"device_del\",\"arguments\":{\"id\":\"drive-0\"}}\\n"
         expect "*DEVICE_DELETED*"
-
-        send "{\"execute\":\"netdev_add\", \"arguments\":{\"id\":\"net-0\", \"ifname\":\"tap0\"}}\\n"
+        send "{\"execute\":\"netdev_add\",\"arguments\":{\"id\":\"net-0\",\"ifname\":\"tap0\"}}\\n"
         expect "*return*"
-        send "{\"execute\":\"device_add\", \"arguments\":{\"id\":\"net-0\", \"driver\":\"virtio-net-mmio\", \"addr\":\"0x0\"}}\\n"
-        expect "*return*" 
-        send "{\"execute\": \"device_del\", \"arguments\": {\"id\": \"net-0\"}}\\n"
-        expect "*DEVICE_DELETED*" 
-
+        send "{\"execute\":\"device_add\",\"arguments\":{\"id\":\"net-0\",\"driver\":\"virtio-net-mmio\",\"addr\":\"0x0\"}}\\n"
+        expect "*return*"
+        send "{\"execute\":\"device_del\",\"arguments\":{\"id\":\"net-0\"}}\\n"
+        expect "*DEVICE_DELETED*"
         send "{\"execute\":\"stop\"}\\n"
         expect "*STOP*"
         send "{\"execute\":\"query-status\"}\\n"
         expect "*paused*"
-        send "{\"execute\":\"migrate\", \"arguments\":{\"uri\":\"file:/tmp\"}}\\n"
+        send "{\"execute\":\"migrate\",\"arguments\":{\"uri\":\"file:/root/tempfile\"}}\\n"
         expect "*return*"
         send "{\"execute\":\"query-migrate\"}\\n"
         expect "*completed*"
         send "{\"execute\":\"quit\"}\\n"
-    expect eof   
+	    expect "*SHUTDOWN*"
+        expect eof
 EOF
-    grep "SHUTDOWN" testlog1
     CHECK_RESULT $? 0 0 'Failed to quit the stratovirt VM'
-    stratovirt \
+    rm -rf  /tmp/stratovirt.socket
+    expect <<EOF
+    set timeout 120
+    spawn /usr/bin/stratovirt \
         -kernel vmlinux.bin \
-        -append console=ttyS0 root=/dev/vda rw reboot=k panic=1 \
-        -drive file="$openeulerversion"-stratovirt-"${NODE1_FRAME}".img,id=rootfs,readonly=false \
+        -append "console=$console root=/dev/vda rw reboot=k panic=1" \
+        -drive file=${openeulerversion}-stratovirt-${NODE1_FRAME}.img,id=rootfs,readonly=false \
         -device virtio-blk-device,drive=rootfs,id=blk1 \
-        -qmp unix:/tmp/another_stratovirt.socket,server,nowait \
+        -qmp unix:/tmp/stratovirt.socket,server,nowait \
         -serial stdio \
-        -incoming file:/tmp &
+        -incoming file:/root/tempfile
+    expect {
+        -re {vcpu0 start running} { send "\r"; exp_continue }
+        -re {\[root@StratoVirt.*\]# } {
+            puts "=== VM boot OK ==="
+            exit 0
+        }
+}
+EOF
     CHECK_RESULT $? 0 0 'Failed to restore the stratovirt VM using a snapshot'
-    SLEEP_WAIT 10
-    kill -9 "$(pgrep -f 'stratovirt -kernel')"
     LOG_INFO "End to run test."
 }
+
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    rm -f vmlinux.bin "$openeulerversion"-stratovirt-"${NODE1_FRAME}".img testlog* /tmp/stratovirt.socket /tmp/another_stratovirt.socket /tmp/memory /tmp/state /tmp/tmp*
+    rm -f vmlinux.bin "$openeulerversion"-stratovirt-"${NODE1_FRAME}".img  /tmp/stratovirt.socket /tmp/another_stratovirt.socket /tmp/memory /tmp/state /tmp/tmp*
     LOG_INFO "End to restore the test environment."
 }
 

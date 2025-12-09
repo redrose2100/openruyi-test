@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/aws-sdk-java",
-    "cases": [
-        {
-            "name": "oe_test_aws-sdk-java_001"
-        }
-    ]
-}

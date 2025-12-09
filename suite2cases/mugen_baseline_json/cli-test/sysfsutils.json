@@ -1,8 +1,0 @@
-{
-  "path": "$OET_PATH/testcases/cli-test/sysfsutils",
-  "cases": [
-    {
-      "name": "oe_test_systools"
-    }
-  ]
-}

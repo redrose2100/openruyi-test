@@ -16,28 +16,29 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test xdiagnose
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "xdiagnose"
     SLEEP_WAIT 5
+    if ! rpm -q xdiagnose; then
+        exit 255
+    fi
     LOG_INFO "End environmental preparation."
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    stdbuf -oL xd_arpstormcheck -f 1 -i 1 -c 2 2>&1 | grep "SIP.*TIP.*Freq" 
+    ping -c 100 localhost >/dev/null &
+    SLEEP_WAIT 3
+    stdbuf -oL xd_arpstormcheck -f 1 -i 1 -c 2 2>&1 | grep "SIP.*TIP.*Freq"
     CHECK_RESULT $? 0 0 "xd_arpstormcheck result err"
-
     stdbuf -oL xd_scsiiocount -d sda -i 1 -t 5 2>&1 | grep -c DEVICE  | grep -w 5
     CHECK_RESULT $? 0 0 "xd_scsiiocount result err"
-
-    local_ip=$(ip route | head -1 | awk '{print $3}')
-    stdbuf -oL xd_tcpskinfo -a "${local_ip}" -p 22 2>&1 | grep skmem 
+    stdbuf -oL xd_tcpskinfo -a "$NODE1_IPV4" -p 22 2>&1 | grep skmem
     CHECK_RESULT $? 0 0 "xd_tcpskinfo result err"
-
     stdbuf -oL xd_scsiiotrace -d 0:0:0:0 -e start >checklog 2>&1 &
     SLEEP_WAIT 3
     pkill xd_scsiiotrace
@@ -48,7 +49,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE "$@"
+    kill -9 "$(pgrep -f "ping -c 100 localhost")"
+    DNF_REMOVE
     rm -rf checklog
     LOG_INFO "Finish environment cleanup!"
 }

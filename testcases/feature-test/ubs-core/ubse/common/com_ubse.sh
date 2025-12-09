@@ -77,7 +77,6 @@ function get_ubse_pid(){
     else
         echo "false"
     fi
-
 }
 
 function get_count(){
@@ -97,14 +96,14 @@ function exec_service(){
     local nodeId=$1
     local action=$2
     result=$(P_SSH_CMD --cmd "systemctl $action ubse" --node "$nodeId")
-    echo $result
+    echo "$result"
 }
 
 function check_ubse_status(){
     local nodeId=$1
     local active=$2
     local count=$3
-    for i in $(seq 1 60); do
+    for _ in $(seq 1 60); do
         if [ "$active" == "start" ] || [ "$active" == "restart" ]; then
             res=$(get_count "$nodeId" "started successfully")
         fi
@@ -122,12 +121,12 @@ function check_ubse_status(){
 
 function stop_ubse(){
     local nodeId=$1
-    pid=$(get_ubse_pid $nodeId) 
+    pid=$(get_ubse_pid "$nodeId")
     if [ "$pid" != "false" ]; then
         count=$(get_count "$nodeId" "Deactivated successfully")
         exec_service "$nodeId" "stop"
         result=$(check_ubse_status "$nodeId" "stop" "$count")
-        echo $result
+        echo "$result"
     else
         echo "true"
         return 0
