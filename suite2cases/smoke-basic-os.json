@@ -945,6 +945,9 @@
       },
       {
             "name": "oe_test_lz4_04"
+      },
+      {
+            "name": "oe_test_lz4_05"
       }
     ]
 }
