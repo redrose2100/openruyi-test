@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/feature-test/ubs_core/ubturbo",
+    "path": "$OET_PATH/testcases/feature-test/ubs-core/ubturbo",
     "cases": [
         {
             "name": "oe_test_ubturbo_01"
