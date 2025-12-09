@@ -16,8 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   isula-build test common
 # ############################################
-# shellcheck disable=SC2068,SC2034,SC2119,SC1091,SC2154
-source ../common/prepare_isulad.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
@@ -27,20 +26,12 @@ function pre_test() {
         DNF_INSTALL "isula-build runc iSulad wget"
     fi
 
-    if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then
-        os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | tr '()' '- ' | sed s/[[:space:]]//g)
-    else
-        if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "LTS"; then
-            os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | awk -F ' ' '{print$1"-"$2}')
-        else
-            os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}')
-        fi
-    fi
-    wget --no-check-certificate -q -P ../common/ \
-        https://repo.openeuler.org/openEuler-"${os_version}"/docker_img/"${NODE1_FRAME}"/openEuler-docker."${NODE1_FRAME}".tar.xz
+    os_version="24.03-LTS-SP1"
+    wget -P ../common/ https://repo.openeuler.org/openEuler-"${os_version}"/docker_img/"${NODE1_FRAME}"/openEuler-docker."${NODE1_FRAME}".tar.xz
 
+    xz -d -k ../common/openEuler-docker."${NODE1_FRAME}".tar.xz
     systemctl restart isula-build
-    isula-build ctr-img load -i ../common/openEuler-docker."${NODE1_FRAME}".tar.xz
+    isula-build ctr-img load -i ../common/openEuler-docker."${NODE1_FRAME}".tar
     images_name=$(isula-build ctr-img images | grep "docker.io/library/openeuler" | awk '{print$1}')
     LOG_INFO "Environmental preparation is over."
 }
@@ -68,11 +59,11 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf Dockerfile
-    rm -rf ../common/openEuler-docker."${NODE1_FRAME}".tar.xz
+    rm -rf ../common/openEuler-docker."${NODE1_FRAME}".tar*
     isula-build ctr-img rm -a
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
 

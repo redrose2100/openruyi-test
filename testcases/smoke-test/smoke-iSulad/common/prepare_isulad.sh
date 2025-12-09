@@ -17,38 +17,30 @@
 # @Desc      :   prepare isulad
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_isulad_env() {
     DNF_INSTALL "iSulad tar wget"
     clean_isulad_env
-    if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then
-        os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | tr '()' '- ' | sed s/[[:space:]]//g)
-    else
-        if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "LTS"; then
-            os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | awk -F ' ' '{print$1"-"$2}')
-        else
-            os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}')
-        fi
-    fi
-    wget -P ../common/ https://repo.openeuler.org/openEuler-${os_version}/docker_img/${NODE1_FRAME}/openEuler-docker.${NODE1_FRAME}.tar.xz
-    isula load -i ../common/openEuler-docker.${NODE1_FRAME}.tar.xz
+    os_version="24.03-LTS-SP1"
+    wget -P ../common/ "https://repo.openeuler.org/openEuler-${os_version}/docker_img/${NODE1_FRAME}/openEuler-docker.${NODE1_FRAME}.tar.xz"
+    isula load -i ../common/openEuler-docker."${NODE1_FRAME}".tar.xz
     Images_name=$(isula images | grep latest | awk '{print$1}')
     test -n "${Images_name}" || exit 1
 }
 
 function run_isulad_container() {
-    containerId=$(isula run -itd ${Images_name})
+    containerId=$(isula run -itd "${Images_name}")
     CHECK_RESULT $?
-    isula inspect -f {{.State.Status}} ${containerId} | grep running
+    isula inspect -f "{{.State.Status}}" "${containerId}" | grep running
     CHECK_RESULT $?
 }
 
 function clean_isulad_env() {
-    isula stop $(isula ps -aq)
-    isula rm $(isula ps -aq)
-    isula rmi $(isula images -q)
+    isula stop "$(isula ps -aq)"
+    isula rm "$(isula ps -aq)"
+    isula rmi "$(isula images -q)"
     test -z "$(isula images -q)"
-    rm -rf ../common/openEuler-docker.${NODE1_FRAME}.tar.xz
+    rm -rf ../common/openEuler-docker."${NODE1_FRAME}".tar.xz
     CHECK_RESULT $?
 }
