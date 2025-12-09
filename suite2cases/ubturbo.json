@@ -1,0 +1,27 @@
+{
+    "path": "$OET_PATH/testcases/feature-test/ubs_core/ubturbo",
+    "cases": [
+        {
+            "name": "oe_test_ubturbo_01"
+        },
+        {
+            "name": "oe_test_ubturbo_02"
+        },
+        {
+            "name": "oe_test_ubturbo_03"
+        },
+        {
+            "name": "oe_test_ubturbo_04"
+        },
+        {
+            "name": "oe_test_ubturbo_05"
+        },
+        {
+            "name": "oe_test_ubturbo_06"
+        },
+        {
+            "name": "oe_test_ubturbo_07"
+        }
+
+    ]
+}
