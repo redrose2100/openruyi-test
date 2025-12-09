@@ -17,7 +17,7 @@
 #####################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-source ${OET_PATH}/testcases/feature-test/ubs_core/ubturbo/common/ubturbo_common.sh
+source ${OET_PATH}/testcases/feature-test/ubs-core/ubturbo/common/ubturbo_common.sh
 
 
 function pre_test() {
