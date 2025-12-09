@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-source "$OET_PATH/testcases/ubse-test/common/com_ubse.sh"
+source ./common/com_ubse.sh
 node_ids=(1 2)
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
