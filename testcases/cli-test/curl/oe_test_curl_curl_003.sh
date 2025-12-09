@@ -28,7 +28,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     curl --happy-eyeballs-timeout-ms 100 https://httpbin.org/anything
     CHECK_RESULT $? 0 0 "check curl --happy-eyeballs-timeout-ms failed"
-    curl -I https://www.baidu.com | grep "Accept-Ranges"
+    curl -I https://www.baidu.com | grep "Content-Type"
     CHECK_RESULT $? 0 0 "check curl -I failed"
     curl -H "User-Agent: elephant" 'https://httpbin.org/anything' 2>&1 | grep "elephant"
     CHECK_RESULT $? 0 0 "check curl -H failed"
