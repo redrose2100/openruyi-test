@@ -1,0 +1,59 @@
+{
+    "path": "$OET_PATH/testcases/feature-test/ubs-core",
+    "cases": [
+        {
+            "name": "oe_test_display_cluster_01"
+        },
+        {
+            "name": "oe_test_display_config_01"
+        },
+        {
+            "name": "oe_test_display_numa_status_01"
+        },
+        {
+            "name": "oe_test_display_topo_01"
+        },
+        {
+            "name": "oe_test_install_ubse_01"
+        },
+        {
+            "name": "oe_test_start_ubse_01"
+        },
+        {
+            "name": "oe_test_ubse_ha_026"
+        },
+        {
+            "name": "oe_test_ubse_mem_fd_sdk"
+        },
+        {
+            "name": "oe_test_ubse_mem_numa_sdk"
+        },
+        {
+            "name": "oe_test_ubse_numa_mem_get_sdk"
+        },
+        {
+            "name": "oe_test_uninstall_ubse_01"
+        },
+        {
+            "name": "oe_test_ubturbo_01"
+        },
+        {
+            "name": "oe_test_ubturbo_02"
+        },
+        {
+            "name": "oe_test_ubturbo_03"
+        },
+        {
+            "name": "oe_test_ubturbo_04"
+        },
+        {
+            "name": "oe_test_ubturbo_05"
+        },
+        {
+            "name": "oe_test_ubturbo_06"
+        },
+        {
+            "name": "oe_test_ubturbo_07"
+        }
+    ]
+}
