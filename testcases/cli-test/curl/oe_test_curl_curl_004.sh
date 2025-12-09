@@ -30,7 +30,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check curl --http2-prior-knowledge failed"
     curl --ignore-content-length https://httpbin.org/anything
     CHECK_RESULT $? 0 0 "check curl --ignore-content-length failed"
-    curl -i https://www.baidu.com | grep "Accept-Ranges"
+    curl -i https://www.baidu.com | grep "Content-Type"
     CHECK_RESULT $? 0 0 "check curl -i failed"
     curl -k 'https://httpbin.org/anything'
     CHECK_RESULT $? 0 0 "check curl -k failed"
