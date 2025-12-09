@@ -21,7 +21,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function config_params() {
     LOG_INFO "Start loading data!"
-    TEST_DISK="$(lsblk -dn -o NAME,TYPE | awk '$2=="disk" {print "/dev/"$1}' | sed -n 2p)"
+    test_disk="$(TEST_DISK 1)"
     LOG_INFO "Loading data is complete!"
 }
 
@@ -33,10 +33,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    echo -e "n\np\n\n\n+100M\nn\np\n\n\n+100M\nw" | fdisk "${TEST_DISK}"
-    echo -n "openEuler123" | cryptsetup reencrypt --new --header "${TEST_DISK}"1 "${TEST_DISK}"2
+    echo -e "n\np\n\n\n+100M\nn\np\n\n\n+100M\nw" | fdisk "/dev/${test_disk}"
+    echo -n "openEuler123" | cryptsetup reencrypt --new --header "/dev/${test_disk}"1 "/dev/${test_disk}"2
     CHECK_RESULT $? 0 0 "exec 'cryptsetup reencrypt --new' failed"
-    echo -n "openEuler123" | cryptsetup open --header "${TEST_DISK}"1 "${TEST_DISK}"2 test_encrypted
+    echo -n "openEuler123" | cryptsetup open --header "/dev/${test_disk}"1 "/dev/${test_disk}"2 test_encrypted
     CHECK_RESULT $? 0 0 "exec 'cryptsetup open --header' failed"
     mkdir /mnt/test_encrypted
     mkfs.ext4 /dev/mapper/test_encrypted
@@ -50,10 +50,10 @@ function post_test() {
     umount /mnt/test_encrypted
     cryptsetup close test_encrypted
     rm -rf /mnt/test_encrypted
-    mkfs.ext4 "${TEST_DISK}"1 -F
-    echo -e "d\n\nd\n\nw" | fdisk "${TEST_DISK}"
+    mkfs.ext4 "/dev/${test_disk}"1 -F
+    echo -e "d\n\nd\n\nw" | fdisk "/dev/${test_disk}"
     DNF_REMOVE "$@"
-    mkfs.ext4 "${TEST_DISK}" -F
+    mkfs.ext4 "/dev/${test_disk}" -F
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
