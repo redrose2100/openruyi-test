@@ -22,7 +22,15 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     swap=$(blkid | grep swap | awk -F":" '{print $1}')
-    old_label=$(swaplabel /dev/mapper/openeuler-swap | grep -i label | awk -F ': ' '{print $NF}')
+    if [ -z "$swap" ]; then
+        fallocate -l 1G /swapfile
+        chmod 600 /swapfile
+        mkswap /swapfile
+        swapon /swapfile
+        swap="/swapfile"
+    fi
+
+    old_label=$(swaplabel "${swap}" | grep -i label | awk -F ': ' '{print $NF}')
     LOG_INFO "End of environmental preparation!"
 }
 
