@@ -26,6 +26,8 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    SSH_CMD "setenforce 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "getenforce | grep Disabled" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" && exit 255
     SSH_CMD "yum install -y samba; sed -i '/testsamba/d' /etc/security/opasswd;useradd testsamba;
     (echo \\\"${NODE1_PASSWORD}\\\";echo \\\"${NODE1_PASSWORD}\\\") | smbpasswd -a testsamba -s" \
         "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
