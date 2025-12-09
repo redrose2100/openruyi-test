@@ -63,6 +63,7 @@ function run_test() {
     kill -9 $!
     nohup dstat -o file >/tmp/dstat_o 2>&1 &
     local_pid=$!
+    SLEEP_WAIT 3
     SLEEP_WAIT 3 "kill -9 $local_pid" 2
     CHECK_RESULT $?
     grep 'pcp-dstat' file
