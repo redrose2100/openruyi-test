@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <yajl/yajl_tree.h>
+#include <stdlib.h>
 
 int main(void) {
     const char * filePath = "test.json";
