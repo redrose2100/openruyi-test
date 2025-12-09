@@ -939,7 +939,13 @@
       },
       {
            "name": "oe_test_zstd_005"
-    }
+      },
+      {
+            "name": "oe_test_lz4_03"
+      },
+      {
+            "name": "oe_test_lz4_04"
+      }
     ]
 }
 

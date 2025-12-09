@@ -39,6 +39,16 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Handshake failed"
     gnutls-cli --list </dev/null | grep -i "Ciphers"
     CHECK_RESULT $? 0 0 "Failed to list cipher suites"
+    gnutls-cli --priority-list </dev/null | grep -i "NORMAL"
+    CHECK_RESULT $? 0 0 "Failed to show priority list"
+    gnutls-cli --benchmark-ciphers </dev/null | grep -i "Cipher"
+    CHECK_RESULT $? 0 0 "Cipher benchmark failed"
+    cert_file=$(mktemp)
+    gnutls-cli --save-cert="${cert_file}" --insecure www.baidu.com </dev/null
+    CHECK_RESULT $? 0 0 "Failed to save certificate"
+    test -s "${cert_file}"
+    CHECK_RESULT $? 0 0 "Saved certificate file is empty"
+    rm -f "${cert_file}"
     LOG_INFO "End to run test."
 }
 

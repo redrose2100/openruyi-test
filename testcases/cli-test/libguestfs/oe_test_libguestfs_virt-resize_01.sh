@@ -15,13 +15,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs virt-resize command
 # ############################################
-# shellcheck disable=SC2034
+# shellcheck disable=SC2034,SC1090
 
 source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     EXECUTE_T="240m"
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     libguestfs_pre_test_no_install
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then
       OS_VERSION="24.03-LTS-SP1"
@@ -63,6 +65,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    export LANG=$OLD_LANG
     libguestfs_post_test_resize "$@"
     LOG_INFO "Finish to restore the test environment."
 }

@@ -33,6 +33,12 @@
         },
         {
             "name": "oe_test_util-linux_chcpu"
+        },
+        {
+            "name": "oe_test_setarch"
+        },
+        {
+            "name": "oe_test_mesg"
         }
     ]
 }

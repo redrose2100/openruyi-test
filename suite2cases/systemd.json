@@ -466,6 +466,9 @@
         },
         {
             "name": "oe_test_service_systemd-quotacheck"
-        }
+        },
+	{
+            "name": "oe_test_telinit"
+	}
     ]
 }

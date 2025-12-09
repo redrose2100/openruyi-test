@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/javapackages-tools",
-    "cases": [
-        {
-            "name": "oe_test_binary_files_operation"
-        }
-    ]
-}

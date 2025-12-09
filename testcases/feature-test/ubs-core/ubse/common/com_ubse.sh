@@ -1,4 +1,9 @@
+#!/usr/bin/bash
+
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+ubse_script_dir="$OET_PATH/testcases/feature-test/ubs-core/ubse/common"
+
 function get_package(){
     local node1=$1
     files=("ubs-engine-1.0.0-1.aarch64.rpm" "ubs-engine-client-libs-1.0.0-1.aarch64.rpm" "ubs-engine-client-devel-1.0.0-1.aarch64.rpm" "python3-ubs-engine-1.0.0-1.noarch.rpm")
@@ -76,7 +81,6 @@ function get_ubse_pid(){
     else
         echo "false"
     fi
-
 }
 
 function get_count(){
@@ -96,14 +100,14 @@ function exec_service(){
     local nodeId=$1
     local action=$2
     result=$(P_SSH_CMD --cmd "systemctl $action ubse" --node "$nodeId")
-    echo $result
+    echo "$result"
 }
 
 function check_ubse_status(){
     local nodeId=$1
     local active=$2
     local count=$3
-    for i in $(seq 1 60); do
+    for _ in $(seq 1 60); do
         if [ "$active" == "start" ] || [ "$active" == "restart" ]; then
             res=$(get_count "$nodeId" "started successfully")
         fi
@@ -121,12 +125,12 @@ function check_ubse_status(){
 
 function stop_ubse(){
     local nodeId=$1
-    pid=$(get_ubse_pid "$nodeId") 
+    pid=$(get_ubse_pid "$nodeId")
     if [ "$pid" != "false" ]; then
         count=$(get_count "$nodeId" "Deactivated successfully")
         exec_service "$nodeId" "stop"
         result=$(check_ubse_status "$nodeId" "stop" "$count")
-        echo $result
+        echo "$result"
     else
         echo "true"
         return 0
@@ -142,72 +146,7 @@ function start_ubse(){
         echo "false"
     fi
     pid=$(get_ubse_pid "$nodeId")
-    echo $pid 
-}
-
-function display_node_role(){
-    local nodeId=$1
-    local role=$2
-    result=$(P_SSH_CMD --cmd "ubsectl display cluster" --node "$nodeId")
-    info=$(echo "$result" | sed 's/-//g' | awk 'NF' | tr -s ' ')
-    extracted_date=$(awk 'NR>1 && $1 ~ /^[^$(]/ {print $1, $2}' <<< "$info")
-    declare -A node_role_dict
-    
-    while IFS= read -r line; do
-        nodeId_res=$(echo "$line" | awk -F'[()]' '{print $2}')
-        role_res=$(echo "$line" | awk '{print $2}')
-        if [ "$role_res" == "$role" ]; then 
-            echo "$nodeId_res"
-            return 0
-        fi
-    done <<< "$extracted_date"
-    echo "false"
-}
-
-function return_nodes_by_role(){
-    local nodeId=$1
-    for i in $(seq 1 60); do
-        masterId=$(display_node_role "$nodeId" "master")
-        standbyId=$(display_node_role "$nodeId" "standby")
-        if [ "$masterId" != "false" ] && [ "$standbyId" != "false" ]; then
-            echo "$masterId $standbyId"
-            return 0
-        fi
-        sleep 6
-    done
-    exit 1
-}
-
-function convert_cli_output_to_json(){
-    grep -vE '^-{4,}' | awk NF | awk '{$1=$1}1' | awk -v FS="[[:space:]]+" '
-    BEGIN {
-        print "[";
-        first = 1;
-    }
-    NR==1{
-        for(i=1; i<=NF; i++){
-            keys[i] = $i;
-        }
-    }
-    NR>1 {
-        if(NF == 0) next;
-        if(!first){
-            printf ",\n";
-        } else {
-            first = 0;
-        }
-        printf" {";
-        for(i=1;i<=NF;i++){
-            value=$i;
-            gsub(/"/,"\\\"",value);
-            printf "\"%s\":\"%s\"",keys[i],value;
-            if(i<NF) printf ",";
-        }
-        printf "}";
-        }
-        END {
-            printf "\n]\n";
-        }'
+    echo "$pid"
 }
 
 function check_memory() {
