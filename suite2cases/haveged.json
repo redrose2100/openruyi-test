@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_haveged"
+        },
+        {
+            "name": "oe_test_command_haveged"
         }
     ]
 }
