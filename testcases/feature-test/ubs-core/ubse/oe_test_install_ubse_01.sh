@@ -19,9 +19,9 @@ function run_test() {
         package1=$(get_package_name "$nodeId" "ubs-engine") 
         result1=$(P_SSH_CMD --cmd "rpm -ivh $package1" --node "$nodeId")
         if echo "$result1" | grep -q "$info"; then
-            echo "install ubs-engine-1.0.0.1.aarch64.rpm success"
+            echo "install ubs-engine success"
         else
-            echo "install ubs-engine-1.0.0.1.aarch64.rpm fail"
+            echo "install ubs-engin fail"
         fi
         return_info1=$(get_version "$nodeId" "ubs-engine")
         read -r version_ubse_engine release_ubse_engine <<< "$return_info1"
@@ -32,9 +32,9 @@ function run_test() {
         package2=$(get_package_name "$nodeId" "ubs-engine-client-libs") 
         result2=$(P_SSH_CMD --cmd "rpm -ivh $package2" --node "$nodeId")
         if echo "$result2" | grep -q "$info"; then
-            echo "install ubs-engine-client-libs-1.0.0-1.aarch64.rpm success"
+            echo "install ubs-engine-client-libs success"
         else
-            echo "install ubs-engine-client-libs-1.0.0-1.aarch64.rpm fail"
+            echo "install ubs-engine-client-libs fail"
         fi
         return_info2=$(get_version $nodeId "ubs-engine-client-libs")
         read -r version_ubse_engine_libs release_ubse_engine_libs <<< "$return_info2"
@@ -45,9 +45,9 @@ function run_test() {
         package3=$(get_package_name "$nodeId" "ubs-engine-client-devel") 
         result3=$(P_SSH_CMD --cmd "rpm -ivh $package3" --node "$nodeId")
         if echo "$result3" | grep -q "$info"; then
-            echo "install ubs-engine-client-libs-1.0.0-1.aarch64.rpm success"
+            echo "install ubs-engine-client-libs success"
         else
-            echo "install ubs-engine-client-libs-1.0.0-1.aarch64.rpm fail"
+            echo "install ubs-engine-client-libs fail"
         fi
         return_info3=$(get_version "$nodeId" "ubs-engine-client-devel")
         read -r version_ubse_engine_devel release_ubse_engine_devel <<< "$return_info3"
