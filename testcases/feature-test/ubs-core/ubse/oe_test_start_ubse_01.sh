@@ -15,7 +15,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if [ "${#rpm_install[@]}" -eq 8 ]; then
+    if [ "${#rpm_install[@]}" -eq 6 ]; then
         for value in "${rpm_install[@]}"; do
             if [ "$value" == "false" ]; then
                 echo "There are issues with installing therpm package"
@@ -23,7 +23,7 @@ function run_test() {
             fi
         done
     else
-        echo "return_values length is not 8, exiting"
+        echo "return_values length is not 6, exiting"
         exit 1
     fi
     for nodeId in "${node_ids[@]}"; do

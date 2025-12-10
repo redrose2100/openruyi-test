@@ -80,23 +80,23 @@ class UbsTopoNodeT(ctypes.Structure):
     _fields_ = [
         ("slot_id", ctypes.c_uint32),
         ("socket_id", ctypes.c_uint32 * UBS_TOPO_SOCKET_NUM),
-        ("numa_ids", (ctypes.c_uint32 * UBS_TOPO_NUMA_NUM) * UBS_TOPO_SOCKET_NUM),
-        ("ips", UbsTopoIpAddressT * UBS_TOPO_IPADDR_NUM),
+        # ("numa_ids", (ctypes.c_uint32 * UBS_TOPO_NUMA_NUM) * UBS_TOPO_SOCKET_NUM),
+        # ("ips", UbsTopoIpAddressT * UBS_TOPO_IPADDR_NUM),
         ("host_name", ctypes.c_char * HOST_NAME_MAX)
     ]
 
     def __str__(self):
         socket_ids = list(self.socket_id)
-        numa_list = [list(self.numa_ids[i]) for i in range(UBS_TOPO_SOCKET_NUM)]
-        ip_list = [str(ip) for ip in self.ips]
+        # numa_list = [list(self.numa_ids[i]) for i in range(UBS_TOPO_SOCKET_NUM)]
+        # ip_list = [str(ip) for ip in self.ips]
         host = self.host_name.decode('utf-8', errors='ignore').strip('\x00')
 
         return (
             f"ubse_node_info(\n"
             f"  slot id={self.slot_id}\n"
             f"  socket ids={socket_ids}\n"
-            f"  numa ids={numa_list}\n"
-            f"  ips={ip_list}\n"
+            # f"  numa ids={numa_list}\n"
+            # f"  ips={ip_list}\n"
             f"  host name={host}\n"
             f")"
         )
@@ -106,10 +106,10 @@ class UbsTopoLinkT(ctypes.Structure):
     _fields_ = [
         ("slot_id", ctypes.c_uint32),
         ("socket_id", ctypes.c_uint32),
-        ("port_id", ctypes.c_uint32),
+        # ("port_id", ctypes.c_uint32),
         ("peer_slot_id", ctypes.c_uint32),
         ("peer_socket_id", ctypes.c_uint32),
-        ("peer_port_id", ctypes.c_uint32)
+        # ("peer_port_id", ctypes.c_uint32)
     ]
 
     def __str__(self):
@@ -117,11 +117,10 @@ class UbsTopoLinkT(ctypes.Structure):
             f"ubse_cpu_topo_info(\n"
             f"  slot id={self.slot_id}\n"
             f"  socket ids={self.socket_id}\n"
-            f"  port id={self.port_id}\n"
+            # f"  port id={self.port_id}\n"
             f"  peer slot id={self.peer_slot_id}\n"
             f"  peer socket ids={self.peer_socket_id}\n"
-            f"  peer port id={self.peer_port_id}\n"
-            f"  peer port id={self.peer_port_id}\n"
+            # f"  peer port id={self.peer_port_id}\n"
             f")"
         )
     
@@ -151,7 +150,7 @@ class UbsMemLenderT(ctypes.Structure):
         ("socket_id", ctypes.c_uint32),
         ("numa_id", ctypes.c_uint64),
         ("lender_size", ctypes.c_uint64),
-        ("port_id", ctypes.c_uint32)
+        # ("port_id", ctypes.c_uint32)
     ]
 
 
@@ -166,10 +165,10 @@ class UbsMemNumastatT(ctypes.Structure):
         ("mem_free", ctypes.c_uint64),
         ("huge_pages_2M", ctypes.c_uint32),
         ("free_huge_pages_2M", ctypes.c_uint32),
-        ("huge_pages_1G", ctypes.c_uint32),
-        ("free_huge_pages_1G", ctypes.c_uint32),
-        ("mem_borrow", ctypes.c_uint64),
-        ("mem_lend", ctypes.c_uint64)
+        # ("huge_pages_1G", ctypes.c_uint32),
+        # ("free_huge_pages_1G", ctypes.c_uint32),
+        # ("mem_borrow", ctypes.c_uint64),
+        # ("mem_lend", ctypes.c_uint64)
     ]
 
     def __str__(self):
@@ -184,10 +183,10 @@ class UbsMemNumastatT(ctypes.Structure):
             f"  mem free={self.mem_free} bytes\n"
             f"  huge pages 2M={self.huge_pages_2M}\n"
             f"  free huge pages 2M={self.free_huge_pages_2M}\n"
-            f"  huge pages 1G={self.huge_pages_1G}\n"
-            f"  free huge pages 1G={self.free_huge_pages_1G}\n"
-            f"  mem borrow={self.mem_borrow} bytes\n"
-            f"  mem lend={self.mem_lend} bytes\n"
+            # f"  huge pages 1G={self.huge_pages_1G}\n"
+            # f"  free huge pages 1G={self.free_huge_pages_1G}\n"
+            # f"  mem borrow={self.mem_borrow} bytes\n"
+            # f"  mem lend={self.mem_lend} bytes\n"
             f")"
         )
     
@@ -199,8 +198,8 @@ class UbsMemFdDescT(ctypes.Structure):
         ("memids", ctypes.c_uint64 * UBSE_MAX_MEMID_NUM),
         ("mem_size", ctypes.c_uint64),
         ("unit_size", ctypes.c_size_t),
-        ("export_node", UbsTopoNodeT),
-        ("import_node", UbsTopoNodeT)
+        # ("export_node", UbsTopoNodeT),
+        # ("import_node", UbsTopoNodeT)
     ]
 
     def __str__(self):
@@ -211,8 +210,8 @@ class UbsMemFdDescT(ctypes.Structure):
             f"  memids={list(self.memids)[:self.memid_cnt]}\n"
             f"  mem_size={self.mem_size} bytes\n"
             f"  unit_size={self.unit_size} bytes\n"
-            f"  export_node={self.export_node.slot_id}\n"
-            f"  import_node={self.import_node.slot_id}\n"
+            # f"  export_node={self.export_node.slot_id}\n"
+            # f"  import_node={self.import_node.slot_id}\n"
             f")"
         )
 
@@ -221,9 +220,9 @@ class UbsMemNumaDescT(ctypes.Structure):
     _fields_ = [
         ("name", ctypes.c_char * (UBS_MEM_MAX_NAME_LENGTH)),
         ("numa_id", ctypes.c_int64),
-        ("export_node", UbsTopoNodeT),
-        ("import_node", UbsTopoNodeT),
-        ("size", ctypes.c_uint64)
+        # ("export_node", UbsTopoNodeT),
+        # ("import_node", UbsTopoNodeT),
+        # ("size", ctypes.c_uint64)
     ]
 
     def __str__(self):
@@ -231,9 +230,9 @@ class UbsMemNumaDescT(ctypes.Structure):
             f"ubse_mem_numa_desc_t(\n"
             f"  name={self.name.decode('utf-8', errors='ignore')}\n"
             f"  numa_id={self.numa_id}\n"
-            f"  export_node={self.export_node.slot_id}\n"
-            f"  import_node={self.import_node.slot_id}\n"
-            f"  size={self.size}"
+            # f"  export_node={self.export_node.slot_id}\n"
+            # f"  import_node={self.import_node.slot_id}\n"
+            # f"  size={self.size}"
             f")"
         )
     
@@ -720,7 +719,7 @@ class UbseMemApp(cmd.Cmd):
         try:
             self.lib_ubse = ctypes.CDLL(lib_path)
         except OSError as ex:
-            logger.error(f"Unable to load library {lib_path} : {ex}")
+            logger.error(f"Unable to load library {lib_path}: {ex}")
             raise
         self.set_function_prototypes()
     
@@ -807,7 +806,6 @@ class UbseMemApp(cmd.Cmd):
                                                     ctypes.POINTER(ctypes.c_uint32)]
         self.lib_ubse.ubs_mem_numa_list.restype = ctypes.c_int32
 
-
     def print_error(self, error_code):
         name_ptr = self.lib_ubse.ubs_error_name(error_code)
         error_name = name_ptr.decode('utf-8') if name_ptr else "UNKNOWN_ERROR"
@@ -854,7 +852,7 @@ class UbseMemApp(cmd.Cmd):
             logger.error(f"Failed to create memory {actual_name}! {ex}")
             return False
 
-    def _eate_single_fd_with_lender(self, name, lender_slot_id, lender_socket_id, lender_port,
+    def _create_single_fd_with_lender(self, name, lender_slot_id, lender_socket_id, lender_port,
                                     numa_id, owner_uid, owner_gid, owner_pid, mode, lender_cnt, index=None):
         """创建单个带lender的FD内存区域的辅助函数"""
         # 如果以索引，修改名称以确保唯一性
@@ -1276,7 +1274,7 @@ class UbseMemApp(cmd.Cmd):
             parser.add_argument("name")
             parser.add_argument("lender_slot_id", type=int)
             parser.add_argument("lender_socket_id", type=int)
-            parser.add_argument("lender_port", type=int, nargs="?", default=0xFFFFFFFF)
+            parser.add_argument("lender_port", type=int, nargs='?', default=0xFFFFFFFF)
             parser.add_argument("--lender_cnt", type=int, default=None)
             # NUMA 相关参数
             parser.add_argument(
@@ -1336,7 +1334,7 @@ class UbseMemApp(cmd.Cmd):
         """Query FD-form memory resource: fd_get <name>"""
         try:
             parser = argparse.ArgumentParser()
-            parser.add_argument("name", type=str, help="Memory resource name")
+            parser.add_argument('name', type=str, help='Memory resource name')
             args = parser.parse_args(shlex.split(arg))
 
             name_bytes = args.name.encode("utf-8")
@@ -1344,7 +1342,7 @@ class UbseMemApp(cmd.Cmd):
             result = self.lib_ubse.ubs_mem_fd_get(name_bytes, ctypes.byref(fd_desc))
             # 处理结果
             if result == 0:
-                logger.info(f"Successfully retrieved FD-form memory resource")
+                logger.info("Successfully retrieved FD-form memory resource")
                 logger.info(fd_desc)
             else:
                 logger.error(f"Query failed {self.print_error(result)}")
@@ -1361,7 +1359,7 @@ class UbseMemApp(cmd.Cmd):
             result = self.lib_ubse.ubs_mem_fd_list(ctypes.byref(fd_descs_ptr), ctypes.byref(fd_desc_cnt))
             # 处理结果
             if result == 0:
-                logger.info(f"Successfully list FD-form memory resources")
+                logger.info("Successfully list FD-form memory resources")
                 logger.info(f"Found {fd_desc_cnt.value} FD-form memory resources:")
                 for i in range(fd_desc_cnt.value):
                     resource_ptr = ctypes.cast(
@@ -1408,20 +1406,20 @@ class UbseMemApp(cmd.Cmd):
         """Modify the permission for FD form memory resource: fd_permission <name> <owner_uid> <owner_gid> <mode>"""
         try:
             parser = argparse.ArgumentParser()
-            parser.add_argument("name", type=str, help="Memory resource name")
+            parser.add_argument('name', type=str, help='Memory resource name')
             parser.add_argument("owner_uid", type=int, default=None)
             parser.add_argument("owner_gid", type=int, default=None)
             parser.add_argument("mode", type=parse_mode, default=None)
             args = parser.parse_args(shlex.split(arg))
 
-            name_bytes = args.name.encode("utf-8")
+            name_bytes = args.name.encode('utf-8')
             owner = UbsMemFdOwnerT()
             owner.uid = args.owner_uid
             owner.gid = args.owner_gid
             result = self.lib_ubse.ubs_mem_fd_permission(name_bytes, ctypes.byref(owner), args.mode)
             # 处理结果
             if result == 0:
-                logger.info(f"Successfully modified the permission for FD form memory resource")
+                logger.info("Successfully modified the permission for FD form memory resource")
             else:
                 logger.error(f"Modify the permission failed {self.print_error(result)}")
         except SystemExit:
@@ -1436,7 +1434,7 @@ class UbseMemApp(cmd.Cmd):
             parser = argparse.ArgumentParser()
             parser.add_argument("name")
             parser.add_argument("size", type=str)
-            parser.add_argument("--slot_ids", type=str, default=None, help="Candidate slot IDs (comma-separated)")
+            parser.add_argument('--slot_ids', type=str, default=None, help="Candidate slot IDs (comma-separated)")
             parser.add_argument("--distance", type=int, default=0)
             parser.add_argument("--slot_cnt", type=int, default=None)
             parser.add_argument("--count", type=int, default=1, help="Total number of memories to create (default=1)")

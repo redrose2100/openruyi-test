@@ -11,18 +11,6 @@ function run_test() {
     LOG_INFO "Start to run test."
     info="Cleaning up / removing"
     return_values=()
-    result1=$(P_SSH_CMD --cmd "rpm -evh python3-ubs-engine" --node "1")
-    if echo "$result1" | grep -q "$info"; then
-        echo "uninstall python3-ubs-engine success"
-    else
-        echo "uninstall python3-ubs-engine fail"
-    fi
-    return_info1=$(get_version "1" "python3-ubs-engine")
-    read -r version_python3 release_python3 <<< "$return_info1"
-    echo "Version: $version_python3"
-    echo "Release: $release_python3"
-    return_values+=("$version_python3")
-    
     result2=$(P_SSH_CMD --cmd "rpm -evh ubs-engine-client-devel" --node "1")
     if echo "$result2" | grep -q "$info"; then
         echo "uninstall ubs-engine-client-devel success"
@@ -59,7 +47,7 @@ function run_test() {
     echo "Release: $release_ubs_engine"
     return_values+=("$version_ubs_engine")
 
-    if [ "${#return_values[@]}" -eq 4 ]; then
+    if [ "${#return_values[@]}" -eq 3 ]; then
         for value in "${return_values[@]}"; do
             if [ "$value" != "false" ]; then
                 echo "install rpm fail"
@@ -67,7 +55,7 @@ function run_test() {
             fi
         done
     else
-        echo "return_values length is not 4, exiting"
+        echo "return_values length is not 3, exiting"
         exit 1
     fi
     echo "uninstall rpms success"

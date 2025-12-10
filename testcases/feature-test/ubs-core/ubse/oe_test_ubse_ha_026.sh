@@ -59,7 +59,8 @@ function run_test() {
         exit 1
     fi
     if [ "$standbyId1" != "$masterId" ]; then
-        exit 1
+        exit 1:q
+        
     fi
     LOG_INFO "End to run test."
 }
