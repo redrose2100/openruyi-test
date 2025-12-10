@@ -26,8 +26,8 @@ function pre_test() {
     DNF_INSTALL "hdparm"
     lsblk >>lsblk.txt
     dev=$(sed -n "2, 1p" lsblk.txt | awk '{print $1}')
-    if [[ "${dev}" =~ "vd" ]]; then
-        LOG_INFO "The hdparm command does not support virtual disks of the virtio type."
+    if [[ "${dev}" =~ ^(vd|nbd|mtd) ]]; then
+        LOG_INFO "hdparm does not support virtio/nbd/mtdblock devices."
         exit 255
     fi
     hdparm -I /dev/"$dev" || exit 1
