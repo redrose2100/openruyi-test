@@ -104,12 +104,22 @@ function get_eid(){
     test_jetty_id=$((RANDOM % 1021 + 3))
 
 }
+function gcc_ra(){
+    local re_type="$1"
+    [-n "${ra_type}"] && re_type="_$_ra_type"
+    DNF_INSTALL "sentry_msg_monitor"
+    DNF_INSTALL "libxalarm-devel"
+    DNF_INSTALL "gcc"
+
+
+}
 function start_RA(){
     local ra_type="${1}"
     local ra_pare="${2:-}"
     local delay_time="${3:-}"
     case $ra_type in 
         panic | kernel_reboot)
+
             stdbuf -oL "/root/mugen/testcases/smoke-test/smoke-sysSentry/RA/RA_reboot" "${ra_pare}" "${delay_time}" > "${TMP_DIR}/RA.log" 2>&1 &
             ;;
         oom)
