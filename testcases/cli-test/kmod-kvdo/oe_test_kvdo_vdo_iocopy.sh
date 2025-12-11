@@ -26,17 +26,18 @@ function pre_test() {
     DNF_INSTALL "kernel-headers-$(uname -r) kernel-devel-$(uname -r)"
     DNF_INSTALL "vdo kmod-kvdo lvm2 xfsprogs"
     free_disks=$(TEST_DISK 1)
-    free_disk=/dev/$(echo "${free_disks}" | awk -F " " '{for(i=1;i<=NF;i++) if ($i!~/[0-9]/)j=i;print $j}')
-    test -z "${free_disk}" && exit 1
+    free_disks_CLEAN=$(echo "${free_disks}" | tr '\n' ' ' | sed 's/[ ]*$//')
+    ALL_DISKS_PATH=$(echo "${free_disks_CLEAN}" | sed 's/[^ ]*/\/dev\/&/g')
+    test -z "${ALL_DISKS_PATH}" && exit 1
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    pvcreate --yes "${free_disk}"
+    eval pvcreate --yes "${ALL_DISKS_PATH}"
     CHECK_RESULT $?
-    vgcreate vg_test --yes "${free_disk}"
-    CHECK_RESULT $?
+    eval vgcreate vg_test --yes "${ALL_DISKS_PATH}"
+    evalCHECK_RESULT $?
     lvcreate --type=vdo --yes -n lv_test -L 5g vg_test
     CHECK_RESULT $?
     mkfs.xfs /dev/vg_test/lv_test
@@ -68,10 +69,11 @@ function post_test() {
     if [ -n "$(pgrep -f cp_result)" ]; then
         kill -9 "$(pgrep -f cp_result)"
     fi
+    SLEEP_WAIT 5
     umount /mnt
     lvremove -f /dev/vg_test/lv_test
     vgremove -f vg_test
-    pvremove -f "${free_disk}"
+    eval pvremove -f "${ALL_DISKS_PATH}"
     DNF_REMOVE "$@"
     rm -rf cp_result*
     LOG_INFO "Finish environment cleanup!"

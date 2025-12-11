@@ -5,6 +5,7 @@ log_file ./test.log
 spawn ./logstash -e "input { stdin { } } output { stdout {} }"
 expect "Successfully"
 send "hello world\r"
+sleep 2
 expect "timestamp"
 send "\03\r"
 expect eof
