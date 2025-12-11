@@ -17,14 +17,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test intltool-extract
 # #############################################
+#shellcheck disable=SC2119
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 # Preparation for installation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "intltool"
-    local_LANG=$LANG
+    DNF_INSTALL "intltool tar"
+    local_LANG="$LANG"
     export LANG=en_US.UTF-8
     test -d tmp || mkdir tmp
     cp -rf common/intltool_extract/* tmp
@@ -50,11 +51,11 @@ function run_test() {
                 "schemas" "gsettings" "xml" "tlk" \
                 "quoted" "quotedxml" "qtdesigner"
     do
-        intltool-extract --type="gettext/${type}" ./tmp/common/test.${type} | grep -i "Wrote" 
+        intltool-extract --type="gettext/${type}" "./tmp/common/test.${type}" | grep -i "Wrote" 
         CHECK_RESULT $? 0 0 "option: --type=\"gettext/${type}\" error"
-        test -f ./tmp/common/test.${type}.h
+        test -f "./tmp/common/test.${type}.h"
         CHECK_RESULT $? 0 0 "option: --type=\"gettext/${type}\" error"
-        grep -i "char" ./tmp/common/test.${type}.h
+        grep -i "char" "./tmp/common/test.${type}.h"
         CHECK_RESULT $? 0 0 "option: --type=\"gettext/${type}\" error"
     done
 
@@ -110,7 +111,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp
     DNF_REMOVE
-    export LANG=${local_LANG}
+    export LANG="${local_LANG}"
     LOG_INFO "End to restore the test environment."
 }
 

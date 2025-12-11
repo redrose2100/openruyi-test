@@ -135,7 +135,12 @@ function del_custommonitor() {
 function stress_mem() {
     local ratio=${1-90}
     local stress_time=${2-300}
-    nohup stress-ng --vm 1 --vm-bytes "${ratio}"% --timeout "${stress_time}" &> /dev/null &
+    local total_mem
+    total_mem=$(free -m | grep Mem | awk '{print $2}')
+    local target_mem=$((total_mem * ratio / 100))
+    swapoff -a && sync
+    nohup stress-ng --vm 4 --vm-bytes "${target_mem}M" --vm-keep --timeout "${stress_time}s" &> /dev/null &
+    SLEEP_WAIT 10
 }
 
 #usage：使用stress-ng工具对cpu加压

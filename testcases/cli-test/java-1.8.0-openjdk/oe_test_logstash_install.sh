@@ -25,18 +25,18 @@ function pre_test() {
     LOG_WARN "Testing cannot be performed if NODE1_FRAME is riscv64"
     exit 255
   fi
-  DNF_INSTALL "java-1.8.0-openjdk expect wget unzip"
+  DNF_INSTALL "java-1.8.0-openjdk expect wget tar"
   mkdir /tmp/test
-  wget -P /tmp/test https://gitee.com/sunqingwei811/package/repository/archive/master.zip
+  wget -P /tmp/test https://artifacts.elastic.co/downloads/logstash/logstash-6.6.1.tar.gz
   LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
   LOG_INFO "Start to run test."
-  unzip /tmp/test/master.zip -d /tmp/test
-  CHECK_RESULT $? 0 0 "Unzip file failed"
-  cp ./common/test.sh /tmp/test/package-master/logstash-6.6.1/bin
-  cd /tmp/test/package-master/logstash-6.6.1/bin || return
+  tar -zxf /tmp/test/logstash-6.6.1.tar.gz -C /tmp/test
+  CHECK_RESULT $? 0 0 "Tar file failed"
+  cp ./common/test.sh /tmp/test/logstash-6.6.1/bin
+  cd /tmp/test/logstash-6.6.1/bin || return
   chmod 777 logstash
   bash test.sh
   grep '\"message\"' test.log | grep '\"hello world\"'

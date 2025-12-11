@@ -24,6 +24,7 @@ function pre_test() {
     DNF_INSTALL stress-ng
     mem_prefun
     pressure_clear
+    DNF_INSTALL "stress-ng"
 }
 
 # 测试点的执行

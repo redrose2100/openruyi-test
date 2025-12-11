@@ -17,14 +17,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test intltool-prepare options
 # ############################################
+#shellcheck disable=SC2119
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 # Preparation for installation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "intltool"
-    local_LANG=$LANG
+    DNF_INSTALL "intltool tar"
+    local_LANG="$LANG"
     export LANG=en_US.UTF-8
     test -d tmp || mkdir tmp
     mkdir -p po
@@ -100,7 +101,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf tmp po
     DNF_REMOVE
-    export LANG=${local_LANG}
+    export LANG="${local_LANG}"
     LOG_INFO "End to restore the test environment."
 }
 
