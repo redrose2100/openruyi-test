@@ -28,10 +28,17 @@ function pre_test() {
     net_cards=$(TEST_NIC 1)
     net_card2=$(echo "$net_cards" | awk -F ' ' '{print $1}')
     net_card3=$(echo "$net_cards" | awk -F ' ' '{print $2}')
-    nmcli connection add con-name bond0 ifname bond0 type bond mode active-backup
-    nmcli connection add con-name slave-38 ifname "${net_card2}" type ethernet master bond0
-    nmcli connection add con-name slave-39 ifname "${net_card3}" type ethernet master bond0
+    mtu1=$(ip -j link show "$net_card2" 2>/dev/null | jq -r '.[0].mtu // 1500')
+    mtu2=$(ip -j link show "$net_card3" 2>/dev/null | jq -r '.[0].mtu // 1500')
+    bond_mtu=$((mtu1 < mtu2 ? mtu1 : mtu2))
+    [[ -z "$bond_mtu" || "$bond_mtu" -lt 68 ]] && { echo "mtu error"; exit 1; }
+    nmcli connection add con-name bond0 ifname bond0 type bond bond.options "mode=active-backup,miimon=100,updelay=200,downdelay=200"
+    nmcli connection add con-name slave-38 ifname "${net_card2}" type ethernet master bond0 slave-type bond
+    nmcli connection add con-name slave-39 ifname "${net_card3}" type ethernet master bond0 slave-type bond
     nmcli connection modify bond0 ipv4.method manual connection.autoconnect yes ipv4.addresses 20.20.20.20/24 ipv4.dns 8.8.8.8 ipv4.gateway 20.20.20.1
+    nmcli connection modify bond0 802-3-ethernet.mtu "$bond_mtu"
+    nmcli connection modify slave-38 802-3-ethernet.mtu "$bond_mtu"
+    nmcli connection modify slave-39 802-3-ethernet.mtu "$bond_mtu"
     nmcli connection up slave-38
     nmcli connection up slave-39
     nmcli connection up bond0
@@ -89,6 +96,7 @@ global_defs {
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
+
 function post_test() {
     LOG_INFO "start environment cleanup."
     nmcli connection del slave-38
@@ -98,4 +106,6 @@ function post_test() {
     rm -rf /etc/keepalived/
     LOG_INFO "Finish environment cleanup!"
 }
+
 main "$@"
+
