@@ -1,8 +1,8 @@
-source "./comm/lib.sh"
+source "comm/lib.sh"
 set -x
 
 function pre_test(){
-    pre_env
+    pre_env 3
 }
 function run_test(){
     sentryctl set sentry_remote_reporter --cna "${node1_cna}" --eid "${node1_eid1};${node1_eid2}" --panic=on --kernel_reboot=on
@@ -21,8 +21,6 @@ function run_test(){
 }
 function post_test(){
     clean_sysSentry_message
-    DNF_REMOVE "sysSentry" 1
-    DNF_REMOVE "sysSentry" 2
 
 }
 

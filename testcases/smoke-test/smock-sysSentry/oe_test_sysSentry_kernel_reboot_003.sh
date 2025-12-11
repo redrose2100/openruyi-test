@@ -1,4 +1,4 @@
-source "./comm/lib.sh"
+source "comm/lib.sh"
 set -x
 
 function pre_test(){
@@ -14,7 +14,7 @@ function run_test(){
     sentryctl set sentry_uvb_comm --server_cna="${node2_cna}"
     SSH_CMD "sentryctl set sentry_uvb_comm --server_cna='${node1_cna}'"  "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
-    start_RA kernel_reboot 0 30
+    start_RA kernel_reboot 0 20
     SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
     check_log 0 RA 1009 1010
@@ -24,8 +24,6 @@ function run_test(){
 }
 function post_test(){
     clean_sysSentry_message
-    DNF_REMOVE "sysSentry" 1
-    DNF_REMOVE "sysSentry" 2
 }
 
 main "$@"

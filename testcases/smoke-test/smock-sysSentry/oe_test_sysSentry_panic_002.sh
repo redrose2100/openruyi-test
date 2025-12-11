@@ -1,4 +1,4 @@
-source "./comm/lib.sh"
+source "comm/lib.sh"
 set -x
 
 function pre_test(){
@@ -22,8 +22,6 @@ function run_test(){
 }
 function post_test(){
     clean_sysSentry_message
-    DNF_REMOVE "sysSentry" 1
-    DNF_REMOVE "sysSentry" 2
 }
 
 main "$@"

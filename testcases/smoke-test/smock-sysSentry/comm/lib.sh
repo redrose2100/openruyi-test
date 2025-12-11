@@ -5,12 +5,15 @@ task_log_path=/var/log/sysSentry
 run_alarm="/var/run/xalarm/alarm"
 run_report="/var/run/xalarm/report"
 xalarm_run_dir="/var/run/xalarm"
+ra_path="$OET_PATH/testcases/smoke-test/smoke-sysSentry/RA"
 mkdir -p "${TMP_DIR}"
 
 function pre_env(){
+    local node_num="$1"
+
     DNF_INSTALL "sysSentry" 1
     DNF_INSTALL "sysSentry" 2
-    DNF_INSTALL "sysSentry" 3
+    [ -n "${node_num}" ] && DNF_INSTALL "sysSentry" 3
     start_sentry
 
     SSH_CMD "
@@ -30,7 +33,7 @@ function pre_env(){
     lsmod | grep sentry
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
-    SSH_CMD "
+   [ -n "${node_num}" ] && SSH_CMD "
     yum -y install sentry_msg_monitor
     systemctl start xalarmd
     systemctl start sysSentry
@@ -92,24 +95,31 @@ function get_eid(){
     node1_eid1=$(urma_admin show | awk '/udma2/ && /eid0/ {print $5}')
     node1_eid2=$(urma_admin show | awk '/udma5/ && /eid0/ {print $5}')
 
-    # node2_eid1=$(SSH_CMD "urma_admin show | awk '/udma2/ && /eid0/ {print \$5}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
-    # node2_eid2=$(SSH_CMD "urma_admin show | awk '/udma5/ && /eid0/ {print \$5}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
+    node2_eid1=$(SSH_CMD "urma_admin show | awk '/udma2/ && /eid0/ {print \$5}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
+    node2_eid2=$(SSH_CMD "urma_admin show | awk '/udma5/ && /eid0/ {print \$5}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
 
-    # node3_eid1=$(SSH_CMD "urma_admin show | awk '/udma2/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
-    # node3_eid2=$(SSH_CMD "urma_admin show | awk '/udma5/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
+    node3_eid1=$(SSH_CMD "urma_admin show | awk '/udma2/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
+    node3_eid2=$(SSH_CMD "urma_admin show | awk '/udma5/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
     
     # node1_cna=1
     # node2_cna=2
-    # node3_cna=3
+    node1_cna=$(( $(cat /sys/devices/ub_bus_controller0/00001/primary_cna | tr -d '[:space:]') ))
+    raw_output=$(SSH_CMD "cat /sys/devices/ub_bus_controller0/00001/primary_cna 2>/dev/null" \
+        "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}")
+        
+    hex_value=$(echo "$raw_output" | tr -d '[:space:]' | grep -oE '0x[0-9A-Fa-f]+')
+    node2_cna=$(( $hex_value ))
+    node3_cna=3
     test_jetty_id=$((RANDOM % 1021 + 3))
 
 }
 function gcc_ra(){
-    local re_type="$1"
-    [-n "${ra_type}"] && re_type="_$_ra_type"
-    DNF_INSTALL "sentry_msg_monitor"
-    DNF_INSTALL "libxalarm-devel"
-    DNF_INSTALL "gcc"
+    local ra_type="$1"
+    [ -n "${ra_type}" ] && ra_type="_$ra_type"
+    yum -y install sentry_msg_monitor libxalarm-devel gcc
+    gcc "${ra_path}"/RA"${ra_type}".c -Wall -o3 -lxalarm -o "${ra_path}"/RA"${ra_type}"
+    chmod 777 "${ra_path}/RA${ra_type}"
+
 
 
 }
@@ -119,13 +129,17 @@ function start_RA(){
     local delay_time="${3:-}"
     case $ra_type in 
         panic | kernel_reboot)
-
+            [ -f "${ra_path}"/RA_reboot ] || gcc_ra reboot
             stdbuf -oL "/root/mugen/testcases/smoke-test/smoke-sysSentry/RA/RA_reboot" "${ra_pare}" "${delay_time}" > "${TMP_DIR}/RA.log" 2>&1 &
             ;;
         oom)
-            stdbuf -oL "/root/mugen/testcases/smoke-test/smoke-sysSentry/RA/RA_${re_type}" > "${TMP_DIR}/RA.log" 2>&1 &
+            [ -f "${ra_path}"/RA_oom ] || gcc_ra oom
+            stdbuf -oL "${ra_path}/RA_${ra_type}" > "${TMP_DIR}/RA.log" 2>&1 &
+            ;;
         *)
-            stdbuf -oL "/root/mugen/testcases/smoke-test/smoke-sysSentry/RA/RA_${re_type}" > "${TMP_DIR}/RA_${re_type}.log" 2>&1 &
+            [ -f "${ra_path}"/RA_"${ra_type}" ] || gcc_ra ${ra_type}
+            stdbuf -oL "${ra_path}/RA_${ra_type}" > "${TMP_DIR}/RA_${ra_type}.log" 2>&1 &
+            ;;
 
     esac
     return $?
@@ -155,7 +169,7 @@ function check_RA_oom(){
     local sync_value="${1}"
     local reason_value="${2}"
     for ((check_ra_oom_loop=0; check_ra_oom_loop<5; check_ra_oom_loop++)); do
-        grep -aw "\[alarmid:1005\]" ${TMP_DIR}/RA.log | grep "\[msg:.*,sync:${sync_value},timeout:30000,reason:${reason_value}\]" && break
+        grep -aw "\[alarmid:1005\]" ${TMP_DIR}/RA.log | grep -F "sync:${sync_value},timeout:30000,reason:${reason_value}" && break
         sleep 2
     done
     [ "${check_ra_oom_loop}" -lt 5 ] || return 1
@@ -238,7 +252,7 @@ function check_log(){
             ;;
     esac
 
-    timeout=$([ "reply_type" -eq 2 ] && echo 100 || echo 50)
+    timeout=$([ "$reply_type" -eq 2 ] && echo 100 || echo 50)
     sleep "$timeout"
     cat "$log_file"
     alarm_count=$(grep -a "$grep_alarm" "$log_file" | wc -l)

@@ -1,7 +1,7 @@
-source "./comm/lib.sh"
+#!/bin/bash
+source "comm/lib.sh"
 set -x
-
-function check_RA_xalarmd_log(){
+function check_RA_xalarmd_log() {
     SLEEP_WAIT 30 "systemctl is-active xalarmd.service" 2
     CHECK_RESULT $? 0 0
     sleep 6 #等服务重启
@@ -15,7 +15,7 @@ function check_RA_xalarmd_log(){
     check_RA_plugin
 }
 
-function check_xalarmd_log(){
+function check_xalarmd_log() {
     grep "${run_alarm} not found or socket file been replaced, recovering" "${task_log_path}"/xalarm.log
     CHECK_RESULT $? 0 0
     grep "${run_report} not found or socket file been replaced, recovering" "${task_log_path}"/xalarm.log
@@ -73,7 +73,7 @@ function run_test(){
 function post_test(){
     clean_sysSentry_message
     systemctl stop xalarmd
-
+    # return 0
 }
 
 main "$@"
