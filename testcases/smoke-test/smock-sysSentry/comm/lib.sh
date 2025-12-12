@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2207,SC2002,SC2126
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
@@ -122,7 +122,7 @@ function get_eid() {
         "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}")
 
     hex_value=$(echo "$raw_output" | tr -d '[:space:]' | grep -oE '0x[0-9A-Fa-f]+')
-    node2_cna=$(($hex_value))
+    node2_cna=$((hex_value))
     node3_cna=3
     test_jetty_id=$((RANDOM % 1021 + 3))
 
@@ -140,7 +140,7 @@ function start_RA() {
     local ra_type="${1}"
     local ra_pare="${2:-}"
     local delay_time="${3:-}"
-    case $ra_type in
+    case "$ra_type" in
         panic | kernel_reboot)
             [ -f "${ra_path}"/RA_reboot ] || gcc_ra reboot
             stdbuf -oL "/root/mugen/testcases/smoke-test/smoke-sysSentry/RA/RA_reboot" "${ra_pare}" "${delay_time}" > "${TMP_DIR}/RA.log" 2>&1 &
@@ -196,24 +196,24 @@ function check_alarmd() {
     local tmp_alarm_msg_len="${2}"
     local is_reply="${3}"
     local tmp_reply_msg_len="${4}"
-    tmp_reply_id=$(expr "$tmp_alarm_id" + 1)
+    tmp_reply_id=$((expr "$tmp_alarm_id" + 1))
     if [[ "${tmp_alarm_msg_len}" == "no" ]]; then
         tmp_alarm_msg_len=".*"
     else
         tmp_alarm_msg_len="$(grep -aw 'Send msg success:' ${task_log_path}/sentry_msg_monitor.log | grep -w "${tmp_alarm_id}" | head -1 | awk -F'str:' '{print $2}' | sed 's/ //g' | wc -c)"
-        tmp_alarm_msg_len="$(expr "$tmp_alarm_msg_len" - 1)"
+        tmp_alarm_msg_len="$((expr "$tmp_alarm_msg_len" - 1))"
     fi
 
     if [[ "${tmp_reply_msg_len}" == "no" ]]; then
         tmp_reply_msg_len=".*"
     else
         tmp_reply_msg_len="$(grep -aw 'Get msg:' ${task_log_path}/sentry_msg_monitor.log | grep -w "${tmp_reply_id}" | head -1 | awk -F'str:' '{print $2}' | sed 's/ //g' | wc -c)"
-        tmp_reply_msg_len="$(expr "$tmp_reply_msg_len" - 1)"
+        tmp_reply_msg_len="$((expr "$tmp_reply_msg_len" - 1))"
     fi
     grep -aw "Broadcast msg success" ${task_log_path}/xalarm.log | grep "alarm msg is alarm_id: ${tmp_alarm_id}, alarm_level: MINOR_ALM, alarm_type: ALARM_TYPE_OCCUR"
     CHECK_RESULT $? 0 0
 
-    grep "alarm_id: ${tmd_alarm_id}" ${task_log_path}/xalarm.log | grep "alarm_msg_len: ${tmp_alarm_msg_len}"
+    grep "alarm_id: ${tmp_alarm_id}" ${task_log_path}/xalarm.log | grep "alarm_msg_len: ${tmp_alarm_msg_len}"
     CHECK_RESULT $? 0 0
 
 }
@@ -230,12 +230,10 @@ function check_oom_sentry_msg_monitor() {
 
 function check_oom_nid_info() {
     local tmp_nid_info="${1}"
-    # nr_nid=$(echo "$tmp_nid_info" | grep -oP '(?<=nr_nid:)\d+')
-    # tmp_nid_str=$(echo "$tmp_nid_info" | grep -oP '(?<=nid:\[)[^\]]+(?=)')
     nid_str=($(echo "${tmp_nid_str[@]}" | tr ',' ' '))
-    echo ${nid_str[@]:0:$(expr "$nr_nid")} | grep -v '\-1'
+    echo "${nid_str[@]:0:$((nr_nid))}" | grep -v '\-1'
     CHECK_RESULT $? 0 0
-    echo ${nid_str[@]:"$nr_nid":$(expr ${#nid_str[@]} - 1)} | xargs -n 1 | grep '\-1' | wc -l | grep "$(expr ${#nid_str[@]} - "$nr_nid")"
+    echo "${nid_str[@]:$nr_nid:$((${#nid_str[@]} - 1))}" | xargs -n 1 | grep -c '\-1' | grep "$((${#nid_str[@]} - nr_nid))"
     CHECK_RESULT $? 0 0
 }
 function check_log() {
@@ -274,7 +272,7 @@ function check_log() {
     test "$alarm_count" -ge 1
     CHECK_RESULT $? 0 0
 
-    if [ "$log_type" != "RA" -a "$reply_type" = "0" ]; then
+    if [ "$log_type" != "RA" ] && [ "$reply_type" = "0" ]; then
         test "$send_ack" -ge 1
         CHECK_RESULT $? 0 0
     fi
