@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# shellcheck disable=SC1017,SC2154
+# shellcheck disable=SC1091
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
@@ -199,14 +199,14 @@ function check_alarmd(){
     local is_reply="${3}"
     local tmp_reply_msg_len="${4}"
     tmp_reply_id=$(expr "$tmp_alarm_id" + 1)
-    if [ "${tmp_alarm_msg_len}"="no"]; then
+    if [[ "${tmp_alarm_msg_len}" == "no" ]]; then
         tmp_alarm_msg_len=".*"
     else
         tmp_alarm_msg_len="$(grep -aw 'Send msg success:' ${task_log_path}/sentry_msg_monitor.log | grep -w "${tmp_alarm_id}" | head -1 | awk -F'str:' '{print $2}' | sed 's/ //g' | wc -c)"
         tmp_alarm_msg_len="$(expr "$tmp_alarm_msg_len" - 1)"
     fi
 
-    if [ "${tmp_reply_msg_len}"="no"]; then
+    if [[ "${tmp_reply_msg_len}" == "no" ]]; then
         tmp_reply_msg_len=".*"
     else
         tmp_reply_msg_len="$(grep -aw 'Get msg:' ${task_log_path}/sentry_msg_monitor.log | grep -w "${tmp_reply_id}" | head -1 | awk -F'str:' '{print $2}' | sed 's/ //g' | wc -c)"
