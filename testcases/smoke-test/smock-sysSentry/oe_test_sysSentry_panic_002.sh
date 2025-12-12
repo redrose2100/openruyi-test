@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-
+# shellcheck disable=SC1017,SC2154
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
@@ -11,7 +11,7 @@
 # @Author    :   yangna 
 # @Date      :   2025/12/12
 # ##################################
-# shellcheck disable=SC1017
+
 
 source "comm/lib.sh"
 set -x
