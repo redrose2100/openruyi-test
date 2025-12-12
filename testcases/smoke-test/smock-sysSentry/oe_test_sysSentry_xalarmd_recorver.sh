@@ -1,4 +1,18 @@
-#!/bin/bash
+#!/usr/bin/bash
+
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# ##################################
+# @Author    :   yangna 
+# @Date      :   2025/12/12
+# ##################################
+# shellcheck disable=SC2002,SC2119
+
 source "comm/lib.sh"
 set -x
 function check_RA_xalarmd_log() {
