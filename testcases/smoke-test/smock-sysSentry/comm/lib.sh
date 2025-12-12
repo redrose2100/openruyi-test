@@ -11,7 +11,7 @@
 # @Author    :   yangna 
 # @Date      :   2025/12/12
 # ##################################
-# shellcheck disable=SC2002,SC2119
+# shellcheck disable=SC1017
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
