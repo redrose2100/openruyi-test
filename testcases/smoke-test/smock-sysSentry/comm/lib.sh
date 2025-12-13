@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# shellcheck disable=SC1091,SC2207,SC2002,SC2126
+# shellcheck disable=SC1091,SC2034,SC2154
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
@@ -8,9 +8,10 @@
 # See the Mulan PSL v2 for more details.
 
 # ##################################
-# @Author    :   yangna
+# @Author    :   yangna 
 # @Date      :   2025/12/12
 # ##################################
+
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -22,7 +23,7 @@ xalarm_run_dir="/var/run/xalarm"
 ra_path="$OET_PATH/testcases/smoke-test/smoke-sysSentry/RA"
 mkdir -p "${TMP_DIR}"
 
-function pre_env() {
+function pre_env(){
     local node_num="$1"
 
     DNF_INSTALL "sysSentry" 1
@@ -47,7 +48,7 @@ function pre_env() {
     lsmod | grep sentry
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
-    [ -n "${node_num}" ] && SSH_CMD "
+   [ -n "${node_num}" ] && SSH_CMD "
     yum -y install sentry_msg_monitor
     systemctl start xalarmd
     systemctl start sysSentry
@@ -67,18 +68,18 @@ function pre_env() {
     get_eid
 
 }
-function pre_oom_env() {
+function pre_oom_env(){
     yum -y install sentry_msg_monitor
     modprobe sentry_msg_helper
     modprobe sentry_reporter
     systemctl start xalarmd
     systemctl start sysSentry
-    sleep 5
+    sleep 5 
     sentryctl list | grep sentry_msg_monitor
 
 }
 
-function pre_xalarm_env() {
+function pre_xalarm_env(){
     DNF_INSTALL "sysSentry" 1
     yum -y remove libxalarm pyxalarm sentry_msg_monitor sysSentry
     yum -y install sentry_msg_monitor
@@ -88,7 +89,7 @@ function pre_xalarm_env() {
     sentryctl list | grep sentry_msg_monitor
 }
 
-function start_sentry() {
+function start_sentry(){
     yum -y install sentry_msg_monitor
     systemctl start xalarmd
     systemctl start sysSentry
@@ -102,10 +103,10 @@ function start_sentry() {
     modprobe sentry_remote_reporter
     sentryctl start sentry_msg_monitor
     sleep 5
-    lsmod | grep sentry
+    lsmod |grep sentry
 }
 
-function get_eid() {
+function get_eid(){
     node1_eid1=$(urma_admin show | awk '/udma2/ && /eid0/ {print $5}')
     node1_eid2=$(urma_admin show | awk '/udma5/ && /eid0/ {print $5}')
 
@@ -114,33 +115,34 @@ function get_eid() {
 
     node3_eid1=$(SSH_CMD "urma_admin show | awk '/udma2/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
     node3_eid2=$(SSH_CMD "urma_admin show | awk '/udma5/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
-
+    
     # node1_cna=1
     # node2_cna=2
-    node1_cna=$(($(cat /sys/devices/ub_bus_controller0/00001/primary_cna | tr -d '[:space:]')))
+    node1_cna=$(( $(cat /sys/devices/ub_bus_controller0/00001/primary_cna | tr -d '[:space:]') ))
     raw_output=$(SSH_CMD "cat /sys/devices/ub_bus_controller0/00001/primary_cna 2>/dev/null" \
         "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}")
-
+        
     hex_value=$(echo "$raw_output" | tr -d '[:space:]' | grep -oE '0x[0-9A-Fa-f]+')
-    node2_cna=$((hex_value))
+    node2_cna=$(( $hex_value ))
     node3_cna=3
     test_jetty_id=$((RANDOM % 1021 + 3))
 
 }
-function gcc_ra() {
+function gcc_ra(){
     local ra_type="$1"
     [ -n "${ra_type}" ] && ra_type="_$ra_type"
     yum -y install sentry_msg_monitor libxalarm-devel gcc
     gcc "${ra_path}"/RA"${ra_type}".c -Wall -o3 -lxalarm -o "${ra_path}"/RA"${ra_type}"
     chmod 777 "${ra_path}/RA${ra_type}"
 
-}
 
-function start_RA() {
+
+}
+function start_RA(){
     local ra_type="${1}"
     local ra_pare="${2:-}"
     local delay_time="${3:-}"
-    case "$ra_type" in
+    case $ra_type in 
         panic | kernel_reboot)
             [ -f "${ra_path}"/RA_reboot ] || gcc_ra reboot
             stdbuf -oL "/root/mugen/testcases/smoke-test/smoke-sysSentry/RA/RA_reboot" "${ra_pare}" "${delay_time}" > "${TMP_DIR}/RA.log" 2>&1 &
@@ -158,30 +160,30 @@ function start_RA() {
     return $?
 }
 
-function check_RA_xalarmd() {
+function check_RA_xalarmd(){
     local ra_log="${1-RA_xalarmd.log}"
     SLEEP_WAIT 30 "grep -aw 'alarmid:1003' ${TMP_DIR}/${ra_log} | grep -w 'msg:hello'" 2
     CHECK_RESULT $? 0 0
 }
-function check_RA_plugin() {
+function check_RA_plugin(){
     local ra_log="${1-RA_plugin.log}"
-    SLEEP_WAIT 30 "grep -aw 'alarmid:1004' ${TMP_DIR}/${ra_log} | grep -w 'msg:ACK OK'" 2
+    SLEEP_WAIT 30 "grep -aw 'alarmid:1004' ${TMP_DIR}/${ra_log} | grep -w 'msg:ACK OK'" 2    
     CHECK_RESULT $? 0 0
 }
-function clean_sysSentry_message() {
+function clean_sysSentry_message(){
     echo > /var/log/sysSentry/xalarm.log
     echo > /var/log/sysSentry/sentry_msg_monitor.log
 }
 
-function check_oom_dmesg() {
+function check_oom_dmesg(){
     local sync_value="${1}"
     local reason_value="${2}"
     SLEEP_WAIT 30 "dmesg | grep -aw \"got lowmem message\" | grep -a \"sync=${sync_value} reason=${reason_value}\"" 2
 }
-function check_RA_oom() {
+function check_RA_oom(){
     local sync_value="${1}"
     local reason_value="${2}"
-    for ((check_ra_oom_loop = 0; check_ra_oom_loop < 5; check_ra_oom_loop++)); do
+    for ((check_ra_oom_loop=0; check_ra_oom_loop<5; check_ra_oom_loop++)); do
         grep -aw "\[alarmid:1005\]" ${TMP_DIR}/RA.log | grep -F "sync:${sync_value},timeout:30000,reason:${reason_value}" && break
         sleep 2
     done
@@ -191,7 +193,7 @@ function check_RA_oom() {
     check_oom_nid_info "${tmp_nid_info}"
     CHECK_RESULT $? 0 0
 }
-function check_alarmd() {
+function check_alarmd(){
     local tmp_alarm_id="${1}"
     local tmp_alarm_msg_len="${2}"
     local is_reply="${3}"
@@ -208,35 +210,37 @@ function check_alarmd() {
         tmp_reply_msg_len=".*"
     else
         tmp_reply_msg_len="$(grep -aw 'Get msg:' ${task_log_path}/sentry_msg_monitor.log | grep -w "${tmp_reply_id}" | head -1 | awk -F'str:' '{print $2}' | sed 's/ //g' | wc -c)"
-        tmp_reply_msg_len="$((expr "$tmp_reply_msg_len" - 1))"
+        tmp_reply_msg_len="$(expr "$tmp_reply_msg_len" - 1)"
     fi
     grep -aw "Broadcast msg success" ${task_log_path}/xalarm.log | grep "alarm msg is alarm_id: ${tmp_alarm_id}, alarm_level: MINOR_ALM, alarm_type: ALARM_TYPE_OCCUR"
     CHECK_RESULT $? 0 0
 
-    grep "alarm_id: ${tmp_alarm_id}" ${task_log_path}/xalarm.log | grep "alarm_msg_len: ${tmp_alarm_msg_len}"
+    grep "alarm_id: ${tmd_alarm_id}" ${task_log_path}/xalarm.log | grep "alarm_msg_len: ${tmp_alarm_msg_len}"
     CHECK_RESULT $? 0 0
 
 }
-function check_oom_sentry_msg_monitor() {
+function check_oom_sentry_msg_monitor(){
     local sync_value="${1}"
     local reason_value="${2}"
     local is_reply="${3-true}"
-    grep -aw 'Send msg success:' ${task_log_path}/sentry_msg_monitor.log | grep -w "alarm_type: 1005, str: .*,sync:${sync_value},timeout:30000,reason:${reason_value}"
+    grep -aw 'Send msg success:' ${task_log_path}/sentry_msg_monitor.log | grep -w "alarm_type: 1005, str: .*,sync:${sync_value},timeout:30000,reason:${reason_value}" 
     CHECK_RESULT $? 0 0
     tmp_nid_info=$(grep -aw "alarm_type: 1005" ${task_log_path}/sentry_msg_monitor.log | tail -1 | awk -F'str:' '{print $2}' | awk -F'{' '{print $2}' | awk -F'}' '{print $1}' | awk -F']' '{print $1}')
     check_oom_nid_info "${tmp_nid_info}"
     CHECK_RESULT $? 0 0
 }
 
-function check_oom_nid_info() {
+function check_oom_nid_info(){
     local tmp_nid_info="${1}"
+    # nr_nid=$(echo "$tmp_nid_info" | grep -oP '(?<=nr_nid:)\d+')
+    # tmp_nid_str=$(echo "$tmp_nid_info" | grep -oP '(?<=nid:\[)[^\]]+(?=)')
     nid_str=($(echo "${tmp_nid_str[@]}" | tr ',' ' '))
-    echo "${nid_str[@]:0:$((nr_nid))}" | grep -v '\-1'
+    echo ${nid_str[@]:0:$(expr "$nr_nid")} | grep -v '\-1'
     CHECK_RESULT $? 0 0
-    echo "${nid_str[@]:$nr_nid:$((${#nid_str[@]} - 1))}" | xargs -n 1 | grep -c '\-1' | grep "$((${#nid_str[@]} - nr_nid))"
+    echo ${nid_str[@]:"$nr_nid":$(expr ${#nid_str[@]} - 1)} | xargs -n 1 | grep '\-1' | wc -l | grep "$(expr ${#nid_str[@]} - "$nr_nid")"
     CHECK_RESULT $? 0 0
 }
-function check_log() {
+function check_log(){
     local reply_type="${1}"
     local log_type="${2}"
     local alarm_value="${3}"
@@ -269,11 +273,11 @@ function check_log() {
     alarm_count=$(grep -a "$grep_alarm" "$log_file" | wc -l)
     send_ack=$(grep -a "$grep_ack" "$log_file" | wc -l)
 
-    test "$alarm_count" -ge 1
+    test $alarm_count -ge 1
     CHECK_RESULT $? 0 0
 
-    if [ "$log_type" != "RA" ] && [ "$reply_type" = "0" ]; then
-        test "$send_ack" -ge 1
+    if [ "$log_type" != "RA" -a "$reply_type" = "0" ]; then     
+        test $send_ack -ge 1
         CHECK_RESULT $? 0 0
     fi
 }
