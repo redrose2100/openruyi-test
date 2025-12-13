@@ -1,11 +1,14 @@
 {
     "path": "${OET_PATH}/testcases/smoke-test/smoke-ubnative",
+    "machine type": "physical",
     "cases": [
         {
-            "name": "oe_test_ubnative_ping"
+            "name": "oe_test_ubnative_ping",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_ubnative_vmlife"
+            "name": "oe_test_ubnative_vmlife",
+            "machine type": "physical"
         }
     ]
 }

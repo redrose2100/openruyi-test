@@ -35,7 +35,7 @@ function run_test() {
         LOG_INFO "Test $vm_name proportion:"
 
         create_vm_waiting_running "$vm_name"
-        CHECK_RESULT $? 0 0 "create vm failed" || exit 1
+        CHECK_RESULT $? 0 0 "create vm failed"
 
         virsh dumpxml "$vm_name" &> "$vm_name".xml
         grep "proportion=" "$vm_name".xml
@@ -44,7 +44,7 @@ function run_test() {
         chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp"
         expect "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp" "$vm_name"
         wait_exec "ping -c 3 ${vm_ip:?}" 100
-        CHECK_RESULT $? 0 0 "ping vm failed" || exit 1
+        CHECK_RESULT $? 0 0 "ping vm failed"
 
         check_memlink_recycle "2" "1.5" "130" "50" "pass"
         CHECK_RESULT $? 0 0 "check memlink recycle failed"

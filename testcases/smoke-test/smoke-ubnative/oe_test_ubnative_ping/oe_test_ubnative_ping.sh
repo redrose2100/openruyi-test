@@ -57,7 +57,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    destroy_vm "$vm_name"
+    post_clean
     ub_dev_restore "$bus_instance" "$ub_dev_id"
     LOG_INFO "End to restore the test environment."
 }

@@ -29,6 +29,8 @@ vm_ip="192.168.1.101"
 vm_user="root"
 vm_passwd="openEuler12#$"
 
+original_selinux_mode=""
+
 function ub_env_init() {
     # img pre
     mkdir -p "$image_dir"
@@ -50,12 +52,14 @@ function ub_env_init() {
     modprobe vfio
     modprobe vfio-ub
     # config
-    setenforce 0
+    original_selinux_mode=$(getenforce)
+    if [[ "$original_selinux_mode" != "Permissive" && "$original_selinux_mode" != "permissive" ]]; then
+        setenforce 0
+    fi
     # vm clean
     virsh list --all --name | xargs -I {} virsh destroy {}
     virsh list --all --name | xargs -I {} virsh undefine {} --nvram
-    rm -rf /var/log/libvirt/libvirtd.log*
-    rm -rf /var/log/libvirt/qemu/*
+    rm -rf /var/log/libvirt/libvirtd.log*; rm -rf /var/log/libvirt/qemu/*
 }
 
 function set_hugepages() {
@@ -98,7 +102,7 @@ function create_vm_waiting_running() {
     done
     LOG_INFO "vm xml save dir: $xml_path; image dir is: $qcow2_path"
     virsh define "$xml_path" && virsh start "$vm_name" || return 1
-    sleep 60
+    SLEEP_WAIT 60
     virsh list | grep "$vm_name"
     return $?
 }
@@ -109,7 +113,7 @@ function wait_exec() {
     for ((i = 1; i <= count; i++)); do
         LOG_INFO "[$i] wait in cmd: ${cmd}..."
         eval "${cmd}" &> /dev/null && return 0
-        sleep 2
+        SLEEP_WAIT 2
     done
     LOG_WARN "${cmd} timeout failed"
     return 1
@@ -133,13 +137,6 @@ function vm_modprobe_ko() {
              modprobe unic" "$vm_ip" "$vm_passwd" "$vm_user"
 }
 
-function destroy_vm() {
-    local vm_name=$1
-    virsh destroy "$vm_name" && sleep 3
-    virsh undefine "$vm_name" --nvram
-    virsh list --all
-}
-
 function ub_dev_restore() {
     local bus_instance=$1
     local ub_dev_ids=$2
@@ -152,4 +149,10 @@ function ub_dev_restore() {
         setub -b unbind -d "$ub_dev_guid" -g "$bus_instance"
     done
     setub -b destroy -g "$bus_instance"
+}
+
+function post_clean() {
+    virsh list --all --name | xargs -I {} virsh destroy {}
+    virsh list --all --name | xargs -I {} virsh undefine {} --nvram
+    setenforce 1
 }

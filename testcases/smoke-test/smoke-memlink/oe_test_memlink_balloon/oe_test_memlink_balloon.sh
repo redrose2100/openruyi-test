@@ -36,12 +36,12 @@ function run_test() {
     max="50"  # default
 
     create_vm_waiting_running "$vm_name"
-    CHECK_RESULT $? 0 0 "create vm failed" || exit 1
+    CHECK_RESULT $? 0 0 "create vm failed"
 
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp"
     expect "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp" "$vm_name"
     wait_exec "ping -c 3 ${vm_ip:?}" 100
-    CHECK_RESULT $? 0 0 "ping vm failed" || exit 1
+    CHECK_RESULT $? 0 0 "ping vm failed"
 
     check_memlink_recycle "$vm_total" "$vm_used" "$used" "$max" "pass"
     CHECK_RESULT $? 0 0 "check memlink recycle failed"

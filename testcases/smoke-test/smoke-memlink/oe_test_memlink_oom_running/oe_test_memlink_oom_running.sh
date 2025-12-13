@@ -32,18 +32,18 @@ function run_test() {
     vm_name="2u2g_memlink_balloon"
 
     create_vm_waiting_running "$vm_name"
-    CHECK_RESULT $? 0 0 "create vm failed" || exit 1
+    CHECK_RESULT $? 0 0 "create vm failed"
 
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp"
     expect "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp" "$vm_name"
     wait_exec "ping -c 3 ${vm_ip:?}" 100
-    CHECK_RESULT $? 0 0 "ping vm failed" || exit 1
+    CHECK_RESULT $? 0 0 "ping vm failed"
 
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_memory.sh"
     sh "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_memory.sh" "$vm_name" "4"
 
     wait_exec "ping -c 3 ${vm_ip:?}" 100
-    CHECK_RESULT $? 0 0 "ping vm failed" || exit 1
+    CHECK_RESULT $? 0 0 "ping vm failed"
 
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/unset_memory.sh"
     sh "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/unset_memory.sh" "$vm_name"

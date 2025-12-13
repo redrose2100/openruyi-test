@@ -30,11 +30,11 @@ function run_test() {
     vm_name="2u2g_small_page"
 
     create_vm_waiting_running "$vm_name"
-    CHECK_RESULT $? 0 0 "create vm failed" || exit 1
+    CHECK_RESULT $? 0 0 "create vm failed"
 
     mig_vm "$vm_name" 2 "urma"
     check_vm_exist "$vm_name"
-    CHECK_RESULT $? 0 1 "check vm failed, vm should not exist in local: $vm_name" || exit 1
+    CHECK_RESULT $? 0 1 "check vm failed, vm should not exist in local: $vm_name"
 
     mig_vm_back "$vm_name" 2 "urma"
     check_vm_exist "$vm_name"

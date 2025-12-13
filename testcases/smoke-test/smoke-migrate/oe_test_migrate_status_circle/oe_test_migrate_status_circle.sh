@@ -31,20 +31,20 @@ function run_test() {
     vm_name="2u2g_huge_page"
 
     create_vm_waiting_running "$vm_name"
-    CHECK_RESULT $? 0 0 "create vm failed" || exit 1
+    CHECK_RESULT $? 0 0 "create vm failed"
 
     # migrate vm and cancel migrate
     mig_vm "$vm_name" 3 "urma" &
     pid=$!
     sleep 1
     virsh domjobabort "$vm_name"
-    CHECK_RESULT $? 0 0 "migrate cancel failed" || exit 1
+    CHECK_RESULT $? 0 0 "migrate cancel failed"
     wait "$pid"
 
     # migrate vm again
     mig_vm "$vm_name" 3 "urma"
     check_vm_exist "$vm_name"
-    CHECK_RESULT $? 0 1 "check vm failed, vm should not exist in local: $vm_name" || exit 1
+    CHECK_RESULT $? 0 1 "check vm failed, vm should not exist in local: $vm_name"
 
     # migrate vm back
     mig_vm_back "$vm_name" 2 "urma" "--onecopy"

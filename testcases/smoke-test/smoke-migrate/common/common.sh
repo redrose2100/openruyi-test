@@ -86,8 +86,7 @@ function pre_init() {
     # vm clean
     vm_clean "local"
     vm_clean "remote"
-    rm -rf /var/log/libvirt/libvirtd.log*
-    rm -rf /var/log/libvirt/qemu/*
+    rm -rf /var/log/libvirt/libvirtd.log*; rm -rf /var/log/libvirt/qemu/*
     SSH_CMD "rm -rf /var/log/libvirt/libvirtd.log*;
              rm -rf /var/log/libvirt/qemu/*" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
 }
@@ -104,11 +103,11 @@ function set_huge_mem() {
     local huge_2M="/sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages"
     if [ "${flag}" = "local" ]; then
         echo "$huge_size" > "$huge_2M"
-        sleep 10
+        SLEEP_WAIT 10
         output=$(grep HugePages_ /proc/meminfo)
     elif [ "${flag}" = "remote" ]; then
         SSH_CMD "echo $huge_size > $huge_2M" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
-        sleep 10
+        SLEEP_WAIT 10
         output=$(SSH_CMD "grep HugePages_ /proc/meminfo" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER")
     fi
     total_local=$(echo "$output" | grep "HugePages_Total:" | sed 's/\r//' | awk '{print int($2)}')
@@ -128,7 +127,7 @@ function wait_exec() {
     for ((i = 1; i <= count; i++)); do
         LOG_INFO "[$i] wait in cmd: ${cmd}..."
         eval "${cmd}" &> /dev/null && return 0
-        sleep 2
+        SLEEP_WAIT 2
     done
     LOG_WARN "${cmd} timeout failed"
     return 1
@@ -145,7 +144,7 @@ function create_vm_waiting_running() {
     sed -i "s|IMAGE_PATH|${qcow2_path}|g" "${xml_path}"
     LOG_INFO "vm xml save dir: $xml_path; image dir is: $qcow2_path"
     virsh create "$xml_path" || return 1
-    sleep 60
+    SLEEP_WAIT 60
     virsh list | grep -iq "$vm_name"
     return $?
 }
@@ -200,7 +199,7 @@ function check_vm_exist() {
 
 function destroy_vm() {
     local vm_name=$1
-    virsh destroy "$vm_name" && sleep 3
+    virsh destroy "$vm_name" && SLEEP_WAIT 3
     virsh undefine "$vm_name" --nvram
     virsh list --all
 }
@@ -208,6 +207,8 @@ function destroy_vm() {
 function post_clean() {
     vm_clean "local"
     vm_clean "remote"
+    setenforce 1
+    SSH_CMD "setenforce 1" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
 }
 
 function vm_sshx() {
@@ -268,13 +269,13 @@ function check_memlink_recycle() {
     # allocing 1G
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_memory.sh" || return 1
     sh "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_memory.sh" "$vm_name"
-    sleep 30
+    SLEEP_WAIT 30
     os_used_running="$(get_hugepage_used "local")"
     LOG_INFO "os_used_running: $os_used_running"
     # kill stress
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/unset_memory.sh"  || return 1
     sh "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/unset_memory.sh" "$vm_name"
-    sleep 80
+    SLEEP_WAIT 80
     os_used_free="$(get_hugepage_used "local")"
     LOG_INFO "os_used_free: $os_used_free"
     # check

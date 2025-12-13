@@ -32,23 +32,23 @@ function run_test() {
     vm_name="2u2g_memlink_balloon"
 
     create_vm_waiting_running "$vm_name"
-    CHECK_RESULT $? 0 0 "create vm failed" || exit 1
+    CHECK_RESULT $? 0 0 "create vm failed"
 
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_network.exp"
     expect "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_network.exp" "$vm_name"
     wait_exec "ping -c 3 ${vm_ip:?}" 100
-    CHECK_RESULT $? 0 0 "ping vm failed" || exit 1
+    CHECK_RESULT $? 0 0 "ping vm failed"
 
     mig_vm "$vm_name" 2 "urma"
     check_vm_exist "$vm_name"
-    CHECK_RESULT $? 0 1 "check vm failed, vm should not exist in local: $vm_name" || exit 1
+    CHECK_RESULT $? 0 1 "check vm failed, vm should not exist in local: $vm_name"
 
     mig_vm_back "$vm_name" 2 "urma"
     check_vm_exist "$vm_name"
-    CHECK_RESULT $? 0 0 "check vm failed, vm should exist in local: $vm_name" || exit 1
+    CHECK_RESULT $? 0 0 "check vm failed, vm should exist in local: $vm_name"
 
     wait_exec "ping -c 3 ${vm_ip:?}" 10
-    CHECK_RESULT $? 0 0 "ping vm failed" || exit 1
+    CHECK_RESULT $? 0 0 "ping vm failed"
 
     check_memlink_recycle "2" "1.5" "130" "50" "pass"
     CHECK_RESULT $? 0 0 "check memlink recycle failed"
