@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# shellcheck disable=SC1091,SC2034,SC2154
+# shellcheck disable=SC1091,SC2034,SC2154,AC2207
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
@@ -118,7 +118,7 @@ function get_eid(){
     
     # node1_cna=1
     # node2_cna=2
-    node1_cna=$(( $(cat /sys/devices/ub_bus_controller0/00001/primary_cna | tr -d '[:space:]') ))
+    node1_cna=$(( $(tr -d '[:space:]' < /sys/devices/ub_bus_controller0/00001/primary_cna) ))
     raw_output=$(SSH_CMD "cat /sys/devices/ub_bus_controller0/00001/primary_cna 2>/dev/null" \
         "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}")
         
@@ -198,19 +198,19 @@ function check_alarmd(){
     local tmp_alarm_msg_len="${2}"
     local is_reply="${3}"
     local tmp_reply_msg_len="${4}"
-    tmp_reply_id=$((expr "$tmp_alarm_id" + 1))
+    tmp_reply_id=$(( tmp_alarm_id + 1 ))
     if [[ "${tmp_alarm_msg_len}" == "no" ]]; then
         tmp_alarm_msg_len=".*"
     else
         tmp_alarm_msg_len="$(grep -aw 'Send msg success:' ${task_log_path}/sentry_msg_monitor.log | grep -w "${tmp_alarm_id}" | head -1 | awk -F'str:' '{print $2}' | sed 's/ //g' | wc -c)"
-        tmp_alarm_msg_len="$((expr "$tmp_alarm_msg_len" - 1))"
+        tmp_alarm_msg_len="$((expr tmp_alarm_msg_len - 1))"
     fi
 
     if [[ "${tmp_reply_msg_len}" == "no" ]]; then
         tmp_reply_msg_len=".*"
     else
         tmp_reply_msg_len="$(grep -aw 'Get msg:' ${task_log_path}/sentry_msg_monitor.log | grep -w "${tmp_reply_id}" | head -1 | awk -F'str:' '{print $2}' | sed 's/ //g' | wc -c)"
-        tmp_reply_msg_len="$(expr "$tmp_reply_msg_len" - 1)"
+        tmp_reply_msg_len="$((expr tmp_reply_msg_len - 1))"
     fi
     grep -aw "Broadcast msg success" ${task_log_path}/xalarm.log | grep "alarm msg is alarm_id: ${tmp_alarm_id}, alarm_level: MINOR_ALM, alarm_type: ALARM_TYPE_OCCUR"
     CHECK_RESULT $? 0 0
@@ -235,9 +235,9 @@ function check_oom_nid_info(){
     # nr_nid=$(echo "$tmp_nid_info" | grep -oP '(?<=nr_nid:)\d+')
     # tmp_nid_str=$(echo "$tmp_nid_info" | grep -oP '(?<=nid:\[)[^\]]+(?=)')
     nid_str=($(echo "${tmp_nid_str[@]}" | tr ',' ' '))
-    echo ${nid_str[@]:0:$(expr "$nr_nid")} | grep -v '\-1'
+    echo "${nid_str[@]:0:$((nr_nid))}" | grep -v '\-1'
     CHECK_RESULT $? 0 0
-    echo ${nid_str[@]:"$nr_nid":$(expr ${#nid_str[@]} - 1)} | xargs -n 1 | grep '\-1' | wc -l | grep "$(expr ${#nid_str[@]} - "$nr_nid")"
+    echo "${nid_str[@]:$nr_nid:$((${#nid_str[@]} - 1))}" | xargs -n 1 | grep -c '\-1' | grep "$((${#nid_str[@]} - nr_nid))"
     CHECK_RESULT $? 0 0
 }
 function check_log(){
@@ -270,14 +270,14 @@ function check_log(){
     timeout=$([ "$reply_type" -eq 2 ] && echo 100 || echo 50)
     sleep "$timeout"
     cat "$log_file"
-    alarm_count=$(grep -a "$grep_alarm" "$log_file" | wc -l)
-    send_ack=$(grep -a "$grep_ack" "$log_file" | wc -l)
+    alarm_count=$(grep -ac "$grep_alarm" "$log_file")
+    send_ack=$(grep -ac "$grep_ack" "$log_file")
 
-    test $alarm_count -ge 1
+    test "$alarm_count" -ge 1
     CHECK_RESULT $? 0 0
 
-    if [ "$log_type" != "RA" -a "$reply_type" = "0" ]; then     
-        test $send_ack -ge 1
+    if [ "$log_type" != "RA" ] && [ "$reply_type" = "0" ]; then
+        test "$send_ack" -ge 1
         CHECK_RESULT $? 0 0
     fi
 }

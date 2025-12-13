@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# shellcheck disable=SC1091,SC2034,SC2004,SC2145
+# shellcheck disable=SC1091,SC2034,SC2004,SC2154
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
 # THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
