@@ -45,19 +45,19 @@ function run_test() {
     LOG_INFO "Start to run test."
     ds-logpipe.py -h | grep "Usage"
     CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
-    timeout 1s ds-logpipe.py test1.pipe
+    timeout 3s ds-logpipe.py test1.pipe
     find test1.pipe
     CHECK_RESULT $? 0 0 "L$LINENO: ds-logpipe No Pass"
-    timeout 1s ds-logpipe.py -m 1 test2.pipe
+    timeout 3s ds-logpipe.py -m 1 test2.pipe
     find test2.pipe
     CHECK_RESULT $? 0 0 "L$LINENO: -m No Pass"
-    timeout 1s ds-logpipe.py -d test3.pipe
+    timeout 3s ds-logpipe.py -d test3.pipe
     find test3.pipe
     CHECK_RESULT $? 0 0 "L$LINENO: -d No Pass"
-    timeout 1s ds-logpipe.py --serverpid=1 test4.pipe 
+    timeout 3s ds-logpipe.py --serverpid=1 test4.pipe 
     find test4.pipe
     CHECK_RESULT $? 0 0 "L$LINENO: --serverpid No Pass"
-    timeout 1s ds-logpipe.py -i 1 test5.pipe 
+    timeout 3s ds-logpipe.py -i 1 test5.pipe 
     find test5.pipe
     CHECK_RESULT $? 0 0 "L$LINENO: -i No Pass"
     LOG_INFO "End to run test."

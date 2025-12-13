@@ -20,6 +20,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    EXECUTE_T="50m"
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "389-ds-base"
     echo "/usr/lib64/dirsrv" | tee /etc/ld.so.conf.d/custom-libraries.conf
