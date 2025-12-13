@@ -123,7 +123,7 @@ function get_eid(){
         "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}")
         
     hex_value=$(echo "$raw_output" | tr -d '[:space:]' | grep -oE '0x[0-9A-Fa-f]+')
-    node2_cna=$(( $hex_value ))
+    node2_cna=$(( hex_value ))
     node3_cna=3
     test_jetty_id=$((RANDOM % 1021 + 3))
 
@@ -203,14 +203,14 @@ function check_alarmd(){
         tmp_alarm_msg_len=".*"
     else
         tmp_alarm_msg_len="$(grep -aw 'Send msg success:' ${task_log_path}/sentry_msg_monitor.log | grep -w "${tmp_alarm_id}" | head -1 | awk -F'str:' '{print $2}' | sed 's/ //g' | wc -c)"
-        tmp_alarm_msg_len="$((expr tmp_alarm_msg_len - 1))"
+        tmp_alarm_msg_len=$((tmp_alarm_msg_len - 1))
     fi
 
     if [[ "${tmp_reply_msg_len}" == "no" ]]; then
         tmp_reply_msg_len=".*"
     else
         tmp_reply_msg_len="$(grep -aw 'Get msg:' ${task_log_path}/sentry_msg_monitor.log | grep -w "${tmp_reply_id}" | head -1 | awk -F'str:' '{print $2}' | sed 's/ //g' | wc -c)"
-        tmp_reply_msg_len="$((expr tmp_reply_msg_len - 1))"
+        tmp_reply_msg_len=$(( tmp_reply_msg_len - 1))
     fi
     grep -aw "Broadcast msg success" ${task_log_path}/xalarm.log | grep "alarm msg is alarm_id: ${tmp_alarm_id}, alarm_level: MINOR_ALM, alarm_type: ALARM_TYPE_OCCUR"
     CHECK_RESULT $? 0 0
