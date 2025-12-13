@@ -20,6 +20,7 @@ function pre_test(){
     pre_oom_env
 }
 function run_test(){
+    sentryctl set sentry_reporter --oom=on
     start_RA oom
     CHECK_RESULT $? 0 0
     echo 50000 | sudo tee /proc/sys/vm/nr_hugepages
