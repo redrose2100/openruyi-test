@@ -25,7 +25,7 @@ function run_test(){
     CHECK_RESULT $? 0 0
     echo 50000 | sudo tee /proc/sys/vm/nr_hugepages
 
-    check_oom_dmesg 0 0
+    check_oom_dmesg 1 1
     CHECK_RESULT $? 0 0
 
     check_RA_oom 1 1
