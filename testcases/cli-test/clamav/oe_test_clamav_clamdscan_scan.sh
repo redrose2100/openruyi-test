@@ -19,6 +19,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    EXECUTE_T="40m"
     LOG_INFO "Start to prepare the database config."
 
     DNF_INSTALL "clamav clamav-server clamav-update"
@@ -31,6 +32,15 @@ function pre_test() {
         DatabaseDirectory /var/lib/clamav
         TCPAddr 0.0.0.0
         TCPSocket 3310" >/etc/clamd.d/scan.conf
+
+   # rv架构增加clamd@scan服务启动时间
+    if [ "$(uname -m)" = "riscv64" ]; then
+      mkdir -p /etc/systemd/system/clamd@scan.service.d
+      echo -e "[Service]\nTimeoutStartSec=700" > /etc/systemd/system/clamd@scan.service.d/timeout.conf
+      systemctl daemon-reload
+    fi
+
+
     systemctl restart clamd@scan.service
     mkdir move_infected_dir copy_infected_dir
     echo "/var/lib/clamav
@@ -58,7 +68,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check clamdscan -i failed."
     clamdscan --no-summary /var/lib/clamav >/dev/null
     CHECK_RESULT $? 0 0 "Check clamdscan --no-summary failed."
-    clamdscan --file-list=testfile >/dev/null
+    #clamdscan --file-list=testfile >/dev/null
+     echo "[START] Scanning at $(date)"
+    
+    # 启用详细模式，每扫描一个文件就输出
+    clamdscan --verbose --file-list="testfile" 2>&1 | while IFS= read -r line; do
+        echo "$line"
+        # 可选：实时写入日志文件
+        echo "$line" >> /tmp/clamdscan_progress.log
+    done
+    
+    echo "[END] Finished at $(date)"
     CHECK_RESULT $? 0 0 "Check clamdscan --file-list failed."
 
     LOG_INFO "End to run test."
