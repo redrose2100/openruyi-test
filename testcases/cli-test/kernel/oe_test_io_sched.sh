@@ -22,9 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    disks=$(TEST_DISK "$@")
-    disk_list=("$disks")
-    local_disk=${disk_list[0]}
+    local_disk=$(TEST_DISK "$@" | head -n 1)
     default=$(< /sys/block/"${local_disk}"/queue/scheduler awk -F "[" '{print $2}' | awk -F "]" '{print $1}')
     LOG_INFO "End of environmental preparation!"
 }

@@ -16,12 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test kernel-mellanox drive（mlx4_core）
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    LOG_INFO "Nothing to do."
+    lsmod | grep mlx4_core
+    mlx4_core_status=$?
+    LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
@@ -35,7 +37,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Module not loaded"
     lsmod | grep mlx4_core
     CHECK_RESULT $? 0 0 "Module not loaded"
-    rmmod mlx4_core
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        rmmod mlx4_en
+        rmmod mlx4_ib
+        rmmod mlx4_core
+    else
+        rmmod mlx4_core
+    fi
     CHECK_RESULT $? 0 0 "Module uninstall failed"
     lsmod | grep mlx4_core
     CHECK_RESULT $? 1 0 "Module loaded"
@@ -44,7 +52,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
+    if [ ${mlx4_core_status} -eq 1 ];then
+        modprobe mlx4_core
+    fi
     LOG_INFO "End to restore the test environment."
 }
 
