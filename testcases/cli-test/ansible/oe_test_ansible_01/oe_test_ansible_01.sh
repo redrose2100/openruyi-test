@@ -17,6 +17,10 @@
 source ../common/common_lib.sh
 
 function pre_test() {
+    # 判断是否为 RISC-V 64 位架构
+    if [ "$(uname -m)" = "riscv64" ]; then
+        EXECUTE_T="60m"
+    fi
     LOG_INFO "Start to prepare the test environment."
     Pre_Test
     LOG_INFO "End to prepare the test environment."
