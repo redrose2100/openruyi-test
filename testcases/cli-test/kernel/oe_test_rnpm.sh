@@ -19,6 +19,15 @@
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    if [[ "${NODE1_FRAME}" != "x86_64" && "${NODE1_FRAME}" != "aarch64" ]]   ; then
+        LOG_INFO "The architecture don't support hinic"
+        exit 255
+    fi
+    LOG_INFO "Nothing to do."
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)
