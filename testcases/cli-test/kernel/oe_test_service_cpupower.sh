@@ -34,7 +34,7 @@ function run_test() {
         test_reload cpupower.service
     else
         LOG_INFO "The environment does not support testing"
-        exit 1
+        exit 255
     fi
     LOG_INFO "End to run test."
 }
