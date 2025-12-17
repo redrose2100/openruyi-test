@@ -20,6 +20,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "squashfs-tools"
     mkdir ./test_squashfs
     echo "helloworld" > ./test_squashfs/testfile
     LOG_INFO "Finish to prepare the database config."
@@ -42,6 +43,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     umount /mnt
     rm -rf ./test_squashfs.squashfs ./test_squashfs
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
