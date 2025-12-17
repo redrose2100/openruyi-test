@@ -36,7 +36,7 @@ function run_test() {
     # migrate vm and cancel migrate
     mig_vm "$vm_name" 3 "urma" &
     pid=$!
-    sleep 1
+    SLEEP_WAIT 1
     virsh domjobabort "$vm_name"
     CHECK_RESULT $? 0 0 "migrate cancel failed"
     wait "$pid"

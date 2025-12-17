@@ -33,67 +33,43 @@ BACKUP_DIR="/tmp/QEMU_tmp"
 MEMLINKD_CONFIG="/etc/memlinkd.conf"
 
 function vm_clean() {
-    local flag="${1:-local}"
-    if [ "${flag}" = "local" ]; then
-        virsh list --all --name | xargs -I {} virsh destroy {}
-        virsh list --all --name | xargs -I {} virsh undefine {} --nvram
-    elif [ "${flag}" = "remote" ]; then
-        SSH_CMD "virsh list --all --name | xargs -I {} virsh destroy {}" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
-        SSH_CMD "virsh list --all --name | xargs -I {} virsh undefine {} --nvram" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
-    fi
+    virsh list --all --name | xargs -I {} virsh destroy {}
+    virsh list --all --name | xargs -I {} virsh undefine {} --nvram
 }
 
 function pre_init() {
     # img pre
     mkdir -p "$image_dir"
-    SSH_CMD "mkdir -p $image_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
     if [ ! -f "$image_path" ]; then
         wget -N -O "$image_path".xz "$image_download_url" --timeout=30 --tries=1
         unxz "$image_path".xz
     fi
-    SSH_SCP "$image_path" "${NODE2_USER}@${NODE2_IPV4}:${image_dir}" "$NODE2_PASSWORD"
     # xml pre
     mkdir -p "$config_dir"
     cp -arvf ../config "$test_qemu_dir"
-    SSH_CMD "mkdir -p $config_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
-    SSH_SCP ../config "${NODE2_USER}@${NODE2_IPV4}:${test_qemu_dir}" "$NODE2_PASSWORD"
     mkdir -p "$BACKUP_DIR"
     # pkg pre
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/pkg_pre.sh"
     sh "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/pkg_pre.sh"
-    SSH_SCP "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/pkg_pre.sh" "${NODE2_USER}@${NODE2_IPV4}:${test_qemu_dir}" "$NODE2_PASSWORD"
-    SSH_CMD "sh ${test_qemu_dir}/pkg_pre.sh" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
     # net pre
     systemctl disable firewalld
-    SSH_CMD "systemctl disable firewalld" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
     sysctl -w kernel.numa_balancing=0
     echo 1 > /proc/sys/net/ipv4/ip_forward
     iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -j MASQUERADE
     iptables -A FORWARD -i QEMU_br0 -j ACCEPT
     iptables -A FORWARD -o QEMU_br0 -m state --state RELATED,ESTABLISHED -j ACCEPT
     iptables -L FORWARD -v -n
-    SSH_CMD "sysctl -w kernel.numa_balancing=0;
-             echo 1 > /proc/sys/net/ipv4/ip_forward;
-             iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -j MASQUERADE;
-             iptables -A FORWARD -i QEMU_br0 -j ACCEPT;
-             iptables -A FORWARD -o QEMU_br0 -m state --state RELATED,ESTABLISHED -j ACCEPT;
-             iptables -L FORWARD -v -n" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
     brctl addbr br0
     ifconfig br0 192.168.1.99/24 up
-    SSH_CMD "brctl addbr br0; ifconfig br0 192.168.1.100/24 up" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
     # config
     sysctl kernel.softlockup_panic | grep 0 || {
         sysctl kernel.softlockup_panic=0
         sysctl -p
     }
     setenforce 0
-    SSH_CMD "setenforce 0" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
     # vm clean
-    vm_clean "local"
-    vm_clean "remote"
+    vm_clean
     rm -rf /var/log/libvirt/libvirtd.log*; rm -rf /var/log/libvirt/qemu/*
-    SSH_CMD "rm -rf /var/log/libvirt/libvirtd.log*;
-             rm -rf /var/log/libvirt/qemu/*" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
 }
 
 function backup_cfg() {
@@ -117,18 +93,11 @@ function memlink_init() {
 
 function set_huge_mem() {
     local huge_size=$1
-    local flag="${2:-local}"
     local huge_2M="/sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages"
-    if [ "${flag}" = "local" ]; then
-        echo 3 > /proc/sys/vm/drop_caches
-        echo "$huge_size" > "$huge_2M"
-        SLEEP_WAIT 10
-        output=$(grep HugePages_ /proc/meminfo)
-    elif [ "${flag}" = "remote" ]; then
-        SSH_CMD "echo 3 > /proc/sys/vm/drop_caches; echo $huge_size > $huge_2M" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
-        SLEEP_WAIT 10
-        output=$(SSH_CMD "grep HugePages_ /proc/meminfo" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER")
-    fi
+    echo 3 > /proc/sys/vm/drop_caches
+    echo "$huge_size" > "$huge_2M"
+    SLEEP_WAIT 10
+    output=$(grep HugePages_ /proc/meminfo)
     total_local=$(echo "$output" | grep "HugePages_Total:" | sed 's/\r//' | awk '{print int($2)}')
     [ "$total_local" -ge "$huge_size" ] || LOG_WARN "set hugepage failed"
 }
@@ -261,10 +230,8 @@ function destroy_vm() {
 function memlink_post() {
     recover_cfg "$MEMLINKD_CONFIG"
     rm -rf "$BACKUP_DIR"
-    vm_clean "local"
-    vm_clean "remote"
+    vm_clean
     set_huge_mem 0
     set_huge_mem 0 "remote"
     setenforce 1
-    SSH_CMD "setenforce 1" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
 }

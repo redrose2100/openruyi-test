@@ -45,11 +45,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check vm ub failed"
 
     # suspend vm
-    virsh suspend "$vm_name" && sleep 5
+    virsh suspend "$vm_name" && SLEEP_WAIT 5
     CHECK_RESULT $? 0 0 "suspend vm failed"
 
     # resume vm
-    virsh resume "$vm_name" && sleep 5
+    virsh resume "$vm_name" && SLEEP_WAIT 5
     CHECK_RESULT $? 0 0 "resume vm failed"
     wait_exec "ping -c 3 ${vm_ip:?}" 30
     CHECK_RESULT $? 0 0 "ping vm failed"
@@ -57,7 +57,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check vm ub failed"
 
     # reboot vm
-    virsh reboot "$vm_name" && sleep 5
+    virsh reboot "$vm_name" && SLEEP_WAIT 5
     CHECK_RESULT $? 0 0 "reboot vm failed"
     wait_exec "ping -c 3 ${vm_ip:?}"
     CHECK_RESULT $? 0 0 "ping vm failed"
@@ -66,7 +66,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check vm ub failed"
 
     # internal reboot
-    vm_sshx "reboot" && sleep 5
+    vm_sshx "reboot" && SLEEP_WAIT 5
     CHECK_RESULT $? 0 0 "internal reboot failed"
     wait_exec "ping -c 3 ${vm_ip:?}"
     CHECK_RESULT $? 0 0 "ping vm failed"
@@ -75,7 +75,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check vm ub failed"
 
     # reset vm
-    virsh reset "$vm_name" && sleep 5
+    virsh reset "$vm_name" && SLEEP_WAIT 5
     CHECK_RESULT $? 0 0 "reset vm failed"
     wait_exec "ping -c 3 ${vm_ip:?}"
     CHECK_RESULT $? 0 0 "ping vm failed"
@@ -84,13 +84,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check vm ub failed"
 
     # shutdown vm
-    virsh shutdown "$vm_name" && sleep 5
+    virsh shutdown "$vm_name" && SLEEP_WAIT 5
     CHECK_RESULT $? 0 0 "shutdown vm failed"
     virsh list | grep "$vm_name"
     CHECK_RESULT $? 0 1 "check vm shutdown failed"
     
     # start vm again
-    virsh start "$vm_name" && sleep 5
+    virsh start "$vm_name" && SLEEP_WAIT 5
     CHECK_RESULT $? 0 0 "start vm failed"
     wait_exec "ping -c 3 ${vm_ip:?}"
     CHECK_RESULT $? 0 0 "ping vm failed"
