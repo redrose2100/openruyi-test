@@ -1,0 +1,42 @@
+{
+    "path": "${OET_PATH}/testcases/smoke-test/smoke-migrate",
+    "machine type": "physical",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_migrate_content_hugepage",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_migrate_memlink_balloon",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_migrate_memlink_fpr",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_migrate_mode_iterative",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_migrate_mode_onecopy",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_migrate_mode_tcp",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_migrate_status_circle",
+            "machine type": "physical",
+            "machine num": 2
+        }
+    ]
+}
