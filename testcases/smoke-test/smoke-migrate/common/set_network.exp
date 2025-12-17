@@ -1,0 +1,50 @@
+#!/usr/bin/expect
+
+set vm_name [lindex $argv 0]
+set username "root"
+set password "openEuler12#$"
+set timeout 60
+
+spawn virsh console $vm_name
+expect {
+    "Ctrl + ]" { send "\r" }
+    timeout { send "\r" }
+}
+
+expect {
+    "login:" { send "$username\r" }
+    timeout { send "\r" }
+}
+
+expect "Password:" { send "$password\r" }
+sleep 10
+
+expect "# " {
+    send "ip addr show eth0 | grep -q '192.168.1.101'\r"
+    expect "# "
+    send "echo $?\r"
+    expect {
+        -re "0\r\n.*# " {
+            send "echo 'IP 192.168.1.101 already exists on eth0, skipping configuration.'\r"
+            expect "# "
+        }
+        -re "1\r\n.*# " {
+            send "echo -e \"DEVICE=eth0\nBOOTPROTO=static\nONBOOT=yes\nIPADDR=192.168.1.101\nNETMASK=255.255.255.0\nGATEWAY=192.168.1.1\nDNS1=8.8.8.8\" > /etc/sysconfig/network-scripts/ifcfg-eth0\r"
+            expect "# "
+            send "sleep 20\r"
+            expect "# "
+            send "ip addr add 192.168.1.101/24 dev eth0; ip route add default via 192.168.1.1\r"
+            expect "# "
+            send "sleep 5\r"
+            expect "# "
+            send "ifconfig eth0\r"
+            expect "# "
+        }
+    }
+}
+
+send "\x1d"
+expect ">" {
+    send "c\r"
+    expect eof
+}
