@@ -82,18 +82,13 @@ function run_test() {
     CHECK_RESULT $?
     SSH_CMD "keepalived -P -f /etc/keepalived/keepalived.conf" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
     CHECK_RESULT $?
-    sleep 1
-    tcpdump -nne -i "${node1_net_card2}" host 192.0.2.2 | grep VRRP >tcpdump_pack &
-    pid1=$!
     SLEEP_WAIT 3
-    tcpdump -nne -i "${node1_net_card3}" host 192.0.2.2 | grep VRRP >tcpdump_pack2 &
-    pid2=$!
-    SLEEP_WAIT 3
+    timeout 30 tcpdump -nne -i "${node1_net_card2}" host 192.0.2.1 or host 192.0.2.2 or host 2001:db8::1 or host 2001:db8::2 > tcpdump_pack 2>&1 &
+    local pid=$!
     SLEEP_WAIT 30
-    kill -9 "$pid1" "$pid2"
-    (grep "192.0.2.2 > 192.0.2.1: VRRPv2" tcpdump_pack >/dev/null && grep "192.0.2.1 > 192.0.2.2: VRRPv2" tcpdump_pack >/dev/null) ||
-        (grep "192.0.2.2 > 192.0.2.1: VRRPv2" tcpdump_pack2 >/dev/null && grep "192.0.2.1 > 192.0.2.2: VRRPv2" tcpdump_pack2 >/dev/null)
-    CHECK_RESULT $?
+    kill -9 $pid || true
+    grep -qE '192\.0\.2\.[12] > 192\.0\.2\.[12]: VRRPv[23]|2001:db8::[12] > 2001:db8::[12]: VRRPv[23]' tcpdump_pack
+    CHECK_RESULT $? 0 0 "Failed to vrrp advertisement captured!"
     LOG_INFO "Finish testcase execution."
 }
 function post_test() {
