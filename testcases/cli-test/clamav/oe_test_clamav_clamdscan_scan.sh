@@ -19,7 +19,10 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    EXECUTE_T="40m"
+    # 判断是否为 RISC-V 64 位架构
+    if [ "$(uname -m)" = "riscv64" ]; then
+	        EXECUTE_T="120m"
+    fi
     LOG_INFO "Start to prepare the database config."
 
     DNF_INSTALL "clamav clamav-server clamav-update"
@@ -34,13 +37,11 @@ function pre_test() {
         TCPSocket 3310" >/etc/clamd.d/scan.conf
 
    # rv架构增加clamd@scan服务启动时间
-    if [ "$(uname -m)" = "riscv64" ]; then
+   if [ "$(uname -m)" = "riscv64" ]; then
       mkdir -p /etc/systemd/system/clamd@scan.service.d
       echo -e "[Service]\nTimeoutStartSec=700" > /etc/systemd/system/clamd@scan.service.d/timeout.conf
       systemctl daemon-reload
     fi
-
-
     systemctl restart clamd@scan.service
     mkdir move_infected_dir copy_infected_dir
     echo "/var/lib/clamav
@@ -68,17 +69,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check clamdscan -i failed."
     clamdscan --no-summary /var/lib/clamav >/dev/null
     CHECK_RESULT $? 0 0 "Check clamdscan --no-summary failed."
-    #clamdscan --file-list=testfile >/dev/null
-     echo "[START] Scanning at $(date)"
-    
-    # 启用详细模式，每扫描一个文件就输出
-    clamdscan --verbose --file-list="testfile" 2>&1 | while IFS= read -r line; do
-        echo "$line"
-        # 可选：实时写入日志文件
-        echo "$line" >> /tmp/clamdscan_progress.log
-    done
-    
-    echo "[END] Finished at $(date)"
+    clamdscan --file-list=testfile >/dev/null
     CHECK_RESULT $? 0 0 "Check clamdscan --file-list failed."
 
     LOG_INFO "End to run test."
@@ -86,10 +77,14 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-
+    systemctl stop clamd@scan.service
     rm -rf /etc/clamd.d/scan.conf clamdscan_log move_infected_dir copy_infected_dir testfile
     mv /etc/clamd.d/scan.conf.bak /etc/clamd.d/scan.conf
-    systemctl restart clamd@scan.service
+    # riscv restore server start time
+    if [ "$(uname -m)" = "riscv64" ]; then
+   	rm -rf /etc/systemd/system/clamd@scan.service.d
+   	systemctl daemon-reload
+    fi
     DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
