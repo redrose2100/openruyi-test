@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/cli-test/rsyslog",
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_rsyslog_abnormal_config"

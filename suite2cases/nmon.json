@@ -1,5 +1,6 @@
 {
         "path": "$OET_PATH/testcases/cli-test/nmon",
+        "add disk": [2],
         "cases": [
             {
                 "name": "oe_test_nmon_01"
