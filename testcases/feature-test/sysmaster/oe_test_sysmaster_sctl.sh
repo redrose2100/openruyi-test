@@ -15,52 +15,57 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   sysmaster sctl 命令测试
 # ############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "sysmaster" 2
-
+    
     SSH_CMD "dracut --omit 'systemd systemd-initrd systemd-networkd dracut-systemd' /boot/initrd_withoutsd.img" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "grubby --make-default --add-kernel=/boot/vmlinuz-$(uname -r) --copy-default --title='openEuler sysmaster' --args='init=/usr/lib/sysmaster/init' --initrd='/boot/initrd_withoutsd.img'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "systemctl reboot -f" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SLEEP_WAIT 120
-
+    REMOTE_REBOOT_WAIT 2 60
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-
+    
     SSH_CMD "grep init /proc/1/comm" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 0 "sysmaster init boot failed"
-
+    
     SSH_CMD "sctl start sshd.service" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 0 "sctl start sshd.service failed"
-
+    
     # SSH_CMD "sctl stop sshd.service" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     # CHECK_RESULT $? 0 0 "sctl stop sshd.service failed"
-
+    
     SSH_CMD "sctl restart sshd.service" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 0 "sctl restart sshd.service failed"
-
+    
     SLEEP_WAIT 5
     SSH_CMD "sctl status sshd.service" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $? 0 0 "sctl status sshd.service failed"
-
+    
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-
-    SSH_CMD "sudo grub2-mkconfig -o \$(find /boot/ -name grub.cfg)" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    
+    if [ "$NODE2_FRAME" == "x86_64" ];then
+        grub_cfg="/boot/grub2/grub.cfg"
+    else
+        grub_cfg="/boot/efi/EFI/openEuler/grub.cfg"
+    fi
+    SSH_CMD "sudo grub2-mkconfig -o ${grub_cfg}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "sudo rm /boot/initrd_withoutsd.img" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-
+    
     REMOTE_REBOOT 2 60
-
-    DNF_REMOVE 2 "$@"
+    
+    DNF_REMOVE 2
     LOG_INFO "Finish environment cleanup!"
 }
 
