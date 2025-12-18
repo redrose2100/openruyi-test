@@ -53,15 +53,10 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     SSH_CMD "sudo rm /etc/devmaster/rules.d/00-persist-storage.rules" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     
-    if [ "$NODE2_FRAME" == "x86_64" ];then
-        grub_cfg="/boot/grub2/grub.cfg"
-    else
-        grub_cfg="/boot/efi/EFI/openEuler/grub.cfg"
-    fi
-    SSH_CMD "sudo grub2-mkconfig -o ${grub_cfg}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "sudo grub2-mkconfig -o \$(find /boot/ -name grub.cfg)" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "sudo rm /boot/initrd_withoutsd.img" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     
-    REMOTE_REBOOT 2 60
+    REMOTE_REBOOT 2 120
     
     DNF_REMOVE 2
     LOG_INFO "Finish environment cleanup!"
