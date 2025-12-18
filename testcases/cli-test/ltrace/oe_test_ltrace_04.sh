@@ -40,7 +40,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to run command: ltrace -w"
     ltrace --where=1 ./tst 2>&1 | grep "> tst"
     CHECK_RESULT $? 0 0 "Failed to run command: ltrace --where"
-    ltrace -s 1 bash ls ./common 2>&1 | grep -m 1 "\"t\""
+    ltrace -s 1 ls ./common 2>&1 | grep -m 1 "\"t\""
     CHECK_RESULT $? 0 0 "Failed to run command: ltrace -s"
     LOG_INFO "End to run test."
 }
