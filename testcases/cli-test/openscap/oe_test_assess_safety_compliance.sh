@@ -17,7 +17,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Assess safety compliance for specific benchmarks
 # #############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -59,10 +59,11 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     SLEEP_WAIT 3
     DNF_REMOVE 2 "openscap scap-security-guide"
     rm -rf /tmp/remote_report.html /tmp/report.html
+    dnf install make python3-paramiko -y
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

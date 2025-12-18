@@ -1,16 +1,17 @@
 {
-  "path": "$OET_PATH/testcases/feature-test/sysmaster",
-  "cases": [
-    {
-      "name": "oe_test_sysmaster_docker"
-    },
-    {
-      "name": "oe_test_sysmaster_sctl",
-      "machine num": 2
-    },
-    {
-      "name": "oe_test_devmaster_devctl",
-      "machine num": 2
-    }
-  ]
+    "path": "$OET_PATH/testcases/feature-test/sysmaster",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_sysmaster_docker"
+        },
+        {
+            "name": "oe_test_sysmaster_sctl",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_devmaster_devctl",
+            "machine num": 2
+        }
+    ]
 }
