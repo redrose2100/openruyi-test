@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -14,7 +15,7 @@
 # @Desc      	:   the test of ltrace package
 ####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -40,15 +41,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to run command: ltrace -w"
     ltrace --where=1 ./tst 2>&1 | grep "> tst"
     CHECK_RESULT $? 0 0 "Failed to run command: ltrace --where"
-    ltrace -s 1 bash ls ./common 2>&1 | grep -m 1 "\"t\""
+    ltrace -s 1 ls ./common 2>&1 | grep -m 1 "\"t\""
     CHECK_RESULT $? 0 0 "Failed to run command: ltrace -s"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf *.log tst libtst.so
+    DNF_REMOVE "$@"
+    rm -rf ./*.log tst libtst.so
     LOG_INFO "End to restore the test environment."
 }
 
