@@ -14,11 +14,14 @@
 #@License   	:   Mulan PSL v2
 #@Desc          :   verification ansible's commnd
 #####################################
-source ../common/common_lib.sh
+# shellcheck disable=SC2034
+
+source "${OET_PATH}/testcases/cli-test/ansible/common/common_lib.sh"
 
 function pre_test() {
+    EXECUTE_T="60m"
     LOG_INFO "Start to prepare the test environment."
-    Pre_Test
+    Pre_Test ""
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -61,7 +64,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    Post_Test
+    Post_Test ""
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
