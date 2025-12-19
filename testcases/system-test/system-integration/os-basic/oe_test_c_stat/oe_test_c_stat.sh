@@ -16,14 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Use c_stat case
 # ############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2119
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    pwd=`pwd`
+    pwd=$(pwd)
     DNF_INSTALL gcc
-    mkdir c_stat_test && cd c_stat_test
+    mkdir c_stat_test && cd c_stat_test || exit
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -43,6 +43,7 @@ EOF
     cat > teststat.c << EOF
 #include<sys/stat.h>
 #include <stdio.h>
+void haha(struct stat *fileinfo);
 int main()
 {
 struct stat fileinfo;
@@ -58,16 +59,16 @@ EOF
     CHECK_RESULT $? 0 0 "Error,fail to create teststat"
     gcc -D_FILE_OFFSET_BITS=64 -o teststat64 teststat.c ./haha.so
     CHECK_RESULT $? 0 0 "Error,fail to create teststat64"
-    result=`./teststat`
+    result=$(./teststat)
     CHECK_RESULT $? 0 0 "Error,check the file teststat"
-    ./teststat64 | grep $result
+    ./teststat64 | grep "$result"
     CHECK_RESULT $? 0 0 "Error,check the file teststat64"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    cd $pwd && rm -rf c_stat_test/
+    cd "$pwd" && rm -rf c_stat_test/
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

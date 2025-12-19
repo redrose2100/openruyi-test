@@ -16,10 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Setting up the disk scheduler using Tuned(For physical machines only)
 # #############################################
-
-source ../common/disk_lib.sh
+# shellcheck disable=SC2119
+source "${OET_PATH}/testcases/system-test/system-integration/os-basic/common/disk_lib.sh"
 function config_params() {
     LOG_INFO "Start to config the test environment."
+    local_disk=""
     check_free_disk
     LOG_INFO "Start to config the test environment."
 }
@@ -49,6 +50,11 @@ include=my-profile_new
 [disk]
 devices_udev_regex=$ID_WWN
 elevator=mq-deadline" >/etc/tuned/my-profile/tuned.conf
+    if rpm -qa tuned | grep 2.24.1; then
+        test -d /etc/tuned/profiles || mkdir /etc/tuned/profiles
+        mv -f /etc/tuned/my-profile_new /etc/tuned/profiles
+        mv -f /etc/tuned/my-profile /etc/tuned/profiles
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -74,4 +80,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
