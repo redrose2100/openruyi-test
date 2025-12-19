@@ -7,9 +7,9 @@ function pre_test() {
     for nodeId in "${node_ids[@]}"; do
         read -ra result < <(install_rpm "$nodeId")
         rpm_install+=("${result[@]}")
-        echo "rpm_install: $rpm_install"
+        echo "rpm_install: ${rpm_install[*]}"
     done
-    echo "rpm_install: $rpm_install"
+    echo "rpm_install: ${rpm_install[*]}"
     LOG_INFO "End to prepare the test environment."
 }
 

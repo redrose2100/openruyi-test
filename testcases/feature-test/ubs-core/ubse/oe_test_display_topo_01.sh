@@ -14,7 +14,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    output=$(P_SSH_CMD --cmd "ubsectl display topo -t cpu" --node 1)
+    output=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl display topo -t cpu" --node 1)
     dict=$(echo "$output" | get_topo_by_cli)
     dict=$(echo "$dict" |jq 'map(. + { "peer_socket": .["peer-socket"] } | del(.["peer-socket"]))')
 

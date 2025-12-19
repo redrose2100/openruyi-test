@@ -37,7 +37,7 @@ function run_test(){
         exit 1
     fi
 
-    res1=$(P_SSH_CMD --cmd "ubsectl display memory -t borrow_detail" --node 1)
+    res1=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl display memory -t borrow_detail" --node 1)
     dict1=$(echo "$res1" | convert_cli_output_to_json)
     echo "Query result:$dict1"
     type=$(echo "$dict1"|grep -o '"type":"[^"]*"' | sed 's/"type":"\([^"]*\)"/\1/')

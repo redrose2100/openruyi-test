@@ -14,7 +14,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    output=$(P_SSH_CMD --cmd "ubsectl display cluster" --node 1)
+    output=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl display cluster" --node 1)
     dict=$(echo "$output" | convert_cli_output_to_json)
     dict=$(echo "$dict" |jq 'map(. + { "bonding_eid": .["bonding-eid"] } | del(.["bonding-eid"]))')
 

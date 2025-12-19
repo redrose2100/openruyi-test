@@ -13,7 +13,7 @@ function run_test(){
     res=$(start_ubse 1)
     echo "Start result:$res"
     sleep 120
-    res1=$(P_SSH_CMD --cmd "ubsectl check memory" --node 1)
+    res1=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl check memory" --node 1)
     dict=$(echo "$res1" | convert_cli_output_to_json)
     node_status=$(echo "$dict" | jq -r '.[] | select(.node == "-(2)") | .status')
     if [[ "$node_status" != "nok" ]];then
@@ -23,7 +23,7 @@ function run_test(){
     echo "Start result:$res2"
     sleep 300
     for i in {1..60};do
-        res3=$(P_SSH_CMD --cmd "ubsectl display cluster" --node 1)
+        res3=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl display cluster" --node 1)
         dict2=$(echo "$res3" | convert_cli_output_to_json)
         role_controller=$(echo "$dict2" | jq -r '.[] | select(.node == "controller(1)") | .role')
         role_node01=$(echo "$dict2" | jq -r '.[] | select(.node == "node01(2)") | .role')
@@ -33,7 +33,7 @@ function run_test(){
         fi
         sleep 5
     done
-    res4=$(P_SSH_CMD --cmd "ubsectl check memory" --node 1)
+    res4=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl check memory" --node 1)
     dict3=$(echo "$res4" | convert_cli_output_to_json)
     node_status1=$(echo "$dict3" | jq -r '.[] | select(.node == "node01(2)") | .status')
     if [[ "$node_status1" == "ok" ]];then

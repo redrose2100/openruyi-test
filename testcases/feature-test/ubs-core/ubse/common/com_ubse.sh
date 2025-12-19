@@ -1,5 +1,9 @@
+#!/usr/bin/bash
+
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
 ubse_script_dir="$OET_PATH/testcases/feature-test/ubs-core/ubse/common"
+
 function get_package(){
     local node1=$1
     files=("ubs-engine-1.0.0-1.aarch64.rpm" "ubs-engine-client-libs-1.0.0-1.aarch64.rpm" "ubs-engine-client-devel-1.0.0-1.aarch64.rpm" "python3-ubs-engine-1.0.0-1.noarch.rpm")
@@ -29,7 +33,7 @@ function get_version(){
 
 function install_rpm(){
     local node1=$1
-    return_values=()
+    local return_values=()
     return_info1=$(get_version "$node1" "ubs-engine")
     read -r version_ubse_engine release_ubse_engine <<< "$return_info1"
     if [ "$version_ubse_engine" = "false" ]; then
@@ -46,8 +50,8 @@ function install_rpm(){
         package2=$(get_package_name "$node1" "ubs-engine-client-libs") 
         P_SSH_CMD --cmd "rpm -ivh $package2" --node "$node1"
     fi
-    return_info2=$(get_version "$node1" "ubs-engine")
-    read -r version_ubse_engine_libs release_ubse_engine_libs <<< "$return_info1"
+    return_info2=$(get_version "$node1" "ubs-engine-client-libs")
+    read -r version_ubse_engine_libs release_ubse_engine_libs <<< "$return_info2"
     return_values+=("$version_ubse_engine_libs")
 
     return_info3=$(get_version "$node1" "ubs-engine-client-devel")
@@ -56,8 +60,8 @@ function install_rpm(){
         package3=$(get_package_name "$node1" "ubs-engine-client-devel") 
         P_SSH_CMD --cmd "rpm -ivh $package3" --node "$node1"
     fi
-    return_info3=$(get_version "$node1" "ubs-engine")
-    read -r version_ubse_engine_devel release_ubse_engine_devel <<< "$return_info1"
+    return_info3=$(get_version "$node1" "ubs-engine-client-devel")
+    read -r version_ubse_engine_devel release_ubse_engine_devel <<< "$return_info3"
     return_values+=("$version_ubse_engine_devel")
     echo "${return_values[@]}"
 }
@@ -101,9 +105,6 @@ function check_ubse_status(){
         if [ "$active" == "start" ] || [ "$active" == "restart" ]; then
             res=$(get_count "$nodeId" "started successfully")
         fi
-        if [ "$active" == "stop" ]; then
-            res=$(get_count "$nodeId" "Deactivated successfully")
-        fi
         if [ "$res" -ne "$count" ]; then
             echo "true"
             return 0
@@ -113,13 +114,30 @@ function check_ubse_status(){
     echo "false"
 } 
 
+function check_stop_status(){
+    local count1=$1
+    local count2=$2
+    local nodeId=$3
+    for i in $(seq 1 20); do
+        count3=$(get_count "$nodeId" "Failed with result 'timeout'")
+        count4=$(get_count "$nodeId" "Failed with result 'core-dump'")
+        if [ "$count3" -ne "$count1" ] || [ "$count4" -ne "$count2" ]; then
+            echo "false"
+            break
+        fi
+        sleep 3
+    done
+    echo "true"
+}
+
 function stop_ubse(){
     local nodeId=$1
     pid=$(get_ubse_pid "$nodeId")
     if [ "$pid" != "false" ]; then
-        count=$(get_count "$nodeId" "Deactivated successfully")
+        count1=$(get_count "$nodeId" "Failed with result 'timeout'")
+        count2=$(get_count "$nodeId" "Failed with result 'core-dump'")
         exec_service "$nodeId" "stop"
-        result=$(check_ubse_status "$nodeId" "stop" "$count")
+        result=$(check_stop_status "$count1" "$count2" "$nodeId")
         echo "$result"
     else
         echo "true"
@@ -137,6 +155,40 @@ function start_ubse(){
     fi
     pid=$(get_ubse_pid "$nodeId")
     echo $pid 
+}
+
+function display_node_role(){
+    local nodeId=$1
+    local role=$2
+    result=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl display cluster" --node "$nodeId")
+
+    info=$(echo "$result" | sed 's/-//g' | awk 'NF' | tr -s ' ')
+    extracted_date=$(awk 'NR>1 && $1 ~ /^[^$(]/ {print $1, $2}' <<< "$info")
+    declare -A node_role_dict
+    
+    while IFS= read -r line; do
+        nodeId_res=$(echo "$line" | awk -F'[()]' '{print $2}')
+        role_res=$(echo "$line" | awk '{print $2}')
+        if [ "$role_res" == "$role" ]; then 
+            echo "$nodeId_res"
+            return 0
+        fi
+    done <<< "$extracted_date"
+    echo "false"
+}
+
+function return_nodes_by_role(){
+    local nodeId=$1
+    for i in $(seq 1 60); do
+        masterId=$(display_node_role "$nodeId" "master")
+        standbyId=$(display_node_role "$nodeId" "standby")
+        if [ "$masterId" != "false" ] && [ "$standbyId" != "false" ]; then
+            echo "$masterId $standbyId"
+            return 0
+        fi
+        sleep 6
+    done
+    exit 1
 }
 
 function convert_cli_output_to_json(){
@@ -173,7 +225,7 @@ function convert_cli_output_to_json(){
 
 function check_memory() {
     local nodeId=$1
-    result=$(P_SSH_CMD --cmd "ubsectl check memory" --node "$nodeId")
+    result=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl check memory" --node "$nodeId")
     echo "$result"
 }
 
@@ -205,40 +257,6 @@ function mem_borrow_common() {
             '"
     result=$(P_SSH_CMD --node "${nodeId}" --cmd "${cmd_list}")
     echo "$result"
-}
-
-function display_node_role(){
-    local nodeId=$1
-    local role=$2
-    result=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl display cluster" --node "$nodeId")
-
-    info=$(echo "$result" | sed 's/-//g' | awk 'NF' | tr -s ' ')
-    extracted_date=$(awk 'NR>1 && $1 ~ /^[^$(]/ {print $1, $2}' <<< "$info")
-    declare -A node_role_dict
-    
-    while IFS= read -r line; do
-        nodeId_res=$(echo "$line" | awk -F'[()]' '{print $2}')
-        role_res=$(echo "$line" | awk '{print $2}')
-        if [ "$role_res" == "$role" ]; then 
-            echo "$nodeId_res"
-            return 0
-        fi
-    done <<< "$extracted_date"
-    echo "false"
-}
-
-function return_nodes_by_role(){
-    local nodeId=$1
-    for i in $(seq 1 60); do
-        masterId=$(display_node_role "$nodeId" "master")
-        standbyId=$(display_node_role "$nodeId" "standby")
-        if [ "$masterId" != "false" ] && [ "$standbyId" != "false" ]; then
-            echo "$masterId $standbyId"
-            return 0
-        fi
-        sleep 6
-    done
-    exit 1
 }
 
 

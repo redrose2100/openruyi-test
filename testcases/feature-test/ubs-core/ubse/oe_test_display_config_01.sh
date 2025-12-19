@@ -15,7 +15,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    output=$(P_SSH_CMD --cmd "ubsectl display memory -t config" --node 1)
+    output=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl display memory -t config" --node 1)
     dict=$(echo "$output" | convert_cli_output_to_json)
 
     node2_slot_id=($(get_slot_id 2))

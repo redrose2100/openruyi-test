@@ -33,7 +33,7 @@ function convert_cli_output_to_json(){
 
 function get_slot_id(){
     local node=$1
-    lcne_return=$(echo "$(P_SSH_CMD --cmd 'curl -X GET "http://127.0.0.1:34256/restconf/data/huawei-vbussw-service:vbussw-service/die-infos"'\
+    lcne_return=$(echo "$(P_SSH_CMD --cmd 'curl -X GET "http://127.0.0.1:34256/restconf/data/huawei-vbussw-service:vbussw-service/iou-infos"'\
       --node $node)" | grep '<slot-id>')
       nodeId=$(echo "$lcne_return" | awk -F'[<>]' 'NR==1 {print $3}')
       echo $nodeId

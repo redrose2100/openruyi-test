@@ -14,7 +14,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    output=$(P_SSH_CMD --cmd "ubsectl display memory -t numa_status" --node 1)
+    output=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl display memory -t numa_status" --node 1)
     dict=$(echo "$output" | convert_cli_output_to_json)
     total_free_mem1=$(echo "$dict" |jq -c 'group_by(.node) | map({node: .[0].node, total:map(.total | tonumber) | add})')
     total_free_mem1=$(echo "$total_free_mem1" | jq 'map(.total |= tostring)')

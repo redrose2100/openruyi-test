@@ -36,7 +36,7 @@ function run_test(){
     else
         exit 1
     fi
-    res1=$(P_SSH_CMD --cmd "ubsectl display memory -t node_borrow" --node 1)
+    res1=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl display memory -t node_borrow" --node 1)
     dict1=$(echo "$res1" | convert_cli_output_to_json)
     lend_node=$(echo "$dict1"|grep -o '"lend":"[^"]*"' | sed 's/"lend":"\([^"]*\)"/\1/')
     size=$(echo "$dict1"|grep -o '"size":"[^"]*"' | sed 's/"size":"\([^"]*\)"/\1/')
@@ -46,7 +46,7 @@ function run_test(){
     else
        exit 1
     fi
-    res2=$(P_SSH_CMD --cmd "ubsectl display memory -t node_borrow" --node 2)
+    res2=$(P_SSH_CMD --cmd "sudo -u ubse /usr/bin/ubsectl display memory -t node_borrow" --node 2)
     dict2=$(echo "$res2" | convert_cli_output_to_json)
     lend_node2=$(echo "$dict2"|grep -o '"lend":"[^"]*"' | sed 's/"lend":"\([^"]*\)"/\1/')
     size2=$(echo "$dict2"|grep -o '"size":"[^"]*"' | sed 's/"size":"\([^"]*\)"/\1/')

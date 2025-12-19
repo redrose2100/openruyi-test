@@ -7,6 +7,7 @@ function pre_test() {
         P_SSH_CMD --cmd "rpm -evh ubs-engine-client-devel" --node "$nodeId"
         P_SSH_CMD --cmd "rpm -evh ubs-engine-client-libs" --node "$nodeId"
         P_SSH_CMD --cmd "rpm -evh ubs-engine" --node "$nodeId"
+        P_SSH_CMD --cmd "yum install libboundscheck" --node "$nodeId"
     done
     LOG_INFO "End to prepare the test environment."
 }
