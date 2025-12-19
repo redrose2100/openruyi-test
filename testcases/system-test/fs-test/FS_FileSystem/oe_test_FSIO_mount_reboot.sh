@@ -60,7 +60,11 @@ function run_test() {
     ssh_cmd_node "df -iT | grep '${test_disk}'"
     CHECK_RESULT $? 0 0 "Check fs is mounted failed."
     ssh_cmd_node "reboot"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+    SLEEP_WAIT 180
+    else
     SLEEP_WAIT 60
+    fi
     ssh_cmd_node "df -iT | grep '${test_disk}'"
     CHECK_RESULT $? 1 0 "Check fs is mounted after reboot."
     LOG_INFO "End to run test."
@@ -85,7 +89,11 @@ d
 w
 diskEof"
     ssh_cmd_node "reboot"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+    SLEEP_WAIT 180
+    else
     SLEEP_WAIT 60
+    fi
     LOG_INFO "End to restore the test environment."
 }
 
