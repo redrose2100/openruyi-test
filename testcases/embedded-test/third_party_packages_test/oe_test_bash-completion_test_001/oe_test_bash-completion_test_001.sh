@@ -16,7 +16,8 @@
 #@Desc      	:   Run bash-completion testsuite
 #####################################
 # shellcheck disable=SC1091
-source ../comm_lib.sh
+source "${OET_PATH}"/testcases/embedded-test/common_libs/comm_lib.sh
+source "${OET_PATH}/testcases/embedded-test/common_libs/common.sh"
 
 # 测试点的执行
 function run_test() {
