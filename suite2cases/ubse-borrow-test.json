@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/feature-test/ubs-core/ubse",
+    "cases": [
+     {
+        "name": "oe_test_check_memory_01"
+     },
+     {
+        "name": "oe_test_display_borrow_detail_01"
+     },
+     {
+        "name": "oe_test_display_node_borrow_01"
+     }
+    ]
+}
