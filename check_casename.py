@@ -40,7 +40,7 @@ def check_testsuite():
 
 def find_case(case_name, check_path):
     find_path = []
-    if not os.path.exists(check_path):
+    if not os.path.isdir(check_path):
         return [-1]
 
     all_files = os.listdir(check_path)
