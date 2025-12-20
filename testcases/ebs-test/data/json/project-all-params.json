@@ -1,0 +1,67 @@
+ {
+      "lock": false,
+      "to_delete": false,
+      "users": {
+        "admin": "maintainer"
+      },
+      "emsx": "ems1",
+      "spec_branch": "master",
+      "build_targets": [
+        {
+          "os_variant": "openEuler:22.03-LTS-SP2",
+          "architecture": "aarch64",
+          "ground_projects": [
+
+          ],
+          "flags": {
+            "build": true,
+            "publish": true
+          }
+        },
+        {
+          "os_variant": "openEuler:22.03-LTS-SP1",
+          "architecture": "x86_64",
+          "ground_projects": [
+
+          ],
+          "flags": {
+            "build": true,
+            "publish": true
+          }
+        }
+      ],
+      "bootstrap_rpm_repo": [
+        {
+          "name": "everything",
+          "repo": "https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS/everything/"
+        }
+      ],
+      "my_specs": [
+        {
+          "spec_name": "python-flask",
+          "spec_url": "https://gitee.com/src-openeuler/python-flask.git",
+          "spec_branch": "",
+          "spec_description": ""
+        },
+        {
+          "spec_name": "bc",
+          "spec_url": "https://gitee.com/src-openeuler/bc.git",
+          "spec_branch": "",
+          "spec_description": ""
+        },
+        {
+          "spec_name": "pcs",
+          "spec_url": "https://gitee.com/src-openeuler/pcs.git",
+          "spec_branch": "",
+          "spec_description": ""
+        }
+      ],
+      "package_overrides": {
+        "ceph": {
+          "to_delete": true
+        }
+      },
+      "build_env_macros": "",
+      "description": ""
+}
+
