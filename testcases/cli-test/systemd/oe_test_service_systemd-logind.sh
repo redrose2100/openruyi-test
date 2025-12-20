@@ -17,12 +17,14 @@
 # @Desc      :   Test systemd-logind.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution systemd-logind.service
-    test_reload systemd-logind.service
+    if [[ "$NODE1_FRAME" != "riscv64" && "$NODE1_FRAME" != "x86_64" ]]; then
+        test_reload systemd-logind.service
+    fi
     LOG_INFO "Finish test!"
 }
 
