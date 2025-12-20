@@ -31,7 +31,7 @@ function pre_test() {
         echo -e "t\n\nfd\nw\n" | fdisk /dev/${local_disk}
         echo -e "n\ne\n\n\n+5G\nn\nl\n\n\nw\n" | fdisk /dev/${local_disk1}
         echo -e "t\n\nfd\nw\n" | fdisk /dev/${local_disk1}
-        mdadm -Cv /dev/md0 -l5 -n2 /dev/${local_disk}5 /dev/${local_disk1}5
+        echo "yes" | mdadm -Cv /dev/md0 -l5 -n2 /dev/${local_disk}5 /dev/${local_disk1}5
         mdadm -D /dev/md0 | grep /dev/${local_disk}5 
         CHECK_RESULT $? 0 0 "check mdadm state failed"
     fi
