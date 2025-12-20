@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_libgit2"
+        },
+        {
+            "name": "oe_test_libgit2_operate_repo"
         }
     ]
 }
