@@ -44,7 +44,7 @@ EOF
                 }
         }
         expect {
-                "assword:" {
+                "password:" {
                 send "${password}\r"
                 }
         }
