@@ -16,7 +16,9 @@
 #@Desc      	:   Run gzip testsuite
 #####################################
 # shellcheck disable=SC1091,SC2010
-source ../comm_lib.sh
+source "${OET_PATH}/testcases/embedded-test/common_libs/comm_lib.sh"
+source "${OET_PATH}/testcases/embedded-test/common_libs/common.sh"
+
 
 # 测试点的执行
 function run_test() {
