@@ -17,7 +17,7 @@
 #####################################
 # shellcheck disable=SC1091
 
-source ../common_lib/fsio_lib.sh
+source ../../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
