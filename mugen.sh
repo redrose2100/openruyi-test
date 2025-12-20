@@ -171,10 +171,10 @@ function exec_case() {
     exec 2>&7 7>&-
 
     test "$ret_code"x == "143"x && {
-        cmd_pid=$(pgrep -f "$cmd")
+        cmd_pid=$(pstree -p "$$" | grep -o '([0-9]*)' | tr -d '()' | grep -v "$$")
         if [ -n "$cmd_pid" ]; then
             for pid in ${cmd_pid}; do
-                pstree -p "$pid" | grep -o '([0-9]*)' | tr -d '()' | xargs kill -9
+                kill -9 $pid
             done
         fi
         LOG_WARN "The case execution timeout."
