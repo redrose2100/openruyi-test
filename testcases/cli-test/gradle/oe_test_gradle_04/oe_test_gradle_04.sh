@@ -32,6 +32,7 @@ function run_test() {
     send "yes\n"
     expect eof
 END
+    SLEEP_WAIT 10
     grep "BUILD SUCCESSFUL" gradle_log
     CHECK_RESULT $? 0 0 "Check gradle base --scan failed"
     gradle build | grep "BUILD SUCCESSFUL"
