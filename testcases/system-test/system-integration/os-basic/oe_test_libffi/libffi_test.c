@@ -15,9 +15,9 @@ int main()
                        &ffi_type_sint, args) == FFI_OK)
     {
       s = "Hello World!";
-      ffi_call(&cif, puts, &rc, values);
+      ffi_call(&cif, (void (*)(void))puts, &rc, values);
       s = "This is cool!";
-      ffi_call(&cif, puts, &rc, values);
+      ffi_call(&cif, (void (*)(void))puts, &rc, values);
     }
   return 0;
 }

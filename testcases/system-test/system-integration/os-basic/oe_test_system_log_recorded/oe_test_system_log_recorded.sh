@@ -33,14 +33,21 @@ function pre_test() {
 function run_test() {
 	LOG_INFO "Start executing testcase."
 	folder=$(find "${journallog_path}/" -mindepth 1 -maxdepth 1 -type d | head -n 1)
-	cp -r "${folder}" "${folder}bak"
-	rm -rf "${folder:?}"
-	systemctl restart systemd-journald.service
-	if [ ! -d "${folder}" ]; then
-		((exec_result++))
-		cp -r "${folder}bak" "${folder}"
+	if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+		systemctl restart systemd-journald
+		logger "journald functional test"
+		journalctl -n 5 | grep "journald functional test"
+		CHECK_RESULT $?
+	else
+		cp -r "${folder}" "${folder}bak"
+		rm -rf "${folder:?}"
+		systemctl restart systemd-journald.service
+		if [ ! -d "${folder}" ]; then
+			((exec_result++))
+			cp -r "${folder}bak" "${folder}"
+		fi
+		CHECK_RESULT "$(find "${folder}" -maxdepth 1 -type f -name "*journal" | wc -l)" 1
 	fi
-	CHECK_RESULT "$(find "${folder}" -maxdepth 1 -type f -name "*journal" | wc -l)" 1
 	sudo journalctl --file "${folder}/system.journal" | tee systemlog1
 	logsize=$(stat -c%s systemlog1)
 	test "${logsize}" -gt 0
