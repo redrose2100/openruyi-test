@@ -16,7 +16,8 @@
 #@Desc      	:   Run sed testsuite
 #####################################
 # shellcheck disable=SC1091,SC2155
-source ../comm_lib.sh
+source "${OET_PATH}"/testcases/embedded-test/common_libs/comm_lib.sh
+source "${OET_PATH}/testcases/embedded-test/common_libs/common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
