@@ -38,13 +38,30 @@ def get_test_nic(node=1):
     Returns:
         [str]: 网卡名
     """
-    exitcode, tmpfile = rpm_manage.rpm_install(pkgs="lshw", node=node)
-    if exitcode != 0:
-        mugen_log.logging(
-            "error",
-            "Failed to install the dependent software package required to obtain the network card.",
-        )
-        sys.exit(exitcode)
+#    exitcode, tmpfile = rpm_manage.rpm_install(pkgs="lshw", node=node)
+#    if exitcode != 0:
+#        mugen_log.logging(
+#            "error",
+#            "Failed to install the dependent software package required to obtain the network card.",
+#        )
+#        sys.exit(exitcode)
+
+exitcode_check = rpm_manage.rpm_check_installed("lshw", node=node)
+
+    # 如果没有安装，则执行安装操作
+    if exitcode_check != 0:
+        exitcode, tmpfile = rpm_manage.rpm_install(pkgs="lshw", node=node)
+        if exitcode != 0:
+            mugen_log.logging(
+                "error",
+                "Failed to install the dependent software package required to obtain the network card.",
+            )
+            sys.exit(exitcode)
+
+        if tmpfile is not None:
+            rpm_manage.rpm_remove(node=node, tmpfile=tmpfile)
+    else:
+        mugen_log.logging("info", "lshw is already installed, skipping installation.")
 
     if os.environ.get("NODE" + str(node) + "_LOCALTION") == "local":
         dev_info = subprocess.getoutput("cat /proc/device-tree/model")
@@ -90,8 +107,8 @@ def get_test_nic(node=1):
 
         ssh_cmd.pssh_close(conn)
 
-    if tmpfile is not None:
-        rpm_manage.rpm_remove(node=node, tmpfile=tmpfile)
+#    if tmpfile is not None:
+#        rpm_manage.rpm_remove(node=node, tmpfile=tmpfile)
 
     return output
 
