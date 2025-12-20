@@ -168,6 +168,37 @@ def rpm_remove(node=1, pkgs="", tmpfile=""):
         ssh_cmd.pssh_close(conn)
     return exitcode
 
+def rpm_check(node=1, pkgs=""):
+    """检测软件包是否安装
+
+    Args:
+        pkgs ([str]): 软包包名，"bc" or "bc vim"
+        node (int, optional): 节点号. Defaults to 1.
+
+    Returns:
+        [boolean]: 是否安装
+    """
+    if pkgs == "":
+        mugen_log.logging("error", "the following arguments are required:pkgs")
+        sys.exit(1)
+
+    localtion = os.environ.get("NODE" + str(node) + "_LOCALTION")
+    if localtion == "local":
+        conn = None
+        func = local_cmd
+    else:
+        conn = ssh_cmd.pssh_conn(
+            os.environ.get("NODE" + str(node) + "_IPV4"),
+            os.environ.get("NODE" + str(node) + "_PASSWORD"),
+            os.environ.get("NODE" + str(node) + "_SSH_PORT"),
+            os.environ.get("NODE" + str(node) + "_USER"),
+        )
+        func = ssh_cmd.pssh_cmd
+
+    exitcode = func(conn=conn, cmd="which " + pkgs)[0]
+    if localtion != "local":
+        ssh_cmd.pssh_close(conn)
+    return exitcode == 0
 
 if __name__ == "__main__":
 
