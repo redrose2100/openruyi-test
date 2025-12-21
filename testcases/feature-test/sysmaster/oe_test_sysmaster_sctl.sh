@@ -22,11 +22,13 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "sysmaster" 2
     
-    SSH_CMD "dracut --omit 'systemd systemd-initrd systemd-networkd dracut-systemd' /boot/initrd_withoutsd.img" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SSH_CMD "grubby --make-default --add-kernel=/boot/vmlinuz-$(uname -r) --copy-default --title='openEuler sysmaster' --args='init=/usr/lib/sysmaster/init' --initrd='/boot/initrd_withoutsd.img'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    # dracut cost too much time, may timeout
+    # SSH_CMD "dracut --omit 'systemd systemd-initrd systemd-networkd dracut-systemd' /boot/initrd_withoutsd.img" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    # grubby use openEuler/grub.cfg, but EFI use grub2/grub.cfg
+    SSH_CMD "grubby --make-default --config-file=/boot/grub2/grub.cfg --add-kernel=/boot/vmlinuz-$(uname -r) --copy-default --title='openEuler sysmaster' --args='init=/usr/lib/sysmaster/init' --initrd='/boot/initrd_withoutsd.img'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "systemctl reboot -f" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SLEEP_WAIT 120
-    REMOTE_REBOOT_WAIT 2 60
+    SLEEP_WAIT 240
+    # REMOTE_REBOOT_WAIT 2 60
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -58,7 +60,8 @@ function post_test() {
     SSH_CMD "sudo grub2-mkconfig -o \$(find /boot/ -name grub.cfg)" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "sudo rm /boot/initrd_withoutsd.img" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     
-    REMOTE_REBOOT 2 120
+    SLEEP_WAIT 240
+    # REMOTE_REBOOT 2 120
     
     DNF_REMOVE 2
     LOG_INFO "Finish environment cleanup!"
