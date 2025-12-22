@@ -3,17 +3,20 @@
     "add network interface": 1,
     "cases": [
         {
-            "name": "oe_test_act_nonexist_nic"
+            "name": "oe_test_act_nonexist_nic",
+            "add network interface": 0
         },
         {
-            "name": "oe_test_add_mac_failed"
+            "name": "oe_test_add_mac_failed",
+            "add network interface": 0
         },
         {
-            "name": "oe_test_bridge_nonexist_nic"
+            "name": "oe_test_bridge_nonexist_nic",
+            "add network interface": 0
         },
         {
             "name": "oe_test_modify_mac_failed",
-	    "add network interface": 1
+            "add network interface": 1
         }
     ]
 }
