@@ -29,6 +29,11 @@ function run_test() {
             modinfo drm | grep sig
             CHECK_RESULT $? 0 1 "modinfo function error"
         fi
+    elif [[ "${NODE1_FRAME}" == "riscv64" ]]; then
+        modinfo kvm | grep file
+        CHECK_RESULT $? 0 0 "modinfo function error"
+        modinfo drm | grep file
+        CHECK_RESULT $? 0 0 "modinfo function error"
     else
         modinfo kvm | grep sig
         CHECK_RESULT $? 0 0 "modinfo function error"

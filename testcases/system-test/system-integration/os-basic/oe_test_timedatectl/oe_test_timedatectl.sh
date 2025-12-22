@@ -17,7 +17,7 @@
 # @Desc      :   Use the timedatectl command to set the time
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     time=$(date "+%Y-%m-%d %H:%M:%S")
@@ -38,14 +38,14 @@ function run_test() {
     SLEEP_WAIT 5
     timedatectl set-time '2019-08-14'
     CHECK_RESULT $?
-    timedatectl | grep "Local time" | grep "2019-08-14"
+    date +%Y-%m-%d | grep "2019-08-14"
     CHECK_RESULT $?
     timedatectl set-time 15:00:00
     CHECK_RESULT $?
     timedatectl | grep "Local time" | grep "15:00"
     CHECK_RESULT $?
-    ret=$(timedatectl list-timezones | grep Asia | wc -l)
-    CHECK_RESULT $ret 0 1
+    ret=$(timedatectl list-timezones | grep -c Asia)
+    CHECK_RESULT "$ret" 0 1
     timedatectl set-timezone Asia/Beijing
     timedatectl | grep "Asia\/Beijing"
     CHECK_RESULT $?

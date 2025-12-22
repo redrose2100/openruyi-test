@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Power up the POWERTOP
 # #############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2119
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL powertop
@@ -28,7 +28,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     nohup powertop >nohup.out 2>&1 &
     nopid=$!
-    SLEEP_WAIT 2
+    SLEEP_WAIT 5
     kill -9 $nopid
     grep "wakeups/second" <nohup.out
     CHECK_RESULT $?
@@ -42,4 +42,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

@@ -17,7 +17,18 @@
 # @Desc      :   KDUMP configuration
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL kexec-tools
+    if ! grep -q "crashkernel=" /proc/cmdline; then
+        LOG_WARN "Skip this testcase: crashkernel parameter is not configured in kernel cmdline"
+	    exit 255
+    fi
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase."
     rpm -q kexec-tools
@@ -42,4 +53,4 @@ function post_test() {
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
