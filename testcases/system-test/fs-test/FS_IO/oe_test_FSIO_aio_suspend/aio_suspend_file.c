@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 {
     struct aiocb wr;
     bzero(&wr, sizeof(wr));
-    struct aiocb *aiocb_list[2];
+    const struct aiocb *aiocb_list[2];
     bzero(&aiocb_list, sizeof(aiocb_list));
 
     char *filename;
