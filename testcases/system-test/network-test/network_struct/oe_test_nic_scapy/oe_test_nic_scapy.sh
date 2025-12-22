@@ -15,12 +15,13 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Use scapy to
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    pip3 install scapy
+    pip3 install scapy -i https://mirrors.aliyun.com/pypi/simple
     LOG_INFO "End to prepare the test environment."
 }
 
