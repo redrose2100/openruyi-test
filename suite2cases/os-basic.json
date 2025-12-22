@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/system-test/system-integration/os-basic",
+    "machine num": 2,
     "machine type": "kvm",
     "add network interface": 2,
     "add disk": [
@@ -8,393 +9,728 @@
         2,
         2
     ],
-    "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_enable_hugepage"
+            "name": "oe_test_enable_hugepage",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_cht_client_mode"
+            "name": "oe_test_cht_client_mode",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_cht_ordinary_mode"
+            "name": "oe_test_cht_ordinary_mode",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_who"
+            "name": "oe_test_who",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_dircolors"
+            "name": "oe_test_dircolors",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_factor"
+            "name": "oe_test_factor",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_csplit"
+            "name": "oe_test_csplit",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_expand"
+            "name": "oe_test_expand",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ctags"
+            "name": "oe_test_ctags",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_envsubst"
+            "name": "oe_test_envsubst",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_expr"
+            "name": "oe_test_expr",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_fold"
+            "name": "oe_test_fold",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_comm"
+            "name": "oe_test_comm",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_dc"
+            "name": "oe_test_dc",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_look"
+            "name": "oe_test_look",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_whereis"
+            "name": "oe_test_whereis",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_base32"
+            "name": "oe_test_base32",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_catman"
+            "name": "oe_test_catman",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_cal"
+            "name": "oe_test_cal",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_autoscan"
+            "name": "oe_test_autoscan",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_base64"
+            "name": "oe_test_base64",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_sha256sum"
+            "name": "oe_test_sha256sum",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_dmraid"
+            "name": "oe_test_dmraid",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_c++"
+            "name": "oe_test_c++",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_md5sum"
+            "name": "oe_test_md5sum",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_tail"
+            "name": "oe_test_tail",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_systool"
+            "name": "oe_test_systool",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_awk"
+            "name": "oe_test_awk",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_sdiff"
+            "name": "oe_test_sdiff",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_diff3"
+            "name": "oe_test_diff3",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_fuse"
+            "name": "oe_test_fuse",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zstd"
+            "name": "oe_test_zstd",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_auditctl"
+            "name": "oe_test_auditctl",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_accessdb"
+            "name": "oe_test_accessdb",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_cksum"
+            "name": "oe_test_cksum",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_paste"
+            "name": "oe_test_paste",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_chgrp"
+            "name": "oe_test_chgrp",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_cut"
+            "name": "oe_test_cut",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_bsdcat"
+            "name": "oe_test_bsdcat",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_b2sum"
+            "name": "oe_test_b2sum",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ulimit"
+            "name": "oe_test_ulimit",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_versioninfo"
+            "name": "oe_test_versioninfo",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_uname"
+            "name": "oe_test_uname",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_timedatectl"
+            "name": "oe_test_timedatectl",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_system_monitor_reboot",
-            "machine num": 2
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_system_monitor_process"
+            "name": "oe_test_system_monitor_process",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_system_monitor_login",
-            "machine num": 2
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_system_log_view"
+            "name": "oe_test_system_log_view",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_system_log_security"
+            "name": "oe_test_system_log_security",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_system_log_recorded"
+            "name": "oe_test_system_log_recorded",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_system_log_process"
+            "name": "oe_test_system_log_process",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_system_log_dmesg"
+            "name": "oe_test_system_log_dmesg",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_system_log_device"
+            "name": "oe_test_system_log_device",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_system_log_basic"
+            "name": "oe_test_system_log_basic",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_server_vsftpd_transfer",
             "machine num": 2,
+            "add network interface": 0,
             "add disk": [
                 2,
                 2
             ]
         },
         {
-            "name": "oe_test_server_vsftpd_restart"
+            "name": "oe_test_server_vsftpd_restart",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_server_vsftpd_NKdelay",
-            "machine num": 2
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_squid_proxy"
+            "name": "oe_test_server_squid_proxy",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_squid_ip"
+            "name": "oe_test_server_squid_ip",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_squid_blacklist"
+            "name": "oe_test_server_squid_blacklist",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_postgresql"
+            "name": "oe_test_server_postgresql",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_openssh_verifykey"
+            "name": "oe_test_server_openssh_verifykey",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_openssh_secure"
+            "name": "oe_test_server_openssh_secure",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_netscript_cfg"
+            "name": "oe_test_netscript_cfg",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_openssh_restart"
+            "name": "oe_test_server_openssh_restart",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_server_openssh_key",
-            "machine num": 2
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_mysql"
+            "name": "oe_test_server_mysql",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_mariadb_stop"
+            "name": "oe_test_server_mariadb_stop",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_mariadb_onlinebackup"
+            "name": "oe_test_server_mariadb_onlinebackup",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_mariadb_loadfile"
+            "name": "oe_test_server_mariadb_loadfile",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_server_mariadb_compatibilty",
             "machine num": 2,
-            "add network interface": 2
+            "add network interface": 2,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_mariadb_dumpMulDB"
+            "name": "oe_test_server_mariadb_dumpMulDB",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_mariadb_dump"
+            "name": "oe_test_server_mariadb_dump",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_mariadb_copy"
+            "name": "oe_test_server_mariadb_copy",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_mariadb_backuptable"
+            "name": "oe_test_server_mariadb_backuptable",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_mariadb_backupDB"
+            "name": "oe_test_server_mariadb_backupDB",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_mariadb_backup"
+            "name": "oe_test_server_mariadb_backup",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_httpd_tls"
+            "name": "oe_test_server_httpd_tls",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_httpd_restart"
+            "name": "oe_test_server_httpd_restart",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_httpd_recover"
+            "name": "oe_test_server_httpd_recover",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_httpd_port"
+            "name": "oe_test_server_httpd_port",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_httpd_checkfirewall"
+            "name": "oe_test_server_httpd_checkfirewall",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_git_install"
+            "name": "oe_test_server_git_install",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_sos"
+            "name": "oe_test_sos",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_reboot",
-            "machine num": 2
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_power_powertop_startup"
+            "name": "oe_test_power_powertop_startup",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_power_powertop_powerup"
+            "name": "oe_test_power_powertop_powerup",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_power_powertop_calibrate"
+            "name": "oe_test_power_powertop_calibrate",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_power_powertop2tuned_optimize"
+            "name": "oe_test_power_powertop2tuned_optimize",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_power_output_HTML"
+            "name": "oe_test_power_output_HTML",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_power_measurement_internal"
+            "name": "oe_test_power_measurement_internal",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_performance_monitor_pcp"
+            "name": "oe_test_performance_monitor_pcp",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_password_change"
+            "name": "oe_test_password_change",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_password_blank"
+            "name": "oe_test_password_blank",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_vlan",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_systemd_resolved",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_route",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_macsec",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_general",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_device",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_config_gw",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_config_connect",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_con_reload",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_cancel_auto",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_bridge",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_add_connect",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_Mgntconnect",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_nmcli_8023link",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
-            "name": "oe_test_USBinfo"
+            "name": "oe_test_USBinfo",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ProcMgmt_vmstat"
+            "name": "oe_test_ProcMgmt_vmstat",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ProcMgmt_top"
+            "name": "oe_test_ProcMgmt_top",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ProcMgmt_start_kill"
+            "name": "oe_test_ProcMgmt_start_kill",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ProcMgmt_sar"
+            "name": "oe_test_ProcMgmt_sar",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ProcMgmt_ps"
+            "name": "oe_test_ProcMgmt_ps",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ProcMgmt_pgrep"
+            "name": "oe_test_ProcMgmt_pgrep",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ProcMgmt_iostat"
+            "name": "oe_test_ProcMgmt_iostat",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ProcMgmt_crontab_cronfile"
+            "name": "oe_test_ProcMgmt_crontab_cronfile",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ProcMgmt_crontab_cmd"
+            "name": "oe_test_ProcMgmt_crontab_cmd",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ProcMgmt_at"
+            "name": "oe_test_ProcMgmt_at",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_disk_tuned_set",
+            "machine num": 1,
+            "add network interface": 0,
             "add disk": [
                 2,
                 2,
@@ -404,6 +740,8 @@
         },
         {
             "name": "oe_test_disk_schedule_specific",
+            "machine num": 1,
+            "add network interface": 0,
             "add disk": [
                 2,
                 2,
@@ -413,6 +751,8 @@
         },
         {
             "name": "oe_test_disk_schedule_udev",
+            "machine num": 1,
+            "add network interface": 0,
             "add disk": [
                 2,
                 2,
@@ -422,6 +762,8 @@
         },
         {
             "name": "oe_test_disk_tuned_new",
+            "machine num": 1,
+            "add network interface": 0,
             "add disk": [
                 2,
                 2,
@@ -431,6 +773,8 @@
         },
         {
             "name": "oe_test_disk_tuned_install",
+            "machine num": 1,
+            "add network interface": 0,
             "add disk": [
                 2,
                 2,
@@ -439,13 +783,21 @@
             ]
         },
         {
-            "name": "oe_test_date"
+            "name": "oe_test_date",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_cmd_su_user"
+            "name": "oe_test_cmd_su_user",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_disk_tuned_modify",
+            "machine num": 1,
+            "add network interface": 0,
             "add disk": [
                 2,
                 2,
@@ -455,6 +807,8 @@
         },
         {
             "name": "oe_test_disk_tuned_disable",
+            "machine num": 1,
+            "add network interface": 0,
             "add disk": [
                 2,
                 2,
@@ -464,658 +818,1271 @@
         },
         {
             "name": "oe_test_ethtool",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
-            "name": "oe_test_basic_create_group"
+            "name": "oe_test_basic_create_group",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_basic_modify_group"
+            "name": "oe_test_basic_modify_group",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_basic_modify_user"
+            "name": "oe_test_basic_modify_user",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_chrony_chronyc_cmd"
+            "name": "oe_test_chrony_chronyc_cmd",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_chrony_chronyc_hardwaretime"
+            "name": "oe_test_chrony_chronyc_hardwaretime",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_chrony_chronyc_ntpstat"
+            "name": "oe_test_chrony_chronyc_ntpstat",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_chrony_chronyd"
+            "name": "oe_test_chrony_chronyd",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_chrony_Manuall"
+            "name": "oe_test_chrony_Manuall",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_cmd_id"
+            "name": "oe_test_cmd_id",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_cmd_sudo"
+            "name": "oe_test_cmd_sudo",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_hwclock"
+            "name": "oe_test_hwclock",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_IOaccess_500Mfile"
+            "name": "oe_test_IOaccess_500Mfile",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_group_access"
+            "name": "oe_test_group_access",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_kernel_sysctl"
+            "name": "oe_test_kernel_sysctl",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_hostnamectl",
-            "machine num": 2
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_kernel_kdump"
+            "name": "oe_test_kernel_kdump",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_IOaccess_100Mfile"
+            "name": "oe_test_IOaccess_100Mfile",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_IOaccess_1Gfile"
+            "name": "oe_test_IOaccess_1Gfile",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_kernel_module_operation"
+            "name": "oe_test_kernel_module_operation",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_kernel_cgroup"
+            "name": "oe_test_kernel_cgroup",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_home_directory"
+            "name": "oe_test_home_directory",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_groupdel"
+            "name": "oe_test_groupdel",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_net_IPVLAN",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_net_setmode",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_net_scriprts",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_net_cmd_ifconfig",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_net_VRF",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
-            "name": "oe_test_localectl"
+            "name": "oe_test_localectl",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_man"
+            "name": "oe_test_man",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_net_cmd_scp",
             "machine num": 2,
-            "add network interface": 2
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_net_cmd_ping",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_net_conninfo_lsof",
-            "add network interface": 2
+            "machine num": 1,
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_net_config",
             "machine num": 2,
-            "add network interface": 2
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_net_cmd_telnet",
             "machine num": 2,
-            "add network interface": 2
+            "add network interface": 2,
+            "add disk": []
         },
         {
             "name": "oe_test_net_ncat",
             "machine num": 2,
-            "add network interface": 2
+            "add network interface": 2,
+            "add disk": []
         },
         {
-            "name": "oe_test_nmcli_set_bond"
+            "name": "oe_test_nmcli_set_bond",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_basic_UserMgmt_permission"
+            "name": "oe_test_basic_UserMgmt_permission",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_system_monitor_share_total",
+            "machine num": 1,
+            "add network interface": 0,
             "add disk": [
                 2
             ]
         },
         {
-            "name": "oe_test_disk_graphics_card"
+            "name": "oe_test_disk_graphics_card",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_nmcli_set_team"
+            "name": "oe_test_nmcli_set_team",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_basic_set_account_expiration_time"
+            "name": "oe_test_basic_set_account_expiration_time",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_basic_set_permissions"
+            "name": "oe_test_basic_set_permissions",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_patch"
+            "name": "oe_test_patch",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_exiv2"
+            "name": "oe_test_exiv2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_json-c"
+            "name": "oe_test_json-c",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_whoami"
+            "name": "oe_test_whoami",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lz4"
+            "name": "oe_test_lz4",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zlib"
+            "name": "oe_test_zlib",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_brotli"
+            "name": "oe_test_brotli",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_net_mtr"
+            "name": "oe_test_net_mtr",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_gsettings"
+            "name": "oe_test_gsettings",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_pcre_use"
+            "name": "oe_test_pcre_use",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ACL_dir"
+            "name": "oe_test_ACL_dir",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_du"
+            "name": "oe_test_du",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ar"
+            "name": "oe_test_ar",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_vim"
+            "name": "oe_test_vim",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_vim_001"
+            "name": "oe_test_vim_001",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_basename"
+            "name": "oe_test_basename",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_groff"
+            "name": "oe_test_groff",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_whatis"
+            "name": "oe_test_whatis",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_auditc_01"
+            "name": "oe_test_auditc_01",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_gmp"
+            "name": "oe_test_gmp",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_libffi"
+            "name": "oe_test_libffi",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_libunistring"
+            "name": "oe_test_libunistring",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_shred"
+            "name": "oe_test_shred",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
             "name": "oe_test_expect",
-            "machine num": 2
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_xmlsec"
+            "name": "oe_test_xmlsec",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_tcl"
+            "name": "oe_test_tcl",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_disk_io_sched"
+            "name": "oe_test_disk_io_sched",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lsusb"
+            "name": "oe_test_lsusb",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_last"
+            "name": "oe_test_last",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lastb"
+            "name": "oe_test_lastb",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_aureport"
+            "name": "oe_test_aureport",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_chsh"
+            "name": "oe_test_chsh",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lua"
+            "name": "oe_test_lua",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_fontconfig"
+            "name": "oe_test_server_fontconfig",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_libtasn1"
+            "name": "oe_test_server_libtasn1",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_count_gperftools_function"
+            "name": "oe_test_count_gperftools_function",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_split"
+            "name": "oe_test_split",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_popd_001"
+            "name": "oe_test_popd_001",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_glibc"
+            "name": "oe_test_glibc",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_cairo"
+            "name": "oe_test_cairo",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_c_stat"
+            "name": "oe_test_c_stat",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_chroot"
+            "name": "oe_test_chroot",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_history"
+            "name": "oe_test_history",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_virt-what"
+            "name": "oe_test_virt-what",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_gcc_01"
+            "name": "oe_test_gcc_01",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_locate_001"
+            "name": "oe_test_locate_001",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_bzcmp"
+            "name": "oe_test_bzcmp",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_unlink"
+            "name": "oe_test_unlink",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_xzcmp"
+            "name": "oe_test_xzcmp",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zgrep"
+            "name": "oe_test_zgrep",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_server_subversion"
+            "name": "oe_test_server_subversion",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_auditctl_02"
+            "name": "oe_test_auditctl_02",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_bunzip2"
+            "name": "oe_test_bunzip2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zipdetails"
+            "name": "oe_test_zipdetails",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zcat"
+            "name": "oe_test_zcat",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_libsecret"
+            "name": "oe_test_libsecret",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_namei"
+            "name": "oe_test_namei",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_rev"
+            "name": "oe_test_rev",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_uid_old_uid"
+            "name": "oe_test_uid_old_uid",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_python3-kmod"
+            "name": "oe_test_python3-kmod",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lsscsi_1"
+            "name": "oe_test_lsscsi_1",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_seq"
+            "name": "oe_test_seq",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lsscsi_2"
+            "name": "oe_test_lsscsi_2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_xargs"
+            "name": "oe_test_xargs",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lsscsi_3"
+            "name": "oe_test_lsscsi_3",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_uniq"
+            "name": "oe_test_uniq",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lsattr"
+            "name": "oe_test_lsattr",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_indent"
+            "name": "oe_test_indent",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_xzmore"
+            "name": "oe_test_xzmore",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_bzless"
+            "name": "oe_test_bzless",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_true"
+            "name": "oe_test_true",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_xzless"
+            "name": "oe_test_xzless",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zgrep_002"
+            "name": "oe_test_zgrep_002",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_fdupes"
+            "name": "oe_test_fdupes",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_enchant2"
+            "name": "oe_test_enchant2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_hexdump"
+            "name": "oe_test_hexdump",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_logsave"
+            "name": "oe_test_logsave",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_brotli_003"
+            "name": "oe_test_brotli_003",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_libidn"
+            "name": "oe_test_libidn",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ld"
+            "name": "oe_test_ld",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_dirname"
+            "name": "oe_test_dirname",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_tty"
+            "name": "oe_test_tty",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_get_module"
+            "name": "oe_test_get_module",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_gzexe"
+            "name": "oe_test_gzexe",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_strings"
+            "name": "oe_test_strings",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zramctl"
+            "name": "oe_test_zramctl",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_znew"
+            "name": "oe_test_znew",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zegrep"
+            "name": "oe_test_zegrep",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_arp"
+            "name": "oe_test_arp",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_strace"
+            "name": "oe_test_strace",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_tac"
+            "name": "oe_test_tac",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lshw"
+            "name": "oe_test_lshw",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_csplit_01"
+            "name": "oe_test_csplit_01",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zipnote"
+            "name": "oe_test_zipnote",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_join"
+            "name": "oe_test_join",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_genisoimage"
+            "name": "oe_test_genisoimage",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zfgrep"
+            "name": "oe_test_zfgrep",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_bzgrep"
+            "name": "oe_test_bzgrep",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ipcs"
+            "name": "oe_test_ipcs",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_nl"
+            "name": "oe_test_nl",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_nice"
+            "name": "oe_test_nice",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_libuv"
+            "name": "oe_test_libuv",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_systemd_analyze"
+            "name": "oe_test_systemd_analyze",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_readlink"
+            "name": "oe_test_readlink",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ul_001"
+            "name": "oe_test_ul_001",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lscpu"
+            "name": "oe_test_lscpu",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lsmem_1"
+            "name": "oe_test_lsmem_1",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_yumdownloader"
+            "name": "oe_test_yumdownloader",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lsmem_2"
+            "name": "oe_test_lsmem_2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_fallocate"
+            "name": "oe_test_fallocate",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_xzgrep"
+            "name": "oe_test_xzgrep",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_sfdisk"
+            "name": "oe_test_sfdisk",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lsmem_3"
+            "name": "oe_test_lsmem_3",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lscpu_2"
+            "name": "oe_test_lscpu_2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_mkfifo"
+            "name": "oe_test_mkfifo",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lspci"
+            "name": "oe_test_lspci",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_bzcat"
+            "name": "oe_test_bzcat",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zipinfo"
+            "name": "oe_test_zipinfo",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_gunzip"
+            "name": "oe_test_gunzip",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_split_01"
+            "name": "oe_test_split_01",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_getent"
+            "name": "oe_test_getent",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_fincore"
+            "name": "oe_test_fincore",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_udisksctl"
+            "name": "oe_test_udisksctl",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_c++_stl"
+            "name": "oe_test_c++_stl",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_fallocate_01"
+            "name": "oe_test_fallocate_01",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lslocks"
+            "name": "oe_test_lslocks",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_brotli_002"
+            "name": "oe_test_brotli_002",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lslocks_2"
+            "name": "oe_test_lslocks_2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lslogins_1"
+            "name": "oe_test_lslogins_1",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_more"
+            "name": "oe_test_more",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lslogins_2"
+            "name": "oe_test_lslogins_2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_column"
+            "name": "oe_test_column",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lslogins_3"
+            "name": "oe_test_lslogins_3",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_xrandr"
+            "name": "oe_test_xrandr",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_as"
+            "name": "oe_test_as",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lslogins_4"
+            "name": "oe_test_lslogins_4",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zstd01"
+            "name": "oe_test_zstd01",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lslogins_5"
+            "name": "oe_test_lslogins_5",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zipgrep"
+            "name": "oe_test_zipgrep",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lslogins_6"
+            "name": "oe_test_lslogins_6",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zforce"
+            "name": "oe_test_zforce",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_lssubsys"
+            "name": "oe_test_lssubsys",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zdiff"
+            "name": "oe_test_zdiff",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ab_1"
+            "name": "oe_test_ab_1",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ab_2"
+            "name": "oe_test_ab_2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ab_3"
+            "name": "oe_test_ab_3",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ab_4"
+            "name": "oe_test_ab_4",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_zcmp"
+            "name": "oe_test_zcmp",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_xxd"
+            "name": "oe_test_xxd",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_xmlwf"
+            "name": "oe_test_xmlwf",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
         {
-            "name": "oe_test_ab_5"
+            "name": "oe_test_ab_5",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         },
-	{
-	    "name": "oe_test_xmllint"
-	},
-	{
-	   "name": "oe_test_usb-devices"
-	},
-	{
-	    "name": "oe_test_xml2-config"
-	},
-	{
-	    "name": "oe_test_certtool_1"
-	},
-	{
-	    "name": "oe_test_certtool_2"
-	},
-	{
-	    "name": "oe_test_certtool_3"
-	},
-	{
-	    "name": "oe_test_update-crypto-policies"
-	},
-	{
-	    "name": "oe_test_certtool_4"
-	},
-	{
-	    "name": "oe_test_certutil"
-	},
-	{
-	    "name": "oe_test_unzstd"
-	},
-	{
-	    "name": "oe_test_unpigz"
-	},
-	{
-	    "name": "oe_test_type"  
-	},
-	{
-	    "name": "oe_test_corelist_1"
-	},
-	{
-	    "name": "oe_test_corelist_2"
-	},
-	{
-	    "name": "oe_test_corelist_3"
-	},
-	{
-	    "name": "oe_test_corelist_4"
-	},
-	{
-	    "name": "oe_test_fc-list_1"
-	}
-
+        {
+            "name": "oe_test_xmllint",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_usb-devices",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_xml2-config",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_certtool_1",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_certtool_2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_certtool_3",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_update-crypto-policies",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_certtool_4",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_certutil",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_unzstd",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_unpigz",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_type",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_corelist_1",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_corelist_2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_corelist_3",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_corelist_4",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_fc-list_1",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        }
     ]
 }
