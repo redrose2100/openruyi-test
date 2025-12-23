@@ -2,7 +2,7 @@
     "path": "${OET_PATH}/testcases/cli-test/kernel",
     "machine type": "physical",
     "add disk": [
-	    10
+        10
     ],
     "cases": [
         {
@@ -32,10 +32,10 @@
         },
         {
             "name": "oe_test_io_sched",
+            "machine type": "physical",
             "add disk": [
-                    10
-            ],
-            "machine type": "physical"
+                10
+            ]
         },
         {
             "name": "oe_test_cache_rw",
@@ -86,32 +86,32 @@
             "name": "oe_test_check_huge_task",
             "machine type": "physical",
             "add disk": []
-	},
-	{
+        },
+        {
             "name": "oe_test_swappiness",
             "machine type": "physical",
             "add disk": []
         },
-	{
+        {
             "name": "oe_test_softdog",
             "machine type": "physical",
             "add disk": []
         },
-	{
+        {
             "name": "oe_test_cifs",
             "machine type": "physical",
             "add disk": []
-	},
-	{
+        },
+        {
             "name": "oe_test_xfs",
             "machine type": "physical",
             "add disk": []
         },
-	{ 
+        {
             "name": "oe_test_wangxun",
             "machine type": "physical",
             "add disk": []
-	},
+        },
         {
             "name": "oe_test_vlan_8021q",
             "machine type": "kvm",
@@ -126,7 +126,6 @@
             "name": "oe_test_libfc",
             "machine type": "kvm",
             "add disk": []
-
         },
         {
             "name": "oe_test_hpsa",
@@ -292,12 +291,11 @@
             "name": "oe_test_hinic3",
             "machine type": "kvm",
             "add disk": []
-	},
-	{
+        },
+        {
             "name": "oe_test_rnpm",
             "machine type": "kvm",
             "add disk": []
         }
     ]
 }
-

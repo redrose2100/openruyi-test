@@ -37,31 +37,40 @@
             ]
         },
         {
-            "name": "oe_test_service_blk-availability"
+            "name": "oe_test_service_blk-availability",
+            "add disk": []
         },
         {
-            "name": "oe_test_service_dm-event"
+            "name": "oe_test_service_dm-event",
+            "add disk": []
         },
         {
-            "name": "oe_test_service_lvm2-lvmdbusd"
+            "name": "oe_test_service_lvm2-lvmdbusd",
+            "add disk": []
         },
         {
-            "name": "oe_test_service_lvm2-lvmpolld"
+            "name": "oe_test_service_lvm2-lvmpolld",
+            "add disk": []
         },
         {
-            "name": "oe_test_service_lvm2-monitor"
+            "name": "oe_test_service_lvm2-monitor",
+            "add disk": []
         },
         {
-            "name": "oe_test_service_lvmlockd"
+            "name": "oe_test_service_lvmlockd",
+            "add disk": []
         },
         {
-            "name": "oe_test_service_lvmlocks"
+            "name": "oe_test_service_lvmlocks",
+            "add disk": []
         },
         {
-            "name": "oe_test_socket_dm-event"
+            "name": "oe_test_socket_dm-event",
+            "add disk": []
         },
         {
-            "name": "oe_test_socket_lvm2-lvmpolld"
+            "name": "oe_test_socket_lvm2-lvmpolld",
+            "add disk": []
         },
         {
             "name": "oe_test_lvm2_pvremove_001",
