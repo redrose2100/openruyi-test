@@ -26,23 +26,23 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    curl -X POST "https://httpbin.org/anything" -H "accept: application/json" --data '{"value":"panda"}' 2>&1 | grep "panda"
+    curl -X POST "https://httpbingo.org/anything" -H "accept: application/json" --data '{"value":"panda"}' 2>&1 | grep "panda"
     CHECK_RESULT $? 0 0 "check curl -X failed"
     curl --dump-header headers http://www.baidu.com && test -f headers
     CHECK_RESULT $? 0 0 "check curl --dump-header failed"
-    curl -f https://httpbin.org/anything
+    curl -f https://httpbingo.org/anything
     CHECK_RESULT $? 0 0 "check curl -f  failed"
-    curl -F name=John -X POST "https://httpbin.org/anything" 2>&1 | grep "John"
+    curl -F name=John -X POST "https://httpbingo.org/anything" 2>&1 | grep "John"
     CHECK_RESULT $? 0 0 "check curl -F  failed"
-    curl --form-string "name=daniel;type=text/foo" -X POST "https://httpbin.org/anything" 2>&1 | grep "type=text/foo"
+    curl --form-string "name=daniel;type=text/foo" -X POST "https://httpbingo.org/anything" 2>&1 | grep "type=text/foo"
     CHECK_RESULT $? 0 0 "check curl --form-string failed"
-    curl --ftp-account "mr.robot" -f https://httpbin.org/anything
+    curl --ftp-account "mr.robot" -f https://httpbingo.org/anything
     CHECK_RESULT $? 0 0 "check curl --ftp-account failed"
-    curl --ftp-alternative-to-user "U53r" -f https://httpbin.org/anything
+    curl --ftp-alternative-to-user "U53r" -f https://httpbingo.org/anything
     CHECK_RESULT $? 0 0 "check curl --ftp-alternative-to-user failed"
-    curl --get https://httpbin.org/anything
+    curl --get https://httpbingo.org/anything
     CHECK_RESULT $? 0 0 "check curl --get failed"
-    curl -g https://httpbin.org/anything/{}
+    curl -g https://httpbingo.org/anything/{}
     CHECK_RESULT $? 0 0 "check curl -g  failed"
     LOG_INFO "End of the test."
 }

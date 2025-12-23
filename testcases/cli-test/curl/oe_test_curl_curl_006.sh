@@ -26,9 +26,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-#    curl --metalink "https://httpbin.org/anything"
+#    curl --metalink "https://httpbingo.org/anything"
 #    CHECK_RESULT $? 0 0 "check curl --metalink failed"
-    curl --negotiate "https://httpbin.org/anything"
+    curl --negotiate "https://httpbingo.org/anything"
     CHECK_RESULT $? 0 0 "check curl --negotiate failed"
     curl https://www.baidu.com -o output.txt && test -f output.txt
     CHECK_RESULT $? 0 0 "check curl -o failed"
@@ -38,7 +38,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check curl --referer failed"
     curl --silent -O https://www.cnblogs.com/kevingrace/p/9030324.html && test -f 9030324.html
     CHECK_RESULT $? 0 0 "check curl --silent -O failed"
-    curl -X POST "https://httpbin.org/anything" -H "accept: application/json"
+    curl -X POST "https://httpbingo.org/anything" -H "accept: application/json"
     CHECK_RESULT $? 0 0 "check curl -X failed"
     curl -1 http://www.baidu.com
     CHECK_RESULT $? 0 0 "check curl -1 failed"
