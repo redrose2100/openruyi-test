@@ -40,6 +40,7 @@ defaults {
        max_fds                   max
        queue_without_daemon      no
        flush_on_last_del         yes
+       reservation_key           0x12cdbe
 }
 
 devices {
