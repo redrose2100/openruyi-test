@@ -30,7 +30,7 @@ function common_config_params() {
 
 # Test environment preparation
 function common_pre() {
-    DNF_INSTALL "dblatex opensp dejavu-fonts"
+    DNF_INSTALL "dblatex opensp dejavu-fonts texlive-collection-latexrecommended"
     mkdir -p $TMP_DIR $TMP_PATH_O1 $TMP_PATH_O2
     ln -s /usr/bin/python3 /usr/bin/python
     sed -i 's#string.join(self.bib_path +#":".join(self.bib_path +#g' $(rpm -ql dblatex | grep bibtex.py)
@@ -52,6 +52,6 @@ function common_post() {
     sed -i 's#openout_any = a#openout_any = p#g' $(rpm -ql texlive-base | grep texmf-dist/web2c)/texmf.cnf
     sed -i '271s#self.doc.must_compile = 0#self.doc.must_compile = 1#g' $(rpm -ql dblatex | grep bibtex.py)
     rm -rf ${TMP_DIR} ${TMP_PATH_O1} ${TMP_PATH_O2}
-    DNF_REMOVE
+    DNF_REMOVE "$@"
 }
 
