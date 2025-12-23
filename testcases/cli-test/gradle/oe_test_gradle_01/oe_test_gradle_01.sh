@@ -15,9 +15,11 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   verification gradle‘s command
 #####################################
+# shellcheck disable=SC2034
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
+    EXECUTE_T="60m"
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL gradle
     version=$(rpm -qa gradle | awk -F "-" '{print$2}')
@@ -27,7 +29,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     gradle --help | grep -i "USAGE:"
     CHECK_RESULT $? 0 0 "Check gradle --help failed"
-    test "$(gradle --version | grep "Gradle" | awk '{print $2}')" == $version
+    test "$(gradle --version | grep "Gradle" | awk '{print $2}')" == "$version"
     CHECK_RESULT $? 0 0 "Check gradle --version failed."
     gradle | grep "BUILD SUCCESSFUL"
     CHECK_RESULT $? 0 0 "Check gradle failed."
@@ -49,7 +51,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf .gradle/
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

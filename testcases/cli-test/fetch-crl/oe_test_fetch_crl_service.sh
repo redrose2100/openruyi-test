@@ -16,13 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test fetch-crl
 # #############################################
-
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/fetch-crl/common/mock_crl.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    setup_mock_crl ""
     DNF_INSTALL "fetch-crl tar"
-    tar -xvf ./common/data.tar.gz > /dev/null
     infopath=$(cd ./data && pwd)
     info="infodir = ${infopath}"
     sed -i "s#infodir =.*#${info}#g" /etc/fetch-crl.conf
@@ -41,8 +40,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    setdown_mock_crl ""
     DNF_REMOVE "$@"
-    rm -rf ./data
     LOG_INFO "End to restore the test environment."
 }
 
