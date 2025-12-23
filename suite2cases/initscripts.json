@@ -3,20 +3,24 @@
     "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_service_import-state"
+            "name": "oe_test_service_import-state",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_loadmodules"
+            "name": "oe_test_service_loadmodules",
+            "machine num": 1
         },
         {
             "name": "oe_test_service_network",
             "machine num": 2
         },
         {
-            "name": "oe_test_service_netconsole"
+            "name": "oe_test_service_netconsole",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_readonly-root"
+            "name": "oe_test_service_readonly-root",
+            "machine num": 1
         }
     ]
 }

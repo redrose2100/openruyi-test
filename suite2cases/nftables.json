@@ -3,35 +3,44 @@
     "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_nftables_create_counters"
+            "name": "oe_test_nftables_create_counters",
+            "machine num": 1
         },
         {
-            "name": "oe_test_nftables_anonymous_map"
+            "name": "oe_test_nftables_anonymous_map",
+            "machine num": 1
         },
         {
-            "name": "oe_test_nftables_listen_package"
+            "name": "oe_test_nftables_listen_package",
+            "machine num": 1
         },
         {
-            "name": "oe_test_nftables_name_sets"
+            "name": "oe_test_nftables_name_sets",
+            "machine num": 1
         },
         {
             "name": "oe_test_nftables_variable_map",
             "machine num": 2
         },
         {
-            "name": "oe_test_nftables_chains"
+            "name": "oe_test_nftables_chains",
+            "machine num": 1
         },
         {
-            "name": "oe_test_iptables_to_nftables"
+            "name": "oe_test_iptables_to_nftables",
+            "machine num": 1
         },
         {
-            "name": "oe_test_nftables_backup_rules"
+            "name": "oe_test_nftables_backup_rules",
+            "machine num": 1
         },
         {
-            "name": "oe_test_nftables_replace_counters"
+            "name": "oe_test_nftables_replace_counters",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_nftables"
+            "name": "oe_test_service_nftables",
+            "machine num": 1
         }
     ]
 }

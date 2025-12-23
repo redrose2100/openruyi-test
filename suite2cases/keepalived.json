@@ -5,10 +5,13 @@
     "cases": [
         {
             "name": "oe_test_keepalived_cli",
-            "machine num": 2
+            "machine num": 2,
+            "add network interface": 0
         },
         {
-            "name": "oe_test_service_keepalived"
+            "name": "oe_test_service_keepalived",
+            "machine num": 1,
+            "add network interface": 0
         },
         {
             "name": "oe_test_tworoute_keepalived",
@@ -17,10 +20,13 @@
         },
         {
             "name": "oe_test_vrrp_bond_vlan_keepalived",
+            "machine num": 1,
             "add network interface": 2
         },
         {
-            "name": "oe_test_vrrp_garp_keepalived"
+            "name": "oe_test_vrrp_garp_keepalived",
+            "machine num": 1,
+            "add network interface": 0
         }
     ]
 }
