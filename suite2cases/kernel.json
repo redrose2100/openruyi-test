@@ -1,203 +1,301 @@
 {
     "path": "${OET_PATH}/testcases/cli-test/kernel",
     "machine type": "physical",
+    "add disk": [
+        10
+    ],
     "cases": [
         {
             "name": "oe_test_kernel_cmd_01",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_kernel_cmd_02",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_kernel_cmd_03",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_service_cpupower",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_ipip",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_io_sched",
-            "add disk":[10],
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": [
+                10
+            ]
         },
         {
             "name": "oe_test_cache_rw",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_snd_aloop",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_hinic",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_hqlogic",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_cpu_rand",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_qxl",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_vport-geneve",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_swap_compress",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_lpfc",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
         {
             "name": "oe_test_check_huge_task",
-            "machine type": "physical"
-	},
-	{
+            "machine type": "physical",
+            "add disk": []
+        },
+        {
             "name": "oe_test_swappiness",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
-	{
+        {
             "name": "oe_test_softdog",
-            "machine type": "physical"
+            "machine type": "physical",
+            "add disk": []
         },
-	{
+        {
             "name": "oe_test_cifs",
-            "machine type": "physical"
-	},
-	{
+            "machine type": "physical",
+            "add disk": []
+        },
+        {
             "name": "oe_test_xfs",
-            "machine type": "physical"
-        },
-	{ 
-	    "name": "oe_test_wangxun",
-	    "machine type": "physical"
-	},
-        {
-            "name": "oe_test_vlan_8021q"
+            "machine type": "physical",
+            "add disk": []
         },
         {
-            "name": "oe_test_nbd"
+            "name": "oe_test_wangxun",
+            "machine type": "physical",
+            "add disk": []
         },
         {
-            "name": "oe_test_libfc"
+            "name": "oe_test_vlan_8021q",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_hpsa"
+            "name": "oe_test_nbd",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_bnx2fc"
+            "name": "oe_test_libfc",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_qla2xxx"
+            "name": "oe_test_hpsa",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_qla3xxx"
+            "name": "oe_test_bnx2fc",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_tcm_loop"
+            "name": "oe_test_qla2xxx",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_libcxgbi"
+            "name": "oe_test_qla3xxx",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_libsas"
+            "name": "oe_test_tcm_loop",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_qedf"
+            "name": "oe_test_libcxgbi",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_qedi"
+            "name": "oe_test_libsas",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_pcie"
+            "name": "oe_test_qedf",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_acpi"
+            "name": "oe_test_qedi",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_uio"
+            "name": "oe_test_pcie",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_clk"
+            "name": "oe_test_acpi",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_mfd"
+            "name": "oe_test_uio",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_bcma"
+            "name": "oe_test_clk",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_extcon"
+            "name": "oe_test_mfd",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_tee"
+            "name": "oe_test_bcma",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_regmap_01"
+            "name": "oe_test_extcon",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_ceph"
+            "name": "oe_test_tee",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_radeon"
+            "name": "oe_test_regmap_01",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_target_core_file"
+            "name": "oe_test_ceph",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_target_core_iblock"
+            "name": "oe_test_radeon",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_target_core_mod"
+            "name": "oe_test_target_core_file",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_target_core_pscsi"
+            "name": "oe_test_target_core_iblock",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_target_core_user"
+            "name": "oe_test_target_core_mod",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_net_ifb"
+            "name": "oe_test_target_core_pscsi",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_net_veth"
+            "name": "oe_test_target_core_user",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_ngsm"
+            "name": "oe_test_net_ifb",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_nhdlc"
+            "name": "oe_test_net_veth",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_mlx4_core"
+            "name": "oe_test_ngsm",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_mlx5_core"
+            "name": "oe_test_nhdlc",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_mlxfw"
+            "name": "oe_test_mlx4_core",
+            "machine type": "kvm",
+            "add disk": []
         },
         {
-            "name": "oe_test_hinic3"
-	},
-	{
-            "name": "oe_test_rnpm"		
+            "name": "oe_test_mlx5_core",
+            "machine type": "kvm",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_mlxfw",
+            "machine type": "kvm",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_hinic3",
+            "machine type": "kvm",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_rnpm",
+            "machine type": "kvm",
+            "add disk": []
         }
     ]
 }
-
