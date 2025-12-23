@@ -3,7 +3,8 @@
     "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_openssh_cipher"
+            "name": "oe_test_openssh_cipher",
+            "machine num": 1
         },
         {
             "name": "oe_test_openssh_keychecking_no",
@@ -62,22 +63,28 @@
             "machine num": 2
         },
         {
-            "name": "oe_test_service_sshd"
+            "name": "oe_test_service_sshd",
+            "machine num": 1
         },
         {
-            "name": "oe_test_socket_sshd"
+            "name": "oe_test_socket_sshd",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_sshd-keygen"
+            "name": "oe_test_target_sshd-keygen",
+            "machine num": 1
         },
         {
-            "name": "oe_test_start_ssh"
+            "name": "oe_test_start_ssh",
+            "machine num": 1
         },
         {
-            "name": "oe_test_sec_ssh"
+            "name": "oe_test_sec_ssh",
+            "machine num": 1
         },
         {
-            "name": "oe_test_sec_jump_login"
+            "name": "oe_test_sec_jump_login",
+            "machine num": 1
         }
     ]
 }

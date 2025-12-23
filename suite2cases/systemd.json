@@ -3,472 +3,624 @@
     "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_service_console-getty"
+            "name": "oe_test_service_console-getty",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_dbus-org.freedesktop.hostname1"
+            "name": "oe_test_service_dbus-org.freedesktop.hostname1",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_dbus-org.freedesktop.locale1"
+            "name": "oe_test_service_dbus-org.freedesktop.locale1",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_dbus-org.freedesktop.login1"
+            "name": "oe_test_service_dbus-org.freedesktop.login1",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_dbus-org.freedesktop.machine1"
+            "name": "oe_test_service_dbus-org.freedesktop.machine1",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_dbus-org.freedesktop.timedate1"
+            "name": "oe_test_service_dbus-org.freedesktop.timedate1",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_debug-shell"
+            "name": "oe_test_service_debug-shell",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_hwclock-save"
+            "name": "oe_test_service_hwclock-save",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_initrd-cleanup"
+            "name": "oe_test_service_initrd-cleanup",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_initrd-parse-etc"
+            "name": "oe_test_service_initrd-parse-etc",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_initrd-switch-root"
+            "name": "oe_test_service_initrd-switch-root",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_initrd-udevadm-cleanup-db"
+            "name": "oe_test_service_initrd-udevadm-cleanup-db",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_kmod-static-nodes"
+            "name": "oe_test_service_kmod-static-nodes",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_ldconfig"
+            "name": "oe_test_service_ldconfig",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_rc-local"
+            "name": "oe_test_service_rc-local",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_rescue"
+            "name": "oe_test_service_rescue",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-ask-password-console"
+            "name": "oe_test_service_systemd-ask-password-console",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-ask-password-wall"
+            "name": "oe_test_service_systemd-ask-password-wall",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-binfmt"
+            "name": "oe_test_service_systemd-binfmt",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-bless-boot"
+            "name": "oe_test_service_systemd-bless-boot",
+            "machine num": 1
         },
         {
             "name": "oe_test_service_systemd-boot-check-no-failures",
             "machine num": 2
         },
         {
-            "name": "oe_test_service_systemd-boot-system-token"
+            "name": "oe_test_service_systemd-boot-system-token",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-exit"
+            "name": "oe_test_service_systemd-exit",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-firstboot"
+            "name": "oe_test_service_systemd-firstboot",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-fsck-root"
+            "name": "oe_test_service_systemd-fsck-root",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-halt"
+            "name": "oe_test_service_systemd-halt",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-hibernate"
+            "name": "oe_test_service_systemd-hibernate",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-hostnamed"
+            "name": "oe_test_service_systemd-hostnamed",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-hwdb-update"
+            "name": "oe_test_service_systemd-hwdb-update",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-hybrid-sleep"
+            "name": "oe_test_service_systemd-hybrid-sleep",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-initctl"
+            "name": "oe_test_service_systemd-initctl",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-journal-catalog-update"
+            "name": "oe_test_service_systemd-journal-catalog-update",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-journald"
+            "name": "oe_test_service_systemd-journald",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-journal-flush"
+            "name": "oe_test_service_systemd-journal-flush",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-kexec"
+            "name": "oe_test_service_systemd-kexec",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-localed"
+            "name": "oe_test_service_systemd-localed",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-logind"
+            "name": "oe_test_service_systemd-logind",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-machined"
+            "name": "oe_test_service_systemd-machined",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-machine-id-commit"
+            "name": "oe_test_service_systemd-machine-id-commit",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-modules-load"
+            "name": "oe_test_service_systemd-modules-load",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-networkd"
+            "name": "oe_test_service_systemd-networkd",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-networkd-wait-online"
+            "name": "oe_test_service_systemd-networkd-wait-online",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-network-generator"
+            "name": "oe_test_service_systemd-network-generator",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-poweroff"
+            "name": "oe_test_service_systemd-poweroff",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-pstore"
+            "name": "oe_test_service_systemd-pstore",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-random-seed"
+            "name": "oe_test_service_systemd-random-seed",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-reboot"
+            "name": "oe_test_service_systemd-reboot",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-soft-reboot"
+            "name": "oe_test_service_systemd-soft-reboot",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-remount-fs"
+            "name": "oe_test_service_systemd-remount-fs",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-resolved"
+            "name": "oe_test_service_systemd-resolved",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-rfkill"
+            "name": "oe_test_service_systemd-rfkill",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-suspend"
+            "name": "oe_test_service_systemd-suspend",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-suspend-then-hibernate"
+            "name": "oe_test_service_systemd-suspend-then-hibernate",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-sysctl"
+            "name": "oe_test_service_systemd-sysctl",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-sysusers"
+            "name": "oe_test_service_systemd-sysusers",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-timedated"
+            "name": "oe_test_service_systemd-timedated",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-timesyncd"
+            "name": "oe_test_service_systemd-timesyncd",
+            "machine num": 1
         },
         {
             "name": "oe_test_service_systemd-time-wait-sync",
             "machine num": 2
         },
         {
-            "name": "oe_test_service_systemd-tmpfiles-clean"
+            "name": "oe_test_service_systemd-tmpfiles-clean",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-tmpfiles-setup-dev"
+            "name": "oe_test_service_systemd-tmpfiles-setup-dev",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-tmpfiles-setup"
+            "name": "oe_test_service_systemd-tmpfiles-setup",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-udevd"
+            "name": "oe_test_service_systemd-udevd",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-udev-settle"
+            "name": "oe_test_service_systemd-udev-settle",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-udev-trigger"
+            "name": "oe_test_service_systemd-udev-trigger",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-update-done"
+            "name": "oe_test_service_systemd-update-done",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-update-utmp-runlevel"
+            "name": "oe_test_service_systemd-update-utmp-runlevel",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-update-utmp"
+            "name": "oe_test_service_systemd-update-utmp",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-user-sessions"
+            "name": "oe_test_service_systemd-user-sessions",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-vconsole-setup"
+            "name": "oe_test_service_systemd-vconsole-setup",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-volatile-root"
+            "name": "oe_test_service_systemd-volatile-root",
+            "machine num": 1
         },
         {
             "name": "oe_test_service_system-update-cleanup",
             "machine num": 2
         },
         {
-            "name": "oe_test_socket_syslog"
+            "name": "oe_test_socket_syslog",
+            "machine num": 1
         },
         {
-            "name": "oe_test_socket_systemd-coredump"
+            "name": "oe_test_socket_systemd-coredump",
+            "machine num": 1
         },
         {
-            "name": "oe_test_socket_systemd-initctl"
+            "name": "oe_test_socket_systemd-initctl",
+            "machine num": 1
         },
         {
-            "name": "oe_test_socket_systemd-journald-audit"
+            "name": "oe_test_socket_systemd-journald-audit",
+            "machine num": 1
         },
         {
-            "name": "oe_test_socket_systemd-journald-dev-log"
+            "name": "oe_test_socket_systemd-journald-dev-log",
+            "machine num": 1
         },
         {
-            "name": "oe_test_socket_systemd-journald"
+            "name": "oe_test_socket_systemd-journald",
+            "machine num": 1
         },
         {
-            "name": "oe_test_socket_systemd-networkd"
+            "name": "oe_test_socket_systemd-networkd",
+            "machine num": 1
         },
         {
-            "name": "oe_test_socket_systemd-udevd-control"
+            "name": "oe_test_socket_systemd-udevd-control",
+            "machine num": 1
         },
         {
-            "name": "oe_test_socket_systemd-udevd-kernel"
+            "name": "oe_test_socket_systemd-udevd-kernel",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_basic"
+            "name": "oe_test_target_basic",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_boot-complete"
+            "name": "oe_test_target_boot-complete",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_cryptsetup-pre"
+            "name": "oe_test_target_cryptsetup-pre",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_cryptsetup"
+            "name": "oe_test_target_cryptsetup",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_ctrl-alt-del"
+            "name": "oe_test_target_ctrl-alt-del",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_default"
+            "name": "oe_test_target_default",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_exit"
+            "name": "oe_test_target_exit",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_final"
+            "name": "oe_test_target_final",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_getty-pre"
+            "name": "oe_test_target_getty-pre",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_getty"
+            "name": "oe_test_target_getty",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_graphical"
+            "name": "oe_test_target_graphical",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_halt"
+            "name": "oe_test_target_halt",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_hibernate"
+            "name": "oe_test_target_hibernate",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_hybrid-sleep"
+            "name": "oe_test_target_hybrid-sleep",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_initrd-fs"
+            "name": "oe_test_target_initrd-fs",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_initrd-root-device"
+            "name": "oe_test_target_initrd-root-device",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_initrd-root-fs"
+            "name": "oe_test_target_initrd-root-fs",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_initrd"
+            "name": "oe_test_target_initrd",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_initrd-switch-root"
+            "name": "oe_test_target_initrd-switch-root",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_kexec"
+            "name": "oe_test_target_kexec",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_local-fs-pre"
+            "name": "oe_test_target_local-fs-pre",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_local-fs"
+            "name": "oe_test_target_local-fs",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_machines"
+            "name": "oe_test_target_machines",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_multi-user"
+            "name": "oe_test_target_multi-user",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_network-online"
+            "name": "oe_test_target_network-online",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_network-pre"
+            "name": "oe_test_target_network-pre",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_network"
+            "name": "oe_test_target_network",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_nss-lookup"
+            "name": "oe_test_target_nss-lookup",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_nss-user-lookup"
+            "name": "oe_test_target_nss-user-lookup",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_paths"
+            "name": "oe_test_target_paths",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_poweroff"
+            "name": "oe_test_target_poweroff",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_reboot"
+            "name": "oe_test_target_reboot",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_soft-reboot"
+            "name": "oe_test_target_soft-reboot",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_remote-cryptsetup"
+            "name": "oe_test_target_remote-cryptsetup",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_remote-fs-pre"
+            "name": "oe_test_target_remote-fs-pre",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_remote-fs"
+            "name": "oe_test_target_remote-fs",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_rescue"
+            "name": "oe_test_target_rescue",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_rpcbind"
+            "name": "oe_test_target_rpcbind",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_runlevel0"
+            "name": "oe_test_target_runlevel0",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_runlevel1"
+            "name": "oe_test_target_runlevel1",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_runlevel2"
+            "name": "oe_test_target_runlevel2",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_runlevel3"
+            "name": "oe_test_target_runlevel3",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_runlevel4"
+            "name": "oe_test_target_runlevel4",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_runlevel5"
+            "name": "oe_test_target_runlevel5",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_runlevel6"
+            "name": "oe_test_target_runlevel6",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_shutdown"
+            "name": "oe_test_target_shutdown",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_sigpwr"
+            "name": "oe_test_target_sigpwr",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_sleep"
+            "name": "oe_test_target_sleep",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_slices"
+            "name": "oe_test_target_slices",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_sockets"
+            "name": "oe_test_target_sockets",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_suspend"
+            "name": "oe_test_target_suspend",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_suspend-then-hibernate"
+            "name": "oe_test_target_suspend-then-hibernate",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_swap"
+            "name": "oe_test_target_swap",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_sysinit"
+            "name": "oe_test_target_sysinit",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_system-update-pre"
+            "name": "oe_test_target_system-update-pre",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_system-update"
+            "name": "oe_test_target_system-update",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_timers"
+            "name": "oe_test_target_timers",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_time-set"
+            "name": "oe_test_target_time-set",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_time-sync"
+            "name": "oe_test_target_time-sync",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_umount"
+            "name": "oe_test_target_umount",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_emergency"
+            "name": "oe_test_service_emergency",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_emergency"
+            "name": "oe_test_target_emergency",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_first-boot-complete"
+            "name": "oe_test_target_first-boot-complete",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_remote-veritysetup"
+            "name": "oe_test_target_remote-veritysetup",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_veritysetup"
+            "name": "oe_test_target_veritysetup",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_veritysetup-pre"
+            "name": "oe_test_target_veritysetup-pre",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_factory-reset"
+            "name": "oe_test_target_factory-reset",
+            "machine num": 1
         },
         {
-            "name": "oe_test_target_integritysetup"
+            "name": "oe_test_target_integritysetup",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-growfs-root"
+            "name": "oe_test_service_systemd-growfs-root",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-tmpfiles-setup-dev-early"
+            "name": "oe_test_service_systemd-tmpfiles-setup-dev-early",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-journal-remote"
+            "name": "oe_test_service_systemd-journal-remote",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-journal-upload"
+            "name": "oe_test_service_systemd-journal-upload",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_quotaon"
+            "name": "oe_test_service_quotaon",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-quotacheck"
+            "name": "oe_test_service_systemd-quotacheck",
+            "machine num": 1
         },
-	{
-            "name": "oe_test_telinit"
-	}
+        {
+            "name": "oe_test_telinit",
+            "machine num": 1
+        }
     ]
 }

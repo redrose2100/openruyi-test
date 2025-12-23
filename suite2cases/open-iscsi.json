@@ -20,13 +20,19 @@
             ]
         },
         {
-            "name": "oe_test_service_iscsid"
+            "name": "oe_test_service_iscsid",
+            "machine num": 1,
+            "add disk": []
         },
         {
-            "name": "oe_test_service_iscsi"
+            "name": "oe_test_service_iscsi",
+            "machine num": 1,
+            "add disk": []
         },
         {
-            "name": "oe_test_socket_iscsid"
+            "name": "oe_test_socket_iscsid",
+            "machine num": 1,
+            "add disk": []
         }
     ]
 }
