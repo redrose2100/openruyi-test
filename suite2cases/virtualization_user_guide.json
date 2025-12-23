@@ -9,10 +9,14 @@
             "add network interface": 1
         },
         {
-            "name": "oe_test_manual_libcareplus_hot_patch"
+            "name": "oe_test_manual_libcareplus_hot_patch",
+            "machine type": "kvm",
+            "add network interface": 0
         },
         {
-            "name": "oe_test_libcareplus_hot_patch_by_script"
+            "name": "oe_test_libcareplus_hot_patch_by_script",
+            "machine type": "kvm",
+            "add network interface": 0
         }
     ]
 }
