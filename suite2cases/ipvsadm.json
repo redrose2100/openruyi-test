@@ -4,17 +4,24 @@
     "add network interface": 1,
     "cases": [
         {
-            "name": "oe_test_ipvs_ADD_01"
+            "name": "oe_test_ipvs_ADD_01",
+            "machine num": 1,
+            "add network interface": 0
         },
         {
-            "name": "oe_test_ipvs_DEL_01"
+            "name": "oe_test_ipvs_DEL_01",
+            "machine num": 1,
+            "add network interface": 0
         },
         {
-            "name": "oe_test_ipvs_MOD_01"
+            "name": "oe_test_ipvs_MOD_01",
+            "machine num": 1,
+            "add network interface": 0
         },
         {
             "name": "oe_test_ipvs_SAVE_01",
-            "machine num": 2
+            "machine num": 2,
+            "add network interface": 0
         },
         {
             "name": "oe_test_ipvs_SCEN_off_httpd_01",
@@ -107,10 +114,14 @@
             "add network interface": 1
         },
         {
-            "name": "oe_test_ipvs_WRONG_COMMAND_01"
+            "name": "oe_test_ipvs_WRONG_COMMAND_01",
+            "machine num": 1,
+            "add network interface": 0
         },
         {
-            "name": "oe_test_service_ipvsadm"
+            "name": "oe_test_service_ipvsadm",
+            "machine num": 1,
+            "add network interface": 0
         }
     ]
 }
