@@ -16,10 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test grape
 # #############################################
+# shellcheck disable=SC2034
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    EXECUTE_T="60m"
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "groovy18 tar"
     tar -xvf common/data.tar.gz > /dev/null
@@ -58,8 +60,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf ./data
+    DNF_REMOVE "$@"
+    rm -rf ./data ~/.groovy/grapes/
     LOG_INFO "End to restore the test environment."
 }
 

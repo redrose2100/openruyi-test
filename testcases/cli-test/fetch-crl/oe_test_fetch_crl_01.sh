@@ -17,14 +17,12 @@
 # @Desc      :   Test fetch-crl
 # #############################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/fetch-crl/common/mock_crl.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "fetch-crl tar"
-    tar -xvf common/data.tar.gz >/dev/null
-    cp -f ./data/KEK.crl_url /etc/grid-security/certificates
-    cp -f ./data/KEK.pem /etc/grid-security/certificates
+    setup_mock_crl ""
+    DNF_INSTALL "fetch-crl"
     systemctl start fetch-crl.service
     SLEEP_WAIT 2
     LOG_INFO "End to prepare the test environment."
@@ -59,8 +57,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    setdown_mock_crl ""
     DNF_REMOVE "$@"
-    rm -rf /etc/grid-security/certificates ./data
     LOG_INFO "End to restore the test environment."
 }
 
