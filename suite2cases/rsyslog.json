@@ -3,7 +3,8 @@
     "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_rsyslog_abnormal_config"
+            "name": "oe_test_rsyslog_abnormal_config",
+            "machine num": 1
         },
         {
             "name": "oe_test_rsyslog_abnormal_template",
@@ -14,33 +15,40 @@
             "machine num": 2
         },
         {
-            "name": "oe_test_rsyslog_function_discard"
+            "name": "oe_test_rsyslog_function_discard",
+            "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_function_facility"
+            "name": "oe_test_rsyslog_function_facility",
+            "machine num": 1
         },
         {
             "name": "oe_test_rsyslog_function_httpd",
             "machine num": 2
         },
         {
-            "name": "oe_test_rsyslog_function_imfile"
+            "name": "oe_test_rsyslog_function_imfile",
+            "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_function_postgreSQL"
+            "name": "oe_test_rsyslog_function_postgreSQL",
+            "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_function_priority"
+            "name": "oe_test_rsyslog_function_priority",
+            "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_function_rainerscript"
+            "name": "oe_test_rsyslog_function_rainerscript",
+            "machine num": 1
         },
         {
             "name": "oe_test_rsyslog_function_relp",
             "machine num": 2
         },
         {
-            "name": "oe_test_rsyslog_function_shell"
+            "name": "oe_test_rsyslog_function_shell",
+            "machine num": 1
         },
         {
             "name": "oe_test_rsyslog_function_tcp",
@@ -51,26 +59,32 @@
             "machine num": 2
         },
         {
-            "name": "oe_test_rsyslog_function_template"
+            "name": "oe_test_rsyslog_function_template",
+            "machine num": 1
         },
         {
             "name": "oe_test_rsyslog_function_udp",
             "machine num": 2
         },
         {
-            "name": "oe_test_rsyslog_function_wildcard"
+            "name": "oe_test_rsyslog_function_wildcard",
+            "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_parameter01"
+            "name": "oe_test_rsyslog_parameter01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_parameter02"
+            "name": "oe_test_rsyslog_parameter02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_parameter03"
+            "name": "oe_test_rsyslog_parameter03",
+            "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_parameter04"
+            "name": "oe_test_rsyslog_parameter04",
+            "machine num": 1
         },
         {
             "name": "oe_test_rsyslog_reliability_lenght",
@@ -81,17 +95,20 @@
             "machine num": 2
         },
         {
-            "name": "oe_test_rsyslog_reliability_operation"
+            "name": "oe_test_rsyslog_reliability_operation",
+            "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_reliability_restart"
+            "name": "oe_test_rsyslog_reliability_restart",
+            "machine num": 1
         },
         {
             "name": "oe_test_rsyslog_reliability_tcp",
             "machine num": 2
         },
         {
-            "name": "oe_test_service_rsyslog"
+            "name": "oe_test_service_rsyslog",
+            "machine num": 1
         }
     ]
 }

@@ -3,248 +3,328 @@
     "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_dbpmda"
+            "name": "oe_test_dbpmda",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp"
+            "name": "oe_test_pcp",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmdate"
+            "name": "oe_test_pmdate",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmdumplog_01"
+            "name": "oe_test_pmdumplog_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmdumplog_02"
+            "name": "oe_test_pmdumplog_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmevent_01"
+            "name": "oe_test_pmevent_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmevent_02"
+            "name": "oe_test_pmevent_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmfind_pmgenmap_pmie2col_pminfo_01"
+            "name": "oe_test_pmfind_pmgenmap_pmie2col_pminfo_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pminfo_02"
+            "name": "oe_test_pminfo_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pminfo_03"
+            "name": "oe_test_pminfo_03",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmjson"
+            "name": "oe_test_pmjson",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmlogcheck_pmlogmv"
+            "name": "oe_test_pmlogcheck_pmlogmv",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmlogconf_pmlogsize"
+            "name": "oe_test_pmlogconf_pmlogsize",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmloglabel"
+            "name": "oe_test_pmloglabel",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmlogsummary_01"
+            "name": "oe_test_pmlogsummary_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmlogsummary_02"
+            "name": "oe_test_pmlogsummary_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmprobe_01"
+            "name": "oe_test_pmprobe_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmprobe_02"
+            "name": "oe_test_pmprobe_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmpython_mkaf_pcp-python"
+            "name": "oe_test_pmpython_mkaf_pcp-python",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmstat"
+            "name": "oe_test_pmstat",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmstore_install-sh"
+            "name": "oe_test_pmstore_install-sh",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmval_01"
+            "name": "oe_test_pmval_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmval_02"
+            "name": "oe_test_pmval_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp-summary_pcp-vmstat_pmcd_wait"
+            "name": "oe_test_pcp-summary_pcp-vmstat_pmcd_wait",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmconfig_pmie_check"
+            "name": "oe_test_pmconfig_pmie_check",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmhostname_pmlock_pmlogger_check"
+            "name": "oe_test_pmhostname_pmlock_pmlogger_check",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmlogger_daily_01"
+            "name": "oe_test_pmlogger_daily_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmlogger_daily_02"
+            "name": "oe_test_pmlogger_daily_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmlogger_daily_report"
+            "name": "oe_test_pmlogger_daily_report",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmlogger_merge_pmlogger_rewrite"
+            "name": "oe_test_pmlogger_merge_pmlogger_rewrite",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmlogreduce_pmpause_pmpost_pmsleep"
+            "name": "oe_test_pmlogreduce_pmpause_pmpost_pmsleep",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp_atop_01"
+            "name": "oe_test_pcp_atop_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp_atop_02"
+            "name": "oe_test_pcp_atop_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp_pcp-import-collectl2pcp"
+            "name": "oe_test_pcp_pcp-import-collectl2pcp",
+            "machine num": 1
         },
         {
             "name": "oe_test_pcp_pcp-import-ganglia2pcp",
             "machine num": 2
         },
         {
-            "name": "oe_test_pcp_pcp-import-iostat2pcp"
+            "name": "oe_test_pcp_pcp-import-iostat2pcp",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp_pcp-import-mrtg2pcp"
+            "name": "oe_test_pcp_pcp-import-mrtg2pcp",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp_pcp-import-sar2pcp"
+            "name": "oe_test_pcp_pcp-import-sar2pcp",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pmcd"
+            "name": "oe_test_service_pmcd",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pmie"
+            "name": "oe_test_service_pmie",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pmlogger"
+            "name": "oe_test_service_pmlogger",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pmproxy"
+            "name": "oe_test_service_pmproxy",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp2json_01"
+            "name": "oe_test_pcp2json_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp2json_02"
+            "name": "oe_test_pcp2json_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp2json_03"
+            "name": "oe_test_pcp2json_03",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp2json_04"
+            "name": "oe_test_pcp2json_04",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp2json_05"
+            "name": "oe_test_pcp2json_05",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp2xml_01"
+            "name": "oe_test_pcp2xml_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp2xml_02"
+            "name": "oe_test_pcp2xml_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp2xml_03"
+            "name": "oe_test_pcp2xml_03",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp2xml_04"
+            "name": "oe_test_pcp2xml_04",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmdumptext_001"
+            "name": "oe_test_pmdumptext_001",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmdumptext_002"
+            "name": "oe_test_pmdumptext_002",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmdumptext_003"
+            "name": "oe_test_pmdumptext_003",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp-pmda-elasticsearch"
+            "name": "oe_test_pcp-pmda-elasticsearch",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmrep_01"
+            "name": "oe_test_pmrep_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmrep_02"
+            "name": "oe_test_pmrep_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmrep_03"
+            "name": "oe_test_pmrep_03",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmrep_04"
+            "name": "oe_test_pmrep_04",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmrep_05"
+            "name": "oe_test_pmrep_05",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pmrep_06"
+            "name": "oe_test_pmrep_06",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp_collectl"
+            "name": "oe_test_pcp_collectl",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp_dmcache"
+            "name": "oe_test_pcp_dmcache",
+            "machine num": 1
         },
         {
-            "name": "oe_test_dstat_01"
+            "name": "oe_test_dstat_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_dstat_02"
+            "name": "oe_test_dstat_02",
+            "machine num": 1
         },
         {
-            "name": "oe_test_dstat_03"
+            "name": "oe_test_dstat_03",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp_free"
+            "name": "oe_test_pcp_free",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp-pidstat_01"
+            "name": "oe_test_pcp-pidstat_01",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp-pidstat_02_pcp-ipcs"
+            "name": "oe_test_pcp-pidstat_02_pcp-ipcs",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp-iostat"
+            "name": "oe_test_pcp-iostat",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp-mpstat_pcp-numastat"
+            "name": "oe_test_pcp-mpstat_pcp-numastat",
+            "machine num": 1
         },
         {
-            "name": "oe_test_pcp-uptime_pcp-verify"
+            "name": "oe_test_pcp-uptime_pcp-verify",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pcp-geolocate"
+            "name": "oe_test_service_pcp-geolocate",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pcp-reboot-init"
+            "name": "oe_test_service_pcp-reboot-init",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pmfind"
+            "name": "oe_test_service_pmfind",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pmie_check"
+            "name": "oe_test_service_pmie_check",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pmie_daily"
+            "name": "oe_test_service_pmie_daily",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pmie_farm_check"
+            "name": "oe_test_service_pmie_farm_check",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pmlogger_check"
+            "name": "oe_test_service_pmlogger_check",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pmlogger_daily"
+            "name": "oe_test_service_pmlogger_daily",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pmlogger_farm_check"
+            "name": "oe_test_service_pmlogger_farm_check",
+            "machine num": 1
         }
     ]
 }
