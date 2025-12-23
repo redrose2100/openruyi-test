@@ -16,20 +16,22 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Take the test dblatex option
 # #############################################
+# shellcheck disable=SC2034
 
 source "common/common.sh"
 
 # Data and parameter configuration that need to be preloaded
 function config_params() {
     LOG_INFO "Start to config params of the case."
-    common_config_params
+    common_config_params ""
     LOG_INFO "End to config params of the case."
 }
 
 # Installation Preparation of test objects, tools required for testing, etc
 function pre_test() {
+    EXECUTE_T="60m"
     LOG_INFO "Start to prepare the test environment."
-    common_pre
+    common_pre ""
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -73,7 +75,7 @@ function run_test() {
 # Post processing to restore the test environment
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    common_post
+    common_post ""
     LOG_INFO "End to restore the test environment."
 }
 

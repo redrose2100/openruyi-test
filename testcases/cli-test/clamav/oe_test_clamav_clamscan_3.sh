@@ -15,17 +15,19 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Take the test clamscan
 #####################################
+# shellcheck disable=SC2034
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    EXECUTE_T="180m"
     LOG_INFO "Start to prepare the database config."
 
     DNF_INSTALL clamav
     mkdir test_virus_collection
     echo "test1" >test_virus_collection/testfile1
     echo "test2" >test_virus_collection/testfile2
-    cp /var/lib/clamav/main.cvd test_virus_collection/
+    cp /var/lib/clamav/main.* test_virus_collection/
 
     LOG_INFO "End to prepare the database config."
 }

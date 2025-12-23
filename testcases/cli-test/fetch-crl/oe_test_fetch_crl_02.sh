@@ -17,14 +17,12 @@
 # @Desc      :   Test fetch-crl
 # #############################################
 # shellcheck disable=SC2010,SC2012,SC2046
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "common/mock_crl.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "fetch-crl tar"
-    tar -xvf common/data.tar.gz >/dev/null
-    cp -f ./data/KEK.crl_url /etc/grid-security/certificates
-    cp -f ./data/KEK.pem /etc/grid-security/certificates
+    setup_mock_crl ""
+    DNF_INSTALL "fetch-crl"
     mkdir -p ./tmp1 ./tmp2 ./tmp3 ./tmp4
     systemctl start fetch-crl.service
     SLEEP_WAIT 2
@@ -58,8 +56,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    setdown_mock_crl ""
     DNF_REMOVE "$@"
-    rm -rf ./data ./tmp*
+    rm -rf ./tmp*
     LOG_INFO "End to restore the test environment."
 }
 
