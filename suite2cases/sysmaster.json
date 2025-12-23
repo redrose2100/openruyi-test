@@ -3,7 +3,8 @@
     "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_sysmaster_docker"
+            "name": "oe_test_sysmaster_docker",
+            "machine num": 1
         },
         {
             "name": "oe_test_sysmaster_sctl",

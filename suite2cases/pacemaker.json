@@ -3,10 +3,12 @@
     "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_service_crm_mon"
+            "name": "oe_test_service_crm_mon",
+            "machine num": 1
         },
         {
-            "name": "oe_test_service_pacemaker_remote"
+            "name": "oe_test_service_pacemaker_remote",
+            "machine num": 1
         },
         {
             "name": "oe_test_service_pacemaker",
