@@ -5,17 +5,17 @@
     "cases": [
         {
             "name": "oe_test_ipvs_ADD_01",
-            "machine num": 1,
+            "machine num": 3,
             "add network interface": 0
         },
         {
             "name": "oe_test_ipvs_DEL_01",
-            "machine num": 1,
+            "machine num": 3,
             "add network interface": 0
         },
         {
             "name": "oe_test_ipvs_MOD_01",
-            "machine num": 1,
+            "machine num": 3,
             "add network interface": 0
         },
         {
@@ -115,7 +115,7 @@
         },
         {
             "name": "oe_test_ipvs_WRONG_COMMAND_01",
-            "machine num": 1,
+            "machine num": 3,
             "add network interface": 0
         },
         {
