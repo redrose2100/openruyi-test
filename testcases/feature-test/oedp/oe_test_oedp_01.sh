@@ -17,11 +17,11 @@
 # @Desc      :   Test oedp version and help
 # #############################################
 
-source "${OET_PATH}/testcases/feature-test/oedp/common.sh"
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    pre_oedp
+    DNF_INSTALL oedp
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -46,7 +46,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    post_oedp
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
