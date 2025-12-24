@@ -18,13 +18,12 @@
 # #############################################
 # shellcheck disable=SC2016
 
-source "${OET_PATH}/testcases/feature-test/oedp/common.sh"
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    pre_oedp
-    DNF_INSTALL python3-libselinux
+    DNF_INSTALL oedp python3-libselinux
     ssh-keyscan -H "${NODE1_IPV4}" >> ~/.ssh/known_hosts
     oedp repo update
     SLEEP_WAIT 5
@@ -52,7 +51,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf ragflow
-    post_oedp
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }

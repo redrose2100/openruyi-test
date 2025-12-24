@@ -18,11 +18,11 @@
 # #############################################
 # shellcheck disable=SC2016
 
-source "${OET_PATH}/testcases/feature-test/oedp/common.sh"
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    pre_oedp
+    DNF_INSTALL oedp
     SSH_CMD "dnf install -y python3-libselinux" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     oedp repo update
     oedp init anythingLLM
@@ -48,7 +48,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf anythingLLM
-    post_oedp
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

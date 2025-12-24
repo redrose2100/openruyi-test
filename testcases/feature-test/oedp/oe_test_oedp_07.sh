@@ -18,13 +18,12 @@
 # #############################################
 # shellcheck disable=SC2016
 
-source "${OET_PATH}/testcases/feature-test/oedp/common.sh"
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    pre_oedp
-    DNF_INSTALL python3-libselinux
+    DNF_INSTALL oedp python3-libselinux
     ssh-keyscan -H "${NODE1_IPV4}" >> ~/.ssh/known_hosts
     oedp repo update
     oedp init euler-copilot
@@ -53,7 +52,6 @@ function post_test() {
 
     rm -rf euler-copilot
     DNF_remove "$@"
-    post_oedp
 
     LOG_INFO "End to restore the test environment."
 }
