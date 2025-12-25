@@ -28,6 +28,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     cat > main.c << EOF
+#include <stdio.h>
+void hello(void);
+void bye(void);
 int main(int argc,char *argv[])
 {
 hello();
@@ -36,12 +39,14 @@ return 0;
 }
 EOF
     cat > hello.c << EOF
+#include <stdio.h>
 void hello(void)
 {
 printf("hello!\n");
 }
 EOF
     cat > bye.c << EOF
+#include <stdio.h>
 void bye(void)
 {
 printf("good bye!\n");
