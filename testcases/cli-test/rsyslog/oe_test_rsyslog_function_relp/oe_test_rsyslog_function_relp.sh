@@ -24,6 +24,9 @@ function pre_test() {
     DNF_INSTALL "net-tools rsyslog-relp" 2
     systemctl stop iptables
     SSH_CMD "systemctl stop iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    iptables -F INPUT && iptables -P INPUT ACCEPT
+    echo "${NODE2_IPV4}  client-relp.local" >> /etc/hosts
+    echo "${NODE1_IPV4}  server-relp.local" >> /etc/hosts
     LOG_INFO "End to prepare the test environment."
 }
 
