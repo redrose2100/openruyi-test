@@ -25,6 +25,9 @@ function pre_test() {
     mkdir /tmp/test/
     path=/tmp/test/
     cat > ${path}/main.c <<EOF
+#include <stdio.h>
+void hello(void);
+void bye(void);
 int main(int argc,char *argv[])
 {
 hello();
@@ -33,12 +36,14 @@ return 0;
 }
 EOF
     cat > ${path}/hello.c <<EOF
+#include <stdio.h>
 void hello(void)
 {
 printf("hello!\n");
 }
 EOF
     cat > ${path}/bye.c <<EOF
+#include <stdio.h>
 void bye(void)
 {
 printf("good bye!\n");
