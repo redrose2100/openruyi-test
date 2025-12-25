@@ -25,7 +25,11 @@ function pre_test() {
     cd /usr/share/activemq/bin || exit 1
     chmod +x ./activemq
     ./activemq start
-    SLEEP_WAIT 10
+    if [ "${NODE1_FRAME}" = "riscv64" ] ; then
+        SLEEP_WAIT 180
+    else
+        SLEEP_WAIT 10
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 
