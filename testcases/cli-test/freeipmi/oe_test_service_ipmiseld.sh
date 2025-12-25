@@ -16,12 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ipmiseld.service restart
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "freeipmi ipmitool"
+    modprobe ipmi_watchdog
+    modprobe ipmi_poweroff
+    modprobe ipmi_devintf
+    modprobe ipmi_msghandler
+    modprobe ipmi_si
     ipmitool lan print | grep -i "Address.*:"
     ret=$?
     if [ $ret -ne 0 ]; then
@@ -41,7 +46,12 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop ipmiseld.service
-    DNF_REMOVE "$@"
+    DNF_REMOVE
+    modprobe -r ipmi_watchdog
+    modprobe -r ipmi_poweroff
+    modprobe -r ipmi_devintf
+    modprobe -r ipmi_msghandler
+    modprobe -r ipmi_si
     LOG_INFO "Finish environment cleanup!"
 }
 
