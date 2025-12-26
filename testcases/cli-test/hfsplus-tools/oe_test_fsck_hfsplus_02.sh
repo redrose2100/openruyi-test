@@ -17,38 +17,38 @@
 # @Desc      :   Test fsck.hfsplus
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL hfsplus-tools
-    device=$(lsblk | awk -F " " {'print $1'} | head -n 2 | tail -n 1)
-    disk_list=/dev/$device
+    # shellcheck disable=SC2119
+    disk_list="/dev/$(TEST_DISK | head -n1)"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    fsck.hfsplus -d -p -f $disk_list 2>&1 | grep 'starting'
+    fsck.hfsplus -d -p -f "$disk_list" 2>&1 | grep 'starting'
     CHECK_RESULT $? 0 0 "test fsck.hfsplus -f failed"
-    fsck.hfsplus -d -p $disk_list 2>&1 | grep 'starting'
+    fsck.hfsplus -d -p "$disk_list" 2>&1 | grep 'starting'
     CHECK_RESULT $? 0 0 "test fsck.hfsplus -p failed"
-    fsck.hfsplus -d -l $disk_list 2>&1 | grep 'run at'
+    fsck.hfsplus -d -l "$disk_list" 2>&1 | grep 'run at'
     CHECK_RESULT $? 0 0 "test fsck.hfsplus -l failed"
-    fsck.hfsplus -d -m 01777 $disk_list 2>&1 | grep 'Executing fsck_hfs'
+    fsck.hfsplus -d -m 01777 "$disk_list" 2>&1 | grep 'Executing fsck_hfs'
     CHECK_RESULT $? 0 0 "test fsck.hfsplus -m failed"
-    fsck.hfsplus -d -n $disk_list 2>&1 | grep 'Executing fsck_hfs'
+    fsck.hfsplus -d -n "$disk_list" 2>&1 | grep 'Executing fsck_hfs'
     CHECK_RESULT $? 0 0 "test fsck.hfsplus -n failed"
-    fsck.hfsplus -d -r $disk_list 2>&1 | grep 'Executing fsck_hfs'
+    fsck.hfsplus -d -r "$disk_list" 2>&1 | grep 'Executing fsck_hfs'
     CHECK_RESULT $? 0 0 "test fsck.hfsplus -r failed"
-    fsck.hfsplus -d -y $disk_list 2>&1 | grep 'Executing fsck_hfs'
+    fsck.hfsplus -d -y "$disk_list" 2>&1 | grep 'Executing fsck_hfs'
     CHECK_RESULT $? 0 0 "test fsck.hfsplus -y failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
