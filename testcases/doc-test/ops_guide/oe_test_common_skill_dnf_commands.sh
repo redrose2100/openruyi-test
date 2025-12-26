@@ -38,6 +38,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to displays the disabled OS repository"
     dnf config-manager --enable OS
     CHECK_RESULT $? 0 0 "Failed to set the OS repository to be available"
+    SLEEP_WAIT 5
     dnf install tree -y | grep "Installed"
     CHECK_RESULT $? 0 0 "Failed to install the RPM pkg"
     expect <<-EOF
@@ -69,6 +70,7 @@ EOF
     CHECK_RESULT $? 0 0 "Failed to specify the specific repo repository to install the RPM pkg"
     dnf remove tree --setopt=reposdir=/etc/yum.repos.d/ -y | grep "Removed"
     CHECK_RESULT $? 0 0 "Failed to specify the specific repo repository to uninstall the RPM pkg"
+    SLEEP_WAIT 5
     dnf install net-tools --repo="everything" -y | grep "Installed"
     CHECK_RESULT $? 0 0 "Failed to specify the specific repo repository to install the RPM pkg"
     dnf autoremove net-tools -y | grep "Removed"
