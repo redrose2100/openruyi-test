@@ -7,6 +7,7 @@
 #include <linux/if_tun.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 int tun_alloc(int flags)
 {
