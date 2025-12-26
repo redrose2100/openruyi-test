@@ -22,8 +22,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL hfsplus-tools
-    device=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '1p')
-    disk_list=/dev/"$device"
+    disk_list="/dev/$(TEST_DISK | head -n1)"
     LOG_INFO "End to prepare the test environment."
 }
 
