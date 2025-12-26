@@ -57,6 +57,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
     SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    sed -i '/client-relp.local/d' /etc/hosts
+    sed -i '/server-relp.local/d' /etc/hosts
     systemctl start iptables
     rm -rf /etc/rsyslog.d/server.conf
     systemctl restart rsyslog
