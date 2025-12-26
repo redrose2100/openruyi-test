@@ -29,7 +29,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     httpry -i "${NODE1_NIC}" -f timestamp,source-ip,dest-ip,direction,host,request-uri,user-agent -o tmp.log -b tmp.txt -d
-    for((i=1;i<=3;i++)); do
+    for((i=1;i<=6;i++)); do
         curl www.baidu.com
     done
     SLEEP_WAIT 5
@@ -39,7 +39,7 @@ function run_test() {
     rm -f index* tmp.log tmp.txt
     # test -F
     httpry -i "${NODE1_NIC}" -b tmp.txt -o tmp.log -F -d
-    for((i=1;i<=3;i++)); do
+    for((i=1;i<=6;i++)); do
         curl www.baidu.com
     done
     SLEEP_WAIT 10
@@ -49,7 +49,7 @@ function run_test() {
     rm -f index* tmp.txt tmp.log
     # test -n
     httpry -i "${NODE1_NIC}" -b tmp.txt -n 3 -o tmp.log -d
-    for((i=1;i<=4;i++)); do
+    for((i=1;i<=6;i++)); do
         curl www.baidu.com
     done
     SLEEP_WAIT 5
@@ -59,7 +59,7 @@ function run_test() {
     rm -f index* tmp.txt tmp.log
     # test -p
     httpry -n 2 -p -o tmp.log -b tmp.txt -d
-    for((i=1;i<=3;i++)); do
+    for((i=1;i<=6;i++)); do
         curl www.baidu.com
     done
     SLEEP_WAIT 2
@@ -73,7 +73,7 @@ function run_test() {
     pkill -9 -f "httpry -i"
     # test -s
     httpry -n 2 -s -o tmp.log -b tmp.txt -d
-    for((i=1;i<=3;i++)); do
+    for((i=1;i<=6;i++)); do
         curl www.baidu.com
     done
     SLEEP_WAIT 2
@@ -83,7 +83,7 @@ function run_test() {
     rm -f index* tmp.txt tmp.log
     # test -l
     httpry -s -l 20 -o tmp.log -b tmp.txt -d
-    for((i=1;i<=3;i++)); do
+    for((i=1;i<=6;i++)); do
         curl www.baidu.com
     done
     SLEEP_WAIT 15
@@ -93,7 +93,7 @@ function run_test() {
     rm -f index* tmp.txt tmp.log
     # test -P
     httpry -n 2 -P PID -o tmp.log -b tmp.txt -d
-    for((i=1;i<=3;i++)); do
+    for((i=1;i<=6;i++)); do
         curl www.baidu.com
     done
     SLEEP_WAIT 2
@@ -104,7 +104,7 @@ function run_test() {
     # test -u
     useradd testdemo
     httpry -n 2 -o tmp.log -u testdemo -b tmp.txt -d
-    for((i=1;i<=3;i++)); do
+    for((i=1;i<=6;i++)); do
         curl www.baidu.com
     done
     SLEEP_WAIT 2
