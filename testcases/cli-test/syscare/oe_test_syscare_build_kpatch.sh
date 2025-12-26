@@ -20,6 +20,7 @@
 source "common/common_syscare.sh"
 
 function pre_test() {
+    EXECUTE_T="720m"
     init_env
     download_and_compile_redis
     target='redis'
