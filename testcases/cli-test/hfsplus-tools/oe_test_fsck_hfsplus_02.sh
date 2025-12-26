@@ -17,13 +17,12 @@
 # @Desc      :   Test fsck.hfsplus
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL hfsplus-tools
-    device=$(lsblk | awk -F " " {'print $1'} | head -n 2 | tail -n 1)
-    disk_list=/dev/$device
+    disk_list="/dev/$(TEST_DISK | head -n1)"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -48,7 +47,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
