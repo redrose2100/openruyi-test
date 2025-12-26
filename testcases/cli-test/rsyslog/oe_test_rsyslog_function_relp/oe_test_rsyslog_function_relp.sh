@@ -23,7 +23,7 @@ function pre_test() {
     DNF_INSTALL "net-tools rsyslog-relp"
     DNF_INSTALL "net-tools rsyslog-relp" 2
     systemctl stop iptables firewalld && setenforce 0
-    SSH_CMD "systemctl stop iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "systemctl stop iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     iptables -F INPUT && iptables -P INPUT ACCEPT
     echo "${NODE1_IPV4}  server-relp.local" >> /etc/hosts && echo "${NODE2_IPV4}  client-relp.local" >> /etc/hosts
     LOG_INFO "End to prepare the test environment."
@@ -43,7 +43,7 @@ EOF
     SSH_CMD "
     echo '\$ModLoad omrelp\nlocal6.* :omrelp:${NODE1_IPV4}:20514' > /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
-    logger -t relp -p local6.err "relptest"${time}""
+    logger -t relp -p local6.err 'relptest${time}'
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     SLEEP_WAIT 20
