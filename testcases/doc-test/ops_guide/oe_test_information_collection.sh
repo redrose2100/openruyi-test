@@ -59,7 +59,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to execute lsblk"
     fdisk -l | grep "Device" | grep "Sectors"
     CHECK_RESULT $? 0 0 "Failed to execute fdisk -l"
-    lspci | grep -i 'eth'
+    lspci | grep -iE 'eth|bridge'
     CHECK_RESULT $? 0 0 "Failed to execute lspci"
     ip a | grep "inet"
     CHECK_RESULT $? 0 0 "Failed to execute ip a"
