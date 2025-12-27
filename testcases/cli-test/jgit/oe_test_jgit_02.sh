@@ -22,6 +22,10 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "jgit tar"
+    if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
+        DNF_INSTALL "java-11-openjdk"
+        sudo alternatives --set java "$(find /usr/lib/jvm/java-11-openjdk-11.*/bin/java | head -n1)"
+    fi
     tar -xvf ./common/data.tar.gz > /dev/null
     pojpath=$(
     cd "$(dirname "$0")" || exit 1
