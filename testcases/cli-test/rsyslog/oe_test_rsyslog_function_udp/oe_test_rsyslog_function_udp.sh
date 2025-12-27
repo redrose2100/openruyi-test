@@ -21,8 +21,9 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "net-tools"
-    systemctl stop iptables
-    SSH_CMD "systemctl stop iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    systemctl stop iptables firewalld && setenforce 0
+    SSH_CMD "systemctl stop iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    iptables -F INPUT && iptables -P INPUT ACCEPT
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -40,8 +41,8 @@ EOF
     SSH_CMD "
     echo  'local6.* @${NODE1_IPV4}' > /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
-    logger -t udp -p local6.err "udptest$time"
-    " ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    logger -t udp -p local6.err 'udptest${time}'
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     SLEEP_WAIT 10
     grep "udptest$time" /var/log/messages
@@ -52,7 +53,8 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    systemctl start iptables firewalld && setenforce 1
     rm -rf /etc/rsyslog.d/server.conf
     systemctl start iptables
     systemctl restart rsyslog
