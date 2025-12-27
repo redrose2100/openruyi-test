@@ -33,8 +33,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Add brctl with ${NODE1_NIC} failed."
     P_SSH_CMD --node 2 --cmd "brctl show | grep br0 | grep ${test_nic}"
     CHECK_RESULT $? 0 0 "Check brctl created failed."
-    REMOTE_REBOOT 2 30
-    REMOTE_REBOOT_WAIT 2 30
+    REMOTE_REBOOT 2 180
+    REMOTE_REBOOT_WAIT 2 180
     P_SSH_CMD --node 2 --cmd "brctl show | grep br0"
     CHECK_RESULT $? 1 0 "Check brctl deleted failed."
     LOG_INFO "End to run test."
@@ -42,7 +42,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE 2
     LOG_INFO "End to restore the test environment."
 }
 
