@@ -16,14 +16,16 @@
 # @Desc      :   Close the firewall, support relp protocol
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "net-tools rsyslog-relp"
     DNF_INSTALL "net-tools rsyslog-relp" 2
-    systemctl stop iptables
-    SSH_CMD "systemctl stop iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    systemctl stop iptables firewalld && setenforce 0
+    SSH_CMD "systemctl stop iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    iptables -F INPUT && iptables -P INPUT ACCEPT
+    echo "${NODE1_IPV4}  server-relp.local" >> /etc/hosts && echo "${NODE2_IPV4}  client-relp.local" >> /etc/hosts
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -41,8 +43,8 @@ EOF
     SSH_CMD "
     echo '\$ModLoad omrelp\nlocal6.* :omrelp:${NODE1_IPV4}:20514' > /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
-    logger -t relp -p local6.err "relptest$time"
-    " ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    logger -t relp -p local6.err 'relptest${time}'
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     SLEEP_WAIT 20
     grep "relptest$time" /var/log/messages
@@ -52,9 +54,10 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    systemctl start iptables
+    DNF_REMOVE "$@"
+    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    sed -i '/client-relp.local/d' /etc/hosts && sed -i '/server-relp.local/d' /etc/hosts
+    systemctl start iptables firewalld && setenforce 1
     rm -rf /etc/rsyslog.d/server.conf
     systemctl restart rsyslog
     LOG_INFO "End to restore the test environment."
