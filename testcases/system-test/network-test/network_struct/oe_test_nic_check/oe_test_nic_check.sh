@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    lspci | grep Eth
+    lspci | grep -iE 'eth|bridge'
     CHECK_RESULT $? 0 0 "Check lspci failed."
     ethtool "${test_nic}"
     CHECK_RESULT $? 0 0 "Check ${test_nic} failed."

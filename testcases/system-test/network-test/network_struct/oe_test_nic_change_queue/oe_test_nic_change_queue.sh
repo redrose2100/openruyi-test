@@ -35,9 +35,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check rx failed."
     ori_tx=$(ethtool -g "${test_nic}" | grep "TX:" | tail -n 1 | awk '{print $2}')
     CHECK_RESULT $? 0 0 "Check tx failed."
-    ethtool -G "${test_nic}" rx 4096
+    max_rx=$(ethtool -g "${test_nic}" | awk '/Pre-set maximums:/ {f=1} f && /RX:/ {print $2; exit}')
+    max_tx=$(ethtool -g "${test_nic}" | awk '/Pre-set maximums:/ {f=1} f && /TX:/ {print $2; exit}')
+    if [[ -z "$max_rx" || -z "$max_tx" ]]; then
+        LOG_WARN "NIC does not support ring size configuration"
+        exit 255
+    fi
+    set_rx=$(( max_rx < 4096 ? max_rx : 4096 ))
+    set_tx=$(( max_tx < 4096 ? max_tx : 4096 ))
+    ethtool -G "${test_nic}" rx "$set_rx"
     CHECK_RESULT $? 0 0 "Change rx failed."
-    ethtool -G "${test_nic}" tx 4096
+    ethtool -G "${test_nic}" tx "$set_tx"
     CHECK_RESULT $? 0 0 "Change tx failed."
     LOG_INFO "End to run test."
 }

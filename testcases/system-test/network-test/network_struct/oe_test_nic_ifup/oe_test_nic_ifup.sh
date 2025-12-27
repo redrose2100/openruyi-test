@@ -23,11 +23,15 @@ function pre_test() {
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     test_nic=$(TEST_NIC 1 | awk '{print $1}')
-    flag=1
+    if ! find /etc/sysconfig/network-scripts -maxdepth 1 -type f | read; then
+        LOG_WARN "There are no files under /etc/sysconfig/network-scripts, skip."
+        exit 255
+    fi
     if [ ! -f /etc/sysconfig/network-scripts/ifcfg-"${test_nic}" ]; then
         cp /etc/sysconfig/network-scripts/ifcfg-"${NODE1_NIC}" /etc/sysconfig/network-scripts/ifcfg-"${test_nic}"
         sed -i "s/${NODE1_NIC}/${test_nic}/g" /etc/sysconfig/network-scripts/ifcfg-"${test_nic}"
         sed -i 's/UUID/#UUID/g' /etc/sysconfig/network-scripts/ifcfg-"${test_nic}"
+        flag=1
     fi 
     LOG_INFO "End to prepare the test environment."
 }
