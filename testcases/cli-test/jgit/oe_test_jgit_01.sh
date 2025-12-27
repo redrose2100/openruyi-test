@@ -22,6 +22,10 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "jgit tar"
+    if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
+        DNF_INSTALL "java-11-openjdk"
+        sudo alternatives --set java "$(find /usr/lib/jvm/java-11-openjdk-11.*/bin/java | head -n1)"
+    fi
     tar -xvf ./common/data.tar.gz > /dev/null
     LOG_INFO "End to prepare the test environment."
 }
@@ -39,11 +43,11 @@ function run_test() {
     jgit --version | grep "jgit version "
     CHECK_RESULT $? 0 0 "Check jgit --version failed"
     mkdir /tmp/jgitdemo
-    pushd /tmp/jgitdemo
+    pushd /tmp/jgitdemo || exit
     jgit clone https://gitee.com/gittyee/demo.git
     test -d ./demo/.git
     CHECK_RESULT $? 0 0 "Check jgit clone failed"
-    pushd /tmp/jgitdemo/demo
+    pushd /tmp/jgitdemo/demo || exit
     touch demo.txt    
     jgit add demo.txt
     jgit status | grep "new file:   demo.txt"
@@ -64,7 +68,7 @@ function run_test() {
     java -verbose > tmp.txt
     jrepath=$(cat tmp.txt | sed -n '1p' | awk -F " " '{print $2}' | awk -F "jre" '{print $1}')
     jrelib=${jrepath}jre/lib/ext
-    cp ${pojpath}/lib/* ${jrelib}
+    cp "${pojpath}"/lib/* "${jrelib}"
     rm -f tmp.txt
     jgit commit -m "test demo"
     jgit log -n 1 | grep "test demo"
@@ -82,14 +86,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check jgit diff failed"
     jgit fetch https://gitee.com/gittyee/demo.git HEAD
     CHECK_RESULT $? 0 0 "Check jgit fetch failed"
-    popd
+    popd || exit
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf /tmp/jgitdemo ${pojpath}/data/ ${pojpath}/lib/
+    DNF_REMOVE "$@"
+    rm -rf /tmp/jgitdemo "${pojpath}"/data/ "${pojpath:?}"/lib/
     LOG_INFO "End to restore the test environment."
 }
 

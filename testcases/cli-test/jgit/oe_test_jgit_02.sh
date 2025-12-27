@@ -22,15 +22,19 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "jgit tar"
+    if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
+        DNF_INSTALL "java-11-openjdk"
+        sudo alternatives --set java "$(find /usr/lib/jvm/java-11-openjdk-11.*/bin/java | head -n1)"
+    fi
     tar -xvf ./common/data.tar.gz > /dev/null
     pojpath=$(
     cd "$(dirname "$0")" || exit 1
         pwd
     )
     mkdir /tmp/jgitdemo
-    pushd /tmp/jgitdemo
+    pushd /tmp/jgitdemo || exit
     jgit clone https://gitee.com/gittyee/demo.git
-    pushd /tmp/jgitdemo/demo
+    pushd /tmp/jgitdemo/demo || exit
     touch demo.txt
     jgit add demo.txt
     jgit commit -m "test demo"
@@ -39,20 +43,20 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    pushd /tmp/jgitdemo/demo
+    pushd /tmp/jgitdemo/demo || exit
     jgit gc 2>&1 | grep "Prune loose, unreferenced objects"
     CHECK_RESULT $? 0 0 "Check jgit gc failed"
-    pushd /tmp/jgitdemo
+    pushd /tmp/jgitdemo || exit
     mkdir demoinit
-    pushd /tmp/jgitdemo/demoinit
+    pushd /tmp/jgitdemo/demoinit || exit
     jgit init
     test -d .git
     CHECK_RESULT $? 0 0 "Check jgit init failed"
-    pushd /tmp/jgitdemo/demo
+    pushd /tmp/jgitdemo/demo || exit
     jgit log -n 1 | grep "test demo"
     CHECK_RESULT $? 0 0 "Check jgit log failed"
     num=$(jgit ls-files | wc -l)
-    test ${num} -gt 0
+    test "${num}" -gt 0
     CHECK_RESULT $? 0 0 "Check jgit ls-files failed"
     jgit ls-remote https://gitee.com/gittyee/demo.git | grep "refs/heads/dev"
     CHECK_RESULT $? 0 0 "Check jgit ls-remote failed"
@@ -85,14 +89,14 @@ EOF
     CHECK_RESULT $? 0 0 "Check jgit push failed"
     jgit reflog | grep "commit: test demo"
     CHECK_RESULT $? 0 0 "Check jgit reflog failed"
-    popd
+    popd || exit
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
-    rm -rf /tmp/jgitdemo ${pojpath}/data/ ${pojpath}/lib/
+    DNF_REMOVE "$@"
+    rm -rf /tmp/jgitdemo "${pojpath}"/data/ "${pojpath:?}"/lib/
     LOG_INFO "End to restore the test environment."
 }
 
