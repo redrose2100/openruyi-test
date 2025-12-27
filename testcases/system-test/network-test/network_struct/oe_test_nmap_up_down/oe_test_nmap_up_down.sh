@@ -21,12 +21,16 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     test_nic=$(TEST_NIC 1 | awk '{print $1}')
-    flag=1
+    if ! find /etc/sysconfig/network-scripts -maxdepth 1 -type f | read -r; then
+        LOG_WARN "There are no files under /etc/sysconfig/network-scripts, skip."
+        exit 255
+    fi
     if [ ! -f /etc/sysconfig/network-scripts/ifcfg-"${test_nic}" ]; then
         cp /etc/sysconfig/network-scripts/ifcfg-"${NODE1_NIC}" /etc/sysconfig/network-scripts/ifcfg-"${test_nic}"
         sed -i "s/${NODE1_NIC}/${test_nic}/g" /etc/sysconfig/network-scripts/ifcfg-"${test_nic}"
         sed -i 's/UUID/#UUID/g' /etc/sysconfig/network-scripts/ifcfg-"${test_nic}"
-    fi
+        flag=1
+    fi 
     systemctl restart NetworkManager
     LOG_INFO "End to prepare the test environment."
 }
@@ -50,7 +54,7 @@ function post_test() {
         rm -rf /etc/sysconfig/network-scripts/ifcfg-"${test_nic}"
     fi
     systemctl restart NetworkManager
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
