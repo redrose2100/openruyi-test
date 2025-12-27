@@ -20,7 +20,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
+    EXECUTE_T="240m"
     srcpath="/tmp/testkconfig/linux"
     outpath="/tmp/testkconfig/checkresult"
     filepath="/tmp/testkconfig/check"
