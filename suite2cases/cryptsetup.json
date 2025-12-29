@@ -5,18 +5,13 @@
     ],
     "cases": [
         {
-            "name": "oe_test_encrypt_data",
-            "add disk": []
+            "name": "oe_test_encrypt_data"
         },
         {
-            "name": "oe_test_luks_encrypted",
-            "add disk": []
+            "name": "oe_test_luks_encrypted"
         },
         {
-            "name": "oe_test_use_luks",
-            "add disk": [
-                10
-            ]
+            "name": "oe_test_use_luks"
         }
     ]
 }
