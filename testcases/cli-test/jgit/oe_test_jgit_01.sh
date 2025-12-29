@@ -16,12 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test jgit
 # #############################################
+# shellcheck disable=SC2164,SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "jgit tar"
+    if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
+        DNF_INSTALL "java-11-openjdk"
+        sudo alternatives --set java "$(find /usr/lib/jvm/java-11-openjdk-11.*/bin/java | head -n1)"
+    fi
     tar -xvf ./common/data.tar.gz > /dev/null
     LOG_INFO "End to prepare the test environment."
 }
@@ -62,9 +67,9 @@ function run_test() {
     test -f unuse.txt
     CHECK_RESULT $? 1 0 "Check jgit clean failed"
     java -verbose > tmp.txt
-    jrepath=$(cat tmp.txt | sed -n '1p' | awk -F " " '{print $2}' | awk -F "jre" '{print $1}')
+    jrepath=$(sed -n '1p' tmp.txt | awk -F " " '{print $2}' | awk -F "jre" '{print $1}')
     jrelib=${jrepath}jre/lib/ext
-    cp ${pojpath}/lib/* ${jrelib}
+    cp "${pojpath}"/lib/* "${jrelib}"
     rm -f tmp.txt
     jgit commit -m "test demo"
     jgit log -n 1 | grep "test demo"
@@ -75,7 +80,7 @@ function run_test() {
     SLEEP_WAIT 5
     pgrep -f "java org.eclipse.jgit.pgm.Main daemon"
     CHECK_RESULT $? 0 0 "Check jgit daemon failed"
-    kill -9 $(pgrep -f "java org.eclipse.jgit.pgm.Main daemon")
+    kill -9 "$(pgrep -f "java org.eclipse.jgit.pgm.Main daemon")"
     jgit describe --always
     CHECK_RESULT $? 0 0 "Check jgit describe failed"
     jgit diff origin/master HEAD | grep "+++ b/demo.txt"
@@ -89,7 +94,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf /tmp/jgitdemo ${pojpath}/data/ ${pojpath}/lib/
+    rm -rf /tmp/jgitdemo "${pojpath}"/data/ "${pojpath:?}"/lib/
     LOG_INFO "End to restore the test environment."
 }
 
