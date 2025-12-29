@@ -30,7 +30,7 @@ function pre_test() {
 #include <stdio.h>
 #define PAGE "<html><head><title>libmicrohttpd demo</title>"\
              "</head><body>libmicrohttpd demo</body></html>"
-static int ahc_echo(void * cls,
+static enum MHD_Result ahc_echo(void *cls,
                     struct MHD_Connection * connection,
                     const char * url,
                     const char * method,
@@ -41,7 +41,7 @@ static int ahc_echo(void * cls,
   static int dummy;
   const char * page = cls;
   struct MHD_Response * response;
-  int ret;
+  enum MHD_Result ret;
   if (0 != strcmp(method, "GET"))
     return MHD_NO; /* unexpected method */
   if (&dummy != *ptr)
