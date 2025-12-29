@@ -16,23 +16,24 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test aesmd.service restart
 # #############################################
+# shellcheck disable=SC2119
 
-source "../common/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    if [ "$(uname -i)" == aarch64 ]; then
-        LOG_INFO "The environment does not support testing"
-        return 0
+    if [ "$(uname -m)" == x86_64 ]; then
+        DNF_INSTALL libsgx-enclave-common
     else
-        DNF_INSTALL sgx-aesm-service
+        LOG_INFO "The environment does not support testing"
+        exit 255
     fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test "$(uname -i)" == x86_64 && (
+    test "$(uname -m)" == x86_64 && (
         test_execution aesmd.service
         systemctl reload aesmd.service
     )
