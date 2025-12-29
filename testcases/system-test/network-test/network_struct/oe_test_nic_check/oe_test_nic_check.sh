@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Check pci
 #####################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    lspci | grep Eth
+    lspci | grep -iE 'eth|bridge'
     CHECK_RESULT $? 0 0 "Check lspci failed."
     ethtool "${test_nic}"
     CHECK_RESULT $? 0 0 "Check ${test_nic} failed."
@@ -40,7 +40,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
