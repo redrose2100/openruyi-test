@@ -53,6 +53,11 @@
         {
             "name": "oe_test_oedp_13",
             "machine num": 1
+        },
+        {
+            "name": "oe_test_oedp_14",
+            "machine num": 3,
+            "machine type": "physical"
         }
     ]
 }
