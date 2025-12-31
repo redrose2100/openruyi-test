@@ -16,13 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test cc-kuasar-vmm.service restart
 # #############################################
-#shellcheck disable=SC1091
+#shellcheck disable=SC1091,SC2119
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if [ "$NODE1_FRAME" == "x86_64" ]; then
         LOG_INFO "Kuasar-cc is unsupported on x86_64 architecture"
+        exit 255
+    fi
+    if ! dnf list available kuasar-cc &> /dev/null; then
+        echo "仓库中不存在 kuasar-cc 包，跳过用例"
         exit 255
     fi
     DNF_INSTALL "kuasar-cc"
@@ -40,7 +44,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop cc-kuasar-vmm.service
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     rm -rf /run/cc-kuasar-vmm
     LOG_INFO "End to restore the test environment."
 }
