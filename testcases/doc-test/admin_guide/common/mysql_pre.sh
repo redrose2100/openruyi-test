@@ -16,16 +16,19 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   mysql prepare
 # ############################################
+# shellcheck disable=SC1090,SC2154
+
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function mysql_pre() {
     grep -w mysql /etc/passwd && userdel mysql
     groupadd mysql
     useradd -g mysql mysql
-    echo ${sql_password} | passwd --stdin mysql
+    echo "${sql_password}" | passwd --stdin mysql
     dir="/data/mysql"
     test -d ${dir} || mkdir -p ${dir}
     CHECK_RESULT $?
-    rm -rf ${dir}/*
+    rm -rf "${dir:?}"/*
     mkdir -p ${dir}/data ${dir}/tmp ${dir}/run ${dir}/log
     chown -R mysql:mysql /data
     cd - || exit
@@ -64,7 +67,7 @@ user=mysql" >/etc/my.cnf
     rm -rf /tmp/mysql.sock
     ln -s /data/mysql/run/mysql.sock /tmp/mysql.sock
     chkconfig mysql on
-    [ -n ${mysql_passwd} ] || exit 1
+    [ -n "${mysql_passwd}" ] || exit 1
 
     su - mysql -c "service mysql start" | grep "SUCCESS"
     CHECK_RESULT $?
@@ -76,8 +79,8 @@ user=mysql" >/etc/my.cnf
 }
 
 function clean_mysql() {
-    sql_pid=$(ps -ef | grep -w mysql | grep -v grep | awk '{print$2}')
-    kill -9 ${sql_pid}
+    sql_pid=$(pgrep mysql)
+    kill -9 "${sql_pid}"
     rm -rf /data/mysql
     userdel -r mysql
     rm -rf /tmp/mysql.sock
