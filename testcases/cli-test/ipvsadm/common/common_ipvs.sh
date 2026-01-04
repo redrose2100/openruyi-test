@@ -19,8 +19,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function RANDOM_IP() {
     while true; do
-        random_ip=192.168.122.$(shuf -e $(seq 1 254) | head -n 1)
-        ping -c 3 "${random_ip}" &>/dev/nul || {
+        random_ip=$(ip -4 -o addr show dev "$(TEST_NIC 1)" | head -n 1 | awk '{print $4}' | cut -d/ -f1 | cut -d. -f1-3).$(shuf -e $(seq 1 254) | head -n 1)
+        ping -c 3 "${random_ip}" &>/dev/null || {
             printf "%s" "$random_ip"
             break
         }
