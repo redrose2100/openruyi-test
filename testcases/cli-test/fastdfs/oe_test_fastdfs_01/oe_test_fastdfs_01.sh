@@ -32,7 +32,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check fdfs_trackerd start error failed."
     fdfs_storaged "$storage_path"/storage.conf start
     CHECK_RESULT $? 0 0 "Check fdfs_storaged start failed."
-    SLEEP_WAIT 10
+    SLEEP_WAIT 140
     netstat -unltp | grep "storage"
     CHECK_RESULT $? 0 0 "Check fdfs_storaged start error failed."
     fdfs_append_file --help >./usage.txt

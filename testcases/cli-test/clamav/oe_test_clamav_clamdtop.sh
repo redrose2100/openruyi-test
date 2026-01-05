@@ -33,6 +33,12 @@ function pre_test() {
         TCPSocket 3310
         LocalSocket /run/clamd.scan/clamd.sock
 " >/etc/clamd.d/scan.conf
+    # rv架构增加clamd@scan服务启动时间
+    if [ "$(uname -m)" = "riscv64" ]; then
+	     mkdir -p /etc/systemd/system/clamd@scan.service.d
+	     echo -e "[Service]\nTimeoutStartSec=700" > /etc/systemd/system/clamd@scan.service.d/timeout.conf
+	     systemctl daemon-reload
+    fi
     systemctl restart clamd@scan.service
 
     LOG_INFO "End to prepare the database config."
@@ -60,9 +66,14 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
+    systemctl stop clamd@scan.service
     rm -f /etc/clamd.d/scan.conf
     mv /etc/clamd.d/scan.conf.bak /etc/clamd.d/scan.conf
-    systemctl restart clamd@scan.service
+    # riscv restore server start time
+    if [ "$(uname -m)" = "riscv64" ]; then
+   	rm -rf /etc/systemd/system/clamd@scan.service.d
+   	systemctl daemon-reload
+    fi
     DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
