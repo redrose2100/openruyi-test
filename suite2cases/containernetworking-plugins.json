@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/containernetworking-plugins",
+    "cases": [
+        {
+            "name": "oe_test_service_cni-dhcp"
+        }
+    ]
+}
