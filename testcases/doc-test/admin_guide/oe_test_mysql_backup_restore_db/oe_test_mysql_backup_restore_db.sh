@@ -16,15 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Backup / restore database
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091,SC2154,SC2119
+
 source ../common/mysql_pre.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    yum list | grep mysql.*-server
-    if [ $? -eq 0 ]; then
+    if yum list | grep mysql-server; then
         rm -rf /var/lib/mysql/*
-	pck=`yum list | grep mysql.*-server | awk -F ' ' '{print $1}'`
-        DNF_INSTALL ${pck}
+        pck=$(yum list | grep mysql-server | awk -F ' ' '{print $1}')
+        DNF_INSTALL "${pck}"
         systemctl start mysqld
     else
         mysql_flag=1
@@ -78,42 +79,42 @@ expect eof
 "
     grep -iE "error|fail" testlog
     CHECK_RESULT $? 1
-    mysqldump -h ${NODE1_IPV4} -P 3306 -uroot -p${NODE1_PASSWORD} --all-databases >alldb.sql
+    mysqldump -h "${NODE1_IPV4}" -P 3306 -uroot -p"${NODE1_PASSWORD}" --all-databases >alldb.sql
     CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db1`" alldb.sql
+    grep "CREATE DATABASE .* $(db1)" alldb.sql
     CHECK_RESULT $?
-    grep "CREATE TABLE `tb1`" alldb.sql
+    grep "CREATE TABLE $(tb1)" alldb.sql
     CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db2`" alldb.sql
+    grep "CREATE DATABASE .* $(db2)" alldb.sql
     CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db3`" alldb.sql
-    CHECK_RESULT $?
-
-    mysqldump -h ${NODE1_IPV4} -P 3306 -uroot -p${NODE1_PASSWORD} --databases db1 >db1.sql
-    CHECK_RESULT $?
-    grep "CREATE TABLE `tb1`" db1.sql
-    CHECK_RESULT $?
-    grep "CREATE DATABASE .* `db1`" db1.sql
+    grep "CREATE DATABASE .* $(db3)" alldb.sql
     CHECK_RESULT $?
 
-    mysqldump -h ${NODE1_IPV4} -P 3306 -uroot -p${NODE1_PASSWORD} db1 tb1 >db1tb1.sql
+    mysqldump -h "${NODE1_IPV4}" -P 3306 -uroot -p"${NODE1_PASSWORD}" --databases db1 >db1.sql
     CHECK_RESULT $?
-    grep "CREATE TABLE `tb1`" db1tb1.sql
+    grep "CREATE TABLE $(tb1)" db1.sql
+    CHECK_RESULT $?
+    grep "CREATE DATABASE .* $(db1)" db1.sql
     CHECK_RESULT $?
 
-    rm -rf db1.sql
-    mysqldump -h ${NODE1_IPV4} -P 3306 -uroot -p${NODE1_PASSWORD} -d db1 >db1.sql
+    mysqldump -h "${NODE1_IPV4}" -P 3306 -uroot -p"${NODE1_PASSWORD}" db1 tb1 >db1tb1.sql
     CHECK_RESULT $?
-    grep "CREATE TABLE `tb1`" db1.sql
+    grep "CREATE TABLE $(tb1)" db1tb1.sql
     CHECK_RESULT $?
 
     rm -rf db1.sql
-    mysqldump -h ${NODE1_IPV4} -P 3306 -uroot -p${NODE1_PASSWORD} -t db1 >db1.sql
+    mysqldump -h "${NODE1_IPV4}" -P 3306 -uroot -p"${NODE1_PASSWORD}" -d db1 >db1.sql
     CHECK_RESULT $?
-    grep "INSERT INTO `tb1`" db1.sql
+    grep "CREATE TABLE $(tb1)" db1.sql
     CHECK_RESULT $?
 
-    mysql -h ${NODE1_IPV4} -P 3306 -uroot -p${NODE1_PASSWORD} -t db3 <db1.sql
+    rm -rf db1.sql
+    mysqldump -h "${NODE1_IPV4}" -P 3306 -uroot -p"${NODE1_PASSWORD}" -t db1 >db1.sql
+    CHECK_RESULT $?
+    grep "INSERT INTO $(tb1)" db1.sql
+    CHECK_RESULT $?
+
+    mysql -h "${NODE1_IPV4}" -P 3306 -uroot -p"${NODE1_PASSWORD}" -t db3 <db1.sql
     CHECK_RESULT $?
     expect -c "
     log_file testlogm
@@ -142,17 +143,17 @@ function post_test() {
         \"Enter*\" { send \"${NODE1_PASSWORD}\r\";
         expect \"mysql>\" { send \"DROP DATABASE db1;\r\"}
         expect \"mysql>\" { send \"DROP DATABASE db2;\r\"}
-	expect \"mysql>\" { send \"DROP DATABASE db3;\r\"}
-	expect \"mysql>\" { send \"DROP USER 'root'@'%';\r\"}
+	    expect \"mysql>\" { send \"DROP DATABASE db3;\r\"}
+	    expect \"mysql>\" { send \"DROP USER 'root'@'%';\r\"}
         expect \"mysql>\" { send \"exit\r\"}
 }
 }
 expect eof
 "
-    test -z ${mysql_flag} || clean_mysql
+    test -z "${mysql_flag}" || clean_mysql
     rm -rf log testlog* db1.sql db1tb1.sql alldb.sql
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

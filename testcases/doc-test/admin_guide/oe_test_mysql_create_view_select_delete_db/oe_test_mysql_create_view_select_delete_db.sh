@@ -16,15 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Create, view, select, delete database
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091,SC2154,SC2119
+
 source ../common/mysql_pre.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    yum list | grep mysql.*-server
-    if [ $? -eq 0 ]; then
+    if yum list | grep mysql-server; then
         rm -rf /var/lib/mysql/*
-	pkgs=`yum list | grep mysql.*-server | awk -F ' ' '{print $1}'`
-        DNF_INSTALL ${pkgs}
+        pkgs=$(yum list | grep mysql-server | awk -F ' ' '{print $1}')
+        DNF_INSTALL "${pkgs}"
         systemctl start mysqld
     else
         mysql_flag=1
@@ -55,22 +56,20 @@ expect eof
 "
     grep -iE "error|fail|while executing" testlog
     CHECK_RESULT $? 1
-    #cat testlog | grep -v changed | grep -w "Database" -A 5 | grep -w databaseexample
     grep -v changed testlog | grep -w "Database" -A 5 | grep -w databaseexample
     CHECK_RESULT $?
-    #cat testlog | grep "USE databaseexample" -A 1 | grep "Database changed"
     grep "USE databaseexample" -A 1 testlog | grep "Database changed"
     CHECK_RESULT $?
-    CHECK_RESULT $(cat testlog | grep -v changed | grep -w "Database" -A 5 | grep -w databaseexample | wc -l) 1
+    CHECK_RESULT "$(grep -v changed <testlog | grep -w 'Database' -A 5 | grep -c databaseexample)" 1
     LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf testlog
-    test -z ${mysql_flag} || clean_mysql
+    test -z "${mysql_flag}" || clean_mysql
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"
