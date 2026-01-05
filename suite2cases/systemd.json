@@ -621,6 +621,10 @@
         {
             "name": "oe_test_telinit",
             "machine num": 1
+        },
+        {
+            "name": "oe_test_service_systemd-battery-check",
+            "machine num": 1
         }
     ]
 }
