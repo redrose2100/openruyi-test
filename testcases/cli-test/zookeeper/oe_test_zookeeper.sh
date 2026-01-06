@@ -16,12 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command zookeeper
 # ############################################
+# shellcheck disable=SC2119
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "apache-zookeeper"
+    DNF_INSTALL "apache-zookeeper hostname"
     local_ip=$(hostname -I |awk '{print $1}')
     data_dir="/home/zookeeper/dataDir"
 
@@ -54,7 +55,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     rm -rf /home/zookeeper/
     rm -rf /opt/zookeeper/
     userdel zookeeper
