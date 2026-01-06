@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test the basic functions of pip3
 # ############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -57,7 +57,7 @@ function run_test() {
     pip3 uninstall -y requests
     pip3 install --upgrade requests | grep Successfully
     CHECK_RESULT $? 0 0 "Failed to repead execute pip3 install --upgrade"
-    pip3 install --ignore-installed requests | grep "Installing collected packages" | grep "Successfully installed" | grep requests
+    pip3 install --ignore-installed requests | grep -C 2 "Installing collected packages" | grep "Successfully installed" | grep requests
     CHECK_RESULT $? 0 0 "Failed to execute pip3 install --ignore-installed"
     LOG_INFO "End to run test."
 }
@@ -66,7 +66,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /tmp/lib /tmp/local
     pip3 uninstall -y requests urllib3 idna charset-normalizer certifi
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
