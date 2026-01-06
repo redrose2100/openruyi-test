@@ -1,9 +1,8 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/trace-cmd",
-  "cases": [
-    {
-      "name": "oe_test_service_trace-cmd"
-    }
-  ]
+    "path": "$OET_PATH/testcases/cli-test/trace-cmd",
+    "cases": [
+        {
+            "name": "oe_test_service_trace-cmd"
+        }
+    ]
 }
-
