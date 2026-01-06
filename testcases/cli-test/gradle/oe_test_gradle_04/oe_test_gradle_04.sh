@@ -15,9 +15,11 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   verification gradle‘s command
 #####################################
+# shellcheck disable=SC2034
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
+    EXECUTE_T="60m"
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL gradle
     cp ../common/build.gradle ./
@@ -26,6 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     expect <<-END
+    set timeout 300
     log_file gradle_log
     spawn gradle base --scan
     expect "Do you accept these terms?"
@@ -63,7 +66,7 @@ END
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf build build.gradle .gradle/
+    rm -rf build build.gradle .gradle/ gradle_log
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

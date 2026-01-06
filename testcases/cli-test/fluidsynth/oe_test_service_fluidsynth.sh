@@ -16,12 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test fluidsynth.service restart
 # #############################################
+# shellcheck disable=SC2119
 
 source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "fluidsynth alsa-topology"
+    DNF_INSTALL "fluidsynth alsa-topology alsa-utils"
     if ! aplay -l | grep -w card;then
         exit 255
         LOG_INFO "There is no sound card device in this environment."
@@ -38,7 +39,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

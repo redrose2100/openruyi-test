@@ -72,11 +72,11 @@
         },
         {
             "name": "oe_test_host_to_host_vpn",
-            "machine num": 1
+            "machine num": 2
         },
         {
             "name": "oe_test_site_to_site_vpn",
-            "machine num": 1
+            "machine num": 2
         }
     ]
 }

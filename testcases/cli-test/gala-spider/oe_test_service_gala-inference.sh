@@ -16,7 +16,7 @@
 # @License : Mulan PSL v2
 # @Desc: Test gala-inference restart
 # #############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
 source "../common/common_lib.sh"
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -27,6 +27,7 @@ function pre_test() {
         flag=true
         DNF_REMOVE 1 "cyrus-sasl"
     fi
+    pip install -i https://mirrors.aliyun.com/pypi/simple numpy==1.26.4
     DNF_INSTALL "kafka gala-inference"
     cp -f /opt/kafka/config/server.properties /opt/kafka/config/server.properties-bak
     cp -f /etc/gala-inference/gala-inference.yaml /etc/gala-inference/gala-inference.yaml-bak
@@ -53,10 +54,11 @@ function post_test() {
     pgrep -f -a "kafka-server-start|zookeeper-server-start" | awk '{print $1}' | xargs kill -9
     mv -f /opt/kafka/config/server.properties-bak /opt/kafka/config/server.properties
     mv -f /etc/gala-inference/gala-inference.yaml-bak /etc/gala-inference/gala-inference.yaml
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     if [ "${flag}" = "true" ]; then
         DNF_INSTALL "cyrus-sasl"
     fi
+    pip uninstall numpy==1.26.4
     LOG_INFO "End to restore the test environment."
 }
 

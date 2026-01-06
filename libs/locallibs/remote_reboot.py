@@ -48,7 +48,7 @@ def reboot_wait(node=2, wait_time=None):
         )
         sys.exit(1)
 
-    machine_type = os.environ.get("NODE" + str(node) + "_MACHINE")
+    machine_type = os.environ.get(f"NODE{node}_MACHINE")
 
     if wait_time is not None:
         time_sleep = wait_time
@@ -57,29 +57,29 @@ def reboot_wait(node=2, wait_time=None):
     else:
         time_sleep = 600
 
-    while [count < time_sleep]:
+    while count < time_sleep:
         exitcode = subprocess.getstatusoutput(
-            "ping -c 3 -w 3 " + os.environ.get("NODE" + str(node) + "_IPV4")
+            f"ping -c 3 -w 3 {os.environ.get(f'NODE{node}_IPV4')}"
         )[0]
         if exitcode == 0:
             conn = ssh_cmd.pssh_conn(
-                os.environ.get("NODE" + str(node) + "_IPV4"),
-                os.environ.get("NODE" + str(node) + "_PASSWORD"),
-                os.environ.get("NODE" + str(node) + "_SSH_PORT"),
-                os.environ.get("NODE" + str(node) + "_USER"),
+                os.environ.get(f"NODE{node}_IPV4"),
+                os.environ.get(f"NODE{node}_PASSWORD"),
+                os.environ.get(f"NODE{node}_SSH_PORT"),
+                os.environ.get(f"NODE{node}_USER"),
                 log_level="warn",
             )
             if conn:
-                if ssh_cmd.pssh_cmd(conn, "ls")[1]:
-                    ssh_cmd.pssh_close(conn)
+                ret, _ = ssh_cmd.pssh_cmd(conn, "ls")
+                ssh_cmd.pssh_close(conn)
+                if ret == 0:
                     return 0
         time.sleep(1)
         count += 1
 
     mugen_log.logging(
         "error",
-        "The remote machine:%s failed to restart."
-        % os.environ.get("NODE" + str(node) + "_IPV4"),
+        f"The remote machine:{os.environ.get(f'NODE{node}_IPV4')} failed to restart."
     )
     return 519
 

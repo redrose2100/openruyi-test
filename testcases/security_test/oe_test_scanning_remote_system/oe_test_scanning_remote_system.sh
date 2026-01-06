@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Scanning remote system vulnerabilities
 # #############################################
-# shellcheck disable=SC2034
+# shellcheck disable=SC2034,SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
@@ -54,7 +54,9 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE 2 "$@"
     DNF_REMOVE "$@"
+    dnf install python3-paramiko -y
     rm -rf /root/remote-vulnerability.html
     LOG_INFO "Finish environment cleanup!"
 }
+
 main "$@"

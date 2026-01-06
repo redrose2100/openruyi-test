@@ -30,7 +30,11 @@ function run_test() {
     LOG_INFO "Start to run test."
     ./activemq start
     CHECK_RESULT $? 0 0 "Activemq server startup failed1"
-    SLEEP_WAIT 10
+    if [ "${NODE1_FRAME}" == "riscv64" ] ; then
+        SLEEP_WAIT 180
+    else
+        SLEEP_WAIT 10
+    fi
     ./activemq status
     CHECK_RESULT $? 0 0 "Activemq state is not active"
     netstat -anp | grep 8161

@@ -20,7 +20,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL qt5-qttools
+    DNF_INSTALL "qt5-qttools dbus-daemon"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -28,14 +28,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     qdbus-qt5 --system | grep "org.freedesktop"
     CHECK_RESULT $?
-    if systemctl get-default | grep graphical.target; then
-        qdbus-qt5 --bus | grep -i "bus"
-        CHECK_RESULT $?
-        qdbus-qt5 --literal org.freedesktop.DBus | grep "/org/freedesktop/DBus"
-        CHECK_RESULT $?
-    else
-        LOG_INFO "The current environment is not graphical"
-    fi
+    dbus-run-session -- qdbus-qt5 --bus | grep -i "bus"
+    CHECK_RESULT $?
+    dbus-run-session -- qdbus-qt5 --literal org.freedesktop.DBus | grep "/org/freedesktop/DBus"
+    CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
 

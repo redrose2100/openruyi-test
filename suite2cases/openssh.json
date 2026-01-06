@@ -84,7 +84,7 @@
         },
         {
             "name": "oe_test_sec_jump_login",
-            "machine num": 1
+            "machine num": 2
         }
     ]
 }

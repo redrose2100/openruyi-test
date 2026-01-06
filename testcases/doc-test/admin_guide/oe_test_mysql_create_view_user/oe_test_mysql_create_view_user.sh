@@ -16,18 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Create User / View User
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091,SC2154,SC2119
+
 source ../common/mysql_pre.sh
+
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    yum list | grep mysql.*-server
-    if [ $? -eq 0 ]; then
+    if yum list | grep mysql-server; then
         rm -rf /var/lib/mysql/*
-	pkgs=`yum list | grep mysql.*-server | awk -F ' ' '{print $1}'`
-        DNF_INSTALL ${pkgs}
-	CHECK_RESULT $?
+        pkgs=$(yum list | grep mysql-server | awk -F ' ' '{print $1}')
+        DNF_INSTALL "${pkgs}"
         systemctl start mysqld
-	CHECK_RESULT $?
     else
         mysql_flag=1
         mysql_pre
@@ -55,11 +54,11 @@ expect eof
 "
     grep -iE "error|fail|while executing" testlog
     CHECK_RESULT $? 1
-    cat testlog | grep "SHOW GRANTS FOR" -A 10 | grep "GRANT USAGE ON" | grep userexample1 | grep localhost
+    grep "SHOW GRANTS FOR" -A 10 <testlog | grep "GRANT USAGE ON" | grep userexample1 | grep localhost
     CHECK_RESULT $?
-    cat testlog | grep "SELECT USER" -A 10 | grep userexample1 | grep localhost
+    grep "SELECT USER" -A 10 <testlog | grep userexample1 | grep localhost
     CHECK_RESULT $?
-    cat testlog | grep "SELECT USER" -A 10 | grep userexample2 | grep "192.168.122.196"
+    grep "SELECT USER" -A 10 <testlog | grep userexample2 | grep "192.168.122.196"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
@@ -80,9 +79,9 @@ expect eof
 "
     rm -rf testlog
     rm -rf log
-    test -z ${mysql_flag} || clean_mysql
+    test -z "${mysql_flag}" || clean_mysql
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 
-main $@
+main "$@"

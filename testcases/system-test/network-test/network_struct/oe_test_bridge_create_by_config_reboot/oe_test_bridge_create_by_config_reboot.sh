@@ -52,8 +52,8 @@ BRIDGE=br0' >/etc/sysconfig/network-scripts/ifcfg-${test_nic}"
     CHECK_RESULT $? 0 0 "Add brctl with ${test_nic} failed."
     P_SSH_CMD --node 2 --cmd "brctl show | grep br0 | grep ${test_nic}"
     CHECK_RESULT $? 0 0 "Check brctl created failed."
-    REMOTE_REBOOT "$@"
-    REMOTE_REBOOT_WAIT
+    REMOTE_REBOOT 2 180
+    REMOTE_REBOOT_WAIT 2 180
     P_SSH_CMD --node 2 --cmd "brctl show | grep br0"
     CHECK_RESULT $? 0 0 "Check brctl reboot failed."
     LOG_INFO "End to run test."
@@ -62,9 +62,9 @@ BRIDGE=br0' >/etc/sysconfig/network-scripts/ifcfg-${test_nic}"
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     P_SSH_CMD --node 2 --cmd "rm -rf /etc/sysconfig/network-scripts/ifcfg-br0 /etc/sysconfig/network-scripts/ifcfg-${test_nic}"
-    DNF_REMOVE 2 "$@"
-    REMOTE_REBOOT "$@"
-    REMOTE_REBOOT_WAIT
+    DNF_REMOVE 2
+    REMOTE_REBOOT 2 180
+    REMOTE_REBOOT_WAIT 2 180
     LOG_INFO "End to restore the test environment."
 }
 

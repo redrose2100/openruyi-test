@@ -24,8 +24,11 @@ function pre_test() {
     if ! dnf list available drbd-utils &> /dev/null; then
             echo "仓库中不存在 drbd-utils 包，跳过用例"
             exit 255
+    elif dnf list available kmod-drbd90 &> /dev/null; then
+       DNF_INSTALL "drbd-utils kmod-drbd90"
+    else
+       DNF_INSTALL "drbd-utils"
     fi
-    DNF_INSTALL "drbd-utils kmod-drbd90"
     depmod -a
     modprobe drbd
     LOG_INFO "End of environmental preparation!"

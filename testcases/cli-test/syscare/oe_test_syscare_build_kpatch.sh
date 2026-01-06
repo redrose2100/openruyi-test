@@ -15,11 +15,12 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Pressure load : concurrent operations
 #####################################
-# shellcheck disable=SC2086,SC2010,SC1091
+# shellcheck disable=SC2086,SC2010,SC1091,SC2034
 
 source "common/common_syscare.sh"
 
 function pre_test() {
+    EXECUTE_T="720m"
     init_env
     download_and_compile_redis
     target='redis'
