@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command zookeeper
 # ############################################
+# shellcheck disable=SC2119
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
@@ -54,7 +55,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     rm -rf /home/zookeeper/
     rm -rf /opt/zookeeper/
     userdel zookeeper
