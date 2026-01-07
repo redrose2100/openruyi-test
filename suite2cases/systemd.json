@@ -625,6 +625,10 @@
         {
             "name": "oe_test_service_systemd-battery-check",
             "machine num": 1
+        },
+        {
+            "name": "oe_test_target_initrd-usr-fs",
+            "machine num": 1
         }
     ]
 }
