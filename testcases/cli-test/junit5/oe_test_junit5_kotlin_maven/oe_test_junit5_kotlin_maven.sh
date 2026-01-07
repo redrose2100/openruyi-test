@@ -16,13 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Used with maven to support kotlin programming language
 # #############################################
-# shellcheck disable=SC1091
-source "../common/lib.sh"
+# shellcheck disable=SC1091,SC2034
+source "${OET_PATH}/testcases/cli-test/junit5/common/lib.sh"
 
 function pre_test() {
+    EXECUTE_T="60m"
     LOG_INFO "Start environment preparation."
-    pre_junit5
-    pre_maven
+    pre_junit5 ""
+    pre_maven ""
     mkdir -p junit5-maven-kotlin/src/main/kotlin/com/example/project
     mkdir -p junit5-maven-kotlin/src/test/kotlin/com/example/project/
     cp pom.xml junit5-maven-kotlin/
@@ -50,7 +51,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE "$@"
-    clean_maven
+    clean_maven ""
     rm -rf junit5-maven-kotlin /tmp/result
     LOG_INFO "Finish environment cleanup!"
 }

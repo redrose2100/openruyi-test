@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -13,15 +15,19 @@
 # @License   	:   Mulan PSL v2
 # @Desc      	:   the test of pngcrush package
 ####################################
+# shellcheck disable=SC2034
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    EXECUTE_T="60m"
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL jython
+    DNF_INSTALL "jython"
     ss=""
-    for file in $(ls /usr/share/jython/javalib); do
-        ss=$ss"/usr/share/jython/javalib/${file}:"
+    javalib_dir="/usr/share/jython/javalib"
+    for file in "$javalib_dir"/*; do
+       [ -e "$file" ] || continue
+       ss="$ss$file:"
     done
     export CLASSPATH=$ss
     LOG_INFO "End of environmental preparation!"
@@ -70,7 +76,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
