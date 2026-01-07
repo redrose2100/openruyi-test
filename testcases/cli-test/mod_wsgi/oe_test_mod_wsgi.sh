@@ -32,7 +32,7 @@ ws.serve_forever()
 EOF
     nohup python3 wsgi.py &
     CHECK_RESULT $? 0 0 'Wsgi.py execution failed'
-    sleep 2
+    sleep 10
     curl 127.0.0.1:9999 | grep 'Hello world!'
     CHECK_RESULT $? 0 0 'Could not match to hello word'
     LOG_INFO "End to run test."

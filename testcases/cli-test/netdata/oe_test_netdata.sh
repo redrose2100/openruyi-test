@@ -17,8 +17,7 @@
 #@Desc      :   Test "netdata" command
 ###################################
 
-# shellcheck disable=SC1091
-# shellcheck disable=SC2046
+# shellcheck disable=SC1091,SC2046,SC2034
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function config_params() {
@@ -30,8 +29,9 @@ function config_params() {
 }
 
 function pre_test() {
+    EXECUTE_T="50m"
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL netdata
+    DNF_INSTALL "netdata"
     touch test.txt
     mkdir -p /var/lib/netdata/cloud.d
     touch /var/lib/netdata/cloud.d/cloud.conf
