@@ -13,10 +13,12 @@
 # @License   	:   Mulan PSL v2
 # @Desc      	:   the test of pngcrush package
 ####################################
+# shellcheck disable=SC2034
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
+    EXECUTE_T="60m"
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "jython java-devel"
     ss=""
@@ -46,6 +48,7 @@ function run_test() {
 
     javac -d . ./common/Hello.java
     expect -c "
+    set timeout 60
     log_file testlog
     spawn jython --jdb
     send \"run Hello\r\"
@@ -60,7 +63,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf testlog Hello*
     export LANG=${old_LANG}
     LOG_INFO "Finish environment cleanup!"

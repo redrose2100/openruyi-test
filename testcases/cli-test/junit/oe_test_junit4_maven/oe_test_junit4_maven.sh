@@ -16,11 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Junit4+maven integration testing
 # ############################################
-# shellcheck disable=SC1091,SC2010
+# shellcheck disable=SC1091,SC2010,SC2034
 
 source "${OET_PATH}/testcases/cli-test/junit/common/common_junit.sh"
 
 function pre_test() {
+    EXECUTE_T="40m"
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     DNF_INSTALL "hamcrest maven wget"
