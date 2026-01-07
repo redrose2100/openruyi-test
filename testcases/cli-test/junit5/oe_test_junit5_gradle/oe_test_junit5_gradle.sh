@@ -16,10 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Run junit5 in gradle
 # #############################################
-
-source "../common/lib.sh"
+# shellcheck disable=SC1091,SC2034,SC2119
+source "${OET_PATH}/testcases/cli-test/junit5/common/lib.sh"
 
 function pre_test() {
+    EXECUTE_T="60m"
     LOG_INFO "Start environment preparation."
     pre_junit5
     DNF_INSTALL gradle
