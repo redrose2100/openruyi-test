@@ -17,13 +17,28 @@
 # @Desc      :   Test low-memory-monitor.service restart
 # #############################################
 # shellcheck disable=SC1091
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL low-memory-monitor 2
     P_SSH_CMD --cmd "cp -f /etc/default/grub /root/grub-bak;sed -i '/CMDLINE_LINUX/s/\"$/ psi=1\"/' /etc/default/grub;grub2-mkconfig -o $(find / -name grub.cfg)" --node 2
-    REMOTE_REBOOT 2 30
+    #REMOTE_REBOOT 2 30
+    if [ $(arch) = "riscv64" ]; then
+	SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    	LOG_INFO "Waiting for node ${NODE2_IPV4} to reboot and SSH to become available..."
+    	if ! timeout 300 bash -c "
+           while ! nc -zvnw 3 '${NODE2_IPV4}' 22 2>/dev/null; do
+	     sleep 30
+           done
+        "; then
+          LOG_ERROR "Node ${NODE2_IPV4} did not come back online within 300 seconds after reboot"
+          exit 1
+       fi
+       LOG_INFO "Node ${NODE2_IPV4} is back online."
+    else
+       REMOTE_REBOOT 2 30
+    fi
     service=low-memory-monitor.service
     log_time=$(P_SSH_CMD --cmd "date '+%Y-%m-%d %T'" --node 2)
     LOG_INFO "End to prepare the test environment."
@@ -61,7 +76,22 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     P_SSH_CMD --cmd "cp -f /root/grub-bak /etc/default/grub;grub2-mkconfig -o $(find / -name grub.cfg);rm -rf /root/grub-bak" --node 2
-    REMOTE_REBOOT 2 30
+    #REMOTE_REBOOT 2 30
+    if [ $(arch) = "riscv64" ]; then
+       SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+       LOG_INFO "Waiting for node ${NODE2_IPV4} to reboot and SSH to become available..."
+       if ! timeout 300 bash -c "
+	  while ! nc -zvnw 3 '${NODE2_IPV4}' 22 2>/dev/null; do
+	     sleep 30
+          done
+        "; then
+	LOG_ERROR "Node ${NODE2_IPV4} did not come back online within 300 seconds after reboot"					
+	exit 1
+       fi
+       LOG_INFO "Node ${NODE2_IPV4} is back online."
+    else
+       REMOTE_REBOOT 2 300
+    fi
     DNF_REMOVE "$@" 2
     LOG_INFO "End to restore the test environment."
 }

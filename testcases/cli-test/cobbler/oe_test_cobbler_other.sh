@@ -18,14 +18,22 @@
 ###################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+sslfile="/etc/httpd/conf.d/ssl.conf"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     echo 20 > test.json
     DNF_INSTALL "cobbler httpd"
+    sslfile="/etc/httpd/conf.d/ssl.conf"
+    if [ -f "$sslfile" ]; then
+       mv ${sslfile} /etc/httpd/conf.d/ssl.conf.bak
+    fi
     systemctl start httpd
     systemctl start cobblerd
-    SLEEP_WAIT 5
+    # 等待 cobblerd 监听 25151
+    while ! ss -tuln | grep -q ':25151 '; do
+      SLEEP_WAIT 2
+    done
     LOG_INFO "End of environmental preparation!"
 }
 

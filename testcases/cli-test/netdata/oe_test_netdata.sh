@@ -30,6 +30,7 @@ function config_params() {
 }
 
 function pre_test() {
+    EXECUTE_T="50m"
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL netdata
     touch test.txt

@@ -16,14 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Use in combination with spring
 # #############################################
+# shellcheck disable=SC2034
 
-source "../common/lib.sh"
+source "${OET_PATH}/testcases/cli-test/junit5/common/lib.sh"
 
 function pre_test() {
+    EXECUTE_T="90m"
     LOG_INFO "Start environment preparation."
-    pre_junit5
+    pre_junit5 ""
     DNF_INSTALL "springframework springframework-test"
-    pre_maven
+    pre_maven ""
     mkdir -p junit5-spring/src/test/java/com/example/springjunit5
     mkdir -p junit5-spring/src/test/java/com/example/springjunit5
     cp pom.xml junit5-spring
@@ -45,8 +47,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
-    clean_maven
+    DNF_REMOVE "$@"
+    clean_maven ""
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
