@@ -23,7 +23,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     # kmod 正常安装需提前安装好， kernel-devel依赖包
-    DNF_INSTALL "kernel-headers-$(uname -r) kernel-devel-$(uname -r)"
+    DNF_INSTALL "kernel-headers-$(uname -r) kernel-devel-$(uname -r) nmap-ncat" 2
     DNF_INSTALL "lvm2 vdo kmod-kvdo parted xfsprogs" 2
     TEST_NODE2_DISKS=$(TEST_DISK 2)
     TEST_NODE2_DISKS_CLEAN=$(echo "${TEST_NODE2_DISKS}" | tr '\n' ' ' | sed 's/[ ]*$//')
@@ -49,7 +49,21 @@ function run_test() {
     CHECK_RESULT $?
     SSH_CMD "echo mydata >/mnt/test" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
-    REMOTE_REBOOT 2 300
+    if [ $(arch) = "riscv64" ]; then
+       SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+     # 等待 SSH 服务恢复（最多 300 秒）
+       LOG_INFO "Waiting for node ${NODE2_IPV4} to reboot and SSH to become available..."
+       if ! timeout 300 bash -c "
+	  while ! nc -zvnw 3 '${NODE2_IPV4}' 22 2>/dev/null; do
+	     sleep 30
+	  done
+       "; then
+         LOG_ERROR "Node ${NODE2_IPV4} did not come back online within 300 seconds after reboot"
+       fi
+       LOG_INFO "Node ${NODE2_IPV4} is back online."
+    else
+       REMOTE_REBOOT 2 300
+    fi
     SSH_CMD "partprobe /dev/mapper/vg0-vdo1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     sleep 1
     SSH_CMD "lsblk | grep vg0-vdo1p1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"

@@ -16,12 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Run junit5 in gradle
 # #############################################
-
-source "../common/lib.sh"
+# shellcheck disable=SC1091,SC2034
+source "${OET_PATH}/testcases/cli-test/junit5/common/lib.sh"
 
 function pre_test() {
+    EXECUTE_T="60m"
     LOG_INFO "Start environment preparation."
-    pre_junit5
+    pre_junit5 ""
     DNF_INSTALL gradle
     JAVA_HOME=/usr/lib/jvm/java-openjdk
     PATH=$PATH:$JAVA_HOME/bin
@@ -53,7 +54,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     rm -rf junit5-gradle /tmp/gradle_result
     source /etc/profile >/dev/null
     LOG_INFO "Finish environment cleanup!"
