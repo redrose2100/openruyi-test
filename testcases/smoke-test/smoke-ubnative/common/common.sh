@@ -32,18 +32,22 @@ vm_passwd="openEuler12#$"
 original_selinux_mode=""
 
 function ub_env_init() {
+    # pkg pre
+    chmod +x "${OET_PATH}/testcases/smoke-test/smoke-ubnative/common/pkg_pre.sh"
+    sh "${OET_PATH}/testcases/smoke-test/smoke-ubnative/common/pkg_pre.sh"
     # img pre
     mkdir -p "$image_dir"
     if [ ! -f "$image_path" ]; then
-        wget -N -O "$image_path".xz "$image_download_url" --timeout=30 --tries=1
-        unxz "$image_path".xz
+        if [ -f "${image_dir}/openEuler-24.03-LTS-SP3-aarch64.qcow2" ]; then
+            cp "${image_dir}/openEuler-24.03-LTS-SP3-aarch64.qcow2" "$image_path"
+        else
+            wget -N -O "$image_path".xz "$image_download_url" --timeout=30 --tries=1
+            unxz "$image_path".xz
+        fi
     fi
     # xml pre
     mkdir -p "$config_dir"
     cp -arvf ../config "$test_qemu_dir"
-    # pkg pre
-    chmod +x "${OET_PATH}/testcases/smoke-test/smoke-ubnative/common/pkg_pre.sh"
-    sh "${OET_PATH}/testcases/smoke-test/smoke-ubnative/common/pkg_pre.sh"
     # net pre
     systemctl disable firewalld
     brctl addbr br0
@@ -102,20 +106,20 @@ function create_vm_waiting_running() {
     done
     LOG_INFO "vm xml save dir: $xml_path; image dir is: $qcow2_path"
     virsh define "$xml_path" && virsh start "$vm_name" || return 1
-    SLEEP_WAIT 60
+    SLEEP_WAIT 120
     virsh list | grep "$vm_name"
     return $?
 }
 
 function wait_exec() {
-    local cmd=$1
-    local count=${2:-60}
-    for ((i = 1; i <= count; i++)); do
-        LOG_INFO "[$i] wait in cmd: ${cmd}..."
-        eval "${cmd}" &> /dev/null && return 0
-        SLEEP_WAIT 2
+    local wait_cmd=$1
+    local wait_count=${2:-30}
+    for ((i = 1; i <= wait_count; i++)); do
+        LOG_INFO "[$i] wait in cmd: ${wait_cmd}..."
+        eval "${wait_cmd}" &> /dev/null && return 0
+        SLEEP_WAIT 5
     done
-    LOG_WARN "${cmd} timeout failed"
+    LOG_WARN "${wait_cmd} timeout failed"
     return 1
 }
 

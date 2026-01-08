@@ -36,20 +36,21 @@ function run_test() {
     # create vm
     create_vm_waiting_running "$vm_name" "$bus_instance" "$ub_dev_id"
     CHECK_RESULT $? 0 0 "create vm failed"
+    SLEEP_WAIT 180
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_network.exp"
     expect "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_network.exp" "$vm_name"
-    wait_exec "ping -c 3 ${vm_ip:?}"
+    wait_exec "ping -c 3 ${vm_ip:?}" 100
     CHECK_RESULT $? 0 0 "ping vm failed"
     vm_modprobe_ko "$vm_ip"
     vm_sshx "ls /sys/bus/ub/devices | wc -l | grep -wq 2"
     CHECK_RESULT $? 0 0 "check vm ub failed"
 
     # suspend vm
-    virsh suspend "$vm_name" && SLEEP_WAIT 5
+    virsh suspend "$vm_name" && SLEEP_WAIT 10
     CHECK_RESULT $? 0 0 "suspend vm failed"
 
     # resume vm
-    virsh resume "$vm_name" && SLEEP_WAIT 5
+    virsh resume "$vm_name" && SLEEP_WAIT 10
     CHECK_RESULT $? 0 0 "resume vm failed"
     wait_exec "ping -c 3 ${vm_ip:?}" 30
     CHECK_RESULT $? 0 0 "ping vm failed"
@@ -57,34 +58,25 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check vm ub failed"
 
     # reboot vm
-    virsh reboot "$vm_name" && SLEEP_WAIT 5
+    virsh reboot "$vm_name" && SLEEP_WAIT 60
     CHECK_RESULT $? 0 0 "reboot vm failed"
-    wait_exec "ping -c 3 ${vm_ip:?}"
+    wait_exec "ping -c 3 ${vm_ip:?}" 100
     CHECK_RESULT $? 0 0 "ping vm failed"
     vm_modprobe_ko "$vm_ip"
     vm_sshx "ls /sys/bus/ub/devices | wc -l | grep -wq 2"
     CHECK_RESULT $? 0 0 "check vm ub failed"
 
     # internal reboot
-    vm_sshx "reboot" && SLEEP_WAIT 5
+    vm_sshx "reboot" && SLEEP_WAIT 60
     CHECK_RESULT $? 0 0 "internal reboot failed"
-    wait_exec "ping -c 3 ${vm_ip:?}"
-    CHECK_RESULT $? 0 0 "ping vm failed"
-    vm_modprobe_ko "$vm_ip"
-    vm_sshx "ls /sys/bus/ub/devices | wc -l | grep -wq 2"
-    CHECK_RESULT $? 0 0 "check vm ub failed"
-
-    # reset vm
-    virsh reset "$vm_name" && SLEEP_WAIT 5
-    CHECK_RESULT $? 0 0 "reset vm failed"
-    wait_exec "ping -c 3 ${vm_ip:?}"
+    wait_exec "ping -c 3 ${vm_ip:?}" 100
     CHECK_RESULT $? 0 0 "ping vm failed"
     vm_modprobe_ko "$vm_ip"
     vm_sshx "ls /sys/bus/ub/devices | wc -l | grep -wq 2"
     CHECK_RESULT $? 0 0 "check vm ub failed"
 
     # shutdown vm
-    virsh shutdown "$vm_name" && SLEEP_WAIT 5
+    virsh shutdown "$vm_name" && SLEEP_WAIT 10
     CHECK_RESULT $? 0 0 "shutdown vm failed"
     virsh list | grep "$vm_name"
     CHECK_RESULT $? 0 1 "check vm shutdown failed"

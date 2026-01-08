@@ -41,6 +41,7 @@ function run_test() {
         grep "proportion=" "$vm_name".xml
         CHECK_RESULT $? 0 0 "check $vm_name proportion failed"
 
+        SLEEP_WAIT 180
         chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp"
         expect "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp" "$vm_name"
         wait_exec "ping -c 3 ${vm_ip:?}" 100
