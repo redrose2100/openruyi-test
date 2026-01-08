@@ -34,6 +34,7 @@ function run_test() {
     create_vm_waiting_running "$vm_name"
     CHECK_RESULT $? 0 0 "create vm failed"
 
+    SLEEP_WAIT 180
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp"
     expect "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp" "$vm_name"
     wait_exec "ping -c 3 ${vm_ip:?}" 100
@@ -42,7 +43,7 @@ function run_test() {
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_memory.sh"
     sh "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_memory.sh" "$vm_name" "4"
 
-    wait_exec "ping -c 3 ${vm_ip:?}" 100
+    wait_exec "ping -c 3 ${vm_ip:?}" 10
     CHECK_RESULT $? 0 0 "ping vm failed"
 
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/unset_memory.sh"

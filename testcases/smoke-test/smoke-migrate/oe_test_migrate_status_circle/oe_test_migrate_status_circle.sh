@@ -36,9 +36,15 @@ function run_test() {
     # migrate vm and cancel migrate
     mig_vm "$vm_name" 3 "urma" &
     pid=$!
-    SLEEP_WAIT 1
-    virsh domjobabort "$vm_name"
-    CHECK_RESULT $? 0 0 "migrate cancel failed"
+    for ((i=0; i<10; i++)); do
+        SLEEP_WAIT 1
+        if ps -ef | grep -q "[v]irsh migrate"; then
+            virsh domjobabort "$vm_name"
+            abort_result=$?
+            break
+        fi
+    done
+    CHECK_RESULT $abort_result 0 0 "migrate cancel failed"
     wait "$pid"
 
     # migrate vm again
