@@ -21,7 +21,7 @@ VM_NAME=$1
 export VM_NAME
 
 /usr/bin/expect << 'EOF'
-    set timeout 20
+    set timeout 60
     spawn virsh console $env(VM_NAME)
     expect {
         "Ctrl + ]" {

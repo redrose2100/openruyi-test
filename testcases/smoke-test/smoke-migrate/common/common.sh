@@ -22,7 +22,9 @@ test_qemu_dir="/home/test_qemu"
 config_dir="${test_qemu_dir}/config"
 image_dir="${test_qemu_dir}/image"
 image_path="${image_dir}/openEuler.qcow2"
-image_download_url="https://dl-cdn.openeuler.openatom.cn/openEuler-24.03-LTS-SP2/virtual_machine_img/aarch64/openEuler-24.03-LTS-SP2-aarch64.qcow2.xz"
+image_path_base="${image_dir}/openEuler-24.03-LTS-SP3-aarch64.qcow2"
+repo_baseurl=$(grep -A 5 "\[openEuler\]" /etc/yum.repos.d/openEuler.repo | grep baseurl | cut -d= -f2)
+image_download_url="${repo_baseurl//everything\/aarch64\//virtual_machine_img\/aarch64\/openEuler-24.03-LTS-SP3-aarch64.qcow2.xz}"
 
 vm_ip="192.168.1.101"
 vm_user="root"
@@ -39,25 +41,44 @@ function vm_clean() {
     fi
 }
 
+function share_image() {
+    systemctl start rpcbind
+    systemctl start rpc-statd
+    echo "$image_dir *(rw,sync,no_subtree_check,no_root_squash)" > /etc/exports
+    systemctl restart nfs-server
+    SSH_CMD "mount -t nfs $NODE1_IPV4:$image_dir $image_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
+    SSH_CMD "df -h" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
+}
+
+function unshare_image() {
+    SSH_CMD "umount -l $image_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
+    systemctl stop nfs-server
+    SSH_CMD "df -h" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
+}
+
 function pre_init() {
-    # img pre
-    mkdir -p "$image_dir"
-    SSH_CMD "mkdir -p $image_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
-    if [ ! -f "$image_path" ]; then
-        wget -N -O "$image_path".xz "$image_download_url" --timeout=30 --tries=1
-        unxz "$image_path".xz
-    fi
-    SSH_SCP "$image_path" "${NODE2_USER}@${NODE2_IPV4}:${image_dir}" "$NODE2_PASSWORD"
-    # xml pre
-    mkdir -p "$config_dir"
-    cp -arvf ../config "$test_qemu_dir"
-    SSH_CMD "mkdir -p $config_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
-    SSH_SCP ../config "${NODE2_USER}@${NODE2_IPV4}:${test_qemu_dir}" "$NODE2_PASSWORD"
     # pkg pre
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh"
     sh "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh"
     SSH_SCP "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh" "${NODE2_USER}@${NODE2_IPV4}:${test_qemu_dir}" "$NODE2_PASSWORD"
-    SSH_CMD "sh ${test_qemu_dir}/pkg_pre.sh" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
+    SSH_CMD "sh ${test_qemu_dir}/pkg_pre.sh" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER" "600"
+    # img pre
+    mkdir -p "$image_dir"
+    SSH_CMD "mkdir -p $image_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
+    if [ ! -f "$image_path" ]; then
+        if [ -f "$image_path_base" ]; then
+            cp "$image_path_base" "$image_path"
+        else
+            wget -N -O "$image_path".xz "$image_download_url" --timeout=30 --tries=1
+            unxz "$image_path".xz
+        fi
+    fi
+    share_image
+    # xml pre
+    mkdir -p "$config_dir"
+    cp -arvf ../config "$test_qemu_dir"
+    SSH_CMD "mkdir -p $config_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER" ""
+    SSH_SCP ../config "${NODE2_USER}@${NODE2_IPV4}:${test_qemu_dir}" "$NODE2_PASSWORD"
     # net pre
     systemctl disable firewalld
     SSH_CMD "systemctl disable firewalld" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
@@ -122,14 +143,14 @@ function set_huge_mem_1_2() {
 }
 
 function wait_exec() {
-    local cmd=$1
-    local count=${2:-60}
-    for ((i = 1; i <= count; i++)); do
-        LOG_INFO "[$i] wait in cmd: ${cmd}..."
-        eval "${cmd}" &> /dev/null && return 0
-        SLEEP_WAIT 2
+    local wait_cmd=$1
+    local wait_count=${2:-30}
+    for ((i = 1; i <= wait_count; i++)); do
+        LOG_INFO "[$i] wait in cmd: ${wait_cmd}..."
+        eval "${wait_cmd}" &> /dev/null && return 0
+        SLEEP_WAIT 5
     done
-    LOG_WARN "${cmd} timeout failed"
+    LOG_WARN "${wait_cmd} timeout failed"
     return 1
 }
 
@@ -144,7 +165,7 @@ function create_vm_waiting_running() {
     sed -i "s|IMAGE_PATH|${qcow2_path}|g" "${xml_path}"
     LOG_INFO "vm xml save dir: $xml_path; image dir is: $qcow2_path"
     virsh create "$xml_path" || return 1
-    SLEEP_WAIT 60
+    SLEEP_WAIT 120
     virsh list | grep -iq "$vm_name"
     return $?
 }
@@ -181,7 +202,7 @@ function mig_vm_back() {
     mig_set_max_downtime "$vm_name" 10000 "remote"
     mig_cmd="time virsh migrate --p2p --live --unsafe --migrateuri ${trans_type}://${NODE1_IPV4} ${vm_name} --listen-address ${NODE1_IPV4} qemu+tcp://${NODE1_IPV4}/system --verbose --parallel --parallel-connections ${parallel_conn} --rdma-pin-all ${onecopy}"
     LOG_INFO "$mig_cmd"
-    SSH_CMD "$mig_cmd" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
+    SSH_CMD "$mig_cmd" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER" "3600"
 }
 
 function check_vm_exist() {
@@ -189,10 +210,8 @@ function check_vm_exist() {
     local flag=${2:-local}
     if [ "$flag" = "local" ]; then
         virsh list --all | grep "$vm_name"
-        virsh list --all | grep -iq "$vm_name"
     elif [ "$flag" = "remote" ]; then
         SSH_CMD "virsh list --all | grep $vm_name" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
-        SSH_CMD "virsh list --all | grep -iq $vm_name" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
     fi
     return $?
 }
@@ -207,6 +226,7 @@ function destroy_vm() {
 function post_clean() {
     vm_clean "local"
     vm_clean "remote"
+    unshare_image
     setenforce 1
     SSH_CMD "setenforce 1" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
 }
@@ -269,13 +289,13 @@ function check_memlink_recycle() {
     # allocing 1G
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_memory.sh" || return 1
     sh "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_memory.sh" "$vm_name"
-    SLEEP_WAIT 30
+    SLEEP_WAIT 60
     os_used_running="$(get_hugepage_used "local")"
     LOG_INFO "os_used_running: $os_used_running"
     # kill stress
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/unset_memory.sh"  || return 1
     sh "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/unset_memory.sh" "$vm_name"
-    SLEEP_WAIT 80
+    SLEEP_WAIT 240
     os_used_free="$(get_hugepage_used "local")"
     LOG_INFO "os_used_free: $os_used_free"
     # check

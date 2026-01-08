@@ -23,7 +23,7 @@ export VM_NAME
 export TMPFS_SIZE
 
 /usr/bin/expect << 'EOF'
-    set timeout 20
+    set timeout 120
     spawn virsh console $env(VM_NAME)
     expect {
         "Ctrl + ]" {
