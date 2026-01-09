@@ -15,13 +15,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of dumpcap command
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 source "$OET_PATH/testcases/cli-test/wireshark/common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL wireshark
+    DNF_INSTALL "wireshark nmap"
     generate_traffic &
     WIRESHARK_TRAFFIC_PID=$!
     version=$(rpm -qa wireshark | awk -F "-" '{print$2}')
@@ -83,7 +83,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f testfile* log*
     close_traffic "$WIRESHARK_TRAFFIC_PID"
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

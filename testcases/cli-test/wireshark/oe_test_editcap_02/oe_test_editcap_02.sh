@@ -15,13 +15,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of editcap command
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 source "$OET_PATH/testcases/cli-test/wireshark/common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "wireshark bc"
+    DNF_INSTALL "wireshark bc nmap"
     generate_traffic &
     WIRESHARK_TRAFFIC_PID=$!
     LOG_INFO "Finish preparing the test environment."
@@ -84,7 +84,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     close_traffic "$WIRESHARK_TRAFFIC_PID"
     rm -f testfile*
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 
