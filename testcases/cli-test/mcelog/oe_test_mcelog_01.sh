@@ -27,6 +27,10 @@ function pre_test() {
     else
         DNF_INSTALL "mcelog gcc gcc-c++ flex dialog git"
     fi
+    if [ ! -e /sys/devices/system/machinecheck/machinecheck0/tolerant ]; then
+        LOG_WARN "当前内核($(uname -r))无tolerant接口，跳过测试"
+        exit 255
+    fi
     cat >correct <<EOF
 CPU 1 BANK 2
 STATUS corrected
