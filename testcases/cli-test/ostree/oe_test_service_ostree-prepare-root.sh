@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ostree-prepare-root.service restart
 # #############################################
-#shellcheck disable=SC1091.SC2119S
+#shellcheck disable=SC1091,SC2119S
 source "../common/common_lib.sh"
 
 function pre_test() {
