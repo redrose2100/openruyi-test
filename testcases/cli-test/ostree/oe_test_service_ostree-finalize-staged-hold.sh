@@ -23,6 +23,10 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL ostree
+    if ! systemctl list-unit-files | grep -q 'ostree-finalize-staged-hold\.service'; then
+        LOG_INFO "ostree-finalize-staged-hold.service not available. The installed ostree version may be too old. Skipping test."
+        exit 255
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
