@@ -1,36 +1,47 @@
 {
     "path": "$OET_PATH/testcases/smoke-test/smoke-sysSentry",
+    "machine num": 3,
     "cases": [
         {
             "name": "oe_test_sysSentry_xalarmd_recorver"
         },
         {
-            "name": "oe_test_sysSentry_oom"
+            "name": "oe_test_sysSentry_oom",
+            "machine num": 1
         },
         {
-            "name": "oe_test_sysSentry_kernel_reboot_001"
+            "name": "oe_test_sysSentry_kernel_reboot_001",
+            "machine num": 2
         },
         {
-            "name": "oe_test_sysSentry_kernel_reboot_002"
+            "name": "oe_test_sysSentry_kernel_reboot_002",
+            "machine num": 2
         },
         {
-            "name": "oe_test_sysSentry_kernel_reboot_003"
+            "name": "oe_test_sysSentry_kernel_reboot_003",
+            "machine num": 2
         },
         {
-            "name": "oe_test_sysSentry_kernel_reboot_004"
+            "name": "oe_test_sysSentry_kernel_reboot_004",
+            "machine num": 3
         },
         {
-            "name": "oe_test_sysSentry_panic_001"
+            "name": "oe_test_sysSentry_panic_001",
+            "machine num": 2
         },
         {
-            "name": "oe_test_sysSentry_panic_002"
+            "name": "oe_test_sysSentry_panic_002",
+            "machine num": 2
         },
         {
-            "name": "oe_test_sysSentry_panic_003"
+            "name": "oe_test_sysSentry_panic_003",
+            "machine num": 2
         },
-	    {
-            "name": "oe_test_sysSentry_panic_004"
-	    },
+        {
+            "name": "oe_test_sysSentry_panic_004",
+            "machine num": 2
+        }
 
     ]
 }
+
