@@ -16,7 +16,7 @@
 #@Desc      	:   Prepare packages
 #####################################
 
-yum install -y qemu edk2 libvirt net-tools bridge-utils
+yum install -y qemu edk2-aarch64 libvirt net-tools bridge-utils
 
 sed -i "s/--timeout 120/--listen/g" /usr/lib/systemd/system/libvirtd.service
 grep -q "libvirtd.log" /etc/libvirt/libvirtd.conf || cat >> /etc/libvirt/libvirtd.conf << 'EOF'

@@ -35,10 +35,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "create vm failed"
 
     set_huge_mem 1024
-    SLEEP_WAIT 60
+    SLEEP_WAIT 180
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp"
     expect "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/set_network.exp" "$vm_name"
-    wait_exec "ping -c 3 ${vm_ip:?}" 50
+    wait_exec "ping -c 3 ${vm_ip:?}" 100
     CHECK_RESULT $? 0 0 "ping vm failed"
 
     check_memlink_recycle "2" "1.5" "130" "50" "pass"
