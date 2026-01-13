@@ -36,9 +36,10 @@ function run_test() {
     create_vm_waiting_running "$vm_name" "$bus_instance" "$ub_dev_id"
     CHECK_RESULT $? 0 0 "create vm failed"
 
+    SLEEP_WAIT 180
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_network.exp"
     expect "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_network.exp" "$vm_name"
-    wait_exec "ping -c 3 ${vm_ip:?}"
+    wait_exec "ping -c 3 ${vm_ip:?}" 100
     CHECK_RESULT $? 0 0 "ping vm failed"
 
     vm_modprobe_ko "$vm_ip"
