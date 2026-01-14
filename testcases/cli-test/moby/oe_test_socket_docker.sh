@@ -22,6 +22,10 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL moby-engine
+    if ! systemctl list-unit-files | grep -q 'docker\.socket'; then
+        LOG_INFO "docker.socket not available. The installed moby-engine version may be too old. Skipping test."
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 

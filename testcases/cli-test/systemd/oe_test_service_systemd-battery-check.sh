@@ -21,6 +21,10 @@ source "../common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
+    if ! systemctl list-unit-files | grep -q 'systemd-battery-check\.service'; then
+        LOG_INFO "systemd-battery-check.service not available. The installed systemd version may be too old. Skipping test."
+        exit 255
+    fi
     test_oneshot systemd-battery-check.service 'inactive (dead)'
     LOG_INFO "Finish test!"
 }
