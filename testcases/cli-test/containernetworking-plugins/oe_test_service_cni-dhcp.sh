@@ -22,6 +22,10 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL containernetworking-plugins
+    if ! systemctl list-unit-files | grep -q 'cni-dhcp\.service'; then
+        LOG_INFO "cni-dhcp.service not available. The installed containernetworking-plugins version may be too old. Skipping test."
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 

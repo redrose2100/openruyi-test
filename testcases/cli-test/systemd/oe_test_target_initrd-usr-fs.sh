@@ -14,7 +14,7 @@
 # @Contact   :   liujingjing25812@163.com
 # @Date      :   2026/01/06
 # @License   :   Mulan PSL v2
-# @Desc      :   Test initrd-root-fs.target restart
+# @Desc      :   Test initrd-usr-fs.target restart
 # #############################################
 # shellcheck disable=SC1091
 source "../common/common_lib.sh"
@@ -22,19 +22,23 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     touch /etc/initrd-release
+    if ! systemctl list-unit-files | grep -q 'initrd-usr-fs\.target'; then
+        LOG_INFO "initrd-usr-fs.target not available. The installed systemd version may be too old. Skipping test."
+        exit 255
+    fi
     LOG_INFO "Finish environment cleanup!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution initrd-root-fs.target
-    test_reload initrd-root-fs.target
+    test_execution initrd-usr-fs.target
+    test_reload initrd-usr-fs.target
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    systemctl stop initrd-root-fs.target
+    systemctl stop initrd-usr-fs.target
     rm -rf /etc/initrd-release
     LOG_INFO "Finish environment cleanup!"
 }

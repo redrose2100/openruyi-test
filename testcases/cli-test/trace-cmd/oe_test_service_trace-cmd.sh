@@ -22,6 +22,10 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL trace-cmd
+    if ! systemctl list-unit-files | grep -q 'trace-cmd\.service'; then
+        LOG_INFO "trace-cmd.service not available. The installed trace-cmd version may be too old. Skipping test."
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
