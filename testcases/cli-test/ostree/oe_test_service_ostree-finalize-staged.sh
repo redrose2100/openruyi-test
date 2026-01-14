@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ostree-finalize-staged.service ostree-prepare-root.service ostree-remount.service restart
 # #############################################
-
+# shellcheck disable=SC1091,SC2119
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -28,8 +28,6 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     test_oneshot ostree-finalize-staged.service 'inactive (dead)'
-    test_oneshot ostree-prepare-root.service 'inactive (dead)'
-    test_oneshot ostree-remount.service 'inactive (dead)'
     LOG_INFO "Finish test!"
 }
 

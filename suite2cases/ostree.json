@@ -9,6 +9,12 @@
         },
         {
             "name": "oe_test_service_ostree-remount"
+        },
+        {
+            "name": "oe_test_service_ostree-boot-complete"
+        },
+        {
+            "name": "oe_test_service_ostree-finalize-staged-hold"
         }
     ]
 }
