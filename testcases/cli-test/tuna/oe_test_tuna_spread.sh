@@ -43,25 +43,31 @@ function run_test() {
     CHECK_RESULT $? 0 0 "tuna spread -h No Pass"
     tuna spread --help | grep "usage: tuna spread"
     CHECK_RESULT $? 0 0 "tuna spread --help No Pass"
-    irqs_id=$(tuna show_irqs | grep virtio2-config | awk '{print $1}')
-    irqs_id_cpu_affinity=$(tuna show_irqs | grep virtio2-config | awk '{print $NF}')
-    tuna spread -c 0 -q "$irqs_id"
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+        irq="virtio3"
+    else
+        irq="virtio2-config"
+    fi
+    irqs_id=$(tuna show_irqs | grep "${irq}" | awk '{print $1}')
+    irqs_id_cpu_affinity_new="0"
+    irqs_id_cpu_affinity=$(tuna show_irqs | grep "${irq}" | awk '{print $NF}')
+    tuna spread -c "${irqs_id_cpu_affinity_new}" -q "$irqs_id"
     CHECK_RESULT $? 0 0 "tuna spread -c -q No Pass"
-    tuna show_irqs -q "${irqs_id}" | grep "${irqs_id}" | awk '{print $NF}' | grep -w 0
+    tuna show_irqs -q "${irqs_id}" | grep "${irqs_id}" | awk '{print $NF}' | grep -w "${irqs_id_cpu_affinity_new}"
     CHECK_RESULT $? 0 0 "tuna show_irqs -q No Pass"
     tuna spread -c "${irqs_id_cpu_affinity}" -q "${irqs_id}"
     CHECK_RESULT $? 0 0 "Restore irqs_id_cpu_affinity to default value"
     tuna spread -S "${socket_id}" --irqs "$irqs_id"
     CHECK_RESULT $? 0 0 "tuna spread -S --irqs No Pass"
-    tuna show_irqs -q "${irqs_id}" | grep "${irqs_id}" | awk '{print $NF}' | grep -w 0
+    tuna show_irqs -q "${irqs_id}" | grep "${irqs_id}" | awk '{print $NF}' | grep -w "${irqs_id_cpu_affinity_new}"
     CHECK_RESULT $? 0 0 "tuna show_irqs -q No Pass"
     tuna spread --cpus 0 -t sshd
     CHECK_RESULT $? 0 0 "tuna spread -cpus -t No Pass"
-    tuna show_threads -t sshd | grep sshd | awk '{print $4}' | grep -w 0
+    tuna show_threads -t sshd | grep sshd | awk '{print $4}' | grep -w "${irqs_id_cpu_affinity_new}"
     CHECK_RESULT $? 0 0 "tuna show_threads -t No Pass"
     tuna spread --sockets "${socket_id}" --threads sshd
     CHECK_RESULT $? 0 0 "tuna spread --sockets --threads No Pass"
-    tuna show_threads -t sshd | grep sshd | awk '{print $4}' | grep -w 0
+    tuna show_threads -t sshd | grep sshd | awk '{print $4}' | grep -w "${irqs_id_cpu_affinity_new}"
     CHECK_RESULT $? 0 0 "tuna show_threads -t No Pass"
     tuna priority -h | grep "usage: tuna priority"
     CHECK_RESULT $? 0 0 "tuna priority -h No Pass"
