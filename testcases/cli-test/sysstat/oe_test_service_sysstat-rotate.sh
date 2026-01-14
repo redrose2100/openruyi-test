@@ -22,6 +22,10 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL sysstat
+    if ! systemctl list-unit-files | grep -q 'sysstat-rotate\.service'; then
+        LOG_INFO "sysstat-rotate.service not available. The installed sysstat version may be too old. Skipping test."
+        exit 255
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
