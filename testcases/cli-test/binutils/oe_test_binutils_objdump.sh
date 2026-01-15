@@ -25,6 +25,9 @@ function pre_test() {
     mkdir /tmp/test
     path=/tmp/test
     cat > ${path}/main.c <<EOF
+#include <stdio.h>
+void hello(void);
+void bye(void);
 int main(int argc,char *argv[])
 {
 hello();
@@ -33,12 +36,14 @@ return 0;
 }
 EOF
     cat > ${path}/hello.c <<EOF
+#include <stdio.h>
 void hello(void)
 {
 printf("hello!\n");
 }
 EOF
     cat > ${path}/bye.c <<EOF
+#include <stdio.h>
 void bye(void)
 {
 printf("good bye!\n");
@@ -50,8 +55,11 @@ EOF
 function run_test() {
     LOG_INFO "Start to run test."
     cd /tmp/test/&&gcc -Wall -c main.c hello.c bye.c
-    ls -al ${path} | grep 'main.o\|hello.o\|bye.o'
-    CHECK_RESULT $? 0 0 "Compilation failure"
+    if [ -f main.o ] && [ -f hello.o ] && [ -f bye.o ]; then
+        CHECK_RESULT 0 0 0 "Compilation failure"
+    else
+        CHECK_RESULT 1 0 1 "Compilation failure"
+    fi
     nm main.o hello.o bye.o > nm.txt
     test -f nm.txt
     CHECK_RESULT $? 0 0 "file is failed"
@@ -63,7 +71,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf $path
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 

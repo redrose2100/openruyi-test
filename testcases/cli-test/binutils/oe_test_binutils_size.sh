@@ -46,8 +46,11 @@ EOF
 function run_test() {
     LOG_INFO "Start to run test."
     g++ -Wl,-Map=${path}/test.map -g ${path}/test.cpp -o ${path}/testfile
-    ls ${path} | grep -E "testfile|test.map"
-    CHECK_RESULT $? 0 0 "Compilation failure"
+        if [ -f "${path}/testfile" ] && [ -f "${path}/test.map" ]; then
+        CHECK_RESULT 0 0 0 "Compilation failure"
+    else
+        CHECK_RESULT 1 0 1 "Compilation failure"
+    fi
     size ${path}/testfile |grep -E "hex|testfile" |grep "testfile"
     CHECK_RESULT $? 0 0 "command2 failure"
     LOG_INFO "End of the test."
@@ -56,7 +59,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ${path}
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
