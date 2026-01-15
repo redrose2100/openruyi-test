@@ -22,6 +22,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "sos tar hostname"
+    EXECUTE_T="240m"
     VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
     LOG_INFO "Finish preparing the test environment."
 }
