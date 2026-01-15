@@ -629,6 +629,22 @@
         {
             "name": "oe_test_target_initrd-usr-fs",
             "machine num": 1
+        },
+        {
+            "name": "oe_test_target_sound",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_target_smartcard",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_target_printer",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_target_bluetooth",
+            "machine num": 1
         }
     ]
 }
