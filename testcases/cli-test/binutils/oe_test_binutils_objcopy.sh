@@ -46,8 +46,11 @@ EOF
 function run_test() {
     LOG_INFO "Start to run test."
     g++ -Wl,-Map=${path}/test.map -g ${path}/test.cpp -o ${path}/testfile
-    ls ${path} | grep -E "testfile|test.map"
-    CHECK_RESULT $? 0 0 "Compilation failure"
+    if [ -f "${path}/testfile" ] && [ -f "${path}/test.map" ]; then
+        CHECK_RESULT 0 0 0 "Compilation failure"
+    else
+        CHECK_RESULT 1 0 1 "Compilation failure"
+    fi
     objcopy -O srec ${path}/testfile ${path}/test.srec
     CHECK_RESULT $? 0 0 "command failure"
     head ${path}/test.srec | grep "S"

@@ -29,10 +29,13 @@ function pre_test(){
 function run_test() {
     gcc -Wall -c file1.c file2.c file3.c
     CHECK_RESULT $? 0 0 "Compilation failure"
-    ls | grep -E "file[1-3]{1}.o" >test-binutils.txt
-    out=$(cat test-binutils.txt)
-    file="file1.o file2.o file3.o"
-    CHECK_RESULT $out $file 0 "File generation failure"
+    if [ -f file1.o ] && [ -f file2.o ] && [ -f file3.o ]; then
+        out=$(cat test-binutils.txt)
+        file="file1.o file2.o file3.o"
+        CHECK_RESULT "$out" "$file" 0 "File generation failure"
+    else
+        CHECK_RESULT 1 0 1 "File generation failure"
+    fi
     ar rv libNAME.a file1.o file2.o file3.o
     CHECK_RESULT $? 0 0 "Generation failure"
     test -f libNAME.a

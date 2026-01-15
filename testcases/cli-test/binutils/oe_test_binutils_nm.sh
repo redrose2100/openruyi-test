@@ -55,8 +55,11 @@ EOF
 function run_test() {
     LOG_INFO "Start to run test."
     cd /tmp/test/&&gcc -Wall -c main.c hello.c bye.c 
-    ls -al ${path} | grep 'main.o\|hello.o\|bye.o'
-    CHECK_RESULT $? 0 0 "Compile failure"
+    if [ -f main.o ] && [ -f hello.o ] && [ -f bye.o ]; then
+        CHECK_RESULT 0 0 0 "Compile failure"
+    else
+        CHECK_RESULT 1 0 1 "Compile failure"
+    fi
  
     nm main.o hello.o bye.o > nm.txt
     test -f nm.txt
