@@ -3,6 +3,9 @@
   "cases": [
     {
       "name": "oe_test_ctags"
+    },
+    {
+      "name": "oe_test_ctags2"
     }
   ]
 }
