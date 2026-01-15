@@ -54,7 +54,7 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
     rm -rf main.c main.o main.dwp main.dwo
     # shellcheck disable=SC2119
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
