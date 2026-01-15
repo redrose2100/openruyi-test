@@ -85,7 +85,7 @@ function run_test() {
         expect eof
 EOF
     useradd wsman
-    printf 'wsman\nwsman\n' | passwd wsman
+    printf 'wsman!@123\nwsman!@123\n' | passwd wsman
     systemctl start openwsmand
     SLEEP_WAIT 3
     wsman identify -h localhost --port 5986 -u wsman --password wsman -c /etc/openwsman/servercert.pem -d 6 2>&1 | grep -i "ssl certificate verify ok"
@@ -107,7 +107,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /etc/openwsman/test_simple_auth.passwd /etc/openwsman/*.pem ./client* ./crypt_test.py
-    uerdel -rf wsman
+    userdel -rf wsman
     kill -9 $(pgrep openwsmand)
     DNF_REMOVE "$@"
     # sleep 10 seconds ensure openwsmand be killed
