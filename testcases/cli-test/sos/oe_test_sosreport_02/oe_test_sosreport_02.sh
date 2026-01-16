@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the usage of sosreport command
 # ############################################
+# shellcheck disable=SC2034
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    EXECUTE_T="240m"
     DNF_INSTALL "sos tar hostname"
     LOG_INFO "Finish preparing the test environment."
 }
