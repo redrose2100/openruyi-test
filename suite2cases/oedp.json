@@ -13,11 +13,6 @@
             "machine type": "kvm"
         },
         {
-            "name": "oe_test_oedp_03",
-            "machine num": 1,
-            "machine type": "kvm"
-        },
-        {
             "name": "oe_test_oedp_04",
             "machine num": 1,
             "machine type": "kvm"
@@ -34,38 +29,38 @@
         },
         {
             "name": "oe_test_oedp_07",
-            "machine num": 1,
-            "machine type": "kvm"
+            "machine num": 3,
+            "machine type": "physical"
         },
         {
             "name": "oe_test_oedp_08",
-            "machine num": 1,
-            "machine type": "kvm"
+            "machine num": 3,
+            "machine type": "physical"
         },
         {
             "name": "oe_test_oedp_09",
-            "machine num": 1,
-            "machine type": "kvm"
+            "machine num": 3,
+            "machine type": "physical"
         },
         {
             "name": "oe_test_oedp_10",
-            "machine num": 1,
-            "machine type": "kvm"
+            "machine num": 3,
+            "machine type": "physical"
         },
         {
             "name": "oe_test_oedp_11",
-            "machine num": 1,
-            "machine type": "kvm"
+            "machine num": 3,
+            "machine type": "physical"
         },
         {
             "name": "oe_test_oedp_12",
-            "machine num": 1,
-            "machine type": "kvm"
+            "machine num": 3,
+            "machine type": "physical"
         },
         {
             "name": "oe_test_oedp_13",
-            "machine num": 1,
-            "machine type": "kvm"
+            "machine num": 3,
+            "machine type": "physical"
         },
         {
             "name": "oe_test_oedp_14",
