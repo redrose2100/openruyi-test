@@ -48,10 +48,13 @@ function run_test() {
     addr2line -v|grep addr2line
     CHECK_RESULT $? 0 0 "addr2line not exist"
     g++ -Wl,-Map=${path}/test.map -g ${path}/test.cpp -o ${path}/testfile
-    ls ${path} | grep -E "testfile|test.map"
-    CHECK_RESULT $? 0 0 "Compilation failure"
+    if [ -f "${path}/testfile" ] && [ -f "${path}/test.map" ]; then
+        CHECK_RESULT 0 0 0 "Compilation failure"
+    else
+        CHECK_RESULT 0 0 1 "Compilation failure"
+    fi
     address=$(grep divide ${path}/test.map |awk '{print $1}')
-    addr2line ${address} -e ${path}/testfile -f -C -s |grep cpp
+    addr2line "${address}" -e "${path}/testfile" -f -C -s |grep cpp
     CHECK_RESULT $? 0 0 "divide failure"
     LOG_INFO "End of the test."
 }
@@ -59,7 +62,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ${path}
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
