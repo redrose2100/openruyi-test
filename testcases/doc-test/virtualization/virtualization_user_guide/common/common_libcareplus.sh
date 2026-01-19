@@ -25,6 +25,7 @@ function pre_env() {
     cat >foo.c <<EOF
 #include <stdio.h>
 #include <time.h>
+#include <unistd.h>
 
 void print_hello(void)
 {
@@ -42,6 +43,7 @@ EOF
     cat >bar.c <<EOF
 #include <stdio.h>
 #include <time.h>
+#include <unistd.h>
 
 void print_hello(void)
 {
