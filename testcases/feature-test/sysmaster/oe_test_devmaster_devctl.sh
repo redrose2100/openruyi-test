@@ -23,7 +23,12 @@ function pre_test() {
     DNF_INSTALL "sysmaster devmaster" 2
     
     SSH_CMD "dracut --omit 'systemd systemd-initrd systemd-networkd dracut-systemd' /boot/initrd_withoutsd.img" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SSH_CMD "grubby --make-default --config-file=/boot/grub2/grub.cfg --add-kernel=/boot/vmlinuz-$(uname -r) --copy-default --title='openEuler sysmaster' --args='init=/usr/lib/sysmaster/init' --initrd='/boot/initrd_withoutsd.img'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    TARGET_ARCH=$(SSH_CMD "uname -m" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | tail -1 | tr -d '\r\n' | xargs)
+    if [ "$TARGET_ARCH" = "aarch64" ]; then
+            SSH_CMD "grubby --make-default --config-file=/boot/efi/EFI/openEuler/grub.cfg --add-kernel=/boot/vmlinuz-$(uname -r) --copy-default --title='openEuler sysmaster' --args='init=/usr/lib/sysmaster/init' --initrd='/boot/initrd_withoutsd.img'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    else
+            SSH_CMD "grubby --make-default --config-file=/boot/grub2/grub.cfg --add-kernel=/boot/vmlinuz-$(uname -r) --copy-default --title='openEuler sysmaster' --args='init=/usr/lib/sysmaster/init' --initrd='/boot/initrd_withoutsd.img'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    fi
     SSH_CMD "systemctl reboot -f" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SLEEP_WAIT 120
     REMOTE_REBOOT_WAIT 2 60
