@@ -24,6 +24,10 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     pre_env
+    if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
+        DNF_INSTALL "java-17-openjdk"
+        sudo alternatives --set java "$(find /usr/lib/jvm/java-17-openjdk-17.*/bin/java | head -n1)"
+    fi
 
     LOG_INFO "End to prepare the test environment."
 }
