@@ -22,6 +22,10 @@ function pre_test() {
     
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "util-linux"
+    if ! (find /lib /usr/lib -name "*.so" -exec file {} +) 2>/dev/null | grep -q "32-bit"; then
+        LOG_INFO "系统无32位库，跳过setarch 32位切换测试用例"
+        exit 255  # 正常退出，标记为跳过
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
