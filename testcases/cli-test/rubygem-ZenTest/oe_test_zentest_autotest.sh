@@ -17,7 +17,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "rubygem-ZenTest tar rubygem-test-unit"
+    DNF_INSTALL "rubygem-ZenTest tar rubygem-test-unit ruby-devel gcc"
     tar -xvf ./common/data.tar.gz > /dev/null
     multigem
     sed -i "/root_dir / aroot_dir = File.expand_path('..',__FILE__)" /usr/share/gems/gems/ZenTest-*/bin/multiruby

@@ -16,8 +16,10 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test sctp_status
 # #############################################
+#shellcheck disable=SC2119
+#shellcheck disable=SC2002
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test()
 {
@@ -32,13 +34,13 @@ function run_test()
     sctp_status -H ::1 -P 6000 -l -i 0 -d 1 -f server_output &
     server_pid=$!
     SLEEP_WAIT 2
-    (echo "hello" && cat) | sctp_darn -H ::1 -P 7000 -h ::1 -p 6000 -s &
+    (echo "hello" && sleep 10) | sctp_darn -H ::1 -P 7000 -h ::1 -p 6000 -s &
     client_pid=$!
     SLEEP_WAIT 2
     cat server_output | grep 'ESTABLISHED'
     CHECK_RESULT $? 0 0 "sctp_status: failed to test options: -i, -d, -f"
-    kill -9 $server_pid
-    kill -9 $client_pid
+    kill -9 "$server_pid"
+    kill -9 "$client_pid"
     sctp_darn -H ::1 -P 6010 -l > /dev/null 2>&1 &
     server_pid=$!
     SLEEP_WAIT 2
@@ -47,26 +49,26 @@ function run_test()
     SLEEP_WAIT 2
     cat client_output | grep 'ESTABLISHED'
     CHECK_RESULT $? 0 0 "sctp_status: failed to test options: -c, -o, -f"
-    kill -9 $client_pid
+    kill -9 "$client_pid"
     sctp_status -H ::1 -P 7020 -h ::1 -p 6010 -s -x 1 > client_output 2>&1 &
     client_pid=$!
     SLEEP_WAIT 2
     cat client_output | grep '(1/1)'
     CHECK_RESULT $? 0 0 "sctp_status: failed to test option: -x"
-    kill -9 $client_pid
+    kill -9 "$client_pid"
     sctp_status -H ::1 -P 7030 -h ::1 -p 6010 -s -M 0 -m 1500 -D > client_output 2>&1 &
     client_pid=$!
     SLEEP_WAIT 2
     cat client_output | grep 'Starting tests...'
     CHECK_RESULT $? 0 0 "sctp_status: failed to test options: -M, -m, -o"
-    kill -9 $client_pid
+    kill -9 "$client_pid"
     sctp_status -H ::1 -P 7040 -h ::1 -p 6010 -s -I 1 -i 0 -d 1 > client_output 2>&1 &
     client_pid=$!
     SLEEP_WAIT 2
     cat client_output | grep 'Starting tests...'
     CHECK_RESULT $? 0 0 "sctp_status: failed to test options: -I, -i, -d"
-    kill -9 $client_pid
-    kill -9 $server_pid
+    kill -9 "$client_pid"
+    kill -9 "$server_pid"
     LOG_INFO "End to run test."
 }
 

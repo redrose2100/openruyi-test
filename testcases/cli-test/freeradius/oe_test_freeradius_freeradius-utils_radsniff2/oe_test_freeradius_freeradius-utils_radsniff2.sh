@@ -43,7 +43,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "radsniff -S execution failed."
     radsniff -v | grep "$(rpm -q freeradius-utils | awk -F '-' '{print $3}')"
     CHECK_RESULT $? 0 0 "radsniff -v execution failed."
-    radsniff -w /tmp/test.pcap -I ../common/test.pcap
+    radsniff -I ../common/test.pcap -S > /tmp/test.pcap
     xxd -b /tmp/test.pcap | grep "$(xxd -b ../common/test.pcap)"
     CHECK_RESULT $? 0 0 "radsniff -w execution failed."
     radsniff -x -I ../common/test.pcap | grep "Authenticator-Field"

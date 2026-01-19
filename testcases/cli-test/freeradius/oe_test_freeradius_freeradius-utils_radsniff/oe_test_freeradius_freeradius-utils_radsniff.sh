@@ -47,9 +47,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "radsniff -m execution failed."
     radsniff -p 1812 -I ../common/test.pcap | grep "1812"
     CHECK_RESULT $? 0 0 "radsniff -p execution failed."
-    radsniff -P /tmp/radsniff.pid
+    radsniff -i lo -P /tmp/radsniff.pid
     echo "Message-Authenticator = 0x00" | radclient 127.0.0.1 status testing123
-    [ "$(cat /tmp/radsniff.pid)" -eq "$(pgrep -f "radsniff -P" | grep -v grep)" ]
+    [ "$(cat /tmp/radsniff.pid)" -eq "$(pgrep -f "radsniff.*-P" | grep -v grep)" ]
     CHECK_RESULT $? 0 0 "radsniff -P execution failed."
     kill -9 "$(cat /tmp/radsniff.pid)"
 
