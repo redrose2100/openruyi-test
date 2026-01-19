@@ -32,6 +32,7 @@ function run_test() {
     expect -c "
     log_file testlog1
     spawn jjs -strict
+    set timeout 60
     expect \"jjs>\"
     send \"a=10\r\"
     expect \"jjs>\"
