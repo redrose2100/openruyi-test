@@ -20,9 +20,8 @@ source ../common/disk_lib.sh
 function config_params() {
     LOG_INFO "Start to config params of the case."
     check_free_disk
-    WWID=$(udevadm info --attribute-walk --name=/dev/"${local_disk}" | grep wwid)
     cp /etc/udev/rules.d/99-scheduler.rules /etc/udev/rules.d/99-scheduler.rules.bak
-    echo "ACTION ==\"add|change\",SUBSYSTEM==\"block\",$WWID,ATTR{queue/scheduler}=\"mq-deadline\"" >/etc/udev/rules.d/99-scheduler.rules
+    echo "ACTION ==\"add|change\",SUBSYSTEM==\"block\",KERNEL==\"${local_disk}\",ATTR{queue/scheduler}=\"mq-deadline\"" >/etc/udev/rules.d/99-scheduler.rules
     LOG_INFO "End to config params of the case."
 }
 
@@ -32,6 +31,7 @@ function run_test() {
     CHECK_RESULT $?
     udevadm trigger --type=devices --action=change
     CHECK_RESULT $?
+    SLEEP_WAIT 10
     awk -F '[' '{print$2}' /sys/block/"${local_disk}"/queue/scheduler | awk -F ']' '{print$1}' | grep mq-deadline
     CHECK_RESULT $?
     LOG_INFO "End to run test."
@@ -46,4 +46,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
