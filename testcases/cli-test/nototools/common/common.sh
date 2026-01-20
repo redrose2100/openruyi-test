@@ -22,7 +22,26 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function notoconfig_pre() {
     TMP_SRCDIR="$(mktemp -d -t nototools.SRC.XXXXXXXXXXXX)"
-    yumdownloader --source nototools --destdir "${TMP_SRCDIR}" >/dev/null
+    #系统无启用的source源，添加source源
+    dnf repolist enabled 2>/dev/null | grep -qi 'source'
+    if [ $? -ne 0 ]; then
+       oeversion=$(awk '{gsub(/\(|\)/,"",$4); print $1"-"$3"-"$4}' /etc/openEuler-release)
+       REPO_FILE="/etc/yum.repos.d/openEuler-source.repo"
+       cat > "$REPO_FILE" <<EOF
+[source]
+name=source
+baseurl=https://repo.openeuler.org/$oeversion/source/
+enabled=1
+gpgcheck=0
+
+[update-source]
+name=update-source
+baseurl=https://repo.openeuler.org/$oeversion/update/source/
+enabled=1
+gpgcheck=0
+EOF
+    fi
+    yumdownloader --source nototools --destdir "${TMP_SRCDIR}" --setopt=strict=0 >/dev/null
     rpm2cpio "${TMP_SRCDIR}"/*.rpm | cpio -div -D "${TMP_SRCDIR}" >/dev/null 2>&1
     tar -zxf "${TMP_SRCDIR}"/*.tar.gz --strip-components 1 --directory "${TMP_SRCDIR}" >/dev/null
     echo "noto_tools=${TMP_SRCDIR}" >~/.notoconfig
@@ -34,7 +53,7 @@ function notoconfig_pre() {
 }
 
 function common_pre() {
-    pip install -r ../common/requirements.txt >/dev/null 2>&1
+    #pip install -r ../common/requirements.txt >/dev/null 2>&1
     DNF_INSTALL "nototools harfbuzz-devel cpio pango python3-gobject python3-cairo python3-pytest tar"
     notoconfig_pre
 }
@@ -42,5 +61,5 @@ function common_pre() {
 function common_post() {
     rm -rf "${TMP_SRCDIR}" ~/.notoconfig
     DNF_REMOVE "$@"
-    # pip3 uninstall -r ../common/requirements.txt -y > /dev/null 2>&1
+    #pip3 uninstall -r ../common/requirements.txt -y > /dev/null 2>&1
 }

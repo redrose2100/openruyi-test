@@ -14,10 +14,18 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test astraceroute
 # #############################################
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "netsniff-ng tar"
+    #兼容rv环境，设置虚拟机默认路由
+    if [ $(arch) = "riscv64" ]; then
+      IP_CIDR=$(ip addr show "${NODE1_NIC}" | awk '/inet / {print $2; exit}')
+      GATEWAY_IP=$(echo "$IP_CIDR" | cut -d'/' -f1 | sed 's/\.[0-9]*$/\.1/')
+      sudo ip route del default 2>/dev/null || true
+      sudo ip route add default via "$GATEWAY_IP" dev "${NODE1_NIC}"
+    fi
     tar -xvf ./common/data.tar.gz > /dev/null
     LOG_INFO "End to prepare the test environment."
 }
@@ -161,6 +169,9 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    if [ $(arch) = "riscv64" ]; then
+       sudo ip route del default 2>/dev/null || true
+    fi
     DNF_REMOVE
     rm -rf ./data/ ./common/*.sh
     LOG_INFO "End to restore the test environment."
