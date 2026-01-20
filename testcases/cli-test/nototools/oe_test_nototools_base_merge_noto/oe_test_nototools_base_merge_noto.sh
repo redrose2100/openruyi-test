@@ -16,10 +16,10 @@
 # @Date      :   2022/08/31
 # @License   :   Mulan PSL v2
 # @Desc      :   TEST merge_noto in nototools
-# #############################################
+# ############################################# 
+# shellcheck disable=SC2034,1091
 
-source "../common/common.sh"
-
+source "${OET_PATH}/testcases/cli-test/nototools/common/common.sh"
 # Preloaded data, parameter configuration
 function config_params() {
     LOG_INFO "Start to config params of the case."
@@ -33,6 +33,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
+    EXECUTE_T="90m"
     common_pre
     cp -rf test_input/* ${TMP_DIR}
     mkdir -p ${TMP_DIR}/combined/unhinted
