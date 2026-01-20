@@ -16,10 +16,10 @@
 # @Date      :   2022/08/31
 # @License   :   Mulan PSL v2
 # @Desc      :   TEST merge_noto in nototools
-# #############################################
+# ############################################# 
+# shellcheck disable=SC2034,2119,2010
 
-source "../common/common.sh"
-
+source "${OET_PATH}/testcases/cli-test/nototools/common/common.sh"
 # Preloaded data, parameter configuration
 function config_params() {
     LOG_INFO "Start to config params of the case."
@@ -33,9 +33,10 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
+    EXECUTE_T="90m"
     common_pre
-    cp -rf test_input/* ${TMP_DIR}
-    mkdir -p ${TMP_DIR}/combined/unhinted
+    cp -rf test_input/* "${TMP_DIR}"
+    mkdir -p "${TMP_DIR}"/combined/unhinted
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -44,14 +45,14 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    cd ${TMP_DIR}
+    cd "${TMP_DIR}" || exit
 
     #Test the merge_noto python file
     merge_noto.py | grep -q "Merging" && \
         ls combined/unhinted/ | grep -c ttf | grep -q "7"
     CHECK_RESULT $? 0 0 "merge_noto.py run error"
 
-    cd - > /dev/null
+    cd - > /dev/null || exit
 
     LOG_INFO "End to run test."
 }
@@ -60,7 +61,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     
-    rm -rf ${TMP_DIR}
+    rm -rf "${TMP_DIR}"
     common_post
 
     LOG_INFO "End to restore the test environment."
