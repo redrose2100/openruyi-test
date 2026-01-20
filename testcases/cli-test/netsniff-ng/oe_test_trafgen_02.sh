@@ -14,10 +14,18 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test trafgen
 # #############################################
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "netsniff-ng tar"
+    DNF_INSTALL "netsniff-ng tar telnet"
+    #兼容rv环境，设置虚拟机默认路由
+    if [ "$(arch)" = "riscv64" ]; then
+        IP_CIDR=$(ip addr show "${NODE1_NIC}" | awk '/inet / {print $2; exit}')
+        GATEWAY_IP=$(echo "$IP_CIDR" | cut -d'/' -f1 | sed 's/\.[0-9]*$/\.1/')
+        sudo ip route del default 2>/dev/null || true
+        sudo ip route add default via "$GATEWAY_IP" dev "${NODE1_NIC}"
+    fi
     tar -xvf ./common/data.tar.gz > /dev/null
     LOG_INFO "End to prepare the test environment."
 }
@@ -52,17 +60,23 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check trafgen --rfraw failed"
     rm -f msg.tmp
     # test --smoke-test
-    netsniff-ng --in ${NODE1_NIC} --out tcpsyn.pcap -n 2
+    netsniff-ng --in "${NODE1_NIC}" --out tcpsyn.pcap -n 2 &
+    #模拟tcp请求
+    timeout 20 telnet 8.8.8.8 53
     netsniff-ng --in tcpsyn.pcap --out tcpsyn.cfg -n 2
-    trafgen --dev ${NODE1_NIC} --conf tcpsyn.cfg --smoke-test 127.0.0.1 -n 2 | grep "packets outgoing"
+    trafgen --dev "${NODE1_NIC}" --conf tcpsyn.cfg --smoke-test 127.0.0.1 -n 2 | grep "packets outgoing"
     CHECK_RESULT $? 0 0 "Check trafgen --smoke-test failed"
     rm -f tcpsyn.cfg tcpsyn.pcap
+    kill -9 "$(pgrep netsniff-ng)"
     # test -s
-    netsniff-ng --in ${NODE1_NIC} --out tcpsyn.pcap -n 2
+    #模拟tcp请求
+    netsniff-ng --in "${NODE1_NIC}" --out tcpsyn.pcap -n 2 &
+    timeout 20 telnet 8.8.8.8 53
     netsniff-ng --in tcpsyn.pcap --out tcpsyn.cfg -n 2
-    trafgen --dev ${NODE1_NIC} --conf tcpsyn.cfg -s 127.0.0.1 -n 2 | grep "packets outgoing"
+    trafgen --dev "${NODE1_NIC}" --conf tcpsyn.cfg -s 127.0.0.1 -n 2 | grep "packets outgoing"
     CHECK_RESULT $? 0 0 "Check trafgen -s failed"
     rm -f tcpsyn.cfg tcpsyn.pcap
+    kill -9 "$(pgrep netsniff-ng)"
     # test -n
     trafgen --dev lo '{ fill(0xff, 6), 0x00, 0x02, 0xb3, rnd(3), c16(0x0800), fill(0xca, 64) }' -n 2 | grep "packets to schedule"
     CHECK_RESULT $? 0 0 "Check trafgen -n failed"
@@ -85,6 +99,9 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    if [ "$(arch)" = "riscv64" ]; then
+        sudo ip route del default 2>/dev/null || true
+    fi
     DNF_REMOVE
     rm -rf ./data/ ./common/*.sh
     LOG_INFO "End to restore the test environment."
