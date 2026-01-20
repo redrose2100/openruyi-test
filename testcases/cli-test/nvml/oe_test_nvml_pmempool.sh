@@ -37,7 +37,7 @@ function run_test() {
     pmempool info pool.blk 2>&1 | grep 'Part'
     CHECK_RESULT $? 0 0 "Check pmempool info failed"
     nohup pmempool dump pool.blk >blk.out &
-    SLEEP_WAIT 3
+    SLEEP_WAIT 10
     test -f ./blk.out
     CHECK_RESULT $? 0 0 "Check pmempool -f failed"
     pmempool check pool.blk

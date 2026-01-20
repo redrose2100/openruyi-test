@@ -14,17 +14,25 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test astraceroute
 # #############################################
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "netsniff-ng tar"
+    #兼容rv环境，设置虚拟机默认路由
+    if [ "$(arch)" = "riscv64" ]; then
+      IP_CIDR=$(ip addr show "${NODE1_NIC}" | awk '/inet / {print $2; exit}')
+      GATEWAY_IP=$(echo "$IP_CIDR" | cut -d'/' -f1 | sed 's/\.[0-9]*$/\.1/')
+      sudo ip route del default 2>/dev/null || true
+      sudo ip route add default via "$GATEWAY_IP" dev "${NODE1_NIC}"
+    fi
     tar -xvf ./common/data.tar.gz > /dev/null
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
     LOG_INFO "Start to run test."
     # test -L
-    astraceroute -i ${NODE1_NIC} -H netsniff-ng.org -L > tmp.txt &
+    astraceroute -i "${NODE1_NIC}" -H netsniff-ng.org -L > tmp.txt &
     local index=1
     while true;do
         ((index++))
@@ -41,10 +49,10 @@ function run_test() {
     done
     grep -E "Using flags SYN:0,ACK:0,ECN:0,FIN:0,PSH:0,RST:0,URG:0" tmp.txt
     CHECK_RESULT $? 0 0 "Check astraceroute -L failed"
-    kill -9 $(pgrep -f "astraceroute -i")
+    kill -9 '$(pgrep -f "astraceroute -i")'
     rm -f tmp.txt
     # test --latitude
-    astraceroute -i ${NODE1_NIC} -H netsniff-ng.org --latitude > tmp.txt &
+    astraceroute -i "${NODE1_NIC}" -H netsniff-ng.org --latitude > tmp.txt &
     local index=1
     while true;do
         ((index++))
@@ -61,24 +69,24 @@ function run_test() {
     done
     grep -E "Using flags SYN:0,ACK:0,ECN:0,FIN:0,PSH:0,RST:0,URG:0" tmp.txt
     CHECK_RESULT $? 0 0 "Check astraceroute --latitude failed"
-    kill -9 $(pgrep -f "astraceroute -i")
+    kill -9 '$(pgrep -f "astraceroute -i")'
     rm -f tmp.txt
     # test -t
-    astraceroute --dev ${NODE1_NIC} -H netsniff-ng.org -t 4 > tmp.txt &
+    astraceroute --dev "${NODE1_NIC}" -H netsniff-ng.org -t 4 > tmp.txt &
     SLEEP_WAIT 5
     grep "AS path IPv4 TCP trace from" tmp.txt
     CHECK_RESULT $? 0 0 "Check astraceroute -t failed"
-    kill -9 $(pgrep -f "astraceroute --dev")
+    kill -9 '$(pgrep -f "astraceroute --dev")'
     rm -f tmp.txt
     # test --tos
-    astraceroute --dev ${NODE1_NIC} -H netsniff-ng.org --tos 4 > tmp.txt &
+    astraceroute --dev "${NODE1_NIC}" -H netsniff-ng.org --tos 4 > tmp.txt &
     SLEEP_WAIT 5
     grep "AS path IPv4 TCP trace from" tmp.txt
     CHECK_RESULT $? 0 0 "Check astraceroute --tos failed"
-    kill -9 $(pgrep -f "astraceroute --dev")
+    kill -9 '$(pgrep -f "astraceroute --dev")'
     rm -f tmp.txt
     # test -G
-    astraceroute -i ${NODE1_NIC} -H netsniff-ng.org -G > tmp.txt &
+    astraceroute -i "${NODE1_NIC}" -H netsniff-ng.org -G > tmp.txt &
     local index=1
     while true;do
         ((index++))
@@ -95,10 +103,10 @@ function run_test() {
     done
     grep "Using flags SYN:0,ACK:0,ECN:0,FIN:0,PSH:0,RST:0,URG:0" tmp.txt
     CHECK_RESULT $? 0 0 "Check astraceroute -G failed"
-    kill -9 $(pgrep -f "astraceroute -i")
+    kill -9 '$(pgrep -f "astraceroute -i")'
     rm -f tmp.txt
     # test --nofrag
-    astraceroute -i ${NODE1_NIC} -H netsniff-ng.org --nofrag > tmp.txt &
+    astraceroute -i "${NODE1_NIC}" -H netsniff-ng.org --nofrag > tmp.txt &
     local index=1
     while true;do
         ((index++))
@@ -115,10 +123,10 @@ function run_test() {
     done
     grep "Using flags SYN:0,ACK:0,ECN:0,FIN:0,PSH:0,RST:0,URG:0" tmp.txt
     CHECK_RESULT $? 0 0 "Check astraceroute --nofrag failed"
-    kill -9 $(pgrep -f "astraceroute -i")
+    kill -9 '$(pgrep -f "astraceroute -i")'
     rm -f tmp.txt
     # test -Z
-    astraceroute -i ${NODE1_NIC} -H netsniff-ng.org -Z > tmp.txt &
+    astraceroute -i "${NODE1_NIC}" -H netsniff-ng.org -Z > tmp.txt &
     local index=1
     while true;do
         ((index++))
@@ -135,10 +143,10 @@ function run_test() {
     done
     grep "Chr .." tmp.txt
     CHECK_RESULT $? 0 0 "Check astraceroute -Z failed"
-    kill -9 $(pgrep -f "astraceroute -i")
+    kill -9 '$(pgrep -f "astraceroute -i")'
     rm -f tmp.txt
     # test --show-packet
-    astraceroute -i ${NODE1_NIC} -H netsniff-ng.org --show-packet > tmp.txt &
+    astraceroute -i "${NODE1_NIC}" -H netsniff-ng.org --show-packet > tmp.txt &
     local index=1
     while true;do
         ((index++))
@@ -155,12 +163,15 @@ function run_test() {
     done
     grep "Chr .." tmp.txt
     CHECK_RESULT $? 0 0 "Check astraceroute --show-packet failed"
-    kill -9 $(pgrep -f "astraceroute -i")
+    kill -9 '$(pgrep -f "astraceroute -i")'
     rm -f tmp.txt
     LOG_INFO "End to run test."
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    if [ "$(arch)" = "riscv64" ]; then
+       sudo ip route del default 2>/dev/null || true
+    fi
     DNF_REMOVE
     rm -rf ./data/ ./common/*.sh
     LOG_INFO "End to restore the test environment."

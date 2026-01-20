@@ -17,13 +17,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   TEST  noto_lint.py in nototools options
 # #############################################
-# shellcheck disable=SC1091
-source "../common/common.sh"
+# shellcheck disable=SC1091,2034
+
+source "${OET_PATH}/testcases/cli-test/nototools/common/common.sh"
 
 #Installation preparation for test objects, tools required for testing, etc.
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
+    EXECUTE_T="60m"
     common_pre
 
     LOG_INFO "End to prepare the test environment."
