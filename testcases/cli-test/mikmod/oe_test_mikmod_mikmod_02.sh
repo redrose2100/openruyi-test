@@ -17,18 +17,19 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   TEST mikmod options
 # #############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 #Installation preparation for test objects, tools required for testing, etc.
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    modprobe snd-dummy
     ret=$?
     if [ $ret -ne 0 ] ;then
         LOG_WARN "The current kernel does not have the snd-dummy module."
         exit 255
     fi
-    modprobe snd-dummy
     DNF_INSTALL "mikmod"
     LOG_INFO "End to prepare the test environment."
 }
