@@ -61,7 +61,7 @@ function pre_init() {
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh"
     sh "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh"
     SSH_SCP "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh" "${NODE2_USER}@${NODE2_IPV4}:${test_qemu_dir}" "$NODE2_PASSWORD"
-    SSH_CMD "sh ${test_qemu_dir}/pkg_pre.sh" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER" "600"
+    SSH_CMD "sh ${test_qemu_dir}/pkg_pre.sh" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER" "1200"
     # img pre
     mkdir -p "$image_dir"
     SSH_CMD "mkdir -p $image_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
