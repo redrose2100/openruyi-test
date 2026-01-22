@@ -19,6 +19,10 @@
 source ../libs/common.sh
 
 function pre_test() {
+    if ! dnf list Kmesh 2>/dev/null; then
+        LOG_ERROR "未找到 Kmesh 软件包，退出码 255"
+	exit 255
+    fi
     DNF_INSTALL Kmesh 
 }
 

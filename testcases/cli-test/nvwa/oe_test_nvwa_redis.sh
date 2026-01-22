@@ -14,15 +14,25 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test nvwa when redis run
 # #############################################
-# shellcheck disable=SC2002,SC2009,SC2148,SC2162,SC2181,SC1091,SC2164,SC2010,SC2034,SC2103,SC2086,SC2126,SC2010,SC2188,SC2162
-source ./common/lib.sh
+# shellcheck disable=SC2002,SC2009,SC2148,SC2162,SC2181,SC1091,SC2164,SC2010,SC2034,SC2103,SC2086,SC2126,SC2010,SC2188,SC2162,SC2119
+source ${OET_PATH}/testcases/cli-test/nvwa/common/lib.sh
 set +e
 function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if ! dnf list --quiet nvwa 2>/dev/null | grep -q '^nvwa\.'; then
+       LOG_ERROR "未找到 nvwa 软件包，退出码 255"
+       exit 255
+    fi
     deploy_nvwa
-    deploy_nvwwa_with_conf
+    #判断系统是否支持NVWA quickkexec
+    if grep -q "CONFIG_QUICK_KEXEC=y" /boot/config-"$(uname -r)" 2>/dev/null; then
+       deploy_nvwwa_with_conf
+    fi
+    LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
+    LOG_INFO "Start to run test."
     last_reboot=$(SSH_CMD "last reboot | head -1 | awk '{print \$8}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | tail -1 | sed 's/\r//')
     deploy_redis 1
     start_redis 1
@@ -37,12 +47,15 @@ function run_test() {
     last_reboot_sec=$(SSH_CMD "last reboot | head -1 | awk '{print \$8}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | tail -1 | sed 's/\r//')
     [ "$last_reboot" != "$last_reboot_sec" ]
     CHECK_RESULT $?
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
+    LOG_INFO "Start to restore the test environment."
     #恢复环境
     clean_redis
     restore_nvwa_restore
     clean_nvwa
+    LOG_INFO "End to restore the test environment."
 }
 main "$@"
