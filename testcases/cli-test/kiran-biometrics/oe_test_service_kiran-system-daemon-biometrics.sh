@@ -23,7 +23,7 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL kiran-biometrics
-    if ! rpm -qa axel | grep axel; then
+    if ! rpm -qa kiran-biometrics | grep kiran-biometrics; then
         echo "kiran-biometrics does not exist"
         exit 255
     fi
