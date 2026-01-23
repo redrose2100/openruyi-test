@@ -35,6 +35,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    sleeptime=10
     # start vnc server
     expect <<EOF
         spawn vncserver ${vncConnName}
@@ -76,14 +77,14 @@ EOF
 
     # --listen --vnc --web
     novnc_server --listen "${novncLisPort}" --vnc localhost:"${vncConnPort}" --web /usr/share/novnc &
-    SLEEP_WAIT 3
+    SLEEP_WAIT $sleeptime
     curl http://localhost:"${novncLisPort}"/vnc.html | grep '<title>noVNC</title>'
     CHECK_RESULT $? 0 0 "novnc_server listen Test --listen --vnc --web FAILED."
     kill -9 "$(lsof -i:"${novncLisPort}" -t)"
 
     # --record
     novnc_server --listen "${novncLisPort}" --vnc localhost:"${vncConnPort}" --record novnc_record >novnc_log.txt 2>&1 &
-    SLEEP_WAIT 3
+    SLEEP_WAIT $sleeptime
     grep 'Navigate to' novnc_log.txt
     CHECK_RESULT $? 0 0 "novnc_server record Test --listen --vnc --record FAILED."
     kill -9 "$(lsof -i:"${novncLisPort}" -t)"
@@ -96,14 +97,14 @@ EOF
 
     # --cert --key
     novnc_server --listen "${novncLisPort}" --vnc localhost:"${vncConnPort}" --cert ./self.pem --key ./self.pem &
-    SLEEP_WAIT 3
+    SLEEP_WAIT $sleeptime
     curl --cacert self.pem https://localhost:"${novncLisPort}"/vnc.html | grep '<title>noVNC</title>'
     CHECK_RESULT $? 0 0 "novnc_server cert and key Test --listen --vnc --cert --key FAILED."
     kill -9 "$(lsof -i:"${novncLisPort}" -t)"
 
     # --ssl-only
     novnc_server --listen "${novncLisPort}" --vnc localhost:"${vncConnPort}" --cert ./self.pem --key ./self.pem --ssl-only &
-    SLEEP_WAIT 3
+    SLEEP_WAIT $sleeptime
     curl http://localhost:"${novncLisPort}"/vnc.html 2>&1 | grep 'Recv failure'
     CHECK_RESULT $? 0 0 "novnc_server ssl-only Test --listen --vnc --cert --key --ssl-only FAILED."
     kill -9 "$(lsof -i:"${novncLisPort}" -t)"

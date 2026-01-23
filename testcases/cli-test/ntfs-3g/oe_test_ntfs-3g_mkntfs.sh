@@ -16,10 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of mkntfs command
 # ############################################
-# shellcheck disable=SC1091,SC2154
+# shellcheck disable=SC1091,SC2154,SC2034
 source "common/common_lib.sh"
 
 function pre_test() {
+    EXECUTE_T="40m"
     LOG_INFO "Start to prepare the test environment."
     get_disk
     LOG_INFO "Finish preparing the test environment."

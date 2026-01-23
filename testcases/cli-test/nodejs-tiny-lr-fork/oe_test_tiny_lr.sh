@@ -29,20 +29,21 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    timetmp=15
     tiny-lr -v "${versionnum}"
     CHECK_RESULT $? 0 0 "Check tiny-lr -V failed"
     tiny-lr --version "${versionnum}"
     CHECK_RESULT $? 0 0 "Check tiny-lr --version failed"
     tiny-lr -p 25555 > port.info &
-    SLEEP_WAIT 5
+    SLEEP_WAIT $timetmp
     grep "Listening on 25555" port.info
     CHECK_RESULT $? 0 0 "Check tiny-lr -p failed"
     tiny-lr --port 26666 > port.info &
-    SLEEP_WAIT 5
+    SLEEP_WAIT $timetmp
     grep "Listening on 26666" port.info
     CHECK_RESULT $? 0 0 "Check tiny-lr --port failed"
     tiny-lr --pid pid.info &
-    SLEEP_WAIT 5
+    SLEEP_WAIT $timetmp
     grep -e "^[0-9].*[0-9]$" pid.info
     CHECK_RESULT $? 0 0 "Check tiny-lr --pid failed"
     update-livereload
