@@ -14,13 +14,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test zentest
 # #############################################
+# shellcheck disable=SC2034
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 GEM_PACKAGES=" rubygem-test-unit rubygem-ZenTest rubygem-minitest rubygem-rails "
 OTHER_DEPENDENCES=" tar nodejs bc gcc libyaml-devel ruby-devel "
 SOURCE_URL="https://gems.ruby-china.com/"
 ORIGIN_SOURCE="https://rubygems.org/"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    EXECUTE_T="240m"
     # remove
     sudo dnf autoremove -y gem
     # install
