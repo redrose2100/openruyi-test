@@ -22,6 +22,10 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    if [[ "${NODE1_FRAME}" != "x86_64" && "${NODE1_FRAME}" != "aarch64" ]]; then
+        LOG_WARN "Current architecture (${NODE1_FRAME}) is not supported by powerapi, skipping test."
+        exit 255
+    fi
     DNF_INSTALL "binutils gcc"
     LOG_INFO "End of environmental preparation!"
 }
@@ -54,7 +58,7 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
     rm -rf main.c main.o main.dwp main.dwo
     # shellcheck disable=SC2119
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

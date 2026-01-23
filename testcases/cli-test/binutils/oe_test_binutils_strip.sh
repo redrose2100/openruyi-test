@@ -46,21 +46,24 @@ EOF
 function run_test() {
     LOG_INFO "Start to run test."
     g++ -Wl,-Map=${path}/test.map -g ${path}/test.cpp -o ${path}/testfile
-    ls ${path} | grep -E "testfile|test.map"
-    CHECK_RESULT $? 0 0 "Compilation failure"
-    size1=$(ls -lh ${path}/testfile |awk '{print $5}')
+    if [ -f "${path}/testfile" ] && [ -f "${path}/test.map" ]; then
+        CHECK_RESULT 0 0 0 "Compilation failure"
+    else
+        CHECK_RESULT 1 0 1 "Compilation failure"
+    fi
+    size1=$(stat -c %s "${path}/testfile")
 
     strip ${path}/testfile
-    size2=$(ls -lh ${path}/testfile |awk '{print $5}')
+    size2=$(stat -c %s "${path}/testfile")
 
-    CHECK_RESULT $size1 $size2 1 "strip failture"
+    CHECK_RESULT "$size1" "$size2" 1 "strip failture"
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ${path}
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }
 
