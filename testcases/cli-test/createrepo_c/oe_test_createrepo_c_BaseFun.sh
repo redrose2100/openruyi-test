@@ -50,8 +50,14 @@ function run_test() {
 
   createrepo_c "${test_path}"/pkg -v
   CHECK_RESULT $? 0 0 "createrepo_c run verbosely fail"
-  createrepo_c "${test_path}"/pkg -v 2>&1 |grep "$(date +%H:%M:%S)" |grep "All done"
+  output=$(createrepo_c "${test_path}"/pkg -v 2>&1)
   CHECK_RESULT $? 0 0 "createrepo_c run verbosely fail"
+
+  echo "$output" | grep -q "All done"
+  CHECK_RESULT $? 0 0 "createrepo_c output missing 'All done'"
+）
+  echo "$output" | grep -q -E '[0-9]{2}:[0-9]{2}:[0-9]{2}'
+  CHECK_RESULT $? 0 0 "createrepo_c output missing timestamp"
 
   createrepo_c --workers 4 "${test_path}"/pkg
   CHECK_RESULT $? 0 0 "fix Number of workers fail"
