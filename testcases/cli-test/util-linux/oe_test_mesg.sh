@@ -23,6 +23,13 @@ function pre_test() {
     DNF_INSTALL "util-linux"
     # Save original mesg state
     original_mesg_state=$(mesg | awk '{print $2}')
+    mesg
+    mesg | awk '{print $2}'
+    if [ -t 0 ]; then
+    	echo "当前环境是TTY（交互式终端）"
+    else
+    	echo "当前环境非TTY（自动化/后台/管道执行）"
+    fi
     LOG_INFO "Original mesg state is $original_mesg_state."
     LOG_INFO "End to prepare the test environment."
 }
