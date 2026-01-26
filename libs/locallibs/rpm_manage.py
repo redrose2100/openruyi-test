@@ -70,50 +70,63 @@ def rpm_install(pkgs, node=1, tmpfile=""):
             os.environ.get("NODE" + str(node) + "_USER"),
         )
         func = ssh_cmd.pssh_cmd
-
-    result = func(conn=conn, cmd="dnf --assumeno install " + pkgs)[1]
-    if "is already installed" in result and "Nothing to do" in result:
-        mugen_log.logging("info", "pkgs:(%s) is already installed" % pkgs)
-        return 0, None
-
-    repoCode, repoList = func(
-        conn=conn,
-        cmd="dnf repolist | awk '{print $NF}' | sed -e '1d;:a;N;$!ba;s/\\n/ /g'",
-    )
-    if repoCode != 0:
-        return repoCode, repoList
-    upCode, upList = func(
-        conn=conn,
-        cmd="dnf --assumeno install "
-        + pkgs
-        + " 2>&1| grep -A 1000 \"Upgrading:\" | grep update | grep -wE \"$(uname -m)|noarch\"|awk '{print $1}'|xargs",
-    )
-    if upCode != 0:
-        return upCode, upList
-    if len(upList) == 0:
+    os_version=os.environ.get("NODE" + str(node) + "_OS_VERSION")
+    if "debian" in os_version:
+        result = func(conn=conn, cmd="dpkg --configure -a;dpkg -s " + pkgs)[1]
+        if "install ok installed" in result and "is not installed" not in result:
+            mugen_log.logging("info", "pkgs:(%s) is already installed" % pkgs)
+            return 0, None
         depCode, depList = func(
+            conn=conn,
+            cmd="apt install --dry-run " + pkgs + " 2>/dev/null | grep '^Inst' | awk '{print $2}'")
+        if depCode != 0:
+            return depCode, depList
+        exitcode, result = func(conn=conn, cmd="apt install -y " + pkgs)
+    
+    else:  
+        result = func(conn=conn, cmd="dnf --assumeno install " + pkgs)[1]
+        if "is already installed" in result and "Nothing to do" in result:
+            mugen_log.logging("info", "pkgs:(%s) is already installed" % pkgs)
+            return 0, None
+
+        repoCode, repoList = func(
+            conn=conn,
+            cmd="dnf repolist | awk '{print $NF}' | sed -e '1d;:a;N;$!ba;s/\\n/ /g'",
+        )
+        if repoCode != 0:
+            return repoCode, repoList
+        upCode, upList = func(
             conn=conn,
             cmd="dnf --assumeno install "
             + pkgs
-            + ' 2>&1 | grep -wE "$(echo '
-            + repoList
-            + " | sed 's/ /|/g')\" | grep -wE \"$(uname -m)|noarch\"| awk '{print $1}'",
+            + " 2>&1| grep -A 1000 \"Upgrading:\" | grep update | grep -wE \"$(uname -m)|noarch\"|awk '{print $1}'|xargs",
         )
-    else:
-        depCode, depList = func(
-            conn=conn,
-            cmd="dnf --assumeno install "
-            + pkgs
-            + ' 2>&1 | grep -wE "$(echo '
-            + repoList
-            + " | sed 's/ /|/g')\" | grep -wE \"$(uname -m)|noarch\"| grep -vE \"$(echo "
-            + upList
-            + " | sed 's/ /|/g')\" | awk '{print $1}'",
-        )
-    if depCode != 0:
-        return depCode, depList
+        if upCode != 0:
+            return upCode, upList
+        if len(upList) == 0:
+            depCode, depList = func(
+                conn=conn,
+                cmd="dnf --assumeno install "
+                + pkgs
+                + ' 2>&1 | grep -wE "$(echo '
+                + repoList
+                + " | sed 's/ /|/g')\" | grep -wE \"$(uname -m)|noarch\"| awk '{print $1}'",
+            )
+        else:
+            depCode, depList = func(
+                conn=conn,
+                cmd="dnf --assumeno install "
+                + pkgs
+                + ' 2>&1 | grep -wE "$(echo '
+                + repoList
+                + " | sed 's/ /|/g')\" | grep -wE \"$(uname -m)|noarch\"| grep -vE \"$(echo "
+                + upList
+                + " | sed 's/ /|/g')\" | awk '{print $1}'",
+            )  
+        if depCode != 0:
+            return depCode, depList
 
-    exitcode, result = func(conn=conn, cmd="dnf -y install " + pkgs)
+        exitcode, result = func(conn=conn, cmd="dnf -y install " + pkgs)
 
     if tmpfile == "":
         tmpfile = tempfile.mkstemp(dir="/tmp")[1]
@@ -162,8 +175,11 @@ def rpm_remove(node=1, pkgs="", tmpfile=""):
     if tmpfile != "":
         with open(tmpfile, "r") as f:
             depList = f.read()
-
-    exitcode = func(conn=conn, cmd="dnf -y remove " + pkgs + " " + depList)[0]
+    os_version = os.environ.get("NODE" + str(node) + "_OS_VERSION")
+    if "debian" in os_version:
+        exitcode = func(conn=conn, cmd="apt -y remove " + pkgs + " " + depList + "; apt purge -y " + pkgs + " " + depList)[0]
+    else:
+        exitcode = func(conn=conn, cmd="dnf -y remove " + pkgs + " " + depList)[0]
     if localtion != "local":
         ssh_cmd.pssh_close(conn)
     return exitcode

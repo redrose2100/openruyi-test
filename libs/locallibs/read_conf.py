@@ -29,6 +29,7 @@ import mugen_log
 NODE_ITEM = [
     "LOCALTION",
     "MACHINE",
+    "OS_VERSION",
     "FRAME",
     "USER",
     "PASSWORD",

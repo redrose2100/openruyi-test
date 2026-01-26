@@ -125,6 +125,9 @@ def write_conf(ip, password, port=22, user="root", run_remote=False, copy_all=Tr
         else:
             NODE_DATA["MACHINE"] = "kvm"
 
+        stdin, stdout, stderr = ssh.exec_command("grep '^ID=' /etc/os-release | awk -F'=' '{print $2}' | sed 's/\"//g'")
+        NODE_DATA["OS_VERSION"] = stdout.read().decode("utf-8").strip("\n")
+
         stdin, stdout, stderr = ssh.exec_command(
             "ip a | grep 'inet6' | grep -v 'scope host' | awk '{print $2}' | awk -F '/' '{print $1}' | head -n 1"
         )
@@ -152,6 +155,9 @@ def write_conf(ip, password, port=22, user="root", run_remote=False, copy_all=Tr
             NODE_DATA.update({"MACHINE": "physical"})
         else:
             NODE_DATA["MACHINE"] = "kvm"
+
+        exitcode, output = subprocess.getstatusoutput("grep '^ID=' /etc/os-release | awk -F'=' '{print $2}' | sed 's/\"//g'")
+        NODE_DATA["OS_VERSION"] = output.strip("\n")
 
         exitcode, output = subprocess.getstatusoutput(
             "ip a | grep 'inet6' | grep -v 'scope host' | awk '{print $2}' | awk -F '/' '{print $1}' | head -n 1"

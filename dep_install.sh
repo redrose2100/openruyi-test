@@ -25,17 +25,29 @@ usage() {
 }
 
 common_dep(){
-    yum install expect psmisc make iputils python3-six python3-paramiko -y
+    if [ "${os_version}" == "debian" ];then
+        apt install expect psmisc make iputils-ping python3-six python3-paramiko -y
+    else
+        yum install expect psmisc make iputils python3-six python3-paramiko -y
+    fi
 }
 
 qemu_dep(){
     echo "install qemu"
-    yum install bridge-utils -y
+    if [ "${os_version}" == "debian" ];then
+        apt install bridge-utils -y
+    else
+        yum install bridge-utils -y
+    fi	
     qemu-system-aarch64 --version && qemu-system-arm --version
     if [ $? -eq 0 ]; then
         return 0
     fi
-    yum install qemu-system-aarch64 qemu-system-arm -y
+    if [ "${os_version}" == "debian" ];then
+        apt install qemu-system-arm -y
+    else
+        yum install qemu-system-aarch64 qemu-system-arm -y
+    fi
     if [ $? -ne 0 ]; then
         echo "ERROR: qemu not install, you need install it youself."
         return 1
@@ -78,6 +90,7 @@ check_option(){
 }
 
 main(){
+    os_version=$(grep "^ID=" /etc/os-release | awk -F'=' '{print $2}' | sed 's/"//g')
     check_option $@
     if [ $? -ne 0 ]; then
         return 1
