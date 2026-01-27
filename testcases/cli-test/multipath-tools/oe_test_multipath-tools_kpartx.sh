@@ -21,8 +21,7 @@ source "common_multipath-tools.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    local_disks=$(TEST_DISK 1)
-    local_disk=$(echo "$local_disks" | awk -F " " '/sd[a-z]/ {for(i=1;i<=NF;i++) if ($i~/sd/ && $i!~/[0-9]/)j=i;print $j}')
+    local_disk=$(lsblk | grep -B 2 "mpath.*1" | grep disk | awk '{print$1}')
     LOG_INFO "End to prepare the test environment."
 }
 
