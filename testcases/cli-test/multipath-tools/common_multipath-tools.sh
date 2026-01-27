@@ -14,12 +14,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Public class integration
 #####################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
     remote_disks=$(TEST_DISK 2)
-    remote_disk=/dev/$(echo "$remote_disks" | awk -F " " '{for(i=1;i<=NF;i++) if ($i!~/[0-9]/)j=i;print $j}')
+    remote_disk=/dev/$(echo "$remote_disks" | awk -F " " '{for(i=1;i<=NF;i++) if ($i!~/[0-9]/)j=i;print $j}'|head -n 1)
     P_SSH_CMD --node 2 --cmd "dnf install -y scsi-target-utils;
         echo -e 'n\np\n1\n\n+2000M\nw' | fdisk ${remote_disk};
         echo -e '<target iqn.2013-12.com.make:ws.httpd>\nbacking-store ${remote_disk}\n</target>' >>/etc/tgt/targets.conf;
@@ -69,6 +69,6 @@ function clear_env() {
     P_SSH_CMD --node 2 --cmd "dnf remove -y scsi-target-utils; echo -e 'd\nw\n' | fdisk ${remote_disk}"
     iscsiadm -m node --logoutall=all
     multipath -F
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     rm -rf /tmp/disk1
 }
