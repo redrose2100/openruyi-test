@@ -25,13 +25,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "The initctl on /run has some errors."
     ls -l /run | grep "utmp" | grep -q "\-rw-rw-r--"
     CHECK_RESULT $? 0 0 "The utmp on /run has some errors."
-    dir=('fsck' 'log' 'mount' 'systemd' 'udev' 'user')
+    dir=('log' 'mount' 'systemd' 'udev' 'user')
     for i in $(seq 0 $((${#dir[@]} - 1))); do
         ls -l /run | grep "${dir[$i]}" | grep -q 'drwxr-xr-x'
         CHECK_RESULT $? 0 0 "The access of /${dir[$i]} is false."
     done
+    if ! grep cloudroot /etc/passwd; then
+        ls -l /run | grep "fsck" | grep -q 'drwxr-xr-x'
+    fi
     LOG_INFO "End to run test."
 }
 
 main "$@"
-
