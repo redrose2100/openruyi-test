@@ -25,6 +25,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "The initctl on /run has some errors."
     ls -l /run | grep "utmp" | grep -q "\-rw-rw-r--"
     CHECK_RESULT $? 0 0 "The utmp on /run has some errors."
+    echo "*************************"; journalctl -u "systemd-fsck@*.service"
     dir=('fsck' 'log' 'mount' 'systemd' 'udev' 'user')
     for i in $(seq 0 $((${#dir[@]} - 1))); do
         ls -l /run | grep "${dir[$i]}" | grep -q 'drwxr-xr-x'
