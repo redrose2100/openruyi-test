@@ -22,7 +22,7 @@ source "${OET_PATH}"/testcases/system-test/system-integration/os-storage/common/
 
 function config_params() {
     LOG_INFO "Start loading data!"
-    if [ ! -e /dev/openeuler/swap ];then
+    if [ ! -e /dev/openeuler/swap ]; then
         LOG_WARN "Testing cannot be performed if /dev/openeuler/swap not exist."
         exit 255
     fi
@@ -105,7 +105,8 @@ function run_test() {
     CHECK_RESULT $?
     swapon -v /dev/vg0/lv_test
     CHECK_RESULT $?
-    size_lv=$(grep dm-2 /proc/swaps | awk '{print$3}')
+    name_lv=$(grep dm /proc/swaps | tail -n1 | awk '{print $1}' | awk -F"/" '{print $NF}')
+    size_lv=$(grep dm /proc/swaps | tail -n1 | awk '{print $3}')
     test "$size_lv" -lt 600000
     CHECK_RESULT $?
 
@@ -116,7 +117,7 @@ function run_test() {
     CHECK_RESULT $?
     sed -i "/lv_test/d" /etc/fstab
     systemctl daemon-reload
-    grep dm-2 /proc/swaps
+    grep "$name_lv" /proc/swaps
     CHECK_RESULT $? 1
 
     swapoff -v /swapfile
