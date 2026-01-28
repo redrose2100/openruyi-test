@@ -44,6 +44,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list=${point_list[*]}
     REMOVE_FS "$list"
+    REMOVE_VG
     LOG_INFO "End to restore the test environment."
 }
 

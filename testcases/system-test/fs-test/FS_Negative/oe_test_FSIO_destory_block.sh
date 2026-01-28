@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Inject: Destory the fs super block to rw the fs
 #####################################
-
+# shellcheck disable=SC1091,SC2207,SC2116,SC2068,SC2119
 source "${OET_PATH}/testcases/system-test/fs-test/common_lib/fsio_lib.sh"
 
 function pre_test() {
@@ -49,7 +49,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     REMOVE_FS "${point_list[@]}"
-    DNF_REMOVE "$@"
+    REMOVE_VG
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
