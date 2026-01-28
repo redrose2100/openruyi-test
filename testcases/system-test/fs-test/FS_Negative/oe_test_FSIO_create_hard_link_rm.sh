@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Inject: Change file access while reading file
 #####################################
-
+# shellcheck disable=SC1091,SC2207,SC2116,SC2068,SC2119,SC2154
 source ../common_lib/fsio_lib.sh
 
 function pre_test() {
@@ -28,11 +28,11 @@ function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         mnt_point=${point_list[$i]}
-        linkFile=$mnt_point/testlink
-        dd if=/dev/zero of=$mnt_point/testFile bs=102400 count=5
-        ln $sourceFile $linkFile &
-        rm -rf $sourceFile &
-        cat $linkFile
+        linkFile="$mnt_point"/testlink
+        dd if=/dev/zero of="$mnt_point"/testFile bs=102400 count=5
+        ln "$sourceFile" "$linkFile" &
+        rm -rf "$sourceFile" &
+        cat "$linkFile"
         CHECK_RESULT $? 1 0 "Create hard link file unexpectly while rm the source file."
     done
     LOG_INFO "End to run test."
@@ -42,6 +42,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list=$(echo ${point_list[@]})
     REMOVE_FS "$list"
+    REMOVE_VG
     LOG_INFO "End to restore the test environment."
 }
 

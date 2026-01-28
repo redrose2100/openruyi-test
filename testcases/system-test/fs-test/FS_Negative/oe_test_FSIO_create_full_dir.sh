@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Inject full dir on fs
 #####################################
-
+# shellcheck disable=SC1091,SC2207,SC2116,SC2068,SC2119,SC2003,SC2004,SC2012,SC2181
 source ../common_lib/fsio_lib.sh
 
 function pre_test() {
@@ -30,26 +30,26 @@ function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         mnt_point=${point_list[$i]}
-        cd $mnt_point
-        top -d 2 >$mnt_point/cpu.log &
-        iostat -d 2 >$mnt_point/iostat.log &
+        cd "$mnt_point" || exit 1
+        top -d 2 >"$mnt_point"/cpu.log &
+        iostat -d 2 >"$mnt_point"/iostat.log &
         start_time=$(date +%s)
-        max_name_len=$(getconf NAME_MAX $mnt_point)
+        max_name_len=$(getconf NAME_MAX "$mnt_point")
         i=0
         while [[ "$?" =~ "0" ]]; do
-            dirName=$(GET_RANDOMNAME $max_name_len)
+            dirName=$(GET_RANDOMNAME "$max_name_len")
             i=$(($i + 1))
-            mkdir $dirName
+            mkdir "$dirName"
             if [[ "$?" =~ "1" ]]; then
                 break
             fi
-            cd $dirName
+            cd "$dirName"  || exit 1
         done
         while [[ $i -gt 0 ]]; do
             first=$(ls -A | head -n 1)
-            if [[ $first != "lost+found" ]]; then
-                rm -rf $first
-                cd ..
+            if [[ "$first" != "lost+found" ]]; then
+                rm -rf "$first"
+                cd ..  || exit 1
             fi
             i=$(($i - 1))
         done
@@ -57,11 +57,11 @@ function run_test() {
         CHECK_RESULT $? 0 "Check pwd failed."
         SLEEP_WAIT 10
         end_time=$(date +%s)
-        exec_time=$(expr $(($end_time - $start_time)))
-        LOG_INFO "Execute time is "$exec_time
-        CHECK_BKG_MONITOR $mnt_point "85.0" "2500.00"
+        exec_time=$(expr $(("$end_time" - "$start_time")))
+        LOG_INFO "Execute time is ""$exec_time"
+        CHECK_BKG_MONITOR "$mnt_point" "85.0" "2500.00"
         CHECK_RESULT $? 0
-        cd $pwd
+        cd "$pwd" || exit 1
     done
     LOG_INFO "End to run test."
 }
@@ -70,7 +70,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list=$(echo ${point_list[@]})
     REMOVE_FS "$list"
-    DNF_REMOVE 0 sysstat
+    REMOVE_VG
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

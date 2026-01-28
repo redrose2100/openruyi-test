@@ -15,7 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Inject: create format file on fs
 #####################################
-
+# shellcheck disable=SC1091,SC2207,SC2116,SC2068,SC2119
 source ../common_lib/fsio_lib.sh
 
 function pre_test() {
@@ -28,13 +28,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         mnt_point=${point_list[$i]}
-        max_name_len=$(getconf NAME_MAX $mnt_point)
-        fileName=$(GET_RANDOMNAME $max_name_len)
-        file=$mnt_point/$fileName
-        dd if=/dev/zero of=$file bs=100M count=100
-        cat $file >/dev/null
+        max_name_len=$(getconf NAME_MAX "$mnt_point")
+        fileName=$(GET_RANDOMNAME "$max_name_len")
+        file="$mnt_point"/"$fileName"
+        dd if=/dev/zero of="$file" bs=100M count=100
+        cat "$file" >/dev/null
         CHECK_RESULT $? 0 0 "Cat file failed."
-        rm -f $file
+        rm -f "$file"
         CHECK_RESULT $? 0 0 "Remove file failed."
     done
     LOG_INFO "End to run test."
@@ -44,6 +44,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list=$(echo ${point_list[@]})
     REMOVE_FS "$list"
+    REMOVE_VG
     LOG_INFO "End to restore the test environment."
 }
 
