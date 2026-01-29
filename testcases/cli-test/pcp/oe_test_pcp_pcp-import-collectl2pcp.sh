@@ -15,14 +15,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in pcp-import-collectl2pcp binary package
 # ############################################
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "pcp-import-collectl2pcp tar hostname wget"
-    wget -nd http://jaist.dl.sourceforge.net/sourceforge/collectl/collectl-3.1.3.src.tar.gz
-    tar zxvf collectl-3.1.3.src.tar.gz
-    cd collectl-3.1.3 || exit
+    wget -nd http://archive.ubuntu.com/ubuntu/pool/universe/c/collectl/collectl_4.3.1.orig.tar.gz
+    tar zxvf collectl_4.3.1.orig.tar.gz
+    cd collectl-4.3.1 || exit
     ./INSTALL
     cd - || exit
     LOG_INFO "End to prepare the test environment."
@@ -44,7 +45,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     rm -rf ./collect* ./wget-log* /opt/hp*
     LOG_INFO "End to restore the test environment."
 }
