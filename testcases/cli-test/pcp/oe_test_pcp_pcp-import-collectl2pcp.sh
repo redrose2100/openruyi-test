@@ -15,8 +15,9 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in pcp-import-collectl2pcp binary package
 # ############################################
-source "$OET_PATH/libs/locallibs/common_lib.sh"
 # shellcheck disable=SC2119
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "pcp-import-collectl2pcp tar hostname wget"
