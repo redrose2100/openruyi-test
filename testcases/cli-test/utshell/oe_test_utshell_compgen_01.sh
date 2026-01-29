@@ -16,12 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   compgen using the utshell test command
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "utshell"
+    if ! rpm -qa utshell | grep utshell; then
+        echo "utshell does not exist"
+        exit 255
+    fi
     useradd -m -s /bin/utshell test
     LOG_INFO "End of environmental preparation!"
 }
@@ -32,7 +36,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "View Help Failed"
     su - test -c "compgen -c"
     CHECK_RESULT $? 0 0 "Execution failed"
-    su - test -c "compgen -a |grep -i ll"
+    su - test -c "compgen -a |grep -i egrep"
     CHECK_RESULT $? 0 0 "Failed to view alias"
     su - test -c "compgen -b |grep -i wait"
     CHECK_RESULT $? 0 0 "View plugin failed"
@@ -45,7 +49,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf test
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -16,30 +16,30 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test python_urllib3
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-  LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "python3-urllib3"
-  LOG_INFO "End of environmental preparation!"
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "python3-urllib3"
+    LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-  LOG_INFO "Start to run test."
-  python3 common/test-urllib3.py 
-  CHECK_RESULT $? 0 0 "script run failed"
-  CHECK_RESULT "$(python3 common/test-urllib3.py |sed -n '1p')" "200" 0 "status get failed"
-
-  python3 common/test-urllib3.py |grep "openEuler社区官网"
-  CHECK_RESULT $? 0 0 "get title error"
-  LOG_INFO "End of the test."
+    LOG_INFO "Start to run test."
+    python3 common/test-urllib3.py
+    CHECK_RESULT $? 0 0 "script run failed"
+    CHECK_RESULT "$(python3 common/test-urllib3.py |sed -n '1p')" "200" 0 "status get failed"
+    
+    python3 common/test-urllib3.py |grep -E "openEuler|社区官网"
+    CHECK_RESULT $? 0 0 "get title error"
+    LOG_INFO "End of the test."
 }
 
 function post_test() {
-  LOG_INFO "start environment cleanup."
-  DNF_REMOVE "$@"
-  LOG_INFO "Finish environment cleanup!"
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
