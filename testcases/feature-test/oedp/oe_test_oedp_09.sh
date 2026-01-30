@@ -17,11 +17,13 @@
 # @Desc      :   Deployment of KubeRay and train MLP model based on FashionMNIST on KubeRay
 # #############################################
 # shellcheck disable=SC2016
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "./common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL oedp python3-libselinux bc
+    build_k8s
+    install_helm
+    DNF_INSTALL "oedp python3-libselinux bc"
     ssh-keyscan -H "${NODE1_IPV4}" >> ~/.ssh/known_hosts
     oedp repo update
     oedp init kuberay
@@ -74,7 +76,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     
-    rm -rf singlepod.txt mulpod.txt kuberay
+    uninstall_helm
+    uninstall_k8s
+    rm -rf singlepod.txt mulpod.txt kuberay helm-3.9.0 install_helm kubernetes-1.31.1 install_kubernetes
     DNF_remove "$@"
 
     LOG_INFO "End to restore the test environment."

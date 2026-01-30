@@ -67,6 +67,7 @@ function post_test() {
     rm -rf kuberay install_kuberay
     uninstall_helm
     uninstall_k8s
+    rm -rf kuberay install_kuberay helm-3.9.0 install_helm kubernetes-1.31.1 install_kubernetes
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

@@ -31,8 +31,10 @@ function run_test() {
 
     oedp repo update
     CHECK_RESULT $? 0 0 "Failed to execute oedp repo update command"
+    
+    repo_url=$(oedp repo list 2>&1 | grep "openEuler" | awk -F'|' '{print $3}' | tr -d ' ')
+    plugin=$(oedp list 2>&1 | grep "openEuler" | awk -F'|' '{print $3}' | head -1 | xargs)
 
-    plugin=$(curl -s https://repo.oepkgs.net/openEuler/rpm/openEuler-24.03-LTS/contrib/oedp/plugins/ | grep -o 'kubernetes-[0-9]\+\(\.[0-9]\+\)*' | sort -V | tail -1)
     oedp init "$plugin" 2>&1 | grep "process success"
     CHECK_RESULT $? 0 0 "Failed to oedp init "$plugin""
 
@@ -40,32 +42,40 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to check "$plugin""
 
     rm -rf "$plugin"
-    oedp init https://repo.oepkgs.net/openEuler/rpm/openEuler-24.03-LTS/contrib/oedp/plugins/"$plugin".tar.gz 2>&1 | grep "process success"
+    CHECK_RESULT $? 0 0 "Failed to delete "$plugin""
+
+    oedp init "$repo_url""$plugin".tar.gz 2>&1 | grep "process success"
     CHECK_RESULT $? 0 0 "Failed to oedp init "$plugin" by url"
     
     test -d "$plugin"
     CHECK_RESULT $? 0 0 "Failed to check "$plugin""
 
     rm -rf "$plugin"
-    oedp init "$plugin" -p ~/"$plugin" 2>&1 | grep "process success"
+    CHECK_RESULT $? 0 0 "Failed to delete "$plugin""
+
+    oedp init "$plugin" -p /root/"$plugin" 2>&1 | grep "process success"
     CHECK_RESULT $? 0 0 "Failed to oedp init "$plugin" to home directory"
 
-    test -d ~/"$plugin"
+    test -d /root/"$plugin"
     CHECK_RESULT $? 0 0 "Failed to check "$plugin""
 
-    rm -rf ~/"$plugin"
-    oedp init "$plugin" -d ~ --force 2>&1 | grep "process success"
-    CHECK_RESULT $? 0 0 "Forcefully initializing "$plugin" to/root directory failed "
+    rm -rf /root/"$plugin"
+    CHECK_RESULT $? 0 0 "Failed to delete "$plugin""
 
-    test -d ~/"$plugin"
+    oedp init "$plugin" -d /root --force 2>&1 | grep "process success"
+    CHECK_RESULT $? 0 0 "Forcefully initializing "$plugin" to /root directory failed "
+
+    test -d /root/"$plugin"
     CHECK_RESULT $? 0 0 "Failed to check "$plugin""
+
+    rm -rf /root/"$plugin"
+    CHECK_RESULT $? 0 0 "Failed to delete "$plugin""
 
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    #rm -rf ~/"$plugin"
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

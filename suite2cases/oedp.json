@@ -12,6 +12,11 @@
             "machine num": 1,
             "machine type": "kvm"
         },
+	{
+            "name": "oe_test_oedp_03",
+            "machine num": 1,
+            "machine type": "kvm"
+        },
         {
             "name": "oe_test_oedp_04",
             "machine num": 1,

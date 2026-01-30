@@ -17,10 +17,12 @@
 # @Desc      :   Deployment of kubeflow-1.9.1
 # #############################################
 # shellcheck disable=SC2016
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "./common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    build_k8s
+    install_helm
     DNF_INSTALL "oedp python3-libselinux"
     ssh-keyscan -H "${NODE1_IPV4}" >> ~/.ssh/known_hosts
     oedp repo update

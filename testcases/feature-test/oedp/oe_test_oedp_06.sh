@@ -23,7 +23,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "oedp python3-libselinux"
+    DNF_INSTALL "oedp python3-libselinux containerd"
     ssh-keyscan -H "${NODE1_IPV4}" >> ~/.ssh/known_hosts
     ln -s /usr/bin/containerd-shim-runc-v2 /usr/local/bin/containerd-shim-runc-v2
     min_mem_gb=$(free -m | awk '/^Mem:/ {print int($7/1024)}')

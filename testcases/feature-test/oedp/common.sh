@@ -14,13 +14,13 @@
 # @Contact   :   ding_jiao@hoperun.com
 # @Date      :   2025/08/28
 # @License   :   Mulan PSL v2
-# @Desc      :   Support deployment of Kubernetes with 1 master and 2 works
+# @Desc      :   Prepare the test environment
 # #############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function build_k8s() {
-    LOG_INFO "Start to prepare the test environment."
+    LOG_INFO "Start to install kubernetes"
     DNF_INSTALL "oedp python3-libselinux"
     oedp repo update
     CHECK_RESULT $? 0 0 "Failed to update repo!"
@@ -34,12 +34,9 @@ function build_k8s() {
     sed -i "s/HOST_IP1/${NODE1_IPV4}/g" ./kubernetes-1.31.1/config.yaml
     sed -i "s/HOST_IP4/${NODE2_IPV4}/g" ./kubernetes-1.31.1/config.yaml
     sed -i "s/HOST_IP5/${NODE3_IPV4}/g" ./kubernetes-1.31.1/config.yaml
-    sed -i '|^'"${NODE1_IPV4}"':$/,/^$/ s|ansible_password: ""|ansible_password: "'"${NODE1_PASSWORD}"'"|' ./kubernetes-1.31.1/config.yaml
-    sed -i '|^'"${NODE2_IPV4}"':$/,/^$/ s|ansible_password: ""|ansible_password: "'"${NODE2_PASSWORD}"'"|' ./kubernetes-1.31.1/config.yaml
-    sed -i '|^'"${NODE3_IPV4}"':$/,/^$/ s|ansible_password: ""|ansible_password: "'"${NODE3_PASSWORD}"'"|' ./kubernetes-1.31.1/config.yaml
-    sed -i "|${NODE1_IPV4}:/,/ansible_password:/{s|ansible_password: \"\"|ansible_password: ${NODE1_PASSWORD}|}" ./kubernetes-1.31.1/config.yaml
-    sed -i "|${NODE2_IPV4}:/,/ansible_password:/{s|ansible_password: \"\"|ansible_password: ${NODE2_PASSWORD}|}" ./kubernetes-1.31.1/config.yaml
-    sed -i "|${NODE3_IPV4}:/,/ansible_password:/{s|ansible_password: \"\"|ansible_password: ${NODE3_PASSWORD}|}" ./kubernetes-1.31.1/config.yaml
+    sed -i '/'"${NODE1_IPV4}"':/,/runtime:/ s|ansible_password: ""|ansible_password: "'"${NODE1_PASSWORD}"'"|' ./kubernetes-1.31.1/config.yaml
+    sed -i '/'"${NODE2_IPV4}"':/,/runtime:/ s|ansible_password: ""|ansible_password: "'"${NODE2_PASSWORD}"'"|' ./kubernetes-1.31.1/config.yaml
+    sed -i '/'"${NODE3_IPV4}"':/,/runtime:/ s|ansible_password: ""|ansible_password: "'"${NODE3_PASSWORD}"'"|' ./kubernetes-1.31.1/config.yaml
     for i in 1 2 3; do
     frame_var="NODE${i}_FRAME"
     ip_var="NODE${i}_IPV4"
@@ -52,7 +49,7 @@ function build_k8s() {
     CHECK_RESULT $? 0 0 "Failed to deployment kubernetes"
 
     kubectl get pod -n kubeflow --no-headers | grep -v "Running"
-    LOG_INFO "End to prepare the test environment."
+    LOG_INFO "End to install kubernetes."
 }
 
 function uninstall_k8s() {
