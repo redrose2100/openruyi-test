@@ -32,13 +32,13 @@ function pre_test() {
     oedp repo update
     SLEEP_WAIT 5
     oedp init ragflow
-    sed -i "s#ansible_host: NODE_IP#ansible_host: "${NODE1_IPV4}"#g" ./ragflow/config.yaml
+    sed -i "s#ansible_host: NODE_IP#ansible_host: ${NODE1_IPV4}#g" ./ragflow/config.yaml
     sed -i 's#ansible_port: NODE_PORT#ansible_port: 22#g' ./ragflow/config.yaml
-    sed -i "s#ansible_user: NODE_USER#ansible_user: "${NODE1_USER}"#g" ./ragflow/config.yaml
-    sed -i "s|ansible_password: NODE_PASSWORD|ansible_password: "${NODE1_PASSWORD}"|g" ./ragflow/config.yaml
-    sed -i "s|MIN_CPU: .*$|MIN_CPU: "${cpu_num}"|g" ./ragflow/config.yaml
-    sed -i "s|MIN_MEM_GB: .*$|MIN_MEM_GB: "${min_mem_gb}"|g" ./ragflow/config.yaml
-    sed -i "s|MIN_DISK_GB: .*$|MIN_DISK_GB: "${disk_gb}"|g" ./ragflow/config.yaml
+    sed -i "s#ansible_user: NODE_USER#ansible_user: ${NODE1_USER}#g" ./ragflow/config.yaml
+    sed -i "s|ansible_password: NODE_PASSWORD|ansible_password: ${NODE1_PASSWORD}|g" ./ragflow/config.yaml
+    sed -i "s|MIN_CPU: .*$|MIN_CPU: ${cpu_num}|g" ./ragflow/config.yaml
+    sed -i "s|MIN_MEM_GB: .*$|MIN_MEM_GB: ${min_mem_gb}|g" ./ragflow/config.yaml
+    sed -i "s|MIN_DISK_GB: .*$|MIN_DISK_GB: ${disk_gb}|g" ./ragflow/config.yaml
 
     LOG_INFO "End to prepare the test environment."
 }

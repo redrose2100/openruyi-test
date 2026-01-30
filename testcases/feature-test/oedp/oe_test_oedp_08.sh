@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Deployment of KubeRay and train MLP model based on FashionMNIST on KubeRay
 # #############################################
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016,SC1091
 
 source "./common.sh"
 
