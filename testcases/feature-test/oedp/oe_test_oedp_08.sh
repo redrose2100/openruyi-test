@@ -16,19 +16,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Deployment of KubeRay and train MLP model based on FashionMNIST on KubeRay
 # #############################################
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016,SC1091
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "./common.sh"
 
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL oedp python3-libselinux
+    build_k8s
+    install_helm
+    DNF_INSTALL "oedp python3-libselinux"
     ssh-keyscan -H "${NODE1_IPV4}" >> ~/.ssh/known_hosts
     oedp repo update
     oedp init kuberay
     sed -i "s#ansible_host: HOST_IP#ansible_host: ${NODE1_IPV4}#g" ./kuberay/config.yaml
-    sed -i "s#ansible_password: \"\"#ansible_password: ${NODE1_PASSWORD}#g" ./kuberay/config.yaml
+    sed -i "s|ansible_password: \"\"|ansible_password: ${NODE1_PASSWORD}|g" ./kuberay/config.yaml
     sed -i '/^[[:space:]]*head:/,/^[[:space:]]*worker:/s/cpu: "[0-9]*"/cpu: "4"/' ./kuberay/config.yaml
     sed -i '/^[[:space:]]*worker:/,/^[[:space:]]*[^[:space:]#]/s/cpu: "[0-9]*"/cpu: "2"/' ./kuberay/config.yaml
     sed -i '/^[[:space:]]*head:/,/^[[:space:]]*worker:/s/memory: "[0-9]*G"/memory: "8G"/' ./kuberay/config.yaml
@@ -43,7 +45,8 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    oedp run install -p kuberay 2>&1 | grep "Execute succeeded: install KubeRay"
+    oedp run install -p kuberay > install_kuberay 2>&1
+    grep "Execute succeeded: install KubeRay" install_kuberay
     CHECK_RESULT $? 0 0 "Failed to install KubeRay"
 
     kubectl get svc -A | grep "8265"
@@ -61,7 +64,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf kuberay
+    rm -rf kuberay install_kuberay
+    uninstall_helm
+    uninstall_k8s
+    rm -rf kuberay install_kuberay helm-3.9.0 install_helm kubernetes-1.31.1 install_kubernetes
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

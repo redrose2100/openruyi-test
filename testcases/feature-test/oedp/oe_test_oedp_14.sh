@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL oedp python3-libselinux
+    DNF_INSTALL "oedp python3-libselinux"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -40,19 +40,16 @@ function run_test() {
     sed -i "s/HOST_IP1/${NODE1_IPV4}/g" ./kubernetes-1.31.1/config.yaml
     sed -i "s/HOST_IP4/${NODE2_IPV4}/g" ./kubernetes-1.31.1/config.yaml
     sed -i "s/HOST_IP5/${NODE3_IPV4}/g" ./kubernetes-1.31.1/config.yaml
-    sed -i '/^'"${NODE1_IPV4}"':$/,/^$/ s/ansible_password: ""/ansible_password: "'"${NODE1_PASSWORD}"'"/' ./kubernetes-1.31.1/config.yaml
-    sed -i '/^'"${NODE2_IPV4}"':$/,/^$/ s@ansible_password: ""@ansible_password: "'"${NODE2_PASSWORD}"'"@' ./kubernetes-1.31.1/config.yaml
-    sed -i '/^'"${NODE3_IPV4}"':$/,/^$/ s@ansible_password: ""@ansible_password: "'"${NODE3_PASSWORD}"'"@' ./kubernetes-1.31.1/config.yaml
-    sed -i "/${NODE1_IPV4}:/,/ansible_password:/{s/ansible_password: \"\"/ansible_password: ${NODE1_PASSWORD}/}" ./kubernetes-1.31.1/config.yaml
-    sed -i "/${NODE2_IPV4}:/,/ansible_password:/{s/ansible_password: \"\"/ansible_password: ${NODE2_PASSWORD}/}" ./kubernetes-1.31.1/config.yaml
-    sed -i "/${NODE3_IPV4}:/,/ansible_password:/{s/ansible_password: \"\"/ansible_password: ${NODE3_PASSWORD}/}" ./kubernetes-1.31.1/config.yaml
+    sed -i '/'"${NODE1_IPV4}"':/,/runtime:/ s|ansible_password: ""|ansible_password: "'"${NODE1_PASSWORD}"'"|' ./kubernetes-1.31.1/config.yaml
+    sed -i '/'"${NODE2_IPV4}"':/,/runtime:/ s|ansible_password: ""|ansible_password: "'"${NODE2_PASSWORD}"'"|' ./kubernetes-1.31.1/config.yaml
+    sed -i '/'"${NODE3_IPV4}"':/,/runtime:/ s|ansible_password: ""|ansible_password: "'"${NODE3_PASSWORD}"'"|' ./kubernetes-1.31.1/config.yaml
 
-   for i in 1 2 3; do
-    frame_var="NODE${i}_FRAME"
-    ip_var="NODE${i}_IPV4"
-    [ "${!frame_var}" = "aarch64" ] && \
-    sed -i "/${!ip_var}:/,/architecture:/{s#architecture: amd64#architecture: arm64#}" ./kubernetes-1.31.1/config.yaml
-  done
+    for i in 1 2 3; do
+     frame_var="NODE${i}_FRAME"
+     ip_var="NODE${i}_IPV4"
+     [ "${!frame_var}" = "aarch64" ] && \
+     sed -i "/${!ip_var}:/,/architecture:/{s#architecture: amd64#architecture: arm64#}" ./kubernetes-1.31.1/config.yaml
+    done
 
     oedp run install -p kubernetes-1.31.1 > install_kubernetes 2>&1 
     grep "Execute succeeded: install kubernetes" install_kubernetes
@@ -70,7 +67,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start post_test"
     
-    rm -rf install_kubernetes
+    rm -rf install_kubernetes kubernetes-1.31.1
     DNF_REMOVE "$@"
 
     LOG_INFO "End post_test"
