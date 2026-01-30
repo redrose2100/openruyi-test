@@ -17,18 +17,16 @@
 # @Desc      :   Deployment of kubeflow-1.9.1
 # #############################################
 # shellcheck disable=SC2016
-source "./common.sh"
+source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    build_k8s
-    install_helm
-    DNF_INSTALL "oedp python3-libselinux"
+    DNF_INSTALL oedp python3-libselinux
     ssh-keyscan -H "${NODE1_IPV4}" >> ~/.ssh/known_hosts
     oedp repo update
     oedp init kubeflow-1.9.1
     sed -i "s#ansible_host: HOST_IP#ansible_host: ${NODE1_IPV4}#g" ./kubeflow-1.9.1/config.yaml
-    sed -i "s|ansible_password: \"\"|ansible_password: ${NODE1_PASSWORD}|g" ./kubeflow-1.9.1/config.yaml
+    sed -i "s#ansible_password: \"\"#ansible_password: ${NODE1_PASSWORD}#g" ./kubeflow-1.9.1/config.yaml
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -56,8 +54,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     
-    #rm -rf kubeflow-1.9.1 install_kubeflow_log
-    #DNF_REMOVE "$@"
+    rm -rf kubeflow-1.9.1 install_kubeflow_log
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }
