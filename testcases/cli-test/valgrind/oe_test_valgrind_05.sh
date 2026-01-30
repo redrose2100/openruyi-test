@@ -44,7 +44,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "execute valgrind --xml-user-comment error"
     valgrind --demangle=no ./valgrind_test
     CHECK_RESULT $? 0 0 "execute valgrind --demangle error"
-    valgrind --num-callers=1 ./valgrind_test
+    valgrind --num-callers=2 ./valgrind_test
     CHECK_RESULT $? 0 0 "execute valgrind --num-callers error"
     valgrind --error-limit=yes ./valgrind_test
     CHECK_RESULT $? 0 0 "execute valgrind --error-limit error"
