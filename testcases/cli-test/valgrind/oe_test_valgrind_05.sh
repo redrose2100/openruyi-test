@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command test valgrind
 # ############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -56,7 +56,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf valgrind_test*
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
