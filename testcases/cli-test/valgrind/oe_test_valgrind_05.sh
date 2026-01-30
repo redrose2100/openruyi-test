@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command test valgrind
 # ############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -44,7 +44,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "execute valgrind --xml-user-comment error"
     valgrind --demangle=no ./valgrind_test
     CHECK_RESULT $? 0 0 "execute valgrind --demangle error"
-    valgrind --num-callers=1 ./valgrind_test
+    valgrind --num-callers=2 ./valgrind_test
     CHECK_RESULT $? 0 0 "execute valgrind --num-callers error"
     valgrind --error-limit=yes ./valgrind_test
     CHECK_RESULT $? 0 0 "execute valgrind --error-limit error"
@@ -56,7 +56,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf valgrind_test*
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
