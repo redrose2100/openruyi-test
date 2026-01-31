@@ -6,6 +6,9 @@
     },
     {
       "name": "oe_test_ctags2"
+    },
+    {
+      "name": "oe_test_ctags3"
     }
   ]
 }
