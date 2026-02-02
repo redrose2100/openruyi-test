@@ -33,11 +33,12 @@ function run_test() {
 ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}
 EOF
-    su - example -c "/sbin/ifconfig $net_card:1 192.168.1.1 netmask 255.255.255.0"
+    su - example -c "ifconfig $net_card:1 192.168.1.1 netmask 255.255.255.0"
     CHECK_RESULT $? 0 1 "Switching example users to view network devices succeeded, but it should fail here"
-    setcap cap_net_admin=eip /bin/busybox.nosuid
+    ifconfig_path=$(realpath $(which ifconfig))
+    setcap cap_net_admin=eip $ifconfig_path
     CHECK_RESULT $? 0 0 "Failed to set cap"
-    su - example -c "/sbin/ifconfig $net_card:1 192.168.1.1 netmask 255.255.255.0"
+    su - example -c "ifconfig $net_card:1 192.168.1.1 netmask 255.255.255.0"
     CHECK_RESULT $? 0 0 "Failed to switch example users to view network devices"
     ip a show $net_card | grep "$net_card:1" | grep '192.168.1.1'
     CHECK_RESULT $? 0 0 "Failed to display protocol address"
@@ -47,7 +48,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     ifconfig $net_card:1 down
-    setcap -r /bin/busybox.nosuid
+    setcap -r $ifconfig_path
     userdel -rf example
     LOG_INFO "Finish environment cleanup!"
 }
