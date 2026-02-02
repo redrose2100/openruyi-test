@@ -1,6 +1,6 @@
 CC:= ${shell echo $$CC | sed "s/-fstack-protector-strong//g"}
 all:
-	sh ${COMMONDIR}/common.sh -s "https://github.com/emscripten-core/posixtestsuite.git" "main"
+	bash ${COMMONDIR}/common.sh -s "https://atomgit.com/alichinese_admin/posixtestsuite.git" "main"
 	cp -r ./tmp_download/posixtestsuite ./tmp_extract/
 	cd ./tmp_extract/posixtestsuite && \
 	sed -i '$a #include<signal.h>' include/posixtest.h && \
@@ -12,7 +12,7 @@ all:
 	POSIX_TARGET=./ make > ../build.log 2>&1 && \
 	sed -i "s/\$$(top_builddir)\/t0 \$$(top_builddir)\/t0.val/#/g" Makefile
 	cp -r ./tmp_extract/* ./tmp_test/
-	sh ${COMMONDIR}/common.sh -r
+	bash ${COMMONDIR}/common.sh -r
 
 clean:
-	sh ${COMMONDIR}/common.sh -r "all"
+	bash ${COMMONDIR}/common.sh -r "all"

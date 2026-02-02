@@ -518,7 +518,7 @@ if __name__ == "__main__":
         combinations.extend(get_all_combinations())
     generate_script(combinations)
     if arge.run is not None and arge.run:
-        run_proc = subprocess.run(['sh', '-x', COMBINATION_SCRIPT_PATH])
+        run_proc = subprocess.run(['bash', '-x', COMBINATION_SCRIPT_PATH])
         result_info = get_combination_results_info()
         result_fail_num = print_combination_info_results(result_info)
         sys.exit(run_proc.returncode + result_fail_num)
