@@ -3,6 +3,9 @@
   "cases": [
     {
       "name": "oe_test_GraphicsMagick"
+    },
+    {
+      "name": "oe_test_GraphicsMagick01"
     }
   ]
 }
