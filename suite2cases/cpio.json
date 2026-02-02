@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_cpio"
-        }
+        },
+	{
+	    "name": "oe_test_cpio_options"
+	}
     ]
 }
