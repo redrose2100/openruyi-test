@@ -21,6 +21,8 @@ source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    pkill -9 mcelog || true
+    rm -f /var/run/mcelog-client || true
     if [[ "${NODE1_FRAME}" == aarch64 || ! -e /dev/mcelog ]]; then
         LOG_INFO "The environment does not support testing"
         exit 255
@@ -32,6 +34,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
+    systemctl start mcelog.service
+    systemctl status mcelog.service
     test_execution mcelog.service
     test_reload mcelog.service
     LOG_INFO "Finish test!"
