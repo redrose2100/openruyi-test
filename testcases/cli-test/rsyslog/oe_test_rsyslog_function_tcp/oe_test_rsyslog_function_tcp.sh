@@ -15,14 +15,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Close the firewall, support TCP protocol
 # ############################################
-# shellcheck disable=SC2086
+# shellcheck disable=SC2086,SC2119
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "net-tools"
     systemctl stop iptables
-    SSH_CMD "systemctl stop iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    systemctl stop firewalld
+    getenforce | grep -i disabled || setenforce 0
+    iptables -F
+    SSH_CMD "systemctl stop iptables;iptables -F;systemctl stop firewalld;getenforce | grep -i disabled || setenforce 0;" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -39,7 +42,7 @@ EOF
     time=$(date +%s%N | cut -c 9-13)
     SSH_CMD "
     echo 'local6.* @@${NODE1_IPV4}' > /etc/rsyslog.d/client.conf
-    systemctl restart rsyslog 
+    systemctl restart rsyslog
     logger -t tcp -p local6.err "tcptest$time"
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
@@ -51,10 +54,12 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
-    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    DNF_REMOVE
+    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables && systemctl start firewalld && getenforce | grep -i Permissive && setenforce 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -rf /etc/rsyslog.d/server.conf
+    getenforce | grep -i Permissive && setenforce 1
     systemctl start iptables
+    systemctl start firewalld
     systemctl restart rsyslog
     LOG_INFO "End to restore the test environment."
 }
