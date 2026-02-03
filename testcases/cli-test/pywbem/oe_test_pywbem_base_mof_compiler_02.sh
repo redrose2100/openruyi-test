@@ -16,15 +16,33 @@
 #@Version   	:   1.0
 #@Desc      	:   Test pywbem_mof_compiler command
 #####################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     cp -f ./common/CIM_Application26.mof ./
     DNF_INSTALL "docker python3-pywbem"
-    sudo docker pull hub.firefly.store/kschopmeyer/openpegasus-server:0.1.1
-    sudo docker run -d -it --rm -p 0.0.0.0:15988:5988 -p 0.0.0.0:15989:5989 --name openpegasus hub.firefly.store/kschopmeyer/openpegasus-server:0.1.1
+    cp -f ./common/CIM_Application26.mof ./
+    echo '{
+        "registry-mirrors":[
+                "https://docker.nju.edu.cn",
+                "https://docker.m.daocloud.io",
+                "https://dockerproxy.com",
+                "https://docker.mirrors.ustc.edu.cn",
+                "https://docker.1panel.live",
+                "https://hub.rat.dev",
+                "https://docker.actima.top",
+                "https://docker.1ms.run",
+                "https://dockeraityp.com",
+                "https://dockerhub.xisoul.cn",
+                "https://docker.imgdb.be"
+        ]
+}
+    ' >/etc/docker/daemon.json
+    systemctl restart docker
+    sudo docker pull kschopmeyer/openpegasus-server:0.1.1
+    sudo docker run -d -it --rm -p 0.0.0.0:15988:5988 -p 0.0.0.0:15989:5989 --name openpegasus kschopmeyer/openpegasus-server:0.1.1
     SLEEP_WAIT 10s
     LOG_INFO "End to prepare the test environment."
 }
@@ -48,8 +66,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     docker stop openpegasus
     docker rm -f openpegasus
-    rm -rf CIM_Application26.mof
-    DNF_REMOVE "$@"
+    rm -rf CIM_Application26.mof /etc/docker/daemon.json
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
