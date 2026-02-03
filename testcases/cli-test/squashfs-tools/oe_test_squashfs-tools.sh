@@ -32,7 +32,11 @@ function run_test() {
   LOG_INFO "Start to run test."
   cp /boot/initramfs-"${kernel}".img "${path}"
   cd "${path}" || exit 1
-  zcat "${path}"/initramfs-"${kernel}".img | cpio -id
+  if file initramfs-"${kernel}".img | grep -q zstd; then
+    zstdcat initramfs-"${kernel}".img | cpio -id
+  else
+    zcat initramfs-"${kernel}".img | cpio -id
+  fi
   CHECK_RESULT $? 0 0 "Initrd.img decompression failed"
   mksquashfs "${path}" squashtest.squashfs
   CHECK_RESULT $? 0 0 "Mksqueshfs production failed"
