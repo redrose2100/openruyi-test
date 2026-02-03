@@ -20,7 +20,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL perf
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL linux-perf
+    else
+        DNF_INSTALL perf
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 

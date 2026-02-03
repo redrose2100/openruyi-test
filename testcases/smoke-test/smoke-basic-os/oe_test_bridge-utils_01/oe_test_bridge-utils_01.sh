@@ -21,7 +21,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "bridge-utils net-tools NetworkManager"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+	DNF_INSTALL "bridge-utils net-tools"    
+    else
+        DNF_INSTALL "bridge-utils net-tools NetworkManager"
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,8 +39,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "br0 setting failed"
     ip a s | grep -A 5 br0 | grep "192.168.1.21/24"
     CHECK_RESULT $? 0 0 "ip setting failed"
-    systemctl restart NetworkManager
-    CHECK_RESULT $? 0 0 "ip setting failed"
+    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+        systemctl restart NetworkManager
+        CHECK_RESULT $? 0 0 "ip setting failed"
+    fi
     ip a s | grep br0 | grep UP
     CHECK_RESULT $? 0 0 "br0 setting failed"
     ip a s | grep -A 5 br0 | grep "192.168.1.21/24"

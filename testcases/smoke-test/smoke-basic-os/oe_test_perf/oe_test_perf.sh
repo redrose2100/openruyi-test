@@ -21,7 +21,11 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "perf file"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+	DNF_INSTALL "linux-perf file"
+    else
+        DNF_INSTALL "perf file"
+    fi	
     LOG_INFO "End of environmental preparation!"
 }
 

@@ -20,8 +20,13 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
     if ! df -h / |grep overlay; then
-        df | grep '/boot'
-        CHECK_RESULT $? 0 0 "df display error"
+	if [ "${NODE1_OS_VERSION}" == "debian" ];then
+            df | grep '/$'
+            CHECK_RESULT $? 0 0 "df display error"
+	else
+            df | grep '/boot'
+            CHECK_RESULT $? 0 0 "df display error"
+	fi
     fi
     df | grep 'G'
     CHECK_RESULT $? 1 0 "df default display error"

@@ -22,13 +22,19 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     grep "testuser1:" /etc/passwd && userdel -rf testuser1
-    useradd testuser1
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        useradd -m -d /home/testuser1 -s /bin/bash testuser1
+    else
+	useradd testuser1
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    usermod -aG wheel testuser1
+    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+        usermod -aG wheel testuser1
+    fi
     passwd testuser1 <<EOF
 ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}
