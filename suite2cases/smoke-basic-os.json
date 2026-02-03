@@ -948,6 +948,9 @@
       },
       {
             "name": "oe_test_lz4_05"
+      },
+      {
+            "name": "oe_test_zless"
       }
     ]
 }
