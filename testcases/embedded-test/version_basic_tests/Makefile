@@ -11,12 +11,12 @@ copycommon:
 
 makemake:
 	yum install libtool -y
-	sh ${COMMONDIR}/common.sh -d "make" "openEuler-22.03-LTS"
+	bash ${COMMONDIR}/common.sh -d "make" "openEuler-24.03-LTS"
 	cd ./tmp_extract/make* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
 	make && \
 	cp ./make ${CURDIR}
-	sh ${COMMONDIR}/common.sh -r all
+	bash ${COMMONDIR}/common.sh -r all
 
 subdirs:
 	for subdir in ${SUBDIRS}; do $(MAKE) -C $$subdir -f Makefile || exit $$?; done
