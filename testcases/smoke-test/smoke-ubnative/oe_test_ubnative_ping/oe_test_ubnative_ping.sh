@@ -44,7 +44,7 @@ function run_test() {
 
     vm_modprobe_ko "$vm_ip"
 
-    # 当前海思驱动不支持虚拟机内部启动ub网卡，本用例仅验证单虚拟机内ub直通正常
+    # 当前ub驱动不支持虚拟机内部启动ub网卡，本用例仅验证单虚拟机内ub直通正常
     vm_sshx "cat /sys/bus/ub/devices/00001/guid | grep cc08-a000-0-2-000000-0000000000000001"
     CHECK_RESULT $? 0 0 "check vm ub bus failed"
 
