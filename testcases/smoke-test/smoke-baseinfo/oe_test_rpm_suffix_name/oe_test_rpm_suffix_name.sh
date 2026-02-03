@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    suffix_name=$(uname -a | awk -F ' ' '{print $3}' | awk -F '.' '{print $(NF-1)}')
+    suffix_name=$(uname -r | awk -F '.' '{print $(NF-1)}')
     LOG_INFO "End to prepare the test environment."
 }
 
