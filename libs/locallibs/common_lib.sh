@@ -93,8 +93,8 @@ function main() {
     os_version=$(grep "^ID=" /etc/os-release | awk -F'=' '{print $2}' | sed 's/"//g')
     if [ "${os_version}" == "debian" ];then
         if ! dpkg -s expect | grep "install ok installed" >/dev/null 2>&1; then
-	    apt -y install expect
-	fi
+            apt -y install expect
+        fi
     else
         if ! rpm -qa | grep expect >/dev/null 2>&1; then
             dnf -y install expect
