@@ -22,8 +22,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     setenforce 0
-    if [ ! -e /dev/cdrom ]; then
-        LOG_INFO "/dev/cdrom doesn't exist, skipping test."
+    if [ ! -e /dev/cdrom ] ! blkid /dev/cdrom > /dev/null 2>&1; then
+        LOG_INFO "/dev/cdrom doesn't exist or no medium found in cdrom, skipping test."
         exit 255
     fi
     DNF_INSTALL "cobbler httpd"
