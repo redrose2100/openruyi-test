@@ -62,18 +62,27 @@ xmlFreeDoc(doc);
 return 1;
 }
 EOF
-    if dnf list | grep libxml2-devel;then
-        DNF_INSTALL "libxml2-devel gcc-c++"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "libxml2-utils g++"
     else
-        DNF_INSTALL "libxml2 gcc-c++"
+        if dnf list | grep libxml2-devel;then
+            DNF_INSTALL "libxml2-devel gcc-c++"
+        else
+            DNF_INSTALL "libxml2 gcc-c++"
+        fi
     fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    rpm -qa | grep libxml2
-    CHECK_RESULT $? 0 0 "Return value error"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        dpkg -s libxml2-utils | grep "install ok installed"
+        CHECK_RESULT $? 0 0 "Return value error"
+    else    
+        rpm -qa | grep libxml2
+        CHECK_RESULT $? 0 0 "Return value error"
+    fi
     cd /tmp && g++ createxml.cpp -o createdxml -I /usr/include/libxml2/ -L /usr/local/lib -lxml2 -lm -lz
     test -f /tmp/createdxml
     CHECK_RESULT $? 0 0 "compile testfile fail"
