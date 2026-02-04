@@ -21,10 +21,14 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    if dnf list | grep pcre-devel;then
-        DNF_INSTALL "pcre-devel pcre-help gcc"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "libpcre3-dev gcc"
     else
-        DNF_INSTALL "pcre pcre-help gcc"
+        if dnf list | grep pcre-devel;then
+            DNF_INSTALL "pcre-devel pcre-help gcc"
+        else
+            DNF_INSTALL "pcre pcre-help gcc"
+        fi
     fi
     LOG_INFO "End of environmental preparation!"
 }
