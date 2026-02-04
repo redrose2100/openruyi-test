@@ -25,7 +25,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to execute mktemp"
     test -f /tmp/mktemp1.log.*
     CHECK_RESULT $? 0 0 "File does not exist in tmp"
-    mktemp_ver=$(rpm -qa coreutils | awk -F '-' '{print $2}')
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        mktemp_ver=$(apt list --installed 2>/dev/null | grep coreutils | awk '{print $2}' | awk -F '-' '{print $1}')
+    else
+        mktemp_ver=$(rpm -qa coreutils | awk -F '-' '{print $2}')
+    fi
     mktemp -V | grep $mktemp_ver
     CHECK_RESULT $? 0 0 "Failed to execute mktemp -V"
     mkdir testdir
