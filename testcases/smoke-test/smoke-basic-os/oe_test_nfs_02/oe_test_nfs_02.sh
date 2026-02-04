@@ -21,7 +21,11 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL nfs-utils
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL nfs-kernel-server
+    else
+        DNF_INSTALL nfs-utils
+    fi
     cp /etc/exports /etc/exports.bak
     echo "/tmp/test *(fsid=0,rw,sync,all_squash)" >/etc/exports
     mkdir /tmp/test
@@ -33,8 +37,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     exportfs -r
     CHECK_RESULT $? 0 0 "Load failed"
-    systemctl restart nfs
-    CHECK_RESULT $? 0 0 "Service restart failed"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        systemctl restart nfs-server
+        CHECK_RESULT $? 0 0 "Service restart failed"
+    else
+        systemctl restart nfs
+        CHECK_RESULT $? 0 0 "Service restart failed"
+    fi
     showmount -e | grep "/tmp/test"
     CHECK_RESULT $? 0 0 "Failed to execute showmount"
     LOG_INFO "End to run test."
