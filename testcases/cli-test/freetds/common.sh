@@ -43,12 +43,8 @@ function common_pre() {
 EOF
         systemctl status mssql-server
         wget -O /etc/yum.repos.d/msprod.repo https://packages.microsoft.com/config/rhel/9/prod.repo
-        expect <<EOF
-        spawn yum install -y mssql-tools
-        expect "*YES or NO*" {send "YES\r"}
-        expect "*Do you accept*" {send "YES\r"}
-        expect eof
-EOF
+	ACCEPT_EULA=Y yum install -y mssql-tools msodbcsql17
+
         SLEEP_WAIT 5
         OLD_PATH=$PATH
         export PATH=$PATH:/opt/mssql-tools/bin

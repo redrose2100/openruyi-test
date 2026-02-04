@@ -35,7 +35,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check fisql -g failed"
 
     echo "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" >inputFile.sql
-    fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile && grep -F "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile
+    script -q -c "fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql" outFile
+    #fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile && grep -F "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile
+    cat outFile
     CHECK_RESULT $? 0 0 "Check fisql -e failed"
 
     fisql -e -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile1 -t 100 -s " " -w 80 && grep -F "INSERT INTO [dbo].[test_user] ([id]) VALUES (0)" outFile1
