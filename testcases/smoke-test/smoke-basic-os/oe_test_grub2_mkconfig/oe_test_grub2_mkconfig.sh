@@ -25,15 +25,24 @@ function pre_test() {
         LOG_INFO "The current environment is Docker."
         exit 0
     else
-        DNF_INSTALL "grub2-tools diffutils"
+        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+            DNF_INSTALL "grub-common diffutils"
+        else
+            DNF_INSTALL "grub2-tools diffutils"
+        fi
     fi
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    grub2-mkconfig -o tmp_grub_cfg
-    CHECK_RESULT $? 0 0 "Failed to execute grub2-mkconfig"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        grub-mkconfig -o tmp_grub_cfg
+        CHECK_RESULT $? 0 0 "Failed to execute grub-mkconfig"
+    else
+        grub2-mkconfig -o tmp_grub_cfg
+        CHECK_RESULT $? 0 0 "Failed to execute grub2-mkconfig"
+    fi
     grep "vmlinuz" tmp_grub_cfg >testlog1
     CHECK_RESULT $? 0 0 "Failed to find vmlinuz in tmp_grub_cfg"
     grep -Ir "vmlinuz" /boot | awk -F 'cfg:' '{print $NF}' | grep linux >testlog2
