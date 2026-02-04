@@ -21,6 +21,10 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        LOG_INFO "The environment dose not support testing"
+        exit 255
+    fi
     DNF_INSTALL "chkconfig network-scripts"
     lang=$(echo $LANG)
     LANG=en_US.UTF-8
