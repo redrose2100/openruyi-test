@@ -21,6 +21,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        LOG_INFO "The environment dose not support testing"
+        exit 255
+    fi
     DNF_INSTALL dbus-glib
     LOG_INFO "End to prepare the test environment."
 }
