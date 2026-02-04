@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL libcgroup
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL cgroup-tools
+        touch /etc/cgsnapshot_blacklist.conf
+    else
+        DNF_INSTALL libcgroup
+    fi
     cgcreate -g cpu:test
     LOG_INFO "End to prepare the test environment."
 }
@@ -38,6 +43,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     cgdelete -g cpu:test
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        rm -rf /etc/cgsnapshot_blacklist.conf
+    fi
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
