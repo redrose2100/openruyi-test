@@ -21,6 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL lz4
     dd if=/dev/zero of=big_file count=10 bs=1M
     LOG_INFO "End to prepare the test environment."
 }
