@@ -20,6 +20,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        LOG_INFO "The environment dose not support testing"
+        exit 255
+    fi
     mkdir -p /tmp/test/test1
     touch /tmp/test/doc.txt
     DNF_INSTALL "digest-list-tools selinux-policy-targeted"
