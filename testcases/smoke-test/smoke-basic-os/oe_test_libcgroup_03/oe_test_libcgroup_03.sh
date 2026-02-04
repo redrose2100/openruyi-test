@@ -21,7 +21,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL libcgroup
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL cgroup-tools
+    else
+        DNF_INSTALL libcgroup
+    fi
     cgcreate -g cpu:test
     LOG_INFO "End to prepare the test environment."
 }
