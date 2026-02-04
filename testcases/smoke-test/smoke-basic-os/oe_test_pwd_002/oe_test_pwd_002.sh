@@ -23,8 +23,13 @@ function run_test() {
     cd /etc/init.d
     pwd -L | grep /etc/init.d
     CHECK_RESULT $? 0 0 "Command executed fail"
-    pwd -P | grep /etc/rc.d/init.d
-    CHECK_RESULT $? 0 0 "Command executed fail"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        pwd -P | grep /etc/init.d
+        CHECK_RESULT $? 0 0 "Command executed fail"
+    else
+        pwd -P | grep /etc/rc.d/init.d
+        CHECK_RESULT $? 0 0 "Command executed fail"
+    fi
     LOG_INFO "Finish test!"
 }
 
