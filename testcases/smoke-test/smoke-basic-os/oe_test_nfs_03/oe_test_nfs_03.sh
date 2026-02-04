@@ -25,7 +25,11 @@ function pre_test() {
         LOG_INFO "The current environment is Docker."
         exit 0
     else
-        DNF_INSTALL nfs-utils
+        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+            DNF_INSTALL nfs-kernel-server
+        else
+            DNF_INSTALL nfs-utils
+        fi
         cp /etc/exports /etc/exports.bak
         echo "/home/nfs *(rw,sync,all_squash)" >>/etc/exports
         mkdir /home/nfs /home/test
