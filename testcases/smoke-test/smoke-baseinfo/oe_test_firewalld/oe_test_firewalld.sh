@@ -21,7 +21,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "firewalld iptables kernel-$(uname -r)"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "firewalld iptables"
+    else
+        DNF_INSTALL "firewalld iptables kernel-$(uname -r)"
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
