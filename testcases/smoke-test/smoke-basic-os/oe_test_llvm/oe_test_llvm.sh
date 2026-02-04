@@ -36,10 +36,17 @@ EOF
 
 function run_test() {
     LOG_INFO "Start testing..."
-    rpm -qa | grep llvm
-    CHECK_RESULT $? 0 0 "Installation failed"
-    rpm -ql llvm
-    CHECK_RESULT $? 0 0 "No path is queried"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        dpkg -s llvm | grep "install ok installed"
+        CHECK_RESULT $? 0 0 "Installation failed"
+        dpkg -L llvm
+        CHECK_RESULT $? 0 0 "Installation failed"
+    else
+        rpm -qa | grep llvm
+        CHECK_RESULT $? 0 0 "Installation failed"
+        rpm -ql llvm
+        CHECK_RESULT $? 0 0 "No path is queried"
+    fi
 
     clang ${path}/llvm_test.c -o ${path}/test
     CHECK_RESULT $? 0 0 "compilation fails"
