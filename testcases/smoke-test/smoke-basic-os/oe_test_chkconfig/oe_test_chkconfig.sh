@@ -28,12 +28,17 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    rpm -qa chkconfig | grep chkconfig
-    CHECK_RESULT $? 0 0 "chkconfig package does not exist"
-    chkconfig --help 2>&1 | grep "usage:   chkconfig"
-    CHECK_RESULT $? 0 0 "chkconfig command does not exist"
-    alternatives --help | grep "usage: alternatives"
-    CHECK_RESULT $? 0 0 "alternatives command does not exist"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        update-alternatives --help | grep "Usage: update-alternatives"
+        CHECK_RESULT $? 0 0 "update-alternatives command does not exist"
+    else
+        rpm -qa chkconfig | grep chkconfig
+        CHECK_RESULT $? 0 0 "chkconfig package does not exist"
+        chkconfig --help 2>&1 | grep "usage:   chkconfig"
+        CHECK_RESULT $? 0 0 "chkconfig command does not exist"
+        alternatives --help | grep "usage: alternatives"
+        CHECK_RESULT $? 0 0 "alternatives command does not exist"
+    fi
     LOG_INFO "End to run test."
 }
 
