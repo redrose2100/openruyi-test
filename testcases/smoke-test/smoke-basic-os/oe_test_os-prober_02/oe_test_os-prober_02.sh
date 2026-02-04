@@ -32,8 +32,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    linux-boot-prober "$(df -Th | grep 'boot$' | awk '{print $1}')" | grep vmlinuz
-    CHECK_RESULT $? 0 0 "Failed to execute linux-boot-prober"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        linux-boot-prober "$(df -Th | grep '/$')"
+        CHECK_RESULT $? 0 0 "Failed to execute linux-boot-prober"
+    else
+        linux-boot-prober "$(df -Th | grep 'boot$' | awk '{print $1}')" | grep vmlinuz
+        CHECK_RESULT $? 0 0 "Failed to execute linux-boot-prober"
+    fi
     LOG_INFO "End to run test."
 }
 
