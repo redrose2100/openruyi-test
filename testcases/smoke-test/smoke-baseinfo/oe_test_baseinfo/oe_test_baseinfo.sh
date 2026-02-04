@@ -35,8 +35,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed command: lscpu"
     fdisk -l | grep -iE "disk|dev"
     CHECK_RESULT $? 0 0 "Failed command: fdisk"
-    grep -iE "name|version" /etc/os-release | grep openEuler
-    CHECK_RESULT $? 0 0 "/etc/os-release file view failed"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        grep -iE "name|version|ID" /etc/os-release | grep debian
+        CHECK_RESULT $? 0 0 "/etc/os-release file view failed"
+    elif [ "${NODE1_OS_VERSION}" == "openEuler" ];then
+        grep -iE "name|version|ID" /etc/os-release | grep openEuler
+        CHECK_RESULT $? 0 0 "/etc/os-release file view failed"
+    fi
     if ! df -h / |grep overlay; then
         timedatectl set-timezone Asia/Shanghai
 	old_zone=$(timedatectl | grep "Time zone" | awk '{print $3}')
@@ -54,8 +59,16 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Failed to recover time zone"
         localectl status | grep -i "System Locale"
         CHECK_RESULT $? 0 0 "The system language does not belong to us"
-        localectl list-locales | grep zh
-        CHECK_RESULT $? 0 0 "The system language does not contain Chinese"
+        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+            localectl list-locales | grep en
+            CHECK_RESULT $? 0 0 "The system language does not contain English"
+            cp /etc/locale.gen /etc/locale.gen_bak
+            sed -i "s/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/g" /etc/locale.gen
+            locale-gen
+        else
+            localectl list-locales | grep zh
+            CHECK_RESULT $? 0 0 "The system language does not contain Chinese"
+        fi
         localectl set-locale LANG=zh_CN.utf8
         CHECK_RESULT $? 0 0 "Failed to set Chinese"
         localectl status | grep zh_CN.utf8
@@ -70,6 +83,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        mv -f /etc/locale.gen_bak /etc/locale.gen
+        locale-gen
+    fi
     export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
