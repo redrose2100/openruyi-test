@@ -22,14 +22,23 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "glib2 glib2-devel gcc"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "libglib2.0-dev gcc"
+    else
+        DNF_INSTALL "glib2 glib2-devel gcc"
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    rpm -qa | grep glib2
-    CHECK_RESULT $? 0 0 "The system does not install glib2"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        dpkg -s libglib2.0-dev | grep "install ok installed"
+        CHECK_RESULT $? 0 0 "The system does not install libglib2.0-dev"
+    else
+        rpm -qa | grep glib2
+        CHECK_RESULT $? 0 0 "The system does not install glib2"
+    fi
     cat<<EOF>test.c
 #include <glib.h>
 int main(void)
