@@ -21,6 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL libuser
     cp /etc/libuser.conf /etc/libuser.conf.bak
     sed -i 's/crypt_style =.*/crypt_style = sha256/' /etc/libuser.conf
     LOG_INFO "End to prepare the test environment."
@@ -98,6 +99,7 @@ function post_test() {
     luserdel -r ltestuser
     userdel -rf testuser
     rm -rf testlog
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
