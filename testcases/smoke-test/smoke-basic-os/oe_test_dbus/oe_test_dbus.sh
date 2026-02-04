@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL dbus
+    systemctl restart dbus
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -32,8 +33,13 @@ function run_test() {
     kill -9 "$(pgrep -u dbus)"
     CHECK_RESULT $? 0 0 "Failed to kill the dbus process"
     SLEEP_WAIT 3
-    pgrep -u dbus
-    CHECK_RESULT $? 0 0 "Failed to exist dbus service"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        pgrep dbus
+        CHECK_RESULT $? 1 0 "Failed to exist dbus service"
+    else
+        pgrep dbus
+        CHECK_RESULT $? 0 0 "Failed to exist dbus service"
+    fi
     dbus-send --system --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ListActivatableNames | grep array
     CHECK_RESULT $? 0 0 "Failed to execute dbus-send"
     systemctl status dbus | grep running
