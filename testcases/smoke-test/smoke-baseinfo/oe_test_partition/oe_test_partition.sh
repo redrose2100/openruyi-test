@@ -24,14 +24,16 @@ function run_test() {
     if df -h / | grep overlay; then
         LOG_INFO "The current environment is Docker."
     else
-        lsblk | grep "/boot$"
-        CHECK_RESULT $? 0 0 "No boot partition"
+        if [ "${NODE1_OS_VERSION}" != "debian" ];then
+            lsblk | grep "/boot$"
+            CHECK_RESULT $? 0 0 "No boot partition"
+        fi
         lsblk | grep "/$"
         CHECK_RESULT $? 0 0 "No / partition"
-	if [ "$(uname -m)" != "riscv64" ]; then
-            lsblk | grep "SWAP"
-            CHECK_RESULT $? 0 0 "No swap partition"
-	fi
+        if [ "$(uname -m)" != "riscv64" ]; then
+                lsblk | grep "SWAP"
+                CHECK_RESULT $? 0 0 "No swap partition"
+        fi
     fi
     lsblk --help
     CHECK_RESULT $? 0 0 "lsblk -h info error"
