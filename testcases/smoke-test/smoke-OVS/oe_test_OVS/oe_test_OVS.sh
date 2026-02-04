@@ -22,10 +22,14 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     ip netns list|awk '{print $1}'|xargs ip netns delete
-    DNF_INSTALL openvswitch
-    if getenforce | grep -i Enforcing; then
-        setenforce 0
-        result_flag=1
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL openvswitch-switch
+    else
+        DNF_INSTALL openvswitch
+        if getenforce | grep -i Enforcing; then
+            setenforce 0
+            result_flag=1
+        fi
     fi
     systemctl start openvswitch
     LOG_INFO "End to prepare the test environment."
@@ -109,8 +113,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop openvswitch
-    if $result_flag -eq 1; then
-        setenforce 1
+    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+        if $result_flag -eq 1; then
+            setenforce 1
+        fi
     fi
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
