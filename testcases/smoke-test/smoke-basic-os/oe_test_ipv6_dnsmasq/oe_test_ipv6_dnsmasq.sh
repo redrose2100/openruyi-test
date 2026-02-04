@@ -25,7 +25,11 @@ function pre_test() {
         LOG_INFO "The current environment is Docker."
         exit 0
     else
-        DNF_INSTALL "dnsmasq bind-utils"
+        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+            DNF_INSTALL "dnsmasq"
+        else
+            DNF_INSTALL "dnsmasq bind-utils"
+        fi
         cp /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
         sed -i 's/#port=5353/port=53/' /etc/dnsmasq.conf
         echo "address=/lvs-test.com/127.0.0.1
