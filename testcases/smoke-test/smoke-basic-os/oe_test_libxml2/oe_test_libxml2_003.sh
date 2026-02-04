@@ -22,7 +22,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "libxml2-devel"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "libxml2-dev"
+    else
+        DNF_INSTALL "libxml2-devel"
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -34,7 +38,7 @@ function run_test() {
     # test01: xml2-config --libs diaplay linked libs
     xml2-config --libs > xml2test
     CHECK_RESULT $? 0 0 "Return value error"
-    [ "$(awk -F '-' '{print $2}' xml2test)" = "lxml2 " ]
+    [ "$(awk -F '-' '{print $2}' xml2test | sed 's/ //')" = "lxml2" ]
     CHECK_RESULT $? 0 0 "Return value error"
 
     # test02：xml2-config --cflags display cflags
