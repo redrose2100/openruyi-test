@@ -22,7 +22,13 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL lldpad
-    lldpad_ver=$(rpm -qa lldpad | awk -F '-' '{print $2}')
+    systemctl stop lldpad.socket
+    systemctl stop lldpad
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        lldpad_ver=$(apt list --installed 2>/dev/null | grep lldpad | awk '{print $2}' | awk -F '-' '{print $1}')
+    else
+        lldpad_ver=$(rpm -qa lldpad | awk -F '-' '{print $2}')
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
