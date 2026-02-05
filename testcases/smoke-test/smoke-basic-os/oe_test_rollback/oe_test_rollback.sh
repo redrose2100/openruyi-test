@@ -27,16 +27,29 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    ID=$(yum history list | grep "install zenity" | awk 'NR==1 {print $1}')
-    CHECK_RESULT $? 0 0 "install fail"
-    yum history undo "$ID" -y
-    CHECK_RESULT $? 0 0 "remove fail"
-    rpm -qa | grep -w zenity
-    CHECK_RESULT $? 0 1 "remove fail"
-    yum history redo "$ID" -y
-    CHECK_RESULT $? 0 0 "install fail"
-    rpm -qa | grep -w zenity
-    CHECK_RESULT $? 0 0 "install fail"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        dpkg -s zenity | grep "install ok installed"
+        CHECK_RESULT $? 0 0 "install fail"
+        apt remove -y zenity && apt purge -y zenity
+        CHECK_RESULT $? 0 0 "remove fail"
+        dpkg -s zenity | grep "not installed"
+        CHECK_RESULT $? 0 0 "remove fail"
+        apt install -y zenity
+        CHECK_RESULT $? 0 0 "install fail"
+        dpkg -s zenity | grep "install ok installed"
+        CHECK_RESULT $? 0 0 "install fail"
+    else
+        ID=$(yum history list | grep "install zenity" | awk 'NR==1 {print $1}')
+        CHECK_RESULT $? 0 0 "install fail"
+        yum history undo "$ID" -y
+        CHECK_RESULT $? 0 0 "remove fail"
+        rpm -qa | grep -w zenity
+        CHECK_RESULT $? 0 1 "remove fail"
+        yum history redo "$ID" -y
+        CHECK_RESULT $? 0 0 "install fail"
+        rpm -qa | grep -w zenity
+        CHECK_RESULT $? 0 0 "install fail"
+    fi
     LOG_INFO "Finish test!"
 }
 
