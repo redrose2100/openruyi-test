@@ -177,7 +177,7 @@ def rpm_remove(node=1, pkgs="", tmpfile=""):
             depList = f.read()
     os_version = os.environ.get("NODE" + str(node) + "_OS_VERSION")
     if "debian" in os_version:
-        exitcode = func(conn=conn, cmd="apt -y remove " + pkgs + " " + depList + "; apt purge -y " + pkgs + " " + depList)[0]
+        exitcode = func(conn=conn, cmd="apt -y remove " + pkgs + "; apt purge -y " + pkgs)[0]
     else:
         exitcode = func(conn=conn, cmd="dnf -y remove " + pkgs + " " + depList)[0]
     if localtion != "local":
