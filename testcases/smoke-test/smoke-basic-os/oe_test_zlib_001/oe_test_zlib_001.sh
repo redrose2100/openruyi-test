@@ -22,7 +22,11 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "gcc zlib-devel"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "gcc zlib1g-dev"
+    else
+        DNF_INSTALL "gcc zlib-devel"
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
