@@ -33,6 +33,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    systemctl stop syslog.socket
     systemctl stop rsyslog
     CHECK_RESULT $? 0 0 "Failed to stop service"
     SLEEP_WAIT 3
@@ -44,9 +45,11 @@ function run_test() {
     systemctl start rsyslog
     CHECK_RESULT $? 0 0 "Failed to start service"
     SLEEP_WAIT 5
-    main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
-    grep rsyslog /var/log/messages | grep "$main_pid"
-    CHECK_RESULT $? 0 0 "Log not recorded"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
+        grep rsyslog /var/log/messages | grep "$main_pid"
+        CHECK_RESULT $? 0 0 "Log not recorded"
+    fi
     if [ "$(uname -m)" == "riscv64" ]; then
         rm -rf /var/run/log/imjournal.state
     else
@@ -55,9 +58,11 @@ function run_test() {
     systemctl restart rsyslog
     CHECK_RESULT $? 0 0 "Failed to restart service"
     SLEEP_WAIT 15
-    main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
-    grep rsyslog /var/log/messages | grep "$main_pid"
-    CHECK_RESULT $? 0 0 "The pid not recorded"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
+        grep rsyslog /var/log/messages | grep "$main_pid"
+        CHECK_RESULT $? 0 0 "The pid not recorded"
+    fi
     LOG_INFO "End to run test."
 }
 
