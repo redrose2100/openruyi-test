@@ -22,6 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
     useradd Jevons
     echo HUAWEI666 | passwd Jevons --stdin
     LOG_INFO "End to prepare the test environment."
@@ -56,6 +57,7 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
     userdel Jevons
     rm -rf /tmp/log.log
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

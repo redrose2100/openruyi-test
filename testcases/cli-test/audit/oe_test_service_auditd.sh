@@ -21,6 +21,7 @@ source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "audit"
     service=auditd
     log_time="$(date '+%Y-%m-%d %T')"
     LOG_INFO "End of environmental preparation!"

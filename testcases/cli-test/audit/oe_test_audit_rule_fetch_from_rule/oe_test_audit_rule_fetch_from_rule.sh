@@ -22,6 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
     echo "-w /etc/passwd -p wa -k passwd_changes" >>/opt/test.rules
     LOG_INFO "End to prepare the test environment."
 }
@@ -43,6 +44,7 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
     auditctl -D
     rm -rf /opt/test.rules
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

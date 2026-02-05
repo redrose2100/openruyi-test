@@ -21,6 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
     useradd Jevons
     uid=$(id -u Jevons)
     LOG_INFO "End to prepare the environment"
@@ -48,6 +49,7 @@ function post_test()
     fOG_INFO "Start to restore the test environment."
     userdel -rf Jevons
     auditctl -D
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
