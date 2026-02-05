@@ -21,24 +21,35 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "xinetd tftp tftp-server net-tools"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "xinetd tftpd-hpa net-tools"
+    else
+        DNF_INSTALL "xinetd tftp tftp-server net-tools"
+    fi
     ifconfig "${NODE1_NIC}" inet6 add 2001:250:250:250:250:250:250:222/64
     route -A inet6 add default gw 2001:250:250:250::1 dev "${NODE1_NIC}"
     SLEEP_WAIT 3
     ping6 -c 3 2001:250:250:250:250:250:250:222
-    sed -i 's/flags.*/flags = IPV6/' /etc/xinetd.d/tftp
-    sed -i 's/disable.*/disable = no/' /etc/xinetd.d/tftp
-    sed -i 's/server_args.*/server_args         = -s \/tmp\/tftpboot -c/' /etc/xinetd.d/tftp
-    getenforce | grep Enforcing && setenforce 0
-    systemctl status firewalld | grep failed && systemctl start firewalld
     mkdir /tmp/tftpboot
-    systemctl restart xinetd
-    systemctl restart tftp
     echo "hello1" >/tmp/tftpboot/hello1.txt
     chmod 777 -R /tmp/tftpboot
-    SLEEP_WAIT 3
-    systemctl restart xinetd
-    systemctl restart tftp
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        cp /etc/default/tftpd-hpa /etc/default/tftpd-hpa_bak
+        sed -i 's/TFTP_DIRECTORY.*/TFTP_DIRECTORY="\/tmp\/tftpboot"/' /etc/default/tftpd-hpa
+        sed -i 's/TFTP_OPTIONS.*/TFTP_OPTIONS="--secure --create"/' /etc/default/tftpd-hpa
+        systemctl restart tftpd-hpa
+    else 
+        sed -i 's/flags.*/flags = IPV6/' /etc/xinetd.d/tftp
+        sed -i 's/disable.*/disable = no/' /etc/xinetd.d/tftp
+        sed -i 's/server_args.*/server_args         = -s \/tmp\/tftpboot -c/' /etc/xinetd.d/tftp
+        getenforce | grep Enforcing && setenforce 0
+        systemctl status firewalld | grep failed && systemctl start firewalld
+        systemctl restart xinetd
+        systemctl restart tftp
+        SLEEP_WAIT 3
+        systemctl restart xinetd
+        systemctl restart tftp
+    fi
     SLEEP_WAIT 5
     LOG_INFO "End to prepare the test environment."
 }
@@ -54,6 +65,7 @@ function run_test() {
     chmod 777 /tmp/tftpboot
     tftp -6 2001:250:250:250:250:250:250:222 -c put hello2.txt
     CHECK_RESULT $? 0 0 "Failed to execute put"
+    SLEEP_WAIT 3
     grep hello2 /tmp/tftpboot/hello2.txt
     CHECK_RESULT $? 0 0 "Failed to find hello2"
     LOG_INFO "End to run test."
@@ -62,7 +74,11 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /tmp/tftpboot hello*
-    getenforce | grep Permissive && setenforce 1
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        mv -f  /etc/default/tftpd-hpa_bak /etc/default/tftpd-hpa
+    else
+        getenforce | grep Permissive && setenforce 1
+    fi
     ifconfig "${NODE1_NIC}" inet6 del 2001:250:250:250:250:250:250:222/64
     route -A inet6 del default gw 2001:250:250:250::1 dev "${NODE1_NIC}"
     DNF_REMOVE "$@"
