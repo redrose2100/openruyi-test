@@ -31,7 +31,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
     groupadd test
-    gid=$(grep "test:" /etc/group | awk -F':' '{print $3}')
+    gid=$(grep "^test:" /etc/group | awk -F':' '{print $3}')
     useradd -g "${gid}" -s /sbin/nologin -m testuser1
     CHECK_RESULT $?
     su testuser1 | grep 'account is currently not available'
