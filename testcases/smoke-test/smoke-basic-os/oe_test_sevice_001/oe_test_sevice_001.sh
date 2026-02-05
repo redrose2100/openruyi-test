@@ -21,7 +21,11 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "audit"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "auditd"
+    else
+        DNF_INSTALL "audit"
+    fi
     systemctl start auditd.service
     LOG_INFO "End of environmental preparation."
 }
