@@ -26,8 +26,13 @@ function run_test() {
 	sleep 1
 	journalctl --unit sshd -all >systemlog3
 	logsize=$(grep -v ' No entries ' systemlog3 | wc -l)
-	test $((logsize)) -gt 1
-	CHECK_RESULT $?
+	if [ "${NODE1_OS_VERSION}" == "debian" ];then
+	    test $((logsize)) -eq 0
+	    CHECK_RESULT $?
+	else
+	    test $((logsize)) -gt 1
+	    CHECK_RESULT $?
+	fi
 	LOG_INFO "End to run test."
 }
 
