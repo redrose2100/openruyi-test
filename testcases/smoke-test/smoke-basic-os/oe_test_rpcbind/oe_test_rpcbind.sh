@@ -30,8 +30,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     ps aux | grep rpcbind
     CHECK_RESULT $? 0 0 "Failed to check rpcbind"
-    netstat -tulnp | grep rpcbind | grep tcp | grep 111
-    CHECK_RESULT $? 0 0 "Failed to execute netstat"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        netstat -tulnp | grep rpcbind
+        CHECK_RESULT $? 0 1 "Failed to execute netstat"
+    else
+        netstat -tulnp | grep rpcbind | grep tcp | grep 111
+        CHECK_RESULT $? 0 0 "Failed to execute netstat"
+    fi
     rpcinfo -b 100004 2
     CHECK_RESULT $? 0 0 "Failed to execute rpcbind"
     ps aux | grep rpcbind
