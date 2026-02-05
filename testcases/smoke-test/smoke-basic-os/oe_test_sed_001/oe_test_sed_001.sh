@@ -32,8 +32,13 @@ EOF
 
 function run_test() {
     LOG_INFO "Start testing..."
-    rpm -qa | grep sed
-    CHECK_RESULT $? 0 0 "Return value error"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        dpkg -s sed | grep "install ok installed"
+        CHECK_RESULT $? 0 0 "Return value error"
+    else
+        rpm -qa | grep sed
+        CHECK_RESULT $? 0 0 "Return value error"
+    fi
     sed --v
     CHECK_RESULT $? 0 0 "Version is error"
     sed --help | grep -iE "用法|Usage"
