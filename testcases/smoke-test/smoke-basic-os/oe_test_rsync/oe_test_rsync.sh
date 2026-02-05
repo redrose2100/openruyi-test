@@ -42,9 +42,14 @@ function run_test() {
     CHECK_RESULT $?
     rm -rf "${des_dir:?}/"*
     echo -e "[test]\npath =${des_dir}\nread only = no\nuid = root" >$conf_file
-    getenforce | grep Enforcing && setenforce 0
-    systemctl restart rsyncd
-    CHECK_RESULT $?
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        systemctl restart rsync
+        CHECK_RESULT $?
+    else
+        getenforce | grep Enforcing && setenforce 0
+        systemctl restart rsyncd
+        CHECK_RESULT $?
+    fi
     SLEEP_WAIT 5
     rsync -a "$0" "$(hostname)"::test
     CHECK_RESULT $?
@@ -55,10 +60,14 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    systemctl stop rsyncd
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        systemctl stop rsync
+    else
+        systemctl stop rsyncd
+        setenforce "${se_stat}"
+    fi
     mv conf_bak "$conf_file"
     rm -rf "${src_dir}" "${des_dir}"
-    setenforce "${se_stat}"
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
