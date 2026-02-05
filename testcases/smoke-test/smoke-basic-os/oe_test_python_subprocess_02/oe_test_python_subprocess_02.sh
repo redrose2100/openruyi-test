@@ -27,6 +27,7 @@ function run_test() {
         expect ">>>" {send "import subprocess\r"}
         expect ">>>" {send "import os\r"}
         expect ">>>" {send "subprocess.Popen('whoami', close_fds=True)\r"}
+        expect ">>>" {send "time.sleep(1)\r"}
         expect ">>>" {send "exit()\r"}
         expect eof
 EOF
