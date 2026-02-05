@@ -57,7 +57,7 @@ EOF
 
     test -d /home/testuser2 || mkdir /home/testuser2
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
-        useradd testuser2 2>&1 | grep 'already exists'
+        useradd testuser2
         CHECK_RESULT $?
     else
         useradd testuser2 2>&1 | grep 'already exists'
