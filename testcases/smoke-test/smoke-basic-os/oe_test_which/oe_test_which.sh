@@ -21,10 +21,15 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    rpm -qa | grep which
-    CHECK_RESULT $? 0 0 "which not install"
-    which -v | grep -E "GNU which v[0-9]\.[0-9]+"
-    CHECK_RESULT $? 0 0 "check version failed"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        dpkg -s debianutils | grep "install ok installed"
+        CHECK_RESULT $? 0 0 "debianutils not install"
+    else
+        rpm -qa | grep which
+        CHECK_RESULT $? 0 0 "which not install"
+        which -v | grep -E "GNU which v[0-9]\.[0-9]+"
+        CHECK_RESULT $? 0 0 "check version failed"
+    fi
     which bash | grep "/usr/bin/bash"
     CHECK_RESULT $? 0 0 "which function failed"
     LOG_INFO "Finish test!"
