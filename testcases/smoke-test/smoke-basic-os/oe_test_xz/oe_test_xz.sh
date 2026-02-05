@@ -21,15 +21,24 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL xz    
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL xz-utils
+    else
+        DNF_INSTALL xz
+    fi
     echo "test-xz" >>/tmp/testfile                                 
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    rpm -qa | grep xz
-    CHECK_RESULT $? 0 0 "Return value error" 
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        dpkg -s xz-utils | grep "install ok installed"
+        CHECK_RESULT $? 0 0 "Return value error"
+    else
+        rpm -qa | grep xz
+        CHECK_RESULT $? 0 0 "Return value error"
+    fi
     xz -V
     CHECK_RESULT $? 0 0 "Version is error"
     xz -h 
