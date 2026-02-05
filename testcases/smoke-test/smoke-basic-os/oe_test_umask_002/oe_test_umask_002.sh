@@ -24,7 +24,11 @@ function pre_test() {
     cur_lang=$(echo $LANG)
     export LANG=zh_CN.UTF-8    
     DNF_INSTALL "expect"
-    useradd -d /home/euler euler
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        useradd -m -d /home/euler -s /bin/bash euler
+    else
+        useradd -d /home/euler euler
+    fi
     LOG_INFO "End of environmental preparation!"
 
 }
