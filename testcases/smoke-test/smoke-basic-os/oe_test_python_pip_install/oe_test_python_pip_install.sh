@@ -48,8 +48,13 @@ function run_test() {
     pip3 uninstall -y requests charset-normalizer
     pip3 install --no-deps requests
     CHECK_RESULT $? 0 0 "Failed to execute pip3 install --no-deps"
-    pip3 list | grep "charset-normalizer"
-    CHECK_RESULT $? 0 1 "Succeed to execute pip3 list"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        pip3 list | grep "charset-normalizer" && apt list --installed | grep charset-normalizer
+        CHECK_RESULT $? 0 0 "Succeed to execute pip3 list"
+    else
+        pip3 list | grep "charset-normalizer"
+        CHECK_RESULT $? 0 1 "Succeed to execute pip3 list"
+    fi
     pip3 install --force-reinstall requests | grep Successfully
     CHECK_RESULT $? 0 0 "Failed to execute pip3 install --force-reinstall"
     pip3 install --upgrade requests | grep already
