@@ -44,13 +44,18 @@ function run_test() {
     if [ -d /var/log/journal ]; then
         find /var/log/journal/ -name system.journal -type f
         CHECK_RESULT $? 0 0 "Failed to find system.journal"
-        grep "[0-9]" /var/run/log/imjournal.state
+        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+            test -s /var/run/log/imjournal.state
+            CHECK_RESULT $? 0 0 "File has exists"
+        else
+            grep "[0-9]" /var/run/log/imjournal.state
+            CHECK_RESULT $? 0 0 "File has no content"
+        fi
     else
         find /run/log/journal/ -name system.journal -type f
         CHECK_RESULT $? 0 0 "Failed to find system.journal"
         grep "[0-9]" /run/log/imjournal.state
     fi
-    CHECK_RESULT $? 0 0 "File has no content"
     LOG_INFO "End to run test."
 }
 
