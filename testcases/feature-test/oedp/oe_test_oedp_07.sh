@@ -23,7 +23,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL oedp python3-libselinux
+    DNF_INSTALL "oedp python3-libselinux"
     ssh-keyscan -H "${NODE1_IPV4}" >> ~/.ssh/known_hosts
     oedp repo update
     oedp init euler-copilot

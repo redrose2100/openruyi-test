@@ -23,15 +23,22 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL oedp python3-libselinux
+    DNF_INSTALL "oedp python3-libselinux containerd"
     ssh-keyscan -H "${NODE1_IPV4}" >> ~/.ssh/known_hosts
+    ln -s /usr/bin/containerd-shim-runc-v2 /usr/local/bin/containerd-shim-runc-v2
+    min_mem_gb=$(free -m | awk '/^Mem:/ {print int($7/1024)}')
+    disk_gb=$(df -BG / | tail -1 | awk '{print $4}' | sed 's/G//')
+    cpu_num=$(nproc)
     oedp repo update
     SLEEP_WAIT 5
     oedp init ragflow
-    sed -i 's#ansible_host: NODE_IP#ansible_host: "${NODE1_IPV4}"#g' ./ragflow/config.yaml
+    sed -i "s#ansible_host: NODE_IP#ansible_host: ${NODE1_IPV4}#g" ./ragflow/config.yaml
     sed -i 's#ansible_port: NODE_PORT#ansible_port: 22#g' ./ragflow/config.yaml
-    sed -i 's#ansible_user: NODE_USER#ansible_user: "${NODE1_USER}"#g' ./ragflow/config.yaml
-    sed -i 's#ansible_password: NODE_PASSWORD#ansible_password: "${NODE1_PASSWORD}"#g' ./ragflow/config.yaml
+    sed -i "s#ansible_user: NODE_USER#ansible_user: ${NODE1_USER}#g" ./ragflow/config.yaml
+    sed -i "s|ansible_password: NODE_PASSWORD|ansible_password: ${NODE1_PASSWORD}|g" ./ragflow/config.yaml
+    sed -i "s|MIN_CPU: .*$|MIN_CPU: ${cpu_num}|g" ./ragflow/config.yaml
+    sed -i "s|MIN_MEM_GB: .*$|MIN_MEM_GB: ${min_mem_gb}|g" ./ragflow/config.yaml
+    sed -i "s|MIN_DISK_GB: .*$|MIN_DISK_GB: ${disk_gb}|g" ./ragflow/config.yaml
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -39,8 +46,11 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    oedp run install -p ragflow 2>&1 | grep "Execute succeeded: Install RAGFlow"
-    CHECK_RESULT $? 0 0 "Failed to init RAGFlow"
+    oedp run install -p ragflow >install_ragflow 2>&1
+    CHECK_RESULT $? 0 0 "Failed to install RAGFlow"
+
+    grep "Execute succeeded: Install RAGFlow" install_ragflow 
+    CHECK_RESULT $? 0 0 "Failed to check log of RAGFlow"
 
     oedp run uninstall -p ragflow 2>&1 | grep "Execute succeeded: Uninstall RAGFlow"
     CHECK_RESULT $? 0 0 "Failed to uninstall RAGFlow"
@@ -50,7 +60,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf ragflow
+    rm -rf ragflow install_ragflow
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
