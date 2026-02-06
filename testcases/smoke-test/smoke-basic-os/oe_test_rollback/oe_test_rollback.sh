@@ -32,7 +32,7 @@ function run_test() {
         CHECK_RESULT $? 0 0 "install fail"
         apt remove -y zenity && apt purge -y zenity
         CHECK_RESULT $? 0 0 "remove fail"
-        dpkg -s zenity | grep "not installed"
+        dpkg -s zenity 2>&1 | grep "not installed"
         CHECK_RESULT $? 0 0 "remove fail"
         apt install -y zenity
         CHECK_RESULT $? 0 0 "install fail"
