@@ -63,7 +63,7 @@ return 1;
 }
 EOF
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
-        DNF_INSTALL "libxml2-utils g++"
+        DNF_INSTALL "libxml2 libxml2-dev libxml2-utils g++"
     else
         if dnf list | grep libxml2-devel;then
             DNF_INSTALL "libxml2-devel gcc-c++"
@@ -77,7 +77,7 @@ EOF
 function run_test() {
     LOG_INFO "Start testing..."
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
-        dpkg -s libxml2-utils | grep "install ok installed"
+        dpkg -s libxml2 | grep "install ok installed"
         CHECK_RESULT $? 0 0 "Return value error"
     else    
         rpm -qa | grep libxml2
