@@ -25,7 +25,7 @@ function pre_test() {
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
         DNF_INSTALL "ftp vsftpd curl"
         conf=/etc/vsftpd.conf
-        useradd -s /sbin/nologin example
+        useradd -m -d /home/example -s /sbin/nologin example
         chmod 755 /home/example
         cp /etc/shells /etc/shells_bak
         echo "/sbin/nologin" >> /etc/shells
