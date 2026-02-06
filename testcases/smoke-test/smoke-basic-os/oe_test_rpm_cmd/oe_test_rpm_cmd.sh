@@ -45,7 +45,7 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Failed to execute dpkg -L"
         apt remove -y tcllib && apt purge -y tcllib
         CHECK_RESULT $? 0 0 "Failed to execute apt remove && apt purge"
-        dpkg -s tcllib | grep "not installed"
+        dpkg -s tcllib 2>&1 | grep "not installed"
         CHECK_RESULT $? 0 0 "Failed to execute dpkg -s"
     else
         yumdownloader tcllib
