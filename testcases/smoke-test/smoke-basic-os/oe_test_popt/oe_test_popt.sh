@@ -21,7 +21,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "popt popt-devel gcc"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "libpopt-dev"
+    else
+        DNF_INSTALL "popt popt-devel gcc"
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
