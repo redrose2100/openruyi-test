@@ -21,8 +21,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL iptables
-    systemctl start iptables
+    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+        DNF_INSTALL iptables
+        systemctl start iptables
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -51,7 +53,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+        DNF_REMOVE "$@"
+    fi
     LOG_INFO "End to restore the test environment."
 }
 
