@@ -38,9 +38,9 @@ function run_test() {
         apt download curl
         ar x *.deb
         tar -xf data.tar.xz
-        test -f usr/bin/crul
-        CHECK_RESULT $? 0 0 "Failed to find usr/bin/crul"
-        diff usr/bin/crul /usr/bin/crul
+        test -f usr/bin/curl
+        CHECK_RESULT $? 0 0 "Failed to find usr/bin/curl"
+        diff usr/bin/curl /usr/bin/curl
         CHECK_RESULT $? 0 0 "Failed to execute diff"
         test "$(stat -c %a /usr/bin/curl)"="$(stat -c %a usr/bin/curl)"
         CHECK_RESULT $? 0 0 "The two files have different permissions"
