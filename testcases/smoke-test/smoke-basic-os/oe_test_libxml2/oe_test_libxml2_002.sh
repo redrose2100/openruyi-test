@@ -99,7 +99,7 @@ return 0;
 }
 EOF
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
-        DNF_INSTALL "libxml2 g++"
+        DNF_INSTALL "libxml2 libxml2-utils libxml2-dev g++"
     else
         if dnf list | grep libxml2-devel;then
             DNF_INSTALL "libxml2-devel gcc-c++"
