@@ -83,7 +83,7 @@ function install_helm() {
 
 function uninstall_helm() {
     LOG_INFO "Start uninstall helm"
-    oedp run uninstall -p helm-3.9.0 2>&1 | grep "Execute succeeded: delete helm"
+    oedp run uninstall -p helm-3.9.0 2>&1 | grep "Execute succeeded: uninstall helm"
     CHECK_RESULT $? 0 0 "Failed to uninstall helm-3.9.0"
     rm -rf install_helm helm-3.9.0
     DNF_REMOVE "$@"
