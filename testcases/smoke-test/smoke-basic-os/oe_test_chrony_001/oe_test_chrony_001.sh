@@ -28,10 +28,17 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     if ! df -h / |grep overlay; then
-        systemctl start chronyd
-        CHECK_RESULT $? 0 0 "Start chrony fail"
-        systemctl status chronyd | grep running
-        CHECK_RESULT $? 0 0 "Start chronyd.service fail"
+        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+            systemctl start chrony
+            CHECK_RESULT $? 0 0 "Start chrony fail"
+            systemctl status chrony | grep running
+            CHECK_RESULT $? 0 0 "Start chrony.service fail"
+        else
+            systemctl start chronyd
+            CHECK_RESULT $? 0 0 "Start chrony fail"
+            systemctl status chronyd | grep running
+            CHECK_RESULT $? 0 0 "Start chronyd.service fail"
+        fi
         chronyc makestep |grep "200 OK"
         CHECK_RESULT $? 0 0 "Failure to synchronize time"
     fi
