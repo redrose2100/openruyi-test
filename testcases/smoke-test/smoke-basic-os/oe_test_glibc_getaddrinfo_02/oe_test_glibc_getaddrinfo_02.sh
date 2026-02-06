@@ -33,8 +33,7 @@ function run_test() {
     echo "" >/etc/resolv.conf
     wget www.baidu.com 2>&1 | grep "unable to resolve host address"
     CHECK_RESULT $? 0 0 "Wget executed successfully"
-    cp -f /etc/resolv.conf.bak /etc/resolv.conf
-    rm -rf /etc/resolv.conf.bak
+    mv -f /etc/resolv.conf.bak /etc/resolv.conf
     wget www.baidu.com
     CHECK_RESULT $? 0 0 "Failed to execute wget"
     test -f index.html
