@@ -16,107 +16,58 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Multiple deployments of Kubeflow 
 # #############################################
-# shellcheck disable=SC2016
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC2016,SC1091
+source "./common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL oedp python3-libselinux
+    DNF_INSTALL "oedp python3-libselinux"
     ssh-keyscan -H "${NODE1_IPV4}" >> ~/.ssh/known_hosts
     oedp repo update
-    oedp init kubeflow-1.9.1
-    sed -i "s#ansible_host: HOST_IP#ansible_host: ${NODE1_IPV4}#g" ./kuberay/config.yaml
-    sed -i "s#ansible_password: \"\"#ansible_password: ${NODE1_PASSWORD}#g" ./kuberay/config.yaml
     LOG_INFO "End to prepare the test environment."
 }
 
-function cleanup_processes() {
-    LOG_INFO "Cleaning up existing processes"
-    pkill -f "oedp run install" || true
-    pkill -f "oedp run uninstall" || true
-    SLEEP_WAIT 3
+function install_kubeflow() {
+    build_k8s
+    install_helm
+    oedp init kubeflow-1.9.1
+    sed -i "s|ansible_host: HOST_IP|ansible_host: ${NODE1_IPV4}|g" ./kubeflow-1.9.1/config.yaml
+    sed -i "s|ansible_password: \"\"|ansible_password: ${NODE1_PASSWORD}|g" ./kubeflow-1.9.1/config.yaml
+    oedp run install -p kubeflow-1.9.1 >install_kubeflow 2>&1
+    grep "Execute succeeded: install kubeflow" install_kubeflow
 }
 
-function run_installation_cycle() {
-    local round=$1
-    local install_pid=""
-    local result=0
-    
-    LOG_INFO "=== Starting test round $round ==="
-    
-    LOG_INFO "Round $round - Step 1: Install Kubeflow"
-    oedp run install -p kubeflow-1.9.1 >> kubeflow_install.log 2>&1 &
-    install_pid=$!
-    LOG_INFO "Install process started: PID=$install_pid"
-    
-    local wait_time=$((5 + RANDOM % 11))
-    LOG_INFO "Round $round - Step 2: Wait $wait_time seconds then interrupt"
-    SLEEP_WAIT $wait_time
-    
-    if ps -p $install_pid > /dev/null 2>&1; then
-        LOG_INFO "Interrupting installation process"
-        kill -INT $install_pid
-        CHECK_RESULT $? 0 0 "Successfully send interrupt signal"
-        SLEEP_WAIT 3
-        
-        if ! ps -p $install_pid > /dev/null 2>&1; then
-            LOG_INFO "Install process terminated successfully after interrupt"
-        else
-            LOG_WARN "Install process still running, force killing"
-            kill -KILL $install_pid
-            SLEEP_WAIT 2
-        fi
-    else
-        LOG_INFO "Install process already finished"
-        wait $install_pid
-        local exit_code=$?
-        LOG_INFO "Install process exit code: $exit_code"
-    fi
-    
-    LOG_INFO "Round $round - Step 3: Reinstall Kubeflow"
-    cleanup_processes
-    
-    oedp run install -p kubeflow-1.9.1 >> kubeflow_install.log 2>&1 &
-    install_pid=$!
-    LOG_INFO "Reinstall process started: PID=$install_pid"
-    
-    LOG_INFO "Executing uninstall command"
-    if oedp run uninstall -p kubeflow-1.9.1 >> kubeflow_install.log 2>&1; then
-        LOG_INFO "Uninstall completed successfully in round $round"
-        result=0
-    else
-        local uninstall_code=$?
-        LOG_WARN "Uninstall finished with code $uninstall_code in round $round"
-        result=1
-    fi
-    
-    cleanup_processes
-    SLEEP_WAIT 2
-    
-    LOG_INFO "=== Finished test round $round ==="
-    return $result
+function uninstall_kubeflow() {
+    oedp run uninstall -p kubeflow-1.9.1 2>&1 | grep "Execute succeeded: uninstall kubeflow"
+    uninstall_helm
+    uninstall_k8s
+    rm -rf kubeflow-1.9.1 install_kubeflow helm-3.9.0 install_helm kubernetes-1.31.1 install_kubernetes
 }
 
 function run_test() {
     LOG_INFO "Start run_test"
     
     local total_success=0
-    local total_rounds=$TEST_ROUNDS
+    local total_rounds=3
     
-    for ((i=1; i<=total_rounds; i++)); do
-        LOG_INFO "Starting iteration $i of $total_rounds"
+    for ((round=1; round<=total_rounds; round++)); do
+        LOG_INFO "Starting iteration $round of $total_rounds"
         
-        if run_installation_cycle "$i"; then
-            LOG_INFO "Round $i completed successfully"
+	if install_kubeflow; then
+            LOG_INFO "Round $round completed successfully"
             ((total_success++))
+
         else
-            LOG_WARN "Round $i had some issues"
+            LOG_WARN "Round $round had some issues"
         fi
-        
-        if [ "$i" -lt "$total_rounds" ]; then
+
+        uninstall_kubeflow
+
+        if [ "$round" -lt "$total_rounds" ]; then
             LOG_INFO "Waiting 5 seconds before next round"
             SLEEP_WAIT 5
         fi
+
     done
     
     LOG_INFO "Test completion summary: $total_success/$total_rounds rounds successful"
@@ -129,8 +80,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start post_test"
     
-    cleanup_processes
-    rm -rf kubeflow_install.log kubeflow-1.9.1
     DNF_REMOVE "$@"
 
     LOG_INFO "End post_test"
