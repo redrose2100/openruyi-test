@@ -16,11 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test console-getty.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
+    systemctl stop getty@tty1
     test_execution console-getty.service
     test_reload console-getty.service
     LOG_INFO "Finish test!"
@@ -29,6 +30,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     systemctl stop console-getty.service
+    systemctl start getty@tty1
     LOG_INFO "Finish environment cleanup!"
 }
 
