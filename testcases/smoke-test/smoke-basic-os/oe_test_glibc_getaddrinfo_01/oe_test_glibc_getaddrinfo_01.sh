@@ -21,7 +21,11 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "bind-utils traceroute mtr wget"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "traceroute mtr wget curl"
+    else
+        DNF_INSTALL "bind-utils traceroute mtr wget"
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
