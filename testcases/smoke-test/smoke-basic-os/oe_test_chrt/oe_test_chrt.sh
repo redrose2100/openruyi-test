@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    ping -q www.baidu.com &
+    ping -q 127.0.0.1 &
     SLEEP_WAIT 3
     test_pid=$(pgrep -f ping | tail -n 1)
     LOG_INFO "End to prepare the test environment."
