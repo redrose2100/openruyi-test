@@ -65,6 +65,7 @@ expect eof
 EOF
     expect http.sh
     CHECK_RESULT $? 0 0 "Script execution failed"
+    SLEEP_WAIT 3
     curl --insecure https://localhost:4443 | grep -i "This is https test"
     CHECK_RESULT $? 0 0 "Access failed"
     LOG_INFO "End to run test."
@@ -75,6 +76,7 @@ function post_test() {
     rm -rf /www http.sh /etc/httpd/conf.d/host.conf /etc/httpd/conf.d/1.key /etc/httpd/conf.d/1.crt
     mv -f /etc/httpd/conf.d/ssl.conf.bak /etc/httpd/conf.d/ssl.conf
     systemctl stop httpd
+    systemctl start firewalld
     DNF_REMOVE "$@"
     export LANG=$Default_Lang
     LOG_INFO "End to restore the test environment."
