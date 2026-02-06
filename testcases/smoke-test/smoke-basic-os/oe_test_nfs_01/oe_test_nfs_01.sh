@@ -21,7 +21,11 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL nfs-utils
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL nfs-kernel-server
+    else
+        DNF_INSTALL nfs-utils
+    fi
     cp -f /etc/exports /etc/exports.bak
     echo "/tmp/test ${NODE1_IPV4}(fsid=0,rw,sync)" >/etc/exports
     mkdir /tmp/test
