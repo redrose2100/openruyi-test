@@ -30,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl status dbus | grep running
     CHECK_RESULT $? 0 0 "Failed to run dbus service"
-    kill -9 "$(pgrep -u dbus)"
+    kill -9 "$(pgrep -f dbus)"
     CHECK_RESULT $? 0 0 "Failed to kill the dbus process"
     SLEEP_WAIT 3
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
