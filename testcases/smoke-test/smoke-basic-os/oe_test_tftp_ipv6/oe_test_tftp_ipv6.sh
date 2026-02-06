@@ -22,7 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
-        DNF_INSTALL "xinetd tftpd-hpa net-tools"
+        DNF_INSTALL "xinetd tftp-hpa tftpd-hpa net-tools"
     else
         DNF_INSTALL "xinetd tftp tftp-server net-tools"
     fi
