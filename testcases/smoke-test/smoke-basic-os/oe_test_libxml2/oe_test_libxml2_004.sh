@@ -22,7 +22,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "End to prepare the test environment."
-    DNF_INSTALL "libxml2-devel"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "libxml2-utils"
+    else
+        DNF_INSTALL "libxml2-devel"
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
