@@ -22,7 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
-        DNF_INSTALL sudo sendmail
+        DNF_INSTALL "sudo sssd sendmail"
     fi
     cp /etc/nsswitch.conf /etc/nsswitch.conf.bak
     echo 'sudoers: files sss' >>/etc/nsswitch.conf
