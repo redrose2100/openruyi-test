@@ -21,23 +21,40 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "net-tools NetworkManager ethtool"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "net-tools network-manager ethtool"
+    else
+        DNF_INSTALL "net-tools NetworkManager ethtool"
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    systemctl restart NetworkManager
-    CHECK_RESULT $?
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        systemctl restart networking
+        CHECK_RESULT $?
 
-    systemctl status NetworkManager | grep 'Active: active'
-    CHECK_RESULT $?
+        systemctl status networking | grep 'Active: active'
+        CHECK_RESULT $?
+    else
+        systemctl restart NetworkManager
+        CHECK_RESULT $?
+
+        systemctl status NetworkManager | grep 'Active: active'
+        CHECK_RESULT $?
+    fi
     if df -h / | grep overlay; then
         ip a | grep "${NODE1_NIC}"	   
         CHECK_RESULT $?	
     else
-        nmcli connection show | grep "${NODE1_NIC}"
-        CHECK_RESULT $?
+        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+            nmcli connection show
+            CHECK_RESULT $?
+        else
+            nmcli connection show | grep "${NODE1_NIC}"
+            CHECK_RESULT $?
+        fi
     fi
     ip link | grep "${NODE1_NIC}"
     CHECK_RESULT $?
