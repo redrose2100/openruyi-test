@@ -38,13 +38,14 @@ function pre_test() {
     export LANG=en_US.UTF-8
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
         DNF_INSTALL "nfs-kernel-server nfs4-acl-tools diffutils"
+        useradd -m -d /home/$test_user -s /bin/bash $test_user
     else
         DNF_INSTALL "nfs-utils nfs4-acl-tools diffutils"
+        useradd $test_user
     fi
-    useradd $test_user
     mkdir $server_dir $client_dir
     test -f /etc/exports && cp /etc/exports .
-    echo "$server_dir *(rw,sync,no_root_squash)" >>/etc/exports
+    echo "$server_dir *(rw,sync,no_root_squash)" > /etc/exports
     exportfs -avr
     LOG_INFO "End of environmental preparation!"
 }
@@ -67,7 +68,7 @@ function run_test() {
     diff $server_dir/file $client_dir/file
     CHECK_RESULT $?
     chmod 640 $client_dir/file
-    sudo -u $test_user cat $client_dir/file 2>/tmp/error.log && return 1
+    su $test_user -c "cat $client_dir/file" 2>/tmp/error.log && return 1
     grep "Permission denied" /tmp/error.log
     CHECK_RESULT $?
     uid=$(id -u $test_user)
@@ -87,7 +88,7 @@ function post_test() {
     rm -rf $client_dir $server_dir
     userdel -r $test_user
     rm -f /tmp/error.log
-    test -f exports && mv exports /etc/exports
+    test -f exports && mv -f exports /etc/exports
     DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
