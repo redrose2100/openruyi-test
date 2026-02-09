@@ -46,7 +46,7 @@ int main(int argc, char** atgv) {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    gcc -laudit test.c
+    gcc test.c -laudit
     [ -e a.out ]
     CHECK_RESULT $? 0 0 "Get a.out: failed!"
     if ! df -h / |grep overlay; then
