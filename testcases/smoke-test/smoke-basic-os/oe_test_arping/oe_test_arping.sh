@@ -23,6 +23,9 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL iputils-arping
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -38,6 +41,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_REMOVE
+    fi
     LOG_INFO "End to restore the test environment."
 }
 
