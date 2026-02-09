@@ -21,6 +21,9 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "sudo"
+    fi
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     DNF_INSTALL sssd
@@ -49,6 +52,9 @@ function post_test() {
     systemctl stop sssd
     DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_REMOVE
+    fi
     LOG_INFO "End to restore the test environment."
 }
 
