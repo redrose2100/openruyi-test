@@ -24,14 +24,15 @@ function pre_test() {
     ip netns list|awk '{print $1}'|xargs ip netns delete
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
         DNF_INSTALL openvswitch-switch
+        systemctl start openvswitch-switch
     else
         DNF_INSTALL openvswitch
         if getenforce | grep -i Enforcing; then
             setenforce 0
             result_flag=1
         fi
+        systemctl start openvswitch
     fi
-    systemctl start openvswitch
     LOG_INFO "End to prepare the test environment."
 }
 
