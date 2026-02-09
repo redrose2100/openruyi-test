@@ -30,6 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     flag=1
     while ((flag < 20)); do
+        systemctl stop syslog.socket
         systemctl stop rsyslog
         CHECK_RESULT $? 0 0 "Service not stoped"
         SLEEP_WAIT 2
