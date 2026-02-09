@@ -112,12 +112,14 @@ function run_test() {
 }
 
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-    systemctl stop openvswitch
-    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+    LOG_INFO "Start to restore the test environment." 
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        systemctl stop openvswitch-switch
+    else
         if $result_flag -eq 1; then
             setenforce 1
         fi
+        systemctl stop openvswitch
     fi
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
