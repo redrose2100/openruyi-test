@@ -21,6 +21,9 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL "sudo"
+    fi
     echo 'echo "export PATH=/tmp:\$PATH"' >/tmp/test.sh
     cp -f /etc/sudoers /etc/sudoers.bak
     chmod +w /etc/sudoers
@@ -41,6 +44,9 @@ function post_test() {
     mv -f /etc/sudoers.bak /etc/sudoers
     userdel -rf testuser
     rm -rf /tmp/test.sh
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_REMOVE
+    fi
     LOG_INFO "End to restore the test environment."
 }
 
