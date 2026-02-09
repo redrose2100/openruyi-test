@@ -41,7 +41,7 @@ function run_test() {
         test -s /run/log/imjournal.state
         CHECK_RESULT $? 0 0 "Failed to find imjournal.state"
         SLEEP_WAIT 2
-        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        if [ "${NODE1_OS_VERSION}" != "debian" ];then
             main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
             grep rsyslog /var/log/messages | grep "$main_pid"
             CHECK_RESULT $? 0 0 "Failed to find main_pid"
