@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
-        DNF_INSTALL "auditd gcc"
+        DNF_INSTALL "auditd libaudit-dev gcc"
     else
         DNF_INSTALL "audit-devel gcc"
     fi
