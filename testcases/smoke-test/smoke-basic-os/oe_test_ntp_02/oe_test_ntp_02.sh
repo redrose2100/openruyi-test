@@ -21,14 +21,22 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL ntp
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL sntp
+    else
+        DNF_INSTALL ntp
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    sntp -d -t 30 -S 9.82.111.111 | grep "9.82.111.111 no UCST response after 30 seconds"
-    CHECK_RESULT $? 0 0 "Failed to execute sntp"
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        sntp -d -t 30 -S 9.82.111.111 | grep "ntpdig: no eligible servers"
+        CHECK_RESULT $? 0 0 "Failed to execute sntp"
+    else
+        sntp -d -t 30 -S 9.82.111.111 | grep "9.82.111.111 no UCST response after 30 seconds"
+        CHECK_RESULT $? 0 0 "Failed to execute sntp"
+    fi
     ps -aux | grep sntp | grep -v grep
     CHECK_RESULT $? 0 1 "Process of sntp exist"
     LOG_INFO "End to run test."
