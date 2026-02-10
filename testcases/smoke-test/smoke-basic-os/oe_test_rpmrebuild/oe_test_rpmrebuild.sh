@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_INSTALL "curl diffutils"
     else
         DNF_INSTALL "rpmrebuild diffutils"
@@ -31,7 +31,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         curr_path=$(pwd)
         mkdir test
         cd test
@@ -69,7 +69,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     cd "$curr_path" || exit 1
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         rm -rf test
     else
         rm -rf /tmp/test* /root/rpmbuild

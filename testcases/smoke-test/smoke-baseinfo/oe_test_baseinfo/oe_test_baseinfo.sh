@@ -35,8 +35,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed command: lscpu"
     fdisk -l | grep -iE "disk|dev"
     CHECK_RESULT $? 0 0 "Failed command: fdisk"
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
-        grep -iE "name|version|ID" /etc/os-release | grep debian
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
+        grep -iE "name|version|ID" /etc/os-release | grep -E "debian|velinux"
         CHECK_RESULT $? 0 0 "/etc/os-release file view failed"
     elif [ "${NODE1_OS_VERSION}" == "openEuler" ];then
         grep -iE "name|version|ID" /etc/os-release | grep openEuler
@@ -59,7 +59,7 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Failed to recover time zone"
         localectl status | grep -i "System Locale"
         CHECK_RESULT $? 0 0 "The system language does not belong to us"
-        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
             localectl list-locales | grep en
             CHECK_RESULT $? 0 0 "The system language does not contain English"
             cp /etc/locale.gen /etc/locale.gen_bak
@@ -83,7 +83,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         mv -f /etc/locale.gen_bak /etc/locale.gen
         locale-gen
     fi

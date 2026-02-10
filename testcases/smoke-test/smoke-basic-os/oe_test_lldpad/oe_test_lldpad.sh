@@ -24,7 +24,7 @@ function pre_test() {
     DNF_INSTALL lldpad
     systemctl stop lldpad.socket
     systemctl stop lldpad
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         lldpad_ver=$(apt list --installed 2>/dev/null | grep lldpad | awk '{print $2}' | awk -F '-' '{print $1}')
     else
         lldpad_ver=$(rpm -qa lldpad | awk -F '-' '{print $2}')

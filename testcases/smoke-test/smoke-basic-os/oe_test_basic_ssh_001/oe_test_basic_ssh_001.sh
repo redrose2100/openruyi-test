@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     grep "testuser1:" /etc/passwd && userdel -rf testuser1
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         useradd -m -d /home/testuser1 -s /bin/bash testuser1
     else
 	useradd testuser1
@@ -32,7 +32,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -vE "debian|velinux";then
         usermod -aG wheel testuser1
     fi
     passwd testuser1 <<EOF

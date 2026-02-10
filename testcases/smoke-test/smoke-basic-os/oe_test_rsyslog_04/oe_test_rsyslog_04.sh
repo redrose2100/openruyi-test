@@ -45,7 +45,7 @@ function run_test() {
     systemctl start rsyslog
     CHECK_RESULT $? 0 0 "Failed to start service"
     SLEEP_WAIT 5
-    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -vE "debian|velinux";then
         main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
         grep rsyslog /var/log/messages | grep "$main_pid"
         CHECK_RESULT $? 0 0 "Log not recorded"
@@ -58,7 +58,7 @@ function run_test() {
     systemctl restart rsyslog
     CHECK_RESULT $? 0 0 "Failed to restart service"
     SLEEP_WAIT 15
-    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -vE "debian|velinux";then
         main_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
         grep rsyslog /var/log/messages | grep "$main_pid"
         CHECK_RESULT $? 0 0 "The pid not recorded"

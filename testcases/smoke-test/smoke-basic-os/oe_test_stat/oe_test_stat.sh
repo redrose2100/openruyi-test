@@ -37,7 +37,7 @@ function run_test() {
     ln -s test_dir dir_link
     stat -L dir_link
     CHECK_RESULT $? 0 0 "Failed to test directory link with -L option"
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         attr_1=$(stat /usr/bin/apt |grep -iE 'Access|权限' |awk -F '/' '{print $1}' | awk -F '(' '{print $2}')
         attr_2=$(stat -L /usr/bin/apt |grep -iE 'Access|权限' |awk -F '/' '{print $1}' | awk -F '(' '{print $2}')
         CHECK_RESULT "${attr_1}" "${attr_2}" 0 "Failed to test access for file and dir with -L option"

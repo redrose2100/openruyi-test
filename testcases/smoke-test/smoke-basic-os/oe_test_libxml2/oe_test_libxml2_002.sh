@@ -98,7 +98,7 @@ xmlFreeDoc(doc);
 return 0;
 }
 EOF
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_INSTALL "libxml2 libxml2-utils libxml2-dev g++"
     else
         if dnf list | grep libxml2-devel;then
@@ -112,7 +112,7 @@ EOF
 
 function run_test() {
     LOG_INFO "Start testing..."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         dpkg -s libxml2 | grep "install ok installed"
         CHECK_RESULT $? 0 0 "Return value error"
     else

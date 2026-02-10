@@ -25,7 +25,7 @@ usage() {
 }
 
 common_dep(){
-    if [ "${os_version}" == "debian" ];then
+    if echo "${os_version}" | grep -E "debian|velinux";then
         apt install expect psmisc make iputils-ping python3-six python3-paramiko -y
     else
         yum install expect psmisc make iputils python3-six python3-paramiko -y
@@ -34,7 +34,7 @@ common_dep(){
 
 qemu_dep(){
     echo "install qemu"
-    if [ "${os_version}" == "debian" ];then
+    if echo "${os_version}" | grep -E "debian|velinux";then
         apt install bridge-utils -y
     else
         yum install bridge-utils -y
@@ -43,7 +43,7 @@ qemu_dep(){
     if [ $? -eq 0 ]; then
         return 0
     fi
-    if [ "${os_version}" == "debian" ];then
+    if echo "${os_version}" | grep -E "debian|velinux";then
         apt install qemu-system-arm -y
     else
         yum install qemu-system-aarch64 qemu-system-arm -y

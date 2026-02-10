@@ -48,7 +48,7 @@ function run_test() {
     pip3 uninstall -y requests charset-normalizer
     pip3 install --no-deps requests
     CHECK_RESULT $? 0 0 "Failed to execute pip3 install --no-deps"
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         pip3 list | grep "charset-normalizer" && apt list --installed | grep charset-normalizer
         CHECK_RESULT $? 0 0 "Succeed to execute pip3 list"
     else

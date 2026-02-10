@@ -26,7 +26,7 @@ function run_test() {
 	sleep 1
 	journalctl --unit sshd -all >systemlog3
 	logsize=$(grep -v ' No entries ' systemlog3 | wc -l)
-	if [ "${NODE1_OS_VERSION}" == "debian" ];then
+	if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
 	    test $((logsize)) -eq 0
 	    CHECK_RESULT $?
 	else

@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_INSTALL sntp
     else
         DNF_INSTALL ntp
@@ -31,7 +31,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         sntp -d -t 30 -S 9.82.111.111 2>&1 | grep "ntpdig: no eligible servers"
         CHECK_RESULT $? 0 0 "Failed to execute sntp"
     else

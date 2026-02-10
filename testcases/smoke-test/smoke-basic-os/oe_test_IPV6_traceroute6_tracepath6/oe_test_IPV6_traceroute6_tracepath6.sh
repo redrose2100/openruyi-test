@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_INSTALL iputils-tracepath
     else
         DNF_INSTALL traceroute
@@ -33,7 +33,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     traceroute6 2>&1 | grep -iA 1 "Usage" | grep "traceroute6"
     CHECK_RESULT $? 0 0 "Failed to execute traceroute6"
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         tracepath 2>&1 | grep tracepath
         CHECK_RESULT $? 0 0 "Failed to repeat execute tracepath"
     else

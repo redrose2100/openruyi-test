@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_INSTALL "xinetd tftp tftpd-hpa net-tools"
     else
         DNF_INSTALL "xinetd tftp tftp-server net-tools"
@@ -33,7 +33,7 @@ function pre_test() {
     mkdir /tmp/tftpboot
     echo "hello1" >/tmp/tftpboot/hello1.txt
     chmod 777 -R /tmp/tftpboot
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         cp /etc/default/tftpd-hpa /etc/default/tftpd-hpa_bak
         sed -i 's/TFTP_DIRECTORY.*/TFTP_DIRECTORY="\/tmp\/tftpboot"/' /etc/default/tftpd-hpa
         sed -i 's/TFTP_OPTIONS.*/TFTP_OPTIONS="--secure --create"/' /etc/default/tftpd-hpa
@@ -74,7 +74,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /tmp/tftpboot hello*
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         mv -f  /etc/default/tftpd-hpa_bak /etc/default/tftpd-hpa
     else
         getenforce | grep Permissive && setenforce 1

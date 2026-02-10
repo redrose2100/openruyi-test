@@ -91,7 +91,7 @@ function main() {
     fi
     
     os_version=$(grep "^ID=" /etc/os-release | awk -F'=' '{print $2}' | sed 's/"//g')
-    if [ "${os_version}" == "debian" ];then
+    if echo "${os_version}" | grep -E "debian|velinux";then
         if ! dpkg -s expect | grep "install ok installed" >/dev/null 2>&1; then
             apt -y install expect
         fi

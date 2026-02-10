@@ -22,7 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     conf=/etc/vsftpd/vsftpd.conf
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_INSTALL "ftp vsftpd curl"
         conf=/etc/vsftpd.conf
         useradd -m -d /home/example -s /sbin/nologin example
@@ -67,7 +67,7 @@ EOF
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         curl -u example:"${NODE1_PASSWORD}" -T example.txt ftp://"${NODE1_IPV4}"
         CHECK_RESULT $? 0 0 "Failed to execute curl"
         test -f /home/example/example.txt
@@ -84,7 +84,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     mv -f "${conf}".bak "${conf}"
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         mv -f /etc/shells_bak /etc/shells
     else
         getenforce | grep Permissive && setenforce 1

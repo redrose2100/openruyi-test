@@ -33,7 +33,7 @@ function run_test() {
     kill -9 "$(pgrep -f dbus-daemon)"
     CHECK_RESULT $? 0 0 "Failed to kill the dbus process"
     SLEEP_WAIT 3
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         pgrep dbus
         CHECK_RESULT $? 1 0 "Failed to exist dbus service"
     else

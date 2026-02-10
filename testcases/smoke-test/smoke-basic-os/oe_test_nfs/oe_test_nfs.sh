@@ -36,7 +36,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_INSTALL "nfs-kernel-server nfs4-acl-tools diffutils"
         useradd -m -d /home/$test_user -s /bin/bash $test_user
     else

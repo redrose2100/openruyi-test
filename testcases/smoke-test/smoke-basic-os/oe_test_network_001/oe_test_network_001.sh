@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_INSTALL "net-tools network-manager ethtool"
     else
         DNF_INSTALL "net-tools NetworkManager ethtool"
@@ -31,7 +31,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         systemctl restart networking
         CHECK_RESULT $?
 
@@ -48,7 +48,7 @@ function run_test() {
         ip a | grep "${NODE1_NIC}"	   
         CHECK_RESULT $?	
     else
-        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
             nmcli connection show
             CHECK_RESULT $?
         else

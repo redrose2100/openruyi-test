@@ -44,7 +44,7 @@ function run_test() {
     if [ -d /var/log/journal ]; then
         find /var/log/journal/ -name system.journal -type f
         CHECK_RESULT $? 0 0 "Failed to find system.journal"
-        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
             test -s /var/run/log/imjournal.state
             CHECK_RESULT $? 0 0 "File has exists"
         else

@@ -23,7 +23,7 @@ function run_test() {
     cd /etc/init.d
     pwd -L | grep /etc/init.d
     CHECK_RESULT $? 0 0 "Command executed fail"
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         pwd -P | grep /etc/init.d
         CHECK_RESULT $? 0 0 "Command executed fail"
     else

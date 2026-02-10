@@ -25,7 +25,7 @@ function pre_test() {
         LOG_INFO "The current environment is Docker."
         exit 0
     else
-        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
             DNF_INSTALL "grub-common diffutils"
         else
             DNF_INSTALL "grub2-tools diffutils"
@@ -36,7 +36,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         grub-mkconfig -o tmp_grub_cfg
         CHECK_RESULT $? 0 0 "Failed to execute grub-mkconfig"
     else

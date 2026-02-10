@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_INSTALL "sudo"
     fi
     OLD_LANG=$LANG
@@ -52,7 +52,7 @@ function post_test() {
     systemctl stop sssd
     DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_REMOVE
     fi
     LOG_INFO "End to restore the test environment."

@@ -28,7 +28,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     if ! df -h / |grep overlay; then
-        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
             systemctl start chrony
             CHECK_RESULT $? 0 0 "Start chrony fail"
             systemctl status chrony | grep running

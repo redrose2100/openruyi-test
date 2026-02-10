@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         mv -f /boot/initrd.img-$(uname -r) /boot/initrd.img-$(uname -r)_bak
     else
         kernel_ver=$(rpm -qa kernel | sort | tail -n 1 | awk -F '-' '{print $2"-"$3}')
@@ -33,7 +33,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     if ! df -h / |grep overlay; then
-        if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
             mkinitramfs -o /boot/initrd.img-$(uname -r)
             CHECK_RESULT $? 0 0 "Failed to execute mkinitramfs"
             test -f /boot/initrd.img-$(uname -r)
@@ -50,7 +50,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         mv -f /boot/initrd.img-$(uname -r)_bak /boot/initrd.img-$(uname -r)
     else
         mv -f /boot/initramfs-"${kernel_ver}".img.bak /boot/initramfs-"${kernel_ver}".img

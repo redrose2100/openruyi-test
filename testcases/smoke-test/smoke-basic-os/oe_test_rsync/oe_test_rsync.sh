@@ -42,7 +42,7 @@ function run_test() {
     CHECK_RESULT $?
     rm -rf "${des_dir:?}/"*
     echo -e "[test]\npath =${des_dir}\nread only = no\nuid = root" >$conf_file
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         systemctl restart rsync
         CHECK_RESULT $?
     else
@@ -60,7 +60,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         systemctl stop rsync
     else
         systemctl stop rsyncd

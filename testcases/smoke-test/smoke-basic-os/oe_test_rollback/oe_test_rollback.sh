@@ -27,7 +27,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         dpkg -s zenity | grep "install ok installed"
         CHECK_RESULT $? 0 0 "install fail"
         apt remove -y zenity && apt purge -y zenity

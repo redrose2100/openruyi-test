@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_INSTALL nfs-kernel-server
     else
         DNF_INSTALL nfs-utils
@@ -37,7 +37,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     exportfs -r
     CHECK_RESULT $? 0 0 "Load failed"
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         systemctl restart nfs-server
         CHECK_RESULT $? 0 0 "Service restart failed"
     else

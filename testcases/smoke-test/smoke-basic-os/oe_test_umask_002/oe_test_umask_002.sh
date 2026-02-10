@@ -24,7 +24,7 @@ function pre_test() {
     cur_lang=$(echo $LANG)
     export LANG=zh_CN.UTF-8    
     DNF_INSTALL "expect"
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         useradd -m -d /home/euler -s /bin/bash euler
     else
         useradd -d /home/euler euler

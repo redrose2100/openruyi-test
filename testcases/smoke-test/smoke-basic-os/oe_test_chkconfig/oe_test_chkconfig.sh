@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         update-alternatives --help | grep "Usage: update-alternatives"
         CHECK_RESULT $? 0 0 "update-alternatives command does not exist"
     else

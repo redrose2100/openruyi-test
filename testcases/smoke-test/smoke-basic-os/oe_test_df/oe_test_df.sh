@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
     if ! df -h / |grep overlay; then
-	if [ "${NODE1_OS_VERSION}" == "debian" ];then
+	if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
             df | grep '/$'
             CHECK_RESULT $? 0 0 "df display error"
 	else

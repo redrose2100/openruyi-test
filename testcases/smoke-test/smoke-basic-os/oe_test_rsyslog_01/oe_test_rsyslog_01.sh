@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL rsyslog
     systemctl start rsyslog
-    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -vE "debian|velinux";then
         cp -f /var/log/messages /var/log/messages.bak
         echo "" >/var/log/messages
     fi
@@ -35,7 +35,7 @@ function run_test() {
     systemctl status rsyslog | grep running
     CHECK_RESULT $? 0 0 "Service not started"
     old_pid=$(systemctl status rsyslog | grep "Main PID" | awk '{print $3}')
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         echo "num=0
         while ((num<200));do
             apt install -y vim
@@ -58,7 +58,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "The service was not pulled up again"
     kill -9 "$(jobs -l | grep test.sh | awk '{print $2}')"
     CHECK_RESULT $? 0 0 "Service not started"
-    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -vE "debian|velinux";then
         test "$(grep -c ldapdb /var/log/messages)" -lt 100
         CHECK_RESULT $? 0 0 "Quantity is greater than 100"
     fi
@@ -69,7 +69,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -vE "debian|velinux";then
         mv -f /var/log/messages.bak /var/log/messages
     fi
     rm -rf test.sh

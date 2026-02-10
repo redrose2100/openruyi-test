@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -vE "debian|velinux";then
         DNF_INSTALL iptables
         systemctl start iptables
     fi
@@ -53,7 +53,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    if [ "${NODE1_OS_VERSION}" != "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -vE "debian|velinux";then
         DNF_REMOVE "$@"
     fi
     LOG_INFO "End to restore the test environment."

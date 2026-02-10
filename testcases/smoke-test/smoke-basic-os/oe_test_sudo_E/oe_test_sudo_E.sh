@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_INSTALL "sudo"
     fi
     echo 'echo "export PATH=/tmp:\$PATH"' >/tmp/test.sh
@@ -44,7 +44,7 @@ function post_test() {
     mv -f /etc/sudoers.bak /etc/sudoers
     userdel -rf testuser
     rm -rf /tmp/test.sh
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         DNF_REMOVE
     fi
     LOG_INFO "End to restore the test environment."

@@ -71,7 +71,7 @@ def rpm_install(pkgs, node=1, tmpfile=""):
         )
         func = ssh_cmd.pssh_cmd
     os_version=os.environ.get("NODE" + str(node) + "_OS_VERSION")
-    if "debian" in os_version:
+    if "debian" in os_version or "velinux" in os_version:
         result = func(conn=conn, cmd="dpkg --configure -a;dpkg -s " + pkgs)[1]
         if "install ok installed" in result and "is not installed" not in result:
             mugen_log.logging("info", "pkgs:(%s) is already installed" % pkgs)
@@ -176,7 +176,7 @@ def rpm_remove(node=1, pkgs="", tmpfile=""):
         with open(tmpfile, "r") as f:
             depList = f.read()
     os_version = os.environ.get("NODE" + str(node) + "_OS_VERSION")
-    if "debian" in os_version:
+    if "debian" in os_version or "velinux" in os_version:
         exitcode = func(conn=conn, cmd="apt -y remove " + pkgs + "; apt purge -y " + pkgs)[0]
     else:
         exitcode = func(conn=conn, cmd="dnf -y remove " + pkgs + " " + depList)[0]

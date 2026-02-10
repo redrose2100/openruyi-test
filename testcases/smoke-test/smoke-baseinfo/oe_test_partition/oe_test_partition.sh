@@ -24,7 +24,7 @@ function run_test() {
     if df -h / | grep overlay; then
         LOG_INFO "The current environment is Docker."
     else
-        if [ "${NODE1_OS_VERSION}" != "debian" ];then
+        if echo "${NODE1_OS_VERSION}" | grep -vE "debian|velinux";then
             lsblk | grep "/boot$"
             CHECK_RESULT $? 0 0 "No boot partition"
         fi

@@ -25,7 +25,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to execute mktemp"
     test -f /tmp/mktemp1.log.*
     CHECK_RESULT $? 0 0 "File does not exist in tmp"
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         mktemp_ver=$(apt list --installed 2>/dev/null | grep coreutils | awk '{print $2}' | awk -F '-' '{print $1}')
     else
         mktemp_ver=$(rpm -qa coreutils | awk -F '-' '{print $2}')

@@ -56,7 +56,7 @@ EOF
     CHECK_RESULT $?
 
     test -d /home/testuser2 || mkdir /home/testuser2
-    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
         useradd testuser2
         CHECK_RESULT $?
     else
