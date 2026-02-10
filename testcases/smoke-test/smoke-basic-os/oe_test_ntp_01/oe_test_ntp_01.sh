@@ -21,7 +21,11 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL ntp
+    if [ "${NODE1_OS_VERSION}" == "debian" ];then
+        DNF_INSTALL ntpsec
+    else
+        DNF_INSTALL ntp
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
