@@ -31,7 +31,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     if [ "${NODE1_OS_VERSION}" == "debian" ];then
-        sntp -d -t 30 -S 9.82.111.111 | grep "ntpdig: no eligible servers"
+        sntp -d -t 30 -S 9.82.111.111 2>&1 | grep "ntpdig: no eligible servers"
         CHECK_RESULT $? 0 0 "Failed to execute sntp"
     else
         sntp -d -t 30 -S 9.82.111.111 | grep "9.82.111.111 no UCST response after 30 seconds"
