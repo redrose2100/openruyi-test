@@ -32,7 +32,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test1=$(oeawarectl -i test)
-    CHECK_RESULT "$test1" "Download failed, because unable to find a match: test" 0 "test1 failed"
+    CHECK_RESULT "$test1" "Download failed, because download not found: test" 0 "test1 faile"
     # test2
 	oeawarectl -i numafast
 	CHECK_RESULT $? 0 0 "test2 failed"
