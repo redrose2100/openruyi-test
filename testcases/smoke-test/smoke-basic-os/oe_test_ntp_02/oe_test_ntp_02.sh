@@ -25,6 +25,7 @@ function pre_test() {
         DNF_INSTALL sntp
     else
         DNF_INSTALL ntp
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
