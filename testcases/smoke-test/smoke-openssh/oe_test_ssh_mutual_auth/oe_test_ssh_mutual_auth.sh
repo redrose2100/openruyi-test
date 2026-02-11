@@ -39,6 +39,21 @@ function do_test() {
     # 服务端登客户端免密
     ssh "${REMOTE_USER}"@"${REMOTE_IP}" ssh root@"${ETS_LOCAL_IP}" ip a | grep "${ETS_LOCAL_IP}"
     CHECK_RESULT $? 0 0
+    
+    # 新增测试点1: 验证SSH密钥文件权限
+    local ssh_dir_perm=$(stat -c %a /root/.ssh 2>/dev/null)
+    CHECK_RESULT "$ssh_dir_perm" "700" 0 ".ssh目录权限不正确，应为700"
+    local auth_keys_perm=$(stat -c %a /root/.ssh/authorized_keys 2>/dev/null)
+    CHECK_RESULT "$auth_keys_perm" "600" 0 "authorized_keys文件权限不正确，应为600"
+    
+    # 新增测试点2: 测试SSH文件传输（scp）
+    echo "test_content_$(date +%s)" > /tmp/ssh_test_file.txt
+    scp /tmp/ssh_test_file.txt "${REMOTE_USER}"@"${REMOTE_IP}":/tmp/
+    CHECK_RESULT $? 0 0 "scp上传文件失败"
+    ssh "${REMOTE_USER}"@"${REMOTE_IP}" "test -f /tmp/ssh_test_file.txt && cat /tmp/ssh_test_file.txt" | grep -q "test_content"
+    CHECK_RESULT $? 0 0 "远程文件内容验证失败"
+    rm -f /tmp/ssh_test_file.txt
+    SSH_CMD "rm -f /tmp/ssh_test_file.txt"
 }
 
 function post_test() {
