@@ -16,42 +16,51 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Deploying kubeflow when disk space is insufficient
 # #############################################
-# shellcheck disable=SC2016
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC2016,SC1091
+source "./common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL oedp python3-libselinux
+    build_k8s
+    install_helm
+    DNF_INSTALL "oedp python3-libselinux"
     ssh-keyscan -H "${NODE1_IPV4}" >> ~/.ssh/known_hosts
     oedp repo update
     oedp init kubeflow-1.9.1
-    sed -i "s#ansible_host: HOST_IP#ansible_host: ${NODE1_IPV4}#g" ./kubeflow-1.9.1/config.yaml
-    sed -i "s#ansible_password: \"\"#ansible_password: ${NODE1_PASSWORD}#g" ./kubeflow-1.9.1/config.yaml
-    total_size=$(df -h | awk 'NR==2 {print $2}')
-    fallocate -l "$total_size" /var/lib/docker/filler.img 2>/dev/null || true
-    fallocate -l "$total_size" /tmp/filler.img 2>/dev/null || true
-    fallocate -l "$total_size" /home/filler.img 2>/dev/null || true
-    fallocate -l "$total_size" /var/tmp/filler.img 2>/dev/null || true
+    sed -i "s|ansible_host: HOST_IP|ansible_host: ${NODE1_IPV4}|g" ./kubeflow-1.9.1/config.yaml
+    sed -i "s|ansible_password: \"\"|ansible_password: ${NODE1_PASSWORD}|g" ./kubeflow-1.9.1/config.yaml
+    available_size=$(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//')
+    fill_size=$((available_size - 100))  # 留100M
+
+    if [ $fill_size -gt 0 ]; then
+        LOG_INFO "Creating filler files of ${fill_size}M to fill disk"
+        fallocate -l "${fill_size}M" /var/lib/docker/filler.img
+        fallocate -l "${fill_size}M" /tmp/filler.img
+        fallocate -l "${fill_size}M" /home/filler.img
+        fallocate -l "${fill_size}M" /var/tmp/filler.img
+    fi
+
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    oedp run install -p kubeflow-1.9.1 > fill_log 2>&1 
-    grep "No space left on device" fill_log
+    oedp run install -p kubeflow-1.9.1  2>&1 | grep "No space left on device"
     CHECK_RESULT $? 0 0 "Failed to deploying kubeflow when disk space is insufficient"
-    rm -rf disk_filler.img
+
     rm -rf /var/lib/docker/filler.img
     rm -rf /tmp/filler.img
     rm -rf /home/filler.img
     rm -rf /var/tmp/filler.img
     oedp run clean -p kubeflow-1.9.1 2>&1 | grep "Execute succeeded: clean cache files"
     CHECK_RESULT $? 0 0 "Failed to uninstall kubeflow"
+
     SLEEP_WAIT 60
     oedp run install -p kubeflow-1.9.1 > install_kubeflow_log 2>&1 
     grep "Execute succeeded: install kubeflow" install_kubeflow_log
     CHECK_RESULT $? 0 0 "Failed to install kubeflow"
+
     oedp run uninstall -p kubeflow-1.9.1 2>&1 | grep "Execute succeeded: uninstall kubeflow"
     CHECK_RESULT $? 0 0 "Failed to uninstall kubeflow"
 
@@ -60,8 +69,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    
-    rm -rf kubeflow-1.9.1 install_kubeflow_log fill_log
+    uninstall_helm
+    uninstall_k8s
+    rm -rf kubeflow-1.9.1 install_kubeflow_log helm-3.9.0 install_helm kubernetes-1.31.1 install_kubernetes 
     DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
