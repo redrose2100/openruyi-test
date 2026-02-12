@@ -18,11 +18,12 @@
 # ############################################
 
 # shellcheck disable=SC1091,SC2154,SC2034
-source ./common/disk_lib.sh
+#source ./common/disk_lib.sh
+source "${OET_PATH}/testcases/cli-test/fio/common/disk_lib.sh"
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     EXECUTE_T="60m"
-    check_free_disk
     DNF_INSTALL fio
     echo "dsafdsfdddddddddddddddddddddddddddddddddddddddddd" >test.txt
     LOG_INFO "End to prepare the test environment!"
