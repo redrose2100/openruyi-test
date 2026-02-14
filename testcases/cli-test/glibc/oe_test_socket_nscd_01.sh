@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test nscd.socket restart
 # #############################################
-
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -53,13 +53,13 @@ function run_test() {
     LOG_INFO "Test nscd socket connectivity"
     getent hosts localhost >/dev/null 2>&1
     CHECK_RESULT $? 0 0 "Basic name service should work with nscd socket"
-    LOG_INFO "End of the test."    
+    LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
     systemctl stop nscd.socket
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
