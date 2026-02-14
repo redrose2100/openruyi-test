@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test bacula-dir.service restart
 # #############################################
-
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -53,7 +53,7 @@ function post_test() {
     /usr/libexec/bacula/drop_mysql_tables
     /usr/libexec/bacula/drop_mysql_database
     systemctl stop mysqld
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     rm -rf /var/lib/mysql/*
     LOG_INFO "End to restore the test environment."
 }
