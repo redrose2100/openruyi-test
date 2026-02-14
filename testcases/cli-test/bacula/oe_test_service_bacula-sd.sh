@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test bacula-sd.service restart
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
