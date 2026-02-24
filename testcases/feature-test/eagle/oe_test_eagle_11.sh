@@ -21,9 +21,9 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if ! [ "${NODE1_FRAME}" = "aarch64" ] && [ "${NODE1_MACHINE}" = "physical" ]; then
-       echo "eagle仅支持aarch64架构和物理机!"
-       exit 255
+    if [[ "${NODE1_MACHINE}" == "physical" && ! ( "${NODE1_FRAME}" == "aarch64" || "${NODE1_FRAME}" == "riscv64" ) ]]; then
+        echo "eagle仅支持 aarch64 / riscv64 架构的物理机!"
+        exit 255
     fi
     DNF_INSTALL "eagle"
     cp /etc/eagle/eagle_policy.ini /etc/eagle/eagle_policy.ini_bak
