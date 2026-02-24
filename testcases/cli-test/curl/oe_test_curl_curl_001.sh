@@ -28,15 +28,15 @@ function run_test() {
     LOG_INFO "Start to run test."
     curl --anyauth -u root:pass http://www.baidu.com
     CHECK_RESULT $? 0 0 "check curl --anyauth  failed"
-    curl -a https://httpbin.com/anything
+    curl -a https://httpbingo.org/anything
     CHECK_RESULT $? 0 0 "check curl -a failed"
-    curl --basic https://httpbin.com/anything
+    curl --basic https://httpbingo.org/anything
     CHECK_RESULT $? 0 0 "check curl --basic failed"
-    curl --cacert /etc/pki/tls/certs/ca-bundle.crt https://httpbin.com/anything
+    curl --cacert /etc/pki/tls/certs/ca-bundle.crt https://httpbingo.org/anything
     CHECK_RESULT $? 0 0 "check curl --cacert failed"
-    curl --capath /etc/pki/tls/certs/ https://httpbin.com/
+    curl --capath /etc/pki/tls/certs/ https://httpbingo.org/
     CHECK_RESULT $? 0 0 "check curl --capath failed"
-    curl --connect-timeout 10 https://httpbin.com/anything
+    curl --connect-timeout 10 https://httpbingo.org/anything
     CHECK_RESULT $? 0 0 "check curl --connect-timeoutfailed"
     curl -C - https://www.baidu.com
     CHECK_RESULT $? 0 0 "check curl -C failed"
@@ -44,7 +44,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check curl https://www.baidu.com failed"
     curl https://www.baidu.com -c cookiefile && test -f cookiefile
     CHECK_RESULT $? 0 0 "check curl -c failed"
-    curl --create-dirs https://httpbin.com/anything
+    curl --create-dirs https://httpbingo.org/anything
     CHECK_RESULT $? 0 0 "check curl --create-dirs failed"
     LOG_INFO "End of the test."
 }
