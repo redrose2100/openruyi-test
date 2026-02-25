@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test oech-server.service restart
 # #############################################
-
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -27,7 +27,7 @@ function pre_test() {
     if [ -f /usr/local/bin/uwsgi ]; then
         ln -sf /usr/bin/uwsgi /usr/local/bin/uwsgi
         flag=true
-    fi	
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -42,7 +42,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop oech-server.service
     pip3 uninstall Flask Flask-bootstrap uwsgi -y
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     if [ "${flag}" = "true" ]; then
         rm -rf /usr/local/bin/uwsgi
     fi
