@@ -1,0 +1,48 @@
+{
+    "path": "$OET_PATH/testcases/feature-test/sysSentry",
+    "machine type": "physical",
+    "add disk": [8],
+    "cases": [
+        {
+            "name": "oe_test_sysSentry_001"
+        },
+        {
+            "name": "oe_test_sysSentry_002"
+        },
+        {
+            "name": "oe_test_sysSentry_003"
+        },
+        {
+            "name": "oe_test_sysSentry_004"
+        },
+        {
+            "name": "oe_test_sysSentry_005"
+        },
+        {
+            "name": "oe_test_sysSentry_006"
+        },
+        {
+            "name": "oe_test_sysSentry_007"
+        },
+        {
+            "name": "oe_test_sysSentry_009",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_sysSentry_010",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_sysSentry_011",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_sysSentry_012",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_sysSentry_013",
+            "add disk": []
+        }
+    ]
+}
