@@ -16,28 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test usbguard-dbus.service restart
 # #############################################
-
-
-#!/usr/bin/bash
-
-# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
-# This program is licensed under Mulan PSL v2.
-# You can use it according to the terms and conditions of the Mulan PSL v2.
-#          http://license.coscl.org.cn/MulanPSL2
-# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
-# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
-# See the Mulan PSL v2 for more detaitest -f.
-
-# #############################################
-# @Author    :   linjianbo
-# @Contact   :   jianbo.lin@outlook.com
-# @Date      :   2023/07/28
-# @License   :   Mulan PSL v2
-# @Desc      :   test pstops and includeres
-# #############################################
-
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -55,7 +35,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop usbguard-dbus.service
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

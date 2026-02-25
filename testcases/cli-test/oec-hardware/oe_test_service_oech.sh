@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test oech.service restart
 # #############################################
-
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -42,7 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop oech.service
-    DNF_REMOVE "$@" 
+    DNF_REMOVE
     if [ "${flag}" = "true" ]; then
         rm -rf /usr/bin/python
         ln -s "${python_version}" /usr/bin/python
