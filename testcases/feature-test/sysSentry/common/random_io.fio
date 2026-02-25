@@ -1,0 +1,14 @@
+[global]
+directory=/mnt/test
+ioengine=libaio
+iodepth=32
+direct=1
+bs=4k
+size=5G
+runtime=600
+group_reporting
+
+[job1]
+rw=randrw
+rwmixread=75
+
