@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   numafast test
 #####################################
+# shellcheck disable=SC2119,SC2120
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
