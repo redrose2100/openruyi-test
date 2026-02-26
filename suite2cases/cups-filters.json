@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_cups-browsed"
+        },
+        {
+            "name": "oe_test_service_cups-filters_config"
         }
     ]
 }
