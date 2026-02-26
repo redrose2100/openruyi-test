@@ -21,10 +21,10 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "samba-tools samba-dc python3-samba-dc krb5-server hostname"
     host_name=$(hostname)
     hostname OE-TESTD
     echo "${NODE1_IPV4} TESTAD.LOCAL" >>/etc/hosts
-    DNF_INSTALL "samba-tools samba-dc python3-samba-dc krb5-server"
     mv /etc/samba/smb.conf /etc/samba/smb.conf_bak
     expect <<EOF
         set timeout 600
@@ -90,7 +90,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload samba.service
     systemctl stop samba.service
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     sed -i '/nameserver 127.0.0.1/d' /etc/resolv.conf
     sed -i 's/#nameserver/nameserver/' /etc/resolv.conf 
     hostname "${host_name}"
