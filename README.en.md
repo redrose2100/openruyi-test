@@ -73,41 +73,10 @@ bash mugen.sh -a -x
 bash mugen.sh -f testsuite -x
 bash mugen.sh -f testsuite -r testcase -x
 ```
-#### Run the suite for reboot cases
-- Configure: Since the suite must be restarted automatically after a reboot, a `.service` file needs to be configured.
-```shell
-cat > /etc/systemd/system/mugen.service <<'EOF'
-[Unit]
-Description=Mugen restart suite
-After=network-online.target
-Wants=network-online.target
-
-[Service]
-Type=simple
-# Change this path to match your directory
-WorkingDirectory=/path/to/mugen
-ExecStartPre=/bin/sleep 10
-# Change this path to match your directory
-ExecStart=/bin/bash -x /path/to/mugen/mugen.sh
-Restart=on-failure
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-systemctl daemon-reload
-systemctl enable mugen.service
-systemctl list-unit-files | grep mugen # make sure the service is enabled
-```
-- Run the suite by `bash mugen.sh -f testsuite`
-- During execution, `the run_test_suite` generates `case_order.txt` and `last_order.txt` to record the execution sequence and current case. These files can be removed automatically once finish. To restart the suite from the beginning, please ensure these files do not exist.
 
 #### Write your test case
-##### We provide two templates: one for common cases and another for cases that may cause a reboot
-
-- Template for common cases: 
-```sh
+- Follow the template we provided: 
+```
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 # Load the data and config 
@@ -144,54 +113,6 @@ function run_test() {
 
 # Cleaning the testing environment
 function post_test() {
-    LOG_INFO "Start to restore the test environment."
-
-    LOG_INFO "Nothing to do."
-
-    LOG_INFO "End to restore the test environment."
-}
-
-main "$@"
-```
-- Template for reboot cases
-```sh
-source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
-BOOT_ID_FILE="/root/mugen_boot_id"
-# BOOT_ID can be stored in any directory you like, not necessarily /root
-
-function pre_test() {
-    LOG_INFO "Start environmental preparation."
-    # Save the current BOOT_ID
-    cat /proc/sys/kernel/random/boot_id > $BOOT_ID_FILE
-    # flush BOOT_ID to disk immediately
-    sync
-    LOG_INFO "Saved current boot id: $(cat $BOOT_ID_FILE)"
-    LOG_INFO "End of environmental preparation!"
-}
-
-function run_test() {
-    LOG_INFO "Start testing..."
-    LOG_INFO "System will reboot now..."
-    # reboot trigger
-    echo b > /proc/sysrq-trigger
-}
-
-function post_test() {
-    LOG_INFO "Check if the system has rebooted"
-    if [ -f $BOOT_ID_FILE ]; then
-        OLD_BOOT_ID=$(cat $BOOT_ID_FILE)
-        NEW_BOOT_ID=$(cat /proc/sys/kernel/random/boot_id)
-        # compare the BOOT_ID to confirm if the system has rebooted
-        if [ "$OLD_BOOT_ID" != "$NEW_BOOT_ID" ]; then
-            LOG_INFO "System reboot confirmed (boot_id changed)."
-        else
-            LOG_ERROR "System did not reboot (boot_id unchanged)."
-        fi
-        rm -f $BOOT_ID_FILE
-    else
-        LOG_WARN "No boot_id record found."
-    fi
-  
     LOG_INFO "Start to restore the test environment."
 
     LOG_INFO "Nothing to do."
