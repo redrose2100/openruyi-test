@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test iio-sensor-proxy.service restart
 # #############################################
-
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -34,7 +34,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
