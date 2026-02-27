@@ -14,7 +14,7 @@
 # @Contact   :   kangjiangbo_yewu@cmss.chinamobile.com
 # @Date      :   2026-2-27
 # @License   :   Mulan PSL v2
-# @Desc      :   Encrypt and decrypt zip
+# @Desc      :   Regular users are not allowed to run secscanner
 # ############################################
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
