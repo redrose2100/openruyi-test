@@ -30,7 +30,7 @@ function pre_test()
 function run_test() {
     LOG_INFO "start to run test."
     per=$(stat -c %a /opt/secScanner/secScanner/db/cvedatabase.db)
-    CHECK_RESULT $per 600 0 "Regular users should not have permission to cve database."
+    CHECK_RESULT "$per" 600 0 "Regular users should not have permission to cve database."
 }
 
 function post_test()
