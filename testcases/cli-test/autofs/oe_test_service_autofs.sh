@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test autofs.service restart
 # #############################################
-
-source "common/common_autofs.sh"
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
