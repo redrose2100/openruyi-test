@@ -56,7 +56,7 @@ function post_test() {
     mv "${sysmonitor_conf}".bak "${sysmonitor_conf}"
     mv /etc/sysmonitor/cpu.bak /etc/sysmonitor/cpu
     monitor_restart
-    dnf -y remove stress stress-ng
+#    dnf -y remove stress stress-ng
 }
 
 main "$@"
