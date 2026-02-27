@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test nfs-client.target restart
 # #############################################
-
+# shellcheck disable=SC2119,SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -34,7 +34,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    systemtl stop nfs-client.target
+    systemctl stop nfs-client.target
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }

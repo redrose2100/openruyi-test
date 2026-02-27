@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   测试服务状态
 # #############################################
-
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."

@@ -14,9 +14,9 @@
 # @Contact   :   735811396@qq.com
 # @Date      :   2020/12/29
 # @License   :   Mulan PSL v2
-# @Desc      :   Test rsyncd.socket restart 
+# @Desc      :   Test rsyncd.socket restart
 # #############################################
-
+# shellcheck disable=SC2119,SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -34,7 +34,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    systtemctl stop rsyncd.socket
+    systemctl stop rsyncd.socket
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
