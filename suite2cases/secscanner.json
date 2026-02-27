@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_secscanner_001"
+        },
+        {
+            "name": "oe_test_secscanner_002"
         }
     ]
 }
