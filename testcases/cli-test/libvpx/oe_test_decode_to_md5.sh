@@ -22,21 +22,26 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "tar libvpx" 
+    DNF_INSTALL "tar libvpx"
     tar -xf common/libvpx.tar.gz
     mkdir tmp
     LOG_INFO "End to prepare the test environment."
 }
 
+function ver() {
+    # version to number: 1.7.0 -> 1007000000
+    echo "$@" | awk -F. '{printf("%d%03d%03d%03d\n", $1,$2,$3,$4);}'
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
-    if ! command -v vp8_simple_encoder &> /dev/null || \
-    ! command -v vp8_twopass_encoder &> /dev/null || \
-    ! command -v vp8cx_set_ref &> /dev/null || \
-    ! command -v vp9_lossless_encoder &> /dev/null || \
-    ! command -v vp9_spatial_svc_encoder &> /dev/null || \
-    ! command -v vp9cx_set_ref &> /dev/null || \
-    ! command -v vpx_temporal_svc_encoder &> /dev/null; then
+    if ! command -v vp8_simple_encoder &>/dev/null ||
+        ! command -v vp8_twopass_encoder &>/dev/null ||
+        ! command -v vp8cx_set_ref &>/dev/null ||
+        ! command -v vp9_lossless_encoder &>/dev/null ||
+        ! command -v vp9_spatial_svc_encoder &>/dev/null ||
+        ! command -v vp9cx_set_ref &>/dev/null ||
+        ! command -v vpx_temporal_svc_encoder &>/dev/null; then
         LOG_ERROR "One or more VP8/VP9 commands are missing, skipping test block."
         exit 255
     fi
@@ -48,7 +53,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed option: vp8cx_set_ref"
     vp9_lossless_encoder 352 288 data/1.ivf tmp/1.ivf | grep 'Processed 1 frames'
     CHECK_RESULT $? 0 0 "Failed option: vp9_lossless_encoder"
-    vp9_spatial_svc_encoder -f 10 -w 352 -h 288 -s 0 -sl 2 -t 10/1 -b 20 -k 1 -tl 0 -tlm 0 -th 6 -aq 1 -d 8 -sp 5 -bl 1 data/1.mp4 -o tmp/1.ivf | grep 'Frame cnt and encoding time/FPS'
+    local version exp
+    version=$(rpm -q libvpx | cut -d "-" -f 2)
+    exp="1.7.0"
+    if [[ $(ver "$version") -gt $(ver "$exp") ]]; then
+        vp9_spatial_svc_encoder -f 10 -w 352 -h 288 -s 0 -sl 2 -t 10/1 -b 20 -k 1 -tl 0 -tlm 0 -th 6 -aq 1 -d 8 -sp 5 -bl 1 data/1.mp4 -o tmp/1.ivf | grep 'Frame cnt and encoding time/FPS'
+    else
+        vp9_spatial_svc_encoder -f 10 -w 352 -h 288 -s 0 -sl 2 -t 10/1 -b 20 -k 1 -tl 0 -tlm 0 -th 6 -aq 1 -d 8 -sp 5 -bl 1 data/1.mp4 tmp/1.ivf | grep 'Frame cnt and encoding time/FPS'
+    fi
     CHECK_RESULT $? 0 0 "Failed option: vp8_simple_decoder"
     vp9cx_set_ref 352 288 data/1.ivf tmp/1.ivf 25 30 | grep 'Processed 1 frames.'
     CHECK_RESULT $? 0 0 "Failed option: vp9cx_set_ref"
