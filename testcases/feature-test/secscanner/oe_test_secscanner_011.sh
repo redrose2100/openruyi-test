@@ -37,7 +37,7 @@ function run_test() {
     sed -i 's/unlock_time=.*/unlock_time=100/' /etc/pam.d/system-auth
     sed -i 's/unlock_time=.*/unlock_time=100/' /etc/pam.d/password-auth
     secscanner check basic > tmp && \mv tmp check
-    grep -i "login lock Deny" fix |grep WARNING
+    grep -i "login lock Deny" check |grep WARNING
     secscanner fix basic > tmp && \mv tmp fix
     grep -i "Set user login lock" fix |grep FINISHED
     grep "unlock_time=300" /etc/pam.d/system-auth
