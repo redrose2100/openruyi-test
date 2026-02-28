@@ -29,7 +29,6 @@ function pre_test()
 
 function run_test() {
     LOG_INFO "start to run test."
-    rm -f /var/log/secScanner/secscanner.log
     secscanner check rootkit
     per=$(stat -c %a /var/log/secScanner/secscanner.log)
     CHECK_RESULT "$per" 600 0
