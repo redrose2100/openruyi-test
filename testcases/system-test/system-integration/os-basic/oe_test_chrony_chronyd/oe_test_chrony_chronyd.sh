@@ -17,32 +17,68 @@
 # @Desc      :   Use Chrony test
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+IS_ENABLE=0
+IS_ACTIVE=0
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "chrony"
     LOG_INFO "End to prepare the test environment."
+    systemctl is-enabled chronyd && IS_ENABLE=1
+    systemctl is-active chronyd && IS_ACTIVE=1
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    systemctl start chronyd
-    systemctl status chronyd | grep running
-    CHECK_RESULT $?
-    systemctl is-enabled chronyd | grep enabled
-    CHECK_RESULT $?
+    systemctl enable chronyd --now
+    systemctl status chronyd
+    CHECK_RESULT $? 0 0 "chronyd not running"
+    systemctl is-enabled chronyd
+    CHECK_RESULT $? 0 0 "chronyd not enabled"
 
-    chronyc sources | grep "MS Name/IP address"
-    CHECK_RESULT $?
+    test -f /etc/chrony.conf
+    CHECK_RESULT $? 0 0 "/etc/chrony.conf not exists"
+
+    chronyc sources | grep -i "MS Name/IP address"
+    CHECK_RESULT $? 0 0 "chronyc cources failed"
+    chronyc tracking | grep -E "Reference ID|Stratum"
+    CHECK_RESULT $? 0 0 "chronyc tracking failed"
+    chronyc sourcestats | grep -i "Name/IP address"
+    CHECK_RESULT $? 0 0 "chronyc sourcestats failed"
+    echo "sources" | chronyc | grep -i "MS Name/IP address"
+    CHECK_RESULT $? 0 0 "read from pipe failed"
+
+    chronyc invalid_command >/dev/null 2>&1
+    CHECK_RESULT $? 0 1 "failed with invalid command"
+
     systemctl stop chronyd
-    systemctl status chronyd | grep dead
-    CHECK_RESULT $?
+    systemctl status chronyd
+    CHECK_RESULT $? 0 1 "status should be dead"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+
+    DNF_REMOVE "$@"
+
+    LOG_INFO "Restore chronyd status:"
+    LOG_INFO "is_enable: $IS_ENABLE, is_active: $IS_ACTIVE"
+
+    if [[ "$IS_ENABLE" -eq 1 ]]; then
+        systemctl enable chronyd
+    else
+        systemctl disable chronyd
+    fi
+
+    if [[ "$IS_ACTIVE" -eq 1 ]]; then
+        systemctl start chronyd
+    else
+        systemctl stop chronyd
+    fi
+
     LOG_INFO "End to restore the test environment."
 }
 
