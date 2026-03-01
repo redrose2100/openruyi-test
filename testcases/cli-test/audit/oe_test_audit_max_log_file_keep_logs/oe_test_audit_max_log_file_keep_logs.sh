@@ -17,7 +17,8 @@
 #@Desc      	:   set max log file keep logs
 #####################################
 
-source ../common/comlib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "./common/comlib.sh"
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
@@ -34,9 +35,9 @@ function run_test()
     for ((i=0;i<10;i++));do
         old_size=$(du -ks /var/log/audit/ | awk '{print $1}')
         old_num=$(find /var/log/audit -maxdepth 1 -name "audit.log*" | wc -l)
-        old=$(ls -i /var/log/audit/audit.log* | tail -n 1 | awk '{print $1}')
+        old=$(stat -c %i /var/log/audit/audit.log*)
         create_logfile
-        new=$(ls -i /var/log/audit/audit.log* | tail -n 1 | awk '{print $1}')
+        new=$(stat -c %i /var/log/audit/audit.log*)
         new_size=$(du -ks /var/log/audit/ | awk '{print $1}')
         new_num=$(find /var/log/audit -maxdepth 1 -name "audit.log*" | wc -l)
         test $(("$new_size" - "$old_size")) -gt 1024 &&{

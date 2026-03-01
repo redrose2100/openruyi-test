@@ -17,7 +17,8 @@
 #@Desc      	:   the available disk space is less than the configured space
 #####################################
 
-source ../common/comlib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "./common/comlib.sh"
 
 function pre_test()
 {

@@ -17,7 +17,8 @@
 #@Desc      	:   set max log file suspend
 #####################################
 
-source ../common/comlib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "./common/comlib.sh"
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."

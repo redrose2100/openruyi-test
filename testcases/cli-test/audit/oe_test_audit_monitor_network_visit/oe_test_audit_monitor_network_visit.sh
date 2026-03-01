@@ -17,7 +17,7 @@
 #@Desc      	:   monitor network visit
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
@@ -45,7 +45,7 @@ function run_test()
     expect eof
 EOF
     endtime=$(date +%T)
-    ausearch -ts ${starttime} -te ${endtime} -ul 1000 -m USER_LOGIN -x ssh -sv yes> /tmp/log.log 
+    ausearch -ts "${starttime}" -te "${endtime}" -ul 1000 -m USER_LOGIN -x ssh -sv yes> /tmp/log.log 
     CHECK_RESULT $? 1 0 "ausearch failed"
     cat < /tmp/log.log |grep -e "<no matches>"
     CHECK_RESULT $? 1 0 "grep failed"

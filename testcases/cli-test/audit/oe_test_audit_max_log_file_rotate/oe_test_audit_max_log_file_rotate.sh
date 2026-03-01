@@ -17,7 +17,8 @@
 #@Desc      	:   set max log file rotate
 #####################################
 
-source ../common/comlib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "./common/comlib.sh"
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
@@ -51,9 +52,9 @@ function run_test()
     done
 
     for ((i=0;i<10;i++));do
-        old=$(ls -i /var/log/audit/audit.log | awk '{print $1}')
+        old=$(stat -c %i /var/log/audit/audit.log)
 	    create_logfile
-        new=$(ls -i /var/log/audit/audit.log.1 | awk '{print $1}')
+        new=$(stat -c %i /var/log/audit/audit.log.1)
 	    log_num=$(find /var/log/audit/ -maxdepth 1 -name "audit.log*" |wc -l)
 	    test "$log_num" -eq 2 && test "$old" -ne "$new" &&{
 	    	break

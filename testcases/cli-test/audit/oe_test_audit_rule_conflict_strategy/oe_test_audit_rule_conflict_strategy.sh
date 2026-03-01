@@ -17,7 +17,7 @@
 #@Desc      	:   rule conflict strategy
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
@@ -45,7 +45,7 @@ function run_test()
     su - Jevons -c "pwd"
     CHECK_RESULT $? 0 0 "failed"
     endtime=$(date +%T)
-    ausearch -k syscall -ts ${starttime} -te ${endtime} -x pwd
+    ausearch -k syscall -ts "${starttime}" -te "${endtime}" -x pwd
     CHECK_RESULT $? 1 0 "ausearch failed"
     LOG_INFO "End to run test."
 }

@@ -17,7 +17,8 @@
 #@Desc      	:   set max log file action ignore
 #####################################
 
-source ../common/comlib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "./common/comlib.sh"
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
@@ -31,10 +32,10 @@ function pre_test(){
 function run_test()
 {
     LOG_INFO "Start to run test."
-    old=$(ls -i /var/log/audit/audit.log | awk -F" " '{print $1}')
+    old=$(stat -c %i /var/log/audit/audit.log)
     for ((i=0;i<10;i++));do
         create_logfile
-        new=$(ls -i /var/log/audit/audit.log | awk -F" " '{print $1}')
+        new=$(stat -c %i /var/log/audit/audit.log)
         log_size=$(du -ks /var/log/audit/audit.log | awk '{print $1}')
         test "$log_size" -gt 1024 &&{
             	test "$old" == "$new"&&{

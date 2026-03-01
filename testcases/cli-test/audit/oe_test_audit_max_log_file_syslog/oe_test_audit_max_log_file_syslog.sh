@@ -17,7 +17,8 @@
 #@Desc      	:   set max log file syslog
 #####################################
 #shellcheck disable=SC1091
-source ../common/comlib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "./common/comlib.sh"
 
 function pre_test()
 {

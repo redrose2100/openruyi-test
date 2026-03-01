@@ -17,7 +17,7 @@
 #@Desc      	:   rule contact strategy
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
@@ -55,7 +55,7 @@ function run_test()
 		    SLEEP_WAIT 1
  	    fi
     done
-    if [ $i -eq 10 ]; then
+    if [ "$i" -eq 10 ]; then
 	   CHECK_RESULT 1 0 0 "contact error"
     fi 
     LOG_INFO "End to run test."

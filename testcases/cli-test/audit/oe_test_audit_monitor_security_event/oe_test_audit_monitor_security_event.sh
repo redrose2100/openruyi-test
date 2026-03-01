@@ -17,7 +17,7 @@
 #@Desc      	:   monitor security event
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
@@ -45,7 +45,7 @@ function run_test()
 EOF
     SLEEP_WAIT 10
     endtime=$(date +%T)
-    ausearch -ts ${starttime} -te ${endtime} -m USER_LOGIN -sv no > /tmp/log.log 
+    ausearch -ts "${starttime}" -te "${endtime}" -m USER_LOGIN -sv no > /tmp/log.log 
     SLEEP_WAIT 5
     cat < /tmp/log.log | grep "<no matches>"
     CHECK_RESULT $? 1 0 "grep failed"
