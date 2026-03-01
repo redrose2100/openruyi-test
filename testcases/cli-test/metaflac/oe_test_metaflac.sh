@@ -37,14 +37,27 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Adding a new tag to FLAC file failed"
     metaflac --preserve-modtime --set-tag="ALBUM=My Album" common/myaudio.flac
     CHECK_RESULT $? 0 0 "Failed to retain the original modification time of the file"
+    
+    # 增加的3个步骤
+    metaflac --add-replay-gain common/myaudio.flac
+    CHECK_RESULT $? 0 0 "Failed to add replay gain"
+    
+    metaflac --remove-all-tags common/myaudio.flac
+    CHECK_RESULT $? 0 0 "Failed to remove all tags"
+    
+    metaflac --import-tags-from=tags.txt common/myaudio.flac
+    CHECK_RESULT $? 0 0 "Failed to import tags from file"
+    
     LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
   rm -rf tags.txt
-  DNF_REMOVE "$@"
+  # shellcheck disable=SC2119
+  DNF_REMOVE
   LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
+
