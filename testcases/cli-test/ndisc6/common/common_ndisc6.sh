@@ -17,7 +17,7 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function deploy_env() {
-    DNF_INSTALL "ndisc6 xinetd time"
+    DNF_INSTALL "ndisc6 xinetd time hostname"
     hostname_init=$(hostname)
     hostname newlocalhost
     NODE1_IPV6=$(ip addr show ${NODE1_NIC[0]} | grep -w inet6 | awk '{print $2}' | awk -F '/' '{print $1}' | awk 'NR==1{print $1}')
