@@ -3,7 +3,9 @@
     "cases": [
         {
             "name": "oe_test_graphviz"
+        },
+        {
+            "name": "oe_test_graphviz01"
         }
-
     ]
 }
