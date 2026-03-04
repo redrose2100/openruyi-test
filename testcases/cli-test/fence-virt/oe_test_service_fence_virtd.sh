@@ -16,12 +16,28 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test fence_virtd.service restart
 # #############################################
-
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL fence-virt*
+    firewall-cmd --permanent --zone=trusted --change-interface=virbr0
+    cat <<EOF | sudo fence_virtd -c
+
+
+
+
+
+
+
+
+y
+EOF
+    mkdir -p /etc/cluster
+    touch /etc/cluster/fence_xvm.key
+    chmod 0600 /etc/cluster/fence_xvm.key
+    dd if=/dev/urandom bs=512 count=1 of=/etc/cluster/fence_xvm.key
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -35,7 +51,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop fence_virtd.service
-    DNF_REMOVE "$@"
+    firewall-cmd --permanent --zone=trusted --remove-interface=virbr0
+    rm -rf /etc/cluster
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

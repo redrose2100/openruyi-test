@@ -16,13 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test libcare.service restart
 # #############################################
-
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL libcareplus
     service=libcare.service
+    if ! systemctl list-unit-files | grep -q "${service}"; then
+        LOG_INFO "${service} not available. Skipping test."
+        exit 255
+    fi
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
 }
@@ -41,7 +45,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop "${service}"
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
