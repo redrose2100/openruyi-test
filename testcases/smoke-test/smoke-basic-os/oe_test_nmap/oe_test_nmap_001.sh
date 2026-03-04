@@ -21,7 +21,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "nmap"
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
+        DNF_INSTALL "ncat"
+    else
+        DNF_INSTALL "nmap"
+    fi
     iptables -F
     systemctl stop firewalld
     LOG_INFO "End to prepare the test environment."
@@ -33,6 +37,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Error,Fail to create /tmp/ncat_log"
     echo -e "123\\n456\\n004\\n" | ncat 127.0.0.1 8080
     CHECK_RESULT $? 0 0 "Error, please check port:8080"
+    SLEEP_WAIT 3
     grep -icE '123|456|004' /tmp/ncat_log
     CHECK_RESULT $? 0 0 "Error, please check /tmp/ncat_log"
     LOG_INFO "End to run test."
@@ -42,7 +47,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
     systemctl restart firewalld
-    rm /tmp/ncat_log
+    rm -rf /tmp/ncat_log
     LOG_INFO "End to restore the test environment."
 }
 
