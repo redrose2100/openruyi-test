@@ -23,25 +23,38 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
     mkdir testdata
-    touch test.txt
+    echo "test content" > test.txt
+    echo "delete content" > test2.txt
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "start to run test."
-    zip  testdatabak.zip testdata
+    zip testdatabak.zip testdata
     test -e testdatabak.zip
     CHECK_RESULT $? 0 0 "zip is failed!"
     zip -u testdatabak.zip test.txt
-    CHECK_RESULT $? 0 0 "testdatabak.zip is failed!"
+    CHECK_RESULT $? 0 0 "testdatabak.zip update is failed!"
     zip -T testdatabak.zip
-    CHECK_RESULT $? 0 0 "unzip is failed!"
+    CHECK_RESULT $? 0 0 "zip test integrity is failed!"
+    zip -P 123456 test_pwd.zip test.txt
+    CHECK_RESULT $? 0 0 "zip encryption is failed!"
+    mkdir extract_dir
+    (
+    cd extract_dir
+    unzip -P 123456 ../test_pwd.zip
+    CHECK_RESULT $? 0 0 "unzip decryption is failed!"
+    )
+    test -f extract_dir/test.txt
+    CHECK_RESULT $? 0 0 "unzip extract file check is failed!"
+    zip -v test_verbose.zip test.txt | grep -E 'in=[0-9]*'
+    CHECK_RESULT $? 0 0 "zip verbose mode is failed!"
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    rm -rf testdata testdatabak.zip
+    rm -rf testdata testdatabak.zip test.txt test2.txt test_level.zip test_pwd.zip test_del.zip test_verbose.zip extract_dir
     LOG_INFO "End to restore the test environment."
 }
 
