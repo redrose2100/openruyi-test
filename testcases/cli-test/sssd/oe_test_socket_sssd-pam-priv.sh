@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test sssd-pam-priv.socket restart
 # #############################################
-
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC1091,SC2119
+source "common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    openldap_server_pre
+    openldap_client_pre
     DNF_INSTALL sssd
     service=sssd-pam-priv.socket
     sed -i '/services/d' /etc/sssd/sssd.conf
@@ -38,6 +40,8 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop "${service}"
     DNF_REMOVE
+    openldap_server_post
+    openldap_client_post
     LOG_INFO "Finish environment cleanup!"
 }
 
