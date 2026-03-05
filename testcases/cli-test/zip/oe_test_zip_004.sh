@@ -24,6 +24,7 @@ function pre_test()
     LOG_INFO "Start to prepare the test environment."
     mkdir testdata
     mkdir testdata1
+    DNF_INSTALL unzip
     LOG_INFO "End of environmental preparation!"
 }
 
