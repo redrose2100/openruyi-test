@@ -18,7 +18,7 @@
 #####################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-source "./common/comlib.sh"
+source "../common/comlib.sh"
 
 function pre_test()
 {
