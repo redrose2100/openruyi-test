@@ -22,8 +22,8 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    UUID=$(blkid |head -n 1 |awk -F " " '{print $2}'|awk -F "=" '{print $2}'|tr -d '""')
-    DEV=$(blkid |head -n 1 |awk -F " " '{print $1}'|tr -d ':')    
+    DEV=$(blkid |head -n 1 |awk -F " " '{print $1}'|tr -d ':')   
+    UUID=$(blkid -s UUID -o value "$DEV")
     LOG_INFO "End of environmental preparation!"
 }
 
