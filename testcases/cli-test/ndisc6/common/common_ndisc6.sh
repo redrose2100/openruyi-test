@@ -14,13 +14,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Public class integration
 #####################################
+# shellcheck disable=SC2119,SC2034
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function deploy_env() {
-    DNF_INSTALL "ndisc6 xinetd time"
+    DNF_INSTALL "ndisc6 xinetd time hostname"
     hostname_init=$(hostname)
     hostname newlocalhost
-    NODE1_IPV6=$(ip addr show ${NODE1_NIC[0]} | grep -w inet6 | awk '{print $2}' | awk -F '/' '{print $1}' | awk 'NR==1{print $1}')
+    NODE1_IPV6=$(ip addr show "${NODE1_NIC[0]}" | grep -w inet6 | awk '{print $2}' | awk -F '/' '{print $1}' | awk 'NR==1{print $1}')
     NODE2_IPV6=$(P_SSH_CMD --node 2 --cmd "ip addr show ${NODE2_NIC[0]}" | grep -w inet6 | awk '{print $2}' | awk -F '/' '{print $1}' | awk 'NR==1{print $1}')
     cp /etc/resolv.conf /etc/resolv.conf-bak
     sed -i 's/name/#&/' /etc/resolv.conf
@@ -32,7 +33,8 @@ function deploy_env() {
 
 function clear_env() {
     DNF_REMOVE
-    hostname ${hostname_init}
+    DNF_REMOVE 2
+    hostname "${hostname_init}"
     cp -rf /etc/resolv.conf-bak /etc/resolv.conf
     rm -rf file runtime /etc/resolv.conf-bak
 }
