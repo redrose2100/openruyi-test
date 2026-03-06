@@ -22,6 +22,7 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL chrony
+    DNF_INSTALL chrony 2
     P_SSH_CMD --cmd "cp /etc/chrony.conf /etc/chrony.conf_bak;sed -i 's/^pool/#pool/' /etc/chrony.conf;sed -i 's/^#allow.*/allow all/' /etc/chrony.conf;sed -i 's/^#local.*/local/' /etc/chrony.conf;systemctl restart chronyd.service;systemctl stop firewalld.service" --node 2
     cp /etc/chrony.conf /etc/chrony.conf_bak
     sed -i 's/^pool.*/server '"${NODE2_IPV4}"' iburst minpoll 3 maxpoll 3/' /etc/chrony.conf
