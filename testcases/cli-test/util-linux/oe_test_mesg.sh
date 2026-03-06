@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Test case for mesg command
 #####################################
+# shellcheck disable=SC1090,SC2119
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -24,6 +25,8 @@ function pre_test() {
     # Save original mesg state
     original_mesg_state=$(mesg | awk '{print $2}')
     LOG_INFO "Original mesg state is $original_mesg_state."
+    OLD_LANG=$LANG
+    export LANG=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -80,9 +83,9 @@ function post_test() {
     elif [[ $original_mesg_state == "n" ]]; then
         mesg n
     fi
-    # shellcheck disable=SC2119
     DNF_REMOVE
     LOG_INFO "Restored mesg state to $original_mesg_state."
+    export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }
 
