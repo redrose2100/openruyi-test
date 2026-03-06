@@ -16,8 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test nl-link-list
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL libnl3-cli
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -37,6 +43,12 @@ function run_test() {
     nl-link-list -i 1 | grep group
     CHECK_RESULT $? 0 0 "nl-link-list -i execute fail"
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
