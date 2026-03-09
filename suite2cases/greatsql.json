@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_greatsql_server"
+        },
+        {
+            "name": "oe_test_greatsql-mysql01"
         }
     ]
 }
