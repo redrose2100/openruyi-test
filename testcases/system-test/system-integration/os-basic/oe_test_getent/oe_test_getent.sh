@@ -31,6 +31,12 @@ function run_test()
     CHECK_RESULT $? 0 0 "version query failed"
     getent --help|grep getent
     CHECK_RESULT $? 0 0 "help query failed"
+    getent passwd nobody |grep nobody
+    CHECK_RESULT $? 0 0 "nobody user query failed"
+    getent services ssh |grep ssh
+    CHECK_RESULT $? 0 0 "ssh service query failed"
+    getent networks loopback |grep loopback
+    CHECK_RESULT $? 0 0 "loopback network query failed"    
     LOG_INFO "End to run test."
 }
 
