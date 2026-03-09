@@ -25,6 +25,7 @@ function pre_test()
     mkdir testdata
     echo "test content" > test.txt
     echo "delete content" > test2.txt
+    DNF_INSTALL unzip
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -41,7 +42,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "zip encryption is failed!"
     mkdir extract_dir
     (
-    cd extract_dir1 || return
+    cd extract_dir || return
     unzip -P 123456 ../test_pwd.zip
     CHECK_RESULT $? 0 0 "unzip decryption is failed!"
     )
