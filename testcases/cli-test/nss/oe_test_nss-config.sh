@@ -39,12 +39,17 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Error in obtaining display header file"
   nss-config --exec-prefix |grep usr
   CHECK_RESULT $? 0 0 "Error getting prefix for displaying executable file installation directory" 
+  nss-config --prefix | grep "/usr"
+  CHECK_RESULT $? 0 0 "Error getting installation prefix path"
+  nss-config --libs nss | grep -E "nss|lib"
+  CHECK_RESULT $? 0 0 "Error getting specified library link parameters"	
   LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  DNF_REMOVE "$@"
+  # shellcheck disable=SC2119
+  DNF_REMOVE
   LOG_INFO "Finish environment cleanup!"
 }
 
