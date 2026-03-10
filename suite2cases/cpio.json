@@ -9,6 +9,9 @@
 	},
 	{
                 "name": "oe_test_cpio_options_02"
+        },
+        {
+                "name": "oe_test_cpio_options_03"
         }
     ]
 }
