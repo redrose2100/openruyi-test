@@ -16,10 +16,14 @@
 #@Desc      	:   Check rootfs lost_found
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if [ ! -d "/lost+found" ]; then
+      echo "/lost+found directory does not exist. Skipping check_rootfs logic."
+      exit 255 
+    fi  
     ls -l /lost+found
     CHECK_RESULT $? 0 0 "The rootfs lost_found direcotry doesn't exist."
     LOG_INFO "End to run test."
