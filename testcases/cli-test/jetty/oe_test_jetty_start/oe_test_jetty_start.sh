@@ -15,10 +15,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   public library
 # #############################################
+# shellcheck disable=SC2034
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    EXECUTE_T="60m"
     DNF_INSTALL "jetty curl"
     if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
         DNF_INSTALL "java-17-openjdk"
