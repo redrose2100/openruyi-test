@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
-	DNF_INSTALL "linux-perf file"
+	DNF_INSTALL "linux-tools file"
     else
         DNF_INSTALL "perf file"
     fi	
