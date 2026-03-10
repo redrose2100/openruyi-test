@@ -15,11 +15,12 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Inject: create error format file on fs to cat
 #####################################
-# shellcheck disable=SC1091,SC2207,SC2116,SC2068,SC2119
+# shellcheck disable=SC1091,SC2207,SC2116,SC2068,SC2119,SC2034
 source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    EXECUTE_T="60m"
     point_list=($(CREATE_FS))
     LOG_INFO "End to prepare the database config."
 }
