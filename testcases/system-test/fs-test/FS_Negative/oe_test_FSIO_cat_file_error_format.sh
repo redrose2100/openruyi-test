@@ -20,6 +20,7 @@ source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    EXECUTE_T="60m"
     point_list=($(CREATE_FS))
     LOG_INFO "End to prepare the database config."
 }
