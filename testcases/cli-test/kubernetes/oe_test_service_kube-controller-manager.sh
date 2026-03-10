@@ -16,11 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test kube-controller-manager.service restart
 # #############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,2034
 source "./common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="90m"
     conf_common
     kubernetes_install
     certificate_prepare
