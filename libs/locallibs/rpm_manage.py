@@ -81,7 +81,7 @@ def rpm_install(pkgs, node=1, tmpfile=""):
             cmd="apt install --dry-run " + pkgs + " 2>/dev/null | grep '^Inst' | awk '{print $2}'")
         if depCode != 0:
             return depCode, depList
-        exitcode, result = func(conn=conn, cmd="apt install -y " + pkgs)
+        exitcode, result = func(conn=conn, cmd="apt install -y " + depList)
     
     else:  
         result = func(conn=conn, cmd="dnf --assumeno install " + pkgs)[1]
@@ -177,7 +177,7 @@ def rpm_remove(node=1, pkgs="", tmpfile=""):
             depList = f.read()
     os_version = os.environ.get("NODE" + str(node) + "_OS_VERSION")
     if "debian" in os_version or "velinux" in os_version:
-        exitcode = func(conn=conn, cmd="apt -y remove " + pkgs + "; apt purge -y " + pkgs)[0]
+        exitcode = func(conn=conn, cmd="apt purge -y " + pkgs + " " + depList)[0]
     else:
         exitcode = func(conn=conn, cmd="dnf -y remove " + pkgs + " " + depList)[0]
     if localtion != "local":
