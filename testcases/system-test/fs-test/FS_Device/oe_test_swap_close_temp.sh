@@ -16,10 +16,14 @@
 #@Desc      	:   Close swap temporary
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if [[ $(wc -l < /proc/swaps) -le 1 ]]; then
+        LOG_WARN "No swap configured, skip test."
+        return 255
+    fi
     swapoff -a
     off_swap=$(free -m | grep -i "swap" | awk '{print $4}')
     echo "off_swap = $off_swap"
