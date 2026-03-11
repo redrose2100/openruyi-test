@@ -78,7 +78,7 @@ def rpm_install(pkgs, node=1, tmpfile=""):
             return 0, None
         depCode, depList = func(
             conn=conn,
-            cmd="apt install --dry-run " + pkgs + " 2>/dev/null | grep '^Inst' | awk '{print $2}'")
+            cmd="apt install --dry-run " + pkgs + " 2>/dev/null | grep '^Inst' | awk '{print $2}' | awk '{printf \"%s \", $0}'")
         if depCode != 0:
             return depCode, depList
         exitcode, result = func(conn=conn, cmd="apt install -y " + depList)
