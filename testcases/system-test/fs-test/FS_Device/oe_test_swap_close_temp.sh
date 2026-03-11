@@ -20,6 +20,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if [[ $(cat /proc/swaps | wc -l) -le 1 ]]; then
+        LOG_WARN "No swap configured, skip test."
+        return 0
+    fi
     swapoff -a
     off_swap=$(free -m | grep -i "swap" | awk '{print $4}')
     echo "off_swap = $off_swap"
