@@ -57,13 +57,18 @@ function run_test() {
     # 检查 cups-filters 相关库文件
     test -f /usr/lib64/libcupsfilters.so.1
     CHECK_RESULT $? 0 0 "libcupsfilters.so.1 library does not exist"
-    
+    cupsfilter -o page-ranges=1 /tmp/test.txt > /tmp/out.pdf 2>/dev/null
+    CHECK_RESULT $? 0 0 "cupsfilter -o parameter failed"
+    cupsfilter -n 2 /tmp/test.txt > /tmp/out2.pdf 2>/dev/null
+    CHECK_RESULT $? 0 0 "cupsfilter -n parameter failed"
+    cupsfilter --list-filters /tmp/test.txt 2>&1 | grep -q "texttopdf"
+    CHECK_RESULT $? 0 0 "cupsfilter --list-filters parameter failed"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -f /tmp/test.txt
+    rm -f /tmp/test.txt /tmp/out.pdf /tmp/out2.pdf
     # shellcheck disable=SC2119
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
