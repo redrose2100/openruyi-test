@@ -21,16 +21,27 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL aide
-    sed -i '$a/home DATAONLY' /etc/aide.conf
-    aide --init
-    mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
+        EXECUTE_T="90m"
+        aide --init --config=/etc/aide/aide.conf
+        mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+    else
+        sed -i '$a/home DATAONLY' /etc/aide.conf
+        aide --init
+        mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    aide --config=/etc/aide.conf | grep -E "Total number of entries|Added entries|Changed entries|Removed entries"
-    CHECK_RESULT $? 0 0 "Get aide configuration items: failed!"
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
+        aide --config=/etc/aide/aide.conf | grep -E "Total number of entries|Added entries|Changed entries|Removed entries"
+        CHECK_RESULT $? 0 0 "Get aide configuration items: failed!"
+    else
+        aide --config=/etc/aide.conf | grep -E "Total number of entries|Added entries|Changed entries|Removed entries"
+        CHECK_RESULT $? 0 0 "Get aide configuration items: failed!"
+    fi
     LOG_INFO "End to run test."
 }
 
