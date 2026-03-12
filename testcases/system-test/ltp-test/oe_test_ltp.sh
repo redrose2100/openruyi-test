@@ -17,7 +17,7 @@
 # @Desc      :   ltp testsuite
 # ############################################
 
-#shellcheck disable=SC2034
+#shellcheck disable=SC2034,SC2155
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
@@ -30,7 +30,7 @@ function pre_test() {
     branch=$(select_ltp_tag)
     until [ -e "ltp" ]
     do
-        git clone -b ${branch} https://github.com/linux-test-project/ltp.git
+        git clone -b "${branch}" https://github.com/linux-test-project/ltp.git
     done
     cd ltp || exit 1
     {
