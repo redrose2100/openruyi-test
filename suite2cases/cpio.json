@@ -12,6 +12,9 @@
         },
         {
             "name": "oe_test_cpio_options_03"
+        },
+        {
+            "name": "oe_test_cpio_format_01"
         }
     ]
 }
