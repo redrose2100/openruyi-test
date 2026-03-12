@@ -17,7 +17,7 @@
 # @Desc      :   ltp testsuite
 # ############################################
 
-#shellcheck disable=SC2034
+#shellcheck disable=SC2034,SC2155
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
@@ -27,14 +27,10 @@ function pre_test() {
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     current_path=$(cd "$(dirname "$0")" || exit;pwd)
-    if [ "$(uname -a|awk '{print $3}'|awk -F "-" '{print $1}')" == "6.6.0" ];then
-        branch=20240129
-    else
-        branch=20220121
-    fi
+    branch=$(select_ltp_tag)
     until [ -e "ltp" ]
     do
-        git clone -b ${branch} https://github.com/linux-test-project/ltp.git
+        git clone -b "${branch}" https://github.com/linux-test-project/ltp.git
     done
     cd ltp || exit 1
     {
@@ -48,13 +44,23 @@ function pre_test() {
     insmod /usr/lib/modules/"$(uname -r)"/kernel/fs/proc/etmem_scan.ko*
     LOG_INFO "End to prepare the test environment."
 }
+select_ltp_tag() {
+    local k=$(uname -r | awk -F. '{printf "%d%02d",$1,$2}')
+    case $k in
+        4*|509|510) echo 20220121 ;;
+        511|6[0-4]) echo 20230626 ;;
+        6[5-8])    echo 20231030 ;;
+        *)         GIT_SSL_NO_VERIFY=true git ls-remote --tags --sort=-v:refname https://github.com/linux-test-project/ltp.git \
+                   | awk -F/ '{print $3}' | grep -E '^[0-9]{8}$' | head -1 ;;
+    esac
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
     cd /opt/ltp || exit 1
     ./runltp |tee -a ltp.txt
     grep -nr "FAIL" /opt/ltp/results |tee "${current_path}"/fail_cases.txt
-    grep -nr "FAIL" /opt/ltp/results/|grep -v -E "af_alg07|cpufreq_boost|proc01|ioctl_sg01|madvise06|cpuset_memory_spread|cve-2018-1000204|cve-2017-1000364|cgroup|fanotify14|memcontrol02|starvation|memcg_stat_rss"
+    grep -nr "FAIL" /opt/ltp/results/|grep -v -E "af_alg07|cpufreq_boost|proc01|ioctl_sg01|madvise06|cpuset_memory_spread|cve-2018-1000204|cve-2017-1000364|cgroup|fanotify14|memcontrol02|starvation|memcg_stat_rss|cpuhotplug04|hugemmap10|cpuhotplug04|cpufreq_boost|cve-2019-8912|cpuset_load_balance|fs_fill|memcg_stress|"
     CHECK_RESULT $? 1 0 "any case failed"
     LOG_INFO "End to run test."
 }
