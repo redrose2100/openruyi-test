@@ -22,22 +22,35 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "aide diffutils"
-    sed -i '88,176s/^/#/g' /etc/aide.conf
-    echo "database_new=file:@@{DBDIR}/aide.db.new.gz" >>/etc/aide.conf
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
+        EXECUTE_T="90m"
+    fi   
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    aide --init
-    CHECK_RESULT $? 0 0 "initialization failed"
-    cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
-    aide --compare >testlog
-    CHECK_RESULT $? 0 0 "Comparison execution failed"
-    grep -E "aide.db.gz|aide.db.new.gz" testlog
-    CHECK_RESULT $? 0 0 "Comparison execution failed"
-    diff testlog /var/log/aide/aide.log
-    CHECK_RESULT $? 0 0 "Different file contents"
+    if echo "${NODE1_OS_VERSION}" | grep -E "debian|velinux";then
+        aide --init --config=/etc/aide/aide.conf
+        CHECK_RESULT $? 0 0 "initialization failed"
+        cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+        aide --compare --config=/etc/aide/aide.conf > testlog
+        CHECK_RESULT $? 0 0 "Comparison execution failed"
+        grep -E "aide.db|aide.db.new" testlog
+        CHECK_RESULT $? 0 0 "Comparison execution failed"
+    else
+        sed -i '88,176s/^/#/g' /etc/aide.conf
+        echo "database_new=file:@@{DBDIR}/aide.db.new.gz" >>/etc/aide.conf
+        aide --init
+        CHECK_RESULT $? 0 0 "initialization failed"
+        cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+        aide --compare >testlog
+        CHECK_RESULT $? 0 0 "Comparison execution failed"
+        grep -E "aide.db.gz|aide.db.new.gz" testlog
+        CHECK_RESULT $? 0 0 "Comparison execution failed"
+        diff testlog /var/log/aide/aide.log
+        CHECK_RESULT $? 0 0 "Different file contents"
+    fi
     LOG_INFO "End to run test."
 }
 
