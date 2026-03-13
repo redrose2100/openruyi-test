@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_service_gssproxy"
+        },
+        {
+            "name": "oe_test_gssproxy"
         }
     ]
 }
