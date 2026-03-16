@@ -22,14 +22,15 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "djvulibre hostname wget"
-    cp ../common/test.pdf ./
-    expect <<-END
-    spawn any2djvu test.pdf
-    expect "]:"
-    send "yes\n"
-    sleep 90
-    expect eof
-END
+    # any2djvu命令依赖远程服务any2djvu.djvu.org，当前不可访问，故用已有的test.djvu文件进行测试
+    cp ../common/test.djvu ./
+ #   expect <<-END
+ #  spawn any2djvu test.pdf
+ #   expect "]:"
+ #   send "yes\n"
+ #   sleep 90
+ #   expect eof
+#END
     LOG_INFO "End to prepare the test environment."
 }
 
