@@ -22,7 +22,14 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "units"
-    LOG_INFO "End to prepare the test environment."
+
+    # units_cur命令依赖远程服务https://services.packetizer.com/spotprices?f=json，若不可访问，跳过测试
+    server="https://services.packetizer.com/spotprices?f=json"
+    if ! curl -s --connect-timeout 5 http://$server >/dev/null 2>&1; then
+        echo "SKIP: $server unreachable, skipping nits_cur test"
+        exit 255
+    fi
+   LOG_INFO "End to prepare the test environment."
 }
 
 function run_test(){

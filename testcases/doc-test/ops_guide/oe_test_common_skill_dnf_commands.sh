@@ -17,7 +17,7 @@
 #####################################
 # shellcheck disable=SC1090
 
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}/testcases/doc-test/ops_guide/common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -71,6 +71,10 @@ EOF
     dnf remove tree --setopt=reposdir=/etc/yum.repos.d/ -y | grep "Removed"
     CHECK_RESULT $? 0 0 "Failed to specify the specific repo repository to uninstall the RPM pkg"
     SLEEP_WAIT 5
+    # 判断软件包是否已安装，若已安装先卸载
+    if rpm -q net-tools &> /dev/null; then
+      dnf remove -y net-tools
+    fi
     dnf install net-tools --repo="everything" -y | grep "Installed"
     CHECK_RESULT $? 0 0 "Failed to specify the specific repo repository to install the RPM pkg"
     dnf autoremove net-tools -y | grep "Removed"
@@ -81,8 +85,12 @@ EOF
     else
         dnf upgrade "$pkg_name" -y | grep "Upgraded"
         CHECK_RESULT $? 0 0 "Failed to upgrade the installed RPM pkg"
-        dnf downgrade "$pkg_name" -y | grep "Downgraded"
-        CHECK_RESULT $? 0 0 "Failed to downgrade the installed RPM pkg"
+        #判断是否有可降级的软件包
+	check_downgrade "$pkg_name" 
+	if [ $? -eq 0 ]; then
+	  dnf downgrade "$pkg_name" -y | grep "Downgraded"
+          CHECK_RESULT $? 0 0 "Failed to downgrade the installed RPM pkg"
+	fi
     fi
     dnf list --all | grep -v "arch\|x86_64\|src" | grep "Installed"
     CHECK_RESULT $? 0 0 "Failed to list the all pkgs"

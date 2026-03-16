@@ -22,6 +22,8 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL cachefilesd
+    # 软件自带的配置文件 /etc/cachefilesd.conf 启用了selinux的设置：secctx system_u:system_r:cachefiles_kernel_t:s0，环境中未启动SELinux时，注释掉该行
+    sudo sed -i.bak 's/^[[:space:]]*secctx/#&/' /etc/cachefilesd.conf
     LOG_INFO "End of environmental preparation!"
 }
 
