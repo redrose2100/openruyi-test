@@ -23,7 +23,10 @@ function pre_test() {
     DNF_INSTALL "net-tools firewalld"
     SSH_CMD "sudo dnf install -y httpd net-tools firewalld
         sudo systemctl start httpd
-        sudo systemctl stop firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+        sudo systemctl stop firewalld
+        sudo systemctl status httpd" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "sudo systemctl is-active httpd" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    CHECK_RESULT $? 0 0 "httpd failed to start on NODE2"
     sudo systemctl start firewalld
     net_cards=$(TEST_NIC 1)
     net_card2=$(echo "$net_cards" | awk -F ' ' '{print $1}')
@@ -40,8 +43,16 @@ function run_test() {
     sudo ifconfig "$net_card2" up
     SSH_CMD "sudo ifconfig $remote_net_card2 192.168.100.2/24;sudo ifconfig $remote_net_card2 up;sudo route add -net 192.168.100.0 netmask 255.255.255.0 gw 192.168.100.1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SLEEP_WAIT 1
-    SSH_CMD "curl http://$NODE1_IPV4" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
+    
+    SSH_CMD "ping -c 3 192.168.100.1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    CHECK_RESULT $? 0 0 "NODE2 cannot ping NODE1 internal IP"
+    
+    SSH_CMD "curl --connect-timeout 10 http://192.168.100.2" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    CHECK_RESULT $? 0 0 "NODE2 cannot access local httpd"
+    
+    SSH_CMD "curl --connect-timeout 10 http://$NODE1_IPV4" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
     CHECK_RESULT $? 0 1
+    
     echo net.ipv4.ip_forward=1 >>/etc/sysctl.conf
     sysctl -p
     CHECK_RESULT $?
@@ -78,7 +89,7 @@ function run_test() {
 
     sudo firewall-cmd --direct --passthrough ipv4 -t nat -A POSTROUTING -d 192.168.100.2 -p tcp --dport 80 -j SNAT --to 192.168.100.1
     CHECK_RESULT $?
-    SSH_CMD "curl http://$NODE1_IPV4" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
+    SSH_CMD "curl --connect-timeout 120 http://$NODE1_IPV4" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
