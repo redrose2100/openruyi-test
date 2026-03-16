@@ -78,7 +78,7 @@ function run_test() {
 
     sudo firewall-cmd --direct --passthrough ipv4 -t nat -A POSTROUTING -d 192.168.100.2 -p tcp --dport 80 -j SNAT --to 192.168.100.1
     CHECK_RESULT $?
-    SSH_CMD "curl http://$NODE1_IPV4" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
+    SSH_CMD "curl --connect-timeout 30 http://$NODE1_IPV4" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
