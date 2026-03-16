@@ -22,9 +22,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "docker-engine wget"
-    # read version from file
-    . /etc/os-release
-    PRETTY_NAME=$(echo "$PRETTY_NAME" | tr -d '(' | tr -d ')' | tr ' ' -)
+    # 下载稳定可用版本的docker文件，选择openEuler-24.03-LTS-SP2版本
+    PRETTY_NAME="openEuler-24.03-LTS-SP2"
     rm -rfv "openEuler-docker.$NODE1_FRAME.tar.xz"
     wget -q "https://dl-cdn.openeuler.openatom.cn/$PRETTY_NAME/docker_img/$NODE1_FRAME/openEuler-docker.$NODE1_FRAME.tar.xz"
     docker load < "openEuler-docker.$NODE1_FRAME.tar.xz"

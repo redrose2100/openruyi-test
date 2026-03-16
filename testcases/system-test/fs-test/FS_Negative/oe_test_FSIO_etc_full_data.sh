@@ -22,7 +22,6 @@ function run_test() {
     LOG_INFO "Start to run test."
     echo "test" >/etc/testFile1 && grep "test" /etc/testFile1 >/dev/null
     CHECK_RESULT $? 0 0 "Read or write file failed befor injection."
-#    df -T | grep "/$" | grep "root" | awk '{print $6}' | grep -v "100%"
     df -T | grep "/$" | awk '{print $6}' | grep -v "100%"
     CHECK_RESULT $? 0 0 "The device is fulled."
     free_space=$(df -T | grep "/$" | awk '{print $5}')
