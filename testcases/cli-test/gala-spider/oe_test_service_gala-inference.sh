@@ -27,7 +27,6 @@ function pre_test() {
         flag=true
         DNF_REMOVE 1 "cyrus-sasl"
     fi
-    pip install -i https://mirrors.aliyun.com/pypi/simple numpy==1.26.4
     DNF_INSTALL "kafka gala-inference"
     cp -f /opt/kafka/config/server.properties /opt/kafka/config/server.properties-bak
     cp -f /etc/gala-inference/gala-inference.yaml /etc/gala-inference/gala-inference.yaml-bak
@@ -58,7 +57,6 @@ function post_test() {
     if [ "${flag}" = "true" ]; then
         DNF_INSTALL "cyrus-sasl"
     fi
-    pip uninstall numpy==1.26.4
     LOG_INFO "End to restore the test environment."
 }
 

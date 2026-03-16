@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test aide update database
 # ############################################
+# shellcheck disable=SC2034
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    EXECUTE_T="180m"
     DNF_INSTALL "aide gcc"
     sed -i '$a/home DATAONLY' /etc/aide.conf
     LOG_INFO "End to prepare the test environment."

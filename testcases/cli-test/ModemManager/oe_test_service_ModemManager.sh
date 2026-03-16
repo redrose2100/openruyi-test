@@ -16,12 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ModemManager.service restart
 # #############################################
-
-source "../common/common_lib.sh"
+# shellcheck disable=SC2119
+source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL ModemManager
+    DNF_INSTALL "ModemManager polkit"
+    systemctl start polkit
     LOG_INFO "End of environmental preparation!"
 }
 
