@@ -30,24 +30,31 @@ function run_test() {
     LOG_INFO "Start to run test."
     any2djvu --help | grep "Usage:"
     CHECK_RESULT $? 0 0 "Check any2djvu --help failed."
-    expect <<-END
-    spawn any2djvu http://barak.pearlmutter.net/papers mesh-preprint.ps.gz
-    expect "]:"
-    send "yes\n"
-    sleep 300
-    expect eof
+    
+    #any2djvu命令依赖远程服务any2djvu.djvu.org，若不可访问，跳过any2djvu测试
+    server="any2djvu.djvu.org"
+    if ! curl -s --connect-timeout 5 http://$server >/dev/null 2>&1; then
+        echo "SKIP: $server unreachable, skipping any2djvu test"
+    else 
+      expect <<-END
+      spawn any2djvu http://barak.pearlmutter.net/papers mesh-preprint.ps.gz
+      expect "]:"
+      send "yes\n"
+      sleep 300
+      expect eof
 END
-    CHECK_RESULT $? 0 0 "Check any2djvu failed."
-    test -f mesh-preprint.djvu
-    CHECK_RESULT $? 0 0 "Check mesh-preprint.djvu not exist."
-    expect <<-END
-    spawn any2djvu test.pdf
-    expect "]:"
-    send "yes\n"
-    sleep 60
-    expect eof
+      CHECK_RESULT $? 0 0 "Check any2djvu failed."
+      test -f mesh-preprint.djvu
+      CHECK_RESULT $? 0 0 "Check mesh-preprint.djvu not exist."
+      expect <<-END
+      spawn any2djvu test.pdf
+      expect "]:"
+      send "yes\n"
+      sleep 60
+      expect eof
 END
-    CHECK_RESULT $? 0 0 "Check any2djvu test.pdf failed."
+      CHECK_RESULT $? 0 0 "Check any2djvu test.djvu failed."
+    fi 
     test -f test.djvu
     CHECK_RESULT $? 0 0 "Check test.djvu not exist."
     bzz --help 2>&1 | grep -E "DjVuLibre|Usage"
