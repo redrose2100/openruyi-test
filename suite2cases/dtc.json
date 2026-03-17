@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_dtc_control"
+        },
+        {
+            "name": "oe_test_dtc_blob"
         }
     ]
 }
