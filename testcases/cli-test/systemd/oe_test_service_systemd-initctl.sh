@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test systemd-initctl.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function run_test() {
@@ -28,7 +28,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    systemcyl stop systemd-initctl.service
+    systemctl stop systemd-initctl.service
     LOG_INFO "Finish environment cleanup!"
 }
 
