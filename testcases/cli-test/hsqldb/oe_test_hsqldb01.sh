@@ -39,7 +39,12 @@ function run_test() {
     LOG_INFO "Testing HSQLDB JAR file existence..."
     ls -la /usr/share/java/hsqldb.jar
     CHECK_RESULT $? 0 0 "HSQLDB JAR file not found"
-
+    java -cp /usr/share/java/hsqldb.jar org.hsqldb.Server --version > /dev/null 2>&1
+    CHECK_RESULT $? 0 0 "HSQLDB version parameter failed"
+    java -cp /usr/share/java/hsqldb.jar org.hsqldb.Server --silent true --help > /dev/null 2>&1
+    CHECK_RESULT $? 0 0 "HSQLDB --silent parameter failed"
+    java -cp /usr/share/java/hsqldb.jar org.hsqldb.Server --port 9001 --help > /dev/null 2>&1
+    CHECK_RESULT $? 0 0 "HSQLDB --port parameter failed"
     LOG_INFO "Finish test!"
 }
 
