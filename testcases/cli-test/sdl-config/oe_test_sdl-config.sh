@@ -22,6 +22,14 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL SDL-devel
+    cat > /tmp/test_sdl.c << EOF
+#include <SDL/SDL.h>
+int main() {
+    SDL_Init(0);
+    SDL_Quit();
+    return 0;
+}
+EOF
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -41,12 +49,20 @@ function run_test() {
     CHECK_RESULT $? 0 0 "SDL exec-prefix path is invalid"
     sdl-config --help 2>&1 | grep -q -i "usage"
     CHECK_RESULT $? 0 0 "Help message missing"
-    LOG_INFO "End to run test."
+    gcc $(sdl-config --cflags) -c /tmp/test_sdl.c -o /tmp/test_sdl.o 2>/dev/null
+    CHECK_RESULT $? 0 0 "SDL compile combination failed"
+    gcc /tmp/test_sdl.o $(sdl-config --libs) -o /tmp/test_sdl 2>/dev/null
+    CHECK_RESULT $? 0 0 "SDL link combination failed"
+    gcc /tmp/test_sdl.o $(sdl-config --static-libs) -o /tmp/test_sdl_static 2>/dev/null
+    CHECK_RESULT $? 0 0 "SDL static link combination failed"
+    /tmp/test_sdl > /dev/null 2>&1
+    CHECK_RESULT $? 0 0 "SDL program execution failed"    LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to clean the test environment."
     DNF_REMOVE "$@"
+    rm -f /tmp/test_sdl.c /tmp/test_sdl.o /tmp/test_sdl /tmp/test_sdl_static
     LOG_INFO "End to clean the test environment."
 }
 
