@@ -32,6 +32,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Compression failure"
     bzegrep 'test bzegrep' test_bzegrep.log.bz2
     CHECK_RESULT $? 0 0 "The bzegrep command fails to be executed"
+    bzegrep -c "test" test_bzegrep.log.bz2 | grep -q "1"
+    CHECK_RESULT $? 0 0 "bzegrep count matches failed"
+    bzegrep -n "test" test_bzegrep.log.bz2 | grep -q "1:"
+    CHECK_RESULT $? 0 0 "bzegrep line number display failed"
+    bzegrep -v "notexist" test_bzegrep.log.bz2 | grep -q "test"
+    CHECK_RESULT $? 0 0 "bzegrep invert match failed"
 }
 
 function post_test() {
