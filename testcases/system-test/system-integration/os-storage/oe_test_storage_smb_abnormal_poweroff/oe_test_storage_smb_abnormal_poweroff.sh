@@ -42,7 +42,7 @@ function run_test() {
     df -h | grep -i '/home/client' | grep "${NODE2_IPV4}"
     CHECK_RESULT $?
     SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SLEEP_WAIT 30
+    SLEEP_WAIT 120
     df -h | grep -i '/home/client' | grep "${NODE2_IPV4}"
     CHECK_RESULT $?
     SSH_CMD "setsebool -P samba_export_all_ro on; setsebool -P samba_export_all_rw on" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
