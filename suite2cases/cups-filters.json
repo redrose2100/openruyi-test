@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_service_cups-filters_config"
+        },
+        {
+            "name": "oe_test_cups-filters_tools"
         }
     ]
 }
