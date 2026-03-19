@@ -20,6 +20,7 @@ source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="360m"
     libguestfs_pre_test
     echo "hello" >a.txt
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then

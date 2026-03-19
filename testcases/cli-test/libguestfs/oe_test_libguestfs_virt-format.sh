@@ -20,6 +20,7 @@ source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="360m"
     libguestfs_pre_test
     export LIBGUESTFS_BACKEND=direct
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1

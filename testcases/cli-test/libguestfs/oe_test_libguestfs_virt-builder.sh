@@ -20,6 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="360m"
     version_id=$(grep "VERSION_ID" /etc/os-release | awk -F "=" '{print $NF}' | awk -F "\"" '{print $2}')
     if [[ ${version_id} != "20.03" && ${version_id} != "22.03" ]];then
         DNF_INSTALL guestfs-tools

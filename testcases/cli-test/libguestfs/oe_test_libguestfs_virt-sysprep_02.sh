@@ -20,6 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="360m"
     DNF_INSTALL 'libguestfs guestfs-tools* virt-manager qemu libvirt openssl-devel numactl numactl-devel libcap-ng-devel traceroute iperf3 python3-paramiko edk2-devel qemu-guest-agent virt-install.noarch'
     if test "$(uname -i)"X == "aarch64"X; then
       LOG_INFO "arm install edk2 pkg"
