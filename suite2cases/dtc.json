@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_dtc_blob"
+        },
+        {
+            "name": "oe_test_dtc_format"
         }
     ]
 }
