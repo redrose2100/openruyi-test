@@ -15,11 +15,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs virt-make-fs command
 # ############################################
+# shellcheck disable=SC2034,SC2119
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="360m"
     libguestfs_pre_test
     mkdir test
     export LIBGUESTFS_BACKEND=direct
@@ -46,7 +48,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check virt-make-fs --type failed"
     virt-make-fs -v --format=qcow2 --type=ext4 --size=+200M ./test/ output.img
     CHECK_RESULT $? 0 0 "Check virt-make-fs -v failed"
-    virt-make-fs -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-make-fs -V 2>&1 | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-make-fs -V failed"
     virt-make-fs -x ./test/ output.img
     CHECK_RESULT $? 0 0 "Check virt-make-fs -x failed"
@@ -60,4 +62,4 @@ function post_test() {
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"

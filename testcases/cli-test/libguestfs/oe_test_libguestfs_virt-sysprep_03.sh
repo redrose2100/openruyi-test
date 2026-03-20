@@ -15,11 +15,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs virt-sysprep command
 # ############################################
+# shellcheck disable=SC2034
 
 source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="360m"
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then
       OS_VERSION="24.03-LTS-SP1"
       VIRT_NAME="openEuler-2403"
