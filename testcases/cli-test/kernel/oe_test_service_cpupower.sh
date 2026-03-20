@@ -16,11 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test cpupower.service restart
 # #############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL kernel-tools
     if grep -v SP1 /etc/openEuler-release; then
         sed -i 's/ondemand/powersave/g' /etc/sysconfig/cpupower
     fi
@@ -44,6 +45,7 @@ function post_test() {
     if grep -v SP1 /etc/openEuler-release; then
         sed -i 's/powersave/ondemand/g' /etc/sysconfig/cpupower
     fi
+    DNF_REMOVE
     LOG_INFO "Finish to restore the test environment."
 }
 
