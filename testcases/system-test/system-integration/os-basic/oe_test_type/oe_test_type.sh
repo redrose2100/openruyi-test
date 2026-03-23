@@ -27,6 +27,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "type error"
     type -p sed | grep "/usr/bin/sed"
     CHECK_RESULT $? 0 0 "type error"
+    type -a echo | grep "/usr/bin/echo"
+    CHECK_RESULT $? 0 0 "type -a error"
+    type -f ls | grep "ls"
+    CHECK_RESULT $? 0 0 "type -f error"
+    type -P cat | grep "/usr/bin/cat"
+    CHECK_RESULT $? 0 0 "type -P error"    
     LOG_INFO "End to run test."
 }
 
