@@ -18,7 +18,7 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
-TIMEOUT="90m"
+EXECUTE_T="180m"
 oeversion="$(cat /etc/openEuler-latest | grep openeulerversion | awk -F '=' '{print $2}')"
 dir="$(pwd)"
 
@@ -27,7 +27,13 @@ function pre_test() {
     DNF_INSTALL imageTailor wget
     mv /opt/imageTailor /home/
     mkdir -p /home/imageTailor/repos/euler_base/
-    wget --no-check-certificate https://repo.openeuler.org/"${oeversion}"/ISO/"$(arch)"/"${oeversion}"-everything-"$(arch)"-dvd.iso -P /home
+    arch=$(arch)
+    if [[ "$(arch)" == "riscv64" && "$oeversion" == "openEuler-24.03-LTS-SP3" ]]; then
+        iso_url="https://repo.openeuler.org/${oeversion}/ISO/${arch}/rva20/${oeversion}-everything-${arch}-dvd.iso"
+    else
+        iso_url="https://repo.openeuler.org/${oeversion}/ISO/${arch}/${oeversion}-everything-${arch}-dvd.iso"
+    fi
+    wget --no-check-certificate "$iso_url" -P /home
     ls /home/"${oeversion}"-everything-"$(arch)"-dvd.iso
     CHECK_RESULT $? 0 0
     mount /home/"${oeversion}"-everything-"$(arch)"-dvd.iso /mnt
