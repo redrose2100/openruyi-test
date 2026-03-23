@@ -12,6 +12,9 @@
         },
         {
             "name": "oe_test_dtc_format"
+        },
+        {
+            "name": "oe_test_dtc_symbol"
         }
     ]
 }
