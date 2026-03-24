@@ -39,6 +39,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    #环境中未启动SELinux时，恢复配置文件/etc/cachefilesd.conf内容
+    if grep -q "^SELINUX=disabled" /etc/selinux/config; then
+       sudo sed -i 's/^#[[:space:]]*\(secctx.*\)/\1/' /etc/cachefilesd.conf
+    fi
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
