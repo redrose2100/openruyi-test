@@ -43,7 +43,7 @@ function run_test() {
 	    EDAC.*error|\
 	    Rasdaemon.*error"
     grep -iE "$MSG_PATTERNS" /var/log/messages
-    CHECK_RESULT $? 1 0 "Dmesg has false information."
+    CHECK_RESULT $? 1 0 "file /var/log/messages has false information."
 }
 
 main "$@"
