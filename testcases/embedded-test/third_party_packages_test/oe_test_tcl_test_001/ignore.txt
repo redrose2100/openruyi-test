@@ -1,5 +1,0 @@
-# sockte.test必定失败其余，测试有概率失败
-socket.test
-aaa_exit.test
-main.test
-io.test
