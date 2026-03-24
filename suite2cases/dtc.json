@@ -15,6 +15,9 @@
         },
         {
             "name": "oe_test_dtc_symbol"
+        },
+        {
+            "name": "oe_test_dtc_info"
         }
     ]
 }
