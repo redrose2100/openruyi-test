@@ -22,12 +22,19 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "docker-engine wget"
-    # 下载稳定可用版本的docker文件，选择openEuler-24.03-LTS-SP2版本
-    PRETTY_NAME="openEuler-24.03-LTS-SP2"
-    rm -rfv "openEuler-docker.$NODE1_FRAME.tar.xz"
-    wget -q "https://dl-cdn.openeuler.openatom.cn/$PRETTY_NAME/docker_img/$NODE1_FRAME/openEuler-docker.$NODE1_FRAME.tar.xz"
-    docker load < "openEuler-docker.$NODE1_FRAME.tar.xz"
-    IMAGE_NAME=$(tar -xJvf "openEuler-docker.$NODE1_FRAME.tar.xz" -O manifest.json | grep -Eo 'docker.io/library/openeuler[^"]+' | awk -F'/' '{print $NF}')
+    #read version from file
+    . /etc/os-release
+    PRETTY_NAME=$(echo "$PRETTY_NAME" | tr -d '(' | tr -d ')' | tr ' ' -) 
+    #对于riscv架构，从sp3版本开始有rva20和rva23两个版本，兼容该场景
+    RVER=$(grep -o "rva2[03]" /etc/yum.repos.d/openEuler.repo | head -n1 | tr '[:lower:]' '[:upper:]')
+    if [[ "$RVER" == RVA* ]]; then
+       wget -q "https://dl-cdn.openeuler.openatom.cn/$PRETTY_NAME/docker_img/$NODE1_FRAME/openEuler-docker.$NODE1_FRAME-$RVER.tar.xz" 
+    else 
+       wget -q "https://dl-cdn.openeuler.openatom.cn/$PRETTY_NAME/docker_img/$NODE1_FRAME/openEuler-docker.$NODE1_FRAME.tar.xz"
+    fi
+    DFILE=$(ls openEuler-docker."${NODE1_FRAME}"*.tar.xz)
+    docker load < "$DFILE"
+    IMAGE_NAME=$(tar -xJvf "$DFILE" -O manifest.json | grep -Eo 'docker.io/library/openeuler[^"]+' | awk -F'/' '{print $NF}')
     # create Dockerfile to build image
     rm -fv Dockerfile  
     cat <<EOF >Dockerfile
@@ -60,7 +67,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    rm -rf Dockerfile "openEuler-docker.$NODE1_FRAME.tar.xz"
+    rm -rf Dockerfile "$DFILE"
     docker rmi openeuler-container-exception-logger "$IMAGE_NAME"
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
