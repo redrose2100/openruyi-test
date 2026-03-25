@@ -28,7 +28,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     nohup powertop >nohup.out 2>&1 &
     nopid=$!
-    SLEEP_WAIT 5
+    SLEEP_WAIT 10
     kill -9 $nopid
     grep "wakeups/second" <nohup.out
     CHECK_RESULT $?
