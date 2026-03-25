@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "unzip"
     touch testfile_zipgrep
     cat > testfile_zipgrep << EOF
 test_1
@@ -50,6 +51,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f testfile_zipgrep.zip testfile_zipgrep
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

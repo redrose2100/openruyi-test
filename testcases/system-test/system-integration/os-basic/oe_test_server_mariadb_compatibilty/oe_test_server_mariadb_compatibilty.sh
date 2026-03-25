@@ -19,17 +19,23 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    eth_use1=$(TEST_NIC 1 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
-    eth_use2=$(TEST_NIC 2 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
     RANDOM_IP() {
         while true; do
             random_ip=192.168.122.$(shuf -e $(seq 1 254) | head -n 1)
-            ping -c 3 "${random_ip}" &>/dev/nul || {
+    	    ping -c 3 "${random_ip}" &>/dev/nul || {
                 printf "%s" "$random_ip"
                 break
             }
         done
     }
+    #如果是qemu环境下，额外添加ip地址添加在eth2上
+    if [ "$(systemd-detect-virt)" = "qemu" ]; then
+	eth_use1="eth2"
+	eth_use2="eth2"
+    else
+        eth_use1=$(TEST_NIC 1 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
+        eth_use2=$(TEST_NIC 2 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
+    fi
     temp_ip1=$(RANDOM_IP)
     ip addr add "${temp_ip1}"/24 dev "${eth_use1}"
     temp_ip2=$(RANDOM_IP)
@@ -39,6 +45,15 @@ function pre_test() {
     systemctl start mariadb.service
     systemctl status mariadb.service | grep running || exit 1
     mysqladmin -uroot password "${NODE1_PASSWORD}"
+    #检查iptables-legacy规则是否有REJECT规则，若存在需要临时放行mysql 3306端口
+    added_rule=0
+    if command -v iptables-legacy >/dev/null 2>&1 && iptables-legacy -L INPUT -n | grep -q "REJECT.*icmp-host-prohibited"; then
+       if ! iptables-legacy -L INPUT -n | grep "dpt:3306"; then
+           echo "[*] Allowing HTTP (port 3306)..."
+           iptables-legacy -I INPUT -p tcp --dport 3306 -j ACCEPT
+           added_rule=1
+       fi
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -77,6 +92,11 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/lib/mysql mariadb_remote
+    #删除放行的http 3306端口
+    if  [ "$added_rule" -eq 1 ]; then
+        echo "[*] Removing temporary rule for port 3306..."
+        iptables-legacy -D INPUT -p tcp --dport 3306 -j ACCEPT
+    fi 
     ip addr del "${temp_ip1}"/24 dev "${eth_use1}"
     SSH_CMD "yum remove mariadb-server expect -y;rm -rf /opt/mariadb_remote /opt/testlog;ip addr del ${temp_ip2}/24 dev ${eth_use2};" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     DNF_REMOVE "$@"
