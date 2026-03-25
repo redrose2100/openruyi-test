@@ -20,7 +20,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "openssh-server openssh-clients openssh"
+    DNF_INSTALL "openssh-server openssh-clients openssh crypto-policies-scripts"
     DNF_INSTALL "firewalld"
     systemctl start sshd
     systemctl start firewalld

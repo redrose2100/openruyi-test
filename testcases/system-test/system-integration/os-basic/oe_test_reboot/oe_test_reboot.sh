@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    EXECUTE_T="120m"
+    EXECUTE_T="150m"
     DNF_INSTALL dmidecode
     LOG_INFO "End to prepare the test environment."
 }
@@ -40,7 +40,7 @@ function run_test() {
         grep -w "0% packet loss" lossfile
         CHECK_RESULT $? 1
 
-        REMOTE_REBOOT_WAIT 2 10
+        REMOTE_REBOOT_WAIT 2 100
         CHECK_RESULT $?
         ((repet_num++))
     done

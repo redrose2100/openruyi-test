@@ -19,21 +19,27 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    eth_use1=$(TEST_NIC 1 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
-    eth_use2=$(TEST_NIC 2 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
     RANDOM_IP() {
         while true; do
             random_ip=192.168.122.$(shuf -e $(seq 1 254) | head -n 1)
-            ping -c 3 "${random_ip}" &>/dev/nul || {
+    	    ping -c 3 "${random_ip}" &>/dev/nul || {
                 printf "%s" "$random_ip"
                 break
             }
         done
     }
-    temp_ip1=$(RANDOM_IP)
-    ip addr add "${temp_ip1}"/24 dev "${eth_use1}"
-    temp_ip2=$(RANDOM_IP)
-    P_SSH_CMD --node 2 --cmd "ip addr add ${temp_ip2}/24 dev ${eth_use2}"
+    #判断如果是qemu环境下，不对网卡添加额外的ip
+    if [ "$(systemd-detect-virt)" = "qemu" ]; then
+	temp_ip1=${NODE1_IPV4}
+	temp_ip2=${NODE2_IPV4}
+    else
+        eth_use1=$(TEST_NIC 1 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
+        eth_use2=$(TEST_NIC 2 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
+        temp_ip1=$(RANDOM_IP)
+        ip addr add "${temp_ip1}"/24 dev "${eth_use1}"
+        temp_ip2=$(RANDOM_IP)
+        P_SSH_CMD --node 2 --cmd "ip addr add ${temp_ip2}/24 dev ${eth_use2}"
+    fi
     DNF_INSTALL "net-tools mariadb-server"
     rm -rf /var/lib/mysql/*
     systemctl start mariadb.service
@@ -77,8 +83,12 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/lib/mysql mariadb_remote
-    ip addr del "${temp_ip1}"/24 dev "${eth_use1}"
-    SSH_CMD "yum remove mariadb-server expect -y;rm -rf /opt/mariadb_remote /opt/testlog;ip addr del ${temp_ip2}/24 dev ${eth_use2};" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    #不是qemu环境时，删除网卡添加的ip地址
+    if [ "$(systemd-detect-virt)" != "qemu" ]; then
+        ip addr del "${temp_ip1}"/24 dev "${eth_use1}"
+	SSH_CMD "ip addr del ${temp_ip2}/24 dev ${eth_use2}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    fi
+    SSH_CMD "yum remove mariadb-server expect -y;rm -rf /opt/mariadb_remote /opt/testlog;" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
