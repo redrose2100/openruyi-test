@@ -20,6 +20,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "chrony"
     time=$(date "+%Y-%m-%d %H:%M:%S")
     timedatectl set-ntp no
     LOG_INFO "End to prepare the test environment."
@@ -58,6 +59,7 @@ function post_test() {
     timedatectl set-ntp yes
     date -s "$time"
     hwclock -w
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

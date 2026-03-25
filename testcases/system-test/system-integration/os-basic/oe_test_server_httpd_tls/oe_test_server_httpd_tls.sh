@@ -16,11 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Enable specific versions of TLSv1.x
 # #############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2119
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
 	LOG_INFO "Start to prepare the test environment."
 	DNF_INSTALL "httpd mod_ssl"
+        #本地生成签名证书用于启动httpd
+        openssl genrsa -out /etc/pki/tls/private/localhost.key 2048
+        openssl req -new -x509 -key /etc/pki/tls/private/localhost.key \
+          -out /etc/pki/tls/certs/localhost.crt -days 365 \
+          -subj "/C=CN/ST=Test/L=Test/O=Test/CN=localhost"
 	LOG_INFO "End to prepare the test environment."
 }
 
@@ -28,7 +33,7 @@ function run_test() {
 	LOG_INFO "Start to run test."
 	systemctl enable httpd
 	systemctl start httpd
-        SLEEP_WAIT 1
+        SLEEP_WAIT 30
 	systemctl status httpd | grep running
 	CHECK_RESULT $?
 	sed -i "s/#SSLProtocol all -SSLv3/SSLProtocol -all +TLSv1.3/g" /etc/httpd/conf.d/ssl.conf
@@ -36,7 +41,7 @@ function run_test() {
 	CHECK_RESULT $?
 	systemctl restart httpd
 	CHECK_RESULT $?
-	openssl s_client -connect ${NODE1_IPV4}:443 -tls1_3 <<EOF
+	openssl s_client -connect "${NODE1_IPV4}":443 -tls1_3 <<EOF
 
 EOF
 	CHECK_RESULT $?
