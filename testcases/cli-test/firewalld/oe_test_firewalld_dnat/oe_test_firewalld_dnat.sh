@@ -27,6 +27,14 @@ function pre_test() {
     sudo systemctl start firewalld
     net_cards=$(TEST_NIC 1)
     net_card2=$(echo "$net_cards" | awk -F ' ' '{print $1}')
+    ip -o -4 addr show | awk -v nic1="$NODE1_NIC" -v nic2="$net_card2" \
+    '$2!=nic1 && $2!=nic2 && $2!="lo" {print $2,$4}' > /tmp/oet_nic_backup
+    conflict_nics=$(ip -o -4 addr show | awk -v nic1="$NODE1_NIC" -v nic2="$net_card2" \
+    '$2!=nic1 && $2!=nic2 && $2!="lo" {print $2}' | sort -u)
+    for nic in $conflict_nics; do
+        LOG_INFO "Flush IPv4 on NIC: $nic"
+        sudo ip addr flush dev "$nic"
+    done
     remote_net_cards=$(TEST_NIC 2)
     remote_net_card2=$(echo "$remote_net_cards" | awk -F ' ' '{print $1}')
     zone1=$(sudo firewall-cmd --get-zone-of-interface="$NODE1_NIC")
@@ -104,6 +112,15 @@ function post_test() {
     DNF_REMOVE "$@"
     rm -rf /tmp/ip_remote
     SSH_CMD "sudo systemctl stop httpd;sudo ip addr del 192.168.100.2 dev $remote_net_card2;sudo route del -net 192.168.100.0 netmask 255.255.255.0 gw 192.168.100.1;sudo yum remove -y net-tools httpd firewalld;rm -rf /root/ip_remote" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    if [ -f /tmp/oet_nic_backup ]; then
+        while read -r nic ip; do
+            if [ -n "$nic" ] && [ -n "$ip" ]; then
+                LOG_INFO "Restore IP $ip on $nic"
+                sudo ip addr add "$ip" dev "$nic"
+            fi
+        done < /tmp/oet_nic_backup
+        rm -f /tmp/oet_nic_backup
+    fi
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
