@@ -16,12 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test cups-filters configuration and tools
 # ############################################
-
+# shellcheck disable=SC2119,SC2230
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL cups-filters
+    DNF_INSTALL "cups-filters cups-filters-help"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -69,7 +69,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -f /tmp/test.txt /tmp/out.pdf /tmp/out2.pdf
-    # shellcheck disable=SC2119
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
