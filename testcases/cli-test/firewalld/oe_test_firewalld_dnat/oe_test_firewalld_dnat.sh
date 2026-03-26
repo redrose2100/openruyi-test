@@ -31,6 +31,14 @@ function pre_test() {
     remote_net_card2=$(echo "$remote_net_cards" | awk -F ' ' '{print $1}')
     zone1=$(sudo firewall-cmd --get-zone-of-interface="$NODE1_NIC")
     zone2=$(sudo firewall-cmd --get-zone-of-interface="$net_card2")
+    conflict_nics=$(ip -o -4 addr show | awk -v nic1="$NODE1_NIC" -v nic2="$net_card2" '$2!=nic1 && $2!=nic2 && $2!="lo" {print $2}' | sort -u)
+    > /tmp/oet_nic_backup
+    for nic in $conflict_nics; do
+        ip_addr=$(ip -o -4 addr show dev "$nic" | awk '{print $4}')
+        echo "$nic $ip_addr" >> /tmp/oet_nic_backup
+        LOG_INFO "Temporarily removing IP on $nic"
+        sudo ifconfig "$nic" 0
+    done
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -85,6 +93,15 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    if [ -f /tmp/oet_nic_backup ]; then
+        while read -r nic ip; do
+            if [ -n "$nic" ] && [ -n "$ip" ]; then
+                LOG_INFO "Restore IP $ip on $nic"
+                sudo ifconfig "$nic" "$ip"
+            fi
+        done < /tmp/oet_nic_backup
+        rm -f /tmp/oet_nic_backup
+    fi
     sudo firewall-cmd --direct --passthrough ipv4 -t nat -D POSTROUTING -d 192.168.100.2 -p tcp --dport 80 -j SNAT --to 192.168.100.1
     sudo firewall-cmd --direct --passthrough ipv4 -t nat -D PREROUTING -d "$NODE1_IPV4" -p tcp --dport 80 -j DNAT --to-destination 192.168.100.2:80
     sudo firewall-cmd --direct --passthrough ipv4 -t nat -F
