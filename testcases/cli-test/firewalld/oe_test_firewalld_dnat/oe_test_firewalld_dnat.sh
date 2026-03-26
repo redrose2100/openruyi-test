@@ -39,7 +39,7 @@ function run_test() {
     sudo ifconfig "$net_card2" 192.168.100.1/24
     sudo ifconfig "$net_card2" up
     SSH_CMD "sudo ifconfig $remote_net_card2 192.168.100.2/24;sudo ifconfig $remote_net_card2 up;sudo route add -net 192.168.100.0 netmask 255.255.255.0 gw 192.168.100.1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SLEEP_WAIT 1
+    SLEEP_WAIT 10
     SSH_CMD "curl http://$NODE1_IPV4" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
     CHECK_RESULT $? 0 1
     echo net.ipv4.ip_forward=1 >>/etc/sysctl.conf
