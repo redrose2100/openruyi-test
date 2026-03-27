@@ -60,7 +60,7 @@ function run_test() {
     cd /opt/ltp || exit 1
     ./runltp |tee -a ltp.txt
     grep -nr "FAIL" /opt/ltp/results |tee "${current_path}"/fail_cases.txt
-    grep -nr "FAIL" /opt/ltp/results/|grep -v -E "af_alg07|cpufreq_boost|proc01|ioctl_sg01|madvise06|cpuset_memory_spread|cve-2018-1000204|cve-2017-1000364|cgroup|fanotify14|memcontrol02|starvation|memcg_stat_rss|cpuhotplug04|hugemmap10|cpuhotplug04|cpufreq_boost|cve-2019-8912|cpuset_load_balance|fs_fill|memcg_stress|"
+    grep -nr "FAIL" /opt/ltp/results/|grep -v -E "af_alg07|cpufreq_boost|proc01|ioctl_sg01|cpuset_memory_spread|cgroup|fanotify14|memcg_stat_rss|cpuhotplug04|hugemmap10|cve-2019-8912|cpuset_load_balance|fs_fill"
     CHECK_RESULT $? 1 0 "any case failed"
     LOG_INFO "End to run test."
 }
