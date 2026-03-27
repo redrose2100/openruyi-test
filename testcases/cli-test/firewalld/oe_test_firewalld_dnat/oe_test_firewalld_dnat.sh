@@ -31,6 +31,15 @@ function pre_test() {
     remote_net_card2=$(echo "$remote_net_cards" | awk -F ' ' '{print $1}')
     zone1=$(sudo firewall-cmd --get-zone-of-interface="$NODE1_NIC")
     zone2=$(sudo firewall-cmd --get-zone-of-interface="$net_card2")
+    net_card2_ip=$(ip -o -4 addr show dev "$net_card2" | awk '{print $4}')
+    if [ -n "$net_card2_ip" ]; then
+        LOG_INFO "Backup and remove IP $net_card2_ip from $net_card2"
+        echo "$net_card2 $net_card2_ip" > /tmp/oet_net_card2_backup
+        sudo ifconfig "$net_card2" 0
+    fi
+    SSH_CMD "REMOTE_IP=\$(ip addr show dev $remote_net_card2 | grep 'inet ' | awk '{print \$2}' | cut -d'/' -f1)
+        echo \"\$REMOTE_IP\" > /tmp/ip_remote_backup
+        ifconfig $remote_net_card2 0" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -85,6 +94,14 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    if [ -f /tmp/oet_net_card2_backup ]; then
+        read nic ip < /tmp/oet_net_card2_backup
+        if [ -n "$nic" ] && [ -n "$ip" ]; then
+            LOG_INFO "Restore IP $ip on $nic"
+            sudo ifconfig "$nic" "$ip"
+        fi
+        rm -f /tmp/oet_net_card2_backup
+    fi
     sudo firewall-cmd --direct --passthrough ipv4 -t nat -D POSTROUTING -d 192.168.100.2 -p tcp --dport 80 -j SNAT --to 192.168.100.1
     sudo firewall-cmd --direct --passthrough ipv4 -t nat -D PREROUTING -d "$NODE1_IPV4" -p tcp --dport 80 -j DNAT --to-destination 192.168.100.2:80
     sudo firewall-cmd --direct --passthrough ipv4 -t nat -F
@@ -102,8 +119,16 @@ function post_test() {
     sudo ip addr del 192.168.100.1 dev "$net_card2"
     sudo systemctl stop httpd
     DNF_REMOVE "$@"
-    rm -rf /tmp/ip_remote
-    SSH_CMD "sudo systemctl stop httpd;sudo ip addr del 192.168.100.2 dev $remote_net_card2;sudo route del -net 192.168.100.0 netmask 255.255.255.0 gw 192.168.100.1;sudo yum remove -y net-tools httpd firewalld;rm -rf /root/ip_remote" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "if [ -f /tmp/ip_remote_backup ]; then
+        REMOTE_IP=\$(cat /tmp/ip_remote_backup)
+        if [ -n \"\$REMOTE_IP\" ]; then
+            ifconfig $remote_net_card2 \$REMOTE_IP
+        fi
+        rm -f /tmp/ip_remote_backup
+    fi
+    systemctl stop httpd
+    route del -net 192.168.100.0 netmask 255.255.255.0 gw 192.168.100.1
+    yum remove -y net-tools httpd" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
