@@ -20,6 +20,10 @@ source "${OET_PATH}/testcases/cli-test/qemu/common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    if [ "$(arch)" == "riscv64" ]; then
+        LOG_INFO "Not support riscv64, skip test."
+        exit 255
+    fi
     img_url="https://repo.openeuler.org/openEuler-22.03-LTS-SP3/virtual_machine_img/$(arch)/openEuler-22.03-LTS-SP3-$(arch).qcow2.xz"
     filename=$(basename "${img_url}")
     volume=${filename%.xz}
