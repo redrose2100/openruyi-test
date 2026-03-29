@@ -17,10 +17,13 @@
 #@Desc      	:   set max log file action ignore
 #####################################
 
-source ../common/comlib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC1091
+source "./common/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "/etc/audit/auditd.conf"
     sed -i 's/num_logs = 5/num_logs = 2/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = ROTATE/max_log_file_action = IGNORE/g' "/etc/audit/auditd.conf"
@@ -30,10 +33,10 @@ function pre_test(){
 function run_test()
 {
     LOG_INFO "Start to run test."
-    old=$(ls -i /var/log/audit/audit.log | awk -F" " '{print $1}')
+    old=$(stat -c %i /var/log/audit/audit.log)
     for ((i=0;i<10;i++));do
         create_logfile
-        new=$(ls -i /var/log/audit/audit.log | awk -F" " '{print $1}')
+        new=$(stat -c %i /var/log/audit/audit.log)
         log_size=$(du -ks /var/log/audit/audit.log | awk '{print $1}')
         test "$log_size" -gt 1024 &&{
             	test "$old" == "$new"&&{
@@ -55,6 +58,7 @@ function post_test()
     sed -i 's/num_logs = 2/num_logs = 5/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = IGNORE/max_log_file_action = ROTATE/g' "/etc/audit/auditd.conf"
     service auditd restart
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

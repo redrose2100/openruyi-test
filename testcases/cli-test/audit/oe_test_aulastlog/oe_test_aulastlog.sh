@@ -16,10 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command aulastlog
 # ############################################
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
     useradd test1
     useradd test2
     echo test1:deepin12#$ | chpasswd
@@ -52,6 +53,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf test1
     userdel -rf test2
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 

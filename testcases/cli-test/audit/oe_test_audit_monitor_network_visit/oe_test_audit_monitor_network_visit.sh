@@ -17,11 +17,12 @@
 #@Desc      	:   monitor network visit
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
     useradd Jevons
     echo "HUAWEI666" | passwd Jevons --stdin
     LOG_INFO "End to prepare the test environment."
@@ -44,7 +45,7 @@ function run_test()
     expect eof
 EOF
     endtime=$(date +%T)
-    ausearch -ts ${starttime} -te ${endtime} -ul 1000 -m USER_LOGIN -x ssh -sv yes> /tmp/log.log 
+    ausearch -ts "${starttime}" -te "${endtime}" -ul 1000 -m USER_LOGIN -x ssh -sv yes> /tmp/log.log 
     CHECK_RESULT $? 1 0 "ausearch failed"
     cat < /tmp/log.log |grep -e "<no matches>"
     CHECK_RESULT $? 1 0 "grep failed"
