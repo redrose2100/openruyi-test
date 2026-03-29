@@ -17,8 +17,9 @@
 #@Desc      	:   collect overall user time statistics
 #####################################
 
-source ${"OET_PATH"}/libs/locallibs/common_lib.sh
-export AUDIT_PATH=$(find /etc -name auditd.conf)
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+AUDIT_PATH=$(find /etc -name auditd.conf)
+export AUDIT_PATH
 
 function create_logfile(){
 	auditctl -w /home/auditd_test -p rwxa
