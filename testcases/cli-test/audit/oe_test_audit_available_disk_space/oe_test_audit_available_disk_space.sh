@@ -18,7 +18,8 @@
 #####################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
-source "../common/common_lib.sh"
+# shellcheck disable=SC1091
+source "./common/common_lib.sh"
 
 function pre_test()
 {
