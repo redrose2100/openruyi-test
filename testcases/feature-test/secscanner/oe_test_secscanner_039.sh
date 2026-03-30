@@ -46,10 +46,16 @@ function pre_test()
     sed -i '/^auth\.none/d' "$RSYSLOG_CONFIG_FILE" 2>/dev/null
 
     # Add existing configurations (with different paths)
-    echo "authpriv.info /var/log/custom_authpriv.log" >> "$RSYSLOG_CONFIG_FILE"
-    echo "kern.warning /var/log/custom_kern.log" >> "$RSYSLOG_CONFIG_FILE"
-    echo "*.err /var/log/custom_errors.log" >> "$RSYSLOG_CONFIG_FILE"
-    echo "auth.none /var/log/custom_auth.log" >> "$RSYSLOG_CONFIG_FILE"
+    #echo "authpriv.info /var/log/custom_authpriv.log" >> "$RSYSLOG_CONFIG_FILE"
+    #echo "kern.warning /var/log/custom_kern.log" >> "$RSYSLOG_CONFIG_FILE"
+    #echo "*.err /var/log/custom_errors.log" >> "$RSYSLOG_CONFIG_FILE"
+    #echo "auth.none /var/log/custom_auth.log" >> "$RSYSLOG_CONFIG_FILE"
+    {
+    echo "authpriv.info /var/log/custom_authpriv.log"
+    echo "kern.warning /var/log/custom_kern.log"
+    echo "*.err /var/log/custom_errors.log"
+    echo "auth.none /var/log/custom_auth.log"
+} >> "$RSYSLOG_CONFIG_FILE"
 
     LOG_INFO "End of environmental preparation!"
 }
