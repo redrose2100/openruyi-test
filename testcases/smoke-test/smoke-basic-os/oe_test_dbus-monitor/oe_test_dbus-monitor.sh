@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL dbus
+    systemctl start dbus
     LOG_INFO "End of environmental preparation!"
 }
 
