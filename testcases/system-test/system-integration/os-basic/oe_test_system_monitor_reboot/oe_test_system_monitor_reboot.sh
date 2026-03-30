@@ -17,21 +17,21 @@
 # @Desc      :   View information about recent system reboots
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
 	LOG_INFO "Start to run test."
-	SSH_CMD "reboot" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-	REMOTE_REBOOT_WAIT 2 15
-	SSH_CMD "reboot" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-	REMOTE_REBOOT_WAIT 2 15
-	SSH_CMD "reboot" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-	REMOTE_REBOOT_WAIT 2 15
-	SSH_CMD "last reboot > /tmp/rebootlog2" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+	SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+	REMOTE_REBOOT_WAIT 2 30
+	SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+	REMOTE_REBOOT_WAIT 2 30
+	SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+	REMOTE_REBOOT_WAIT 2 30
+	SSH_CMD "last reboot > /tmp/rebootlog2" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 	CHECK_RESULT $?
-	SSH_SCP ${NODE2_USER}@${NODE2_IPV4}:/tmp/rebootlog2 . ${NODE2_PASSWORD}
+	SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/rebootlog2 . "${NODE2_PASSWORD}"
 	CHECK_RESULT $?
-	num_user=$(cat rebootlog2 | grep 'reboot' | wc -l)
-	test $num_user -ge 3
+        num_user=$(grep -c 'reboot' rebootlog2)
+	test "$num_user" -ge 3
 	CHECK_RESULT $?
 	LOG_INFO "End to run test."
 }
@@ -42,4 +42,4 @@ function post_test() {
 	LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
