@@ -23,14 +23,6 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 CONFIG_FILE="/etc/secScanner/secscanner.cfg"
 RSYSLOG_CONFIG_FILE="/etc/rsyslog.conf"
 
-# Log files to check
-LOG_FILES=(
-    "/var/log/authpriv.log"
-    "/var/log/kern.log"
-    "/var/log/errors.log"
-    "/var/log/auth.log"
-)
-
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
