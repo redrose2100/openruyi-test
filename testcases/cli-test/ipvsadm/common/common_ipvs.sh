@@ -19,7 +19,12 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function RANDOM_IP() {
     while true; do
-        random_ip=$(ip -4 -o addr show dev "$(TEST_NIC 1)" | head -n 1 | awk '{print $4}' | cut -d/ -f1 | cut -d. -f1-3).$(shuf -e $(seq 1 254) | head -n 1)
+        if [ "$(systemd-detect-virt)" = "qemu" ]; then
+            NODENIC="${NODE1_NIC}"
+        else
+            NODENIC="$(TEST_NIC 1)"
+        fi
+        random_ip=$(ip -4 -o addr show dev "$NODENIC" | head -n 1 | awk '{print $4}' | cut -d/ -f1 | cut -d. -f1-3).$(shuf -e $(seq 50 254) | head -n 1)
         ping -c 3 "${random_ip}" &>/dev/null || {
             printf "%s" "$random_ip"
             break
@@ -37,10 +42,26 @@ function build_env() {
     ipvs_ip2=$(RANDOM_IP)
     ipvs_ip3=$(RANDOM_IP)
     ipvs_ip4=$(RANDOM_IP)
-    eth_use1=$(TEST_NIC 1 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
-    eth_use2=$(TEST_NIC 2 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
-    eth_use3=$(TEST_NIC 3 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
-    eth_use4=$(TEST_NIC 4 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
+    if [ "$(systemd-detect-virt)" = "qemu" ]; then
+        eth_use1=${NODE1_NIC}
+        eth_use2=${NODE2_NIC}
+        eth_use3=${NODE3_NIC}
+        eth_use4=${NODE4_NIC}	
+    else
+        eth_use1=$(NODE1_NIC | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
+        eth_use2=$(NODE2_NIC | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
+        eth_use3=$(NODE3_NIC | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
+        eth_use4=$(NODE4_NIC | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
+    fi
+    #检查iptables-legacy规则有REJECT 规则，若存在需要临时放行http 80端口
+    added_rule=0
+    if command -v iptables-legacy >/dev/null 2>&1 && iptables-legacy -L INPUT -n | grep -q "REJECT.*icmp-host-prohibited"; then
+         if ! iptables-legacy -L INPUT -n | grep "dpt:80"; then
+	     echo "[*] Allowing HTTP (port 80)..."
+	     iptables-legacy -I INPUT -p tcp --dport 80 -j ACCEPT
+             added_rule=1
+	 fi
+    fi
     ip addr add "$ipvs_ip1"/24 dev "${eth_use1}"
     P_SSH_CMD --node 2 --cmd "ip addr add $ipvs_ip2/24 dev ${eth_use2}"
     P_SSH_CMD --node 3 --cmd "ip addr add $ipvs_ip3/24 dev ${eth_use3}"
@@ -71,6 +92,11 @@ function clean_env() {
     systemctl start firewalld
     systemctl stop httpd
     ipvsadm -C
+    #删除放行的http 80端口
+    if  [ "$added_rule" -eq 1 ]; then
+        echo "[*] delete HTTP (port 80)..."
+        iptables-legacy -D INPUT -p tcp --dport 80 -j ACCEPT                                    
+    fi 
     rm -rf /etc/sysconfig/ipvsadm ./result_*
     ip addr del "$ipvs_vip"/24 dev "${NODE1_NIC}"
     DNF_REMOVE "$@"
