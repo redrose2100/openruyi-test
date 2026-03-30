@@ -24,9 +24,6 @@ CONFIG_FILE="/etc/secScanner/secscanner.cfg"
 SSHD_CONFIG_FILE="/etc/ssh/sshd_config"
 SSH_BANNER_FILE="/etc/sshbanner"
 
-# Test user
-TEST_USER="test_ssh_user"
-
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
