@@ -43,10 +43,12 @@ function pre_test()
         sed -i '/^PASS_MIN_LEN/d' "$LOGIN_DEFS_FILE" 
         sed -i '/^PASS_WARN_AGE/d' "$LOGIN_DEFS_FILE" 
         # Add different values
-        echo "PASS_MAX_DAYS 180" >> "$LOGIN_DEFS_FILE"
-        echo "PASS_MIN_DAYS 3" >> "$LOGIN_DEFS_FILE"
-        echo "PASS_MIN_LEN 8" >> "$LOGIN_DEFS_FILE"
-        echo "PASS_WARN_AGE 14" >> "$LOGIN_DEFS_FILE"
+        {
+            echo "PASS_MAX_DAYS 180"
+            echo "PASS_MIN_DAYS 3"
+            echo "PASS_MIN_LEN 8"
+            echo "PASS_WARN_AGE 14"
+        } >> "$LOGIN_DEFS_FILE"
     fi
 
     LOG_INFO "End of environmental preparation!"
