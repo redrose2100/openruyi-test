@@ -29,7 +29,7 @@ function run_test() {
     CHECK_RESULT "$(grep -wcE 'Route' ./ipvsadm_restore.txt)" 1
     CHECK_RESULT "$(grep -wcE 'rr' ./ipvsadm_restore.txt)" 1
     SSH_CMD "ipvsadm -C && systemctl reboot &" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SLEEP_WAIT 60
+    SLEEP_WAIT 400
     SSH_CMD "ipvsadm -R < /etc/sysconfig/ipvsadm && ipvsadm>>/tmp/ipvsadm_restore1.txt " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/ipvsadm_restore1.txt ./ipvsadm_restore1.txt "${NODE2_PASSWORD}"
     CHECK_RESULT "$(grep -wcE 'Route' ./ipvsadm_restore1.txt)" 1
