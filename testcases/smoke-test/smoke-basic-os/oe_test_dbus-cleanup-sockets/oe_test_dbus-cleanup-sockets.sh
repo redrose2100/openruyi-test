@@ -19,11 +19,24 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL dbus
+    systemctl start dbus
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     dbus-cleanup-sockets | grep "Cleaned up"
     CHECK_RESULT $? 0 0 "Failed to cleaned up sockets"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
