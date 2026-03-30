@@ -43,12 +43,19 @@ function run_test() {
         sort -g sort_test.txt | head -2 | grep "openeuler"
         CHECK_RESULT $? 0 0 "sort -g faild"
     else
-        res=$(sort sort_test.txt | head -1)
-        CHECK_RESULT "$res" 66 0 "sort faild"
         sort -d sort_test.txt | head -3 | grep "aa"
         CHECK_RESULT $? 0 0 "sort -d faild"
-        sort -g sort_test.txt | head -2 | grep "hello"
-        CHECK_RESULT $? 0 0 "sort -g faild"
+        if locale | grep LC_COLLATE | grep "C.UTF-8"; then
+            sort sort_test.txt | head -1 | grep aa
+            CHECK_RESULT $? 0 0 "sort faild"
+            sort -g sort_test.txt | head -2 | grep "openeuler"
+            CHECK_RESULT $? 0 0 "sort -g faild"
+        else
+            res=$(sort sort_test.txt | head -1)
+            CHECK_RESULT "$res" 66 0 "sort faild"
+            sort -g sort_test.txt | head -2 | grep "hello"
+            CHECK_RESULT $? 0 0 "sort -g faild"
+        fi
     fi
     sort -c sort_test.txt
     CHECK_RESULT $? 1 0 "sort -c faild"
