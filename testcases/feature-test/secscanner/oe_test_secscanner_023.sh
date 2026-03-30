@@ -18,7 +18,7 @@
 # ############################################
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
-
+# shellcheck disable=SC2129
 # Global configuration and file list
 CONFIG_FILE="/etc/secScanner/secscanner.cfg"
 LOGIN_DEFS_FILE="/etc/login.defs"
