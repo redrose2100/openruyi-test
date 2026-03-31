@@ -20,7 +20,8 @@ source "${OET_PATH}/testcases/cli-test/qemu/common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    img_url="https://repo.openeuler.org/openEuler-22.03-LTS-SP3/virtual_machine_img/$(arch)/openEuler-22.03-LTS-SP3-$(arch).qcow2.xz"
+    version=$(grep "^VERSION=" /etc/os-release | cut -d= -f2 | tr -d '"' | tr -cs '[:alnum:].-' '-' | sed 's/-$//')
+    img_url="https://repo.openeuler.org/openEuler-${version}/virtual_machine_img/$(arch)/openEuler-${version}-$(arch).qcow2.xz"
     filename=$(basename "${img_url}")
     volume=${filename%.xz}
     enc_volume=${volume%.qcow2}_sm4_sm3.qcow2
