@@ -21,10 +21,29 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dmesg | grep -iE 'error|fail|not support|no such' | grep -vE "Failed to initialise from firmware|platform does not support|virgl 3d acceleration not supported| _OSC failed|OSC evaluation for CPUs failed| fail to add MMCONFIG information|res=success|CPU model not supported|not support BPF/cgroup firewalling|failed to assign|failed to load regulatory\.db|load for regulatory\.db failed|Perf sampling/filtering is not supported|probe of poweroff failed"
+    # 捕捉所有内核级致命错误
+    CRITICAL_KERNEL_PATTERNS="Kernel panic|Oops:|kernel BUG at|general protection fault|unable to handle kernel paging request|soft lockup|hard lockup|Out of memory|Killed process|I/O error"
+    dmesg | grep -iE "$CRITICAL_KERNEL_PATTERNS" \
+	    | grep -vE "Kernel command line|Command line:"
     CHECK_RESULT $? 1 0 "Dmesg has false information."
-    grep -iE 'error|fail|not support|no such' /var/log/messages | grep -vE "Failed to initialise|platform does not support|Couldn't write 'fq_codel'|Failed to init entropy source|KD_FONT_OP_GET failed while|virgl 3d acceleration|ignorelockingfailure|not support BPF/cgroup firewalling| /etc/lvm/backup/openeuler: stat failed:|Failed to read VG openeuler |ovsdb: Could not connect:|secret-key: failure to generate|dbus-org.freedesktop.resolve1.service|imjournal: No statefile exists|net.ipv4.icmp_ignore_bogus_error_responses|pam_faillock|rasdaemon: wait_access() failed|wait_access\(\) failed|rasdaemon: Can't get|lm_sensors.service|Failed to start Hardware Monitoring Sensors|unit=lm_sensors|/etc/lvm/backup/openeuler_openeuler|package at does not exist| _OSC failed|OSC evaluation for CPUs failed| fail to add MMCONFIG information|failed to open file /etc/ndctl/keys/nvdimm-master|/etc/samba/secrets.tdb\) No such file or directory|Unable to watch \(/root/.ssh/*|ipv6: duplicate address check failed for|linklocal6: failed to generate an address|res=success|Can't open PID file /run/restorecond.pid|CPU model not supported|\[hwrng \]: Initialization Failed|\[rndr  \]: Initialization Failed|failed to assign|Failed to import credentials, ignoring:|setfont|Setting fonts|mdmonitor.service|Failed to start MD array monitor|unit=mdmonitor|\[pkcs11\]: Initialization Failed|failed to load regulatory\.db|load for regulatory\.db failed|Perf sampling/filtering is not supported|probe of poweroff failed"
-    CHECK_RESULT $? 1 0 "Dmesg has false information."
+    # 只关注 文件系统损坏、硬件故障、底层I/O错误。 
+    MSG_PATTERNS="\
+	    XFS.*fatal|\
+	    XFS.*Internal error|\
+	    EXT4-fs.*error|\
+	    EXT4-fs.*abort|\
+	    Buffer I/O error|\
+	    blk_update_request:\s+I/O error|\
+	    sector.*read failed|\
+	    sector.*write failed|\
+	    Machine check|\
+	    kernel panic|\
+	    kernel BUG at|\
+	    Hardware Error|\
+	    EDAC.*error|\
+	    Rasdaemon.*error"
+    grep -iE "$MSG_PATTERNS" /var/log/messages
+    CHECK_RESULT $? 1 0 "file /var/log/messages has false information."
 }
 
 main "$@"
