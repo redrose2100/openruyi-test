@@ -15,7 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Test case for grpunconv command
 #####################################
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2119
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -37,7 +37,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    grpunconv -h | grep -q "用法：grpunconv"
+    grpunconv -h | grep -iq "用法：grpunconv\|Usage: grpunconv"
     CHECK_RESULT $? 0 0 "Help test failed"
     test -f /etc/gshadow
     CHECK_RESULT $? 0 0 "gshadow missing before test"
@@ -60,6 +60,7 @@ function post_test() {
         rm -f /etc/gshadow
     fi
     rm -f /etc/group.bak /etc/gshadow.bak /etc/gshadow.bak.empty 2>/dev/null
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
