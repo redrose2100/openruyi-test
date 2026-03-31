@@ -34,7 +34,7 @@ function pre_test()
     if [[ -f "$CONFIG_FILE" && ! -f "${CONFIG_FILE}-bak" ]]; then
         \cp "$CONFIG_FILE" "${CONFIG_FILE}-bak"
     fi
-
+    
     if [[ -f "$LIMITS_CONFIG_FILE" && ! -f "${LIMITS_CONFIG_FILE}-bak" ]]; then
         \cp "$LIMITS_CONFIG_FILE" "${LIMITS_CONFIG_FILE}-bak"
     fi
@@ -56,19 +56,19 @@ function run_test() {
 
     # Step 2: Execute secscanner check basic before fix
     secscanner check basic > tmp && \mv tmp check
-
+    
     # Check for warning messages before fix
     grep -i "core" check | grep -i "WARNING"
     CHECK_RESULT $? 0 0 "Check output should show WARNING for core dump before fix"
 
     # Step 3: Execute secscanner fix basic
     secscanner fix basic > tmp && \mv tmp fix
-
+    
     # Step 4: Check if limits.conf contains the expected configuration
     # Use regex to match any number of whitespace characters between * and soft/hard
     grep "^\*\s\+soft\s\+core\s\+0" "$LIMITS_CONFIG_FILE"
     CHECK_RESULT $? 0 0 "limits.conf missing soft core configuration"
-
+    
     grep "^\*\s\+hard\s\+core\s\+0" "$LIMITS_CONFIG_FILE"
     CHECK_RESULT $? 0 0 "limits.conf missing hard core configuration"
 
@@ -88,7 +88,7 @@ function post_test()
     if [[ -f "${CONFIG_FILE}-bak" ]]; then
         \cp "${CONFIG_FILE}-bak" "$CONFIG_FILE"
     fi
-
+    
     if [[ -f "${LIMITS_CONFIG_FILE}-bak" ]]; then
         \cp "${LIMITS_CONFIG_FILE}-bak" "$LIMITS_CONFIG_FILE"
     fi
