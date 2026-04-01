@@ -14,7 +14,7 @@
 # @Contact   :   liyongqiang_yewu@cmss.chinamobile.com
 # @Date      :   2026-3-26
 # @License   :   Mulan PSL v2
-# @Desc      :   set_tmout test (session timeout configuration)
+# @Desc      :   set_tmout test - when set to no (should not modify TMOUT)
 # ############################################
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
@@ -48,28 +48,21 @@ function pre_test()
 function run_test() {
     LOG_INFO "start to run test."
 
-    # Step 1: Set set_tmout=yes in configuration
-    \cp "$CONFIG_FILE" "${CONFIG_FILE}-bak"     
-    sed -i 's/^set_tmout.*/set_tmout=yes/' "$CONFIG_FILE"
-    CHECK_RESULT $? 0 0 "Failed to set set_tmout=yes"
+    # Step 1: Set set_tmout=no in configuration
+    \cp "$CONFIG_FILE" "${CONFIG_FILE}-bak"
+    sed -i 's/^set_tmout.*/set_tmout=no/' "$CONFIG_FILE"
+    CHECK_RESULT $? 0 0 "Failed to set set_tmout=no"
 
-    # Step 2: Execute secscanner fix basic and check profile file
+    # Step 2: Execute secscanner fix basic
     secscanner check basic > tmp && \mv tmp check
     secscanner fix basic > tmp && \mv tmp fix
+
+    # Step 3: Verify TMOUT configuration is NOT added
     grep "TMOUT=180" "$PROFILE_FILE"
-    CHECK_RESULT $? 0 0 "Profile file missing 'TMOUT=180' after fix"
+    CHECK_RESULT $? 1 0 "Profile file should not contain 'TMOUT=180' when set_tmout=no"
     grep "export TMOUT" "$PROFILE_FILE"
-    CHECK_RESULT $? 0 0 "Profile file missing 'export TMOUT' after fix"
+    CHECK_RESULT $? 1 0 "Profile file should not contain 'export TMOUT' when set_tmout=no"
 
-    # Step 3: Execute secscanner check basic and check output
-    secscanner check basic > tmp && \mv tmp check
-    grep -i "tmout" check | grep -i "ok"
-    CHECK_RESULT $? 0 0 "TMOUT check did not show OK status"
-
-    # Step 5: Execute secscanner restore all and check output
-    secscanner restore all -y > tmp && \mv tmp restore
-    grep "$PROFILE_FILE" restore | grep FINISHED
-    CHECK_RESULT $? 0 0 "Restore output missing for $PROFILE_FILE"
     LOG_INFO "All checks finished."
 }
 
