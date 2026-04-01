@@ -21,6 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     find /tmp -type f -name "somesocket" && rm -rf /tmp/somesocket
@@ -44,6 +45,7 @@ function post_test() {
     auditctl -D
     rm -rf /tmp/somesocket
     export LANG=${OLD_LANG}
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

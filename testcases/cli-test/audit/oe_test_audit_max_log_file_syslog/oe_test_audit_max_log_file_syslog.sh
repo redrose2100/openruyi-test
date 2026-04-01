@@ -17,11 +17,14 @@
 #@Desc      	:   set max log file syslog
 #####################################
 #shellcheck disable=SC1091
-source ../common/comlib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC1091
+source "./common/common_lib.sh"
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
     ls /var/log/audit/audit.log && rm -rf /var/log/audit/audit.log
     disk_total_mb=$(df -m / | awk 'NR==2 {print int($2 * 0.1)}')
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "/etc/audit/auditd.conf"
@@ -66,6 +69,7 @@ function post_test()
     sed -i "s/space_left = $disk_total_mb/space_left = 75/g" "/etc/audit/auditd.conf"
     service auditd restart
     rm -f /var/log/fill_disk
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

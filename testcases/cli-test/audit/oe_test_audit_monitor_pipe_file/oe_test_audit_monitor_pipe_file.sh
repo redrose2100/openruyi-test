@@ -23,6 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
+    DNF_INSTALL "audit"
     service auditd restart
     LOG_INFO "End to prepare the test environment."
 }
@@ -43,6 +44,7 @@ function post_test() {
     auditctl -D
     rm -rf /tmp/pipefile
     export LANG=${OLD_LANG}
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

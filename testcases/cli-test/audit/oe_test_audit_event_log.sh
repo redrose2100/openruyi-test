@@ -20,6 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "audit"
     rm -rf /var/log/audit/audit.log*
     auditctl -D
     service auditd restart
@@ -39,6 +40,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     auditctl -D
     service auditd restart
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"
