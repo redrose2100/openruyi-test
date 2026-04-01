@@ -28,6 +28,13 @@ function pre_test() {
     ipv4_target_addr=$(host huawei.com | grep 'has address' | awk '{print $4}')
     ipv4_target_hostname="hwclouds-dns"
     P_SSH_CMD --node 2 --cmd "find /var/log/messages || touch /var/log/messages"
+    #qemu下获取默认路由所用的网络接口
+    if [ "$(systemd-detect-virt)" = "qemu" ]; then
+	INTERFACE=$(ip route show default | awk '{print $5}' | head -n1)
+        IFTOP="iftop -i $INTERFACE"
+    else 
+	IFTOP="iftop"
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -35,14 +42,14 @@ function run_test() {
     LOG_INFO "Start testing..."
     iftop -h | grep 'Synopsis: iftop'
     CHECK_RESULT $? 0 0 "Failed to use option: -h"
-    iftop -t -s 1 2>&1 | grep 'Listening on'
+    $IFTOP -t -s 1 2>&1 | grep 'Listening on'
     CHECK_RESULT $? 0 0 "Failed to use option: -s and -t"
     ping "$ipv4_target_addr" -c 100 >/dev/null 2>&1 &
     SLEEP_WAIT 1
     dns_resolution_work=1
     for ((i = 0; i < 100; i++)); do
         SLEEP_WAIT 1
-        if iftop -t -s 1 2>&1 | grep "$ipv4_target_hostname"; then
+        if $IFTOP -t -s 1 2>&1 | grep "$ipv4_target_hostname"; then
             dns_resolution_work=0
             break
         fi
@@ -51,7 +58,7 @@ function run_test() {
     if [ $dns_resolution_work -eq 0 ]; then
         ping "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
         SLEEP_WAIT 1
-        iftop -t -s 1 -n 2>&1 | grep "$ipv4_target_hostname"
+        $IFTOP -t -s 1 -n 2>&1 | grep "$ipv4_target_hostname"
         CHECK_RESULT $? 0 1 "Failed to use option: -n"
     else
         LOG_WARN "DNS RESOLUTION NOT WORK."
@@ -60,7 +67,7 @@ function run_test() {
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && iftop -t -s 1 -P | grep ":ssh"; then
+        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && $IFTOP -t -s 1 -P | grep ":ssh"; then
             result=0
             break
         fi
@@ -69,7 +76,7 @@ function run_test() {
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && iftop -t -s 1 -P -N | grep ":22"; then
+        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && $IFTOP -t -s 1 -P -N | grep ":22"; then
             result=0
             break
         fi
@@ -82,7 +89,7 @@ function run_test() {
     SLEEP_WAIT 1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        output=$(iftop -t -s 1 -n -p 2>&1)
+        output=$($IFTOP -t -s 1 -n -p 2>&1)
         if (echo "${output}" | grep -A 1 "${ipv4_addr_1}" | grep "${ipv4_target_addr}") && (echo "${output}" | grep -A 1 "${ipv4_addr_2}" | grep "${ipv4_target_addr}"); then
             result=0
             break
@@ -95,7 +102,7 @@ function run_test() {
     SLEEP_WAIT 1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if iftop -t -s 1 -B -n 2>&1 | grep "${ipv4_addr_1}" | grep 'B'; then
+        if $IFTOP -t -s 1 -B -n 2>&1 | grep "${ipv4_addr_1}" | grep 'B'; then
             result=0
             break
         fi
@@ -103,33 +110,39 @@ function run_test() {
     CHECK_RESULT $result 0 0 "Failed to use option: -B"
     pkill -f 'ping'
     SLEEP_WAIT 1
-    ping -I "${ipv4_addr_1}" "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
-    SLEEP_WAIT 1
-    iftop -t -s 1 -i "${net_cards[0]}" 2>&1 | grep "Listening on ${net_cards[0]}"
+    if [ "$(systemd-detect-virt)" = "qemu" ]; then
+        ping -I "$INTERFACE" "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
+	SLEEP_WAIT 1
+	$IFTOP -t -s 1 2>&1 | grep "Listening on $INTERFACE"
+    else
+        ping -I "${ipv4_addr_1}" "${ipv4_target_addr}" -c 100 >/dev/null 2>&1 &
+        SLEEP_WAIT 1
+        iftop -t -s 1 -i "${net_cards[0]}" 2>&1 | grep "Listening on ${net_cards[0]}"
+    fi
     CHECK_RESULT $? 0 0 "Failed to use option: -i"
     pkill -f 'ping'
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if  { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && iftop -t -s 1 -P -N -f "dst port 22" 2>&1 | grep ":22"; then
+        if  { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && $IFTOP -t -s 1 -P -N -f "dst port 22" 2>&1 | grep ":22"; then
             result=0
             break
         fi
     done
     CHECK_RESULT $result 0 0 "Failed to use option: -f"
-    iftop -t -s 1 -m 10b 2>&1 | grep 'Listening on'
+    $IFTOP -t -s 1 -m 10b 2>&1 | grep 'Listening on'
     CHECK_RESULT $? 0 0 "Failed to use option: -m"
-    iftop -t -s 5 -o 2s 2>&1 | grep '2s'
+    $IFTOP -t -s 5 -o 2s 2>&1 | grep '2s'
     CHECK_RESULT $? 0 0 "Failed to use option: -o 2s"
-    iftop -t -s 15 -o 10s 2>&1 | grep '10s'
+    $IFTOP -t -s 15 -o 10s 2>&1 | grep '10s'
     CHECK_RESULT $? 0 0 "Failed to use option: -o 10s"
-    iftop -t -s 45 -o 40s 2>&1 | grep '40s'
+    $IFTOP -t -s 45 -o 40s 2>&1 | grep '40s'
     CHECK_RESULT $? 0 0 "Failed to use option: -o 40s"
-    iftop -t -s 1 -o source 2>&1 | grep 'Listening on'
+    $IFTOP -t -s 1 -o source 2>&1 | grep 'Listening on'
     CHECK_RESULT $? 0 0 "Failed to use option: -o source"
-    iftop -t -s 1 -o destination 2>&1 | grep 'Listening on'
+    $IFTOP -t -s 1 -o destination 2>&1 | grep 'Listening on'
     CHECK_RESULT $? 0 0 "Failed to use option: -o destination"
-    iftop -t -s 1 -L 5 2>&1 | grep 'Listening on'
+    $IFTOP -t -s 1 -L 5 2>&1 | grep 'Listening on'
     CHECK_RESULT $? 0 0 "Failed to use option: -L"
     LOG_INFO "Finish test!"
 }
