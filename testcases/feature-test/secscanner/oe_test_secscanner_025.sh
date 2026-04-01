@@ -14,14 +14,14 @@
 # @Contact   :   liyongqiang_yewu@cmss.chinamobile.com
 # @Date      :   2026-3-26
 # @License   :   Mulan PSL v2
-# @Desc      :   set_tmout test (session timeout configuration)
+# @Desc      :   SSH login banner test - when set to no (should not modify sshd_config)
 # ############################################
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 # Global configuration and file list
 CONFIG_FILE="/etc/secScanner/secscanner.cfg"
-PROFILE_FILE="/etc/profile"
+SSHD_CONFIG_FILE="/etc/ssh/sshd_config"
 
 function pre_test()
 {
@@ -30,17 +30,13 @@ function pre_test()
     yum search secScanner || exit 255
     DNF_INSTALL "secScanner"
 
-    # Backup profile file if it exists
-    if [[ -f "$PROFILE_FILE" && ! -f "${PROFILE_FILE}-bak" ]]; then
-        \cp "$PROFILE_FILE" "${PROFILE_FILE}-bak"
+    # Backup sshd_config file if it exists
+    if [[ -f "$SSHD_CONFIG_FILE" && ! -f "${SSHD_CONFIG_FILE}-bak" ]]; then
+        \cp "$SSHD_CONFIG_FILE" "${SSHD_CONFIG_FILE}-bak"
     fi
-    
-    # Always modify configuration regardless of backup status
-    if [[ -f "$PROFILE_FILE" ]]; then
-        # Remove any existing TMOUT configuration
-        sed -i '/^[[:space:]]*TMOUT=/d' "$PROFILE_FILE" 2>/dev/null
-        sed -i '/^[[:space:]]*export TMOUT/d' "$PROFILE_FILE" 2>/dev/null
-    fi
+    # Remove any existing Banner configuration
+    sed -i '/^Banner/d' "$SSHD_CONFIG_FILE" 2>/dev/null
+    grep "Banner" "$SSHD_CONFIG_FILE"|grep -v "#"
 
     LOG_INFO "End of environmental preparation!"
 }
@@ -48,28 +44,22 @@ function pre_test()
 function run_test() {
     LOG_INFO "start to run test."
 
-    # Step 1: Set set_tmout=yes in configuration
-    \cp "$CONFIG_FILE" "${CONFIG_FILE}-bak"     
-    sed -i 's/^set_tmout.*/set_tmout=yes/' "$CONFIG_FILE"
-    CHECK_RESULT $? 0 0 "Failed to set set_tmout=yes"
+    # Step 1: Set set_ssh_login_banner=no in configuration
+    \cp "$CONFIG_FILE" "${CONFIG_FILE}-bak"
+    sed -i 's/^set_ssh_login_banner.*/set_ssh_login_banner=no/' "$CONFIG_FILE"
+    CHECK_RESULT $? 0 0 "Failed to set set_ssh_login_banner=no"
 
-    # Step 2: Execute secscanner fix basic and check profile file
+    # Step 2: Execute secscanner fix basic
     secscanner check basic > tmp && \mv tmp check
     secscanner fix basic > tmp && \mv tmp fix
-    grep "TMOUT=180" "$PROFILE_FILE"
-    CHECK_RESULT $? 0 0 "Profile file missing 'TMOUT=180' after fix"
-    grep "export TMOUT" "$PROFILE_FILE"
-    CHECK_RESULT $? 0 0 "Profile file missing 'export TMOUT' after fix"
 
-    # Step 3: Execute secscanner check basic and check output
-    secscanner check basic > tmp && \mv tmp check
-    grep -i "tmout" check | grep -i "ok"
-    CHECK_RESULT $? 0 0 "TMOUT check did not show OK status"
+    # Step 3: Verify sshd_config is NOT modified
+    grep "Banner" "$SSHD_CONFIG_FILE"|grep -v "#"
+    CHECK_RESULT $? 1 0 "sshd_config should not contain Banner when set_ssh_login_banner=no"
 
-    # Step 5: Execute secscanner restore all and check output
+    # Step 4: Execute secscanner restore all
     secscanner restore all -y > tmp && \mv tmp restore
-    grep "$PROFILE_FILE" restore | grep FINISHED
-    CHECK_RESULT $? 0 0 "Restore output missing for $PROFILE_FILE"
+
     LOG_INFO "All checks finished."
 }
 
@@ -77,9 +67,9 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
 
-    # Restore original profile file from backup
-    if [[ -f "${PROFILE_FILE}-bak" ]]; then
-        \cp "${PROFILE_FILE}-bak" "$PROFILE_FILE"
+    # Restore original sshd_config file from backup
+    if [[ -f "${SSHD_CONFIG_FILE}-bak" ]]; then
+        \cp "${SSHD_CONFIG_FILE}-bak" "${SSHD_CONFIG_FILE}"
     fi
 
     # Restore secScanner configuration and remove package
