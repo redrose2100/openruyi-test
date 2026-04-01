@@ -17,10 +17,13 @@
 #@Desc      	:   set max log file suspend
 #####################################
 
-source ../common/comlib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC1091
+source "./common/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = ROTATE/max_log_file_action = SUSPEND/g' "/etc/audit/auditd.conf"
     service auditd restart
@@ -51,6 +54,7 @@ function post_test()
     sed -i 's/max_log_file = 1/max_log_file = 8/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = SUSPEND/max_log_file_action = ROTATE/g' "/etc/audit/auditd.conf"
     service auditd restart
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

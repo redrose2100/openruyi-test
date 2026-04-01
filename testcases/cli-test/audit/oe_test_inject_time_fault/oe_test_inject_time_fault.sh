@@ -16,11 +16,14 @@
 #@Desc      	:   inject time fault
 #####################################
 
-source ../common/comlib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC1091
+source "./common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
+    DNF_INSTALL "audit"
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "${AUDIT_PATH}"
     service auditd restart
     date_add=$(date -d "+1 year" +'%m/%d/%Y %H:%M:%S')
@@ -72,6 +75,7 @@ function post_test() {
     sed -i 's/max_log_file = 1/max_log_file = 8/g' "${AUDIT_PATH}"
     rm -rf /var/log/audit/audit.log*
     service auditd restart
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }

@@ -17,8 +17,9 @@
 #@Desc      	:   collect overall user time statistics
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 AUDIT_PATH=$(find /etc -name auditd.conf)
+export AUDIT_PATH
 
 function create_logfile(){
 	auditctl -w /home/auditd_test -p rwxa
@@ -41,13 +42,12 @@ function search_log(){
 	auditctl -W /tmp/"${audit_key}" -p rwxa -k "${audit_key}"
 	CHECK_RESULT $? 0 0 "second failed"
 	for((i=0;i<10;i++));do
-		ausearch -k "${audit_key}" -ts "${starttime}" -te "${endtime}"
-		if [[ $? -ne 0 ]];then
-			SLEEP_WAIT 1
-		else
-			break
-		fi
-	done
+        if ausearch -k "${audit_key}" -ts "${starttime}" -te "${endtime}"; then
+            break
+        else
+            SLEEP_WAIT 1
+        fi
+    done
 	if [[ $i -eq 10 ]];then
 		return 1
 	fi
