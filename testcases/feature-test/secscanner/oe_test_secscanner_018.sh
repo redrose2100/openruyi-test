@@ -14,7 +14,7 @@
 # @Contact   :   liyongqiang_yewu@cmss.chinamobile.com
 # @Date      :   2026-3-26
 # @License   :   Mulan PSL v2
-# @Desc      :   set_tmout test (session timeout configuration)
+# @Desc      :   set_tmout test - when TMOUT exists (should not modify existing value)
 # ############################################
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
@@ -40,6 +40,9 @@ function pre_test()
         # Remove any existing TMOUT configuration
         sed -i '/^[[:space:]]*TMOUT=/d' "$PROFILE_FILE" 2>/dev/null
         sed -i '/^[[:space:]]*export TMOUT/d' "$PROFILE_FILE" 2>/dev/null
+        # Add TMOUT with a different value
+        echo "TMOUT=300" >> "$PROFILE_FILE"
+        echo "export TMOUT" >> "$PROFILE_FILE"
     fi
 
     LOG_INFO "End of environmental preparation!"
@@ -49,27 +52,25 @@ function run_test() {
     LOG_INFO "start to run test."
 
     # Step 1: Set set_tmout=yes in configuration
-    \cp "$CONFIG_FILE" "${CONFIG_FILE}-bak"     
+    \cp "$CONFIG_FILE" "${CONFIG_FILE}-bak"
     sed -i 's/^set_tmout.*/set_tmout=yes/' "$CONFIG_FILE"
     CHECK_RESULT $? 0 0 "Failed to set set_tmout=yes"
 
-    # Step 2: Execute secscanner fix basic and check profile file
+    # Step 2: Execute secscanner fix basic
     secscanner check basic > tmp && \mv tmp check
     secscanner fix basic > tmp && \mv tmp fix
-    grep "TMOUT=180" "$PROFILE_FILE"
-    CHECK_RESULT $? 0 0 "Profile file missing 'TMOUT=180' after fix"
+
+    # Step 3: Verify TMOUT is NOT modified (should remain 300)
+    grep "TMOUT=300" "$PROFILE_FILE"
+    CHECK_RESULT $? 0 0 "Profile file should still contain 'TMOUT=300' (should not be modified)"
     grep "export TMOUT" "$PROFILE_FILE"
-    CHECK_RESULT $? 0 0 "Profile file missing 'export TMOUT' after fix"
+    CHECK_RESULT $? 0 0 "Profile file should contain 'export TMOUT'"
+    # Verify TMOUT=180 is not present
+    grep "TMOUT=180" "$PROFILE_FILE"
+    CHECK_RESULT $? 1 0 "Profile file should not contain 'TMOUT=180' when TMOUT already exists"
 
-    # Step 3: Execute secscanner check basic and check output
-    secscanner check basic > tmp && \mv tmp check
-    grep -i "tmout" check | grep -i "ok"
-    CHECK_RESULT $? 0 0 "TMOUT check did not show OK status"
-
-    # Step 5: Execute secscanner restore all and check output
+    # Step 4: Execute secscanner restore all and check output
     secscanner restore all -y > tmp && \mv tmp restore
-    grep "$PROFILE_FILE" restore | grep FINISHED
-    CHECK_RESULT $? 0 0 "Restore output missing for $PROFILE_FILE"
     LOG_INFO "All checks finished."
 }
 
@@ -79,7 +80,7 @@ function post_test()
 
     # Restore original profile file from backup
     if [[ -f "${PROFILE_FILE}-bak" ]]; then
-        \cp "${PROFILE_FILE}-bak" "$PROFILE_FILE"
+        \cp "${PROFILE_FILE}-bak" "${PROFILE_FILE}"
     fi
 
     # Restore secScanner configuration and remove package
