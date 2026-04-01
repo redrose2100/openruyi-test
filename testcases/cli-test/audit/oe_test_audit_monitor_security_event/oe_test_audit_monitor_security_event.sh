@@ -17,11 +17,12 @@
 #@Desc      	:   monitor security event
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
     useradd Jevons
     echo HUAWEI666 | passwd Jevons --stdin
     LOG_INFO "End to prepare the test environment."
@@ -44,7 +45,7 @@ function run_test()
 EOF
     SLEEP_WAIT 10
     endtime=$(date +%T)
-    ausearch -ts ${starttime} -te ${endtime} -m USER_LOGIN -sv no > /tmp/log.log 
+    ausearch -ts "${starttime}" -te "${endtime}" -m USER_LOGIN -sv no > /tmp/log.log 
     SLEEP_WAIT 5
     cat < /tmp/log.log | grep "<no matches>"
     CHECK_RESULT $? 1 0 "grep failed"
@@ -56,6 +57,7 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
     userdel Jevons
     rm -rf /tmp/log.log
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

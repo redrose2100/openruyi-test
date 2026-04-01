@@ -17,7 +17,14 @@
 #@Desc      	:   rule contact strategy
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "audit"
+    LOG_INFO "End of environmental preparation!"
+}
+
 
 function run_test()
 {
@@ -48,7 +55,7 @@ function run_test()
 		    SLEEP_WAIT 1
  	    fi
     done
-    if [ $i -eq 10 ]; then
+    if [ "$i" -eq 10 ]; then
 	   CHECK_RESULT 1 0 0 "contact error"
     fi 
     LOG_INFO "End to run test."
@@ -57,6 +64,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     auditctl -D
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

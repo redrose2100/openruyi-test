@@ -18,6 +18,12 @@
 # #############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "audit"
+    LOG_INFO "End of environmental preparation!"
+}
 function run_test() {
     LOG_INFO "Start executing testcase."
     service auditd start
@@ -37,5 +43,11 @@ function run_test() {
     systemctl status auditd | grep running
     CHECK_RESULT $? 0 0 "Failed to systemctl auditd services with running status"
     LOG_INFO "Finish testcase execution."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

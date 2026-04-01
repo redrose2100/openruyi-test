@@ -17,7 +17,13 @@
 #@Desc      	:   monitor file access
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test(){
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
+    LOG_INFO "End to prepare the environment"
+}
 
 function run_test()
 {
@@ -33,8 +39,8 @@ function run_test()
     CHECK_RESULT $? 0 0 "useradd failed"
     endtime=$(date +%T)
     for ((i=0;i,10;i++));do 
-	    ausearch -ts "${starttime}" -te "${endtime}" -k passwd_changes
-	    if [[ $? -ne 0 ]];then
+	    
+	    if ! ausearch -ts "${starttime}" -te "${endtime}" -k passwd_changes;then
 		    SLEEP_WAIT 1
 	    else
 	   	 break
@@ -50,6 +56,7 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
     userdel -rf Jevons
     auditctl -D
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

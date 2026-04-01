@@ -23,7 +23,7 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
     export TCLLIBPATH="/usr/lib64/tcl8.6/expect5.45.4"
-    DNF_INSTALL audispd-plugins
+    DNF_INSTALL "audit audispd-plugins"
     path=$(find / -name af_unix.conf)
     sed -i 's/active = no/active = yes/g' "${path}"
     service auditd restart

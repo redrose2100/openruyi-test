@@ -23,6 +23,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8    
+    DNF_INSTALL "audit"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -52,6 +53,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to clean the test environment."
     export LANG=${OLD_LANG}
+    DNF_REMOVE "$@"
     LOG_INFO "End to clean the test environment."
 }
 
