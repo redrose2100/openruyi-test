@@ -17,7 +17,14 @@
 #@Desc      	:   count number of events
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "audit"
+    LOG_INFO "End of environmental preparation!"
+}
+
 
 function run_test()
 {
@@ -28,4 +35,11 @@ function run_test()
     CHECK_RESULT $? 0 0 "grep failed"
     LOG_INFO "End to run test."
 }
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE "$@"
+    LOG_INFO "Finish environment cleanup!"
+}
+
 main "$@"

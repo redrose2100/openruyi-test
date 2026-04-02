@@ -17,7 +17,9 @@
 #@Desc      	:   the available disk space is less than the configured space
 #####################################
 
-source ../common/comlib.sh
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC1091
+source "./common/common_lib.sh"
 
 function pre_test()
 {

@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     OLD_LANG=$LANG
+    DNF_INSTALL "audit"
     export LANG=en_US.UTF-8    
     auditctl -l > audit_rules.bak
     auditctl -D
@@ -44,6 +45,7 @@ function post_test() {
     export LANG=${OLD_LANG}
     auditctl -R audit_rules.bak
     rm -f audit_rules.bak
+    DNF_REMOVE "$@"
     LOG_INFO "End to clean the test environment."
 }
 
