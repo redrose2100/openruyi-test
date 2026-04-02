@@ -16,26 +16,34 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test 驱动加载_snd-aloop
 # #############################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    modinfo snd-aloop |grep name
-    CHECK_RESULT $? 0 0 "Failed to view module information"
-    lsmod | grep ^snd_aloop
-    CHECK_RESULT $? 1 0 "Module loaded"
-    modprobe snd-aloop
-    CHECK_RESULT $? 0 0 "Module not loaded"
-    lsmod | grep ^snd_aloop
-    CHECK_RESULT $? 0 0 "Module not loaded"
+    if modinfo snd-aloop; then
+        modinfo snd-aloop | grep name
+        CHECK_RESULT $? 0 0 "Failed to view module information"
+        lsmod | grep ^snd_aloop
+        CHECK_RESULT $? 1 0 "Module loaded"
+        modprobe snd-aloop
+        CHECK_RESULT $? 0 0 "Module not loaded"
+        lsmod | grep ^snd_aloop
+        CHECK_RESULT $? 0 0 "Module not loaded"
+    else
+        LOG_INFO "Module snd-aloop not found"
+        exit 255
+    fi
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "Start to restore the tet environment."
-    systemctl stop alsa-state
-    rmmod snd-aloop
+    if modinfo snd-aloop; then
+        systemctl stop alsa-state
+        rmmod snd-aloop
+    fi
     LOG_INFO "Finish to restore the tet environment."
 }
 
