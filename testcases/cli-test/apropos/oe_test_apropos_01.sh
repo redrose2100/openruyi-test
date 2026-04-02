@@ -32,8 +32,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Basic search for 'ls' failed"
     apropos "ls" | grep -q "list"
     CHECK_RESULT $? 0 0 "Search for 'ls' content failed"
-    apropos "printf" | grep -q "printf"
-    CHECK_RESULT $? 0 0 "Search for 'printf' failed"
+    if ls /usr/share/man/man1/printf.1* /usr/share/man/man3/printf.3* >/dev/null 2>&1;then
+        apropos "printf" | grep -q "printf"
+        CHECK_RESULT $? 0 0 "Search for 'printf' failed"
+    fi
     apropos "file" | head -5 | wc -l | grep -q "[1-9]"
     CHECK_RESULT $? 0 0 "Search for 'file' returned no results"
     apropos --help 2>&1 | head -2 | grep -q -E "(usage|apropos)"
