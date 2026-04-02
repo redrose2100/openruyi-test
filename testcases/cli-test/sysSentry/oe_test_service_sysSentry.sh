@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    yum remove -y sysSentry
+    yum remove -y hbm_online_repair sentry_msg_monitor
     DNF_INSTALL sysSentry
     service=sysSentry.service
     systemctl start xalarmd

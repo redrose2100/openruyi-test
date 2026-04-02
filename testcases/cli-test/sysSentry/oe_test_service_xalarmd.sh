@@ -21,7 +21,6 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    yum remove -y sysSentry
     DNF_INSTALL sysSentry
     service=xalarmd.service
     log_time=$(date '+%Y-%m-%d %T')
