@@ -21,31 +21,34 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    while true; do
-        random_ip=192.168.122.$(shuf -e $(seq 1 254) | head -n 1)
-        ping -c 3 "${random_ip}" &>/dev/nul || {
-            printf "%s" "$random_ip"
-            break
-        }
-    done
-    while true; do
-        random2_ip=192.168.122.$(shuf -e $(seq 1 254) | head -n 1)
-        ping -c 3 "${random2_ip}" &>/dev/nul || {
-            printf "%s" "$random2_ip"
-            break
-        }
-    done
-    eth_use=$(TEST_NIC 1 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth' | awk '{print $NF}')
-    if [ -z "${eth_use}" ]; then
-        echo 'No extra unused network card.'
-        exit 1
+    RANDOM_IP(){
+
+        while true; do
+            random_ip=192.168.122.$(shuf -e $(seq 1 254) | head -n 1)
+            ping -c 3 "${random_ip}" &>/dev/nul || {
+                printf "%s" "$random_ip"
+                break
+            }
+        done
+    }
+    if [ "$(systemd-detect-virt)" = "qemu" ]; then
+    	eth_use=${NODE1_NIC}
+	eth_use_remote=${NODE2_NIC}
+    else	    
+    	eth_use=$(TEST_NIC 1 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth' | awk '{print $NF}')
+    	if [ -z "${eth_use}" ]; then
+        	echo 'No extra unused network card.'
+        	exit 1
+    	fi
+    	eth_use_remote=$(TEST_NIC 2 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth' | awk '{print $NF}')
+    	if [ -z "${eth_use_remote}" ]; then
+        	echo 'No extra unused network card.'
+        	exit 1
+    	fi
     fi
-    eth_use_remote=$(TEST_NIC 2 | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth' | awk '{print $NF}')
-    if [ -z "${eth_use_remote}" ]; then
-        echo 'No extra unused network card.'
-        exit 1
-    fi
+    random_ip=$(RANDOM_IP)
     ip addr add "$random_ip"/24 dev "${eth_use}"
+    random2_ip=$(RANDOM_IP)
     P_SSH_CMD --node 2 --cmd "ip addr add $random2_ip/24 dev ${eth_use_remote}"
     DNF_INSTALL openvpn
     DNF_INSTALL openvpn 2
