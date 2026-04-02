@@ -21,16 +21,36 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    yum remove -y hbm_online_repair sentry_msg_monitor
     DNF_INSTALL sysSentry
     service=sysSentry.service
     systemctl start xalarmd
     SLEEP_WAIT 5
+    log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution "${service}"
+    systemctl restart ${service}
+    CHECK_RESULT $? 0 0 "${service} restart failed"
+    SLEEP_WAIT 5
+    systemctl status ${service} | grep "Active: active"
+    CHECK_RESULT $? 0 0 "${service} restart failed"
+    systemctl stop sysSentry.socket
+    systemctl stop ${service}
+    CHECK_RESULT $? 0 0 "${service} stop failed"
+    SLEEP_WAIT 5
+    systemctl status ${service} | grep "Active: inactive"
+    CHECK_RESULT $? 0 0 "${service} stop failed"
+    systemctl start ${service}
+    CHECK_RESULT $? 0 0 "${service} start failed"
+    SLEEP_WAIT 5
+    systemctl status ${service} | grep "Active: active"
+    CHECK_RESULT $? 0 0 "${service} start failed"
+    test_enabled ${service}
+    journalctl --since "${log_time}" -u ${service} | grep -i "fail\|error"
+    CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload "${service}"
     LOG_INFO "Finish test!"
 }
