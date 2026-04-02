@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test samba.service restart
 # #############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -44,7 +44,7 @@ EOF
     mv /etc/krb5.conf /etc/krb5.bak
     rm -rf /etc/krb5.conf && cp -raf /var/lib/samba/private/krb5.conf /etc/
     systemctl stop firewalld
-    sed -i 's/nameserver/#nameserver/' /etc/resolv.conf 
+    sed -i 's/nameserver/#nameserver/' /etc/resolv.conf
     echo "nameserver 127.0.0.1" >> /etc/resolv.conf
     flag=false
     if getenforce | grep Enforcing; then
@@ -59,7 +59,6 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl restart samba.service
     CHECK_RESULT $? 0 0 "samba.service restart failed"
-    SLEEP_WAIT 5
     systemctl status samba.service | grep "Active: active"
     CHECK_RESULT $? 0 0 "samba.service restart failed"
     systemctl stop samba.service
@@ -92,14 +91,14 @@ function post_test() {
     systemctl stop samba.service
     DNF_REMOVE
     sed -i '/nameserver 127.0.0.1/d' /etc/resolv.conf
-    sed -i 's/#nameserver/nameserver/' /etc/resolv.conf 
+    sed -i 's/#nameserver/nameserver/' /etc/resolv.conf
     hostname "${host_name}"
     sed -i "/TESTAD/d" /etc/hosts
     systemctl start firewalld
     if [ "${flag}" = "true" ]; then
         setenforce 1
     fi
-    rm -rf  /etc/samba/smb.conf /var/lib/samba/private/* /var/lib/samba/sysvol/*  
+    rm -rf  /etc/samba/smb.conf /var/lib/samba/private/* /var/lib/samba/sysvol/*
     mv -f /etc/krb5.bak /etc/krb5.conf
     mv -f /etc/samba/smb.conf_bak /etc/samba/smb.conf
     LOG_INFO "Finish to restore the test environment."
