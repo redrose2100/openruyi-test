@@ -40,6 +40,10 @@ function vm_clean() {
 }
 
 function pre_init() {
+    if [ $(arch) != "aarch64" ];then
+	echo "memlinkd仅支持ARM架构，非ARM架构跳过测试"
+	exit 255
+    fi
     # pkg pre
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/pkg_pre.sh"
     sh "${OET_PATH}/testcases/smoke-test/smoke-memlink/common/pkg_pre.sh"
