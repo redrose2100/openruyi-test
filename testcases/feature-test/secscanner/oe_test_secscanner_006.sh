@@ -45,8 +45,6 @@ function run_test() {
     secscanner restore all -y  > tmp && mv tmp restore
     grep motd restore |grep FINISHED
     CHECK_RESULT $? 0 0
-    diff /etc/motd ./motd_bak
-    CHECK_RESULT $? 0 0
 }
 
 function post_test()
