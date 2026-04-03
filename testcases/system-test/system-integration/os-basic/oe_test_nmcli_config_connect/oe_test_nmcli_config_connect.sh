@@ -40,6 +40,12 @@ function run_test() {
     CHECK_RESULT $?
     nmcli con mod "${con_name}" +ipv6.dns "2001:4860:4860::8888 2001:4860:4860::8844"
     CHECK_RESULT $?
+    #rv qemu下获取动态ip失败，故调整设置静态ip
+    if [ "$(systemd-detect-virt)" = "qemu" ]; then
+       Randomly_generate_ip
+       nmcli con mod "${con_name}" ipv4.addresses ${random_ip}/24
+       nmcli con mod "${con_name}" ipv4.method manual
+    fi
     nmcli con up "${con_name}" ifname "${test_eth}"
     CHECK_RESULT $?
     nmcli device status | grep "${test_eth}" | grep "${con_name}"
