@@ -30,7 +30,7 @@ function pre_test()
 function run_test() {
     LOG_INFO "start to run test."
     rm -f /var/log/secScanner/CVE_info.json
-    secscanner check cve_t 2>&1 > tmp && \mv tmp check
+    secscanner check cve_t > tmp 2>&1 && \mv tmp check
     # Check if architecture is not supported
     if grep "architecture is not supported" check; then
         LOG_INFO "Architecture not supported, returning 0"
