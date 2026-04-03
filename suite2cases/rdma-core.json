@@ -12,15 +12,15 @@
         },
         {
             "name": "oe_test_service_ibacm",
-            "machine type": "kvm"
+            "machine type": "physical"
         },
         {
             "name": "oe_test_service_iwpmd",
-            "machine type": "kvm"
+            "machine type": "physical"
         },
         {
             "name": "oe_test_service_rdma-ndd",
-            "machine type": "kvm"
+            "machine type": "physical"
         }
     ]
 }
