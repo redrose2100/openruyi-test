@@ -29,7 +29,7 @@ function get_free_eth() {
 
 function Randomly_generate_ip() {
     while [ True ]; do
-        random_ip=${NODE1_IPV4[0]%.*}.$(shuf -e $(seq 1 254) | head -n 1)
+        random_ip=${NODE1_IPV4[0]%.*}.$(shuf -e $(seq 50 254) | head -n 1)
         ping -c 3 ${random_ip} &>/dev/nul || {
             printf "%s" "$random_ip"
             break
