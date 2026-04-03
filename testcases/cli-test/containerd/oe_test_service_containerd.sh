@@ -22,24 +22,29 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL containerd
-    mkdir -p /etc/cni/net.d/
-    log_time="$(date '+%Y-%m-%d %T')"
-    echo '{
-    "cniVersion": "0.4.0",
-    "name": "mynet",
-    "type": "bridge",
-    "bridge": "cni0",
-    "isGateway": true,
-    "ipMasq": true,
-    "ipam": {
-        "type": "host-local",
-        "subnet": "10.10.0.0/16",
-        "routes": [
-            { "dst": "0.0.0.0/0" }
-        ],
-        "gateway": "10.10.0.1"
-    }
-}' >/etc/cni/net.d/network.conf
+    if rpm -ql containerd | grep "containerd.service"; then
+        mkdir -p /etc/cni/net.d/
+        log_time="$(date '+%Y-%m-%d %T')"
+        echo '{
+        "cniVersion": "0.4.0",
+        "name": "mynet",
+        "type": "bridge",
+        "bridge": "cni0",
+        "isGateway": true,
+        "ipMasq": true,
+        "ipam": {
+            "type": "host-local",
+            "subnet": "10.10.0.0/16",
+            "routes": [
+                { "dst": "0.0.0.0/0" }
+            ],
+            "gateway": "10.10.0.1"
+        }
+    }' >/etc/cni/net.d/network.conf
+    else
+        LOG_INFO "containerd.service not found"
+        exit 255
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -55,9 +60,11 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    systemctl stop containerd.service
+    if rpm -ql containerd | grep "containerd.service"; then
+        systemctl stop containerd.service
+        rm -rf /etc/cni/net.d
+    fi
     DNF_REMOVE "$@"
-    rm -rf /etc/cni/net.d/network.conf
     LOG_INFO "End to restore the test environment."
 }
 
