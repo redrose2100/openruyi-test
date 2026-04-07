@@ -23,8 +23,8 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "rdma-core"
     if ! lspci | grep -i -E "infiniband|rdma|mellanox|connectx|iwarp";then
-        exit 255
         LOG_INFO "There is no RDMA device in this environment."
+        exit 255
     fi
     LOG_INFO "End of environmental preparation!"
 }
