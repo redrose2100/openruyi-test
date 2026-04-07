@@ -16,12 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ibacm.socket restart
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "ibacm"
+    if ! lspci | grep -i -E "infiniband|rdma|mellanox|connectx|iwarp";then
+        exit 255
+        LOG_INFO "There is no RDMA device in this environment."
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -35,7 +39,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop ibacm.socket
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
