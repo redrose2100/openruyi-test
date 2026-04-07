@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test python-wheel
 # ############################################
+# shellcheck disable=SC1090,SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -27,7 +28,7 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-  pip3 wheel mypackage
+  pip3 wheel mypackage -i https://mirrors.aliyun.com/pypi/simple
   CHECK_RESULT $? 0 0 "command success"
   test -e Mypackage-0.1-py3-none-any.whl
   CHECK_RESULT $? 0 0 "Mypackage-0.1-py3-none-any.whl not exist"
@@ -36,7 +37,7 @@ function run_test() {
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  DNF_REMOVE "$@"
+  DNF_REMOVE
   rm -rf ./*.whl
   LOG_INFO "Finish environment cleanup!"
 }
