@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test chcpu basic functionality
 # ############################################
+# shellcheck disable=SC1090,SC2119
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
 
@@ -23,6 +24,8 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL util-linux
+    Default_Lang=$LANG
+    export LANG=en_US.UTF-8
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -71,7 +74,8 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
+    export LANG=$Default_Lang
     LOG_INFO "End to restore the test environment."
 }
 
