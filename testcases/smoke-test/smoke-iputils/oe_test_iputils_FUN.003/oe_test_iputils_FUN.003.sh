@@ -16,12 +16,12 @@
 # @Desc      :   iputils从R11升级到R12后差异点检查：
 #                废弃命令：ninfod、rarpd、rdisc
 # ############################################
+# shellcheck disable=SC2119,SC2120
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    history_id=$(yum history | head -n3 | tail -n1 | awk '{print $1}')
-    yum -y install iputils
+    DNF_INSTALL iputils
 }
 
 function run_test() {
@@ -41,7 +41,7 @@ function run_test() {
 }
 
 function post_test() {
-    yum -y history rollback "$history_id"
+    DNF_REMOVE
 }
 
 main "$@"

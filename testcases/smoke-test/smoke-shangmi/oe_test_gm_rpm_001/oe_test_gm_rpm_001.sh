@@ -19,6 +19,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to run test."
+    cur_lang=$LANG
+    export LANG=en_US.UTF-8
     DNF_INSTALL "libgcrypt gnupg2 rpm"
     LOG_INFO "End to prepare the test environment."
 }
@@ -60,6 +62,7 @@ function post_test() {
     gpg --batch --yes --delete-secret-keys "$fingerprint"
     gpg --batch --yes --delete-keys "$fingerprint"
     rpm -qa 'gpg-pubkey*' --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n' | grep rpm-gm | awk '{print $1}' | xargs rpm -e
+    export LANG=$cur_lang
     LOG_INFO "Finish restoring the test environment."
 }
 

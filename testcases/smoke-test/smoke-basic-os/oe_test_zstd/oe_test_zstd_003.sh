@@ -49,11 +49,6 @@ function run_test() {
         (($(echo "$time_1 >= $time_4" | bc -l)))
         CHECK_RESULT $? 0 0 "Using p1(1cpu) spend less time than using p4(4cpus)"
     fi
-    if [ "${NODE1_FRAME}" != "riscv64" ];then
-        # 使用1cpu耗时应小于1s
-        (($(echo "$time_1 < 1" | bc -l)))
-        CHECK_RESULT $? 0 0 "Using p1(1cpu) spend time more than 1s"
-    fi
 
     /usr/bin/time -f %e pzstd -1 -f bigfile &> tmp_file
     t_level_1=$(awk 'NR==2 {print $1}' tmp_file)

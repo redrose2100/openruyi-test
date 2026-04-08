@@ -23,6 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if yum list oeAware-manager; then
         DNF_INSTALL "oeAware-manager"
+        systemctl restart oeaware
     else
         echo "oeAware-manager does not exist"
         exit 255
