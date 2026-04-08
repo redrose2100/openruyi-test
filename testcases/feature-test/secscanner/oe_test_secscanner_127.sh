@@ -53,17 +53,9 @@ function run_test() {
     secscanner fix level3 > tmp && \mv tmp fix
     # Step 3: Check that pam_wheel configuration is not added
     grep -E "auth\s+required\s+pam_wheel\.so" "$SU_FILE"
-    if [[ $? -eq 0 ]]; then
-        LOG_WARN "pam_wheel configuration was added (unexpected)"
-    else
-        LOG_INFO "pam_wheel configuration was not added (as expected)"
-    fi
+    CHECK_RESULT $? 0 0 "pam_wheel configuration was added (unexpected"
     # Step 4: Check restore
     secscanner restore all -y > tmp && \mv tmp restore
-    # Restore original configuration
-    if [[ -f "${SU_FILE}-bak" ]]; then
-        \cp "${SU_FILE}-bak" "$SU_FILE"
-    fi
     LOG_INFO "All checks finished."
 }
 
