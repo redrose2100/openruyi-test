@@ -18,6 +18,13 @@
 # #############################################
 
 source "$OET_PATH/testcases/cli-test/common/common_lib.sh"
+function pre_test(){
+    LOG_INFO "Start environmental preparation."
+    mkdir -p /run/initramfs/state/network
+    echo "dummy" > /run/initramfs/state/network/dummy.conf
+    LOG_INFO "End of environmental preparation!"
+}
+
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -28,6 +35,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    rm -rf /run/initramfs/state/network
     systemctl stop import-state.service
     LOG_INFO "Finish environment cleanup!"
 }
