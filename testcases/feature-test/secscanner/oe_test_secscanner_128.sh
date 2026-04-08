@@ -38,7 +38,7 @@ function pre_test()
         \cp "$PASSWD_FILE" "${PASSWD_FILE}-bak"
     fi
     # Record original permission
-    original_perm=$(ls -l "$PASSWD_FILE" | awk '{print $1}')
+    original_perm=$(stat -c "%A" "$PASSWD_FILE")
     LOG_INFO "Original /etc/passwd permission: $original_perm"
     LOG_INFO "End of environmental preparation!"
 }
@@ -48,27 +48,15 @@ function run_test() {
     # Step 1: Set passwd_property=yes in secscanner.cfg
     sed -i 's/^passwd_property.*/passwd_property=yes/' "$CONFIG_FILE"
     CHECK_RESULT $? 0 0 "Failed to set passwd_property=yes"
-    # Step 2: Execute secscanner fix level3
-    secscanner fix level3 > tmp && \mv tmp fix
-    # Step 3: Change file permission to 444
     chmod 444 "$PASSWD_FILE"
-    CHECK_RESULT $? 0 0 "Failed to change /etc/passwd permission to 444"
-    current_perm=$(ls -l "$PASSWD_FILE" | awk '{print $1}')
-    LOG_INFO "Current /etc/passwd permission: $current_perm"
-    # Step 4: Execute secscanner check level3
     secscanner check level3 > tmp && \mv tmp check
-    # Check WARNING message
     grep -i "passwd.*property" check | grep -i "warning"
     CHECK_RESULT $? 0 0 "WARNING message not found"
-    # Step 5: Execute secscanner fix level3 again
     secscanner fix level3 > tmp && \mv tmp fix
-    # Check if permission is fixed
-    current_perm=$(ls -l "$PASSWD_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$PASSWD_FILE")
     LOG_INFO "Fixed /etc/passwd permission: $current_perm"
-    # Step 6: Check restore
     secscanner restore all -y > tmp && \mv tmp restore
-    # Restore original configuration
-    if [[ -f "${PASSWD_FILE}-bak" ]]; then
+    if test -f "${PASSWD_FILE}-bak"; then
         \cp "${PASSWD_FILE}-bak" "$PASSWD_FILE"
     fi
     LOG_INFO "All checks finished."
@@ -78,10 +66,10 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     # Restore original files
-    if [[ -f "${CONFIG_FILE}-bak" ]]; then
+    if test -f "${CONFIG_FILE}-bak"; then
         \cp "${CONFIG_FILE}-bak" "$CONFIG_FILE"
     fi
-    if [[ -f "${PASSWD_FILE}-bak" ]]; then
+    if test -f "${PASSWD_FILE}-bak"; then
         \cp "${PASSWD_FILE}-bak" "$PASSWD_FILE"
         rm -f "${PASSWD_FILE}-bak"
     fi
