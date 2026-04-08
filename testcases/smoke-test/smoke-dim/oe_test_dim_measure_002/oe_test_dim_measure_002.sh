@@ -19,7 +19,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     dnf config-manager --disable update
-    DNF_INSTALL "dim_tools dim vdo kmod-kvdo"
+    DNF_INSTALL "kernel-devel-$(uname -r) kernel-headers-$(uname -r) dim_tools dim vdo kmod-kvdo"
     if dnf list --installed | grep dim_tools; then
         lsmod | grep dim_core || insmod "$(rpm -ql dim | grep dim_core.ko)"
         lsmod | grep dim_monitor || insmod "$(rpm -ql dim | grep dim_monitor.ko)"

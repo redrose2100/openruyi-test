@@ -15,11 +15,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   指定ping退出之前的超时（以秒为单位），无论已发送或接收了多少数据包 -w参数
 # ############################################
-
+# shellcheck disable=SC2119,SC2120
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    yum -y install iputils ping
+    DNF_INSTALL "iputils ping"
 }
 
 function run_test() {
@@ -33,7 +33,8 @@ function run_test() {
 }
 
 function post_test() {
-    yum -y remove iputils ping
+    rm -rf log
+    DNF_REMOVE
 }
 
 main "$@"
