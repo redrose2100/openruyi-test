@@ -90,7 +90,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    if [[ -f "${CONFIG_FILE}-bak" ]]; thens
+    if [[ -f "${CONFIG_FILE}-bak" ]]; then
         \cp "${CONFIG_FILE}-bak" "$CONFIG_FILE"
     fi
     if [[ -f "${PASSWD_FILE}-bak" ]]; then
