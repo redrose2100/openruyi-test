@@ -48,11 +48,7 @@ function run_test() {
     secscanner check level3 > tmp && \mv tmp check
     secscanner fix level3 > tmp && \mv tmp fix
     grep -i "remove.*tftp" fix | grep -i "finished"
-    if [ $? -ne 0 ]; then
-        LOG_INFO "Fix output:"
-        cat fix
-        CHECK_RESULT 1 0 0 "Remove tftp message not found"
-    fi
+    CHECK_RESULT $? 0 0 "Remove tftp message not found"
     rpm -qa | grep -w tftp
     CHECK_RESULT $? 1 0 "tftp should be uninstalled"
     secscanner restore all -y > tmp && \mv tmp restore
