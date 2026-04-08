@@ -25,6 +25,7 @@ function pre_test() {
     useradd test2
     echo test1:deepin12#$ | chpasswd
     echo test2:deepin12#$ | chpasswd
+    systemctl start auditd
     LOG_INFO "End to prepare the test environment."
 }
 
