@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Deploying high-availability NBDE systems
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function config_params() {
     LOG_INFO "Start loading data!"
-    TEST_DISK=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
+    disks=$(TEST_DISK)
+    read -ra disk_list <<<"$disks"
+    TEST_DISK=/dev/${disk_list[0]}
     LOG_INFO "Loading data is complete!"
 }
 
@@ -120,7 +122,7 @@ function post_test() {
     cryptsetup close test_encrypted
     mkfs.ext4 "${TEST_DISK}1" -F
     echo -e "d\n\nw"| fdisk "${TEST_DISK}"
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     rm -rf secert.jwe adv.jws sec.jwe input-plain.txt /etc/systemd/system/tangd.socket.d /mnt/test_encrypted1 /var/db/tang /tmp/header.bin
     DNF_REMOVE 2 "tang"
     SSH_CMD "rm -rf /etc/systemd/system/tangd.socket.d /var/db/tang" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
