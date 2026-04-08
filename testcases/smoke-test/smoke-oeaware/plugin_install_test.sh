@@ -22,6 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if yum list oeAware-manager; then
         DNF_INSTALL "oeAware-manager"
+        systemctl restart oeaware
     else
         echo "oeAware-manager does not exist"
         exit 255
@@ -32,11 +33,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     test1=$(oeawarectl -i test)
-    CHECK_RESULT "$test1" "Download failed, because download not found: test" 0 "test1 faile"
-    # test2
-	oeawarectl -i numafast
-	CHECK_RESULT $? 0 0 "test2 failed"
-    
+    CHECK_RESULT "$test1" "Download failed, because download not found: test" 0 "test1 failed"
+    oeawarectl -i numafast
+    CHECK_RESULT $? 0 0 "Download numafast failed"
     LOG_INFO "End to run test."
 }
 

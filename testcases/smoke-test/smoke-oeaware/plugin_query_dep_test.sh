@@ -23,6 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if yum list oeAware-manager; then
         DNF_INSTALL "oeAware-manager"
+        systemctl restart oeaware
     else
         echo "oeAware-manager does not exist"
         exit 255
@@ -36,10 +37,10 @@ function run_test() {
     CHECK_RESULT "$test1" "Query instance dependencies failed, because instance does not exist." 0 "test1 failed"
     test2=$(oeawarectl --query-dep thread_collector)
     CHECK_RESULT "$test2" "Generate dependencies graph dep.png." 0 "test2 failed"
-	test3=$(oeawarectl -Q)
+    test3=$(oeawarectl -Q)
     CHECK_RESULT "$test3" "Generate dependencies graph dep.png." 0 "test3 failed"
     rm -f dep.*
-	LOG_INFO "End to run test."
+    LOG_INFO "End to run test."
 }
 
 function post_test() {

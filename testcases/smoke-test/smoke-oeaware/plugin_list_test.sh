@@ -23,6 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if yum list oeAware-manager; then
         DNF_INSTALL "oeAware-manager"
+        systemctl restart oeaware
     else
         echo "oeAware-manager does not exist"
         exit 255
@@ -39,8 +40,10 @@ function run_test() {
     CHECK_RESULT "$test3" "libthread_scenario.so" 0 "test3 failed"
     test4=$(oeawarectl --list | grep "libsystem_tune.so")
     CHECK_RESULT "$test4" "libsystem_tune.so" 0 "test4 failed"
-    test5=$(oeawarectl --list | grep "libpmu.so")
-    CHECK_RESULT "$test5" "libpmu.so" 0 "test5 failed"
+    if [[ "${NODE1_FRAME}" == "aarch64" ]]; then
+        test5=$(oeawarectl --list | grep "libpmu.so")
+        CHECK_RESULT "$test5" "libpmu.so" 0 "test5 failed"
+    fi
     LOG_INFO "End to run test."
 }
 

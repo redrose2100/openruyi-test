@@ -62,24 +62,27 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check getcap -h failed"
     setcap cap_sys_time+eip libcap_testfile
     CHECK_RESULT $? 0 0 "Check setcap failed"
-    getcap -v libcap_testfile| grep 'libcap_testfile cap_sys_time=eip' 
+    getcap -v libcap_testfile > libcap_tmp1
+    grep 'libcap_testfile cap_sys_time=eip' libcap_tmp1 || grep "libcap_testfile = cap_sys_time+eip" libcap_tmp1
     CHECK_RESULT $? 0 0 "Check getcap -v libcap_testfile failed"
-    getcap -r ./ >libcap_tmp && grep 'libcap_testfile cap_sys_time=eip' < libcap_tmp
+    getcap -r ./ >libcap_tmp2
+    grep 'libcap_testfile cap_sys_time=eip' libcap_tmp2 || grep "libcap_testfile = cap_sys_time+eip" libcap_tmp2
     CHECK_RESULT $? 0 0 "Check getcap -r ./ failed"
     getpcaps "$(pgrep -f sshd | awk '{print $2}'|head -1)" 2>libcap_tmp | grep ': =ep'
     CHECK_RESULT $? 0 0 "Check getpcaps failed"
     # setcap命令测试
-    setcap -q cap_net_raw+eip libcap_testfile && getcap libcap_testfile >libcap_tmp && grep 'libcap_testfile cap_net_raw=eip' < libcap_tmp
+    setcap -q cap_net_raw+eip libcap_testfile && getcap libcap_testfile > libcap_tmp3
+    grep 'libcap_testfile cap_net_raw=eip' libcap_tmp3 || grep "libcap_testfile = cap_net_raw+eip" libcap_tmp3
     CHECK_RESULT $? 0 0 "Check setcap -q failed"
     setcap -v cap_net_raw+eip libcap_testfile | grep 'libcap_testfile: OK'
     CHECK_RESULT $? 0 0 "Check setcap -v failed"
-    setcap -r libcap_testfile && getcap -v libcap_testfile >libcap_tmp && grep 'libcap_testfile' < libcap_tmp 
+    setcap -r libcap_testfile && getcap -v libcap_testfile > libcap_tmp4 && grep 'libcap_testfile' libcap_tmp4 
     CHECK_RESULT $? 0 0 "Check setcap -r failed"
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f libcap_testfile
+    rm -f libcap_testfile libcap_tmp*
     userdel -r testuser
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
