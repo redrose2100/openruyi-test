@@ -16,9 +16,9 @@
 #@Desc      	:   inject time fault
 #####################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
+#source "$OET_PATH/libs/locallibs/common_lib.sh"
 # shellcheck disable=SC1091
-source "./common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/audit/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."

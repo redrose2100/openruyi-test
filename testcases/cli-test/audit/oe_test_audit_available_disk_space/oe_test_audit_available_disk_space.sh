@@ -17,13 +17,13 @@
 #@Desc      	:   the available disk space is less than the configured space
 #####################################
 
-source "$OET_PATH/libs/locallibs/common_lib.sh"
 # shellcheck disable=SC1091
-source "./common/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/audit/common/common_lib.sh"
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "audit"
     cp -raf /var/log/ /tmp/
     sed -i 's/log_file = \/var\/log\/audit\/audit.log/log_file = \/tmp\/log\/audit\/audit.log/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = ROTATE/max_log_file_action = KEEP_LOGS/g' "/etc/audit/auditd.conf"
@@ -63,6 +63,7 @@ function post_test()
     sed -i 's/max_log_file_action = KEEP_LOGS/max_log_file_action = ROTATE/g' "${AUDIT_PATH}"
     service auditd restart
     rm -rf /tmp/log
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

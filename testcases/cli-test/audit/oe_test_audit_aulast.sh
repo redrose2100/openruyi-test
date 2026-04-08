@@ -21,9 +21,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "audit sshpass"
+    systemctl start auditd
     OLD_LANG="$LANG"
     export LANG=en_US.UTF-8   
-    echo "wrong_pass" | ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@localhost "exit" 2>/dev/null 
+    sshpass -p "openEuler12#$" ssh -o StrictHostKeyChecking=no root@localhost "exit" 2>/dev/null
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,9 +45,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to filter tty login users. Procedure"
     aulast --proof|grep -q ausearch
     CHECK_RESULT $? 0 0 "failed to print the audit event sequence number used to determine a row on the report"
+    sshpass -p "wrong_pass" ssh -o StrictHostKeyChecking=no root@localhost "exit" 2>/dev/null
     aulast --bad |grep root
     CHECK_RESULT $? 0 0 "the command bad failed to execute"
-    aulast --debug 2>&1 | grep -q logged
+    aulast --debug 2>&1 | grep -q root 
     CHECK_RESULT $? 0 0 "the command debug failed to execute"
     aulast --stdin < aulast.log | grep -q root
     CHECK_RESULT $? 0 0 "the command stdin  failed to execute"
@@ -56,6 +59,7 @@ function post_test() {
     LOG_INFO "Start to clean the test environment."
     rm -rf aulast.log
     export LANG="${OLD_LANG}"
+    DNF_REMOVE "$@"
     LOG_INFO "End to clean the test environment."
 }
 
