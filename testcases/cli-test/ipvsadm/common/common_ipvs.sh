@@ -53,15 +53,6 @@ function build_env() {
         eth_use3=$(NODE3_NIC | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
         eth_use4=$(NODE4_NIC | grep -v -E 'lo|bond|virbr|vnet|br\\[0-9\\]|docker|br-|veth|tun' | awk '{print $NF}')
     fi
-    #检查iptables-legacy规则有REJECT 规则，若存在需要临时放行http 80端口
-    added_rule=0
-    if command -v iptables-legacy >/dev/null 2>&1 && iptables-legacy -L INPUT -n | grep -q "REJECT.*icmp-host-prohibited"; then
-         if ! iptables-legacy -L INPUT -n | grep "dpt:80"; then
-	     echo "[*] Allowing HTTP (port 80)..."
-	     iptables-legacy -I INPUT -p tcp --dport 80 -j ACCEPT
-             added_rule=1
-	 fi
-    fi
     ip addr add "$ipvs_ip1"/24 dev "${eth_use1}"
     P_SSH_CMD --node 2 --cmd "ip addr add $ipvs_ip2/24 dev ${eth_use2}"
     P_SSH_CMD --node 3 --cmd "ip addr add $ipvs_ip3/24 dev ${eth_use3}"
@@ -71,6 +62,15 @@ function build_env() {
     DNF_INSTALL "firewalld" 3
     systemctl start httpd
     systemctl stop firewalld
+    #检查iptables-legacy规则是否有REJECT 规则，若存在需要临时放行http 80端口
+    added_rule=0
+    if command -v iptables-legacy >/dev/null 2>&1 && iptables-legacy -L INPUT -n | grep -q "REJECT.*icmp-host-prohibited"; then
+         if ! iptables-legacy -L INPUT -n | grep "dpt:80"; then
+	     echo "[*] Allowing HTTP (port 80)..."
+	     iptables-legacy -I INPUT -p tcp --dport 80 -j ACCEPT
+             added_rule=1
+	 fi
+    fi
     ipvsadm
     ipvsadm -C
 }
