@@ -38,7 +38,7 @@ function pre_test()
         \cp "$GROUPX_FILE" "${GROUPX_FILE}-bak"
     fi
     # Record original permission
-    original_perm=$(ls -l "$GROUPX_FILE" | awk '{print $1}')
+    original_perm=$(stat -c "%A" "$GROUPX_FILE")
     LOG_INFO "Original /etc/group- permission: $original_perm"
     LOG_INFO "End of environmental preparation!"
 }
@@ -53,24 +53,20 @@ function run_test() {
     # Step 3: Change file permission to 444
     chmod 444 "$GROUPX_FILE"
     CHECK_RESULT $? 0 0 "Failed to change /etc/group- permission to 444"
-    current_perm=$(ls -l "$GROUPX_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$GROUPX_FILE")
     LOG_INFO "Current /etc/group- permission: $current_perm"
     # Step 4: Execute secscanner check level3
     secscanner check level3 > tmp && \mv tmp check
     # Check WARNING message
-    grep -i "group-.*property" check | grep -i "warning"
+    grep -i "groupx.*property" check | grep -i "warning"
     CHECK_RESULT $? 0 0 "WARNING message not found"
     # Step 5: Execute secscanner fix level3 again
     secscanner fix level3 > tmp && \mv tmp fix
     # Check if permission is fixed
-    current_perm=$(ls -l "$GROUPX_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$GROUPX_FILE")
     LOG_INFO "Fixed /etc/group- permission: $current_perm"
     # Step 6: Check restore
     secscanner restore all -y > tmp && \mv tmp restore
-    # Restore original configuration
-    if [[ -f "${GROUPX_FILE}-bak" ]]; then
-        \cp "${GROUPX_FILE}-bak" "$GROUPX_FILE"
-    fi
     LOG_INFO "All checks finished."
 }
 
