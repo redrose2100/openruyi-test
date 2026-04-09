@@ -38,7 +38,7 @@ function pre_test()
         \cp "$GSHADOW_FILE" "${GSHADOW_FILE}-bak"
     fi
     # Record original permission
-    original_perm=$(ls -l "$GSHADOW_FILE" | awk '{print $1}')
+    original_perm=$(stat -c "%A" "$GSHADOW_FILE")
     LOG_INFO "Original /etc/gshadow permission: $original_perm"
     LOG_INFO "End of environmental preparation!"
 }
@@ -53,7 +53,7 @@ function run_test() {
     # Step 3: Change file permission to 444
     chmod 444 "$GSHADOW_FILE"
     CHECK_RESULT $? 0 0 "Failed to change /etc/gshadow permission to 444"
-    current_perm=$(ls -l "$GSHADOW_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$GSHADOW_FILE")
     LOG_INFO "Current /etc/gshadow permission: $current_perm"
     # Step 4: Execute secscanner check level3
     secscanner check level3 > tmp && \mv tmp check
@@ -63,12 +63,12 @@ function run_test() {
     # Step 5: Execute secscanner fix level3 again
     secscanner fix level3 > tmp && \mv tmp fix
     # Check if permission is fixed
-    current_perm=$(ls -l "$GSHADOW_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$GSHADOW_FILE")
     LOG_INFO "Fixed /etc/gshadow permission: $current_perm"
     # Step 6: Check restore
     secscanner restore all -y > tmp && \mv tmp restore
     # Restore original configuration
-    if [[ -f "${GSHADOW_FILE}-bak" ]]; then
+    if test -f "${GSHADOW_FILE}-bak"; then
         \cp "${GSHADOW_FILE}-bak" "$GSHADOW_FILE"
     fi
     LOG_INFO "All checks finished."
@@ -78,10 +78,10 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     # Restore original files
-    if [[ -f "${CONFIG_FILE}-bak" ]]; then
+    if test -f "${CONFIG_FILE}-bak"; then
         \cp "${CONFIG_FILE}-bak" "$CONFIG_FILE"
     fi
-    if [[ -f "${GSHADOW_FILE}-bak" ]]; then
+    if test -f "${GSHADOW_FILE}-bak"; then
         \cp "${GSHADOW_FILE}-bak" "$GSHADOW_FILE"
         rm -f "${GSHADOW_FILE}-bak"
     fi
