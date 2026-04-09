@@ -38,7 +38,7 @@ function pre_test()
         \cp "$GSHADOWX_FILE" "${GSHADOWX_FILE}-bak"
     fi
     # Record original permission
-    original_perm=$(ls -l "$GSHADOWX_FILE" | awk '{print $1}')
+    original_perm=$(stat -c "%A" "$GSHADOWX_FILE")
     LOG_INFO "Original /etc/gshadow- permission: $original_perm"
     LOG_INFO "End of environmental preparation!"
 }
@@ -53,22 +53,22 @@ function run_test() {
     # Step 3: Change file permission to 444
     chmod 444 "$GSHADOWX_FILE"
     CHECK_RESULT $? 0 0 "Failed to change /etc/gshadow- permission to 444"
-    current_perm=$(ls -l "$GSHADOWX_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$GSHADOWX_FILE")
     LOG_INFO "Current /etc/gshadow- permission: $current_perm"
     # Step 4: Execute secscanner check level3
     secscanner check level3 > tmp && \mv tmp check
     # Check WARNING message
-    grep -i "gshadow-.*property" check | grep -i "warning"
+    grep -i "gshadowx.*property" check | grep -i "warning"
     CHECK_RESULT $? 0 0 "WARNING message not found"
     # Step 5: Execute secscanner fix level3 again
     secscanner fix level3 > tmp && \mv tmp fix
     # Check if permission is fixed
-    current_perm=$(ls -l "$GSHADOWX_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$GSHADOWX_FILE")
     LOG_INFO "Fixed /etc/gshadow- permission: $current_perm"
     # Step 6: Check restore
     secscanner restore all -y > tmp && \mv tmp restore
     # Restore original configuration
-    if [[ -f "${GSHADOWX_FILE}-bak" ]]; then
+    if test -f "${GSHADOWX_FILE}-bak"; then
         \cp "${GSHADOWX_FILE}-bak" "$GSHADOWX_FILE"
     fi
     LOG_INFO "All checks finished."
@@ -78,10 +78,10 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     # Restore original files
-    if [[ -f "${CONFIG_FILE}-bak" ]]; then
+    if test -f "${CONFIG_FILE}-bak"; then
         \cp "${CONFIG_FILE}-bak" "$CONFIG_FILE"
     fi
-    if [[ -f "${GSHADOWX_FILE}-bak" ]]; then
+    if test -f "${GSHADOWX_FILE}-bak"; then
         \cp "${GSHADOWX_FILE}-bak" "$GSHADOWX_FILE"
         rm -f "${GSHADOWX_FILE}-bak"
     fi
