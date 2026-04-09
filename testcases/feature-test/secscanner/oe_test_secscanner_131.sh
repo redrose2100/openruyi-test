@@ -38,7 +38,7 @@ function pre_test()
         \cp "$SHADOW_FILE" "${SHADOW_FILE}-bak"
     fi
     # Record original permission
-    original_perm=$(ls -l "$SHADOW_FILE" | awk '{print $1}')
+    original_perm=$(stat -c "%A" "$SHADOW_FILE")
     LOG_INFO "Original /etc/shadow permission: $original_perm"
     LOG_INFO "End of environmental preparation!"
 }
@@ -51,24 +51,21 @@ function run_test() {
     # Step 2: Change file permission to 444
     chmod 444 "$SHADOW_FILE"
     CHECK_RESULT $? 0 0 "Failed to change /etc/shadow permission to 444"
-    current_perm=$(ls -l "$SHADOW_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$SHADOW_FILE")
     LOG_INFO "Current /etc/shadow permission: $current_perm"
     # Step 3: Execute secscanner fix level3
     secscanner check level3 > tmp && \mv tmp check
     secscanner fix level3 > tmp && \mv tmp fix
     # Step 4: Check if permission remains unchanged
-    current_perm=$(ls -l "$SHADOW_FILE" | awk '{print $1}')
-    if [[ "$current_perm" == "-r--r--r--" ]]; then
+    current_perm=$(stat -c "%a" "$SHADOW_FILE")
+    if test "$current_perm" = "444"; then
         LOG_INFO "/etc/shadow permission remains 444 (as expected)"
     else
         LOG_WARN "/etc/shadow permission was changed to $current_perm (unexpected)"
     fi
     # Step 5: Check restore
     secscanner restore all -y > tmp && \mv tmp restore
-    # Restore original configuration
-    if [[ -f "${SHADOW_FILE}-bak" ]]; then
-        \cp "${SHADOW_FILE}-bak" "$SHADOW_FILE"
-    fi
+
     LOG_INFO "All checks finished."
 }
 
