@@ -16,16 +16,19 @@
 # @Desc      :   gazellectl 命令测试
 # ############################################
 
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
-
+source "${OET_PATH}/testcases/feature-test/gazelle/common.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     DNF_INSTALL "libconfig dpdk numactl libboundscheck libpcap gazelle pciutils net-tools redis"
 
     cp /etc/gazelle/lstack.conf /etc/gazelle/lstack.conf.bak
-
-    test_nic=$(TEST_NIC 1)
+    if [ "$(systemd-detect-virt)" = "qemu" ]; then
+        get_free_eth 1
+        test_nic=${LOCAL_ETH[0]}
+    else
+        test_nic=$(TEST_NIC 1)
+    fi
     test_nic_mac=$(cat /sys/class/net/"$test_nic"/address)
     test_nic_drv=$(dpdk-devbind -s | grep " if=$test_nic " | awk -F 'drv=' '{print $2}' | awk '{print $1}')
     test_nic_bus=$(dpdk-devbind -s | grep " if=$test_nic " | awk '{print $1}')
