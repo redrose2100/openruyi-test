@@ -38,7 +38,7 @@ function pre_test()
         \cp "$GROUP_FILE" "${GROUP_FILE}-bak"
     fi
     # Record original permission
-    original_perm=$(ls -l "$GROUP_FILE" | awk '{print $1}')
+    original_perm=$(stat -c "%A" "$GROUP_FILE")
     LOG_INFO "Original /etc/group permission: $original_perm"
     LOG_INFO "End of environmental preparation!"
 }
@@ -53,7 +53,7 @@ function run_test() {
     # Step 3: Change file permission to 444
     chmod 444 "$GROUP_FILE"
     CHECK_RESULT $? 0 0 "Failed to change /etc/group permission to 444"
-    current_perm=$(ls -l "$GROUP_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$GROUP_FILE")
     LOG_INFO "Current /etc/group permission: $current_perm"
     # Step 4: Execute secscanner check level3
     secscanner check level3 > tmp && \mv tmp check
@@ -63,12 +63,12 @@ function run_test() {
     # Step 5: Execute secscanner fix level3 again
     secscanner fix level3 > tmp && \mv tmp fix
     # Check if permission is fixed
-    current_perm=$(ls -l "$GROUP_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$GROUP_FILE")
     LOG_INFO "Fixed /etc/group permission: $current_perm"
     # Step 6: Check restore
     secscanner restore all -y > tmp && \mv tmp restore
     # Restore original configuration
-    if [[ -f "${GROUP_FILE}-bak" ]]; then
+    if test -f "${GROUP_FILE}-bak"; then
         \cp "${GROUP_FILE}-bak" "$GROUP_FILE"
     fi
     LOG_INFO "All checks finished."
@@ -78,10 +78,10 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     # Restore original files
-    if [[ -f "${CONFIG_FILE}-bak" ]]; then
+    if test -f "${CONFIG_FILE}-bak"; then
         \cp "${CONFIG_FILE}-bak" "$CONFIG_FILE"
     fi
-    if [[ -f "${GROUP_FILE}-bak" ]]; then
+    if test -f "${GROUP_FILE}-bak"; then
         \cp "${GROUP_FILE}-bak" "$GROUP_FILE"
         rm -f "${GROUP_FILE}-bak"
     fi
