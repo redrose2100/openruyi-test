@@ -38,7 +38,7 @@ function pre_test()
         \cp "$PASSWDX_FILE" "${PASSWDX_FILE}-bak"
     fi
     # Record original permission
-    original_perm=$(ls -l "$PASSWDX_FILE" | awk '{print $1}')
+    original_perm=$(stat -c "%A" "$PASSWDX_FILE")
     LOG_INFO "Original /etc/passwd- permission: $original_perm"
     LOG_INFO "End of environmental preparation!"
 }
@@ -51,14 +51,14 @@ function run_test() {
     # Step 2: Change file permission to 444
     chmod 444 "$PASSWDX_FILE"
     CHECK_RESULT $? 0 0 "Failed to change /etc/passwd- permission to 444"
-    current_perm=$(ls -l "$PASSWDX_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$PASSWDX_FILE")
     LOG_INFO "Current /etc/passwd- permission: $current_perm"
     # Step 3: Execute secscanner fix level3
     secscanner check level3 > tmp && \mv tmp check
     secscanner fix level3 > tmp && \mv tmp fix
     # Step 4: Check if permission remains unchanged
-    current_perm=$(ls -l "$PASSWDX_FILE" | awk '{print $1}')
-    if [[ "$current_perm" == "-r--r--r--" ]]; then
+    current_perm=$(stat -c "%a" "$PASSWDX_FILE")
+    if test "$current_perm" = "444"; then
         LOG_INFO "/etc/passwd- permission remains 444 (as expected)"
     else
         LOG_WARN "/etc/passwd- permission was changed to $current_perm (unexpected)"
@@ -66,7 +66,7 @@ function run_test() {
     # Step 5: Check restore
     secscanner restore all -y > tmp && \mv tmp restore
     # Restore original configuration
-    if [[ -f "${PASSWDX_FILE}-bak" ]]; then
+    if test -f "${PASSWDX_FILE}-bak"; then
         \cp "${PASSWDX_FILE}-bak" "$PASSWDX_FILE"
     fi
     LOG_INFO "All checks finished."
@@ -76,10 +76,10 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     # Restore original files
-    if [[ -f "${CONFIG_FILE}-bak" ]]; then
+    if test -f "${CONFIG_FILE}-bak"; then
         \cp "${CONFIG_FILE}-bak" "$CONFIG_FILE"
     fi
-    if [[ -f "${PASSWDX_FILE}-bak" ]]; then
+    if test -f "${PASSWDX_FILE}-bak"; then
         \cp "${PASSWDX_FILE}-bak" "$PASSWDX_FILE"
         rm -f "${PASSWDX_FILE}-bak"
     fi
