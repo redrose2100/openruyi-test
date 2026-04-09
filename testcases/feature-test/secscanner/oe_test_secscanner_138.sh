@@ -38,7 +38,7 @@ function pre_test()
         \cp "$SHADOWX_FILE" "${SHADOWX_FILE}-bak"
     fi
     # Record original permission
-    original_perm=$(ls -l "$SHADOWX_FILE" | awk '{print $1}')
+    original_perm=$(stat -c "%A" "$SHADOWX_FILE")
     LOG_INFO "Original /etc/shadow- permission: $original_perm"
     LOG_INFO "End of environmental preparation!"
 }
@@ -53,22 +53,22 @@ function run_test() {
     # Step 3: Change file permission to 444
     chmod 444 "$SHADOWX_FILE"
     CHECK_RESULT $? 0 0 "Failed to change /etc/shadow- permission to 444"
-    current_perm=$(ls -l "$SHADOWX_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$SHADOWX_FILE")
     LOG_INFO "Current /etc/shadow- permission: $current_perm"
     # Step 4: Execute secscanner check level3
     secscanner check level3 > tmp && \mv tmp check
     # Check WARNING message
-    grep -i "shadow-.*property" check | grep -i "warning"
+    grep -i "shadowx.*property" check | grep -i "warning"
     CHECK_RESULT $? 0 0 "WARNING message not found"
     # Step 5: Execute secscanner fix level3 again
     secscanner fix level3 > tmp && \mv tmp fix
     # Check if permission is fixed
-    current_perm=$(ls -l "$SHADOWX_FILE" | awk '{print $1}')
+    current_perm=$(stat -c "%a" "$SHADOWX_FILE")
     LOG_INFO "Fixed /etc/shadow- permission: $current_perm"
     # Step 6: Check restore
     secscanner restore all -y > tmp && \mv tmp restore
     # Restore original configuration
-    if [[ -f "${SHADOWX_FILE}-bak" ]]; then
+    if test -f "${SHADOWX_FILE}-bak"; then
         \cp "${SHADOWX_FILE}-bak" "$SHADOWX_FILE"
     fi
     LOG_INFO "All checks finished."
@@ -78,10 +78,10 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     # Restore original files
-    if [[ -f "${CONFIG_FILE}-bak" ]]; then
+    if test -f "${CONFIG_FILE}-bak"; then
         \cp "${CONFIG_FILE}-bak" "$CONFIG_FILE"
     fi
-    if [[ -f "${SHADOWX_FILE}-bak" ]]; then
+    if test -f "${SHADOWX_FILE}-bak"; then
         \cp "${SHADOWX_FILE}-bak" "$SHADOWX_FILE"
         rm -f "${SHADOWX_FILE}-bak"
     fi
