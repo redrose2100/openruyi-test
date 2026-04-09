@@ -56,8 +56,7 @@ function run_test() {
     secscanner check level3 > tmp && \mv tmp check
     secscanner fix level3 > tmp && \mv tmp fix
     # Check if test user exists in shadow file
-    grep -w "^$TEST_USER:" "$SHADOW_FILE"
-    if [[ $? -eq 0 ]]; then
+    if grep -w "^$TEST_USER:" "$SHADOW_FILE"; then
         LOG_WARN "Test user $TEST_USER still exists in shadow file"
     else
         LOG_INFO "Test user $TEST_USER has been removed from shadow file"
@@ -86,7 +85,6 @@ function post_test()
         \cp "${SHADOW_FILE}-bak" "$SHADOW_FILE"
         rm -f "${SHADOW_FILE}-bak"
     fi
-
     # Remove test user if exists
     userdel -r "$TEST_USER" >/dev/null 2>&1 || true
     groupdel "$TEST_USER" >/dev/null 2>&1 || true
