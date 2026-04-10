@@ -26,7 +26,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if ! df -h / |grep overlay; then
+    if ! grep docker /proc/1/cgroup; then
         systemctl start auditd
         CHECK_RESULT $? 0 0 "Start audit: failed!"
         systemctl status auditd | grep "active (running)"

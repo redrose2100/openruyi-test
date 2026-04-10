@@ -29,7 +29,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if ! df -h / |grep overlay; then
+    if ! grep docker /proc/1/cgroup; then
         chrt -f -p 10 "${test_pid}"
         CHECK_RESULT $? 0 0 "Failed to execute chrt"
         chrt -p "${test_pid}" | grep pid

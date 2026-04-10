@@ -32,7 +32,7 @@ function run_test() {
 
     systemctl status NetworkManager | grep 'Active: active'
     CHECK_RESULT $?
-    if df -h / | grep overlay; then
+    if grep docker /proc/1/cgroup; then
         ip a | grep "${NODE1_NIC}"	   
         CHECK_RESULT $?	
     else
