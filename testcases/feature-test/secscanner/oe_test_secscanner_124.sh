@@ -47,10 +47,12 @@ function pre_test()
     sed -i '/^PASS_MIN_DAYS/d' "$LOGIN_DEFS"
     sed -i '/^PASS_MIN_LEN/d' "$LOGIN_DEFS"
     sed -i '/^PASS_WARN_AGE/d' "$LOGIN_DEFS"
-    echo "PASS_MAX_DAYS  90" >> "$LOGIN_DEFS"
-    echo "PASS_MIN_DAYS   6" >> "$LOGIN_DEFS"
-    echo "PASS_MIN_LEN    5" >> "$LOGIN_DEFS"
-    echo "PASS_WARN_AGE   30" >> "$LOGIN_DEFS"
+    cat >> "$LOGIN_DEFS" << EOF
+PASS_MAX_DAYS  90
+PASS_MIN_DAYS   6
+PASS_MIN_LEN    5
+PASS_WARN_AGE   30
+EOF
     # Create test user
     useradd "$TEST_USER"
     echo "$TEST_PASSWORD" | passwd --stdin "$TEST_USER"
