@@ -45,7 +45,7 @@ function run_test() {
     gcc -laudit test.c
     [ -e a.out ]
     CHECK_RESULT $? 0 0 "Get a.out: failed!"
-    if ! df -h / |grep overlay; then
+    if ! grep docker /proc/1/cgroup; then
         ./a.out &
         SLEEP_WAIT 3
         auditctl -s | grep -w "backlog"

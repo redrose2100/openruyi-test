@@ -19,7 +19,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
-    if ! df -h / |grep overlay; then
+    if ! grep docker /proc/1/cgroup; then
         df | grep '/boot'
         CHECK_RESULT $? 0 0 "df display error"
     fi

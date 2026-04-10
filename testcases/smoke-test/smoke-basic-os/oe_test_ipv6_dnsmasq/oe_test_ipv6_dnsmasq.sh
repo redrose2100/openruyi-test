@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if df -h / | grep overlay; then
+    if grep docker /proc/1/cgroup; then
         LOG_INFO "The current environment is Docker."
         exit 0
     else
