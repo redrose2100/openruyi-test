@@ -25,7 +25,7 @@ function pre_test()
     mkdir testdata
     echo "test content" > test.txt
     echo "delete content" > test2.txt
-    DNF_INSTALL unzip
+    DNF_INSTALL unzip zip
     LOG_INFO "End of environmental preparation!"
 }
 
