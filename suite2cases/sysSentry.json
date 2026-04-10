@@ -6,6 +6,15 @@
         },
         {
             "name": "oe_test_service_xalarmd"
+        },
+        {
+            "name": "oe_test_service_sentryCollector"
+        },
+        {
+            "name": "oe_test_socket_sysSentry"
+        },
+        {
+            "name": "oe_test_socket_xalarmd"
         }
     ]
 }
