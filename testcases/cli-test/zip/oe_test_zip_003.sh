@@ -24,6 +24,7 @@ function pre_test()
     LOG_INFO "Start to prepare the test environment."
     mkdir /tmp/zip_test && mkdir /tmp/zip_test/testdata
     touch /tmp/zip_test/test.txt
+    DNF_INSTALL unzip zip
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,6 +44,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf /tmp/zip_test
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
