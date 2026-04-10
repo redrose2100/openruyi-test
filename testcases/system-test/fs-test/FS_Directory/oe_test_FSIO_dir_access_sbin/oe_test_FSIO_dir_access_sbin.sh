@@ -32,18 +32,13 @@ function run_test() {
     diff /sbin /usr/sbin
     CHECK_RESULT $? 0 0 "The /sbin doesn't same with /usr/sbin."
     actual_access=$(find /usr/sbin -mindepth 1 -maxdepth 1 -exec stat -c '%A' {} \; | sort | uniq)
-    if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
-        expect_file="./expect_access_riscv64"
-    else
-        expect_file="./expect_access"
-    fi
-    while read -r rows; do
-        if [[ $actual_access =~ $rows ]]; then 
-            continue
-        fi
-        CHECK_RESULT 1 0 0 "The access of file under /sbin is error."
-        break
-    done < "$expect_file"
+    expect_file="./expect_access"
+    while IFS= read -r perm; do
+        if ! grep -Fxq -- "$perm" "$expect_file"; then
+            CHECK_RESULT 1 0 0 "Unexpected permission: $perm"
+            break
+	fi
+    done <<< "$actual_access"
     
     LOG_INFO "End to run test."
 }
