@@ -20,6 +20,7 @@ source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "xfsprogs"
     point_list=($(CREATE_FS))
     LOG_INFO "Finish to prepare the database config."
 }
@@ -35,7 +36,6 @@ function run_test() {
         mkdir $point/test_dir 2>&1 | grep "cannot create directory" | grep "No space left on device"
         CHECK_RESULT $? 0 0 "The error msg of $point is false."
     done
-
     LOG_INFO "End to run test."
 }
 
@@ -43,6 +43,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list=$(echo ${point_list[@]})
     REMOVE_FS "$list"
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
