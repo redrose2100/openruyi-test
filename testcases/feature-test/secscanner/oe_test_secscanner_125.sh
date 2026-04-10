@@ -22,7 +22,6 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 # Global configuration
 CONFIG_FILE="/etc/secScanner/secscanner.cfg"
 SHADOW_FILE="/etc/shadow"
-LOGIN_DEFS="/etc/login.defs"
 
 # Test user
 TEST_USER="testuser"
