@@ -57,6 +57,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    systemctl stop sysSentry.socket
+    systemctl stop ${service}
     systemctl stop xalarmd
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"

@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of osinfo-detect command
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
@@ -29,10 +29,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     osinfo-detect --help | grep -E "Usage:|osinfo-detect \[OPTION…\]|osinfo-detect"
     CHECK_RESULT $?
-    wget https://repo.openeuler.org/openEuler-20.03-LTS/ISO/aarch64/openEuler-20.03-LTS-aarch64-dvd.iso
-    osinfo-detect --format=plain openEuler-20.03-LTS-aarch64-dvd.iso
+    wget https://dl-cdn.openeuler.openatom.cn/openEuler-22.03-LTS/ISO/aarch64/openEuler-22.03-LTS-netinst-aarch64-dvd.iso
+    osinfo-detect --format=plain openEuler-22.03-LTS-netinst-aarch64-dvd.iso
     CHECK_RESULT $?
-    osinfo-detect --type=media openEuler-20.03-LTS-aarch64-dvd.iso
+    osinfo-detect --type=media openEuler-22.03-LTS-netinst-aarch64-dvd.iso
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
@@ -41,7 +41,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     kill -9 "$(pgrep -f 'wget')"
     find . -type f ! -name "*.sh" -exec rm -f {} \;
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 
