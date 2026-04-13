@@ -18,7 +18,11 @@
 # #############################################
 # shellcheck disable=SC1091
 source "../common/common_lib.sh"
-
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "hostname"
+    LOG_INFO "End to prepare the test environment."
+}
 function run_test() {
     LOG_INFO "Start testing..."
     if [ "$(uname -m)" == "riscv64" ]; then
@@ -27,6 +31,11 @@ function run_test() {
     test_execution nis-domainname.service
     test_reload nis-domainname.service
     LOG_INFO "Finish test!"
+}
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
