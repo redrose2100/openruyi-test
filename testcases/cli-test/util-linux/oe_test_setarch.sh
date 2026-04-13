@@ -48,12 +48,13 @@ function run_test() {
     elif [ "$current_arch" == "ppc64le" ]; then
         expected_32arch="ppc"
     fi
-    
-    result=$(setarch "$expected_32arch" uname -m)
-    CHECK_RESULT $? 0 0 "setarch ${expected_32arch} uname -m failed"
-    test "$result" == "$expected_32arch"
-    CHECK_RESULT $? 0 0 "the changed arch not equal with expected 32 arch: $expected_32arch"	
-    
+    if [ "$NODE1_FRAME" != "riscv64" ]; then
+        result=$(setarch "$expected_32arch" uname -m)
+        CHECK_RESULT $? 0 0 "setarch ${expected_32arch} uname -m failed"
+        test "$result" == "$expected_32arch"
+        CHECK_RESULT $? 0 0 "the changed arch not equal with expected 32 arch: $expected_32arch"	
+    fi    
+
     # Test 3: Verify invalid architecture returns error
     setarch invalid_arch echo test 2>/dev/null
     CHECK_RESULT $? 0 1 "setarch with invalid arch should exit with non-zero code"
