@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-  pip3 wheel mypackage -i https://mirrors.aliyun.com/pypi/simple
+  pip3 wheel mypackage -i https://repo.huaweicloud.com/repository/pypi/simple/
   CHECK_RESULT $? 0 0 "command success"
   test -e Mypackage-0.1-py3-none-any.whl
   CHECK_RESULT $? 0 0 "Mypackage-0.1-py3-none-any.whl not exist"
