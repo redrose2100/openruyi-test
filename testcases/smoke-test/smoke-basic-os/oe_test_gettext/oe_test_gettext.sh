@@ -54,7 +54,7 @@ EOF
     mkdir -p locale/en_US/LC_MESSAGES/
     msgfmt -o locale/zh_CN/LC_MESSAGES/test.mo test.po
     CHECK_RESULT $? 0 0 "Can't generate mo file"
-    if df -h / | grep overlay; then
+    if grep docker /proc/1/cgroup; then
         LOG_INFO "The current environment is Docker."
     else
         LANG=zh_CN.UTF-8

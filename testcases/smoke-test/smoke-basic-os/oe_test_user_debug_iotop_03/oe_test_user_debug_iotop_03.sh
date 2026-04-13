@@ -32,7 +32,7 @@ done" >iotoptest
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if df -h / | grep overlay; then
+    if grep docker /proc/1/cgroup; then
         LOG_INFO "The current environment is Docker."
     else
         ./iotoptest &

@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $?
     ip netns list | grep ns_2
     CHECK_RESULT $?
-    if ! df -h / |grep overlay; then
+    if ! grep docker /proc/1/cgroup; then
         ovs-vsctl add-br br0
         CHECK_RESULT $?
         ip a | grep -w br0
@@ -67,7 +67,7 @@ function run_test() {
     fi
     ip a | grep tap2
     CHECK_RESULT $? 1
-    if ! df -h / |grep overlay; then
+    if ! grep docker /proc/1/cgroup; then
          ip netns exec ns_2 ip link set dev tap2 up
          CHECK_RESULT $?
          ip netns list | grep ns_2 | grep "id: 1"
@@ -77,7 +77,7 @@ function run_test() {
     fi
     ip --all netns exec echo hello | grep -A 1 "netns: ns_1" | grep hello
     CHECK_RESULT $?
-    if ! df -h / |grep overlay; then
+    if ! grep docker /proc/1/cgroup; then
         ip netns exec ns_2 ip addr add 10.1.1.2/24 dev tap2
         CHECK_RESULT $?
     fi
@@ -87,7 +87,7 @@ function run_test() {
     CHECK_RESULT $?
     ip netns exec ns_2 ip link set lo up
     CHECK_RESULT $?
-    if ! df -h / |grep overlay; then
+    if ! grep docker /proc/1/cgroup; then
         ip netns exec ns_2 ping -c 3 10.1.1.1
         CHECK_RESULT $?
         ovs-vsctl del-br br0
