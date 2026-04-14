@@ -22,6 +22,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 # Global configuration
 CONFIG_FILE="/etc/secScanner/secscanner.cfg"
 SHADOW_FILE="/etc/shadow"
+LOGIN_DEFS="/etc/login.defs"
 
 # Test user
 TEST_USER="testuser"
@@ -38,6 +39,20 @@ function pre_test()
     if [[ -f "$SHADOW_FILE" && ! -f "${SHADOW_FILE}-bak" ]]; then
         \cp "$SHADOW_FILE" "${SHADOW_FILE}-bak"
     fi
+    if [[ -f "$LOGIN_DEFS" && ! -f "${LOGIN_DEFS}-bak" ]]; then
+        \cp "$LOGIN_DEFS" "${LOGIN_DEFS}-bak"
+    fi
+    # Set password policy: first remove existing PASS lines, then add new ones
+    sed -i '/^PASS_MAX_DAYS/d' "$LOGIN_DEFS"
+    sed -i '/^PASS_MIN_DAYS/d' "$LOGIN_DEFS"
+    sed -i '/^PASS_MIN_LEN/d' "$LOGIN_DEFS"
+    sed -i '/^PASS_WARN_AGE/d' "$LOGIN_DEFS"
+    cat >> "$LOGIN_DEFS" << EOF
+PASS_MAX_DAYS  90
+PASS_MIN_DAYS   6
+PASS_MIN_LEN    5
+PASS_WARN_AGE   30
+EOF
     # Create test user
     useradd "$TEST_USER"
     echo "$TEST_PASSWORD" | passwd --stdin "$TEST_USER"
@@ -83,6 +98,10 @@ function post_test()
     if [[ -f "${SHADOW_FILE}-bak" ]]; then
         \cp "${SHADOW_FILE}-bak" "$SHADOW_FILE"
         rm -f "${SHADOW_FILE}-bak"
+    fi
+    if [[ -f "${LOGIN_DEFS}-bak" ]]; then
+        \cp "${LOGIN_DEFS}-bak" "$LOGIN_DEFS"
+        rm -f "${LOGIN_DEFS}-bak"
     fi
     # Remove test user if exists
     userdel -r "$TEST_USER" >/dev/null 2>&1 || true
