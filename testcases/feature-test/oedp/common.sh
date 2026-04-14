@@ -30,7 +30,17 @@ function build_k8s() {
 
     oedp info -p kubernetes-1.31.1 2>&1 | grep "name: kubernetes"
     CHECK_RESULT $? 0 0 "Failed to view info of kubernetes!"
-    
+   
+    #判断kubernetes的文件是否包含当前系统部署的可用文件
+    ARCH="${NODE1_FRAME}"
+    WORKSPACE="./kubernetes-1.31.1/workspace/roles/prepare"
+    KUBEADM_PATH="$WORKSPACE/kubernetes/files/$ARCH/kubeadm"
+    CONTAINERD_PATH="$WORKSPACE/containerd/files/$ARCH/containerd"
+    if [ ! -f "$KUBEADM_PATH" ] || [ ! -f "$CONTAINERD_PATH" ]; then
+       echo "Warning: Missing binaries for architecture '$ARCH'. Skipping Kubernetes installation."
+       exit 255  
+    fi
+
     sed -i "s/HOST_IP1/${NODE1_IPV4}/g" ./kubernetes-1.31.1/config.yaml
     sed -i "s/HOST_IP4/${NODE2_IPV4}/g" ./kubernetes-1.31.1/config.yaml
     sed -i "s/HOST_IP5/${NODE3_IPV4}/g" ./kubernetes-1.31.1/config.yaml
@@ -38,11 +48,13 @@ function build_k8s() {
     sed -i '/'"${NODE2_IPV4}"':/,/runtime:/ s|ansible_password: ""|ansible_password: "'"${NODE2_PASSWORD}"'"|' ./kubernetes-1.31.1/config.yaml
     sed -i '/'"${NODE3_IPV4}"':/,/runtime:/ s|ansible_password: ""|ansible_password: "'"${NODE3_PASSWORD}"'"|' ./kubernetes-1.31.1/config.yaml
     for i in 1 2 3; do
-    frame_var="NODE${i}_FRAME"
-    ip_var="NODE${i}_IPV4"
-    [ "${!frame_var}" = "aarch64" ] && \
-    sed -i "/${!ip_var}:/,/architecture:/{s#architecture: amd64#architecture: arm64#}" ./kubernetes-1.31.1/config.yaml
-  done
+        frame_var="NODE${i}_FRAME"
+        ip_var="NODE${i}_IPV4"
+        [ "${!frame_var}" = "aarch64" ] && \
+        sed -i "/${!ip_var}:/,/architecture:/{s#architecture: amd64#architecture: arm64#}" ./kubernetes-1.31.1/config.yaml
+        [ "${!frame_var}" = "riscv64" ] && \
+        sed -i "/${!ip_var}:/,/architecture:/{s#architecture: amd64#architecture: riscv64#}" ./kubernetes-1.31.1/config.yaml
+    done
 
     oedp run install -p kubernetes-1.31.1 > install_kubernetes 2>&1
     grep "Execute succeeded: install kubernetes" install_kubernetes
@@ -76,6 +88,8 @@ function install_helm() {
     frame_var="NODE${i}_FRAME"
     [ "${!frame_var}" = "aarch64" ] && \
     sed -i "s/amd64/arm64/g" ./helm-3.9.0/config.yaml
+    [ "${!frame_var}" = "riscv64" ] && \
+    sed -i "s/amd64/riscv64/g" ./helm-3.9.0/config.yaml
     oedp run install -p  helm-3.9.0 >install_helm 2>&1
     grep "Execute succeeded: install helm" install_helm
     CHECK_RESULT $? 0 0 "Failed to deployment helm"
