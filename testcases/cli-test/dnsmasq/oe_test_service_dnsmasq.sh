@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test dnsmasq.service restart
 # #############################################
-
+# shellcheck disable=SC2119,SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
