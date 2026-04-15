@@ -16,13 +16,19 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ovs-delete-transient-ports.service restart
 # #############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
+
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL openvswitch
-    systemctl start ovsdb-server.service
+    if ! rpm -ql openvswitch | grep "ovs-delete-transient-ports.service"; then
+        LOG_INFO "ovs-delete-transient-ports.service not fount"
+        exit 255
+    else
+        systemctl start ovsdb-server.service
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,9 +41,11 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    systemctl stop ovsdb-server.service
-    systemctl stop ovs-delete-transient-ports.service
-    DNF_REMOVE "$@"
+    if rpm -ql openvswitch | grep "ovs-delete-transient-ports.service"; then
+        systemctl stop ovsdb-server.service
+        systemctl stop ovs-delete-transient-ports.service
+    fi
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
