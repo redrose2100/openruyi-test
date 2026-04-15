@@ -201,7 +201,7 @@ if __name__ == "__main__":
 
     if sys.argv[1] == "install":
         exitcode, output = rpm_install(args.pkgs, args.node, args.tempfile)
-        if exitcode == 1 and output == "package not exists" or output == "package installation conflict":
+        if exitcode == 1 and (output == "package not exists" or output == "package installation conflict"):
             kill_parent_process()
             sys.exit(exitcode)
 
