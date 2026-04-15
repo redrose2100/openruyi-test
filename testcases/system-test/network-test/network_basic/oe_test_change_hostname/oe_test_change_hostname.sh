@@ -17,6 +17,11 @@
 #####################################
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+function pre_test(){
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "hostname" 2
+    LOG_INFO "Start to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -29,6 +34,12 @@ function run_test() {
     P_SSH_CMD --node 2 --cmd "uname -n | grep test.name"
     CHECK_RESULT $? 1 0 "The hostname is still remained."
     LOG_INFO "End to run test."
+}
+
+function post_test(){
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE "$@" 2
+    LOG_INFO "Start to restore the test environment."
 }
 
 main "$@"
