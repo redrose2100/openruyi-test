@@ -40,7 +40,7 @@ function pre_test()
         \cp "$AUDIT_RULES_FILE" "${AUDIT_RULES_FILE}-bak"
     fi
     # Clear audit rules file for test
-    > "$AUDIT_RULES_FILE"
+    ：> "$AUDIT_RULES_FILE"
     LOG_INFO "End of environmental preparation!"
 }
 
