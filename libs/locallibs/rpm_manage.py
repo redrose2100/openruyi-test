@@ -22,6 +22,7 @@ import sys
 import subprocess
 import tempfile
 import argparse
+import signal
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
@@ -41,6 +42,11 @@ def local_cmd(cmd, conn=None):
     """
     exitcode, output = subprocess.getstatusoutput(cmd)
     return exitcode, output
+
+
+def kill_parent_process():
+    parent_pid = os.getppid()
+    os.kill(parent_pid, signal.SIGKILL)
 
 
 def rpm_install(pkgs, node=1, tmpfile=""):
@@ -75,6 +81,16 @@ def rpm_install(pkgs, node=1, tmpfile=""):
     if "is already installed" in result and "Nothing to do" in result:
         mugen_log.logging("info", "pkgs:(%s) is already installed" % pkgs)
         return 0, None
+
+    # === 新增逻辑1：处理软件包不存在，导致安装失败的问题 ===
+    if "No match for argument" in result or "is not a package file" in result:
+        mugen_log.logging("error", "pkgs:(%s) does not exist. Installation failed exit script." % pkgs)
+        return 1, "package not exists"
+
+    # === 新增逻辑2：处理软件包安装冲突问题 ===
+    if "conflicts" in result and "cannot install the best candidate for the job" in result or "冲突" in result and "无法为该任务安装最佳候选" in result:
+        mugen_log.logging("error", "pkgs:(%s) installation conflict. Exiting script." % pkgs)
+        return 1, "package installation conflict"
 
     repoCode, repoList = func(
         conn=conn,
@@ -185,6 +201,10 @@ if __name__ == "__main__":
 
     if sys.argv[1] == "install":
         exitcode, output = rpm_install(args.pkgs, args.node, args.tempfile)
+        if exitcode == 1 and output == "package not exists" or output == "package installation conflict":
+            kill_parent_process()
+            sys.exit(exitcode)
+
         if output is not None:
             print(output)
         sys.exit(exitcode)
