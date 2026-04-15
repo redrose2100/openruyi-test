@@ -18,7 +18,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "netsniff-ng tar telnet"
+    DNF_INSTALL "netsniff-ng tar"
     #兼容rv环境，设置虚拟机默认路由
     if [ "$(arch)" = "riscv64" ]; then
         IP_CIDR=$(ip addr show "${NODE1_NIC}" | awk '/inet / {print $2; exit}')
@@ -63,7 +63,7 @@ function run_test() {
     netsniff-ng --in "${NODE1_NIC}" --out tcpsyn.pcap -n 2 &
     #模拟tcp请求
     timeout 5 curl -s http://example.com >/dev/null
-    sleep 3
+    SLEEP_WAIT 3
     trafgen --in tcpsyn.pcap --out tcpsyn.cfg -n 2
     trafgen --dev "${NODE1_NIC}" --conf tcpsyn.cfg --smoke-test 127.0.0.1 -n 2 | grep "packets outgoing"
     CHECK_RESULT $? 0 0 "Check trafgen --smoke-test failed"
@@ -73,7 +73,7 @@ function run_test() {
     #模拟tcp请求
     netsniff-ng --in "${NODE1_NIC}" --out tcpsyn.pcap -n 2 &
     timeout 5 curl -s http://example.com >/dev/null
-    sleep 3
+    SLEEP_WAIT 3
     trafgen --in tcpsyn.pcap --out tcpsyn.cfg -n 2
     trafgen --dev "${NODE1_NIC}" --conf tcpsyn.cfg -s 127.0.0.1 -n 2 | grep "packets outgoing"
     CHECK_RESULT $? 0 0 "Check trafgen -s failed"
