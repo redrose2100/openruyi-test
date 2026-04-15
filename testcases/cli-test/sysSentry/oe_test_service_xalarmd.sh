@@ -21,8 +21,9 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    dnf remove -y libxalarm libxalarm-devel
     DNF_INSTALL sysSentry
-    start systemctl start xalarmd.socket
+    systemctl start xalarmd.socket
     SLEEP_WAIT 5
     service=xalarmd.service
     log_time=$(date '+%Y-%m-%d %T')
@@ -33,7 +34,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     systemctl restart ${service}
     CHECK_RESULT $? 0 0 "${service} restart failed"
-    SLEEP_WAIT 10
+    SLEEP_WAIT 5
     systemctl status ${service} | grep "Active: active"
     CHECK_RESULT $? 0 0 "${service} restart failed"
     systemctl stop ${service}

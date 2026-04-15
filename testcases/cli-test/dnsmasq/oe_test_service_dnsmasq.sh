@@ -16,12 +16,17 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test dnsmasq.service restart
 # #############################################
-
+# shellcheck disable=SC2119,SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL dnsmasq
+    flag=false
+    if ! find /etc/hosts; then
+        touch /etc/hosts
+        flag=true
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -35,6 +40,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE
+    if [ "${flag}" = "true" ]; then
+        rm -rf /etc/hosts
+    fi
     LOG_INFO "Finish environment cleanup!"
 }
 
