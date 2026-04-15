@@ -36,6 +36,24 @@ function pre_test()
     if [[ -f "$SHADOW_FILE" && ! -f "${SHADOW_FILE}-bak" ]]; then
         \cp "$SHADOW_FILE" "${SHADOW_FILE}-bak"
     fi
+    # Backup and configure login.defs
+    LOGIN_DEFS="/etc/login.defs"
+    if [[ -f "$LOGIN_DEFS" && ! -f "${LOGIN_DEFS}-bak" ]]; then
+        \cp "$LOGIN_DEFS" "${LOGIN_DEFS}-bak"
+    fi
+    # Set password policy: first remove existing PASS lines, then add new ones
+    sed -i '/^PASS_MAX_DAYS/d' "$LOGIN_DEFS"
+    sed -i '/^PASS_MIN_DAYS/d' "$LOGIN_DEFS"
+    sed -i '/^PASS_MIN_LEN/d' "$LOGIN_DEFS"
+    sed -i '/^PASS_WARN_AGE/d' "$LOGIN_DEFS"
+    cat >> "$LOGIN_DEFS" << EOF
+PASS_MAX_DAYS  90
+PASS_MIN_DAYS   6
+PASS_MIN_LEN    5
+PASS_WARN_AGE   30
+EOF
+    # Verify configuration
+    grep ^PASS "$LOGIN_DEFS"
     # Remove test user if exists
     groupdel "$TEST_USER" 2>/dev/null || true
     userdel -r "$TEST_USER" 2>/dev/null || true
@@ -83,6 +101,12 @@ function post_test()
     fi
     if [[ -f "${SHADOW_FILE}-bak" ]]; then
         \cp "${SHADOW_FILE}-bak" "$SHADOW_FILE"
+    fi
+    # Restore login.defs
+    LOGIN_DEFS="/etc/login.defs"
+    if [[ -f "${LOGIN_DEFS}-bak" ]]; then
+        \cp "${LOGIN_DEFS}-bak" "$LOGIN_DEFS"
+        rm -f "${LOGIN_DEFS}-bak"
     fi
     # Remove test user if exists
     userdel -rf "$TEST_USER" 2>/dev/null || true
