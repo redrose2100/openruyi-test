@@ -53,7 +53,7 @@ PASS_MIN_LEN    5
 PASS_WARN_AGE   30
 EOF
     # Verify configuration
-    cat "$LOGIN_DEFS" | grep PASS
+    grep ^PASS "$LOGIN_DEFS"
     # Remove test user if exists
     groupdel "$TEST_USER" 2>/dev/null || true
     userdel -r "$TEST_USER" 2>/dev/null || true
