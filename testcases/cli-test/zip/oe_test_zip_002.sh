@@ -25,7 +25,7 @@ function pre_test()
     mkdir testdata
     echo "test content" > test.txt
     echo "delete content" > test2.txt
-    DNF_INSTALL unzip zip
+    DNF_INSTALL "unzip zip"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -56,6 +56,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf testdata testdatabak.zip test.txt test2.txt test_level.zip test_pwd.zip test_del.zip test_verbose.zip extract_dir
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 
