@@ -62,21 +62,23 @@ function run_test() {
     # test --smoke-test
     netsniff-ng --in "${NODE1_NIC}" --out tcpsyn.pcap -n 2 &
     #模拟tcp请求
-    timeout 20 telnet 8.8.8.8 53
-    netsniff-ng --in tcpsyn.pcap --out tcpsyn.cfg -n 2
+    timeout 5 curl -s http://example.com >/dev/null
+    sleep 3
+    trafgen --in tcpsyn.pcap --out tcpsyn.cfg -n 2
     trafgen --dev "${NODE1_NIC}" --conf tcpsyn.cfg --smoke-test 127.0.0.1 -n 2 | grep "packets outgoing"
     CHECK_RESULT $? 0 0 "Check trafgen --smoke-test failed"
     rm -f tcpsyn.cfg tcpsyn.pcap
-    kill -9 "$(pgrep netsniff-ng)"
+    pkill -f "netsniff-ng.*tcpsyn.pcap" 2>/dev/null
     # test -s
     #模拟tcp请求
     netsniff-ng --in "${NODE1_NIC}" --out tcpsyn.pcap -n 2 &
-    timeout 20 telnet 8.8.8.8 53
-    netsniff-ng --in tcpsyn.pcap --out tcpsyn.cfg -n 2
+    timeout 5 curl -s http://example.com >/dev/null
+    sleep 3
+    trafgen --in tcpsyn.pcap --out tcpsyn.cfg -n 2
     trafgen --dev "${NODE1_NIC}" --conf tcpsyn.cfg -s 127.0.0.1 -n 2 | grep "packets outgoing"
     CHECK_RESULT $? 0 0 "Check trafgen -s failed"
     rm -f tcpsyn.cfg tcpsyn.pcap
-    kill -9 "$(pgrep netsniff-ng)"
+    pkill -f "netsniff-ng.*tcpsyn.pcap" 2>/dev/null
     # test -n
     trafgen --dev lo '{ fill(0xff, 6), 0x00, 0x02, 0xb3, rnd(3), c16(0x0800), fill(0xca, 64) }' -n 2 | grep "packets to schedule"
     CHECK_RESULT $? 0 0 "Check trafgen -n failed"
