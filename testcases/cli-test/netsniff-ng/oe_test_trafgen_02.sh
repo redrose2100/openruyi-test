@@ -18,7 +18,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "netsniff-ng tar"
+    DNF_INSTALL "netsniff-ng tar curl"
     #兼容rv环境，设置虚拟机默认路由
     if [ "$(arch)" = "riscv64" ]; then
         IP_CIDR=$(ip addr show "${NODE1_NIC}" | awk '/inet / {print $2; exit}')
