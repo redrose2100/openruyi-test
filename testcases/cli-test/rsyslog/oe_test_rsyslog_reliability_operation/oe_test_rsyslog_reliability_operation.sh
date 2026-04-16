@@ -35,3 +35,10 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"
+

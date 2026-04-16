@@ -49,3 +49,5 @@ function post_test() {
   DNF_REMOVE "$@"
   LOG_INFO "Finish environment cleanup!"
 }
+
+main "$@"
