@@ -24,7 +24,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     command -v firewalld && systemctl stop firewalld
     getenforce | grep Enforcing && setenforce 0
-    DNF_INSTALL "keepalived vconfig net-tools"
+    DNF_INSTALL "keepalived vconfig net-tools jq"
     net_cards=$(TEST_NIC 1)
     net_card2=$(echo "$net_cards" | awk -F ' ' '{print $1}')
     net_card3=$(echo "$net_cards" | awk -F ' ' '{print $2}')
@@ -86,7 +86,7 @@ global_defs {
     done
     systemctl start keepalived
     CHECK_RESULT $?
-    SLEEP_WAIT 5
+    SLEEP_WAIT 10
     test "$(ip a | grep vrrp4 | grep -c 192)" -eq 20
     CHECK_RESULT $?
     nmcli connection down bond0
