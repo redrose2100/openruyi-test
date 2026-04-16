@@ -45,4 +45,3 @@ function post_test() {
 }
 
 main "$@"
-`
