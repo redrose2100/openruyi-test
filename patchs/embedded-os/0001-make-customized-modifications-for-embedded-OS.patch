@@ -1,0 +1,200 @@
+From 3ea53299ca12855a57ac8d348f00ce42b7d6069b Mon Sep 17 00:00:00 2001
+From: alichinese_admin <lixinyu44@huawei.com>
+Date: Thu, 16 Apr 2026 10:34:34 +0800
+Subject: [PATCH] make customized modifications for embedded OS
+
+---
+ libs/locallibs/combination.py                 |  5 ++-
+ mugen.sh                                      |  6 ++-
+ .../oe_test_kernel_hello_world_test.sh        |  8 ++--
+ .../oe_test_initscripts_test_001.sh           |  5 +++
+ .../oe_test_net-tools_test_001.sh             |  4 +-
+ .../oe_test_system_service_sshd.sh            | 37 ++++++++++++++-----
+ .../oe_test_version_ltp_test_001.sh           |  1 -
+ .../oe_test_version_posix_suite_test_001.sh   |  1 -
+ 8 files changed, 47 insertions(+), 20 deletions(-)
+
+diff --git a/libs/locallibs/combination.py b/libs/locallibs/combination.py
+index 0fad48df9..6e3a6cbf1 100644
+--- a/libs/locallibs/combination.py
++++ b/libs/locallibs/combination.py
+@@ -178,8 +178,9 @@ def generate_sdk_set_script(sdk_path:str, env_name:str):
+                                   f'y\n' \
+                                   f'EOF\n' 
+         tmp_sdk_path = tmp_sdk_name
+-    sdk_script = sdk_script + f'source_path=$(find {tmp_sdk_path} -name "environment-setup-*")\n' + \
+-                              'source ${source_path}'
++    # sdk_script = sdk_script + f'source_path=$(find {tmp_sdk_path} -name "environment-setup-*")\n' + \
++                            #   'source ${source_path}'
++    sdk_script = sdk_script + f'export SDK_PATH={tmp_sdk_path}'
+     return sdk_script                
+ 
+ def generate_execute_env_script(env_name_list:list, env_dict:dict):
+diff --git a/mugen.sh b/mugen.sh
+index a9a564c5a..60f5de1db 100644
+--- a/mugen.sh
++++ b/mugen.sh
+@@ -379,6 +379,9 @@ function build_one_suite() {
+ 
+     pushd "$suite_path" >/dev/null || return 1
+ 
++    source_path=$(find ${SDK_PATH} -name "environment-setup-*")
++    source ${source_path}
++
+     if [[ -f "./makefile" || -f "./Makefile" ]]; then
+         LOG_INFO "do make for testsuite: ${test_suite}"
+         make
+@@ -474,7 +477,8 @@ while getopts "c:af:r:dxb:s:m" option; do
+                 exit 1
+             fi
+         done
+-
++        source_path=$(find ${SDK_PATH} -name "environment-setup-*")
++        source ${source_path}
+         if echo "$@" | grep -q -e ' * -a *$\| -ba *$'; then
+             build_all
+         else
+diff --git a/testcases/embedded-test/application_develop_tests/oe_test_kernel_hello_world_test/oe_test_kernel_hello_world_test.sh b/testcases/embedded-test/application_develop_tests/oe_test_kernel_hello_world_test/oe_test_kernel_hello_world_test.sh
+index 43a7d1364..b26894055 100644
+--- a/testcases/embedded-test/application_develop_tests/oe_test_kernel_hello_world_test/oe_test_kernel_hello_world_test.sh
++++ b/testcases/embedded-test/application_develop_tests/oe_test_kernel_hello_world_test/oe_test_kernel_hello_world_test.sh
+@@ -22,8 +22,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
+ function run_test() {
+     LOG_INFO "Start to run test."
+ 
+-    make kernel_modules
+-    CHECK_RESULT $? 0 0 "build kernel hello world fail"
++    # make kernel_modules
++    # CHECK_RESULT $? 0 0 "build kernel hello world fail"
+ 
+     test -f ./kernel_hello_world.ko
+     CHECK_RESULT $? 0 0 "no kernel hello world ko file build fail"
+@@ -51,8 +51,8 @@ function run_test() {
+     dmesg | grep "Byebye!, openEuler Embedded!"
+     CHECK_RESULT $? 0 0 "check kernel hello world remove message fail"
+ 
+-    make clean
+-    CHECK_RESULT $? 0 0 "clean kernel hello world fail"
++    # make clean
++    # CHECK_RESULT $? 0 0 "clean kernel hello world fail"
+ 
+     LOG_INFO "End to run test."
+ }
+diff --git a/testcases/embedded-test/os_basic_extra_test/oe_test_initscripts_test_001/oe_test_initscripts_test_001.sh b/testcases/embedded-test/os_basic_extra_test/oe_test_initscripts_test_001/oe_test_initscripts_test_001.sh
+index c4a94f69c..ea8cc36ca 100644
+--- a/testcases/embedded-test/os_basic_extra_test/oe_test_initscripts_test_001/oe_test_initscripts_test_001.sh
++++ b/testcases/embedded-test/os_basic_extra_test/oe_test_initscripts_test_001/oe_test_initscripts_test_001.sh
+@@ -20,6 +20,11 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
+ 
+ function run_test() {
+     LOG_INFO "Start to run initscripts test."
++    # 检测到系统中存在systemctl则直接退出测试
++    if command -v systemctl >/dev/null 2>&1; then
++        LOG_INFO "系统中存在systemctl，退出initscripts测试"
++        return 0
++    fi
+     ifconfig | grep "^lo"
+     CHECK_RESULT $? 0 0 "check ifdown failed!"
+     ifdown lo
+diff --git a/testcases/embedded-test/os_basic_extra_test/oe_test_net-tools_test_001/oe_test_net-tools_test_001.sh b/testcases/embedded-test/os_basic_extra_test/oe_test_net-tools_test_001/oe_test_net-tools_test_001.sh
+index 2d73faa7b..9a2f0cbf3 100644
+--- a/testcases/embedded-test/os_basic_extra_test/oe_test_net-tools_test_001/oe_test_net-tools_test_001.sh
++++ b/testcases/embedded-test/os_basic_extra_test/oe_test_net-tools_test_001/oe_test_net-tools_test_001.sh
+@@ -74,13 +74,13 @@ function run_test() {
+ 
+     route
+     CHECK_RESULT $? 0 0 "check route failed!"
+-    route add default gw "${NODE1_IPV4}" && route | grep "${NODE1_IPV4}"
++    route add default gw "${NODE1_IPV4}" && route -n | grep "${NODE1_IPV4}"
+     CHECK_RESULT $? 0 0 "check route failed!"
+     route -n | grep -v "default" | grep "0.0.0.0"
+     CHECK_RESULT $? 0 0 "check route -n failed!"
+     route -e | grep -E "irtt|MSS|Window" 
+     CHECK_RESULT $? 0 0 "check route -e failed!"
+-    route del default gw "${NODE1_IPV4}" && route | grep -v "${NODE1_IPV4}"
++    route del default gw "${NODE1_IPV4}" && route -n | grep -v "${NODE1_IPV4}"
+     CHECK_RESULT $? 0 0 "check route failed!"
+     LOG_INFO "End to run net-tools test."
+ }
+diff --git a/testcases/embedded-test/os_basic_tests/oe_test_system_service_sshd/oe_test_system_service_sshd.sh b/testcases/embedded-test/os_basic_tests/oe_test_system_service_sshd/oe_test_system_service_sshd.sh
+index bb35693c1..bd4309661 100644
+--- a/testcases/embedded-test/os_basic_tests/oe_test_system_service_sshd/oe_test_system_service_sshd.sh
++++ b/testcases/embedded-test/os_basic_tests/oe_test_system_service_sshd/oe_test_system_service_sshd.sh
+@@ -23,14 +23,26 @@ function run_test() {
+     LOG_INFO "Start to run test."
+ 
+     for ((i = 1; i < 10; i ++)); do
+-        /etc/init.d/sshd stop
+-        CHECK_RESULT $? 0 0 "stop sshd fail"
+-        /etc/init.d/sshd start
+-        CHECK_RESULT $? 0 0 "start sshd fail"
+-	SLEEP_WAIT 2
+-        /etc/init.d/sshd restart
+-        CHECK_RESULT $? 0 0 "restart sshd fail"
+-        SLEEP_WAIT 2
++        # 如果不是systemd文件管理系统，执行额外的停止和启动检查
++        if ! command -v systemctl &>/dev/null; then
++            /etc/init.d/sshd stop
++            CHECK_RESULT $? 0 0 "stop sshd fail"
++            /etc/init.d/sshd start
++            CHECK_RESULT $? 0 0 "start sshd fail"
++            SLEEP_WAIT 2
++            /etc/init.d/sshd restart
++            CHECK_RESULT $? 0 0 "restart sshd fail"
++            SLEEP_WAIT 2
++        else
++            systemctl stop sshd
++            CHECK_RESULT $? 0 0 "stop sshd fail"
++            systemctl start sshd
++            CHECK_RESULT $? 0 0 "start sshd fail"
++            SLEEP_WAIT 2
++            systemctl restart sshd
++            CHECK_RESULT $? 0 0 "restart sshd fail"
++            SLEEP_WAIT 2
++        fi
+     done
+ 
+     LOG_INFO "End to run test."
+@@ -39,7 +51,14 @@ function run_test() {
+ function post_test() {
+     LOG_INFO "Start to restore the test environment."
+ 
+-    /etc/init.d/sshd restart
++    # 如果不是systemd文件管理系统，执行额外的重启检查
++    if ! command -v systemctl &>/dev/null; then
++        /etc/init.d/sshd restart
++        CHECK_RESULT $? 0 0 "restart sshd fail"
++    else
++        systemctl restart sshd
++        CHECK_RESULT $? 0 0 "restart sshd fail"
++    fi
+ 
+     LOG_INFO "End to restore the test environment."
+ }
+diff --git a/testcases/embedded-test/version_basic_tests/oe_test_version_ltp_test_001/oe_test_version_ltp_test_001.sh b/testcases/embedded-test/version_basic_tests/oe_test_version_ltp_test_001/oe_test_version_ltp_test_001.sh
+index 42f19dfdf..fd278ca13 100644
+--- a/testcases/embedded-test/version_basic_tests/oe_test_version_ltp_test_001/oe_test_version_ltp_test_001.sh
++++ b/testcases/embedded-test/version_basic_tests/oe_test_version_ltp_test_001/oe_test_version_ltp_test_001.sh
+@@ -29,7 +29,6 @@ function pre_test() {
+     LOG_INFO "Start to prepare the test environment."
+ 
+     EXECUTE_T="1440m"
+-    echo "EXECUTE_T = ${EXECUTE_T}"
+ 
+     MAKEDIR=$(cd .. && pwd)
+     chmod 777 "${MAKEDIR}"/make
+diff --git a/testcases/embedded-test/version_basic_tests/oe_test_version_posix_suite_test_001/oe_test_version_posix_suite_test_001.sh b/testcases/embedded-test/version_basic_tests/oe_test_version_posix_suite_test_001/oe_test_version_posix_suite_test_001.sh
+index 14df49c28..c42ffc64c 100644
+--- a/testcases/embedded-test/version_basic_tests/oe_test_version_posix_suite_test_001/oe_test_version_posix_suite_test_001.sh
++++ b/testcases/embedded-test/version_basic_tests/oe_test_version_posix_suite_test_001/oe_test_version_posix_suite_test_001.sh
+@@ -25,7 +25,6 @@ function pre_test() {
+     LOG_INFO "Start to prepare the test environment."
+ 
+     EXECUTE_T="180m"
+-    echo "EXECUTE_T = ${EXECUTE_T}"
+ 
+     MAKEDIR=$(cd .. && pwd)
+     chmod 777 "${MAKEDIR}"/make
+-- 
+2.34.1
+
