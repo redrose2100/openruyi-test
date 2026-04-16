@@ -32,7 +32,7 @@ function pre_test() {
 
 }
 
-function do_test() {
+function run_test() {
     # 客户端登服务端免密
     ssh "${REMOTE_USER}"@"${REMOTE_IP}" ip a | grep "${REMOTE_IP}"
     CHECK_RESULT $? 0 0
