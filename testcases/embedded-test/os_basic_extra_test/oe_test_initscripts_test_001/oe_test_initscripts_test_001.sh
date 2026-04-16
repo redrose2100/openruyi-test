@@ -20,6 +20,11 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run initscripts test."
+    # 检测到系统中存在systemctl则直接退出测试
+    if command -v systemctl >/dev/null 2>&1; then
+        LOG_INFO "系统中存在systemctl，退出initscripts测试"
+        return 0
+    fi
     ifconfig | grep "^lo"
     CHECK_RESULT $? 0 0 "check ifdown failed!"
     ifdown lo

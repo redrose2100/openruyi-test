@@ -74,13 +74,13 @@ function run_test() {
 
     route
     CHECK_RESULT $? 0 0 "check route failed!"
-    route add default gw "${NODE1_IPV4}" && route | grep "${NODE1_IPV4}"
+    route add default gw "${NODE1_IPV4}" && route -n | grep "${NODE1_IPV4}"
     CHECK_RESULT $? 0 0 "check route failed!"
     route -n | grep -v "default" | grep "0.0.0.0"
     CHECK_RESULT $? 0 0 "check route -n failed!"
     route -e | grep -E "irtt|MSS|Window" 
     CHECK_RESULT $? 0 0 "check route -e failed!"
-    route del default gw "${NODE1_IPV4}" && route | grep -v "${NODE1_IPV4}"
+    route del default gw "${NODE1_IPV4}" && route -n | grep -v "${NODE1_IPV4}"
     CHECK_RESULT $? 0 0 "check route failed!"
     LOG_INFO "End to run net-tools test."
 }

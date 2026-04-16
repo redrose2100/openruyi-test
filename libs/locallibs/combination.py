@@ -178,8 +178,7 @@ def generate_sdk_set_script(sdk_path:str, env_name:str):
                                   f'y\n' \
                                   f'EOF\n' 
         tmp_sdk_path = tmp_sdk_name
-    sdk_script = sdk_script + f'source_path=$(find {tmp_sdk_path} -name "environment-setup-*")\n' + \
-                              'source ${source_path}'
+    sdk_script = sdk_script + f'export SDK_PATH={tmp_sdk_path}'
     return sdk_script                
 
 def generate_execute_env_script(env_name_list:list, env_dict:dict):
