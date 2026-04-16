@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of perl-libwww-perl command
 # ############################################
-
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC2119
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -33,9 +33,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check POST -U failed"
     POST -m GET http://www.baidu.com -s 2>&1 | grep '200 OK'
     CHECK_RESULT $? 0 0 "Check POST -s failed"
-    POST -m GET http://www.baidu.com -S 2>&1 | grep 'http://www.baidu.com'
+    POST -m GET http://www.baidu.com -S 2>&1 | grep -B 1 "200 OK" | grep 'http://www.baidu.com'
     CHECK_RESULT $? 0 0 "Check POST -S failed"
-    POST -m GET http://www.baidu.com -e 2>&1 | grep 'response'
+    POST -m GET http://www.baidu.com -e 2>&1 | grep "Content-Type"
     CHECK_RESULT $? 0 0 "Check POST -e failed"
     POST -m GET http://www.baidu.com -d
     CHECK_RESULT $? 0 0 "Check POST -d failed"
@@ -52,4 +52,4 @@ function post_test() {
     LOG_INFO "Finish restore the test environment."
 }
 
-main $@
+main "$@"
