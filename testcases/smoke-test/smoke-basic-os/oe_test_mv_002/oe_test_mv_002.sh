@@ -26,7 +26,7 @@ function pre_test(){
     LOG_INFO "End of enviornment preparation"
 
 }
-function do_test() {
+function run_test() {
     LOG_INFO "Start test"
     mkdir /tmp/name1
     ls /tmp/name1
@@ -51,4 +51,4 @@ function post_test(){
     LOG_INFO "Finish environment cleanup!"
 }
 
-main $@
+main "$@"
