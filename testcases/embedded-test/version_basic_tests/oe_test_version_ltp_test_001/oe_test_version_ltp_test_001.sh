@@ -29,7 +29,6 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     EXECUTE_T="1440m"
-    echo "EXECUTE_T = ${EXECUTE_T}"
 
     MAKEDIR=$(cd .. && pwd)
     chmod 777 "${MAKEDIR}"/make

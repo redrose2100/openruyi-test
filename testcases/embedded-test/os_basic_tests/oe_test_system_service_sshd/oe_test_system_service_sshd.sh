@@ -23,14 +23,26 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     for ((i = 1; i < 10; i ++)); do
-        /etc/init.d/sshd stop
-        CHECK_RESULT $? 0 0 "stop sshd fail"
-        /etc/init.d/sshd start
-        CHECK_RESULT $? 0 0 "start sshd fail"
-	SLEEP_WAIT 2
-        /etc/init.d/sshd restart
-        CHECK_RESULT $? 0 0 "restart sshd fail"
-        SLEEP_WAIT 2
+        # 如果不是systemd文件管理系统，执行额外的停止和启动检查
+        if ! command -v systemctl &>/dev/null; then
+            /etc/init.d/sshd stop
+            CHECK_RESULT $? 0 0 "stop sshd fail"
+            /etc/init.d/sshd start
+            CHECK_RESULT $? 0 0 "start sshd fail"
+            SLEEP_WAIT 2
+            /etc/init.d/sshd restart
+            CHECK_RESULT $? 0 0 "restart sshd fail"
+            SLEEP_WAIT 2
+        else
+            systemctl stop sshd
+            CHECK_RESULT $? 0 0 "stop sshd fail"
+            systemctl start sshd
+            CHECK_RESULT $? 0 0 "start sshd fail"
+            SLEEP_WAIT 2
+            systemctl restart sshd
+            CHECK_RESULT $? 0 0 "restart sshd fail"
+            SLEEP_WAIT 2
+        fi
     done
 
     LOG_INFO "End to run test."
@@ -39,7 +51,14 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    /etc/init.d/sshd restart
+    # 如果不是systemd文件管理系统，执行额外的重启检查
+    if ! command -v systemctl &>/dev/null; then
+        /etc/init.d/sshd restart
+        CHECK_RESULT $? 0 0 "restart sshd fail"
+    else
+        systemctl restart sshd
+        CHECK_RESULT $? 0 0 "restart sshd fail"
+    fi
 
     LOG_INFO "End to restore the test environment."
 }
