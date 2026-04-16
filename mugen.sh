@@ -379,6 +379,9 @@ function build_one_suite() {
 
     pushd "$suite_path" >/dev/null || return 1
 
+    source_path=$(find ${SDK_PATH} -name "environment-setup-*")
+    source ${source_path}
+
     if [[ -f "./makefile" || -f "./Makefile" ]]; then
         LOG_INFO "do make for testsuite: ${test_suite}"
         make
@@ -474,7 +477,8 @@ while getopts "c:af:r:dxb:s:m" option; do
                 exit 1
             fi
         done
-
+        source_path=$(find ${SDK_PATH} -name "environment-setup-*")
+        source ${source_path}
         if echo "$@" | grep -q -e ' * -a *$\| -ba *$'; then
             build_all
         else
