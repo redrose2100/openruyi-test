@@ -18,7 +18,6 @@
 # ############################################
 
 source "$OET_PATH"/libs/locallibs/common_lib.sh
-
 CONFIG_FILE="/etc/secScanner/secscanner.cfg"
 
 function pre_test()
