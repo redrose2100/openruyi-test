@@ -26,7 +26,7 @@ function pre_test()
     LOG_INFO "Start to prepare the test environment."
     yum search secScanner || exit 0
     # Check if python2 package is actually available
-    python2_available=$(yum list python2 2>/dev/null | grep -E '^python2\.' | wc -l)
+    python2_available=$(yum list python2 2>/dev/null | grep -c -E '^python2\.')
     if [ "$python2_available" -gt 0 ]; then
         # Try to install python2 if available
         DNF_INSTALL "python2" || exit 0
