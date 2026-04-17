@@ -16,7 +16,7 @@
 # @Desc      :   [pmd_mapping=100%] mempool_allocator模块参数测试
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 source common.sh
 
 function pre_test() {
@@ -52,7 +52,7 @@ function run_test() {
     CHECK_RESULT $? 0
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID
     CHECK_RESULT $? 0 1
-    dmesg | grep 'The size of new OBMM region 0x200000 on node 0 is not aligned t OBMM memseg size 0x2000000'
+    dmesg | grep 'The size of new OBMM region 0x200000 on node 0 is not aligned to OBMM memseg size 0x2000000'
     CHECK_RESULT $? 0
     total_mem=$((32 * MB2B))
     numa_mem_init $total_mem
@@ -81,7 +81,7 @@ function run_test() {
     CHECK_RESULT $? 0
 
     dmesg -C
-    test_export $numa_mem_list $EXP_COMMON_FLAG $deid &> export.log
+    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
     CHECK_RESULT $? 0
     test_unexport $(get_id export.log)
     rmmod obmm
@@ -116,7 +116,7 @@ function run_test() {
     CHECK_RESULT $? 0
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID
     CHECK_RESULT $? 0 1
-    dmesg | grep 'The size of new OBMM region 0x2000000 on NODE 0 is not aligned to OBMM memseg size 0X40000000'
+    dmesg | grep 'The size of new OBMM region 0x2000000 on node 0 is not aligned to OBMM memseg size 0x40000000'
     CHECK_RESULT $? 0
     total_mem=$((1 * GB2B))
     numa_mem_init $total_mem
@@ -156,11 +156,11 @@ function run_test() {
     insmod_obmm_default mempool_allocator=hugetlb_pmd mem_allocator_granu=1G 2>&1 | grep "Invalid argument"
     CHECK_RESULT $? 0
 
-    insmod_obmm_default mempool_allocator=hugetlb_pmd mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
+    insmod_obmm_default mempool_allocator=hugetlb_pud mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
     CHECK_RESULT $? 0
-    insmod_obmm_default mempool_allocator=hugetlb_pmd mem_allocator_granu=2M 2>&1 | grep "Invalid argument"
+    insmod_obmm_default mempool_allocator=hugetlb_pud mem_allocator_granu=2M 2>&1 | grep "Invalid argument"
     CHECK_RESULT $? 0
-    insmod_obmm_default mempool_allocator=hugetlb_pmd mem_allocator_granu=32M 2>&1 | grep "Invalid argument"
+    insmod_obmm_default mempool_allocator=hugetlb_pud mem_allocator_granu=32M 2>&1 | grep "Invalid argument"
     CHECK_RESULT $? 0
 
     # 使用1G大页
