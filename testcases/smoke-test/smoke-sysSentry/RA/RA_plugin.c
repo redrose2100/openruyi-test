@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     }
 
     printf ("Sending %s msg to RA ...", input);
-    xalarm_report_event(ALARM_REBOOT_EVENT, input);
+    xalarm_report_event(ALARM_REBOOT_EVENT, input, strlen(input));
     id_filter.id_list[ID_INDEX_0] = ALARM_REBOOT_ACK_EVENT;
     id_filter.len = ID_LIST_LENGTH;
     ret = xalarm_register_event(&register_info, id_filter);
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     }
     RefreshOutput();
     print_alarm_info(msg);
-    xalarm_unregister_event(register_info);
+    xalarm_unregister_event(&register_info);
     RefreshOutput();
     return 0;
 }
