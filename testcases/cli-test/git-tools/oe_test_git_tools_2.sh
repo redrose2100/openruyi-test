@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test "git-tools" command
 # ##################################
+#shellcheck disable=SC2034
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
+    EXECUTE_T="160m"
     DNF_INSTALL "git-tools git"
     git clone https://gitee.com/openeuler/test-tools
     cd ./test-tools || exit
