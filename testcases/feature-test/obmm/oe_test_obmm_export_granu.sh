@@ -16,7 +16,7 @@
 # @Desc      :   导出粒度测试
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 source common.sh
 
 function pre_test() {
@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     # 导出0M
-    test_export 0 $EXP_COMMON_FLAG $DEID
+    test_export 0 $EXP_MMAP_FLAG $DEID
     CHECK_RESULT $? 0 1
     dmesg | grep 'The size of new OBMM region is 0. Non-zero value expected'
     CHECK_RESULT $? 0
@@ -45,7 +45,7 @@ function run_test() {
     test_unexport $EXP_MEM_ID
     CHECK_RESULT $? 0
     # 导出4M ,导出成功
-    test_export $((4 * MB2B)) $EXP_MMAP_FLAG $DEID $> export.log
+    test_export $((4 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
     CHECK_RESULT $? 0
     cat export.log
     EXP_MEM_ID=$(get_id export.log)
@@ -60,7 +60,7 @@ function run_test() {
     CHECK_RESULT $? 0
 
     # 导出130M(2M 对齐，非4M对齐，非128M对齐)，导出成功
-    test_export $((130 *MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
+    test_export $((130 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
     CHECK_RESULT $? 0
     cat export.log
     test_unexport $(get_id export.log)
