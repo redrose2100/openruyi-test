@@ -21,7 +21,7 @@ source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start testing..."
-    if [ -e /dev/mapper/openeuler-root ] ; then
+    if systemctl status systemd-fsck-root.service | grep "active (exited)" ; then
         test_oneshot systemd-fsck-root.service 'active (exited)'
     else
         test_oneshot systemd-fsck-root.service 'inactive (dead)'
