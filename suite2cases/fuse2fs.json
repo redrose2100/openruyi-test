@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/fuse2fs",
+    "cases": [
+        {
+            "name": "oe_test_fuse2fs"
+        }
+
+      ]
+}
+
