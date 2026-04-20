@@ -71,7 +71,7 @@ function run_test() {
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && $iftop_cmd -t -s 1 -P | grep ":ssh"; then
+        if { P_SSH_CMD --node 2 --cmd "while true; do date; sleep 1; done" >/dev/null 2>&1 & } && $iftop_cmd -t -s 1 -P | grep ":ssh"; then
             result=0
             break
         fi
@@ -80,7 +80,7 @@ function run_test() {
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && $iftop_cmd -t -s 1 -P -N | grep ":22"; then
+        if { P_SSH_CMD --node 2 --cmd "while true; do date; sleep 1; done" >/dev/null 2>&1 & } && $iftop_cmd -t -s 1 -P -N | grep ":22"; then
             result=0
             break
         fi
@@ -163,7 +163,7 @@ function run_test() {
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if  { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && $iftop_cmd -t -s 1 -P -N -f "dst port 22" 2>&1 | grep ":22"; then
+        if  { P_SSH_CMD --node 2 --cmd "while true; do date; sleep 1; done" >/dev/null 2>&1 & } && $iftop_cmd -t -s 1 -P -N -f "dst port 22" 2>&1 | grep ":22"; then
             result=0
             break
         fi
