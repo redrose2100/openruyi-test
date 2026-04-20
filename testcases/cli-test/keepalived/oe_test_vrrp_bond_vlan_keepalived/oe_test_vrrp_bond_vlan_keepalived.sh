@@ -24,7 +24,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     command -v firewalld && systemctl stop firewalld
     getenforce | grep Enforcing && setenforce 0
-    DNF_INSTALL "keepalived vconfig net-tools"
+    DNF_INSTALL "keepalived vconfig net-tools jq"
     net_cards=$(TEST_NIC 1)
     net_card2=$(echo "$net_cards" | awk -F ' ' '{print $1}')
     net_card3=$(echo "$net_cards" | awk -F ' ' '{print $2}')
@@ -39,9 +39,9 @@ function pre_test() {
     nmcli connection modify bond0 802-3-ethernet.mtu "$bond_mtu"
     nmcli connection modify slave-38 802-3-ethernet.mtu "$bond_mtu"
     nmcli connection modify slave-39 802-3-ethernet.mtu "$bond_mtu"
+    nmcli connection up bond0
     nmcli connection up slave-38
     nmcli connection up slave-39
-    nmcli connection up bond0
     modprobe bonding
     LOG_INFO "End of environmental preparation!"
 }
@@ -86,7 +86,7 @@ global_defs {
     done
     systemctl start keepalived
     CHECK_RESULT $?
-    SLEEP_WAIT 5
+    SLEEP_WAIT 10
     test "$(ip a | grep vrrp4 | grep -c 192)" -eq 20
     CHECK_RESULT $?
     nmcli connection down bond0
