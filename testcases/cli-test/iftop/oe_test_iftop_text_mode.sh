@@ -29,7 +29,6 @@ function pre_test() {
     ipv4_addr_2=$(nmcli device show "${net_cards[1]}" | grep IP4.ADDRESS | awk '{print $2}' | cut -d '/' -f1)
     ipv4_target_addr=$(host huawei.com | grep 'has address' | awk '{print $4}')
     ipv4_target_hostname="hwclouds-dns"
-    P_SSH_CMD --node 2 --cmd "find /var/log/messages || touch /var/log/messages"
     #qemu下获取默认路由所用的网络接口
     if [ "$(systemd-detect-virt)" = "qemu" ]; then
         INTERFACE=$(ip route show default | awk '{print $5}' | head -n1)
@@ -71,21 +70,23 @@ function run_test() {
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && $iftop_cmd -t -s 1 -P | grep ":ssh"; then
+        if { P_SSH_CMD --node 2 --cmd "while true; do date; sleep 1; done" >/dev/null 2>&1 & } && iftop -t -s 1 -P | grep ":ssh"; then
             result=0
             break
         fi
     done
     CHECK_RESULT $result 0 0 "Failed to use option: -P"
+    pkill -f "do date"
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && $iftop_cmd -t -s 1 -P -N | grep ":22"; then
+        if { P_SSH_CMD --node 2 --cmd "while true; do date; sleep 1; done" >/dev/null 2>&1 & } && iftop -t -s 1 -P -N | grep ":22"; then
             result=0
             break
         fi
     done
     CHECK_RESULT $result 0 0 "Failed to use option: -N"
+    pkill -f "do date"
     
     if [ "$(systemd-detect-virt)" != "qemu" ]; then
         result=1
@@ -163,12 +164,13 @@ function run_test() {
     result=1
     for ((i = 0; i < 10; i++)); do
         SLEEP_WAIT 1
-        if  { P_SSH_CMD --node 2 --cmd "tail -f /var/log/messages" >/dev/null 2>&1 & } && $iftop_cmd -t -s 1 -P -N -f "dst port 22" 2>&1 | grep ":22"; then
+        if  { P_SSH_CMD --node 2 --cmd "while true; do date; sleep 1; done" >/dev/null 2>&1 & } && iftop -t -s 1 -P -N -f "dst port 22" 2>&1 | grep ":22"; then
             result=0
             break
         fi
     done
     CHECK_RESULT $result 0 0 "Failed to use option: -f"
+    pkill -f "do date"
     
     $iftop_cmd -t -s 1 -m 10b 2>&1 | grep 'Listening on'
     CHECK_RESULT $? 0 0 "Failed to use option: -m"
