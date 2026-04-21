@@ -29,7 +29,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     # Test default log output
-    script -c "echo default_test" /tmp/test_script/default.log
+    script -q -c "echo default_test" /tmp/test_script/default.log > /dev/null 2>&1
+    echo "退出码: $?"
+    cat /tmp/test_script/default.log
     CHECK_RESULT $? 0 0 "Failed to run script with default output"
     grep "default_test" /tmp/test_script/default.log
     CHECK_RESULT $? 0 0 "Default log missing expected output"
