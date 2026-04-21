@@ -84,7 +84,7 @@ int main(int argc, char **argv)
             if (ack_result !=2){
                 char res_str[256];
                 snprintf(res_str, 256, "%s_%d", msg->pucParas, ack_result);
-                ret = xalarm_report_event(ALARM_REBOOT_ACK_EVENT, res_str);
+                ret = xalarm_report_event(ALARM_REBOOT_ACK_EVENT, res_str, strlen(res_str));
                 if(ret < 0){
                     perror("Failed to send reboot ack msg \n");
                     return 1;
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
             if(ack_result !=2){
                 char res_str[256];
                 snprintf(res_str, 256, "%s_%d", msg->pucParas, ack_result);
-                ret=xalarm_report_event(ALARM_OOM_ACK_EVENT, res_str);
+                ret=xalarm_report_event(ALARM_OOM_ACK_EVENT, res_str, strlen(res_str));
                 if(ret < 0){
                     perror("Failed to send oom ack msg\n");
                     return 1;
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
                 snprintf(res_str, URMA_SEND_DATA_MAX_LEN, "%s_%d", msg->pucParas, ack_result);
                 if (delay_ack_time <=0){
                     time_start_flag =false;
-                    ret = xalarm_report_event(ALARM_PANIC_ACK_EVENT, res_str);
+                    ret = xalarm_report_event(ALARM_PANIC_ACK_EVENT, res_str, strlen(res_str));
                     if(ret < 0) {
                         printf("Failed to send panic ack msg %s\n", res_str);
                         return 1;
@@ -125,7 +125,7 @@ int main(int argc, char **argv)
                 fflush(stdout);
                 if(elapsed_seconds >= delay_ack_time){
                     time_start_flag = false;
-                    ret = xalarm_report_event(ALARM_PANIC_ACK_EVENT, res_str);
+                    ret = xalarm_report_event(ALARM_PANIC_ACK_EVENT, res_str, strlen(res_str));
                     if(ret < 0){
                         printf("Failed to send panic ack msg %s\n", res_str);
                         return 1;
@@ -140,7 +140,7 @@ int main(int argc, char **argv)
                 snprintf(res_str, URMA_SEND_DATA_MAX_LEN, "%s_%d", msg->pucParas, ack_result);
                 if(delay_ack_time <=0){
                     time_start_flag=false;
-                    ret = xalarm_report_event(ALARM_KERNEL_REBOOT_ACK_EVENT, res_str);
+                    ret = xalarm_report_event(ALARM_KERNEL_REBOOT_ACK_EVENT, res_str, strlen(res_str));
                     if(ret < 0){
                         printf("Failed to send kernel reboot ack msg %s\n", res_str);
                         return 1;                        
@@ -155,7 +155,7 @@ int main(int argc, char **argv)
                 fflush(stdout);                
                 if (elapsed_seconds >=delay_ack_time){
                     time_start_flag =false;
-                    ret = xalarm_report_event(ALARM_KERNEL_REBOOT_ACK_EVENT, res_str);
+                    ret = xalarm_report_event(ALARM_KERNEL_REBOOT_ACK_EVENT, res_str, strlen(res_str));
                      if(ret < 0){
                         printf("Failed to send kernel reboot ack msg %s\n", res_str);
                         return 1;                        
@@ -165,7 +165,7 @@ int main(int argc, char **argv)
             }
         }
     }
-    xalarm_unregister_event(register_info);
+    xalarm_unregister_event(&register_info);
     return 0;
 
 }

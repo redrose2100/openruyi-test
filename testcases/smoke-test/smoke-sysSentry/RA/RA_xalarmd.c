@@ -49,10 +49,10 @@ int main(int argc, char **argv)
 
     process_alarm_info(msg);
     sleep(5);
-    xalarm_unregister_event(register_info);
+    xalarm_unregister_event(&register_info);
     printf("Reporting msg to plugin ... \n");
 
-    ret = xalarm_report_event(ALARM_REBOOT_ACK_EVENT, "ACK OK");
+    ret = xalarm_report_event(ALARM_REBOOT_ACK_EVENT, "ACK OK", strlen("ACK OK"));
 
 
     if(ret < 0){
