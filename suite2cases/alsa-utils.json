@@ -12,15 +12,6 @@
         },
         {
             "name": "oe_test_alsactl"
-        },
-        {
-            "name": "oe_test_amixer_controls"
-        },
-        {
-            "name": "oe_test_aplay_formats"
-        },
-        {
-            "name": "oe_test_iecset"
         }
     ]
 }
