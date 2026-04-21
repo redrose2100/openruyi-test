@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_alsa_tools"
+        },
+        {
+            "name":"oe_test_alsactl"
         }
     ]
 }
