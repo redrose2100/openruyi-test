@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/feature-test/obmm",
+    "cases": [
+        {
+            "name": "oe_test_obmm_ko_para_003"
+        },
+        {
+            "name": "oe_test_obmm_export_granu"
+        },
+        {
+            "name": "oe_test_obmm_ko_para_004"
+        },
+        {
+            "name": "oe_test_obmm_ko_para_001"
+        },
+        {
+            "name": "oe_test_obmm_cmdline_pmd_mapping_001"
+        },
+        {
+            "name": "oe_test_obmm_cmdline_pmd_mapping_002"
+        },
+        {
+            "name": "oe_test_obmm_cmdline_pmd_mapping_003"
+        },
+        {
+            "name": "oe_test_obmm_cmdline_pmd_mapping_004"
+        },
+        {
+            "name": "oe_test_obmm_cmdline_pmd_mapping_005"
+        }
+    ]
+}
