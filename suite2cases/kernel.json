@@ -218,6 +218,11 @@
             "add disk": []
         },
         {
+            "name": "oe_test_regmap_02",
+            "machine type": "kvm",
+            "add disk": []
+        },
+        {
             "name": "oe_test_ceph",
             "machine type": "kvm",
             "add disk": []
