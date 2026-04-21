@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   cmdline配置：pmd_mapping配置参数测试--pmd_mapping=0%
 # ############################################
+# shellcheck disable=SC1009,SC1020,SC1035,SC1072,SC1073,SC1091,SC2002,SC2004,SC2015,SC2034,SC2046,SC2048,SC2068,SC2086,SC2153,SC2154
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 source ./common.sh

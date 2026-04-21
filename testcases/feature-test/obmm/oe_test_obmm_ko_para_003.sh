@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   [pmd_mapping<100%] mempool_allocator模块参数测试
 # ############################################
+# shellcheck disable=SC1009,SC1020,SC1035,SC1072,SC1073,SC1091,SC2002,SC2004,SC2015,SC2034,SC2046,SC2048,SC2068,SC2086,SC2153,SC2154
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 source common.sh

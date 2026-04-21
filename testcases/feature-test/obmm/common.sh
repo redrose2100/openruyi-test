@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC1009,SC1020,SC1035,SC1072,SC1073,SC1091,SC2002,SC2004,SC2034,SC2046,SC2086,SC2153,SC2154
+# shellcheck disable=SC1009,SC1020,SC1035,SC1072,SC1073,SC1091,SC2002,SC2004,SC2015,SC2034,SC2046,SC2048,SC2068,SC2086,SC2153,SC2154
 readonly CPU_TOPO='/root/cpu_socket_topology'
 readonly SYS_MEMPOOL_ALLOCATOR='/sys/module/obmm/parameters/mempool_allocator'
 readonly NODEINFO="/sys/devices/system/node/node"
