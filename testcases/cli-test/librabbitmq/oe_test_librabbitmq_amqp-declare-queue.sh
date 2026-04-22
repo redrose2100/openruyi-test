@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "librabbitmq rabbitmq-server unzip"
+    DNF_INSTALL "librabbitmq rabbitmq-server unzip hostname"
     if grep -q "$(hostname -f)" /etc/hosts ; then
             :
     else

@@ -16,14 +16,38 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test systemd-binfmt.service restart
 # #############################################
-
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    found=0
+    for d in /lib/binfmt.d /usr/lib/binfmt.d /usr/local/lib/binfmt.d /etc/binfmt.d /run/binfmt.d; do
+        if [[ -d "$d" ]] && [[ -n "$(ls -A "$d" 2>/dev/null)" ]]; then
+            found=1
+            break
+        else
+            found=0
+        fi
+    done
+    systemctl start systemd-binfmt.service
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
     LOG_INFO "systemd-binfmt.service is an early boot service that registers additional binary formats for executables in the kernel"
-    test_oneshot systemd-binfmt.service 'inactive (dead)'
+    if (( found )); then
+        test_oneshot systemd-binfmt.service 'active (exited)'
+    else
+        test_oneshot systemd-binfmt.service 'inactive (dead)'
+    fi
     LOG_INFO "Finish test!"
 }
 
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    systemctl stop systemd-binfmt.service
+    LOG_INFO "End to restore the test environment."
+}
 main "$@"

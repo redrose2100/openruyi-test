@@ -67,7 +67,7 @@ int main(int argc, char **argv)
             char ack[256];
             int nr_freed = 0;
             sprintf(ack, "%lu_%d", msgid, nr_freed);
-            ret = xalarm_report_event(ALARM_OOM_ACK_EVENT, ack);
+            ret = xalarm_report_event(ALARM_OOM_ACK_EVENT, ack, strlen(ack));
             if(ret < 0)
             {
                 perror("Failed to send msg\n");

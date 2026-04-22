@@ -37,6 +37,7 @@ function run_test() {
     LOG_INFO "start to run test."
     bash /opt/zookeeper/bin/zkServer.sh start
     CHECK_RESULT $? 0 0 "start failed." 1
+    SLEEP_WAIT 10
     bash /opt/zookeeper/bin/zkServer.sh status
     CHECK_RESULT $? 0 0 "get status failed." 1
     bash /opt/zookeeper/bin/zkServer.sh stop
