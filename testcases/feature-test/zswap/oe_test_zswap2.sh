@@ -1,5 +1,3 @@
-[0;33m请输入 oe_test_zswap2.sh 的代码内容（shell脚本）：[0m
-[0;34m（请输入内容，结束时在新行输入 END 并回车）[0m
 #!/usr/bin/bash
 
 # Copyright (c) 2026. Huawei Technologies Co.,Ltd.ALL rights reserved.
@@ -14,7 +12,7 @@
 # #############################################
 # @Author    :   sjxjx
 # @Contact   :   3541335833@qq.com
-# @Date      :   2026-04-21
+# @Date      :   2026-04-22
 # @License   :   Mulan PSL v2
 # @Desc      :   Test zswap compression performance via vmstat counters
 # ############################################
@@ -141,3 +139,4 @@ function post_test() {
 }
 
 main "$@"
+
