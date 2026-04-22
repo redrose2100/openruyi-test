@@ -28,6 +28,9 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    res1=$(echo "test1Xtest2Xtest3" |xargs -d X)
+    [ "$res1" == "test1 test2 test3" ]
+    CHECK_RESULT $? 0 0 "xargs error"   
     find . -perm 777 -print0 |xargs -0 ls |grep 'test_xargs.txt'
     CHECK_RESULT $? 0 0 "xargs execution error" 
     LOG_INFO "End to run test."
