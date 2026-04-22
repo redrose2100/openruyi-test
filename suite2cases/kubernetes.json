@@ -15,6 +15,9 @@
         },
         {
             "name": "oe_test_service_kube-apiserver"
+        },
+        {
+            "name": "oe_test_kubernetes_kubectl"
         }
     ]
 }
