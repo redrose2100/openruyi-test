@@ -76,10 +76,9 @@ def sleep_wait(wait_time, cmd=None, mode=1):
             if exitcode == 0:
                 print(output)
                 sys.exit(0)
-            elif init == wait_time:
-                sys.exit(exitcode)
 
             init += 1
+        sys.exit(exitcode)
 
 
 if __name__ == "__main__":
