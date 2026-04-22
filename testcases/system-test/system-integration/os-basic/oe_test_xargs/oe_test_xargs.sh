@@ -22,12 +22,22 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     touch test_xargs.txt
+    cat > test_xargs.txt << EOF
+1
+2
+3
+EOF
     chmod 777 test_xargs.txt
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+ 
+    res1=$(cat test_xargs.txt | xargs)
+    [ "$res1" == "1 2 3" ]
+    CHECK_RESULT $? 0 0 "xargs error"   
+
     find . -perm 777 -print0 |xargs -0 ls |grep 'test_xargs.txt'
     CHECK_RESULT $? 0 0 "xargs execution error" 
     LOG_INFO "End to run test."
