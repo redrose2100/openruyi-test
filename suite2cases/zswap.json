@@ -1,8 +1,13 @@
+[0;33m请输入 zswap.json 的新内容（将完全替换原文件）：[0m
+[0;34m（请输入内容，结束时在新行输入 END 并回车）[0m
 {
   "path": "$OET_PATH/testcases/feature-test/zswap/",
   "cases": [
     {
       "name": "oe_test_zswap01"
+    },
+    {
+        "name": "oe_test_zswap03"
     }
   ]
 }
