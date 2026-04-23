@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_tree"
+        },
+        {
+            "name": "oe_test_tree_options"
         }
     ]
 }
