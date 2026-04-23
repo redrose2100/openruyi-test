@@ -107,7 +107,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     fusermount -u "${MNT_DIR}" 2>/dev/null
     rm -rf "${TEST_DIR}" "${MNT_DIR}"
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
