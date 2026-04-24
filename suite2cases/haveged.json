@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_command_haveged"
+        },
+        {
+            "name": "oe_test_haveged01"
         }
     ]
 }
