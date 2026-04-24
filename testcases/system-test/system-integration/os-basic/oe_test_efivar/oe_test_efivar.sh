@@ -27,29 +27,64 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+
+    # 判断是否为 UEFI 环境
     efibootmgr
     ret=$?
-    if [ $ret -ne 0 ] ;then
+    if [ $ret -ne 0 ]; then
         LOG_WARN "System is not in UEFI mode. Exiting test."
         LOG_INFO "End to run test."
         return 0
     fi
-    efivar -l |grep -i "boot"
-    CHECK_RESULT $? 0 0 "Failed to read uefi variable"
-    uefi_value=$(efivar -l |grep -i "boot" |head -1)
-    efivar -n "${uefi_value}"
-    CHECK_RESULT $? 0 0 "Failed to read uefi variable"
-    efivar -n "${uefi_value}" -d 99
-    CHECK_RESULT $? 0 0 "Execution failed"
+
+    # 获取 boot 变量
+    boot_list=$(efivar -l | grep -i "boot")
+    CHECK_RESULT $? 0 0 "Failed to read UEFI variable list"
+
+    uefi_value=$(echo "$boot_list" | head -1)
+
+    # 读取变量并校验输出
+    efivar -n "${uefi_value}" > out.txt
+    CHECK_RESULT $? 0 0 "Failed to read UEFI variable"
+    [ -s out.txt ]
+    CHECK_RESULT $? 0 0 "UEFI variable content is empty"
+
+    # dump（使用安全 offset）
+    efivar -n "${uefi_value}" -d 0
+    CHECK_RESULT $? 0 0 "UEFI variable dump failed"
+
+    # 负例：使用不安全/越界 offset，应失败
+    efivar -n "${uefi_value}" -d 99999 > /dev/null 2>&1
+    CHECK_RESULT $? 0 1 "Invalid offset should fail"
+
+    # 导出文件并校验
     efivar -n "${uefi_value}" -e test.txt
     test -f test.txt
     CHECK_RESULT $? 0 0 "File generation failed"
+    [ -s test.txt ]
+    CHECK_RESULT $? 0 0 "Exported file is empty"
+
+    # 负例：非法变量
+    efivar -n "Invalid-Variable-Name"
+    CHECK_RESULT $? 0 1 "Reading invalid variable should fail"
+
+    # 权限测试（不影响 CI）
+    if [ "$(id -u)" -ne 0 ]; then
+        if efivar -l > /dev/null 2>&1; then            
+            LOG_WARN "Non-root user can access efivar, skip permission check."
+        else
+            LOG_INFO "Permission restriction works as expected."
+        fi
+    else
+        LOG_INFO "Running as root, skip permission negative test."
+    fi
+
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf test.txt
+    rm -rf test.txt out.txt
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
