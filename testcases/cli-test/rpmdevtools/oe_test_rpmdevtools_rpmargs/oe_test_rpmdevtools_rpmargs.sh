@@ -48,6 +48,7 @@ function run_test() {
     rpmargs -c file -p /ALT/Sisyphus/files/noarch/RPMS/"${pkg_name}"*.rpm | grep "${pkg_name}"
     CHECK_RESULT $? 0 0 "Failed option: -p"
 
+    rpmdev-checksig "${pkg_name}"*.rpm
     rpmdev-checksig "${pkg_name}"*.rpm | grep -E "${pkg_name}.*.rpm: RSA|${pkg_name}.*.rpm: MD5"
     CHECK_RESULT $? 0 0 "Failed command:rpmdev-checksig"
 
