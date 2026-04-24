@@ -7,6 +7,9 @@ mugen is a testing framework provided by openEuler community. This repo contains
 - New mugen entry function
 - Added support for setting testsuit directory and testing envrionment
 - Added python util functions for testing
+- Enhanced command line interface with long options support
+- Added progress display during test execution
+- Improved error handling with more user-friendly error messages
 
 ## How to use
 
@@ -62,17 +65,25 @@ Simply run `bash dep_install.sh`.
 
 #### Run the test
 - Run all test cases
-`bash mugen.sh -a`
+`bash mugen.sh -a` or `bash mugen.sh --all`
 - Run a test suite
-`bash mugen.sh -f testsuite`
+`bash mugen.sh -f testsuite` or `bash mugen.sh --suite testsuite`
 - Run a test case
-`bash mugen.sh -f testsuite -r testcase`
+`bash mugen.sh -f testsuite -r testcase` or `bash mugen.sh --suite testsuite --case testcase`
 - Save the testing log
 ```
 bash mugen.sh -a -x 
 bash mugen.sh -f testsuite -x
 bash mugen.sh -f testsuite -r testcase -x
+# Using long options
+bash mugen.sh --all --debug
+bash mugen.sh --suite testsuite --debug
+bash mugen.sh --suite testsuite --case testcase --debug
 ```
+- Run tests on remote node
+`bash mugen.sh -a -s` or `bash mugen.sh --all --remote`
+- Show help information
+`bash mugen.sh -h` or `bash mugen.sh --help`
 
 #### Write your test case
 - Follow the template we provided: 
