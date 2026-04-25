@@ -48,6 +48,9 @@
         },
         {
             "name": "oe_test_xz_xzdiff_02"
+        },
+        {
+            "name": "oe_test_xz_compression_level"
         }
     ]
 }
