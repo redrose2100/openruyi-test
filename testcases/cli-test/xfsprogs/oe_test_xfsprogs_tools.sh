@@ -17,7 +17,7 @@
 # @Desc      :   Test xfsprogs command line tools
 # #############################################
 
-# shellcheck source=../common/common_lib.sh
+# shellcheck disable=SC1091
 source "../common/common_lib.sh"
 
 function pre_test() {
