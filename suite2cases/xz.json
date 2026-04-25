@@ -54,6 +54,9 @@
         },
         {
            "name": "oe_test_xz_basic_compress"
-       }
+       },
+       {
+          "name": "oe_test_xz_keep_original"
+      }
     ]
 }
