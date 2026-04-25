@@ -112,7 +112,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     rm -rf "${TEST_DIR}"
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
