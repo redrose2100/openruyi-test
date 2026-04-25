@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+﻿#!/usr/bin/bash
 # Copyright (c) [2021] Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -85,7 +85,7 @@ function TEST_DISK() {
 function DNF_INSTALL() {
     pkgs=$1
     node=${2-1}
-    #多节点初始系统环境相同，本地和远端安装的包，在任何节点不不应该存在
+    #澶氳妭鐐瑰垵濮嬬郴缁熺幆澧冪浉鍚岋紝鏈湴鍜岃繙绔畨瑁呯殑鍖咃紝鍦ㄤ换浣曡妭鐐逛笉涓嶅簲璇ュ瓨鍦?
     [ -z "$tmpfile" ] && tmpfile=""
 
     tmpfile2=$(python3 "${OET_PATH}"/libs/locallibs/rpm_manage.py \

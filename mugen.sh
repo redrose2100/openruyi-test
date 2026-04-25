@@ -1,1 +1,605 @@
-#!/usr/bin/bash\n# Copyright (c) [2021] Huawei Technologies Co.,Ltd.ALL rights reserved.\n# This program is licensed under Mulan PSL v2.\n# You can use it according to the terms and conditions of the Mulan PSL v2.\n#          http://license.coscl.org.cn/MulanPSL2\n# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,\n# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,\n# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.\n# See the Mulan PSL v2 for more details.\n####################################\n# @Author  : lemon-higgins\n# @email   : lemon.higgins@aliyun.com\n# @Date    : 2021-04-20 15:12:00\n# @License : Mulan PSL v2\n# @Version : 1.0\n# @Desc    :\n#####################################\n# shellcheck disable=SC2181,SC1090,SC2086\n\nOET_PATH=$(\n    cd "$(dirname "$0")" || exit 1\n    pwd\n)\nexport OET_PATH\n\nsource "${OET_PATH}"/libs/locallibs/common_lib.sh\n\nif [[ -d "/etc/mugen" ]]; then\n    export conf_file="/etc/mugen/mugen.json"\nelse\n    export conf_file="${OET_PATH}/conf/mugen.json"\nfi\n\nTIMEOUT="30m"\nCOMMAND_X="no"\nCOMMAND_S="no"\nCOPY_DONE="no"\nCASE_NUM=0\nSUCCESS_NUM=0\nFAIL_NUM=0\nSKIP_NUM=0\n\nfunction usage() {\n    printf "Mugen Test Framework\n"\n    printf "==================\n\n"\n    printf "Usage: bash mugen.sh [OPTIONS]\n\n"\n    printf "Options:\n"\n    printf "  -c, --config           Configure test framework environment\n"\n    printf "  -a, --all              Execute all test cases\n"\n    printf "  -f, --suite SUITE      Specify test suite\n"\n    printf "  -r, --case CASE        Specify test case\n"\n    printf "  -x, --debug            Execute shell script in debug mode\n"\n    printf "  -b, --build            Build test suite if Makefile exists\n"\n    printf "  -s, --remote           Run test cases on remote NODE1\n"\n    printf "  -m, --modify           Modify test case configuration\n"\n    printf "  -h, --help             Show this help message\n\n"\n    printf "Examples:\n"\n    printf "  Run all cases:\n"\n    printf "    bash mugen.sh -a\n"\n    printf "    bash mugen.sh -a -x  # Debug mode\n"\n    printf "    bash mugen.sh -a -s  # Remote execution\n\n"\n    printf "  Run test suite:\n"\n    printf "    bash mugen.sh -f test_suite\n"\n    printf "    bash mugen.sh -f test_suite -x  # Debug mode\n\n"\n    printf "  Run specific test case:\n"\n    printf "    bash mugen.sh -f test_suite -r test_case\n\n"\n    printf "  Configure test framework:\n"\n    printf "    bash mugen.sh -c --ip \$ip --password \$passwd --user \$user --port \$port\n"\n    printf "    # Add --run_remote to configure for remote execution\n"\n    printf "    # Add --put_all to copy all test cases at once\n\n"\n    printf "  Modify test case configuration:\n"\n    printf "    bash mugen.sh -m --suite \$suite --conf \$conf --key \$key --value \$value\n\n"\n    printf "  Build test suites:\n"\n    printf "    bash mugen.sh -b -a  # Build all test suites\n"\n    printf "    bash mugen.sh -b test_suite  # Build specific test suite\n"\n}\n\nfunction deploy_conf() {\n    python3 "${OET_PATH}"/libs/locallibs/write_conf.py "$@"\n    test $? -ne 0 && exit 1 || exit 0\n}\n\nfunction modify_conf() {\n    python3 "${OET_PATH}"/libs/locallibs/modify_conf.py "$@"\n    test $? -ne 0 && exit 1 || exit 0\n}\n\nfunction load_conf() {\n    rm -rf "${OET_PATH}"/results\n\n    export_var=$(python3 "${OET_PATH}"/libs/locallibs/read_conf.py env-var)\n    test $? -ne 0 && exit 1\n\n    $export_var\n\n    env_conf="$(echo -e "$conf_file" | sed -e 's/json/env/')"\n    printf "%s\n" "$export_var" >"$env_conf"\n\n    if [[ $COMMAND_S == "yes" ]]; then\n        env_path="$(echo -e "$conf_file" | sed -e 's/mugen.json//')"\n        SFTP put --node 1 --remotedir /mugen_re/conf/ --localdir "$env_path" --localfile "mugen.env"\n    fi\n}\n\nfunction generate_result_file() {\n    local suite=$1\n    local case=$2\n    local exitcode=$3\n\n    if [ "$exitcode" -eq 0 ]; then\n        LOG_INFO "The case exit by code $ret_code."\n        ((SUCCESS_NUM++))\n        result="succeed"\n    elif [ "$exitcode" -eq 255 ]; then\n        LOG_ERROR "The case exit by code $ret_code."\n        ((SKIP_NUM++))\n        result="skipped"\n    else\n        LOG_ERROR "The case exit by code $ret_code."\n        ((FAIL_NUM++))\n        result="failed"\n    fi\n\n    local result_path="$OET_PATH/results/$suite/$result"\n    mkdir -p "$result_path"\n    touch "$result_path"/"$case"\n}\n\nfunction exec_case() {\n    local cmd=$1\n    local log_path=$2\n    local case_name=$3\n    local test_suite=$4\n\n    exec 6>&1\n    exec 7>&2\n    exec >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1\n\n    SLEEP_WAIT $TIMEOUT "$cmd"\n    ret_code=$?\n\n    exec 1>&6 6>&-\n    exec 2>&7 7>&-\n\n    test "$ret_code"x == "143"x && {\n        cmd_pid=$(pgrep -f "$cmd")\n        if [ -n "$cmd_pid" ]; then\n            for pid in ${cmd_pid}; do\n                pstree -p "$pid" | grep -o '([0-9]*)' | tr -d '()' | xargs kill -9\n            done\n        fi\n        LOG_WARN "The case execution timeout."\n    }\n\n    generate_result_file "$test_suite" "$case_name" "$ret_code"\n}\n\nfunction run_test_case() {\n\n    local test_suite=$1\n    local test_case=$2\n    export exec_result\n\n    if [[ -z "$test_suite" || -z "$test_case" ]]; then\n        LOG_ERROR "Parameter(test suite or test case) loss."\n        exit 1\n    fi\n\n    result_files=$(find "${OET_PATH}"/results/"${test_suite}" -name "$test_case" >/dev/null 2>&1)\n    for result_file in $result_files; do\n        test -f "$result_file" && rm -rf "$result_file"\n    done\n\n    suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)\n    test $? -ne 0 && return 1\n    test -d "$suite_path" || {\n        LOG_ERROR "Path value:${suite_path} in a JSON file that does not exist in the environment."\n        return 1\n    }\n\n    if ! grep -q "$test_case" suite2cases/"${test_suite}.json"; then\n        LOG_ERROR "Error: Test case '$test_case' not found in suite '${test_suite}'."\n        LOG_ERROR "Please check if the case is properly defined in suite2cases/${test_suite}.json"\n        return 1\n    fi\n\n    mapfile -t case_path < <(find "${suite_path}" -name "${test_case}.*" | sed -e "s#/${test_case}.\(sh\|py\)##")\n    test ${#case_path[@]} -gt 1 && {\n        LOG_ERROR "Error: Multiple identical test case scripts found for '$test_case' in suite '${test_suite}'."\n        LOG_ERROR "Please check your test case scripts in: ${suite_path}"\n        return 1\n    }\n\n    ((CASE_NUM++))\n\n    log_path="${OET_PATH}/logs/${test_suite}/${test_case}"\n    mkdir -p "${log_path}"\n\n    LOG_INFO "Starting test case: $test_case"\n\n    if [ -z "${case_path[*]}" ]; then\n        LOG_ERROR "Error: Test script for '$test_case' not found."\n        LOG_ERROR "Please confirm whether the code is submitted to: ${suite_path}"\n        echo -e "Error: Test script not found. Please confirm whether the code is submitted." >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1\n        exec_case "exit 255" "$log_path" "$test_case" "$test_suite"\n        return 1\n    else\n        CHECK_ENV "${OET_PATH}/suite2cases/$test_suite.json" "${test_case}"\n        if [ $? -ne 0 ]; then\n            LOG_ERROR "Error: Test environment does not meet requirements for case '$test_case'."\n            LOG_ERROR "Please check your environment configuration."\n            echo -e "Error: Test environment don't meet the requirements. Please check your environment." >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1\n            exec_case "exit 255" "$log_path" "$test_case" "$test_suite"\n            return 1\n        fi\n    fi\n\n    if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" ]]; then\n        common_files=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key common-files)\n        test $? -ne 0 && return 1\n\n        for one_file in $common_files; do\n            local_dir=${one_file%/*}\n            local_file=${one_file##*/}\n            remote_dir=$(echo -e "${local_dir}" | sed -e "s#${OET_PATH}#/mugen_re#")\n            SFTP put --node 1 --remotedir "$remote_dir" --remotefile "$local_file" --localdir "$local_dir" --localfile "$local_file"\n            if [ $? -ne 0 ]; then\n                LOG_ERROR "Copy $test_suite suite2cases to remote fail."\n                return 1\n            fi\n        done\n\n        remote_dir=$(echo -e "${case_path%/*}" | sed -e "s#${OET_PATH}#/mugen_re#")\n        SFTP put --node 1 --remotedir "$remote_dir" --localdir "${case_path[*]}"\n        test $? -ne 0 && return 1\n    fi\n\n    pushd "${case_path[*]}" >/dev/null || return 1\n\n    local time_out\n    time_out=$(grep -w --fixed-strings EXECUTE_T "${test_case}".* 2>/dev/null | awk -F '=' '{print $NF}' | tr -d '"')\n    test -n "$time_out" && local TIMEOUT=$time_out\n\n    local script_type\n    script_type=$(find . -name "${test_case}.*" | awk -F '.' '{print $NF}')\n\n    if [[ "$script_type"x == "sh"x ]] || [[ "$script_type"x == "bash"x ]]; then\n        if [ "$COMMAND_X"x == "yes"x ]; then\n            run_cmd="bash -x ${test_case}.sh"\n        else\n            run_cmd="bash ${test_case}.sh"\n        fi\n    elif [ "$script_type"x == "py"x ]; then\n        run_cmd="python3 ${test_case}.py"\n    fi\n\n    if [[ $COMMAND_S == "yes" ]]; then\n        remote_case_path=$(echo -e "${case_path[*]}" | sed -e "s#${OET_PATH}#/mugen_re#")\n        remote_cmd="bash -c '. /mugen_re/conf/mugen.env &&\n                 export OET_PATH=/mugen_re &&\n                 pushd \"$remote_case_path\" >/dev/null || exit 1 &&\n                 $run_cmd > /tmp/mugen_re.log 2>&1 &&\n                 (cat /tmp/mugen_re.log && rm -rf /tmp/mugen_re.log && popd >/dev/null || exit 1) ||\n                 (cat /tmp/mugen_re.log 1>&2 && rm -rf /tmp/mugen_re.log && popd >/dev/null && exit 1)\n                '"\n        run_cmd="python3 \"${OET_PATH}\"/libs/locallibs/ssh_cmd.py --node 1 --cmd \"${remote_cmd}\""\n    fi\n\n    exec_case "$run_cmd" "$log_path" "$test_case" "$test_suite"\n\n    popd >/dev/null || return 1\n\n    if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" ]]; then\n        remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")\n        P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir"\n    fi\n\n    LOG_INFO "End to run testcase:$test_case."\n}\n\nfunction run_test_suite() {\n    local test_suite=$1\n\n    [ -z "$(find "${OET_PATH}"/suite2cases -name "${test_suite}".json)" ] && {\n        LOG_ERROR "Error: Test suite '${test_suite}' not found."\n        LOG_ERROR "Please check if the suite is properly defined in suite2cases/${test_suite}.json"\n        return 1\n    }\n\n    local this_copy=false\n    local suite_path=""\n    if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" && ${NODE1_COPY_ALL}x == "true"x ]]; then\n        suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)\n        test $? -ne 0 && return 1\n\n        remote_dir=$(echo -e "${suite_path%/*}" | sed -e "s#${OET_PATH}#/mugen_re#")\n        SFTP put --node 1 --remotedir "$remote_dir" --localdir "$suite_path"\n        if [ $? -ne 0 ]; then\n            LOG_ERROR "Copy $test_suite testcases to remote fail."\n            return 1\n        fi\n        COPY_DONE="yes"\n        this_copy=true\n    fi\n\n    # Get all test cases for this suite\n    local test_cases=($(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name | shuf))\n    local total_cases=${#test_cases[@]}\n    local current_case=0\n\n    LOG_INFO "Starting to run $total_cases test cases in suite $test_suite..."\n\n    for test_case in ${test_cases[*]}; do\n        ((current_case++))\n        LOG_INFO "Running case $current_case/$total_cases: $test_case"\n        run_test_case "$test_suite" "$test_case"\n    done\n\n    LOG_INFO "All $total_cases test cases in suite $test_suite completed."\n\n    if $this_copy; then\n        remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")\n        P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir"\n    fi\n}\n\nfunction run_all_cases() {\n    mapfile -t test_suites < <(find "${OET_PATH}"/suite2cases/ -type f -name "*.json" | awk -F '/' '{print $NF}' | sed -e 's/.json$//g')\n    test ${#test_suites[@]} -eq 0 && {\n        LOG_ERROR "Can't find recording about test_suites."\n        return 1\n    }\n\n    local total_suites=${#test_suites[@]}\n    local current_suite=0\n    local this_copy=false\n    if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" && ${NODE1_COPY_ALL}x == "true"x ]]; then\n        local this_copy=true\n    fi\n\n    LOG_INFO "Starting to run $total_suites test suites..."\n\n    for test_suite in ${test_suites[*]}; do\n        ((current_suite++))\n        LOG_INFO "Running suite $current_suite/$total_suites: $test_suite"\n        run_test_suite "$test_suite"\n        COPY_DONE="no"\n        local this_copy=true\n    done\n\n    if $this_copy; then\n        P_SSH_CMD --node 1 --cmd "rm -rf /mugen_re/testcases"\n    fi\n\n    LOG_INFO "All test suites completed."\n}\n\nfunction statistic_result() {\n    LOG_INFO "A total of ${CASE_NUM} use cases were executed, with ${SUCCESS_NUM} successes ${FAIL_NUM} failures and ${SKIP_NUM} skips."\n    exit "${FAIL_NUM}"\n}\n\nDO_MAKE_COUNT=0\nNOT_DO_MAKE_COUNT=0\nTOTAL_MAKE_COUNT=0\n\nfunction build_one_suite() {\n    ((TOTAL_MAKE_COUNT++))\n    local test_suite=$1\n\n    [ -z "$(find "${OET_PATH}"/suite2cases -name "${test_suite}".json)" ] && {\n        LOG_ERROR "Error: Test suite '${test_suite}' not found."\n        LOG_ERROR "Please check if the suite is properly defined in suite2cases/${test_suite}.json"\n        return 1\n    }\n\n    suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)\n    if [ $? -ne 0 ]; then\n        LOG_ERROR "find ${test_suite} test suite path fail"\n        return 1\n    fi\n    test -d "$suite_path" || {\n        LOG_ERROR "Path value:${suite_path} in a JSON file that does not exist in the environment."\n        return 1\n    }\n\n    pushd "$suite_path" >/dev/null || return 1\n\n    if [[ -n "${SDK_PATH}" && -d "${SDK_PATH}" ]]; then\n        source_path=$(find ${SDK_PATH} -name "environment-setup-*")\n        source ${source_path}\n    fi\n\n    if [[ -f "./makefile" || -f "./Makefile" ]]; then\n        LOG_INFO "do make for testsuite: ${test_suite}"\n        make\n        if [ $? -ne 0 ]; then\n            LOG_ERROR "do make for testsuite: ${test_suite} fail"\n            popd >/dev/null || exit\n            return 1\n        fi\n        ((DO_MAKE_COUNT++))\n    else\n        if [[ $2 != "no_print" ]]; then\n            LOG_INFO "This test suite $suite_path have no makefile or Makefile"\n        fi\n        ((NOT_DO_MAKE_COUNT++))\n    fi\n\n    popd >/dev/null || return 1\n\n    return 0\n}\n\nfunction build_all() {\n    mapfile -t test_suites < <(find "${OET_PATH}"/suite2cases/ -type f -name "*.json" | awk -F '/' '{print $NF}' | sed -e 's/.json$//g')\n    test ${#test_suites[@]} -eq 0 && {\n        LOG_ERROR "Can't find recording about test_suites."\n        return 1\n    }\n\n    do_error_count=0\n\n    for test_suite in ${test_suites[*]}; do\n        build_one_suite "$test_suite" "no_print"\n        if [ $? -ne 0 ]; then\n            LOG_ERROR "doing test suite $test_suite make fail"\n            ((do_error_count++))\n        fi\n    done\n\n    LOG_INFO "A total ${TOTAL_MAKE_COUNT} test suite run make, ${DO_MAKE_COUNT} had make, ${NOT_DO_MAKE_COUNT} no need do make, ${do_error_count} do make fail"\n    if [ "$do_error_count" -ne 0 ]; then\n        exit 1\n    fi\n\n    exit 0\n}\n\nfunction copy_libs_to_node1() {\n    if [[ $COMMAND_S == "no" ]]; then\n        return\n    fi\n    P_SSH_CMD --node 1 --cmd "ls -l /mugen_re/" | grep -q "libs"\n    if [ $? -ne 0 ]; then\n        SFTP put --node 1 --remotedir /mugen_re/ --localdir "${OET_PATH}"/libs/\n    fi\n}\n\n# Handle long options\nfor arg in "$@"; do\n    case $arg in\n        --config)\n            shift\n            deploy_conf "$@"\n            exit 0\n            ;;\n        --all)\n            shift\n            set -- -a "$@"\n            ;;\n        --suite)\n            shift\n            set -- -f "$1" "${@:2}"\n            ;;\n        --case)\n            shift\n            set -- -r "$1" "${@:2}"\n            ;;\n        --debug)\n            shift\n            set -- -x "$@"\n            ;;\n        --build)\n            shift\n            set -- -b "$@"\n            ;;\n        --remote)\n            shift\n            set -- -s "$@"\n            ;;\n        --modify)\n            shift\n            set -- -m "$@"\n            ;;\n        --help)\n            usage\n            exit 0\n            ;;\n    esac\ndone\n\nwhile getopts "c:af:r:dxb:s:mh" option; do\n    case $option in\n    c)\n        deploy_conf ${*//-c/}\n        ;;\n    m)\n        modify_conf ${*//-m/}\n        ;;\n    d)\n        echo -e "The test script download function has been discarded."\n        ;;\n    a)\n        if echo "$@" | grep -q -e '-a * -x *$\| -x * -a *$\| -ax *$\| -xa *$'; then\n            COMMAND_X="yes"\n        elif echo "$@" | grep -q -e '-a * -s *$\| -s * -a *$\| -as *$\| -sa *$'; then\n            COMMAND_S="yes"\n        elif echo "$@" | grep -q -e '-a * -b *$\| -b * -a *$\| -ab *$\| -ba *$'; then\n            ret=$(build_all)\n            exit "$ret"\n        elif ! echo "$@" | grep -q -e '-a *$'; then\n            usage\n            exit 1\n        fi\n\n        load_conf\n        copy_libs_to_node1\n        run_all_cases\n        statistic_result\n        ;;\n    b)\n        test_suite=$OPTARG\n        op_list=('-f' '-r' '-x' '-d' '-c' '-s')\n\n        for op in ${op_list[*]}; do\n            if [[ $test_suite == "$op" ]]; then\n                usage\n                exit 1\n            fi\n        done\n        if [[ -n "${SDK_PATH}" && -d "${SDK_PATH}" ]]; then\n            source_path=$(find ${SDK_PATH} -name "environment-setup-*")\n            source ${source_path}\n        fi\n        if echo "$@" | grep -q -e ' * -a *$\| -ba *$'; then\n            build_all\n        else\n            build_one_suite "$test_suite"\n        fi\n\n        ;;\n    f)\n        test_suite=$OPTARG\n\n        echo "$@" | grep -q -e " -b *$"\n        if [ $? -eq 0 ]; then\n            usage\n            exit 1\n        fi\n\n        echo "$test_suite" | grep -q -e ' -a \| -r \| -x \| -d ' && {\n            usage\n            exit 1\n        }\n\n        echo "$@" | grep -q -e ' * -x *\| * -xf *' && {\n            COMMAND_X="yes"\n        }\n\n        echo "$@" | grep -q -e ' * -s *\| * -sf *' && {\n            COMMAND_S="yes"\n        }\n\n        echo "$@" | grep -q -e ' -r ' || {\n            load_conf\n            copy_libs_to_node1\n            run_test_suite "$test_suite"\n            statistic_result\n        }\n        ;;\n    r)\n        test_case=$OPTARG\n\n        echo "$@" | grep -q -e " -b *$"\n        if [ $? -eq 0 ]; then\n            usage\n            exit 1\n        fi\n\n        echo "$test_case" | grep -q -e ' -a \| -f \| -x \| -d ' && {\n            usage\n            exit 1\n        }\n\n        echo "$@" | grep -q -e ' * -x *\| * -xr *\| * -xf *' && {\n            COMMAND_X="yes"\n        }\n\n        echo "$@" | grep -q -e ' * -s *\| * -sr *\| * -sf *' && {\n            COMMAND_S="yes"\n        }\n\n        load_conf\n        copy_libs_to_node1\n        run_test_case "$test_suite" "$test_case"\n        statistic_result\n        ;;\n    x)\n        echo "$@" | grep -q -e '^ [a-zA-Z0-9_-]-x *$' && {\n            LOG_ERROR "The -x parameter must be used in combination with -a, -f, and -r."\n            exit 1\n        }\n        ;;\n    s)\n        echo "$@" | grep -q -e '^ [a-Z0-9_-]-x *$' && {\n            LOG_ERROR "The -s parameter must be used in combination with -a, -f, and -r."\n            exit 1\n        }\n        ;;\n    h)\n        usage\n        exit 0\n        ;;\n    *)\n        usage\n        exit 1\n        ;;\n\n    esac\ndone\n
+﻿#!/usr/bin/bash
+# Copyright (c) [2021] Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+####################################
+# @Author  : lemon-higgins
+# @email   : lemon.higgins@aliyun.com
+# @Date    : 2021-04-20 15:12:00
+# @License : Mulan PSL v2
+# @Version : 1.0
+# @Desc    :
+#####################################
+# shellcheck disable=SC2181,SC1090,SC2086
+
+OET_PATH=$(
+    cd "$(dirname "$0")" || exit 1
+    pwd
+)
+export OET_PATH
+
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+
+if [[ -d "/etc/mugen" ]]; then
+    export conf_file="/etc/mugen/mugen.json"
+else
+    export conf_file="${OET_PATH}/conf/mugen.json"
+fi
+
+TIMEOUT="30m"
+COMMAND_X="no"
+COMMAND_S="no"
+COPY_DONE="no"
+CASE_NUM=0
+SUCCESS_NUM=0
+FAIL_NUM=0
+SKIP_NUM=0
+
+function usage() {
+    printf "Mugen Test Framework\n"
+    printf "==================\n\n"
+    printf "Usage: bash mugen.sh [OPTIONS]\n\n"
+    printf "Options:\n"
+    printf "  -c, --config           Configure test framework environment\n"
+    printf "  -a, --all              Execute all test cases\n"
+    printf "  -f, --suite SUITE      Specify test suite\n"
+    printf "  -r, --case CASE        Specify test case\n"
+    printf "  -x, --debug            Execute shell script in debug mode\n"
+    printf "  -b, --build            Build test suite if Makefile exists\n"
+    printf "  -s, --remote           Run test cases on remote NODE1\n"
+    printf "  -m, --modify           Modify test case configuration\n"
+    printf "  -h, --help             Show this help message\n\n"
+    printf "Examples:\n"
+    printf "  Run all cases:\n"
+    printf "    bash mugen.sh -a\n"
+    printf "    bash mugen.sh -a -x  # Debug mode\n"
+    printf "    bash mugen.sh -a -s  # Remote execution\n\n"
+    printf "  Run test suite:\n"
+    printf "    bash mugen.sh -f test_suite\n"
+    printf "    bash mugen.sh -f test_suite -x  # Debug mode\n\n"
+    printf "  Run specific test case:\n"
+    printf "    bash mugen.sh -f test_suite -r test_case\n\n"
+    printf "  Configure test framework:\n"
+    printf "    bash mugen.sh -c --ip \$ip --password \$passwd --user \$user --port \$port\n"
+    printf "    # Add --run_remote to configure for remote execution\n"
+    printf "    # Add --put_all to copy all test cases at once\n\n"
+    printf "  Modify test case configuration:\n"
+    printf "    bash mugen.sh -m --suite \$suite --conf \$conf --key \$key --value \$value\n\n"
+    printf "  Build test suites:\n"
+    printf "    bash mugen.sh -b -a  # Build all test suites\n"
+    printf "    bash mugen.sh -b test_suite  # Build specific test suite\n"
+}
+
+function deploy_conf() {
+    python3 "${OET_PATH}"/libs/locallibs/write_conf.py "$@"
+    test $? -ne 0 && exit 1 || exit 0
+}
+
+function modify_conf() {
+    python3 "${OET_PATH}"/libs/locallibs/modify_conf.py "$@"
+    test $? -ne 0 && exit 1 || exit 0
+}
+
+function load_conf() {
+    rm -rf "${OET_PATH}"/results
+
+    export_var=$(python3 "${OET_PATH}"/libs/locallibs/read_conf.py env-var)
+    test $? -ne 0 && exit 1
+
+    $export_var
+
+    env_conf="$(echo -e "$conf_file" | sed -e 's/json/env/')"
+    printf "%s\n" "$export_var" >"$env_conf"
+
+    if [[ $COMMAND_S == "yes" ]]; then
+        env_path="$(echo -e "$conf_file" | sed -e 's/mugen.json//')"
+        SFTP put --node 1 --remotedir /mugen_re/conf/ --localdir "$env_path" --localfile "mugen.env"
+    fi
+}
+
+function generate_result_file() {
+    local suite=$1
+    local case=$2
+    local exitcode=$3
+
+    if [ "$exitcode" -eq 0 ]; then
+        LOG_INFO "The case exit by code $ret_code."
+        ((SUCCESS_NUM++))
+        result="succeed"
+    elif [ "$exitcode" -eq 255 ]; then
+        LOG_ERROR "The case exit by code $ret_code."
+        ((SKIP_NUM++))
+        result="skipped"
+    else
+        LOG_ERROR "The case exit by code $ret_code."
+        ((FAIL_NUM++))
+        result="failed"
+    fi
+
+    local result_path="$OET_PATH/results/$suite/$result"
+    mkdir -p "$result_path"
+    touch "$result_path"/"$case"
+}
+
+function exec_case() {
+    local cmd=$1
+    local log_path=$2
+    local case_name=$3
+    local test_suite=$4
+
+    exec 6>&1
+    exec 7>&2
+    exec >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1
+
+    SLEEP_WAIT $TIMEOUT "$cmd"
+    ret_code=$?
+
+    exec 1>&6 6>&-
+    exec 2>&7 7>&-
+
+    test "$ret_code"x == "143"x && {
+        cmd_pid=$(pgrep -f "$cmd")
+        if [ -n "$cmd_pid" ]; then
+            for pid in ${cmd_pid}; do
+                pstree -p "$pid" | grep -o '([0-9]*)' | tr -d '()' | xargs kill -9
+            done
+        fi
+        LOG_WARN "The case execution timeout."
+    }
+
+    generate_result_file "$test_suite" "$case_name" "$ret_code"
+}
+
+function run_test_case() {
+
+    local test_suite=$1
+    local test_case=$2
+    export exec_result
+
+    if [[ -z "$test_suite" || -z "$test_case" ]]; then
+        LOG_ERROR "Parameter(test suite or test case) loss."
+        exit 1
+    fi
+
+    result_files=$(find "${OET_PATH}"/results/"${test_suite}" -name "$test_case" >/dev/null 2>&1)
+    for result_file in $result_files; do
+        test -f "$result_file" && rm -rf "$result_file"
+    done
+
+    suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)
+    test $? -ne 0 && return 1
+    test -d "$suite_path" || {
+        LOG_ERROR "Path value:${suite_path} in a JSON file that does not exist in the environment."
+        return 1
+    }
+
+    if ! grep -q "$test_case" suite2cases/"${test_suite}.json"; then
+        LOG_ERROR "In the suite2cases directory, Can't find the case name:${test_case} in the file of testsuite:${test_suite}."
+        return 1
+    fi
+
+    mapfile -t case_path < <(find "${suite_path}" -name "${test_case}.*" | sed -e "s#/${test_case}.\(sh\|py\)##")
+    test ${#case_path[@]} -gt 1 && {
+        LOG_ERROR "Multiple identical test case scripts have been found under the test suite. Please check your use case scripts. Test suite path:${suite_path}"
+        return 1
+    }
+
+    ((CASE_NUM++))
+
+    log_path="${OET_PATH}/logs/${test_suite}/${test_case}"
+    mkdir -p "${log_path}"
+
+    LOG_INFO "start to run testcase:$test_case."
+
+    if [ -z "${case_path[*]}" ]; then
+        echo -e "Can't find the test script:$test_case, Please confirm whether the code is submitted." >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1
+        exec_case "exit 255" "$log_path" "$test_case" "$test_suite"
+        return 1
+    else
+        CHECK_ENV "${OET_PATH}/suite2cases/$test_suite.json" "${test_case}"
+        if [ $? -ne 0 ]; then
+            echo -e "The test environment don't meet the requirements, please check your environment." >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1
+            exec_case "exit 255" "$log_path" "$test_case" "$test_suite"
+            return 1
+        fi
+    fi
+
+    if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" ]]; then
+        common_files=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key common-files)
+        test $? -ne 0 && return 1
+
+        for one_file in $common_files; do
+            local_dir=${one_file%/*}
+            local_file=${one_file##*/}
+            remote_dir=$(echo -e "${local_dir}" | sed -e "s#${OET_PATH}#/mugen_re#")
+            SFTP put --node 1 --remotedir "$remote_dir" --remotefile "$local_file" --localdir "$local_dir" --localfile "$local_file"
+            if [ $? -ne 0 ]; then
+                LOG_ERROR "Copy $test_suite suite2cases to remote fail."
+                return 1
+            fi
+        done
+
+        remote_dir=$(echo -e "${case_path%/*}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        SFTP put --node 1 --remotedir "$remote_dir" --localdir "${case_path[*]}"
+        test $? -ne 0 && return 1
+    fi
+
+    pushd "${case_path[*]}" >/dev/null || return 1
+
+    local time_out
+    time_out=$(grep -w --fixed-strings EXECUTE_T "${test_case}".* 2>/dev/null | awk -F '=' '{print $NF}' | tr -d '"')
+    test -n "$time_out" && local TIMEOUT=$time_out
+
+    local script_type
+    script_type=$(find . -name "${test_case}.*" | awk -F '.' '{print $NF}')
+
+    if [[ "$script_type"x == "sh"x ]] || [[ "$script_type"x == "bash"x ]]; then
+        if [ "$COMMAND_X"x == "yes"x ]; then
+            run_cmd="bash -x ${test_case}.sh"
+        else
+            run_cmd="bash ${test_case}.sh"
+        fi
+    elif [ "$script_type"x == "py"x ]; then
+        run_cmd="python3 ${test_case}.py"
+    fi
+
+    if [[ $COMMAND_S == "yes" ]]; then
+        remote_case_path=$(echo -e "${case_path[*]}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        remote_cmd="bash -c '. /mugen_re/conf/mugen.env &&
+                 export OET_PATH=/mugen_re &&
+                 pushd \"$remote_case_path\" >/dev/null || exit 1 &&
+                 $run_cmd > /tmp/mugen_re.log 2>&1 &&
+                 (cat /tmp/mugen_re.log && rm -rf /tmp/mugen_re.log && popd >/dev/null || exit 1) ||
+                 (cat /tmp/mugen_re.log 1>&2 && rm -rf /tmp/mugen_re.log && popd >/dev/null && exit 1)
+                '"
+        run_cmd="python3 \"${OET_PATH}\"/libs/locallibs/ssh_cmd.py --node 1 --cmd \"${remote_cmd}\""
+    fi
+
+    exec_case "$run_cmd" "$log_path" "$test_case" "$test_suite"
+
+    popd >/dev/null || return 1
+
+    if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" ]]; then
+        remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir"
+    fi
+
+    LOG_INFO "End to run testcase:$test_case."
+}
+
+function run_test_suite() {
+    local test_suite=$1
+
+    [ -z "$(find "${OET_PATH}"/suite2cases -name "${test_suite}".json)" ] && {
+        LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
+        return 1
+    }
+
+    local this_copy=false
+    local suite_path=""
+    if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" && ${NODE1_COPY_ALL}x == "true"x ]]; then
+        suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)
+        test $? -ne 0 && return 1
+
+        remote_dir=$(echo -e "${suite_path%/*}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        SFTP put --node 1 --remotedir "$remote_dir" --localdir "$suite_path"
+        if [ $? -ne 0 ]; then
+            LOG_ERROR "Copy $test_suite testcases to remote fail."
+            return 1
+        fi
+        COPY_DONE="yes"
+        this_copy=true
+    fi
+
+    local all_cases=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name | shuf)
+    local total_cases=$(echo "$all_cases" | wc -l)
+    local current_case=0
+
+    for test_case in $all_cases; do
+        ((current_case++))
+        LOG_INFO "Running test $current_case/$total_cases: $test_case"
+        run_test_case "$test_suite" "$test_case"
+    done
+
+    if $this_copy; then
+        remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir"
+    fi
+}
+
+function run_all_cases() {
+    mapfile -t test_suites < <(find "${OET_PATH}"/suite2cases/ -type f -name "*.json" | awk -F '/' '{print $NF}' | sed -e 's/.json$//g')
+    test ${#test_suites[@]} -eq 0 && {
+        LOG_ERROR "Can't find recording about test_suites."
+        return 1
+    }
+
+    local this_copy=false
+    if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" && ${NODE1_COPY_ALL}x == "true"x ]]; then
+        local this_copy=true
+    fi
+
+    local total_suites=${#test_suites[@]}
+    local current_suite=0
+
+    for test_suite in ${test_suites[*]}; do
+        ((current_suite++))
+        LOG_INFO "Running suite $current_suite/$total_suites: $test_suite"
+        run_test_suite "$test_suite"
+        COPY_DONE="no"
+        local this_copy=true
+    done
+
+    if $this_copy; then
+        P_SSH_CMD --node 1 --cmd "rm -rf /mugen_re/testcases"
+    fi
+}
+
+function statistic_result() {
+    LOG_INFO "A total of ${CASE_NUM} use cases were executed, with ${SUCCESS_NUM} successes ${FAIL_NUM} failures and ${SKIP_NUM} skips."
+    exit "${FAIL_NUM}"
+}
+
+DO_MAKE_COUNT=0
+NOT_DO_MAKE_COUNT=0
+TOTAL_MAKE_COUNT=0
+
+function build_one_suite() {
+    ((TOTAL_MAKE_COUNT++))
+    local test_suite=$1
+
+    [ -z "$(find "${OET_PATH}"/suite2cases -name "${test_suite}".json)" ] && {
+        LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
+        return 1
+    }
+
+    suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)
+    if [ $? -ne 0 ]; then
+        LOG_ERROR "find ${test_suite} test suite path fail"
+        return 1
+    fi
+    test -d "$suite_path" || {
+        LOG_ERROR "Path value:${suite_path} in a JSON file that does not exist in the environment."
+        return 1
+    }
+
+    pushd "$suite_path" >/dev/null || return 1
+
+    if [[ -n "${SDK_PATH}" && -d "${SDK_PATH}" ]]; then
+        source_path=$(find ${SDK_PATH} -name "environment-setup-*")
+        source ${source_path}
+    fi
+
+    if [[ -f "./makefile" || -f "./Makefile" ]]; then
+        LOG_INFO "do make for testsuite: ${test_suite}"
+        make
+        if [ $? -ne 0 ]; then
+            LOG_ERROR "do make for testsuite: ${test_suite} fail"
+            popd >/dev/null || exit
+            return 1
+        fi
+        ((DO_MAKE_COUNT++))
+    else
+        if [[ $2 != "no_print" ]]; then
+            LOG_INFO "This test suite $suite_path have no makefile or Makefile"
+        fi
+        ((NOT_DO_MAKE_COUNT++))
+    fi
+
+    popd >/dev/null || return 1
+
+    return 0
+}
+
+function build_all() {
+    mapfile -t test_suites < <(find "${OET_PATH}"/suite2cases/ -type f -name "*.json" | awk -F '/' '{print $NF}' | sed -e 's/.json$//g')
+    test ${#test_suites[@]} -eq 0 && {
+        LOG_ERROR "Can't find recording about test_suites."
+        return 1
+    }
+
+    do_error_count=0
+
+    for test_suite in ${test_suites[*]}; do
+        build_one_suite "$test_suite" "no_print"
+        if [ $? -ne 0 ]; then
+            LOG_ERROR "doing test suite $test_suite make fail"
+            ((do_error_count++))
+        fi
+    done
+
+    LOG_INFO "A total ${TOTAL_MAKE_COUNT} test suite run make, ${DO_MAKE_COUNT} had make, ${NOT_DO_MAKE_COUNT} no need do make, ${do_error_count} do make fail"
+    if [ "$do_error_count" -ne 0 ]; then
+        exit 1
+    fi
+
+    exit 0
+}
+
+function copy_libs_to_node1() {
+    if [[ $COMMAND_S == "no" ]]; then
+        return
+    fi
+    P_SSH_CMD --node 1 --cmd "ls -l /mugen_re/" | grep -q "libs"
+    if [ $? -ne 0 ]; then
+        SFTP put --node 1 --remotedir /mugen_re/ --localdir "${OET_PATH}"/libs/
+    fi
+}
+
+# Handle long options
+for arg in "$@"; do
+    case $arg in
+        --config)
+            shift
+            deploy_conf "$@"
+            exit 0
+            ;;
+        --all)
+            shift
+            set -- -a "$@"
+            ;;
+        --suite)
+            shift
+            set -- -f "$1" "${@:2}"
+            ;;
+        --case)
+            shift
+            set -- -r "$1" "${@:2}"
+            ;;
+        --debug)
+            shift
+            set -- -x "$@"
+            ;;
+        --build)
+            shift
+            set -- -b "$@"
+            ;;
+        --remote)
+            shift
+            set -- -s "$@"
+            ;;
+        --modify)
+            shift
+            set -- -m "$@"
+            ;;
+        --help)
+            usage
+            exit 0
+            ;;
+    esac
+done
+
+while getopts "c:af:r:dxb:s:mh" option; do
+    case $option in
+    c)
+        deploy_conf ${*//-c/}
+        ;;
+    m)
+        modify_conf ${*//-m/}
+        ;;
+    d)
+        echo -e "The test script download function has been discarded."
+        ;;
+    a)
+        if echo "$@" | grep -q -e '-a * -x *$\| -x * -a *$\| -ax *$\| -xa *$'; then
+            COMMAND_X="yes"
+        elif echo "$@" | grep -q -e '-a * -s *$\| -s * -a *$\| -as *$\| -sa *$'; then
+            COMMAND_S="yes"
+        elif echo "$@" | grep -q -e '-a * -b *$\| -b * -a *$\| -ab *$\| -ba *$'; then
+            ret=$(build_all)
+            exit "$ret"
+        elif ! echo "$@" | grep -q -e '-a *$'; then
+            usage
+            exit 1
+        fi
+
+        load_conf
+        copy_libs_to_node1
+        run_all_cases
+        statistic_result
+        ;;
+    b)
+        test_suite=$OPTARG
+        op_list=('-f' '-r' '-x' '-d' '-c' '-s')
+
+        for op in ${op_list[*]}; do
+            if [[ $test_suite == "$op" ]]; then
+                usage
+                exit 1
+            fi
+        done
+        if [[ -n "${SDK_PATH}" && -d "${SDK_PATH}" ]]; then
+            source_path=$(find ${SDK_PATH} -name "environment-setup-*")
+            source ${source_path}
+        fi
+        if echo "$@" | grep -q -e ' * -a *$\| -ba *$'; then
+            build_all
+        else
+            build_one_suite "$test_suite"
+        fi
+
+        ;;
+    f)
+        test_suite=$OPTARG
+
+        echo "$@" | grep -q -e " -b *$"
+        if [ $? -eq 0 ]; then
+            usage
+            exit 1
+        fi
+
+        echo "$test_suite" | grep -q -e ' -a \| -r \| -x \| -d ' && {
+            usage
+            exit 1
+        }
+
+        echo "$@" | grep -q -e ' * -x *\| * -xf *' && {
+            COMMAND_X="yes"
+        }
+
+        echo "$@" | grep -q -e ' * -s *\| * -sf *' && {
+            COMMAND_S="yes"
+        }
+
+        echo "$@" | grep -q -e ' -r ' || {
+            load_conf
+            copy_libs_to_node1
+            run_test_suite "$test_suite"
+            statistic_result
+        }
+        ;;
+    r)
+        test_case=$OPTARG
+
+        echo "$@" | grep -q -e " -b *$"
+        if [ $? -eq 0 ]; then
+            usage
+            exit 1
+        fi
+
+        echo "$test_case" | grep -q -e ' -a \| -f \| -x \| -d ' && {
+            usage
+            exit 1
+        }
+
+        echo "$@" | grep -q -e ' * -x *\| * -xr *\| * -xf *' && {
+            COMMAND_X="yes"
+        }
+
+        echo "$@" | grep -q -e ' * -s *\| * -sr *\| * -sf *' && {
+            COMMAND_S="yes"
+        }
+
+        load_conf
+        copy_libs_to_node1
+        run_test_case "$test_suite" "$test_case"
+        statistic_result
+        ;;
+    x)
+        echo "$@" | grep -q -e '^ [a-zA-Z0-9_-]-x *$' && {
+            LOG_ERROR "The -x parameter must be used in combination with -a, -f, and -r."
+            exit 1
+        }
+        ;;
+    s)
+        echo "$@" | grep -q -e '^ [a-Z0-9_-]-x *$' && {
+            LOG_ERROR "The -s parameter must be used in combination with -a, -f, and -r."
+            exit 1
+        }
+        ;;
+    h)
+        usage
+        exit 0
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+
+    esac
+done
