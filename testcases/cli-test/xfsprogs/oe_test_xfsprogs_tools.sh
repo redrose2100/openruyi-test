@@ -10,13 +10,14 @@
 # See the Mulan PSL v2 for more details.
 
 # #############################################
-# @Author    :   sjxjx
-# @Contact   :   3541335833@qq.com
+# @Author    :   2401_86190146
+# @Contact   :   202422460152@mail.sdu.edu.cn
 # @Date      :   2026-04-23
 # @License   :   Mulan PSL v2
 # @Desc      :   Test xfsprogs command line tools
 # #############################################
 
+# shellcheck source=../common/common_lib.sh
 source "../common/common_lib.sh"
 
 function pre_test() {
@@ -25,15 +26,13 @@ function pre_test() {
     TEST_DIR="/tmp/xfsprogs_test"
     mkdir -p "${TEST_DIR}"
 
-    dd if=/dev/zero of="${TEST_DIR}/test.img" bs=1M count=400 2>/dev/null
-    if [ $? -ne 0 ]; then
+    if ! dd if=/dev/zero of="${TEST_DIR}/test.img" bs=1M count=400 2>/dev/null; then
         LOG_ERROR "Failed to create test image file"
         exit 1
     fi
 
     local mkfs_out
-    mkfs_out=$(mkfs.xfs -f "${TEST_DIR}/test.img" 2>&1)
-    if [ $? -ne 0 ]; then
+    if ! mkfs_out=$(mkfs.xfs -f "${TEST_DIR}/test.img" 2>&1); then
         LOG_ERROR "mkfs.xfs failed: ${mkfs_out}"
         exit 1
     fi
@@ -74,12 +73,12 @@ function run_test() {
     # Test 4b: xfs_db basic device access (read-only)
     LOG_INFO "Test 4b: xfs_db basic device access"
     local db_output
-    db_output=$(xfs_db -r "${TEST_DIR}/test.img" -c "quit" 2>&1)
-    local db_ret=$?
-    if [ ${db_ret} -ne 0 ]; then
+    if ! db_output=$(xfs_db -r "${TEST_DIR}/test.img" -c "quit" 2>&1); then
         LOG_ERROR "xfs_db quit failed, output: ${db_output}"
+        CHECK_RESULT 1 0 0 "xfs_db quit failed"
+    else
+        CHECK_RESULT 0 0 0 "xfs_db quit failed"
     fi
-    CHECK_RESULT ${db_ret} 0 0 "xfs_db quit failed"
 
     # Test 5: xfs_repair command exists
     LOG_INFO "Test 5: Check xfs_repair command"
@@ -89,12 +88,12 @@ function run_test() {
     # Test 6: xfs_repair dry run (clean filesystem expects 0)
     LOG_INFO "Test 6: xfs_repair dry run"
     local repair_output
-    repair_output=$(xfs_repair -n "${TEST_DIR}/test.img" 2>&1)
-    local repair_ret=$?
-    if [ ${repair_ret} -ne 0 ]; then
+    if ! repair_output=$(xfs_repair -n "${TEST_DIR}/test.img" 2>&1); then
         LOG_ERROR "xfs_repair dry run failed, output: ${repair_output}"
+        CHECK_RESULT 1 0 0 "xfs_repair dry run failed"
+    else
+        CHECK_RESULT 0 0 0 "xfs_repair dry run failed"
     fi
-    CHECK_RESULT ${repair_ret} 0 0 "xfs_repair dry run failed"
 
     # Test 7: xfs_growfs command exists
     LOG_INFO "Test 7: Check xfs_growfs command"
@@ -112,7 +111,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     rm -rf "${TEST_DIR}"
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
