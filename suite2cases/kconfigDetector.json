@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_kconfigDetector"
+        },
+        {
+            "name": "oe_test_kconfigDetector_version"
         }
     ]
 }
