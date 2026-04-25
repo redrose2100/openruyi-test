@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+﻿#!/usr/bin/bash
 # Copyright (c) [2021] Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -41,58 +41,38 @@ FAIL_NUM=0
 SKIP_NUM=0
 
 function usage() {
-    printf "Usage:  \n
-    -c: configuration environment of test framework\n
-    -a: execute all use cases\n
-    -f: designated test suite\n
-    -r: designated test case\n
-    -x: the shell script is executed in debug mode\n
-    -b: do make for test suite if test suite path have makefile or Makefile file\n
-    -s: runing test case at remote NODE1
-    -m: Modify the configuration file that comes with the test case
-    \n
-    Example:
-        run all cases:
-          normal mode:
-            bash mugen.sh -a
-          debug mode:
-            bash mugen.sh -a -x
-
-        run test suite:
-          normal mode:
-            bash mugen.sh -f test_suite
-          debug mode:
-            bash mugen.sh -f test_suite -x
-
-        run test case:
-          normal mode:
-            bash mugen.sh -f test_suite -r test_case
-          debug mode:
-            bash mugen.sh -f test_suite -r test_case -x
-
-        run at remote:
-          normal mode:
-            bash mugen.sh -a -s
-            bash mugen.sh -f test_suite -s
-            bash mugen.sh -f test_suite -r test_case -s
-          debug mode:
-            bash mugen.sh -a -s -x
-            bash mugen.sh -f test_suite -s -x
-            bash mugen.sh -f test_suite -r test_case -s -x
-        \n
-	configure env of test framework:
-	    bash mugen.sh -c --ip \$ip --password \$passwd --user \$user --port \$port\n
-          if want run at remote should add --run_remote
-          if want run at remote copy all testcase once add --put_all
-    \n
-    configure env of test case:
-            bash mugen.sh -m --suite \$suite --conf \$conf --key \$key --value \$value\n
-    \n
-    do make for test suite:
-        for all test suite:
-            bash mugen.sh -b -a
-        for one test suite:
-            bash mugen.sh -b test_suite\n"
+    printf "Mugen Test Framework\n"
+    printf "==================\n\n"
+    printf "Usage: bash mugen.sh [OPTIONS]\n\n"
+    printf "Options:\n"
+    printf "  -c, --config           Configure test framework environment\n"
+    printf "  -a, --all              Execute all test cases\n"
+    printf "  -f, --suite SUITE      Specify test suite\n"
+    printf "  -r, --case CASE        Specify test case\n"
+    printf "  -x, --debug            Execute shell script in debug mode\n"
+    printf "  -b, --build            Build test suite if Makefile exists\n"
+    printf "  -s, --remote           Run test cases on remote NODE1\n"
+    printf "  -m, --modify           Modify test case configuration\n"
+    printf "  -h, --help             Show this help message\n\n"
+    printf "Examples:\n"
+    printf "  Run all cases:\n"
+    printf "    bash mugen.sh -a\n"
+    printf "    bash mugen.sh -a -x  # Debug mode\n"
+    printf "    bash mugen.sh -a -s  # Remote execution\n\n"
+    printf "  Run test suite:\n"
+    printf "    bash mugen.sh -f test_suite\n"
+    printf "    bash mugen.sh -f test_suite -x  # Debug mode\n\n"
+    printf "  Run specific test case:\n"
+    printf "    bash mugen.sh -f test_suite -r test_case\n\n"
+    printf "  Configure test framework:\n"
+    printf "    bash mugen.sh -c --ip \$ip --password \$passwd --user \$user --port \$port\n"
+    printf "    # Add --run_remote to configure for remote execution\n"
+    printf "    # Add --put_all to copy all test cases at once\n\n"
+    printf "  Modify test case configuration:\n"
+    printf "    bash mugen.sh -m --suite \$suite --conf \$conf --key \$key --value \$value\n\n"
+    printf "  Build test suites:\n"
+    printf "    bash mugen.sh -b -a  # Build all test suites\n"
+    printf "    bash mugen.sh -b test_suite  # Build specific test suite\n"
 }
 
 function deploy_conf() {
@@ -316,7 +296,13 @@ function run_test_suite() {
         this_copy=true
     fi
 
-    for test_case in $(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name | shuf); do
+    local all_cases=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name | shuf)
+    local total_cases=$(echo "$all_cases" | wc -l)
+    local current_case=0
+
+    for test_case in $all_cases; do
+        ((current_case++))
+        LOG_INFO "Running test $current_case/$total_cases: $test_case"
         run_test_case "$test_suite" "$test_case"
     done
 
@@ -338,7 +324,12 @@ function run_all_cases() {
         local this_copy=true
     fi
 
+    local total_suites=${#test_suites[@]}
+    local current_suite=0
+
     for test_suite in ${test_suites[*]}; do
+        ((current_suite++))
+        LOG_INFO "Running suite $current_suite/$total_suites: $test_suite"
         run_test_suite "$test_suite"
         COPY_DONE="no"
         local this_copy=true
@@ -440,7 +431,50 @@ function copy_libs_to_node1() {
     fi
 }
 
-while getopts "c:af:r:dxb:s:m" option; do
+# Handle long options
+for arg in "$@"; do
+    case $arg in
+        --config)
+            shift
+            deploy_conf "$@"
+            exit 0
+            ;;
+        --all)
+            shift
+            set -- -a "$@"
+            ;;
+        --suite)
+            shift
+            set -- -f "$1" "${@:2}"
+            ;;
+        --case)
+            shift
+            set -- -r "$1" "${@:2}"
+            ;;
+        --debug)
+            shift
+            set -- -x "$@"
+            ;;
+        --build)
+            shift
+            set -- -b "$@"
+            ;;
+        --remote)
+            shift
+            set -- -s "$@"
+            ;;
+        --modify)
+            shift
+            set -- -m "$@"
+            ;;
+        --help)
+            usage
+            exit 0
+            ;;
+    esac
+done
+
+while getopts "c:af:r:dxb:s:mh" option; do
     case $option in
     c)
         deploy_conf ${*//-c/}
@@ -557,6 +591,10 @@ while getopts "c:af:r:dxb:s:m" option; do
             LOG_ERROR "The -s parameter must be used in combination with -a, -f, and -r."
             exit 1
         }
+        ;;
+    h)
+        usage
+        exit 0
         ;;
     *)
         usage
