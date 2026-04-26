@@ -70,7 +70,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     rm -f /tmp/oval-results.xml /tmp/xccdf-results.xml /tmp/xccdf-report.html
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
