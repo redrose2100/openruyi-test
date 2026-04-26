@@ -81,7 +81,11 @@ EOF
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE libjpeg-turbo
+    DNF_REMOVE libjpeg-turbo-devel
+    DNF_REMOVE libjpeg-turbo-utils
+    DNF_REMOVE gcc
+    DNF_REMOVE glibc-devel
     rm -rf test.jpg test.pgm test.ppm version_test.c version_test
     LOG_INFO "End to restore the test environment."
 }
