@@ -22,7 +22,6 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL xz
     echo "test content for keep original file functionality" > test_keep
     LOG_INFO "End to prepare the test environment."
 }
@@ -45,7 +44,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
-    DNF_REMOVE 
     rm -f test_keep test_keep.xz
     LOG_INFO "End to restore the test environment."
 }
