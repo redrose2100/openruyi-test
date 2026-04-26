@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2026. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -22,9 +22,6 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    
-    # 检查并安装 xz
-    which xz || DNF_INSTALL xz
     
     # 创建测试文件
     dd if=/dev/zero of=test_level bs=1M count=5 2>/dev/null
@@ -109,7 +106,6 @@ function post_test() {
     # 清理所有测试文件
     rm -f test_level test_level_*.xz
     rm -f test_level_*_decompressed
-    
     LOG_INFO "End to restore the test environment."
 }
 
