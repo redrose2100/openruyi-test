@@ -48,7 +48,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
-    DNF_REMOVE xz
+    DNF_REMOVE
     rm -f test_basic test_basic.xz
     LOG_INFO "End to restore the test environment."
 }
