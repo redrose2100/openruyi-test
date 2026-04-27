@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libjpeg-turbo",
+    "cases": [
+        {
+            "name": "oe_test_libjpeg_001"
+        }
+
+    ]
+}
