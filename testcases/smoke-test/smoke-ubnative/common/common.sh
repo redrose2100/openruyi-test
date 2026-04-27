@@ -33,6 +33,11 @@ vm_passwd="openEuler12#$"
 original_selinux_mode=""
 
 function ub_env_init() {
+    virt=$(systemd-detect-virt)
+    if [ "$(arch)" != "aarch64" ] || [ "$virt" = "qemu" ] || [ "$virt" = "kvm" ];then
+        echo "当前环境不满足UB的测试，跳过"
+        exit 255
+    fi
     # pkg pre
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-ubnative/common/pkg_pre.sh"
     sh "${OET_PATH}/testcases/smoke-test/smoke-ubnative/common/pkg_pre.sh"
