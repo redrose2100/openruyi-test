@@ -24,6 +24,7 @@ function pre_test() {
     cp -a "${sysmonitor_conf:-}" "${sysmonitor_conf}".bak
     sed -i "/^FILESYSTEM_MONITOR=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     monitor_restart
+    grep -q "the kernel do not support filesystem monitor" "${sysmonitor_log}" && exit 255
 }
 
 # 测试点的执行
