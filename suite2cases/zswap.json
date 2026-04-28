@@ -3,6 +3,9 @@
   "cases": [
     {
       "name": "oe_test_zswap01"
+    },
+    {
+      "name": "oe_test_zswap05"
     }
   ]
 }
