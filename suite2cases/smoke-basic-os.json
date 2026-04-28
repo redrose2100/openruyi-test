@@ -599,7 +599,8 @@
             "name": "oe_test_shadow"
         },
         {
-            "name": "oe_test_sshd"
+            "name": "oe_test_sshd",
+            "machine type": "physical"
         },
         {
             "name": "oe_test_stat"
@@ -761,7 +762,8 @@
             "name": "oe_test_bbr_04"
         },
         {
-            "name": "oe_test_bonding_SCEN_05"
+            "name": "oe_test_bonding_SCEN_05",
+            "machine type": "physical"
         },
         {
             "name": "oe_test_ima_v2_manual_gen_digest_01"

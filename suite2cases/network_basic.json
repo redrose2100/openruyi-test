@@ -66,7 +66,8 @@
         {
             "name": "oe_test_network_manager_service",
             "machine num": 1,
-            "add network interface": 0
+            "add network interface": 0,
+            "machine type": "physical"
         },
         {
             "name": "oe_test_ping",

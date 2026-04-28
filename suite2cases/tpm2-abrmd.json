@@ -1,8 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/tpm2-abrmd",
+    "machine type": "physical",
     "cases": [
         {
-            "name": "oe_test_service_tpm2-abrmd"
+            "name": "oe_test_service_tpm2-abrmd",
+            "machine type": "physical"
         }
     ]
 }
