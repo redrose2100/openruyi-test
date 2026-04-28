@@ -19,6 +19,7 @@
 
 source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 function pre_test() {
+    DNF_INSTALL "at"
     LOG_INFO "Start environmental preparation."
     service=openEuler-security.service
     systemctl restart "${service}"
