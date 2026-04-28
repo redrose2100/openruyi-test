@@ -1,8 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/tpm2-tools",
+    "machine type": "physical",
     "cases": [
         {
-            "name": "oe_test_tpm2_tools_save_data_01"
+            "name": "oe_test_tpm2_tools_save_data_01",
+            "machine type": "physical"
         }
     ]
 }

@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/cli-test/rasdaemon",
+    "machine type": "physical",
     "cases": [
         {
             "name": "oe_test_service_rasdaemon"

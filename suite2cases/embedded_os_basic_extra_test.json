@@ -74,7 +74,8 @@
             "name": "oe_test_net-tools_test_001"
         },
         {
-            "name": "oe_test_initscripts_test_001"
+            "name": "oe_test_initscripts_test_001",
+            "machine type": "physical"
         },
         {
             "name": "oe_test_iptables_cli_test"

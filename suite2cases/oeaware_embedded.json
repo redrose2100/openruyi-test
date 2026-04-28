@@ -1,38 +1,50 @@
 {
     "path": "$OET_PATH/testcases/feature-test/oeaware_embedded",
+    "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_oeAware_embedded_01"
+            "name": "oe_test_oeAware_embedded_01",
+            "machine num": 2
         },
         {
-            "name": "oe_test_oeAware_embedded_02"
+            "name": "oe_test_oeAware_embedded_02",
+            "machine num": 2
         },
         {
-            "name": "oe_test_oeAware_embedded_03"
+            "name": "oe_test_oeAware_embedded_03",
+            "machine num": 2
         },
         {
-            "name": "oe_test_oeAware_embedded_04"
+            "name": "oe_test_oeAware_embedded_04",
+            "machine num": 2
         },
         {
-            "name": "oe_test_oeAware_embedded_05"
+            "name": "oe_test_oeAware_embedded_05",
+            "machine num": 2
         },
         {
-            "name": "oe_test_oeAware_embedded_06"
+            "name": "oe_test_oeAware_embedded_06",
+            "machine num": 2
         },
         {
-            "name": "oe_test_oeAware_embedded_07"
+            "name": "oe_test_oeAware_embedded_07",
+            "machine num": 2
         },
         {
-            "name": "oe_test_oeAware_embedded_08"
+            "name": "oe_test_oeAware_embedded_08",
+            "machine num": 2
         },
         {
-            "name": "oe_test_oeAware_embedded_09"
+            "name": "oe_test_oeAware_embedded_09",
+            "machine num": 2
         },
         {
-            "name": "oe_test_oeAware_embedded_10"
+            "name": "oe_test_oeAware_embedded_10",
+            "machine num": 2
         },
         {
-            "name": "oe_test_oeAware_embedded_11"
+            "name": "oe_test_oeAware_embedded_11",
+            "machine num": 2
         }
     ]
 }

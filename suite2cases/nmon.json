@@ -12,7 +12,8 @@
             "name": "oe_test_nmon_02",
             "add disk": [
                 2
-            ]
+            ],
+            "machine type": "physical"
         },
         {
             "name": "oe_test_nmon_03",

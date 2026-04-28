@@ -1,8 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/prometheus-ha_cluster_exporter",
+    "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_service_prometheus-ha_cluster_exporter"
+            "name": "oe_test_service_prometheus-ha_cluster_exporter",
+            "machine num": 2
         }
     ]
 }
