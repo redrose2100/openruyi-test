@@ -1,26 +1,26 @@
 {
     "path": "${OET_PATH}/testcases/smoke-test/smoke-memlink",
-    "machine num": 1,
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_memlink_balloon",
-            "machine num": 1
+            "machine num": 2
         },
         {
             "name": "oe_test_memlink_fpr",
-            "machine num": 1
+            "machine num": 2
         },
         {
             "name": "oe_test_memlink_dumpxml_proportion",
-            "machine num": 1
+            "machine num": 2
         },
         {
             "name": "oe_test_memlink_oom_running",
-            "machine num": 1
+            "machine num": 2
         },
         {
             "name": "oe_test_memlink_oom_start",
-            "machine num": 1
+            "machine num": 2
         }
     ]
 }

@@ -1,11 +1,14 @@
 {
     "path": "$OET_PATH/testcases/cli-test/sysSentry",
+    "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_service_sysSentry"
+            "name": "oe_test_service_sysSentry",
+            "machine num": 2
         },
         {
-            "name": "oe_test_service_xalarmd"
+            "name": "oe_test_service_xalarmd",
+            "machine num": 2
         },
         {
             "name": "oe_test_service_sentryCollector"

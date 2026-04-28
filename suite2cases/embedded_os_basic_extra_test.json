@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/embedded-test/os_basic_extra_test",
+    "machine type": "physical",
     "cases": [
         {
             "name": "oe_test_kmod_depmod"
@@ -74,7 +75,8 @@
             "name": "oe_test_net-tools_test_001"
         },
         {
-            "name": "oe_test_initscripts_test_001"
+            "name": "oe_test_initscripts_test_001",
+            "machine type": "physical"
         },
         {
             "name": "oe_test_iptables_cli_test"
@@ -99,9 +101,9 @@
         },
         {
             "name": "oe_test_libpwquality_test_001"
-	},
-	{
-	    "name": "oe_test_curl_test_001"
+        },
+        {
+            "name": "oe_test_curl_test_001"
         },
         {
             "name": "oe_test_rpcbind_test_001"

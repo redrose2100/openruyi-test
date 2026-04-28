@@ -1,17 +1,22 @@
 {
     "path": "$OET_PATH/testcases/cli-test/tpm-tools",
+    "machine type": "physical",
     "cases": [
         {
-            "name": "oe_test_tpm-tools_01"
+            "name": "oe_test_tpm-tools_01",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_tpm-tools_02"
+            "name": "oe_test_tpm-tools_02",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_tpm-tools_03"
+            "name": "oe_test_tpm-tools_03",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_tpm-tools_04"
+            "name": "oe_test_tpm-tools_04",
+            "machine type": "physical"
         }
     ]
 }

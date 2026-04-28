@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/feature-test/oedp",
+    "machine type": "physical",
     "machine num": 3,
     "cases": [
         {
