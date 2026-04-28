@@ -1,9 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/qperf",
-    "machine num":2,
+    "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_qperf_01"
+            "name": "oe_test_qperf_01",
+            "machine num": 2
         }
     ]
 }
