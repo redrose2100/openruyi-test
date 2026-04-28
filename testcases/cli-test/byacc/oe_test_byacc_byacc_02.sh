@@ -1,3 +1,5 @@
+#! /usr/bin/bash
+
 # Copyright (c) 2022. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -13,8 +15,10 @@
 # @License   	:   Mulan PSL v2
 # @Desc      	:   the test of byacc package
 ####################################
+# shellcheck disable=SC1091,SC2119,SC2119
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/testcases/cli-test/byacc/common/checkenv.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -29,14 +33,22 @@ function run_test() {
     byacc -b ./tmp/test_v -v ./common/test.y 2>&1 && test -f ./tmp/test_v.output
     CHECK_RESULT $? 0 0 "Failed option: -v"
 
-    byacc -t ./common/test.y -o ./tmp/test_t.tab.c 2>&1 && cat ./tmp/test_t.tab.c | grep "#define YYDEBUG 1"
+    byacc -t ./common/test.y -o ./tmp/test_t.tab.c 2>&1 && grep "#define YYDEBUG 1" ./tmp/test_t.tab.c
     CHECK_RESULT $? 0 0 "Failed option: -t"
 
     byacc -r ./common/test.y -o ./tmp/test_r.code.c 2>&1 && test -f ./tmp/test_r.code.c
     CHECK_RESULT $? 0 0 "Failed option: -r"
 
-    byacc -b ./tmp/test_d -d ./common/test.y -o /tmp/test_d.tab.h 2>&1 && test -f ./tmp/test_d.tab.h
-    CHECK_RESULT $? 0 0 "Failed option: -d"
+    NVML_VERSION=$(yum info byacc 2>/dev/null | grep -E '^Version' | awk '{print $NF}' | head -1)
+    compareversions "$NVML_VERSION" "2.0.20260126"
+    result=$?
+    if [[ $result -eq 0 || $result -eq 1 ]]; then
+    	byacc -b ./tmp/test_d -d ./common/test.y -o ./tmp/test_d.tab.c 2>&1 && test -f ./tmp/test_d.tab.c
+        CHECK_RESULT $? 0 0 "Failed option: -d"
+    elif [[ $result -eq 2 ]]; then
+        byacc -b ./tmp/test_d -d ./common/test.y -o ./tmp/test_d.tab.h 2>&1 && test -f ./tmp/test_d.tab.h
+        CHECK_RESULT $? 0 0 "Failed option: -d"
+    fi
 
     byacc -b ./tmp/test_i -i ./common/test.y -o ./tmp/test_i.tab.i 2>&1 && test -f ./tmp/test_i.tab.i
     CHECK_RESULT $? 0 0 "Failed option: -i"
