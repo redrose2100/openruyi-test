@@ -3,8 +3,8 @@
     "machine num":2,
     "cases": [
         {
-            "name": "oe_test_openmpi_cluster"
-
+            "name": "oe_test_openmpi_cluster",
+            "machine num": 2
         },
         {
             "name": "oe_test_openmpi_single_01"

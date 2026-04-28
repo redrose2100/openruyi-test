@@ -23,7 +23,8 @@
             "name": "oe_test_cvs_cvs_05"
         },
         {
-            "name": "oe_test_cvs_cvs_06"
+            "name": "oe_test_cvs_cvs_06",
+            "machine num": 2
         }
     ]
 }
