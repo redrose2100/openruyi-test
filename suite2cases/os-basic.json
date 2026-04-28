@@ -399,6 +399,7 @@
         },
         {
             "name": "oe_test_server_openssh_restart",
+            "machine type": "physical",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []

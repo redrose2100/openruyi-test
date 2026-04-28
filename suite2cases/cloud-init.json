@@ -1,35 +1,46 @@
 {
     "path": "$OET_PATH/testcases/cli-test/cloud-init",
+    "machine type": "physical",
     "cases": [
         {
-            "name": "oe_test_service_cloud-config"
+            "name": "oe_test_service_cloud-config",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_service_cloud-final"
+            "name": "oe_test_service_cloud-final",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_service_cloud-init-local"
+            "name": "oe_test_service_cloud-init-local",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_service_cloud-init"
+            "name": "oe_test_service_cloud-init",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_target_cloud-config"
+            "name": "oe_test_target_cloud-config",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_target_cloud-init"
+            "name": "oe_test_target_cloud-init",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_service_cloud-init-hotplugd"
+            "name": "oe_test_service_cloud-init-hotplugd",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_socket_cloud-init-hotplugd"
+            "name": "oe_test_socket_cloud-init-hotplugd",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_service_cloud-init-main"
+            "name": "oe_test_service_cloud-init-main",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_service_cloud-init-network"
+            "name": "oe_test_service_cloud-init-network",
+            "machine type": "physical"
         }
     ]
 }

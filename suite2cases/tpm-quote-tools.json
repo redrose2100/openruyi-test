@@ -1,8 +1,11 @@
 {
     "path": "$OET_PATH/testcases/cli-test/tpm-quote-tools",
+    "machine type": "physical",
+    "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_tpm-quote-tools"
+            "name": "oe_test_tpm-quote-tools",
+            "machine num": 2
         }
     ]
 }
