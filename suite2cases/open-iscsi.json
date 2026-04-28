@@ -1,5 +1,5 @@
 {
-    "path": "\"${OET_PATH}\"/testcases/cli-test/open-iscsi",
+    "path": "$OET_PATH/testcases/cli-test/open-iscsi",
     "machine num": 2,
     "add disk": [
         2
