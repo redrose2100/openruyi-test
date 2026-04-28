@@ -1,11 +1,14 @@
 {
     "path": "$OET_PATH/testcases/cli-test/gnutls",
+    "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_gnutls"
+            "name": "oe_test_gnutls",
+            "machine num": 2
         },
         {
-            "name": "oe_test_gnutls_01"
+            "name": "oe_test_gnutls_01",
+            "machine num": 2
         }
     ]
 }

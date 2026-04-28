@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/cli-test/libfabric",
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_libfabric_fi_info_01"
@@ -11,10 +12,12 @@
             "name": "oe_test_libfabric_fi_info_03"
         },
         {
-            "name": "oe_test_libfabric_pingpong_01"
+            "name": "oe_test_libfabric_pingpong_01",
+            "machine num": 2
         },
         {
-            "name": "oe_test_libfabric_pingpong_02"
+            "name": "oe_test_libfabric_pingpong_02",
+            "machine num": 2
         }
     ]
 }
