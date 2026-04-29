@@ -23,7 +23,7 @@ function pre_test() {
     cp /etc/sudoers /etc/sudoers-bak
     echo 'test' >/tmp/m_test && echo 'test ' >/tmp/sm_test && echo 'test test2' >/tmp/M_test
     touch /tmp/rm_test
-    DNF_INSTALL "httpd security-tool"
+    DNF_INSTALL "httpd security-tool at"
     cp /etc/openEuler_security/usr-security.conf /etc/openEuler_security/usr-security.conf-bak
     systemctl stop httpd
     LOG_INFO "End of environmental preparation!"
