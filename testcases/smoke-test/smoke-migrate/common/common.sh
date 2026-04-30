@@ -23,8 +23,8 @@ config_dir="${test_qemu_dir}/config"
 image_dir="${test_qemu_dir}/image"
 image_path="${image_dir}/openEuler.qcow2"
 image_path_base="${image_dir}/openEuler-24.03-LTS-SP3-aarch64.qcow2"
-repo_baseurl=$(grep -A 5 "\[openEuler\]" /etc/yum.repos.d/openEuler.repo | grep baseurl | cut -d= -f2)
-image_download_url="${repo_baseurl//everything\/aarch64\//virtual_machine_img\/aarch64\/openEuler-24.03-LTS-SP3-aarch64.qcow2.xz}"
+repo_baseurl=$(grep -A 5 "\[everything\]" /etc/yum.repos.d/openEuler.repo |grep baseurl |cut -d= -f2 | awk -F'/everything/' '{print $1}')
+image_download_url="${repo_baseurl}/virtual_machine_img/aarch64/openEuler-24.03-LTS-SP3-aarch64.qcow2.xz"
 
 vm_ip="192.168.1.101"
 vm_user="root"
@@ -57,6 +57,10 @@ function unshare_image() {
 }
 
 function pre_init() {
+    if [ $(arch) != "aarch64" ]; then
+        echo "migrate仅支持ARM架构，非ARM架构跳过测试"
+        exit 255
+    fi
     # pkg pre
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh"
     sh "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh"
@@ -77,7 +81,7 @@ function pre_init() {
     # xml pre
     mkdir -p "$config_dir"
     cp -arvf ../config "$test_qemu_dir"
-    SSH_CMD "mkdir -p $config_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER" ""
+    SSH_CMD "mkdir -p $config_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER" 
     SSH_SCP ../config "${NODE2_USER}@${NODE2_IPV4}:${test_qemu_dir}" "$NODE2_PASSWORD"
     # net pre
     systemctl disable firewalld
