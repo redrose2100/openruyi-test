@@ -301,6 +301,12 @@
             "name": "oe_test_rnpm",
             "machine type": "kvm",
             "add disk": []
+        },
+        {
+            "name": "oe_test_led-class-flash",
+            "machine type": "kvm",
+            "add disk": []
         }
+
     ]
 }
