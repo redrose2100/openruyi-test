@@ -29,7 +29,7 @@ function run_test(){
     sentryctl set sentry_uvb_comm --server_cna="${node2_cna}"
     SSH_CMD "sentryctl set sentry_uvb_comm --server_cna='${node1_cna}'"  "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
-    start_RA panic 0 20
+    start_RA panic 0 0
     SSH_CMD "echo c > /proc/sysrq-trigger" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
     check_log 0 RA 1007 1008
