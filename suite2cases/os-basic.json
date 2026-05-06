@@ -2113,6 +2113,12 @@
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
+        },
+        {
+            "name": "oe_test_certutil_2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         }
     ]
 }
