@@ -15,19 +15,32 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   imageTailor function test
 # #############################################
-
+#shellcheck disable=SC2034
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
-TIMEOUT="90m"
 oeversion="$(cat /etc/openEuler-latest | grep openeulerversion | awk -F '=' '{print $2}')"
 dir="$(pwd)"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL imageTailor wget
+    EXECUTE_T="120m"
+    DNF_INSTALL "imageTailor wget"
     mv /opt/imageTailor /home/
     mkdir -p /home/imageTailor/repos/euler_base/
-    wget --no-check-certificate https://repo.openeuler.org/"${oeversion}"/ISO/"$(arch)"/"${oeversion}"-everything-"$(arch)"-dvd.iso -P /home
+    if [ $(systemd-detect-virt)="qemu" ]; then
+        weburl="https://fast-mirror.isrc.ac.cn/openeuler"
+    else
+        weburl="https://repo.openeuler.org"
+    fi
+    RVER=$(grep -o "rva2[03]" /etc/yum.repos.d/openEuler.repo | head -n1)
+    if [[ "$RVER" == rva20 ]]; then
+        wget --no-check-certificate -q "${weburl}"/"${oeversion}"/ISO/"$(arch)"/"${RVER}"/"${oeversion}"-everything-"$(arch)"-dvd.iso -P /home
+    elif [[ "$RVER" == rva23 ]]; then
+        RVER_UPPER=$(echo "$RVER" | tr '[:lower:]' '[:upper:]')
+        wget --no-check-certificate -q -O "${oeversion}"-everything-"$(arch)"-dvd.iso "${weburl}"/"${oeversion}"/ISO/"$(arch)"/"${RVER}"/"${oeversion}"-"${RVER_UPPER}"-everything-"$(arch)"-dvd.iso -P /home
+    else
+        wget --no-check-certificate -q "${weburl}"/"${oeversion}"/ISO/"$(arch)"/"${oeversion}"-everything-"$(arch)"-dvd.iso -P /home
+    fi
     ls /home/"${oeversion}"-everything-"$(arch)"-dvd.iso
     CHECK_RESULT $? 0 0
     mount /home/"${oeversion}"-everything-"$(arch)"-dvd.iso /mnt
