@@ -51,7 +51,7 @@ function run_test(){
         CHECK_RESULT $? 0 0
 
 
-        for i in {1..1}; do
+        for _ in {1..5}; do
             SLEEP_WAIT 10 "systemctl start xalarmd" 1 
             systemctl status xalarmd
             CHECK_RESULT $? 0 0
