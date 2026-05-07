@@ -88,12 +88,18 @@ function run_test() {
         CHECK_RESULT $? 0 0 "Failed to set max_pool_percent to $limit"
 
         # Generate memory pressure with timeout protection
+        # Calculate safe memory usage (50% of physical memory to avoid OOM)
         MEM_GB=$((MEM_KB / 1024 / 1024))
         if [ "$MEM_GB" -lt 1 ]; then
             MEM_GB=1
         fi
+        # Limit vm-bytes to 50% of available memory to prevent OOM
+        SAFE_MEM_GB=$((MEM_GB / 2))
+        if [ "$SAFE_MEM_GB" -lt 1 ]; then
+            SAFE_MEM_GB=1
+        fi
 
-        stress-ng --vm $((MEM_GB / 4 + 1)) --vm-bytes 4G --timeout 15s &
+        stress-ng --vm 1 --vm-bytes ${SAFE_MEM_GB}G --timeout 15s &
         stress_pid=$!
 
         # Wait with timeout protection - kill process if it hangs
