@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/pathchk",
-    "cases": [
-        {
-            "name": "oe_test_pathchk"
-        }
-    ]
-}
