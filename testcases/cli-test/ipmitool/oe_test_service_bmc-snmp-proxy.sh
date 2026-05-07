@@ -16,21 +16,26 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test bmc-snmp-proxy.service restart
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    modprobe ipmi_watchdog
+    modprobe ipmi_poweroff
+    modprobe ipmi_devintf
+    modprobe ipmi_si
+    modprobe ipmi_msghandler
     if [[ ! -e /dev/ipmi0 && ! -e /dev/ipmi/0 && ! -e /dev/ipmidev/0 ]];then
         LOG_WARN "Testing cannot be performed if machine don't support ipmi."
         exit 255
     fi
     DNF_INSTALL "ipmitool OpenIPMI bmc-snmp-proxy"
     if [ "$NODE1_FRAME" == "ppc64le" ]; then
-      if [ -f /etc/sysconfig/ipmi ]; then
-        sed -i 's/IPMI_SI=yes/#&/g' /etc/sysconfig/ipmi
-        systemctl restart ipmi.service
-      fi
+        if [ -f /etc/sysconfig/ipmi ]; then
+            sed -i 's/IPMI_SI=yes/#&/g' /etc/sysconfig/ipmi
+            systemctl restart ipmi.service
+        fi
     fi
     systemctl start snmpd.service
     LOG_INFO "End of environmental preparation!"
@@ -47,7 +52,12 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop bmc-snmp-proxy.service
     systemctl stop snmpd.service
-    DNF_REMOVE "$@"
+    modprobe -r ipmi_watchdog
+    modprobe -r ipmi_poweroff
+    modprobe -r ipmi_devintf
+    modprobe -r ipmi_si
+    modprobe -r ipmi_msghandler
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
