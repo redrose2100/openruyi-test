@@ -12,7 +12,7 @@
 # #############################################
 # @Author    :   sjxjx
 # @Contact   :   3541335833@qq.com
-# @Date      :   2026-04-21
+# @Date      :   2026-05-07
 # @License   :   Mulan PSL v2
 # @Desc      :   Test zswap max_pool_percent memory limit functionality
 # ############################################
@@ -23,20 +23,35 @@ ORIGIN_ENABLED=""
 ORIGIN_MAX_POOL_PERCENT=""
 ORIGIN_LANG=""
 SWAP_KB=0
+MEM_KB=0
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "stress-ng"
 
-    # Save original settings
-    ORIGIN_ENABLED=$(cat /sys/module/zswap/parameters/enabled 2>/dev/null)
-    ORIGIN_MAX_POOL_PERCENT=$(cat /sys/module/zswap/parameters/max_pool_percent 2>/dev/null)
+    # Save original settings with default values
+    ORIGIN_ENABLED=$(cat /sys/module/zswap/parameters/enabled 2>/dev/null || echo "N")
+    ORIGIN_MAX_POOL_PERCENT=$(cat /sys/module/zswap/parameters/max_pool_percent 2>/dev/null || echo "20")
     ORIGIN_LANG=$LANG
     export LANG="en_US.UTF-8"
 
-    # Get memory info
+    # Get memory info with validation
     MEM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+    if [ -z "$MEM_KB" ] || ! echo "$MEM_KB" | grep -qE '^[0-9]+$'; then
+        LOG_WARN "Failed to get valid memory info, using default 8GB"
+        MEM_KB=8388608
+    fi
+
     SWAP_KB=$(grep SwapFree /proc/meminfo | awk '{print $2}')
+    if [ -z "$SWAP_KB" ] || ! echo "$SWAP_KB" | grep -qE '^[0-9]+$'; then
+        SWAP_KB=0
+    fi
+
+    # Check if zswap is available
+    if [ ! -f /sys/module/zswap/parameters/enabled ]; then
+        LOG_WARN "zswap not available on this kernel"
+        exit 255
+    fi
 
     # Create swap file if no swap available
     if [ "$SWAP_KB" -eq 0 ]; then
@@ -58,6 +73,12 @@ function run_test() {
     test "$SWAP_KB" -gt 0
     CHECK_RESULT $? 0 0 "No available swap, test cannot continue."
 
+    # Validate memory info before use
+    if [ -z "$MEM_KB" ] || [ "$MEM_KB" -le 0 ] 2>/dev/null; then
+        LOG_WARN "Invalid MEM_KB value, using default 8GB"
+        MEM_KB=8388608
+    fi
+
     # Test different max_pool_percent values
     for limit in 10 20 30; do
         LOG_INFO "Setting max_pool_percent to $limit"
@@ -66,11 +87,30 @@ function run_test() {
         test "$current_limit" -eq "$limit"
         CHECK_RESULT $? 0 0 "Failed to set max_pool_percent to $limit"
 
-        # Generate memory pressure
+        # Generate memory pressure with timeout protection
         MEM_GB=$((MEM_KB / 1024 / 1024))
+        if [ "$MEM_GB" -lt 1 ]; then
+            MEM_GB=1
+        fi
+
         stress-ng --vm $((MEM_GB / 4 + 1)) --vm-bytes 4G --timeout 15s &
         stress_pid=$!
-        sleep 10
+
+        # Wait with timeout protection - kill process if it hangs
+        local count=0
+        while [ $count -lt 20 ]; do
+            if ! kill -0 $stress_pid 2>/dev/null; then
+                break
+            fi
+            sleep 1
+            count=$((count + 1))
+        done
+
+        # Force kill if still running
+        if kill -0 $stress_pid 2>/dev/null; then
+            LOG_WARN "stress-ng process timed out, killing it"
+            kill -9 $stress_pid 2>/dev/null || true
+        fi
 
         # Check zswap usage
         zswap_used=$(grep "zswap_pool_total_size" /proc/vmstat 2>/dev/null | awk '{print $2}')
@@ -78,12 +118,10 @@ function run_test() {
         expected_max=$((MEM_KB * limit / 100))
 
         LOG_INFO "zswap used: $zswap_used KB, expected max: $expected_max KB"
-        # Only warn, do not fail (usage may be lower than limit)
         if [ "$zswap_used" -gt "$expected_max" ]; then
             LOG_WARN "zswap usage ($zswap_used KB) exceeds limit ($expected_max KB)"
         fi
 
-        wait $stress_pid
         echo 3 > /proc/sys/vm/drop_caches
         sleep 2
     done
@@ -95,18 +133,30 @@ function post_test() {
     LOG_INFO "Start to clean the test environment."
     export LANG="$ORIGIN_LANG"
 
-    # Remove temporary swap file
+    # Kill any remaining stress-ng processes
+    pkill -9 stress-ng 2>/dev/null || true
+
+    # Remove temporary swap file with error handling
     if grep -q /tmp/tst_swap /proc/swaps 2>/dev/null; then
-        swapoff /tmp/tst_swap
-        rm -f /tmp/tst_swap
+        if swapoff /tmp/tst_swap 2>/dev/null; then
+            rm -f /tmp/tst_swap
+            LOG_INFO "Temporary swap file cleaned up successfully"
+        else
+            LOG_WARN "Failed to swapoff, skipping file deletion to prevent data loss"
+        fi
     fi
 
-    # Restore original zswap settings
-    echo "$ORIGIN_ENABLED" > /sys/module/zswap/parameters/enabled 2>/dev/null
-    echo "$ORIGIN_MAX_POOL_PERCENT" > /sys/module/zswap/parameters/max_pool_percent 2>/dev/null
+    # Restore original zswap settings only if valid
+    if [ -n "$ORIGIN_ENABLED" ] && [ -f /sys/module/zswap/parameters/enabled ]; then
+        echo "$ORIGIN_ENABLED" > /sys/module/zswap/parameters/enabled 2>/dev/null || true
+    fi
+    if [ -n "$ORIGIN_MAX_POOL_PERCENT" ] && [ -f /sys/module/zswap/parameters/max_pool_percent ]; then
+        echo "$ORIGIN_MAX_POOL_PERCENT" > /sys/module/zswap/parameters/max_pool_percent 2>/dev/null || true
+    fi
 
     DNF_REMOVE
     LOG_INFO "End to clean the test environment."
 }
 
 main "$@"
+
