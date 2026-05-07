@@ -3,6 +3,12 @@
     "cases": [
         {
             "name": "oe_test_newusers"
+        },
+        {
+            "name": "oe_test_grpunconv"
+        },
+        {
+            "name": "oe_test_pwck"
         }
     ]
 }
