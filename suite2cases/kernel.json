@@ -311,6 +311,11 @@
             "name": " oe_test_leds_blinkm",
             "machine type": "kvm",
             "add disk": []
+        },
+        {
+            "name": "oe_test_leds_lm3530",
+            "machine type": "kvm",
+            "add disk": []
         }
 
     ]
