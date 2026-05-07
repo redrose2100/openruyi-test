@@ -16,20 +16,20 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ipmievd.service restart
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
-    if [[ ! -e /dev/ipmi0 && ! -e /dev/ipmi/0 && ! -e /dev/ipmidev/0 ]];then
-        LOG_WARN "Testing cannot be performed if machine don't support ipmi."
-        exit 255
-    fi
     LOG_INFO "Start environmental preparation."
     modprobe ipmi_watchdog
     modprobe ipmi_poweroff
     modprobe ipmi_devintf
     modprobe ipmi_si
     modprobe ipmi_msghandler
+    if [[ ! -e /dev/ipmi0 && ! -e /dev/ipmi/0 && ! -e /dev/ipmidev/0 ]];then
+        LOG_WARN "Testing cannot be performed if machine don't support ipmi."
+        exit 255
+    fi
     DNF_INSTALL ipmitool
     LOG_INFO "End of environmental preparation!"
 }
@@ -43,13 +43,13 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    systemctl stop ipmievd.service
     modprobe -r ipmi_watchdog
     modprobe -r ipmi_poweroff
     modprobe -r ipmi_devintf
     modprobe -r ipmi_si
     modprobe -r ipmi_msghandler
-    systemctl stop ipmievd.service
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
