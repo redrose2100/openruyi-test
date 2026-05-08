@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/openEuler-lsb",
+    "path": "$OET_PATH/testcases/cli-test/openeuler-lsb",
     "cases": [
         {
             "name": "oe_test_openEuler-lsb_01"
