@@ -1,5 +1,5 @@
 {
-  "path": "$OET_PATH/testcases/cli-test/pyyaml",
+  "path": "$OET_PATH/testcases/cli-test/pyYAML",
   "cases": [
     {
       "name": "oe_test_pyyaml"
