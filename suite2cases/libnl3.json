@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/nl-link",
+    "path": "$OET_PATH/testcases/cli-test/libnl3",
     "cases": [
         {
             "name": "oe_test_nl_link_list"
