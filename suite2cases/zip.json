@@ -11,13 +11,19 @@
             "name": "oe_test_zip_003"
         },
         {
-	    "name": "oe_test_zip_004"
-	},
-	{
-	    "name": "oe_test_zip_005"
-	},
+            "name": "oe_test_zip_004"
+        },
+        {
+            "name": "oe_test_zip_005"
+        },
         {
             "name": "oe_test_zip_006"
+        },
+        {
+            "name": "oe_test_zipsplit"
+        },
+        {
+            "name": "oe_test_zipsplit_01"
         }
     ]
 }
