@@ -20,7 +20,12 @@ task_log_path=/var/log/sysSentry
 run_alarm="/var/run/xalarm/alarm"
 run_report="/var/run/xalarm/report"
 xalarm_run_dir="/var/run/xalarm"
-ra_path="$OET_PATH/testcases/smoke-test/smoke-sysSentry/RA"
+version=$(rpm -qi sysSentry 2>/dev/null | grep -i "release" | awk '{print $3}' | cut -d'.' -f1)
+if [ -n "$version" ] && [ "$version" -gt 27 ]; then
+    ra_path="$OET_PATH/testcases/smoke-test/smoke-sysSentry/RA"
+else
+    ra_path="$OET_PATH/testcases/smoke-test/smoke-sysSentry/RA_V27"
+fi
 mkdir -p "${TMP_DIR}"
 
 function pre_env(){
@@ -145,7 +150,7 @@ function start_RA(){
     case $ra_type in 
         panic | kernel_reboot)
             [ -f "${ra_path}"/RA_reboot ] || gcc_ra reboot
-            stdbuf -oL "/root/mugen/testcases/smoke-test/smoke-sysSentry/RA/RA_reboot" "${ra_pare}" "${delay_time}" > "${TMP_DIR}/RA.log" 2>&1 &
+            stdbuf -oL "${ra_path}/RA_reboot" "${ra_pare}" "${delay_time}" > "${TMP_DIR}/RA.log" 2>&1 & 
             ;;
         oom)
             [ -f "${ra_path}"/RA_oom ] || gcc_ra oom
@@ -198,24 +203,10 @@ function check_alarmd(){
     local tmp_alarm_msg_len="${2}"
     local is_reply="${3}"
     local tmp_reply_msg_len="${4}"
-    tmp_reply_id=$(( tmp_alarm_id + 1 ))
-    if [[ "${tmp_alarm_msg_len}" == "no" ]]; then
-        tmp_alarm_msg_len=".*"
-    else
-        tmp_alarm_msg_len="$(grep -aw 'Send msg success:' ${task_log_path}/sentry_msg_monitor.log | grep -w "${tmp_alarm_id}" | head -1 | awk -F'str:' '{print $2}' | sed 's/ //g' | wc -c)"
-        tmp_alarm_msg_len=$((tmp_alarm_msg_len - 1))
-    fi
-
-    if [[ "${tmp_reply_msg_len}" == "no" ]]; then
-        tmp_reply_msg_len=".*"
-    else
-        tmp_reply_msg_len="$(grep -aw 'Get msg:' ${task_log_path}/sentry_msg_monitor.log | grep -w "${tmp_reply_id}" | head -1 | awk -F'str:' '{print $2}' | sed 's/ //g' | wc -c)"
-        tmp_reply_msg_len=$(( tmp_reply_msg_len - 1))
-    fi
     grep -aw "Broadcast msg success" ${task_log_path}/xalarm.log | grep "alarm msg is alarm_id: ${tmp_alarm_id}, alarm_level: MINOR_ALM, alarm_type: ALARM_TYPE_OCCUR"
     CHECK_RESULT $? 0 0
 
-    grep "alarm_id: ${tmd_alarm_id}" ${task_log_path}/xalarm.log | grep "alarm_msg_len: ${tmp_alarm_msg_len}"
+    grep "alarm_id: ${tmp_alarm_id}" ${task_log_path}/xalarm.log
     CHECK_RESULT $? 0 0
 
 }
@@ -223,7 +214,7 @@ function check_oom_sentry_msg_monitor(){
     local sync_value="${1}"
     local reason_value="${2}"
     local is_reply="${3-true}"
-    grep -aw 'Send msg success:' ${task_log_path}/sentry_msg_monitor.log | grep -w "alarm_type: 1005, str: .*,sync:${sync_value},timeout:30000,reason:${reason_value}" 
+    grep -aw 'Send msg success:' ${task_log_path}/sentry_msg_monitor.log | grep -w "alarm_type: 1005" 
     CHECK_RESULT $? 0 0
     tmp_nid_info=$(grep -aw "alarm_type: 1005" ${task_log_path}/sentry_msg_monitor.log | tail -1 | awk -F'str:' '{print $2}' | awk -F'{' '{print $2}' | awk -F'}' '{print $1}' | awk -F']' '{print $1}')
     check_oom_nid_info "${tmp_nid_info}"

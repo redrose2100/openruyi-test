@@ -21,23 +21,25 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     rm -rf /root/.ssh
     ssh-keygen -t rsa -f /root/.ssh/id_rsa -P ''
-    SSH_CMD "rm -rf /root/.ssh;rm -rf /libs;ssh-keygen -t rsa -f /root/.ssh/id_rsa -P ''"
-    SSH_SCP "$OET_PATH"/libs/tools/sshcmd.sh "${REMOTE_USER}"@"${REMOTE_IP}":/root/ "${REMOTE_PASSWD}"
-    SSH_SCP "$OET_PATH"/libs "${REMOTE_USER}"@"${REMOTE_IP}":/ "${REMOTE_PASSWD}"
-    #服务端保存客户端的yes
-    SSH_CMD "sh /root/sshcmd.sh -c 'ls' -m '$ETS_LOCAL_IP' -p '${ETS_LOCAL_PASSWD_ROOT}' -u 'root'"
+    SSH_CMD "rm -rf /root/.ssh;rm -rf /libs;ssh-keygen -t rsa -f /root/.ssh/id_rsa -P ''" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_SCP "$OET_PATH"/libs/locallibs/sshcmd.sh "${NODE2_USER}"@"${NODE2_IPV4}":/root/ "${NODE2_PASSWORD}"
+    SSH_SCP "$OET_PATH"/libs "${NODE2_USER}"@"${NODE2_IPV4}":/ "${NODE2_PASSWORD}"
+    #服务端保存客户端的host key
+    SSH_CMD "ssh-keyscan -H ${NODE1_IPV4} >> /root/.ssh/known_hosts 2>/dev/null" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     #服务端，客户端互相免密
-    SSH_SCP "$REMOTE_USER"@"${REMOTE_IP}":/root/.ssh/id_rsa.pub /root/.ssh/authorized_keys "$REMOTE_PASSWD"
-    SSH_SCP /root/.ssh/id_rsa.pub "${REMOTE_USER}"@"${REMOTE_IP}":/root/.ssh/authorized_keys "${REMOTE_PASSWD}"
+    SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/root/.ssh/id_rsa.pub /root/.ssh/authorized_keys "${NODE2_PASSWORD}"
+    chmod 600 /root/.ssh/authorized_keys
+    SSH_SCP /root/.ssh/id_rsa.pub "${NODE2_USER}"@"${NODE2_IPV4}":/root/.ssh/authorized_keys "${NODE2_PASSWORD}"
+    SSH_CMD "chmod 600 /root/.ssh/authorized_keys" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
 }
 
-function do_test() {
+function run_test() {
     # 客户端登服务端免密
-    ssh "${REMOTE_USER}"@"${REMOTE_IP}" ip a | grep "${REMOTE_IP}"
+    ssh "${NODE2_USER}"@"${NODE2_IPV4}" ip a | grep "${NODE2_IPV4}"
     CHECK_RESULT $? 0 0
     # 服务端登客户端免密
-    ssh "${REMOTE_USER}"@"${REMOTE_IP}" ssh root@"${ETS_LOCAL_IP}" ip a | grep "${ETS_LOCAL_IP}"
+    ssh "${NODE2_USER}"@"${NODE2_IPV4}" ssh root@"${NODE1_IPV4}" ip a | grep "${NODE1_IPV4}"
     CHECK_RESULT $? 0 0
     
     # 新增测试点1: 验证SSH密钥文件权限
@@ -50,17 +52,17 @@ function do_test() {
     
     # 新增测试点2: 测试SSH文件传输（scp）
     echo "test_content_$(date +%s)" > /tmp/ssh_test_file.txt
-    scp /tmp/ssh_test_file.txt "${REMOTE_USER}"@"${REMOTE_IP}":/tmp/
+    scp /tmp/ssh_test_file.txt "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/
     CHECK_RESULT $? 0 0 "scp上传文件失败"
-    ssh "${REMOTE_USER}"@"${REMOTE_IP}" "test -f /tmp/ssh_test_file.txt && cat /tmp/ssh_test_file.txt" | grep -q "test_content"
+    ssh "${NODE2_USER}"@"${NODE2_IPV4}" "test -f /tmp/ssh_test_file.txt && cat /tmp/ssh_test_file.txt" | grep -q "test_content"
     CHECK_RESULT $? 0 0 "远程文件内容验证失败"
     rm -f /tmp/ssh_test_file.txt
-    SSH_CMD "rm -f /tmp/ssh_test_file.txt"
+    SSH_CMD "rm -f /tmp/ssh_test_file.txt" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 }
 
 function post_test() {
     rm -rf /root/.ssh
-    SSH_CMD "rm -rf /root/.ssh;rm -rf /root/sshcmd.sh;rm -rf /libs"
+    SSH_CMD "rm -rf /root/.ssh;rm -rf /root/sshcmd.sh;rm -rf /libs" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 }
 
 main "$@"

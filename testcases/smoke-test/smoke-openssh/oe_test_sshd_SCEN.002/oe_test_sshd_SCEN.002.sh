@@ -23,42 +23,42 @@ sshd_pid_dir2="/var/run/sshd.init.pid"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL sshd
+    DNF_INSTALL openssh-server
     CHECK_RESULT $? 0 0
 
 }
 
 function run_test() {
-    LOG_INFO "Start to prepare the test environment."
+    LOG_INFO "Start to run test."
     if test -f $sshd_pid_dir1; then
         echo > $sshd_pid_dir1
     else
         echo > $sshd_pid_dir2
     fi
     systemctl restart sshd
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "sshd restart failed"
     systemctl status sshd
-    CHECK_RESULT $? 0 0
-    pid=$(pgrep -f "/usr/sbin/sshd" | awk 'NR==1{print $2}')
+    CHECK_RESULT $? 0 0 "sshd not active after restart"
+    pid=$(pgrep -f "/usr/sbin/sshd" | head -n 1)
     echo "${pid}"
-    CHECK_RESULT $? 0 0
+    CHECK_RESULT $? 0 0 "failed to get sshd pid"
     if test -f $sshd_pid_dir1; then
-        pid1=$(< $sshd_pid_dir1 awk '{print $1}' | head -n 1)
+        pid1=$(awk '{print $1}' "$sshd_pid_dir1" | head -n 1)
         echo "${pid1}"
     else
-        pid1=$(< $sshd_pid_dir2 awk '{print $1}' | head -n 1)
+        pid1=$(awk '{print $1}' "$sshd_pid_dir2" | head -n 1)
         echo "${pid1}"
     fi
-    if [ "${pid}" -ne "${pid1}" ]; then
-        ((tmp_result++))
-    fi
-    if [ "$tmp_result" -eq 0 ]; then
-        CHECK_RESULT $? 0 0
-    fi
+    CHECK_RESULT $? 0 0 "failed to read pid file"
+    [ "${pid}" = "${pid1}" ]
+    CHECK_RESULT $? 0 0 "PID mismatch: running pid=${pid}, pidfile=${pid1}"
 }
 
 function post_test() {
-    LOG_INFO "Nothing to do."
+    LOG_INFO "Start to restore the test environment."
+    rm -f "$sshd_pid_dir1" "$sshd_pid_dir2"
+    systemctl restart sshd
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

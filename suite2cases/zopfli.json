@@ -3,8 +3,9 @@
     "cases": [
         {
             "name": "oe_test_zopfli"
+        },
+        {
+            "name": "oe_test_zopflipng"
         }
-
-      ]
+    ]
 }
-

@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_flac"
+        },
+        {
+            "name": "oe_test_metaflac"
         }
     ]
 }

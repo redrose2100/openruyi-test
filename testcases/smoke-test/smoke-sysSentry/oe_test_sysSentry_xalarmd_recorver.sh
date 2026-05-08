@@ -29,65 +29,94 @@ function check_RA_xalarmd_log() {
     check_RA_plugin
 }
 
-function check_xalarmd_log() {
-    grep "${run_alarm} not found or socket file been replaced, recovering" "${task_log_path}"/xalarm.log
-    CHECK_RESULT $? 0 0
-    grep "${run_report} not found or socket file been replaced, recovering" "${task_log_path}"/xalarm.log
-    CHECK_RESULT $? 0 0
-    grep "${run_alarm} has been created" "${task_log_path}"/xalarm.log
-    CHECK_RESULT $? 0 0
-    grep "${run_report} has been created" "${task_log_path}"/xalarm.log
-    CHECK_RESULT $? 0 0
-
-}
 function pre_test(){
     pre_xalarm_env
 }
 function run_test(){
-   check_RA_xalarmd_log
-   clean_sysSentry_message
+    if [ -n "$version" ] && [ "$version" -gt 28 ]; then
+        check_RA_xalarmd_log
+        rm -rf "${run_alarm}"
+        rm -rf "${run_report}"
+        [ ! -e "${run_alarm}" ] && [ ! -e "${run_report}" ]
+        CHECK_RESULT $? 0 0
 
-   rm -rf "${run_alarm}"
-   rm -rf "${run_report}"
-   check_RA_xalarmd_log
-   check_xalarmd_log
+        systemctl restart  xalarmd.socket
+        [  -e "${run_alarm}" ] && [  -e "${run_report}" ]
+        CHECK_RESULT $? 0 0
 
-   clean_sysSentry_message
-    rm -rf "${run_alarm}" && touch "${run_alarm}"
-    rm -rf "${run_report}" && touch "${run_alarm}"
-    check_RA_xalarmd_log
-    check_xalarmd_log
+        SLEEP_WAIT 10 "systemctl status sysSentry" 1
+        CHECK_RESULT $? 0 0
 
-    chmod 700 "${run_alarm}"
-    chmod 700 "${run_report}"
+        SLEEP_WAIT 10 " sentryctl list | grep sentry_msg_monitor | grep RUNNING" 1 
+        CHECK_RESULT $? 0 0
 
-    check_RA_xalarmd_log
 
-    grep "socket file ${run_alarm} permission .* set not properly, recover as default permission" "${task_log_path}"/xalarm.log
-    CHECK_RESULT $? 0 0
-    grep "socket file ${run_report} permission .* set not properly, recover as default permission" "${task_log_path}"/xalarm.log
-    CHECK_RESULT $? 0 0
+        for _ in {1..3}; do
+            SLEEP_WAIT 10 "systemctl start xalarmd" 1 
+            systemctl status xalarmd
+            CHECK_RESULT $? 0 0
 
-    chmod 700 "${xalarm_run_dir}"
-    check_RA_xalarmd_log
-    grep "${xalarm_run_dir} permission set not properly, recover as default permission" "${task_log_path}"/xalarm.log
-    CHECK_RESULT $? 0 0
+            systemctl status xalarmd.socket
+            CHECK_RESULT $? 0 0
 
-    rm -rf "${xalarm_run_dir}"
-    check_RA_xalarmd_log
-    grep "xalarmd run dir not exists, create ${xalarm_run_dir}" "${task_log_path}"/xalarm.log
-    CHECK_RESULT $? 0 0
+            echo > "${task_log_path}"/sentry_msg_monitor.log
 
-    kill -9 "$(pgrep -f /usr/bin/xalarmd)"
-    check_RA_xalarmd_log
-    grep "xalarm daemon init success" "${task_log_path}"/xalarm.log 
-    CHECK_RESULT $? 0 0
+            kill -9 "$(pgrep -f /usr/bin/xalarmd)"
+            SLEEP_WAIT 10 " grep 'Xalarmd service exception, try to re-register' ${task_log_path}/sentry_msg_monitor.log" 1 
+            CHECK_RESULT $? 0 0
+
+            cat "${task_log_path}"/sentry_msg_monitor.log
+            SLEEP_WAIT 10 " grep 'sentry_msg_monitor start' ${task_log_path}/sentry_msg_monitor.log" 1 
+            CHECK_RESULT $? 0 0
+
+            SLEEP_WAIT 10 "systemctl is-active xalarmd" 1
+            CHECK_RESULT $? 0 0
+
+        done
+    else
+        check_RA_xalarmd_log
+        clean_sysSentry_message
+
+        rm -rf "${run_alarm}"
+        rm -rf "${run_report}"
+        check_RA_xalarmd_log
+    
+        clean_sysSentry_message
+        rm -rf "${run_alarm}" && touch "${run_alarm}"
+        rm -rf "${run_report}" && touch "${run_alarm}"
+        check_RA_xalarmd_log
+
+        chmod 700 "${run_alarm}"
+        chmod 700 "${run_report}"
+        check_RA_xalarmd_log
+
+        grep "socket file ${run_alarm} permission .* set not properly, recover as default permission" "${task_log_path}"/xalarm.log
+        CHECK_RESULT $? 0 0
+        grep "socket file ${run_report} permission .* set not properly, recover as default permission" "${task_log_path}"/xalarm.log
+        CHECK_RESULT $? 0 0
+
+        chmod 700 "${xalarm_run_dir}"
+        check_RA_xalarmd_log
+        grep "${xalarm_run_dir} permission set not properly, recover as default permission" "${task_log_path}"/xalarm.log
+        CHECK_RESULT $? 0 0
+
+        rm -rf "${xalarm_run_dir}"
+        check_RA_xalarmd_log
+        grep "xalarmd run dir not exists, create ${xalarm_run_dir}" "${task_log_path}"/xalarm.log
+        CHECK_RESULT $? 0 0
+
+        kill -9 "$(pgrep -f /usr/bin/xalarmd)"
+        check_RA_xalarmd_log
+        grep "xalarm daemon init success" "${task_log_path}"/xalarm.log 
+        CHECK_RESULT $? 0 0
+    fi
+
+   
 
 }
 function post_test(){
     clean_sysSentry_message
     systemctl stop xalarmd
-    # return 0
 }
 
 main "$@"

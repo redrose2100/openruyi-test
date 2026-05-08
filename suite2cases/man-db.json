@@ -10,8 +10,14 @@
         {
             "name": "oe_test_man-db_mandb"
         },
-	{
-	    "name": "oe_test_man-db_1"
-	}
+        {
+            "name": "oe_test_man-db_1"
+        },
+        {
+            "name": "oe_test_apropos"
+        },
+        {
+            "name": "oe_test_apropos_01"
+        }
     ]
 }
