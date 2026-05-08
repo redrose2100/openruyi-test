@@ -180,6 +180,10 @@
             "add disk": [
                 10
             ]
+        },
+        {
+            "name": "oe_test_dmevent-service",
+            "add disk": []
         }
     ]
 }
