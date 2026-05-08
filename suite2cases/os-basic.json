@@ -2084,7 +2084,7 @@
             "add network interface": 0,
             "add disk": []
         },
-	{
+        {
             "name": "oe_test_taskset",
             "machine num": 1,
             "add network interface": 0,
@@ -2116,6 +2116,12 @@
         },
         {
             "name": "oe_test_certutil_2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_libstdc++",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
