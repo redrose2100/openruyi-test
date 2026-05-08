@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/python3-vllm",
+    "path": "$OET_PATH/testcases/cli-test/vllm",
     "cases": [
         {
             "name": "oe_test_python3-vllm_01"
