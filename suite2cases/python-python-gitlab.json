@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/python-gitlab",
+    "path": "$OET_PATH/testcases/cli-test/python-python-gitlab",
     "cases": [
         {
             "name": "oe_test_gitlab_01"
@@ -7,5 +7,5 @@
         {
             "name": "oe_test_gitlab_02"
         }
-   ]
+    ]
 }
