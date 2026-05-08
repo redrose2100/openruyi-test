@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_libdwarf"
+        },
+        {
+            "name": "oe_test_dwz"
         }
     ]
 }
