@@ -1,8 +1,8 @@
 {
-    "path": "$OET_PATH/testcases/cli-test/neon-config",
+    "path": "$OET_PATH/testcases/cli-test/neon",
     "cases": [
         {
             "name": "oe_test_neon-config"
-	}
+        }
     ]
 }
