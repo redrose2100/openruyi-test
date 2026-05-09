@@ -59,16 +59,14 @@ download_ltp_from_tar() {
     LOG_INFO "Downloading LTP ${version} from ${tar_url}"
     
     # 下载 tar.gz 包
-    wget --no-check-certificate -O "${tar_file}" "${tar_url}"
-    if [[ $? -ne 0 ]]; then
+    if ! wget --no-check-certificate -O "${tar_file}" "${tar_url}"; then
         LOG_ERROR "Failed to download LTP ${version} tar.gz"
         exit 1
     fi
     
     # 解压到当前目录
     LOG_INFO "Extracting ${tar_file} to ${current_path}"
-    tar -xzf "${tar_file}" -C "${current_path}"
-    if [[ $? -ne 0 ]]; then
+    if ! tar -xzf "${tar_file}" -C "${current_path}"; then
         LOG_ERROR "Failed to extract ${tar_file}"
         exit 1
     fi
@@ -91,18 +89,15 @@ function run_test() {
     # 编译 LTP
     LOG_INFO "Building LTP from ${LTP_SRC_DIR}..."
     cd "${LTP_SRC_DIR}" || exit 1
-    {
-        make autotools
-        ./configure --prefix=/opt/ltp
-        make -j "$(nproc)"
+    if ! {
+        make autotools &&
+        ./configure --prefix=/opt/ltp &&
+        make -j "$(nproc)" &&
         make install
-    } >> "${current_path}/ltp_build.log" 2>&1
-    
-    if [[ $? -ne 0 ]]; then
+    } >> "${current_path}/ltp_build.log" 2>&1; then
         LOG_ERROR "LTP build failed, check ${current_path}/ltp_build.log"
         exit 1
-    fi
-    
+    fi 
     LOG_INFO "LTP successfully installed to /opt/ltp"
     
     # proc01 相关配置
