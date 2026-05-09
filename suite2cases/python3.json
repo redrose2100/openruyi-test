@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_python3-threading"
+        },
+        {
+            "name": "oe_test_python3-hashlib"
         }
     ]
 }
