@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/cli-test/openssh",
+    "machine type": "physical",
     "machine num": 2,
     "cases": [
         {
@@ -68,6 +69,7 @@
         },
         {
             "name": "oe_test_socket_sshd",
+            "machine type": "physical",
             "machine num": 1
         },
         {

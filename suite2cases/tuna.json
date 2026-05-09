@@ -1,11 +1,14 @@
 {
     "path": "$OET_PATH/testcases/cli-test/tuna",
+    "machine type": "physical",
     "cases": [
         {
-            "name": "oe_test_tuna_apply"
+            "name": "oe_test_tuna_apply",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_tuna_include"
+            "name": "oe_test_tuna_include",
+            "machine type": "physical"
         },
         {
             "name": "oe_test_tuna_run"
@@ -17,13 +20,15 @@
             "name": "oe_test_tuna_show_irqs"
         },
         {
-            "name": "oe_test_tuna_show_threads_01"
+            "name": "oe_test_tuna_show_threads_01",
+            "machine type": "physical"
         },
         {
             "name": "oe_test_tuna_show_threads_02"
         },
         {
-            "name": "oe_test_tuna_spread"
+            "name": "oe_test_tuna_spread",
+            "machine type": "physical"
         }
     ]
 }

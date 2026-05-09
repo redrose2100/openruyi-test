@@ -1,11 +1,14 @@
 {
     "path": "$OET_PATH/testcases/cli-test/fcoe-utils",
+    "machine type": "physical",
     "cases": [
         {
-            "name": "oe_test_service_fcoe"
+            "name": "oe_test_service_fcoe",
+            "machine type": "physical"
         },
         {
-            "name": "oe_test_socket_fcoemon"
+            "name": "oe_test_socket_fcoemon",
+            "machine type": "physical"
         }
     ]
 }

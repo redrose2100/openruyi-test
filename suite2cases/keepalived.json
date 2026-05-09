@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/cli-test/keepalived",
+    "machine type": "physical",
     "machine num": 3,
     "add network interface": 4,
     "cases": [
@@ -20,6 +21,7 @@
         },
         {
             "name": "oe_test_vrrp_bond_vlan_keepalived",
+            "machine type": "physical",
             "machine num": 1,
             "add network interface": 2
         },

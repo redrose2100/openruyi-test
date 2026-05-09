@@ -1,8 +1,10 @@
 {
     "path": "$OET_PATH/testcases/cli-test/pps-tools",
+    "machine type": "physical",
     "cases": [
         {
-            "name": "oe_test_pps-tools"
+            "name": "oe_test_pps-tools",
+            "machine type": "physical"
         }
     ]
 }
