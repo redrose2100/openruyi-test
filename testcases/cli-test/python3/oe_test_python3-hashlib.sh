@@ -16,26 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command python3-hashlib
 # ############################################
+# shellcheck disable=SC1090
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
-function pre_test() {
-    LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "python3-hashlib"
-    LOG_INFO "End to prepare the test environment."
-}
-
 function run_test() {
-	LOG_INFO "Start to run test."
-    python3 common/test_python3-hashlib.py |grep "Test Passed" 
-    CHECK_RESULT $? 0 0 "python3-hashlib test fail"
-	LOG_INFO "End of the test."
-}
-
-function post_test() {
-  LOG_INFO "start environment cleanup."
-  DNF_REMOVE "$@"
-  LOG_INFO "Finish environment cleanup!"
+  LOG_INFO "Start to run test."
+  python3 common/test_python3-hashlib.py | grep "Test Passed"
+  CHECK_RESULT $? 0 0 "python3-hashlib test fail"
+  LOG_INFO "End of the test."
 }
 
 main "$@"
