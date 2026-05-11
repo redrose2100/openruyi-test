@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2026. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -23,11 +23,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL libjpeg-turbo
-    DNF_INSTALL libjpeg-turbo-devel
-    DNF_INSTALL libjpeg-turbo-utils
-    DNF_INSTALL gcc
-    DNF_INSTALL glibc-devel
+    DNF_INSTALL "libjpeg-turbo libjpeg-turbo-devel libjpeg-turbo-utils gcc glibc-devel"
 
     # 用Python生成标准、有效的PGM灰度图（100%兼容cjpeg）
     python3 - << 'EOF'
