@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_hyperscan_simplegrep"
-        }
+        },
+        {
+            "name": "oe_test_hyperscan_simplegrep01"
+        }        
     ]
 }
