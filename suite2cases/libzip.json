@@ -1,5 +1,5 @@
 {
-    "path": "\"${OET_PATH}\"/testcases/cli-test/libzip",
+    "path": "$OET_PATH/testcases/cli-test/libzip",
     "cases": [
         {
             "name": "oe_test_libzip_zipcmp"

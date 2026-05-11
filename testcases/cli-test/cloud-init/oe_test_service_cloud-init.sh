@@ -23,6 +23,8 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL cloud-init
+    printf "datasource_list: [ None ]\n" >/etc/cloud/cloud.cfg.d/99-mugen-datasource-none.cfg
+    CHECK_RESULT $? 0 0 "Failed to configure cloud-init datasource."
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -35,6 +37,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    rm -f /etc/cloud/cloud.cfg.d/99-mugen-datasource-none.cfg
     sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
     rm -rf /etc/ssh/sshd_config.d
     systemctl restart sshd

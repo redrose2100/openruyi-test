@@ -16,11 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verification ipmitool command
 # ############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    modprobe ipmi_watchdog
+    modprobe ipmi_poweroff
+    modprobe ipmi_devintf
+    modprobe ipmi_si
+    modprobe ipmi_msghandler
     if [[ ! -e /dev/ipmi0 && ! -e /dev/ipmi/0 && ! -e /dev/ipmidev/0 ]];then
         LOG_WARN "Testing cannot be performed if machine don't support ipmi."
         exit 255
@@ -48,7 +53,12 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE "$@"
+    modprobe -r ipmi_watchdog
+    modprobe -r ipmi_poweroff
+    modprobe -r ipmi_devintf
+    modprobe -r ipmi_si
+    modprobe -r ipmi_msghandler
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

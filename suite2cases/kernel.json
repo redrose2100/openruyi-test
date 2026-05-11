@@ -218,6 +218,11 @@
             "add disk": []
         },
         {
+            "name": "oe_test_regmap_02",
+            "machine type": "kvm",
+            "add disk": []
+        },
+        {
             "name": "oe_test_ceph",
             "machine type": "kvm",
             "add disk": []
@@ -296,6 +301,27 @@
             "name": "oe_test_rnpm",
             "machine type": "kvm",
             "add disk": []
+        },
+        {
+            "name": "oe_test_led-class-flash",
+            "machine type": "kvm",
+            "add disk": []
+        },
+        {
+            "name": " oe_test_leds_blinkm",
+            "machine type": "kvm",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_leds_lm3530",
+            "machine type": "kvm",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_leds_lp3944",
+            "machine type": "kvm",
+            "add disk": []
         }
+
     ]
 }

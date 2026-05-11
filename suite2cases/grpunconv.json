@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/grpunconv",
-    "cases": [
-        {
-            "name": "oe_test_grpunconv"
-        }
-    ]
-}

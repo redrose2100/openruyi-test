@@ -3,7 +3,8 @@
     "machine num": 3,
     "cases": [
         {
-            "name": "oe_test_sysSentry_xalarmd_recorver"
+            "name": "oe_test_sysSentry_xalarmd_recorver",
+            "machine num": 1
         },
         {
             "name": "oe_test_sysSentry_oom",

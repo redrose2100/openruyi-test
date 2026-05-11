@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/stty",
-    "cases": [
-        {
-            "name": "oe_test_stty"
-        }
-    ]
-}

@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_libsdl1.2"
+        },
+        {
+            "name": "oe_test_sdl-config"
         }
     ]
 }

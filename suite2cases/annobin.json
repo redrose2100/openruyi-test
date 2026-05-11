@@ -1,5 +1,5 @@
 {
-    "path": "\"${OET_PATH}\"/testcases/cli-test/annobin",
+    "path": "$OET_PATH/testcases/cli-test/annobin",
     "cases": [
         {
             "name": "oe_test_annobin"
