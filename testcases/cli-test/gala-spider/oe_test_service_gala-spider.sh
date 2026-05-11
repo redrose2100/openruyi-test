@@ -79,4 +79,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main "@"
+main "$@"

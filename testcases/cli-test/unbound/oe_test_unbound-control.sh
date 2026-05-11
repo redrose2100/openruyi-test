@@ -35,6 +35,11 @@ function run_test() {
   unbound-control-setup
   CHECK_RESULT $? 0 0 "set up the keys and certificates failed"
 
+  sed -i 's/control-enable: no/control-enable: yes/' /etc/unbound/unbound.conf
+  CHECK_RESULT $? 0 0 "enable remote control failed"
+  systemctl restart unbound.service
+  CHECK_RESULT $? 0 0 "restart unbound.service failed"
+
   unbound-control stats_noreset
   CHECK_RESULT $? 0 0 "print statistics without resetting them failed"
   unbound-control dump_cache
@@ -49,3 +54,5 @@ function post_test() {
   DNF_REMOVE "$@"
   LOG_INFO "Finish environment cleanup!"
 }
+
+main "$@"

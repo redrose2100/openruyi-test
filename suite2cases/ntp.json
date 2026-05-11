@@ -12,6 +12,12 @@
         },
         {
             "name": "oe_test_service_sntp"
-        }
+        },
+	{
+	    "name": "oe_test_ntpdc_basic"
+	},
+	{
+            "name": "oe_test_ntpd_basic"
+	}
     ]
 }

@@ -19,24 +19,24 @@
         {
             "name": "oe_test_acl_chacl"
         },
-	{
-	    "name": "oe_test_acl_getfacl"
-	},
-	{
-	    "name": "oe_test_acl_setfacl"
-	},
         {
-	    "name": "oe_test_access_providepam"
-	},
+            "name": "oe_test_acl_getfacl"
+        },
         {
-	    "name": "oe_test_acl_file"
-	},
+            "name": "oe_test_acl_setfacl"
+        },
         {
-	    "name": "oe_test_acl_default_kernel_setting"
-	},
+            "name": "oe_test_access_providepam"
+        },
         {
-	    "name": "oe_test_acl_backup_recovery"
-	},
+            "name": "oe_test_acl_file"
+        },
+        {
+            "name": "oe_test_acl_default_kernel_setting"
+        },
+        {
+            "name": "oe_test_acl_backup_recovery"
+        },
         {
             "name": "oe_test_acl_delete_acl"
         },
@@ -54,6 +54,9 @@
         },
         {
             "name": "oe_test_acl_default_inherit_fun02"
+        },
+        {
+            "name": "oe_test_libacl"
         }
     ]
 }

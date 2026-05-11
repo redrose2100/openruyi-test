@@ -1,11 +1,13 @@
 {
     "path": "$OET_PATH/testcases/smoke-test/smoke-openssh",
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_sshd_SCEN.002"
         },
         {
-            "name": "oe_test_ssh_mutual_auth"
+            "name": "oe_test_ssh_mutual_auth",
+            "machine num": 2
         }
     ]
 }
