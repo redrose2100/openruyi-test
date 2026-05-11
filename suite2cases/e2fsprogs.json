@@ -15,6 +15,9 @@
         },
         {
             "name": "oe_test_fuse2fs"
+        },
+        {
+            "name": "oe_test_debugfs"
         }
     ]
 }
