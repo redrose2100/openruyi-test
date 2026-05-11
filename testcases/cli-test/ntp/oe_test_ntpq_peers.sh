@@ -1,0 +1,35 @@
+#!/usr/bin/bash
+# Copyright (c) 2026. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+# #############################################
+# @Author    :   郑威
+# @Contact   :   zhengwei@uniontech.com
+# @Date      :   2026/5/11
+# @License   :   Mulan PSL v2
+# @Desc      :   Test ntpq -p/-n peers and -c interactive commands
+# ############################################
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    LOG_INFO "End of environmental preparation!"
+}
+function run_test() {
+    LOG_INFO "Start to run test."
+    ntpq -c version | grep -E "[0-9]+\.[0-9]"
+    CHECK_RESULT $? 0 0 "check ntpq -c version failed"
+    ntpq -c help 2>&1 | grep "ntpq commands"
+    CHECK_RESULT $? 0 0 "check ntpq -c help failed"
+    LOG_INFO "End of the test."
+}
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    LOG_INFO "Finish environment cleanup!"
+}
+main "$@"
+
