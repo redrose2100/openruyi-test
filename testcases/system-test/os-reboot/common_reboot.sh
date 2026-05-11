@@ -23,7 +23,8 @@ function build_env() {
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     if [ -z "$NODE2_BMC_IP" ]; then
-        exit 1
+        echo "BMC_IP not configurable in this environment, Skipping test."
+        exit 255
     fi
     DNF_INSTALL "ipmitool OpenIPMI net-tools"
     test_ip=$(echo "$NODE2_BMC_IP" | sed 's/\.[^.]*$//')
