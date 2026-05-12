@@ -2120,6 +2120,12 @@
             "add network interface": 0,
             "add disk": []
         },
+	{
+            "name": "oe_test_declare",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
         {
             "name": "oe_test_libstdc++",
             "machine num": 1,
