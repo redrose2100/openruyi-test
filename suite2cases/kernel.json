@@ -39,7 +39,7 @@
         },
         {
             "name": "oe_test_cache_rw",
-            "machine type": "physical",
+            "machine type": "kvm",
             "add disk": []
         },
         {
