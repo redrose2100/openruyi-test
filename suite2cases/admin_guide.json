@@ -486,6 +486,12 @@
             "add disk": []
         },
         {
+            "name": "oe_test_postgresql_create_duplicate_role",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
             "name": "oe_test_nmcli_config_static_IP",
             "machine num": 1,
             "add network interface": 0,
