@@ -286,6 +286,12 @@
             "add disk": []
         },
         {
+            "name": "oe_test_basic_add_user_invalid",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
             "name": "oe_test_basic_related_account_info",
             "machine num": 1,
             "add network interface": 0,
