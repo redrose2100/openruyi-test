@@ -522,6 +522,12 @@
             "add disk": []
         },
         {
+            "name": "oe_test_nginx_invalid_configuration",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
             "name": "oe_test_procmgmt_who",
             "machine num": 1,
             "add network interface": 0,
