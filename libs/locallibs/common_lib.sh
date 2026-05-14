@@ -15,6 +15,7 @@
 # @Version : 1.0
 # @Desc    :
 #####################################
+# shellcheck disable=SC1090
 
 if python3 --version; then
     source "$OET_PATH/libs/locallibs/common_lib_python.sh"
@@ -31,7 +32,7 @@ function CHECK_RESULT() {
 
     if [ -z "$*" ]; then
         LOG_ERROR "Missing parameter error code."
-	((exec_result++))
+        ((exec_result++))
         return 1
     fi
 
@@ -40,8 +41,8 @@ function CHECK_RESULT() {
             test -n "$error_log" && LOG_ERROR "$error_log"
             ((exec_result++))
             LOG_ERROR "${BASH_SOURCE[1]} line ${BASH_LINENO[0]}"
-	    if [ "$exit_mode" -eq 1 ]; then
-                    exit 1;
+            if [ "$exit_mode" -eq 1 ]; then
+                exit 1
             fi
         }
     else
@@ -49,8 +50,8 @@ function CHECK_RESULT() {
             test -n "$error_log" && LOG_ERROR "$error_log"
             ((exec_result++))
             LOG_ERROR "${BASH_SOURCE[1]} line ${BASH_LINENO[0]}"
-	    if [ "$exit_mode" -eq 1 ]; then
-                    exit 1;
+            if [ "$exit_mode" -eq 1 ]; then
+                exit 1
             fi
         }
     fi
@@ -84,11 +85,28 @@ function POST_TEST_DEFAULT() {
 }
 
 function main() {
-    if [ -n "$(type -t post_test)" ]; then
-        trap post_test EXIT INT HUP TERM || exit 1
-    else
-        trap POST_TEST_DEFAULT EXIT INT HUP TERM || exit 1
-    fi
+    # 只执行一次清理
+    __TRAP_EXECUTED=0
+    handle_signal() {
+        if [ $__TRAP_EXECUTED -eq 0 ]; then
+            __TRAP_EXECUTED=1
+            if [ -n "$(type -t post_test)" ]; then
+                post_test
+            else
+                POST_TEST_DEFAULT
+            fi
+        fi
+        if [ $# -gt 0 ]; then
+            if [ "$1" == "NOPKG" ]; then
+                exit 255
+            elif [ "$1" == "PKGCONFLICT" ]; then
+                exit 247
+            fi
+        fi
+    }
+    trap handle_signal EXIT INT HUP TERM || exit 1
+    trap "handle_signal NOPKG" SIGRTMIN || exit 1
+    trap "handle_signal PKGCONFLICT" SIGRTMIN+1 || exit 1
 
     if ! rpm -qa | grep expect >/dev/null 2>&1; then
         dnf -y install expect
