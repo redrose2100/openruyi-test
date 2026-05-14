@@ -25,48 +25,48 @@ function pre_test() {
     rm -rf ./*.rpm
     DNF_INSTALL "createrepo wget"
     rpm -qa |grep gpg-pubkey || rpm --import "$(rpm -qa |grep gpg-keys |xargs rpm -ql |grep -i euler)"
-    yumdownloader libatomic
+    yumdownloader lsof
     arch=$(uname -m)
     if [ "${arch}" = "riscv64" ]; then
         url="https://repo.tarsier-infra.isrc.ac.cn/openEuler-RISC-V/testing/20221028/v0.1/repo/22.09/mainline/riscv64"
     else
         url="https://rpmfind.net/linux/centos-stream/10-stream/BaseOS/${arch}/os/Packages"
     fi
-    pkg=$(curl -skL "$url" | grep "libatomic" | head -n 1 | sed -n 's/.*href="\([^"]*\.rpm\)".*/\1/p')
-    wget --no-check-certificate "$url"/"$pkg" -O libatomic_el10.rpm
+    pkg=$(curl -skL "$url" | grep "lsof" | head -n 1 | sed -n 's/.*href="\([^"]*\.rpm\)".*/\1/p')
+    wget --no-check-certificate "$url"/"$pkg" -O lsof_el10.rpm
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    rpm -K "$(ls libatomic*oe*)" | grep -E "digests OK|digests signatures OK"
+    rpm -K "$(ls lsof*oe*)" | grep -E "digests OK|digests signatures OK"
     CHECK_RESULT $? 0 0 "Failed to check RPM signature"
-    yum install -y "$(ls libatomic*oe*)"
+    yum install -y "$(ls lsof*oe*)"
     CHECK_RESULT $? 0 0 "Failed to localinstall rpm"
-    yum remove -y libatomic
+    yum remove -y lsof
 
-    rpm -K "$(ls libatomic*el10*)" | grep "digests SIGNATURES NOT OK"
+    rpm -K "$(ls lsof*el10*)" | grep "digests SIGNATURES NOT OK"
     CHECK_RESULT $? 0 0 "Failed to check RPM signature"
-    yum install -y "$(ls libatomic*el10*)"
+    yum install -y "$(ls lsof*el10*)"
     CHECK_RESULT $? 0 0 "Failed to localinstall rpm"
-    yum remove -y libatomic
+    yum remove -y lsof
 
     rpm -e gpg-pubkey
-    mkdir el10;mv "$(ls libatomic*el10*)" el10;createrepo el10
+    mkdir el10;mv "$(ls lsof*el10*)" el10;createrepo el10
     sed -i "s#el10_path#$(realpath el10)#g" common/test.repo
     cp common/test.repo /etc/yum.repos.d/;yum clean all
-    yum --repo=el10 install -y libatomic
+    yum --repo=el10 install -y lsof
     CHECK_RESULT $? 0 1 "Failed to check rpm gpgkey"
 
     sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/yum.repos.d/test.repo
-    yum --repo=el10 install -y libatomic
+    yum --repo=el10 install -y lsof
     CHECK_RESULT $? 0 0 "Failed to check rpm gpgkey"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    yum remove -y libatomic
+    yum remove -y lsof
     DNF_REMOVE "$@"
     rm -rf ./*.rpm ./el10 /etc/yum.repos.d/test.repo
     export LANG=$Default_LANG
