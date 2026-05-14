@@ -420,6 +420,12 @@
             "add disk": []
         },
         {
+            "name": "oe_test_httpd_invalid_configuration_recover",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
             "name": "oe_test_mariadb_modify_delete_user",
             "machine num": 1,
             "add network interface": 0,
