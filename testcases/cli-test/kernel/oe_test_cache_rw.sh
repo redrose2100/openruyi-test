@@ -16,28 +16,29 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test 缓存读写
 # #############################################
+# shellcheck disable=SC1090
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start testing..."
-    free -h |grep -i mem |awk '{print $6}' |awk -F "M" '{print $1}'
+    free -h | grep -i mem | awk '{print $6}' | awk -F "M|G" '{print $1}'
     CHECK_RESULT $? 0 0 "Failed to view cache information"
-    echo 3 > /proc/sys/vm/drop_caches
+    echo 3 >/proc/sys/vm/drop_caches
     CHECK_RESULT $? 0 0 "Failed to clear cache"
-    cache_size=`free -h |grep -i mem |awk '{print $6}' |awk -F "M" '{print $1}'`
-    dd if=/dev/zero of=/home/testfile count=100 bs=1M
+    cache_size=$(free -h | grep -i mem | awk '{print $6}' | awk -F "M|G" '{print $1}')
+    dd if=/dev/zero of=/tmp/testfile count=100 bs=1M
     CHECK_RESULT $? 0 0 "fail to write to file"
-    cache_size1=`free -h |grep -i mem |awk '{print $6}' |awk -F "M" '{print $1}'`
-    [ ${cache_size1} -gt ${cache_size} ]
+    cache_size1=$(free -h | grep -i mem | awk '{print $6}' | awk -F "M|G" '{print $1}')
+    [[ $(echo "${cache_size1} > ${cache_size}" | bc) -eq 1 ]]
     CHECK_RESULT $? 0 0 "Cache utilization not increasing"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "Start to restore the tet environment."
-    echo 3 > /proc/sys/vm/drop_caches
-    rm -rf /home/testfile
+    echo 3 >/proc/sys/vm/drop_caches
+    rm -rf /tmp/testfile
     LOG_INFO "Finish to restore the tet environment."
 }
 

@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   package Echarts test
 # ############################################
+# shellcheck disable=SC1090,SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -45,9 +46,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment." 
     systemctl start firewalld
     npm uninstall echarts --save
-    rm -rf node_modules/echarts/ echarts
+    rm -rf node_modules echarts package*.json
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"
