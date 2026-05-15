@@ -203,11 +203,13 @@ if __name__ == "__main__":
         exitcode, output = rpm_install(args.pkgs, args.node, args.tempfile)
         if exitcode == 1:
             # === 新增逻辑1：处理软件包不存在
-            if  output == "package not exists":
+            if output == "package not exists":
                 quit_parent_process(signal.SIGRTMIN)
             # === 新增逻辑2：处理软件包安装冲突
-            if  output == "package installation conflict":
+            elif output == "package installation conflict":
                 quit_parent_process(signal.SIGRTMIN+1)
+        if output is not None:
+            print(output)
         sys.exit(exitcode)
     elif sys.argv[1] == "remove":
         exitcode = rpm_remove(args.node, args.pkgs, args.tempfile)
