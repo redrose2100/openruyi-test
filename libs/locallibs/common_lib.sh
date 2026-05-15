@@ -105,8 +105,8 @@ function main() {
         fi
     }
     trap handle_signal EXIT INT HUP TERM || exit 1
-    trap "handle_signal NOPKG" SIGRTMIN || exit 1
-    trap "handle_signal PKGCONFLICT" SIGRTMIN+1 || exit 1
+    trap "handle_signal NOPKG" SIGRTMIN || exit 255
+    trap "handle_signal PKGCONFLICT" SIGRTMIN+1 || exit 247
 
     if ! rpm -qa | grep expect >/dev/null 2>&1; then
         dnf -y install expect
