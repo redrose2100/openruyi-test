@@ -10,7 +10,8 @@
 # See the Mulan PSL v2 for more details.
 
 # #############################################
-# @Author    :   OpenCode
+# @Author    :   liuyafei
+# @Contact   :   liuyafei@uniontech.com
 # @Date      :   2026-05-14
 # @License   :   Mulan PSL v2
 # @Desc      :   Verify postgresql rejects duplicate role creation
