@@ -61,6 +61,7 @@ function post_test() {
     su postgres -c "psql -d postgres -c \"DROP ROLE IF EXISTS ${role_name};\"" >/dev/null 2>&1
     su postgres -c "/usr/bin/pg_ctl -D ${pg_data} -l ${pg_data}/logfile stop" >/dev/null 2>&1
     rm -rf "${pg_data}" duplicate_role.log
+    # shellcheck disable=SC2119
     DNF_REMOVE
     if [ "${backup_firewalld_state}" = "active" ]; then
         systemctl enable firewalld >/dev/null 2>&1
