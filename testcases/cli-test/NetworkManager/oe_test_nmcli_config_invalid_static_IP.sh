@@ -29,7 +29,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    rpm -q NetworkManager >/dev/null 2>&1 || DNF_INSTALL NetworkManager
+    DNF_INSTALL "NetworkManager"
     systemctl start NetworkManager >/dev/null 2>&1
     nmcli con delete "${con_name_1}" >/dev/null 2>&1
     nmcli con delete "${con_name_2}" >/dev/null 2>&1
@@ -40,14 +40,14 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase!"
     nmcli connection add type ethernet con-name "${con_name_1}" ifname "${NODE1_NIC}" ip4 300.0.2.100/24 gw4 192.0.2.1 >invalid_ip.log 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "nmcli should reject invalid IPv4 address 300.0.2.100/24"
     nmcli con show "${con_name_1}" >/dev/null 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "connection ${con_name_1} must not be created after invalid IPv4 input"
 
     nmcli connection add type ethernet con-name "${con_name_2}" ifname "${NODE1_NIC}" ip4 192.0.2.100/99 gw4 192.0.2.1 >invalid_prefix.log 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "nmcli should reject invalid prefix length 99"
     nmcli con show "${con_name_2}" >/dev/null 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "connection ${con_name_2} must not be created after invalid prefix input"
     LOG_INFO "End of testcase execution!"
 }
 
@@ -56,6 +56,7 @@ function post_test() {
     nmcli con delete "${con_name_1}" >/dev/null 2>&1
     nmcli con delete "${con_name_2}" >/dev/null 2>&1
     rm -rf invalid_ip.log invalid_prefix.log
+    DNF_REMOVE
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup."
 }
