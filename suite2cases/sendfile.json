@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/sendfile/",
+    "cases": [
+        {
+            "name": "oe_test_sendfile_001"
+        }
+
+    ]
+}
