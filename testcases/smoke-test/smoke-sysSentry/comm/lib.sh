@@ -24,7 +24,7 @@ version=$(rpm -qi sysSentry 2>/dev/null | grep -i "release" | awk '{print $3}' |
 if [ -n "$version" ] && [ "$version" -gt 27 ]; then
     ra_path="$OET_PATH/testcases/smoke-test/smoke-sysSentry/RA"
 else
-    ra_path="$OET_PATH/testcases/smoke-test/smoke-sysSentry/RA_V27"
+    ra_path="$OET_PATH/testcases/smoke-test/smoke-sysSentry/RA_v27"
 fi
 mkdir -p "${TMP_DIR}"
 
@@ -40,12 +40,6 @@ function pre_env(){
     yum -y install sentry_msg_monitor
     systemctl start xalarmd
     systemctl start sysSentry
-    modprobe sentry_msg_helper
-    modprobe sentry_reporter
-    sleep 5
-    modprobe sentry_urma_comm
-    modprobe odf
-    modprobe cis
     sleep 5
     modprobe sentry_remote_reporter
     sentryctl start sentry_msg_monitor
@@ -57,12 +51,6 @@ function pre_env(){
     yum -y install sentry_msg_monitor
     systemctl start xalarmd
     systemctl start sysSentry
-    modprobe sentry_msg_helper
-    modprobe sentry_reporter
-    sleep 5
-    modprobe sentry_urma_comm
-    modprobe odf
-    modprobe cis
     sleep 5
     modprobe sentry_remote_reporter
     sentryctl start sentry_msg_monitor
@@ -97,12 +85,6 @@ function start_sentry(){
     yum -y install sentry_msg_monitor
     systemctl start xalarmd
     systemctl start sysSentry
-    modprobe sentry_msg_helper
-    modprobe sentry_reporter
-    sleep 5
-    modprobe sentry_urma_comm
-    modprobe odf
-    modprobe cis
     sleep 5
     modprobe sentry_remote_reporter
     sentryctl start sentry_msg_monitor

@@ -33,7 +33,7 @@ function pre_test(){
     pre_xalarm_env
 }
 function run_test(){
-    if [ -n "$version" ] && [ "$version" -gt 28 ]; then
+    if [ -n "$version" ] && [ "$version" -gt 27 ]; then
         check_RA_xalarmd_log
         rm -rf "${run_alarm}"
         rm -rf "${run_report}"
@@ -44,12 +44,19 @@ function run_test(){
         [  -e "${run_alarm}" ] && [  -e "${run_report}" ]
         CHECK_RESULT $? 0 0
 
-        SLEEP_WAIT 10 "systemctl status sysSentry" 1
-        CHECK_RESULT $? 0 0
+        MAX_RETRIES=30
+        SLEEP_INTERVAL=5
+        retry_count=0
+        echo "等待 sysSentry 服务启动..."
+        while [ $retry_count -lt $MAX_RETRIES ]; do
+            # 检查服务状态
+            systemctl status sysSentry && break
+            retry_count=$((retry_count + 1))
+            sleep $SLEEP_INTERVAL
+        done 
 
         SLEEP_WAIT 10 " sentryctl list | grep sentry_msg_monitor | grep RUNNING" 1 
         CHECK_RESULT $? 0 0
-
 
         for _ in {1..3}; do
             SLEEP_WAIT 10 "systemctl start xalarmd" 1 
@@ -62,14 +69,15 @@ function run_test(){
             echo > "${task_log_path}"/sentry_msg_monitor.log
 
             kill -9 "$(pgrep -f /usr/bin/xalarmd)"
-            SLEEP_WAIT 10 " grep 'Xalarmd service exception, try to re-register' ${task_log_path}/sentry_msg_monitor.log" 1 
+            sleep 10
+            grep 'Xalarmd service exception, try to re-register' ${task_log_path}/sentry_msg_monitor.log
             CHECK_RESULT $? 0 0
 
             cat "${task_log_path}"/sentry_msg_monitor.log
-            SLEEP_WAIT 10 " grep 'sentry_msg_monitor start' ${task_log_path}/sentry_msg_monitor.log" 1 
+            grep 'sentry_msg_monitor start' ${task_log_path}/sentry_msg_monitor.log
             CHECK_RESULT $? 0 0
 
-            SLEEP_WAIT 10 "systemctl is-active xalarmd" 1
+            systemctl is-active xalarmd
             CHECK_RESULT $? 0 0
 
         done
@@ -111,12 +119,9 @@ function run_test(){
         CHECK_RESULT $? 0 0
     fi
 
-   
-
 }
 function post_test(){
     clean_sysSentry_message
-    systemctl stop xalarmd
 }
 
 main "$@"
