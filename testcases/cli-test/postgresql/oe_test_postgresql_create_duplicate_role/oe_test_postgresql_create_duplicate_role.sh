@@ -36,23 +36,23 @@ function pre_test() {
     mkdir -p "${pg_data}"
     chown -R postgres:postgres "${pg_data}"
     su postgres -c "/usr/bin/initdb -D ${pg_data}" >/dev/null 2>&1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "initdb should initialize the temporary PostgreSQL cluster"
     su postgres -c "/usr/bin/pg_ctl -D ${pg_data} -l ${pg_data}/logfile start" >/dev/null 2>&1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "pg_ctl should start the temporary PostgreSQL cluster"
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
     su postgres -c "psql -d postgres -c \"CREATE ROLE ${role_name} LOGIN;\"" >/dev/null 2>&1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "first CREATE ROLE for ${role_name} should succeed"
 
     su postgres -c "psql -d postgres -c \"CREATE ROLE ${role_name} LOGIN;\"" >duplicate_role.log 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "duplicate CREATE ROLE for ${role_name} should fail"
     grep -i "already exists" duplicate_role.log
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "duplicate role error should mention that ${role_name} already exists"
 
-    CHECK_RESULT "$(su postgres -c "psql -d postgres -Atqc \"SELECT count(*) FROM pg_roles WHERE rolname='${role_name}';\"")" 1
+    CHECK_RESULT "$(su postgres -c "psql -d postgres -Atqc \"SELECT count(*) FROM pg_roles WHERE rolname='${role_name}';\"")" 1 0 "role ${role_name} should exist exactly once"
     LOG_INFO "End of testcase execution."
 }
 
@@ -61,7 +61,7 @@ function post_test() {
     su postgres -c "psql -d postgres -c \"DROP ROLE IF EXISTS ${role_name};\"" >/dev/null 2>&1
     su postgres -c "/usr/bin/pg_ctl -D ${pg_data} -l ${pg_data}/logfile stop" >/dev/null 2>&1
     rm -rf "${pg_data}" duplicate_role.log
-    DNF_REMOVE 1 postgresql-server 1
+    DNF_REMOVE
     if [ "${backup_firewalld_state}" = "active" ]; then
         systemctl enable firewalld >/dev/null 2>&1
         systemctl start firewalld >/dev/null 2>&1
