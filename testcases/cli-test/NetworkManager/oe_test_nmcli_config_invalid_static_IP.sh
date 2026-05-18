@@ -56,6 +56,7 @@ function post_test() {
     nmcli con delete "${con_name_1}" >/dev/null 2>&1
     nmcli con delete "${con_name_2}" >/dev/null 2>&1
     rm -rf invalid_ip.log invalid_prefix.log
+    # shellcheck disable=SC2119
     DNF_REMOVE
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup."
