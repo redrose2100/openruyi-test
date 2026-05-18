@@ -23,7 +23,7 @@ function pre_test() {
     OLD_LANG=${LANG}
     export LANG=en_US.UTF-8
     user=testuser_dup
-    getent passwd "${user}" >/dev/null 2>&1 && userdel -r "${user}" >/dev/null 2>&1
+    getent passwd "${user}" >/dev/null 2>&1 && userdel -rf "${user}" >/dev/null 2>&1
     getent group "${user}" >/dev/null 2>&1 && groupdel "${user}" >/dev/null 2>&1
     rm -rf duplicate.log
     LOG_INFO "Environmental preparation is over."
@@ -32,20 +32,20 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     useradd "${user}"
-    CHECK_RESULT $?
-    CHECK_RESULT "$(grep -cE "^${user}:" /etc/passwd)" 1
+    CHECK_RESULT $? 0 0 "useradd ${user} should succeed"
+    CHECK_RESULT "$(grep -cE "^${user}:" /etc/passwd)" 1 0 "user ${user} should exist once in /etc/passwd"
 
     useradd "${user}" >duplicate.log 2>&1
-    CHECK_RESULT $? 0 1
-    CHECK_RESULT "$(grep -cE "^${user}:" /etc/passwd)" 1
+    CHECK_RESULT $? 0 1 "duplicate useradd for ${user} should fail"
+    CHECK_RESULT "$(grep -cE "^${user}:" /etc/passwd)" 1 0 "duplicate useradd must not create another passwd entry"
     id "${user}" >/dev/null 2>&1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "existing user ${user} should still be queryable"
     LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    getent passwd "${user}" >/dev/null 2>&1 && userdel -r "${user}" >/dev/null 2>&1
+    getent passwd "${user}" >/dev/null 2>&1 && userdel -rf "${user}" >/dev/null 2>&1
     getent group "${user}" >/dev/null 2>&1 && groupdel "${user}" >/dev/null 2>&1
     rm -rf duplicate.log
     export LANG=${OLD_LANG}

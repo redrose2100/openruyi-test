@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_pwck"
+        },
+        {
+            "name": "oe_test_basic_add_user_duplicate"
         }
     ]
 }
