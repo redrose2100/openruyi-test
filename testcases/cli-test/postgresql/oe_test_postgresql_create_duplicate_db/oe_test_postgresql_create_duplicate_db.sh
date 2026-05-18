@@ -36,23 +36,23 @@ function pre_test() {
     mkdir -p "${pg_data}"
     chown -R postgres:postgres "${pg_data}"
     su postgres -c "/usr/bin/initdb -D ${pg_data}" >/dev/null 2>&1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "initdb should initialize the temporary PostgreSQL cluster"
     su postgres -c "/usr/bin/pg_ctl -D ${pg_data} -l ${pg_data}/logfile start" >/dev/null 2>&1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "pg_ctl should start the temporary PostgreSQL cluster"
     LOG_INFO "Environmental preparation is over."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
     su postgres -c "psql -d postgres -c \"CREATE DATABASE ${db_name};\"" >/dev/null 2>&1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "first CREATE DATABASE for ${db_name} should succeed"
 
     su postgres -c "psql -d postgres -c \"CREATE DATABASE ${db_name};\"" >duplicate_db.log 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "duplicate CREATE DATABASE for ${db_name} should fail"
     grep -i "already exists" duplicate_db.log
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "duplicate database error should mention that ${db_name} already exists"
 
-    CHECK_RESULT "$(su postgres -c "psql -d postgres -Atqc \"SELECT count(*) FROM pg_database WHERE datname='${db_name}';\"")" 1
+    CHECK_RESULT "$(su postgres -c "psql -d postgres -Atqc \"SELECT count(*) FROM pg_database WHERE datname='${db_name}';\"")" 1 0 "database ${db_name} should exist exactly once"
     LOG_INFO "End of testcase execution."
 }
 
@@ -61,7 +61,7 @@ function post_test() {
     su postgres -c "psql -d postgres -c \"DROP DATABASE IF EXISTS ${db_name};\"" >/dev/null 2>&1
     su postgres -c "/usr/bin/pg_ctl -D ${pg_data} -l ${pg_data}/logfile stop" >/dev/null 2>&1
     rm -rf "${pg_data}" duplicate_db.log
-    DNF_REMOVE 1 postgresql-server 1
+    DNF_REMOVE
     if [ "${backup_firewalld_state}" = "active" ]; then
         systemctl enable firewalld >/dev/null 2>&1
         systemctl start firewalld >/dev/null 2>&1
