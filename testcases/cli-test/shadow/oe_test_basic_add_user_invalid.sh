@@ -26,7 +26,7 @@ function pre_test() {
     invalid_user_2='bad/name'
     valid_name=testuser_invalid_date
     for one_user in "${invalid_user_1}" "${invalid_user_2}" "${valid_name}"; do
-        getent passwd "${one_user}" >/dev/null 2>&1 && userdel -r "${one_user}" >/dev/null 2>&1
+        getent passwd "${one_user}" >/dev/null 2>&1 && userdel -rf "${one_user}" >/dev/null 2>&1
         getent group "${one_user}" >/dev/null 2>&1 && groupdel "${one_user}" >/dev/null 2>&1
     done
     rm -rf invalid_user_1.log invalid_user_2.log invalid_date.log
@@ -36,26 +36,26 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     useradd "${invalid_user_1}" >invalid_user_1.log 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "useradd should reject invalid user name ${invalid_user_1}"
     getent passwd "${invalid_user_1}" >/dev/null 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "invalid user ${invalid_user_1} must not be created"
 
     useradd "${invalid_user_2}" >invalid_user_2.log 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "useradd should reject invalid user name ${invalid_user_2}"
     getent passwd "${invalid_user_2}" >/dev/null 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "invalid user ${invalid_user_2} must not be created"
 
     useradd -e 2020-13-40 "${valid_name}" >invalid_date.log 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "useradd should reject invalid expiration date for ${valid_name}"
     getent passwd "${valid_name}" >/dev/null 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "user ${valid_name} must not be created with invalid expiration date"
     LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     for one_user in "${invalid_user_1}" "${invalid_user_2}" "${valid_name}"; do
-        getent passwd "${one_user}" >/dev/null 2>&1 && userdel -r "${one_user}" >/dev/null 2>&1
+        getent passwd "${one_user}" >/dev/null 2>&1 && userdel -rf "${one_user}" >/dev/null 2>&1
         getent group "${one_user}" >/dev/null 2>&1 && groupdel "${one_user}" >/dev/null 2>&1
     done
     rm -rf invalid_user_1.log invalid_user_2.log invalid_date.log
