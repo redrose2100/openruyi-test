@@ -60,6 +60,7 @@ function post_test() {
     systemctl stop httpd >/dev/null 2>&1
     rm -rf "${backup_file}" httpd_invalid.log
     # shellcheck disable=SC2119
+    # shellcheck disable=SC2119
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
