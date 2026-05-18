@@ -25,7 +25,7 @@ function pre_test() {
     user_one=testuid_conflict_1
     user_two=testuid_conflict_2
     for one_user in "${user_one}" "${user_two}"; do
-        getent passwd "${one_user}" >/dev/null 2>&1 && userdel -r "${one_user}" >/dev/null 2>&1
+        getent passwd "${one_user}" >/dev/null 2>&1 && userdel -rf "${one_user}" >/dev/null 2>&1
         getent group "${one_user}" >/dev/null 2>&1 && groupdel "${one_user}" >/dev/null 2>&1
     done
     rm -rf uid_conflict.log
@@ -35,23 +35,23 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     useradd "${user_one}"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "useradd ${user_one} should succeed"
     useradd "${user_two}"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "useradd ${user_two} should succeed"
 
     uid_one=$(id -u "${user_one}")
     uid_two=$(id -u "${user_two}")
     usermod -u "${uid_one}" "${user_two}" >uid_conflict.log 2>&1
-    CHECK_RESULT $? 0 1
-    CHECK_RESULT "$(id -u "${user_one}")" "${uid_one}"
-    CHECK_RESULT "$(id -u "${user_two}")" "${uid_two}"
+    CHECK_RESULT $? 0 1 "usermod should reject assigning duplicated UID ${uid_one}"
+    CHECK_RESULT "$(id -u "${user_one}")" "${uid_one}" 0 "UID of ${user_one} should remain unchanged"
+    CHECK_RESULT "$(id -u "${user_two}")" "${uid_two}" 0 "UID of ${user_two} should remain unchanged"
     LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     for one_user in "${user_one}" "${user_two}"; do
-        getent passwd "${one_user}" >/dev/null 2>&1 && userdel -r "${one_user}" >/dev/null 2>&1
+        getent passwd "${one_user}" >/dev/null 2>&1 && userdel -rf "${one_user}" >/dev/null 2>&1
         getent group "${one_user}" >/dev/null 2>&1 && groupdel "${one_user}" >/dev/null 2>&1
     done
     rm -rf uid_conflict.log
