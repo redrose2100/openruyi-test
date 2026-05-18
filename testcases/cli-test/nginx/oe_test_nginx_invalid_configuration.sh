@@ -14,7 +14,7 @@
 # @Contact   :   liuyafei@uniontech.com
 # @Date      :   2026-05-14
 # @License   :   Mulan PSL v2
-# @Desc      :   Verify nginx rejects invalid configuration and recovers after restore
+# @Desc      :   Verify nginx validates a baseline configuration, rejects an invalid directive, and recovers after restore
 # #############################################
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
@@ -30,16 +30,17 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
+    # Verify the baseline configuration works before injecting an invalid directive.
     /usr/sbin/nginx -t >/dev/null 2>&1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "nginx -t should pass with the original configuration"
 
     printf '\ninvalid_directive on;\n' >>"${conf_file}"
     /usr/sbin/nginx -t >nginx_invalid.log 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "nginx -t should fail after injecting an invalid directive"
 
     cp -f "${backup_file}" "${conf_file}"
     /usr/sbin/nginx -t >/dev/null 2>&1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "nginx -t should pass after restoring the original configuration"
     LOG_INFO "End of testcase execution."
 }
 
@@ -48,7 +49,8 @@ function post_test() {
     test -f "${backup_file}" && cp -f "${backup_file}" "${conf_file}"
     systemctl stop nginx >/dev/null 2>&1
     rm -rf "${backup_file}" nginx_invalid.log
-    DNF_REMOVE "$@"
+    # shellcheck disable=SC2119
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 
