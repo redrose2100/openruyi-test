@@ -14,7 +14,7 @@
 # @Contact   :   liuyafei@uniontech.com
 # @Date      :   2026-05-14
 # @License   :   Mulan PSL v2
-# @Desc      :   Verify httpd rejects invalid configuration and recovers after restore
+# @Desc      :   Verify httpd starts with a valid configuration, rejects an invalid directive, and recovers after restore
 # #############################################
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
@@ -30,26 +30,27 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
+    # Verify the baseline configuration works before injecting an invalid directive.
     apachectl -t >/dev/null 2>&1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "apachectl -t should pass with the original configuration"
     systemctl restart httpd
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "httpd should restart successfully with the original configuration"
     systemctl is-active httpd | grep active
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "httpd service should be active before injecting invalid configuration"
 
     printf '\nInvalidDirective On\n' >>"${conf_file}"
     apachectl -t >httpd_invalid.log 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "apachectl -t should fail after injecting an invalid directive"
     systemctl restart httpd >>httpd_invalid.log 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "httpd restart should fail with invalid configuration"
 
     cp -f "${backup_file}" "${conf_file}"
     apachectl -t >/dev/null 2>&1
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "apachectl -t should pass after restoring the original configuration"
     systemctl restart httpd
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "httpd should restart successfully after restoring the original configuration"
     systemctl is-active httpd | grep active
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "httpd service should be active after configuration recovery"
     LOG_INFO "End of testcase execution."
 }
 
@@ -58,7 +59,8 @@ function post_test() {
     test -f "${backup_file}" && cp -f "${backup_file}" "${conf_file}"
     systemctl stop httpd >/dev/null 2>&1
     rm -rf "${backup_file}" httpd_invalid.log
-    DNF_REMOVE "$@"
+    # shellcheck disable=SC2119
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 
