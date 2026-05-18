@@ -2143,6 +2143,12 @@
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
+        },
+        {
+            "name": "oe_test_fsck-ntfs",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         }
     ]
 }
