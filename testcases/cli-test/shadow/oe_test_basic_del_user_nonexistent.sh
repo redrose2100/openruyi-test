@@ -23,7 +23,7 @@ function pre_test() {
     OLD_LANG=${LANG}
     export LANG=en_US.UTF-8
     user=testuser_not_exist_case
-    getent passwd "${user}" >/dev/null 2>&1 && userdel -r "${user}" >/dev/null 2>&1
+    getent passwd "${user}" >/dev/null 2>&1 && userdel -rf "${user}" >/dev/null 2>&1
     getent group "${user}" >/dev/null 2>&1 && groupdel "${user}" >/dev/null 2>&1
     rm -rf del_nonexistent.log
     LOG_INFO "Environmental preparation is over."
@@ -31,18 +31,18 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    userdel -r "${user}" >del_nonexistent.log 2>&1
-    CHECK_RESULT $? 0 1
+    userdel -rf "${user}" >del_nonexistent.log 2>&1
+    CHECK_RESULT $? 0 1 "userdel should reject nonexistent user ${user}"
     getent passwd "${user}" >/dev/null 2>&1
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "nonexistent user ${user} must not appear in passwd database"
     test -d "/home/${user}"
-    CHECK_RESULT $? 0 1
+    CHECK_RESULT $? 0 1 "home directory /home/${user} must not exist"
     LOG_INFO "End of testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    getent passwd "${user}" >/dev/null 2>&1 && userdel -r "${user}" >/dev/null 2>&1
+    getent passwd "${user}" >/dev/null 2>&1 && userdel -rf "${user}" >/dev/null 2>&1
     getent group "${user}" >/dev/null 2>&1 && groupdel "${user}" >/dev/null 2>&1
     rm -rf del_nonexistent.log
     export LANG=${OLD_LANG}

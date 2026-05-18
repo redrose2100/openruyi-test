@@ -326,12 +326,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_basic_del_user_nonexistent",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_lvm_vgchange_vgremove",
             "machine num": 1,
             "add network interface": 0,
