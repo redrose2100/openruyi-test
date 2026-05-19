@@ -39,7 +39,7 @@
         },
         {
             "name": "oe_test_cache_rw",
-            "machine type": "physical",
+            "machine type": "kvm",
             "add disk": []
         },
         {
@@ -308,7 +308,7 @@
             "add disk": []
         },
         {
-            "name": " oe_test_leds_blinkm",
+            "name": "oe_test_leds_blinkm",
             "machine type": "kvm",
             "add disk": []
         },

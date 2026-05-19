@@ -86,7 +86,6 @@ function pre_oom_env(){
 
 function pre_xalarm_env(){
     DNF_INSTALL "sysSentry" 1
-    yum -y remove libxalarm pyxalarm sentry_msg_monitor sysSentry
     yum -y install sentry_msg_monitor
     systemctl start xalarmd
     systemctl start sysSentry
@@ -112,14 +111,14 @@ function start_sentry(){
 }
 
 function get_eid(){
-    node1_eid1=$(urma_admin show | awk '/udma2/ && /eid0/ {print $5}')
-    node1_eid2=$(urma_admin show | awk '/udma5/ && /eid0/ {print $5}')
+    node1_eid1=$(urma_admin show -a | awk '/udma2/ && /eid0/ {print $5}')
+    node1_eid2=$(urma_admin show -a | awk '/udma5/ && /eid0/ {print $5}')
 
-    node2_eid1=$(SSH_CMD "urma_admin show | awk '/udma2/ && /eid0/ {print \$5}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
-    node2_eid2=$(SSH_CMD "urma_admin show | awk '/udma5/ && /eid0/ {print \$5}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
+    node2_eid1=$(SSH_CMD "urma_admin show -a | awk '/udma2/ && /eid0/ {print \$5}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
+    node2_eid2=$(SSH_CMD "urma_admin show -a | awk '/udma5/ && /eid0/ {print \$5}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
 
-    node3_eid1=$(SSH_CMD "urma_admin show | awk '/udma2/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
-    node3_eid2=$(SSH_CMD "urma_admin show | awk '/udma5/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
+    node3_eid1=$(SSH_CMD "urma_admin show -a | awk '/udma2/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
+    node3_eid2=$(SSH_CMD "urma_admin show -a | awk '/udma5/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
     
     # node1_cna=1
     # node2_cna=2
