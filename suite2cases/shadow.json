@@ -9,6 +9,9 @@
         },
         {
             "name": "oe_test_pwck"
+        },
+        {
+            "name": "oe_test_basic_del_user_nonexistent"
         }
     ]
 }
