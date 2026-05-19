@@ -308,7 +308,7 @@
             "add disk": []
         },
         {
-            "name": " oe_test_leds_blinkm",
+            "name": "oe_test_leds_blinkm",
             "machine type": "kvm",
             "add disk": []
         },
@@ -319,6 +319,11 @@
         },
         {
             "name": "oe_test_leds_lp3944",
+            "machine type": "kvm",
+            "add disk": []
+      	  },
+        {
+            "name": "oe_test_leds_lt3593",
             "machine type": "kvm",
             "add disk": []
         }

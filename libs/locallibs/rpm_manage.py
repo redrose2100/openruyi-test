@@ -44,9 +44,9 @@ def local_cmd(cmd, conn=None):
     return exitcode, output
 
 
-def kill_parent_process():
+def quit_parent_process(signal_name):
     parent_pid = os.getppid()
-    os.kill(parent_pid, signal.SIGKILL)
+    os.kill(parent_pid, signal_name)
 
 
 def rpm_install(pkgs, node=1, tmpfile=""):
@@ -201,10 +201,13 @@ if __name__ == "__main__":
 
     if sys.argv[1] == "install":
         exitcode, output = rpm_install(args.pkgs, args.node, args.tempfile)
-        if exitcode == 1 and (output == "package not exists" or output == "package installation conflict"):
-            kill_parent_process()
-            sys.exit(exitcode)
-
+        if exitcode == 1:
+            # === 新增逻辑1：处理软件包不存在
+            if output == "package not exists":
+                quit_parent_process(signal.SIGRTMIN)
+            # === 新增逻辑2：处理软件包安装冲突
+            elif output == "package installation conflict":
+                quit_parent_process(signal.SIGRTMIN+1)
         if output is not None:
             print(output)
         sys.exit(exitcode)
