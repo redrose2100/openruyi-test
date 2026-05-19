@@ -17,6 +17,7 @@
 #####################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/openssl/common/checkenv.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -27,7 +28,14 @@ function run_test() {
     CHECK_RESULT $?
     touch rsakey1-pub.pem
     CHECK_RESULT $?
-    openssl rsautl -encrypt -pubin -inkey rsakey1-pub.pem -in word -out wordencp1 2>&1 | grep -E "unable to load Public Key|Could not read public key"
+    NVML_VERSION=$(yum info openssl 2>/dev/null | grep -E '^Version' | awk '{print $NF}' | head -1)
+    compareversions "$NVML_VERSION" "3.2.0"
+    result=$?
+    if [[ $result -eq 0 || $result -eq 1 ]]; then
+	    openssl rsautl -encrypt -pubin -inkey rsakey1-pub.pem -in word -out wordencp1 2>&1 | grep -E "unable to load Public Key|Could not find private key of public key"
+    elif [[ $result -eq 2 ]]; then
+            openssl rsautl -encrypt -pubin -inkey rsakey1-pub.pem -in word -out wordencp1 2>&1 | grep -E "unable to load Public Key|Could not read public key"
+    fi
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

@@ -17,6 +17,7 @@
 #####################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "${OET_PATH}"/testcases/cli-test/openssl/common/checkenv.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -30,14 +31,27 @@ function run_test() {
     grep 'BEGIN PUBLIC KEY' rsakey-pub.pem
     CHECK_RESULT $?
     echo "999" >error_rsakey-pub.pem
-    openssl rsautl -encrypt -pubin -inkey error_rsakey-pub.pem -in word -out wordencp2 2>&1 | grep -E "unable to load Public Key|Could not read public key"
+    NVML_VERSION=$(yum info openssl 2>/dev/null | grep -E '^Version' | awk '{print $NF}' | head -1)
+    compareversions "$NVML_VERSION" "3.2.0"
+    result=$?
+    if [[ $result -eq 0 || $result -eq 1 ]]; then
+            openssl rsautl -encrypt -pubin -inkey error_rsakey-pub.pem -in word -out wordencp2 2>&1 | grep -E "unable to load Public Key|Could not find private key of public key"
+    elif [[ $result -eq 2 ]]; then
+            openssl rsautl -encrypt -pubin -inkey error_rsakey-pub.pem -in word -out wordencp2 2>&1 | grep -E "unable to load Public Key|Could not read public key"
+    fi
     CHECK_RESULT $? 0 0 "Incorrect public key succeeded in encrypting the file"
     openssl rsautl -encrypt -pubin -inkey rsakey-pub.pem -in word -out wordencp2
     CHECK_RESULT $?
     test -f wordencp2
     CHECK_RESULT $?
     echo "999" >error_rsakey.pem
-    openssl rsautl -decrypt -inkey error_rsakey.pem -in wordencp2 -out word_replain2 2>&1 | grep -E 'unable to load Private Key|Could not read private key'
+    compareversions "$NVML_VERSION" "3.2.0"
+    result=$?
+    if [[ $result -eq 0 || $result -eq 1 ]]; then
+	    openssl rsautl -decrypt -inkey error_rsakey.pem -in wordencp2 -out word_replain2 2>&1 | grep -E 'unable to load Private Key|Could not find private key'
+    elif [[ $result -eq 2 ]]; then
+	    openssl rsautl -decrypt -inkey error_rsakey.pem -in wordencp2 -out word_replain2 2>&1 | grep -E 'unable to load Private Key|Could not read private key'
+    fi
     CHECK_RESULT $? 0 0 "The wrong private key successfully decrypted the file"
     LOG_INFO "End to run test."
 }
