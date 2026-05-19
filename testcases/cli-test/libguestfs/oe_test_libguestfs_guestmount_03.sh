@@ -34,7 +34,7 @@ function run_test() {
     else
       OS_VERSION="20.03-LTS-SP3"
     fi
-    device=$(fdisk -l 2> /dev/null | grep "Device" -A 1 | grep -o "/dev/[a-z0-9]*" | head -n 1) 
+    device=$(virt-filesystems -a /home/kvm/images/openEuler-${OS_VERSION}.qcow2 --all --long -h | awk '$2 == "filesystem" {print $1; exit}')
     guestmount -v -a "/home/kvm/images/openEuler-${OS_VERSION}.qcow2" -m "$device" --ro /mnt
     CHECK_RESULT $? 0 0 "Check guestmount -v failed"
     guestunmount /mnt
