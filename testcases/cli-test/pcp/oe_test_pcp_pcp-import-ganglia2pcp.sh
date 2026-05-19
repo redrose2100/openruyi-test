@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   The usage of commands in pcp-import-ganglia2pcp binary package
 # ############################################
+# shellcheck disable=SC2016
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -39,13 +40,22 @@ function pre_test() {
         flag_result4=1
     fi
     sed -i "s/data_source \"my cluster\" localhost/data_source \"cluster01\" ${NODE1_IPV4} ${NODE2_IPV4}/g" /etc/ganglia/gmetad.conf
+    if [[ "$(systemd-detect-virt)" = "qemu" ]];then  
+        sed -i '/udp_send_channel/,/}/ s/mcast_join = 239\.2\.11\.71/host = 10.0.0.20/' /etc/ganglia/gmond.conf
+        sed -i '/udp_recv_channel/,/}/ {/mcast_join = 239\.2\.11\.71/d}' /etc/ganglia/gmond.conf
+        sed -i '/udp_recv_channel/,/}/ s/bind = 239\.2\.11\.71/bind = 0.0.0.0/' /etc/ganglia/gmond.conf
+    fi
     SLEEP_WAIT 10
     service gmond restart
     service httpd restart
     service gmetad restart
-    P_SSH_CMD --node 2 --cmd "
-        sed -i '/ name / s/unspecified/cluster01/' /etc/ganglia/gmond.conf;
-        service gmond restart;"
+    P_SSH_CMD --node 2 --cmd '
+        sed -i "/ name / s/unspecified/cluster01/" /etc/ganglia/gmond.conf;
+        if [[ "$(systemd-detect-virt)" = "qemu" ]]; then
+            sed -i "/udp_send_channel/,/}/ s/mcast_join = 239\.2\.11\.71/host = 10.0.0.10/" /etc/ganglia/gmond.conf
+        fi;
+        service gmond restart;
+    '
     SLEEP_WAIT 60
     LOG_INFO "End to prepare the test environment."
 }
@@ -64,6 +74,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
+    DNF_REMOVE "$@" 2
     rm -rf /var/lib/ganglia
     if [ $flag_result1 -eq 1 ]; then
         systemctl start firewalld
