@@ -15,6 +15,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   verification opencc‘s command
 #####################################
+# shellcheck disable=SC2086,SC2119,SC2010
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
@@ -36,7 +37,7 @@ function run_test() {
     CHECK_RESULT "$(grep -cE '畢竟' ./sim_chinese_zhw.txt)" 1
     opencc -i ./sim_chinese.txt -o ./sim_chinese_zhhk.txt -c s2hk.json
     CHECK_RESULT "$(grep -cE '畢竟' ./sim_chinese_zhhk.txt)" 1
-    opencc -i .sim_chinese.txt -o .sim_chinese_zh.txt -c s2t.json
+    opencc -i ./sim_chinese.txt -o ./sim_chinese_zh.txt -c s2t.json
     CHECK_RESULT $?
     CHECK_RESULT "$(ls | grep -cE "sim_chinese55.txt")" 0
     CHECK_RESULT "$(opencc -i sim_chinese55.txt -o sim_chinese_zhｗ.txt -c s2tw.json)" $result
