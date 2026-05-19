@@ -18,6 +18,9 @@
 	},
 	{
             "name": "oe_test_ntpd_basic"
-	}
+	},
+        {
+            "name": "oe_test_ntpq_peers"
+        }
     ]
 }
