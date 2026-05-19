@@ -15,6 +15,9 @@
         },
         {
             "name": "oe_test_libnetfilter_conntrack"
+        },
+        {
+            "name": "oe_test_nmcli_config_invalid_static_IP"
         }
     ]
 }
