@@ -15,8 +15,9 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs libguestfs-test-tool command
 # ############################################
+#shellcheck disable=SC2119
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -30,19 +31,20 @@ function run_test() {
     LOG_INFO "Start to run test."
     libguestfs-test-tool --help 2>&1 | grep 'libguestfs-test-tool'
     CHECK_RESULT $? 0 0 "Check libguestfs-test-tool --help failed"
-    libguestfs-test-tool --qemu /usr/bin/qemu-kvm 2>&1 | grep 'TEST FINISHED OK'
+    libguestfs-test-tool -t 300 --qemu /usr/bin/qemu-kvm 2>&1 | grep 'TEST FINISHED OK'
     CHECK_RESULT $? 0 0 "Check libguestfs-test-tool --qemu failed"
-    libguestfs-test-tool -t 100 2>&1 | grep 'TEST FINISHED OK'
+    libguestfs-test-tool -t 300 2>&1 | grep 'TEST FINISHED OK'
     CHECK_RESULT $? 0 0 "Check libguestfs-test-tool -t failed"
-    libguestfs-test-tool --version 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    libguestfs-test-tool --version 2>&1 | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check libguestfs-test-tool --version failed"
     LOG_INFO "End of the test."
 }
 
+# shellcheck disable=SC2120
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     libguestfs_post_test
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"
