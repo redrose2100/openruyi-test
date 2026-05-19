@@ -63,6 +63,7 @@ function run_test() {
     LOG_INFO "End of the test."
 }
 
+# shellcheck disable=SC2120
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=$OLD_LANG

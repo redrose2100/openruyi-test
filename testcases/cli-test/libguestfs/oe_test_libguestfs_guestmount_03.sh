@@ -46,6 +46,7 @@ function run_test() {
     LOG_INFO "End to run test."
 }
 
+# shellcheck disable=SC2120
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     libguestfs_post_test "$@"
