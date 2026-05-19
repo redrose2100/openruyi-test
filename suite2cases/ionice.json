@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_ionice"
+        },
+        {
+            "name": "oe_test_ionice01"
         }
     ]
 }
