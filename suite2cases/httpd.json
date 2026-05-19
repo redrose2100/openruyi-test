@@ -12,6 +12,9 @@
         },
         {
             "name": "oe_test_socket_httpd"
+        },
+        {
+            "name": "oe_test_httpd_invalid_configuration_recover"
         }
     ]
 }
