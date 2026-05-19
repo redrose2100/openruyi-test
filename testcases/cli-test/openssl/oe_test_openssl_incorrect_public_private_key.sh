@@ -30,14 +30,14 @@ function run_test() {
     grep 'BEGIN PUBLIC KEY' rsakey-pub.pem
     CHECK_RESULT $?
     echo "999" >error_rsakey-pub.pem
-    openssl rsautl -encrypt -pubin -inkey error_rsakey-pub.pem -in word -out wordencp2 2>&1 | grep -E "unable to load Public Key|Could not read public key"
+    openssl rsautl -encrypt -pubin -inkey error_rsakey-pub.pem -in word -out wordencp2 2>&1 | grep -E "unable to load Public Key|Could not read public key|Could not find private key of public key"
     CHECK_RESULT $? 0 0 "Incorrect public key succeeded in encrypting the file"
     openssl rsautl -encrypt -pubin -inkey rsakey-pub.pem -in word -out wordencp2
     CHECK_RESULT $?
     test -f wordencp2
     CHECK_RESULT $?
     echo "999" >error_rsakey.pem
-    openssl rsautl -decrypt -inkey error_rsakey.pem -in wordencp2 -out word_replain2 2>&1 | grep -E 'unable to load Private Key|Could not read private key'
+    openssl rsautl -decrypt -inkey error_rsakey.pem -in wordencp2 -out word_replain2 2>&1 | grep -E 'unable to load Private Key|Could not read private key|Could not find private key'
     CHECK_RESULT $? 0 0 "The wrong private key successfully decrypted the file"
     LOG_INFO "End to run test."
 }
