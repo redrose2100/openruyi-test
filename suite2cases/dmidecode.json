@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_biosdecode"
+        },
+        {
+            "name": "oe_test_dmidecode_extend"
         }
     ]
 }
