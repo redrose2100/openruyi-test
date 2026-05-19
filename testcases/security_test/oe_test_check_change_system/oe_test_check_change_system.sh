@@ -17,8 +17,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Support check and change the system encryption policy
 # #############################################
-
+#shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    DNF_INSTALL "crypto-policies-scripts"
+}
 
 function run_test() {
     LOG_INFO "Start executing testcase."
@@ -37,5 +41,6 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     update-crypto-policies --set DEFAULT
     LOG_INFO "Finish environment cleanup!"
+    DNF_REMOVE
 }
 main "$@"

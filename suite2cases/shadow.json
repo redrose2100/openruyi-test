@@ -18,6 +18,8 @@
         },
         {
             "name": "oe_test_basic_mod_UID_conflict"
+        },
+            "name": "oe_test_basic_del_user_nonexistent"
         }
     ]
 }
