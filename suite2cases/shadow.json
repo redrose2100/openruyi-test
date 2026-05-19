@@ -11,6 +11,12 @@
             "name": "oe_test_pwck"
         },
         {
+            "name": "oe_test_basic_add_user_invalid"
+        },
+        {
+            "name": "oe_test_basic_add_user_duplicate"
+        },
+        {
             "name": "oe_test_basic_mod_UID_conflict"
         }
     ]
