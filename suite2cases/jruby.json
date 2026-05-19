@@ -3,7 +3,9 @@
     "cases": [
         {
             "name": "oe_test_jruby"
+        },
+        {
+            "name": "oe_test_jruby01"
         }
-
       ]
 }
