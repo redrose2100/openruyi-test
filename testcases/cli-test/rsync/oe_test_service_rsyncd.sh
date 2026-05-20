@@ -17,12 +17,16 @@
 # @Desc      :   Test rsyncd.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL rsync
-    LOG_INFO "End of environmental preparation!"
+    # 记录 rsyncd 服务的原始状态
+    original_rsyncd_state=$(systemctl is-active rsyncd.service) || true
+    if [[ "$original_rsyncd_state" != "active" ]]; then
+        systemctl start rsyncd.service
+    fi
 }
 
 function run_test() {
@@ -34,9 +38,12 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    systemctl stop rsyncd.service
+    #恢复服务原始状态
+    if [[ "$original_rsyncd_state" != "active" ]]; then
+        systemctl stop rsyncd.service
+    fi
+    # shellcheck disable=SC2119
     DNF_REMOVE
-    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
