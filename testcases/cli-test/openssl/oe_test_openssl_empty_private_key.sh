@@ -32,7 +32,7 @@ function run_test() {
     openssl rsautl -encrypt -pubin -inkey rsakey-pub.pem -in word -out wordencp1
     CHECK_RESULT $?
     true >rsakey.pem
-    openssl rsautl -decrypt -inkey rsakey.pem -in wordencp1 -out word_replain1 2>&1 | grep -E 'unable to load Private Key|Could not read private key'
+    openssl rsautl -decrypt -inkey rsakey.pem -in wordencp1 -out word_replain1 2>&1 | grep -E 'unable to load Private Key|Could not read private key|Could not find private key'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
