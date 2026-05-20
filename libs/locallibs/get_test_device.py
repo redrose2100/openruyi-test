@@ -38,13 +38,36 @@ def get_test_nic(node=1):
     Returns:
         [str]: 网卡名
     """
-    exitcode, tmpfile = rpm_manage.rpm_install(pkgs="lshw", node=node)
-    if exitcode != 0:
-        mugen_log.logging(
-            "error",
-            "Failed to install the dependent software package required to obtain the network card.",
+    tmpfile = None
+    if os.environ.get("NODE" + str(node) + "_LOCALTION") == "local":
+        lshw_installed = subprocess.getoutput("command -v lshw").strip() != ""
+        is_ubuntu = "ubuntu" in subprocess.getoutput("cat /etc/os-release").lower()
+    else:
+        conn = ssh_cmd.pssh_conn(
+            os.environ.get("NODE" + str(node) + "_IPV4"),
+            os.environ.get("NODE" + str(node) + "_PASSWORD"),
+            os.environ.get("NODE" + str(node) + "_SSH_PORT"),
+            os.environ.get("NODE" + str(node) + "_USER"),
         )
-        sys.exit(exitcode)
+        lshw_installed = ssh_cmd.pssh_cmd(conn, "command -v lshw")[1].strip() != ""
+        is_ubuntu = "ubuntu" in ssh_cmd.pssh_cmd(conn, "cat /etc/os-release")[1].lower()
+        ssh_cmd.pssh_close(conn)
+
+    if not lshw_installed:
+        if is_ubuntu:
+            mugen_log.logging(
+                "error",
+                "The system is Ubuntu, please install lshw manually: sudo apt install lshw",
+            )
+            sys.exit(1)
+        else:
+            exitcode, tmpfile = rpm_manage.rpm_install(pkgs="lshw", node=node)
+            if exitcode != 0:
+                mugen_log.logging(
+                    "error",
+                    "Failed to install the dependent software package required to obtain the network card.",
+                )
+                sys.exit(exitcode)
 
     if os.environ.get("NODE" + str(node) + "_LOCALTION") == "local":
         dev_info = subprocess.getoutput("cat /proc/device-tree/model")
