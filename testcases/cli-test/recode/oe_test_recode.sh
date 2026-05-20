@@ -50,9 +50,8 @@ function run_test() {
     echo "¥" | recode -f UTF-8..ASCII 
     CHECK_RESULT $? 0 0 "Currency symbol force-recode failed"
     echo "<p>Hello, World!</p>" > test.html
-    recode HTML.. < test.html > test_decode.txt
     CHECK_RESULT $? 0 0 "HTML to text conversion failed"
-    cat test_decode.txt | grep -q "Hello, World!"
+    grep -q "Hello, World!" test_decode.txt
     CHECK_RESULT $? 0 0 "Decoded content mismatch"
     recode --silent us..latin1 /dev/null 2>/dev/null
     CHECK_RESULT $? 0 0 "Silent option test failed"
@@ -67,6 +66,7 @@ function post_test() {
     rm -rf page.txt
     rm -rf page.html
     rm -rf test.html test_decode.txt
+    # shellcheck disable=SC2120
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
