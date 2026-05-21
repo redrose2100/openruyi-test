@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_socket_proftpd"
+        },
+        {
+            "name": "oe_test_ftp_proftpd"
         }
     ]
 }
