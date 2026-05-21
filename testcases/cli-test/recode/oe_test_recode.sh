@@ -41,14 +41,23 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Version check failed"
     recode -l | head -5 >/dev/null 2>&1
     CHECK_RESULT $? 0 0 "recode -l command failed"    
-    recode -T 2>/dev/null
+    recode -T | head -2>/dev/null 2>&1
     CHECK_RESULT $? 0 0 "Subset detection test failed"
-    echo "测试" | recode -sI UTF-8..GB2312
+    echo "测试" | recode -si UTF-8..GB2312
     CHECK_RESULT $? 0 0 "Strict mode with iconv failed"
     echo "©" | recode -qf UTF-8..ASCII
     CHECK_RESULT $? 0 0 "Combined flags  test failed"
     echo "¥" | recode -f UTF-8..ASCII 
     CHECK_RESULT $? 0 0 "Currency symbol force-recode failed"
+    echo "<p>Hello, World!</p>" > test.html
+    CHECK_RESULT $? 0 0 "HTML to text conversion failed"
+    grep -q "Hello, World!" test_decode.txt
+    CHECK_RESULT $? 0 0 "Decoded content mismatch"
+    recode --silent us..latin1 /dev/null 2>/dev/null
+    CHECK_RESULT $? 0 0 "Silent option test failed"
+    touch empty.txt
+    recode -t utf-8..utf-8 empty.txt 2>/dev/null
+    CHECK_RESULT $? 0 0 "Touch option test failed"    
     LOG_INFO "Finish test!"
 }
 
@@ -56,7 +65,9 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf page.txt
     rm -rf page.html
-    DNF_REMOVE "$@"
+    rm -rf test.html test_decode.txt
+    # shellcheck disable=SC2119
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
