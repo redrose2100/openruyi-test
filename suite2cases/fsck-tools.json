@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/fsck-tools",
+    "add disk": [2],
+    "cases": [
+        {
+            "name": "oe_test_fsck-btrfs",
+            "add disk": []
+        }
+    ]
+}
