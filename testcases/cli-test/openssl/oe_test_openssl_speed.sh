@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "start to run test."
     openssl speed -elapsed rsa512 >openssl.log
-    grep "rsa  512 bits" openssl.log
+    grep -E "rsa\s+512 bits" openssl.log
     CHECK_RESULT $? 0 0 "rsa512 encryption and decryption operation speed fail"
     openssl speed -elapsed aes-128-cbc >>openssl.log
     grep -iE "aes-128 cbc|aes-128-cbc" openssl.log

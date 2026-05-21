@@ -27,7 +27,7 @@ function run_test() {
     CHECK_RESULT $?
     touch rsakey1-pub.pem
     CHECK_RESULT $?
-    openssl rsautl -encrypt -pubin -inkey rsakey1-pub.pem -in word -out wordencp1 2>&1 | grep -E "unable to load Public Key|Could not read public key"
+    openssl rsautl -encrypt -pubin -inkey rsakey1-pub.pem -in word -out wordencp1 2>&1 | grep -E "unable to load Public Key|Could not read public key|Could not find private key of public key"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
