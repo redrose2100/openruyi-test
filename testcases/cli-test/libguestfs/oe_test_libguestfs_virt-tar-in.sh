@@ -20,8 +20,17 @@ source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    wget https://download.qemu.org/qemu-4.2.0.tar.xz
-    xz -dk qemu-4.2.0.tar.xz
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+      VERSION="2403"
+      dd if=/dev/urandom of=qemu-4.2.0.bin bs=1M count=20
+      tar -cf qemu-4.2.0.tar qemu-4.2.0.bin 
+    else
+      OS_VERSION="20.03-LTS-SP3"
+      DOM_VERSION="2003"
+      wget https://download.qemu.org/qemu-4.2.0.tar.xz
+      xz -dk qemu-4.2.0.tar.xz
+    fi
     libguestfs_pre_test
     export LIBGUESTFS_BACKEND=direct
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
@@ -30,11 +39,18 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-tar-in -d openEuler-2003 qemu-4.2.0.tar /etc/
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+      DOM_VERSION="2403"
+    else
+      OS_VERSION="20.03-LTS-SP3"
+      DOM_VERSION="2003"
+    fi 
+    virt-tar-in -d openEuler-"$DOM_VERSION" qemu-4.2.0.tar /etc/
     CHECK_RESULT $? 0 0 "Check virt-tar-in -d failed"
     virt-tar-in -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
     CHECK_RESULT $? 0 0 "Check virt-tar-in -V failed"
-    virt-tar-in -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 qemu-4.2.0.tar /etc/
+    virt-tar-in -a /home/kvm/images/openEuler-"$OS_VERSION".qcow2 qemu-4.2.0.tar /etc/
     CHECK_RESULT $? 0 0 "Check virt-tar-in -a failed"
     virt-tar-in -h 2>&1 | grep 'display a list of commands'
     CHECK_RESULT $? 0 0 "Check virt-tar-in -h failed"
