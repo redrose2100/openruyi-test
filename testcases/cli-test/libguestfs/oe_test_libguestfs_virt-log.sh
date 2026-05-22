@@ -15,11 +15,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs virt-log command
 # ############################################
+#shellcheck disable=SC2034
 
 source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="480m"
     libguestfs_pre_test
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
@@ -62,7 +64,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    libguestfs_post_test "$@"
+    libguestfs_post_test
     LOG_INFO "Finish to restore the test environment."
 }
 
