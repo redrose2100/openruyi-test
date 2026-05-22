@@ -15,13 +15,23 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs virt-tar-out command
 # ############################################
+# shellcheck disable=SC2119
 
-source ${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh
+source "${OET_PATH}/testcases/cli-test/libguestfs/common/common_libguestfs.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    wget https://download.qemu.org/qemu-4.2.0.tar.xz
-    xz -dk qemu-4.2.0.tar.xz
+    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
+      OS_VERSION="24.03-LTS-SP1"
+      DOM_VERSION="2403"
+      dd if=/dev/urandom of=qemu-4.2.0.bin bs=1M count=20
+      tar -cf qemu-4.2.0.tar qemu-4.2.0.bin
+    else
+      OS_VERSION="20.03-LTS-SP3"
+      DOM_VERSION="2003"
+      wget https://download.qemu.org/qemu-4.2.0.tar.xz
+      xz -dk qemu-4.2.0.tar.xz
+    fi
     libguestfs_pre_test
     unset LIBGUESTFS_BACKEND
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
@@ -30,11 +40,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    virt-tar-out -d openEuler-2003 /etc/ qemu-4.2.0.tar
+    virt-tar-out -d openEuler-"$DOM_VERSION" /etc/ qemu-4.2.0.tar
     CHECK_RESULT $? 0 0 "Check virt-tar-out -d failed"
-    virt-tar-out -a /home/kvm/images/openEuler-20.03-LTS-SP3.qcow2 /etc/ qemu-4.2.0.tar
+    virt-tar-out -a /home/kvm/images/openEuler-"$OS_VERSION".qcow2 /etc/ qemu-4.2.0.tar
     CHECK_RESULT $? 0 0 "Check virt-tar-out -a failed"
-    virt-tar-out -V 2>&1 | grep $(rpm -q libguestfs --queryformat '%{version}\n')
+    virt-tar-out -V 2>&1 | grep "$(rpm -q libguestfs --queryformat '%{version}\n')"
     CHECK_RESULT $? 0 0 "Check virt-tar-out -V failed"
     virt-tar-out -h 2>&1 | grep 'display a list of commands'
     CHECK_RESULT $? 0 0 "Check virt-tar-out -h failed"
@@ -47,4 +57,4 @@ function post_test() {
     LOG_INFO "Finish to restore the test environment."
 }
 
-main $@
+main "$@"
