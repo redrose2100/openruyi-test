@@ -27,7 +27,7 @@ function pre_test() {
     fi
     rm -rf "${TEST_DIR}"
     mkdir -p "${TEST_DIR}"
-    cd "${TEST_DIR}" || LOG_ERROR "Failed to enter test directory"
+    cd "${TEST_DIR}" || { LOG_ERROR "Failed to enter test directory"; return 1; }
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -47,7 +47,8 @@ function test_generate_md5_key() {
     ntp-keygen -M > keygen.out 2>&1
     CHECK_RESULT $? 0 0 "ntp-keygen -M failed, output: $(cat keygen.out)"
     
-    local md5_file=$(ls ntpkey_MD5key_* 2>/dev/null | head -1)
+    local md5_file
+    md5_file=$(ls ntpkey_MD5key_* 2>/dev/null | head -1) || true
     if [ -z "$md5_file" ]; then
         LOG_ERROR "No MD5 key file generated"
         CHECK_RESULT 1 0 0 "MD5 key file not found"
@@ -71,8 +72,8 @@ function test_generate_rsa_key() {
     ntp-keygen -T > keygen.out 2>&1
     CHECK_RESULT $? 0 0 "ntp-keygen -T failed, output: $(cat keygen.out)"
     
-    # 查找生成的 RSA 相关文件（包含 host 或 RSA）
-    local rsa_files=$(ls ntpkey_*host* ntpkey_*RSA* 2>/dev/null)
+    local rsa_files
+    rsa_files=$(ls ntpkey_*host* ntpkey_*RSA* 2>/dev/null) || true
     if [ -z "$rsa_files" ]; then
         LOG_ERROR "No RSA key files generated (expected ntpkey_*host* or ntpkey_*RSA*)"
         CHECK_RESULT 1 0 0 "No RSA key files generated"
@@ -101,7 +102,8 @@ function test_generate_default_key() {
     ntp-keygen > keygen.out 2>&1
     CHECK_RESULT $? 0 0 "ntp-keygen (default) failed, output: $(cat keygen.out)"
     
-    local default_files=$(ls ntpkey_* 2>/dev/null)
+    local default_files
+    default_files=$(ls ntpkey_* 2>/dev/null) || true
     if [ -z "$default_files" ]; then
         LOG_ERROR "Default ntp-keygen produced no key files"
         CHECK_RESULT 1 0 0 "No default key files"
@@ -139,7 +141,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    cd /tmp
+    cd /tmp || return 1
     rm -rf "${TEST_DIR}"
     LOG_INFO "Finish environment cleanup!"
 }
