@@ -20,7 +20,10 @@
             "name": "oe_test_debugfs"
 	},
 	{
-	    "name": "oe_test_e2image"	
+	    "name": "oe_test_e2image"
+        },
+	{
+	    "name": "oe_test_e2freefrag"	
         }
     ]
 }
