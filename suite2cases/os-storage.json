@@ -1326,6 +1326,12 @@
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fsck-btrfs",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         }
     ]
 }
