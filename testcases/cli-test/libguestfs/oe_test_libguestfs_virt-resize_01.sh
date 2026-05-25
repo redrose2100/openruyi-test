@@ -15,7 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of libguestfs virt-resize command
 # ############################################
-# shellcheck disable=SC2034,SC1090
+# shellcheck disable=SC2034,SC1090,SC2119
 
 source "${OET_PATH}"/testcases/cli-test/libguestfs/common/common_libguestfs.sh
 
@@ -39,7 +39,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    device=$(fdisk -l 2> /dev/null | grep "Device" -A 2 | grep -o "/dev/[a-z0-9]*" | awk 'NR==2')
+    device=$(virt-filesystems -a /home/kvm/images/openEuler-${OS_VERSION}.qcow2 --all --long -h | awk '$2 == "filesystem" {print $1; exit}')
     virt-resize --align-first never /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /home/kvm/images/openEuler-"${OS_VERSION}"-1.qcow2
     CHECK_RESULT $? 0 0 "Check virt-resize --align-first failed"
     virt-resize --alignment 128 /home/kvm/images/openEuler-"${OS_VERSION}".qcow2 /home/kvm/images/openEuler-"${OS_VERSION}"-1.qcow2
@@ -66,7 +66,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=$OLD_LANG
-    libguestfs_post_test_resize "$@"
+    libguestfs_post_test_resize 
     LOG_INFO "Finish to restore the test environment."
 }
 
