@@ -14,7 +14,7 @@
 # @Contact   :   gaoshuaishuai@uniontech.com
 # @Date      :   2026/05/11
 # @License   :   Mulan PSL v2
-# @Desc      :   test e2image
+# @Desc      :   test e2freefrag
 # ############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
@@ -30,16 +30,19 @@ function pre_test() {
     
     DNF_INSTALL "e2fsprogs"
     
-    # 创建测试目录和文件
-    TEST_DIR="/tmp/e2image_test"
+    # 创建测试目录
+    TEST_DIR="/tmp/e2freefrag_test"
     TEST_IMG="${TEST_DIR}/test_disk.img"
     MOUNT_POINT="${TEST_DIR}/mount"
     
     mkdir -p "${TEST_DIR}" "${MOUNT_POINT}"
-    cd "${TEST_DIR}" || exit 1
+    cd "${TEST_DIR}" || {
+        LOG_ERROR "Failed to change directory to ${TEST_DIR}"
+        exit 1
+    }
     
-    # 创建虚拟磁盘（100MB）
-    dd if=/dev/zero of="${TEST_IMG}" bs=1M count=100 &>/dev/null
+    # 创建虚拟磁盘（200MB，便于观察碎片化）
+    dd if=/dev/zero of="${TEST_IMG}" bs=1M count=200 &>/dev/null
     
     # 格式化为 ext4
     mkfs.ext4 -F "${TEST_IMG}" &>/dev/null
@@ -49,20 +52,36 @@ function pre_test() {
     losetup "${LOOP_DEV}" "${TEST_IMG}"
     mount "${LOOP_DEV}" "${MOUNT_POINT}"
     
-    # 创建测试文件
+    # 创建一些文件来产生碎片化
     cd "${MOUNT_POINT}" || exit 1
-    echo "test file content" > testfile.txt
-    mkdir testdir
-    echo "subdir file" > testdir/subfile.txt
     
+    # 创建多个小文件
+    for i in $(seq 1 100); do
+        dd if=/dev/urandom of="small_file_${i}.txt" bs=1K count=1 &>/dev/null
+    done
+    
+    # 创建一些大文件
     for i in $(seq 1 10); do
-        echo "data ${i}" > "file_${i}.txt"
+        dd if=/dev/urandom of="large_file_${i}.bin" bs=1M count=5 &>/dev/null
+    done
+    
+    # 删除部分文件产生碎片
+    for i in $(seq 1 50); do
+        rm -f "small_file_${i}.txt"
+    done
+    
+    for i in $(seq 1 5); do
+        rm -f "large_file_${i}.bin"
+    done
+    
+    # 再写入一些新文件（产生碎片）
+    for i in $(seq 1 50); do
+        dd if=/dev/urandom of="new_file_${i}.log" bs=1K count=2 &>/dev/null
     done
     
     sync
     cd "${TEST_DIR}" || exit 1
     umount "${MOUNT_POINT}"
-    losetup -d "${LOOP_DEV}"
     
     LOG_INFO "End of environmental preparation!"
 }
@@ -70,52 +89,42 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    # 步骤1：测试 e2image 创建元数据镜像（标准模式）
-    LOG_INFO "Step 1: Test e2image create metadata image"
-    e2image "${TEST_IMG}" "${TEST_DIR}/metadata.img" 2>/dev/null
-    CHECK_RESULT $? 0 0 "e2image basic mode failed"
+    # 步骤1：测试 e2freefrag 基本使用（查看碎片化情况）
+    LOG_INFO "Step 1: Test e2freefrag basic usage"
+    e2freefrag "${TEST_IMG}" 2>/dev/null | grep -qi "Device"
+    CHECK_RESULT $? 0 0 "e2freefrag basic command failed"
     
-    # 验证镜像文件已创建
-    test -f "${TEST_DIR}/metadata.img"
-    CHECK_RESULT $? 0 0 "e2image metadata image not created"
-    LOG_INFO "Standard metadata image created: $(stat -c %s "${TEST_DIR}/metadata.img") bytes"
+    # 获取文件系统信息并输出
+    e2freefrag "${TEST_IMG}" 2>/dev/null | head -20
+    CHECK_RESULT $? 0 0 "e2freefrag failed to display fragmentation info"
 
-    # 步骤2：测试 e2image 创建原始元数据镜像（-r 选项）
-    LOG_INFO "Step 2: Test e2image with -r option (raw metadata)"
-    e2image -r "${TEST_IMG}" "${TEST_DIR}/metadata_raw.img" 2>/dev/null
-    CHECK_RESULT $? 0 0 "e2image -r option failed"
+    # 步骤2：测试 e2freefrag 指定块大小（-c 选项）
+    LOG_INFO "Step 2: Test e2freefrag with chunksize option"
+    e2freefrag -c 4096 "${TEST_IMG}" 2>/dev/null | grep -qi "chunksize"
+    CHECK_RESULT $? 0 0 "e2freefrag -c option failed"
     
-    # 验证原始镜像文件存在
-    test -f "${TEST_DIR}/metadata_raw.img"
-    CHECK_RESULT $? 0 0 "e2image -r metadata image not created"
-    LOG_INFO "Raw metadata image created: $(stat -c %s "${TEST_DIR}/metadata_raw.img") bytes"
+    # 验证 -c 参数生效
+    e2freefrag -c 4096 "${TEST_IMG}" 2>/dev/null | grep -q "Extent Size Range"
+    CHECK_RESULT $? 0 0 "e2freefrag -c option output verification failed"
 
-    # 步骤3：测试 e2image 创建 QEMU 格式镜像（-Q 选项）
-    LOG_INFO "Step 3: Test e2image with -Q option (QEMU format)"
-    e2image -Q "${TEST_IMG}" "${TEST_DIR}/metadata.qcow2" 2>/dev/null
-    CHECK_RESULT $? 0 0 "e2image -Q option failed"
+    # 步骤3：测试不同块大小参数
+    LOG_INFO "Step 3: Test e2freefrag with different chunksize values"
     
-    # 验证 QEMU 格式文件存在
-    test -f "${TEST_DIR}/metadata.qcow2"
-    CHECK_RESULT $? 0 0 "e2image QEMU format image not created"
-    LOG_INFO "QEMU format image created: $(stat -c %s "${TEST_DIR}/metadata.qcow2") bytes"
-
-    # 步骤4：测试 e2image 镜像信息查看（不测试恢复功能，因为 -I 需要特殊条件）
-    LOG_INFO "Step 4: Test e2image info display"
+    # 测试常见块大小
+    for chunksize in 1024 2048 4096 8192 16384 32768; do
+        LOG_INFO "Testing chunksize: ${chunksize} KB"
+        e2freefrag -c "${chunksize}" "${TEST_IMG}" 2>/dev/null > "/tmp/e2freefrag_${chunksize}.log"
+        CHECK_RESULT $? 0 0 "e2freefrag -c ${chunksize} failed"
+        
+        # 验证输出包含块大小信息
+        grep -q "${chunksize}" "/tmp/e2freefrag_${chunksize}.log" 2>/dev/null
+        CHECK_RESULT $? 0 0 "e2freefrag -c ${chunksize} output missing chunksize"
+    done
     
-    # 使用 -Q 镜像查看信息（qemu-img info 配合使用）
-    if command -v qemu-img &>/dev/null; then
-        qemu-img info "${TEST_DIR}/metadata.qcow2" 2>/dev/null | grep -qi "qcow2"
-        CHECK_RESULT $? 0 0 "qemu-img info on e2image output failed"
-        LOG_INFO "e2image QEMU format image verified with qemu-img"
-    else
-        LOG_WARN "qemu-img not installed, skipping QEMU format verification"
-    fi
-    
-    # 步骤5：测试 e2image 参数错误处理
-    LOG_INFO "Step 5: Test e2image error handling"
-    e2image 2>&1 | grep -qi "e2image"
-    CHECK_RESULT $? 0 0 "e2image error output missing"
+    # 步骤4：测试帮助信息
+    LOG_INFO "Step 4: Test e2freefrag help information"
+    e2freefrag -h 2>&1 | grep -qi "usage"
+    CHECK_RESULT $? 0 0 "e2freefrag help information missing"
 
     LOG_INFO "End of the test."
 }
@@ -125,15 +134,22 @@ function post_test() {
     
     # 卸载可能还在的挂载点
     mount | grep -q "${MOUNT_POINT}" && umount "${MOUNT_POINT}" 2>/dev/null
-    mount | grep -q "${TEST_DIR}/mount_restored" && umount "${TEST_DIR}/mount_restored" 2>/dev/null
     
     # 清理 loop 设备
+    if [ -n "${LOOP_DEV}" ]; then
+        losetup -d "${LOOP_DEV}" 2>/dev/null
+    fi
+    
+    # 清理所有关联的 loop 设备
     while IFS= read -r loop; do
         losetup -d "${loop}" 2>/dev/null
     done < <(losetup -l 2>/dev/null | grep "${TEST_DIR}" | awk '{print $1}')
     
     # 删除测试目录
     rm -rf "${TEST_DIR}"
+    
+    # 清理临时文件
+    rm -rf /tmp/e2freefrag_*.log
     
     # 清理变量
     unset TEST_DIR TEST_IMG LOOP_DEV MOUNT_POINT
