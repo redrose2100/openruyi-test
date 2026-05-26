@@ -23,7 +23,7 @@ config_dir="${test_qemu_dir}/config"
 image_dir="${test_qemu_dir}/image"
 image_path="${image_dir}/openEuler.qcow2"
 image_path_base="${image_dir}/openEuler-24.03-LTS-SP3-aarch64.qcow2"
-repo_baseurl=$(grep -A 5 "\[everything\]" /etc/yum.repos.d/openEuler.repo |grep baseurl |cut -d= -f2 | awk -F'/everything/' '{print $1}')
+repo_baseurl=$(awk -F= '/baseurl/ {print $2; exit}' /etc/yum.repos.d/openEuler.repo | sed 's|/OS/\$basearch/||')
 image_download_url="${repo_baseurl}/virtual_machine_img/aarch64/openEuler-24.03-LTS-SP3-aarch64.qcow2.xz"
 
 vm_ip="192.168.1.101"
@@ -62,6 +62,7 @@ function pre_init() {
         exit 255
     fi
     # pkg pre
+    SSH_CMD "mkdir -p $test_qemu_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh"
     sh "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh"
     SSH_SCP "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh" "${NODE2_USER}@${NODE2_IPV4}:${test_qemu_dir}" "$NODE2_PASSWORD"
@@ -73,7 +74,7 @@ function pre_init() {
         if [ -f "$image_path_base" ]; then
             cp "$image_path_base" "$image_path"
         else
-            wget -N -O "$image_path".xz "$image_download_url" --timeout=30 --tries=1
+            curl -kL -o "$image_path".xz "$image_download_url" --fail --connect-timeout 30
             unxz "$image_path".xz
         fi
     fi
