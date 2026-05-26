@@ -16,6 +16,12 @@
 #@Desc      	:   Prepare packages
 #####################################
 
+UBURMA_DEVICES=$(find /dev/uburma -maxdepth 1 -type c 2>/dev/null | grep -v bonding_dev_0 | sort)
+UBURMA_DEVICE_LIST=""
+for dev in $UBURMA_DEVICES; do
+    UBURMA_DEVICE_LIST="UBURMA_DEVICE_LIST\"$dev\",\n"
+done
+
 yum install -y qemu edk2-aarch64 libvirt net-tools bridge-utils
 
 sed -i "s/--timeout 120/--listen/g" /usr/lib/systemd/system/libvirtd.service
@@ -34,7 +40,7 @@ auth_tls = "none"
 log_level = 2
 log_outputs = "2:file:/var/log/libvirt/libvirtd.log"
 EOF
-grep -q "udma" /etc/libvirt/qemu.conf || cat >> /etc/libvirt/qemu.conf << 'EOF'
+grep -q "bonding_dev_0" /etc/libvirt/qemu.conf || cat >> /etc/libvirt/qemu.conf << EOF
 user = "root"
 group = "root"
 namespaces = []
@@ -47,13 +53,9 @@ cgroup_device_acl = [
 "/dev/ham_migrate",
 "/dev/infiniband/rdma_cm",
 "/dev/obmm",
-"/dev/uburma/udma2",
-"/dev/uburma/udma3",
-"/dev/uburma/udma4",
-"/dev/uburma/udma5",
-"/dev/uburma/udma6",
-"/dev/uburma/udma7",
+$(echo -e $UBURMA_DEVICE_LIST)
 "/dev/uburma/bonding_dev_0",
+"/dev/ubcore/ubcore"
 "/dev/ummu/tid",
 ]
 max_files = 4096

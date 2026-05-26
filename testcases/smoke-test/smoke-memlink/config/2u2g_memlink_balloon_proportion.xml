@@ -14,9 +14,9 @@
     <emulatorpin cpuset='4-7'/>
   </cputune>
   <numatune>
-    <memory mode='strict' nodeset='0,1'/>
-    <memnode cellid='0' mode='preferred' nodeset='0' proportion='256-node0:768-node1'/>
-    <memnode cellid='1' mode='preferred' nodeset='1' proportion='512-node0:512-node1'/>
+    <memory mode='strict' nodeset='0,2'/>
+    <memnode cellid='0' mode='preferred' nodeset='0' proportion='256-node0:768-node2'/>
+    <memnode cellid='1' mode='preferred' nodeset='2' proportion='512-node0:512-node2'/>
   </numatune>
   <cpu mode='host-passthrough' check='none'>
     <topology sockets='1' cores='2' threads='1'/>
