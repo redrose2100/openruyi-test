@@ -45,13 +45,20 @@ function run_test() {
     CHECK_RESULT $? 0 0 "count failed"
     zipgrep -n  testfile_zipgrep.zip | wc -l | grep -q 2
     CHECK_RESULT $? 0 0 "Empty pattern should match all lines"
+    zipgrep -v "Test_2" testfile_zipgrep.zip | wc -l | grep -q "1"
+    CHECK_RESULT $? 0 0 "Inverse match (-v) failed"
+    zipgrep -l "Test_2" testfile_zipgrep.zip | grep -q "testfile_zipgrep"
+    CHECK_RESULT $? 0 0 "Show filename only (-l) failed"
+    zipgrep -h "Test_2" testfile_zipgrep.zip | grep -q "Test_2"
+    CHECK_RESULT $? 0 0 "Hide filename (-h) failed"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f testfile_zipgrep.zip testfile_zipgrep
-    DNF_REMOVE "$@"
+    # shellcheck disable=SC2119
+    DNF_REMOVE 
     LOG_INFO "End to restore the test environment."
 }
 
