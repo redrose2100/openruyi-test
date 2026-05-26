@@ -13,5 +13,8 @@
         {
             "name": "oe_test_sendfile"
         },
+        {
+            "name": "oe_test_sendfile_01"
+        }
     ]
 }
