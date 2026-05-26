@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_dos2unix"
+        },
+        {
+            "name":"oe_test_dos2unix_basic_param"
         }
     ]
 }
