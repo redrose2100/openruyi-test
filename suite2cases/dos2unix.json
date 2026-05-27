@@ -6,6 +6,9 @@
         },
         {
             "name":"oe_test_dos2unix_basic_param"
+        },
+        {
+            "name":"oe_test_dos2unix_file_info"
         }
     ]
 }
