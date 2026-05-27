@@ -70,11 +70,11 @@ function run_test(){
 
             kill -9 "$(pgrep -f /usr/bin/xalarmd)"
             sleep 10
-            grep 'Xalarmd service exception, try to re-register' ${task_log_path}/sentry_msg_monitor.log
+            grep 'Xalarmd service exception, try to re-register' "${task_log_path}"/sentry_msg_monitor.log
             CHECK_RESULT $? 0 0
 
             cat "${task_log_path}"/sentry_msg_monitor.log
-            grep 'sentry_msg_monitor start' ${task_log_path}/sentry_msg_monitor.log
+            grep 'sentry_msg_monitor start' "${task_log_path}"/sentry_msg_monitor.log
             CHECK_RESULT $? 0 0
 
             systemctl is-active xalarmd
