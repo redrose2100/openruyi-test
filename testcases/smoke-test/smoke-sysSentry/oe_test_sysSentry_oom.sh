@@ -33,8 +33,7 @@ function test_hugepages() {
     echo "总内存: $((total_mem_kb / 1024 / 1024)) GB"
     echo "OOM阈值(95%): $((oom_threshold / 1024 / 1024)) GB"
     echo "需要的hugepages: $needed_hugepages"
-    # 但是直接设置这个值可能会卡死！
-    # 建议使用timeout
+    # 但是直接设置这个值可能会卡死！使用timeout
     timeout 5 bash -c "echo $needed_hugepages > /proc/sys/vm/nr_hugepages"
 }
 function run_test(){
