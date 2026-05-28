@@ -9,6 +9,9 @@
         },
         {
             "name":"oe_test_dos2unix_file_info"
+        },
+        {
+            "name":"oe_test_dos2unix_newfile_keepdate"
         }
     ]
 }
