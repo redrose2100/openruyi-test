@@ -22,12 +22,16 @@ function pre_test(){
 function run_test(){
     sentryctl set sentry_remote_reporter --cna "${node1_cna}" --eid "${node1_eid1};${node1_eid2}" --panic=on --kernel_reboot=on
     SSH_CMD "sentryctl set sentry_remote_reporter --cna=${node2_cna} --eid='${node2_eid1};${node2_eid2}' --panic=on --kernel_reboot=on " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "sentryctl set sentry_remote_reporter --cna=${node3_cna} --eid='${node3_eid1};${node3_eid2}' --panic=on --kernel_reboot=on " "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
 
     sentryctl set sentry_urma_comm --server_eid="${node1_eid1},${node2_eid1},${node3_eid1};${node1_eid2},${node2_eid2},${node3_eid2}" --client_jetty_id="${test_jetty_id}"
     SSH_CMD "sentryctl set sentry_urma_comm --server_eid='${node2_eid1},${node1_eid1},${node3_eid1};${node2_eid2},${node1_eid2},${node3_eid2}' --client_jetty_id=${test_jetty_id}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "sentryctl set sentry_urma_comm --server_eid='${node3_eid1},${node1_eid1},${node2_eid1};${node3_eid2},${node1_eid2},${node2_eid2}' --client_jetty_id=${test_jetty_id}" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
 
     start_RA panic 0 0
     SSH_CMD "echo c > /proc/sysrq-trigger" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "echo c > /proc/sysrq-trigger" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
+
     sleep 60
 
     check_log 0 RA 1007 1008
