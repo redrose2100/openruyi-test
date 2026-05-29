@@ -12,6 +12,9 @@
         },
         {
             "name":"oe_test_dos2unix_newfile_keepdate"
+        },
+        {
+            "name":"oe_test_dos2unix_recursive"
         }
     ]
 }
