@@ -11,6 +11,12 @@
             "name": "oe_test_service_atune-engine"
         },
         {
+            "name": "oe_test_service_tune-openapi"
+        },
+        {
+            "name": "oe_test_service_tune-mcpserver"
+        },
+        {
             "name": "oe_test_atuned_01"
         },
         {
@@ -39,4 +45,3 @@
         }
     ]
 }
-
