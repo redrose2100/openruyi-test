@@ -28,6 +28,7 @@ function run_test(){
 
     start_RA kernel_reboot 2 0
     SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    sleep 60
 
     check_log 2 RA 1009 1010
     check_log 2 alarmd 1009 1010

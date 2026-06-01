@@ -31,6 +31,7 @@ function run_test(){
 
     start_RA panic 0 0
     SSH_CMD "echo c > /proc/sysrq-trigger" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    sleep 60
 
     check_log 0 RA 1007 1008
     check_log 0 alarmd 1007 1008
