@@ -15,19 +15,15 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Mount tmpfs test
 #####################################
+# shellcheck disable=SC1090
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
-
-function pre_test() {
-    LOG_INFO "Start to prepare test requirements."
-    LOG_INFO "Nothing done."
-}
 
 function run_test() {
     LOG_INFO "Start to run test."
     mount -t tmpfs swap /mnt -o size=100
     CHECK_RESULT $? 0 0 "mount failed"
-    echo "hello world" > /mnt/testfile
+    echo "hello world" >/mnt/testfile
     grep "hello world" /mnt/testfile
     CHECK_RESULT $? 0 0 "write or read file failed"
     LOG_INFO "End to run test."
@@ -36,6 +32,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     umount /mnt
+    rm -f /mnt/testfile
     LOG_INFO "Finish environment cleanup!"
 }
 
