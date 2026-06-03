@@ -29,7 +29,7 @@ ssh_verify = False
 
 [test]
 url = https://gitlab.com
-private_token = glpat-gtfsnPBxt_DG16Jy5GbX
+private_token = glpat-C6I0EF8Irwr15D6we5V2oGM6MQpvOjEKdTpuM2gyNw8.01.171gb7v4u
 api_version = 4" > tmp.cfg
     LOG_INFO "End to prepare the test environment."
 }
