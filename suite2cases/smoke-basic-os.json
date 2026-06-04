@@ -820,6 +820,9 @@
 	 {
 	     "name": "oe_test_tr"
         },
+         {
+             "name": "oe_test_tr_extend"
+        },
 	{
 	     "name": "oe_test_popt"
 	},
