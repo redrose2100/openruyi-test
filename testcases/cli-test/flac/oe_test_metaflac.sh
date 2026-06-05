@@ -21,7 +21,9 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "flac"
+    DNF_INSTALL "flac git-lfs"
+    git -C "${OET_PATH}" lfs install --local
+    git -C "${OET_PATH}" lfs pull --include="testcases/cli-test/flac/common/myaudio.flac"
     LOG_INFO "End of environmental preparation!"
 }
 
