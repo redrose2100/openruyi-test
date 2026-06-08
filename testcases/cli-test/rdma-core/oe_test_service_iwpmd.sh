@@ -16,14 +16,18 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test iwpmd.service restart
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "iwpmd"
+    DNF_INSTALL "iwpmd libibverbs-utils"
     if ! lspci | grep -i -E "infiniband|rdma|mellanox|connectx|iwarp";then
         LOG_INFO "There is no RDMA device in this environment."
+        exit 255
+    fi
+    if ! ibv_devinfo | grep -i "transport" | grep -i "iw";then
+        LOG_INFO "There is no iWarp device in this environment."
         exit 255
     fi
     LOG_INFO "End of environmental preparation!"
@@ -39,7 +43,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop iwpmd.service
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
