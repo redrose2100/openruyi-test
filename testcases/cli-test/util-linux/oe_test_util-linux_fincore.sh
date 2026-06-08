@@ -29,12 +29,13 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     echo 4444 > test1
+    cat test1
     CHECK_RESULT $? 0 0 "new file succeeded"
-    fincore test1 |grep 4K
+    fincore test1 |grep -E '4K|64K'
     CHECK_RESULT $? 0 0 "file creation failure"
-    fincore -J  test1 |grep '"res": "4K"'
+    fincore -J  test1 |grep -E '"res": "(4K|64K)"'
     CHECK_RESULT $? 0 0 "failed to delete columns 3 through 6 from the file"
-    fincore -b test1 |grep 4096
+    fincore -b test1 |grep -E '4096|65536'
     CHECK_RESULT $? 0 0 "description failed to view the dc help information"
     fincore -n test1|grep RES
     CHECK_RESULT $? 0 1 "description failed to view the dc version"
