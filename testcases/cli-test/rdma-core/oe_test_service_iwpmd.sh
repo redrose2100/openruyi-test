@@ -30,7 +30,6 @@ function pre_test() {
         LOG_INFO "There is no iWarp device in this environment."
         exit 255
     fi
-    LOG
     LOG_INFO "End of environmental preparation!"
 }
 
