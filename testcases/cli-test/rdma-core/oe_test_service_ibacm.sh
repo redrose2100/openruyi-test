@@ -27,7 +27,7 @@ function pre_test() {
         exit 255
     fi
     if ! ibv_devinfo | grep "link_layer:" | grep -i "InfiniBand";then
-        LOG_INFO "There is no RDMA device in this environment."
+        LOG_INFO "There is no IB device in this environment."
         exit 255
     fi
     LOG_INFO "End of environmental preparation!"
