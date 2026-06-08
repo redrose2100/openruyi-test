@@ -326,6 +326,11 @@
             "name": "oe_test_leds_lt3593",
             "machine type": "kvm",
             "add disk": []
+        },
+       {
+            "name": "oe_test_dax_cxl",
+            "machine type": "kvm",
+            "add disk": []
         }
 
     ]
