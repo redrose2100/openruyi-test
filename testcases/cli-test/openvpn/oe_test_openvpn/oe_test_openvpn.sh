@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   verify the uasge of openvpn command
 # ############################################
+# shellcheck disable=SC2120
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -75,12 +76,12 @@ function run_test() {
     pgrep -f 'openvpn --local'
     CHECK_RESULT $? 1
 
-    nohup openvpn --remote "${random2_ip}" --dev tun1 --ifconfig 10.4.0.1 10.4.0.2 --verb 9 >/dev/null 2>&1 &
+    nohup openvpn --remote "${random2_ip}" --dev tun1 --ifconfig 10.4.0.1 10.4.0.2 --verb 9 --float >/dev/null 2>&1 &
     CHECK_RESULT $?
     pgrep -f 'openvpn --remote'
     CHECK_RESULT $?
 
-    P_SSH_CMD --node 2 --cmd "nohup openvpn --remote ${random_ip} --dev tun1 --ifconfig 10.4.0.2 10.4.0.1 --verb 9 >/dev/null 2>&1 &"
+    P_SSH_CMD --node 2 --cmd "nohup openvpn --remote ${random_ip} --dev tun1 --ifconfig 10.4.0.2 10.4.0.1 --verb 9 --float >/dev/null 2>&1 &"
     CHECK_RESULT $?
     remote_pid=$(P_SSH_CMD --node 2 --cmd "pgrep -f 'openvpn --remote'" | tail -n 1 | awk -F '\r' '{print $1}')
     CHECK_RESULT $?
@@ -199,11 +200,11 @@ EOF
 
     P_SSH_CMD --node 2 --cmd "test -f ca.crt -a -f server.crt -a -f server.key"
     CHECK_RESULT $?
-    P_SSH_CMD --node 2 --cmd "openssl dhparam -out dh1024.pem 1024"
+    P_SSH_CMD --node 2 --cmd "openssl dhparam -out dh2048.pem 2048"
     SLEEP_WAIT 15
-    P_SSH_CMD --node 2 --cmd "test -f dh1024.pem"
+    P_SSH_CMD --node 2 --cmd "test -f dh2048.pem"
     CHECK_RESULT $?
-    P_SSH_CMD --node 2 --cmd "nohup openvpn --remote ${random_ip} --dev tun1 --ifconfig 10.4.0.2 10.4.0.1 --tls-server --dh dh1024.pem --ca ca.crt --cert server.crt --key server.key --reneg-sec 60 --verb 5 >/dev/null 2>&1 &"
+    P_SSH_CMD --node 2 --cmd "nohup openvpn --remote ${random_ip} --dev tun1 --ifconfig 10.4.0.2 10.4.0.1 --tls-server --dh dh2048.pem --ca ca.crt --cert server.crt --key server.key --reneg-sec 60 --verb 5 >/dev/null 2>&1 &"
     CHECK_RESULT $?
     remote_pid=$(P_SSH_CMD --node 2 --cmd "pgrep -f 'openvpn --remote'" | tail -n 1 | awk -F '\r' '{print $1}')
     CHECK_RESULT $?
