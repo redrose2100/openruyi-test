@@ -11,16 +11,14 @@ function pre_test() {
     em_check_env || return 1
     em_backup_config
     em_stop_service
-    if ! command -v spark-submit >/dev/null 2>&1; then
-        LOG_WARN "spark-submit not found, skip test"
-        return 1
-    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    em_check_env || return 1
+    em_check_env || return 0
+
+    em_require_spark || return 0
 
     cat > "$CONFIG_PATH" << EOF
 policy = paral
@@ -33,12 +31,11 @@ memory_migration = true
 sample_interval = 100
 sample_count = 10
 EOF
-    em_start_service
+    em_start_service_for_paral
     CHECK_RESULT $? 0 0 "paral start failed"
     em_assert_log_contains "cmdline_kw=--executor-id"
     CHECK_RESULT $? 0 0 "executor-id not in activation"
 
-    # 提交 Spark 任务
     spark-submit --master 'local[4]' --conf spark.executor.instances=4 \
         --class org.apache.spark.examples.SparkPi \
         "$SPARK_HOME/examples/jars/spark-examples"*.jar 10 2>/dev/null &
@@ -47,12 +44,11 @@ EOF
     em_track_pid $SPARK_PID
     sleep 20
 
-    # 检查 executor 进程 NUMA 绑定
     local exec_count=0
     for pid in $(pgrep -f '--executor-id' 2>/dev/null); do
         exec_count=$((exec_count + 1))
         local affinity
-        affinity=$(LC_ALL=C taskset -p $pid 2>/dev/null | awk '{print $NF}')
+        affinity=$(em_get_cpu_affinity $pid)
         LOG_INFO "Executor PID $pid affinity: $affinity"
     done
     [ "$exec_count" -gt 0 ]

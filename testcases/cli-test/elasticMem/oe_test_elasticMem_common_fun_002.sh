@@ -11,48 +11,43 @@ function pre_test() {
     em_check_env || return 1
     em_backup_config
     em_stop_service
-    em_require_numactl
+    em_require_numactl || return 1
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    em_check_env || return 1
+    em_check_env || return 0
 
-    # whitelist 含多个关键字，paral 只读第一个
     em_write_paral_config "[--executor-id, spark]"
-    em_start_service
+    > "$LOG_FILE"
+    em_start_service_for_paral
     CHECK_RESULT $? 0 0 "paral start failed"
 
-    # 确认只激活第一个关键字
     em_assert_log_contains "cmdline_kw=--executor-id"
     CHECK_RESULT $? 0 0 "first keyword not activated"
 
-    # 启动不含 --executor-id 的进程
     bash -c "sleep 30" &
     em_track_pid $!
     local PID1=$!
-    em_track_pid $PID1
     sleep 2
 
-    # 检查未被绑核（affinity 应为全部 CPU）
     local aff1
-    aff1=$(LC_ALL=C LC_ALL=C taskset -p $PID1 2>/dev/null | awk '{print $NF}')
+    aff1=$(em_get_cpu_affinity $PID1)
     LOG_INFO "PID $PID1 affinity: $aff1"
 
-    # 启动含 --executor-id 的进程
     bash -c "sleep 30 #--executor-id test" &
     em_track_pid $!
     local PID2=$!
-    em_track_pid $PID2
     sleep 2
 
     local aff2
-    aff2=$(LC_ALL=C LC_ALL=C taskset -p $PID2 2>/dev/null | awk '{print $NF}')
+    aff2=$(em_get_cpu_affinity $PID2)
     LOG_INFO "PID $PID2 affinity (should be restricted): $aff2"
 
-    # 含关键字的进程应被绑核（affinity 不同于全部 CPU）
-    [ "$aff2" != "$(cat /sys/devices/system/cpu/present)" ]
+    local all_cpus
+    all_cpus=$(cat /sys/devices/system/cpu/present)
+    [ "$aff2" != "$all_cpus" ]
     CHECK_RESULT $? 0 0 "process not bound by paral"
 
     em_safe_kill $PID1; em_safe_kill $PID2

@@ -11,13 +11,13 @@ function pre_test() {
     em_check_env || return 1
     em_backup_config
     em_stop_service
-    em_require_numactl
+    em_require_numactl || return 1
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    em_check_env || return 1
+    em_check_env || return 0
 
     # === paral 模式 ===
     em_write_paral_config "[test]"
@@ -25,10 +25,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "paral start failed"
 
     local pid=$(em_get_service_pid)
-    em_safe_kill $pid
-    sleep 3
+    [ -n "$pid" ] || { LOG_ERROR "Cannot get paral PID"; return 1; }
 
-    ps -p $pid > /dev/null 2>&1 && LOG_ERROR "paral process still alive after SIGTERM"
+    # 使用 em_kill_service_pid 代替 em_safe_kill，避免 Restart=on-failure 重拉
+    em_kill_service_pid $pid
+
+    ps -p $pid > /dev/null 2>&1
     CHECK_RESULT $? 1 0 "paral SIGTERM graceful exit failed"
 
     # 检查 tracefs 清理
@@ -44,10 +46,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "light start failed"
 
     pid=$(em_get_service_pid)
-    em_safe_kill $pid
-    sleep 3
+    [ -n "$pid" ] || { LOG_ERROR "Cannot get light PID"; return 1; }
 
-    ps -p $pid > /dev/null 2>&1 && LOG_ERROR "light process still alive after SIGTERM"
+    em_kill_service_pid $pid
+
+    ps -p $pid > /dev/null 2>&1
     CHECK_RESULT $? 1 0 "light SIGTERM graceful exit failed"
 
     # 检查 cgroup 是否被清理

@@ -77,6 +77,17 @@ def rpm_install(pkgs, node=1, tmpfile=""):
         )
         func = ssh_cmd.pssh_cmd
 
+
+    all_installed = True
+    for pkg in pkgs.split():
+        exitcode_check = func(conn=conn, cmd="rpm -q " + pkg)[0]
+        if exitcode_check != 0:
+            all_installed = False
+            break
+    if all_installed:
+        mugen_log.logging("info", "pkgs:(%s) is already installed" % pkgs)
+        return 0, None
+
     result = func(conn=conn, cmd="dnf --assumeno install " + pkgs)[1]
     if "is already installed" in result and "Nothing to do" in result:
         mugen_log.logging("info", "pkgs:(%s) is already installed" % pkgs)

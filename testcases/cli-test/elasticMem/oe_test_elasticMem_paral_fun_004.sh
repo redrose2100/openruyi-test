@@ -11,11 +11,14 @@ function pre_test() {
     em_check_env || return 1
     em_backup_config
     em_stop_service
+    rm "$LOG_FILE"
+    LOG_INFO "Cleaned old log: $LOG_FILE"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
+    export 'PS4=[`date +"%m-%d %H:%M:%S"`]`basename $0`:$LINENO + '
     em_check_env || return 1
 
     # 使用 debug 日志以便统计
@@ -23,7 +26,7 @@ function run_test() {
 policy = paral
 log_level = debug
 log_file = $LOG_FILE
-whitelist = [test]
+whitelist = [sleep]
 comm_whitelist = []
 nr_cpus=1
 memory_migration = true
@@ -33,17 +36,23 @@ EOF
     em_start_service
     CHECK_RESULT $? 0 0 "paral start failed"
 
+    sleep 10
     # 快速创建 50 个短生命周期进程
     for i in $(seq 1 50); do
-        bash -c 'exit 0' "#test" &
+        sleep 30 &
         em_track_pid $!
+	echo $!
     done
     wait
-    sleep 3
+    sleep 30
 
+for pid in $(grep -oP "ParalTune set pid\(\K\d+" /var/log/elasticMem/elasticMem.log)
+do
+    ps aux | grep -v grep | grep -w $pid
+done
     # 统计绑核记录数
     local count
-    count=$(journalctl -u $SERVICE_NAME --since "1 min ago" --no-pager 2>/dev/null | grep -c "ParalTune set pid")
+    count=$(grep -c "ParalTune set pid" "$LOG_FILE" 2>/dev/null || echo 0)
     LOG_INFO "ParalTune set pid count: $count"
     [ "$count" -ge 45 ]
     CHECK_RESULT $? 0 0 "capture rate too low: $count/50"

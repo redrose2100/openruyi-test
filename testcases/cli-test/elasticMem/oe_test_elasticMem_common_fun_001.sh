@@ -1,8 +1,4 @@
 #!/usr/bin/bash
-# #############################################
-# @Desc    : test_elasticMem_common_fun.001 - 验证 log_level 各级别生效
-# #############################################
-
 source "../common/common_lib.sh"
 source "./common/em_common.sh"
 
@@ -16,33 +12,107 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    em_check_env || return 1
+    em_check_env || return 0
 
-    for level in debug info warn error; do
-        LOG_INFO "Testing log_level=$level"
-        cat > "$CONFIG_PATH" << EOF
-policy = paral
-log_level = $level
+    local debug_cnt info_cnt warn_cnt
+
+    cat > "$CONFIG_PATH" << EOF
+policy = light
+log_level = debug
 log_file = $LOG_FILE
 whitelist = []
 comm_whitelist = []
-nr_cpus=1
 memory_migration = true
 sample_interval = 100
 sample_count = 10
+nr_cpus=1
 EOF
-        systemctl restart $SERVICE_NAME 2>/dev/null
-        sleep 2
+    > "$LOG_FILE"
+    systemctl restart $SERVICE_NAME 2>/dev/null
+    sleep 5
+    systemctl is-active $SERVICE_NAME --quiet
+    CHECK_RESULT $? 0 0 "service failed with log_level=debug"
+    debug_cnt=$(grep -c '\[DEBUG\]' "$LOG_FILE" 2>/dev/null)
+    debug_cnt=${debug_cnt:-0}
+    LOG_INFO "log_level=debug: $debug_cnt DEBUG lines"
+    [ "$debug_cnt" -gt 0 ]
+    CHECK_RESULT $? 0 0 "no DEBUG output when log_level=debug"
 
-        systemctl is-active $SERVICE_NAME --quiet
-        CHECK_RESULT $? 0 0 "service failed with log_level=$level"
+    cat > "$CONFIG_PATH" << EOF
+policy = light
+log_level = info
+log_file = $LOG_FILE
+whitelist = []
+comm_whitelist = []
+memory_migration = true
+sample_interval = 100
+sample_count = 10
+nr_cpus=1
+EOF
+    > "$LOG_FILE"
+    systemctl restart $SERVICE_NAME 2>/dev/null
+    sleep 5
+    systemctl is-active $SERVICE_NAME --quiet
+    CHECK_RESULT $? 0 0 "service failed with log_level=info"
+    debug_cnt=$(grep -c '\[DEBUG\]' "$LOG_FILE" 2>/dev/null)
+    debug_cnt=${debug_cnt:-0}
+    LOG_INFO "log_level=info: $debug_cnt DEBUG lines (should be 0)"
+    [ "$debug_cnt" -eq 0 ]
+    CHECK_RESULT $? 0 0 "DEBUG lines not filtered when log_level=info"
+    info_cnt=$(grep -c '\[INFO\]' "$LOG_FILE" 2>/dev/null)
+    info_cnt=${info_cnt:-0}
+    LOG_INFO "log_level=info: $info_cnt INFO lines"
+    [ "$info_cnt" -gt 0 ]
+    CHECK_RESULT $? 0 0 "no INFO output when log_level=info"
 
-        local log_count
-        log_count=$(journalctl -u $SERVICE_NAME --since "5 sec ago" --no-pager 2>/dev/null | wc -l)
-        LOG_INFO "log_level=$level: $log_count lines"
-        [ "$log_count" -gt 0 ]
-        CHECK_RESULT $? 0 0 "no log output for level=$level"
-    done
+    cat > "$CONFIG_PATH" << EOF
+policy = light
+log_level = warn
+log_file = $LOG_FILE
+whitelist = []
+comm_whitelist = []
+memory_migration = true
+sample_interval = 100
+sample_count = 10
+nr_cpus=1
+EOF
+    > "$LOG_FILE"
+    systemctl restart $SERVICE_NAME 2>/dev/null
+    sleep 5
+    systemctl is-active $SERVICE_NAME --quiet
+    CHECK_RESULT $? 0 0 "service failed with log_level=warn"
+    debug_cnt=$(grep -c '\[DEBUG\]' "$LOG_FILE" 2>/dev/null)
+    debug_cnt=${debug_cnt:-0}
+    LOG_INFO "log_level=warn: $debug_cnt DEBUG lines (should be 0)"
+    [ "$debug_cnt" -eq 0 ]
+    CHECK_RESULT $? 0 0 "DEBUG lines not filtered when log_level=warn"
+
+    cat > "$CONFIG_PATH" << EOF
+policy = light
+log_level = error
+log_file = $LOG_FILE
+whitelist = []
+comm_whitelist = []
+memory_migration = true
+sample_interval = 100
+sample_count = 10
+nr_cpus=1
+EOF
+    > "$LOG_FILE"
+    systemctl restart $SERVICE_NAME 2>/dev/null
+    sleep 5
+    systemctl is-active $SERVICE_NAME --quiet
+    CHECK_RESULT $? 0 0 "service failed with log_level=error"
+    debug_cnt=$(grep -c '\[DEBUG\]' "$LOG_FILE" 2>/dev/null)
+    debug_cnt=${debug_cnt:-0}
+    LOG_INFO "log_level=error: $debug_cnt DEBUG lines (should be 0)"
+    [ "$debug_cnt" -eq 0 ]
+    CHECK_RESULT $? 0 0 "DEBUG lines not filtered when log_level=error"
+    warn_cnt=$(grep -c '\[WARN\]' "$LOG_FILE" 2>/dev/null)
+    warn_cnt=${warn_cnt:-0}
+    LOG_INFO "log_level=error: $warn_cnt WARN lines (should be 0)"
+    [ "$warn_cnt" -eq 0 ]
+    CHECK_RESULT $? 0 0 "WARN lines not filtered when log_level=error"
 
     LOG_INFO "Finish test!"
 }

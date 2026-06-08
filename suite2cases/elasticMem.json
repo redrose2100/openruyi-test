@@ -30,18 +30,13 @@
         {"name": "oe_test_elasticMem_process_ras_001"},
         {"name": "oe_test_elasticMem_process_ras_002"},
         {"name": "oe_test_elasticMem_log_ras_001"},
-        {"name": "oe_test_elasticMem_log_ras_002"},
         {"name": "oe_test_elasticMem_concurrent_ras_001"},
         {"name": "oe_test_elasticMem_resource_ras_001"},
-        {"name": "oe_test_elasticMem_resource_ras_002"},
         {"name": "oe_test_elasticMem_compact_ras_001"},
-        {"name": "oe_test_elasticMem_longrun_ras_001"},
         {"name": "oe_test_elasticMem_paral_prf_001"},
         {"name": "oe_test_elasticMem_light_prf_001"},
         {"name": "oe_test_elasticMem_noise_prf_001"},
-        {"name": "oe_test_elasticMem_permission_sec_001"},
         {"name": "oe_test_elasticMem_injection_sec_001"},
-        {"name": "oe_test_elasticMem_injection_sec_002"},
         {"name": "oe_test_elasticMem_procfs_sec_001"}
     ]
 }

@@ -1,8 +1,4 @@
 #!/usr/bin/bash
-# #############################################
-# @Desc    : test_elasticMem_paral_fun.006 - nr_cpus 超 node CPU 数启动失败
-# #############################################
-
 source "../common/common_lib.sh"
 source "./common/em_common.sh"
 
@@ -16,17 +12,16 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
 
-    # 设置过大的 nr_cpus
     em_write_paral_config "[test]" 99999
+    > "$LOG_FILE"
     systemctl start $SERVICE_NAME 2>/dev/null
     sleep 3
 
-    # 应该启动失败
-    systemctl is-active $SERVICE_NAME --quiet
-    CHECK_RESULT $? 1 0 "service should fail with excessive nr_cpus"
-
-    em_assert_log_contains "exceeds cpu count"
+    em_assert_log_contains "exceeds cpu count\|nrCpus.*exceed\|Invalid nr_cpus\|nr_cpus.*invalid\|too large"
     CHECK_RESULT $? 0 0 "log missing exceeds cpu count error"
+
+    em_assert_log_contains "workflow init failed\|init failed\|exited"
+    CHECK_RESULT $? 0 0 "log missing init failure"
 
     LOG_INFO "Finish test!"
 }

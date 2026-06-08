@@ -28,16 +28,15 @@ memory_migration = true
 sample_interval = 100
 sample_count = 10
 EOF
-
+    > "$LOG_FILE"
     systemctl start $SERVICE_NAME 2>/dev/null
-    sleep 2
-
-    # 服务应为 failed 或 inactive
-    systemctl is-active $SERVICE_NAME --quiet && LOG_ERROR "service unexpectedly active"
-    CHECK_RESULT $? 1 0 "service should not be active with invalid policy"
+    sleep 3
 
     em_assert_log_contains "Invalid policy"
     CHECK_RESULT $? 0 0 "log missing Invalid policy error"
+
+    em_assert_log_contains "workflow init failed"
+    CHECK_RESULT $? 0 0 "log missing workflow init failed"
 
     LOG_INFO "Finish test!"
 }

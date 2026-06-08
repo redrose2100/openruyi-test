@@ -1,11 +1,12 @@
 #!/usr/bin/bash
 # #############################################
-# elasticMem mugen suite common functions (安全版 v2)
+# elasticMem mugen suite common functions (安全版 v3)
 # - 精确 PID 清理，不用 killall
 # - DNF 安装先检测 + 安装后校验，卸载仅限本次安装的包
 # - 备份配置后逐项验证恢复
 # - NUMA 检测回退到 /sys（不依赖 numactl）
 # - 用例产生的后台 PID 记录到 __EM_BG_PIDS，post_test 精确清理
+# - 修复 Restart=on-failure 导致的直接 kill 被重启问题
 # #############################################
 
 CONFIG_PATH="/etc/elasticMem.ini"
@@ -33,6 +34,20 @@ em_safe_kill() {
     kill -0 "$pid" 2>/dev/null || return 0
     kill -TERM "$pid" 2>/dev/null
     return 0
+}
+
+# [v3新增] 安全杀掉 elasticMem 服务进程：先 systemctl stop 防止 Restart 重拉
+em_kill_service_pid() {
+    local pid=$1
+    [ -z "$pid" ] && return 0
+    # 先通过 systemctl 停止服务，避免 Restart=on-failure 立即重拉
+    systemctl stop $SERVICE_NAME 2>/dev/null
+    sleep 1
+    # 如果进程仍在，补充 SIGTERM
+    kill -0 "$pid" 2>/dev/null && kill -TERM "$pid" 2>/dev/null
+    sleep 2
+    # 如果还不死，SIGKILL
+    kill -0 "$pid" 2>/dev/null && kill -KILL "$pid" 2>/dev/null
 }
 
 em_kill_bg() {
@@ -100,7 +115,11 @@ em_check_env() {
 }
 
 em_get_service_pid() {
-    systemctl show $SERVICE_NAME -p MainPID --value 2>/dev/null
+    local pid
+    pid=$(systemctl show $SERVICE_NAME -p MainPID --value 2>/dev/null)
+    if [ -n "$pid" ] && [ "$pid" -gt 0 ] 2>/dev/null; then
+        echo "$pid"
+    fi
 }
 
 em_write_paral_config() {
@@ -141,30 +160,56 @@ em_start_service() {
     mkdir -p "$LOG_DIR" 2>/dev/null
     systemctl daemon-reload 2>/dev/null
     systemctl restart $SERVICE_NAME 2>/dev/null
-    sleep 3
+    local retry=0
+    while [ $retry -lt 10 ]; do
+        sleep 2
+        if systemctl is-active $SERVICE_NAME --quiet; then
+            return 0
+        fi
+        retry=$((retry + 1))
+    done
     systemctl is-active $SERVICE_NAME --quiet
 }
 
 em_assert_log_contains() {
     local pattern=$1
     local since=${2:-"2 min ago"}
-    local found=0
-    journalctl -u $SERVICE_NAME --since "$since" --no-pager 2>/dev/null | grep -q "$pattern" && found=1
-    if [ "$found" -eq 0 ] && [ -f "$LOG_FILE" ]; then
-        grep -q "$pattern" "$LOG_FILE" 2>/dev/null && found=1
-    fi
-    [ "$found" -eq 1 ]
+    local retry=0
+    while [ $retry -lt 10 ]; do
+        journalctl -u $SERVICE_NAME --since "$since" --no-pager 2>/dev/null | grep -q "$pattern" && return 0
+        [ -f "$LOG_FILE" ] && grep -q "$pattern" "$LOG_FILE" 2>/dev/null && return 0
+        sleep 1
+        retry=$((retry + 1))
+    done
+    return 1
+}
+
+# [v3新增] paral模式启动：paral处理完进程后正常退出(service变inactive)，
+# 这是预期行为。此函数只确认服务曾启动且日志中有ParalTune激活记录。
+em_start_service_for_paral() {
+    mkdir -p "$LOG_DIR" 2>/dev/null
+    > "$LOG_FILE"
+    systemctl daemon-reload 2>/dev/null
+    systemctl restart $SERVICE_NAME 2>/dev/null
+    local retry=0
+    while [ $retry -lt 15 ]; do
+        sleep 1
+        if systemctl is-active $SERVICE_NAME --quiet; then
+            return 0
+        fi
+        grep -q "ParalTune activated\|Executing paral tune" "$LOG_FILE" 2>/dev/null && return 0
+        retry=$((retry + 1))
+    done
+    grep -q "ParalTune activated\|Executing paral tune" "$LOG_FILE" 2>/dev/null && return 0
+    systemctl is-active $SERVICE_NAME --quiet
 }
 
 em_assert_not_log_contains() {
     local pattern=$1
     local since=${2:-"2 min ago"}
-    local found=0
-    journalctl -u $SERVICE_NAME --since "$since" --no-pager 2>/dev/null | grep -q "$pattern" && found=1
-    if [ "$found" -eq 0 ] && [ -f "$LOG_FILE" ]; then
-        grep -q "$pattern" "$LOG_FILE" 2>/dev/null && found=1
-    fi
-    [ "$found" -eq 0 ]
+    journalctl -u $SERVICE_NAME --since "$since" --no-pager 2>/dev/null | grep -q "$pattern" && return 1
+    [ -f "$LOG_FILE" ] && grep -q "$pattern" "$LOG_FILE" 2>/dev/null && return 1
+    return 0
 }
 
 em_dnf_install() {
@@ -228,4 +273,14 @@ em_get_cpu_affinity() {
 em_get_cpu_from_affinity() {
     local aff=$1
     echo "$aff" | cut -d',' -f1 | cut -d'-' -f1
+}
+
+em_get_pid_numa_node() {
+    local pid=$1
+    local cpu
+    cpu=$(LC_ALL=C taskset -p "$pid" 2>/dev/null | awk '{print $NF}' | cut -d',' -f1 | cut -d'-' -f1)
+    [ -z "$cpu" ] && echo "-1" && return
+    local node
+    node=$(ls -d /sys/devices/system/cpu/cpu${cpu}/node* 2>/dev/null | head -1 | grep -oP 'node\K\d+')
+    echo "${node:--1}"
 }

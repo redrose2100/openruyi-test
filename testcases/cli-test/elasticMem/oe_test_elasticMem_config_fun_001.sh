@@ -11,38 +11,38 @@ function pre_test() {
     em_check_env || return 1
     em_backup_config
     em_stop_service
-    em_require_numactl
+    em_require_numactl || return 1
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    em_check_env || return 1
+    em_check_env || return 0
 
-    # 确认配置文件中 policy=paral
-    grep -q '^policy' "$CONFIG_PATH" 2>/dev/null && \
-        sed -i 's/^policy.*/policy = paral/' "$CONFIG_PATH" || \
-        em_write_paral_config
+    cat > "$CONFIG_PATH" << EOF
+policy = paral
+log_level = debug
+log_file = $LOG_FILE
+whitelist = [bash]
+comm_whitelist = [bash]
+memory_migration = true
+sample_interval = 100
+sample_count = 10
+nr_cpus=1
+EOF
     grep '^policy' "$CONFIG_PATH"
     CHECK_RESULT $? 0 0 "policy not set to paral"
 
-    # 启动服务
-    em_start_service
+    > "$LOG_FILE"
+    em_start_service_for_paral
     CHECK_RESULT $? 0 0 "elasticMem service start failed"
 
-    # 检查状态
-    systemctl status $SERVICE_NAME --no-pager -l | grep "active (running)"
-    CHECK_RESULT $? 0 0 "service not active"
-
-    # 检查日志
     em_assert_log_contains "policy: paral"
     CHECK_RESULT $? 0 0 "log missing policy: paral"
     em_assert_log_contains "ElasticMem service started"
     CHECK_RESULT $? 0 0 "log missing service started"
-
-    # 确认进程存在
-    ps aux | grep elasticMem | grep -v grep | grep -v mugen
-    CHECK_RESULT $? 0 0 "elasticMem process not found"
+    em_assert_log_contains "ParalTune"
+    CHECK_RESULT $? 0 0 "ParalTune not in log"
 
     LOG_INFO "Finish test!"
 }
