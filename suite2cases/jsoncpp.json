@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_jsoncpp_02"
+        },
+	{
+            "name": "oe_test_jsoncpp_03"
         }
     ]
 }
