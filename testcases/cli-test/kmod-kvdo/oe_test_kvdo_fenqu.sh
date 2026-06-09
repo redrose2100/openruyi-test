@@ -24,7 +24,14 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     EXECUTE_T="60m"
     # kmod 正常安装需提前安装好， kernel-devel依赖包
-    DNF_INSTALL "kernel-headers-$(uname -r) kernel-devel-$(uname -r) nmap-ncat" 2
+    if [[ $KERNEL_VER == *"+64k"* ]]; then
+        LOG_INFO "Detected 64k kernel, install 64k version devel"
+        KERNEL_VER_CLEAN=$(echo $KERNEL_VER | sed 's/+64k//')
+        DNF_INSTALL "kernel-headers-${KERNEL_VER_CLEAN} kernel-64k-devel-${KERNEL_VER} nmap-ncat" 2
+    else
+        LOG_INFO "Detected normal kernel, install standard devel"
+        DNF_INSTALL "kernel-headers-${KERNEL_VER} kernel-devel-${KERNEL_VER} nmap-ncat" 2
+    fi
     DNF_INSTALL "lvm2 vdo kmod-kvdo parted xfsprogs" 2
     TEST_NODE2_DISKS=$(TEST_DISK 2)
     TEST_NODE2_DISKS_CLEAN=$(echo "${TEST_NODE2_DISKS}" | tr '\n' ' ' | sed 's/[ ]*$//')
