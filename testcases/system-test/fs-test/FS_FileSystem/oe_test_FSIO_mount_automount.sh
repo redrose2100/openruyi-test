@@ -66,7 +66,7 @@ function run_test() {
         ssh_cmd_node "echo '${test_disk}3 /mnt/test_xfs xfs defaults 0 0' >> /etc/fstab"
     fi
     ssh_cmd_node "reboot"
-    SLEEP_WAIT 60
+    SLEEP_WAIT 180
     ssh_cmd_node "df -iT | grep '${test_disk}*'"
     CHECK_RESULT $? 0 0 "Check fs is mounted failed."
     LOG_INFO "End to run test."
@@ -97,7 +97,7 @@ d
 w
 diskEof"
     ssh_cmd_node "reboot"
-    SLEEP_WAIT 60
+    SLEEP_WAIT 180
     LOG_INFO "End to restore the test environment."
 }
 
