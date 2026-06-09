@@ -336,6 +336,11 @@
             "name": "oe_test_dax_pmem",
             "machine type": "kvm",
             "add disk": []
+                },
+       {
+            "name": "oe_test_device_dax",
+            "machine type": "kvm",
+            "add disk": []
         }
     ]
 }
