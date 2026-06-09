@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Partition on the LVM volume, write data to the partition, restart and check whether the data is lost
 # #############################################
-# shellcheck disable=SC1090,SC2034
+# shellcheck disable=SC1090,SC2034,SC2120
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -24,8 +24,14 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     EXECUTE_T="60m"
     # kmod 正常安装需提前安装好， kernel-devel依赖包
-    DNF_INSTALL "kernel-headers-$(uname -r) kernel-devel-$(uname -r) nmap-ncat" 2
-    DNF_INSTALL "lvm2 vdo kmod-kvdo parted xfsprogs" 2
+    KERNEL_VER=$(uname -r)
+    if [[ ${KERNEL_VER} == *"+64k"* ]]; then
+        KERNEL_VER_CLEAN="${KERNEL_VER//+64k/}"
+        DNF_INSTALL "kernel-headers-${KERNEL_VER_CLEAN} kernel-64k-devel-${KERNEL_VER}" 2
+    else
+        DNF_INSTALL "kernel-headers-${KERNEL_VER} kernel-devel-${KERNEL_VER}" 2
+    fi
+    DNF_INSTALL "nmap-ncat lvm2 vdo kmod-kvdo parted xfsprogs" 2
     TEST_NODE2_DISKS=$(TEST_DISK 2)
     TEST_NODE2_DISKS_CLEAN=$(echo "${TEST_NODE2_DISKS}" | tr '\n' ' ' | sed 's/[ ]*$//')
     ALL_DISKS_PATH=$(echo "${TEST_NODE2_DISKS_CLEAN}" | sed 's/[^ ]*/\/dev\/&/g')
