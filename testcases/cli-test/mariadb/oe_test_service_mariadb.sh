@@ -16,13 +16,16 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test mariadb.service restart
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL mariadb-server
-    mv /etc/my.cnf /etc/my.bak
+    mariadb_version=$(rpm -qa mariadb-server | awk -F- '{print $3}')
+    if [[ "${mariadb_version}" == "10.3.39" ]]; then
+        sed -i 's/plugin-load-add=auth_gssapi.so/#plugin-load-add=auth_gssapi.so/g'  /etc/my.cnf.d/auth_gssapi.cnf
+    fi
     log_time="$(date '+%Y-%m-%d %T')"
     LOG_INFO "End of environmental preparation!"
 }
@@ -40,8 +43,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop mariadb.service
-    mv /etc/my.bak /etc/my.cnf
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     rm -rf /var/lib/mysql/*
     LOG_INFO "Finish environment cleanup!"
 }
