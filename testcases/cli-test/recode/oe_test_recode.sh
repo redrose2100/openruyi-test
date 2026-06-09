@@ -50,6 +50,8 @@ function run_test() {
     echo "¥" | recode -f UTF-8..ASCII 
     CHECK_RESULT $? 0 0 "Currency symbol force-recode failed"
     echo "<p>Hello, World!</p>" > test.html
+    CHECK_RESULT $? 0 0 "Failed to create test.html"
+    recode HTML.. <test.html > test_decode.txt
     CHECK_RESULT $? 0 0 "HTML to text conversion failed"
     grep -q "Hello, World!" test_decode.txt
     CHECK_RESULT $? 0 0 "Decoded content mismatch"
