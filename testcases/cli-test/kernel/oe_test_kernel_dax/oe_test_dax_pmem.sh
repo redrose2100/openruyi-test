@@ -59,6 +59,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     modprobe -r "${mod_name}" 2>/dev/null
+    # 移除测试安装的kmod包
+    dnf remove -y kmod
     LOG_INFO "End to restore the test environment."
 }
 
