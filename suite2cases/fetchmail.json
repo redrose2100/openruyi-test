@@ -2,7 +2,8 @@
     "path": "$OET_PATH/testcases/cli-test/fetchmail",
     "cases": [
         {
-            "name": "oe_test_service_fetchmail"
+            "name": "oe_test_service_fetchmail",
+            "name": "oe_test_function_fetchmail"
         }
     ]
 }
