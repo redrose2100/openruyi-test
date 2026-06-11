@@ -347,6 +347,11 @@
             "name": "oe_test_dax_kmem  ",
             "machine type": "kvm",
             "add disk": []
+       },
+       {
+            "name": "oe_test_cxl_acpi",
+            "machine type": "kvm",
+            "add disk": []
         }
     ]
 }
