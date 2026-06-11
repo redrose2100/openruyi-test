@@ -68,11 +68,9 @@ select_ltp_tag() {
     local mirror="https://ghproxy.com/https://github.com/linux-test-project/ltp.git"
 
     case $k in
-        4*|509|510) echo 20220121 ;;
-        511|6[0-4]) echo 20230626 ;;
-        6[5-8])     echo 20231030 ;;
+        419|510)    echo 20220121 ;;
+        606)        echo 20260130 ;;
         *)
-            # 尝试主站，失败尝试镜像
             local tag=""
             for url in "https://github.com/linux-test-project/ltp.git" "$mirror"; do
                 tag=$(GIT_SSL_NO_VERIFY=true git ls-remote --tags --sort=-v:refname \
@@ -80,7 +78,6 @@ select_ltp_tag() {
                       | awk -F/ '{print $3}' | grep -E '^[0-9]{8}$' | head -1)
                 [[ -n "$tag" ]] && break
             done
-
             echo "${tag:-$default_tag}"
             ;;
     esac
