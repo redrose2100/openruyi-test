@@ -21,6 +21,9 @@
 	},
         {
             "name": "oe_test_ntpq_peers"
-        }
+        },
+	{
+	    "name": "oe_test_bash_shopt"
+	}
     ]
 }
