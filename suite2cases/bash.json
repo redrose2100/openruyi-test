@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_readarray"
+        },
+        {
+            "name": "oe_test_bash_shopt"
         }
     ]
 }
