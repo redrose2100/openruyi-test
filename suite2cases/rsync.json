@@ -6,6 +6,9 @@
         },
         {
             "name": "oe_test_socket_rsyncd"
+        },
+        {
+            "name": "oe_test_rsync_basic"
         }
     ]
 }
