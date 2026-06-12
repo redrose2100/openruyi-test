@@ -1,0 +1,8 @@
+{
+    "path": "${OET_PATH}/testcases/smoke-test/smoke-basic-os/oe_test_timeout",
+    "cases": [
+        {
+            "name": "oe_test_timeout_01"
+        }
+    ]
+}
