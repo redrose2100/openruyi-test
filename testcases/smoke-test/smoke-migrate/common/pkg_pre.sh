@@ -49,7 +49,7 @@ cgroup_device_acl = [
 "/dev/obmm",
 $(find /dev/uburma -maxdepth 1 -type c 2>/dev/null | grep -v bonding_dev_0 | sort | sed 's/.*/"&",/')
 "/dev/uburma/bonding_dev_0",
-"/dev/ubcore/ubcore"
+"/dev/ubcore/ubcore",
 "/dev/ummu/tid",
 ]
 max_files = 4096
