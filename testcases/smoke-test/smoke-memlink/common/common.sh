@@ -22,8 +22,13 @@ test_qemu_dir="/home/test_qemu"
 config_dir="${test_qemu_dir}/config"
 image_dir="${test_qemu_dir}/image"
 image_path="${image_dir}/openEuler.qcow2"
-repo_baseurl=$(awk -F= '/baseurl/ {print $2; exit}' /etc/yum.repos.d/openEuler.repo | sed "s|/OS/\$basearch/||")
-version=$(basename "${repo_baseurl}")
+if [ -f /etc/yum.repos.d/openEuler.repo ]; then
+    repo_baseurl=$(awk -F= '/baseurl/ {print $2; exit}' /etc/yum.repos.d/openEuler.repo | grep -o '^.*/openEuler-[^/]*')
+    version=$(basename "${repo_baseurl}")
+else
+    version=$(curl -skL https://repo.openeuler.org | grep -oE 'openEuler-[0-9]+\.[0-9]+-LTS(-SP[0-9]+)?' | sort -uV | tail -n 1)
+    repo_baseurl="https://repo.openeuler.org/${version}"
+fi
 image_path_base="${image_dir}/${version}-aarch64.qcow2"
 image_download_url="${repo_baseurl}/virtual_machine_img/aarch64/${version}-aarch64.qcow2.xz"
 
