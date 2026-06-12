@@ -358,6 +358,11 @@
             "name": "oe_test_cxl_mem",
             "machine type": "kvm",
             "add disk": []
+       },
+       {
+            "name": "oe_test_cxl_pci",
+            "machine type": "kvm",
+            "add disk": []
         }
     ]
 }
