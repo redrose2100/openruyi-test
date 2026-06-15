@@ -19,6 +19,10 @@ for {set i 0} {$i < $max_attempts} {incr i} {
             send "$username\r" 
             break
         }
+        "# " {
+            send "echo 'Already logged in.'\r" 
+            break
+        }
         timeout { 
             if {$i % 6 == 0} {
                 send "\r"
