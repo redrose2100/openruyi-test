@@ -2155,6 +2155,12 @@
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
+        },
+        {
+            "name": "oe_test_unexpand",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
         }
 
     ]
