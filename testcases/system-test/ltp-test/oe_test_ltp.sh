@@ -17,7 +17,7 @@
 # @Desc      :   ltp testsuite
 # ############################################
 
-#shellcheck disable=SC2034,SC2155
+#shellcheck disable=SC2034,SC2155,SC2120
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
