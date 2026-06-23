@@ -343,7 +343,7 @@
             "add disk": []
         },
        {
-            "name": "oe_test_dax_kmem  ",
+            "name": "oe_test_dax_kmem",
             "machine type": "kvm",
             "add disk": []
        },
