@@ -3,6 +3,8 @@
     "cases": [
         {
             "name": "oe_test_service_fetchmail"
+        },
+        {   "name": "oe_test_function_fetchmail"
         }
     ]
 }
