@@ -63,6 +63,9 @@
         },
         {
             "name": "oe_test_setsid"
+        },
+        {
+            "name": "oe_test_nsenter"
         }
     ]
 }
