@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "gcc binutils"
     testDir=$(mktemp -d)
     cat > "$testDir/test.c" <<EOF
 int foo() { return 42; }

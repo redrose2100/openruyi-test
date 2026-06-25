@@ -27,6 +27,9 @@
     },
     {
       "name": "oe_test_binutils_dwp"
+    },
+    {
+      "name": "oe_test_binutils_ranlib"
     }
   ]
 }
