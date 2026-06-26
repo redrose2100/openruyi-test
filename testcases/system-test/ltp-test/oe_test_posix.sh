@@ -20,6 +20,27 @@
 #shellcheck disable=SC2034
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+select_ltp_tag() {
+    local k=$(uname -r | awk -F. '{printf "%d%02d",$1,$2}')
+    local default_tag="20260130"
+    local mirror="https://ghproxy.com/https://github.com/linux-test-project/ltp.git"
+
+    case $k in
+        419|510)    echo 20220121 ;;
+        606)        echo 20260130 ;;
+        *)
+            local tag=""
+            for url in "https://github.com/linux-test-project/ltp.git" "$mirror"; do
+                tag=$(GIT_SSL_NO_VERIFY=true git ls-remote --tags --sort=-v:refname \
+                      "$url" 2>/dev/null \
+                      | awk -F/ '{print $3}' | grep -E '^[0-9]{8}$' | head -1)
+                [[ -n "$tag" ]] && break
+            done
+            echo "${tag:-$default_tag}"
+            ;;
+    esac
+}
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     EXECUTE_T="240m"
@@ -29,9 +50,10 @@ function pre_test() {
     current_path=$(cd "$(dirname "$0")" || exit 1
         pwd
     )
+    ltp_tag=$(select_ltp_tag)
     until [ -e "ltp" ]
     do
-        git clone -b 20210927 https://github.com/linux-test-project/ltp.git
+        git clone -b "$ltp_tag" https://github.com/linux-test-project/ltp.git
     done
     LOG_INFO "End to prepare the test environment."
 }
@@ -39,6 +61,8 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     cd ltp/testcases/open_posix_testsuite || exit 1
+    autoreconf -fvi
+    ./configure
     make all >> /dev/null 2>&1
     make conformance-test > /opt/posix_conformance_result.txt
     pcnt=$(grep PASS /opt/posix_conformance_result.txt | awk '{print $2}' | awk '{sum +=$1}; END {print sum}')
@@ -48,9 +72,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "bin case pass rate lower than 97%"
     cd bin || exit 1
     ./run-all-posix-option-group-tests.sh AIO >/opt/AIO.txt
-    pcnt=$(grep PASS /opt/AIO.txt | awk '{print $2}' | awk '{sum +=$1}; END {print sum}')
-    tcnt=$(grep TOTAL /opt/AIO.txt | awk '{print $2}' | awk '{sum +=$1}; END {print sum}')
-    rate=$(awk 'BEGIN{printf "%.5f\n", ('"$pcnt"'/'"$tcnt"')}')
+    pass=$(grep -cE 'Test PASSED|TEST PASSED|Test passed' "$file" 2>/dev/null || echo 0)
+    fail=$(grep -E 'FAIL' "$file" 2>/dev/null | grep -cvE 'PASSED|passed' || echo 0)
+    untested=$(grep -c 'UNTESTED' "$file" 2>/dev/null || echo 0)
+    unsupported=$(grep -c 'UNSUPPORTED' "$file" 2>/dev/null || echo 0)
+    skipped=$(grep -c 'Test skipped' "$file" 2>/dev/null || echo 0)
+    total=$((pass + fail + untested + unsupported + skipped))
+    rate=$(awk -v p="$pass" -v t="$total" 'BEGIN{printf "%.5f\n", p/t}')
     awk -v rate="$rate" 'BEGIN{print(rate>0.97)?"0":"1"}'
     CHECK_RESULT $? 0 0 "bin case pass rate lower than 97%"
     LOG_INFO "End to run test."
@@ -66,3 +94,4 @@ function post_test() {
 }
 
 main "$@"
+
