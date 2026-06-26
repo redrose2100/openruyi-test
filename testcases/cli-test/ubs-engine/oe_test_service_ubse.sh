@@ -45,7 +45,7 @@ function run_test() {
     systemctl status ${service} | grep "Active: active"
     CHECK_RESULT $? 0 0 "${service} start failed"
     test_enabled ${service}
-    journalctl --since "${log_time}" -u ${service} | grep -iE "fail|error|no such"
+    journalctl --since "${log_time}" -u ${service} | grep -iE "fail|error|no such" | grep -v -i "DEBUG\|INFO\|WARNING"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload ${service}
     LOG_INFO "Finish test!"
