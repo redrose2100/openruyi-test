@@ -15,7 +15,8 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   delete the ssl-related files from httpd configuration file,acess request(Implements https based on httpd and OpenSSL)
 #####################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
+
 source "common/common_openssl.sh"
 
 function config_params() {
@@ -28,7 +29,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpd mod_ssl"
+    DNF_INSTALL "openssl httpd mod_ssl"
     createCA_and_Self_signed_certificate
     generate_PrivateKey_and_Certificate_Signing_Request
     CA_Signature_Authentication

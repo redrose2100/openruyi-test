@@ -15,8 +15,15 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   OpenSSL commandline tool: Diffie-Hellman(key exchange protocal/algorithm)
 #####################################
+# shellcheck disable=SC2119
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "openssl"
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -32,6 +39,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f dhparam.pem
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

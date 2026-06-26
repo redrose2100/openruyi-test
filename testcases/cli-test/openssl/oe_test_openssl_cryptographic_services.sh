@@ -22,7 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpd mod_ssl"
+    DNF_INSTALL "openssl httpd mod_ssl"
     systemctl stop firewalld
     mkdir -p /www/https
     mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.bak
