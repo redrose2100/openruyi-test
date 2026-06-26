@@ -15,8 +15,15 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Application scenarios: encrypting character string
 #####################################
+# shellcheck disable=SC2119
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "openssl"
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -25,6 +32,12 @@ function run_test() {
     echo "encode me" | openssl enc -base64 | openssl enc -base64 -d | grep 'encode me'
     CHECK_RESULT $?
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

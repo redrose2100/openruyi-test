@@ -26,7 +26,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL nginx
+    DNF_INSTALL "nginx openssl"
     LOG_INFO "End to prepare the test environment."
 }
 

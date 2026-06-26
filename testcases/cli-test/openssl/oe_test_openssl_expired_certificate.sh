@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   the certificate has expired
 #####################################
+# shellcheck disable=SC2119
 
 source "common/common_openssl.sh"
 
@@ -28,7 +29,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpd mod_ssl"
+    DNF_INSTALL "openssl httpd mod_ssl"
     createCA_and_Self_signed_certificate
     generate_PrivateKey_and_Certificate_Signing_Request
     ssl_Path=/etc/httpd/ssl

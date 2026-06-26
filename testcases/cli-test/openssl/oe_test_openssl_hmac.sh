@@ -16,7 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command openssl hmac
 # ############################################
+# shellcheck disable=SC2119
+
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "openssl"
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "start to run test."
@@ -29,6 +37,12 @@ function run_test() {
     echo -n "abc" | openssl dgst -md5 -hmac "qwert" | grep "(stdin)= 02ee5c8b3b23be6f68a9113b416a02d5"
     CHECK_RESULT $? 0 0 "hmac algorithm with md5 fail"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"

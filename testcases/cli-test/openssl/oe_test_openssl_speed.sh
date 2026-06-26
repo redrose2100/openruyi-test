@@ -16,7 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command openssl speed
 # ############################################
+# shellcheck disable=SC2119
+
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "openssl"
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "start to run test."
@@ -44,6 +52,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f openssl.log
+    DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 main "$@"

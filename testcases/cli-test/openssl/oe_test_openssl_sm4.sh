@@ -16,10 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command openssl sm4
 # ############################################
+# shellcheck disable=SC2119
+
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "openssl"
     touch file1
     LOG_INFO "End to prepare the test environment."
 }
@@ -45,6 +48,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f file1 file1.sm4 file2
+    DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 
