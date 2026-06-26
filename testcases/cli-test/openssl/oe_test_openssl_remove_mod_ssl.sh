@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   remove the mod_ssl.so module,restart service(Implements https based on httpd and OpenSSL)
 #####################################
+# shellcheck disable=SC2119,SC1091
 
 source "common/common_openssl.sh"
 
@@ -26,7 +27,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpd mod_ssl"
+    DNF_INSTALL "openssl httpd mod_ssl"
     createCA_and_Self_signed_certificate
     generate_PrivateKey_and_Certificate_Signing_Request
     CA_Signature_Authentication

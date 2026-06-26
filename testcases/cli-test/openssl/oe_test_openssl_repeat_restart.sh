@@ -15,6 +15,7 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Pressure load : Repeat restart (Implements https based on httpd and OpenSSL)
 #####################################
+# shellcheck disable=SC2119,SC1091
 
 source "common/common_openssl.sh"
 
@@ -26,7 +27,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpd mod_ssl"
+    DNF_INSTALL "openssl httpd mod_ssl"
     createCA_and_Self_signed_certificate
     generate_PrivateKey_and_Certificate_Signing_Request
     CA_Signature_Authentication
@@ -42,7 +43,7 @@ function run_test() {
         SLEEP_WAIT 1
         systemctl status httpd | grep "active"
         CHECK_RESULT $?
-        echo $i >/dev/null
+        echo "$i" >/dev/null
     done
     curl --cacert /etc/pki/CA/cacert.pem https://www.openeuler.org/index.html -I 2>&1 | grep '200'
     CHECK_RESULT $?
