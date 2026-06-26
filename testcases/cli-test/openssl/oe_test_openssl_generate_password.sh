@@ -15,8 +15,15 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Encryption algorithm: generate a password
 #####################################
+# shellcheck disable=SC2119
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "openssl"
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -47,6 +54,7 @@ END
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f word testlog1
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

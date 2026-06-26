@@ -15,8 +15,15 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Application scenarios: use RSA certificates to encrypte and decrypte emails
 #####################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
+
 source "common/common_openssl.sh"
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "openssl"
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -48,6 +55,7 @@ function post_test() {
             rm -f "$file"
         fi
     done
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

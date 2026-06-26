@@ -15,8 +15,15 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Application scenarios: method of generating the private key,public key,and self-shared key(signature certificate) of the DSA algorithm
 #####################################
+# shellcheck disable=SC2119
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "openssl"
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -58,6 +65,7 @@ END
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f dsakey.pem dsakey-pub.pem mycert-dsa.pem testlog
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

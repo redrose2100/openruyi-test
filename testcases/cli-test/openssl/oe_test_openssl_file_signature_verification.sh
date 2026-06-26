@@ -15,8 +15,15 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   OpenSSL commandline tool: file signature and signature verification
 #####################################
+# shellcheck disable=SC2119
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "openssl"
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -55,6 +62,7 @@ function post_test() {
             rm -f "$file"
         fi
     done
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

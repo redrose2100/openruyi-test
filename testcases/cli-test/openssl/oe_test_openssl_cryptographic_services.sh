@@ -16,13 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   SSL protocol encrypted transmission service
 # #############################################
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2119
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpd mod_ssl"
+    DNF_INSTALL "openssl httpd mod_ssl"
     systemctl stop firewalld
     mkdir -p /www/https
     mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.bak
@@ -77,7 +77,7 @@ function post_test() {
     mv -f /etc/httpd/conf.d/ssl.conf.bak /etc/httpd/conf.d/ssl.conf
     systemctl stop httpd
     systemctl start firewalld
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     export LANG=$Default_Lang
     LOG_INFO "End to restore the test environment."
 }

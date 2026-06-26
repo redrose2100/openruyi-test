@@ -15,9 +15,15 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Application scenarios: method of generating the private key,public key,and self-shared key(signature certificate) of the RSA algorithm
 #####################################
-# shellcheck disable=SC1091
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC1091,SC2119
+
 source "common/common_openssl.sh"
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "openssl"
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -36,6 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f rsakey.pem rsakey-pub.pem mycert-rsa.pem testlog
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
