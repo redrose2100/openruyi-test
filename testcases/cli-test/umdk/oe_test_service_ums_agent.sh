@@ -23,13 +23,13 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "umdk-ums-agent umdk-ums"
     mkdir -p /etc/ums_agent/certs/
-    openssl req -newkey rsa:2048 -passout pass:123456 -keyout /etc/ums_agent/certs/ca_rsa_private.pem -x509 -days 365 -out /etc/ums_agent/certs/ca.crt -subj "/C=CN/ST=GD/L=SZ/O=COM/OU=NSP/CN=CA/emailAddress=xxxx@xxx.com"
-    openssl req -newkey rsa:2048 -passout pass:srv123 -keyout /etc/ums_agent/certs/server_rsa_private.pem -out /etc/ums_agent/certs/server.csr -subj "/C=CN/ST=GD/L=SZ/O=COM/OU=NSP/CN=SERVER/emailAddress=xxxx@xxx.com"
-    openssl x509 -req -days 365 -in /etc/ums_agent/certs/server.csr -CA /etc/ums_agent/certs/ca.crt -CAkey /etc/ums_agent/certs/ca_rsa_private.pem -passin pass:123456 -CAcreateserial -out /etc/ums_agent/certs/server.crt
-    openssl req -newkey rsa:2048 -passout pass:clnt123 -keyout /etc/ums_agent/certs/client_rsa_private.pem -out /etc/ums_agent/certs/client.csr -subj "/C=CN/ST=GD/L=SZ/O=COM/OU=NSP/CN=CLIENT/emailAddress=xxxx@xxx.com"
-    openssl x509 -req -days 365 -in /etc/ums_agent/certs/client.csr -CA /etc/ums_agent/certs/ca.crt -CAkey /etc/ums_agent/certs/ca_rsa_private.pem -passin pass:123456 -CAcreateserial -out /etc/ums_agent/certs/client.crt
-    sudo -u ums keyctl add user server_private_key_passphrase "srv123" @u
-    sudo -u ums keyctl add user client_private_key_passphrase "clnt123" @u
+    openssl req -newkey rsa:2048 -passout pass:"${NODE1_PASSWORD}" -keyout /etc/ums_agent/certs/ca_rsa_private.pem -x509 -days 365 -out /etc/ums_agent/certs/ca.crt -subj "/C=CN/ST=GD/L=SZ/O=COM/OU=NSP/CN=CA/emailAddress=xxxx@xxx.com"
+    openssl req -newkey rsa:2048 -passout pass:"${NODE1_PASSWORD}" -keyout /etc/ums_agent/certs/server_rsa_private.pem -out /etc/ums_agent/certs/server.csr -subj "/C=CN/ST=GD/L=SZ/O=COM/OU=NSP/CN=SERVER/emailAddress=xxxx@xxx.com"
+    openssl x509 -req -days 365 -in /etc/ums_agent/certs/server.csr -CA /etc/ums_agent/certs/ca.crt -CAkey /etc/ums_agent/certs/ca_rsa_private.pem -passin pass:"${NODE1_PASSWORD}" -CAcreateserial -out /etc/ums_agent/certs/server.crt
+    openssl req -newkey rsa:2048 -passout pass:"${NODE1_PASSWORD}" -keyout /etc/ums_agent/certs/client_rsa_private.pem -out /etc/ums_agent/certs/client.csr -subj "/C=CN/ST=GD/L=SZ/O=COM/OU=NSP/CN=CLIENT/emailAddress=xxxx@xxx.com"
+    openssl x509 -req -days 365 -in /etc/ums_agent/certs/client.csr -CA /etc/ums_agent/certs/ca.crt -CAkey /etc/ums_agent/certs/ca_rsa_private.pem -passin pass:"${NODE1_PASSWORD}" -CAcreateserial -out /etc/ums_agent/certs/client.crt
+    sudo -u ums keyctl add user server_private_key_passphrase "${NODE1_PASSWORD}" @u
+    sudo -u ums keyctl add user client_private_key_passphrase "${NODE1_PASSWORD}" @u
     sudo -u ums keyctl list @u
     chown ums:ums /etc/ums_agent/certs/ -R
     chmod 750 /etc/ums_agent/certs/
