@@ -2,7 +2,7 @@
     "path": "$OET_PATH/testcases/cli-test/greatsql",
     "cases": [
         {
-            "name": "oe_test_service_greatsql-mysql-router"
+            "name": "oe_test_service_mysqlrouter"
         },
         {
             "name": "oe_test_greatsql_server"
