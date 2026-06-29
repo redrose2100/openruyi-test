@@ -50,7 +50,7 @@ function run_test() {
         freebcp "select * from test1.dbo.test1_admin" queryout out.txt -U sa -P Hw123456 -S egServer70 -d -c && grep "18" out.txt
     CHECK_RESULT $? 0 0 "Check datacopy -S -c failed"
 
-    defncopy -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile2 test_user && grep "CREATE TABLE dbo.test_user" outFile2
+    defncopy -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql -o outFile2 test_user && grep "CREATE TABLE \[dbo\].\[test_user\]" outFile2
     CHECK_RESULT $? 0 0 "Check defncopy -i -o -e failed"
 
     LOG_INFO "End to run test."
