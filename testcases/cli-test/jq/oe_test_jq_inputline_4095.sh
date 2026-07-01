@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Print lines with a length of 4095 multiples
 # #############################################
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -29,7 +29,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     echo '1
-1
+2
 3' >/tmp/diff_result
     python3 -c "print('0\n\"' + 'a'*4093 + '\"\n0');" | jq 'input_line_number' >/tmp/jq_4095_result
     diff /tmp/diff_result /tmp/jq_4095_result
@@ -41,8 +41,9 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     rm -rf /tmp/diff_result /tmp/jq_16380_result /tmp/jq_4095_result
     LOG_INFO "Finish environment cleanup!"
 }
+
 main "$@"
