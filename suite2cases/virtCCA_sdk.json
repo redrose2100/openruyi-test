@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/virtCCA_sdk",
+    "cases": [
+        {
+            "name": "oe_test_service_virtcca-computer"
+        },
+        {
+            "name": "oe_test_service_virtcca-guest-agent"
+        },
+        {
+            "name": "oe_test_service_virtcca-manager"
+        }
+    ]
+}
