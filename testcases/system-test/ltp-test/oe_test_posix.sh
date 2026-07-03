@@ -21,7 +21,8 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 select_ltp_tag() {
-    local k=$(uname -r | awk -F. '{printf "%d%02d",$1,$2}')
+    local k
+    k=$(uname -r | awk -F. '{printf "%d%02d",$1,$2}')
     local default_tag="20260130"
     local mirror="https://ghproxy.com/https://github.com/linux-test-project/ltp.git"
 
@@ -31,7 +32,7 @@ select_ltp_tag() {
         *)
             local tag=""
             for url in "https://github.com/linux-test-project/ltp.git" "$mirror"; do
-                tag=$(GIT_SSL_NO_VERIFY=true git ls-remote --tags --sort=-v:refname \
+                tag=$(git ls-remote --tags --sort=-v:refname \
                       "$url" 2>/dev/null \
                       | awk -F/ '{print $3}' | grep -E '^[0-9]{8}$' | head -1)
                 [[ -n "$tag" ]] && break
@@ -61,8 +62,8 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     cd ltp/testcases/open_posix_testsuite || exit 1
-    autoreconf -fvi
-    ./configure
+    autoreconf -fvi || { LOG_ERROR "autoreconf failed"; exit 1; }
+    ./configure || { LOG_ERROR "configure failed"; exit 1; }
     make all >> /dev/null 2>&1
     make conformance-test > /opt/posix_conformance_result.txt
     pcnt=$(grep PASS /opt/posix_conformance_result.txt | awk '{print $2}' | awk '{sum +=$1}; END {print sum}')
@@ -72,11 +73,12 @@ function run_test() {
     CHECK_RESULT $? 0 0 "bin case pass rate lower than 97%"
     cd bin || exit 1
     ./run-all-posix-option-group-tests.sh AIO >/opt/AIO.txt
-    pass=$(grep -cE 'Test PASSED|TEST PASSED|Test passed' "$file" 2>/dev/null || echo 0)
-    fail=$(grep -E 'FAIL' "$file" 2>/dev/null | grep -cvE 'PASSED|passed' || echo 0)
-    untested=$(grep -c 'UNTESTED' "$file" 2>/dev/null || echo 0)
-    unsupported=$(grep -c 'UNSUPPORTED' "$file" 2>/dev/null || echo 0)
-    skipped=$(grep -c 'Test skipped' "$file" 2>/dev/null || echo 0)
+    file="/opt/AIO.txt"
+    pass=$(grep -cE 'Test PASSED|TEST PASSED|Test passed' "$file" 2>/dev/null) || pass=0
+    fail=$(grep -E 'FAIL' "$file" 2>/dev/null | grep -cvE 'PASSED|passed') || fail=0
+    untested=$(grep -c 'UNTESTED' "$file" 2>/dev/null) || untested=0
+    unsupported=$(grep -c 'UNSUPPORTED' "$file" 2>/dev/null) || unsupported=0
+    skipped=$(grep -c 'Test skipped' "$file" 2>/dev/null) || skipped=0
     total=$((pass + fail + untested + unsupported + skipped))
     rate=$(awk -v p="$pass" -v t="$total" 'BEGIN{printf "%.5f\n", p/t}')
     awk -v rate="$rate" 'BEGIN{print(rate>0.97)?"0":"1"}'
@@ -94,4 +96,3 @@ function post_test() {
 }
 
 main "$@"
-
