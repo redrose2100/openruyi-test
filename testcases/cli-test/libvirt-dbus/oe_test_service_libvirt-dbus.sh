@@ -21,8 +21,7 @@ source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "libvirt-dbus"
-    groupadd -r libvirt
+    DNF_INSTALL "libvirt-dbus libvirt"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -36,7 +35,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop libvirt-dbus.service
-    groupdel libvirt
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
