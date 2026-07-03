@@ -88,7 +88,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     export LANG=${OLD_LANG}
     cd "${current_path}" || exit 1
     rm -rf "${current_path}"/ltp /opt/ltp /opt/posix_conformance_result.txt /opt/AIO.txt
