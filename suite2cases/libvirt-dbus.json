@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libvirt-dbus",
+    "cases": [
+        {
+            "name": "oe_test_service_libvirt-dbus"
+        }
+    ]
+}
