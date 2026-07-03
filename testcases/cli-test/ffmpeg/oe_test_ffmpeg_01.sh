@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test  ffmpeg
 # ############################################
+# shellcheck disable=SC1090,SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -31,17 +32,23 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Failed to obtain information from test.mpg file"
   ffmpeg -i common/test.mpg test.yuv
   CHECK_RESULT $? 0 0 "Ffmpeg decoding MPEG-2 video file to YUV format error"
-  ffplay test.yuv 
-  CHECK_RESULT $? 0 0 "Failed to retrieve information from test.yuv file"
+  
+  # 新增：检测图形显示环境（同时兼容X11(DISPLAY)、Wayland(WAYLAND_DISPLAY)图形环境），无图形设备则跳过ffplay
+  if [[ -z "${DISPLAY}" && -z "${WAYLAND_DISPLAY}" ]]; then
+    LOG_INFO "Current environment has no graphical display device, skip ffplay playback test"
+  else
+    # -nodisp 关闭窗口、-autoexit 播放完成自动退出，避免阻塞
+    ffplay -autoexit -nodisp test.yuv
+    CHECK_RESULT $? 0 0 "ffplay cannot play generated yuv raw video"
+  fi
   LOG_INFO "End of the test."
 }
 
 function post_test() {
   LOG_INFO "start environment cleanup."
-  DNF_REMOVE "$@"
+  DNF_REMOVE
   rm -rf test.yuv
   LOG_INFO "Finish environment cleanup!"
 }
 
 main "$@"
-
