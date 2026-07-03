@@ -19,48 +19,64 @@
             "name": "oe_test_raid_auto_mount",
             "machine num": 2,
             "add disk": [
-                20
+                 20
             ]
         },
         {
             "name": "oe_test_raid_compress",
             "machine num": 1,
-            "add disk": []
+            "add disk": [
+                 20
+	    ]
         },
         {
             "name": "oe_test_raid_faulty_1",
             "machine num": 1,
-            "add disk": []
+            "add disk": [
+                 20
+	    ]
         },
         {
             "name": "oe_test_raid_faulty_2",
             "machine num": 1,
-            "add disk": []
+            "add disk": [
+                 20
+            ]
         },
         {
             "name": "oe_test_raid_faulty_3",
             "machine num": 1,
-            "add disk": []
+            "add disk": [
+                 20
+            ]
         },
         {
             "name": "oe_test_raid_faulty_add_device",
             "machine num": 1,
-            "add disk": []
+            "add disk": [
+                 20
+            ]
         },
         {
             "name": "oe_test_raid_faulty_rw",
             "machine num": 1,
-            "add disk": []
+            "add disk": [
+                 20
+            ]
         },
         {
             "name": "oe_test_raid_faulty_w",
             "machine num": 1,
-            "add disk": []
+            "add disk": [
+                 20
+            ]
         },
         {
             "name": "oe_test_raid_react",
             "machine num": 1,
-            "add disk": []
+            "add disk": [
+                 20
+            ]
         },
         {
             "name": "oe_test_raid_rm_ko",
@@ -70,12 +86,16 @@
         {
             "name": "oe_test_raid_ro",
             "machine num": 1,
-            "add disk": []
+            "add disk": [
+                 20
+            ]
         },
         {
             "name": "oe_test_raid_rw",
             "machine num": 1,
-            "add disk": []
+            "add disk": [
+                 20
+            ]
         },
         {
             "name": "oe_test_snapshot_dump",
