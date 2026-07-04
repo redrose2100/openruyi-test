@@ -17,7 +17,7 @@
 # @Desc      :   ltp testsuite
 # ############################################
 
-#shellcheck disable=SC2034
+#shellcheck disable=SC2034,SC2120
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 select_ltp_tag() {
@@ -88,7 +88,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE "$@"
     export LANG=${OLD_LANG}
     cd "${current_path}" || exit 1
     rm -rf "${current_path}"/ltp /opt/ltp /opt/posix_conformance_result.txt /opt/AIO.txt
