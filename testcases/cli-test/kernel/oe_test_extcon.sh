@@ -22,6 +22,10 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)
+    if [ ! -d "${extcon_path}" ]; then
+        LOG_INFO "Current kernel environment missing extcon driver, skip testcase"
+        exit 255
+    fi
     cd /usr/lib/modules/"${kernel_name}"/kernel/drivers/extcon ||return
     test -f extcon-gpio.ko.xz
     CHECK_RESULT $? 0 0 "file does not exist"
