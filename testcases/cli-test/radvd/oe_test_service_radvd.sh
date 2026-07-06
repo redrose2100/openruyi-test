@@ -22,9 +22,8 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL radvd
-    eth_name=$(ip a | grep "${NODE1_IPV4}" | awk '{print $NF}')
     cp /etc/radvd.conf /etc/radvd.bak
-    echo "interface ${eth_name}
+    echo "interface ${NODE1_NIC}
 {
         AdvSendAdvert on;
         MinRtrAdvInterval 3;
