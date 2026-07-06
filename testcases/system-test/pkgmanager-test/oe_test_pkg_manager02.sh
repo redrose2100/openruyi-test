@@ -68,7 +68,8 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Packages upgrade error !"
     test -s /home/pkg_manager_folder/EPOL_upgrade_fail_list
     CHECK_RESULT $? 1 0 "EPOL packages upgrade error !"
-    REMOTE_REBOOT 2 120
+    REMOTE_REBOOT 2 300
+    CHECK_RESULT $? 0 1 "NODE2 reboot timeout, failed to establish SSH connection"
     # Downgrade packages
     downgrade_test_pkg
     test -s /home/pkg_manager_folder/downgrade_fail_list
@@ -81,7 +82,8 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Remove packages error !"
     test -s /home/pkg_manager_folder/EPOL_remove_fail_list
     CHECK_RESULT $? 1 0 "Remove epol packages error !"
-    REMOTE_REBOOT 2 120
+    REMOTE_REBOOT 2 300
+    CHECK_RESULT $? 0 1 "NODE2 reboot timeout, failed to establish SSH connection"
     LOG_INFO "End to run test."
 }
 

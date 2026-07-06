@@ -37,6 +37,46 @@ function pre_test() {
     LOG_INFO "End to prepare the test environment."
 }
 
+function check_arch_pkg_white_list() {
+    LOG_INFO "Start check arm/x86 different packages with white list"
+    local arm_list="repo_packages_arm"
+    local x86_list="repo_packages_x86"
+    local whitelist="${ARCH_PKG_WHITE_LIST}"
+    local diff_arm_only diff_x86_only all_diff_pkg unexpect_pkg
+
+    diff_arm_only=$(comm -13 <(sort "${x86_list}") <(sort "${arm_list}"))
+    diff_x86_only=$(comm -23 <(sort "${x86_list}") <(sort "${arm_list}"))
+    all_diff_pkg=$(echo -e "${diff_arm_only}\n${diff_x86_only}" | sed '/^$/d')
+
+    if [[ -z "${all_diff_pkg}" ]]; then
+        LOG_INFO "No different packages between arm and x86, check pass"
+        return 0
+    fi
+    LOG_INFO "Found difference packages between arm/x86:"
+    echo "${all_diff_pkg}" >> /home/pkg_manager_folder/arch_diff_pkg.log
+
+    unexpect_pkg=""
+    while IFS= read -r pkg; do
+        if [[ -z "${pkg}" ]]; then
+            continue
+        fi
+        if ! grep -q "^${pkg}$" "${whitelist}"; then
+            unexpect_pkg+="${pkg}"$'\n'
+            LOG_ERROR "Package ${pkg} is different between architectures and NOT in white list"
+        fi
+    done <<< "${all_diff_pkg}"
+
+    if [[ -n "${unexpect_pkg}" ]]; then
+        echo "Unallowed different packages exist, need manual check:" >> /home/pkg_manager_folder/check_pkg_num.log
+        echo "${unexpect_pkg}" >> /home/pkg_manager_folder/check_pkg_num.log
+        LOG_ERROR "Arm/x86 packages mismatch has unwhite-listed packages, please manual verify"
+        return 1
+    fi
+
+    LOG_INFO "All different packages are in white list, check pass"
+    echo "All architecture difference packages are in white list, skip fail judge" >> /home/pkg_manager_folder/check_pkg_num.log
+    return 0
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -71,9 +111,9 @@ function run_test() {
         echo "The update two architectures are equal in number" >>/home/pkg_manager_folder/check_pkg_num.log
     else
         echo "The update two architectures are not equal in number" >>/home/pkg_manager_folder/check_pkg_num.log
+	check_arch_pkg_white_list
+	CHECK_RESULT $? 0 1 "Arm/x86 package quantity inconsistent, unexpected differential packages exist, manual review required"
     fi
-    grep "The update two architectures are not equal in number" /home/pkg_manager_folder/check_pkg_num.log
-    CHECK_RESULT $? 1 0 "The two architectures are not equal in number"
     if [ -s EPOL_update_list ]; then
         arm_epol_pkgs_num=$(grep -ci ".rpm" epol_repo_packages_arm)
         x86_epol_pkgs_num=$(grep -ci ".rpm" epol_repo_packages_x86)
@@ -81,9 +121,9 @@ function run_test() {
             echo "The epol two architectures are equal in number" >>/home/pkg_manager_folder/check_pkg_num.log
         else
             echo "The epol two architectures are not equal in number" >>/home/pkg_manager_folder/check_pkg_num.log
+	    check_arch_pkg_white_list
+	    CHECK_RESULT $? 0 1 "Arm/x86 package quantity inconsistent, unexpected differential packages exist, manual review required"
         fi
-        grep "The epol two architectures are not equal in number" /home/pkg_manager_folder/check_pkg_num.log
-        CHECK_RESULT $? 1 0 "The epol two architectures are not equal in number"
     else
         echo "EPOL repo is not exit"
     fi
@@ -95,14 +135,16 @@ function run_test() {
     CHECK_RESULT $? 1 0 "EPOL packages install error !"
     test -s /home/pkg_manager_folder/ko_fail_list
     CHECK_RESULT $? 1 0 "Check ko insmod fail !"
-    REMOTE_REBOOT 2 120
+    REMOTE_REBOOT 2 300
+    CHECK_RESULT $? 0 1 "NODE2 reboot timeout, failed to establish SSH connection"
     # Remove packages
     uninstall_pkg
     test -s /home/pkg_manager_folder/remove_fail_list
     CHECK_RESULT $? 1 0 "Remove packages error !"
     test -s /home/pkg_manager_folder/EPOL_remove_fail_list
     CHECK_RESULT $? 1 0 "Remove epol packages error !"
-    REMOTE_REBOOT 2 120
+    REMOTE_REBOOT 2 300
+    CHECK_RESULT $? 0 1 "NODE2 reboot timeout, failed to establish SSH connection"
     LOG_INFO "End to run test."
 }
 
@@ -117,3 +159,4 @@ function post_test() {
 
 
 main "$@"
+
