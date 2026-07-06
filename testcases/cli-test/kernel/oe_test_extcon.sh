@@ -22,6 +22,10 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)
+    if [ ! -d "/usr/lib/modules/${kernel_name}/kernel/drivers/extcon" ]; then
+    	LOG_INFO "extcon驱动目录不存在，跳过用例"
+    	exit 255
+    fi
     cd /usr/lib/modules/"${kernel_name}"/kernel/drivers/extcon ||return
     test -f extcon-gpio.ko.xz
     CHECK_RESULT $? 0 0 "file does not exist"
