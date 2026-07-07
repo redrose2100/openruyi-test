@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test e2scrub_all.service restart
 # #############################################
+# shellcheck disable=SC1091,SC2119
 
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL e2fsprogs
     systemctl start e2scrub_all.service
     LOG_INFO "End of environmental preparation!"
 }
@@ -29,6 +31,12 @@ function run_test() {
     LOG_INFO "Start testing..."
     test_oneshot e2scrub_all.service 'inactive (dead)'
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

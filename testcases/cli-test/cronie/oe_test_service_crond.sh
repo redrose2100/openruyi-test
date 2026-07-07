@@ -16,8 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test crond.service restart
 # #############################################
+# shellcheck disable=SC1091,SC2119
 
 source "../common/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL cronie
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -37,6 +44,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/sbin/crond -n -c\ExecStart=/usr/sbin/crond -n\g' /usr/lib/systemd/system/crond.service
     systemctl daemon-reload
     systemctl reload crond.service
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
