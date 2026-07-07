@@ -15,12 +15,13 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Test case for pathchk command
 #####################################
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2119
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL coreutils
     touch normal_file
     LOG_INFO "End to prepare the test environment."
 }
@@ -43,6 +44,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f normal_file
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

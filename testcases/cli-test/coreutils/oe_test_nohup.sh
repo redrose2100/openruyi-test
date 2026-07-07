@@ -16,14 +16,21 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test nohup
 # ############################################
+# shellcheck disable=SC1090,SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL coreutils
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
     nohup --help
     CHECK_RESULT $? 0 0 "nohup execute fail"
-    nohup top > file.all 2>&1 &
+    nohup top >file.all 2>&1 &
     CHECK_RESULT $? 0 0 "nohup top execute fail"
     cat file.all
     CHECK_RESULT $? 0 0 "nohup execute fail"
@@ -32,14 +39,14 @@ function run_test() {
     pid=$!
     ps -p $pid >/dev/null 2>&1
     CHECK_RESULT $? 0 0 "Background process not running"
-    
+
     error_file="nohup_error.out"
     nohup ls /nonexistent >/dev/null 2>"$error_file" &
     sleep 1
     [ -s "$error_file" ]
     CHECK_RESULT $? 0 0 "Error output not redirected properly"
-    
-    nohup echo "test message" > cmd_compat.out 2>&1
+
+    nohup echo "test message" >cmd_compat.out 2>&1
     grep -q "test message" cmd_compat.out
     CHECK_RESULT $? 0 0 "Command compatibility test failed"
     LOG_INFO "Finish test!"
@@ -49,6 +56,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f file.all nohup_error.out cmd_compat.out
     pkill -f "sleep 30" 2>/dev/null
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

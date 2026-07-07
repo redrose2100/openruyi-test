@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   bzegrep Basic function verification
 # ############################################
+# shellcheck disable=SC1090,SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL bzip2
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,6 +45,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf test_bzegrep.log.bz2
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

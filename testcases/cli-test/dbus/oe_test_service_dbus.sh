@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test dbus.service restart
 # #############################################
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
+
 source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL dbus
     service=dbus.service
     log_time=$(date '+%Y-%m-%d %T')
     flag=false
@@ -33,8 +35,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_restart ${service}
-    test_enabled ${service}
+    test_restart "${service}"
+    test_enabled "${service}"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v "Activation via systemd failed"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     systemctl start "${service}"
@@ -55,6 +57,7 @@ function post_test() {
     if [[ "$flag" == "true" ]]; then
         systemctl start dbus.socket
     fi
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

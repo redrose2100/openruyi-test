@@ -16,8 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test busctl
 # ############################################
+# shellcheck disable=SC1090,SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL dbus
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -35,7 +42,12 @@ function run_test() {
 
     busctl tree -q | grep -E "└─ */org"
     CHECK_RESULT $? 0 0 'busctl tree failed.'
+}
 
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
