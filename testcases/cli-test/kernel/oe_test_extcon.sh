@@ -22,6 +22,10 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start testing..."
     kernel_name=$(uname -r)
+    if [ "${NODE1_FRAME}" == "x86_64" ]; then
+    	LOG_INFO "x86_64架构无extcon-gpio驱动，直接跳过用例"
+    	exit 255
+    fi
     cd /usr/lib/modules/"${kernel_name}"/kernel/drivers/extcon ||return
     test -f extcon-gpio.ko.xz
     CHECK_RESULT $? 0 0 "file does not exist"
