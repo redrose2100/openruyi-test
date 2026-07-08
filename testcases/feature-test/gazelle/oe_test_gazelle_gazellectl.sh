@@ -24,6 +24,15 @@ function pre_test() {
     DNF_INSTALL "libconfig dpdk numactl libboundscheck libpcap gazelle pciutils net-tools redis"
 
     cp /etc/gazelle/lstack.conf /etc/gazelle/lstack.conf.bak
+
+    test_nic=$(python3 ${OET_PATH}/libs/locallibs/get_test_device.py --device nic --node all | awk '{print $1}' | while read nic; do
+        bus=$(${DPDK_BIND} -s | grep " if=$nic " | awk '{print $1}')
+        # 过滤e1000类型网卡，找到第一个virtio网卡直接输出
+        if ! lspci -s "$bus" | grep -qi "82540EM"; then
+            echo "$nic"
+            break
+        fi
+    done)
     
     test_nic=$(TEST_NIC 1 | awk '{print $1}')
     test_nic_mac=$(cat /sys/class/net/"$test_nic"/address)
