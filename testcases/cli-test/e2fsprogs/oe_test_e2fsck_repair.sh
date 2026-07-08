@@ -15,12 +15,13 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Repair file system integrity
 #####################################
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2119
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL e2fsprogs
     dd if=/dev/zero of=/home/testzone count=20 bs=10M
     losetup /dev/loop0 /home/testzone
     CHECK_RESULT $? 0 0 "log message: Failed install minimap2 "
@@ -52,6 +53,7 @@ function post_test() {
     umount /mnt
     losetup -d /dev/loop0
     rm -rf /home/testzone
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

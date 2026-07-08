@@ -16,8 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test dbus.socket restart
 # #############################################
+# shellcheck disable=SC1091,SC2119
 
 source "../common/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL dbus
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -28,6 +35,12 @@ function run_test() {
     systemctl status dbus.socket | grep "Active: active"
     CHECK_RESULT $? 
     LOG_INFO "End of the test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
