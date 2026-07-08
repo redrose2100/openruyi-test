@@ -15,6 +15,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   gazellectl 命令测试
 # ############################################
+# shellcheck disable=SC2120
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
@@ -24,8 +25,23 @@ function pre_test() {
     DNF_INSTALL "libconfig dpdk numactl libboundscheck libpcap gazelle pciutils net-tools redis"
 
     cp /etc/gazelle/lstack.conf /etc/gazelle/lstack.conf.bak
-    
-    test_nic=$(TEST_NIC 1 | awk '{print $1}')
+
+    test_nic=""
+    # 获取本机所有物理网卡，过滤lo本地回环
+    mapfile -t local_nics < <(find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -printf "%f\n")
+    for tmp in "${local_nics[@]}"; do
+    	bus=$(dpdk-devbind -s | grep " if=$tmp " | awk '{print $1}')
+    	# 找到有效且非e1000网卡直接选用
+    	if [[ -n "$bus" ]] && ! dpdk-devbind -s | grep "$bus" | grep -qi e1000; then
+        	test_nic="$tmp"
+        	break
+    	fi
+    done
+    #找不到e1000就报错，避免test_nic 是空值
+    if [[ -z "$test_nic" ]];then
+    	echo "ERROR：本机所有网卡均为e1000或无可用DPDK网卡"
+    	exit 1
+    fi
     test_nic_mac=$(cat /sys/class/net/"$test_nic"/address)
     test_nic_drv=$(dpdk-devbind -s | grep " if=$test_nic " | awk -F 'drv=' '{print $2}' | awk '{print $1}')
     test_nic_bus=$(dpdk-devbind -s | grep " if=$test_nic " | awk '{print $1}')
