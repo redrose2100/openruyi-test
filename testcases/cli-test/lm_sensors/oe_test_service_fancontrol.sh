@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test fancontrol.service restart
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
@@ -26,14 +26,14 @@ function pre_test() {
     log_file /tmp/sensors_log
         spawn sensors-detect
         expect {
-            "*(YES/no*" {
+            -nocase "*(YES/no*" {
                 send "yes\r"
                 exp_continue
             }
         }
         expect eof
 EOF
-    if grep "no sensors were detected" /tmp/sensors_log; then
+    if grep "no sensors were detected" /tmp/sensors_log && ! sensors | grep -i fan; then
         LOG_ERROR "The environment does not support testing"
         exit 255
     fi
@@ -50,7 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop fancontrol.service
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
