@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   gperftools-功能验证
 # ############################################
+#shellcheck disable=SC2119
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
@@ -74,7 +75,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf main* test.cpp
-    DNF_REMOVE "$@"
+    DNF_REMOVE 
     LOG_INFO "Finish environment cleanup!"
 
 }
