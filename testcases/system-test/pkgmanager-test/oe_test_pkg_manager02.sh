@@ -29,7 +29,8 @@ export LANG=en_US.UTF-8
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     EXECUTE_T="720m"
-    cp /etc/yum.repos.d/openEuler.repo /tmp/openEuler.repo.bak
+    mkdir /tmp/yum.bak
+    cp /etc/yum.repos.d/*.repo /tmp/yum.bak/    
     rm -rf /home/{pkg_manager_folder,src,src_epol} /root/rpmbuild
     sed -i 's/\r$//' ./common/escape.pkg
     yum clean all
@@ -68,7 +69,8 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Packages upgrade error !"
     test -s /home/pkg_manager_folder/EPOL_upgrade_fail_list
     CHECK_RESULT $? 1 0 "EPOL packages upgrade error !"
-    REMOTE_REBOOT 2 120
+    REMOTE_REBOOT 2 600
+    CHECK_RESULT $? 0 0 "NODE2 reboot timeout, failed to establish SSH connection"    
     # Downgrade packages
     downgrade_test_pkg
     test -s /home/pkg_manager_folder/downgrade_fail_list
@@ -81,16 +83,18 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Remove packages error !"
     test -s /home/pkg_manager_folder/EPOL_remove_fail_list
     CHECK_RESULT $? 1 0 "Remove epol packages error !"
-    REMOTE_REBOOT 2 120
+    REMOTE_REBOOT 2 600
+    CHECK_RESULT $? 0 0 "NODE2 reboot timeout, failed to establish SSH connection"    
     LOG_INFO "End to run test."
 }
 
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf /etc/yum.repos.d/*
-    mv /tmp/openEuler.repo.bak /etc/yum.repos.d/openEuler.repo
     export LANG=$Default_LANG
+    rm -rf /etc/yum.repos.d/*
+    mv /tmp/yum.bak/*.repo /etc/yum.repos.d/
+    rm -rf /tmp/yum.bak
     LOG_INFO "End to restore the test environment."
 }
 
