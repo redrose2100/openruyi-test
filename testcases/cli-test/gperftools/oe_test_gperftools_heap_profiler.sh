@@ -10,20 +10,15 @@
 # See the Mulan PSL v2 for more details.
 
 # #############################################
-# @Author    :   dev
-# @Contact   :
+# @Author    :   ding-jiao
+# @Contact   :   ding_jiao@hoperun.com
 # @Date      :   2026-07-08
 # @License   :   Mulan PSL v2
 # @Desc      :   gperftools-Heap profiler functionality
 # ############################################
+#shellcheck disable=SC2119
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
-
-function config_params() {
-    LOG_INFO "Start to config params of the case."
-    LOG_INFO "No params need to config."
-    LOG_INFO "End to config params of the case."
-}
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -47,7 +42,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Heap profile files not generated"
 
     # Test 4: Check heap profile file is not empty
-    HEAP_FILE=$(ls /tmp/heapprof.*.heap | head -1)
+    HEAP_FILE=$(find /tmp -maxdepth 1 -name "heapprof.*.heap" | head -1)
     test -s "$HEAP_FILE"
     CHECK_RESULT $? 0 0 "Heap profile file is empty"
 

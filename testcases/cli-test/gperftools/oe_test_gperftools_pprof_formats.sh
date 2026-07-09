@@ -10,14 +10,15 @@
 # See the Mulan PSL v2 for more details.
 
 # #############################################
-# @Author    :   dev
-# @Contact   :
+# @Author    :   ding-jiao
+# @Contact   :   ding_jiao@hoperun.com
 # @Date      :   2026-07-08
 # @License   :   Mulan PSL v2
 # @Desc      :   gperftools-pprof analysis tool with various output formats
 # #############################################
+#shellcheck disable=SC2119
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
