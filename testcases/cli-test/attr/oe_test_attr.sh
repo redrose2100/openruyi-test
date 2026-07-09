@@ -16,11 +16,26 @@
 #@Version       :   1.0
 #@Desc          :   command test attr
 #####################################
+# shellcheck disable=SC1090,SC2119
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
+function ver() {
+    # version to number: 6.6.0 -> 6006000
+    echo "$@" | awk -F. '{ printf("%d%03d%03d\n", $1,$2,$3); }'
+}
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    if test -d /lkp/lkp/; then
+        local version exp
+        version=$(rpm -q kernel | head -1 | cut -d "-" -f 2)
+        exp="6.6.0"
+        if [[ $(ver "$version") -lt $(ver "$exp") ]]; then
+            LOG_INFO "The eulerpipeline platform environment does not support the attr command for kernel versions below 6.6.0."
+            exit 255
+        fi
+    fi
     DNF_INSTALL attr
     touch test && ln -s test test.lnk
     LOG_INFO "End to prepare the test environment."
@@ -67,6 +82,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f test.lnk test
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
