@@ -16,27 +16,33 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test command findfs
 # ############################################
+# shellcheck disable=SC1090,SC2119
 
-source "$OET_PATH"/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
-function pre_test()
-{
+function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DEV=$(blkid |head -n 1 |awk -F " " '{print $1}'|tr -d ':')   
-    UUID=$(blkid -s UUID -o value "$DEV")
+    DNF_INSTALL util-linux
+	DEV=$(df / | awk 'NR==2{print $1}')
+    if [ -z "$DEV" ] || [ ! -b "$DEV" ]; then
+        LOG_WARN "No valid block device found, skip findfs tests"
+		exit 255
+    else
+        UUID=$(blkid -s UUID -o value "$DEV")
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "start to run test."
-    findfs UUID="$UUID"| grep "$DEV"
+    findfs UUID="$UUID" | grep "$DEV"
     CHECK_RESULT $? 0 0 "cannot find $DEV in system."
     LOG_INFO "End of the test."
 }
 
-function post_test()
-{
+function post_test() {
     LOG_INFO "Start to restore the test environment."
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
