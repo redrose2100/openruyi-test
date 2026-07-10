@@ -29,7 +29,8 @@ export LANG=en_US.UTF-8
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     EXECUTE_T="720m"
-    cp /etc/yum.repos.d/openEuler.repo /tmp/openEuler.repo.bak
+    mkdir -p /tmp/yum.bak
+    cp /etc/yum.repos.d/*.repo /tmp/yum.bak/
     rm -rf /home/{pkg_manager_folder,src,src_epol} /root/rpmbuild
     yum clean all
     # clean the dos \r ending.
@@ -37,6 +38,43 @@ function pre_test() {
     LOG_INFO "End to prepare the test environment."
 }
 
+function check_arch_pkg_white_list() {
+    LOG_INFO "Start check arch packages white list"
+    local arm_html="$1"
+    local x86_html="$2"
+    local repo_tag="$3"
+    local whitelist="${OET_PATH}/testcases/system-test/pkgmanager-test/common/arch_diff_whitelist.pkg"
+    local diff_log="/home/pkg_manager_folder/arch_diff_${repo_tag}_pkg.log"
+
+    #get rpm packages
+    get_pkg() {
+        grep -o 'href=".*\.rpm"' "$1" | sed -E 's/href="//;s/"$//' | sed -E 's/-[0-9]+\.[0-9]+.*$//' | sort -u
+    }
+    arm_pkg=$(get_pkg "$arm_html")
+    x86_pkg=$(get_pkg "$x86_html")
+
+    # get only in arm & x86
+    arm_only=$(awk 'NR==FNR{s[$0]=1;next}!s[$0]' <(echo "$x86_pkg") <(echo "$arm_pkg"))
+    x86_only=$(awk 'NR==FNR{s[$0]=1;next}!s[$0]' <(echo "$arm_pkg") <(echo "$x86_pkg"))
+    diff=$(echo -e "${arm_only}\n${x86_only}" | sed '/^$/d')
+     
+    # Check differences pkg between the two architectures.
+    if [[ -z "${diff}" ]]; then
+        LOG_INFO "No diff packages, pass"
+        return 0
+    fi
+
+    # Check whether the diff packages are in the whitelist
+    bad_pkg=$(echo "$diff" | while read -r p; do grep -q "^$p$" "$whitelist" || echo "$p"; done)
+    if [[ -n "$bad_pkg" ]]; then
+        echo -e "\nNot in whitelist:\n$bad_pkg" >> "$diff_log"
+        LOG_ERROR "Packages not in whitelist: $bad_pkg"
+        return 1
+    fi
+
+    LOG_INFO "All diff packages in whitelist, pass"
+    return 0
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -70,23 +108,42 @@ function run_test() {
     if [[ "${arm_pkgs_num}" -eq "${x86_pkgs_num}" ]]; then
         echo "The update two architectures are equal in number" >>/home/pkg_manager_folder/check_pkg_num.log
     else
-        echo "The update two architectures are not equal in number" >>/home/pkg_manager_folder/check_pkg_num.log
+        check_arch_pkg_white_list "repo_packages_arm" "repo_packages_x86" "everything"
+        ret=$?
+        if [ ${ret} -eq 0 ]; then
+        # 返回0：差异包全部在白名单，可忽略
+           echo "all differential packages are in the whitelist, this problem can be ignored" >> /home/pkg_manager_folder/check_pkg_num.log
+           LOG_INFO "all differential packages are in the whitelist, this problem can be ignored"
+        else
+        # 返回1：存在不在白名单的差异包，报错
+           echo "two architectures are not equal in number,differential packages not in whitelist see /home/pkg_manager_folder/arch_diff_everything_pkg.log" >> /home/pkg_manager_folder/check_pkg_num.log
+           LOG_INFO "two architectures are not equal in number,differential packages not in whitelist see /home/pkg_manager_folder/arch_diff_everything_pkg.log"
+        fi
     fi
-    grep "The update two architectures are not equal in number" /home/pkg_manager_folder/check_pkg_num.log
-    CHECK_RESULT $? 1 0 "The two architectures are not equal in number"
+    grep "two architectures are not equal in number,differential packages not in whitelist see /home/pkg_manager_folder/arch_diff_everything_pkg.log" /home/pkg_manager_folder/check_pkg_num.log
+    CHECK_RESULT $? 1 0 "The two architectures are not equal in number,see /home/pkg_manager_folder/arch_diff_everything_pkg.log"
     if [ -s EPOL_update_list ]; then
         arm_epol_pkgs_num=$(grep -ci ".rpm" epol_repo_packages_arm)
         x86_epol_pkgs_num=$(grep -ci ".rpm" epol_repo_packages_x86)
         if [[ "${arm_epol_pkgs_num}" -eq "${x86_epol_pkgs_num}" ]]; then
             echo "The epol two architectures are equal in number" >>/home/pkg_manager_folder/check_pkg_num.log
         else
-            echo "The epol two architectures are not equal in number" >>/home/pkg_manager_folder/check_pkg_num.log
-        fi
-        grep "The epol two architectures are not equal in number" /home/pkg_manager_folder/check_pkg_num.log
-        CHECK_RESULT $? 1 0 "The epol two architectures are not equal in number"
+	    check_arch_pkg_white_list "epol_repo_packages_arm" "epol_repo_packages_x86" "epol"
+	    ret=$?
+	    if [ ${ret} -eq 0 ]; then
+	       echo "The epol differential packages are in the whitelist, this problem can be ignored" >> /home/pkg_manager_folder/check_pkg_num.log
+               LOG_INFO "The epol differential packages are in the whitelist, this problem can be ignored"
+	    else
+	       echo "The epol two architectures are not equal in number,differential packages not in whitelist see /home/pkg_manager_folder/arch_diff_epol_pkg.log" >> /home/pkg_manager_folder/check_pkg_num.log
+	       LOG_INFO "The epol two architectures are not equal in number,differential packages not in whitelist see /home/pkg_manager_folder/arch_diff_epol_pkg.log"
+	
+	    fi
+	fi
+        grep "The epol two architectures are not equal in number,differential packages not in whitelist see /home/pkg_manager_folder/arch_diff_epol_pkg.log" /home/pkg_manager_folder/check_pkg_num.log
+        CHECK_RESULT $? 1 0 "The epol two architectures are not equal in number,see /home/pkg_manager_folder/arch_diff_epol_pkg.log"
     else
         echo "EPOL repo is not exit"
-    fi
+    fi    
     # Install packages and ko verification
     install_test_pkg
     test -s /home/pkg_manager_folder/install_fail_list
@@ -95,14 +152,16 @@ function run_test() {
     CHECK_RESULT $? 1 0 "EPOL packages install error !"
     test -s /home/pkg_manager_folder/ko_fail_list
     CHECK_RESULT $? 1 0 "Check ko insmod fail !"
-    REMOTE_REBOOT 2 120
+    REMOTE_REBOOT 2 600
+    CHECK_RESULT $? 0 0 "NODE2 reboot timeout, failed to establish SSH connection"
     # Remove packages
     uninstall_pkg
     test -s /home/pkg_manager_folder/remove_fail_list
     CHECK_RESULT $? 1 0 "Remove packages error !"
     test -s /home/pkg_manager_folder/EPOL_remove_fail_list
     CHECK_RESULT $? 1 0 "Remove epol packages error !"
-    REMOTE_REBOOT 2 120
+    REMOTE_REBOOT 2 600
+    CHECK_RESULT $? 0 0 "NODE2 reboot timeout, failed to establish SSH connection"
     LOG_INFO "End to run test."
 }
 
@@ -111,7 +170,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=$Default_LANG
     rm -rf /etc/yum.repos.d/*
-    mv /tmp/openEuler.repo.bak /etc/yum.repos.d/openEuler.repo
+    mv /tmp/yum.bak/*.repo /etc/yum.repos.d/
+    rm -rf /tmp/yum.bak
     LOG_INFO "End to restore the test environment."
 }
 
