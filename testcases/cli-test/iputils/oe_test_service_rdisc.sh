@@ -16,8 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test rdisc.service restart
 # #############################################
-#shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2119
+
 source "../common/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL iputils
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -28,6 +35,12 @@ function run_test() {
     test_execution rdisc.service
     test_reload rdisc.service
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "start to restore the test environment."
+    DNF_REMOVE
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

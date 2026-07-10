@@ -16,8 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test iptables.service restart
 # #############################################
+# shellcheck disable=SC1091,SC2119
 
 source "../common/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL iptables
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -29,7 +36,6 @@ function run_test() {
     CHECK_RESULT $? 0 0 "iptables.service reload failed"
     systemctl status iptables.service | grep "active (exited)"
     CHECK_RESULT $? 0 0 "iptables.service reload causes the service status to change"
-
     LOG_INFO "Finish test!"
 }
 
@@ -38,6 +44,7 @@ function post_test() {
     sed -i 's\iptables.init condrestart\iptables.init start\g' /usr/lib/systemd/system/iptables.service
     systemctl daemon-reload
     systemctl reload iptables.service
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

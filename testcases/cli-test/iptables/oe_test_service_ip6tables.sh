@@ -16,8 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ip6tables.service restart
 # #############################################
+# shellcheck disable=SC1091,SC2119
 
 source "../common/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL iptables
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -37,6 +44,7 @@ function post_test() {
     sed -i 's\ip6tables.init condrestart\ip6tables.init start\g' /usr/lib/systemd/system/ip6tables.service
     systemctl daemon-reload
     systemctl reload ip6tables.service
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
