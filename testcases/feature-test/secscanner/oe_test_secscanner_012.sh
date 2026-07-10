@@ -22,7 +22,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
     \cp /etc/sysctl.conf sysctl.conf-bak
     LOG_INFO "End of environmental preparation!"

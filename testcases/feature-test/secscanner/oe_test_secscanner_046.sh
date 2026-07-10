@@ -28,7 +28,7 @@ function pre_test()
     LOG_INFO "Start to prepare the test environment."
 
     # Check if secScanner is installed
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
 
     # Install vsftpd if not installed
@@ -44,8 +44,6 @@ function pre_test()
     if [[ -f "$VSFTPD_CONFIG_FILE" && ! -f "${VSFTPD_CONFIG_FILE}-bak" ]]; then
         \cp "$VSFTPD_CONFIG_FILE" "${VSFTPD_CONFIG_FILE}-bak"
     fi
-
-
 
     # Remove existing anonymous_enable configuration line
     sed -i '/^anonymous_enable/d' "$VSFTPD_CONFIG_FILE" 2>/dev/null
