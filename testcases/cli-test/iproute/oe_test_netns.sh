@@ -16,9 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   system common command ip netns
 # ############################################
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL iproute
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -38,6 +44,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     ip netns delete netns1
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
