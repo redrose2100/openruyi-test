@@ -71,7 +71,7 @@ function post_test()
     # Restore secScanner configuration
     [[ -f "${CONFIG_FILE}-bak" ]] && \cp "${CONFIG_FILE}-bak" "$CONFIG_FILE"
 
-    DNF_REMOVE "$@"
+    DNF_REMOVE
 
     # Clean up temporary files
     rm -f restore fix check tmp service_status_before.txt service_status_after.txt

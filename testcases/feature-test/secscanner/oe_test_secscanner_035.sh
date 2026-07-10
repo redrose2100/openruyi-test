@@ -86,13 +86,13 @@ function post_test()
         \cp "${CONFIG_FILE}-bak" "$CONFIG_FILE"
     fi
     
-    if [[ -f "${PASSWD_FILE}-bak" ]]; then
+    if [[ -f "${PASSWD_FILE}-bak" ]]; the
         \cp "${PASSWD_FILE}-bak" "$PASSWD_FILE"
     fi
 
     # Clean up temporary files
     rm -f restore fix check tmp
-
+    
     LOG_INFO "End to restore the test environment."
 }
 

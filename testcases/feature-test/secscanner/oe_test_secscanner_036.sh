@@ -90,7 +90,7 @@ function post_test()
     if [[ -f "${PASSWD_FILE}-bak" ]]; then
         \cp "${PASSWD_FILE}-bak" "$PASSWD_FILE"
     fi
-
+    
     # Clean up temporary files
     rm -f restore fix check tmp
 

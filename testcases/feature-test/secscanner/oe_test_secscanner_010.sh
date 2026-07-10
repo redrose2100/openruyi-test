@@ -55,7 +55,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     \mv /etc/pam.d/system-auth-bak /etc/pam.d/system-auth
     \mv /etc/pam.d/password-auth-bak /etc/pam.d/password-auth
     \mv "${CONFIG_FILE}_bak" "$CONFIG_FILE" 

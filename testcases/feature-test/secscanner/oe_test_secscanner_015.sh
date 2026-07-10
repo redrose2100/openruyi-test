@@ -85,7 +85,7 @@ function post_test()
 
     # Restore secScanner configuration and remove package
     [[ -f "${CONFIG_FILE}_bak" ]] && \mv "${CONFIG_FILE}_bak" "$CONFIG_FILE"
-    DNF_REMOVE "$@"
+    DNF_REMOVE
 
     # Clean up temporary files
     rm -f restore fix check tmp

@@ -85,7 +85,7 @@ function post_test()
     fi
     systemctl restart sshd 2>/dev/null
     # Remove installed packages
-    DNF_REMOVE "$@"
+    DNF_REMOVE
 
     # Clean up temporary files
     rm -f restore fix check tmp

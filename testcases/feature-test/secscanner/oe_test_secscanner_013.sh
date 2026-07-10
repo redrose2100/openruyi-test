@@ -52,7 +52,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     \mv sysctl.conf-bak /etc/sysctl.conf
     \mv "${CONFIG_FILE}_bak" "$CONFIG_FILE" 
     rm -f restore fix check "${CONFIG_FILE}_bak"

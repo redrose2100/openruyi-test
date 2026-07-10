@@ -143,7 +143,7 @@ function post_test()
     fi
 
     # Remove installed packages
-    DNF_REMOVE "$@"
+    DNF_REMOVE
 
     # Clean up temporary files
     rm -f restore fix check tmp ${ISSUE_FILE}-bak ${ISSUE_NET_FILE}-bak

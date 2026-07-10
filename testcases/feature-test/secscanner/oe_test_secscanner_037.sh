@@ -116,7 +116,7 @@ function post_test()
     if [[ -f "${RSYSLOG_CONFIG_FILE}-bak" ]]; then
         \cp "${RSYSLOG_CONFIG_FILE}-bak" "$RSYSLOG_CONFIG_FILE"
     fi
-
+    DNF_REMOVE
     # Clean up temporary files
     rm -f restore fix check tmp rsyslog_original.txt
 
