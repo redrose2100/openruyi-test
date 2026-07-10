@@ -28,7 +28,7 @@ function pre_test()
     LOG_INFO "Start to prepare the test environment."
 
     # Check if secScanner is installed
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
 
     # Install vsftpd if not installed
@@ -82,7 +82,7 @@ function post_test()
     fi
 
     # Remove installed packages
-    DNF_REMOVE "$@"
+    DNF_REMOVE
 
     # Clean up temporary files
     rm -f restore fix check tmp

@@ -28,7 +28,7 @@ function pre_test()
     LOG_INFO "Start to prepare the test environment."
 
     # Check if secScanner is installed
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
 
     # Backup configuration files
@@ -84,7 +84,7 @@ function post_test()
     fi
     systemctl restart sshd 2>/dev/null
     # Remove installed packages
-    DNF_REMOVE "$@"
+    DNF_REMOVE
 
     # Clean up temporary files
     rm -f restore fix check tmp

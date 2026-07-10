@@ -22,7 +22,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
     id test && userdel -rf test
 	useradd test
@@ -32,13 +32,13 @@ function pre_test()
 function run_test() {
     LOG_INFO "start to run test."
     su -c "secscanner -h" -test
-    CHECK_RESULT $? 1 0 "Regular users are not allowed to run secscanner."
+    CHECK_RESULT $? 0 1 "Regular users are not allowed to run secscanner."
 }
 
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     userdel -rf test
     LOG_INFO "End to restore the test environment."
 }

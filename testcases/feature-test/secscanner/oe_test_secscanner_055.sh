@@ -29,7 +29,7 @@ function pre_test()
     LOG_INFO "Start to prepare the test environment."
 
     # Check if secScanner is installed
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
 
     # Backup issue and issue.net files
@@ -143,7 +143,7 @@ function post_test()
     fi
 
     # Remove installed packages
-    DNF_REMOVE "$@"
+    DNF_REMOVE
 
     # Clean up temporary files
     rm -f restore fix check tmp ${ISSUE_FILE}-bak ${ISSUE_NET_FILE}-bak

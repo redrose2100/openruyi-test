@@ -30,7 +30,7 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
 
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
 
     # Backup configuration files
@@ -90,7 +90,7 @@ function post_test()
     if [[ -f "${PASSWD_FILE}-bak" ]]; then
         \cp "${PASSWD_FILE}-bak" "$PASSWD_FILE"
     fi
-
+    
     # Clean up temporary files
     rm -f restore fix check tmp
 

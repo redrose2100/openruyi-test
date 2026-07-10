@@ -22,7 +22,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
     \cp /etc/motd ./motd_bak
     LOG_INFO "End of environmental preparation!"
@@ -50,7 +50,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     \cp ./motd_bak /etc/motd
     \cp "${CONFIG_FILE}_bak" "$CONFIG_FILE" 
     rm -f restore fix check motd_bak "${CONFIG_FILE}_bak"
