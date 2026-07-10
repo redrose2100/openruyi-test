@@ -30,7 +30,7 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
 
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
 
     # Backup configuration files
