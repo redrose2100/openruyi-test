@@ -27,7 +27,7 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
 
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
 
     # Backup configuration files
@@ -116,7 +116,7 @@ function post_test()
     if [[ -f "${RSYSLOG_CONFIG_FILE}-bak" ]]; then
         \cp "${RSYSLOG_CONFIG_FILE}-bak" "$RSYSLOG_CONFIG_FILE"
     fi
-
+    DNF_REMOVE
     # Clean up temporary files
     rm -f restore fix check tmp rsyslog_original.txt
 

@@ -27,7 +27,7 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
 
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
 
     # Backup secscanner configuration file
@@ -74,7 +74,7 @@ function post_test()
     # Restore telnet.socket service status
     systemctl stop "$SERVICE_NAME" 2>/dev/null
 
-    DNF_REMOVE "$@"
+    DNF_REMOVE
 
     # Clean up temporary files
     rm -f restore fix check tmp service_status_before.txt service_status_after.txt

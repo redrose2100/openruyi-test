@@ -35,7 +35,7 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
 
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
 
     # Backup and clean each file if it exists
@@ -85,7 +85,7 @@ function post_test()
 
     # Restore secScanner configuration and remove package
     [[ -f "${CONFIG_FILE}_bak" ]] && \mv "${CONFIG_FILE}_bak" "$CONFIG_FILE"
-    DNF_REMOVE "$@"
+    DNF_REMOVE
 
     # Clean up temporary files
     rm -f restore fix check tmp

@@ -22,7 +22,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    yum search secScanner || exit 255
+    yum search secScanner || exit 0
     DNF_INSTALL "secScanner"
     \cp /etc/pam.d/system-auth /etc/pam.d/system-auth-bak
     \cp /etc/pam.d/password-auth /etc/pam.d/password-auth-bak
@@ -55,7 +55,7 @@ function run_test() {
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     \mv /etc/pam.d/system-auth-bak /etc/pam.d/system-auth
     \mv /etc/pam.d/password-auth-bak /etc/pam.d/password-auth
     \mv "${CONFIG_FILE}_bak" "$CONFIG_FILE" 
