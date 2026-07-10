@@ -15,12 +15,13 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   Test case for nsenter command
 #####################################
-# shellcheck disable=SC2119
+# shellcheck disable=SC2119,SC1090
+
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL util-linux
+    DNF_INSTALL "util-linux hostname"
     nohup sleep 60 &
     SLEEP_PID=$!
     LOG_INFO "End to prepare the test environment."
