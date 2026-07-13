@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/fuse",
+    "cases": [
+        {
+            "name": "oe_test_fuse_daemon_recovery"
+        },
+        {
+            "name": "oe_test_fuse_ulockmgr_server"
+        },
+        {
+            "name": "oe_test_fuse_mount_fuse"
+        },
+        {
+            "name": "oe_test_fuse_fusermount"
+        }
+    ]
+}
