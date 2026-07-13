@@ -46,10 +46,10 @@ function run_test() {
     fusermount --help 2>&1 | grep -i "fusermount"
     CHECK_RESULT $? 0 0 "fusermount --help failed"
     # 测试选项 -V / --version：显示版本信息
-    fusermount -V | grep -i "version"
+    fusermount -V | grep "$(rpm -qa fuse | awk -F'-' '{print $2}')"
     CHECK_RESULT $? 0 0 "fusermount -V failed"
     # fusermount命令：显示版本信息（长选项）
-    fusermount --version | grep -i "version"
+    fusermount --version | grep "$(rpm -qa fuse | awk -F'-' '{print $2}')"
     CHECK_RESULT $? 0 0 "fusermount --version failed"
     fuse2fs "${FUSE_IMG}" "${FUSE_MNT}"
     CHECK_RESULT $? 0 0 "fuse2fs mount failed, cannot proceed with unmount tests"
