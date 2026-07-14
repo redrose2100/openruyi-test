@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   alsa-lib PCM API test
 # ############################################
-# shellcheck disable=SC1090,SC2119,SC2046
-source "${OET_PATH}/testcases/cli-test/alsa-lib/common_alsa-lib.sh"
+# shellcheck disable=SC1091,SC2119,SC2046
+source "./common_alsa-lib.sh"
 
 function pre_test() {
     # Step 1: Prepare test environment, install dependencies
