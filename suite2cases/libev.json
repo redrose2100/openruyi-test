@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libev",
+    "cases": [
+        {
+            "name": "oe_test_libev"
+        },
+        {
+            "name": "oe_test_libev_watcher"
+        }
+    ]
+}
