@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   alsa-lib Mixer API test
 # ############################################
-# shellcheck disable=SC1090,SC2119,SC2046
-source "${OET_PATH}/testcases/cli-test/alsa-lib/common_alsa-lib.sh"
+# shellcheck disable=SC1091,SC2119,SC2046
+source "./common_alsa-lib.sh"
 
 function pre_test() {
     # Step 1: Prepare test environment, install dependencies
@@ -92,7 +92,7 @@ EOF
     CHECK_RESULT $? 0 0 "Failed to compile test_mixer.c"
 
 	# Step 4: Run Mixer API test
-    ./test_mixer | grep "RESULT:"
+    ./test_mixer | grep "RESULT: PASS"
     CHECK_RESULT $? 0 0 "Mixer API test failed"
     
     LOG_INFO "End to run test."
