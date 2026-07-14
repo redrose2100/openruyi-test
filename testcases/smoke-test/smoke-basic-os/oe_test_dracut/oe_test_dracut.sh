@@ -22,6 +22,12 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     kernel_ver=$(rpm -qa kernel | sort | tail -n 1 | awk -F '-' '{print $2"-"$3}')
+    suffix_name=$(uname -a | awk -F ' ' '{print $3}' | awk -F '.' '{print $(NF-1)}')
+    name="kernel"
+    if [[ $suffix_name == *+64k ]];then
+        name="kernel-64k"
+        kernel_ver=$(rpm -qa $name | sort | tail -n 1 | awk -F '-' '{print $3"-"$4}')
+    fi
     mv -f /boot/initramfs-"${kernel_ver}".img /boot/initramfs-"${kernel_ver}".img.bak
     LOG_INFO "End to prepare the test environment."
 }

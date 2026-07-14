@@ -20,14 +20,20 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     dnf config-manager --disable update
     DNF_INSTALL "dim_tools dim vdo kmod-kvdo"
-    if dnf list --installed | grep dim_tools; then
-        lsmod | grep dim_core || insmod "$(rpm -ql dim | grep dim_core.ko)"
-        lsmod | grep dim_monitor || insmod "$(rpm -ql dim | grep dim_monitor.ko)"
-        depmod -a
-        modprobe kvdo
-    else
-        echo "dim does not exist, function is unavailable"
+    suffix_name=$(uname -a | awk -F ' ' '{print $3}' | awk -F '.' '{print $(NF-1)}')
+    if [[ $suffix_name == *+64k ]];then
+        LOG_INFO "The environment does not support testing"
         exit 255
+    else
+        if dnf list --installed | grep dim_tools; then
+            lsmod | grep dim_core || insmod "$(rpm -ql dim | grep dim_core.ko)"
+            lsmod | grep dim_monitor || insmod "$(rpm -ql dim | grep dim_monitor.ko)"
+            depmod -a
+            modprobe kvdo
+        else
+            echo "dim does not exist, function is unavailable"
+            exit 255
+        fi
     fi
 }
 

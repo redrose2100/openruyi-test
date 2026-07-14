@@ -39,7 +39,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to execute journalctl"
     journalctl /usr/lib/systemd/systemd1
     CHECK_RESULT $? 0 1 "Succeed to execute journalctl"
-    local_disk=$(lsblk | grep disk | grep da | head -n 1 | awk '{print $1}')
+    local_disk=$(lsblk | grep -B1 part | grep disk | awk '{print $1}')
     journalctl /dev/"$local_disk"| grep -E "begins at|begin at|[0-9]|entries"
     CHECK_RESULT $? 0 0 "Failed to execute journalctl disk"
     journalctl /dev/testdev

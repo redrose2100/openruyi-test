@@ -17,17 +17,20 @@
 # @Desc      :   Check rpm package suffix name of rpm package
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     suffix_name=$(uname -a | awk -F ' ' '{print $3}' | awk -F '.' '{print $(NF-1)}')
+    if [[ $suffix_name == *+64k ]];then
+        suffix_name="${suffix_name//\+64k/}"
+    fi	    
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    dnf list | grep -wv $suffix_name | grep -v "Packages\|Last metadata expiration check"
+    dnf list | grep -wv "${suffix_name}" | grep -v "Packages\|Last metadata expiration check"
     CHECK_RESULT $? 1 0 "Check rpm package name: failed!"
     LOG_INFO "End to run test."
 }
