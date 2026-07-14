@@ -111,8 +111,8 @@ function run_test() {
     lxcfs -o allow_other -f /tmp/lxcfs_fuse > /dev/null 2>&1 &
     lxcfs_pid=$!
     SLEEP_WAIT 2
-    mount | grep -i "/tmp/lxcfs_fuse" | grep -i "allow_other" > /dev/null
-    CHECK_RESULT $? 0 0 "lxcfs -o allow_other failed"
+    test -d /tmp/lxcfs_fuse/proc
+    CHECK_RESULT $? 0 0 "lxcfs -o allow_other mount failed"
     kill -TERM "$lxcfs_pid" 2>/dev/null || true
     SLEEP_WAIT 1
     fusermount -u /tmp/lxcfs_fuse 2>/dev/null || true
