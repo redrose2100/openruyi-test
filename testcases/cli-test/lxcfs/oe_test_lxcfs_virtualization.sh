@@ -12,19 +12,20 @@
 # #############################################
 # @Author    :   ding-jiao
 # @Contact   :   ding_jiao@hoperun.com
-# @Date      :   2026-07-13
+# @Date      :   2026-07-14
 # @License   :   Mulan PSL v2
-# @Desc      :   Test lxcfs /proc virtualization (cpuinfo, meminfo, loadavg, swaps)
+# @Desc      :   Test lxcfs /proc virtualization (cpuinfo, meminfo, loadavg, swaps, stat, uptime, diskstats)
 # #############################################
 
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
-MOUNT_POINT="/var/lib/lxcfs"
+MOUNT_POINT="/tmp/lxcfs_virt_test"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "lxcfs fuse"
     systemctl stop lxcfs.service 2>/dev/null || true
+    fusermount -u "$MOUNT_POINT" 2>/dev/null || true
     rm -rf "$MOUNT_POINT"
     mkdir -p "$MOUNT_POINT"
     LOG_INFO "End to prepare the test environment."
@@ -36,39 +37,68 @@ function run_test() {
     lxcfs "$MOUNT_POINT" &
     SLEEP_WAIT 2
 
-    test -f "$MOUNT_POINT"/proc/cpuinfo
+    # 验证cpuinfo文件存在
+    test -f "$MOUNT_POINT/proc/cpuinfo"
     CHECK_RESULT $? 0 0 "cpuinfo file does not exist"
 
-    grep "^processor" "$MOUNT_POINT"/proc/cpuinfo > /dev/null
+    # 验证cpuinfo包含processor字段
+    grep -q "^processor" "$MOUNT_POINT/proc/cpuinfo"
     CHECK_RESULT $? 0 0 "cpuinfo has no processor field"
 
-    test -f "$MOUNT_POINT"/proc/meminfo
+    # 验证meminfo文件存在
+    test -f "$MOUNT_POINT/proc/meminfo"
     CHECK_RESULT $? 0 0 "meminfo file does not exist"
 
-    grep "^MemTotal" "$MOUNT_POINT"/proc/meminfo | grep -E '[0-9]+' > /dev/null
-    CHECK_RESULT $? 0 0 "meminfo MemTotal is missing or invalid"
+    # 验证meminfo包含MemTotal字段
+    grep -q "^MemTotal" "$MOUNT_POINT/proc/meminfo"
+    CHECK_RESULT $? 0 0 "meminfo MemTotal is missing"
 
-    test -f "$MOUNT_POINT"/proc/loadavg
+    # 验证meminfo包含MemFree字段
+    grep -q "^MemFree" "$MOUNT_POINT/proc/meminfo"
+    CHECK_RESULT $? 0 0 "meminfo MemFree is missing"
+
+    # 验证虚拟化meminfo值有效
+    VIRT_MEM=$(grep "^MemTotal:" "$MOUNT_POINT/proc/meminfo" | awk '{print $2}')
+    test -n "$VIRT_MEM" && test "$VIRT_MEM" -gt 0
+    CHECK_RESULT $? 0 0 "Virtualized MemTotal is empty or invalid"
+
+    # 验证loadavg文件存在
+    test -f "$MOUNT_POINT/proc/loadavg"
     CHECK_RESULT $? 0 0 "loadavg file does not exist"
 
-    cat "$MOUNT_POINT"/proc/loadavg | grep -E '^[0-9.]+ [0-9.]+ [0-9.]+' > /dev/null
+    # 验证loadavg内容格式正确
+    grep -qE '^[0-9.]+ [0-9.]+ [0-9.]+' "$MOUNT_POINT/proc/loadavg"
     CHECK_RESULT $? 0 0 "loadavg content is invalid"
 
-    test -f "$MOUNT_POINT"/proc/swaps
+    # 验证swaps文件存在
+    test -f "$MOUNT_POINT/proc/swaps"
     CHECK_RESULT $? 0 0 "swaps file does not exist"
 
-    cat "$MOUNT_POINT"/proc/swaps | grep -E '^Filename|^/' > /dev/null
-    CHECK_RESULT $? 0 0 "swaps content is invalid"
+    # 验证swaps表头存在
+    grep -q "^Filename" "$MOUNT_POINT/proc/swaps"
+    CHECK_RESULT $? 0 0 "swaps header is missing"
 
-    test -f "$MOUNT_POINT"/proc/stat
+    # 验证stat文件存在
+    test -f "$MOUNT_POINT/proc/stat"
     CHECK_RESULT $? 0 0 "stat file does not exist"
 
-    test -f "$MOUNT_POINT"/proc/uptime
+    # 验证stat包含cpu行
+    grep -q "^cpu " "$MOUNT_POINT/proc/stat"
+    CHECK_RESULT $? 0 0 "stat missing cpu line"
+
+    # 验证uptime文件存在
+    test -f "$MOUNT_POINT/proc/uptime"
     CHECK_RESULT $? 0 0 "uptime file does not exist"
 
-    test -f "$MOUNT_POINT"/proc/diskstats
+    # 验证uptime内容有效
+    grep -qE '^[0-9.]+ [0-9.]+' "$MOUNT_POINT/proc/uptime"
+    CHECK_RESULT $? 0 0 "uptime content is invalid"
+
+    # 验证diskstats文件存在
+    test -f "$MOUNT_POINT/proc/diskstats"
     CHECK_RESULT $? 0 0 "diskstats file does not exist"
 
+    # 卸载lxcfs挂载
     fusermount -u "$MOUNT_POINT"
     CHECK_RESULT $? 0 0 "fusermount -u failed"
 
@@ -77,9 +107,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    fusermount -u "$MOUNT_POINT" 2>/dev/null || true
     killall lxcfs 2>/dev/null || true
+    fusermount -u "$MOUNT_POINT" 2>/dev/null || true
     rm -rf "$MOUNT_POINT"
+    systemctl start lxcfs.service 2>/dev/null || true
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
