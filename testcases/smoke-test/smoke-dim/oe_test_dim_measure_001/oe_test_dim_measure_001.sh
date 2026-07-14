@@ -84,7 +84,6 @@ function post_test() {
     rmmod dim_monitor dim_core kvdo
     rm /usr/lib/modules/"$(uname -r)"/kernel/drivers/block/kvdo.ko
     rm -rf /etc/dim/
-    DNF_REMOVE "$@"
 }
 
 main "$@"

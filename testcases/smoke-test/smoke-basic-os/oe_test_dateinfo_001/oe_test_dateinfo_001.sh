@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test timedatectl command and date command
 # ############################################
-# shellcheck disable=SC2119
+
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {

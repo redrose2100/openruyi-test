@@ -103,7 +103,7 @@ function post_test() {
     rm -rf $lun1 $lun2
     test ${firewall_status} -eq 1 && systemctl restart firewalld
     lsmod | grep dm_multipath && modprobe -r dm_multipath
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 
