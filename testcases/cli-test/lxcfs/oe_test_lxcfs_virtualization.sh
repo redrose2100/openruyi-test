@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test lxcfs /proc virtualization (cpuinfo, meminfo, loadavg, swaps, stat, uptime, diskstats)
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 MOUNT_POINT="/tmp/lxcfs_virt_test"

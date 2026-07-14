@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test lxcfs FUSE mount and unmount functionality
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 MOUNT_POINT="/tmp/lxcfs_mount_test"

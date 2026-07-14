@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test lxcfs command line arguments
 # #############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -64,7 +64,7 @@ function run_test() {
     SLEEP_WAIT 2
     test -f /tmp/lxcfs.pid
     CHECK_RESULT $? 0 0 "lxcfs -p pid file not created"
-    cat /tmp/lxcfs.pid | grep -E '^[0-9]+$' > /dev/null
+    grep -E "^[0-9]+$" /tmp/lxcfs.pid > /dev/null
     CHECK_RESULT $? 0 0 "lxcfs -p pid file content invalid"
     kill -TERM "$(cat /tmp/lxcfs.pid)" 2>/dev/null || true
     SLEEP_WAIT 1
@@ -77,7 +77,7 @@ function run_test() {
     SLEEP_WAIT 2
     test -f /tmp/lxcfs2.pid
     CHECK_RESULT $? 0 0 "lxcfs --pidfile pid file not created"
-    cat /tmp/lxcfs2.pid | grep -E '^[0-9]+$' > /dev/null
+    grep -E "^[0-9]+$" /tmp/lxcfs2.pid > /dev/null
     CHECK_RESULT $? 0 0 "lxcfs --pidfile pid file content invalid"
     kill -TERM "$(cat /tmp/lxcfs2.pid)" 2>/dev/null || true
     SLEEP_WAIT 1
