@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   open-iscsi & multipath-tools & target test
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function config_params() {
@@ -63,10 +63,18 @@ function run_test() {
     iscsiadm -m node -p ${local_addr} -l
     CHECK_RESULT $?
     lsmod | grep dm_multipath || modprobe dm_multipath
+    lsblk
+    SLEEP_WAIT 5
+    cp /etc/multipath/wwids /etc/multipath/wwids_bak
+    for disk in $(lsscsi -t | grep iscsi | awk '{print $NF}');do
+        multipath -a "${disk}"
+    done
     systemctl restart multipathd
     CHECK_RESULT $?
     multipath -v2
     SLEEP_WAIT 3
+    lsblk
+    multipath -ll
     path1=$(multipath -ll | grep disk1 | awk '{print $1}')
     path2=$(multipath -ll | grep disk2 | awk '{print $1}')
     test -n "$path1" && test -n "$path2" || return 1
@@ -84,6 +92,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    mv -f /etc/multipath/wwids_bak /etc/multipath/wwids
     iscsiadm -m node -p ${local_addr} -u
     iscsiadm -m node -o delete -p ${local_addr}
     systemctl stop multipathd
@@ -94,7 +103,7 @@ function post_test() {
     rm -rf $lun1 $lun2
     test ${firewall_status} -eq 1 && systemctl restart firewalld
     lsmod | grep dm_multipath && modprobe -r dm_multipath
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -16,12 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test the basic functions of ip6tables
 # ############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL iptables-nft
+    DNF_INSTALL "iptables-nft kmod kernel-$(uname -r)"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -40,7 +40,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 
