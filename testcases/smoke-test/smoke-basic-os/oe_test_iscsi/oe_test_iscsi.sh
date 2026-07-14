@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   open-iscsi & multipath-tools & target test
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function config_params() {
