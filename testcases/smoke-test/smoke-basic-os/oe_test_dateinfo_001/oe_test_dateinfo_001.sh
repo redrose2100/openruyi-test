@@ -16,8 +16,15 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   test timedatectl command and date command
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL "dbus"
+    systemctl restart dbus
+    LOG_INFO "End of environmental preparation!"
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
@@ -28,4 +35,10 @@ function run_test() {
     LOG_INFO "Finish test!"
 }
 
-main $@
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
+}
+
+main "$@"

@@ -16,12 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test the basic functions of ebtables
 # ############################################
-
+# shellcheck disable=SC2119
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "ebtables"
+    DNF_INSTALL "ebtables kmod kernel-$(uname -r)"
     touch /run/ebtables.lock
     LOG_INFO "End to prepare the test environment."
 }
@@ -35,7 +35,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     rm -rf /run/ebtables.lock
     LOG_INFO "End to restore the test environment."
 }
