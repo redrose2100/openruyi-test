@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   alsa-lib install verification and version check
 # ############################################
-# shellcheck disable=SC1090,SC2119,SC2046
-source "${OET_PATH}/libs/locallibs/common_lib.sh"
+# shellcheck disable=SC1091,SC2119,SC2046
+source "./common_lib.sh"
 
 function pre_test() {
     # Step 1: Prepare test environment, install alsa-lib and alsa-lib-devel packages
