@@ -30,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     
     # Step 2: Verify alsa-lib package is installed
-    rpm -qa | grep alsa-lib
+    rpm -qa | grep -w alsa-lib
     CHECK_RESULT $? 0 0 "alsa-lib package not installed"
     
     # Step 3: Verify alsa-lib-devel package is installed
