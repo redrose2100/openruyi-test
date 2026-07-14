@@ -1,0 +1,11 @@
+{
+  "path": "$OET_PATH/testcases/cli-test/lxcfs-tools/",
+  "cases": [
+    {
+      "name": "oe_test_lxcfs-tools"
+    },
+    {
+      "name": "oe_test_service_lxcfs-tools"
+    }
+  ]
+}
