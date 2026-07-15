@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libssh",
+    "cases": [
+        {
+            "name": "oe_test_libssh_01",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_libssh_02",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_libssh_03",
+            "machine num": 2
+        }
+    ]
+}
