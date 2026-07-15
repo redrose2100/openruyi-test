@@ -136,7 +136,7 @@ conn = libvirt.open('qemu:///session')
 domain = conn.lookupByName('${VM_NAME}')
 print(domain.maxMemory())
 conn.close()
-    " | grep "$(virsh dumpxml "${VM_NAME}" | xmllint --xpath 'string(//memory[@unit="KiB"])' -)"
+    " | grep "[0-9]" |grep "$(virsh dumpxml "${VM_NAME}" | xmllint --xpath 'string(//memory[@unit="KiB"])' -)"
     CHECK_RESULT $? 0 0 "VM maxMemory get failed"
     # Test VM vCPU count
     python3 -c "
@@ -195,7 +195,6 @@ try:
 except:
     pass
         "
-        CHECK_RESULT $? 0 0 "VM undefine failed"
     else
         python3 -c "
 import libvirt
@@ -211,7 +210,7 @@ try:
 except:
     pass
         "
-        CHECK_RESULT $? 0 0 "VM undefine failed"
+        rm -rf /tmp/"${VM_NAME}".qcow2
     fi
     rm -rf "${VM_XML}"
     DNF_REMOVE

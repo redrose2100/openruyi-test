@@ -178,6 +178,9 @@ conn.close()
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    if [ "${NODE1_FRAME}" == "aarch64" ];then
+        rm -rf /tmp/"${VM_NAME}".qcow2
+    fi
     rm -rf "${VM_XML}"
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
