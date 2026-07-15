@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   alsa-lib common functions
 # ############################################
-# shellcheck disable=SC1090,SC2119
+# shellcheck disable=SC1090
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 # Check if audio hardware exists on the system
 # Returns 0 if audio hardware is found, 1 if not
