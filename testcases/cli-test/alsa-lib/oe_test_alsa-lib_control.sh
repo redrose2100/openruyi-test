@@ -16,8 +16,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   alsa-lib Control API test
 # ############################################
-# shellcheck disable=SC1090,SC2119,SC2046
-source "${OET_PATH}/testcases/cli-test/alsa-lib/common_alsa-lib.sh"
+# shellcheck disable=SC1091,SC2119,SC2046
+source "./common_alsa-lib.sh"
 
 function pre_test() {
     # Step 1: Prepare test environment, install dependencies
@@ -73,7 +73,7 @@ EOF
     CHECK_RESULT $? 0 0 "Failed to compile test_control.c"
 
 	# Step 4: Run Control API test
-    ./test_control | grep "RESULT:"
+    ./test_control | grep "RESULT: PASS"
     CHECK_RESULT $? 0 0 "Control API test failed"
     
     LOG_INFO "End to run test."
