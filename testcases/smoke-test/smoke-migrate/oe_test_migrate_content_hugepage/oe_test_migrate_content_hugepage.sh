@@ -21,14 +21,14 @@ source "${OET_PATH}"/testcases/smoke-test/smoke-migrate/common/common.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     pre_init
-    set_huge_mem_1_2 2048 2048
+    set_huge_mem_1_2 3072 3072
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    vm_name="2u2g_huge_page"
+    vm_name="2u4g_huge_page"
 
     create_vm_waiting_running "$vm_name"
     CHECK_RESULT $? 0 0 "create vm failed"

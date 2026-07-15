@@ -1,6 +1,6 @@
 <domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type='kvm'>
-  <name>2u2g_huge_page</name>
-  <memory unit='GiB'>2</memory>
+  <name>2u4g_huge_page</name>
+  <memory unit='GiB'>4</memory>
   <memoryBacking>
     <hugepages>
       <page size='2' unit='MiB'/>
