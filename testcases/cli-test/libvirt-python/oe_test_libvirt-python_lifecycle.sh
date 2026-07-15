@@ -51,10 +51,9 @@ function pre_test() {
   </devices>
 </domain>
 EOF
-    else
+    elif [ "${NODE1_FRAME}" == "aarch64" ];then
         DNF_INSTALL "python3-libvirt libvirt qemu-kvm edk2-aarch64"
         chmod 600 /dev/kvm
-        qemu-img create -f qcow2 /tmp/"${VM_NAME}".qcow2 10G
         cat > "${VM_XML}" << EOF
 <domain type='kvm'>
   <name>${VM_NAME}</name>
@@ -71,11 +70,6 @@ EOF
   </features>
   <cpu mode='host-passthrough'/>
   <devices>
-    <disk type='file' device='disk'>
-      <driver name='qemu' type='qcow2'/>
-      <source file='/tmp/${VM_NAME}.qcow2'/>
-      <target dev='vda' bus='virtio'/>
-    </disk>
     <serial type='pty'>
       <target type='system-serial' port='0'>
         <model name='pl011'/>
@@ -84,6 +78,9 @@ EOF
 	</devices>
 </domain>
 EOF
+    else
+        LOG_ERROR "Unsupported architecture: ${NODE1_FRAME}. If needed, adapt the test cases to the target architecture."
+        exit 255
     fi
     systemctl start libvirtd
     SLEEP_WAIT 3
@@ -163,7 +160,7 @@ domain.undefine()
 conn.close()
         "
         CHECK_RESULT $? 0 0 "VM undefine failed"
-    else
+    elif [ "${NODE1_FRAME}" == "aarch64" ];then
         python3 -c "
 import libvirt
 conn = libvirt.open('qemu:///session')
@@ -172,15 +169,15 @@ domain.undefineFlags(libvirt.VIR_DOMAIN_UNDEFINE_NVRAM)
 conn.close()
         "
         CHECK_RESULT $? 0 0 "VM undefine failed"
+    else
+        LOG_ERROR "Unsupported architecture: ${NODE1_FRAME}. If needed, adapt the test cases to the target architecture."
+        exit 255
     fi
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    if [ "${NODE1_FRAME}" == "aarch64" ];then
-        rm -rf /tmp/"${VM_NAME}".qcow2
-    fi
     rm -rf "${VM_XML}"
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
