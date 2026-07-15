@@ -1,0 +1,11 @@
+{
+  "path": "$OET_PATH/testcases/cli-test/libpwquality/",
+  "cases": [
+    {
+      "name": "oe_test_libpwquality_pwscore"
+    },
+    {
+      "name": "oe_test_libpwquality_pwmake"
+    }
+  ]
+}
