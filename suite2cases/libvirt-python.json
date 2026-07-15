@@ -1,0 +1,18 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libvirt-python",
+    "machine type": "physical",
+    "cases": [
+        {
+            "name": "oe_test_libvirt-python_basic",
+            "machine type": "kvm"
+        },
+        {
+            "name": "oe_test_libvirt-python_lifecycle",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_libvirt-python_monitor",
+            "machine type": "physical"
+        }
+    ]
+}
