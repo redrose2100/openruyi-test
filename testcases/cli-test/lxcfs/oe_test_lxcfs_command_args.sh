@@ -24,6 +24,12 @@ function pre_test() {
     DNF_INSTALL "lxcfs fuse"
     killall lxcfs 2>/dev/null || true
     SLEEP_WAIT 1
+    for mp in /tmp/lxcfs_fg /tmp/lxcfs_pidfile /tmp/lxcfs_pidfile2 /tmp/lxcfs_debug \
+              /tmp/lxcfs_debug2 /tmp/lxcfs_fuse /tmp/lxcfs_loadavg /tmp/lxcfs_loadavg2 \
+              /tmp/lxcfs_noswap /tmp/lxcfs_noswap2 /tmp/lxcfs_cfs /tmp/lxcfs_pidfd; do
+        fusermount -u "$mp" 2>/dev/null || true
+        rm -rf "$mp"
+    done
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -110,7 +116,9 @@ function run_test() {
     mkdir -p /tmp/lxcfs_fuse
     lxcfs -o allow_other -f /tmp/lxcfs_fuse > /dev/null 2>&1 &
     lxcfs_pid=$!
-    SLEEP_WAIT 2
+    SLEEP_WAIT 5
+    ps -p "$lxcfs_pid" > /dev/null
+    CHECK_RESULT $? 0 0 "lxcfs -o allow_other process not running"
     test -d /tmp/lxcfs_fuse/proc
     CHECK_RESULT $? 0 0 "lxcfs -o allow_other mount failed"
     kill -TERM "$lxcfs_pid" 2>/dev/null || true
@@ -191,6 +199,13 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     killall lxcfs 2>/dev/null || true
+    SLEEP_WAIT 1
+    for mp in /tmp/lxcfs_fg /tmp/lxcfs_pidfile /tmp/lxcfs_pidfile2 /tmp/lxcfs_debug \
+              /tmp/lxcfs_debug2 /tmp/lxcfs_fuse /tmp/lxcfs_loadavg /tmp/lxcfs_loadavg2 \
+              /tmp/lxcfs_noswap /tmp/lxcfs_noswap2 /tmp/lxcfs_cfs /tmp/lxcfs_pidfd; do
+        fusermount -u "$mp" 2>/dev/null || true
+        rm -rf "$mp"
+    done
     rm -rf /tmp/lxcfs*.pid /tmp/lxcfs_*.log
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
