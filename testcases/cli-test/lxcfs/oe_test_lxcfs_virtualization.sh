@@ -36,7 +36,12 @@ function run_test() {
 
     lxcfs "$MOUNT_POINT" &
     SLEEP_WAIT 2
+    lxcfs "$MOUNT_POINT" &
+    SLEEP_WAIT 2
 
+    # 验证lxcfs挂载成功
+    mount | grep -q "lxcfs.*$MOUNT_POINT"
+    CHECK_RESULT $? 0 0 "lxcfs failed to mount on $MOUNT_POINT"
     # 验证cpuinfo文件存在
     test -f "$MOUNT_POINT/proc/cpuinfo"
     CHECK_RESULT $? 0 0 "cpuinfo file does not exist"
