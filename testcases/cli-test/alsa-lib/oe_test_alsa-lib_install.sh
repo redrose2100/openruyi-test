@@ -20,7 +20,6 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    # Step 1: Prepare test environment, install alsa-lib and alsa-lib-devel packages
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "alsa-lib alsa-lib-devel"
     LOG_INFO "End to prepare the test environment."
@@ -29,23 +28,23 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     
-    # Step 2: Verify alsa-lib package is installed
+    # Step 1: Verify alsa-lib package is installed
     rpm -qa | grep -w alsa-lib
     CHECK_RESULT $? 0 0 "alsa-lib package not installed"
     
-    # Step 3: Verify alsa-lib-devel package is installed
+    # Step 2: Verify alsa-lib-devel package is installed
     rpm -qa | grep alsa-lib-devel
     CHECK_RESULT $? 0 0 "alsa-lib-devel package not installed"
     
-    # Step 4: Verify pkg-config can find alsa module and get version
+    # Step 3: Verify pkg-config can find alsa module and get version
     pkg-config --modversion alsa
     CHECK_RESULT $? 0 0 "pkg-config alsa module not found"
     
-    # Step 5: Verify libasound.so library file exists
+    # Step 4: Verify libasound.so library file exists
 	find /usr/lib64/ -name "libasound.so*" | grep -q .
     CHECK_RESULT $? 0 0 "libasound.so not found"
     
-    # Step 6: Verify asoundlib.h header file exists
+    # Step 5: Verify asoundlib.h header file exists
     ls /usr/include/alsa/asoundlib.h
     CHECK_RESULT $? 0 0 "asoundlib.h header not found"
     
@@ -53,7 +52,6 @@ function run_test() {
 }
 
 function post_test() {
-    # Step 7: Clean up test environment, remove installed packages
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."

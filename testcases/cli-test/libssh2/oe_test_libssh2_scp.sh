@@ -196,7 +196,6 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-	# Step 6: Clean up test environment, remove temporary files and packages
     rm -f test_scp.c test_scp /tmp/test_scp_src.txt /tmp/test_scp_dst.txt
     env_clean
     LOG_INFO "End to restore the test environment."
