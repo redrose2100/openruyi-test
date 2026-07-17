@@ -22,7 +22,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL nss-mdns
-    cp /etc/nsswitch.conf /etc/nsswitch.conf.bak
+    cp -f /etc/nsswitch.conf /etc/nsswitch.conf.bak
     
     # Step 1: Configure nsswitch.conf for mdns
     if ! grep -E '^hosts:' /etc/nsswitch.conf | grep -q mdns; then
@@ -64,7 +64,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     hostnamectl set-hostname "$ORIG_HOSTNAME"
-    mv /etc/nsswitch.conf.bak /etc/nsswitch.conf
+    mv -f /etc/nsswitch.conf.bak /etc/nsswitch.conf
     systemctl stop avahi-daemon.service avahi-daemon.socket
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."

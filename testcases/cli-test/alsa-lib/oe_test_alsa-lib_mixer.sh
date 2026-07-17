@@ -20,19 +20,19 @@
 source "./common_alsa-lib.sh"
 
 function pre_test() {
-    # Step 1: Prepare test environment, install dependencies
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "alsa-lib alsa-lib-devel gcc"
     
-    # Step 2: Check for audio hardware, skip test if not found
+    # Step 1: Check for audio hardware, skip test if not found
     check_and_skip_if_no_audio
+
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-	# Step 3: Compile Mixer API test program
+	# Step 2: Compile Mixer API test program
     cat > test_mixer.c << EOF
 #include <stdio.h>
 #include <stdlib.h>
@@ -88,6 +88,7 @@ int main(int argc, char *argv[]) {
 EOF
     CHECK_RESULT $? 0 0 "Failed to create test_mixer.c"
 
+	# Step 3: Compile Mixer API test program
     gcc test_mixer.c -o test_mixer $(pkg-config --cflags --libs alsa)
     CHECK_RESULT $? 0 0 "Failed to compile test_mixer.c"
 
@@ -99,7 +100,6 @@ EOF
 }
 
 function post_test() {
-    # Step 5: Clean up test environment, remove temporary files and packages
     LOG_INFO "Start to restore the test environment."
     rm -f test_mixer.c test_mixer
     DNF_REMOVE

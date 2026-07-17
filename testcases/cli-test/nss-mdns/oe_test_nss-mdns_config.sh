@@ -20,26 +20,23 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
-    # Step 1: Prepare test environment, install nss-mdns package
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "nss-mdns"
-    
-    # Step 2: Backup original nsswitch.conf
-    cp /etc/nsswitch.conf /etc/nsswitch.conf.bak
+    cp -f /etc/nsswitch.conf /etc/nsswitch.conf.bak
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     
-    # Step 3: Check if mdns is already configured in nsswitch.conf
+    # Step 1: Check if mdns is already configured in nsswitch.conf
     if ! grep -E '^hosts:' /etc/nsswitch.conf | grep -q mdns; then
-        # Step 4: Add mdns4_minimal to nsswitch.conf hosts line
+        # Step 2: Add mdns4_minimal to nsswitch.conf hosts line
         sed -i 's/^hosts: \(.*\)/hosts: mdns4_minimal \[NOTFOUND=return\] \1/' /etc/nsswitch.conf
         CHECK_RESULT $? 0 0 "Failed to configure nsswitch.conf"
     fi
     
-    # Step 4: Verify mdns configuration in nsswitch.conf
+    # Step 3: Verify mdns configuration in nsswitch.conf
     grep -E '^hosts:' /etc/nsswitch.conf | grep -q mdns
     CHECK_RESULT $? 0 0 "mdns not configured in nsswitch.conf"
     
@@ -48,7 +45,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    mv /etc/nsswitch.conf.bak /etc/nsswitch.conf
+    mv -f /etc/nsswitch.conf.bak /etc/nsswitch.conf
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

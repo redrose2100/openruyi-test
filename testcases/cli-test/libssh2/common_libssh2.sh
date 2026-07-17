@@ -44,7 +44,6 @@ function env_prepare() {
 }
 
 function env_clean() {
-	# Step 1: Clean up test environment, remove temporary files and packages
 	userdel -rf testuser
 	DNF_REMOVE
 }
