@@ -134,7 +134,6 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-	# Step 5: Clean up test environment, remove temporary files and packages
     rm -f test_ssh_api.c test_ssh_api
     env_clean
     LOG_INFO "End to restore the test environment."
