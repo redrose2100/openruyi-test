@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/ima-evm-utils",
+    "cases": [
+        {
+            "name": "oe_test_evmctl_01",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_evmctl_02",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_evmctl_03",
+            "machine num": 1
+        }
+    ]
+}
