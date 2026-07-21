@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/fipscheck",
+    "cases": [
+        {
+            "name": "oe_test_fipscheck"
+        },
+        {
+            "name": "oe_test_fipshmac"
+        }
+    ]
+}
