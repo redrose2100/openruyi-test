@@ -84,7 +84,8 @@ function run_test() {
     runc delete -f "$CONTAINER_ID"
     CHECK_RESULT $? 0 0 "runc delete failed"
     SLEEP_WAIT 1
-    runc list 2>/dev/null | grep -q "$CONTAINER_ID" || CHECK_RESULT $? 1 0 "Container still exists after delete"
+    runc list 2>/dev/null | grep -q "$CONTAINER_ID" 
+    CHECK_RESULT $? 1 0 "Container still exists after delete"
     # --root 指定自定义root目录运行容器
     mkdir -p /tmp/custom_runc_root
     runc --root /tmp/custom_runc_root run -d "$CONTAINER_ID"
