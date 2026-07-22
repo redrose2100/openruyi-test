@@ -1,4 +1,3 @@
-
 #!/usr/bin/bash
 
 # Copyright (c) 2026 Huawei Technologies Co.,Ltd.ALL rights reserved.
@@ -19,14 +18,14 @@
 # ############################################
 # shellcheck disable=SC2119
 
-source "./common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
 TEST_BUNDLE="/tmp/runc_management_test"
 CONTAINER_ID="mgmtcontainer"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    install_runc
+    DNF_INSTALL "runc"
     prepare_rootfs "$TEST_BUNDLE"
     runc spec
     python3 -c "import json; d=json.load(open('config.json')); d['process']['terminal']=False; d['process']['args']=['sleep', '120']; json.dump(d, open('config.json','w'), indent=4)"

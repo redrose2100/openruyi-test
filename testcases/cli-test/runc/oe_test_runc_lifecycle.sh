@@ -18,7 +18,7 @@
 # ############################################
 # shellcheck disable=SC2119
 
-source "./common.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
 TEST_BUNDLE="/tmp/runc_lifecycle_test"
 CONTAINER_ID="testcontainer"
