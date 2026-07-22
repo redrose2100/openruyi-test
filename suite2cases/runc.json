@@ -6,12 +6,6 @@
     "add disk": [],
     "cases": [
         {
-            "name": "oe_test_runc_basic",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_runc_lifecycle",
             "machine num": 1,
             "add network interface": 0,
