@@ -1,0 +1,15 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libseccomp",
+    "machine num": 1,
+    "machine type": "kvm",
+    "add network interface": 1,
+    "add disk": [],
+    "cases": [
+        {
+            "name": "oe_test_libseccomp",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        }
+    ]
+}
