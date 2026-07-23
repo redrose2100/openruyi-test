@@ -29,7 +29,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "prefetch_tuning"
-    insmod $(find /lib/modules/ -name prefetch_tuning.ko)
+    insmod "$(find /lib/modules/ -name prefetch_tuning.ko | head -1)"
     LOG_INFO "End to prepare the test environment."
 }
 

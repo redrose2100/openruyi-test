@@ -23,7 +23,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "prefetch_tuning"
-    insmod $(find /lib/modules/ -name prefetch_tuning.ko)
+    insmod "$(find /lib/modules/ -name prefetch_tuning.ko | head -1)"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -50,22 +50,22 @@ function run_test() {
     echo 0 > /sys/devices/virtual/misc/prefetch/read_unique
     CHECK_RESULT $? 0 0 "read_unique set to 0 failed"
     grep -q "^cpu(.*): 0.$" /sys/devices/virtual/misc/prefetch/read_unique
-    CHECK_RESULT$? 0 0 "read_unique value not updated to 0"
+    CHECK_RESULT $? 0 0 "read_unique value not updated to 0"
     echo 1 > /sys/devices/virtual/misc/prefetch/read_unique
-    CHECK_RESULT$? 0 0 "read_unique set to 1 failed"
+    CHECK_RESULT $? 0 0 "read_unique set to 1 failed"
     grep -q "^cpu(.*): 1.$" /sys/devices/virtual/misc/prefetch/read_unique
-    CHECK_RESULT$? 0 0 "read_unique value not updated to 1"
+    CHECK_RESULT $? 0 0 "read_unique value not updated to 1"
     echo 2 > /sys/devices/virtual/misc/prefetch/read_unique
     grep -q "^cpu(.*): 2.$" /sys/devices/virtual/misc/prefetch/read_unique
-    CHECK_RESULT$? 0 1 "read_unique should reject value 2"
+    CHECK_RESULT $? 0 1 "read_unique should reject value 2"
 
     # Test spill_en parameter (0/1): L3 cache spill
     echo 0 > /sys/devices/virtual/misc/prefetch/spill_en
-    CHECK_RESULT$? 0 0 "spill_en set to 0 failed"
+    CHECK_RESULT $? 0 0 "spill_en set to 0 failed"
     grep -q "^register(.*): 0.$" /sys/devices/virtual/misc/prefetch/spill_en
-    CHECK_RESULT$? 0 0 "spill_en value not updated to 0"
+    CHECK_RESULT $? 0 0 "spill_en value not updated to 0"
     echo 1 > /sys/devices/virtual/misc/prefetch/spill_en
-    CHECK_RESULT$? 0 0 "spill_en set to 1 failed"
+    CHECK_RESULT $? 0 0 "spill_en set to 1 failed"
     grep -q "^register(.*): 1.$" /sys/devices/virtual/misc/prefetch/spill_en
     CHECK_RESULT $? 0 0 "spill_en value not updated to 1"
     echo 2 > /sys/devices/virtual/misc/prefetch/spill_en
