@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/prefetch_tuning",
+    "machine type": "physical",
+    "cases": [
+        {
+            "name": "oe_test_prefetch_tuning_install",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_prefetch_tuning_params",
+            "machine type": "physical"
+        }
+    ]
+}
