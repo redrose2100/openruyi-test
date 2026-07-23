@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/prefetch_tuning",
+    "cases": [
+        {
+            "name": "oe_test_prefetch_tuning_install"
+        },
+        {
+            "name": "oe_test_prefetch_tuning_params"
+        }
+    ]
+}
