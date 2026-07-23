@@ -78,7 +78,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f "$TEST_BIN" *.o
+    rm -f "$TEST_BIN" ./*.o
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
