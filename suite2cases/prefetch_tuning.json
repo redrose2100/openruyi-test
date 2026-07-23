@@ -4,11 +4,11 @@
     "cases": [
         {
             "name": "oe_test_prefetch_tuning_install",
-	    "machine type": "physical"
+            "machine type": "physical"
         },
         {
             "name": "oe_test_prefetch_tuning_params",
-	    "machine type": "physical"
+            "machine type": "physical"
         }
     ]
 }
