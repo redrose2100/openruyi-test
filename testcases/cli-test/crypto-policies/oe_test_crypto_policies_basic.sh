@@ -41,7 +41,7 @@ function run_test() {
     update-crypto-policies --is-applied
     CHECK_RESULT $? 0 0 "update-crypto-policies --is-applied failed"
     # Test config file content is a valid policy name
-    grep -qE "^(DEFAULT|LEGACY|FUTURE|FIPS)(:[A-Z]+)?$" /etc/crypto-policies/config
+    grep -qE "^(DEFAULT|LEGACY|FUTURE|FIPS)(:[A-Z0-9-]+)?$" /etc/crypto-policies/config
     CHECK_RESULT $? 0 0 "crypto-policies config file content is not a valid policy"
     # Test back-ends directory existence
     [ -d "/etc/crypto-policies/back-ends" ]
