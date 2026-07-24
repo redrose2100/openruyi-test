@@ -17,6 +17,10 @@
 #####################################
 
 source "${OET_PATH}"/testcases/smoke-test/smoke-migrate/common/common.sh
+if [ "$is_64k_version" = "true" ]; then
+    echo "Memlink is not supported in 64k kernel"
+    exit 255
+fi
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
