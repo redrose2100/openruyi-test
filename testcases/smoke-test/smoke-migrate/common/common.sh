@@ -36,6 +36,8 @@ vm_ip="192.168.1.101"
 vm_user="root"
 vm_passwd="openEuler12#$"
 
+is_64k_version=$(uname -a | grep -q 64k && echo "true" || echo "false")
+
 function vm_clean() {
     local flag=${1:-local}
     if [ "${flag}" = "local" ]; then
@@ -132,13 +134,17 @@ function memlink_init() {
 function set_huge_mem() {
     local huge_size=$1
     local flag=${2:-local}
-    local huge_2M="/sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages"
+    if [ "$is_64k_version" = "true" ]; then
+        nr_hugepages_path="/sys/kernel/mm/hugepages/hugepages-524288kB/nr_hugepages"
+    else
+        nr_hugepages_path="/sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages"
+    fi
     if [ "${flag}" = "local" ]; then
-        echo "$huge_size" > "$huge_2M"
+        echo "$huge_size" > "$nr_hugepages_path"
         SLEEP_WAIT 10
         output=$(grep HugePages_ /proc/meminfo)
     elif [ "${flag}" = "remote" ]; then
-        SSH_CMD "echo $huge_size > $huge_2M" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
+        SSH_CMD "echo $huge_size > $nr_hugepages_path" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
         SLEEP_WAIT 10
         output=$(SSH_CMD "grep HugePages_ /proc/meminfo" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER")
     fi
@@ -174,9 +180,12 @@ function create_vm_waiting_running() {
         exit 1
     }
     sed -i "s|IMAGE_PATH|${qcow2_path}|g" "${xml_path}"
+    if [ "$is_64k_version" = "true" ]; then
+        sed -i "s/page size='2'/page size='512'/g" "${xml_path}"
+    fi
     LOG_INFO "vm xml save dir: $xml_path; image dir is: $qcow2_path"
     virsh create "$xml_path" || return 1
-    SLEEP_WAIT 120
+    SLEEP_WAIT 60
     virsh list | grep -iq "$vm_name"
     return $?
 }
