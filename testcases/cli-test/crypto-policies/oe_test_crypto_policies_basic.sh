@@ -35,7 +35,7 @@ function run_test() {
     command -v update-crypto-policies
     CHECK_RESULT $? 0 0 "update-crypto-policies command not found"
     # Test --show option: display current applied crypto policy
-    update-crypto-policies --show | grep -qE "^(DEFAULT|LEGACY|FUTURE|FIPS)(:[A-Z]+)?$"
+    update-crypto-policies --show | grep -qE "^(DEFAULT|LEGACY|FUTURE|FIPS)(:[A-Z0-9-]+)?$"
     CHECK_RESULT $? 0 0 "update-crypto-policies --show output is not a valid policy"
     # Test --is-applied option: check if current configured policy is applied
     update-crypto-policies --is-applied
