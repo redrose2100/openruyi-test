@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/c-ares",
+    "cases": [
+        {
+            "name": "oe_test_c-ares_01"
+        },
+        {
+            "name": "oe_test_c-ares_02"
+        },
+        {
+            "name": "oe_test_c-ares_adig"
+        },
+        {
+            "name": "oe_test_c-ares_ahost"
+        }
+    ]
+}
