@@ -24,7 +24,6 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "crypto-policies"
     ORIGINAL_POLICY=$(update-crypto-policies --show)
-    LOG_INFO "Original crypto policy: ${ORIGINAL_POLICY}"
     LOG_INFO "End to prepare the test environment."
 }
 
