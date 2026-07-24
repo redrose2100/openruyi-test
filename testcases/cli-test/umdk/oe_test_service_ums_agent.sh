@@ -21,7 +21,11 @@ source "${OET_PATH}"/testcases/cli-test/common/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "umdk-ums-agent umdk-ums"
+    if uname -a | grep -q 64k;then
+        DNF_INSTALL "umdk-ums-agent umdk-ums-64kb"
+    else
+        DNF_INSTALL "umdk-ums-agent umdk-ums"
+    fi
     mkdir -p /etc/ums_agent/certs/
     openssl req -newkey rsa:2048 -passout pass:"${NODE1_PASSWORD}" -keyout /etc/ums_agent/certs/ca_rsa_private.pem -x509 -days 365 -out /etc/ums_agent/certs/ca.crt -subj "/C=CN/ST=GD/L=SZ/O=COM/OU=NSP/CN=CA/emailAddress=xxxx@xxx.com"
     openssl req -newkey rsa:2048 -passout pass:"${NODE1_PASSWORD}" -keyout /etc/ums_agent/certs/server_rsa_private.pem -out /etc/ums_agent/certs/server.csr -subj "/C=CN/ST=GD/L=SZ/O=COM/OU=NSP/CN=SERVER/emailAddress=xxxx@xxx.com"
