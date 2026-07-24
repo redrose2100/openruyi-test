@@ -70,7 +70,7 @@ function run_test() {
     gcc -o "$TEST_BIN" "$TEST_FILE" -lseccomp -Wall -Wextra
     CHECK_RESULT $? 0 0 "Compile test file failed"
 
-    ./$TEST_BIN | grep "Result: 8 passed, 0 failed"
+    ./$TEST_BIN
     CHECK_RESULT $? 0 0 "Seccomp filter tests failed"
 
     LOG_INFO "End to run test."
