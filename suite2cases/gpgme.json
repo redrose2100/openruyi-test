@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/gpgme",
+    "cases": [
+        {
+            "name": "oe_test_gpgme_install"
+        },
+        {
+            "name": "oe_test_gpgme_cli"
+        },
+        {
+            "name": "oe_test_gpgme_api"
+        },
+        {
+            "name": "oe_test_gpgme_python"
+        }
+    ]
+}
