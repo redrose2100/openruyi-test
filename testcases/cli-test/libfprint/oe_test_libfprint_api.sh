@@ -76,7 +76,6 @@ int main() {
     int dev_count = 0;
     int ret;
 
-    /* 初始化libfprint库 */
     ret = fp_init();
     if (ret != 0) {
         printf("FAIL: fp_init() failed with error code %d\n", ret);
@@ -84,17 +83,13 @@ int main() {
     }
     printf("PASS: fp_init() succeeded\n");
 
-    /* 发现可用设备 */
     discovered = fp_discover_devs();
-    /* 注意：即使没有设备，fp_discover_devs()也不会返回NULL，
-       而是返回首元素为NULL的数组 */
     if (!discovered) {
         printf("FAIL: fp_discover_devs() returned NULL\n");
         fp_exit();
         return 1;
     }
 
-    /* 统计设备数量 */
     while (discovered[dev_count] != NULL) {
         dev_count++;
     }
@@ -105,11 +100,9 @@ int main() {
         printf("PASS: fp_discover_devs() found %d devices\n", dev_count);
     }
 
-    /* 清理设备列表 */
     fp_dscv_devs_free(discovered);
     printf("PASS: fp_dscv_devs_free() succeeded\n");
 
-    /* 退出库 */
     fp_exit();
     printf("PASS: fp_exit() succeeded\n");
 
