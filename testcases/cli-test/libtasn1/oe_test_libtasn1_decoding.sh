@@ -17,6 +17,7 @@
 # @Desc      :   libtasn1 asn1Decoding command test
 # ############################################
 # shellcheck disable=SC2119
+set -o pipefail
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 TEST_DIR=$(dirname "${BASH_SOURCE[0]}")
@@ -24,7 +25,7 @@ TEST_DIR=$(dirname "${BASH_SOURCE[0]}")
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "libtasn1"
-    # 创建 ASN.1 定义文件（测试数据）- 包含时间字段
+    # 创建 ASN.1 定义文件
     cat > "$TEST_DIR/test.asn1" << 'EOF'
 Test DEFINITIONS EXPLICIT TAGS ::=
 BEGIN
@@ -35,7 +36,7 @@ BEGIN
     }
 END
 EOF
-    # 创建值分配文件（测试数据）- UTCTime 标准格式：YYMMDDHHMMSSZ
+    # 创建值分配文件
     cat > "$TEST_DIR/test.asn1val" << 'EOF'
 test Test.TestType
 
@@ -43,12 +44,10 @@ id 123
 name test
 time 230101000000Z
 EOF
-    # 生成合法的 DER 编码文件供解码测试使用
+    # 生成合法的 DER 编码文件
     asn1Coding "$TEST_DIR/test.asn1" "$TEST_DIR/test.asn1val" -o "$TEST_DIR/valid.der"
-    # 创建时间字段不符合严格规则的文件（UTCTime 使用非标准格式：缺少秒数）
-    # 标准格式：230101000000Z (13字节)
-    # 非标准格式：2301010000Z (11字节，缺少秒数)
-    printf '\x30\x11\x02\x01\x7b\x0c\x04\x74\x65\x73\x74\x17\x0b\x32\x33\x30\x31\x30\x31\x30\x30\x30\x30\x5a' > "$TEST_DIR/bad_time.der"
+    # 创建时间字段不符合严格规则的文件（UTCTime 使用非标准格式：缺少时区标记）
+    printf '\x30\x17\x02\x01\x7b\x0c\x04\x74\x65\x73\x74\x17\x0c\x32\x33\x30\x31\x30\x31\x30\x30\x30\x30\x30\x30' > "$TEST_DIR/bad_time.der"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -66,7 +65,7 @@ function run_test() {
     # 验证 -v 参数输出版本信息
     asn1Decoding -v | grep -qE "^asn1Decoding \(libtasn1\) [0-9]+\.[0-9]+\.[0-9]+$"
     CHECK_RESULT $? 0 0 "asn1Decoding -v failed"
-    # 验证基本解码功能（无参数）- 能解码合法的 DER 文件
+    # 验证基本解码功能-能解码合法的 DER 文件
     asn1Decoding "$TEST_DIR/test.asn1" "$TEST_DIR/valid.der" Test.TestType > "$TEST_DIR/decoding_output.txt" 2>&1
     CHECK_RESULT $? 0 0 "asn1Decoding basic failed"
     # 验证解码成功提示
@@ -75,28 +74,27 @@ function run_test() {
     # 验证整数解码正确（value:0x7b = 123）
     grep -q "value:0x7b" "$TEST_DIR/decoding_output.txt"
     CHECK_RESULT $? 0 0 "asn1Decoding basic integer failed"
-    # 验证字符串解码正确（无引号）
+    # 验证字符串解码正确
     grep -q "name:name  type:UTF8_STR  value:test" "$TEST_DIR/decoding_output.txt"
     CHECK_RESULT $? 0 0 "asn1Decoding basic string failed"
     # 验证时间类型识别正确
     grep -q "UTC_TIME" "$TEST_DIR/decoding_output.txt"
     CHECK_RESULT $? 0 0 "asn1Decoding basic time type failed"
-    # 验证时间值解码正确（无引号）
+    # 验证时间值解码正确
     grep -q "value:230101000000Z" "$TEST_DIR/decoding_output.txt"
     CHECK_RESULT $? 0 0 "asn1Decoding basic time value failed"
     # 验证 -s 参数（严格 DER 解码模式）- 能解码合法文件
     asn1Decoding -s "$TEST_DIR/test.asn1" "$TEST_DIR/valid.der" Test.TestType | grep -q "value:0x7b"
     CHECK_RESULT $? 0 0 "asn1Decoding -s valid failed"
-    # 验证 -s 参数拒绝时间字段非严格的文件（缺少秒数）
+    # 验证 -s 参数拒绝时间字段非严格的文件）
     asn1Decoding -s "$TEST_DIR/test.asn1" "$TEST_DIR/bad_time.der" Test.TestType >/dev/null 2>&1
     CHECK_RESULT $? 1 0 "asn1Decoding -s bad_time should fail"
     # 验证 --strict 参数（严格 DER 解码模式）- 能解码合法文件
     asn1Decoding --strict "$TEST_DIR/test.asn1" "$TEST_DIR/valid.der" Test.TestType | grep -q "value:0x7b"
     CHECK_RESULT $? 0 0 "asn1Decoding --strict valid failed"
-    # 验证 --strict 参数拒绝时间字段非严格的文件（缺少秒数）
+    # 验证 --strict 参数拒绝时间字段非严格的文件
     asn1Decoding --strict "$TEST_DIR/test.asn1" "$TEST_DIR/bad_time.der" Test.TestType >/dev/null 2>&1
     CHECK_RESULT $? 1 0 "asn1Decoding --strict bad_time should fail"
-
     # 验证 -t 参数（时间字段非严格模式）- 能解码合法文件
     asn1Decoding -t "$TEST_DIR/test.asn1" "$TEST_DIR/valid.der" Test.TestType | grep -q "value:0x7b"
     CHECK_RESULT $? 0 0 "asn1Decoding -t valid failed"
@@ -106,21 +104,21 @@ function run_test() {
     # 验证 --no-time-strict 参数（时间字段非严格模式）- 能解码合法文件
     asn1Decoding --no-time-strict "$TEST_DIR/test.asn1" "$TEST_DIR/valid.der" Test.TestType | grep -q "value:0x7b"
     CHECK_RESULT $? 0 0 "asn1Decoding --no-time-strict valid failed"
-    # 验证 --no-time-strict 参数能解码时间字段非严格的文件（缺少秒数）
+    # 验证 --no-time-strict 参数能解码时间字段非严格的文件
     asn1Decoding --no-time-strict "$TEST_DIR/test.asn1" "$TEST_DIR/bad_time.der" Test.TestType | grep -q "value:0x7b"
     CHECK_RESULT $? 0 0 "asn1Decoding --no-time-strict bad_time failed"
-    # 验证 -b 参数（基准测试模式）- 命令执行成功
+    # 验证 -b 参数（基准测试模式）
     asn1Decoding -b "$TEST_DIR/test.asn1" "$TEST_DIR/valid.der" Test.TestType >/dev/null 2>&1
     CHECK_RESULT $? 0 0 "asn1Decoding -b failed"
-    # 验证 --benchmark 参数（基准测试模式）- 命令执行成功
+    # 验证 --benchmark 参数（基准测试模式）
     asn1Decoding --benchmark "$TEST_DIR/test.asn1" "$TEST_DIR/valid.der" Test.TestType >/dev/null 2>&1
     CHECK_RESULT $? 0 0 "asn1Decoding --benchmark failed"
     # 验证无参数执行失败
     asn1Decoding >/dev/null 2>&1
-    CHECK_RESULT $? 1 0 0 "asn1Decoding no args should fail"
+    CHECK_RESULT $? 1 0 "asn1Decoding no args should fail"
     # 验证不存在的 DER 文件执行失败
     asn1Decoding "$TEST_DIR/test.asn1" "$TEST_DIR/nonexist.der" Test.TestType >/dev/null 2>&1
-    CHECK_RESULT $? 1 0 0 "asn1Decoding nonexist file should fail"
+    CHECK_RESULT $? 1 0 "asn1Decoding nonexist file should fail"
     LOG_INFO "End to run test."
 }
 

@@ -17,6 +17,7 @@
 # @Desc      :   libtasn1 asn1Parser command test
 # ############################################
 # shellcheck disable=SC2119
+set -o pipefail
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 TEST_DIR=$(dirname "${BASH_SOURCE[0]}")
@@ -33,7 +34,7 @@ BEGIN
     }
 END
 EOF
-    # 创建非法的 ASN.1 定义文件（语法错误）
+    # 创建非法的 ASN.1 定义文件
     cat > "$TEST_DIR/invalid.asn1" << 'EOF'
 Test DEFINITIONS ::= BEGIN
     TestType SEQUENCE {
@@ -58,12 +59,27 @@ function run_test() {
     # 验证 -v 参数输出版本信息
     asn1Parser -v | grep -qE "^asn1Parser \(libtasn1\) [0-9]+\.[0-9]+\.[0-9]+$"
     CHECK_RESULT $? 0 0 "asn1Parser -v failed"
-    # 验证基本解析功能（无参数）
-    asn1Parser "$TEST_DIR/test.asn1" | grep -q "TestType"
+    # 验证基本解析功能-默认生成 test_asn1_tab.c 文件
+    asn1Parser "$TEST_DIR/test.asn1"
     CHECK_RESULT $? 0 0 "asn1Parser basic failed"
+    # 验证生成的C文件非空
     [ -s "$TEST_DIR/test_asn1_tab.c" ]
     CHECK_RESULT $? 0 0 "asn1Parser output file empty"
-    # 验证 -c 参数（语法检查模式）- 能检查合法文件
+    # 验证生成的C文件包含模块名
+    grep -q '"Test"' "$TEST_DIR/test_asn1_tab.c"
+    CHECK_RESULT $? 0 0 "asn1Parser output missing module name"
+    # 验证生成的C文件包含类型定义
+    grep -q '"TestType"' "$TEST_DIR/test_asn1_tab.c"
+    CHECK_RESULT $? 0 0 "asn1Parser output missing TestType"
+    # 验证生成的C文件包含字段名
+    grep -q '"id"' "$TEST_DIR/test_asn1_tab.c"
+    CHECK_RESULT $? 0 0 "asn1Parser output missing id field"
+    grep -q '"name"' "$TEST_DIR/test_asn1_tab.c"
+    CHECK_RESULT $? 0 0 "asn1Parser output missing name field"
+    # 验证生成的C文件包含数组定义
+    grep -q "asn1_static_node test_asn1_tab\[\]" "$TEST_DIR/test_asn1_tab.c"
+    CHECK_RESULT $? 0 0 "asn1Parser output missing array definition"
+    # 验证 -c参数(语法检查模式）- 能检查合法文件
     asn1Parser -c "$TEST_DIR/test.asn1"
     CHECK_RESULT $? 0 0 "asn1Parser -c valid failed"
     # 验证 -c 参数拒绝非法文件（缺少 ::=）
@@ -75,7 +91,7 @@ function run_test() {
     # 验证 --check 参数拒绝非法文件（缺少 ::=）
     asn1Parser --check "$TEST_DIR/invalid.asn1"
     CHECK_RESULT $? 1 0 "asn1Parser --check should reject invalid"
-    # 验证 -o 参数（输出 C 数组文件）
+    # 验证 -o 参数（输出C数组文件）
     asn1Parser -o "$TEST_DIR/parser_output.h" "$TEST_DIR/test.asn1"
     CHECK_RESULT $? 0 0 "asn1Parser -o failed"
     # 验证输出文件非空
@@ -88,17 +104,23 @@ function run_test() {
     [ -s "$TEST_DIR/parser_output.h" ]
     CHECK_RESULT $? 0 0 "asn1Parser --output file empty"
     # 验证 -n 参数（自定义数组名称）
-    asn1Parser -n "test_array" "$TEST_DIR/test.asn1" | grep -q "test_array"
+    asn1Parser -n "test_array" "$TEST_DIR/test.asn1"
     CHECK_RESULT $? 0 0 "asn1Parser -n failed"
+    # 验证生成的文件包含自定义数组名称
+    grep -q "asn1_static_node test_array\[\]" "$TEST_DIR/test_asn1_tab.c"
+    CHECK_RESULT $? 0 0 "asn1Parser -n output missing array name"
     # 验证 --name 参数（自定义数组名称）
-    asn1Parser --name "test_array" "$TEST_DIR/test.asn1" | grep -q "test_array"
+    asn1Parser --name "test_array" "$TEST_DIR/test.asn1"
     CHECK_RESULT $? 0 0 "asn1Parser --name failed"
+    # 验证生成的文件包含自定义数组名称
+    grep -q "asn1_static_node test_array\[\]" "$TEST_DIR/test_asn1_tab.c"
+    CHECK_RESULT $? 0 0 "asn1Parser --name output missing array name"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f "$TEST_DIR/test.asn1" "$TEST_DIR/invalid.asn1" "$TEST_DIR/parser_output.h"
+    rm -f "$TEST_DIR/test.asn1" "$TEST_DIR/invalid.asn1" "$TEST_DIR/parser_output.h" "$TEST_DIR/test_asn1_tab.c"
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

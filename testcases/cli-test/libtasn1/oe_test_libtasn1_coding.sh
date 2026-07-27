@@ -24,7 +24,7 @@ TEST_DIR=$(dirname "${BASH_SOURCE[0]}")
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "libtasn1"
-    # 创建 ASN.1 定义文件（测试数据）
+    # 创建 ASN.1 定义文件
     cat > "$TEST_DIR/test.asn1" << 'EOF'
 Test DEFINITIONS EXPLICIT TAGS ::=
 BEGIN
@@ -54,10 +54,10 @@ function run_test() {
     # 验证 -h 参数输出帮助信息
     asn1Coding -h | grep -q "Usage"
     CHECK_RESULT $? 0 0 "asn1Coding -h failed"
-    # 验证 --version 参数输出版本信息（正则匹配版本号格式）
+    # 验证 --version 参数输出版本信息
     asn1Coding --version | grep -qE "^asn1Coding \(libtasn1\) [0-9]+\.[0-9]+\.[0-9]+$"
     CHECK_RESULT $? 0 0 "asn1Coding --version failed"
-    # 验证 -v 参数输出版本信息（正则匹配版本号格式）
+    # 验证 -v 参数输出版本信息
     asn1Coding -v | grep -qE "^asn1Coding \(libtasn1\) [0-9]+\.[0-9]+\.[0-9]+$"
     CHECK_RESULT $? 0 0 "asn1Coding -v failed"
     # 验证 -c 参数（语法检查模式）- 能检查合法文件
