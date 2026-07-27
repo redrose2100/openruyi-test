@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-
+set -o pipefail
 # Copyright (c) 2026 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -17,7 +17,6 @@
 # @Desc      :   libtasn1 asn1Decoding command test
 # ############################################
 # shellcheck disable=SC2119
-set -o pipefail
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 TEST_DIR=$(dirname "${BASH_SOURCE[0]}")
@@ -54,10 +53,10 @@ EOF
 function run_test() {
     LOG_INFO "Start to run test."
     # 验证 --help 参数输出帮助信息
-    asn1Decoding --help | grep "Usage"
+    asn1Decoding --help | grep -q "Usage"
     CHECK_RESULT $? 0 0 "asn1Decoding --help failed"
     # 验证 -h 参数输出帮助信息
-    asn1Decoding -h | grep "Usage"
+    asn1Decoding -h | grep -q "Usage"
     CHECK_RESULT $? 0 0 "asn1Decoding -h failed"
     # 验证 --version 参数输出版本信息
     asn1Decoding --version | grep -qE "^asn1Decoding \(libtasn1\) [0-9]+\.[0-9]+\.[0-9]+$"

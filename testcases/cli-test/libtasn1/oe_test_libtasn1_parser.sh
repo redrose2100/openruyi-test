@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-
+set -o pipefail
 # Copyright (c) 2026 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -17,7 +17,6 @@
 # @Desc      :   libtasn1 asn1Parser command test
 # ############################################
 # shellcheck disable=SC2119
-set -o pipefail
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 TEST_DIR=$(dirname "${BASH_SOURCE[0]}")

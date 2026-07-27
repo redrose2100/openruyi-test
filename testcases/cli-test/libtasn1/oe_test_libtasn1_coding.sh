@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-
+set -o pipefail
 # Copyright (c) 2026 Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
@@ -64,14 +64,18 @@ function run_test() {
     asn1Coding -c "$TEST_DIR/test.asn1" "$TEST_DIR/test.asn1val" 2>&1 | grep "Coding: SUCCESS"
     CHECK_RESULT $? 0 0 "asn1Coding -c valid failed"
     # 验证 -c 参数拒绝非法文件（缺少类型声明）
-    asn1Coding -c "$TEST_DIR/test.asn1" "$TEST_DIR/invalid.asn1val" 2>&1 | grep "libtasn1 ERROR"
-    CHECK_RESULT $? 0 0 "asn1Coding -c should reject invalid"
+    asn1Coding -c "$TEST_DIR/test.asn1" "$TEST_DIR/invalid.asn1val" > "$TEST_DIR/coding_error.txt" 2>&1
+    CHECK_RESULT $? 1 0 "asn1Coding -c should fail for invalid input"
+    grep -q "libtasn1 ERROR" "$TEST_DIR/coding_error.txt"
+    CHECK_RESULT $? 0 0 "asn1Coding -c should output error message"
     # 验证 --check 参数（语法检查模式）- 能检查合法文件
     asn1Coding --check "$TEST_DIR/test.asn1" "$TEST_DIR/test.asn1val" 2>&1 | grep "Coding: SUCCESS"
     CHECK_RESULT $? 0 0 "asn1Coding --check valid failed"
     # 验证 --check 参数拒绝非法文件（缺少类型声明）
-    asn1Coding --check "$TEST_DIR/test.asn1" "$TEST_DIR/invalid.asn1val" 2>&1 | grep "libtasn1 ERROR"
-    CHECK_RESULT $? 0 0 "asn1Coding --check should reject invalid"
+    asn1Coding --check "$TEST_DIR/test.asn1" "$TEST_DIR/invalid.asn1val" > "$TEST_DIR/coding_error.txt" 2>&1
+    CHECK_RESULT $? 1 0 "asn1Coding --check should fail for invalid input"
+    grep -q "libtasn1 ERROR" "$TEST_DIR/coding_error.txt"
+    CHECK_RESULT $? 0 0 "asn1Coding --check should output error message"
     # 验证 -o 参数（输出 DER 编码文件）
     asn1Coding "$TEST_DIR/test.asn1" "$TEST_DIR/test.asn1val" -o "$TEST_DIR/output.der" > "$TEST_DIR/coding_output.txt" 2>&1
     CHECK_RESULT $? 0 0 "asn1Coding -o failed"
@@ -101,7 +105,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f "$TEST_DIR/test.asn1" "$TEST_DIR/test.asn1val" "$TEST_DIR/invalid.asn1val" "$TEST_DIR/output.der" "$TEST_DIR/coding_output.txt"
+    rm -f "$TEST_DIR/test.asn1" "$TEST_DIR/test.asn1val" "$TEST_DIR/invalid.asn1val" "$TEST_DIR/output.der" "$TEST_DIR/coding_output.txt" "$TEST_DIR/coding_error.txt"
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
