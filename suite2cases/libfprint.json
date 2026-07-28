@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libfprint",
+    "cases": [
+        {
+            "name": "oe_test_libfprint_basic"
+        },
+        {
+            "name": "oe_test_libfprint_api"
+        }
+    ]
+}
