@@ -22,6 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "abseil-cpp abseil-cpp-devel gcc-c++"
+    tmp_dir=$(mktemp -d /tmp/test_XXXXXX)
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -29,15 +30,15 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # Test 1: Verify package installation
-    rpm -qa | grep -q "abseil-cpp"
+    rpm -qa | grep "abseil-cpp" > /dev/null
     CHECK_RESULT $? 0 0 "abseil-cpp package not installed"
 
     # Test 2: Verify main library files exist
-    ldconfig -p | grep -q "libabsl_base"
+    ldconfig -p | grep "libabsl_base" > /dev/null
     CHECK_RESULT $? 0 0 "libabsl_base library not found"
 
     # Test 3: Verify log sink library exists
-    ldconfig -p | grep -q "libabsl_log_sink"
+    ldconfig -p | grep "libabsl_log_sink" > /dev/null
     CHECK_RESULT $? 0 0 "libabsl_log_sink library not found"
 
     # Test 4: Verify library file count
@@ -54,7 +55,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "abseil-cpp license not found"
 
     # Test 7: Verify logging functionality
-    cat > /tmp/test_logging.cpp << 'EOF'
+    cat > "$tmp_dir/test_logging.cpp" << 'EOF'
 #include <iostream>
 #include "absl/log/log.h"
 #include "absl/log/check.h"
@@ -73,7 +74,7 @@ int main() {
 }
 EOF
 
-    g++ -std=c++17 -o /tmp/test_logging /tmp/test_logging.cpp \
+    g++ -std=c++17 -o "$tmp_dir/test_logging" "$tmp_dir/test_logging.cpp" \
         -labsl_log_initialize -labsl_log_internal_globals \
         -labsl_log_internal_message -labsl_log_severity \
         -labsl_log_sink -labsl_log_entry \
@@ -86,7 +87,7 @@ EOF
         -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile logging test"
 
-    /tmp/test_logging 2>&1 | grep -q "Logging test passed"
+    "$tmp_dir/test_logging" 2>&1 | grep "Logging test passed" > /dev/null
     CHECK_RESULT $? 0 0 "Logging test failed"
 
     LOG_INFO "End to run test."
@@ -95,7 +96,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -f /tmp/test_logging.cpp /tmp/test_logging
+    rm -rf "$tmp_dir"
     LOG_INFO "End to restore the test environment."
 }
 

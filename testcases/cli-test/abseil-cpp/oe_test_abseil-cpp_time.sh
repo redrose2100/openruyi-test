@@ -16,13 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   abseil-cpp time and timezone test
 # ############################################
-# shellcheck disable=SC1090,SC2119
+# shellcheck disable=SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "abseil-cpp abseil-cpp-devel gcc-c++"
+    tmp_dir=$(mktemp -d /tmp/test_XXXXXX)
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -30,7 +31,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # Test 1: Verify absl::Time and Duration functionality
-    cat > /tmp/test_time.cpp << 'EOF'
+    cat > "$tmp_dir/test_time.cpp" << 'EOF'
 #include <iostream>
 #include "absl/time/time.h"
 #include "absl/time/clock.h"
@@ -55,13 +56,13 @@ int main() {
     return 0;
 }
 EOF
-    g++ -o /tmp/test_time /tmp/test_time.cpp -labsl_time -labsl_strings -labsl_string_view -labsl_base
+    g++ -o "$tmp_dir/test_time" "$tmp_dir/test_time.cpp" -labsl_time -labsl_strings -labsl_string_view -labsl_base
     CHECK_RESULT $? 0 0 "Failed to compile time test"
-    /tmp/test_time | grep -q "Time test passed"
+    "$tmp_dir/test_time" | grep "Time test passed" > /dev/null
     CHECK_RESULT $? 0 0 "Time test failed"
 
     # Test 2: Verify absl::TimeZone functionality
-    cat > /tmp/test_timezone.cpp << 'EOF'
+    cat > "$tmp_dir/test_timezone.cpp" << 'EOF'
 #include <iostream>
 #include <string>
 #include "absl/time/time.h"
@@ -79,9 +80,9 @@ int main() {
     return 0;
 }
 EOF
-    g++ -o /tmp/test_timezone /tmp/test_timezone.cpp -labsl_time_zone -labsl_time -labsl_strings -labsl_string_view -labsl_base
+    g++ -o "$tmp_dir/test_timezone" "$tmp_dir/test_timezone.cpp" -labsl_time_zone -labsl_time -labsl_strings -labsl_string_view -labsl_base
     CHECK_RESULT $? 0 0 "Failed to compile timezone test"
-    /tmp/test_timezone | grep -q "TimeZone test passed"
+    "$tmp_dir/test_timezone" | grep "TimeZone test passed" > /dev/null
     CHECK_RESULT $? 0 0 "TimeZone test failed"
 
     LOG_INFO "End to run test."
@@ -90,8 +91,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -f /tmp/test_time.cpp /tmp/test_time
-    rm -f /tmp/test_timezone.cpp /tmp/test_timezone
+    rm -rf "$tmp_dir"
     LOG_INFO "End to restore the test environment."
 }
 

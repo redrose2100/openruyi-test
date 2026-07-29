@@ -23,6 +23,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "abseil-cpp abseil-cpp-devel gcc-c++"
+    tmp_dir=$(mktemp -d /tmp/test_XXXXXX)
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -30,7 +31,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # Test 1: Verify absl::string_view functionality
-    cat > /tmp/test_string_view.cpp << 'EOF'
+    cat > "$tmp_dir/test_string_view.cpp" << 'EOF'
 #include <iostream>
 #include "absl/strings/string_view.h"
 
@@ -42,13 +43,13 @@ int main() {
     return 0;
 }
 EOF
-    g++ -o /tmp/test_string_view /tmp/test_string_view.cpp -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
+    g++ -o "$tmp_dir/test_string_view" "$tmp_dir/test_string_view.cpp" -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile string_view test"
-    /tmp/test_string_view | grep -q "string_view test passed"
+    "$tmp_dir/test_string_view" | grep "string_view test passed" > /dev/null
     CHECK_RESULT $? 0 0 "string_view test failed"
 
     # Test 2: Verify absl::StrFormat and StrJoin functionality
-    cat > /tmp/test_strings.cpp << 'EOF'
+    cat > "$tmp_dir/test_strings.cpp" << 'EOF'
 #include <iostream>
 #include <vector>
 #include "absl/strings/str_format.h"
@@ -66,13 +67,13 @@ int main() {
     return 0;
 }
 EOF
-    g++ -o /tmp/test_strings /tmp/test_strings.cpp -labsl_strings -labsl_str_format_internal -labsl_string_view -labsl_base 2>/dev/null
+    g++ -o "$tmp_dir/test_strings" "$tmp_dir/test_strings.cpp" -labsl_strings -labsl_str_format_internal -labsl_string_view -labsl_base 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile strings test"
-    /tmp/test_strings | grep -q "strings test passed"
+    "$tmp_dir/test_strings" | grep "strings test passed" > /dev/null
     CHECK_RESULT $? 0 0 "strings test failed"
 
     # Test 3: Verify absl::Status functionality
-    cat > /tmp/test_status.cpp << 'EOF'
+    cat > "$tmp_dir/test_status.cpp" << 'EOF'
 #include <iostream>
 #include "absl/status/status.h"
 
@@ -88,13 +89,13 @@ int main() {
     return 0;
 }
 EOF
-    g++ -o /tmp/test_status /tmp/test_status.cpp -labsl_status -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
+    g++ -o "$tmp_dir/test_status" "$tmp_dir/test_status.cpp" -labsl_status -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile status test"
-    /tmp/test_status | grep -q "Status test passed"
+    "$tmp_dir/test_status" | grep "Status test passed" > /dev/null
     CHECK_RESULT $? 0 0 "Status test failed"
 
     # Test 4: Verify absl::StatusOr functionality
-    cat > /tmp/test_statusor.cpp << 'EOF'
+    cat > "$tmp_dir/test_statusor.cpp" << 'EOF'
 #include <iostream>
 #include "absl/status/statusor.h"
 #include "absl/status/status.h"
@@ -115,13 +116,13 @@ int main() {
     return 0;
 }
 EOF
-    g++ -o /tmp/test_statusor /tmp/test_statusor.cpp -labsl_statusor -labsl_status -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
+    g++ -o "$tmp_dir/test_statusor" "$tmp_dir/test_statusor.cpp" -labsl_statusor -labsl_status -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile StatusOr test"
-    /tmp/test_statusor | grep -q "StatusOr test passed"
+    "$tmp_dir/test_statusor" | grep "StatusOr test passed" > /dev/null
     CHECK_RESULT $? 0 0 "StatusOr test failed"
 
     # Test 5: Verify absl::flags functionality
-    cat > /tmp/test_flags.cpp << 'EOF'
+    cat > "$tmp_dir/test_flags.cpp" << 'EOF'
 #include <iostream>
 #include "absl/flags/flag.h"
 #include "absl/flags/parse.h"
@@ -135,9 +136,9 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 EOF
-    g++ -o /tmp/test_flags /tmp/test_flags.cpp -labsl_flags -labsl_flags_parse -labsl_flags_commandlineflag -labsl_flags_config -labsl_flags_internal -labsl_flags_reflection -labsl_flags_marshalling -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
+    g++ -o "$tmp_dir/test_flags" "$tmp_dir/test_flags.cpp" -labsl_flags -labsl_flags_parse -labsl_flags_commandlineflag -labsl_flags_config -labsl_flags_internal -labsl_flags_reflection -labsl_flags_marshalling -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile flags test"
-    /tmp/test_flags | grep -q "flags test passed"
+    "$tmp_dir/test_flags" | grep "flags test passed" > /dev/null
     CHECK_RESULT $? 0 0 "flags test failed"
 
     LOG_INFO "End to run test."
@@ -146,11 +147,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -f /tmp/test_string_view.cpp /tmp/test_string_view
-    rm -f /tmp/test_strings.cpp /tmp/test_strings
-    rm -f /tmp/test_status.cpp /tmp/test_status
-    rm -f /tmp/test_statusor.cpp /tmp/test_statusor
-    rm -f /tmp/test_flags.cpp /tmp/test_flags
+    rm -rf "$tmp_dir"
     LOG_INFO "End to restore the test environment."
 }
 

@@ -23,6 +23,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "abseil-cpp abseil-cpp-devel gcc-c++"
+    tmp_dir=$(mktemp -d /tmp/test_XXXXXX)
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -30,7 +31,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # Test 1: Verify absl::Mutex multi-threading
-    cat > /tmp/test_mutex.cpp << 'EOF'
+    cat > "$tmp_dir/test_mutex.cpp" << 'EOF'
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -63,13 +64,13 @@ int main() {
     return 0;
 }
 EOF
-    g++ -std=c++17 -o /tmp/test_mutex /tmp/test_mutex.cpp -labsl_synchronization -labsl_base -lpthread 2>/dev/null
+    g++ -std=c++17 -o "$tmp_dir/test_mutex" "$tmp_dir/test_mutex.cpp" -labsl_synchronization -labsl_base -lpthread 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile mutex test"
-    /tmp/test_mutex | grep -q "Mutex test passed"
+    "$tmp_dir/test_mutex" | grep "Mutex test passed" > /dev/null
     CHECK_RESULT $? 0 0 "Mutex test failed"
 
     # Test 2: Verify absl::Notification functionality
-    cat > /tmp/test_notification.cpp << 'EOF'
+    cat > "$tmp_dir/test_notification.cpp" << 'EOF'
 #include <iostream>
 #include <thread>
 #include "absl/synchronization/notification.h"
@@ -91,9 +92,9 @@ int main() {
     return 0;
 }
 EOF
-    g++ -std=c++17 -o /tmp/test_notification /tmp/test_notification.cpp -labsl_synchronization -labsl_base -lpthread 2>/dev/null
+    g++ -std=c++17 -o "$tmp_dir/test_notification" "$tmp_dir/test_notification.cpp" -labsl_synchronization -labsl_base -lpthread 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile notification test"
-    /tmp/test_notification | grep -q "Notification test passed"
+    "$tmp_dir/test_notification" | grep "Notification test passed" > /dev/null
     CHECK_RESULT $? 0 0 "Notification test failed"
 
     LOG_INFO "End to run test."
@@ -102,8 +103,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -f /tmp/test_mutex.cpp /tmp/test_mutex
-    rm -f /tmp/test_notification.cpp /tmp/test_notification
+    rm -rf "$tmp_dir"
     LOG_INFO "End to restore the test environment."
 }
 

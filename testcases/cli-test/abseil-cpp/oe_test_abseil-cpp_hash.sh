@@ -23,6 +23,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "abseil-cpp abseil-cpp-devel gcc-c++"
+    tmp_dir=$(mktemp -d /tmp/test_XXXXXX)
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -30,7 +31,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # Test 1: Verify absl::Hash functionality
-    cat > /tmp/test_hash.cpp << 'EOF'
+    cat > "$tmp_dir/test_hash.cpp" << 'EOF'
 #include <iostream>
 #include "absl/hash/hash.h"
 #include "absl/strings/string_view.h"
@@ -47,13 +48,13 @@ int main() {
     return 0;
 }
 EOF
-    g++ -o /tmp/test_hash /tmp/test_hash.cpp -labsl_hash -labsl_low_level_hash -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
+    g++ -o "$tmp_dir/test_hash" "$tmp_dir/test_hash.cpp" -labsl_hash -labsl_low_level_hash -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile hash test"
-    /tmp/test_hash | grep -q "Hash test passed"
+    "$tmp_dir/test_hash" | grep "Hash test passed" > /dev/null
     CHECK_RESULT $? 0 0 "Hash test failed"
 
     # Test 2: Verify absl random number generation
-    cat > /tmp/test_random.cpp << 'EOF'
+    cat > "$tmp_dir/test_random.cpp" << 'EOF'
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -82,9 +83,9 @@ int main() {
     return 0;
 }
 EOF
-    g++ -std=c++17 -o /tmp/test_random /tmp/test_random.cpp -labsl_random_distributions -labsl_random_internal_platform -labsl_random_internal_randen -labsl_random_internal_randen_slow -labsl_random_internal_seed_material -labsl_random_seed_sequences -labsl_random_seed_gen_exception -labsl_random_internal_randen_hwaes -labsl_random_internal_randen_hwaes_impl -labsl_random_internal_pool_urbg -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
+    g++ -std=c++17 -o "$tmp_dir/test_random" "$tmp_dir/test_random.cpp" -labsl_random_distributions -labsl_random_internal_platform -labsl_random_internal_randen -labsl_random_internal_randen_slow -labsl_random_internal_seed_material -labsl_random_seed_sequences -labsl_random_seed_gen_exception -labsl_random_internal_randen_hwaes -labsl_random_internal_randen_hwaes_impl -labsl_random_internal_pool_urbg -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile random test"
-    /tmp/test_random | grep -q "Random test passed"
+    "$tmp_dir/test_random" | grep "Random test passed" > /dev/null
     CHECK_RESULT $? 0 0 "Random test failed"
 
     LOG_INFO "End to run test."
@@ -93,8 +94,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -f /tmp/test_hash.cpp /tmp/test_hash
-    rm -f /tmp/test_random.cpp /tmp/test_random
+    rm -rf "$tmp_dir"
     LOG_INFO "End to restore the test environment."
 }
 

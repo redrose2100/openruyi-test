@@ -22,6 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "abseil-cpp abseil-cpp-devel gcc-c++"
+    tmp_dir=$(mktemp -d /tmp/test_XXXXXX)
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -29,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # Test 1: Verify absl::flat_hash_map functionality
-    cat > /tmp/test_hashmap.cpp << 'EOF'
+    cat > "$tmp_dir/test_hashmap.cpp" << 'EOF'
 #include <iostream>
 #include "absl/container/flat_hash_map.h"
 
@@ -51,13 +52,13 @@ int main() {
     return 0;
 }
 EOF
-    g++ -std=c++17 -o /tmp/test_hashmap /tmp/test_hashmap.cpp -labsl_hash -labsl_raw_hash_set -labsl_low_level_hash -labsl_raw_logging_internal -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
+    g++ -std=c++17 -o "$tmp_dir/test_hashmap" "$tmp_dir/test_hashmap.cpp" -labsl_hash -labsl_raw_hash_set -labsl_low_level_hash -labsl_raw_logging_internal -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile HashMap test"
-    /tmp/test_hashmap | grep -q "HashMap test passed"
+    "$tmp_dir/test_hashmap" | grep "HashMap test passed" > /dev/null
     CHECK_RESULT $? 0 0 "HashMap test failed"
 
     # Test 2: Verify absl::flat_hash_set functionality
-    cat > /tmp/test_hashset.cpp << 'EOF'
+    cat > "$tmp_dir/test_hashset.cpp" << 'EOF'
 #include <iostream>
 #include "absl/container/flat_hash_set.h"
 
@@ -80,13 +81,13 @@ int main() {
     return 0;
 }
 EOF
-    g++ -std=c++17 -o /tmp/test_hashset /tmp/test_hashset.cpp -labsl_hash -labsl_raw_hash_set -labsl_low_level_hash -labsl_raw_logging_internal -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
+    g++ -std=c++17 -o "$tmp_dir/test_hashset" "$tmp_dir/test_hashset.cpp" -labsl_hash -labsl_raw_hash_set -labsl_low_level_hash -labsl_raw_logging_internal -labsl_strings -labsl_string_view -labsl_base 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile HashSet test"
-    /tmp/test_hashset | grep -q "HashSet test passed"
+    "$tmp_dir/test_hashset" | grep "HashSet test passed" > /dev/null
     CHECK_RESULT $? 0 0 "HashSet test failed"
 
     # Test 3: Verify absl::int128 functionality
-    cat > /tmp/test_int128.cpp << 'EOF'
+    cat > "$tmp_dir/test_int128.cpp" << 'EOF'
 #include <iostream>
 #include "absl/numeric/int128.h"
 
@@ -107,9 +108,9 @@ int main() {
     return 0;
 }
 EOF
-    g++ -std=c++17 -o /tmp/test_int128 /tmp/test_int128.cpp -labsl_int128 -labsl_base 2>/dev/null
+    g++ -std=c++17 -o "$tmp_dir/test_int128" "$tmp_dir/test_int128.cpp" -labsl_int128 -labsl_base 2>/dev/null
     CHECK_RESULT $? 0 0 "Failed to compile int128 test"
-    /tmp/test_int128 | grep -q "int128 test passed"
+    "$tmp_dir/test_int128" | grep "int128 test passed" > /dev/null
     CHECK_RESULT $? 0 0 "int128 test failed"
 
     LOG_INFO "End to run test."
@@ -118,9 +119,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -f /tmp/test_hashmap.cpp /tmp/test_hashmap
-    rm -f /tmp/test_hashset.cpp /tmp/test_hashset
-    rm -f /tmp/test_int128.cpp /tmp/test_int128
+    rm -rf "$tmp_dir"
     LOG_INFO "End to restore the test environment."
 }
 
