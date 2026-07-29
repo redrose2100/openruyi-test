@@ -35,10 +35,14 @@ function run_test() {
 
     # Test 2: Verify all package firmware files are in standard search path
     missing=0
+    checked=0
     while IFS= read -r f; do
         [ -z "$f" ] && continue
+        checked=$((checked + 1))
         [ -e "$f" ] || { LOG_ERROR "Firmware missing from load path: $f"; missing=1; }
     done < <(rpm -ql alsa-firmware 2>/dev/null | grep -E '^/(lib|usr/share/alsa)/firmware/')
+    [ $checked -gt 0 ]
+    CHECK_RESULT $? 0 0 "No firmware files found in standard search path"
     CHECK_RESULT $missing 0 0 "Some firmware files missing from standard load path"
 
     # Test 3: Check dmesg for firmware loading errors if sound device exists
