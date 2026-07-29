@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   abseil-cpp cord, span, any test
 # ############################################
+# shellcheck disable=SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 

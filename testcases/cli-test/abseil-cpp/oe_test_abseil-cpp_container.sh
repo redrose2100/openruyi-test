@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   abseil-cpp container and int128 test
 # ############################################
-
+# shellcheck disable=SC2119
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {

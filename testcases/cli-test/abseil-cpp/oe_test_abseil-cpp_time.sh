@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   abseil-cpp time and timezone test
 # ############################################
+# shellcheck disable=SC1090,SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 

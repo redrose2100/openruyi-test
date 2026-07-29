@@ -1,51 +1,26 @@
 {
     "path": "$OET_PATH/testcases/cli-test/abseil-cpp",
-    "machine num": 1,
-    "machine type": "kvm",
-    "add network interface": 0,
-    "add disk": [],
     "cases": [
         {
-            "name": "oe_test_abseil_cpp_basic",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
+            "name": "oe_test_abseil_cpp_basic"
+	},
+        {
+            "name": "oe_test_abseil_cpp_strings"
         },
         {
-            "name": "oe_test_abseil_cpp_strings",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
+            "name": "oe_test_abseil_cpp_hash"
         },
         {
-            "name": "oe_test_abseil_cpp_hash",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
+            "name": "oe_test_abseil_cpp_synchronization"
         },
         {
-            "name": "oe_test_abseil_cpp_synchronization",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
+            "name": "oe_test_abseil_cpp_time"
         },
         {
-            "name": "oe_test_abseil_cpp_time",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
+            "name": "oe_test_abseil_cpp_cord"
         },
         {
-            "name": "oe_test_abseil_cpp_cord",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_abseil_cpp_container",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
+            "name": "oe_test_abseil_cpp_container"
         }
     ]
 }
