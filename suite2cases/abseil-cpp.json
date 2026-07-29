@@ -1,0 +1,26 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/abseil-cpp",
+    "cases": [
+        {
+            "name": "oe_test_abseil-cpp_basic"
+        },
+        {
+            "name": "oe_test_abseil-cpp_strings"
+        },
+        {
+            "name": "oe_test_abseil-cpp_hash"
+        },
+        {
+            "name": "oe_test_abseil-cpp_synchronization"
+        },
+        {
+            "name": "oe_test_abseil-cpp_time"
+        },
+        {
+            "name": "oe_test_abseil-cpp_cord"
+        },
+        {
+            "name": "oe_test_abseil-cpp_container"
+        }
+    ]
+}
