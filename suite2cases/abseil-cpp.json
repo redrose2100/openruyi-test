@@ -3,7 +3,7 @@
     "cases": [
         {
             "name": "oe_test_abseil_cpp_basic"
-	},
+        },
         {
             "name": "oe_test_abseil_cpp_strings"
         },

@@ -41,7 +41,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "libabsl_log_sink library not found"
 
     # Test 4: Verify library file count
-    local lib_count=$(ldconfig -p | grep -c "libabsl_")
+    lib_count=$(ldconfig -p | grep -c "libabsl_")
     [ "$lib_count" -gt 50 ]
     CHECK_RESULT $? 0 0 "abseil-cpp library count is less than expected: $lib_count"
 
