@@ -34,11 +34,18 @@ fi
 TIMEOUT="30m"
 COMMAND_X="no"
 COMMAND_S="no"
+COMMAND_RERUN="no"
+RERUN_MODE="failed"
+ROUND=1
+MUGEN_START_TIME=$(date +%s)
 COPY_DONE="no"
 CASE_NUM=0
 SUCCESS_NUM=0
 FAIL_NUM=0
 SKIP_NUM=0
+SUITE_TOTAL=0
+RETRY_NUM=0
+LAST_FAILED_FILE="${OET_PATH}/logs/last_failed.json"
 
 function usage() {
     printf "Usage:  \n
@@ -50,6 +57,9 @@ function usage() {
     -b: do make for test suite if test suite path have makefile or Makefile file\n
     -s: runing test case at remote NODE1
     -m: Modify the configuration file that comes with the test case
+    -R: rerun cases from last execution (optional mode: failed/skip/not-run/all)
+    --retry: retry failed cases N times (e.g. --retry 2)
+    -n N: same as --retry
     \n
     Example:
         run all cases:
@@ -122,28 +132,50 @@ function load_conf() {
     fi
 }
 
+function bump_round() {
+    local round_file=$1
+    ROUND=1
+    [[ -f "$round_file" ]] && ROUND=$(<"$round_file")
+    ROUND=$((ROUND + 1))
+    echo "$ROUND" > "$round_file"
+}
+
 function generate_result_file() {
     local suite=$1
     local case=$2
     local exitcode=$3
+    local duration=$4
+    local green yellow red reset
+    printf -v green '\033[32m'
+    printf -v yellow '\033[33m'
+    printf -v red '\033[31m'
+    printf -v reset '\033[0m'
 
     if [ "$exitcode" -eq 0 ]; then
-        LOG_INFO "The case exit by code $ret_code."
         ((SUCCESS_NUM++))
         result="succeed"
+        LOG_INFO "${green}[PASS]${reset} testcase:${case} runtime is ${duration:-0}s"
     elif [ "$exitcode" -eq 255 ]; then
-        LOG_ERROR "The case exit by code $ret_code."
         ((SKIP_NUM++))
         result="skipped"
+        LOG_INFO "${yellow}[SKIP]${reset} testcase:${case} runtime is ${duration:-0}s"
     else
-        LOG_ERROR "The case exit by code $ret_code."
         ((FAIL_NUM++))
         result="failed"
+        LOG_ERROR "${red}[FAIL]${reset} testcase:${case} runtime is ${duration:-0}s"
     fi
+
+    local result_dir="$OET_PATH/logs/$suite/$case"
+    mkdir -p "$result_dir"
+    echo "$exitcode" > "$result_dir/result"
 
     local result_path="$OET_PATH/results/$suite/$result"
     mkdir -p "$result_path"
     touch "$result_path"/"$case"
+
+    printf '{"round":%s,"ts":"%s","exitcode":%s}\n' \
+        "$ROUND" "$(date '+%Y-%m-%d %H:%M:%S')" "$exitcode" \
+        >> "$result_dir/history"
 }
 
 function exec_case() {
@@ -172,7 +204,9 @@ function exec_case() {
         LOG_WARN "The case execution timeout."
     }
 
-    generate_result_file "$test_suite" "$case_name" "$ret_code"
+    local case_duration=0
+    [ -n "$CASE_START_TIME" ] && case_duration=$(( $(date +%s) - CASE_START_TIME ))
+    generate_result_file "$test_suite" "$case_name" "$ret_code" "$case_duration"
 }
 
 function run_test_case() {
@@ -186,10 +220,10 @@ function run_test_case() {
         exit 1
     fi
 
-    result_files=$(find "${OET_PATH}"/results/"${test_suite}" -name "$test_case" >/dev/null 2>&1)
-    for result_file in $result_files; do
-        test -f "$result_file" && rm -rf "$result_file"
-    done
+    rm -f "${OET_PATH}/logs/${test_suite}/${test_case}/result"
+    if [ "$ROUND" -eq 1 ]; then
+        rm -f "${OET_PATH}/logs/${test_suite}/${test_case}/history"
+    fi
 
     suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)
     test $? -ne 0 && return 1
@@ -214,7 +248,10 @@ function run_test_case() {
     log_path="${OET_PATH}/logs/${test_suite}/${test_case}"
     mkdir -p "${log_path}"
 
-    LOG_INFO "start to run testcase:$test_case."
+    local show_total="${SUITE_TOTAL}"
+    [ "$show_total" -le 0 ] 2>/dev/null && show_total=1
+    local progress_tag="[${CASE_NUM}/${show_total}]"
+    LOG_INFO "${progress_tag} start to run testcase:${test_case}."
 
     if [ -z "${case_path[*]}" ]; then
         echo -e "Can't find the test script:$test_case, Please confirm whether the code is submitted." >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1
@@ -280,6 +317,7 @@ function run_test_case() {
         run_cmd="python3 \"${OET_PATH}\"/libs/locallibs/ssh_cmd.py --node 1 --cmd \"${remote_cmd}\""
     fi
 
+    CASE_START_TIME=$(date +%s)
     exec_case "$run_cmd" "$log_path" "$test_case" "$test_suite"
 
     popd >/dev/null || return 1
@@ -289,11 +327,14 @@ function run_test_case() {
         P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir"
     fi
 
-    LOG_INFO "End to run testcase:$test_case."
+    LOG_INFO "${progress_tag} End to run testcase:${test_case}."
 }
 
 function run_test_suite() {
     local test_suite=$1
+    CASE_NUM=0
+    ROUND=1
+    rm -f "${OET_PATH}/logs/${test_suite}/round_counter"
 
     [ -z "$(find "${OET_PATH}"/suite2cases -name "${test_suite}".json)" ] && {
         LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
@@ -316,9 +357,62 @@ function run_test_suite() {
         this_copy=true
     fi
 
-    for test_case in $(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name | shuf); do
+    local case_list
+    case_list=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name)
+    SUITE_TOTAL=$(echo "$case_list" | wc -l)
+    printf "\n==== %s (%d cases) ====\n" "$test_suite" "$SUITE_TOTAL"
+    SUITE_START_TIME=$(date +%s)
+
+    for test_case in $(echo "$case_list" | shuf); do
         run_test_case "$test_suite" "$test_case"
     done
+
+    echo "${ROUND}" > "${OET_PATH}/logs/${test_suite}/round_counter"
+
+    # Post-suite retry of failed cases
+    if [ "$RETRY_NUM" -gt 0 ]; then
+        local retry_round=0
+        while [ "$retry_round" -lt "$RETRY_NUM" ]; do
+            ((retry_round++))
+
+            local failed_list=""
+            local fail_count=0
+            while IFS= read -r -d '' f; do
+                read ec < "$f"
+                if [ "$ec" -ne 0 ] && [ "$ec" -ne 255 ]; then
+                    local casedir
+                    casedir=$(basename "$(dirname "$f")")
+                    failed_list="${failed_list}${test_suite} ${casedir}
+"
+                    ((fail_count++))
+                fi
+            done < <(find "${OET_PATH}/logs/${test_suite}" -name result -print0 2>/dev/null)
+
+            [[ $fail_count -eq 0 ]] && break
+            LOG_INFO "Retry round $retry_round/$RETRY_NUM: $fail_count failed case(s)"
+
+            # Update round counter for this retry session
+            bump_round "${OET_PATH}/logs/${test_suite}/round_counter"
+
+            SUITE_TOTAL=$fail_count
+            CASE_NUM=0
+            rerun_cases "$failed_list"
+        done
+
+        # Recalculate counters from result files (final state)
+        FAIL_NUM=0; SUCCESS_NUM=0; SKIP_NUM=0
+        while IFS= read -r d; do
+            read ec < "$d"
+            case $ec in
+                0) ((SUCCESS_NUM++)) ;;
+                255) ((SKIP_NUM++)) ;;
+                *) ((FAIL_NUM++)) ;;
+            esac
+        done < <(find "${OET_PATH}/logs/${test_suite}" -name result 2>/dev/null)
+    fi
+
+    local suite_duration=$(( $(date +%s) - SUITE_START_TIME ))
+    printf "==== %s done (%dm%ds) ====\n\n" "$test_suite" $((suite_duration/60)) $((suite_duration%60))
 
     if $this_copy; then
         remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
@@ -341,7 +435,7 @@ function run_all_cases() {
     for test_suite in ${test_suites[*]}; do
         run_test_suite "$test_suite"
         COPY_DONE="no"
-        local this_copy=true
+        this_copy=true
     done
 
     if $this_copy; then
@@ -350,7 +444,13 @@ function run_all_cases() {
 }
 
 function statistic_result() {
-    LOG_INFO "A total of ${CASE_NUM} use cases were executed, with ${SUCCESS_NUM} successes ${FAIL_NUM} failures and ${SKIP_NUM} skips."
+    local total=$(( SUCCESS_NUM + FAIL_NUM + SKIP_NUM ))
+    printf "\n==== Summary ====\n"
+    printf "  Total: %d  Pass: %d  Fail: %d  Skip: %d\n" "$total" "$SUCCESS_NUM" "$FAIL_NUM" "$SKIP_NUM"
+    if [ "$total" -gt 0 ]; then
+        local pass_rate=$(( SUCCESS_NUM * 100 / total ))
+        printf "  Pass rate: %d%%\n" "$pass_rate"
+    fi
     exit "${FAIL_NUM}"
 }
 
@@ -440,7 +540,49 @@ function copy_libs_to_node1() {
     fi
 }
 
-while getopts "c:af:r:dxb:s:m" option; do
+function rerun_cases() {
+    local case_list="$1"
+    [[ -z "$case_list" ]] && return 0
+
+    while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+        local suite case_name
+        read -r suite case_name <<< "$line"
+        run_test_case "$suite" "$case_name"
+    done <<< "$case_list"
+}
+
+function generate_report() {
+    python3 "${OET_PATH}"/libs/locallibs/generate_report.py --start-time "$MUGEN_START_TIME"
+    local ret=$?
+    if [ $ret -ne 0 ]; then
+        LOG_WARN "generate_report failed with exit code $ret"
+    fi
+}
+
+# Pre-process long options and detect -R and --retry before getopts
+ARGS=()
+i=0
+while [ $i -lt $# ]; do
+    arg="${@:$((i+1)):1}"
+    case "$arg" in
+        --rerun-failed) ARGS+=(-R); COMMAND_RERUN="yes" ;;
+        -R) ARGS+=(-R); COMMAND_RERUN="yes" ;;
+        --retry)
+            i=$((i + 1))
+            RETRY_NUM="${@:$((i+1)):1}"
+            if ! [[ "$RETRY_NUM" =~ ^[0-9]+$ ]]; then
+                LOG_ERROR "--retry requires a non-negative integer, got: $RETRY_NUM"
+                exit 1
+            fi
+            ;;
+        *) ARGS+=("$arg") ;;
+    esac
+    i=$((i + 1))
+done
+set -- "${ARGS[@]}"
+
+while getopts "c:af:r:dxb:s:mRn:" option; do
     case $option in
     c)
         deploy_conf ${*//-c/}
@@ -467,6 +609,7 @@ while getopts "c:af:r:dxb:s:m" option; do
         load_conf
         copy_libs_to_node1
         run_all_cases
+        generate_report
         statistic_result
         ;;
     b)
@@ -489,6 +632,9 @@ while getopts "c:af:r:dxb:s:m" option; do
             build_one_suite "$test_suite"
         fi
 
+        ;;
+    n)
+        RETRY_NUM=$OPTARG
         ;;
     f)
         test_suite=$OPTARG
@@ -513,10 +659,13 @@ while getopts "c:af:r:dxb:s:m" option; do
         }
 
         echo "$@" | grep -q -e ' -r ' || {
-            load_conf
-            copy_libs_to_node1
-            run_test_suite "$test_suite"
-            statistic_result
+            if [[ $COMMAND_RERUN != "yes" ]]; then
+                load_conf
+                copy_libs_to_node1
+                run_test_suite "$test_suite"
+                generate_report
+                statistic_result
+            fi
         }
         ;;
     r)
@@ -552,6 +701,8 @@ while getopts "c:af:r:dxb:s:m" option; do
             exit 1
         }
         ;;
+    R)
+        ;;
     s)
         echo "$@" | grep -q -e '^ [a-Z0-9_-]-x *$' && {
             LOG_ERROR "The -s parameter must be used in combination with -a, -f, and -r."
@@ -565,3 +716,52 @@ while getopts "c:af:r:dxb:s:m" option; do
 
     esac
 done
+
+# Handle rerun after options are processed
+if [[ $COMMAND_RERUN == "yes" ]]; then
+    shift $((OPTIND - 1))
+    if [[ $# -gt 0 && ! "$1" =~ ^- ]]; then
+        RERUN_MODE="$1"
+    fi
+
+    case "$RERUN_MODE" in
+        failed|skip|not-run|all|failed,skip|failed,not-run|skip,not-run|failed,skip,not-run) ;;
+        *)
+            LOG_ERROR "Invalid rerun mode: $RERUN_MODE"
+            exit 1
+            ;;
+    esac
+
+    load_conf
+    copy_libs_to_node1
+
+    case_list=$(python3 "${OET_PATH}/libs/locallibs/generate_report.py" \
+        --list-cases "${test_suite}" --mode "${RERUN_MODE}" 2>/dev/null)
+
+    if [[ -z "$case_list" ]]; then
+        LOG_INFO "No cases to rerun (mode: ${RERUN_MODE})."
+        exit 0
+    fi
+
+    CASE_NUM=0
+    SUCCESS_NUM=0
+    FAIL_NUM=0
+    SKIP_NUM=0
+    SUITE_TOTAL=$(printf '%s' "$case_list" | wc -l)
+
+    current_suite=""
+    while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+        read -r suite case_name <<< "$line"
+
+        if [[ "$suite" != "$current_suite" ]]; then
+            current_suite="$suite"
+            bump_round "${OET_PATH}/logs/${suite}/round_counter"
+        fi
+
+        run_test_case "$suite" "$case_name"
+    done <<< "$case_list"
+
+    generate_report
+    statistic_result
+fi

@@ -67,6 +67,15 @@ Simply run `bash dep_install.sh`.
 `bash mugen.sh -f testsuite`
 - Run a test case
 `bash mugen.sh -f testsuite -r testcase`
+- Run with retry (retry failed cases up to N rounds after suite finishes)
+`bash mugen.sh -f testsuite --retry 3`
+- Rerun failed cases from last execution
+`bash mugen.sh -R`
+- Rerun with mode (skip/not-run/all/combo)
+`bash mugen.sh -R skip`
+`bash mugen.sh -R not-run`
+`bash mugen.sh -R all`
+`bash mugen.sh -R failed,skip`
 - Save the testing log
 ```
 bash mugen.sh -a -x 
@@ -288,6 +297,26 @@ import xxx
 #### About timeout
 - Default timeout is 30 min
 - If a test case costs more than 30 min，set `TIMEOUT` in the test case script
+
+#### Report and output
+- After each suite run, reports are generated in `logs/<suite>/`:
+  - `<suite>.html` — view in browser with JS history filtering
+  - `<suite>.md` — markdown summary
+- Per-case result: `logs/<suite>/<case>/result` (single line: exit code)
+- Per-case history: `logs/<suite>/<case>/history` (JSON Lines, one entry per round)
+- Round counter: `logs/<suite>/round_counter`
+- Global state: `logs/last_failed.json`
+- Terminal output format:
+```
+==== <suite> (N cases) ====
+[N/TOTAL] start to run testcase:<case>
+[PASS] testcase:<case> runtime is Ns
+[N/TOTAL] End to run testcase:<case>
+...
+==== Summary ====
+  Total: N  Pass: N  Fail: N  Skip: N
+  Pass rate: N%
+```
 
 #### FAQ
 - Timeout in remote execution
