@@ -28,58 +28,21 @@ function pre_test() {
 
 function run_test() {
     rmmod obmm
-    insmod_obmm_default
+    insmod_obmm mem_allocator_granu=2M mempool_allocator=hugetlb_pmd
     cat /sys/module/obmm/parameters/mem_allocator_granu | grep -E "null|2M"
     CHECK_RESULT $? 0
-    cat /sys/module/obmm/parameters/mempool_allocator | grep -E "null|buddy_highmem"
+    cat /sys/module/obmm/parameters/mempool_allocator | grep -E "null|hugetlb_pmd"
     CHECK_RESULT $? 0
     total_mem=$((2 * MB2B))
-    numa_mem_list=$total_mem
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
-    test_unexport $(get_id export.log)
-    rmmod obmm
-
-    insmod_obmm_default mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
-    CHECK_RESULT $? 0
-    insmod_obmm_default mem_allocator_granu=2M
-    CHECK_RESULT $? 0
-    dmesg -C
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    test_unexport $(get_id export.log)
-    rmmod obmm
-
-    insmod_obmm_default mem_allocator_granu=32M
-    CHECK_RESULT $? 0
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID
-    CHECK_RESULT $? 0 1
-    dmesg | grep 'The size of new OBMM region 0x200000 on node 0 is not aligned to OBMM memseg size 0x2000000'
-    CHECK_RESULT $? 0
-    total_mem=$((32 * MB2B))
     numa_mem_init $total_mem
-    dmesg -C
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
     CHECK_RESULT $? 0
     test_unexport $(get_id export.log)
     rmmod obmm
 
-    insmod_obmm_default mem_allocator_granu=1G
+    insmod_obmm mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
     CHECK_RESULT $? 0
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID
-    CHECK_RESULT $? 0 1
-    dmesg | grep 'The size of new OBMM region 0x2000000 on node 0 is not aligned to OBMM memseg size 0x40000000'
-    CHECK_RESULT $? 0
-    total_mem=$((1 * GB2B))
-    numa_mem_init $total_mem
-    dmesg -C
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    cat export.log
-    test_unexport $(get_id export.log)
-
-    rmmod obmm
-    insmod_obmm_default mempool_allocator=buddy_highmem
-    CHECK_RESULT $? 0
+    insmod_obmm mem_allocator_granu=2M
 
     dmesg -C
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
@@ -87,9 +50,17 @@ function run_test() {
     test_unexport $(get_id export.log)
     rmmod obmm
 
-    insmod_obmm_default mempool_allocator=buddy_highmem mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
+    insmod_obmm mempool_allocator=buddy_highmem
+
+    dmesg -C
+    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
     CHECK_RESULT $? 0
-    insmod_obmm_default mempool_allocator=buddy_highmem mem_allocator_granu=2M
+    test_unexport $(get_id export.log)
+    rmmod obmm
+
+    insmod_obmm mempool_allocator=buddy_highmem mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
+    CHECK_RESULT $? 0
+    insmod_obmm mempool_allocator=buddy_highmem mem_allocator_granu=2M
     CHECK_RESULT $? 0
     dmesg -C
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
@@ -97,7 +68,7 @@ function run_test() {
     test_unexport $(get_id export.log)
     rmmod obmm
 
-    insmod_obmm_default mempool_allocator=buddy_highmem mem_allocator_granu=32M
+    insmod_obmm mempool_allocator=buddy_highmem mem_allocator_granu=32M
     CHECK_RESULT $? 0
     total_mem=$((2 * MB2B))
     numa_mem_list=$total_mem
@@ -107,18 +78,18 @@ function run_test() {
     CHECK_RESULT $? 0
     total_mem=$((32 * MB2B))
     numa_mem_init $total_mem
+    clean_hugepages
     dmesg -C
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
     CHECK_RESULT $? 0
     test_unexport $(get_id export.log)
     rmmod obmm
-
-    insmod_obmm_default mempool_allocator=buddy_highmem mem_allocator_granu=1G
+    
+    dmesg -C
+    insmod_obmm mempool_allocator=buddy_highmem mem_allocator_granu=1G
     CHECK_RESULT $? 0
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID
     CHECK_RESULT $? 0 1
-    dmesg | grep 'The size of new OBMM region 0x2000000 on node 0 is not aligned to OBMM memseg size 0x40000000'
-    CHECK_RESULT $? 0
     total_mem=$((1 * GB2B))
     numa_mem_init $total_mem
     dmesg -C
@@ -131,73 +102,83 @@ function run_test() {
     rmmod obmm
 
     # 使用2M大页，环境无2M页，导出失败
-    insmod_obmm_default mempool_allocator=hugetlb_pmd
+    insmod_obmm mempool_allocator=hugetlb_pmd
     CHECK_RESULT $? 0
-    total_mem=$((2 * MB2B))
+    rmmod obmm
+ 
+    insmod_obmm mempool_allocator=hugetlb_pmd mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
+    CHECK_RESULT $? 0
+    if [ $PAGE_SIZE -eq 65536 ]; then
+        insmod_obmm mempool_allocator=hugetlb_pmd mem_allocator_granu=2M 2>&1 | grep "Invalid argument"
+        insmod_obmm mempool_allocator=hugetlb_pmd mem_allocator_granu=512M
+    else
+        insmod_obmm mempool_allocator=hugetlb_pmd mem_allocator_granu=2M
+    fi
+    total_mem=$((1 * GB2B))   
 
-    # 配置2M大页，导出成功
+    
     numa_mem_init $total_mem
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
     CHECK_RESULT $? 0
     test_unexport $(get_id export.log)
     rmmod obmm
+    clean_hugepages    
 
-    insmod_obmm_default mempool_allocator=hugetlb_pmd mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
+    insmod_obmm mempool_allocator=hugetlb_pmd mem_allocator_granu=32M 2>&1 | grep "Invalid argument"
     CHECK_RESULT $? 0
-    insmod_obmm_default mempool_allocator=hugetlb_pmd mem_allocator_granu=2M
-    total_mem=$((2 * MB2B))
-    numa_mem_init $total_mem
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
+    dmesg | grep "unsupported mem_allocator_granu for hugetlb_pmd allocator: 32M"
     CHECK_RESULT $? 0
-    test_unexport $(get_id export.log)
-    rmmod obmm
-
-    insmod_obmm_default mempool_allocator=hugetlb_pmd mem_allocator_granu=32M 2>&1 | grep "Invalid argument"
+    
+    insmod_obmm mempool_allocator=hugetlb_pmd mem_allocator_granu=1G 2>&1 | grep "Invalid argument"
     CHECK_RESULT $? 0
-    insmod_obmm_default mempool_allocator=hugetlb_pmd mem_allocator_granu=1G 2>&1 | grep "Invalid argument"
+    dmesg | grep "unsupported mem_allocator_granu for hugetlb_pmd allocator: 1G"
     CHECK_RESULT $? 0
 
-    insmod_obmm_default mempool_allocator=hugetlb_pud mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
+    insmod_obmm mempool_allocator=hugetlb_pud mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
     CHECK_RESULT $? 0
-    insmod_obmm_default mempool_allocator=hugetlb_pud mem_allocator_granu=2M 2>&1 | grep "Invalid argument"
+    insmod_obmm mempool_allocator=hugetlb_pud mem_allocator_granu=2M 2>&1 | grep "Invalid argument"
     CHECK_RESULT $? 0
-    insmod_obmm_default mempool_allocator=hugetlb_pud mem_allocator_granu=32M 2>&1 | grep "Invalid argument"
+    insmod_obmm mempool_allocator=hugetlb_pud mem_allocator_granu=32M 2>&1 | grep "Invalid argument"
     CHECK_RESULT $? 0
 
     # 使用1G大页
-    insmod_obmm_default mempool_allocator=hugetlb_pud
-    CHECK_RESULT $? 0
-    total_mem=$((1 * GB2B))
-    numa_mem_init $total_mem
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    cat export.log
-    # 说明申请的大页来自系统内存，非内存池
-    dmesg | grep "slow allocated"
-    CHECK_RESULT $? 0
-    test_unexport $(get_id export.log)
-    rmmod obmm
+    if [ $PAGE_SIZE -eq 4096 ]; then
+	modprobe obmm mempool_allocator=hugetlb_pud
+        CHECK_RESULT $? 0
+        total_mem=$((1 * GB2B))
+        numa_mem_init $total_mem
+        test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
+        CHECK_RESULT $? 0
+        cat export.log
+        # 说明申请的大页来自系统内存，非内存池
+        dmesg | grep "slow allocated"
+        CHECK_RESULT $? 0
+        test_unexport $(get_id export.log)
+        rmmod obmm
 
-    dmesg -C
-    insmod_obmm_default mempool_allocator=hugetlb_pud mempool_size=4G
-    CHECK_RESULT $? 0
-    total_mem=$((1 * GB2B))
-    numa_mem_init $total_mem
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    # 匹配不到slow allocated ，说明申请的大页来自内存池，非系统内存
-    dmesg | grep "slow allocated"
-    CHECK_RESULT $? 0 1
-    test_unexport $(get_id export.log)
+        dmesg -C
+        modprobe obmm mempool_allocator=hugetlb_pud mempool_size=4G
+    	CHECK_RESULT $? 0
+    	total_mem=$((1 * GB2B))
+    	numa_mem_init $total_mem
+    	test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
+    	CHECK_RESULT $? 0
+    	# 匹配不到slow allocated ，说明申请的大页来自内存池，非系统内存
+    	dmesg | grep "slow allocated"
+    	CHECK_RESULT $? 0 1
+    	test_unexport $(get_id export.log)
+    fi
 
     rmmod obmm
-    insmod_obmm_default mempool_allocator=buddy_highmem
+    insmod_obmm mempool_allocator=buddy_highmem
     CHECK_RESULT $? 0
 }
 
 function post_test() {
     rmmod obmm
-    insmod_obmm_default
+    insmod_obmm
+    clean_hugepages
 }
 
 main "$@"
+

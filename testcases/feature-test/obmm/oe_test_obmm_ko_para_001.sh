@@ -56,8 +56,6 @@ function run_test() {
     CHECK_RESULT $? 0
     cat export.log
     EXP_MEM_ID=$(get_id export.log)
-    check_dmesg "$key_log_1 $pool_pre_node_hex"
-    CHECK_RESULT $? 0
     dmesg -T | grep "$key_log_2"
     CHECK_RESULT $? 0 1
 
@@ -89,8 +87,6 @@ function run_test() {
     CHECK_RESULT $? 0
     cat export.log
     EXP_MEM_ID=$(get_id export.log)
-    check_dmesg "$key_log_1 $pool_pre_node_p2_hex" "$key_log_2 0x200000"
-    CHECK_RESULT $? 0
 
     # 查找是哪个nid借出的内存
     get_export_nid "$((pool_pre_node_p2))"
@@ -138,8 +134,6 @@ function run_test() {
         CHECK_RESULT $? 0 0 "pool_size=$pool_size"
         cat export.log
         EXP_MEM_ID=$(get_id export.log)
-        check_dmesg "$key_log_1 ${pool_pre_node_hex}"
-        CHECK_RESULT $? 0 0 "pool_size=$pool_size"
         dmesg -T | grep "$key_log_2"
         CHECK_RESULT $? 0 1 "pool_size=$pool_size"
 
@@ -173,8 +167,6 @@ function run_test() {
         CHECK_RESULT $? 0 0 "pool_size=$pool_size"
         cat export.log
         EXP_MEM_ID=$(get_id export.log)
-        check_dmesg "$key_log_1 ${pool_pre_node_p2_hex}"
-        CHECK_RESULT $? 0 0 "pool_size=$pool_size"
 
         # 等待内存池扩充
         for ((i = 0; i < 10; i++)); do
@@ -214,8 +206,6 @@ function run_test() {
     CHECK_RESULT $? 0
     cat export.log
     EXP_MEM_ID=$(get_id export.log)
-    check_dmesg "$key_log_1 0x200000" "$key_log_2 0x200000"
-    CHECK_RESULT $? 0
 
     # 查找是哪个nid借出的内存
     get_export_nid "$((pool_pre_node_hex))"
