@@ -1,0 +1,14 @@
+{
+  "path": "$OET_PATH/testcases/cli-test/bridge-utils/",
+  "cases": [
+    {
+      "name": "oe_test_bridge-utils_brctl_01"
+    },
+    {
+      "name": "oe_test_bridge-utils_brctl_02"
+    },
+    {
+      "name": "oe_test_bridge-utils_brctl_03"
+    }
+  ]
+}
