@@ -61,7 +61,7 @@ function run_test() {
     cat /sys/module/obmm/parameters/mem_allocator_granu | grep -w 32M
     CHECK_RESULT $? 0
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID
-    dmesg | grep 'The size of new OBMM region 0x200000 on node 0 is not aligned to OBMM memseg size 0x2000000'
+    dmesg | grep 'The size of new OBMM region 0x200000 on node [0-9] is not aligned to OBMM memseg size 0x2000000'
     CHECK_RESULT $? 0
 
     total_mem=$((32 * MB2B))
@@ -78,7 +78,7 @@ function run_test() {
     cat /sys/module/obmm/parameters/mem_allocator_granu | grep -w 1G
     CHECK_RESULT $? 0
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID
-    dmesg | grep 'The size of new OBMM region 0x2000000 on node 0 is not aligned to OBMM memseg size 0x40000000'
+    dmesg | grep 'The size of new OBMM region 0x2000000 on node [0-9] is not aligned to OBMM memseg size 0x40000000'
     CHECK_RESULT $? 0
 
     total_mem=$((1 * GB2B))
@@ -112,7 +112,7 @@ function run_test() {
     cat /sys/module/obmm/parameters/mem_allocator_granu | grep -w 32M
     CHECK_RESULT $? 0
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID
-    dmesg | grep 'The size of new OBMM region 0x200000 on node 0 is not aligned to OBMM memseg size 0x2000000'
+    dmesg | grep 'The size of new OBMM region 0x200000 on node [0-9] is not aligned to OBMM memseg size 0x2000000'
     CHECK_RESULT $? 0
 
     total_mem=$((32 * MB2B))
@@ -128,7 +128,7 @@ function run_test() {
     cat /sys/module/obmm/parameters/mem_allocator_granu | grep -w 1G
     CHECK_RESULT $? 0
     test_export $numa_mem_list $EXP_COMMON_FLAG $DEID
-    dmesg | grep 'The size of new OBMM region 0x2000000 on node 0 is not aligned to OBMM memseg size 0x40000000'
+    dmesg | grep 'The size of new OBMM region 0x2000000 on node [0-9] is not aligned to OBMM memseg size 0x40000000'
     CHECK_RESULT $? 0
 
     total_mem=$((1 * GB2B))
@@ -175,6 +175,7 @@ function run_test() {
 function post_test() {
     rmmod obmm
     insmod_obmm_default
+    clean_hugepages
 }
 
 main "$@"
