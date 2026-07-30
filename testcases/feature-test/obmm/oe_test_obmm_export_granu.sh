@@ -66,6 +66,29 @@ function run_test() {
     cat export.log
     test_unexport $(get_id export.log)
     CHECK_RESULT $? 0
+    
+    # mem_allocator_granu=32M，导出2M，导出失败
+    rmmod obmm
+    insmod_obmm mem_allocator_granu=32M
+    test_export $((2 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
+    CHECK_RESULT $? 0 1
+    cat export.log
+    dmesg -T | grep "The size of new OBMM region 0x200000 on node 0 is not aligned to OBMM memseg size 0x2000000"
+    CHECK_RESULT $? 0
+	
+    # 导出40M，(32M 对齐)，导出失败
+    test_export $((40 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
+    CHECK_RESULT $? 0 1
+    cat export.log
+    dmesg -T | grep "The size of new OBMM region 0x2800000 on node 0 is not aligned to OBMM memseg size 0x2000000"
+    CHECK_RESULT $? 0
+	
+    # 导出128M，(32M 对齐)，导出成功
+    test_export $((128 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
+    CHECK_RESULT $? 0
+    cat export.log
+    test_unexport $(get_id export.log)
+    CHECK_RESULT $? 0
 }
 
 function post_test() {

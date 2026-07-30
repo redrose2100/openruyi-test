@@ -35,7 +35,7 @@ expand_done_line_num=$(cat "$SYS_DYNAMIC_DEBUG_CTL" | grep "conti_pool_thread.*e
 expand_done_file=$(cat "$SYS_DYNAMIC_DEBUG_CTL" | grep "conti_pool_thread.*expand done" | awk -F: '{print $1}')
 POOL_EXPAND_DONE_DEBUG="module obmm file $expand_done_file line $expand_done_line_num +p"
 contrace_expect_file=$(cat "$SYS_DYNAMIC_DEBUG_CTL" | grep "contract expect size" | awk -F: '{print $1}')
-contrace_expect_file_line_num=$(cat "$SYS_DYNAMIC_DEBUG_CTL" | grep "contract expect size" | awk -F: '{print $2}' | awk '{print $1}')
+contrace_expect_file_line_num=$(cat "$SYS_DYNAMIC_DEBUG_CTL" | grep "conti_pool_thread.*contract done" | awk -F: '{print $2}' | awk '{print $1}')
 POOL_CONTRACT_EXPECT_DONE_DEBUG="module obmm file $contrace_expect_file line $contrace_expect_file_line_num +p"
 
 ls -l /usr/bin/numactl || yum install numactl -y
@@ -164,6 +164,17 @@ function set_hugepages() {
         else
             echo 4096 > ${NODEINFO}$i/hugepages/hugepages-2048kB/nr_hugepages
         fi
+    done
+}
+
+## usage: 清理大页
+## input: null
+## output: null
+function clean_hugepages() {
+    echo 3 > /proc/sys/vm/drop_caches
+    for ((i = 0; i < $NODE_NUM; i++)); do
+        echo 0 > ${NODEINFO}$i/hugepages/hugepages-2048kB/nr_hugepages
+        echo 0 > ${NODEINFO}$i/hugepages/hugepages-1048576kB/nr_hugepages
     done
 }
 
