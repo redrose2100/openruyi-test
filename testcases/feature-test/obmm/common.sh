@@ -1,5 +1,9 @@
 #!/bin/bash
 # shellcheck disable=SC1009,SC1020,SC1035,SC1072,SC1073,SC1091,SC2002,SC2004,SC2015,SC2034,SC2046,SC2048,SC2068,SC2086,SC2153,SC2154
+# 系统页面大小
+PAGE_SIZE=$(getconf PAGESIZE)
+readonly PAGE_SIZE
+
 readonly CPU_TOPO='/root/cpu_socket_topology'
 readonly SYS_MEMPOOL_ALLOCATOR='/sys/module/obmm/parameters/mempool_allocator'
 readonly NODEINFO="/sys/devices/system/node/node"
@@ -37,6 +41,9 @@ POOL_EXPAND_DONE_DEBUG="module obmm file $expand_done_file line $expand_done_lin
 contrace_expect_file=$(cat "$SYS_DYNAMIC_DEBUG_CTL" | grep "contract expect size" | awk -F: '{print $1}')
 contrace_expect_file_line_num=$(cat "$SYS_DYNAMIC_DEBUG_CTL" | grep "conti_pool_thread.*contract done" | awk -F: '{print $2}' | awk '{print $1}')
 POOL_CONTRACT_EXPECT_DONE_DEBUG="module obmm file $contrace_expect_file line $contrace_expect_file_line_num +p"
+slow_allocate_line_num=$(cat "$SYS_DYNAMIC_DEBUG_CTL" | grep "conti_alloc_memory_slow.*slow allocate" | awk -F: '{print $2}' | awk '{print $1}')
+slow_allocate_file=$(cat "$SYS_DYNAMIC_DEBUG_CTL" | grep "conti_alloc_memory_slow.*slow allocate" | awk -F: '{print $1}')
+LOW_ALLOCATE_DEBUG="module obmm file $slow_allocate_file line $slow_allocate_line_num +p"
 
 ls -l /usr/bin/numactl || yum install numactl -y
 NODE_NUM=$(numactl -H | grep available | awk '{print $2}')
