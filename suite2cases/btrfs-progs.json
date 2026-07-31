@@ -1,0 +1,50 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/btrfs-progs",
+    "cases": [
+        {
+            "name": "oe_test_btrfs-progs_install"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cli_global_01"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cli_global_02"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cli_filesystem_01"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cli_filesystem_02"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cli_filesystem_03"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cli_subvolume"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cli_operation"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cli_quota"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cli_inspect_01"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cli_inspect_02"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cli_inspect_03"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cls_cmd_01"
+        },
+        {
+            "name": "oe_test_btrfs-progs_cls_cmd_02"
+        },
+        {
+            "name": "oe_test_btrfs-progs_filesystem"
+        }
+    ]
+}
