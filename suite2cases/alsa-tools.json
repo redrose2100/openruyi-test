@@ -30,6 +30,27 @@
         },
         {
             "name": "oe_test_alsa_tools_misc"
+        },
+        {
+            "name": "oe_test_alsa_tools_mixartloader"
+        },
+        {
+            "name": "oe_test_alsa_tools_pcxhrloader"
+        },
+        {
+            "name": "oe_test_alsa_tools_sbiload"
+        },
+        {
+            "name": "oe_test_alsa_tools_sscape_ctl"
+        },
+        {
+            "name": "oe_test_alsa_tools_us428control"
+        },
+        {
+            "name": "oe_test_alsa_tools_usx2yloader"
+        },
+        {
+            "name": "oe_test_alsa_tools_vxloader"
         }
     ]
 }
