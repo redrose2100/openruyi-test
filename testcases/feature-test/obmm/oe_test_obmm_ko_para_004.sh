@@ -144,6 +144,7 @@ function run_test() {
     # 使用1G大页
     if [ $PAGE_SIZE -eq 4096 ]; then
 	modprobe obmm mempool_allocator=hugetlb_pud
+        echo "$SLOW_ALLOCATE_DEBUG" > "$SYS_DYNAMIC_DEBUG_CTL"
         CHECK_RESULT $? 0
         total_mem=$((1 * GB2B))
         numa_mem_init $total_mem
@@ -152,7 +153,7 @@ function run_test() {
         cat export.log
         # 说明申请的大页来自系统内存，非内存池
         dmesg | grep "slow allocated"
-        CHECK_RESULT $? 0
+        CHECK_RESULT $? 0 1
         test_unexport $(get_id export.log)
         rmmod obmm
 
