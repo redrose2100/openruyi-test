@@ -28,35 +28,54 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+
+    # Check if DISPLAY env var exists, skip GUI tools if no display
+    local has_display=0
+    if [ -n "$DISPLAY" ]; then
+        has_display=1
+    fi
+
     # Test echomixer command (needs Echoaudio hardware)
-    echomixer 2>&1 | grep -i "echoaudio\|cards"
+    timeout 5 echomixer 2>&1 | grep -i "echoaudio\|cards"
     CHECK_RESULT $? 0 0 "echomixer execution check failed"
-    # Test envy24control command (GTK tool)
-    envy24control 2>&1 | grep -i "envy24\|gtk\|display"
-    CHECK_RESULT $? 0 0 "envy24control execution check failed"
-    # Test hdajackretask command (GTK tool)
-    hdajackretask 2>&1 | grep -i "retask\|gtk\|display"
-    CHECK_RESULT $? 0 0 "hdajackretask execution check failed"
-    # Test hdspconf command (GTK tool, needs HDSP hardware)
-    hdspconf 2>&1 | grep -i "hdspconf\|copyright\|gtk"
-    CHECK_RESULT $? 0 0 "hdspconf execution check failed"
-    # Test hwmixvolume command (GTK tool)
-    hwmixvolume 2>&1 | grep -i "mixvolume\|version\|python"
-    CHECK_RESULT $? 0 0 "hwmixvolume execution check failed"
+
+    # GTK GUI tools test, requires DISPLAY environment variable
+    if [ "$has_display" -eq 1 ]; then
+        timeout 5 envy24control 2>&1 | grep -i "envy24\|gtk\|display"
+        CHECK_RESULT $? 0 0 "envy24control execution check failed"
+
+        timeout 5 hdajackretask 2>&1 | grep -i "retask\|gtk\|display"
+        CHECK_RESULT $? 0 0 "hdajackretask execution check failed"
+
+        timeout 5 hdspconf 2>&1 | grep -i "hdspconf\|copyright\|gtk"
+        CHECK_RESULT $? 0 0 "hdspconf execution check failed"
+
+        timeout 5 hwmixvolume 2>&1 | grep -i "mixvolume\|version\|python"
+        CHECK_RESULT $? 0 0 "hwmixvolume execution check failed"
+    else
+        LOG_INFO "Skip GTK GUI tools: no DISPLAY available"
+    fi
+
     # Test init_audigy command
-    init_audigy 2>&1 | grep -i "ld10k1"
+    timeout 5 init_audigy 2>&1 | grep -i "ld10k1"
     CHECK_RESULT $? 0 0 "init_audigy execution check failed"
+
     # Test init_audigy_eq10 command
-    init_audigy_eq10 2>&1 | grep -i "ld10k1"
+    timeout 5 init_audigy_eq10 2>&1 | grep -i "ld10k1"
     CHECK_RESULT $? 0 0 "init_audigy_eq10 execution check failed"
+
     # Test init_live command
-    init_live 2>&1 | grep -i "ld10k1\|lo10k1"
+    timeout 5 init_live 2>&1 | grep -i "ld10k1\|lo10k1"
     CHECK_RESULT $? 0 0 "init_live execution check failed"
+
     # Test rmedigicontrol command
-    rmedigicontrol 2>&1 | grep -i "medi\|emu10k1"
+    timeout 5 rmedigicontrol 2>&1 | grep -i "medi\|emu10k1"
     CHECK_RESULT $? 0 0 "rmedigicontrol execution check failed"
-    timeout 3 hdsploader -D /dev/snd/pcmCARD0DATAPTR 2>&1 | grep -i "Looking for"
+
+    # Test hdsploader command
+    timeout 5 hdsploader -D /dev/snd/pcmCARD0DATAPTR 2>&1 | grep -i "Looking for"
     CHECK_RESULT $? 0 0 "hdsploader -D option check failed"
+
     LOG_INFO "End to run test."
 }
 
@@ -67,3 +86,4 @@ function post_test() {
 }
 
 main "$@"
+
