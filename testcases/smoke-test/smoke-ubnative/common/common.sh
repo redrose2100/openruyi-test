@@ -37,6 +37,7 @@ vm_user="root"
 vm_passwd="openEuler12#$"
 
 original_selinux_mode=""
+is_64k_version=$(uname -a | grep -q 64k && echo "true" || echo "false")
 
 function ub_env_init() {
     virt=$(systemd-detect-virt)
@@ -80,9 +81,14 @@ function ub_env_init() {
 
 function set_hugepages() {
     local num=$1
-    cur_num=$(cat /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages)
+    if [ "$is_64k_version" = "true" ]; then
+        nr_hugepages_path="/sys/kernel/mm/hugepages/hugepages-524288kB/nr_hugepages"
+    else
+        nr_hugepages_path="/sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages"
+    fi
+    cur_num=$(cat "$nr_hugepages_path")
     if [ "$cur_num" -lt "$num" ]; then
-        echo "$num" > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+        echo "$num" > "$nr_hugepages_path"
     fi
 }
 
@@ -110,6 +116,9 @@ function create_vm_waiting_running() {
         LOG_ERROR "$xml_path does not exist"
         return 1
     }
+    if [ "$is_64k_version" = "true" ]; then
+        sed -i "s/page size='2'/page size='512'/g" "${xml_path}"
+    fi
     sed -i "s|IMAGE_PATH|${qcow2_path}|g" "$xml_path"
     sed -i "s|BUS_INSTANCE|${bus_instance}|g" "$xml_path"
     for ub_dev_id in $ub_dev_ids; do
@@ -118,8 +127,7 @@ function create_vm_waiting_running() {
     done
     LOG_INFO "vm xml save dir: $xml_path; image dir is: $qcow2_path"
     virsh define "$xml_path" && virsh start "$vm_name" || return 1
-    SLEEP_WAIT 120
-    virsh list | grep "$vm_name"
+    wait_exec "virsh list --state-running | grep $vm_name" 10
     return $?
 }
 

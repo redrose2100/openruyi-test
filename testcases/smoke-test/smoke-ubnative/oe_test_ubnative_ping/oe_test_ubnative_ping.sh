@@ -26,6 +26,11 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     ub_env_init
     set_hugepages 4096
+    if [ "$is_64k_version" = "true" ]; then
+        set_hugepages 16
+    else
+        set_hugepages 4096
+    fi
     ub_dev_init "$bus_instance" "$ub_dev_id"
     LOG_INFO "End to prepare the test environment."
 }
