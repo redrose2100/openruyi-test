@@ -28,6 +28,8 @@ readonly GRANU=$((GRANU_M * MB2B))
 readonly KO_PARA="/sys/module/obmm/parameters"
 # 垃圾日志
 readonly JUNK_LOGS='Fallback order for Node |OBMM: cache maintainence'
+# 系统页面大小
+readonly PAGE_SIZE=$(getconf PAGE_SIZE)
 
 # debug日志
 readonly SYS_DYNAMIC_DEBUG_CTL="/sys/kernel/debug/dynamic_debug/control"
