@@ -20,19 +20,17 @@ function pre_test(){
     pre_env
 }
 function run_test(){
-    sentryctl set sentry_remote_reporter --cna "${node1_cna}" --eid "${node1_eid1};${node1_eid2}" --panic=on --kernel_reboot=on
-    SSH_CMD "sentryctl set sentry_remote_reporter --cna=${node2_cna} --eid='${node2_eid1};${node2_eid2}' --panic=on --kernel_reboot=on " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    #urma 单通道
+    sentryctl set sentry_remote_reporter --uvb_comm=off
+    SSH_CMD "sentryctl set sentry_remote_reporter --uvb_comm=off" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 
-    sentryctl set sentry_urma_comm --server_eid="${node1_eid1},${node2_eid1};${node1_eid2},${node2_eid2}" --client_jetty_id="${test_jetty_id}"
-    SSH_CMD "sentryctl set sentry_urma_comm --server_eid='${node2_eid1},${node1_eid1};${node2_eid2},${node1_eid2}' --client_jetty_id=${test_jetty_id}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-
-    start_RA kernel_reboot 2 0
+    start_RA kernel_reboot 0 0
     SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     sleep 60
 
-    check_log 2 RA 1009 1010
-    check_log 2 alarmd 1009 1010
-    check_log 2 monitor 1009 1010
+    check_log 0 RA 1009 1010
+    check_log 0 alarmd 1009 1010
+    check_log 0 monitor 1009 1010
     
 }
 function post_test(){

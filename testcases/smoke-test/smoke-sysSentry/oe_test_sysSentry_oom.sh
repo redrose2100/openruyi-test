@@ -34,6 +34,7 @@ function test_hugepages() {
     echo "OOM阈值(95%): $((oom_threshold / 1024 / 1024)) GB"
     echo "需要的hugepages: $needed_hugepages"
     # 但是直接设置这个值可能会卡死！使用timeout
+    original_nr_hugepages=$(cat /proc/sys/vm/nr_hugepages)
     timeout 5 bash -c "echo $needed_hugepages > /proc/sys/vm/nr_hugepages"
 }
 function run_test(){
@@ -57,6 +58,7 @@ function run_test(){
 }
 function post_test(){
     clean_sysSentry_message
+    echo $original_nr_hugepages > /proc/sys/vm/nr_hugepages
 }
 
 main "$@"
