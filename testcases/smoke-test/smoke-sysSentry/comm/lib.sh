@@ -59,6 +59,7 @@ function pre_env(){
     " "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
 
     get_eid
+    systemctl status ubse || systemctl start ubse
 
 }
 function pre_oom_env(){
@@ -93,17 +94,6 @@ function start_sentry(){
 }
 
 function get_eid(){
-    node1_eid1=$(urma_admin show -a | awk '/udma2/ && /eid0/ {print $5}')
-    node1_eid2=$(urma_admin show -a | awk '/udma5/ && /eid0/ {print $5}')
-
-    node2_eid1=$(SSH_CMD "urma_admin show -a | awk '/udma2/ && /eid0/ {print \$5}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
-    node2_eid2=$(SSH_CMD "urma_admin show -a | awk '/udma5/ && /eid0/ {print \$5}'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
-
-    node3_eid1=$(SSH_CMD "urma_admin show -a | awk '/udma2/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
-    node3_eid2=$(SSH_CMD "urma_admin show -a | awk '/udma5/ && /eid0/ {print \$5}'" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}" | grep -oE '([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4}')
-    
-    # node1_cna=1
-    # node2_cna=2
     node1_cna=$(( $(tr -d '[:space:]' < /sys/devices/ub_bus_controller0/00001/primary_cna) ))
     raw_output=$(SSH_CMD "cat /sys/devices/ub_bus_controller0/00001/primary_cna 2>/dev/null" \
         "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}")
@@ -120,9 +110,6 @@ function gcc_ra(){
     yum -y install sentry_msg_monitor libxalarm-devel gcc
     gcc "${ra_path}"/RA"${ra_type}".c -Wall -o3 -lxalarm -o "${ra_path}"/RA"${ra_type}"
     chmod 777 "${ra_path}/RA${ra_type}"
-
-
-
 }
 function start_RA(){
     local ra_type="${1}"
