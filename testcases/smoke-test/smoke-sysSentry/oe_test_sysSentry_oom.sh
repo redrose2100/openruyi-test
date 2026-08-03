@@ -58,7 +58,7 @@ function run_test(){
 }
 function post_test(){
     clean_sysSentry_message
-    echo $original_nr_hugepages > /proc/sys/vm/nr_hugepages
+    echo "$original_nr_hugepages" > /proc/sys/vm/nr_hugepages
 }
 
 main "$@"
