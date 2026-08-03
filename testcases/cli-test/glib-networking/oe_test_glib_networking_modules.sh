@@ -28,7 +28,8 @@ function pre_test() {
     openssl req -x509 -newkey rsa:2048 -keyout "$tmp_dir/server.key" \
         -out "$tmp_dir/server.crt" -days 1 -nodes -subj "/CN=localhost" > /dev/null 2>&1
     # Start D-Bus session for gsettings
-    export DBUS_SESSION_BUS_ADDRESS=$(dbus-daemon --session --print-address --fork 2>/dev/null)
+    DBUS_SESSION_BUS_ADDRESS=$(dbus-daemon --session --print-address --fork 2>/dev/null)
+    export DBUS_SESSION_BUS_ADDRESS
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -49,6 +50,7 @@ print('TLS backend OK')
     openssl s_server -accept 18443 -cert "$tmp_dir/server.crt" \
         -key "$tmp_dir/server.key" -www > /dev/null 2>&1 &
     server_pid=$!
+    SLEEP_WAIT 1
     python3 -c "
 from gi.repository import Gio
 client = Gio.SocketClient.new()

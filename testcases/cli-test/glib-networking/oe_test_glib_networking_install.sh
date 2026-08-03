@@ -73,6 +73,8 @@ function run_test() {
     # Test 8: Verify GIO modules have no unresolved dynamic dependencies
     for mod in libgiognutls.so libgiognomeproxy.so libgiolibproxy.so; do
         modpath="/usr/lib64/gio/modules/$mod"
+        [ -f "$modpath" ]
+        CHECK_RESULT $? 0 0 "GIO module $mod file not found for dependency check"
         ldd "$modpath" 2>/dev/null | grep "not found" > /dev/null
         CHECK_RESULT $? 1 0 "GIO module $mod has unresolved library dependencies"
     done
