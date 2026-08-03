@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libnetfilter_queue",
+    "cases": [
+        {
+            "name": "oe_test_libnetfilter_queue_install"
+        },
+        {
+            "name": "oe_test_libnetfilter_queue_devel"
+        },
+        {
+            "name": "oe_test_libnetfilter_queue_api"
+        }
+    ]
+}
