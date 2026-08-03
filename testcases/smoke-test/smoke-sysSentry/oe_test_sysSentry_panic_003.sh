@@ -22,7 +22,7 @@ function pre_test(){
 function run_test(){
     # uvb单通道
     sentryctl set sentry_remote_reporter --urma_comm=off
-    SSH_CMD "set sentry_remote_reporter --urma_comm=off" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "sentryctl set sentry_remote_reporter --urma_comm=off" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     
     sentryctl set sentry_uvb_comm --server_cna="${node2_cna}"
     SSH_CMD "sentryctl set sentry_uvb_comm --server_cna='${node1_cna}'"  "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
