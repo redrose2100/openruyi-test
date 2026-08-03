@@ -60,6 +60,8 @@ function pre_env(){
 
     get_eid
     systemctl status ubse || systemctl start ubse
+    sleep 3
+
 
 }
 function pre_oom_env(){
