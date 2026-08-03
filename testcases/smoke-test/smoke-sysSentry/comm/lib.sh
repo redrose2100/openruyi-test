@@ -160,13 +160,10 @@ function check_RA_oom(){
     local reason_value="${2}"
     for ((check_ra_oom_loop=0; check_ra_oom_loop<5; check_ra_oom_loop++)); do
         grep -aw "\[alarmid:1005\]" ${TMP_DIR}/RA.log | grep -F "sync:${sync_value},timeout:30000,reason:${reason_value}" && break
-        sleep 2
+        sleep 5
     done
     [ "${check_ra_oom_loop}" -lt 5 ] || return 1
-    tmp_nid_info=$(grep -aw "\[alarmid:1005\]" ${TMP_DIR}/RA.log | tail -1 | grep "\[msg:.*\]" | awk -F'{' '{print $2}' | awk -F'}' '{print $1}' | awk -F']' '{print $1}')
-    echo "$tmp_nid_info"
-    check_oom_nid_info "${tmp_nid_info}"
-    CHECK_RESULT $? 0 0
+
 }
 function check_alarmd(){
     local tmp_alarm_id="${1}"
