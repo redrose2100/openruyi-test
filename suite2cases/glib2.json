@@ -3,6 +3,48 @@
     "cases": [
         {
             "name": "oe_test_glib2"
+        },
+        {
+            "name": "oe_test_glib2_gapplication"
+        },
+        {
+            "name": "oe_test_glib2_gdbus"
+        },
+        {
+            "name": "oe_test_glib2_gdbus-codegen"
+        },
+        {
+            "name": "oe_test_glib2_gio"
+        },
+        {
+            "name": "oe_test_glib2_glib-compile-resources"
+        },
+        {
+            "name": "oe_test_glib2_glib-compile-schemas"
+        },
+        {
+            "name": "oe_test_glib2_glib-genmarshal"
+        },
+        {
+            "name": "oe_test_glib2_glib-gettextize"
+        },
+        {
+            "name": "oe_test_glib2_glib-mkenums"
+        },
+        {
+            "name": "oe_test_glib2_gobject-query"
+        },
+        {
+            "name": "oe_test_glib2_gresource"
+        },
+        {
+            "name": "oe_test_glib2_gsettings"
+        },
+        {
+            "name": "oe_test_glib2_gtester"
+        },
+        {
+            "name": "oe_test_glib2_gtester-report"
         }
     ]
 }
