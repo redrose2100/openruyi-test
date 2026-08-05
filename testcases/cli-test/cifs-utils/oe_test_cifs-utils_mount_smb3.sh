@@ -39,15 +39,10 @@ function cleanup_creds_file() {
     rm -f "$CREDS_FILE"
 }
 
-function get_file_mode() {
-    stat -c %f "$1" 2>/dev/null
-}
-
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "samba cifs-utils"
-    samba_start "$SMB_CONF" "$SMB_SHARE" "$MOUNT_POINT"
-    [ $? -ne 0 ] && return 1
+    samba_start "$SMB_CONF" "$SMB_SHARE" "$MOUNT_POINT" || return 1
     echo "smb3 test content" > "$SMB_SHARE/test.txt"
     mkdir -p "$SMB_SHARE/subdir"
     echo "nested smb3 content" > "$SMB_SHARE/subdir/nested.txt"
@@ -103,25 +98,25 @@ function run_test() {
     grep -q "nested smb3 content" "$MOUNT_POINT/subdir/nested.txt"
     CHECK_RESULT $? 0 0 "mount.smb3: nested file content mismatch"
 
-    # Test dir_attribute: Check directory has DIRECTORY type (S_IFDIR=0x4000) via bitwise AND
-    local dir_mode
-    dir_mode=$(get_file_mode "$MOUNT_POINT/subdir")
-    if [ -n "$dir_mode" ]; then
-        local dir_mode_dec=$((16#$dir_mode))
-        [ $((dir_mode_dec & 0x4000)) -ne 0 ]
+    # Test dir_attribute: Check directory has DIRECTORY flag (0x10) via bitwise AND
+    local dir_attr
+    dir_attr=$(smbinfo filebasicinfo "$MOUNT_POINT/subdir" 2>&1 | grep "File Attributes:" | awk '{print $3}')
+    if [ -n "$dir_attr" ]; then
+        local dir_attr_dec=$((16#${dir_attr#0x}))
+        [ $((dir_attr_dec & 0x10)) -ne 0 ]
         CHECK_RESULT $? 0 0 "mount.smb3: directory missing DIRECTORY attribute"
     else
         [ -d "$MOUNT_POINT/subdir" ]
         CHECK_RESULT $? 0 0 "mount.smb3: directory attribute check fallback"
     fi
 
-    # Test file_attribute: Check file has REGULAR type (S_IFREG=0x8000) via bitwise AND
-    local file_mode
-    file_mode=$(get_file_mode "$MOUNT_POINT/test.txt")
-    if [ -n "$file_mode" ]; then
-        local file_mode_dec=$((16#$file_mode))
-        [ $((file_mode_dec & 0x8000)) -ne 0 ]
-        CHECK_RESULT $? 0 0 "mount.smb3: file missing REGULAR attribute"
+    # Test file_attribute: Check file does NOT have DIRECTORY flag (0x10) via bitwise AND
+    local file_attr
+    file_attr=$(smbinfo filebasicinfo "$MOUNT_POINT/test.txt" 2>&1 | grep "File Attributes:" | awk '{print $3}')
+    if [ -n "$file_attr" ]; then
+        local file_attr_dec=$((16#${file_attr#0x}))
+        [ $((file_attr_dec & 0x10)) -eq 0 ]
+        CHECK_RESULT $? 0 0 "mount.smb3: file should not have DIRECTORY attribute"
     else
         [ -f "$MOUNT_POINT/test.txt" ]
         CHECK_RESULT $? 0 0 "mount.smb3: file attribute check fallback"
