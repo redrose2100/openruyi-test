@@ -4,7 +4,7 @@
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
-# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTY OF ANY KIND,
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 # MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
@@ -20,6 +20,22 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+# Helper: run cifscreds add/update with password via expect
+function cifscreds_run() {
+    expect << EOF > /dev/null 2>&1
+spawn cifscreds $@
+expect {
+    "Password:" {
+        send "${NODE1_PASSWORD}\r"
+        expect eof
+        catch wait result
+        exit [lindex \$result 3]
+    }
+    eof
+}
+EOF
+}
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if ! grep -q "cifs-test-host" /etc/hosts 2>/dev/null; then
@@ -27,7 +43,7 @@ function pre_test() {
         echo "127.0.0.1 cifs-test-domain" >> /etc/hosts
         echo "127.0.0.1 cifs-test-host2" >> /etc/hosts
     fi
-    DNF_INSTALL "cifs-utils"
+    DNF_INSTALL "cifs-utils expect"
     cifscreds clearall 2>/dev/null || true
     LOG_INFO "End to prepare the test environment."
 }
@@ -40,7 +56,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "cifscreds usage not displayed"
 
     # Test add: Add credential (key: cifs:a:127.0.0.1)
-    echo "" | cifscreds add cifs-test-host > /dev/null 2>&1
+    cifscreds_run add cifs-test-host
     CHECK_RESULT $? 0 0 "cifscreds add cifs-test-host failed"
 
     # Test add_verify: Verify credential exists in keyring after add
@@ -56,7 +72,7 @@ function run_test() {
     CHECK_RESULT $? 1 0 "cifscreds clear verification: credential still exists"
 
     # Test add_-u: Add credential with username (key remains cifs:a:127.0.0.1)
-    echo "" | cifscreds add -u testuser cifs-test-host > /dev/null 2>&1
+    cifscreds_run add -u testuser cifs-test-host
     CHECK_RESULT $? 0 0 "cifscreds add -u testuser failed"
 
     # Test add_-u_verify: Verify credential exists in keyring after add -u
@@ -64,7 +80,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "cifscreds add -u verification: credential not found in keyring"
 
     # Test update_-u: Update credential with username
-    echo "" | cifscreds update -u testuser cifs-test-host > /dev/null 2>&1
+    cifscreds_run update -u testuser cifs-test-host
     CHECK_RESULT $? 0 0 "cifscreds update -u failed"
 
     # Test update_-u_verify: Verify credential still exists after update
@@ -80,7 +96,7 @@ function run_test() {
     CHECK_RESULT $? 1 0 "cifscreds clear -u verification: credential still exists"
 
     # Test add_-d: Add credential with domain (key: cifs:d:cifs-test-domain)
-    echo "" | cifscreds add -d cifs-test-domain > /dev/null 2>&1
+    cifscreds_run add -d cifs-test-domain
     CHECK_RESULT $? 0 0 "cifscreds add -d cifs-test-domain failed"
 
     # Test add_-d_verify: Verify domain credential exists in keyring
@@ -88,7 +104,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "cifscreds add -d verification: credential not found in keyring"
 
     # Test update_-d: Update credential with domain
-    echo "" | cifscreds update -d cifs-test-domain > /dev/null 2>&1
+    cifscreds_run update -d cifs-test-domain
     CHECK_RESULT $? 0 0 "cifscreds update -d failed"
 
     # Test update_-d_verify: Verify domain credential still exists after update
@@ -104,7 +120,7 @@ function run_test() {
     CHECK_RESULT $? 1 0 "cifscreds clear -d verification: credential still exists"
 
     # Test add_-u_-d: Combined user and domain option (key: cifs:d:cifs-test-host2)
-    echo "" | cifscreds add -u domainuser -d cifs-test-host2 > /dev/null 2>&1
+    cifscreds_run add -u domainuser -d cifs-test-host2
     CHECK_RESULT $? 0 0 "cifscreds add -u -d failed"
 
     # Test add_-u_-d_verify: Verify combined credential exists in keyring

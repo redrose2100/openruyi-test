@@ -3,17 +3,17 @@
 # Common Samba server setup/cleanup functions for cifs-utils tests
 # Source this file in test scripts: source "$(dirname "$0")/common/samba_server.sh"
 
-# Start a local Samba server with a guest-accessible share and mount it
+# Start a local Samba server with user authentication and mount it
 # Parameters:
 #   $1 - config file path
 #   $2 - share directory path
 #   $3 - mount point path
 #   $4 - additional smb.conf entries (optional)
 function samba_start() {
-    local config="$1"
-    local share="$2"
-    local mount="$3"
-    local extra_config="${4:-}"
+    config="$1"
+    share="$2"
+    mount="$3"
+    extra_config="${4:-}"
 
     if [ -z "$config" ] || [ -z "$share" ] || [ -z "$mount" ]; then
         echo "ERROR: samba_start requires config, share, and mount parameters"
@@ -22,20 +22,25 @@ function samba_start() {
 
     # Cleanup any leftover processes from previous runs
     samba_stop "$config" "$mount"
+    pkill -9 smbd 2>/dev/null || true
+    rm -f /run/smbd.pid 2>/dev/null
 
     mkdir -p "$share"
     mkdir -p "$mount"
+
+    # Create Samba user with NODE1_PASSWORD to avoid interactive password prompt
+    (echo "${NODE1_PASSWORD}"; echo "${NODE1_PASSWORD}") | smbpasswd -a root -s > /dev/null 2>&1
+    smbpasswd -e root > /dev/null 2>&1
 
     cat > "$config" << EOF
 [global]
     workgroup = WORKGROUP
     security = user
-    map to guest = Bad User
     ${extra_config}
 
 [testshare]
     path = ${share}
-    guest ok = yes
+    valid users = root
     read only = no
     browseable = yes
     force user = root
@@ -50,7 +55,7 @@ EOF
         return 1
     fi
 
-    mount.cifs "//127.0.0.1/testshare" "$mount" -o guest,vers=3.0 > /dev/null 2>&1
+    mount.cifs "//127.0.0.1/testshare" "$mount" -o "username=root,password=${NODE1_PASSWORD},vers=2.0" > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         echo "ERROR: Failed to mount CIFS share"
         return 1
@@ -65,8 +70,8 @@ EOF
 #   $1 - config file path (optional)
 #   $2 - mount point path (optional)
 function samba_stop() {
-    local config="${1:-}"
-    local mount="${2:-}"
+    config="${1:-}"
+    mount="${2:-}"
 
     if [ -n "$mount" ] && mountpoint -q "$mount" 2>/dev/null; then
         umount -l "$mount" 2>/dev/null

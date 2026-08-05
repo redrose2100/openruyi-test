@@ -4,7 +4,7 @@
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
-# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTY OF ANY KIND,
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
 # EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 # MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
 # See the Mulan PSL v2 for more details.
@@ -24,6 +24,7 @@ source "$(dirname "$0")/common/samba_server.sh"
 SMB_CONF="/etc/samba/mountcifs_test.conf"
 SMB_SHARE="/tmp/samba_cifs_share"
 MOUNT_POINT="/mnt/cifstest"
+TMP_MOUNT="/tmp/cifs_invalid_mount"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -33,9 +34,9 @@ function pre_test() {
     echo "cifs test content" > "$SMB_SHARE/test.txt"
     mkdir -p "$SMB_SHARE/subdir"
     echo "nested cifs content" > "$SMB_SHARE/subdir/nested.txt"
-    # Remount after creating files
     umount "$MOUNT_POINT" 2>/dev/null
-    mount.cifs "//127.0.0.1/testshare" "$MOUNT_POINT" -o guest,vers=3.0 > /dev/null 2>&1
+    mount.cifs "//127.0.0.1/testshare" "$MOUNT_POINT" -o "username=root,password=${NODE1_PASSWORD},vers=2.0" > /dev/null 2>&1
+    mkdir -p "$TMP_MOUNT"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -55,7 +56,7 @@ function run_test() {
     CHECK_RESULT $? 1 0 "mount.cifs missing args should fail"
 
     # Test invalid_option: Produce error with invalid option
-    mount.cifs "//127.0.0.1/testshare" "$MOUNT_POINT" -o "invalidopt=val" 2>&1 | grep -i "invalid\|Unrecognized" > /dev/null
+    mount.cifs "//127.0.0.1/testshare" "$TMP_MOUNT" -o "invalidopt=val,username=root,password=${NODE1_PASSWORD},vers=2.0" 2>&1 | grep -i "invalid\|Unrecognized\|bad option" > /dev/null
     CHECK_RESULT $? 0 0 "mount.cifs invalid option should fail"
 
     # Test mount_exists: Verify current mount exists in mount table
@@ -90,7 +91,7 @@ function run_test() {
     CHECK_RESULT $? 1 0 "mount.cifs: still mounted after umount"
 
     # Test ro_mount: Read-only mount
-    mount.cifs "//127.0.0.1/testshare" "$MOUNT_POINT" -o guest,vers=3.0,ro > /dev/null 2>&1
+    mount.cifs "//127.0.0.1/testshare" "$MOUNT_POINT" -o "username=root,password=${NODE1_PASSWORD},vers=2.0,ro" > /dev/null 2>&1
     CHECK_RESULT $? 0 0 "mount.cifs ro mount failed"
 
     # Test ro_option: Verify read-only option applied
@@ -107,6 +108,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     umount "$MOUNT_POINT" > /dev/null 2>&1
+    rmdir "$TMP_MOUNT" 2>/dev/null
     samba_stop "$SMB_CONF" "$MOUNT_POINT"
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
