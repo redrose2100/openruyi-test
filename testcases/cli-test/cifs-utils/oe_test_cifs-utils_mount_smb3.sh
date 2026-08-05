@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test mount.smb3 command - SMB3 mount with local Samba
 # ############################################
-# shellcheck disable=SC2119
+# shellcheck disable=SC2119,SC1091
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 source "$(dirname "$0")/common/samba_server.sh"
@@ -25,6 +25,23 @@ SMB_CONF="/etc/samba/mountsmb3_test.conf"
 SMB_SHARE="/tmp/samba_smb3_share"
 MOUNT_POINT="/mnt/smb3test"
 TMP_MOUNT="/tmp/smb3_invalid_mount"
+CREDS_FILE="/tmp/smb3_creds.$$"
+
+function create_creds_file() {
+    cat > "$CREDS_FILE" << EOF
+username=root
+password=${NODE1_PASSWORD}
+EOF
+    chmod 600 "$CREDS_FILE"
+}
+
+function cleanup_creds_file() {
+    rm -f "$CREDS_FILE"
+}
+
+function get_file_mode() {
+    stat -c %f "$1" 2>/dev/null
+}
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -35,7 +52,11 @@ function pre_test() {
     mkdir -p "$SMB_SHARE/subdir"
     echo "nested smb3 content" > "$SMB_SHARE/subdir/nested.txt"
     umount -lf "$MOUNT_POINT" 2>/dev/null
-    mount.smb3 "//127.0.0.1/testshare" "$MOUNT_POINT" -o "username=root,password=${NODE1_PASSWORD},vers=3.0" > /dev/null 2>&1
+    create_creds_file
+    mount.smb3 "//127.0.0.1/testshare" "$MOUNT_POINT" -o "credentials=$CREDS_FILE,vers=3.0" > /dev/null 2>&1 || {
+        cleanup_creds_file
+        return 1
+    }
     mkdir -p "$TMP_MOUNT"
     LOG_INFO "End to prepare the test environment."
 }
@@ -56,7 +77,7 @@ function run_test() {
     CHECK_RESULT $? 1 0 "mount.smb3 missing args should fail"
 
     # Test invalid_option: Produce error with invalid option
-    mount.smb3 "//127.0.0.1/testshare" "$TMP_MOUNT" -o "invalidopt=val,username=root,password=${NODE1_PASSWORD}" 2>&1 | grep -i "invalid\|Unrecognized\|bad option" > /dev/null
+    mount.smb3 "//127.0.0.1/testshare" "$TMP_MOUNT" -o "invalidopt=val,credentials=$CREDS_FILE" 2>&1 | grep -i "invalid\|Unrecognized\|bad option" > /dev/null
     CHECK_RESULT $? 0 0 "mount.smb3 invalid option should fail"
 
     # Test mount_exists: Verify current mount exists in mount table
@@ -82,6 +103,30 @@ function run_test() {
     grep -q "nested smb3 content" "$MOUNT_POINT/subdir/nested.txt"
     CHECK_RESULT $? 0 0 "mount.smb3: nested file content mismatch"
 
+    # Test dir_attribute: Check directory has DIRECTORY type (S_IFDIR=0x4000) via bitwise AND
+    local dir_mode
+    dir_mode=$(get_file_mode "$MOUNT_POINT/subdir")
+    if [ -n "$dir_mode" ]; then
+        local dir_mode_dec=$((16#$dir_mode))
+        [ $((dir_mode_dec & 0x4000)) -ne 0 ]
+        CHECK_RESULT $? 0 0 "mount.smb3: directory missing DIRECTORY attribute"
+    else
+        [ -d "$MOUNT_POINT/subdir" ]
+        CHECK_RESULT $? 0 0 "mount.smb3: directory attribute check fallback"
+    fi
+
+    # Test file_attribute: Check file has REGULAR type (S_IFREG=0x8000) via bitwise AND
+    local file_mode
+    file_mode=$(get_file_mode "$MOUNT_POINT/test.txt")
+    if [ -n "$file_mode" ]; then
+        local file_mode_dec=$((16#$file_mode))
+        [ $((file_mode_dec & 0x8000)) -ne 0 ]
+        CHECK_RESULT $? 0 0 "mount.smb3: file missing REGULAR attribute"
+    else
+        [ -f "$MOUNT_POINT/test.txt" ]
+        CHECK_RESULT $? 0 0 "mount.smb3: file attribute check fallback"
+    fi
+
     # Test umount: Unmount verification
     umount "$MOUNT_POINT" > /dev/null 2>&1
     CHECK_RESULT $? 0 0 "umount failed after mount.smb3"
@@ -91,7 +136,7 @@ function run_test() {
     CHECK_RESULT $? 1 0 "mount.smb3: still mounted after umount"
 
     # Test ro_mount: Read-only mount via mount.smb3
-    mount.smb3 "//127.0.0.1/testshare" "$MOUNT_POINT" -o "username=root,password=${NODE1_PASSWORD},vers=3.0,ro" > /dev/null 2>&1
+    mount.smb3 "//127.0.0.1/testshare" "$MOUNT_POINT" -o "credentials=$CREDS_FILE,vers=3.0,ro" > /dev/null 2>&1
     CHECK_RESULT $? 0 0 "mount.smb3 ro mount failed"
 
     # Test ro_option: Verify read-only option applied
@@ -109,6 +154,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     umount "$MOUNT_POINT" > /dev/null 2>&1
     rmdir "$TMP_MOUNT" 2>/dev/null
+    cleanup_creds_file
     samba_stop "$SMB_CONF" "$MOUNT_POINT"
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."

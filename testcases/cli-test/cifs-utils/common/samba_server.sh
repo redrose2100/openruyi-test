@@ -50,18 +50,17 @@ function samba_start() {
 EOF
 
     smbd -s "$config" > /dev/null 2>&1
-    sleep 2
+    SLEEP_WAIT 2
 
-    if ! ss -tlnp 2>/dev/null | grep -q :445; then
+    if ! ss -tlnp 2>/dev/null | grep -qE ':445[[:space:]]|:445$'; then
         echo "ERROR: smbd failed to start on port 445"
         return 1
     fi
 
-    mount.cifs "//127.0.0.1/testshare" "$mount" -o "username=root,password=${NODE1_PASSWORD},vers=2.0" > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
+    mount.cifs "//127.0.0.1/testshare" "$mount" -o "username=root,password=${NODE1_PASSWORD},vers=2.0" > /dev/null 2>&1 || {
         echo "ERROR: Failed to mount CIFS share"
         return 1
-    fi
+    }
 
     echo "Samba server started: config=$config share=$share mount=$mount"
     return 0
@@ -84,7 +83,7 @@ function samba_stop() {
         rm -f "$config"
     fi
 
-    sleep 1
+    SLEEP_WAIT 1
 
     if [ -n "$mount" ] && [ -d "$mount" ]; then
         rm -rf "$mount"

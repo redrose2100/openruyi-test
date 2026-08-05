@@ -42,11 +42,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "cifs.idmap -v version failed"
 
     # Test missing_key_serial: Return non-zero when key_serial not provided
-    cifs.idmap 2>&1 > /dev/null
+    cifs.idmap 2>/dev/null > /dev/null
     CHECK_RESULT $? 1 0 "cifs.idmap without key_serial should fail"
 
     # Test -t_timeout: Parse -t timeout option (still fails without key_serial)
-    cifs.idmap -t 5 2>&1 > /dev/null
+    cifs.idmap -t 5 2>/dev/null > /dev/null
     CHECK_RESULT $? 1 0 "cifs.idmap -t timeout without key_serial should fail"
 
     # Test invalid_option: Invalid option produces error

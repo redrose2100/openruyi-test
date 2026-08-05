@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test setcifsacl command - modify CIFS/NTFS ACL on Samba share
 # ############################################
-# shellcheck disable=SC2119
+# shellcheck disable=SC2119,SC1091
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 source "$(dirname "$0")/common/samba_server.sh"
@@ -28,8 +28,7 @@ CIFS_MOUNT="/mnt/setcifsacltest"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "samba cifs-utils"
-    samba_start "$SMB_CONF" "$SMB_SHARE" "$CIFS_MOUNT" "map acl inherit = yes"
-    [ $? -ne 0 ] && return 1
+    samba_start "$SMB_CONF" "$SMB_SHARE" "$CIFS_MOUNT" "map acl inherit = yes" || return 1
     touch "$CIFS_MOUNT/test_file"
     mkdir -p "$CIFS_MOUNT/test_dir"
     touch "$CIFS_MOUNT/test_dir/nested_file"

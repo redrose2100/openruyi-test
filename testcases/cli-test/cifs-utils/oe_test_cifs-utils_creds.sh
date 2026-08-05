@@ -31,7 +31,10 @@ expect {
         catch wait result
         exit [lindex \$result 3]
     }
-    eof
+    eof {
+        catch wait result
+        exit [lindex \$result 3]
+    }
 }
 EOF
 }
@@ -39,9 +42,11 @@ EOF
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if ! grep -q "cifs-test-host" /etc/hosts 2>/dev/null; then
-        echo "127.0.0.1 cifs-test-host" >> /etc/hosts
-        echo "127.0.0.1 cifs-test-domain" >> /etc/hosts
-        echo "127.0.0.1 cifs-test-host2" >> /etc/hosts
+        {
+            echo "127.0.0.1 cifs-test-host"
+            echo "127.0.0.1 cifs-test-domain"
+            echo "127.0.0.1 cifs-test-host2"
+        } >> /etc/hosts
     fi
     DNF_INSTALL "cifs-utils expect"
     cifscreds clearall 2>/dev/null || true

@@ -74,7 +74,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    [ -L "/usr/local/bin/python" ] && rm -f "/usr/local/bin/python" 2>/dev/null || true
+    if [ -L "/usr/local/bin/python" ]; then
+        rm -f "/usr/local/bin/python" 2>/dev/null || true
+    fi
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

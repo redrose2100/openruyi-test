@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test mount.cifs command with local Samba server
 # ############################################
-# shellcheck disable=SC2119
+# shellcheck disable=SC2119,SC1091
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 source "$(dirname "$0")/common/samba_server.sh"
@@ -29,13 +29,12 @@ TMP_MOUNT="/tmp/cifs_invalid_mount"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "samba cifs-utils"
-    samba_start "$SMB_CONF" "$SMB_SHARE" "$MOUNT_POINT"
-    [ $? -ne 0 ] && return 1
+    samba_start "$SMB_CONF" "$SMB_SHARE" "$MOUNT_POINT" || return 1
     echo "cifs test content" > "$SMB_SHARE/test.txt"
     mkdir -p "$SMB_SHARE/subdir"
     echo "nested cifs content" > "$SMB_SHARE/subdir/nested.txt"
     umount -lf "$MOUNT_POINT" 2>/dev/null
-    mount.cifs "//127.0.0.1/testshare" "$MOUNT_POINT" -o "username=root,password=${NODE1_PASSWORD},vers=2.0" > /dev/null 2>&1
+    mount.cifs "//127.0.0.1/testshare" "$MOUNT_POINT" -o "username=root,password=${NODE1_PASSWORD},vers=2.0" > /dev/null 2>&1 || return 1
     mkdir -p "$TMP_MOUNT"
     LOG_INFO "End to prepare the test environment."
 }
