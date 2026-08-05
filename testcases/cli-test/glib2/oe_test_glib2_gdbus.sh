@@ -17,7 +17,7 @@
 # @Desc      :   test gdbus command
 # ############################################
 
-# shellcheck disable=SC2119
+# shellcheck disable=SC2119,SC2086
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
@@ -78,9 +78,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    dbus_pid=$(pgrep -f "dbus-daemon.*session" 2>/dev/null)
+    dbus_pid=$(pgrep -f "dbus-daemon --session --print-address --fork")
     if [ -n "$dbus_pid" ]; then
-        kill "$dbus_pid" 2>/dev/null
+        kill -9 $dbus_pid
     fi
     DNF_REMOVE
     rm -f /tmp/dbus_addr_gdbus
