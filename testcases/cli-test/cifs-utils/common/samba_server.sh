@@ -26,7 +26,9 @@ function samba_start() {
     rm -f /run/smbd.pid 2>/dev/null
 
     mkdir -p "$share"
-    mkdir -p "$mount"
+    # Force cleanup stale mount point before mkdir
+    umount -lf "$mount" 2>/dev/null
+    mkdir -p "$mount" 2>/dev/null || { rmdir "$mount" 2>/dev/null; mkdir -p "$mount"; }
 
     # Create Samba user with NODE1_PASSWORD to avoid interactive password prompt
     (echo "${NODE1_PASSWORD}"; echo "${NODE1_PASSWORD}") | smbpasswd -a root -s > /dev/null 2>&1

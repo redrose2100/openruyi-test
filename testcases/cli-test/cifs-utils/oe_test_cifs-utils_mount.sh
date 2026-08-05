@@ -34,7 +34,7 @@ function pre_test() {
     echo "cifs test content" > "$SMB_SHARE/test.txt"
     mkdir -p "$SMB_SHARE/subdir"
     echo "nested cifs content" > "$SMB_SHARE/subdir/nested.txt"
-    umount "$MOUNT_POINT" 2>/dev/null
+    umount -lf "$MOUNT_POINT" 2>/dev/null
     mount.cifs "//127.0.0.1/testshare" "$MOUNT_POINT" -o "username=root,password=${NODE1_PASSWORD},vers=2.0" > /dev/null 2>&1
     mkdir -p "$TMP_MOUNT"
     LOG_INFO "End to prepare the test environment."
