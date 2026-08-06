@@ -1,0 +1,68 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/ldns",
+    "cases": [
+        {
+            "name": "oe_test_ldns"
+        },
+        {
+            "name": "oe_test_ldns_drill"
+        },
+        {
+            "name": "oe_test_ldns_mx"
+        },
+        {
+            "name": "oe_test_ldns_resolver"
+        },
+        {
+            "name": "oe_test_ldns_test-edns"
+        },
+        {
+            "name": "oe_test_ldns_read-zone"
+        },
+        {
+            "name": "oe_test_ldns_compare-zones"
+        },
+        {
+            "name": "oe_test_ldns_gen-zone"
+        },
+        {
+            "name": "oe_test_ldns_zsplit"
+        },
+        {
+            "name": "oe_test_ldns_zcat"
+        },
+        {
+            "name": "oe_test_ldns_keygen"
+        },
+        {
+            "name": "oe_test_ldns_signzone"
+        },
+        {
+            "name": "oe_test_ldns_verify-zone"
+        },
+        {
+            "name": "oe_test_ldns_key2ds"
+        },
+        {
+            "name": "oe_test_ldns_nsec3-hash"
+        },
+        {
+            "name": "oe_test_ldns_rrsig"
+        },
+        {
+            "name": "oe_test_ldns_chaos"
+        },
+        {
+            "name": "oe_test_ldns_config"
+        },
+        {
+            "name": "oe_test_ldns_keyfetcher"
+        },
+        {
+            "name": "oe_test_ldns_revoke"
+        },
+        {
+            "name": "oe_test_ldns_walk"
+        }
+    ]
+}

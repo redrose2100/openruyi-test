@@ -41,6 +41,14 @@
         {
             "name": "oe_test_service_nftables",
             "machine num": 1
+        },
+	{
+            "name": "oe_test_nftables_nft_01",
+            "machine num": 1
+        },
+	{
+            "name": "oe_test_nftables_nft_02",
+            "machine num": 1
         }
     ]
 }
