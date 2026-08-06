@@ -1,0 +1,18 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libnftnl",
+    "machine num": 1,
+    "cases": [
+        {
+            "name": "oe_test_libnftnl",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_libnftnl_table",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_libnftnl_filter",
+            "machine num": 1
+        }
+    ]
+}
