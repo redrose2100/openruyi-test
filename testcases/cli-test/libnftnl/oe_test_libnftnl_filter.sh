@@ -109,7 +109,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "nft add SNAT chain failed"
     nft add rule inet "$TEST_TABLE" snat_test ip saddr 10.0.0.0/24 snat to 192.168.1.100
     CHECK_RESULT $? 0 0 "nft add SNAT rule failed"
-    nft list chain inet "$TEST_TABLE" snat_test | grep -E "snat|192.168.1.100"
+    nft list chain inet "$TEST_TABLE" snat_test | grep -E "snat to|192\.168\.1\.100"
     CHECK_RESULT $? 0 0 "nft list SNAT rule verification failed"
 
     # Test nat_dnat: Add DNAT rule
@@ -117,7 +117,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "nft add DNAT chain failed"
     nft add rule inet "$TEST_TABLE" dnat_test tcp dport 8080 dnat ip to 10.0.0.5
     CHECK_RESULT $? 0 0 "nft add DNAT rule failed"
-    nft list chain inet "$TEST_TABLE" dnat_test | grep -E "dnat|10.0.0.5"
+    nft list chain inet "$TEST_TABLE" dnat_test | grep -E "dnat ip to|10\.0\.0\.5"
     CHECK_RESULT $? 0 0 "nft list DNAT rule verification failed"
 
     # Test queue_rule: Add queue rule
