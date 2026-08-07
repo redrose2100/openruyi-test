@@ -30,6 +30,9 @@
         },
         {
             "name": "oe_test_mysql_secure_installation_001"
+        },
+        {
+            "name": "oe_test_mysql_transaction_crud_001"
         }
     ]
 }
