@@ -125,6 +125,9 @@
             "name": "oe_test_postgresql_vacuumdb"
         },
         {
+            "name": "oe_test_postgresql_transaction_control"
+        },
+        {
             "name": "oe_test_service_postgresql"
         }
     ]
