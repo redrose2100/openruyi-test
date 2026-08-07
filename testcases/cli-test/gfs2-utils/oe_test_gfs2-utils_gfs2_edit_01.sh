@@ -14,7 +14,7 @@
 # @Contact   :   liujingjing25812@163.com
 # @Date      :   2026/08/07
 # @License   :   Mulan PSL v2
-# @Desc      :   test gfs2_edit command
+# @Desc      :   test gfs2_edit and gfs2_convert command
 # ############################################
 
 # shellcheck disable=SC2119

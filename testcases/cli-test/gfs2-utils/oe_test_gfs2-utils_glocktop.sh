@@ -50,19 +50,19 @@ function run_test() {
     timeout 5 glocktop -t  | grep -i "glock"
     CHECK_RESULT $? 0 0 "glocktop -t check failed"
     # Test -d option (delay)
-    timeout --foreground 5 glocktop -d 3  | grep -ic "loop" | grep 2
+    timeout --foreground 5 glocktop -d 3  | grep -ic "loop" | grep -x 2
     CHECK_RESULT $? 0 0 "glocktop -d check failed"
     # Test -n option (iterations)
-    timeout --foreground 5 glocktop -n 1  | grep -ic "loop" | grep 1
+    timeout --foreground 5 glocktop -n 1  | grep -ic "loop" | grep -x 1
     CHECK_RESULT $? 0 0 "glocktop -n check failed"
     # Test -H option (don't show Held glocks)
-    timeout --foreground 3 glocktop -H | grep -c "G:.*s"  | grep 1
+    timeout --foreground 3 glocktop -H | grep -c "G:.*s"  | grep -x 1
     CHECK_RESULT $? 0 0 "glocktop -H check failed"
     # Test -r option (show reservations)
     timeout --foreground 3 glocktop -r  | grep -i "rgrp"
     CHECK_RESULT $? 0 0 "glocktop -r check failed"
     # Test -s option (show glock summary)
-    timeout --foreground 3 glocktop -d 1 -s2 | grep -ic glock  | grep 2
+    timeout --foreground 3 glocktop -d 1 -s2 | grep -ic glock  | grep -x 2
     CHECK_RESULT $? 0 0 "glocktop -s check failed"
     LOG_INFO "End to run test."
 }

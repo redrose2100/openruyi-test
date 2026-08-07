@@ -47,7 +47,7 @@ function run_test() {
     gfs2_grow -h 2>&1 | grep -i "usage"
     CHECK_RESULT $? 0 0 "gfs2_grow -h check failed"
     # Test -V option (version)
-    gfs2_grow -V | grep -E "$(rpm -q gfs2-utils | awk -F '-' '{print $3}')"
+    gfs2_grow -V 2>&1 | grep -E "$(rpm -q gfs2-utils | awk -F '-' '{print $3}')"
     CHECK_RESULT $? 0 0 "gfs2_grow -V check failed"
     # Test -T option (dry run, do everything except update file system)
     truncate -s 200M "${TEST_IMG}"
