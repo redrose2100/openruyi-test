@@ -125,7 +125,11 @@
             "name": "oe_test_postgresql_vacuumdb"
         },
         {
+<<<<<<< HEAD
             "name": "oe_test_postgresql_transaction_control"
+=======
+            "name": "oe_test_postgresql_transaction_isolation"
+>>>>>>> f237a4882c513a905407d135d558479892521757
         },
         {
             "name": "oe_test_service_postgresql"
