@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/gfs2-utils",
+    "cases": [
+        {
+            "name": "oe_test_gfs2-utils_fsck.gfs2"
+        },
+        {
+            "name": "oe_test_gfs2-utils_gfs2_edit_01"
+        },
+        {
+            "name": "oe_test_gfs2-utils_gfs2_edit_02"
+        },
+        {
+            "name": "oe_test_gfs2-utils_gfs2_grow"
+        },
+        {
+            "name": "oe_test_gfs2-utils_gfs2_jadd"
+        },
+        {
+            "name": "oe_test_gfs2-utils_glocktop"
+        },
+        {
+            "name": "oe_test_gfs2-utils_mkfs.gfs2"
+        },
+        {
+            "name": "oe_test_gfs2-utils_tunegfs2"
+        }
+    ]
+}
