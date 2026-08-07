@@ -34,7 +34,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "hwdata package not installed"
 
     # Query package info once for all field validations
-    hwdata_info=$(rpm -qi hwdata 2>/dev/null)
+    hwdata_info=$(LC_ALL=C rpm -qi hwdata 2>/dev/null)
 
     # Test hwdata_version: Verify version field exists and has valid format
     echo "$hwdata_info" | grep "^Version" | grep -E "[0-9]+\.[0-9]+"

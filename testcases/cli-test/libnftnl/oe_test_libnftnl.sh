@@ -34,27 +34,27 @@ function run_test() {
     CHECK_RESULT $? 0 0 "libnftnl package not installed"
 
     # Test libnftnl_version: Check libnftnl package version
-    libnftnl_ver=$(rpm -q libnftnl --qf "%{VERSION}" 2>/dev/null)
+    libnftnl_ver=$(LC_ALL=C rpm -q libnftnl --qf "%{VERSION}" 2>/dev/null)
     [ -n "$libnftnl_ver" ]
     CHECK_RESULT $? 0 0 "libnftnl version not found"
 
     # Test libnftnl_release: Check libnftnl package release
-    libnftnl_rel=$(rpm -q libnftnl --qf "%{RELEASE}" 2>/dev/null)
+    libnftnl_rel=$(LC_ALL=C rpm -q libnftnl --qf "%{RELEASE}" 2>/dev/null)
     [ -n "$libnftnl_rel" ]
     CHECK_RESULT $? 0 0 "libnftnl release not found"
 
     # Test libnftnl_arch: Check libnftnl package architecture
-    libnftnl_arch=$(rpm -q libnftnl --qf "%{ARCH}" 2>/dev/null)
+    libnftnl_arch=$(LC_ALL=C rpm -q libnftnl --qf "%{ARCH}" 2>/dev/null)
     [ -n "$libnftnl_arch" ]
     CHECK_RESULT $? 0 0 "libnftnl architecture not found"
 
     # Test libnftnl_vendor: Check libnftnl package vendor
-    libnftnl_vendor=$(rpm -q libnftnl --qf "%{VENDOR}" 2>/dev/null)
+    libnftnl_vendor=$(LC_ALL=C rpm -q libnftnl --qf "%{VENDOR}" 2>/dev/null)
     [ -n "$libnftnl_vendor" ]
     CHECK_RESULT $? 0 0 "libnftnl vendor not found"
 
     # Test libnftnl_summary: Check libnftnl package summary
-    rpm -q libnftnl --qf "%{SUMMARY}" 2>/dev/null | grep -qi "nftables\|netfilter"
+    LC_ALL=C rpm -q libnftnl --qf "%{SUMMARY}" 2>/dev/null | grep -qi "nftables\|netfilter"
     CHECK_RESULT $? 0 0 "libnftnl summary not found or invalid"
 
     # Test libnftnl_files: Verify all expected package files exist
@@ -85,7 +85,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "nftables package not installed"
 
     # Test nftables_version: Check nftables package version
-    nftables_ver=$(rpm -q nftables --qf "%{VERSION}" 2>/dev/null)
+    nftables_ver=$(LC_ALL=C rpm -q nftables --qf "%{VERSION}" 2>/dev/null)
     [ -n "$nftables_ver" ]
     CHECK_RESULT $? 0 0 "nftables version not found"
 
