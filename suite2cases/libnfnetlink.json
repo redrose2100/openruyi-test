@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/libnfnetlink",
+    "cases": [
+        {
+            "name": "oe_test_libnfnetlink_install"
+        },
+        {
+            "name": "oe_test_libnfnetlink_basic"
+        }
+    ]
+}
