@@ -23,6 +23,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "libnfnetlink libnfnetlink-devel gcc make"
+    mkdir -p /tmp/libnf_test
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -33,7 +34,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "libnfnetlink not found in ldconfig cache"
     
     # Compile a test program to verify library API
-    cat > /tmp/test_libnfnetlink_api.c << 'EOF'
+    cat > /tmp/libnf_test/test_libnfnetlink_api.c << 'EOF'
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,10 +62,10 @@ int main() {
 }
 EOF
     
-    gcc -o /tmp/test_libnfnetlink_api /tmp/test_libnfnetlink_api.c $(pkg-config --cflags --libs libnfnetlink)
+    gcc -o /tmp/libnf_test/test_libnfnetlink_api /tmp/libnf_test/test_libnfnetlink_api.c $(pkg-config --cflags --libs libnfnetlink)
     CHECK_RESULT $? 0 0 "Failed to compile test program"
     
-    /tmp/test_libnfnetlink_api | grep "All API tests passed"
+    /tmp/libnf_test/test_libnfnetlink_api | grep "All API tests passed"
     CHECK_RESULT $? 0 0 "Test program execution failed"
     
     LOG_INFO "End to run test."
@@ -72,7 +73,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -f /tmp/test_libnfnetlink_api /tmp/test_libnfnetlink_api.c
+    rm -rf /tmp/libnf_test
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
