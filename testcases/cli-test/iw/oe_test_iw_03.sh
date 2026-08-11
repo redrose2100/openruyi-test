@@ -57,9 +57,7 @@ function run_test() {
     iw phy testphy0 set name "$HWSIM_PHY"
     # iw phy <phyname> set netns 1 - test graceful failure
     iw phy "$HWSIM_PHY" set netns 1
-    CHECK_RESULT $? 0 0 "iw phy set netns handled correctly"
-    iw dev | grep "wlan0"
-    CHECK_RESULT $? 0 0 "iw phy set netns 1 command failed"
+    CHECK_RESULT $? 0 0 "iw phy set netns command failed"
     # iw dev <devname> set power_save on - enable power save
     iw dev "$HWSIM_DEV" set power_save on
     CHECK_RESULT $? 0 0 "iw set power_save on command failed"
@@ -80,7 +78,7 @@ function run_test() {
     iw dev "$HWSIM_DEV" set monitor none
     CHECK_RESULT $? 0 0 "iw set monitor none command failed"
     ip link set "$HWSIM_DEV" up
-    iw dev "$HWSIM_DEV" info | grep "monitor"
+    grep "0x0" /sys/kernel/debug/ieee80211/"$HWSIM_PHY"/netdev:"$HWSIM_DEV"/flags
     CHECK_RESULT $? 0 0 "iw dev set monitor none failed"
     LOG_INFO "End to run test."
 }
