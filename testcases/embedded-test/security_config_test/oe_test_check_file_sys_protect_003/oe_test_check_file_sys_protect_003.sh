@@ -50,17 +50,17 @@ function run_test() {
     find /var/ -name log -type d -user root -group root -perm 750
     CHECK_RESULT $? 0 0 "check /var/log/ file right fail"
 
-    getFileNum=$("find /var/log/* -type f -user root -group root -perm 640 | wc -l")
-    allFileNum=$("find /var/log/* -type f | wc -l")
+    getFileNum=$(find /var/log/* -type f -user root -group root -perm 640 | wc -l)
+    allFileNum=$(find /var/log/* -type f | wc -l)
     test "$getFileNum" -eq "$allFileNum"
     CHECK_RESULT $? 0 1 "check /var/log/* file right fail"
 
     if [ -e /var/log/secure ]; then
         find /var/log/secure -type f -user root -group root -perm 640
         CHECK_RESULT $? 0 0 "check /var/log/secure file right fail"
-    else
+    elif [ -e /var/log/auth.log ]; then
         find /var/log/auth.log -type f -user root -group root -perm 640
-        CHECK_RESULT $? 0 0 "check /var/log/secure file right fail"
+        CHECK_RESULT $? 0 0 "check /var/log/auth.log file right fail"
     fi
 
     find /var/log/wtmp -type f -user root -group root -perm 640

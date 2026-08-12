@@ -43,21 +43,26 @@ function run_test()
     CHECK_RESULT $? 0 0 "check SSH LoginGraceTime set"
 
     getNum=$(cat /etc/ssh/sshd_config | grep "^\s*LoginGraceTime" | awk '{print $2}')
-    test $getNum -eq 0
-    CHECK_RESULT $? 0 1 "LoginGraceTime set time is 0"
+    getNum=${getNum//[!0-9]/}
+    test "${getNum:-0}" -ne 0
+    CHECK_RESULT $? 0 0 "LoginGraceTime set time is 0"
 
     # check UsePAM
     cat /etc/ssh/sshd_config | grep "^\s*UsePAM" | grep "yes"
     CHECK_RESULT $? 0 0 "check SSH UsePAM set fail"
 
     # check known_hosts and authorized_keys permission
-    getNum=$(find /root/.ssh/known_hosts -maxdepth 0 \( ! -user root  -o  ! -group root  -o  -perm /177 \) 2>/dev/null | wc -l)
-    test $getNum -eq 0
-    CHECK_RESULT $? 0 0 "check /root/.ssh/known_hosts files permission fail"
+    if [ -f /root/.ssh/known_hosts ]; then
+        getNum=$(find /root/.ssh/known_hosts -maxdepth 0 \( ! -user root  -o  ! -group root  -o  -perm /177 \) 2>/dev/null | wc -l)
+        test $getNum -eq 0
+        CHECK_RESULT $? 0 0 "check /root/.ssh/known_hosts files permission fail"
+    fi
 
-    getNum=$(find /root/.ssh/authorized_keys -maxdepth 0 \( ! -user root  -o  ! -group root  -o  -perm /177 \) 2>/dev/null | wc -l)
-    test $getNum -eq 0
-    CHECK_RESULT $? 0 0 "check /root/.ssh/authorized_keys files permission fail"
+    if [ -f /root/.ssh/authorized_keys ]; then
+        getNum=$(find /root/.ssh/authorized_keys -maxdepth 0 \( ! -user root  -o  ! -group root  -o  -perm /177 \) 2>/dev/null | wc -l)
+        test $getNum -eq 0
+        CHECK_RESULT $? 0 0 "check /root/.ssh/authorized_keys files permission fail"
+    fi
 
     # check SSH Banner set
     grep "^\s*Banner /etc/issue.net" /etc/ssh/sshd_config
