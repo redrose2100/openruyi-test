@@ -37,7 +37,7 @@ function pre_test() {
     pwd)
 
     rm -rf test-tools
-    git clone https://gitee.com/saarloos/test-tools.git -v test-tools -b master
+    git clone https://atomgit.com/saarloos/test-tools.git -v test-tools -b master
     pushd  test-tools || exit 1
     unzip UnixBench.zip
     pushd  UnixBench || exit 1

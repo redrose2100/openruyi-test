@@ -19,6 +19,16 @@
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
+if command -v dmesg >/dev/null 2>&1; then
+    KERNEL_LOG_CMD="dmesg"
+elif [ -f /var/log/kern.log ]; then
+    KERNEL_LOG_CMD="cat /var/log/kern.log"
+elif command -v journalctl >/dev/null 2>&1; then
+    KERNEL_LOG_CMD="journalctl -k"
+else
+    KERNEL_LOG_CMD="dmesg"
+fi
+
 function run_test() {
     LOG_INFO "Start to run test."
 
@@ -35,7 +45,7 @@ function run_test() {
     lsmod | grep kernel_hello_world
     CHECK_RESULT $? 0 0 "find kernel hello world fail"
 
-    dmesg | grep "Hello world, openEuler Embedded!"
+    ${KERNEL_LOG_CMD} | grep "Hello world, openEuler Embedded!"
     CHECK_RESULT $? 0 0 "check kernel hello world install message fail"
 
     rmmod kernel_hello_world.ko
@@ -45,7 +55,7 @@ function run_test() {
     lsmod | grep kernel_hello_world
     CHECK_RESULT $? 1 0 "find remod kernel hello world"
 
-    dmesg | grep "Byebye!, openEuler Embedded!"
+    ${KERNEL_LOG_CMD} | grep "Byebye!, openEuler Embedded!"
     CHECK_RESULT $? 0 0 "check kernel hello world remove message fail"
 
     LOG_INFO "End to run test."
