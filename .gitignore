@@ -3,3 +3,9 @@
 /logs/
 /results/
 *.log
+testcases/embedded-test/third_party_packages_test/make
+testcases/embedded-test/version_basic_tests/make
+*tmp_test.tar
+*tmp_download/
+*tmp_extract/
+tmp_0_*

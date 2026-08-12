@@ -25,6 +25,7 @@ import argparse
 import time
 import threading
 import signal
+import socket
 import paramiko
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -132,6 +133,13 @@ def qemu_start_wait_start(sub_list, wait_time = 60):
     if not is_qemu_ok:
         qemu_start_stop_all(sub_list)
 
+net_mode = "bridge"
+serial_port_base = 1111
+
+def strip_ansi(text):
+    import re
+    return re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', text)
+
 def qemu_start_make_cmd(finally_config, i, br_name):
     run_cmd = []
     run_cmd.append("qemu-system-%s"%finally_config["qemu_type_list"][i])
@@ -145,16 +153,31 @@ def qemu_start_make_cmd(finally_config, i, br_name):
     run_cmd.append(finally_config["kernal_img_path_list"][i])
     run_cmd.append("-initrd")
     run_cmd.append(finally_config["initrd_path_list"][i])
-    run_cmd.append("-nographic")
+    if net_mode == "user":
+        serial_port = serial_port_base + i
+        run_cmd.append("-display")
+        run_cmd.append("none")
+        run_cmd.append("-serial")
+        run_cmd.append("tcp::%d,server,nowait"%serial_port)
+        run_cmd.append("-monitor")
+        run_cmd.append("none")
+    else:
+        run_cmd.append("-nographic")
     run_cmd.append("-device")
     if finally_config["qemu_type_list"][i] == "x86_64":
         run_cmd.append("virtio-net-pci,netdev=tap0,mac=%s"%finally_config["qemu_mac_list"][i])
     else:
         run_cmd.append("virtio-net-device,netdev=tap0,mac=%s"%finally_config["qemu_mac_list"][i])
     run_cmd.append("-netdev")
-    run_cmd.append("bridge,id=tap0,br=%s"%br_name)
+    if net_mode == "user":
+        host_ssh_port = finally_config.get("host_ssh_port_list", ["2222"])[i]
+        run_cmd.append("user,id=tap0,hostfwd=tcp::%s-:%s"%(host_ssh_port, finally_config["qemu_ssh_port_list"][i]))
+    else:
+        run_cmd.append("bridge,id=tap0,br=%s"%br_name)
 
     return run_cmd
+
+verbose = False
 
 def qemu_start_wait_output(wait_output, one_sub, all_sub, check_location = -1, wait_time = 60):
     global is_qemu_ok
@@ -163,6 +186,8 @@ def qemu_start_wait_output(wait_output, one_sub, all_sub, check_location = -1, w
 
     line = one_sub.stdout.readline()
     while one_sub.poll() is None:
+        if verbose and line.strip():
+            print(line.strip())
         localtion = line.find(wait_output)
         if (check_location < 0 and localtion >= 0) or (check_location >= 0 and localtion == check_location):
             is_qemu_ok = True
@@ -176,7 +201,28 @@ check_login_str = ""
 check_sshd_start_cmd = ""
 start_sshd_cmd = ""
 
-def qemu_start_subprocess(finally_config, br_name):
+def socket_wait_output(sock, wait_str, wait_time=60):
+    sock.settimeout(5)
+    buf = ""
+    start = time.time()
+    while time.time() - start < wait_time:
+        try:
+            data = sock.recv(4096).decode(errors='replace')
+            if verbose and data.strip():
+                print(strip_ansi(data.strip()))
+            buf += data
+            clean_buf = strip_ansi(buf)
+            if clean_buf.find(wait_str) >= 0:
+                return True
+        except socket.timeout:
+            continue
+    return False
+
+def socket_send_cmd(sock, cmd, wait=2):
+    sock.send((cmd + "\n").encode())
+    time.sleep(wait)
+
+def qemu_start_subprocess_user(finally_config, i, br_name):
     global check_login_str
     global check_sshd_start_cmd
     global start_sshd_cmd
@@ -184,131 +230,135 @@ def qemu_start_subprocess(finally_config, br_name):
     global login_wait_time
     global extra_set_passwd
 
+    serial_port = serial_port_base + i
+    run_cmd = qemu_start_make_cmd(finally_config, i, br_name)
+    if finally_config["excess_qemu_option_list"][i] != "":
+        run_cmd.extend(finally_config["excess_qemu_option_list"][i].split())
+    mugen_log.logging("INFO", "will run : %s"%" ".join(run_cmd))
+
+    log_file = OET_PATH.rstrip("/") + "/logs/qemu_%d.log"%i
+    os.makedirs(os.path.dirname(log_file), exist_ok=True)
+    log_fd = open(log_file, "w")
+
+    one_sub = subprocess.Popen(run_cmd, stdin=subprocess.DEVNULL,
+        stdout=log_fd, stderr=log_fd)
+
+    time.sleep(5)
+    if one_sub.poll() is not None:
+        mugen_log.logging("ERROR", "start qemu %d fail, retcode %d"%(i, one_sub.returncode))
+        qemu_start_stop_all([one_sub])
+        sys.exit(1)
+
+    mugen_log.logging("INFO", "connecting to qemu serial console on port %d"%serial_port)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(10)
+    connected = False
+    for retry in range(30):
+        try:
+            sock.connect(("127.0.0.1", serial_port))
+            connected = True
+            break
+        except (ConnectionRefusedError, socket.timeout):
+            time.sleep(2)
+    if not connected:
+        mugen_log.logging("ERROR", "connect to qemu serial port %d fail"%serial_port)
+        qemu_start_stop_all([one_sub])
+        sys.exit(1)
+
+    sock.send(b"\n")
+    time.sleep(3)
+
+    if not socket_wait_output(sock, check_login_str, wait_time=option_wait_time):
+        mugen_log.logging("ERROR", "start qemu %d fail, wait login prompt too long"%i)
+        qemu_start_stop_all([one_sub])
+        sys.exit(1)
+
+    time.sleep(login_wait_time)
+
+    socket_send_cmd(sock, finally_config["user_list"][i], login_wait_time)
+    socket_send_cmd(sock, finally_config["passwd_list"][i], login_wait_time)
+    socket_send_cmd(sock, finally_config["passwd_list"][i], login_wait_time)
+    socket_send_cmd(sock, "", 1)
+
+    time.sleep(login_wait_time)
+
+    if extra_set_passwd:
+        socket_send_cmd(sock, "passwd " + finally_config["user_list"][i], login_wait_time)
+        socket_send_cmd(sock, finally_config["passwd_list"][i], login_wait_time)
+        socket_send_cmd(sock, finally_config["passwd_list"][i], login_wait_time)
+        socket_send_cmd(sock, "", login_wait_time)
+
+    socket_send_cmd(sock, "echo 'login qemu'", login_wait_time)
+    if not socket_wait_output(sock, "login qemu", wait_time=option_wait_time):
+        mugen_log.logging("ERROR", "start qemu %d fail, not login qemu"%i)
+        qemu_start_stop_all([one_sub])
+        sys.exit(1)
+
+    run_start_sshd_cmd = ""
+    if start_sshd_cmd != "" and check_sshd_start_cmd != "":
+        run_start_sshd_cmd = "%s || %s"%(check_sshd_start_cmd, start_sshd_cmd)
+    elif start_sshd_cmd != "":
+        run_start_sshd_cmd = start_sshd_cmd
+
+    if run_start_sshd_cmd != "":
+        mugen_log.logging("INFO", "will run cmd in qemu to start sshd: %s"%run_start_sshd_cmd)
+        socket_send_cmd(sock, run_start_sshd_cmd, 3)
+
+    if check_sshd_start_cmd != "":
+        check_cmd = "for i in {1..60}; do if %s; then echo 'check run sshd ok'; break; else sleep 1; fi; done"%(check_sshd_start_cmd)
+        mugen_log.logging("INFO", "will run cmd in qemu to check sshd start")
+        socket_send_cmd(sock, check_cmd, 3)
+        if not socket_wait_output(sock, "check run sshd ok", wait_time=option_wait_time):
+            mugen_log.logging("ERROR", "start qemu sshd %d fail"%i)
+            sys.exit(1)
+
+    socket_send_cmd(sock, "echo 'end set qemu'", 2)
+    if not socket_wait_output(sock, "end set qemu", wait_time=option_wait_time):
+        mugen_log.logging("ERROR", "start qemu %d fail, check end output fail"%i)
+        qemu_start_stop_all([one_sub])
+        sys.exit(1)
+
+    mugen_log.logging("INFO", "enable PasswordAuthentication in qemu sshd")
+    socket_send_cmd(sock, "sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config", 2)
+    socket_send_cmd(sock, "sed -i 's/^#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config", 2)
+    socket_send_cmd(sock, "kill -HUP $(cat /var/run/sshd.pid 2>/dev/null || pgrep -f 'sshd.*listener')", 3)
+    mugen_log.logging("INFO", "wait 10s for sshd to reload config")
+    time.sleep(10)
+
+    mugen_log.logging("INFO", "net_mode is user, skip ping check, will verify via SSH port forwarding")
+
+    sock.close()
+    log_fd.close()
+
+    return one_sub
+
+def qemu_start_subprocess(finally_config, br_name):
     sub_list = []
     i = 0
     while i < finally_config["count"]:
-        run_cmd = qemu_start_make_cmd(finally_config, i, br_name)
-        if finally_config["excess_qemu_option_list"][i] != "":
-            run_cmd.extend(finally_config["excess_qemu_option_list"][i].split())
-        mugen_log.logging("INFO", "will run : %s"%" ".join(run_cmd))
-        one_sub = subprocess.Popen(run_cmd, stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
-        time.sleep(1)
-        if one_sub.poll() is not None:
-            output_out, output_err = one_sub.communicate()
-            mugen_log.logging("ERROR", "start qemu %d fail, retcode %d, output:\n %s \n %s"%(i, one_sub.returncode, output_out, output_err))
-            qemu_start_stop_all(sub_list)
-            sys.exit(1)
-
-        sub_list.append(one_sub)
-
-        one_sub.stdin.write("\n")
-        one_sub.stdin.flush()
-
-        check_wait = qemu_start_wait_output(check_login_str, one_sub, sub_list, wait_time=option_wait_time)
-        if not check_wait:
-            mugen_log.logging("ERROR", "start qemu %d fail, wait time too long"%i)
-            sys.exit(1)
-
-        time.sleep(login_wait_time)
-        one_sub.stdin.flush()
-
-        one_sub.stdin.write(finally_config["user_list"][i] + "\n")
-        one_sub.stdin.flush()
-        time.sleep(1)
-        one_sub.stdin.write(finally_config["passwd_list"][i] + "\n")
-        one_sub.stdin.flush()
-        time.sleep(1)
-        one_sub.stdin.write(finally_config["passwd_list"][i] + "\n")
-        one_sub.stdin.flush()
-        time.sleep(1)
-        one_sub.stdin.write("\n")
-        one_sub.stdin.flush()
-
-        time.sleep(login_wait_time)
-        one_sub.stdin.flush()
-
-        if extra_set_passwd:
-            one_sub.stdin.write("passwd " + finally_config["user_list"][i] + "\n")
-            one_sub.stdin.flush()
-            time.sleep(login_wait_time)
-            one_sub.stdin.write(finally_config["passwd_list"][i] + "\n")
-            one_sub.stdin.flush()
-            time.sleep(login_wait_time)
-            one_sub.stdin.write(finally_config["passwd_list"][i] + "\n")
-            one_sub.stdin.flush()
-            time.sleep(login_wait_time)
-            one_sub.stdin.write("\n")
-            one_sub.stdin.flush()
-            time.sleep(login_wait_time)
-            one_sub.stdin.flush()
-
-        one_sub.stdin.write("echo 'login qemu'" + "\n")
-        one_sub.stdin.flush()
-        check_wait = qemu_start_wait_output("login qemu", one_sub, sub_list, 0, wait_time=option_wait_time)
-        if not check_wait:
-            mugen_log.logging("ERROR", "start qemu %d fail, not login qemu"%i)
-            sys.exit(1)
-        one_sub.stdin.write("ifconfig eth0 %s up\n"%finally_config["qemu_ip_list"][i] + "\n")
-        one_sub.stdin.flush()
-        time.sleep(1)
-        one_sub.stdin.flush()
-
-        run_start_sshd_cmd = ""
-        if start_sshd_cmd != "" and check_sshd_start_cmd != "":
-            run_start_sshd_cmd = "%s || %s\n"%(check_sshd_start_cmd, start_sshd_cmd)
-        elif start_sshd_cmd != "":
-            run_start_sshd_cmd = "%s\n"%(start_sshd_cmd)
-
-        check_run_start_sshd_cmd = ""
-        if check_sshd_start_cmd != "":
-            check_run_start_sshd_cmd = "for i in {1..60}; "\
-                                       "do "\
-                                       "if %s; then "\
-                                       "echo 'check run sshd ok'; "\
-                                       "break; "\
-                                       "else "\
-                                       "sleep 1; "\
-                                       "fi; "\
-                                       "done\n"%(check_sshd_start_cmd)
-
-        if run_start_sshd_cmd != "":
-            mugen_log.logging("INFO", "will run cmd in qemu to start sshd: %s"%run_start_sshd_cmd)
-            one_sub.stdin.write(run_start_sshd_cmd + "\n")
-            one_sub.stdin.flush()
+        if net_mode == "user":
+            one_sub = qemu_start_subprocess_user(finally_config, i, br_name)
+            sub_list.append(one_sub)
+        else:
+            run_cmd = qemu_start_make_cmd(finally_config, i, br_name)
+            if finally_config["excess_qemu_option_list"][i] != "":
+                run_cmd.extend(finally_config["excess_qemu_option_list"][i].split())
+            mugen_log.logging("INFO", "will run : %s"%" ".join(run_cmd))
+            one_sub = subprocess.Popen(run_cmd, stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
             time.sleep(1)
-
-        if check_run_start_sshd_cmd != "":
-            mugen_log.logging("INFO", "will run cmd in qemu to check sshd start: %s"%check_run_start_sshd_cmd)
-            one_sub.stdin.write(check_run_start_sshd_cmd + "\n")
-            one_sub.stdin.flush()
-            check_wait = qemu_start_wait_output("check run sshd ok", one_sub, sub_list, 0, wait_time=option_wait_time)
-            if not check_wait:
-                mugen_log.logging("ERROR", "start qemu sshd %d fail"%i)
+            if one_sub.poll() is not None:
+                output_out, output_err = one_sub.communicate()
+                mugen_log.logging("ERROR", "start qemu %d fail, retcode %d, output:\n %s \n %s"%(i, one_sub.returncode, output_out, output_err))
+                qemu_start_stop_all(sub_list)
                 sys.exit(1)
-
-        one_sub.stdin.write("echo 'end set qemu'" + "\n")
-        one_sub.stdin.flush()
-        check_wait = qemu_start_wait_output("end set qemu", one_sub, sub_list, 0, wait_time=option_wait_time)
-        if not check_wait:
-            mugen_log.logging("ERROR", "start qemu %d fail, check end output fail"%i)
-            sys.exit(1)
-
-        check_sub = subprocess.Popen(["ping", finally_config["qemu_ip_list"][i], "-c", "3"],
-            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
-        check_out, check_error = check_sub.communicate()
-        if check_out.lower().find("error") >= 0 or check_error.lower().find("error") >= 0:
-            mugen_log.logging("ERROR", "set qemu %d ip fail"%i)
-            qemu_start_stop_all(sub_list)
-            sys.exit(1)
-
+            sub_list.append(one_sub)
         i += 1
-
     return sub_list
 
 def qemu_start_check_config_keys(one_config, all_key:list):
     support_keys = ["qemu_type", "user", "passwd", "machine", "cpu", "qemu_ip", "host_ip",
-        "kernal_img_path", "initrd_path", "memory_size", "excess_qemu_option", "qemu_ssh_port"]
+        "kernal_img_path", "initrd_path", "memory_size", "excess_qemu_option", "qemu_ssh_port", "host_ssh_port"]
     must_keys = ["kernal_img_path", "initrd_path"]
 
     if not all(key in all_key for key in must_keys):
@@ -355,6 +405,7 @@ def qemu_start_get_finally_config(all_config):
         "initrd_path_list" : [],
         "memory_size_list" : [],
         "excess_qemu_option_list" : [],
+        "host_ssh_port_list" : [],
     }
     default_typ_cpu_map = {
         "aarch64" : "cortex-a57",
@@ -381,6 +432,7 @@ def qemu_start_get_finally_config(all_config):
             need_set_host_ip = False
         qemu_mac = "52:54:00:12:34:%02x"%ip_begin
         qemu_ssh_port = "22" if "qemu_ssh_port" not in all_key else one_config["qemu_ssh_port"]
+        host_ssh_port = "2222" if "host_ssh_port" not in all_key else one_config["host_ssh_port"]
         ip_begin += 1
 
         finally_config["qemu_type_list"].append(qemu_type)
@@ -392,6 +444,7 @@ def qemu_start_get_finally_config(all_config):
         finally_config["qemu_ip_list"].append(qemu_ip)
         finally_config["qemu_mac_list"].append(qemu_mac)
         finally_config["qemu_ssh_port_list"].append(qemu_ssh_port)
+        finally_config["host_ssh_port_list"].append(host_ssh_port)
         finally_config["kernal_img_path_list"].append(kernal_img_path)
         finally_config["initrd_path_list"].append(initrd_path)
         finally_config["memory_size_list"].append(memory_size)
@@ -412,7 +465,7 @@ def qemu_start_wait_ssh_connect(ip, port, user, password, wait_time = 60):
     wait_i = 0
     while wait_i < wait_time:
         try:
-            ssh.connect(ip, port, user, password)
+            ssh.connect(ip, int(port), user, password, look_for_keys=False, allow_agent=False, banner_timeout=30)
             ssh.close()
             break
         except paramiko.ssh_exception.NoValidConnectionsError as e:
@@ -432,16 +485,28 @@ def qemu_start_config_conf(finally_config, put_all):
         if i == 0:
             remote_str = "--run_remote"
         # some time may wait some time to connect ssh, this is for it
-        qemu_start_wait_ssh_connect(finally_config["qemu_ip_list"][i],
-                                    finally_config["qemu_ssh_port_list"][i],
+        if net_mode == "user":
+            ssh_ip = "127.0.0.1"
+            ssh_port = int(finally_config["host_ssh_port_list"][i])
+        else:
+            ssh_ip = finally_config["qemu_ip_list"][i]
+            ssh_port = int(finally_config["qemu_ssh_port_list"][i])
+        qemu_start_wait_ssh_connect(ssh_ip,
+                                    ssh_port,
                                     finally_config["user_list"][i],
                                     finally_config["passwd_list"][i],
                                     option_wait_time)
+        if net_mode == "user":
+            conf_ip = "127.0.0.1"
+            conf_port = finally_config["host_ssh_port_list"][i]
+        else:
+            conf_ip = finally_config["qemu_ip_list"][i]
+            conf_port = finally_config["qemu_ssh_port_list"][i]
         cmd = "python3 %s/libs/locallibs/write_conf.py --ip '%s' --password '%s' --port '%s' --user '%s' %s %s"%(
               OET_PATH,
-              finally_config["qemu_ip_list"][i],
+              conf_ip,
               finally_config["passwd_list"][i],
-              finally_config["qemu_ssh_port_list"][i],
+              conf_port,
               finally_config["user_list"][i],
               remote_str,
               copy_string)
@@ -457,11 +522,17 @@ def qemu_start_config_conf(finally_config, put_all):
 def qemu_start_copy_libs(finally_config):
     i = 0
     while i < finally_config["count"]:
+        if net_mode == "user":
+            sftp_ip = "127.0.0.1"
+            sftp_port = finally_config["host_ssh_port_list"][i]
+        else:
+            sftp_ip = finally_config["qemu_ip_list"][i]
+            sftp_port = finally_config["qemu_ssh_port_list"][i]
         cmd = "python3 %s/libs/locallibs/sftp.py put --ip '%s' --password '%s' --port '%s' --user '%s' --node '-1' --localdir '%s' --remotedir '%s'"%(
               OET_PATH,
-              finally_config["qemu_ip_list"][i],
+              sftp_ip,
               finally_config["passwd_list"][i],
-              finally_config["qemu_ssh_port_list"][i],
+              sftp_port,
               finally_config["user_list"][i],
               "%s/libs/"%OET_PATH,
               "/mugen_re/")
@@ -496,8 +567,11 @@ def qemu_start(qemu_config, put_all, br_name):
         all_config = [qemu_config]
 
     finally_config = qemu_start_get_finally_config(all_config)
-    if finally_config["host_ip"] != "":
-        subprocess.run(["ifconfig", br_name, finally_config["host_ip"]])
+    if net_mode == "user":
+        mugen_log.logging("INFO", "net_mode is user, skip ifconfig for bridge, connect via localhost port forwarding")
+    else:
+        if finally_config["host_ip"] != "":
+            subprocess.run(["ifconfig", br_name, finally_config["host_ip"]])
     all_sub = qemu_start_subprocess(finally_config, br_name)
     if qemu_start_config_conf(finally_config, put_all) != 0:
         qemu_start_stop_all(all_sub)
@@ -563,6 +637,15 @@ def qemu_control(options, args):
     if args.start_sshd_cmd is not None: start_sshd_cmd = args.start_sshd_cmd
     if args.option_wait_time is not None: option_wait_time = args.option_wait_time
     if args.login_wait_time is not None: login_wait_time = args.login_wait_time
+    global net_mode
+    global verbose
+    if args.net_mode is not None:
+        net_mode = args.net_mode
+    if args.verbose:
+        verbose = True
+    if net_mode == "user":
+        if args.host_ssh_port is not None and args.config_file is None:
+            qemu_config["host_ssh_port"] = args.host_ssh_port
 
     return qemu_start(qemu_config, put_all, args.br_name)
 
@@ -594,6 +677,9 @@ if __name__ == "__main__":
     config_param_group.add_argument('--memory_size', type=str, help = "start qemu config memory_size", default=None)
     config_param_group.add_argument('--excess_qemu_option', type=str, help = "start qemu config excess_qemu_option", default=None)
     config_param_group.add_argument('--qemu_ssh_port', type=str, help = "start qemu config qemu_ssh_port", default=None)
+    config_param_group.add_argument('--net_mode', type=str, help = "network mode: bridge(require root) or user(no root required)", default=None)
+    config_param_group.add_argument('--host_ssh_port', type=str, help = "host ssh port for user net_mode port forwarding", default=None)
+    parser.add_argument('--verbose', action="store_true", help = "show qemu boot log output")
     args = parser.parse_args()
 
     if ((args.config_file is not None or
