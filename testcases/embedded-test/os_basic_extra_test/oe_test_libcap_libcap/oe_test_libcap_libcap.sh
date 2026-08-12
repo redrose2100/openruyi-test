@@ -73,8 +73,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    userdel $user
-    rm -r ./ping
+    userdel -rf $user
+    rm -rf ./ping
 
     LOG_INFO "End to restore the test environment."
 }

@@ -20,6 +20,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    IPTABLES_AVAILABLE=0
+    if ! iptables -L -n >/dev/null 2>&1; then
+        LOG_WARN "iptables kernel module (ip_tables) not available, skip this case."
+        IPTABLES_AVAILABLE=1
+        exit 0
+    fi
     iptables-save >iptables_bak
     ip6tables-save >ip6tables_bak
     LOG_INFO "End to prepare the test environment."
@@ -79,8 +85,14 @@ COMMIT" >ip6tables_rule
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    if [ "${IPTABLES_AVAILABLE:-0}" -eq 1 ]; then
+        LOG_INFO "iptables not available, nothing to cleanup."
+        return 0
+    fi
     iptables -D INPUT -p udp --dport 80 -j dropchain
     iptables -D INPUT -p tcp --tcp-flags SYN,RST,ACK SYN --dport 80 -j ACCEPT
+    iptables -F dropchain 2>/dev/null || true
+    iptables -X dropchain 2>/dev/null || true
     ip6tables-restore -n ip6tables_bak
     iptables-restore -n iptables_bak
     rm -rf ip6tables_* iptables_*

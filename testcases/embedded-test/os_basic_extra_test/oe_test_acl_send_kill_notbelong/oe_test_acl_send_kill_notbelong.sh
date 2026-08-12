@@ -50,6 +50,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     setcap -r /bin/kill.procps
+    kill -9 $(pgrep -f "tail -f") 2>/dev/null || true
     userdel -rf example
     LOG_INFO "Finish environment cleanup!"
 }

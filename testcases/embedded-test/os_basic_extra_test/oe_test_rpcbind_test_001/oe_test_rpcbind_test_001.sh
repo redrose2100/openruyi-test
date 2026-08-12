@@ -36,10 +36,17 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to execute rpcbind"
     pgrep rpcbind
     CHECK_RESULT $? 0 0 "Failed to display rpcbind"
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+
     if ${need_stop}; then
         /etc/init.d/rpcbind stop
     fi
-    LOG_INFO "End to run test."
+
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
