@@ -23,6 +23,38 @@ OET_PATH=$(
 )
 export OET_PATH
 
+GIT_CLONE_MAX_RETRY=3
+GIT_CLONE_RETRY_INTERVAL=10
+
+function git_clone_with_retry() {
+    local retry_count=0
+    local clone_args="$@"
+    local target_dir=""
+    for arg in "$@"; do
+        if [[ ! "$arg" =~ ^- ]]; then
+            target_dir="$arg"
+        fi
+    done
+    while [ $retry_count -lt $GIT_CLONE_MAX_RETRY ]; do
+        if [ $retry_count -gt 0 ]; then
+            LOG_WARN "git clone retry #$retry_count after $GIT_CLONE_RETRY_INTERVAL seconds..."
+            sleep $GIT_CLONE_RETRY_INTERVAL
+            if [ -n "$target_dir" ] && [ -e "$target_dir" ]; then
+                rm -rf "$target_dir"
+            fi
+        fi
+        if git clone $clone_args; then
+            if [ $retry_count -gt 0 ]; then
+                LOG_INFO "git clone succeeded on retry #$retry_count"
+            fi
+            return 0
+        fi
+        retry_count=$((retry_count + 1))
+    done
+    LOG_ERROR "git clone failed after $GIT_CLONE_MAX_RETRY attempts: git clone $clone_args"
+    return 1
+}
+
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 if [[ -d "/etc/mugen" ]]; then
@@ -163,11 +195,10 @@ function exec_case() {
     exec 2>&7 7>&-
 
     test "$ret_code"x == "143"x && {
-        cmd_pid=$(pgrep -f "$cmd")
-        if [ -n "$cmd_pid" ]; then
-            for pid in ${cmd_pid}; do
-                pstree -p "$pid" | grep -o '([0-9]*)' | tr -d '()' | xargs kill -9
-            done
+        if [ -f /tmp/mugen_timeout_pid ]; then
+            kill_pid=$(cat /tmp/mugen_timeout_pid)
+            kill -9 -- -"$kill_pid" 2>/dev/null || kill -9 "$kill_pid" 2>/dev/null
+            rm -f /tmp/mugen_timeout_pid
         fi
         LOG_WARN "The case execution timeout."
     }
@@ -230,6 +261,9 @@ function run_test_case() {
     fi
 
     if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" ]]; then
+        remote_dir_clean=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir_clean /tmp/mugen_oe_test_*"
+
         common_files=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key common-files)
         test $? -ne 0 && return 1
 
@@ -270,13 +304,16 @@ function run_test_case() {
 
     if [[ $COMMAND_S == "yes" ]]; then
         remote_case_path=$(echo -e "${case_path[*]}" | sed -e "s#${OET_PATH}#/mugen_re#")
-        remote_cmd="bash -c '. /mugen_re/conf/mugen.env &&
+        echo "$test_case" > /tmp/mugen_remote_case_name
+        export MUGEN_SSH_NODE=1
+        remote_cmd="bash -c 'trap \"\" SIGHUP; . /mugen_re/conf/mugen.env &&
                  export OET_PATH=/mugen_re &&
                  pushd \"$remote_case_path\" >/dev/null || exit 1 &&
-                 $run_cmd > /tmp/mugen_re.log 2>&1 &&
-                 (cat /tmp/mugen_re.log && rm -rf /tmp/mugen_re.log && popd >/dev/null || exit 1) ||
-                 (cat /tmp/mugen_re.log 1>&2 && rm -rf /tmp/mugen_re.log && popd >/dev/null && exit 1)
-                '"
+                 $run_cmd > /tmp/mugen_re.log 2>&1; __mugen_ret=\$?;
+                 echo \"__MUGEN_RET__=\$__mugen_ret\" >> /tmp/mugen_re.log;
+                 cat /tmp/mugen_re.log; rm -rf /tmp/mugen_re.log; popd >/dev/null;
+                 exit \$__mugen_ret
+                 '"
         run_cmd="python3 \"${OET_PATH}\"/libs/locallibs/ssh_cmd.py --node 1 --cmd \"${remote_cmd}\""
     fi
 
@@ -286,7 +323,7 @@ function run_test_case() {
 
     if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" ]]; then
         remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
-        P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir"
+        P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir /tmp/mugen_oe_test_*"
     fi
 
     LOG_INFO "End to run testcase:$test_case."
@@ -316,7 +353,7 @@ function run_test_suite() {
         this_copy=true
     fi
 
-    for test_case in $(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name | shuf); do
+    for test_case in $(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name); do
         run_test_case "$test_suite" "$test_case"
     done
 
@@ -358,6 +395,56 @@ DO_MAKE_COUNT=0
 NOT_DO_MAKE_COUNT=0
 TOTAL_MAKE_COUNT=0
 
+function prepare_manifest() {
+    local manifest_map="${OET_PATH}/testcases/embedded-test/common_libs/manifest_map.json"
+    YOCTO_META_BRANCH=${YOCTO_META_BRANCH:-"openEuler-24.03-LTS"}
+    export YOCTO_META_BRANCH
+
+    if [[ -f "${manifest_map}" ]]; then
+        LOG_INFO "manifest_map.json already exists, skip manifest preparation"
+        return 0
+    fi
+    YOCTO_META_REMOTE=${YOCTO_META_REMOTE:-"https://atomgit.com/openeuler/yocto-meta-openeuler.git"}
+    YOCTO_META_DIR="${OET_PATH}/yocto-meta-openeuler"
+
+    LOG_INFO "Fetching yocto-meta-openeuler manifest, branch: ${YOCTO_META_BRANCH}"
+
+    if [[ -d "${YOCTO_META_DIR}" ]]; then
+        pushd "${YOCTO_META_DIR}" >/dev/null
+        git fetch origin
+        git checkout "${YOCTO_META_BRANCH}"
+        git reset --hard "origin/${YOCTO_META_BRANCH}"
+        popd >/dev/null
+    else
+        git_clone_with_retry -b "${YOCTO_META_BRANCH}" "${YOCTO_META_REMOTE}" "${YOCTO_META_DIR}"
+    fi
+
+    LOG_INFO "Parsing manifest.yaml to generate manifest_map.json"
+    python3 -c "
+import yaml, json
+with open('${YOCTO_META_DIR}/.oebuild/manifest.yaml', 'r') as f:
+    data = yaml.safe_load(f)
+manifest_list = data.get('manifest_list', {})
+result = {}
+for name, info in manifest_list.items():
+    url = info.get('remote_url', '')
+    version = info.get('version', '')
+    if url and version:
+        result[name] = {'url': url, 'version': version}
+with open('${manifest_map}', 'w') as f:
+    json.dump(result, f, indent=2)
+print(f'Generated manifest map with {len(result)} packages')
+"
+
+    if [[ $? -ne 0 ]]; then
+        LOG_ERROR "Failed to parse manifest.yaml"
+        return 1
+    fi
+
+    LOG_INFO "Manifest preparation completed"
+    return 0
+}
+
 function build_one_suite() {
     ((TOTAL_MAKE_COUNT++))
     local test_suite=$1
@@ -383,6 +470,8 @@ function build_one_suite() {
         source_path=$(find ${SDK_PATH} -name "environment-setup-*")
         source ${source_path}
     fi
+
+    prepare_manifest
 
     if [[ -f "./makefile" || -f "./Makefile" ]]; then
         LOG_INFO "do make for testsuite: ${test_suite}"
@@ -457,8 +546,8 @@ while getopts "c:af:r:dxb:s:m" option; do
         elif echo "$@" | grep -q -e '-a * -s *$\| -s * -a *$\| -as *$\| -sa *$'; then
             COMMAND_S="yes"
         elif echo "$@" | grep -q -e '-a * -b *$\| -b * -a *$\| -ab *$\| -ba *$'; then
-            ret=$(build_all)
-            exit "$ret"
+            build_all
+            exit $?
         elif ! echo "$@" | grep -q -e '-a *$'; then
             usage
             exit 1

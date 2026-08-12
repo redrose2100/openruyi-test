@@ -24,14 +24,23 @@ export OET_PATH
 
 con_op=""
 br_name="testbr0"
+net_mode="bridge"
 rem_br=0
+rem_net=0
 for i in $*; do
     if [ $rem_br -eq 1 ]; then
         br_name="$i"
         rem_br=0
     fi
+    if [ $rem_net -eq 1 ]; then
+        net_mode="$i"
+        rem_net=0
+    fi
     if [[ $i == "--br_name" ]]; then
         rem_br=1
+    fi
+    if [[ $i == "--net_mode" ]]; then
+        rem_net=1
     fi
     if [[ $i == "start" || $i == "stop" && -z con_op ]]; then
         con_op=$i
@@ -52,47 +61,77 @@ if [[ -n $MUGEN_QEMU_ACL_DIR ]]; then
 fi
 
 if [[ $con_op == "start" ]]; then
-    if [[ ! -e $con_op ]]; then
-        mkdir -p /etc/qemu/
-        mkdir -p /usr/local/etc/qemu/
-    fi
-
-    if [ -e $br_conf ]; then
-        cp $br_conf $br_conf_bak
-    fi
-
-    if [ -e $br_conf1 ]; then
-        cp $br_conf1 $br_conf1_bak
-    fi
-
-    echo "allow ${br_name}" >> $br_conf
-    echo "allow ${br_name}" >> $br_conf1
-    if [[ -n ${br_conf2} ]]; then
-        if [ -e $br_conf2 ]; then
-            cp $br_conf2 $br_conf2_bak
+    if [[ $net_mode == "user" ]]; then
+        echo "net_mode is user, skip bridge setup (no root required)"
+    else
+        if [[ ! -e $con_op ]]; then
+            mkdir -p /etc/qemu/
+            mkdir -p /usr/local/etc/qemu/
         fi
-        echo "allow ${br_name}" >> $br_conf2
-    fi
 
-    brctl addbr ${br_name}
-    ifconfig ${br_name} up
+        if [ -e $br_conf ]; then
+            cp $br_conf $br_conf_bak
+        fi
+
+        if [ -e $br_conf1 ]; then
+            cp $br_conf1 $br_conf1_bak
+        fi
+
+        echo "allow ${br_name}" >> $br_conf
+        echo "allow ${br_name}" >> $br_conf1
+        if [[ -n ${br_conf2} ]]; then
+            if [ -e $br_conf2 ]; then
+                cp $br_conf2 $br_conf2_bak
+            fi
+            echo "allow ${br_name}" >> $br_conf2
+        fi
+
+        brctl addbr ${br_name}
+        ifconfig ${br_name} up
+    fi
 fi
 
-python3 ${OET_PATH}/libs/locallibs/qemu_ctl.py "$@"
+daemon=0
+rem_daemon=0
+for i in $*; do
+    if [ $rem_daemon -eq 1 ]; then
+        daemon="$i"
+        rem_daemon=0
+    fi
+    if [[ $i == "-d" || $i == "--daemon" ]]; then
+        daemon=1
+    fi
+done
+
+if [[ $daemon -eq 1 && $con_op == "start" ]]; then
+    QEMU_LOG="${OET_PATH}/logs/qemu_ctl.log"
+    mkdir -p "${OET_PATH}/logs"
+    echo "Starting QEMU in daemon mode, log: ${QEMU_LOG}"
+    nohup python3 ${OET_PATH}/libs/locallibs/qemu_ctl.py "$@" > "${QEMU_LOG}" 2>&1 &
+    disown
+    echo "QEMU setup is running in background (PID: $!)"
+    echo "Use 'tail -f ${QEMU_LOG}' to monitor progress"
+else
+    python3 ${OET_PATH}/libs/locallibs/qemu_ctl.py "$@"
+fi
 
 if [[ $con_op == "stop" ]]; then
-    if [ -e $br_conf_bak ]; then
-        cp $br_conf_bak $br_conf
-        rm -rf $br_conf_bak
-    fi
-    if [ -e $br_conf1_bak ]; then
-        cp $br_conf1_bak $br_conf1
-        rm -rf $br_conf1_bak
-    fi
-    if [[ -n ${br_conf2} ]]; then
-        if [ -e $br_conf2_bak ]; then
-            cp $br_conf2_bak $br_conf2
-            rm -rf $br_conf2_bak
+    if [[ $net_mode == "user" ]]; then
+        echo "net_mode is user, skip bridge cleanup"
+    else
+        if [ -e $br_conf_bak ]; then
+            cp $br_conf_bak $br_conf
+            rm -rf $br_conf_bak
+        fi
+        if [ -e $br_conf1_bak ]; then
+            cp $br_conf1_bak $br_conf1
+            rm -rf $br_conf1_bak
+        fi
+        if [[ -n ${br_conf2} ]]; then
+            if [ -e $br_conf2_bak ]; then
+                cp $br_conf2_bak $br_conf2
+                rm -rf $br_conf2_bak
+            fi
         fi
     fi
 fi
