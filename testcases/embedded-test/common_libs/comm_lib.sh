@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 tar -xf tmp_test.tar
 
 pushd ../
-if [[ -z "${RUNTEST}" ]]; then
+if [[ -z "${RUNTEST}" ]] && [[ -f dejagnu.tar ]]; then
     CUR=`pwd`
     tar -xf dejagnu.tar
     RUNTEST=${CUR}/dejagnu/bin/runtest
