@@ -77,6 +77,8 @@ function post_test()
     
     userdel -rf tester1
     userdel -rf tester2
+    faillock --user tester1 --reset 2>/dev/null || true
+    faillock --user tester2 --reset 2>/dev/null || true
     
     LOG_INFO "End to restore the test environment."
 }
