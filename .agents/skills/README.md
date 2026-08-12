@@ -8,6 +8,7 @@
 |----------|------|------------------------|
 | [mugen-git-flow](./mugen-git-flow) | 工作流 | 提交代码、推送至个人仓库、整理commit、确保符合 openEuler DCO/Commit 规范。 |
 | [mugen-atomgit-pr](./mugen-atomgit-pr) | AtomGit | 管理 PR 生命周期：创建、读取上下文、更新描述、列出、关闭/重开。 |
+| [mugen-test-execution](./mugen-test-execution) | 测试 | 单用例测试、测试套测试、组合测试、编译测试、远程执行、查看测试结果、测试报告。 |
 
 ## 技能分类说明
 
@@ -18,6 +19,10 @@
 ### AtomGit 自动化工具
 
 - **PR 工作流 ([mugen-atomgit-pr](./mugen-atomgit-pr))**: 管理 mugen 仓库在 AtomGit 上的 PR 全生命周期，包括创建、读取详情、更新描述、列表查询、关闭/重开。通过 AtomGit REST API 实现，支持跨仓库 PR 操作。
+
+### 测试执行
+
+- **测试执行 ([mugen-test-execution](./mugen-test-execution))**: 覆盖所有 mugen 测试执行场景，包括单用例测试 (`-r`)、测试套测试 (`-f`)、全量测试 (`-a`)、组合测试 (`run_combinations.sh`)、编译后测试 (`-b`)、远程执行 (`-s`)。包含 QEMU aarch64 嵌入式设备测试的设备配置、SDK 选择、密码过期处理、LTP 系统库破坏恢复等已知问题的工作方案，以及测试结果检查和报告生成。
 
 > **前置条件：配置 AtomGit Token**
 >
