@@ -22,7 +22,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    id -u usertest1 || useradd testuser1
+    id -u testuser1 || useradd testuser1
     umask_1=$(su testuser1 -c "umask")
 
     LOG_INFO "End to prepare the test environment."

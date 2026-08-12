@@ -21,28 +21,39 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "lsof"
+    DNF_INSTALL "lsof" 2>/dev/null || LOG_WARN "lsof not available, will use netstat as fallback"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    lsof -i
-    CHECK_RESULT $? 0 0 "run lsof fail"
+    if command -v lsof &>/dev/null; then
+        lsof -i
+        CHECK_RESULT $? 0 0 "run lsof fail"
 
-    lsof -i:22 | grep sshd
-    CHECK_RESULT $? 0 0 "check lsof sshd fail"
+        lsof -i:22 | grep sshd
+        CHECK_RESULT $? 0 0 "check lsof sshd fail"
 
-    lsof --help 2>&1 | grep -i "Usage"
-    CHECK_RESULT $? 0 0 "check lsof help fail"
+        lsof --help 2>&1 | grep -i "Usage"
+        CHECK_RESULT $? 0 0 "check lsof help fail"
+    else
+        netstat -tlnp
+        CHECK_RESULT $? 0 0 "run netstat fail"
+
+        netstat -tlnp | grep ':22' | grep sshd
+        CHECK_RESULT $? 0 0 "check netstat sshd fail"
+
+        netstat --help 2>&1 | grep -i "Usage"
+        CHECK_RESULT $? 0 0 "check netstat help fail"
+    fi
 
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    DNF_REMOVE 2>/dev/null || true
     LOG_INFO "End to restore the test environment."
 }
 

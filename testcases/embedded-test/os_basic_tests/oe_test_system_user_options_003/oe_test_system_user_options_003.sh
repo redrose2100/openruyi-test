@@ -21,7 +21,11 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    grep "testuser:" /etc/passwd && userdel -rf testuser
+    grep "testuser:" /etc/passwd && {
+        systemctl stop user@$(id -u testuser 2>/dev/null) 2>/dev/null
+        loginctl terminate-user testuser 2>/dev/null
+        userdel -rf testuser
+    }
     grep "testuser:" /etc/group && groupdel testuser
     test -d /home/new_test && rm -rf /home/new_test
     useradd testuser
