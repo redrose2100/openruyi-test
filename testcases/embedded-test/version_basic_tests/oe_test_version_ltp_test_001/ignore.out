@@ -76,3 +76,30 @@ mkfs01_msdos_sh mkfs01.sh -f msdos
 mkfs01_vfat_sh mkfs01.sh -f vfat
 cve-2016-5195 dirtyc0w
 cve-2020-25705 icmp_rate_limit01
+clock_settime03 clock_settime03
+cve-2018-7566 snd_seq01
+dio29 diotest3 -b 65536 -n 100 -i 100 -o 1024000
+dio30 diotest6 -b 65536 -n 100 -i 100 -o 1024000
+epoll_pwait02 epoll_pwait02
+epoll_pwait03 epoll_pwait03
+epoll_pwait04 epoll_pwait04
+epoll_pwait05 epoll_pwait05
+input01 input01
+input02 input02
+input03 input03
+input04 input04
+input05 input05
+input06 input06
+ioctl_loop05 ioctl_loop05
+leapsec01 leapsec01
+pread02_64 pread02_64
+pread02 pread02
+syslog01 syslog01
+syslog02 syslog02
+syslog03 syslog03
+syslog04 syslog04
+syslog05 syslog05
+syslog07 syslog07
+syslog08 syslog08
+syslog09 syslog09
+syslog10 syslog10

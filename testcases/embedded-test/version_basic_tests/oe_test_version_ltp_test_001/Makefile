@@ -9,7 +9,7 @@ all:
 	./configure --prefix=${CURDIR}/tmp_test/ltp_run --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
 	make && \
 	make install
-	tar -cf tmp_test/allinfo.tar -C ${SYSROOT_DIR} ./
+	tar -cf tmp_test/allinfo.tar -C ${SYSROOT_DIR} --exclude=./etc --exclude=./home --exclude=./root ./
 	bash ${COMMONDIR}/common.sh -r
 
 clean:
