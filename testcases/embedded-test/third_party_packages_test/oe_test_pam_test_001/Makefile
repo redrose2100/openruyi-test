@@ -1,17 +1,16 @@
 all:
-	sh ../common.sh -s "https://gitee.com/src-openeuler/pam.git" "${DOWNLOAD_BRANCH}"
-	tar -xf $$(find ./tmp_download -name "*.tar.xz") -C ./tmp_extract/
+	bash ../common.sh -M "pam" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	tar -xf $$(find ./tmp_download -name "*.tar.xz") -C ./tmp_extract/ || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
 	cd ./tmp_extract/Linux-PAM*/ && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
-	cd ./libpam && \
-	make && \
-	cd ../ && \
-	cd ./tests && \
-	make check || echo "done" && \
+	make || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	cd ./tmp_extract/Linux-PAM*/ && make -C tests check-am || true
+	cd ./tmp_extract/Linux-PAM*/tests && \
 	rm -rf *.log && \
 	rm -rf *.trs
-	sh ../common.sh -c "Linux-PAM*" "tests"
-	sh ../common.sh -c "Linux-PAM*" "test-driver"
-	sh ../common.sh -r
+	bash ../common.sh -c "Linux-PAM*" "tests" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "Linux-PAM*" "test-driver" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	cp ./tmp_extract/Linux-PAM*/tests/.libs/tst-* ./tmp_test/tests/ || true
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

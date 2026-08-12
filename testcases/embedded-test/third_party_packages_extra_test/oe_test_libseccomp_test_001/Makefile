@@ -1,5 +1,5 @@
 all:
-	sh ../common.sh -d "libseccomp" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "libseccomp"
 	cd ./tmp_extract/libseccomp*  && \
 	autoreconf && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \

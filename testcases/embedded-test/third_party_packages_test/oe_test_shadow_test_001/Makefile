@@ -1,8 +1,7 @@
 all:
-	sh ../common.sh -s "https://github.com/shadow-maint/shadow.git" "v4.9"
-	cp -rR ./tmp_download/* ./tmp_extract/
-	sh ../common.sh -c "shadow" "tests"
-	cp ./run_embedded ./tmp_test/tests/run_embedded
-	sh ../common.sh -r
+	bash ../common.sh -M "shadow" || { bash ../common.sh -r; exit 1; }
+	mkdir -p tmp_test/tests || { bash ../common.sh -r; exit 1; }
+	cp ./run_embedded ./tmp_test/tests/run_embedded || { bash ../common.sh -r; exit 1; }
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

@@ -11,7 +11,7 @@ src_path="$(
   cd "${CURRENT_PATH}"/tmp_extract/libgcrypt* || exit 1
   pwd
 )"
-dnf install -y  autoconf make libgpg-error-devel
+dnf install -y autoconf make libgpg-error-devel || yum install autoconf make libgpg-error-devel -y || apt-get install -y autoconf make libgpg-error-dev || true
 
 pushd ${src_path} || exit 1
 autoreconf -f

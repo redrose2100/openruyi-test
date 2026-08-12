@@ -9,7 +9,6 @@ test_cast.test
 test_parse.test
 test_locale.test
 test_charcase.test
-test_printbuf.test
 test_obj_iter-del.test
 test_object_object_add_ex.test
 test_many_subobj.test

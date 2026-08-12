@@ -1,7 +1,7 @@
 .PHONY: all clean
 all:
-	sh ../common.sh -d "asio" "${DOWNLOAD_BRANCH}"
-	sh ./compile.sh
-	sh ../common.sh -r
+	bash ../common.sh -M "asio" || { bash ../common.sh -r; exit 1; }
+	bash ./compile.sh || { bash ../common.sh -r; exit 1; }
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

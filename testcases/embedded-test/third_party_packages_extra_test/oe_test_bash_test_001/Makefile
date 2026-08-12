@@ -1,5 +1,5 @@
 all:
-	sh ../common.sh -d "bash" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "bash"
 	cd ./tmp_extract/bash*  && \
 	autoconf && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) --with-bash-malloc=no --with-afs && \
@@ -9,13 +9,13 @@ all:
 	sed -i 's/.*@( cd $$(srcdir)\/tests/#	@( cd $$(srcdir)\/tests/g' Makefile && \
 	sed -i 's/$$(CC_FOR_BUILD)/$$(CC)/g' Makefile && \
 	make check
-	sh ../common.sh -c "bash*" "tests"
-	sh ../common.sh -c "bash*" "y.tab.c"
-	sh ../common.sh -c "bash*" "config.h"
-	sh ../common.sh -c "bash*" "version.h"
-	sh ../common.sh -r
+	bash ../common.sh -c "bash*" "tests"
+	bash ../common.sh -c "bash*" "y.tab.c"
+	bash ../common.sh -c "bash*" "config.h"
+	bash ../common.sh -c "bash*" "version.h"
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"
 
 
 

@@ -7,12 +7,17 @@ CURRENT_PATH=$(
   cd "$(dirname "$0")" || exit 1
   pwd
 )
+target_dir="$(find "${CURRENT_PATH}"/tmp_extract -maxdepth 1 -iname "*grep*" -type d | head -1)"
+if [ -z "${target_dir}" ] || [ ! -d "${target_dir}" ]; then
+    echo "grep directory not found in tmp_extract"
+    exit 1
+fi
 src_path=$(
-  cd "${CURRENT_PATH}"/tmp_extract/grep*/ || exit 1
+  cd "${target_dir}" || exit 1
   pwd
 )
 
-dnf install -y  autoconf make
+dnf install -y autoconf make || yum install autoconf make -y || apt-get install -y autoconf make || true
 
 pushd "${src_path}" || exit 1
 autoreconf -f

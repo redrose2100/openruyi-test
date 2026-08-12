@@ -6,12 +6,17 @@ CURRENT_PATH=$(
   cd "$(dirname "$0")" || exit 1
   pwd
 )
+target_dir="$(find "${CURRENT_PATH}"/tmp_extract -maxdepth 1 -iname "*libaio*" -type d | head -1)"
+if [ -z "${target_dir}" ] || [ ! -d "${target_dir}" ]; then
+    echo "libaio directory not found in tmp_extract"
+    exit 1
+fi
 src_path="$(
-  cd "${CURRENT_PATH}"/tmp_extract/libaio* || exit 1
+  cd "${target_dir}" || exit 1
   pwd
 )"
 
-dnf install -y  make
+dnf install -y make || yum install make -y || apt-get install -y make || true
 
 pushd "${src_path}" || exit 1
 make
@@ -24,4 +29,4 @@ if ! make; then
 fi
 cd - || exit 1
 cp -r harness/* "${CURRENT_PATH}"/tmp_test
-popd || exit
+popd || exit 1

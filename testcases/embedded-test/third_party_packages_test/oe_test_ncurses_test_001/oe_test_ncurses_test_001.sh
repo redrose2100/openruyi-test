@@ -24,6 +24,10 @@ function run_test() {
 
     pushd ./tmp_test/test
 
+    export LD_LIBRARY_PATH=$(pwd)/..:${LD_LIBRARY_PATH}
+    export TERM=xterm
+    [ -d /etc/terminfo ] && export TERMINFO=/etc/terminfo
+
     chmod 777 ./*
 
     runList=("demo_termcap" "demo_terminfo" "keynames" "railroad" "test_arrays" "test_tparm")

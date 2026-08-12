@@ -1,17 +1,14 @@
 all:
-	sh ../common.sh -d "sed" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "sed" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
 	cd ./tmp_extract/sed* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine)  \
 				--without-included-regex && \
-	make -j1 
-	sh ../common.sh -c "sed*" "testsuite"
-	sh ../common.sh -c "sed*" "init.cfg"
-	sh ../common.sh -c "sed*" "test-driver"
-	sh ../common.sh -r
+	make -j1 || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "sed*" "testsuite" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "sed*" "init.cfg" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "sed*" "test-driver" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"
 
 	
-
-
-

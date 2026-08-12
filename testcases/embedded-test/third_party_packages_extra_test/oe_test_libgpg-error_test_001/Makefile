@@ -1,5 +1,5 @@
 all:
-	sh ../common.sh -d "libgpg-error" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "libgpg-error"
 	cd ./tmp_extract/libgpg-error* && \
 	autoreconf -f && \
 	sed -i -e 's|^libdir=@libdir@$$|libdir=@exec_prefix@/lib|g;s|@GPG_ERROR_CONFIG_HOST@|none|g' src/gpg-error-config.in  && \
@@ -9,8 +9,8 @@ all:
 	sed -i 's/check-TESTS:/#check-TESTS:/g' src/Makefile && \
 	sed -i 's/check-TESTS:/#check-TESTS:/g' tests/Makefile && \
 	make V=1 check
-	sh ../common.sh -c "libgpg-error*" "gpg-error-config-test.sh"
-	sh ../common.sh -c "libgpg-error*" "tests"
-	sh ../common.sh -r
+	bash ../common.sh -c "libgpg-error*" "gpg-error-config-test.sh"
+	bash ../common.sh -c "libgpg-error*" "tests"
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

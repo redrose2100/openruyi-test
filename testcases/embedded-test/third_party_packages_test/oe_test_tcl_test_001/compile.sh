@@ -6,13 +6,18 @@ CURRENT_PATH=$(
   pwd
 )
 
+target_dir="$(find "${CURRENT_PATH}"/tmp_extract -maxdepth 1 -iname "*tcl*" -type d | head -1)"
+if [ -z "${target_dir}" ] || [ ! -d "${target_dir}" ]; then
+    echo "tcl directory not found in tmp_extract"
+    exit 1
+fi
 src_path="$(
-  cd "${CURRENT_PATH}"/tmp_extract/tcl* || exit 1
+  cd "${target_dir}" || exit 1
   pwd
 )"
-pushd "${src_path}"/unix || exit
+pushd "${src_path}"/unix || exit 1
 
-dnf install -y  make
+dnf install -y make || yum install make -y || apt-get install -y make || true
 
 ./configure --host="${CROSS_COMPILE%-}" --build="$(gcc -dumpmachine)" --enable-threads --enable-symbols --enable-dtrace
 
@@ -38,4 +43,4 @@ else
   exit 1
 fi
 
-popd || exit
+popd || exit 1

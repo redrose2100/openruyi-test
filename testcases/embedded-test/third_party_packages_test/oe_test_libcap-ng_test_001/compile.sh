@@ -7,12 +7,17 @@ CURRENT_PATH=$(
   cd "$(dirname "$0")" || exit 1
   pwd
 )
+target_dir="$(find "${CURRENT_PATH}"/tmp_extract -maxdepth 1 -iname "*libcap-ng*" -type d | head -1)"
+if [ -z "${target_dir}" ] || [ ! -d "${target_dir}" ]; then
+    echo "libcap-ng directory not found in tmp_extract"
+    exit 1
+fi
 src_path="$(
-  cd "${CURRENT_PATH}"/tmp_extract/libcap-ng* || exit 1
+  cd "${target_dir}" || exit 1
   pwd
 )"
 
-dnf install -y  make
+dnf install -y make || yum install make -y || apt-get install -y make || true
 
 pushd "${src_path}" || exit 1
 
@@ -34,4 +39,4 @@ fi
 cd - || exit 1
 cp -r test "${CURRENT_PATH}"/tmp_test
 
-popd || exit
+popd || exit 1

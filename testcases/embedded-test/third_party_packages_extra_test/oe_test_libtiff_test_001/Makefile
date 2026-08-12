@@ -1,5 +1,5 @@
 all:
-	sh ../common.sh -d "libtiff" "${DOWNLOAD_BRANCH}" "libtiff/tiff-*"
+	bash ../common.sh -M "libtiff" "libtiff/tiff-*"
 	dnf -y install libjpeg-turbo-devel libjpeg-turbo-devel
 	cd ./tmp_extract/tiff* && \
 	libtoolize --force --copy && \

@@ -1,28 +1,26 @@
-SUBDIRS=${shell ls | grep -v "Makefile" | grep -v "common.sh" | grep -v "make" | grep -v "comm_lib.sh" | grep -v "dejagnu*"}
+SUBDIRS=${shell ls -d oe_test_* | grep -v "Makefile"}
 CURDIR=${shell pwd}
 
 all:copycommon makemake subdirs
 
 copycommon:
-	cp -r $${OET_PATH}/testcases/embedded-test/common_libs/* ./
+	cp -r $${OET_PATH}/testcases/embedded-test/common_libs/* ./ || { bash ./common.sh -r; exit 1; }
 
 makemake:
-	yum install libtool -y
-	sh ./common.sh -d "make" "openEuler-22.03-LTS"
+	dnf install libtool -y || yum install libtool -y || apt-get install -y libtool || true
+	bash ./common.sh -M "make" || { bash ./common.sh -r; exit 1; }
 	cd ./tmp_extract/make* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
 	make && \
-	cp ./make ${CURDIR}
-	sh ./common.sh -d "dejagnu" "openEuler-22.03-LTS"
+	cp ./make ${CURDIR} || { bash ./common.sh -r; exit 1; }
+	bash ./common.sh -M "dejagnu" || { bash ./common.sh -r; exit 1; }
 	cd ./tmp_extract/dejagnu* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) --prefix=${CURDIR}/dejagnu && \
-	make install
-	tar -cf dejagnu.tar ./dejagnu
-	sh ./common.sh -r all
+	make install || { bash ./common.sh -r; exit 1; }
+	tar -cf dejagnu.tar ./dejagnu || { bash ./common.sh -r; exit 1; }
+	bash ./common.sh -r
 
 subdirs:
-	for subdir in ${SUBDIRS}; do $(MAKE) -C $$subdir -f Makefile||exit $$?; done
+	for subdir in ${SUBDIRS}; do test -f $$subdir/tmp_test.tar && tar -tf $$subdir/tmp_test.tar 2>/dev/null | grep -qv '/$$' && echo "$$subdir already built, skip" || $(MAKE) -C $$subdir -f Makefile || { bash ./common.sh -r; exit 1; }; done
 clean:
-	rm -rf ./make
-	rm -rf dejagnu.tar
-	for subdir in ${SUBDIRS}; do $(MAKE) -C $$subdir -f Makefile clean; done
+	bash ./common.sh -r all
