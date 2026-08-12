@@ -1,6 +1,6 @@
 .PHONY: all clean
 all:
-	sh ../common.sh -d "python3" "${DOWNLOAD_BRANCH}" "python3/Python*.tar.xz" "tar"
+	bash ../common.sh -M "python3" "python3/Python*.tar.xz" "tar"
 	sh ./compile.sh
 	sh ../common.sh -r
 clean:

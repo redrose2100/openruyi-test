@@ -1,5 +1,5 @@
 all:
-	sh ../common.sh -d "libunistring" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "libunistring"
 	cd ./tmp_extract/libunistring* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
 	make -O -j1 V=1 VERBOSE=1 && \

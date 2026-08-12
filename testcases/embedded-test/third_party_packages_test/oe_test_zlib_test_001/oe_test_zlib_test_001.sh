@@ -19,11 +19,13 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+tar -xf tmp_test.tar
+
 function run_test() {
     LOG_INFO "Start to run test."
 
-    chmod 777 ./test
-    ./test | grep -E "Src string:hello world! aaaaa bbbbb ccccc ddddd|UnCompressed String:hello world! aaaaa bbbbb ccccc ddddd"
+    chmod 777 ./tmp_test/test
+    ./tmp_test/test | grep -E "Src string:hello world! aaaaa bbbbb ccccc ddddd|UnCompressed String:hello world! aaaaa bbbbb ccccc ddddd"
     CHECK_RESULT $? 0 0 "grep msg error"
 
     LOG_INFO "End to run test."
@@ -32,7 +34,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
 
-    rm -rf test
+    rm -rf ./tmp_test
 
     LOG_INFO "Finish environment cleanup!"
 }

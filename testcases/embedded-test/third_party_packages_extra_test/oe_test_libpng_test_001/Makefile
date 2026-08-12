@@ -1,5 +1,5 @@
 all:
-	sh ../common.sh -d "libpng" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "libpng"
 	cd ./tmp_extract/libpng* && \
 	autoreconf -vif && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \

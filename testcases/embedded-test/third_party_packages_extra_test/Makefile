@@ -1,4 +1,4 @@
-SUBDIRS=${shell ls | grep -v "Makefile" | grep -v "common.sh" | grep -v "make" | grep -v "comm_lib.sh" | grep -v "dejagnu*"}
+SUBDIRS=${shell ls -d oe_test_* | grep -v "Makefile"}
 CURDIR=${shell pwd}
 
 all:copycommon makemake subdirs
@@ -7,18 +7,18 @@ copycommon:
 	cp -r $${OET_PATH}/testcases/embedded-test/common_libs/* ./
 
 makemake:
-	yum install libtool -y
-	sh ./common.sh -d "make" "openEuler-22.03-LTS"
+	dnf install libtool -y || yum install libtool -y || apt-get install -y libtool || true
+	bash ./common.sh -M "make"
 	cd ./tmp_extract/make* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
 	make && \
 	cp ./make ${CURDIR}
-	sh ./common.sh -d "dejagnu" "openEuler-22.03-LTS"
+	bash ./common.sh -M "dejagnu"
 	cd ./tmp_extract/dejagnu* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) --prefix=${CURDIR}/dejagnu && \
 	make install
 	tar -cf dejagnu.tar ./dejagnu
-	sh ./common.sh -r all
+	bash ./common.sh -r all
 
 subdirs:
 	for subdir in ${SUBDIRS}; do $(MAKE) -C $$subdir -f Makefile||exit $$?; done

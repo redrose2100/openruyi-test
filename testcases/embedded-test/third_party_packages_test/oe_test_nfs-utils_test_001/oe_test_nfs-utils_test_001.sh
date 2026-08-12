@@ -22,6 +22,10 @@ source ../comm_lib.sh
 function pre_test() {
     LOG_INFO "Start shadow preparation."
 
+    kill -9 $(pgrep -f rpcbind) 2>/dev/null || true
+    kill -9 $(pgrep -f rpc.statd) 2>/dev/null || true
+    kill -9 $(pgrep -f statd) 2>/dev/null || true
+    sleep 1
     rpcbind
 
     LOG_INFO "End of shadow preparation!"
@@ -44,7 +48,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    kill -9 $(pgrep -f rpcbind)
+    kill -9 $(pgrep -f rpcbind) 2>/dev/null || true
+    kill -9 $(pgrep -f rpc.statd) 2>/dev/null || true
+    kill -9 $(pgrep -f statd) 2>/dev/null || true
 
     LOG_INFO "End to restore the test environment."
 }

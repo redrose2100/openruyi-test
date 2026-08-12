@@ -20,3 +20,7 @@ mpfrsort
 mpfrsqrt
 mpfrstrtonum
 mpgforcenum
+gsubnulli18n
+mtchi18n2
+unicode1
+mbstr2

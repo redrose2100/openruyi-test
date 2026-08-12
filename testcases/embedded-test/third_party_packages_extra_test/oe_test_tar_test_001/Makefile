@@ -1,5 +1,5 @@
 all:
-	sh ../common.sh -d "tar" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "tar"
 	cd ./tmp_extract/tar* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine)  \
 				--without-selinux --with-lzma="xz --format=lzma" \

@@ -12,7 +12,7 @@ src_path="$(
 )"
 pushd "${src_path}" || exit 1
 
-dnf install -y  autoconf autoconf-archive
+dnf install -y autoconf autoconf-archive || yum install autoconf autoconf-archive -y || apt-get install -y autoconf autoconf-archive || true
 
 autoconf -f
 if [ -n "${TARGET_PREFIX}" ]; then

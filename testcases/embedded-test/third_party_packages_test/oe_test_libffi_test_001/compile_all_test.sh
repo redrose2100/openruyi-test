@@ -24,7 +24,7 @@ for oneDir in ${compileDirs[*]}; do
         allCompileFiles=$(find ./ -name "*.c")
         for oneFile in ${allCompileFiles[*]}; do
             compilteName=$(basename $oneFile .c)
-            ${CC} ${CPPFLAGS} ${CFLAGS} ${LDFLAGS} -I../../ -o ../testsuite_out/${compilteName} ${oneFile} -lffi
+            ${CC} ${CPPFLAGS} ${CFLAGS} ${LDFLAGS} -I../../ -I../../src/ -I../../include/ -o ../testsuite_out/${compilteName} ${oneFile} -lffi
         done
     popd
 done
