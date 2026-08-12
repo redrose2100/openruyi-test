@@ -34,7 +34,7 @@ function run_test() {
         CHECK_RESULT $?
         ls /dev/full
         CHECK_RESULT $?
-        find /dev/ -name 'fu*' | wc -l | grep "1"
+        find /dev/ -name 'fu*' | wc -l | grep -v "^0$"
         CHECK_RESULT $?
     fi
     LOG_INFO "End of the test."

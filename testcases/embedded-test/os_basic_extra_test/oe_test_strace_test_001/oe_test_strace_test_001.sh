@@ -59,4 +59,13 @@ function run_test() {
     LOG_INFO "End of the test."
 }
 
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+
+    kill -9 $(pgrep -f "sleep 5") 2>/dev/null || true
+    rm -rf tmptest tmptest.*
+
+    LOG_INFO "End to restore the test environment."
+}
+
 main "$@"
