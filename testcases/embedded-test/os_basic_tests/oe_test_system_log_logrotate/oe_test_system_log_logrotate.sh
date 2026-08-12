@@ -26,7 +26,19 @@ function pre_test() {
     if [ -e /var/log/messages ]; then
         rmMessage=0
     fi
-    /etc/init.d/syslog restart
+    rsyslog_was_active=0
+    systemctl is-active rsyslog >/dev/null 2>&1 && rsyslog_was_active=1
+    systemctl restart rsyslog 2>/dev/null || /etc/init.d/syslog restart 2>/dev/null || true
+    sleep 2
+    if [ ! -e /var/log/messages ]; then
+        touch /var/log/messages
+        logger "logrotate test init"
+        sleep 1
+    fi
+    hasLogrotateConf=0
+    if [ -e /etc/logrotate.d/rsyslog ]; then
+        hasLogrotateConf=1
+    fi
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -37,7 +49,9 @@ function run_test() {
     ls /var/log/messages
     CHECK_RESULT $? 0 0 "check /var/log/messages fail"
     rm -rf /var/log/messages-*.gz
-    mv /etc/logrotate.d/rsyslog /etc/logrotate.d/rsyslog_bak
+    if [ ${hasLogrotateConf} -eq 1 ]; then
+        mv /etc/logrotate.d/rsyslog /etc/logrotate.d/rsyslog_bak
+    fi
     cat >/etc/logrotate.d/rsyslog <<eof
 /var/log/messages
 {
@@ -64,9 +78,14 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -rf /etc/logrotate.d/rsyslog
-    mv /etc/logrotate.d/rsyslog_bak /etc/logrotate.d/rsyslog
+    if [ ${hasLogrotateConf} -eq 1 ]; then
+        mv /etc/logrotate.d/rsyslog_bak /etc/logrotate.d/rsyslog
+    fi
     if [ ${rmMessage} -eq 1 ]; then
         rm -rf /var/log/messages
+    fi
+    if [ ${rsyslog_was_active} -eq 0 ]; then
+        systemctl stop rsyslog 2>/dev/null || /etc/init.d/syslog stop 2>/dev/null || true
     fi
 
     LOG_INFO "End to restore the test environment."

@@ -36,7 +36,10 @@ function run_test() {
 
     ./mypstest &
     testpid=$(ps -aux | grep mypstest | grep -v grep | awk '{print$2}')
-    CHECK_RESULT $? 0 0 "check ps show fail"
+    if [ -z "$testpid" ]; then
+        CHECK_RESULT 1 0 0 "check ps show fail"
+        return 1
+    fi
     kill -9 ${testpid}
     CHECK_RESULT $? 0 0 "kill mytrest pid fail"
     ps -ef | grep -v grep | grep ${testpid}
