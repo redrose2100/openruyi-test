@@ -10,3 +10,10 @@ testcases/embedded-test/version_basic_tests/make
 *tmp_extract/
 tmp_0_*
 run_combinations.sh
+testcases/embedded-test/third_party_packages_test/comm_lib.sh
+testcases/embedded-test/third_party_packages_test/common.sh
+testcases/embedded-test/third_party_packages_test/dejagnu.tar
+testcases/embedded-test/third_party_packages_test/manifest_map.json
+testcases/embedded-test/third_party_packages_test/manifest_parse.sh
+testcases/embedded-test/version_basic_tests/comm_lib.sh
+testcases/embedded-test/version_basic_tests/common.sh
