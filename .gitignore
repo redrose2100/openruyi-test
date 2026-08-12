@@ -9,3 +9,4 @@ testcases/embedded-test/version_basic_tests/make
 *tmp_download/
 *tmp_extract/
 tmp_0_*
+run_combinations.sh
