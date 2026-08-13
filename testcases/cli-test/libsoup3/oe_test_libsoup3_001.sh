@@ -16,20 +16,19 @@
 # @License   :   Mulan PSL v2
 # @Desc      : libsoup3 HTTP/2 async GET test
 # ############################################
-
+# shellcheck disable=SC2119,SC1090
 source "$OET_PATH"/libs/locallibs/common_lib.sh
 
-function pre_test()
-{
-    LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "libsoup3 libsoup3-devel gcc glib2-devel glib2"
-    LOG_INFO "End of environmental preparation!"
+function pre_test() {
+	LOG_INFO "Start to prepare the test environment."
+	DNF_INSTALL "libsoup3 libsoup3-devel gcc glib2-devel glib2"
+	LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
-    LOG_INFO "start to run test."
+	LOG_INFO "start to run test."
 
-    cat > test_soup3_http2_get.c <<'EOF'
+	cat >test_soup3_http2_get.c <<'EOF'
 #include <libsoup/soup.h>
 #include <stdio.h>
 #include <glib.h>
@@ -89,30 +88,28 @@ int main() {
 }
 EOF
 
-    CHECK_RESULT $? 0 0 "Create test_soup3_http2_get.c failed!"
+	CHECK_RESULT $? 0 0 "Create test_soup3_http2_get.c failed!"
 
-    gcc -I/usr/include/libsoup-3.0 \
-        -I/usr/include/glib-2.0 \
-        -I/usr/lib64/glib-2.0/include \
-        test_soup3_http2_get.c \
-        -o test_soup3_http2_get \
-        -lsoup-3.0 -lgobject-2.0 -lglib-2.0 -lgio-2.0
+	gcc -I/usr/include/libsoup-3.0 \
+		-I/usr/include/glib-2.0 \
+		-I/usr/lib64/glib-2.0/include \
+		test_soup3_http2_get.c \
+		-o test_soup3_http2_get \
+		-lsoup-3.0 -lgobject-2.0 -lglib-2.0 -lgio-2.0
 
-    CHECK_RESULT $? 0 0 "Compile test_soup3_http2_get.c failed!"
+	CHECK_RESULT $? 0 0 "Compile test_soup3_http2_get.c failed!"
 
-    ./test_soup3_http2_get
-    CHECK_RESULT $? 0 0 "Run test_soup3_http2_get failed!"
+	./test_soup3_http2_get
+	CHECK_RESULT $? 0 0 "Run test_soup3_http2_get failed!"
 
-    LOG_INFO "All test cases executed successfully!"
+	LOG_INFO "All test cases executed successfully!"
 }
 
-function post_test()
-{
-    LOG_INFO "Start to restore the test environment."
-    #shellcheck disable=SC2119
-    DNF_REMOVE
-    rm -rf test_soup3_http2_get.c test_soup3_http2_get
-    LOG_INFO "End to restore the test environment."
+function post_test() {
+	LOG_INFO "Start to restore the test environment."
+	DNF_REMOVE
+	rm -rf test_soup3_http2_get.c test_soup3_http2_get
+	LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
