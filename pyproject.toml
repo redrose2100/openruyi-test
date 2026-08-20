@@ -1,0 +1,20 @@
+# 仅含静态检查工具段；target-version 按存量兼容默认 py39（仓库无 requires-python/python_requires 声明）
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+extend-exclude = ["generated/", "vendor/", "third_party/"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501", "RUF001", "RUF002", "RUF003"]
+# 中文/全角标点注释仓库：RUF001/002/003 会把「，」等判为模糊字符，属误报，已忽略；
+# 收紧路径：清理 PR 后按阶段加回 B → UP/SIM → RUF（规则分批启用）
+
+[tool.bandit]
+# 存量仓库先只看高危（hook args: -lll），后续按路线图放开
+
+[tool.mypy]
+python_version = "3.9"
+warn_unused_ignores = true
+show_error_codes = true
+files = ["testcases"]

@@ -1,0 +1,73 @@
+# 修复模式：仅对暂存区文件生效；存量仓库请勿运行 pre-commit run --all-files
+minimum_pre_commit_version: "4.0"
+
+repos:
+  # ===== 通用基础 hook（所有语言） =====
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace          # 修复：移除行尾空白
+        exclude: ^(pnpm-lock\.yaml|package-lock\.json|.*\.lock)$
+      - id: end-of-file-fixer            # 修复：确保文件以单个换行结尾
+        exclude: ^(pnpm-lock\.yaml|package-lock\.json|.*\.lock)$
+      - id: check-yaml
+        # 以下为故意格式错误的测试夹具（异常场景用例/INI 格式样例），非真实坏数据
+        exclude: ^testcases/(feature-test/pkgship/pkgship_start_init/oe_test_pkgship_init_exception_10/error[2-5]\.yaml|cli-test/etmem/example_etmemd\.yaml)$
+      - id: check-json
+        # 故意使用 JSONL（行分隔 JSON）的 prometheus 基准数据夹具
+        exclude: ^testcases/cli-test/prometheus2/20kseries\.json$
+      - id: check-xml
+        # 故意格式错误/实体未定义/非 UTF-8 编码的测试夹具（itstool/opensp/xmltoman/dblatex/docbook2X）
+        exclude: ^testcases/cli-test/(itstool/common/broken\.xml|opensp/common/normal\.xml|xmltoman/1\.xml|dblatex/common/test-1/test2\.xml|docbook2X/common/manpages\.xml)$
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        # 按存量最大文件（约 92MB 测试数据包）校准，样本/夹具目录会持续变大
+        args: [--maxkb=102400]
+      - id: detect-private-key
+
+  # ===== 密钥检测 =====
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  # ===== 拼写检查 =====
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.3
+    hooks:
+      - id: codespell
+        # skip 与 .codespellrc 保持一致：二进制/压缩测试数据与 vendored 测试套件
+        args: ["--skip=.git,*.lock,node_modules,.next,coverage,build,dist,vendor,third_party,*.gz,*.tar,*.flac,*.y4m,*.pdf,*.otf,*.bin,*.zip,*.xz,*.bz2,*.png,*.jpg,*.jpeg,*.gif,*.ico,*.ttf,*.woff,*.class,*.jar,*.so,*.o,*.a,*.pyc,*/testsuite-gcc*/*,*/libappstream-glib/common/*,*/asciidoc/common/xsl/*"]
+        exclude: ^(vendor/|third_party/|generated/)
+
+  # ===== Shell：Shfmt（修复）+ ShellCheck（检查） =====
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.13.1-1
+    hooks:
+      - id: shfmt
+        # 修复模式无需加参数（manifest 已内置 --write）；只读档加 args: [--check]
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        args: [--severity=error]      # 存量默认 error 起步；清理 PR 后按基线收紧回 warning
+
+  # ===== Markdown：markdownlint（修复）+ codespell 已覆盖 =====
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.49.1
+    hooks:
+      - id: markdownlint
+        args: [--fix]                  # 修复模式；只读档去掉 --fix
+
+  # ===== Python：Ruff（修复）+ Bandit（检查） =====
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.3
+    hooks:
+      - id: ruff
+        args: [--fix]                  # 修复模式；只读档去掉 --fix
+      - id: ruff-format                # 修复模式；只读档加 --check
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.9.4
+    hooks:
+      - id: bandit
+        args: [-lll]                  # 存量仓库先只看高危；清理后按路线图放开 -ll → 全量
