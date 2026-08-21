@@ -1,0 +1,7 @@
+# ShellCheck 配置（按项目调整）
+# 禁用无法跨脚本跟踪外部 source 的告警
+# 仓库惯例：版权头之后才写 shebang（约 484 个文件），测试框架以 bash <脚本> 方式执行，
+# SC1128 属项目惯例误报，按基线校准禁用；如需可直接执行，请清理 PR 统一调整
+disable=SC1091,SC1128
+# 指定 source-path 可让 SC1091 解析外部脚本
+# source-path=SCRIPTDIR
