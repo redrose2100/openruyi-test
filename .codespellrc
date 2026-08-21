@@ -1,0 +1,5 @@
+[codespell]
+skip = .git,*.lock,node_modules,.next,coverage,build,dist,vendor,third_party,*.gz,*.tar,*.flac,*.y4m,*.pdf,*.otf,*.bin,*.zip,*.xz,*.bz2,*.png,*.jpg,*.jpeg,*.gif,*.ico,*.ttf,*.woff,*.class,*.jar,*.so,*.o,*.a,*.pyc,*/testsuite-gcc*/*,*/libappstream-glib/common/*,*/asciidoc/common/xsl/*
+# 项目术语/专有名词加入忽略列表；注意：该值留空会导致 codespell 报
+# "argument -L/--ignore-words-list: expected one argument"，不填就整行删除。
+ignore-words-list = chage,TestNG,testng
