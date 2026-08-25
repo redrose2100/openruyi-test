@@ -42,8 +42,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "create vm failed"
 
     SLEEP_WAIT 180
-    chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_network.exp"
-    expect "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_network.exp" "$vm_name"
+    chmod +x "${OET_PATH}/testcases/smoke-test/smoke-ubnative/common/set_network.exp"
+    expect "${OET_PATH}/testcases/smoke-test/smoke-ubnative/common/set_network.exp" "$vm_name"
     wait_exec "ping -c 3 ${vm_ip:?}" 100
     CHECK_RESULT $? 0 0 "ping vm failed"
 

@@ -82,6 +82,7 @@ function pre_init() {
     iptables -L FORWARD -v -n
     brctl addbr br0
     ifconfig br0 192.168.1.99/24 up
+    ssh-keygen -R "$vm_ip"
     # config
     sysctl kernel.softlockup_panic | grep 0 || {
         sysctl kernel.softlockup_panic=0

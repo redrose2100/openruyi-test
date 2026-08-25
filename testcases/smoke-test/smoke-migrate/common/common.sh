@@ -110,6 +110,7 @@ function pre_init() {
     brctl addbr br0
     ifconfig br0 192.168.1.99/24 up
     SSH_CMD "brctl addbr br0; ifconfig br0 192.168.1.100/24 up" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
+    ssh-keygen -R "$vm_ip"
     # config
     sysctl kernel.softlockup_panic | grep 0 || {
         sysctl kernel.softlockup_panic=0
