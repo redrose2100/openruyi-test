@@ -65,6 +65,7 @@ function ub_env_init() {
     systemctl disable firewalld
     brctl addbr br0
     ifconfig br0 192.168.1.99/24 up
+    ssh-keygen -R "$vm_ip"
     # ub pre
     modprobe vfio
     modprobe vfio-ub
