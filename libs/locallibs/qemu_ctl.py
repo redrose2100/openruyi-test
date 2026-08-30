@@ -133,14 +133,11 @@ def qemu_start_wait_start(sub_list, wait_time = 60):
     if not is_qemu_ok:
         qemu_start_stop_all(sub_list)
 
-net_mode = "bridge"
-serial_port_base = 1111
-
 def strip_ansi(text):
     import re
     return re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', text)
 
-def qemu_start_make_cmd(finally_config, i, br_name):
+def qemu_start_make_cmd(finally_config, i, br_name, net_mode="bridge", serial_port_base=1111):
     run_cmd = []
     run_cmd.append("qemu-system-%s"%finally_config["qemu_type_list"][i])
     run_cmd.append("-M")
@@ -222,7 +219,7 @@ def socket_send_cmd(sock, cmd, wait=2):
     sock.send((cmd + "\n").encode())
     time.sleep(wait)
 
-def qemu_start_subprocess_user(finally_config, i, br_name):
+def qemu_start_subprocess_user(finally_config, i, br_name, net_mode="bridge", serial_port_base=1111):
     global check_login_str
     global check_sshd_start_cmd
     global start_sshd_cmd
@@ -231,7 +228,7 @@ def qemu_start_subprocess_user(finally_config, i, br_name):
     global extra_set_passwd
 
     serial_port = serial_port_base + i
-    run_cmd = qemu_start_make_cmd(finally_config, i, br_name)
+    run_cmd = qemu_start_make_cmd(finally_config, i, br_name, net_mode, serial_port_base)
     if finally_config["excess_qemu_option_list"][i] != "":
         run_cmd.extend(finally_config["excess_qemu_option_list"][i].split())
     mugen_log.logging("INFO", "will run : %s"%" ".join(run_cmd))
@@ -332,15 +329,15 @@ def qemu_start_subprocess_user(finally_config, i, br_name):
 
     return one_sub
 
-def qemu_start_subprocess(finally_config, br_name):
+def qemu_start_subprocess(finally_config, br_name, net_mode="bridge", serial_port_base=1111):
     sub_list = []
     i = 0
     while i < finally_config["count"]:
         if net_mode == "user":
-            one_sub = qemu_start_subprocess_user(finally_config, i, br_name)
+            one_sub = qemu_start_subprocess_user(finally_config, i, br_name, net_mode, serial_port_base)
             sub_list.append(one_sub)
         else:
-            run_cmd = qemu_start_make_cmd(finally_config, i, br_name)
+            run_cmd = qemu_start_make_cmd(finally_config, i, br_name, net_mode, serial_port_base)
             if finally_config["excess_qemu_option_list"][i] != "":
                 run_cmd.extend(finally_config["excess_qemu_option_list"][i].split())
             mugen_log.logging("INFO", "will run : %s"%" ".join(run_cmd))
@@ -473,7 +470,7 @@ def qemu_start_wait_ssh_connect(ip, port, user, password, wait_time = 60):
             time.sleep(1)
             wait_i += 1
 
-def qemu_start_config_conf(finally_config, put_all):
+def qemu_start_config_conf(finally_config, put_all, net_mode="bridge"):
     global option_wait_time
     i = 0
     copy_string = ""
@@ -519,7 +516,7 @@ def qemu_start_config_conf(finally_config, put_all):
         i += 1
     return 0
 
-def qemu_start_copy_libs(finally_config):
+def qemu_start_copy_libs(finally_config, net_mode="bridge"):
     i = 0
     while i < finally_config["count"]:
         if net_mode == "user":
@@ -545,7 +542,7 @@ def qemu_start_copy_libs(finally_config):
         i += 1
     return 0
 
-def qemu_start(qemu_config, put_all, br_name):
+def qemu_start(qemu_config, put_all, br_name, net_mode="bridge", serial_port_base=1111):
     if type(qemu_config) is list:
         if len(qemu_config) == 0:
             mugen_log.logging("ERROR", "qemu config min num is 1")
@@ -572,11 +569,11 @@ def qemu_start(qemu_config, put_all, br_name):
     else:
         if finally_config["host_ip"] != "":
             subprocess.run(["ifconfig", br_name, finally_config["host_ip"]])
-    all_sub = qemu_start_subprocess(finally_config, br_name)
-    if qemu_start_config_conf(finally_config, put_all) != 0:
+    all_sub = qemu_start_subprocess(finally_config, br_name, net_mode, serial_port_base)
+    if qemu_start_config_conf(finally_config, put_all, net_mode) != 0:
         qemu_start_stop_all(all_sub)
         sys.exit(1)
-    if qemu_start_copy_libs(finally_config) != 0:
+    if qemu_start_copy_libs(finally_config, net_mode) != 0:
         qemu_start_stop_all(all_sub)
         sys.exit(1)
     qemu_start_updata_qemu_rem(all_sub)
@@ -637,17 +634,15 @@ def qemu_control(options, args):
     if args.start_sshd_cmd is not None: start_sshd_cmd = args.start_sshd_cmd
     if args.option_wait_time is not None: option_wait_time = args.option_wait_time
     if args.login_wait_time is not None: login_wait_time = args.login_wait_time
-    global net_mode
     global verbose
-    if args.net_mode is not None:
-        net_mode = args.net_mode
+    net_mode = args.net_mode if args.net_mode is not None else "bridge"
     if args.verbose:
         verbose = True
     if net_mode == "user":
         if args.host_ssh_port is not None and args.config_file is None:
             qemu_config["host_ssh_port"] = args.host_ssh_port
 
-    return qemu_start(qemu_config, put_all, args.br_name)
+    return qemu_start(qemu_config, put_all, args.br_name, net_mode)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="manual to this script")

@@ -35,6 +35,54 @@ function git_clone_with_retry() {
     return 1
 }
 
+function prepare_manifest() {
+    if [[ -f "${MANIFEST_MAP}" ]]; then
+        echo "INFO: manifest_map.json already exists, skip manifest preparation"
+        return 0
+    fi
+
+    local yocto_meta_branch="${YOCTO_META_BRANCH:-openEuler-24.03-LTS}"
+    local yocto_meta_remote="${YOCTO_META_REMOTE:-https://atomgit.com/openeuler/yocto-meta-openeuler.git}"
+    local yocto_meta_dir="${OET_PATH}/yocto-meta-openeuler"
+
+    echo "INFO: Fetching yocto-meta-openeuler manifest, branch: ${yocto_meta_branch}"
+
+    if [[ -d "${yocto_meta_dir}" ]]; then
+        pushd "${yocto_meta_dir}" >/dev/null
+        git fetch origin
+        git checkout "${yocto_meta_branch}"
+        git reset --hard "origin/${yocto_meta_branch}"
+        popd >/dev/null
+    else
+        git_clone_with_retry -b "${yocto_meta_branch}" "${yocto_meta_remote}" "${yocto_meta_dir}"
+    fi
+
+    echo "INFO: Parsing manifest.yaml to generate manifest_map.json"
+    python3 -c "
+import yaml, json
+with open('${yocto_meta_dir}/.oebuild/manifest.yaml', 'r') as f:
+    data = yaml.safe_load(f)
+manifest_list = data.get('manifest_list', {})
+result = {}
+for name, info in manifest_list.items():
+    url = info.get('remote_url', '')
+    version = info.get('version', '')
+    if url and version:
+        result[name] = {'url': url, 'version': version}
+with open('${MANIFEST_MAP}', 'w') as f:
+    json.dump(result, f, indent=2)
+print(f'Generated manifest map with {len(result)} packages')
+"
+
+    if [[ $? -ne 0 ]]; then
+        echo "ERROR: Failed to parse manifest.yaml"
+        return 1
+    fi
+
+    echo "INFO: Manifest preparation completed"
+    return 0
+}
+
 function downloadFromGitee() {
     downloadName=$1
     downloadBranch=$2
@@ -56,8 +104,11 @@ function downloadFromGitee() {
 function downloadFromManifest() {
     packageName=$1
     if [[ ! -f "${MANIFEST_MAP}" ]]; then
-        echo "manifest_map.json not found, please run manifest_parse.sh first"
-        return 1
+        echo "INFO: manifest_map.json not found, preparing manifest..."
+        if ! prepare_manifest; then
+            echo "ERROR: failed to prepare manifest_map.json"
+            return 1
+        fi
     fi
     remote_url=$(python3 -c "import json; d=json.load(open('${MANIFEST_MAP}')); print(d.get('${packageName}', {}).get('url', ''))")
     commit_hash=$(python3 -c "import json; d=json.load(open('${MANIFEST_MAP}')); print(d.get('${packageName}', {}).get('version', ''))")

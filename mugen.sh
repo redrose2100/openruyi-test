@@ -195,10 +195,11 @@ function exec_case() {
     exec 2>&7 7>&-
 
     test "$ret_code"x == "143"x && {
-        if [ -f /tmp/mugen_timeout_pid ]; then
-            kill_pid=$(cat /tmp/mugen_timeout_pid)
-            kill -9 -- -"$kill_pid" 2>/dev/null || kill -9 "$kill_pid" 2>/dev/null
-            rm -f /tmp/mugen_timeout_pid
+        cmd_pid=$(pgrep -f "$cmd")
+        if [ -n "$cmd_pid" ]; then
+            for pid in ${cmd_pid}; do
+                pstree -p "$pid" | grep -o '([0-9]*)' | tr -d '()' | xargs kill -9
+            done
         fi
         LOG_WARN "The case execution timeout."
     }
@@ -395,56 +396,6 @@ DO_MAKE_COUNT=0
 NOT_DO_MAKE_COUNT=0
 TOTAL_MAKE_COUNT=0
 
-function prepare_manifest() {
-    local manifest_map="${OET_PATH}/testcases/embedded-test/common_libs/manifest_map.json"
-    YOCTO_META_BRANCH=${YOCTO_META_BRANCH:-"openEuler-24.03-LTS"}
-    export YOCTO_META_BRANCH
-
-    if [[ -f "${manifest_map}" ]]; then
-        LOG_INFO "manifest_map.json already exists, skip manifest preparation"
-        return 0
-    fi
-    YOCTO_META_REMOTE=${YOCTO_META_REMOTE:-"https://atomgit.com/openeuler/yocto-meta-openeuler.git"}
-    YOCTO_META_DIR="${OET_PATH}/yocto-meta-openeuler"
-
-    LOG_INFO "Fetching yocto-meta-openeuler manifest, branch: ${YOCTO_META_BRANCH}"
-
-    if [[ -d "${YOCTO_META_DIR}" ]]; then
-        pushd "${YOCTO_META_DIR}" >/dev/null
-        git fetch origin
-        git checkout "${YOCTO_META_BRANCH}"
-        git reset --hard "origin/${YOCTO_META_BRANCH}"
-        popd >/dev/null
-    else
-        git_clone_with_retry -b "${YOCTO_META_BRANCH}" "${YOCTO_META_REMOTE}" "${YOCTO_META_DIR}"
-    fi
-
-    LOG_INFO "Parsing manifest.yaml to generate manifest_map.json"
-    python3 -c "
-import yaml, json
-with open('${YOCTO_META_DIR}/.oebuild/manifest.yaml', 'r') as f:
-    data = yaml.safe_load(f)
-manifest_list = data.get('manifest_list', {})
-result = {}
-for name, info in manifest_list.items():
-    url = info.get('remote_url', '')
-    version = info.get('version', '')
-    if url and version:
-        result[name] = {'url': url, 'version': version}
-with open('${manifest_map}', 'w') as f:
-    json.dump(result, f, indent=2)
-print(f'Generated manifest map with {len(result)} packages')
-"
-
-    if [[ $? -ne 0 ]]; then
-        LOG_ERROR "Failed to parse manifest.yaml"
-        return 1
-    fi
-
-    LOG_INFO "Manifest preparation completed"
-    return 0
-}
-
 function build_one_suite() {
     ((TOTAL_MAKE_COUNT++))
     local test_suite=$1
@@ -470,8 +421,6 @@ function build_one_suite() {
         source_path=$(find ${SDK_PATH} -name "environment-setup-*")
         source ${source_path}
     fi
-
-    prepare_manifest
 
     if [[ -f "./makefile" || -f "./Makefile" ]]; then
         LOG_INFO "do make for testsuite: ${test_suite}"
