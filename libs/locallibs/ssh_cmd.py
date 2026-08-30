@@ -90,7 +90,7 @@ def pssh_cmd(conn, cmd):
     """
     if conn == 519:
         return 519, ""
-    full_cmd = "export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/root/bin:$PATH; " + cmd
+    full_cmd = "export PATH=$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/root/bin; " + cmd
     try:
         stdin, stdout, stderr = conn.exec_command(full_cmd, timeout=None)
         exitcode = stdout.channel.recv_exit_status()
