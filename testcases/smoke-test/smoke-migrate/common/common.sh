@@ -72,7 +72,7 @@ function pre_init() {
     # pkg pre
     SSH_CMD "mkdir -p $test_qemu_dir" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER"
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh"
-    sh "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh"
+    bash "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh"
     SSH_SCP "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/pkg_pre.sh" "${NODE2_USER}@${NODE2_IPV4}:${test_qemu_dir}" "$NODE2_PASSWORD"
     SSH_CMD "sh ${test_qemu_dir}/pkg_pre.sh" "$NODE2_IPV4" "$NODE2_PASSWORD" "$NODE2_USER" "1200"
     # img pre
@@ -309,13 +309,13 @@ function check_memlink_recycle() {
     local flag="${5:-}"
     # allocing 1G
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_memory.sh" || return 1
-    sh "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_memory.sh" "$vm_name"
+    bash "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/set_memory.sh" "$vm_name"
     SLEEP_WAIT 60
     os_used_running="$(get_hugepage_used "local")"
     LOG_INFO "os_used_running: $os_used_running"
     # kill stress
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/unset_memory.sh"  || return 1
-    sh "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/unset_memory.sh" "$vm_name"
+    bash "${OET_PATH}/testcases/smoke-test/smoke-migrate/common/unset_memory.sh" "$vm_name"
     SLEEP_WAIT 240
     os_used_free="$(get_hugepage_used "local")"
     LOG_INFO "os_used_free: $os_used_free"
