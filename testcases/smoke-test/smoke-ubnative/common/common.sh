@@ -47,7 +47,7 @@ function ub_env_init() {
     fi
     # pkg pre
     chmod +x "${OET_PATH}/testcases/smoke-test/smoke-ubnative/common/pkg_pre.sh"
-    sh "${OET_PATH}/testcases/smoke-test/smoke-ubnative/common/pkg_pre.sh"
+    bash "${OET_PATH}/testcases/smoke-test/smoke-ubnative/common/pkg_pre.sh"
     # img pre
     mkdir -p "$image_dir"
     if [ ! -f "$image_path" ]; then
