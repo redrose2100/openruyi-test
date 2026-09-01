@@ -636,13 +636,14 @@ def qemu_control(options, args):
     if args.login_wait_time is not None: login_wait_time = args.login_wait_time
     global verbose
     net_mode = args.net_mode if args.net_mode is not None else "bridge"
+    serial_port_base = args.serial_port_base if args.serial_port_base is not None else 1111
     if args.verbose:
         verbose = True
     if net_mode == "user":
         if args.host_ssh_port is not None and args.config_file is None:
             qemu_config["host_ssh_port"] = args.host_ssh_port
 
-    return qemu_start(qemu_config, put_all, args.br_name, net_mode)
+    return qemu_start(qemu_config, put_all, args.br_name, net_mode, serial_port_base)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="manual to this script")
@@ -674,6 +675,7 @@ if __name__ == "__main__":
     config_param_group.add_argument('--qemu_ssh_port', type=str, help = "start qemu config qemu_ssh_port", default=None)
     config_param_group.add_argument('--net_mode', type=str, help = "network mode: bridge(require root) or user(no root required)", default=None)
     config_param_group.add_argument('--host_ssh_port', type=str, help = "host ssh port for user net_mode port forwarding", default=None)
+    config_param_group.add_argument('--serial_port_base', type=int, help = "base serial port for qemu serial console in user net_mode", default=None)
     parser.add_argument('--verbose', action="store_true", help = "show qemu boot log output")
     args = parser.parse_args()
 
@@ -690,7 +692,8 @@ if __name__ == "__main__":
          args.initrd_path is not None or
          args.memory_size is not None or
          args.excess_qemu_option is not None or
-         args.qemu_ssh_port is not None )):
+         args.qemu_ssh_port is not None or
+         args.serial_port_base is not None )):
         mugen_log.logging("ERROR", "had config config file, do not add other param config")
         sys.exit(1)
 
