@@ -23,38 +23,6 @@ OET_PATH=$(
 )
 export OET_PATH
 
-GIT_CLONE_MAX_RETRY=3
-GIT_CLONE_RETRY_INTERVAL=10
-
-function git_clone_with_retry() {
-    local retry_count=0
-    local clone_args="$@"
-    local target_dir=""
-    for arg in "$@"; do
-        if [[ ! "$arg" =~ ^- ]]; then
-            target_dir="$arg"
-        fi
-    done
-    while [ $retry_count -lt $GIT_CLONE_MAX_RETRY ]; do
-        if [ $retry_count -gt 0 ]; then
-            LOG_WARN "git clone retry #$retry_count after $GIT_CLONE_RETRY_INTERVAL seconds..."
-            sleep $GIT_CLONE_RETRY_INTERVAL
-            if [ -n "$target_dir" ] && [ -e "$target_dir" ]; then
-                rm -rf "$target_dir"
-            fi
-        fi
-        if git clone $clone_args; then
-            if [ $retry_count -gt 0 ]; then
-                LOG_INFO "git clone succeeded on retry #$retry_count"
-            fi
-            return 0
-        fi
-        retry_count=$((retry_count + 1))
-    done
-    LOG_ERROR "git clone failed after $GIT_CLONE_MAX_RETRY attempts: git clone $clone_args"
-    return 1
-}
-
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 if [[ -d "/etc/mugen" ]]; then
