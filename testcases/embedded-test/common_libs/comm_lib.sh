@@ -16,24 +16,25 @@
 # @Desc    :
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 tar -xf tmp_test.tar || { echo "ERROR: failed to extract tmp_test.tar, test data may be missing"; exit 1; }
 
 pushd ../
 if [[ -z "${RUNTEST}" ]] && [[ -f dejagnu.tar ]]; then
-    CUR=`pwd`
+    CUR=$(pwd)
     tar -xf dejagnu.tar
     RUNTEST=${CUR}/dejagnu/bin/runtest
-    chmod +x ${RUNTEST}
+    chmod +x "${RUNTEST}"
     export RUNTEST
 fi
-popd
+popd || exit
 
 function getCasesFromFile() {
     declare -n array="$1"
     filename=$2
-    while read line || [[ -n $line ]] ; do
+    while read -r line || [[ -n $line ]] ; do
         [[ $line =~ ^#.* ]] && continue
         [[ -z "$line" ]] && continue
         if [[ $line =~ "#" ]]; then
@@ -41,7 +42,8 @@ function getCasesFromFile() {
         else
             casename=$line
         fi
-        casename=`echo $casename | sed -e 's/^[ \t]//g' -e 's/[ \t]*$//g'`
+        casename=$(echo "$casename" | sed -e 's/^[ \t]//g' -e 's/[ \t]*$//g')
+        # shellcheck disable=SC2034
         array[$casename]=1
-    done < $filename
+    done < "$filename"
 }

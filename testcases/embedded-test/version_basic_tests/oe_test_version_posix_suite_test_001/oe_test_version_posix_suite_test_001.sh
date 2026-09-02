@@ -16,6 +16,7 @@
 #@Desc      	:   run posix test suite
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
 CUR_DATE=$(date +'%Y-%m-%d %H:%M:%S')
@@ -24,6 +25,7 @@ CUR_DATE=$(date +'%Y-%m-%d %H:%M:%S')
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
+    # shellcheck disable=SC2034
     EXECUTE_T="180m"
 
     MAKEDIR=$(cd .. && pwd)

@@ -1,0 +1,1 @@
+cmd_/data/mugen/testcases/embedded-test/application_develop_tests/oe_test_kernel_hello_world_test/kernel_hello_world.mod := { echo  /data/mugen/testcases/embedded-test/application_develop_tests/oe_test_kernel_hello_world_test/kernel_hello_world.o;  echo; } > /data/mugen/testcases/embedded-test/application_develop_tests/oe_test_kernel_hello_world_test/kernel_hello_world.mod

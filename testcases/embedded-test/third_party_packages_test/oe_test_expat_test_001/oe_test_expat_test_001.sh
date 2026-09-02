@@ -16,6 +16,7 @@
 #@Desc      	:   Run expat testsuite
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
 # 测试点的执行

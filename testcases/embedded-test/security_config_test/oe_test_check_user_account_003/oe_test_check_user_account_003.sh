@@ -18,6 +18,7 @@
 # @Desc      :   check deny and unlock time fail
 # #############################################
 
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test()
@@ -64,7 +65,7 @@ openEuler@456
 EOF
 )
 
-    echo $getValue | grep "The account is locked due to "
+    echo "$getValue" | grep "The account is locked due to "
     CHECK_RESULT $? 0 0 "check login fail 3 time lock fail"
 fi
 

@@ -18,6 +18,7 @@
 # @Desc      :   check file right part 2
 # #############################################
 
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {

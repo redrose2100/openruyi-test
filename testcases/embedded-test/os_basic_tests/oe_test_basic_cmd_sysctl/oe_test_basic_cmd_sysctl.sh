@@ -17,7 +17,8 @@
 # @Desc      :   SYSCTL modifies kernel parameters
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -39,4 +40,4 @@ function run_test() {
     LOG_INFO "End of run test."
 }
 
-main $@
+main "$@"

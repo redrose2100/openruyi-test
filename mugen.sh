@@ -23,6 +23,7 @@ OET_PATH=$(
 )
 export OET_PATH
 
+# shellcheck disable=SC1091
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 if [[ -d "/etc/mugen" ]]; then
@@ -344,7 +345,7 @@ function run_all_cases() {
         local this_copy=true
     fi
 
-    for test_suite in ${test_suites[*]}; do
+    for test_suite in "${test_suites[@]}"; do
         run_test_suite "$test_suite"
         COPY_DONE="no"
         local this_copy=true
@@ -420,7 +421,7 @@ function build_all() {
 
     do_error_count=0
 
-    for test_suite in ${test_suites[*]}; do
+    for test_suite in "${test_suites[@]}"; do
         build_one_suite "$test_suite" "no_print"
         if [ $? -ne 0 ]; then
             LOG_ERROR "doing test suite $test_suite make fail"
@@ -449,10 +450,10 @@ function copy_libs_to_node1() {
 while getopts "c:af:r:dxb:s:m" option; do
     case $option in
     c)
-        deploy_conf ${*//-c/}
+        deploy_conf "${*//-c/}"
         ;;
     m)
-        modify_conf ${*//-m/}
+        modify_conf "${*//-m/}"
         ;;
     d)
         echo -e "The test script download function has been discarded."
@@ -479,7 +480,7 @@ while getopts "c:af:r:dxb:s:m" option; do
         test_suite=$OPTARG
         op_list=('-f' '-r' '-x' '-d' '-c' '-s')
 
-        for op in ${op_list[*]}; do
+        for op in "${op_list[@]}"; do
             if [[ $test_suite == "$op" ]]; then
                 usage
                 exit 1

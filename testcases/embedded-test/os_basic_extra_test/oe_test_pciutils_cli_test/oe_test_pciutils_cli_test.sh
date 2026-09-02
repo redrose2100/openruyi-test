@@ -16,6 +16,7 @@
 #@Desc      	:   Run pciutils testsuite
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function is_qemu_vm() {

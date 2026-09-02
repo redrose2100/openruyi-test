@@ -8,7 +8,7 @@ GIT_CLONE_RETRY_INTERVAL=10
 
 function git_clone_with_retry() {
     local retry_count=0
-    local clone_args="$@"
+    local clone_args="$*"
     local target_dir=""
     for arg in "$@"; do
         if [[ ! "$arg" =~ ^- ]]; then
@@ -48,11 +48,11 @@ function prepare_manifest() {
     echo "INFO: Fetching yocto-meta-openeuler manifest, branch: ${yocto_meta_branch}"
 
     if [[ -d "${yocto_meta_dir}" ]]; then
-        pushd "${yocto_meta_dir}" >/dev/null
+        pushd "${yocto_meta_dir}" >/dev/null || exit
         git fetch origin
         git checkout "${yocto_meta_branch}"
         git reset --hard "origin/${yocto_meta_branch}"
-        popd >/dev/null
+        popd >/dev/null || exit
     else
         git_clone_with_retry -b "${yocto_meta_branch}" "${yocto_meta_remote}" "${yocto_meta_dir}"
     fi
@@ -74,7 +74,7 @@ with open('${MANIFEST_MAP}', 'w') as f:
 print(f'Generated manifest map with {len(result)} packages')
 "
 
-    if [[ $? -ne 0 ]]; then
+    if [[ $? -ne 0 ]]; then  # shellcheck disable=SC2181
         echo "ERROR: Failed to parse manifest.yaml"
         return 1
     fi
@@ -117,7 +117,7 @@ function downloadFromManifest() {
         echo "Package ${packageName} not found in manifest, fallback to branch download"
         downloadFromGitee "${packageName}" "${DOWNLOAD_BRANCH}"
         mkdir -p tmp_extract
-        local tar_file=$(find "tmp_download/${packageName}" -maxdepth 1 -type f \( -name "*.tar.gz" -o -name "*.tar.xz" -o -name "*.tar.bz2" -o -name "*.zip" \) | head -1)
+        local tar_file; tar_file=$(find "tmp_download/${packageName}" -maxdepth 1 -type f \( -name "*.tar.gz" -o -name "*.tar.xz" -o -name "*.tar.bz2" -o -name "*.zip" \) | head -1)
         if [[ -n "${tar_file}" ]]; then
             tar -xf "${tar_file}" -C tmp_extract 2>/dev/null || unzip -d tmp_extract "${tar_file}" 2>/dev/null || true
         fi
@@ -125,13 +125,13 @@ function downloadFromManifest() {
     fi
 
     if [[ -d "tmp_download/${packageName}" ]]; then
-        pushd "tmp_download/${packageName}" >/dev/null
-        local current_hash=$(git rev-parse HEAD 2>/dev/null)
-        popd >/dev/null
+        pushd "tmp_download/${packageName}" >/dev/null || exit
+        local current_hash; current_hash=$(git rev-parse HEAD 2>/dev/null)
+        popd >/dev/null || exit
         if [[ "${current_hash}" == "${commit_hash}" ]]; then
             echo "INFO: ${packageName} source already exists with correct commit, skip clone"
             mkdir -p tmp_extract
-            local tar_file=$(find "tmp_download/${packageName}" -maxdepth 1 -type f \( -name "*.tar.gz" -o -name "*.tar.xz" -o -name "*.tar.bz2" \) | head -1)
+            local tar_file; tar_file=$(find "tmp_download/${packageName}" -maxdepth 1 -type f \( -name "*.tar.gz" -o -name "*.tar.xz" -o -name "*.tar.bz2" \) | head -1)
             if [[ -n "${tar_file}" ]]; then
                 tar -xf "${tar_file}" -C tmp_extract
             fi
@@ -142,12 +142,12 @@ function downloadFromManifest() {
     if ! git_clone_with_retry "${remote_url}" "tmp_download/${packageName}"; then
         return 1
     fi
-    pushd "tmp_download/${packageName}" >/dev/null
+    pushd "tmp_download/${packageName}" >/dev/null || exit
     git checkout "${commit_hash}"
-    popd >/dev/null
+    popd >/dev/null || exit
 
     mkdir -p tmp_extract
-    local tar_file=$(find "tmp_download/${packageName}" -maxdepth 1 -type f \( -name "*.tar.gz" -o -name "*.tar.xz" -o -name "*.tar.bz2" \) | head -1)
+    local tar_file; tar_file=$(find "tmp_download/${packageName}" -maxdepth 1 -type f \( -name "*.tar.gz" -o -name "*.tar.xz" -o -name "*.tar.bz2" \) | head -1)
     if [[ -n "${tar_file}" ]]; then
         tar -xf "${tar_file}" -C tmp_extract
     fi

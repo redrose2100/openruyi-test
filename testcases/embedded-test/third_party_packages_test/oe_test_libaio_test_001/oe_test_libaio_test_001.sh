@@ -15,6 +15,7 @@
 #@Desc      	:   Test libaio
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
 function config_params() {

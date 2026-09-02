@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 # shellcheck disable=SC2086
+# shellcheck disable=SC1091
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 CURRENT_PATH=$(
@@ -32,6 +33,7 @@ if [ ! -f Makefile ]; then
   echo "Makefile not found in libsemanage source directory"
   exit 1
 fi
+# shellcheck disable=SC2034
 src_path="$(pwd)"
 # delete tests/Makefile POLICIES
 sed -i '/POLICIES = .*/d' tests/Makefile

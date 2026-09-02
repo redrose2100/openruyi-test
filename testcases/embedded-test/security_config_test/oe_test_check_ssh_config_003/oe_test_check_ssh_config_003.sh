@@ -22,6 +22,7 @@
 #                check SSH Banner set
 # #############################################
 
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test()
@@ -54,13 +55,13 @@ function run_test()
     # check known_hosts and authorized_keys permission
     if [ -f /root/.ssh/known_hosts ]; then
         getNum=$(find /root/.ssh/known_hosts -maxdepth 0 \( ! -user root  -o  ! -group root  -o  -perm /177 \) 2>/dev/null | wc -l)
-        test $getNum -eq 0
+        test "$getNum" -eq 0
         CHECK_RESULT $? 0 0 "check /root/.ssh/known_hosts files permission fail"
     fi
 
     if [ -f /root/.ssh/authorized_keys ]; then
         getNum=$(find /root/.ssh/authorized_keys -maxdepth 0 \( ! -user root  -o  ! -group root  -o  -perm /177 \) 2>/dev/null | wc -l)
-        test $getNum -eq 0
+        test "$getNum" -eq 0
         CHECK_RESULT $? 0 0 "check /root/.ssh/authorized_keys files permission fail"
     fi
 
