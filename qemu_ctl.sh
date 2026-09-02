@@ -27,7 +27,7 @@ br_name="testbr0"
 net_mode="bridge"
 rem_br=0
 rem_net=0
-for i in $*; do
+for i in "$@"; do
     if [ $rem_br -eq 1 ]; then
         br_name="$i"
         rem_br=0
@@ -42,7 +42,7 @@ for i in $*; do
     if [[ $i == "--net_mode" ]]; then
         rem_net=1
     fi
-    if [[ $i == "start" || $i == "stop" && -z con_op ]]; then
+    if [[ $i == "start" || $i == "stop" && -z "$con_op" ]]; then
         con_op=$i
     fi
 done
@@ -55,7 +55,7 @@ br_conf1_bak="/usr/local/etc/qemu/bridge.conf.bak"
 br_conf2_bak=""
 
 if [[ -n $MUGEN_QEMU_ACL_DIR ]]; then
-    mkdir -p $MUGEN_QEMU_ACL_DIR
+    mkdir -p "$MUGEN_QEMU_ACL_DIR"
     br_conf2="$MUGEN_QEMU_ACL_DIR/bridge.conf"
     br_conf2_bak="$MUGEN_QEMU_ACL_DIR/bridge.conf.bak"
 fi
@@ -80,20 +80,20 @@ if [[ $con_op == "start" ]]; then
         echo "allow ${br_name}" >> $br_conf
         echo "allow ${br_name}" >> $br_conf1
         if [[ -n ${br_conf2} ]]; then
-            if [ -e $br_conf2 ]; then
-                cp $br_conf2 $br_conf2_bak
+            if [ -e "$br_conf2" ]; then
+                cp "$br_conf2" "$br_conf2_bak"
             fi
-            echo "allow ${br_name}" >> $br_conf2
+            echo "allow ${br_name}" >> "$br_conf2"
         fi
 
-        brctl addbr ${br_name}
-        ifconfig ${br_name} up
+        brctl addbr "${br_name}"
+        ifconfig "${br_name}" up
     fi
 fi
 
 daemon=0
 rem_daemon=0
-for i in $*; do
+for i in "$@"; do
     if [ $rem_daemon -eq 1 ]; then
         daemon="$i"
         rem_daemon=0
@@ -107,12 +107,12 @@ if [[ $daemon -eq 1 && $con_op == "start" ]]; then
     QEMU_LOG="${OET_PATH}/logs/qemu_ctl.log"
     mkdir -p "${OET_PATH}/logs"
     echo "Starting QEMU in daemon mode, log: ${QEMU_LOG}"
-    nohup python3 ${OET_PATH}/libs/locallibs/qemu_ctl.py "$@" > "${QEMU_LOG}" 2>&1 &
+    nohup python3 "${OET_PATH}"/libs/locallibs/qemu_ctl.py "$@" > "${QEMU_LOG}" 2>&1 &
     disown
     echo "QEMU setup is running in background (PID: $!)"
     echo "Use 'tail -f ${QEMU_LOG}' to monitor progress"
 else
-    python3 ${OET_PATH}/libs/locallibs/qemu_ctl.py "$@"
+    python3 "${OET_PATH}"/libs/locallibs/qemu_ctl.py "$@"
 fi
 
 if [[ $con_op == "stop" ]]; then
@@ -128,9 +128,9 @@ if [[ $con_op == "stop" ]]; then
             rm -rf $br_conf1_bak
         fi
         if [[ -n ${br_conf2} ]]; then
-            if [ -e $br_conf2_bak ]; then
-                cp $br_conf2_bak $br_conf2
-                rm -rf $br_conf2_bak
+            if [ -e "$br_conf2_bak" ]; then
+                cp "$br_conf2_bak" "$br_conf2"
+                rm -rf "$br_conf2_bak"
             fi
         fi
     fi

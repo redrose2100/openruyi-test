@@ -16,6 +16,7 @@
 #@Desc      	:   run ltp test
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
 CUR_DATE=$(date +'%Y-%m-%d %H:%M:%S')
@@ -29,6 +30,7 @@ TOP_DIR=$(echo "$CUR_DIR" | cut -d'/' -f1-2)
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
+    # shellcheck disable=SC2034
     EXECUTE_T="1440m"
 
     MAKEDIR=$(cd .. && pwd)

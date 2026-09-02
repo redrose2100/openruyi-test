@@ -7,10 +7,10 @@ all:
 	make && \
 	cd tests && \
 	make genfile checkseekhole ckmtime
-	sh ../common.sh -c "tar*" "tests"
-	sh ../common.sh -r
+	bash ../common.sh -c "tar*" "tests"
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"
 
 	
 

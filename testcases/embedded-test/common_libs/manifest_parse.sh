@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 # shellcheck disable=SC2086
 
+# shellcheck disable=SC1091
 source "${OET_PATH}/testcases/embedded-test/common_libs/common.sh"
 
 YOCTO_META_DIR="${OET_PATH}/yocto-meta-openeuler"
@@ -12,11 +13,11 @@ YOCTO_META_REMOTE=${YOCTO_META_REMOTE:-"https://atomgit.com/openeuler/yocto-meta
 
 function fetch_manifest() {
     if [[ -d "${YOCTO_META_DIR}" ]]; then
-        pushd "${YOCTO_META_DIR}" >/dev/null
+        pushd "${YOCTO_META_DIR}" >/dev/null || exit
         git fetch origin
         git checkout "${YOCTO_META_BRANCH}"
         git reset --hard "origin/${YOCTO_META_BRANCH}"
-        popd >/dev/null
+        popd >/dev/null || exit
     else
         git_clone_with_retry -b "${YOCTO_META_BRANCH}" "${YOCTO_META_REMOTE}" "${YOCTO_META_DIR}"
     fi

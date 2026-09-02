@@ -21,7 +21,7 @@ makemake:
 	bash ./common.sh -r all
 
 subdirs:
-	for subdir in ${SUBDIRS}; do $(MAKE) -C $$subdir -f Makefile||exit $$?; done
+	for subdir in oe_test_libgpg-error_test_001 $(filter-out oe_test_libgpg-error_test_001,$(SUBDIRS)); do $(MAKE) -C $$subdir -f Makefile||exit $$?; done
 clean:
 	rm -rf ./make
 	rm -rf dejagnu.tar

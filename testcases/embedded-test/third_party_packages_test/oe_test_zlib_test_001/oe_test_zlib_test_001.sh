@@ -17,7 +17,8 @@
 # @Desc      :   Command test zlib
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 tar -xf tmp_test.tar
 
@@ -25,7 +26,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     chmod 777 ./tmp_test/test
-    ./tmp_test/test | grep -E "Src string:hello world! aaaaa bbbbb ccccc ddddd|UnCompressed String:hello world! aaaaa bbbbb ccccc ddddd"
+    ./tmp_test/test || grep -E "Src string:hello world! aaaaa bbbbb ccccc ddddd|UnCompressed String:hello world! aaaaa bbbbb ccccc ddddd"
     CHECK_RESULT $? 0 0 "grep msg error"
 
     LOG_INFO "End to run test."

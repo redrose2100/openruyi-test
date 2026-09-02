@@ -14,6 +14,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Test curl
 #####################################
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function config_params() {

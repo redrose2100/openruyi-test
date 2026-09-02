@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 # shellcheck disable=SC2086
+# shellcheck disable=SC1091
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 CURRENT_PATH=$(
@@ -12,6 +13,11 @@ src_path="$(
   pwd
 )"
 dnf install -y autoconf make libgpg-error-devel || yum install autoconf make libgpg-error-devel -y || apt-get install -y autoconf make libgpg-error-dev || true
+
+# Use gpg-error-config from SDK sysroot if installed by libgpg-error test
+if [[ -n "${SDKTARGETSYSROOT}" && -f "${SDKTARGETSYSROOT}/usr/bin/gpg-error-config" ]]; then
+    export GPG_ERROR_CONFIG="${SDKTARGETSYSROOT}/usr/bin/gpg-error-config"
+fi
 
 pushd ${src_path} || exit 1
 autoreconf -f

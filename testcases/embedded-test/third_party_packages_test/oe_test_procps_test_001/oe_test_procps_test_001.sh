@@ -16,19 +16,20 @@
 #@Desc      	:   Run procps-ng testsuite
 #####################################
 
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    pushd ./tmp_test/ps
+    pushd ./tmp_test/ps || exit
     # 去掉pscommand wrapper
     rm -f pscommand
     cp .libs/pscommand pscommand
     chmod +x pscommand
-    popd
+    popd || exit
 
-    pushd ./tmp_test/testsuite
+    pushd ./tmp_test/testsuite || exit
     # 修改site.exp
     cur=$(pwd)
     sed -i "s\set objdir .*$\set objdir ${cur}\g" site.exp
@@ -37,7 +38,7 @@ function pre_test() {
     sed -i 's/min(\[ exec \/usr\/bin\/getconf ARG_MAX \], 104857)/104857/g' config/unix.exp
 
     # 修改unix.exp 将/tmp改为可执行目录(嵌入式目标板/tmp可能是noexec tmpfs)
-    mkdir -p ${cur}/tmp
+    mkdir -p "${cur}"/tmp
     sed -i "s|/tmp/|${cur}/tmp/|g" config/unix.exp
     sed -i "s/exec mktemp -u/exec mktemp -u \"\${objdir}\/tmp\/tmp.XXXXXX\"/g" config/unix.exp
     sed -i "s/global testproc_path testproc_comm testproc_arg_str testproc1_pid testproc2_pid topdir/global testproc_path testproc_comm testproc_arg_str testproc1_pid testproc2_pid topdir objdir/" config/unix.exp
@@ -86,7 +87,7 @@ function pre_test() {
         sed -i "s/\${topdir}//g" w.test/w.exp
     fi
 
-    popd
+    popd || exit
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -94,14 +95,14 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    pushd ./tmp_test/testsuite
+    pushd ./tmp_test/testsuite || exit
 
     suites=$(ls *.test -d)
     for tc in ${suites}; do
         tool=${tc%.test}
-        cmd=$(which ${tool})
+        cmd=$(which "${tool}")
         if [[ -n "${cmd}" ]]; then
-            ln -s ${cmd} ../${tool}
+            ln -s "${cmd}" ../"${tool}"
         fi
         if [[ "${tool}" == "w" ]]; then
             ../w --version 2>/dev/null
@@ -110,7 +111,7 @@ function run_test() {
                 continue
             fi
         fi
-        ${RUNTEST} --tool ${tool} --srcdir . 2>&1 | tee pmap_test.log
+        ${RUNTEST} --tool "${tool}" --srcdir . 2>&1 | tee pmap_test.log
         ret=$?
         if [[ "${tool}" == "pmap" && $ret -ne 0 ]]; then
             if grep -q "pmap X pid pid has same total" pmap_test.log && \
@@ -124,7 +125,7 @@ function run_test() {
 
     rm -f pmap_test.log
 
-    popd
+    popd || exit
 
     LOG_INFO "End to run test."
 }

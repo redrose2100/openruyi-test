@@ -17,6 +17,7 @@
 # @Desc      :   File system common command test-dd
 # ############################################
 
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
@@ -46,4 +47,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

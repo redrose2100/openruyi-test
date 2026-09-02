@@ -2,6 +2,6 @@
 all:
 	bash ../common.sh -M "python3" "python3/Python*.tar.xz" "tar"
 	sh ./compile.sh
-	sh ../common.sh -r
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

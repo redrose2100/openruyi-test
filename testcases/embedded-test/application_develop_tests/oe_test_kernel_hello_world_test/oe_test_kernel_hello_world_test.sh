@@ -17,6 +17,7 @@
 # @Desc      :   test build ko
 # ############################################
 
+# shellcheck disable=SC1091
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 if command -v dmesg >/dev/null 2>&1; then

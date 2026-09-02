@@ -17,7 +17,8 @@
 # @Desc      :   View process status-ps
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
@@ -40,9 +41,9 @@ function run_test() {
         CHECK_RESULT 1 0 0 "check ps show fail"
         return 1
     fi
-    kill -9 ${testpid}
+    kill -9 "${testpid}"
     CHECK_RESULT $? 0 0 "kill mytrest pid fail"
-    ps -ef | grep -v grep | grep ${testpid}
+    ps -ef | grep -v grep | grep "${testpid}"
     CHECK_RESULT $? 0 1 "killed pid not kill"
     ps -ef | grep UID | grep PID | grep PPID
     CHECK_RESULT $? 0 0 "check ps -ef title fail"

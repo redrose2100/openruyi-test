@@ -18,6 +18,7 @@
 # @Desc      :   auto run embedded unix bench test
 # #############################################
 # shellcheck disable=SC1091,SC1090,SC2034
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {

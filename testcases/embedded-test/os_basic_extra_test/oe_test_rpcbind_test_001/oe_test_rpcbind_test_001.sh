@@ -14,6 +14,7 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Test rpcbind
 #####################################
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 # 测试点的执行

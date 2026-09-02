@@ -17,6 +17,7 @@
 # @Desc      :   allows to modify the unmodifiable (IMMUTABLE) and only add (APPEND-ONLY) attributes of the file
 # #############################################
 
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function is_qemu_vm() {

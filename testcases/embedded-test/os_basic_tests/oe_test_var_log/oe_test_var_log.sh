@@ -17,7 +17,8 @@
 # @Desc      :   Log View
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -50,7 +51,7 @@ function run_test() {
     logger "var_log test trigger"
     SLEEP_WAIT 5
     row02=$(cat ${logfile} | wc -l)
-    [ ${row01} -le ${row02} ]
+    [ "${row01}" -le "${row02}" ]
     CHECK_RESULT $? 0 0 "check log message file line fail"
 
     cat /var/log/messages
@@ -63,7 +64,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     pid=$(ps -ef | grep "tail -f /var/log/messages" | grep -v grep | awk '{print $2}')
-    kill -9 ${pid} 2>/dev/null
+    kill -9 "${pid}" 2>/dev/null
     rm -rf ${logfile}
     if [ ${rmMessage} -eq 1 ]; then
         rm -rf /var/log/messages
@@ -75,4 +76,4 @@ function post_test() {
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

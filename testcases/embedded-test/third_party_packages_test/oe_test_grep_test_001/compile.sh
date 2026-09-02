@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 # shellcheck disable=SC2086
 
+# shellcheck disable=SC1091
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 CURRENT_PATH=$(
