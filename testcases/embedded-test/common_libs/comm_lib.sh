@@ -18,7 +18,7 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
-tar -xf tmp_test.tar
+tar -xf tmp_test.tar || { echo "ERROR: failed to extract tmp_test.tar, test data may be missing"; exit 1; }
 
 pushd ../
 if [[ -z "${RUNTEST}" ]] && [[ -f dejagnu.tar ]]; then
