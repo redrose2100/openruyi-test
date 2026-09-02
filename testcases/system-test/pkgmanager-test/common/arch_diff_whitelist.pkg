@@ -285,3 +285,4 @@ xorg-x11-drv-vesa
 xorg-x11-drv-vesa-help
 xorg-x11-drv-vmware
 xorg-x11-drv-vmware-help
+mesa-vulkan-devel
