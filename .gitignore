@@ -17,4 +17,17 @@ testcases/embedded-test/third_party_packages_test/manifest_map.json
 testcases/embedded-test/third_party_packages_test/manifest_parse.sh
 testcases/embedded-test/version_basic_tests/comm_lib.sh
 testcases/embedded-test/version_basic_tests/common.sh
+testcases/embedded-test/version_basic_tests/manifest_map.json
+testcases/embedded-test/version_basic_tests/manifest_parse.sh
+testcases/embedded-test/third_party_packages_extra_test/comm_lib.sh
+testcases/embedded-test/third_party_packages_extra_test/common.sh
+testcases/embedded-test/third_party_packages_extra_test/manifest_map.json
+testcases/embedded-test/third_party_packages_extra_test/manifest_parse.sh
+testcases/embedded-test/third_party_packages_test/dejagnu/
+testcases/embedded-test/application_develop_tests/oe_test_cpp_hello_world_test/hello_world_cpp
+testcases/embedded-test/application_develop_tests/oe_test_hello_world_test/hello_world
+testcases/embedded-test/application_develop_tests/oe_test_kernel_hello_world_test/.*
+testcases/embedded-test/application_develop_tests/oe_test_kernel_hello_world_test/Module.symvers
+testcases/embedded-test/application_develop_tests/oe_test_kernel_hello_world_test/kernel_hello_world.*
+testcases/embedded-test/application_develop_tests/oe_test_kernel_hello_world_test/modules.order
 
