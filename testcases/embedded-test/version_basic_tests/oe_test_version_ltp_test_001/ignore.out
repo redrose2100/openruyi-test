@@ -103,3 +103,9 @@ syslog07 syslog07
 syslog08 syslog08
 syslog09 syslog09
 syslog10 syslog10
+mallinfo2_01 mallinfo2_01
+overcommit_memory01 overcommit_memory
+overcommit_memory03 overcommit_memory -R 30
+overcommit_memory04 overcommit_memory -R 80
+overcommit_memory05 overcommit_memory -R 100
+overcommit_memory06 overcommit_memory -R 200
