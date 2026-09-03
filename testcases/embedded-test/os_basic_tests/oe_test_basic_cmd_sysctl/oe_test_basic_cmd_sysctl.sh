@@ -17,26 +17,27 @@
 # @Desc      :   SYSCTL modifies kernel parameters
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    if [ ! -e /proc/sys/net/ipv6 ]; then
-        LOG_WARN "No /proc/sys/net/ipv6 test not run."
-        LOG_INFO "End to run test."
-        exit 0
+    if [ -e /proc/sys/net/ipv6 ]; then
+        test_param="net.ipv6.conf.lo.disable_ipv6"
+    else
+        test_param="net.ipv4.ip_forward"
     fi
 
     CHECK_RESULT "$(sysctl -a | grep -ioE 'dev|kernel|net' | sort -u | wc -l)" 3 0 "run sysctl -a | grep -ioE 'dev|kernel|net' fail"
-    sysctl net.ipv6.conf.lo.disable_ipv6=1
-    CHECK_RESULT $? 0 0 "run sysctl enable fail"
-    CHECK_RESULT "$(sysctl -a | grep net.ipv6.conf.lo.disable_ipv6 | awk '{print$3}')" 1 0 "check net.ipv6.conf.lo.disable_ipv6 enable fail"
-    sysctl -w net.ipv6.conf.lo.disable_ipv6=0
-    CHECK_RESULT $? 0 0 "run sysctl disable fail"
-    CHECK_RESULT "$(sysctl -a | grep net.ipv6.conf.lo.disable_ipv6 | awk '{print$3}')" 0 0 "check net.ipv6.conf.lo.disable_ipv6 disable fail"
+    sysctl ${test_param}=1
+    CHECK_RESULT $? 0 0 "run sysctl set ${test_param}=1 fail"
+    CHECK_RESULT "$(sysctl -a | grep -w ${test_param} | awk '{print$3}')" 1 0 "check ${test_param} set to 1 fail"
+    sysctl -w ${test_param}=0
+    CHECK_RESULT $? 0 0 "run sysctl -w ${test_param}=0 fail"
+    CHECK_RESULT "$(sysctl -a | grep -w ${test_param} | awk '{print$3}')" 0 0 "check ${test_param} set to 0 fail"
 
-    LOG_INFO "End to run test."
+    LOG_INFO "End of run test."
 }
 
-main $@
+main "$@"

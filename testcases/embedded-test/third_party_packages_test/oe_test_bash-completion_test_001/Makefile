@@ -1,13 +1,12 @@
 all:
-	sh ../common.sh -d "bash-completion" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "bash-completion" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
 	cd ./tmp_extract/bash-completion*  && \
 	autoreconf -fiv && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
-	make 
-	sh ../common.sh -c "bash-completion*" "completions"
-	sh ../common.sh -r
+	make || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "bash-completion*" "completions" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
-
+	bash ../common.sh -r "all"
 
 

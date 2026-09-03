@@ -16,6 +16,7 @@
 #@Desc      	:   run posix test suite
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
 CUR_DATE=$(date +'%Y-%m-%d %H:%M:%S')
@@ -24,6 +25,7 @@ CUR_DATE=$(date +'%Y-%m-%d %H:%M:%S')
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
+    # shellcheck disable=SC2034
     EXECUTE_T="180m"
 
     MAKEDIR=$(cd .. && pwd)
@@ -46,19 +48,34 @@ function run_test() {
     pushd posixtestsuite/ || exit 1
     CHECK_RESULT $? 0 0 "no posixtestsuite uploaded, all test not run"
     POSIX_TARGET=./ ${MAKE} run-tests > ../run.log 2>&1
+    CHECK_RESULT $? 0 0 "make run-tests failed, check run.log for details"
+    echo "====== cat run.log start ======"
+    cat ../run.log
+    echo "====== cat run.log end ======"
     popd || exit 1
 
+    echo "====== cat build.log start ======"
+    cat build.log
+    echo "====== cat build.log end ======"
     awk -F': ' '{if(($2=="build" && $3!="PASS") || ($2=="link" && $3!="PASS") || (($2=="execution" && $3=="PASS"))) print $1}' build.log >  skip.name
     cat ../ignore.out >> skip.name
     awk -F': ' '{if($2=="execution" && $3!="PASS") print $1}' run.log > fail.name
+
+    echo "====== execution failed cases (not in skip list) ======"
+    cat fail.name
+    echo "====== total fail count ======"
+    wc -l fail.name
 
     while read -r line || [[ -n $line ]]; do
         if grep -q "$line" skip.name; then
             continue
         fi
         # 单独再执行一次
-        ./posixtestsuite/"$line".test
-        CHECK_RESULT $? 0 0 "run posix testcase fail case name: $line"
+        echo "====== re-run testcase: $line ======"
+        ./posixtestsuite/"$line".test > ../rerun_"${line//\//_}".log 2>&1
+        ret=$?
+        cat ../rerun_"${line//\//_}".log
+        CHECK_RESULT $ret 0 0 "run posix testcase fail case name: $line"
     done < fail.name
 
     popd || exit 1

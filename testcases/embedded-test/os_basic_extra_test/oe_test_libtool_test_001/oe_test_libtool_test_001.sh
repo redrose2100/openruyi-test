@@ -16,6 +16,7 @@
 #@Desc      	:   Run libtool testsuite
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
@@ -59,6 +60,14 @@ function run_test() {
     libtoolize --no-warnings
     CHECK_RESULT $? 0 0 "check libtoolize --no-warnings failed!"
     LOG_INFO "End to run libtool test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+
+    rm -rf m4 libtool aclocal.m4 configure config.* Makefile.in ltmain.sh
+
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

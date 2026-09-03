@@ -17,7 +17,8 @@
 # @Desc      :   The system supports monitoring and testing each process
 # #############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -30,10 +31,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check ps -eo 'pmem,pid,comm,args' fail"
     ps -eo 'stat,pid,comm,args,pcpu'
     CHECK_RESULT $? 0 0 "check ps -eo 'stat,pid,comm,args,pcpu' fail"
-    ipcs -m
-    CHECK_RESULT $? 0 0 "run ipcs -m fail"
+    if command -v ipcs &>/dev/null; then
+        ipcs -m
+        CHECK_RESULT $? 0 0 "run ipcs -m fail"
+    else
+        cat /proc/sysvipc/shm
+        CHECK_RESULT $? 0 0 "run cat /proc/sysvipc/shm fail"
+    fi
 
     LOG_INFO "End to run test."
 }
 
-main $@
+main "$@"

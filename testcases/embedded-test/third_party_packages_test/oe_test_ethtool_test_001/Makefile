@@ -1,15 +1,12 @@
 all:
-	sh ../common.sh -d "ethtool" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "ethtool" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
 	cd ./tmp_extract/ethtool* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
 	make && \
-	make test-cmdline 
-	sh ../common.sh -c "ethtool*" "test-cmdline"
-	sh ../common.sh -r
+	make test-cmdline || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "ethtool*" "test-cmdline" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"
 
 	
-
-
-

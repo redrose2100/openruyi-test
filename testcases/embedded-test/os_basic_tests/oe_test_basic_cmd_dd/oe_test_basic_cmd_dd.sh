@@ -17,19 +17,20 @@
 # @Desc      :   File system common command test-dd
 # ############################################
 
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    dd if=/dev/zero of=test bs=1M count=100
+    dd if=/dev/zero of=/tmp/test bs=1M count=100
     CHECK_RESULT $? 0 0 "run dd if=/dev/zero fail"
-    ls -l test | grep "104857600"
+    ls -l /tmp/test | grep "104857600"
     CHECK_RESULT $? 0 0 "run dd test size fail"
 
-    ls file && rm -rf file
-    echo "test" >file
-    dd if=file of=test1 bs=1M count=100
+    ls /tmp/file && rm -rf /tmp/file
+    echo "test" >/tmp/file
+    dd if=/tmp/file of=/tmp/test1 bs=1M count=100
     CHECK_RESULT $? 0 0 "run dd if=file fail"
 
     dd --help 2>&1 | grep "Usage"
@@ -41,9 +42,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -f test test1 file
+    rm -f /tmp/test /tmp/test1 /tmp/file
 
     LOG_INFO "End to restore the test environment."
 }
 
-main $@
+main "$@"

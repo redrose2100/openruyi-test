@@ -1,7 +1,7 @@
 .PHONY: all clean
 all:
-	sh ../common.sh -d "gdb" "${DOWNLOAD_BRANCH}"
-	sh ./compile.sh
-	sh ../common.sh -r
+	bash ../common.sh -M "gdb"
+	bash ./compile.sh || exit 1
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

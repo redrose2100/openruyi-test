@@ -16,24 +16,29 @@
 #@Desc      	:   Run ncurses testsuite
 #####################################
 
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
 
-    pushd ./tmp_test/test
+    pushd ./tmp_test/test || exit
+
+    local _ldpath; _ldpath="$(pwd)/..:${LD_LIBRARY_PATH}"; export LD_LIBRARY_PATH="$_ldpath"
+    export TERM=xterm
+    [ -d /etc/terminfo ] && export TERMINFO=/etc/terminfo
 
     chmod 777 ./*
 
     runList=("demo_termcap" "demo_terminfo" "keynames" "railroad" "test_arrays" "test_tparm")
-    for onetest in ${runList[@]}; do
+    for onetest in "${runList[@]}"; do
         echo "Run test $onetest"
-        ./${onetest}
+        ./"${onetest}"
         CHECK_RESULT $? 0 0 "run ncurses testcase $onetest fail"
     done
 
-    popd
+    popd || exit
 
     LOG_INFO "End to run test."
 }

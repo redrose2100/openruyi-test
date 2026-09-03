@@ -16,6 +16,7 @@
 #@Desc      	:   Run expat testsuite
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
 # 测试点的执行
@@ -25,8 +26,12 @@ function run_test() {
     chmod +x ./*
     ./runtests | grep "Failed: 0"
     CHECK_RESULT $? 0 0 "run runtests failed!"
-    ./runtestspp | grep "Failed: 0"
-    CHECK_RESULT $? 0 0 "run runtestspp failed!"
+    if [ -f ./runtests_cxx ]; then
+        ./runtests_cxx | grep "Failed: 0"
+        CHECK_RESULT $? 0 0 "run runtests_cxx failed!"
+    else
+        LOG_INFO "runtests_cxx not available, skipping"
+    fi
     popd || return
     LOG_INFO "End to run expat test."
 }

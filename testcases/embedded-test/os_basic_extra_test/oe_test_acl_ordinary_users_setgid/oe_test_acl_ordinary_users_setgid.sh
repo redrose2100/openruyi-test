@@ -18,9 +18,24 @@
 # @Desc      :   The setting program allows ordinary users to use the setgid function
 # #############################################
 
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function is_qemu_vm() {
+    [ -f /sys/class/dmi/id/sys_vendor ] && grep -qi "qemu" /sys/class/dmi/id/sys_vendor && return 0
+    grep -qi "qemu" /proc/device-tree/model 2>/dev/null && return 0
+    grep -qi "qemu" /proc/device-tree/vendor 2>/dev/null && return 0
+    grep -qi "linux,dummy-virt" /proc/device-tree/compatible 2>/dev/null && return 0
+    hostname 2>/dev/null | grep -qi "qemu" && return 0
+    return 1
+}
+
 function config_params() {
     LOG_INFO "This test case has no config params to load!"
+    if is_qemu_vm; then
+        LOG_INFO "Skip: QEMU VM does not support chattr/lsattr ioctl on rootfs"
+        exit 255
+    fi
 }
 
 function pre_test() {

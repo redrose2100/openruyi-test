@@ -1,18 +1,24 @@
 #!/usr/bin/bash
 # shellcheck disable=SC2086,SC2010
 
+# shellcheck disable=SC1091
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 CURRENT_PATH=$(
   cd "$(dirname "$0")" || exit 1
   pwd
 )
+target_dir="$(find "${CURRENT_PATH}"/tmp_extract -maxdepth 1 -iname "*gawk*" -type d | head -1)"
+if [ -z "${target_dir}" ] || [ ! -d "${target_dir}" ]; then
+    echo "gawk directory not found in tmp_extract"
+    exit 1
+fi
 src_path=$(
-  cd "${CURRENT_PATH}"/tmp_extract/gawk*/ || exit 1
+  cd "${target_dir}" || exit 1
   pwd
 )
 
-dnf install -y  autoconf make mpfr-devel gmp-devel
+dnf install -y autoconf make mpfr-devel gmp-devel || yum install autoconf make mpfr-devel gmp-devel -y || apt-get install -y autoconf make libmpfr-dev libgmp-dev || true
 
 pushd "${src_path}" || exit 1
 autoreconf -fv
@@ -26,7 +32,7 @@ if make; then
     for test_awk in *.awk
     do
       test_item=$(basename "${test_awk}" .awk)
-      if make -n "${test_item}"|grep -v '^make\[' > "${test_item}".test;then
+      if make -n "${test_item}" 2>/dev/null |grep -v '^make\[' > "${test_item}".test;then
         echo "${test_item}" >> all_test.txt
       fi
     done

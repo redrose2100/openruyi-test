@@ -1,11 +1,11 @@
 all:
-	sh ../common.sh -d "popt" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "popt" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
 	cd ./tmp_extract/popt* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
-	make && \
-	cd tests && \
+	make || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	cd ./tmp_extract/popt*/tests && \
 	make check || echo "done"
-	sh ../common.sh -c "popt*" "tests"
-	sh ../common.sh -r
+	bash ../common.sh -c "popt*" "tests" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

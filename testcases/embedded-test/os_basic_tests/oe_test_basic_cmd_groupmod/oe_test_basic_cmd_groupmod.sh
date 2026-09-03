@@ -17,12 +17,13 @@
 # @Desc      :   Modity User Group test
 # ############################################
 
+# shellcheck disable=SC1091
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    grep -w testuser1 /etc/passwd && userdel -r /home/testuser1
+    grep -w testuser1 /etc/passwd && userdel -rf testuser1
     grep -w testgroup1 /etc/group && groupdel testgroup1
     useradd testuser1
     groupadd testgroup1
@@ -63,8 +64,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    groupdel testgroup2
-    userdel -r testuser1
+    groupdel testgroup2 2>/dev/null || true
+    userdel -rf testuser1
 
     LOG_INFO "End to restore the test environment."
 }

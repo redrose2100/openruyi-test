@@ -1,8 +1,8 @@
 .PHONY: all clean
 all:
-	sh ../common.sh -d "libsemanage" "${DOWNLOAD_BRANCH}"
-	sh  -x ../common.sh -d "CUnit" "${DOWNLOAD_BRANCH}"  "CUnit/cunit*.tar.bz2" "tar"
-	sh ./compile.sh
-	sh ../common.sh -r
+	bash ../common.sh -M "libsemanage" || { bash ../common.sh -r; exit 1; }
+	bash ../common.sh -M "CUnit" || { bash ../common.sh -r; exit 1; }
+	bash ./compile.sh || { bash ../common.sh -r; exit 1; }
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

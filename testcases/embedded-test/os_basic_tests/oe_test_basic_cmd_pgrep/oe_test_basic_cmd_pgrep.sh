@@ -17,21 +17,30 @@
 # @Desc      :   View process status-pgrep
 # ############################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
 
-    line=1
-    for ps_pid in $(pgrep -f ssh)
-    do
-        pgrep -l ssh | sed -n ${line}p | grep ${ps_pid}
-        CHECK_RESULT $? 0 0 "check ssh pid fail"
-        ((line++))
-    done
-    pgrep -l ssh | sed -n 1p | grep "$(pgrep -l -o ssh)"
+    pgrep -l ssh
+    CHECK_RESULT $? 0 0 "pgrep -l ssh fail"
+
+    pgrep -o ssh
+    CHECK_RESULT $? 0 0 "pgrep -o ssh fail"
+
+    pgrep -n ssh
+    CHECK_RESULT $? 0 0 "pgrep -n ssh fail"
+
+    pgrep -f sshd
+    CHECK_RESULT $? 0 0 "pgrep -f sshd fail"
+
+    oldest_pid=$(pgrep -o ssh)
+    pgrep -l -o ssh | grep "${oldest_pid}"
     CHECK_RESULT $? 0 0 "check pgrep -l -o ssh fail"
-    pgrep -l ssh | awk 'END{print$1,$2}' | grep "$(pgrep -l -n ssh)"
+
+    newest_pid=$(pgrep -n ssh)
+    pgrep -l -n ssh | grep "${newest_pid}"
     CHECK_RESULT $? 0 0 "check pgrep -l -n ssh fail"
 
     LOG_INFO "End to run test."

@@ -1,10 +1,10 @@
 all:
-	sh ../common.sh -d "libffi" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "libffi" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
 	cd ./tmp_extract/libffi* && \
-	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) --disable-builddir
-	sh ./compile_all_test.sh
-	sh ../common.sh -c "libffi*" "libffi.bhaible"
-	sh ../common.sh -c "libffi*" "testsuite_out"
-	sh ../common.sh -r
+	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) --disable-builddir || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ./compile_all_test.sh || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "libffi*" "libffi.bhaible" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "libffi*" "testsuite_out" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

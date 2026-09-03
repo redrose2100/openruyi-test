@@ -16,12 +16,17 @@
 #@Desc      	:   Run nfs-util testsuite
 #####################################
 
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start shadow preparation."
 
+    kill -9 $(pgrep -f rpcbind) 2>/dev/null || true
+    kill -9 $(pgrep -f rpc.statd) 2>/dev/null || true
+    kill -9 $(pgrep -f statd) 2>/dev/null || true
+    sleep 1
     rpcbind
 
     LOG_INFO "End of shadow preparation!"
@@ -31,12 +36,12 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    pushd ./tmp_test/tests
+    pushd ./tmp_test/tests || exit
 
     sh ./t0001-statd-basic-mon-unmon.sh
     CHECK_RESULT $? 0 0 "run nfs-util testcase t0001-statd-basic-mon-unmon fail"
 
-    popd
+    popd || exit
 
     LOG_INFO "End to run test."
 }
@@ -44,7 +49,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    kill -9 $(pgrep -f rpcbind)
+    kill -9 $(pgrep -f rpcbind) 2>/dev/null || true
+    kill -9 $(pgrep -f rpc.statd) 2>/dev/null || true
+    kill -9 $(pgrep -f statd) 2>/dev/null || true
 
     LOG_INFO "End to restore the test environment."
 }

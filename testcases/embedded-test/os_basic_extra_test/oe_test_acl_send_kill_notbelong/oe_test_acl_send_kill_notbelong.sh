@@ -18,6 +18,7 @@
 # @Desc      :   Allow kill signals to be sent to processes that do not belong to you
 # #############################################
 
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -41,7 +42,7 @@ EOF
     su - example -c "/bin/kill -9 $tail_pid"
     CHECK_RESULT $?
     SLEEP_WAIT 3
-    ps -aux | grep tail | grep $tail_pid | grep -v 'grep'
+    ps -aux | grep tail | grep "$tail_pid" | grep -v 'grep'
     CHECK_RESULT $? 0 1 "The viewing process succeeded, but it should fail here"
 
     LOG_INFO "Finish testcase execution."
@@ -50,6 +51,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     setcap -r /bin/kill.procps
+    kill -9 $(pgrep -f "tail -f") 2>/dev/null || true
     userdel -rf example
     LOG_INFO "Finish environment cleanup!"
 }

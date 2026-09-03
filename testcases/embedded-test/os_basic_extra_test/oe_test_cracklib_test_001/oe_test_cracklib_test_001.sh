@@ -16,6 +16,7 @@
 #@Desc      	:   Run cracklib testsuite
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
@@ -90,6 +91,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check create-cracklib-dict option --help failed"
 
     LOG_INFO "End of the test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+
+    create-cracklib-dict pw_dict.orig
+    rm -rf test-data format-data format-dict pw_dict.new pw_dict.orig words.hwm words.pwd words.pwi unpacker-data output.hwm output.pwd output.pwi
+
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

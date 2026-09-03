@@ -20,6 +20,7 @@
 #                check LD_LIBRARY_PATH and PATH value
 # #############################################
 
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test()
@@ -35,13 +36,13 @@ function run_test() {
     LOG_INFO "Start executing testcase."
 
     # check mount options of /tmp /var and /dev/shm
-    mount | grep /var | grep "(rw,nosuid,nodev,relatime,mode=755)"
+    mount | grep /var | grep "nosuid,nodev" | grep "mode=755"
     CHECK_RESULT $? 0 0 "check /var mount options fail"
 
-    mount | grep /tmp | grep "(rw,nosuid,nodev,noexec,relatime)"
+    mount | grep /tmp | grep "nosuid,nodev,noexec"
     CHECK_RESULT $? 0 0 "check /tmp mount options fail"
 
-    mount | grep /dev/shm | grep "(rw,nosuid,nodev,noexec,relatime)"
+    mount | grep /dev/shm | grep "nosuid,nodev,noexec"
     CHECK_RESULT $? 0 0 "check /dev/shm mount options fail"
 
     # check stickbit

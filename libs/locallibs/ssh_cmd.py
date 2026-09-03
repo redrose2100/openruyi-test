@@ -49,8 +49,21 @@ def pssh_conn(
     """
     conn = paramiko.SSHClient()
     conn.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+    conn._ip = ip
+    conn._password = password
+    conn._port = port
+    conn._user = user
+    conn._timeout = timeout
     try:
-        conn.connect(ip, port, user, password, timeout=timeout)
+        conn.connect(ip, port, user, password, timeout=timeout,
+                     allow_agent=False, look_for_keys=False)
+    except paramiko.ssh_exception.BadAuthenticationType:
+        transport = paramiko.Transport((ip, port))
+        transport.connect(username=user)
+        def handler(title, instructions, prompts):
+            return [password] * len(prompts)
+        transport.auth_interactive(user, handler)
+        conn._transport = transport
     except (
         paramiko.ssh_exception.NoValidConnectionsError,
         paramiko.ssh_exception.AuthenticationException,
@@ -77,15 +90,53 @@ def pssh_cmd(conn, cmd):
     """
     if conn == 519:
         return 519, ""
-    stdin, stdout, stderr = conn.exec_command(cmd, timeout=None)
+    full_cmd = "export PATH=$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/root/bin; " + cmd
+    try:
+        stdin, stdout, stderr = conn.exec_command(full_cmd, timeout=None)
+        exitcode = stdout.channel.recv_exit_status()
+        out = stdout.read().decode("utf-8", errors="ignore")
+        err = stderr.read().decode("utf-8", errors="ignore")
+        if exitcode == 0:
+            output = out.strip("\n")
+        else:
+            output = (err + out).strip("\n")
+        return exitcode, output
+    except Exception:
+        pass
 
-    exitcode = stdout.channel.recv_exit_status()
+    import time
+    time.sleep(10)
+    for _ in range(360):
+        try:
+            new_conn = pssh_conn(conn._ip, conn._password, conn._port, conn._user, conn._timeout)
+            if new_conn == 519:
+                time.sleep(10)
+                continue
+            stdin, stdout, stderr = new_conn.exec_command("cat /tmp/mugen_re.log 2>/dev/null; echo '__MUGEN_RET__=$?'", timeout=30)
+            exitcode = stdout.channel.recv_exit_status()
+            out = stdout.read().decode("utf-8", errors="ignore")
+            pssh_close(new_conn)
+            if "__MUGEN_RET__" in out:
+                break
+        except Exception:
+            pass
+        time.sleep(10)
 
-    if exitcode == 0:
-        output = stdout.read().decode("utf-8").strip("\n")
+    try:
+        result_out = out
+    except NameError:
+        return 1, "SSH connection lost and unable to recover result"
+
+    ret_line = [l for l in result_out.split("\n") if "__MUGEN_RET__" in l]
+    if ret_line:
+        try:
+            exitcode = int(ret_line[-1].split("=")[-1].strip())
+        except (ValueError, IndexError):
+            exitcode = 1
     else:
-        output = stderr.read().decode("utf-8", errors="ignore").strip("\n")
+        exitcode = 1
 
+    output = result_out.replace(ret_line[-1], "").strip("\n") if ret_line else result_out.strip("\n")
     return exitcode, output
 
 
@@ -114,7 +165,7 @@ if __name__ == "__main__":
     if args.node is not None:
         args.ip = os.environ.get("NODE" + str(args.node) + "_IPV4")
         args.password = os.environ.get("NODE" + str(args.node) + "_PASSWORD")
-        args.port = os.environ.get("NODE" + str(args.node) + "_SSH_PORT")
+        args.port = int(os.environ.get("NODE" + str(args.node) + "_SSH_PORT", 22))
         args.user = os.environ.get("NODE" + str(args.node) + "_USER")
 
         if (

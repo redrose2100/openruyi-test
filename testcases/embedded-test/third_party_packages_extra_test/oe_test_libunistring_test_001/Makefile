@@ -1,5 +1,5 @@
 all:
-	sh ../common.sh -d "libunistring" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "libunistring"
 	cd ./tmp_extract/libunistring* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
 	make -O -j1 V=1 VERBOSE=1 && \
@@ -12,9 +12,9 @@ all:
 	sed -i 's/\$$(EXEEXT)//g' testfile && \
 	sed -i 's/\$$(am__EXEEXT_1)/test-categ_none/g' testfile && \
 	sed -i 's/\$$(am__append_50)/uniname\/test-uninames.sh/g' testfile 
-	sh ../common.sh -c "libunistring*" "test-driver"
-	sh ../common.sh -c "libunistring*" "tests"
-	sh ../common.sh -c "libunistring*" "testfile"
-	sh ../common.sh -r
+	bash ../common.sh -c "libunistring*" "test-driver"
+	bash ../common.sh -c "libunistring*" "tests"
+	bash ../common.sh -c "libunistring*" "testfile"
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

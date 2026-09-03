@@ -14,9 +14,16 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   Test curl
 #####################################
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
-# 测试点的执行
+function config_params() {
+    if ! curl -s --connect-timeout 5 http://www.baidu.com > /dev/null 2>&1; then
+        LOG_INFO "Skip: No internet access available"
+        exit 255
+    fi
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     LOG_INFO "Test curl -o test.html www.baidu.com"
@@ -38,6 +45,14 @@ function run_test() {
     curl -q www.baidu.com
     CHECK_RESULT $? 0 0 "check curl -q www.baidu.com failed"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+
+    rm -rf test.html sina_part1.html
+
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
