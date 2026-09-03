@@ -16,35 +16,62 @@
 #@Desc          :   Run util-linux testsuite
 #####################################
 
+# shellcheck disable=SC1091
 source ../comm_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+
+    pushd ./tmp_test/run_test_dir/ || exit
+
+    for wrapper in sample-partitions test_uuid_parser; do
+        if [ -f "$wrapper" ] && grep -q "program=lt-" "$wrapper" 2>/dev/null; then
+            bin_name=$(grep "program=lt-" "$wrapper" | sed "s/.*program=lt-'\(.*\)'.*/\1/")
+            if [ -f ".libs/$bin_name" ] && [ ! -f ".libs/lt-$bin_name" ]; then
+                cp ".libs/$bin_name" ".libs/lt-$bin_name"
+            fi
+        fi
+    done
+
+    popd || exit
+
+    LOG_INFO "End to prepare the test environment."
+}
 
 # 测试点的执行
 function run_test() {
     LOG_INFO "Start to run test."
 
-    pushd ./tmp_test/run_test_dir/
+    export PATH="/bin:/sbin:${PATH}"
+
+    pushd ./tmp_test/run_test_dir/ || exit
 
     chmod 777 ./*
 
     ignoreFail=(" FAILED (script/options-size)")
     exculdeTest="libsmartcols/fromfile libsmartcols/title"
-    sh ./tests/run.sh --exclude="${exculdeTest}" > tmp_log.log 2>&1
+    sh ./tests/run.sh --show-diff --exclude="${exculdeTest}" > tmp_log.log 2>&1
     cat tmp_log.log
-    while read line; do
-        if [[ $line =~ "..." && $line =~ ":" ]]; then
-            resuleTitle=${line#*...}
-            runtestName=${line%...*}
-            if [[ "${ignoreFail[*]}" =~ "${resuleTitle}" ]]; then
+    while read -r line; do
+        [[ "$line" =~ ^[[:space:]]*:[[:space:]] ]] && continue
+        if [[ $line =~ ... && $line =~ : ]]; then
+            resuleTitle="${line#*...}"
+            runtestName="${line%...*}"
+            local should_ignore=0
+            for ignore_item in "${ignoreFail[@]}"; do
+                [[ "${resuleTitle}" =~ ${ignore_item} ]] && { should_ignore=1; break; }
+            done
+            if [[ $should_ignore -eq 1 ]]; then
                 continue
             else
-                echo ${resuleTitle} | grep -q "FAILED" && echo ${resuleTitle} | grep -qv "KNOWN"
+                echo "${resuleTitle}" | grep -q "FAILED" && echo "${resuleTitle}" | grep -qv "KNOWN"
                 CHECK_RESULT $? 0 1 "run util-linux ${runtestName} testcase fail."
             fi
         fi
 
     done < tmp_log.log
 
-    popd
+    popd || exit
 
     LOG_INFO "End to run test."
 }

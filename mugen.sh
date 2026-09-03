@@ -23,6 +23,7 @@ OET_PATH=$(
 )
 export OET_PATH
 
+# shellcheck disable=SC1091
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 if [[ -d "/etc/mugen" ]]; then
@@ -230,6 +231,9 @@ function run_test_case() {
     fi
 
     if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" ]]; then
+        remote_dir_clean=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir_clean /tmp/mugen_oe_test_*"
+
         common_files=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key common-files)
         test $? -ne 0 && return 1
 
@@ -270,13 +274,16 @@ function run_test_case() {
 
     if [[ $COMMAND_S == "yes" ]]; then
         remote_case_path=$(echo -e "${case_path[*]}" | sed -e "s#${OET_PATH}#/mugen_re#")
-        remote_cmd="bash -c '. /mugen_re/conf/mugen.env &&
+        echo "$test_case" > /tmp/mugen_remote_case_name
+        export MUGEN_SSH_NODE=1
+        remote_cmd="bash -c 'trap \"\" SIGHUP; . /mugen_re/conf/mugen.env &&
                  export OET_PATH=/mugen_re &&
                  pushd \"$remote_case_path\" >/dev/null || exit 1 &&
-                 $run_cmd > /tmp/mugen_re.log 2>&1 &&
-                 (cat /tmp/mugen_re.log && rm -rf /tmp/mugen_re.log && popd >/dev/null || exit 1) ||
-                 (cat /tmp/mugen_re.log 1>&2 && rm -rf /tmp/mugen_re.log && popd >/dev/null && exit 1)
-                '"
+                 $run_cmd > /tmp/mugen_re.log 2>&1; __mugen_ret=\$?;
+                 echo \"__MUGEN_RET__=\$__mugen_ret\" >> /tmp/mugen_re.log;
+                 cat /tmp/mugen_re.log; rm -rf /tmp/mugen_re.log; popd >/dev/null;
+                 exit \$__mugen_ret
+                 '"
         run_cmd="python3 \"${OET_PATH}\"/libs/locallibs/ssh_cmd.py --node 1 --cmd \"${remote_cmd}\""
     fi
 
@@ -286,7 +293,7 @@ function run_test_case() {
 
     if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" ]]; then
         remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
-        P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir"
+        P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir /tmp/mugen_oe_test_*"
     fi
 
     LOG_INFO "End to run testcase:$test_case."
@@ -316,7 +323,7 @@ function run_test_suite() {
         this_copy=true
     fi
 
-    for test_case in $(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name | shuf); do
+    for test_case in $(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name); do
         run_test_case "$test_suite" "$test_case"
     done
 
@@ -338,7 +345,7 @@ function run_all_cases() {
         local this_copy=true
     fi
 
-    for test_suite in ${test_suites[*]}; do
+    for test_suite in "${test_suites[@]}"; do
         run_test_suite "$test_suite"
         COPY_DONE="no"
         local this_copy=true
@@ -414,7 +421,7 @@ function build_all() {
 
     do_error_count=0
 
-    for test_suite in ${test_suites[*]}; do
+    for test_suite in "${test_suites[@]}"; do
         build_one_suite "$test_suite" "no_print"
         if [ $? -ne 0 ]; then
             LOG_ERROR "doing test suite $test_suite make fail"
@@ -443,10 +450,10 @@ function copy_libs_to_node1() {
 while getopts "c:af:r:dxb:s:m" option; do
     case $option in
     c)
-        deploy_conf ${*//-c/}
+        deploy_conf "${*//-c/}"
         ;;
     m)
-        modify_conf ${*//-m/}
+        modify_conf "${*//-m/}"
         ;;
     d)
         echo -e "The test script download function has been discarded."
@@ -457,8 +464,8 @@ while getopts "c:af:r:dxb:s:m" option; do
         elif echo "$@" | grep -q -e '-a * -s *$\| -s * -a *$\| -as *$\| -sa *$'; then
             COMMAND_S="yes"
         elif echo "$@" | grep -q -e '-a * -b *$\| -b * -a *$\| -ab *$\| -ba *$'; then
-            ret=$(build_all)
-            exit "$ret"
+            build_all
+            exit $?
         elif ! echo "$@" | grep -q -e '-a *$'; then
             usage
             exit 1
@@ -473,7 +480,7 @@ while getopts "c:af:r:dxb:s:m" option; do
         test_suite=$OPTARG
         op_list=('-f' '-r' '-x' '-d' '-c' '-s')
 
-        for op in ${op_list[*]}; do
+        for op in "${op_list[@]}"; do
             if [[ $test_suite == "$op" ]]; then
                 usage
                 exit 1

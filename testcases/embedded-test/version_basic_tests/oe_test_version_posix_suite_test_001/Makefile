@@ -9,8 +9,12 @@ all:
 	sed -i "1i #pragma GCC push_options" conformance/interfaces/pthread_create/10-1.c && \
 	sed -i "\$$i #pragma GCC pop_options" conformance/interfaces/pthread_create/10-1.c && \
 	sed -i "s/CFLAGS = -g -O2 -Wall -Werror /CFLAGS = -g -O2 -Wno-implicit-function-declaration /g" Makefile && \
-	POSIX_TARGET=./ make > ../build.log 2>&1 && \
-	sed -i "s/\$$(top_builddir)\/t0 \$$(top_builddir)\/t0.val/#/g" Makefile
+	sed -e '/^\$$(top_builddir)\/t0:/,/^\$$(top_builddir)\/t0\.val:/{/^\$$(top_builddir)\/t0:/d; /^[[:space:]]*\t/d}' -i Makefile && \
+	sed -e '/^\$$(top_builddir)\/t0\.val:/,/^[^[:space:]]/{/^\$$(top_builddir)\/t0\.val:/d; /^[[:space:]]*\t/d}' -i Makefile && \
+	sed -i "s/\$$(top_builddir)\/t0 \$$(top_builddir)\/t0\.val//g" Makefile && \
+	sed -i "s/\$$(TIMEOUT) \$$</timeout 240 \$$</g" Makefile && \
+	sed -i "/^TIMEOUT_RET/s/.*/TIMEOUT_RET ?= 142/" Makefile && \
+	POSIX_TARGET=./ make build-tests > ../build.log 2>&1
 	cp -r ./tmp_extract/* ./tmp_test/
 	bash ${COMMONDIR}/common.sh -r
 

@@ -108,6 +108,8 @@ def suite_cases(suite):
         mugen_log.logging("error", "A key:%s error specifying JSON data" % e)
         sys.exit(1)
 
+EXCLUDE_DIRS = {".git", "tmp_download", "tmp_extract", "tmp_test", "__pycache__"}
+
 def get_local_dir_files(local_dir):
     """获取本地文件列表
 
@@ -123,6 +125,8 @@ def get_local_dir_files(local_dir):
 
     dir_files = os.listdir(local_dir)
     for d_f in dir_files:
+        if d_f in EXCLUDE_DIRS:
+            continue
         _name = os.path.join(local_dir, d_f)
         if os.path.isdir(_name):
             all_file.extend(get_local_dir_files(_name))
@@ -153,6 +157,10 @@ def suite_common(suite):
             check_file_name = file_name[0:file_name.rfind(".")]
             if check_file_name in test_case_list:
                 continue
+        rel_path = os.path.relpath(one_file, test_suite_path)
+        path_parts = rel_path.split(os.sep)
+        if any(part in test_case_list for part in path_parts[:-1]):
+            continue
         common_file += one_file + "\n"
 
     return common_file.rstrip("\n")

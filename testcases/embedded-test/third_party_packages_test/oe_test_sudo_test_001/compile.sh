@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 # shellcheck disable=SC2086
+# shellcheck disable=SC1091
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 CURRENT_PATH=$(
@@ -7,11 +8,16 @@ CURRENT_PATH=$(
   pwd
 )
 
+target_dir="$(find "${CURRENT_PATH}"/tmp_extract -maxdepth 1 -iname "*sudo*" -type d | head -1)"
+if [ -z "${target_dir}" ] || [ ! -d "${target_dir}" ]; then
+    echo "sudo directory not found in tmp_extract"
+    exit 1
+fi
 src_path="$(
-  cd "${CURRENT_PATH}"/tmp_extract/sudo* || exit 1
+  cd "${target_dir}" || exit 1
   pwd
 )"
-dnf install -y  autoconf make
+dnf install -y autoconf make || yum install autoconf make -y || apt-get install -y autoconf make || true
 
 pushd ${src_path} || exit 1
 autoreconf -f

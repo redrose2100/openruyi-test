@@ -16,18 +16,28 @@
 #@Desc      	:   Run dosfstools testsuite
 #####################################
 
+# shellcheck disable=SC1091
 source ../comm_lib.sh
 
-CUR_DATE=`date +'%Y-%m-%d %H:%M:%S'`
+CUR_DATE=$(date +'%Y-%m-%d %H:%M:%S')
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
+    if ! command -v logrotate >/dev/null 2>&1; then
+        if [ -x /usr/sbin/logrotate ]; then
+            export PATH=$PATH:/usr/sbin
+        else
+            LOG_INFO "logrotate not installed, skip test"
+            exit 255
+        fi
+    fi
+
     pushd ./tmp_test/
     #更新时间
-    timestap=`stat -c %Y test/test-driver`
-    formart_date=`date '+%Y-%m-%d %H:%M:%S' -d @$timestap`
+    timestap=$(stat -c %Y test/test-driver)
+    formart_date=$(date '+%Y-%m-%d %H:%M:%S' -d @"$timestap")
     date -s "$formart_date"
     popd
 
@@ -49,16 +59,17 @@ function run_test() {
 
     runList=$(find ./ -name "test-0*.sh" | sort)
     failTitles=("XPASS" "ERROR" "FAIL")
-    for onetest in ${runList[@]}; do
+    for onetest in "${runList[@]}"; do
         testName=${onetest##*/}
         testName=`echo $testName | sed -e 's/^[ \t]//g' -e 's/[ \t]*$//g'`
         [[ ${ignoreFail[$testName]} -eq 1 ]] && continue
         echo "Run: ./test-driver --test-name ${testName} --log-file ${testName}.log --trs-file ${testName}.trs $onetest"
-        outStr=$(./test-driver --test-name ${testName} --log-file ${testName}.log --trs-file ${testName}.trs $onetest)
+        outStr=$(timeout -s KILL 60 ./test-driver --test-name ${testName} --log-file ${testName}.log --trs-file ${testName}.trs $onetest 2>&1)
+        pkill -9 -x logrotate 2>/dev/null || true
         echo "Output: $outStr"
         outTitle=${outStr%%:*}
         outTitle=`echo $outTitle | sed -e 's/^[ \t]//g' -e 's/[ \t]*$//g'`
-        if [[ "${failTitles[*]}" =~ "${outTitle}" && "${outTitle}" != "PASS" ]]; then
+        if [[ "${failTitles[*]}" =~ ${outTitle} && "${outTitle}" != "PASS" ]]; then
             CHECK_RESULT 1 0 0 "run logrotate testcase $testName fail"
             cat ${testName}.log
         fi

@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 # shellcheck disable=SC2086
+# shellcheck disable=SC1091
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 CURRENT_PATH=$(
@@ -12,7 +13,7 @@ src_path="$(
   pwd
 )"
 
-dnf install -y  make autoconf unzip
+dnf install -y make autoconf unzip || yum install make autoconf unzip -y || apt-get install -y make autoconf unzip || true
 
 pushd "${src_path}" || exit 1
 autoreconf -vif

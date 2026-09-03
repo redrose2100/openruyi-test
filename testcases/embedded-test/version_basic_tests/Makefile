@@ -1,4 +1,4 @@
-SUBDIRS=${shell ls | grep -v "Makefile" | grep -v "common.sh" | grep -v "make" | grep -v "comm_lib.sh"}
+SUBDIRS=${shell find . -maxdepth 1 -type d -name "oe_test_*" | sed 's|./||'}
 CURDIR=${shell pwd}
 COMMONDIR=${CURDIR}
 
@@ -10,13 +10,14 @@ copycommon:
 	cp -r $${OET_PATH}/testcases/embedded-test/common_libs/* ./
 
 makemake:
-	yum install libtool -y
+	dnf install libtool -y || yum install libtool -y || apt-get install -y libtool || true
 	bash ${COMMONDIR}/common.sh -d "make" "openEuler-24.03-LTS"
 	cd ./tmp_extract/make* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
 	make && \
 	cp ./make ${CURDIR}
-	bash ${COMMONDIR}/common.sh -r all
+	rm -rf ./tmp_download
+	rm -rf ./tmp_extract
 
 subdirs:
 	for subdir in ${SUBDIRS}; do $(MAKE) -C $$subdir -f Makefile || exit $$?; done

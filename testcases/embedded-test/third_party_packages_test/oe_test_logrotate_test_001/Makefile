@@ -1,8 +1,8 @@
 all:
-	sh ../common.sh -d "logrotate" "${DOWNLOAD_BRANCH}"
-	sh ../common.sh -c "logrotate*" "test"
-	sh ../common.sh -c "logrotate*" "test-driver"
-	cp -f ./tmp_test/test-driver ./tmp_test/test/
-	sh ../common.sh -r
+	bash ../common.sh -M "logrotate" || { bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "logrotate*" "test" || { bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "logrotate*" "test-driver" || { bash ../common.sh -r; exit 1; }
+	cp -f ./tmp_test/test-driver ./tmp_test/test/ || { bash ../common.sh -r; exit 1; }
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

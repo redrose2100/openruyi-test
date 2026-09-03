@@ -1,15 +1,15 @@
 all:
-	yum install -y cmake
-	sh ../common.sh -d "json-c" "${DOWNLOAD_BRANCH}"
-	mkdir -p ./tmp_extract/build
+	dnf install -y cmake || yum install -y cmake || apt-get install -y cmake || true
+	bash ../common.sh -M "json-c" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	mkdir -p ./tmp_extract/build || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
 	cd ./tmp_extract/build && \
 	cmake ../json-c*/ -DBUILD_STATIC_LIBS=OFF && \
-	make
-	sh ../common.sh -c "build" "tests"
-	sh ../common.sh -c "json-c*" "tests"
-	rm -rf ./tmp_test/tests/CMakeFiles
-	rm -rf ./tmp_test/tests/Makefile
-	rm -rf ./tmp_test/tests/*.cmake
-	sh ../common.sh -r
+	make || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "build" "tests" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "json-c*" "tests" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	rm -rf ./tmp_test/tests/CMakeFiles || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	rm -rf ./tmp_test/tests/Makefile || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	rm -rf ./tmp_test/tests/*.cmake || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

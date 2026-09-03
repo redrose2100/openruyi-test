@@ -16,6 +16,7 @@
 #@Desc      	:   Run squashfs-tools testsuite
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
@@ -46,6 +47,14 @@ function run_test() {
     unsquashfs -n squashtest.squashfs && test -d squashfs-root && rm -rf squashfs-root
     CHECK_RESULT $? 0 0 "check unsquashfs -n fail"
     LOG_INFO "End of the test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+
+    rm -rf squashtest*.squashfs squashfs-root /tmp/test_unsquashfs
+
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

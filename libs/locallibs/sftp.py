@@ -31,6 +31,24 @@ import mugen_log
 import ssh_cmd
 
 
+def sftp_mkdir_p(sftp, path):
+    """SFTP 协议递归创建目录，等同 mkdir -p"""
+    if path in ("/", "", None):
+        return
+    try:
+        sftp.stat(path)
+        return
+    except IOError:
+        pass
+    parent = os.path.dirname(path)
+    if parent != path:
+        sftp_mkdir_p(sftp, parent)
+    try:
+        sftp.mkdir(path)
+    except IOError:
+        pass
+
+
 def get_remote_file(sftp, remote_dir, remote_file=None):
     """获取对端文件
 
@@ -111,6 +129,9 @@ def psftp_get(conn, remote_dir, remote_file="", local_dir=os.getcwd()):
     conn.close()
 
 
+EXCLUDE_DIRS = {".git", "tmp_download", "tmp_extract", "tmp_test", "__pycache__"}
+EXCLUDE_FILES = set()
+
 def get_local_file(local_dir, local_file=None):
     """获取本地文件列表
 
@@ -127,6 +148,8 @@ def get_local_file(local_dir, local_file=None):
 
     dir_files = os.listdir(local_dir)
     for d_f in dir_files:
+        if d_f in EXCLUDE_DIRS or d_f in EXCLUDE_FILES:
+            continue
         if local_file is not None and re.match(local_file, d_f) is None:
             continue
 
@@ -180,12 +203,10 @@ def psftp_put(conn, local_dir=os.getcwd(), local_file="", remote_dir=""):
             storage_path = os.path.join(
                 remote_dir, storage_dir + os.path.dirname(f[len(local_dir):])
             )
-            if ssh_cmd.pssh_cmd(conn, "test -d " + storage_path)[0]:
-                ssh_cmd.pssh_cmd(conn, "mkdir -p " + storage_path)
+            sftp_mkdir_p(sftp, storage_path)
             sftp.put(f, os.path.join(storage_path, f.split("/")[-1]))
         else:
-            if ssh_cmd.pssh_cmd(conn, "test -d " + remote_dir)[0]:
-                ssh_cmd.pssh_cmd(conn, "mkdir -p " + remote_dir)
+            sftp_mkdir_p(sftp, remote_dir)
             sftp.put(f, os.path.join(remote_dir, f.split("/")[-1]))
         mugen_log.logging("info", "start to put file:%s......" % f)
 
@@ -212,7 +233,7 @@ if __name__ == "__main__":
     if args.node is not None and args.node > 0:
         args.ip = os.environ.get("NODE" + str(args.node) + "_IPV4")
         args.password = os.environ.get("NODE" + str(args.node) + "_PASSWORD")
-        args.port = os.environ.get("NODE" + str(args.node) + "_SSH_PORT")
+        args.port = int(os.environ.get("NODE" + str(args.node) + "_SSH_PORT", 22))
         args.user = os.environ.get("NODE" + str(args.node) + "_USER")
 
         if (

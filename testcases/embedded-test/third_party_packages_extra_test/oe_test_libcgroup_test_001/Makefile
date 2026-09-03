@@ -1,7 +1,7 @@
 .PHONY: all clean
 all:
-	sh -x ../common.sh -d "libcgroup" "${DOWNLOAD_BRANCH}" ''
-	sh ./compile.sh
-	sh ../common.sh -r
+	bash ../common.sh -M "libcgroup" ''
+	bash ./compile.sh
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

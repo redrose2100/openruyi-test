@@ -17,11 +17,17 @@
 #####################################
 # shellcheck disable=SC1091
 
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     USER_NAME='test_user'
+    grep "$USER_NAME:" /etc/passwd && {
+        systemctl stop user@$(id -u "$USER_NAME" 2>/dev/null) 2>/dev/null
+        loginctl terminate-user "$USER_NAME" 2>/dev/null
+        userdel -rf "$USER_NAME"
+    }
     useradd $USER_NAME
     echo "echo \"Hello World: \$(date)\" >> $(pwd)/rst.txt" >./test.sh
     chmod 777 ./test.sh

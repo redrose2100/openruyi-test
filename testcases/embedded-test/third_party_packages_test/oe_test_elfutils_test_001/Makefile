@@ -1,5 +1,5 @@
 all:
-	sh ../common.sh -d "elfutils" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "elfutils" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
 	cd ./tmp_extract/elfutils* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) \
 		--without-bzlib --without-bzip2-replacement-native \
@@ -12,13 +12,13 @@ all:
 	cd tests && \
 	sed -i "s/.log: /.log: #/g" Makefile && \
 	sed -i "s/check-TESTS: /check-TESTS: #/g" Makefile && \
-	sed -i "s/gawk/awk/g" coverage.sh
-	sh ../common.sh -c "elfutils*" "libelf"
-	sh ../common.sh -c "elfutils*" "libasm"
-	sh ../common.sh -c "elfutils*" "libdw"
-	sh ../common.sh -c "elfutils*" "config"
-	sh ../common.sh -c "elfutils*" "src"
-	sh ../common.sh -c "elfutils*" "tests"
-	sh ../common.sh -r
+	sed -i "s/gawk/awk/g" coverage.sh || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "elfutils*" "libelf" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "elfutils*" "libasm" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "elfutils*" "libdw" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "elfutils*" "config" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "elfutils*" "src" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -c "elfutils*" "tests" || { cd $(CURDIR) && bash ../common.sh -r; exit 1; }
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

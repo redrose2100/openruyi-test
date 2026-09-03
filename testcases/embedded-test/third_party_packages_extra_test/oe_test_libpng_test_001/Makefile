@@ -1,5 +1,5 @@
 all:
-	sh ../common.sh -d "libpng" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "libpng"
 	cd ./tmp_extract/libpng* && \
 	autoreconf -vif && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine) && \
@@ -11,10 +11,10 @@ all:
 	make check || true && \
 	rm -rf .libs/libpng16.* && \
 	mv pngimage pngstest pngunknown pngvalid pngtest pngtest.png .libs ../../tmp_test/
-	sh ../common.sh -c "libpng*" "test-driver"
-	sh ../common.sh -c "libpng*" "tests"
-	sh ../common.sh -c "libpng*" "testfile" 
-	sh ../common.sh -c "libpng*" "contrib"
-	sh ../common.sh -r
+	bash ../common.sh -c "libpng*" "test-driver"
+	bash ../common.sh -c "libpng*" "tests"
+	bash ../common.sh -c "libpng*" "testfile" 
+	bash ../common.sh -c "libpng*" "contrib"
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"

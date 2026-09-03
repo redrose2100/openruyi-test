@@ -16,16 +16,17 @@
 #@Desc      	:   Check libcap
 #####################################
 
-source ${OET_PATH}/libs/locallibs/common_lib.sh
+# shellcheck disable=SC1091
+source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
     cur_date=$(date +%Y%m%d%H%M%S)
     user="test"$cur_date
-    useradd $user
-    uid=$(cat /etc/passwd | grep $user | cut -d ':' -f 3)
-    gid=$(cat /etc/passwd | grep $user | cut -d ':' -f 4)
+    useradd "$user"
+    uid=$(cat /etc/passwd | grep "$user" | cut -d ':' -f 3)
+    gid=$(cat /etc/passwd | grep "$user" | cut -d ':' -f 4)
     cp /bin/ping ./
 
     LOG_INFO "End to prepare the database config."
@@ -36,14 +37,14 @@ function run_test() {
 
     capsh --help
     CHECK_RESULT $? 0 0 "Check capsh --help failed."
-    capsh --caps="cap_net_raw+eip cap_setpcap,cap_setuid,cap_setgid+ep" --keep=1 --user=$user --addamb=cap_net_raw -- -c "ping -c1 127.0.0.1"
+    capsh --caps="cap_net_raw+eip cap_setpcap,cap_setuid,cap_setgid+ep" --keep=1 --user="$user" --addamb=cap_net_raw -- -c "ping -c1 127.0.0.1"
     CHECK_RESULT $? 0 0 "Check capsh ping local failed."
 
-    capsh --user=$user -- -c "whoami" | grep $user
+    capsh --user="$user" -- -c "whoami" | grep "$user"
     CHECK_RESULT $? 0 0 "Check capsh --user failed."
-    capsh --uid=$uid -- -c "whoami" | grep $user
+    capsh --uid="$uid" -- -c "whoami" | grep "$user"
     CHECK_RESULT $? 0 0 "Check capsh --uid failed."
-    capsh --gid=$gid -- -c "whoami" | grep "root"
+    capsh --gid="$gid" -- -c "whoami" | grep "root"
     CHECK_RESULT $? 0 0 "Check capsh --gid failed."
 
     capsh --mode=NOPRIV -- -c "whoami" | grep "root"
@@ -73,8 +74,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    userdel $user
-    rm -r ./ping
+    userdel -rf "$user"
+    rm -rf ./ping
 
     LOG_INFO "End to restore the test environment."
 }

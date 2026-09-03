@@ -18,6 +18,7 @@
 # @Desc      :   check deny and unlock time fail
 # #############################################
 
+# shellcheck disable=SC1091
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test()
@@ -64,7 +65,7 @@ openEuler@456
 EOF
 )
 
-    echo $getValue | grep "The account is locked due to "
+    echo "$getValue" | grep "The account is locked due to "
     CHECK_RESULT $? 0 0 "check login fail 3 time lock fail"
 fi
 
@@ -77,6 +78,8 @@ function post_test()
     
     userdel -rf tester1
     userdel -rf tester2
+    faillock --user tester1 --reset 2>/dev/null || true
+    faillock --user tester2 --reset 2>/dev/null || true
     
     LOG_INFO "End to restore the test environment."
 }

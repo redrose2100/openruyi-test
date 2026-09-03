@@ -1,5 +1,5 @@
 all:
-	sh ../common.sh -d "tar" "${DOWNLOAD_BRANCH}"
+	bash ../common.sh -M "tar"
 	cd ./tmp_extract/tar* && \
 	./configure --host=$${CROSS_COMPILE%-} --build=$$(gcc -dumpmachine)  \
 				--without-selinux --with-lzma="xz --format=lzma" \
@@ -7,10 +7,10 @@ all:
 	make && \
 	cd tests && \
 	make genfile checkseekhole ckmtime
-	sh ../common.sh -c "tar*" "tests"
-	sh ../common.sh -r
+	bash ../common.sh -c "tar*" "tests"
+	bash ../common.sh -r
 clean:
-	sh ../common.sh -r "all"
+	bash ../common.sh -r "all"
 
 	
 

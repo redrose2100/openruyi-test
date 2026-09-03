@@ -15,7 +15,16 @@
 #@Desc      	:   Test libaio
 #####################################
 # shellcheck disable=SC1091
+# shellcheck disable=SC1091
 source ../comm_lib.sh
+
+function config_params() {
+    if ! dd if=/dev/zero of=/tmp/.libaio_odirect_test bs=4k count=1 oflag=direct 2>/dev/null; then
+        LOG_INFO "Skip: O_DIRECT not supported (no block device, likely tmpfs/initrd rootfs)"
+        exit 255
+    fi
+    rm -f /tmp/.libaio_odirect_test
+}
 
 function run_test() {
   LOG_INFO "Start to run test."
