@@ -450,10 +450,10 @@ function copy_libs_to_node1() {
 while getopts "c:af:r:dxb:s:m" option; do
     case $option in
     c)
-        deploy_conf "${*//-c/}"
+        deploy_conf ${*//-c/}
         ;;
     m)
-        modify_conf "${*//-m/}"
+        modify_conf ${*//-m/}
         ;;
     d)
         echo -e "The test script download function has been discarded."
