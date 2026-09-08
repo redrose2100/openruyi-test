@@ -57,9 +57,6 @@ if ! command -v jq >/dev/null 2>&1; then
     exit 1
 fi
 
-# Check if python3 is available (for JSON syntax validation fallback)
-HAS_PYTHON3=0
-
 # Validate JSON syntax
 validate_json_syntax() {
     local json_file="$1"
