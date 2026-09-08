@@ -60,7 +60,6 @@ fi
 # Check if python3 is available (for JSON syntax validation fallback)
 HAS_PYTHON3=0
 if command -v python3 >/dev/null 2>&1; then
-    HAS_PYTHON3=1
 fi
 
 # Validate JSON syntax
@@ -140,7 +139,7 @@ validate_cases() {
 
     # Resolve $OET_PATH to actual path
     if [ -n "$base_path" ]; then
-        base_path=$(echo "$base_path" | sed "s|\$OET_PATH|$TESTCASES_DIR|g")
+        base_path="${base_path//\$OET_PATH/\$TESTCASES_DIR}"
     fi
 
     # Get number of cases
@@ -184,7 +183,7 @@ validate_cases() {
         local script_file=""
         if [ -n "$case_path" ]; then
             # If case_path is specified, resolve it
-            case_path=$(echo "$case_path" | sed "s|\$OET_PATH|$TESTCASES_DIR|g")
+            case_path="${case_path//\$OET_PATH/\$TESTCASES_DIR}"
             script_file="$case_path"
         elif [ -n "$base_path" ]; then
             # Use base path + case_name.sh
