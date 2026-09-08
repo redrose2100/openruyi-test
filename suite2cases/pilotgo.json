@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/feature-test/pilotgo",
+    "cases": [
+        {
+            "name": "oe_test_pilotgo_server"
+        },
+        {
+            "name": "oe_test_pilotgo_agent"
+        }
+    ]
+}
