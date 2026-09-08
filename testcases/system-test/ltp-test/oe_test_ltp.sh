@@ -32,6 +32,10 @@ function pre_test() {
     do
         git clone -b "${branch}" https://github.com/linux-test-project/ltp.git
     done
+    cp "${current_path}/memcg_move_charge_at_immigrate_test.sh" \
+       ltp/testcases/kernel/controllers/memcg/functional/memcg_move_charge_at_immigrate_test.sh
+    cp "${current_path}/memcg_lib.sh" ltp/testcases/kernel/controllers/memcg/functional/memcg_lib.sh
+    cp "${current_path}/memcg_subgroup_charge.sh" ltp/testcases/kernel/controllers/memcg/functional/memcg_subgroup_charge.sh
     cd ltp || exit 1
     {
         make autotools 
@@ -52,13 +56,18 @@ function pre_test() {
     if [[ -f "${ko_path}/etmem_scan.ko" ]]; then
         insmod "${ko_path}/etmem_scan.ko" 2>/dev/null
     fi
+
+    # cve-2025-21756用例依赖vsock_loopback.ko
+    modprobe vsock_loopback
+
     # Starvation 配置
     if [[ -f "/sys/kernel/debug/sched/features" ]]; then
         echo NO_RUN_TO_PARITY_WAKEUP > /sys/kernel/debug/sched/features 2>/dev/null
     fi
 
-    # 增加超时时间
-    export LTP_TIMEOUT_MUL=10
+    # 关闭SELinux 
+    setenforce 0
+
     LOG_INFO "End to prepare the test environment."
 }
 
