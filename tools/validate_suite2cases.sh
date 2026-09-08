@@ -59,8 +59,6 @@ fi
 
 # Check if python3 is available (for JSON syntax validation fallback)
 HAS_PYTHON3=0
-if command -v python3 >/dev/null 2>&1; then
-fi
 
 # Validate JSON syntax
 validate_json_syntax() {
