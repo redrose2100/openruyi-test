@@ -12,3 +12,11 @@
         }
     ]
 }
+
+{
+    "glibc": {
+        "testcases": [
+            "oe_test_glibc_basic_function"
+        ]
+    }
+}
