@@ -20,3 +20,15 @@
         ]
     }
 }
+
+{
+    "testcases/glibc/oe_test_glibc_basic_function.sh": {
+      "type": "shell",
+      "time": 600
+    },
+    "testcases/glibc/oe_test_glibc_timezone_datetime.sh": {
+      "type": "shell",
+      "time": 600
+    }
+  }
+  
