@@ -12,3 +12,15 @@
         }
     ]
 }
+
+[
+    {
+      "case_name": "oe_test_glibc_basic_function",
+      "case_path": "testcases/glibc/oe_test_glibc_basic_function.sh"
+    },
+    {
+      "case_name": "oe_test_glibc_timezone_datetime",
+      "case_path": "testcases/glibc/oe_test_glibc_timezone_datetime.sh"
+    }
+  ]
+  
