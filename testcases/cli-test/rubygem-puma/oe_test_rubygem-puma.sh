@@ -34,7 +34,7 @@ EOF
     CHECK_RESULT $? 0 0 "Create config.ru file fail"
     puma -b tcp://0.0.0.0:3000 &
     CHECK_RESULT $? 0 0 "Execution fail"
-    sleep 5
+    sleep 10
     CHECK_RESULT $? 0 0 "Execution fail"
     curl http://127.0.0.1:3000 | grep "Hello, Puma!"                        
     CHECK_RESULT $? 0 0 "Execution fail"
