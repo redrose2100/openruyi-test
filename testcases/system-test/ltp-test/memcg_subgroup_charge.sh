@@ -8,7 +8,7 @@
 # Author: Li Zefan <lizf@cn.fujitsu.com>
 # Restructure for LTP: Shi Weihua <shiwh@cn.fujitsu.com>
 # Added memcg enable/disable functinality: Rishikesh K Rajak <risrajak@linux.vnet.ibm.com
-
+# shellcheck disable=SC2034,SC2209,SC3043,SC2155,SC2103,SC1091
 MEMCG_TESTFUNC=test
 TST_CNT=3
 

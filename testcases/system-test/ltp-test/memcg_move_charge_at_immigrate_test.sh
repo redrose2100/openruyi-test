@@ -5,7 +5,7 @@
 # Copyright (c) 2021 Joerg Vehlow <joerg.vehlow@aox-tech.de>
 #
 # Author: Peng Haitao <penght@cn.fujitsu.com>
-
+# shellcheck disable=SC2034,SC2209,SC3043,SC2155,SC2103,SC1091
 MEMCG_TESTFUNC=test
 TST_CNT=4
 

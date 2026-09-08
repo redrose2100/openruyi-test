@@ -5,7 +5,7 @@
 # Copyright (c) 2021 Joerg Vehlow <joerg.vehlow@aox-tech.de>
 #
 # Author: Peng Haitao <penght@cn.fujitsu.com>
-
+# shellcheck disable=SC2034,SC3043,SC2155,SC2145,SC2166,SC1091,SC2004
 TST_NEEDS_CHECKPOINTS=1
 TST_NEEDS_ROOT=1
 TST_NEEDS_TMPDIR=1
