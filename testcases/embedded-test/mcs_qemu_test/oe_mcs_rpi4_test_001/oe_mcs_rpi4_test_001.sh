@@ -15,11 +15,14 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   check rpi4 mcs
 #####################################
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}/testcases/embedded-test/mcs_qemu_test/common.sh"
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+
+    #检测 mcs_km.ko 网卡管理驱动是否存在，不存在则跳过测试
+    check_env
 
     echo "1 4 1 7" > /proc/sys/kernel/printk
     find / -name "mcs_km.ko" | awk 'NR==1{print}' | xargs insmod
