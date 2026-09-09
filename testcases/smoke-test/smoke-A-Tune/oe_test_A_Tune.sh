@@ -20,7 +20,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "test start"
-    DNF_INSTALL "atune atune-engine net-tools"
+    DNF_INSTALL "atune atune-engine net-tools polkit"
 }
 
 function run_test() {
@@ -62,7 +62,7 @@ function run_test() {
 
 function post_test() {
     mv /etc/atuned/atuned.cnf_bak /etc/atuned/atuned.cnf
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     LOG_INFO "test end"
 }
 
