@@ -40,11 +40,16 @@ function pre_test() {
     fi
 
     if [[ "$RVER" == RVA* ]]; then
-       wget -q "${IMG_ROOT}/docker_img/${NODE1_FRAME}/openEuler-docker.$NODE1_FRAME-$RVER.tar.xz"
+       IMAGE_URL="${IMG_ROOT}/docker_img/${NODE1_FRAME}/openEuler-docker.$NODE1_FRAME-$RVER.tar.xz"
     else
-       wget -q "${IMG_ROOT}/docker_img/${NODE1_FRAME}/openEuler-docker.$NODE1_FRAME.tar.xz"
+       IMAGE_URL="${IMG_ROOT}/docker_img/${NODE1_FRAME}/openEuler-docker.$NODE1_FRAME.tar.xz"
     fi
-
+    #镜像地址不可访问添加兜底镜像
+    HTTP_CODE=$(curl -o /dev/null -s -w "%{http_code}" --head "$IMAGE_URL")
+    if [ "$HTTP_CODE" = "404" ]; then
+       IMAGE_URL="https://repo.openeuler.org/openEuler-24.03-LTS-SP2/docker_img/riscv64/openEuler-docker.riscv64.tar.xz"
+    fi
+    wget -q $IMAGE_URL
     DFILE=$(ls openEuler-docker."${NODE1_FRAME}"*.tar.xz)
     docker load < "$DFILE"
     IMAGE_NAME=$(tar -xJvf "$DFILE" -O manifest.json | grep -Eo 'docker.io/library/openeuler[^"]+' | awk -F'/' '{print $NF}')
