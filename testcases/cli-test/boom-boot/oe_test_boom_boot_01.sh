@@ -29,8 +29,8 @@ function run_test() {
     LOG_INFO "Start to run testcase:oe_test_boom_boot_01."
     boom -h | grep "usage: boom"
     CHECK_RESULT $? 0 0 "L$LINENO: -h No Pass"
-    boom -help | grep "usage: boom"
-    CHECK_RESULT $? 0 0 "L$LINENO: -help No Pass"
+    boom --help | grep "usage: boom"
+    CHECK_RESULT $? 0 0 "L$LINENO: --help No Pass"
     boom entry show -b 1 
     CHECK_RESULT $? 0 0 "L$LINENO: -b No Pass"
     boom entry show --boot-id 1
