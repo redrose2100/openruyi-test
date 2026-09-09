@@ -15,13 +15,17 @@
 #@License   	:   Mulan PSL v2
 #@Desc      	:   check uniproton mcs
 #####################################
-source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}/testcases/embedded-test/mcs_qemu_test/common.sh"
 
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-
+    
+    # 检测 mcs_km.ko 网卡管理驱动是否存在，不存在则跳过测试
+    check_env
+ 
     echo "1 4 1 7" > /proc/sys/kernel/printk
+    sleep 1800
     find / -name "mcs_km.ko" | awk 'NR==1{print}' | xargs insmod
     lsmod | grep mcs
     bin_path="$(find / -name "raspi4.bin" | awk 'NR==1{print}')"
