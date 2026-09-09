@@ -33,8 +33,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "mtr -v fail"
     mtr -h | grep 'Usage:'
     CHECK_RESULT $? 0 0 "mtr -h fail"
-    mtr -r dns.google | grep 'dns.google'
-    CHECK_RESULT $? 0 0 "mtr -r dns fail"
+    mtr -r -n 114.114.114.114 | grep '114.114.114.114'
+    CHECK_RESULT $? 0 0 "mtr -r ip fail"
     mtr -r -e | grep 'HOST'
     CHECK_RESULT $? 0 0 "mtr -e fail"
     mtr -r -u | grep 'HOST'
