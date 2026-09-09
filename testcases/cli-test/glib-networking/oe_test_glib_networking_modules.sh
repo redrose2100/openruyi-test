@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "glib-networking"
+    DNF_INSTALL "glib-networking python3-gobject"
     tmp_dir=$(mktemp -d /tmp/test_XXXXXX)
     # Generate self-signed certificate for TLS testing
     openssl req -x509 -newkey rsa:2048 -keyout "$tmp_dir/server.key" \
