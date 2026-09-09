@@ -31,12 +31,22 @@ function pre_test() {
     systemctl stop firewalld
     sed -i '/apache-error/d' /var/log/messages
     sed -i '/apache-access/d' /var/log/messages
+    rm -rf /var/log/test
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
+
+    # Server first: avoids Connection refused & omfwd suspended.
+    SSH_CMD "
+    echo  '\$ModLoad imtcp\n\$InputTCPServerRun 514\n*.* /var/log/test' > /etc/rsyslog.d/server.conf
+    systemctl restart rsyslog
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    CHECK_RESULT $?
+    SLEEP_WAIT 20
+
     cat >/etc/rsyslog.d/client.conf <<EOF
     \$ModLoad imfile
     \$InputFilePollInterval 10
@@ -53,18 +63,12 @@ function run_test() {
     \$InputFilePersistStateInterval 25000
     \$InputRunFileMonitor
     if \$programname == 'apache-access' then @@${NODE2_IPV4}
-    if \$programname == 'apache-access' then ~
+    if \$programname == 'apache-access' then stop
     if \$programname == 'apache-error' then @@${NODE2_IPV4}
-    if \$programname == 'apache-error' then ~
+    if \$programname == 'apache-error' then stop
 EOF
     systemctl restart rsyslog
     CHECK_RESULT $?
-    SSH_CMD "
-    echo  '\$ModLoad imtcp\n\$InputTCPServerRun 514\n*.* /var/log/test' > /etc/rsyslog.d/server.conf
-    systemctl restart rsyslog
-    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    CHECK_RESULT $?
-    SLEEP_WAIT 20
     echo "hello world" >>/var/log/httpd/access_log
     systemctl restart httpd
     SLEEP_WAIT 20
@@ -77,8 +81,8 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE "$@"
-    SSH_CMD "rm -rf /etc/rsyslog.d/server.conf && systemctl restart rsyslog" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    DNF_REMOVE 1
+    SSH_CMD "rm -rf /etc/rsyslog.d/server.conf && systemctl restart rsyslog && rm -rf /var/log/test" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -rf /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
     LOG_INFO "End to restore the test environment."
