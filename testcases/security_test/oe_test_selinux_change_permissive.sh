@@ -33,7 +33,7 @@ function run_test() {
 SELINUXTYPE=targeted'>/etc/selinux/config" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SLEEP_WAIT 1
     SSH_CMD "reboot &" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    REMOTE_REBOOT_WAIT 2 15
+    REMOTE_REBOOT_WAIT 2
     SSH_CMD "getenforce | grep Permissive" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
