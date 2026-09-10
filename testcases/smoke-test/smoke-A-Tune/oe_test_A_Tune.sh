@@ -15,12 +15,13 @@
 #@License       :   Mulan PSL v2
 #@Desc          :   A-tune
 #####################################
+# shellcheck disable=SC2120
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "test start"
-    DNF_INSTALL "atune atune-engine net-tools"
+    DNF_INSTALL "atune atune-engine net-tools polkit"
 }
 
 function run_test() {
