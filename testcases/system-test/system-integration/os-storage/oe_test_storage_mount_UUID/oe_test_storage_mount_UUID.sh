@@ -22,6 +22,7 @@ source ../common/storage_disk_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "xfsprogs"
     check_free_disk
     echo "n
 
@@ -54,6 +55,7 @@ function post_test() {
     echo "d
 
 w" | fdisk /dev/"${local_disk}"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup."
 }
 
