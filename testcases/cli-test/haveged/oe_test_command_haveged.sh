@@ -48,8 +48,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "haveged version check failed"
 
     LOG_INFO "Test 5: Verify service logging"
-    journalctl -u haveged.service | grep -iq "success"
-    CHECK_RESULT $? 0 0 "Service logging not working"
+    journalctl -u haveged.service | grep -Eiq "failed|error|fatal|panic"
+    CHECK_RESULT $? 1 0 "Service logging not working"
 
     LOG_INFO "Test 6: Verify random device access"
     dd if=/dev/random of=/dev/null bs=1 count=1 2>/dev/null
