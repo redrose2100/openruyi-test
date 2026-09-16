@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   File system common command test-Keras
 # ############################################
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2120
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -24,6 +24,11 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "python3-Keras"
     pip3 install tensorflow -i https://mirrors.aliyun.com/pypi/simple
+    pip_rc=$?
+    if [ $pip_rc -ne 0 ]; then
+        LOG_INFO "TensorFlow does not support riscv64, skipping test"
+        exit 255
+    fi    
     check_keras_version=$(python3 -c "import keras; print(keras.__version__)")
     LOG_INFO "keras_version:${check_keras_version}"
     KERAS_VERSION=${check_keras_version}
