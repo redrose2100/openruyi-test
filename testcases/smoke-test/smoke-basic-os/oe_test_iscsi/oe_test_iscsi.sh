@@ -36,7 +36,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "open-iscsi multipath-tools target-restore targetcli"
+    DNF_INSTALL "open-iscsi multipath-tools target-restore targetcli lsscsi"
     dd if=/dev/zero of=$lun1 count=10 bs=1M
     dd if=/dev/zero of=$lun2 count=10 bs=1M
     systemctl status --no-pager firewalld && firewall_status=1
@@ -75,13 +75,12 @@ function run_test() {
     SLEEP_WAIT 3
     lsblk
     multipath -ll
-    path1=$(multipath -ll | grep disk1 | awk '{print $1}')
-    path2=$(multipath -ll | grep disk2 | awk '{print $1}')
+    path1=$(multipath -ll | grep disk1 | awk '{print $2}')
+    path2=$(multipath -ll | grep disk2 | awk '{print $2}')
     test -n "$path1" && test -n "$path2" || return 1
-    sleep 1
-    mkfs.ext4 -F /dev/mapper/"${path1}"
+    mkfs.ext4 -F /dev/"${path1}"
     CHECK_RESULT $?
-    mkfs.ext4 -F /dev/mapper/"${path2}"
+    mkfs.ext4 -F /dev/"${path2}"
     CHECK_RESULT $?
     iscsiadm -m node -p ${local_addr} -u
     CHECK_RESULT $?
