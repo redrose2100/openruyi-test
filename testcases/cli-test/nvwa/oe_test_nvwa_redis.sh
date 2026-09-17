@@ -19,10 +19,6 @@ source ${OET_PATH}/testcases/cli-test/nvwa/common/lib.sh
 set +e
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if ! dnf list --quiet nvwa 2>/dev/null | grep -q '^nvwa\.'; then
-       LOG_ERROR "未找到 nvwa 软件包，退出码 255"
-       exit 255
-    fi
     deploy_nvwa
     #判断系统是否支持NVWA quickkexec
     if grep -q "CONFIG_QUICK_KEXEC=y" /boot/config-"$(uname -r)" 2>/dev/null; then

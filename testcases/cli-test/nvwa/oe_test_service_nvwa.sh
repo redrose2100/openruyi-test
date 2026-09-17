@@ -20,10 +20,6 @@
 source "${OET_PATH}/testcases/cli-test/nvwa/common/lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if ! dnf list --quiet nvwa 2>/dev/null | grep -q '^nvwa\.'; then
-       LOG_ERROR "未找到 nvwa 软件包，退出码 255"
-       exit 255
-    fi
     DNF_INSTALL nvwa
     service=nvwa.service
     LOG_INFO "End to prepare the test environment."
