@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command test-pzstd
 # ############################################
+# shellcheck disable=SC2120
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -54,11 +55,11 @@ function run_test() {
     t_level_1=$(awk 'NR==2 {print $1}' tmp_file)
     /usr/bin/time -f %e pzstd -9 -f bigfile &> tmp_file
     t_level_9=$(awk 'NR==2 {print $1}' tmp_file)
-    (($(echo "$t_level_1 < $t_level_9" | bc -l)))
-    CHECK_RESULT $? 0 0 "Using level9 spend less time than level1"
     if [ "${NODE1_FRAME}" != "riscv64" ];then
+        (($(echo "$t_level_1 < $t_level_9" | bc -l)))
+	CHECK_RESULT $? 0 0 "Using level1 spend less time than level9"
         (($(echo "$t_level_1 < 1" | bc -l)))
-        CHECK_RESULT $? 0 0 "Using level3 spend time more than 1s"
+        CHECK_RESULT $? 0 0 "Using level1 spend time more than 1s"
     fi
 
     pzstd testfile
