@@ -33,40 +33,66 @@ function run_test() {
     CHECK_RESULT $? 0 1
     dmesg | grep 'The size of new OBMM region is 0. Non-zero value expected'
     CHECK_RESULT $? 0
-    # 导出4K
-    test_export $((4 * KB2B)) $EXP_MMAP_FLAG $DEID
-    CHECK_RESULT $? 0 1
-    dmesg | grep 'The size of new OBMM region 0x1000 on node 0 is not aligned to OBMM memseg size 0x200000'
-    CHECK_RESULT $? 0
-    # 导出2M ，导出成功
-    test_export $((2 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    cat export.log
-    EXP_MEM_ID=$(get_id export.log)
-    test_unexport $EXP_MEM_ID
-    CHECK_RESULT $? 0
-    # 导出4M ,导出成功
-    test_export $((4 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    cat export.log
-    EXP_MEM_ID=$(get_id export.log)
-    test_unexport $EXP_MEM_ID
-    CHECK_RESULT $? 0
-    # 导出128M ，导出成功
-    test_export $((128 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    cat export.log
-    EXP_MEM_ID=$(get_id export.log)
-    test_unexport $EXP_MEM_ID
-    CHECK_RESULT $? 0
+    if uname -r | grep -i "oe"; then
+       # 导出4K
+       test_export $((4 * KB2B)) $EXP_MMAP_FLAG $DEID
+       CHECK_RESULT $? 0 1
+       dmesg | grep 'The size of new OBMM region 0x1000 on node 0 is not aligned to OBMM memseg size 0x200000'
+       CHECK_RESULT $? 0
+       # 导出2M ，导出成功
+       test_export $((2 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
+       CHECK_RESULT $? 0
+       cat export.log
+       EXP_MEM_ID=$(get_id export.log)
+       test_unexport $EXP_MEM_ID
+       CHECK_RESULT $? 0
+       # 导出4M ,导出成功
+       test_export $((4 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
+       CHECK_RESULT $? 0
+       cat export.log
+       EXP_MEM_ID=$(get_id export.log)
+       test_unexport $EXP_MEM_ID
+       CHECK_RESULT $? 0
+       # 导出130M(2M 对齐，非4M对齐，非128M对齐)，导出成功
+       test_export $((130 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
+       CHECK_RESULT $? 0
+       cat export.log
+       test_unexport $(get_id export.log)
+       CHECK_RESULT $? 0
 
-    # 导出130M(2M 对齐，非4M对齐，非128M对齐)，导出成功
-    test_export $((130 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    cat export.log
-    test_unexport $(get_id export.log)
-    CHECK_RESULT $? 0
-    
+       # 导出128M ，导出成功
+       test_export $((128 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
+       CHECK_RESULT $? 0
+       cat export.log
+       EXP_MEM_ID=$(get_id export.log)
+       test_unexport $EXP_MEM_ID
+       CHECK_RESULT $? 0
+    fi
+
+    if uname -r | grep -i "tl"; then
+        # 导出32M(32M 对齐),导出成功
+        test_export $((32 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
+        CHECK_RESULT $? 0
+        cat export.log
+        EXP_MEM_ID=$(get_id export.log)
+        test_unexport $EXP_MEM_ID
+        CHECK_RESULT $? 0
+
+        # 导出33M(32M 对齐),导出失败
+        test_export $((33 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
+        CHECK_RESULT $? 0 1
+        cat export.log
+        dmesg -T | grep "The size of new OBMM region 0x2100000 on node 0 is not aligned to OBMM memseg size 0x2000000"
+        CHECK_RESULT $? 0
+
+        # 导出31M(32M 对齐),导出失败
+        test_export $((31 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
+        CHECK_RESULT $? 0 1
+        cat export.log
+        dmesg -T | grep "The size of new OBMM region 0x1f00000 on node 0 is not aligned to OBMM memseg size 0x2000000"
+        CHECK_RESULT $? 0
+
+    fi
     # mem_allocator_granu=32M，导出2M，导出失败
     rmmod obmm
     insmod_obmm mem_allocator_granu=32M
@@ -75,14 +101,14 @@ function run_test() {
     cat export.log
     dmesg -T | grep "The size of new OBMM region 0x200000 on node 0 is not aligned to OBMM memseg size 0x2000000"
     CHECK_RESULT $? 0
-	
+
     # 导出40M，(32M 对齐)，导出失败
     test_export $((40 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
     CHECK_RESULT $? 0 1
     cat export.log
     dmesg -T | grep "The size of new OBMM region 0x2800000 on node 0 is not aligned to OBMM memseg size 0x2000000"
     CHECK_RESULT $? 0
-	
+
     # 导出128M，(32M 对齐)，导出成功
     test_export $((128 * MB2B)) $EXP_MMAP_FLAG $DEID &> export.log
     CHECK_RESULT $? 0
@@ -93,7 +119,8 @@ function run_test() {
 
 function post_test() {
     rmmod obmm
-    insmod_obmm_default
+    insmod_obmm
 }
 
 main "$@"
+
