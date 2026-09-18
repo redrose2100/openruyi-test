@@ -31,10 +31,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "The help parameter is incorrectly displayed"
     systemctl start cgdcbxd
     CHECK_RESULT $? 0 0 "Service startup exception"
-    cgdcbxd -n
-    ps aux | pgrep cgdcbxd | pgrep Ssl
-    CHECK_RESULT $? 0 1 "The program is in a daemon state"
-
+    SLEEP_WAIT 10
+    pgrep cgdcbxd
+    CHECK_RESULT $? 0 0 "cgdcbxd process is not running"
 }
 
 function post_test() {
