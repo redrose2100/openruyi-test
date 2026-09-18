@@ -28,32 +28,50 @@ function pre_test() {
 
 function run_test() {
     rmmod obmm
-    insmod_obmm_default
+    insmod_obmm
     # 检查参数默认值
     cat /sys/module/obmm/parameters/mempool_allocator | grep -E "null|buddy_highmem"
     CHECK_RESULT $? 0
-    cat /sys/module/obmm/parameters/mem_allocator_granu | grep -E "null|2M"
-    CHECK_RESULT $? 0
-    # 检查默认行为，mapping < 100%，默认使用buddy，到处粒度是2M
     total_mem=$((2 * MB2B))
     numa_mem_init $total_mem
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    test_unexport $(get_id export.log)
-    rmmod obmm.ko
-    dmesg -C
-    insmod_obmm_default mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
-    CHECK_RESULT $? 0
-    dmesg | grep 'unsupported mem_allocator_granu: 1M'
-    CHECK_RESULT $? 0
-    insmod_obmm_default mem_allocator_granu=2M
-    dmesg -C
-    cat /sys/module/obmm/parameters/mem_allocator_granu | grep -w 2M
-    CHECK_RESULT $? 0
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    test_unexport $(get_id export.log)
+    if uname -r | grep -i "oe"; then
+        cat /sys/module/obmm/parameters/mem_allocator_granu | grep -E "null|2M"
+        CHECK_RESULT $? 0
+        # 检查默认行为，mapping < 100%，默认使用buddy，到处粒度是2M
+        test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
+        CHECK_RESULT $? 0
+        test_unexport $(get_id export.log)
+        rmmod obmm.ko
+        dmesg -C
+        insmod_obmm_default mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
+        CHECK_RESULT $? 0
+        dmesg | grep 'unsupported mem_allocator_granu: 1M'
+        CHECK_RESULT $? 0
+        insmod_obmm_default mem_allocator_granu=2M
+        dmesg -C
+        cat /sys/module/obmm/parameters/mem_allocator_granu | grep -w 2M
+        CHECK_RESULT $? 0
+        test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
+        CHECK_RESULT $? 0
+        test_unexport $(get_id export.log)
 
+        rmmod obmm.ko
+        insmod_obmm_default mempool_allocator=buddy_highmem
+        cat /sys/module/obmm/parameters/mempool_allocator | grep buddy_highmem
+        CHECK_RESULT $? 0
+        total_mem=$((2 * MB2B))
+        numa_mem_init $total_mem
+        test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
+        CHECK_RESULT $? 0
+        test_unexport $(get_id export.log)
+
+        rmmod obmm.ko
+        insmod_obmm_default mempool_allocator=buddy_highmem mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
+        insmod_obmm_default mempool_allocator=buddy_highmem mem_allocator_granu=2M
+        test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
+        CHECK_RESULT $? 0
+        test_unexport $(get_id export.log)
+    fi
     rmmod obmm.ko
     insmod_obmm_default mem_allocator_granu=32M
     CHECK_RESULT $? 0
@@ -89,23 +107,9 @@ function run_test() {
     cat export.log
     test_unexport $(get_id export.log)
 
-    rmmod obmm.ko
-    insmod_obmm_default mempool_allocator=buddy_highmem
-    cat /sys/module/obmm/parameters/mempool_allocator | grep buddy_highmem
-    CHECK_RESULT $? 0
+
     total_mem=$((2 * MB2B))
     numa_mem_init $total_mem
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    test_unexport $(get_id export.log)
-
-    rmmod obmm.ko
-    insmod_obmm_default mempool_allocator=buddy_highmem mem_allocator_granu=1M 2>&1 | grep "Invalid argument"
-    insmod_obmm_default mempool_allocator=buddy_highmem mem_allocator_granu=2M
-    test_export $numa_mem_list $EXP_COMMON_FLAG $DEID &> export.log
-    CHECK_RESULT $? 0
-    test_unexport $(get_id export.log)
-
     rmmod obmm.ko
     dmesg -C
     insmod_obmm_default mempool_allocator=buddy_highmem mem_allocator_granu=32M
@@ -174,8 +178,9 @@ function run_test() {
 
 function post_test() {
     rmmod obmm
-    insmod_obmm_default
+    insmod_obmm
     clean_hugepages
 }
 
 main "$@"
+
