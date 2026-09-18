@@ -44,7 +44,6 @@ SYSTEMD_PATH="/etc/systemd/system"
 NVWA_PATH="/etc/nvwa"
 
 function deploy_nvwa() {
-    #SSH_CMD "rpm -qa | grep nvwa || yum install -y nvwa" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     DNF_INSTALL "nvwa" 2
     SSH_CMD "systemctl start nvwa; systemctl enable nvwa" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     #disable selinux
@@ -52,8 +51,7 @@ function deploy_nvwa() {
     if [ $? -ne 0 ]; then
         SSH_CMD "sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
         SSH_CMD "reboot &" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-        #REMOTE_REBOOT_WAIT 2 15
-        wait_ssh "${NODE2_IPV4}" "300"
+        REMOTE_REBOOT_WAIT 2 60
 	CHECK_RESULT $?
     fi
 }
@@ -79,8 +77,7 @@ function deploy_nvwwa_with_conf() {
     SSH_CMD "cp $GRUB_PATH $GRUB_PATH.bak" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "grubby --update-kernel=ALL --args='quickkexec=128M max_pin_pid_num=10 redirect_space_size=2M pinmemory=100M@0x40000000 cpuparkmem=0x13bfe0000'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "reboot &" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    #REMOTE_REBOOT_WAIT 2 15
-    wait_ssh "${NODE2_IPV4}" "300"
+    REMOTE_REBOOT_WAIT 2 60
     CHECK_RESULT $?
 
     check_cmdline_apply "quickkexec pinmemory cpuparkmem"
@@ -168,15 +165,11 @@ function clean_nvwa() {
     SSH_CMD "cp /etc/selinux/config  /etc/selinux/config.bak" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "sed -i 's/SELINUX=.*/SELINUX=permissive/g' /etc/selinux/config" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "touch /.autorelabel" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    #REMOTE_REBOOT_WAIT 2 60
-    wait_ssh "${NODE2_IPV4}" "300"
+    REMOTE_REBOOT 2
     CHECK_RESULT $?
     SSH_CMD "mv /etc/selinux/config.bak /etc/selinux/config" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "mv $GRUB_PATH.bak $GRUB_PATH" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SSH_CMD "reboot" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    #REMOTE_REBOOT_WAIT 2 60
-    wait_ssh "${NODE2_IPV4}" "300"
+    REMOTE_REBOOT 2
     CHECK_RESULT $?
     DNF_REMOVE "$@" 2
 }
@@ -187,25 +180,5 @@ function clean_redis() {
     SSH_CMD "systemctl enable firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "systemctl start firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "yum remove -y redis" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-}
-
-function wait_ssh() {
-    local node_ipv4="$1"
-    local time="$2"
-    if [[ -z "$node_ipv4" ]]; then
-	LOG_ERROR "Usage: wait_rv_ssh <ipv4>"
-    	return 1
-    fi
-    DNF_INSTALL "nmap-ncat"
-    LOG_INFO "Waiting for node '${node_ipv4}' to reboot and SSH to become available..."
-    if ! timeout $time bash -c "
-        while ! nc -zvnw 3 '${node_ipv4}' 22 2>/dev/null; do
-	   sleep 30
-        done
-    "; then
-        LOG_ERROR "Node ${node_ipv4} did not come back online within ${time} seconds after reboot"
-        exit 1
-    fi
-    LOG_INFO "Node ${node_ipv4} is back online."
 }
 
