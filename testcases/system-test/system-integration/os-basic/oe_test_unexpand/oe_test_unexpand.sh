@@ -56,7 +56,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "unexpand --version execution failed"
 
     # Test help option output
-    /usr/bin/unexpand --help | grep -q "转换为制表符"
+    /usr/bin/unexpand --help | grep -q "Usage:"
     CHECK_RESULT $? 0 0 "unexpand --help output check failed"
 
     LOG_INFO "End to run test."
