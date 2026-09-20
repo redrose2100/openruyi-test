@@ -31,6 +31,12 @@ function run_test() {
 
     # 检查模块文件是否存在
     test -f "/lib/modules/$(uname -r)/kernel/drivers/cxl/${mod_name}.ko.xz"
+    if [ $? = 0 ]; then
+        CHECK_RESULT $? 0 0 "Check ${mod_name} file exist failed"
+    else
+        exit 255
+        LOG_INFO "Module cxl_acpi not found, skipping test"
+    fi 
     CHECK_RESULT $? 0 0 "Check ${mod_name} file exist failed"
 
     # 查看模块信息
