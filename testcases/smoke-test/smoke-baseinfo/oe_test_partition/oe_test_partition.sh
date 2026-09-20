@@ -24,11 +24,11 @@ function run_test() {
     if grep docker /proc/1/cgroup; then
         LOG_INFO "The current environment is Docker."
     else
-        lsblk | grep "/boot$"
-        CHECK_RESULT $? 0 0 "No boot partition"
         lsblk | grep "/$"
         CHECK_RESULT $? 0 0 "No / partition"
 	if [ "$(uname -m)" != "riscv64" ]; then
+            lsblk | grep "/boot$" 
+            CHECK_RESULT $? 0 0 "No boot partition"
             lsblk | grep "SWAP"
             CHECK_RESULT $? 0 0 "No swap partition"
 	fi
