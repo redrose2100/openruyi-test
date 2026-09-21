@@ -30,11 +30,19 @@ function prepare_rootfs() {
     cp -a /bin/echo "$bundle_path/rootfs/bin/" 2>/dev/null || true
     cp -a /bin/sh "$bundle_path/rootfs/bin/" 2>/dev/null || true
     cp -a /bin/cat "$bundle_path/rootfs/bin/" 2>/dev/null || true
-    cp -a /lib/ld-linux-aarch64.so.1 "$bundle_path/rootfs/lib/" 2>/dev/null || true
-    cp -a /lib/ld-linux-x86-64.so.2 "$bundle_path/rootfs/lib/" 2>/dev/null || true
-    cp -a /lib64/ld-linux-x86-64.so.2 "$bundle_path/rootfs/lib64/" 2>/dev/null || true
-    cp -a /usr/lib64/libc.so.6 "$bundle_path/rootfs/usr/lib64/" 2>/dev/null || true
-    cp -a /usr/lib64/libc.so.6 "$bundle_path/rootfs/lib64/" 2>/dev/null || true
+    if [ $(uname -m) != "riscv64" ]; then
+        cp -a /lib/ld-linux-aarch64.so.1 "$bundle_path/rootfs/lib/" 2>/dev/null || true
+        cp -a /lib/ld-linux-x86-64.so.2 "$bundle_path/rootfs/lib/" 2>/dev/null || true
+        cp -a /lib64/ld-linux-x86-64.so.2 "$bundle_path/rootfs/lib64/" 2>/dev/null || true
+        cp -a /usr/lib64/libc.so.6 "$bundle_path/rootfs/usr/lib64" 2>/dev/null || true
+        cp -a /usr/lib64/libc.so.6 "$bundle_path/rootfs/lib64" 2>/dev/null || true
+    else
+        mkdir -p "$bundle_path/rootfs/usr/lib64/lp64d"
+        mkdir -p "$bundle_path/rootfs/lib64/lp64d"
+        cp -a /lib/ld-linux-riscv64-lp64d.so.1 "$bundle_path/rootfs/lib/" 2>/dev/null || true
+	cp -a /usr/lib64/libc.so.6 "$bundle_path/rootfs/usr/lib64/lp64d/" 2>/dev/null || true
+	cp -a /usr/lib64/libc.so.6 "$bundle_path/rootfs/lib64/lp64d/" 2>/dev/null || true
+    fi
     cd "$bundle_path" || exit 1
 }
 
