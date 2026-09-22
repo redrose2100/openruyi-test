@@ -22,22 +22,21 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "libffi libffi-devel gcc clang python3-devel python3-zstd"
-    pip install zstandard
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
     cat > test.py <<EOF
-import zstandard as zstd
+import zstd
 
-# 压缩数据
-compressor = zstd.ZstdCompressor()
-compressed_data = compressor.compress(b'Your data to compress')
+data = b'Your data to compress'
 
-# 解压数据
-decompressor = zstd.ZstdDecompressor()
-decompressed_data = decompressor.decompress(compressed_data)
+# 压缩
+compressed_data = zstd.ZSTD_compress(data)
+
+# 解压
+decompressed_data = zstd.ZSTD_uncompress(compressed_data)
 
 print(decompressed_data)
 EOF
