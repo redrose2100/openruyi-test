@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL nss-mdns
+    DNF_INSTALL "nss-mdns hostname"
     cp -f /etc/nsswitch.conf /etc/nsswitch.conf.bak
     
     # Step 1: Configure nsswitch.conf for mdns
