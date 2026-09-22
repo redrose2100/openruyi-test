@@ -31,7 +31,7 @@ function run_test() {
     sudo -u zookeeper bash /opt/zookeeper/bin/zkServer.sh start
     CHECK_RESULT $? 0 0 "ZooKeeper not enabled"
     if [ "${NODE1_FRAME}" == "riscv64" ]; then
-        sleep 15
+        sleep 30
     fi
     sudo -u zookeeper bash /opt/zookeeper/bin/zkServer.sh status
     CHECK_RESULT $? 0 0 "ZooKeeper JMX is turned off by default"
