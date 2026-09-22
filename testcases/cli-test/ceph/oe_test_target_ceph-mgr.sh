@@ -16,10 +16,12 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test ceph-mgr.target restart
 # #############################################
+# shellcheck disable=SC2034
 
-source "../common/common_lib.sh"
+source "${OET_PATH}/testcases/common/common_lib.sh"
 
 function pre_test() {
+    EXECUTE_T="50m"
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL ceph-mgr
     LOG_INFO "End of environmental preparation!"
