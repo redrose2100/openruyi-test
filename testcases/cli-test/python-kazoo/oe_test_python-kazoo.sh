@@ -16,7 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   package python-kazoo test
 # ############################################
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2120
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -31,7 +31,7 @@ function run_test() {
     sudo -u zookeeper bash /opt/zookeeper/bin/zkServer.sh start
     CHECK_RESULT $? 0 0 "ZooKeeper not enabled"
     if [ "${NODE1_FRAME}" == "riscv64" ]; then
-        sleep 15
+        sleep 25
     fi
     sudo -u zookeeper bash /opt/zookeeper/bin/zkServer.sh status
     CHECK_RESULT $? 0 0 "ZooKeeper JMX is turned off by default"
