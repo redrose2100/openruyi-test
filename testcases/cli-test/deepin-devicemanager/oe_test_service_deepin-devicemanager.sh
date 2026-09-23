@@ -27,14 +27,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    test_execution deepin-devicemanager-server.service
-    test_reload deepin-devicemanager-server.service
+    test_execution deepin-devicecontrol.service
+    test_reload deepin-devicecontrol.service
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    systemctl stop deepin-devicemanager-server.service
+    systemctl stop deepin-devicecontrol.service
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }
