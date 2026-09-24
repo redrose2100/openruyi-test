@@ -28,7 +28,7 @@ function run_test() {
     LOG_INFO "Start executing testcase!"
     if [[ "$NODE1_FRAME" == "riscv64" ]]; then
         # RISC-V 架构专用适配
-        lshw -c memory | grep "description: System memory"
+        lshw -c memory | grep -i "description: System memory"
         CHECK_RESULT $?
         lshw -c memory | grep "size:"
         CHECK_RESULT $?
