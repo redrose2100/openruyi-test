@@ -21,17 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
 	LOG_INFO "Start to prepare the test environment."
-	DNF_INSTALL "libsemanage"
-
-	# Step 1: Check if SELinux is enabled
-	if ! sestatus 2>/dev/null | grep -q "SELinux status:.*enabled"; then
-		setenforce 1
-		if ! getenforce | grep -q "Enforcing"; then
-			LOG_INFO "SELinux is not enabled. Skipping semanage command tests."
-			exit 255
-		fi
-	fi
-
+	DNF_INSTALL "libsemanage policycoreutils-python-utils"
 	LOG_INFO "End to prepare the test environment."
 }
 
