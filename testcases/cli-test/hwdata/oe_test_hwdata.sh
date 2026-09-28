@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "hwdata"
+    DNF_INSTALL "hwdata pciutils"
     LOG_INFO "End to prepare the test environment."
 }
 
