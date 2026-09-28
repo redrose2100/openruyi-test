@@ -40,6 +40,7 @@ function run_test() {
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 int main(int argc, char *argv[]) {
     int rc;
