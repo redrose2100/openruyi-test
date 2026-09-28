@@ -32,6 +32,7 @@ dir_num = subprocess.getoutput("ls / | grep -cE 'proc|usr|roor|var|sys|etc|boot|
 if dir_num != "7":
     ret += 1
 conn = ssh_cmd.pssh_conn(os.environ.get("NODE2_IPV4"), os.environ.get("NODE2_PASSWORD"))
+ssh_cmd.pssh_cmd(conn, "mkdir test")
 exitcode, output = ssh_cmd.pssh_cmd(conn, "ls")
 ssh_cmd.pssh_close(conn)
 if exitcode != 0:
@@ -39,6 +40,7 @@ if exitcode != 0:
 else:
     if output != "test":
         ret += 1
-
+ssh_cmd.pssh_cmd(conn, "rm -rf test")
 sys.exit(ret)
+
 
