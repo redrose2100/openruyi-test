@@ -16,12 +16,14 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Test pkcon function
 # #############################################
+# shellcheck disable=SC2120
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "PackageKit"
+    DNF_INSTALL "PackageKit polkit"
+    systemctl start polkit
     LOG_INFO "End of environmental preparation!"
 }
 
