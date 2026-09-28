@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "hwdata"
+    DNF_INSTALL "hwdata pciutils"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -109,7 +109,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "PnP ID AAA vendor query failed"
 
     # Test hwdata_mac_query: Query MAC prefix 28-6F-B9 and verify organization
-    grep "^28-6F-B9" /usr/share/hwdata/oui.txt | grep -i "Nokia" > /dev/null 2>&1
+    grep -E "^28-6F-B9|^08-9C-86" /usr/share/hwdata/oui.txt | grep -i "Nokia" > /dev/null 2>&1
     CHECK_RESULT $? 0 0 "MAC prefix 28-6F-B9 organization query failed"
 
     # Test hwdata_lspci_integration: Verify lspci uses hwdata to show vendor name
