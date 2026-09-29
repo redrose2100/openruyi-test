@@ -18,6 +18,12 @@
 # ############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+function pre_test(){
+    LOG_INFO "Start to prepare the test environment."
+    make all
+    LOG_INFO "End to prepare the test environment."
+}
+
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -33,5 +39,12 @@ function run_test() {
 
     LOG_INFO "End to run test."
 }
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    make clean
+    LOG_INFO "End to restore the test environment."
+}
+
 
 main "$@"

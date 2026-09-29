@@ -29,6 +29,13 @@ elif command -v journalctl >/dev/null 2>&1; then
 else
     KERNEL_LOG_CMD="dmesg"
 fi
+ 
+function pre_test(){
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "kernel-devel-$(uname -r)"
+    make
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start to run test."
@@ -60,6 +67,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check kernel hello world remove message fail"
 
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    make clean
+    DNF_REMOVE "$@"
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"
