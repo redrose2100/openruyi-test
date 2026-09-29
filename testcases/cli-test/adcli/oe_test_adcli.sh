@@ -44,8 +44,8 @@ function run_test() {
     echo "$adcli_info" | grep "^Release" | grep -E "[0-9]+"
     CHECK_RESULT $? 0 0 "adcli release invalid"
 
-    # Test adcli_arch: Verify architecture is aarch64 or x86_64
-    echo "$adcli_info" | grep "^Architecture" | grep -E "aarch64|x86_64"
+    # Test adcli_arch: Verify architecture is aarch64 or x86_64 or riscv64
+    echo "$adcli_info" | grep "^Architecture" | grep -E "$(uname -m)"
     CHECK_RESULT $? 0 0 "adcli architecture invalid"
 
     # Test adcli_license: Verify license field contains LGPL
