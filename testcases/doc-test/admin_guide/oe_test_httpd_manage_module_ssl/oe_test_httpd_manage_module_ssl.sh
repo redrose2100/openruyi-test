@@ -16,10 +16,11 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Management module and ssl
 # #############################################
+# shellcheck disable=SC2120
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "httpd"
+    DNF_INSTALL "httpd hostname"
     systemctl enable httpd
     systemctl start httpd
     SLEEP_WAIT 6
