@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Basic functional verification of efivar
 # #############################################
+# shellcheck disable=SC2120
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -49,13 +50,17 @@ function run_test() {
     [ -s out.txt ]
     CHECK_RESULT $? 0 0 "UEFI variable content is empty"
 
-    # dump（使用安全 offset）
-    efivar -n "${uefi_value}" -d 0
-    CHECK_RESULT $? 0 0 "UEFI variable dump failed"
+    # print-decimal仅表示以十进制格式显示数据
+    output=$(efivar -n "${uefi_value}" -d 2>/dev/null)
+    CHECK_RESULT $? 0 0 "UEFI variable -d failed"
+    
+    # 验证输出非空
+    [ -n "$output" ]
+    CHECK_RESULT $? 0 0 "efivar -d output is empty"
 
-    # 负例：使用不安全/越界 offset，应失败
-    efivar -n "${uefi_value}" -d 99999 > /dev/null 2>&1
-    CHECK_RESULT $? 0 1 "Invalid offset should fail"
+    # 验证输出为合法十进制格式（每个token为0-255的纯数字）
+    echo "$output" | tr ' \t\n' '\n'  | sed '/^$/d'  | grep -qvE '^[0-9]{1,3}$'
+    CHECK_RESULT $? 1 0 "efivar -d output is NOT valid decimal format"
 
     # 导出文件并校验
     efivar -n "${uefi_value}" -e test.txt
