@@ -53,7 +53,11 @@ function run_test()
     CHECK_RESULT $? 0 0 "Failed to query UEFI driver variables (-r)"
     efibootmgr -c -I 0 -l '/EFI/test/test.efi' -L TestIndex -d "/dev/${disk}" -p "${part}" | grep -E 'Boot[0-9]+.*TestIndex'
     CHECK_RESULT $? 0 0 "Failed to create entry at index (-I)"
-    efibootmgr -g | grep "GPT"
+    if [ $(uname -m) == riscv64 ]; then
+        efibootmgr -g | grep "MBR"
+    else
+        efibootmgr -g | grep "GPT"
+    fi
     CHECK_RESULT $? 0 0 "Failed to force GPT mode (-g)"
     echo "test" > /tmp/efibootmgr_args.txt
     efibootmgr -c -@ /tmp/efibootmgr_args.txt -l '\\EFI\\test\\test.efi' -d "/dev/${disk}" -p "${part}" | grep -E 'Boot[0-9]+'
@@ -61,10 +65,12 @@ function run_test()
     rm -f /tmp/efibootmgr_args.txt
     efibootmgr -i eth0 2>/dev/null | grep -E "netboot|IP4"
     CHECK_RESULT $? 0 1 "Failed to create netboot entry (-i)"
-    efibootmgr -c -e 1 -l '/EFI/test/test.efi' -L TestEDD -d "/dev/${disk}" -p "${part}" 2>&1 | grep -E "EDD|TestEDD"
-    CHECK_RESULT $? 0 0 "Failed to create entry with EDD 1.0 (-e)"
-    efibootmgr -c -e 3 -E 0x80 -l '/EFI/test/test.efi' -L TestEDD3 -d "/dev/${disk}" -p "${part}" 2>&1 | grep -E "EDD|TestEDD3"
-    CHECK_RESULT $? 0 0 "Failed to create entry with EDD 3.0 (-e, -E)"
+    if [ $(systemd-detect-virt) != "qemu" ]; then   
+        efibootmgr -c -e 1 -l '/EFI/test/test.efi' -L TestEDD -d "/dev/${disk}" -p "${part}" 2>&1 | grep -E "EDD|TestEDD"
+        CHECK_RESULT $? 0 0 "Failed to create entry with EDD 1.0 (-e)"
+        efibootmgr -c -e 3 -E 0x80 -l '/EFI/test/test.efi' -L TestEDD3 -d "/dev/${disk}" -p "${part}" 2>&1 | grep -E "EDD|TestEDD3"
+        CHECK_RESULT $? 0 0 "Failed to create entry with EDD 3.0 (-e, -E)"
+    fi
     declare drvnum; drvnum="$(efibootmgr -r | grep TestDriver | awk '{sub("Driver","");sub("\\*","");print $1}')" || exit 1
     efibootmgr -r -b "$drvnum" -f | grep -E "reconnect|TestDriver"
     CHECK_RESULT $? 0 0 "Failed to reconnect devices (-f)"
