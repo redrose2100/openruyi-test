@@ -16,11 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   Command certutil test
 # ############################################
+# shellcheck disable=SC2120
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL nss-util
     cur_lang=$LANG
     export LANG=en_US.UTF-8
     
@@ -97,6 +99,7 @@ function post_test() {
     LOG_INFO "Start environment cleanup."
     export LANG=$cur_lang
     rm -rf "$TEST_DIR"
+    DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }
 
