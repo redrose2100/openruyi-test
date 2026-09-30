@@ -16,12 +16,13 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   High load reads and writes on VOD volumes
 # #############################################
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2034,SC2120
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    EXECUTE_T="40m"
     # kmod 正常安装需提前安装好， kernel-devel依赖包
     DNF_INSTALL "kernel-headers-$(uname -r) kernel-devel-$(uname -r)"
     DNF_INSTALL "vdo kmod-kvdo lvm2 xfsprogs"
@@ -37,7 +38,7 @@ function run_test() {
     eval pvcreate --yes "${ALL_DISKS_PATH}"
     CHECK_RESULT $?
     eval vgcreate vg_test --yes "${ALL_DISKS_PATH}"
-    evalCHECK_RESULT $?
+    CHECK_RESULT $?
     lvcreate --type=vdo --yes -n lv_test -L 5g vg_test
     CHECK_RESULT $?
     mkfs.xfs /dev/vg_test/lv_test
