@@ -1,8 +1,10 @@
 {
     "path": "$OET_PATH/testcases/embedded-test/unix_bench_tests",
+    "machine num": 2,
     "cases": [
         {
-            "name": "oe_test_unix_bench_test_001"
+            "name": "oe_test_unix_bench_test_001",
+            "machine num": 2
         }
     ]
 }

@@ -18,13 +18,20 @@
 # @Desc      :   auto run embedded unix bench test
 # #############################################
 # shellcheck disable=SC1091,SC1090,SC2034
-# shellcheck disable=SC1091
+
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
+    
     EXECUTE_T="1440m"
+    
+    # 判断设备是否为树莓派
+    BOARD_MODEL=$(cat /proc/device-tree/model 2>/dev/null | tr -d '\0')
+    if ! echo "$BOARD_MODEL" | grep -iE "(raspberry.?pi|bcm2[78][0-9]{2}|rp[i45])"; then
+        LOG_INFO "unixbench仅支持在树莓派上测试，非树莓派跳过测试"
+        exit 255
+    fi 
 
     if [ -z "${SDK_PATH}" ]; then
         LOG_WARN "not set sdk path"
@@ -38,7 +45,7 @@ function pre_test() {
     pwd)
 
     rm -rf test-tools
-    git clone https://atomgit.com/saarloos/test-tools.git -v test-tools -b master
+    git clone https://gitee.com/saarloos/test-tools.git -v test-tools -b master
     pushd  test-tools || exit 1
     unzip UnixBench.zip
     pushd  UnixBench || exit 1
@@ -52,11 +59,11 @@ function pre_test() {
 
     zip -r put_unipriton.zip UnixBench
 
-    SFTP put --node 1 --remotedir "/root/" --localdir "${current_path}/test-tools/"  --localfile "make.zip"
-    SFTP put --node 1 --remotedir "/root/" --localdir "${current_path}/test-tools/"  --localfile "perl.zip"
-    SFTP put --node 1 --remotedir "/root/" --localdir "${current_path}/test-tools/"  --localfile "put_unipriton.zip"
+    SFTP put --node 2 --remotedir "/root/" --localdir "${current_path}/test-tools/"  --localfile "make.zip"
+    SFTP put --node 2 --remotedir "/root/" --localdir "${current_path}/test-tools/"  --localfile "perl.zip"
+    SFTP put --node 2 --remotedir "/root/" --localdir "${current_path}/test-tools/"  --localfile "put_unipriton.zip"
 
-    P_SSH_CMD --node 1 --cmd "\
+    P_SSH_CMD --node 2 --cmd "\
     cd /root/ && \
     unzip -o perl.zip && \
     unzip -o make.zip && \
@@ -76,55 +83,55 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    P_SSH_CMD --node 1 --cmd "\
+    P_SSH_CMD --node 2 --cmd "\
     cat /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq > /root/logs/cur_freq_1.txt"
     CHECK_RESULT $? 0 0 "get 0.6 ub freq fail"
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "cur_freq_1.txt" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "cur_freq_1.txt" --localdir "${current_path}/"
     cat cur_freq_1.txt || grep 600000
     CHECK_RESULT $? 0 0 "run ub freq not 600000"
 
-    P_SSH_CMD --node 1 --cmd "\
+    P_SSH_CMD --node 2 --cmd "\
     cd /root/UnixBench && \
     ./Run -c 1 -c \`nproc\` -i 3 > /root/logs/test_1_1.log && \
     ./Run -c 1 -c \`nproc\` -i 3 > /root/logs/test_1_2.log && \
     ./Run -c 1 -c \`nproc\` -i 3 > /root/logs/test_1_3.log"
     CHECK_RESULT $? 0 0 "run 0.6 ub fail"
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "test_1_1.log" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "test_1_1.log" --localdir "${current_path}/"
     echo "==================== test_1_1.log ===================="
     cat test_1_1.log
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "test_1_2.log" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "test_1_2.log" --localdir "${current_path}/"
     echo "==================== test_1_2.log ===================="
     cat test_1_2.log
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "test_1_3.log" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "test_1_3.log" --localdir "${current_path}/"
     echo "==================== test_1_3.log ===================="
     cat test_1_3.log
 
-    P_SSH_CMD --node 1 --cmd "\
+    P_SSH_CMD --node 2 --cmd "\
     cd /root/UnixBench && \
     echo \"performance\" > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor && \
     cat /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq > /root/logs/cur_freq_2.txt"
     CHECK_RESULT $? 0 0 "get 1.5 ub freq fail"
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "cur_freq_2.txt" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "cur_freq_2.txt" --localdir "${current_path}/"
     cat cur_freq_2.txt || grep 1500000
     CHECK_RESULT $? 0 0 "run ub freq not 1500000"
 
-    P_SSH_CMD --node 1 --cmd "\
+    P_SSH_CMD --node 2 --cmd "\
     cd /root/UnixBench && \
     ./Run -c 1 -c \`nproc\` -i 3 > /root/logs/test_2_1.log && \
     ./Run -c 1 -c \`nproc\` -i 3 > /root/logs/test_2_2.log && \
     ./Run -c 1 -c \`nproc\` -i 3 > /root/logs/test_2_3.log"
     CHECK_RESULT $? 0 0 "run 1.5 ub fail"
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "test_2_1.log" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "test_2_1.log" --localdir "${current_path}/"
     echo "==================== test_2_1.log ===================="
     cat test_2_1.log
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "test_2_2.log" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "test_2_2.log" --localdir "${current_path}/"
     echo "==================== test_2_2.log ===================="
     cat test_2_2.log
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "test_2_3.log" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "test_2_3.log" --localdir "${current_path}/"
     echo "==================== test_2_3.log ===================="
     cat test_2_3.log
 
-    P_SSH_CMD --node 1 --cmd "\
+    P_SSH_CMD --node 2 --cmd "\
     mkdir -p /root/boot && \
     mount /dev/mmcblk0p1 /root/boot && \
     cp /root/boot/config.txt /root/config.txt.bak && \
@@ -135,31 +142,30 @@ function run_test() {
     echo \"\" >> /root/boot/config.txt"
     CHECK_RESULT $? 0 0 "set 1.8 ub fail"
 
-    P_SSH_CMD --node 1 --cmd "reboot"
-    SLEEP_WAIT 15
+    REMOTE_REBOOT 2
 
-    P_SSH_CMD --node 1 --cmd "\
+    P_SSH_CMD --node 2 --cmd "\
     cd /root/UnixBench && \
     echo \"performance\" > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor && \
     cat /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq > /root/logs/cur_freq_3.txt"
     CHECK_RESULT $? 0 0 "get 1.8 ub freq fail"
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "cur_freq_3.txt" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "cur_freq_3.txt" --localdir "${current_path}/"
     cat cur_freq_3.txt || grep 1800000
     CHECK_RESULT $? 0 0 "run ub freq not 1800000"
 
-    P_SSH_CMD --node 1 --cmd "\
+    P_SSH_CMD --node 2 --cmd "\
     cd /root/UnixBench && \
     ./Run -c 1 -c \`nproc\` -i 3 > /root/logs/test_3_1.log && \
     ./Run -c 1 -c \`nproc\` -i 3 > /root/logs/test_3_2.log && \
     ./Run -c 1 -c \`nproc\` -i 3 > /root/logs/test_3_3.log"
     CHECK_RESULT $? 0 0 "run 1.8 ub fail"
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "test_3_1.log" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "test_3_1.log" --localdir "${current_path}/"
     echo "==================== test_3_1.log ===================="
     cat test_3_1.log
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "test_3_2.log" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "test_3_2.log" --localdir "${current_path}/"
     echo "==================== test_3_2.log ===================="
     cat test_3_2.log
-    SFTP get --node 1 --remotedir "/root/logs" --remotefile "test_3_3.log" --localdir "${current_path}/"
+    SFTP get --node 2 --remotedir "/root/logs" --remotefile "test_3_3.log" --localdir "${current_path}/"
     echo "==================== test_3_3.log ===================="
     cat test_3_3.log
 
@@ -179,13 +185,12 @@ function post_test() {
     rm -rf "${current_path}"/*.log
     rm -rf "${current_path}"/*.txt
 
-    P_SSH_CMD --node 1 --cmd "\
+    P_SSH_CMD --node 2 --cmd "\
     mount /dev/mmcblk0p1 /root/boot && \
     cp /root/config.txt.bak /root/boot/config.txt && \
     umount /root/boot && \
     rm -rf /root/perl /root/make /root/UnixBench /root/make.zip /root/perl.zip /root/put_unipriton.zip"
-    P_SSH_CMD --node 1 --cmd "reboot"
-    SLEEP_WAIT 15
+    REMOTE_REBOOT 2
 
     LOG_INFO "End to restore the test environment."
 }
