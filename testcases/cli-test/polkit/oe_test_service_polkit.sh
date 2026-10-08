@@ -17,13 +17,25 @@
 # @Desc      :   Test polkit.service restart
 # #############################################
 
-source "../common/common_lib.sh"
+source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "polkit"
+    LOG_INFO "End to prepare the test environment."
+}
 
 function run_test() {
     LOG_INFO "Start testing..."
     test_execution polkit.service
     test_reload polkit.service
     LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "Start restore the test environment."
+    DNF_REMOVE "$@"
+    LOG_INFO "End of restore the test environment."
 }
 
 main "$@"
