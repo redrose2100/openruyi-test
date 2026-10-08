@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/cli-test/elasticMem",
+    "cases": [
+        {"name": "oe_test_elasticMem_common_fun_001"},
+        {"name": "oe_test_elasticMem_common_fun_002"},
+        {"name": "oe_test_elasticMem_common_fun_003"},
+        {"name": "oe_test_elasticMem_common_fun_004"}
+    ]
+}
