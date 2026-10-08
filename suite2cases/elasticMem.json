@@ -17,6 +17,16 @@
         {"name": "oe_test_elasticMem_light_fun_005"},
         {"name": "oe_test_elasticMem_light_fun_006"},
         {"name": "oe_test_elasticMem_light_fun_007"},
-        {"name": "oe_test_elasticMem_light_fun_008"}
+        {"name": "oe_test_elasticMem_light_fun_008"},
+        {"name": "oe_test_elasticMem_paral_fun_001"},
+        {"name": "oe_test_elasticMem_paral_fun_002"},
+        {"name": "oe_test_elasticMem_paral_fun_003"},
+        {"name": "oe_test_elasticMem_paral_fun_004"},
+        {"name": "oe_test_elasticMem_paral_fun_005"},
+        {"name": "oe_test_elasticMem_paral_fun_006"},
+        {"name": "oe_test_elasticMem_paral_fun_007"},
+        {"name": "oe_test_elasticMem_compact_ras_001"},
+        {"name": "oe_test_elasticMem_concurrent_ras_001"},
+        {"name": "oe_test_elasticMem_process_ras_001"}
     ]
 }
