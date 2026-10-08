@@ -30,7 +30,11 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     dnf check-update
-    CHECK_RESULT $? 0 0
+    # dnf check-update返回码为0表示没有可用的更新，返回码为100表示有可用的更新，返回码为1表示执行出错
+    if [ $? != 1 ]; then
+        ret=0
+    fi
+    CHECK_RESULT $ret 0 0
     dnf check
     CHECK_RESULT $?
     dnf check --dependencies
