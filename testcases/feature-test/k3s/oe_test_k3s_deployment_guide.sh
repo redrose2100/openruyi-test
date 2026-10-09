@@ -42,7 +42,7 @@ function pre_test() {
     DNF_INSTALL "k3s hostname"
     hostName_bak=$(hostname)
     hostnamectl set-hostname server
-    P_SSH_CMD --cmd "yum install -y k3s" --node 2
+    P_SSH_CMD --cmd "yum install -y k3s hostname" --node 2
     P_SSH_CMD --cmd "hostnamectl set-hostname agent" --node 2
     LOG_INFO "End to prepare the test environment."
 }
@@ -63,6 +63,12 @@ function run_test() {
     SLEEP_WAIT 30
     kubectl get nodes | grep "agent"
     CHECK_RESULT $? 0 0 "Failed to deploy the k3s-agent"
+    P_SSH_CMD --cmd "crictl pull m.daocloud.io/docker.io/rancher/mirrored-pause:3.6" --node 2
+    P_SSH_CMD --cmd "ctr -n k8s.io image tag m.daocloud.io/docker.io/rancher/mirrored-pause:3.6 docker.io/rancher/mirrored-pause:3.6" --node 2
+    P_SSH_CMD --cmd "crictl pull m.daocloud.io/docker.io/library/nginx:alpine" --node 2
+    P_SSH_CMD --cmd "ctr -n k8s.io image tag m.daocloud.io/docker.io/library/nginx:alpine docker.io/library/nginx:alpine" --node 2
+    P_SSH_CMD --cmd "crictl images | grep nginx" --node 2
+    P_SSH_CMD --cmd "crictl images | grep mirrored-pause" --node 2 
     kubectl apply -f deployment.yml | grep "deployment.apps/nginx-deployment created"
     CHECK_RESULT $? 0 0 "Failed to create the k3s-server nginx-deployment"
     SLEEP_WAIT 30
@@ -82,13 +88,16 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     firewall-cmd --remove-port=6443/tcp --zone=public --permanent
     firewall-cmd --remove-port=8472/udp --zone=public --permanent
-    firewall-cmd --rceload
+    firewall-cmd --reload
     P_SSH_CMD --cmd "firewall-cmd --remove-port=6443/tcp --zone=public --permanent" --node 2
     P_SSH_CMD --cmd "firewall-cmd --remove-port=8472/udp --zone=public --permanent" --node 2
     P_SSH_CMD --cmd "firewall-cmd --reload" --node 2
     P_SSH_CMD --cmd "systemctl restart firewalld" --node 2
     hostnamectl set-hostname "$hostName_bak"
     bash -x /usr/local/bin/k3s-uninstall.sh
+	P_SSH_CMD --cmd "hostnamectl set-hostname $hostName_bak" --node 2
+    P_SSH_CMD --cmd "crictl rmi m.daocloud.io/docker.io/rancher/mirrored-pause:3.6" --node 2
+    P_SSH_CMD --cmd "crictl rmi m.daocloud.io/docker.io/library/nginx:alpine" --node 2
     P_SSH_CMD --cmd "bash -x /usr/local/bin/k3s-agent-uninstall.sh" --node 2
     LOG_INFO "End to restore the test environment."
 }
