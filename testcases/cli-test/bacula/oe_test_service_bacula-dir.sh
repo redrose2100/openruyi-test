@@ -49,7 +49,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop bacula-dir.service
-    sed -i 's\dbuser = "root"\dbuser = "bacula"\g' /etc/bacula/bacula-dir.conf
     alternatives --set libbaccats.so /usr/lib64/libbaccats-postgresql.so
     /usr/libexec/bacula/drop_mysql_tables
     /usr/libexec/bacula/drop_mysql_database
