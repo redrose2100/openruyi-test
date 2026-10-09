@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "rpmdevtools"
     pkg_name=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
-    pkg_arch=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $2}')
+    pkg_arch=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $2}') 
     yumdownloader "${pkg_name}"
     mkdir -p /ALT/Sisyphus/files/i586/RPMS
     mkdir -p /ALT/Sisyphus/files/noarch/RPMS
@@ -34,6 +34,11 @@ function pre_test() {
     pkg_name1=$(dnf list | head -n 4 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
     mkdir ./tmp_dir
     yumdownloader "${pkg_name1}"
+    
+    # 导入 openEuler 官方 GPG 公钥
+    if ! rpm -qa gpg-pubkey* | grep gpg > /dev/null 2>&1 && [ -f /etc/pki/rpm-gpg/RPM-GPG-KEY-openEuler ]; then
+         rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-openEuler
+    fi
 
     LOG_INFO "End of environmental preparation."
 }
@@ -50,7 +55,7 @@ function run_test() {
 
     rpmdev-checksig "${pkg_name}"*.rpm | grep -E "${pkg_name}.*.rpm: RSA|${pkg_name}.*.rpm: MD5"
     CHECK_RESULT $? 0 0 "Failed command:rpmdev-checksig"
-
+   
     rpmdev-cksum "${pkg_name}"*rpm | head -n 1 | awk '{print $3}' | grep "${pkg_name}.*rpm"
     CHECK_RESULT $? 0 0 "Failed command: rpmdev-cksum"
 
