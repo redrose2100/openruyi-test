@@ -30,7 +30,8 @@ function pre_test() {
     /usr/libexec/bacula/create_mysql_database
     /usr/libexec/bacula/make_mysql_tables
     alternatives --set libbaccats.so /usr/lib64/libbaccats-mysql.so
-    sed -i 's\dbuser = "bacula"\dbuser = "root"\g' /etc/bacula/bacula-dir.conf
+    chown -R bacula:bacula /var/spool/bacula /var/log/bacula
+    chmod 750 /var/spool/bacula /var/log/bacula
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -48,7 +49,6 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop bacula-dir.service
-    sed -i 's\dbuser = "root"\dbuser = "bacula"\g' /etc/bacula/bacula-dir.conf
     alternatives --set libbaccats.so /usr/lib64/libbaccats-postgresql.so
     /usr/libexec/bacula/drop_mysql_tables
     /usr/libexec/bacula/drop_mysql_database
