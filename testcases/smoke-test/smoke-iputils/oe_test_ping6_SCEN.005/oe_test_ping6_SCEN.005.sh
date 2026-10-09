@@ -19,7 +19,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    DNF_INSTALL "iputils ping6"
+    DNF_INSTALL "iputils"
     eth_main=$(get_eth_main local)
 }
 
