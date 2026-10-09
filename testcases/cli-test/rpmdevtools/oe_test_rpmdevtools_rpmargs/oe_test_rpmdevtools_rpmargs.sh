@@ -34,6 +34,11 @@ function pre_test() {
     pkg_name1=$(dnf list | head -n 4 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
     mkdir ./tmp_dir
     yumdownloader "${pkg_name1}"
+    
+    # 导入 openEuler 官方 GPG 公钥
+    if ! rpm -qa gpg-pubkey* | grep gpg > /dev/null 2>&1 && [ -f /etc/pki/rpm-gpg/RPM-GPG-KEY-openEuler ]; then
+         rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-openEuler
+    fi
 
     LOG_INFO "End of environmental preparation."
 }
