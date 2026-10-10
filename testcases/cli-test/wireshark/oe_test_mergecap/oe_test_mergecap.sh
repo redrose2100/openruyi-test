@@ -25,7 +25,7 @@ function pre_test() {
     generate_traffic &
     WIRESHARK_TRAFFIC_PID=$!
     system_version=$(grep VERSION_ID /etc/os-release | cut -d'"' -f2)
-    if [ "$system_version" = "25.09" ]; then
+    if [ "$system_version" = "25.09" ] || [ "$system_version" = "26.09" ]; then
             version=$(rpm -qa 'wireshark-qt*' | head -1 | awk -F '-' '{print $3}')
     else
             version=$(rpm -qa wireshark | awk -F "-" '{print$2}')
