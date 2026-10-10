@@ -28,10 +28,17 @@ function config_params() {
     echo "I miss you.
 I nedd you.
 Thi is a wrongg stencees." > ${TMP_DIR}/test.in
-    echo "& nedd 2 2: need, nerd
+    if [ "$system_version" = "26.09" ]; then
+            echo "& nedd 2 2: need, nerd
+& Thi 11 0: Thu, Th, Ti, Hi, Thai, Chi, Phi, T hi, Th i, Thigh, Thee
+& wrongg 3 9: wrong, wrongs, wrong g
+& stencees 5 16: stenches, existences, sentences, sentence, senescence" > ${TMP_DIR}/test.refs
+    else
+	    echo "& nedd 2 2: need, nerd
 & Thi 13 0: Thu, Th, Ti, Hi, Thai, Chi, Phi, T hi, Th i, Thigh, Thee, Tho, This
 & wrongg 3 9: wrong, wrongs, wrong g
 & stencees 5 16: stenches, existences, sentences, sentence, senescence" > ${TMP_DIR}/test.refs
+    fi
     LOG_INFO "End to config params of the case."
 }
 
