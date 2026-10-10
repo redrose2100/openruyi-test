@@ -15,6 +15,7 @@
 # @License   	:   Mulan PSL v2
 # @Desc      	:   the test of novnc package
 ####################################
+# shellcheck disable=SC2119
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
@@ -37,16 +38,17 @@ function run_test() {
     LOG_INFO "Start to run test."
     sleeptime=10
     # start vnc server
+    VNC_TEST_PWD="Kj#7sQ2z"
     expect <<EOF
         spawn vncserver ${vncConnName}
         expect {
             "Password:" {
-                send "${NODE1_PASSWORD}\\r"
+                send "${VNC_TEST_PWD}\\r"
             }
         }
         expect {
             "Verify:" {
-                send "${NODE1_PASSWORD}\\r"
+                send "${VNC_TEST_PWD}\\r"
             }
         } 
         expect {
@@ -56,12 +58,12 @@ function run_test() {
         }
         expect {
             "Password:" {
-                send "${NODE1_PASSWORD}\\r"
+                send "${VNC_TEST_PWD}\\r"
             }
         }
         expect {
             "Verify:" {
-                send "${NODE1_PASSWORD}\\r"
+                send "${VNC_TEST_PWD}\\r"
             }
         } 
         expect {
@@ -115,7 +117,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     vncserver -kill "${vncConnName}"
-    DNF_REMOVE "$@"
+    DNF_REMOVE
     rm -rf self.pem novnc_log.txt
     LOG_INFO "End to restore the test environment."
 }
