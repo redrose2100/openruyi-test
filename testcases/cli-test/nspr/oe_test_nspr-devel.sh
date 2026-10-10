@@ -31,7 +31,9 @@ function run_test() {
   CHECK_RESULT $? 0 0 "Compiler option error in NSPR library"
   nspr-config --libs |grep lnspr4
   CHECK_RESULT $? 0 0 "Error in obtaining linker options for NSPR library"
-  test "$(nspr-config --version)" = "$(rpm -q nspr-devel | awk -F'-' '{print $3}')"
+  ver1=$(nspr-config --version | sed -E 's/\.0+$//')
+  ver2=$(rpm -q nspr-devel | awk -F- '{print $3}' | sed -E 's/\.0+$//')
+  test "${ver1}" = "${ver2}"
   CHECK_RESULT $? 0 0 "Error in obtaining version information of NSPR library"
   nspr-config --prefix |grep usr
   CHECK_RESULT $? 0 0 "Error getting installation path for NSPR library"
