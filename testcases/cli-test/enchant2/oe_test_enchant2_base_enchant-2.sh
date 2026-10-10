@@ -17,6 +17,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   TEST enchant-2
 # #############################################
+# shellcheck disable=SC2119
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
@@ -27,11 +28,19 @@ function config_params() {
     test -d tmp || mkdir tmp 
     echo "I miss you.
 I nedd you.
-Thi is a wrongg stencees." > ${TMP_DIR}/test.in
-    echo "& nedd 2 2: need, nerd
+Thi is a wrongg stencees." > "${TMP_DIR}/test.in"
+    system_version=$(grep VERSION_ID /etc/os-release | cut -d'"' -f2)
+    if [ "$system_version" = "26.09" ]; then
+            echo "& nedd 2 2: need, nerd
+& Thi 11 0: Thu, Th, Ti, Hi, Thai, Chi, Phi, T hi, Th i, Thigh, Thee
+& wrongg 3 9: wrong, wrongs, wrong g
+& stencees 5 16: stenches, existences, sentences, sentence, senescence" > "${TMP_DIR}/test.refs"
+    else
+	    echo "& nedd 2 2: need, nerd
 & Thi 13 0: Thu, Th, Ti, Hi, Thai, Chi, Phi, T hi, Th i, Thigh, Thee, Tho, This
 & wrongg 3 9: wrong, wrongs, wrong g
-& stencees 5 16: stenches, existences, sentences, sentence, senescence" > ${TMP_DIR}/test.refs
+& stencees 5 16: stenches, existences, sentences, sentence, senescence" > "${TMP_DIR}/test.refs"
+    fi
     LOG_INFO "End to config params of the case."
 }
 
@@ -49,15 +58,15 @@ function run_test() {
     CHECK_RESULT $? 0 0 "option: -h error"
     enchant-2 -v | grep -E "[0-9.]+"
     CHECK_RESULT $? 0 0 "option: -v error"
-    enchant-2 -l < $tmp/test.in | grep $'nedd\nThi\nwrongg\nstencees'
+    enchant-2 -l < "${TMP_DIR}/test.in" | grep $'nedd\nThi\nwrongg\nstencees'
     CHECK_RESULT $? 0 0 "option: -l STDIN error"
-    enchant-2 -l $tmp/test.in | grep $'nedd\nThi\nwrongg\nstencees'
+    enchant-2 -l "${TMP_DIR}/test.in" | grep $'nedd\nThi\nwrongg\nstencees'
     CHECK_RESULT $? 0 0 "option: -l FILEIN error"
-    enchant-2 -l -d en_AU $tmp/test.in | grep $'nedd\nThi\nwrongg\nstencees'
+    enchant-2 -l -d en_AU "${TMP_DIR}/test.in" | grep $'nedd\nThi\nwrongg\nstencees'
     CHECK_RESULT $? 0 0 "option: -d error"
-    enchant-2 -l -L $tmp/test.in | grep $'2 nedd\n3 Thi\n3 wrongg\n3 stencees'
+    enchant-2 -l -L "${TMP_DIR}/test.in" | grep $'2 nedd\n3 Thi\n3 wrongg\n3 stencees'
     CHECK_RESULT $? 0 0 "option: -L error"
-    enchant-2 -a $tmp/test.in | grep "^& " | diff -u $tmp/test.refs -
+    enchant-2 -a "${TMP_DIR}/test.in" | grep "^& " | diff -u "${TMP_DIR}/test.refs" -
     CHECK_RESULT $? 0 0 "option: -a error"
     LOG_INFO "End to run test."
 }
@@ -66,7 +75,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    rm -rf $tmp 
+    rm -rf "${TMP_DIR}"
     DNF_REMOVE
 
     LOG_INFO "End to restore the test environment."
