@@ -17,11 +17,14 @@
 # ############################################
 # shellcheck disable=SC2119,SC2034
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH/testcases/cli-test/wireshark/common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     EXECUTE_T="120m"
-    DNF_INSTALL wireshark
+    DNF_INSTALL "wireshark nmap"
+    generate_traffic &
+    WIRESHARK_TRAFFIC_PID=$!
     version=$(rpm -qa wireshark | awk -F "-" '{print$2}')
     LOG_INFO "Finish preparing the test environment."
 }
@@ -85,6 +88,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    close_traffic "$WIRESHARK_TRAFFIC_PID"
     rm -f testfile*
     DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."
