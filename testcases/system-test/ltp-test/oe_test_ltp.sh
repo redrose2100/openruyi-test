@@ -32,17 +32,21 @@ function pre_test() {
     do
         git clone -b "${branch}" https://github.com/linux-test-project/ltp.git
     done
-    cp "${current_path}/memcg_move_charge_at_immigrate_test.sh" \
-       ltp/testcases/kernel/controllers/memcg/functional/memcg_move_charge_at_immigrate_test.sh
-    cp "${current_path}/memcg_lib.sh" ltp/testcases/kernel/controllers/memcg/functional/memcg_lib.sh
-    cp "${current_path}/memcg_subgroup_charge.sh" ltp/testcases/kernel/controllers/memcg/functional/memcg_subgroup_charge.sh
+    # kernel 6.6+ memory.stat异步更新机制需要替换memcg测试用例
+    kver=$(uname -r | awk -F. '{printf "%d%03d",$1,$2}')
+    if [ "$kver" -ge 6006 ]; then
+        cp "${current_path}/memcg_move_charge_at_immigrate_test.sh" \
+           ltp/testcases/kernel/controllers/memcg/functional/memcg_move_charge_at_immigrate_test.sh
+        cp "${current_path}/memcg_lib.sh" ltp/testcases/kernel/controllers/memcg/functional/memcg_lib.sh
+        cp "${current_path}/memcg_subgroup_charge.sh" ltp/testcases/kernel/controllers/memcg/functional/memcg_subgroup_charge.sh
+    fi
     cd ltp || exit 1
-    {
-        make autotools 
-        ./configure  
-        make -j "$(nproc)"
-        make install 
-    } >>/dev/null 2>&1
+    # Ensure automake/autoconf are installed (aclocal required by make autotools)
+    command -v aclocal >/dev/null 2>&1 || dnf install -y automake autoconf
+    make autotools || { LOG_ERROR "make autotools failed"; exit 1; }
+    ./configure || { LOG_ERROR "configure failed"; exit 1; }
+    make -j "$(nproc)" || { LOG_ERROR "make failed"; exit 1; }
+    make install || { LOG_ERROR "make install failed"; exit 1; }
     # proc01 相关配置
     if [[ -f "/proc/dirty/buffer_size" ]]; then
         echo 1024 > /proc/dirty/buffer_size
@@ -72,13 +76,13 @@ function pre_test() {
 }
 
 select_ltp_tag() {
-    local k=$(uname -r | awk -F. '{printf "%d%02d",$1,$2}')
+    local k=$(uname -r | awk -F. '{printf "%d%03d",$1,$2}')
     local default_tag="20260130"
     local mirror="https://ghproxy.com/https://github.com/linux-test-project/ltp.git"
 
     case $k in
-        419|510)    echo 20220121 ;;
-        606)        echo 20260130 ;;
+        4019|5010)    echo 20220121 ;;
+        6006)        echo 20260130 ;;
         *)
             local tag=""
             for url in "https://github.com/linux-test-project/ltp.git" "$mirror"; do
