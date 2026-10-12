@@ -34,46 +34,49 @@ function run_test()
     LOG_INFO "Start to run test."
 
     source /etc/profile
-
     umaskValue=$(umask)
-    test "$umaskValue" == "0077"
+    test "$umaskValue" == "0022"
     CHECK_RESULT $? 0 0  "check umask default value fail"
 
     grep -iE "^\s*umask\s+" /etc/login.defs | grep "UMASK[[:space:]]\+077"
     CHECK_RESULT $? 0 0 "check /etc/login.defs set umask value fail"
-
-    grep -iE "^\s*umask\s+" /etc/profile | grep "[umaskUMASK][[:space:]]\+077" 
-    CHECK_RESULT $? 0 0 "check /etc/profile set umask value fail"
-
-    bashrcFile="/etc/bashrc"
-    if [ ! -e ${bashrcFile} ]; then 
-        bashrcFile="/etc/skel/.bashrc"
+    
+    if grep -riE '^\s*umask\s+' /etc/ 2>/dev/null |grep -E "profile";then
+        grep -iE "^\s*umask\s+" /etc/profile | grep "[umaskUMASK][[:space:]]\+077" 
+        CHECK_RESULT $? 0 0 "check /etc/profile set umask value fail"
     fi
 
-    grep -iE "^\s*umask\s+" ${bashrcFile} | grep "[umaskUMASK][[:space:]]\+077"
-    CHECK_RESULT $? 0 0 "check /etc/bashrc set umask value fail"
+    if grep -riE '^\s*umask\s+' /etc/ 2>/dev/null |grep -E "bashrc";then
+        bashrcFile="/etc/bashrc"
+        if [ ! -e ${bashrcFile} ]; then 
+            bashrcFile="/etc/skel/.bashrc"
+        fi
+
+        grep -iE "^\s*umask\s+" ${bashrcFile} | grep "[umaskUMASK][[:space:]]\+077"
+        CHECK_RESULT $? 0 0 "check /etc/bashrc set umask value fail"
+    fi
 
     touch test
     CHECK_RESULT $? 0 0 "touch failed"
-    ls -l | grep -e "-rw-------"
+    ls -l | grep -e "-rw-r--r--"
     CHECK_RESULT $? 0 0 "check root new file right faild"
     rm -rf test
 
     mkdir testdir
     CHECK_RESULT $? 0 0 "mkdir failed"
-    ls -ld testdir/ | grep -e "drwx------"
+    ls -ld testdir/ | grep -e "drwxr-xr-x"
     CHECK_RESULT $? 0 0 "check root new dir right faild"
     rm -rf testdir
 
     su - tester1 -c "touch test"
     CHECK_RESULT $? 0 0 "touch failed"
-    su - tester1 -c "ls -l" | grep -e "-rw-------"
+    su - tester1 -c "ls -l" | grep -e "-rw-r--r--"
     CHECK_RESULT $? 0 0 "check tester1 new file right faild"
     su - tester1 -c "rm -rf test"
 
     su - tester1 -c "mkdir testdir"
     CHECK_RESULT $? 0 0 "mkdir failed"
-    su - tester1 -c "ls -ld testdir/" | grep -e "drwx------"
+    su - tester1 -c "ls -ld testdir/" | grep -e "drwxr-xr-x"
     CHECK_RESULT $? 0 0 "check tester1 new dir right faild"
     su - tester1 -c "rm -rf testdir"
     

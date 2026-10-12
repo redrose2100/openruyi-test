@@ -46,7 +46,7 @@ function run_test() {
     find /sbin/init -type f -user root -group root -perm 755
     CHECK_RESULT $? 0 0 "check /sbin/init file right fail"
 
-    find /var/volatile/log -type f -user root -group root -perm 750
+    find /var/log -type f -user root -group root -perm 750
     CHECK_RESULT $? 0 0 "check /var/volatile/log file right fail"
 
     find /etc/motd -type f -user root -group root -perm 644
