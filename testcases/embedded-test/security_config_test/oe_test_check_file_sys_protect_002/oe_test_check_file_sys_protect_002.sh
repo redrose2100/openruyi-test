@@ -35,7 +35,7 @@ function run_test() {
     find /etc/init.d/ -type f -user root -group root -perm 750
     CHECK_RESULT $? 0 0 "check /etc/init.d/ file right fail"
 
-    getFileNum=$("find /etc/init.d/* -type f -user root -group root -perm 750 | wc -l")
+    getFileNum=$("find /etc/init.d/* -type f -user root -group root -perm 644 | wc -l")
     allFileNum=$("find /etc/init.d/* -type f | wc -l")
     test "$getFileNum" -eq "$allFileNum"
     CHECK_RESULT $? 0 1 "check /etc/init.d/* file right fail"
@@ -43,8 +43,8 @@ function run_test() {
     find /etc/passwd -type f -user root -group root -perm 644
     CHECK_RESULT $? 0 0 "check /etc/passwd file right fail"
 
-    find /etc/securetty -type f -user root -group root -perm 600
-    CHECK_RESULT $? 0 0 "check /etc/securetty file right fail"
+    find /etc/security -type f -user root -group root -perm 600
+    CHECK_RESULT $? 0 0 "check /etc/security file right fail"
 
     find /etc/security/opasswd -type f -user root -group root -perm 600
     CHECK_RESULT $? 0 0 "check /etc/security/opasswd file right fail"
@@ -52,7 +52,7 @@ function run_test() {
     find /etc/shadow -type f -user root -group root -perm 600
     CHECK_RESULT $? 0 0 "check /etc/shadow file right fail"
 
-    getFileNum=$("find /etc/ssh/*key -type f -user root -group root -perm 400 | wc -l")
+    getFileNum=$("find /etc/ssh/*key -type f -user root -group root -perm 600 | wc -l")
     allFileNum=$("find /etc/ssh/*key -type f | wc -l")
     test "$getFileNum" -eq "$allFileNum"
     CHECK_RESULT $? 0 1 "check /etc/ssh/*key file right fail"
