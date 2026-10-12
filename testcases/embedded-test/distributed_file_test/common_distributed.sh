@@ -20,7 +20,11 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_env() {
-    dnf install hmdfs filemanagement_dfs_service -y
+    if ! grep -qiE '(openharmony|harmonyos|harmony)' /etc/os-release; then
+       LOG_INFO "当前系统非 OpenHarmony/HarmonyOS，跳过测试。"
+       exit 255
+    fi
+    DNF_INSTALL "hmdfs filemanagement_dfs_service"
     if cd /root && insmod /root/hmdfs.ko; then
         echo "insmod sucess"
     else
@@ -29,7 +33,7 @@ function pre_env() {
     fi
 
     SSH_SCP /root/hmdfs.ko "${NODE2_USER}"@"${NODE2_IPV4}":/root "${NODE2_PASSWORD}"
-    SSH_CMD "dnf install hmdfs filemanagement_dfs_service -y" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 300 22
+    DNF_INSTALL "hmdfs filemanagement_dfs_service" 2
     SSH_CMD "cd /root && insmod hmdfs.ko" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 300 22
 
     mkdir -p /data/service/el2/100/non_account /mnt/hmdfs/100/non_account
@@ -68,10 +72,10 @@ function clean_env() {
     sudo umount "/data/service/el2/100/non_account" "/mnt/hmdfs/100/non_account"
     SSH_CMD "sudo umount  \"/data/service/el2/100/non_account\"  \"/mnt/hmdfs/100/non_account\"" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 300 22
 
-    dnf hmdfs filemanagement_dfs_service -y
+    DNF_REMOVE "$@"
     rm -rf /test_01.txt /test_02.txt /remoteIDb.txt /remote_env.txt
     rmmod hmdfs && rm -rf /data/service /mnt/hmdfs
-    SSH_CMD "dnf filemanagement_dfs_service -y" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 300 22
+    DNF_REMOVE "$@" 2
     SSH_CMD "rm -rf /test_01.txt /test_02.txt /remoteIDb.txt /remote_env.txt" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 300 22
     SSH_CMD "rmmod hmdfs && rm -rf  /data/service /mnt/hmdfs" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 300 22
 }
