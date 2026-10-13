@@ -1,1 +1,6 @@
 testcases/cli-test/flac/common/myaudio.flac filter=lfs diff=lfs merge=lfs -text
+# doc/learning 自动化脚本统一 LF（autocrlf=true 下防 CRLF 破坏 bash shebang）
+doc/learning/tools/hooks/* text eol=lf
+doc/learning/tools/*.sh text eol=lf
+doc/learning/tools/*.py text eol=lf
+doc/learning/tools/*.ps1 text eol=lf
