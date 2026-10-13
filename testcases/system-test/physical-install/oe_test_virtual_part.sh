@@ -1,0 +1,73 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   liujingjing
+# @Contact   :   liujingjing25812@163.com
+# @Date      :   2023/07/06
+# @License   :   Mulan PSL v2
+# @Desc      :   virtual part
+# ############################################
+# shellcheck disable=SC2034,SC2154,SC1091
+
+source ./common.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    build_env
+    EXECUTE_T="120m"
+    sed -i "s#network_url#$http_url#g" /var/www/html/anaconda-ks-base.cfg
+    sed -i "s/minimal-environment/virtualization-host-environment/g" /var/www/html/anaconda-ks-base.cfg
+    sed -i  "/virtualization-host-environment/a @container-management\n@development\n@headless-management\n@legacy-unix\n@network-file-system-client\n@network-server" /var/www/html/anaconda-ks-base.cfg
+    chmod  777 /var/www/html/anaconda-ks-base.cfg
+    systemctl restart httpd
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+    if [ "${NODE3_MACHINE}" == "kvm" ]; then
+        LOG_WARN "This machine is not a physical machine."
+    else
+        if [ "$NODE3_IPV4"x == "$server_ip"x ]; then
+            LOG_INFO "The third machine is the tftp server."
+        else
+            ipmitool -H ${NODE3_BMC_IP} -I lanplus -U ${NODE3_BMC_USER} -P ${NODE3_BMC_PASSWORD} chassis bootdev pxe
+            SLEEP_WAIT 5
+            ipmitool -H ${NODE3_BMC_IP} -I lanplus -U ${NODE3_BMC_USER} -P ${NODE3_BMC_PASSWORD} chassis power reset
+            SLEEP_WAIT 1500
+            ipmitool -H ${NODE3_BMC_IP} -I lanplus -U ${NODE3_BMC_USER} -P ${NODE3_BMC_PASSWORD} power status | grep "Chassis Power is on" || SLEEP_WAIT 300
+            P_SSH_CMD --cmd "ping -c 3 ${NODE1_IPV4} >/dev/null" --node 3 || SLEEP_WAIT 300
+            P_SSH_CMD --cmd "cat /root/anaconda-ks.cfg" --node 3 | grep "network-server"
+            CHECK_RESULT $?
+            SFTP put --localdir /etc/yum.repos.d --localfile openEuler.repo --remotedir /etc/yum.repos.d --node 3
+            P_SSH_CMD --cmd "dnf grouplist hidden | grep -A 1 'Installed Env'| grep -i virtual" --node 3
+            CHECK_RESULT $?
+            P_SSH_CMD --cmd "dnf grouplist hidden" --node 3 | grep -A 15 "Installed Groups" | grep -iEc "container|development tools|headless|legacy|network file|network server" | grep 6
+            CHECK_RESULT $?
+        fi
+    fi
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    P_SSH_CMD --cmd "mkdir virtual_part_${NODE3_FRAME};
+    dmesg>dmesg_log;
+    journalctl>journalctl_log;
+    cp /var/log/messages ./;
+    mv dmesg_log journalctl_log messages anaconda-ks.cfg virtual_part_${NODE3_FRAME};" --node 3
+    SFTP get --localdir ./ --remotedir virtual_part_${NODE3_FRAME} --node 3
+    clean_env
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"

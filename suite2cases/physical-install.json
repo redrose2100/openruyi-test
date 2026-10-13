@@ -1,0 +1,73 @@
+{
+    "path": "$OET_PATH/testcases/system-test/physical-install",
+    "machine type": "physical",
+    "machine num": 3,
+    "cases": [
+        {
+            "name": "oe_test_minimal"
+        },
+        {
+            "name": "oe_test_minimal_standard"
+        },
+        {
+            "name": "oe_test_minimal_all"
+        },
+        {
+            "name": "oe_test_server"
+        },
+        {
+            "name": "oe_test_server_part"
+        },
+        {
+            "name": "oe_test_server_all"
+        },
+        {
+            "name": "oe_test_virtual"
+        },
+        {
+            "name": "oe_test_virtual_part"
+        },
+        {
+            "name": "oe_test_virtual_all"
+        },
+        {
+            "name": "oe_test_ftp_install"
+        },
+        {
+            "name": "oe_test_nfs_install"
+        },
+        {
+            "name": "oe_test_check_password"
+        },
+        {
+            "name": "oe_test_check_route"
+        },
+        {
+            "name": "oe_test_create_user"
+        },
+        {
+            "name": "oe_test_create_sm3"
+        },
+        {
+            "name": "oe_test_modify_hostname"
+        },
+        {
+            "name": "oe_test_second_disk"
+        },
+        {
+            "name": "oe_test_setup_ipv4"
+        },
+        {
+            "name": "oe_test_setup_ipv6"
+        },
+        {
+            "name": "oe_test_setup_mtu"
+        },
+        {
+            "name": "oe_test_root_lock"
+        },
+        {
+            "name": "oe_test_ntp_install"
+        }
+    ]
+}
