@@ -8,6 +8,12 @@
 #           （或复制本文件到 .git/hooks/pre-push 并 chmod +x）
 set -u
 
+# 嵌套推送保护：update_docs.sh --prepush 内部会再 push 一次（把刚提交的文档带上 fork），
+# 那一次触发的钩子直接放行，避免无限递归。
+if [ "${PREPUSH_HOOK:-0}" = "1" ]; then
+    exit 0
+fi
+
 # 本文件位于 doc/learning/tools/hooks/，上跳 4 级到仓库根
 ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
 PREPUSH_BRANCH="${PREPUSH_BRANCH:-master}"

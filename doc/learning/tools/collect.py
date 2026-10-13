@@ -263,8 +263,13 @@ security_themes = count_subdirs(os.path.join(TESTCASES, "security_test"))
 
 try:
     import subprocess
-    commit_short = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], cwd=REPO, stderr=subprocess.DEVNULL).decode().strip()
-    last_subject = subprocess.check_output(["git", "log", "-1", "--format=%s"], cwd=REPO, stderr=subprocess.DEVNULL).decode().strip()
+    # 分析快照 = 最后一个触碰"非 doc/learning 文件"的提交（doc 自身提交不参与，避免自激震荡）
+    snap = ["git", "-C", REPO, "log", "-1", "--format=%h|%s", "--", ".", ":(exclude)doc/learning"]
+    _out = subprocess.check_output(snap, stderr=subprocess.DEVNULL).decode().strip()
+    if "|" in _out:
+        commit_short, last_subject = _out.split("|", 1)
+    else:
+        commit_short, last_subject = _out, ""
     branch = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=REPO, stderr=subprocess.DEVNULL).decode().strip()
 except Exception:
     commit_short = last_subject = branch = "unknown"
