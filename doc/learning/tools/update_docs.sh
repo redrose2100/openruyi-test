@@ -42,8 +42,9 @@ sync_upstream() {
     fi
     BEHIND=$(git rev-list --count HEAD.."$UPSTREAM/$BRANCH")
     AHEAD=$(git rev-list --count "$UPSTREAM/$BRANCH"..HEAD)
-    if [ "$BEHIND" -eq 0 ] && [ "$AHEAD" -eq 0 ]; then
-        log "与上游完全同步，无需合并"; return 0
+    if [ "$BEHIND" -eq 0 ]; then
+        log "上游无新提交，无需合并"
+        return 0
     fi
     log "本地落后上游 $BEHIND 提交 / 领先 $AHEAD 提交，执行 merge 合并 ..."
     BEFORE=$(git rev-parse HEAD)
