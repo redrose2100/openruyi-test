@@ -1,0 +1,64 @@
+# keyutils
+
+> 本文档由 `case_extract.json` 脚本生成（骨架），含元信息、环境约束、用例清单（@Desc/断言/命令），**全部为代码事实**。测试域内代表性特性的函数级深挖见 [`08-测试特性树`](../08-测试特性树.md)。
+
+## 元信息
+
+| 项 | 值 |
+|----|----|
+| 测试域 | 命令行与服务域（cli-test） |
+| 套件路径 | `$OET_PATH/testcases/cli-test/keyutils` |
+| 注册用例数 | 3 |
+| 环境约束 | 无 |
+
+## 用例清单（测试点）
+
+| 用例名 | 描述 | 函数 | 断言数 | 装包 | 远端 | 超时 |
+|--------|------|------|-------:|------|------|------|
+| oe_test_keyutils-api | Test keyutils api | pre_test/run_test/post_test | 1 | ✔ |  |  |
+| oe_test_keyutils-keyctl | Test keyutils api | pre_test/run_test/post_test | 7 | ✔ |  |  |
+| oe_test_keyutils-libs | keyutils basic library call | pre_test/run_test/post_test | 3 | ✔ |  |  |
+
+### 断言与命令明细
+
+#### oe_test_keyutils-api
+
+- 描述：Test keyutils api
+- 函数：`pre_test, run_test, post_test`
+- 断言（1 条）：
+
+```
+  CHECK_RESULT $? 0 0 "import key error"
+```
+
+- 涉及命令：test×1
+
+#### oe_test_keyutils-keyctl
+
+- 描述：Test keyutils api
+- 函数：`pre_test, run_test, post_test`
+- 断言（7 条）：
+
+```
+  CHECK_RESULT $? 0 0 "version error"
+  CHECK_RESULT $? 0 0 "support info error"
+  CHECK_RESULT $? 0 0 "add user failed"
+  CHECK_RESULT $? 0 0 "search user failed"
+  CHECK_RESULT $? 0 0 "keyctl update failed"
+  CHECK_RESULT $? 0 0 "keyctl revoke failed"
+  CHECK_RESULT $? 0 1 "keyctl clear failed"
+```
+
+#### oe_test_keyutils-libs
+
+- 描述：keyutils basic library call
+- 函数：`pre_test, run_test, post_test`
+- 断言（3 条）：
+
+```
+  CHECK_RESULT $? 0 0 "t_request_key.c failed to compile"
+  CHECK_RESULT $? 0 0 "support info error"
+  CHECK_RESULT $? 0 0 "import key error"
+```
+
+- 涉及命令：gcc×1

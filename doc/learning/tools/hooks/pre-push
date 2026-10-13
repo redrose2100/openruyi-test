@@ -1,0 +1,36 @@
+#!/usr/bin/bash
+# pre-push 钩子 — 推送前自动同步上游 + 刷新 doc/learning 学习文档
+# 触发条件: 推送的是 master（可改 PREPUSH_BRANCH 环境变量调整）
+# 行为:     调用 doc/learning/tools/update_docs.sh --prepush
+#           （同步 upstream → 重新生成文档 → 若 doc/learning 有变化则自动提交）
+#           失败不阻塞推送，仅告警，避免影响正常代码推送。
+# 启用:     设置 git config core.hooksPath doc/learning/tools/hooks
+#           （或复制本文件到 .git/hooks/pre-push 并 chmod +x）
+set -u
+
+ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+PREPUSH_BRANCH="${PREPUSH_BRANCH:-master}"
+SCRIPT="$ROOT/doc/learning/tools/update_docs.sh"
+
+# 仅处理 master 的推送；其他分支/标签直接放行
+while read local_ref local_sha remote_ref remote_sha; do
+    case "$local_ref" in
+        refs/heads/"$PREPUSH_BRANCH")
+            ;;
+        *)
+            exit 0
+            ;;
+    esac
+done
+
+if [ ! -f "$SCRIPT" ]; then
+    echo "[pre-push] WARN 未找到 $SCRIPT，跳过文档刷新"
+    exit 0
+fi
+
+# 防止钩子内推送造成递归（--prepush 模式本身不推送，此处仅防御）
+export PREPUSH_HOOK=1
+echo "[pre-push] 同步上游并刷新 doc/learning 学习文档 ..."
+bash "$SCRIPT" --prepush
+echo "[pre-push] 完成（即使失败也已放行，请留意上方告警）"
+exit 0

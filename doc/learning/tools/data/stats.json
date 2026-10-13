@@ -1,0 +1,177 @@
+{
+ "suites_total": 979,
+ "cases_total": 7189,
+ "unique_cases": 6718,
+ "dup_names": 461,
+ "extra_refs": 471,
+ "script_files": 7629,
+ "orphans": 879,
+ "orphan_case": 503,
+ "orphan_lib": 376,
+ "orphan_by": {
+  "cli-test": 231,
+  "doc-test": 5,
+  "embedded-test": 27,
+  "feature-test": 552,
+  "security_test": 1,
+  "smoke-test": 36,
+  "system-test": 26,
+  "testsuite": 1
+ },
+ "sh_cases": 7147,
+ "py_cases": 1,
+ "desc_cases": 7137,
+ "check_cases": 6461,
+ "dnf_cases": 4958,
+ "ssh_cases": 292,
+ "timeout_cases": 123,
+ "config_params": 226,
+ "pre_test": 6586,
+ "post_test": 6737,
+ "run_test": 7147,
+ "domains": {
+  "cli-test": {
+   "suites": 863,
+   "cases": 4316
+  },
+  "smoke-test": {
+   "suites": 34,
+   "cases": 734
+  },
+  "system-test": {
+   "suites": 28,
+   "cases": 865
+  },
+  "doc-test": {
+   "suites": 6,
+   "cases": 160
+  },
+  "feature-test": {
+   "suites": 31,
+   "cases": 810
+  },
+  "embedded-test": {
+   "suites": 15,
+   "cases": 231
+  },
+  "security_test": {
+   "suites": 1,
+   "cases": 71
+  },
+  "testsuite": {
+   "suites": 1,
+   "cases": 2
+  }
+ },
+ "types": {
+  "功能/命令测试": 6884,
+  "可靠性/异常恢复": 67,
+  "配置管理": 71,
+  "兼容性/多版本": 29,
+  "安全测试": 121,
+  "性能/压测": 17
+ },
+ "cons_suite": {
+  "machine num": 80,
+  "add disk": 29,
+  "machine type": 33,
+  "add network interface": 18
+ },
+ "cons_case": {
+  "machine num": 1610,
+  "add disk": 1007,
+  "machine type": 387,
+  "add network interface": 764
+ },
+ "suites_with_constraints": 116,
+ "smoke_overlap": 261,
+ "missing_cases": 41,
+ "subject_repo": {
+  "其他/第三方软件包": 772,
+  "编译器与开发工具": 29,
+  "安全与认证": 22,
+  "文件系统与存储": 16,
+  "命令行与Shell工具": 15,
+  "嵌入式": 15,
+  "网络工具": 13,
+  "桌面与图形": 11,
+  "监控与运维": 11,
+  "DNS与网络服务": 11,
+  "数据库": 11,
+  "虚拟化与容器": 8,
+  "分布式与集群": 8,
+  "Web服务器与应用": 8,
+  "系统服务与初始化": 6,
+  "系统管理工具": 5,
+  "包管理与仓库工具": 4,
+  "文本处理": 4,
+  "内核与驱动": 3,
+  "多媒体": 3,
+  "办公/图形混合-其他": 2,
+  "驱动专项(driver_test)": 1,
+  "办公与文档": 1
+ },
+ "subject_per_domain": {
+  "cli-test": {
+   "其他/第三方软件包": 680,
+   "编译器与开发工具": 29,
+   "安全与认证": 22,
+   "命令行与Shell工具": 15,
+   "网络工具": 12,
+   "桌面与图形": 11,
+   "监控与运维": 11,
+   "DNS与网络服务": 11,
+   "数据库": 11,
+   "文件系统与存储": 8,
+   "虚拟化与容器": 8,
+   "分布式与集群": 8,
+   "Web服务器与应用": 8,
+   "系统服务与初始化": 6,
+   "系统管理工具": 5,
+   "包管理与仓库工具": 4,
+   "文本处理": 4,
+   "内核与驱动": 3,
+   "多媒体": 3,
+   "办公/图形混合-其他": 2,
+   "驱动专项(driver_test)": 1,
+   "办公与文档": 1
+  },
+  "smoke-test": {
+   "其他/第三方软件包": 34
+  },
+  "system-test": {
+   "其他/第三方软件包": 20,
+   "文件系统与存储": 8
+  },
+  "doc-test": {
+   "其他/第三方软件包": 6
+  },
+  "feature-test": {
+   "其他/第三方软件包": 29,
+   "网络工具": 1,
+   "嵌入式": 1
+  },
+  "embedded-test": {
+   "嵌入式": 14,
+   "其他/第三方软件包": 1
+  },
+  "security_test": {
+   "其他/第三方软件包": 1
+  },
+  "testsuite": {
+   "其他/第三方软件包": 1
+  }
+ },
+ "missing_top": {
+  "secscanner": 40,
+  "kata-containers": 1
+ },
+ "smoke_cases": 274,
+ "smoke_basic_os_cases": 319,
+ "smoke_syscare_cases": 1,
+ "cli_dirs": 841,
+ "security_themes": 47,
+ "commit_short": "4f92a1735",
+ "last_subject": "!5482 update oe_test_service_bacula-dir",
+ "branch": "master"
+}

@@ -1,0 +1,1008 @@
+# features/ 逐特性文档索引
+
+> 本目录按套件生成 979 份特性文档（每套件一份，脚本生成，100% 代码事实）。与 `09 附录-全量测试套清单` 配合：附录看全局清单，本目录看单特性细节（用例描述/断言/命令）。
+
+## 目录
+
+### 命令行与服务域（cli-test）（863 套件 / 4316 用例）
+
+- [389-ds-base](389-ds-base.md)（62 用例）
+- [389-ds-base_1.4.3.20](389-ds-base_1.4.3.20.md)（63 用例）
+- [abrt](abrt.md)（7 用例）
+- [abseil-cpp](abseil-cpp.md)（7 用例）
+- [accountsservice](accountsservice.md)（1 用例）
+- [acl](acl.md)（19 用例）
+- [acpid](acpid.md)（5 用例）
+- [activemq](activemq.md)（2 用例）
+- [adcli](adcli.md)（1 用例）
+- [alertmanager](alertmanager.md)（1 用例）
+- [alsa-firmware](alsa-firmware.md)（3 用例）
+- [alsa-lib](alsa-lib.md)（4 用例）
+- [alsa-tools](alsa-tools.md)（17 用例）
+- [alsa-utils](alsa-utils.md)（3 用例）
+- [amanda](amanda.md)（9 用例）
+- [anaconda](anaconda.md)（9 用例）
+- [annobin](annobin.md)（1 用例）
+- [ansible](ansible.md)（4 用例） ⚠️
+- [ant](ant.md)（5 用例）
+- [anthy](anthy.md)（1 用例）
+- [aom](aom.md)（1 用例）
+- [apr](apr.md)（5 用例）
+- [aqute-bnd](aqute-bnd.md)（5 用例）
+- [argus](argus.md)（5 用例）
+- [arptables](arptables.md)（2 用例）
+- [arpwatch](arpwatch.md)（1 用例）
+- [asciidoc](asciidoc.md)（5 用例）
+- [aspell](aspell.md)（10 用例）
+- [assimp](assimp.md)（2 用例）
+- [at](at.md)（4 用例）
+- [attest-tools](attest-tools.md)（2 用例）
+- [attr](attr.md)（1 用例）
+- [atune](atune.md)（14 用例）
+- [audit](audit.md)（36 用例）
+- [augeas](augeas.md)（7 用例）
+- [auter](auter.md)（1 用例）
+- [authd](authd.md)（1 用例）
+- [autoconf213](autoconf213.md)（10 用例）
+- [autofs](autofs.md)（2 用例） ⚠️
+- [automake](automake.md)（1 用例）
+- [avahi](avahi.md)（3 用例）
+- [aws-sdk-cpp](aws-sdk-cpp.md)（1 用例）
+- [aws-sdk-java](aws-sdk-java.md)（1 用例）
+- [axel](axel.md)（2 用例）
+- [b43-tools](b43-tools.md)（1 用例）
+- [babeltrace](babeltrace.md)（1 用例）
+- [bacula](bacula.md)（31 用例）
+- [bacula_9.4.4](bacula_9.4.4.md)（1 用例）
+- [bash](bash.md)（3 用例）
+- [batik](batik.md)（1 用例）
+- [bcrypt](bcrypt.md)（1 用例）
+- [beakerlib](beakerlib.md)（2 用例）
+- [bind](bind.md)（4 用例）
+- [binutils](binutils.md)（10 用例）
+- [biometric-authentication](biometric-authentication.md)（1 用例）
+- [bird](bird.md)（9 用例）
+- [bison](bison.md)（1 用例）
+- [blackbox_exporter](blackbox_exporter.md)（1 用例）
+- [blueman](blueman.md)（1 用例）
+- [bluez](bluez.md)（2 用例）
+- [bolt](bolt.md)（2 用例）
+- [boom-boot](boom-boot.md)（3 用例）
+- [boom-boot-0.9](boom-boot-0.9.md)（3 用例）
+- [boost](boost.md)（3 用例）
+- [booth](booth.md)（1 用例）
+- [bridge-utils](bridge-utils.md)（3 用例） ⚠️
+- [brltty](brltty.md)（1 用例）
+- [btrfs-progs](btrfs-progs.md)（15 用例）
+- [byacc](byacc.md)（4 用例）
+- [byacc2.0](byacc2.0.md)（2 用例）
+- [bzip2](bzip2.md)（6 用例）
+- [c-ares](c-ares.md)（4 用例）
+- [cachefilesd](cachefilesd.md)（1 用例）
+- [ccid](ccid.md)（1 用例）
+- [ceph](ceph.md)（12 用例）
+- [certmonger](certmonger.md)（1 用例）
+- [cgdcbxd](cgdcbxd.md)（2 用例）
+- [checkpolicy](checkpolicy.md)（1 用例）
+- [chrony](chrony.md)（3 用例） ⚠️
+- [chrpath](chrpath.md)（1 用例）
+- [cifs-utils](cifs-utils.md)（10 用例）
+- [clamav](clamav.md)（18 用例）
+- [clang](clang.md)（4 用例）
+- [clevis](clevis.md)（5 用例） ⚠️
+- [cloud-init](cloud-init.md)（10 用例）
+- [cmake](cmake.md)（8 用例）
+- [cobbler](cobbler.md)（10 用例）
+- [cockpit](cockpit.md)（8 用例）
+- [collectd](collectd.md)（1 用例）
+- [colm](colm.md)（1 用例）
+- [colord](colord.md)（1 用例）
+- [compat-nginx](compat-nginx.md)（1 用例）
+- [conmon](conmon.md)（4 用例）
+- [conntrack-tools](conntrack-tools.md)（4 用例）
+- [console-setup](console-setup.md)（4 用例）
+- [container-exception-logger](container-exception-logger.md)（1 用例）
+- [container-selinux](container-selinux.md)（3 用例）
+- [containerd](containerd.md)（2 用例）
+- [containernetworking-plugins](containernetworking-plugins.md)（1 用例）
+- [coreutils](coreutils.md)（4 用例）
+- [corosync](corosync.md)（2 用例） ⚠️
+- [corosync-qdevice](corosync-qdevice.md)（2 用例） ⚠️
+- [cpio](cpio.md)（8 用例）
+- [cpp-httplib](cpp-httplib.md)（1 用例）
+- [cppcheck](cppcheck.md)（2 用例）
+- [cracklib](cracklib.md)（1 用例）
+- [createrepo_c](createrepo_c.md)（5 用例）
+- [cri-o](cri-o.md)（2 用例）
+- [criu](criu.md)（20 用例）
+- [criu_3.15](criu_3.15.md)（1 用例）
+- [criu_3.16](criu_3.16.md)（1 用例）
+- [cronie](cronie.md)（2 用例）
+- [crontabs](crontabs.md)（2 用例）
+- [crypto-policies](crypto-policies.md)（2 用例）
+- [cryptsetup](cryptsetup.md)（3 用例） ⚠️
+- [ctags](ctags.md)（4 用例）
+- [cups](cups.md)（3 用例）
+- [cups-filters](cups-filters.md)（3 用例）
+- [curl](curl.md)（9 用例）
+- [custodia](custodia.md)（4 用例）
+- [cvs](cvs.md)（8 用例）
+- [cyrus-sasl](cyrus-sasl.md)（1 用例）
+- [dblatex](dblatex.md)（6 用例）
+- [dbus](dbus.md)（9 用例）
+- [dde-daemon](dde-daemon.md)（1 用例）
+- [deallocvt](deallocvt.md)（1 用例）
+- [deepin-anything](deepin-anything.md)（1 用例）
+- [deepin-devicemanager](deepin-devicemanager.md)（1 用例）
+- [deepin-graphics-driver-manager](deepin-graphics-driver-manager.md)（1 用例）
+- [dejagnu](dejagnu.md)（3 用例）
+- [derby](derby.md)（1 用例）
+- [dhcp](dhcp.md)（5 用例）
+- [diffutils](diffutils.md)（4 用例）
+- [dim](dim.md)（2 用例） ⚠️
+- [discount](discount.md)（5 用例）
+- [djvulibre](djvulibre.md)（6 用例）
+- [dkms](dkms.md)（1 用例）
+- [dlm](dlm.md)（1 用例） ⚠️
+- [dmidecode](dmidecode.md)（3 用例）
+- [dnf](dnf.md)（23 用例）
+- [dnsmasq](dnsmasq.md)（1 用例）
+- [dnssec-trigger](dnssec-trigger.md)（8 用例）
+- [docbook-utils](docbook-utils.md)（3 用例）
+- [docbook2X](docbook2X.md)（11 用例）
+- [docbook5-schemas](docbook5-schemas.md)（1 用例）
+- [docker-engine](docker-engine.md)（1 用例）
+- [dos2unix](dos2unix.md)（5 用例）
+- [dosfstools](dosfstools.md)（2 用例）
+- [dovecot](dovecot.md)（7 用例）
+- [doxygen](doxygen.md)（1 用例）
+- [dracut](dracut.md)（10 用例）
+- [drbd](drbd.md)（2 用例）
+- [dtc](dtc.md)（6 用例）
+- [e2fsprogs](e2fsprogs.md)（8 用例）
+- [easymock](easymock.md)（12 用例）
+- [ebtables](ebtables.md)（3 用例）
+- [efibootmgr](efibootmgr.md)（3 用例）
+- [elasticMem](elasticMem.md)（27 用例）
+- [elfutils](elfutils.md)（2 用例）
+- [elinks](elinks.md)（3 用例）
+- [enchant2](enchant2.md)（2 用例）
+- [enchant2_2.3.3](enchant2_2.3.3.md)（1 用例）
+- [enscript](enscript.md)（2 用例）
+- [erlang](erlang.md)（4 用例）
+- [espeak-ng](espeak-ng.md)（2 用例）
+- [etcd](etcd.md)（6 用例）
+- [etckeeper](etckeeper.md)（1 用例）
+- [etmem](etmem.md)（2 用例）
+- [exempi](exempi.md)（1 用例）
+- [fakechroot](fakechroot.md)（5 用例）
+- [fakeroot](fakeroot.md)（2 用例）
+- [fapolicyd](fapolicyd.md)（2 用例）
+- [fastdfs](fastdfs.md)（4 用例）
+- [fcgi](fcgi.md)（2 用例）
+- [fcoe-utils](fcoe-utils.md)（2 用例）
+- [fence-virt](fence-virt.md)（1 用例）
+- [fetch-crl](fetch-crl.md)（5 用例）
+- [fetchmail](fetchmail.md)（1 用例）
+- [ffmpeg](ffmpeg.md)（5 用例）
+- [fftw](fftw.md)（10 用例）
+- [figlet](figlet.md)（4 用例）
+- [file](file.md)（1 用例）
+- [fio](fio.md)（4 用例） ⚠️
+- [fipscheck](fipscheck.md)（2 用例）
+- [firebird](firebird.md)（2 用例）
+- [firewalld](firewalld.md)（49 用例） ⚠️
+- [flac](flac.md)（2 用例）
+- [flatbuffers](flatbuffers.md)（3 用例）
+- [flatpak](flatpak.md)（1 用例）
+- [flex](flex.md)（5 用例）
+- [flink](flink.md)（1 用例）
+- [fluidsynth](fluidsynth.md)（1 用例）
+- [fmt](fmt.md)（1 用例）
+- [fontconfig](fontconfig.md)（6 用例）
+- [fontforge](fontforge.md)（3 用例）
+- [fonts-rpm-macros](fonts-rpm-macros.md)（1 用例）
+- [fprintd](fprintd.md)（1 用例）
+- [freeipmi](freeipmi.md)（3 用例） ⚠️
+- [freeradius](freeradius.md)（18 用例）
+- [freetds](freetds.md)（4 用例）
+- [fribidi](fribidi.md)（1 用例）
+- [fuse](fuse.md)（4 用例）
+- [future](future.md)（1 用例）
+- [fwupd](fwupd.md)（3 用例）
+- [gala-anteater](gala-anteater.md)（1 用例）
+- [gala-gopher](gala-gopher.md)（1 用例）
+- [gala-spider](gala-spider.md)（2 用例）
+- [galera](galera.md)（2 用例）
+- [ganglia](ganglia.md)（2 用例）
+- [gawk](gawk.md)（5 用例）
+- [gcc](gcc.md)（5 用例）
+- [gdb](gdb.md)（5 用例）
+- [gdbm](gdbm.md)（2 用例）
+- [gdisk](gdisk.md)（13 用例） ⚠️
+- [gdk-pixbuf2](gdk-pixbuf2.md)（1 用例）
+- [gdm](gdm.md)（1 用例）
+- [gegl04](gegl04.md)（2 用例）
+- [genders](genders.md)（1 用例）
+- [geoclue2](geoclue2.md)（1 用例）
+- [geos](geos.md)（1 用例）
+- [gfs2-utils](gfs2-utils.md)（8 用例）
+- [ghostscript](ghostscript.md)（2 用例）
+- [git](git.md)（1 用例）
+- [git-tools](git-tools.md)（6 用例）
+- [glib](glib.md)（1 用例）
+- [glib-networking](glib-networking.md)（2 用例）
+- [glib2](glib2.md)（15 用例）
+- [glibc](glibc.md)（3 用例）
+- [glusterfs](glusterfs.md)（5 用例）
+- [gnome-shell](gnome-shell.md)（2 用例）
+- [gnupg2](gnupg2.md)（1 用例）
+- [gnustep-base](gnustep-base.md)（1 用例）
+- [gnutls](gnutls.md)（2 用例）
+- [gobject-introspection](gobject-introspection.md)（1 用例）
+- [golang-github-prometheus-node_exporter](golang-github-prometheus-node_exporter.md)（1 用例）
+- [gperf](gperf.md)（7 用例）
+- [gperftools](gperftools.md)（6 用例） ⚠️
+- [gpgme](gpgme.md)（4 用例）
+- [gpm](gpm.md)（2 用例）
+- [gradle](gradle.md)（4 用例）
+- [grafana](grafana.md)（2 用例）
+- [GraphicsMagick](GraphicsMagick.md)（2 用例）
+- [graphviz](graphviz.md)（3 用例）
+- [greatsql](greatsql.md)（3 用例）
+- [groovy](groovy.md)（2 用例）
+- [groovy18](groovy18.md)（8 用例）
+- [grpc](grpc.md)（1 用例）
+- [grub2](grub2.md)（2 用例）
+- [grubby](grubby.md)（3 用例）
+- [gsl](gsl.md)（5 用例）
+- [gssproxy](gssproxy.md)（2 用例）
+- [gtk+](gtk+.md)（1 用例）
+- [gyp](gyp.md)（2 用例）
+- [hadoop](hadoop.md)（10 用例） ⚠️
+- [hadoop-3.1](hadoop-3.1.md)（10 用例） ⚠️
+- [haproxy](haproxy.md)（2 用例）
+- [haveged](haveged.md)（3 用例）
+- [hbase](hbase.md)（7 用例）
+- [hdf5](hdf5.md)（2 用例）
+- [hdparm](hdparm.md)（1 用例）
+- [help2man](help2man.md)（1 用例）
+- [hfsplus-tools](hfsplus-tools.md)（4 用例） ⚠️
+- [hivex](hivex.md)（4 用例）
+- [hostname](hostname.md)（1 用例）
+- [hsqldb](hsqldb.md)（2 用例）
+- [htop](htop.md)（2 用例）
+- [httpd](httpd.md)（5 用例）
+- [httpry](httpry.md)（2 用例）
+- [hwdata](hwdata.md)（1 用例）
+- [hwloc](hwloc.md)（47 用例）
+- [hwloc_1.11.9](hwloc_1.11.9.md)（37 用例）
+- [hyperscan](hyperscan.md)（2 用例）
+- [icu](icu.md)（2 用例）
+- [iftop](iftop.md)（3 用例） ⚠️
+- [iio-sensor-proxy](iio-sensor-proxy.md)（1 用例）
+- [ima-evm-utils](ima-evm-utils.md)（3 用例）
+- [ImageMagick](ImageMagick.md)（8 用例）
+- [imageTailor](imageTailor.md)（1 用例） ⚠️
+- [indent](indent.md)（2 用例）
+- [initial-setup](initial-setup.md)（2 用例）
+- [initscripts](initscripts.md)（5 用例） ⚠️
+- [intel-cmt-cat](intel-cmt-cat.md)（1 用例）
+- [intltool](intltool.md)（6 用例）
+- [iperf3](iperf3.md)（4 用例） ⚠️
+- [ipmitool](ipmitool.md)（4 用例） ⚠️
+- [iproute](iproute.md)（3 用例）
+- [iprutils](iprutils.md)（4 用例）
+- [ipset](ipset.md)（4 用例）
+- [iptables](iptables.md)（5 用例）
+- [iputils](iputils.md)（15 用例） ⚠️
+- [ipvsadm](ipvsadm.md)（24 用例） ⚠️
+- [ipwatchd](ipwatchd.md)（2 用例）
+- [irqbalance](irqbalance.md)（1 用例）
+- [isula-build](isula-build.md)（1 用例）
+- [iSulad](iSulad.md)（9 用例）
+- [itstool](itstool.md)（3 用例）
+- [itstool_2.0.4](itstool_2.0.4.md)（3 用例）
+- [iw](iw.md)（5 用例）
+- [java-1.8.0-openjdk](java-1.8.0-openjdk.md)（12 用例）
+- [java-11-openjdk](java-11-openjdk.md)（12 用例）
+- [java-17-openjdk](java-17-openjdk.md)（2 用例）
+- [javapackages-tools](javapackages-tools.md)（6 用例）
+- [jemalloc](jemalloc.md)（2 用例）
+- [jetty](jetty.md)（2 用例）
+- [jgit](jgit.md)（3 用例）
+- [jose](jose.md)（4 用例）
+- [jpegoptim](jpegoptim.md)（10 用例）
+- [jq](jq.md)（6 用例）
+- [jruby](jruby.md)（2 用例）
+- [jsoncpp](jsoncpp.md)（3 用例）
+- [jtidy](jtidy.md)（4 用例）
+- [junit](junit.md)（13 用例）
+- [junit5](junit5.md)（13 用例）
+- [jython](jython.md)（3 用例）
+- [kata-containers](kata-containers.md)（1 用例）
+- [keepalived](keepalived.md)（5 用例） ⚠️
+- [kernel](kernel.md)（71 用例） ⚠️
+- [kexec-tools](kexec-tools.md)（1 用例）
+- [keyutils](keyutils.md)（3 用例）
+- [kf5-kconfig](kf5-kconfig.md)（1 用例）
+- [kiran-authentication-service](kiran-authentication-service.md)（1 用例）
+- [kiran-biometrics](kiran-biometrics.md)（1 用例）
+- [kiran-cc-daemon](kiran-cc-daemon.md)（1 用例）
+- [Kmesh](Kmesh.md)（7 用例）
+- [kmod](kmod.md)（7 用例）
+- [kmod-kvdo](kmod-kvdo.md)（3 用例） ⚠️
+- [kpatch](kpatch.md)（1 用例）
+- [krb5](krb5.md)（3 用例）
+- [ksh](ksh.md)（1 用例）
+- [kuasar](kuasar.md)（2 用例）
+- [kubernetes](kubernetes.md)（5 用例）
+- [ladspa](ladspa.md)（2 用例）
+- [ldns](ldns.md)（21 用例）
+- [leptonica](leptonica.md)（1 用例）
+- [leveldb](leveldb.md)（1 用例）
+- [libaec](libaec.md)（1 用例）
+- [libappstream-glib](libappstream-glib.md)（8 用例）
+- [libarchive](libarchive.md)（2 用例）
+- [libcanberra](libcanberra.md)（3 用例）
+- [libcap](libcap.md)（9 用例）
+- [libcareplus](libcareplus.md)（2 用例）
+- [libdap](libdap.md)（3 用例）
+- [libdb](libdb.md)（1 用例）
+- [libdwarf](libdwarf.md)（2 用例）
+- [libesmtp](libesmtp.md)（1 用例）
+- [libev](libev.md)（2 用例）
+- [libexif](libexif.md)（1 用例）
+- [libfabric](libfabric.md)（5 用例）
+- [libffi](libffi.md)（1 用例）
+- [libfprint](libfprint.md)（2 用例）
+- [libgcrypt](libgcrypt.md)（1 用例）
+- [libgeotiff](libgeotiff.md)（1 用例）
+- [libgit2](libgit2.md)（1 用例）
+- [libgpg-error](libgpg-error.md)（1 用例）
+- [libguestfs](libguestfs.md)（50 用例） ⚠️
+- [libhangul](libhangul.md)（1 用例）
+- [libiec61883](libiec61883.md)（2 用例）
+- [libiodbc](libiodbc.md)（1 用例）
+- [libiscsi](libiscsi.md)（1 用例）
+- [libjpeg-turbo](libjpeg-turbo.md)（7 用例）
+- [libksba](libksba.md)（1 用例）
+- [libldb](libldb.md)（1 用例）
+- [liblouis](liblouis.md)（1 用例）
+- [libmemcached](libmemcached.md)（12 用例）
+- [libmicrohttpd](libmicrohttpd.md)（1 用例）
+- [libmnl](libmnl.md)（1 用例）
+- [libnetfilter_queue](libnetfilter_queue.md)（3 用例）
+- [libnfnetlink](libnfnetlink.md)（2 用例）
+- [libnftnl](libnftnl.md)（3 用例）
+- [libnl3](libnl3.md)（1 用例）
+- [libosinfo](libosinfo.md)（4 用例）
+- [libpcap](libpcap.md)（3 用例）
+- [libpng](libpng.md)（6 用例）
+- [libpwquality](libpwquality.md)（2 用例）
+- [librabbitmq](librabbitmq.md)（5 用例）
+- [libreport](libreport.md)（1 用例）
+- [libreswan](libreswan.md)（19 用例） ⚠️
+- [librsvg2](librsvg2.md)（1 用例）
+- [libseccomp](libseccomp.md)（1 用例）
+- [libselinux](libselinux.md)（1 用例）
+- [libsemanage](libsemanage.md)（4 用例）
+- [libsepol](libsepol.md)（3 用例）
+- [libsmi](libsmi.md)（13 用例）
+- [libsndfile](libsndfile.md)（1 用例）
+- [libsoup3](libsoup3.md)（1 用例）
+- [libssh](libssh.md)（2 用例）
+- [libssh2](libssh2.md)（4 用例）
+- [libstoragemgmt](libstoragemgmt.md)（1 用例）
+- [libtar](libtar.md)（1 用例）
+- [libtasn1](libtasn1.md)（3 用例）
+- [libtiff](libtiff.md)（1 用例）
+- [libtommath](libtommath.md)（1 用例）
+- [libunistring](libunistring.md)（1 用例）
+- [libusb](libusb.md)（1 用例）
+- [libverto](libverto.md)（1 用例）
+- [libvirt](libvirt.md)（48 用例）
+- [libvirt-dbus](libvirt-dbus.md)（1 用例）
+- [libvirt-python](libvirt-python.md)（3 用例） ⚠️
+- [libvma](libvma.md)（2 用例）
+- [libvpx](libvpx.md)（11 用例）
+- [libwbxml](libwbxml.md)（2 用例）
+- [libwebp](libwebp.md)（8 用例）
+- [libwmf](libwmf.md)（11 用例）
+- [libX11](libX11.md)（1 用例）
+- [libXpm](libXpm.md)（1 用例）
+- [libxslt](libxslt.md)（1 用例）
+- [libyaml](libyaml.md)（1 用例）
+- [libzip](libzip.md)（3 用例）
+- [lighttpd](lighttpd.md)（1 用例）
+- [lighttpd_1.4.63](lighttpd_1.4.63.md)（1 用例）
+- [linkchecker](linkchecker.md)（1 用例）
+- [linux-sgx](linux-sgx.md)（2 用例）
+- [linuxconsoletools](linuxconsoletools.md)（2 用例）
+- [linuxdoc-tools](linuxdoc-tools.md)（13 用例）
+- [linuxptp](linuxptp.md)（7 用例） ⚠️
+- [lksctp-tools](lksctp-tools.md)（5 用例）
+- [lldpad](lldpad.md)（2 用例）
+- [lm_sensors](lm_sensors.md)（3 用例） ⚠️
+- [lmdb](lmdb.md)（1 用例）
+- [log4cplus](log4cplus.md)（1 用例）
+- [logrotate](logrotate.md)（1 用例）
+- [logwatch](logwatch.md)（1 用例）
+- [lorax](lorax.md)（2 用例）
+- [low-memory-monitor](low-memory-monitor.md)（1 用例） ⚠️
+- [lsyncd](lsyncd.md)（5 用例）
+- [ltrace](ltrace.md)（4 用例）
+- [lua-lunit](lua-lunit.md)（1 用例）
+- [luajit](luajit.md)（2 用例）
+- [luarocks](luarocks.md)（2 用例）
+- [lvm2](lvm2.md)（32 用例） ⚠️
+- [lxc](lxc.md)（14 用例）
+- [lxcfs](lxcfs.md)（4 用例） ⚠️
+- [lxcfs-tools](lxcfs-tools.md)（1 用例）
+- [lzo](lzo.md)（2 用例）
+- [mac-robber](mac-robber.md)（2 用例）
+- [mailman](mailman.md)（3 用例）
+- [man-db](man-db.md)（6 用例）
+- [mariadb](mariadb.md)（5 用例）
+- [mathjax](mathjax.md)（1 用例）
+- [mc](mc.md)（4 用例）
+- [mcelog](mcelog.md)（3 用例）
+- [mcstrans](mcstrans.md)（2 用例）
+- [mdadm](mdadm.md)（4 用例） ⚠️
+- [memcached](memcached.md)（3 用例）
+- [memlinkd](memlinkd.md)（1 用例）
+- [meson](meson.md)（1 用例）
+- [mikmod](mikmod.md)（7 用例）
+- [minimap2](minimap2.md)（1 用例）
+- [mksh](mksh.md)（1 用例）
+- [mlocate](mlocate.md)（1 用例）
+- [moby](moby.md)（1 用例）
+- [mocha](mocha.md)（10 用例）
+- [mod_wsgi](mod_wsgi.md)（1 用例）
+- [ModemManager](ModemManager.md)（1 用例）
+- [mosquitto](mosquitto.md)（1 用例）
+- [mpg123](mpg123.md)（1 用例）
+- [mpich](mpich.md)（4 用例）
+- [mptcpd](mptcpd.md)（1 用例）
+- [mrtg](mrtg.md)（1 用例）
+- [mt-st](mt-st.md)（2 用例）
+- [mtools](mtools.md)（1 用例）
+- [mtx](mtx.md)（5 用例）
+- [multipath-tools](multipath-tools.md)（7 用例） ⚠️
+- [munge](munge.md)（2 用例）
+- [mutt](mutt.md)（1 用例）
+- [mysql](mysql.md)（10 用例）
+- [mysql5](mysql5.md)（1 用例）
+- [nagios](nagios.md)（1 用例）
+- [nano](nano.md)（5 用例）
+- [nasm](nasm.md)（16 用例）
+- [nbdkit](nbdkit.md)（3 用例）
+- [ncurses](ncurses.md)（1 用例）
+- [ndctl](ndctl.md)（1 用例）
+- [ndisc6](ndisc6.md)（9 用例） ⚠️
+- [neon](neon.md)（1 用例）
+- [net-snmp](net-snmp.md)（4 用例） ⚠️
+- [net-tools](net-tools.md)（6 用例）
+- [netavark](netavark.md)（3 用例）
+- [netcdf](netcdf.md)（1 用例）
+- [netcf](netcf.md)（1 用例）
+- [netdata](netdata.md)（2 用例）
+- [netlabel_tools](netlabel_tools.md)（4 用例）
+- [netperf](netperf.md)（3 用例） ⚠️
+- [netsniff-ng](netsniff-ng.md)（19 用例） ⚠️
+- [NetworkManager](NetworkManager.md)（6 用例）
+- [nfs-utils](nfs-utils.md)（17 用例）
+- [nftables](nftables.md)（12 用例） ⚠️
+- [nghttp2](nghttp2.md)（1 用例）
+- [nginx](nginx.md)（5 用例）
+- [ninja-build](ninja-build.md)（1 用例）
+- [nispor](nispor.md)（1 用例）
+- [nmon](nmon.md)（4 用例） ⚠️
+- [nodejs](nodejs.md)（4 用例）
+- [nodejs-clean-css_3.4.6](nodejs-clean-css_3.4.6.md)（2 用例）
+- [nodejs-grunt-cli](nodejs-grunt-cli.md)（2 用例）
+- [nodejs-jsonpointer](nodejs-jsonpointer.md)（1 用例）
+- [nodejs-tiny-lr-fork](nodejs-tiny-lr-fork.md)（1 用例）
+- [nodeunit](nodeunit.md)（2 用例）
+- [nototools](nototools.md)（18 用例）
+- [nototools_0-2](nototools_0-2.md)（1 用例）
+- [nototools_0.2.17](nototools_0.2.17.md)（1 用例）
+- [novnc](novnc.md)（1 用例）
+- [nspr](nspr.md)（3 用例）
+- [nss](nss.md)（3 用例）
+- [nss-mdns](nss-mdns.md)（3 用例）
+- [nss-pam-ldapd](nss-pam-ldapd.md)（1 用例）
+- [nss_wrapper](nss_wrapper.md)（1 用例）
+- [ntfs-3g](ntfs-3g.md)（26 用例） ⚠️
+- [ntp](ntp.md)（7 用例）
+- [numad](numad.md)（2 用例）
+- [nvme-snsd](nvme-snsd.md)（1 用例）
+- [nvmetcli](nvmetcli.md)（5 用例）
+- [nvml](nvml.md)（3 用例）
+- [nvwa](nvwa.md)（3 用例） ⚠️
+- [oath-toolkit](oath-toolkit.md)（1 用例）
+- [objectweb-asm3](objectweb-asm3.md)（2 用例）
+- [obs-server](obs-server.md)（30 用例）
+- [ocaml](ocaml.md)（110 用例）
+- [ocaml-findlib](ocaml-findlib.md)（1 用例）
+- [ocaml-gettext](ocaml-gettext.md)（1 用例）
+- [oddjob](oddjob.md)（1 用例）
+- [oec-hardware](oec-hardware.md)（3 用例）
+- [oemaker](oemaker.md)（1 用例）
+- [ogdi](ogdi.md)（1 用例）
+- [oncn-bwm](oncn-bwm.md)（2 用例） ⚠️
+- [oniguruma](oniguruma.md)（1 用例）
+- [open-iscsi](open-iscsi.md)（5 用例） ⚠️
+- [open-isns](open-isns.md)（1 用例）
+- [openblas](openblas.md)（1 用例）
+- [opencc](opencc.md)（9 用例）
+- [opencryptoki](opencryptoki.md)（1 用例）
+- [opendmarc](opendmarc.md)（1 用例）
+- [openeuler-lsb](openeuler-lsb.md)（2 用例）
+- [OpenEXR](OpenEXR.md)（7 用例）
+- [opengauss](opengauss.md)（3 用例）
+- [openhpi](openhpi.md)（1 用例）
+- [OpenIPMI](OpenIPMI.md)（1 用例）
+- [openjade](openjade.md)（7 用例）
+- [openjpeg2](openjpeg2.md)（3 用例）
+- [openldap](openldap.md)（1 用例）
+- [openmpi](openmpi.md)（3 用例） ⚠️
+- [openscap](openscap.md)（7 用例） ⚠️
+- [openslp](openslp.md)（1 用例）
+- [opensm](opensm.md)（1 用例）
+- [opensp](opensp.md)（6 用例）
+- [openssh](openssh.md)（21 用例） ⚠️
+- [openssl](openssl.md)（34 用例）
+- [openvpn](openvpn.md)（1 用例） ⚠️
+- [openvswitch](openvswitch.md)（8 用例）
+- [openwsman](openwsman.md)（1 用例）
+- [optipng](optipng.md)（2 用例）
+- [osc](osc.md)（8 用例）
+- [ostree](ostree.md)（5 用例）
+- [p7zip](p7zip.md)（5 用例）
+- [pacemaker](pacemaker.md)（3 用例） ⚠️
+- [PackageKit](PackageKit.md)（3 用例）
+- [pam](pam.md)（1 用例）
+- [papi](papi.md)（6 用例）
+- [paps](paps.md)（1 用例）
+- [patch-tracking](patch-tracking.md)（1 用例）
+- [patchutils](patchutils.md)（18 用例）
+- [pax](pax.md)（4 用例）
+- [pbzip2](pbzip2.md)（3 用例）
+- [pcp](pcp.md)（81 用例） ⚠️
+- [pcre2](pcre2.md)（1 用例）
+- [pcs](pcs.md)（3 用例） ⚠️
+- [pcsc-lite](pcsc-lite.md)（2 用例）
+- [perl-Date-Manip](perl-Date-Manip.md)（2 用例）
+- [perl-DBI](perl-DBI.md)（1 用例）
+- [perl-File-MimeInfo](perl-File-MimeInfo.md)（6 用例）
+- [perl-libwww-perl](perl-libwww-perl.md)（9 用例）
+- [perl-Module-Build](perl-Module-Build.md)（1 用例）
+- [perl-Module-ScanDeps](perl-Module-ScanDeps.md)（1 用例）
+- [perl-Net-Server](perl-Net-Server.md)（1 用例）
+- [perl-Parse-Yapp](perl-Parse-Yapp.md)（1 用例）
+- [perl-Pod-Markdown](perl-Pod-Markdown.md)（1 用例）
+- [pesign](pesign.md)（9 用例）
+- [phodav](phodav.md)（1 用例）
+- [php](php.md)（9 用例）
+- [pigz](pigz.md)（11 用例）
+- [pixman](pixman.md)（1 用例）
+- [pkgconf](pkgconf.md)（1 用例）
+- [pki-core](pki-core.md)（1 用例）
+- [plymouth](plymouth.md)（11 用例）
+- [pmix](pmix.md)（2 用例）
+- [pngcrush](pngcrush.md)（5 用例）
+- [pngquant](pngquant.md)（1 用例）
+- [po4a](po4a.md)（14 用例）
+- [podman](podman.md)（61 用例）
+- [podman_0.10.1](podman_0.10.1.md)（57 用例）
+- [policycoreutils](policycoreutils.md)（4 用例）
+- [polkit](polkit.md)（1 用例）
+- [poppler](poppler.md)（3 用例）
+- [portreserve](portreserve.md)（1 用例）
+- [postfix](postfix.md)（2 用例）
+- [postgresql](postgresql.md)（42 用例）
+- [powertop](powertop.md)（2 用例）
+- [pps-tools](pps-tools.md)（1 用例）
+- [predixy](predixy.md)（1 用例）
+- [prefetch_tuning](prefetch_tuning.md)（2 用例） ⚠️
+- [procinfo](procinfo.md)（2 用例）
+- [procps-ng](procps-ng.md)（2 用例）
+- [proftpd](proftpd.md)（3 用例）
+- [prometheus-ha_cluster_exporter](prometheus-ha_cluster_exporter.md)（1 用例）
+- [prometheus2](prometheus2.md)（5 用例）
+- [prometheus2_2.20.0](prometheus2_2.20.0.md)（6 用例）
+- [protobuf](protobuf.md)（1 用例）
+- [protobuf-c](protobuf-c.md)（1 用例）
+- [ps_mem](ps_mem.md)（1 用例）
+- [psacct](psacct.md)（2 用例）
+- [psutils](psutils.md)（8 用例）
+- [pyelftools](pyelftools.md)（3 用例）
+- [pylint](pylint.md)（9 用例）
+- [pyScss](pyScss.md)（6 用例）
+- [python-blivet](python-blivet.md)（1 用例）
+- [python-bottle](python-bottle.md)（1 用例）
+- [python-certifi](python-certifi.md)（1 用例）
+- [python-cryptography](python-cryptography.md)（3 用例）
+- [python-dateutil](python-dateutil.md)（3 用例）
+- [python-docutils](python-docutils.md)（50 用例）
+- [python-eventlet](python-eventlet.md)（2 用例）
+- [python-flask](python-flask.md)（1 用例）
+- [python-greenlet](python-greenlet.md)（1 用例）
+- [python-httplib2](python-httplib2.md)（1 用例）
+- [python-jinja2](python-jinja2.md)（2 用例）
+- [python-junitxml](python-junitxml.md)（1 用例）
+- [python-kazoo](python-kazoo.md)（1 用例）
+- [python-Keras](python-Keras.md)（1 用例）
+- [python-keyring](python-keyring.md)（1 用例）
+- [python-keyring_13.2.1](python-keyring_13.2.1.md)（1 用例）
+- [python-lesscpy](python-lesscpy.md)（1 用例）
+- [python-lxml](python-lxml.md)（1 用例）
+- [python-mako](python-mako.md)（1 用例）
+- [python-pip](python-pip.md)（1 用例）
+- [python-python-gitlab](python-python-gitlab.md)（2 用例）
+- [python-ray](python-ray.md)（2 用例）
+- [python-reportlab](python-reportlab.md)（1 用例）
+- [python-requests](python-requests.md)（1 用例）
+- [python-robotframework](python-robotframework.md)（9 用例）
+- [python-rsa](python-rsa.md)（1 用例）
+- [python-rsa_3.4.2](python-rsa_3.4.2.md)（1 用例）
+- [python-rtslib](python-rtslib.md)（1 用例）
+- [python-schema](python-schema.md)（1 用例）
+- [python-scikit-learn](python-scikit-learn.md)（1 用例）
+- [python-scrypt](python-scrypt.md)（1 用例）
+- [python-setuptools](python-setuptools.md)（1 用例）
+- [python-simplejson](python-simplejson.md)（1 用例）
+- [python-singledispatch](python-singledispatch.md)（1 用例）
+- [python-sortedcontainers](python-sortedcontainers.md)（1 用例）
+- [python-suds2](python-suds2.md)（1 用例）
+- [python-supervisor](python-supervisor.md)（1 用例）
+- [python-sure](python-sure.md)（1 用例）
+- [python-tempita](python-tempita.md)（1 用例）
+- [python-tqdm](python-tqdm.md)（3 用例）
+- [python-twisted](python-twisted.md)（1 用例）
+- [python-typing](python-typing.md)（2 用例）
+- [python-urlgrabber](python-urlgrabber.md)（1 用例）
+- [python-urllib3](python-urllib3.md)（1 用例）
+- [python-uWSGI](python-uWSGI.md)（1 用例）
+- [python-waitress](python-waitress.md)（1 用例）
+- [python-wcwidth](python-wcwidth.md)（1 用例）
+- [python-werkzeug](python-werkzeug.md)（1 用例）
+- [python-wheel](python-wheel.md)（2 用例）
+- [python-wrapt](python-wrapt.md)（1 用例）
+- [python-xgboost](python-xgboost.md)（1 用例）
+- [python-xmltodict](python-xmltodict.md)（1 用例）
+- [python-zstd](python-zstd.md)（1 用例）
+- [python3](python3.md)（4 用例）
+- [pywbem](pywbem.md)（2 用例）
+- [pywbem_0.12.4](pywbem_0.12.4.md)（2 用例）
+- [pywbem_1.1.3](pywbem_1.1.3.md)（1 用例）
+- [pyYAML](pyYAML.md)（1 用例）
+- [qemu](qemu.md)（6 用例）
+- [qpdf](qpdf.md)（11 用例）
+- [qperf](qperf.md)（1 用例） ⚠️
+- [qt5-qttools](qt5-qttools.md)（12 用例）
+- [quota](quota.md)（2 用例）
+- [rabbitmq-server](rabbitmq-server.md)（12 用例） ⚠️
+- [radvd](radvd.md)（1 用例）
+- [rapidjson](rapidjson.md)（1 用例）
+- [raptor2](raptor2.md)（4 用例）
+- [rasdaemon](rasdaemon.md)（2 用例）
+- [rasqal](rasqal.md)（4 用例）
+- [rdate](rdate.md)（1 用例）
+- [rdma-core](rdma-core.md)（6 用例） ⚠️
+- [realmd](realmd.md)（1 用例）
+- [recode](recode.md)（1 用例）
+- [redis](redis.md)（4 用例）
+- [redis5](redis5.md)（4 用例）
+- [redis6](redis6.md)（4 用例）
+- [redland](redland.md)（2 用例）
+- [resource-agents](resource-agents.md)（2 用例）
+- [rhash](rhash.md)（6 用例） ⚠️
+- [rhash_1.4.0](rhash_1.4.0.md)（1 用例） ⚠️
+- [rhash_1.4.2](rhash_1.4.2.md)（1 用例） ⚠️
+- [rhino](rhino.md)（2 用例）
+- [rinetd](rinetd.md)（1 用例）
+- [rng-tools](rng-tools.md)（1 用例）
+- [rocksdb](rocksdb.md)（1 用例）
+- [rootsh](rootsh.md)（2 用例）
+- [rpcbind](rpcbind.md)（2 用例）
+- [rpcsvc-proto](rpcsvc-proto.md)（1 用例）
+- [rpmdevtools](rpmdevtools.md)（5 用例）
+- [rpmlint](rpmlint.md)（2 用例）
+- [rrdtool](rrdtool.md)（36 用例）
+- [rsync](rsync.md)（2 用例）
+- [rsyslog](rsyslog.md)（27 用例） ⚠️
+- [rtkit](rtkit.md)（1 用例）
+- [ruby](ruby.md)（12 用例）
+- [rubygem-asciidoctor](rubygem-asciidoctor.md)（3 用例）
+- [rubygem-bacon](rubygem-bacon.md)（2 用例）
+- [rubygem-bundler](rubygem-bundler.md)（14 用例）
+- [rubygem-fluentd](rubygem-fluentd.md)（1 用例）
+- [rubygem-puma](rubygem-puma.md)（1 用例）
+- [rubygem-redcarpet](rubygem-redcarpet.md)（1 用例）
+- [rubygem-sdoc](rubygem-sdoc.md)（7 用例）
+- [rubygem-ZenTest](rubygem-ZenTest.md)（3 用例）
+- [rubygem-ZenTest_4.12.1](rubygem-ZenTest_4.12.1.md)（2 用例）
+- [runc](runc.md)（2 用例） ⚠️
+- [runuser](runuser.md)（1 用例）
+- [rust](rust.md)（8 用例）
+- [samba](samba.md)（5 用例）
+- [sane-backends](sane-backends.md)（1 用例）
+- [sanlock](sanlock.md)（11 用例）
+- [sassc](sassc.md)（3 用例）
+- [sbd](sbd.md)（2 用例）
+- [scala](scala.md)（15 用例）
+- [scipy](scipy.md)（1 用例）
+- [scrub](scrub.md)（1 用例）
+- [scrub_2.5.2](scrub_2.5.2.md)（1 用例）
+- [scrub_2.6.1](scrub_2.6.1.md)（1 用例）
+- [scsi-target-utils](scsi-target-utils.md)（1 用例）
+- [SDL](SDL.md)（2 用例）
+- [SDL2](SDL2.md)（3 用例）
+- [secpaver](secpaver.md)（1 用例）
+- [security-tool](security-tool.md)（2 用例）
+- [sendmail](sendmail.md)（3 用例）
+- [sg3_utils](sg3_utils.md)（1 用例）
+- [shadow](shadow.md)（4 用例）
+- [shared-mime-info](shared-mime-info.md)（1 用例）
+- [skylark](skylark.md)（1 用例）
+- [slang](slang.md)（1 用例）
+- [smartmontools](smartmontools.md)（1 用例）
+- [socat](socat.md)（5 用例）
+- [sos](sos.md)（4 用例）
+- [sox](sox.md)（5 用例）
+- [spamassassin](spamassassin.md)（2 用例）
+- [spawn-fcgi](spawn-fcgi.md)（1 用例）
+- [speech-dispatcher](speech-dispatcher.md)（3 用例）
+- [sphinx](sphinx.md)（1 用例）
+- [spice-vdagent](spice-vdagent.md)（2 用例）
+- [sqlite](sqlite.md)（17 用例）
+- [sqlite-jdbc](sqlite-jdbc.md)（1 用例）
+- [squashfs-tools](squashfs-tools.md)（1 用例）
+- [squid](squid.md)（1 用例）
+- [sssd](sssd.md)（17 用例） ⚠️
+- [stalld](stalld.md)（1 用例）
+- [storm](storm.md)（4 用例）
+- [strongswan](strongswan.md)（4 用例）
+- [struts](struts.md)（1 用例）
+- [stunnel](stunnel.md)（1 用例）
+- [sudo](sudo.md)（1 用例）
+- [sulogin](sulogin.md)（1 用例）
+- [swig](swig.md)（11 用例）
+- [switcheroo-control](switcheroo-control.md)（1 用例）
+- [syscare](syscare.md)（4 用例）
+- [sysfsutils](sysfsutils.md)（2 用例）
+- [sysget](sysget.md)（2 用例）
+- [sysmonitor-kmod](sysmonitor-kmod.md)（1 用例）
+- [sysprof](sysprof.md)（2 用例）
+- [sysSentry](sysSentry.md)（5 用例）
+- [sysstat](sysstat.md)（5 用例）
+- [systemd](systemd.md)（161 用例） ⚠️
+- [systemtap](systemtap.md)（3 用例）
+- [tang](tang.md)（3 用例）
+- [targetcli](targetcli.md)（6 用例）
+- [tbb](tbb.md)（1 用例）
+- [tboot](tboot.md)（3 用例）
+- [tboot_1.10.2-3](tboot_1.10.2-3.md)（3 用例）
+- [tboot_1.9.12-2](tboot_1.9.12-2.md)（3 用例）
+- [tcllib](tcllib.md)（3 用例）
+- [telnet](telnet.md)（1 用例）
+- [tensorflow](tensorflow.md)（1 用例）
+- [testng](testng.md)（13 用例）
+- [texi2html](texi2html.md)（8 用例）
+- [texlive](texlive.md)（1 用例）
+- [tftp](tftp.md)（2 用例）
+- [thrift](thrift.md)（11 用例）
+- [tidy](tidy.md)（17 用例）
+- [tigervnc](tigervnc.md)（1 用例）
+- [timedatex](timedatex.md)（1 用例）
+- [tinycdb](tinycdb.md)（2 用例）
+- [tinyxml2](tinyxml2.md)（1 用例）
+- [tldr](tldr.md)（1 用例）
+- [tog-pegasus](tog-pegasus.md)（1 用例）
+- [tomcat](tomcat.md)（3 用例）
+- [tpm-quote-tools](tpm-quote-tools.md)（1 用例）
+- [tpm-tools](tpm-tools.md)（4 用例）
+- [tpm2-abrmd](tpm2-abrmd.md)（1 用例）
+- [tpm2-tools](tpm2-tools.md)（1 用例）
+- [trace-cmd](trace-cmd.md)（1 用例）
+- [trafficserver](trafficserver.md)（1 用例）
+- [transfig](transfig.md)（1 用例）
+- [tree](tree.md)（1 用例）
+- [trousers](trousers.md)（1 用例）
+- [ttmkfdir](ttmkfdir.md)（2 用例）
+- [tuna](tuna.md)（8 用例）
+- [tuned](tuned.md)（1 用例）
+- [ubs-engine](ubs-engine.md)（1 用例）
+- [ubs-virt](ubs-virt.md)（1 用例）
+- [udisks2](udisks2.md)（1 用例）
+- [umdk](umdk.md)（1 用例）
+- [umoci](umoci.md)（1 用例）
+- [unbound](unbound.md)（4 用例）
+- [units](units.md)（6 用例）
+- [units_2.21](units_2.21.md)（1 用例）
+- [unixODBC](unixODBC.md)（1 用例）
+- [unrtf](unrtf.md)（1 用例）
+- [upower](upower.md)（1 用例）
+- [usbguard](usbguard.md)（2 用例）
+- [usbmuxd](usbmuxd.md)（1 用例）
+- [util-linux](util-linux.md)（22 用例）
+- [utshell](utshell.md)（81 用例）
+- [utsudo](utsudo.md)（8 用例）
+- [uuid](uuid.md)（2 用例）
+- [uwsgi](uwsgi.md)（1 用例）
+- [valgrind](valgrind.md)（32 用例）
+- [valgrind_3.13.0](valgrind_3.13.0.md)（28 用例）
+- [varnish](varnish.md)（8 用例）
+- [vdo](vdo.md)（22 用例）
+- [virtCCA_sdk](virtCCA_sdk.md)（3 用例）
+- [vllm](vllm.md)（1 用例）
+- [vsftpd](vsftpd.md)（2 用例）
+- [watchdog](watchdog.md)（3 用例）
+- [wavpack](wavpack.md)（1 用例）
+- [webbench](webbench.md)（1 用例）
+- [whois](whois.md)（3 用例）
+- [wireshark](wireshark.md)（12 用例）
+- [wpa_supplicant](wpa_supplicant.md)（1 用例）
+- [wrk](wrk.md)（1 用例）
+- [wsmancli](wsmancli.md)（11 用例）
+- [x265](x265.md)（1 用例）
+- [xapian-core](xapian-core.md)（17 用例）
+- [xdelta](xdelta.md)（3 用例）
+- [xdiagnose](xdiagnose.md)（1 用例）
+- [xfsprogs](xfsprogs.md)（1 用例）
+- [xinetd](xinetd.md)（2 用例）
+- [xmltoman](xmltoman.md)（1 用例）
+- [xsd](xsd.md)（1 用例）
+- [xz](xz.md)（19 用例）
+- [yajl](yajl.md)（2 用例）
+- [yasm](yasm.md)（1 用例）
+- [yelp-tools](yelp-tools.md)（3 用例）
+- [ypbind](ypbind.md)（1 用例）
+- [ypserv](ypserv.md)（3 用例）
+- [zerofree](zerofree.md)（1 用例）
+- [zeromq](zeromq.md)（1 用例）
+- [zip](zip.md)（8 用例）
+- [zookeeper](zookeeper.md)（2 用例）
+- [zopfli](zopfli.md)（2 用例）
+- [zsh](zsh.md)（1 用例）
+- [zvbi](zvbi.md)（1 用例）
+- [zziplib](zziplib.md)（4 用例）
+
+### 冒烟域（smoke-test）（34 套件 / 734 用例）
+
+- [A-Tune](A-Tune.md)（1 用例）
+- [aops-ceres](aops-ceres.md)（6 用例）
+- [dbus-broker](dbus-broker.md)（1 用例）
+- [os-base-timeout](os-base-timeout.md)（1 用例）
+- [os-base-yes](os-base-yes.md)（1 用例）
+- [smoke](smoke.md)（274 用例）
+- [smoke-baseinfo](smoke-baseinfo.md)（11 用例）
+- [smoke-basic-os](smoke-basic-os.md)（319 用例）
+- [smoke-bzip2](smoke-bzip2.md)（3 用例）
+- [smoke-cronie](smoke-cronie.md)（1 用例）
+- [smoke-dim](smoke-dim.md)（2 用例） ⚠️
+- [smoke-docker](smoke-docker.md)（15 用例）
+- [smoke-eagle](smoke-eagle.md)（5 用例） ⚠️
+- [smoke-elfutils](smoke-elfutils.md)（9 用例）
+- [smoke-findutils](smoke-findutils.md)（3 用例）
+- [smoke-gnutls](smoke-gnutls.md)（1 用例） ⚠️
+- [smoke-iputils](smoke-iputils.md)（3 用例）
+- [smoke-iSulad](smoke-iSulad.md)（12 用例）
+- [smoke-libcap](smoke-libcap.md)（1 用例）
+- [smoke-libcap-ng](smoke-libcap-ng.md)（9 用例）
+- [smoke-libselinux-sssd](smoke-libselinux-sssd.md)（2 用例）
+- [smoke-memlink](smoke-memlink.md)（5 用例） ⚠️
+- [smoke-migrate](smoke-migrate.md)（7 用例） ⚠️
+- [smoke-module](smoke-module.md)（1 用例）
+- [smoke-oeaware](smoke-oeaware.md)（8 用例）
+- [smoke-oncn-bwm](smoke-oncn-bwm.md)（2 用例） ⚠️
+- [smoke-openssh](smoke-openssh.md)（2 用例） ⚠️
+- [smoke-OVS](smoke-OVS.md)（1 用例）
+- [smoke-powerapi](smoke-powerapi.md)（6 用例） ⚠️
+- [smoke-samba](smoke-samba.md)（3 用例）
+- [smoke-shangmi](smoke-shangmi.md)（6 用例） ⚠️
+- [smoke-syscare](smoke-syscare.md)（1 用例）
+- [smoke-sysSentry](smoke-sysSentry.md)（10 用例） ⚠️
+- [smoke-ubnative](smoke-ubnative.md)（2 用例）
+
+### 特性域（feature-test）（31 套件 / 810 用例）
+
+- [da-tool](da-tool.md)（12 用例）
+- [eagle](eagle.md)（39 用例） ⚠️
+- [gazelle](gazelle.md)（3 用例） ⚠️
+- [k3s](k3s.md)（1 用例） ⚠️
+- [kconfigDetector](kconfigDetector.md)（1 用例）
+- [kubeedge](kubeedge.md)（1 用例） ⚠️
+- [mm_uce](mm_uce.md)（8 用例） ⚠️
+- [obmm](obmm.md)（9 用例）
+- [oeaware](oeaware.md)（89 用例） ⚠️
+- [oeaware_embedded](oeaware_embedded.md)（11 用例）
+- [oedp](oedp.md)（14 用例） ⚠️
+- [pilotgo](pilotgo.md)（2 用例）
+- [pkgship_bedepend_query](pkgship_bedepend_query.md)（15 用例）
+- [pkgship_builddep_query](pkgship_builddep_query.md)（15 用例）
+- [pkgship_compare](pkgship_compare.md)（17 用例）
+- [pkgship_info_query](pkgship_info_query.md)（11 用例）
+- [pkgship_installdep_query](pkgship_installdep_query.md)（15 用例）
+- [pkgship_performance](pkgship_performance.md)（7 用例）
+- [pkgship_reliability](pkgship_reliability.md)（5 用例）
+- [pkgship_selfdepend_query](pkgship_selfdepend_query.md)（13 用例）
+- [pkgship_service_module](pkgship_service_module.md)（30 用例）
+- [pkgship_start_init](pkgship_start_init.md)（65 用例） ⚠️
+- [powerapi_interface](powerapi_interface.md)（95 用例） ⚠️
+- [secscanner](secscanner.md)（300 用例）
+- [secure_conf](secure_conf.md)（1 用例）
+- [sysboost](sysboost.md)（1 用例）
+- [sysmaster](sysmaster.md)（3 用例） ⚠️
+- [sysmonitor](sysmonitor.md)（13 用例）
+- [sysSentry_feature](sysSentry_feature.md)（12 用例） ⚠️
+- [ubackup](ubackup.md)（1 用例） ⚠️
+- [zswap](zswap.md)（1 用例）
+
+### 系统域（system-test）（28 套件 / 865 用例）
+
+- [compile-test](compile-test.md)（1 用例）
+- [dirsplit](dirsplit.md)（1 用例）
+- [efivar](efivar.md)（1 用例）
+- [FS_Device](FS_Device.md)（21 用例） ⚠️
+- [FS_Directory](FS_Directory.md)（33 用例） ⚠️
+- [FS_Docker](FS_Docker.md)（10 用例） ⚠️
+- [FS_File](FS_File.md)（40 用例） ⚠️
+- [FS_FileSystem](FS_FileSystem.md)（63 用例） ⚠️
+- [FS_IO](FS_IO.md)（42 用例） ⚠️
+- [FS_iSula](FS_iSula.md)（8 用例）
+- [FS_Negative](FS_Negative.md)（15 用例） ⚠️
+- [glog](glog.md)（1 用例）
+- [ltp](ltp.md)（2 用例）
+- [network_basic](network_basic.md)（18 用例） ⚠️
+- [network_docker](network_docker.md)（3 用例）
+- [network_negative](network_negative.md)（4 用例） ⚠️
+- [network_struct](network_struct.md)（29 用例） ⚠️
+- [network_virtual](network_virtual.md)（11 用例）
+- [os-basic](os-basic.md)（357 用例） ⚠️
+- [os-reboot](os-reboot.md)（31 用例） ⚠️
+- [os-storage](os-storage.md)（161 用例） ⚠️
+- [pkgmanager-test](pkgmanager-test.md)（2 用例） ⚠️
+- [pv](pv.md)（1 用例）
+- [realpath](realpath.md)（1 用例）
+- [service-test](service-test.md)（1 用例）
+- [shangmi](shangmi.md)（6 用例） ⚠️
+- [spec-test](spec-test.md)（1 用例）
+- [vala](vala.md)（1 用例）
+
+### 嵌入式域（embedded-test）（15 套件 / 231 用例）
+
+- [distributed_file_test](distributed_file_test.md)（24 用例） ⚠️
+- [embedded_application_develop_tests](embedded_application_develop_tests.md)（3 用例）
+- [embedded_dsoftbus_3_1_basic_test](embedded_dsoftbus_3_1_basic_test.md)（19 用例） ⚠️
+- [embedded_dsoftbus_3_2_basic_test](embedded_dsoftbus_3_2_basic_test.md)（19 用例） ⚠️
+- [embedded_mcs_qemu_test](embedded_mcs_qemu_test.md)（1 用例） ⚠️
+- [embedded_mcs_rpi4_test](embedded_mcs_rpi4_test.md)（1 用例） ⚠️
+- [embedded_mcs_uniproton_test](embedded_mcs_uniproton_test.md)（1 用例） ⚠️
+- [embedded_os_basic_extra_test](embedded_os_basic_extra_test.md)（35 用例）
+- [embedded_os_basic_test](embedded_os_basic_test.md)（49 用例）
+- [embedded_security_config_test](embedded_security_config_test.md)（20 用例）
+- [embedded_third_party_packages_extra_test](embedded_third_party_packages_extra_test.md)（15 用例）
+- [embedded_third_party_packages_test](embedded_third_party_packages_test.md)（40 用例）
+- [embedded_tiny_image_test](embedded_tiny_image_test.md)（1 用例）
+- [embedded_unixbench_test](embedded_unixbench_test.md)（1 用例）
+- [embedded_version_basic_tests](embedded_version_basic_tests.md)（2 用例）
+
+### 文档域（doc-test）（6 套件 / 160 用例）
+
+- [admin_guide](admin_guide.md)（92 用例） ⚠️
+- [app-devel-guide](app-devel-guide.md)（8 用例） ⚠️
+- [ops_guide](ops_guide.md)（5 用例）
+- [security_guide](security_guide.md)（49 用例） ⚠️
+- [StratoVirt_user_guide](StratoVirt_user_guide.md)（3 用例） ⚠️
+- [virtualization_user_guide](virtualization_user_guide.md)（3 用例） ⚠️
+
+### 安全域（security_test）（1 套件 / 71 用例）
+
+- [security_test](security_test.md)（71 用例） ⚠️
+
+### 模板域（testsuite）（1 套件 / 2 用例）
+
+- [testsuite](testsuite.md)（2 用例） ⚠️
