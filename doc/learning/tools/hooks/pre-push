@@ -8,7 +8,8 @@
 #           （或复制本文件到 .git/hooks/pre-push 并 chmod +x）
 set -u
 
-ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+# 本文件位于 doc/learning/tools/hooks/，上跳 4 级到仓库根
+ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
 PREPUSH_BRANCH="${PREPUSH_BRANCH:-master}"
 SCRIPT="$ROOT/doc/learning/tools/update_docs.sh"
 

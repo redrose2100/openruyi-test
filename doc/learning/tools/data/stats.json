@@ -171,7 +171,7 @@
  "smoke_syscare_cases": 1,
  "cli_dirs": 841,
  "security_themes": 47,
- "commit_short": "4f92a1735",
- "last_subject": "!5482 update oe_test_service_bacula-dir",
+ "commit_short": "1fedd766d",
+ "last_subject": "docs(learning): 自动刷新学习文档（数据快照同步上游最新状态）",
  "branch": "master"
 }
