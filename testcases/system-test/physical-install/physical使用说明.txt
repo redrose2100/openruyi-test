@@ -1,0 +1,27 @@
+1.在pxe机器上修改你要安装的物理机的dhcp信息
+例
+host 170_70_xx_xx {
+                filename "openEuler/GUI_24.03-LTS_phy/grubaa64.efi";
+                hardware ethernet 44:00:4D:A7:96:xx;
+                fixed-address 172.168.131.xx;
+                   }
+2.mugen环境配置时，需要３台机器，第一台本地机器，第二台pxe服务器，第三台被安装的物理机，三台皆是物理机
+例
+bash mugen.sh -c --ip 172.168.131.xx(本地机器ip) --password xx(本地机器密码)
+bash mugen.sh -c --ip 172.168.131.xx(pxe服务器ip) --password xx(pxe服务器密码)
+bash mugen.sh -c --ip 172.168.131.xx(被安装机器ip) --password xx(被安装机器密码)
+
+注，顺序一定不能乱
+
+3.第三台机器需要配置它的BMCip，用户密码等
+例
+　　　　　　"BMC_IP": "170.70.xx.xx",
+            "BMC_USER": "Adminisxx",
+            "BMC_PASSWORD": "openEulxx"
+4.修改./testcases/system-test/physical-install/install_env.conf
+test_time='openeuler-2024-06-16-20-05-05'该参数修改为具体测试时间.
+5.先执行单个用例，确保环境布置皆无问题
+例
+bash mugen.sh -x -f physical-install -r oe_test_minimal -x
+6.再全部执行
+bash mugen.sh -x -f physical-install -x　
