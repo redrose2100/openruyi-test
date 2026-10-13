@@ -27,7 +27,7 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    argus-extip | grep "Server_Host"
+    argus-extip | grep "ArgusEventData" 
     CHECK_RESULT $? 0 0 "Check argus-extip failed"
     argus-lsof  | grep "Program: /usr/bin/lsof"
     CHECK_RESULT $? 0 0 "Check argus-lsof failed"
