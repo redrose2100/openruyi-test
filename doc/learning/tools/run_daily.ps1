@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
-# run_daily.ps1 — 供 Windows 计划任务每日调用：同步上游 + 刷新文档 + 提交 + 推送 fork
-# 用法: powershell -ExecutionPolicy Bypass -File doc\learning\tools\run_daily.ps1
+# run_daily.ps1 - daily scheduled task entry: sync upstream + refresh docs + commit + push fork
+# Usage: powershell -ExecutionPolicy Bypass -File doc\learning\tools\run_daily.ps1
+# Note: this file is ASCII-only (PowerShell 5.1 mis-reads non-BOM UTF-8 as ANSI).
 $ErrorActionPreference = "Continue"
 $Tools = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Repo  = Split-Path -Parent (Split-Path -Parent $Tools)
@@ -9,7 +9,7 @@ $LogDir = Join-Path $Tools "logs"
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
 $Log = Join-Path $LogDir ("daily_" + (Get-Date -Format "yyyyMMdd_HHmm") + ".log")
 
-# 定位 git-bash
+# locate git-bash
 $bash = $null
 foreach ($p in @("$env:ProgramFiles\Git\bin\bash.exe", "${env:ProgramFiles(x86)}\Git\bin\bash.exe", "$env:LOCALAPPDATA\Programs\Git\bin\bash.exe")) {
     if (Test-Path $p) { $bash = $p; break }
@@ -19,7 +19,7 @@ if (-not $bash) {
     if ($w) { $bash = $w.Source }
 }
 if (-not $bash) {
-    "ERROR: 未找到 git-bash (bash.exe)，无法运行 update_docs.sh" | Tee-Object $Log
+    "ERROR: git-bash (bash.exe) not found - cannot run update_docs.sh" | Tee-Object $Log
     exit 1
 }
 
