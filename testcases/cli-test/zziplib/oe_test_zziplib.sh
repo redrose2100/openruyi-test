@@ -16,6 +16,7 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   zziplib formatting test
 # ############################################
+# shellcheck disable=SC2120
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
@@ -46,7 +47,7 @@ int main()
 }
 EOF
 
-    DNF_INSTALL "zziplib zziplib-devel zziplib-help gcc"
+    DNF_INSTALL "zziplib zziplib-devel zziplib-help gcc unzip"
     LOG_INFO "End of environmental preparation!"
 }
 
