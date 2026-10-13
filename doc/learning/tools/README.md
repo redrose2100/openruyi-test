@@ -73,9 +73,9 @@ bash doc/learning/tools/update_docs.sh --regen-only
 
 | 触发 | 机制 | 说明 |
 |------|------|------|
-| 你 `git push origin master` | pre-push 钩子 → `--prepush` | 推送前同步上游 + 刷新 + 提交（文档随推送一起更新） |
-| 每天定时 | Windows 计划任务 → `--all` | 即使你没有推送，上游新提交也会在每日刷新时同步进来 |
-| 手动 | `update_docs.sh --all` | 随时强制执行 |
+| 你 `git push origin master` | pre-push 钩子 → `--prepush` | 推送前同步上游 + 刷新 + 自动提交文档（推送本身不会被中断/失败）；钩子提交的文档随**下一次推送**或每日任务上传 fork |
+| 每天定时 | Windows 计划任务 → `--all` | 即使你没有推送，上游新提交也会在每日刷新时同步进来并推送 fork |
+| 手动 | `update_docs.sh --all` | 随时强制执行（同步+刷新+提交+推送 fork） |
 
 ## 4. 数据口径（与文档一致）
 

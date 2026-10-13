@@ -8,8 +8,8 @@
 #           （或复制本文件到 .git/hooks/pre-push 并 chmod +x）
 set -u
 
-# 嵌套推送保护：update_docs.sh --prepush 内部会再 push 一次（把刚提交的文档带上 fork），
-# 那一次触发的钩子直接放行，避免无限递归。
+# 递归保护：若 update_docs.sh 未来增加嵌套推送，PREPUSH_HOOK=1 使嵌套触发的钩子直接放行。
+# 当前设计钩子不推送（避免 push-in-hook 竞态），本保护为防御性冗余。
 if [ "${PREPUSH_HOOK:-0}" = "1" ]; then
     exit 0
 fi

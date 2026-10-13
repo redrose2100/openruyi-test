@@ -103,17 +103,8 @@ case "$MODE" in
         sync_upstream
         regen_docs || log "WARN 重新生成失败，不阻塞推送（文档可能滞后）"
         commit_docs
-        if [ "${PREPUSH_HOOK:-0}" = "1" ]; then
-            # 在钩子内：把"上游合并 + 刚提交的文档"一并推到 fork（嵌套 push；
-            # 触发的新钩子见 PREPUSH_HOOK=1 直接放行）。失败不阻塞外层推送，
-            # 文档会在下次推送/每日计划任务时带上。
-            log "嵌套推送 fork（携带最新文档） ..."
-            if git push "$FORK" "HEAD:$BRANCH"; then
-                log "嵌套推送完成。"
-            else
-                log "WARN 嵌套推送失败（文档已提交在本地，将随下次推送/每日计划任务上传）"
-            fi
-        fi
+        # 说明：钩子不在此推送，避免 push-in-hook 竞态导致外层 push 报错。
+        # 刚提交的文档随下一次推送（或每日计划任务 --all）上传到 fork。
         ;;
     --all)
         sync_upstream
