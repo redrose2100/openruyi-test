@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if [[ "${NODE1_FRAME}" != "x86_64" && "${NODE1_FRAME}" != "aarch64" ]]; then
+    if [[ "${NODE1_FRAME}" != "x86_64" && "${NODE1_FRAME}" != "aarch64" && "${NODE1_FRAME}" != "riscv64" ]]; then
         LOG_WARN "Current architecture (${NODE1_FRAME}) is not supported by powerapi, skipping test."
         exit 255
     fi

@@ -24,7 +24,7 @@ function pre_test() {
         LOG_INFO "The environment does not support testing"
         exit 0
     fi
-    if [[ "${NODE1_FRAME}" != "x86_64" && "${NODE1_FRAME}" != "aarch64" ]]; then
+    if [[ "${NODE1_FRAME}" != "x86_64" && "${NODE1_FRAME}" != "aarch64" && "${NODE1_FRAME}" != "riscv64" ]]; then
         LOG_WARN "Current architecture (${NODE1_FRAME}) is not supported by powerapi, skipping test."
         exit 255
     fi
