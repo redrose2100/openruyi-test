@@ -22,8 +22,26 @@ import re
 import subprocess
 import sys
 
-# 仓库根目录：以脚本自身位置推导，不依赖调用者的当前工作目录
-REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
+def find_repo_root(start_dir):
+    """从脚本所在目录向上查找仓库根（含 suite2cases 的目录）。
+
+    脚本位于 .github/scripts 下，不能再用脚本所在目录当仓库根，
+    这里改为向上逐级探测，同时兼容被移动到其他层级的情况。
+    """
+    current = os.path.realpath(start_dir)
+    while True:
+        if os.path.isdir(os.path.join(current, "suite2cases")):
+            return current
+        parent = os.path.dirname(current)
+        if parent == current:
+            break
+        current = parent
+    # 兜底：退化到脚本上两级目录，保证不会静默拿到错误路径
+    return os.path.realpath(os.path.join(start_dir, os.pardir, os.pardir))
+
+
+# 仓库根目录：以脚本自身位置向上推导，不依赖调用者的当前工作目录
+REPO_ROOT = find_repo_root(os.path.dirname(os.path.abspath(__file__)))
 
 # 允许的提交类型
 ALLOWED_TYPES = (

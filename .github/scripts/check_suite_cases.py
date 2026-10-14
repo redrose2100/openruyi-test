@@ -23,9 +23,29 @@ import re
 import subprocess
 import sys
 
-# 仓库根目录：以脚本自身位置推导，不依赖调用者的当前工作目录
-REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
 SUITE_DIR_NAME = "suite2cases"
+
+
+def find_repo_root(start_dir):
+    """从脚本所在目录向上查找仓库根（含 suite2cases 的目录）。
+
+    脚本位于 .github/scripts 下，不能再用脚本所在目录当仓库根，
+    这里改为向上逐级探测，同时兼容被移动到其他层级的情况。
+    """
+    current = os.path.realpath(start_dir)
+    while True:
+        if os.path.isdir(os.path.join(current, SUITE_DIR_NAME)):
+            return current
+        parent = os.path.dirname(current)
+        if parent == current:
+            break
+        current = parent
+    # 兜底：退化到脚本上两级目录，保证不会静默拿到错误路径
+    return os.path.realpath(os.path.join(start_dir, os.pardir, os.pardir))
+
+
+# 仓库根目录：以脚本自身位置向上推导，不依赖调用者的当前工作目录
+REPO_ROOT = find_repo_root(os.path.dirname(os.path.abspath(__file__)))
 
 # 固定忽略清单：命中的套件文件不做任何校验
 # testsuite.json 为团队约定永久跳过，后续所有相关操作均遵循此规则

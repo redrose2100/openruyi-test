@@ -65,7 +65,7 @@ jobs:
       - name: Check commit messages
         run: |
           set -eu
-          python3 check_commit_msg.py --rev-range "${{ steps.range.outputs.range }}"
+          python3 .github/scripts/check_commit_msg.py --rev-range "${{ steps.range.outputs.range }}"
 
   suite2cases:
     name: suite2cases consistency
@@ -151,7 +151,7 @@ jobs:
         run: |
           set -eu
           mapfile -t FILES < /tmp/changed_suites.txt
-          python3 check_suite_cases.py --files "${FILES[@]}"
+          python3 .github/scripts/check_suite_cases.py --files "${FILES[@]}"
 
       - name: Skip notice
         if: steps.changed.outputs.skip == 'true'

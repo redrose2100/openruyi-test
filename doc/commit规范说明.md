@@ -101,16 +101,16 @@ chore: 修正问题。                    # subject 以句号结尾
 
 ## 10 校验脚本
 
-脚本位置：`check_commit_msg.py`（仓库根目录）。
+脚本位置：`.github/scripts/check_commit_msg.py`。
 
 ### 10.1 使用方式
 
 ```bash
 # 校验两次提交之间的提交
-python3 check_commit_msg.py --rev-range v1.0..v1.1
+python3 .github/scripts/check_commit_msg.py --rev-range v1.0..v1.1
 
 # 本地用消息文件测试，多条消息之间用单独一行 '---' 分隔
-python3 check_commit_msg.py --messages-file /tmp/messages.txt
+python3 .github/scripts/check_commit_msg.py --messages-file /tmp/messages.txt
 ```
 
 ### 10.2 退出码

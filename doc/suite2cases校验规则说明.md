@@ -52,7 +52,7 @@
 
 ## 3 校验脚本
 
-脚本位置：`check_suite_cases.py`（仓库根目录）。
+脚本位置：`.github/scripts/check_suite_cases.py`。
 
 ### 3.1 三种执行模式
 
@@ -70,16 +70,16 @@
 
 ```bash
 # 全量校验
-python3 check_suite_cases.py --all
+python3 .github/scripts/check_suite_cases.py --all
 
 # 只校验指定文件
-python3 check_suite_cases.py --files suite2cases/kata-containers.json
+python3 .github/scripts/check_suite_cases.py --files suite2cases/kata-containers.json
 
 # 校验工作区相对于 HEAD 的改动
-python3 check_suite_cases.py --changed-from HEAD
+python3 .github/scripts/check_suite_cases.py --changed-from HEAD
 
 # 校验两次提交之间的改动
-python3 check_suite_cases.py --changed-from v1.0 --changed-to v1.1
+python3 .github/scripts/check_suite_cases.py --changed-from v1.0 --changed-to v1.1
 ```
 
 ### 3.3 退出码
@@ -139,7 +139,7 @@ python3 check_suite_cases.py --changed-from v1.0 --changed-to v1.1
 | `suite2cases/secscanner.json` | 声明了 300 个用例，其中 40 个没有对应 `.sh` 脚本 | 删除这 40 个用例条目 |
 | `suite2cases/kata-containers.json` | 声明的 `oe_test_kata-containers` 没有对应脚本 | 改为真实存在的 `oe_test_kata-containers_kata-runtime` |
 
-修正后 `python3 check_suite_cases.py --all` 返回 0 错误。
+修正后 `python3 .github/scripts/check_suite_cases.py --all` 返回 0 错误。
 
 > 修改 `suite2cases` 下的 JSON 时必须保持原有文件格式（行尾、缩进），
 > 不要用工具整体重新序列化，否则会产生大量无意义的 diff。
