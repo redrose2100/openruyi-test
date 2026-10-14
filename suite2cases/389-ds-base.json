@@ -186,6 +186,9 @@
         },
         {
             "name": "oe_test_ds-replcheck"
+        },
+        {
+            "name": "oe_test_readnsstate"
         }
     ]
 }

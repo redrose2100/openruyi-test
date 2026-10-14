@@ -60,6 +60,12 @@
         },
         {
             "name": "oe_test_criu_base_service"
+        },
+        {
+            "name": "oe_test_criu_3.15"
+        },
+        {
+            "name": "oe_test_criu_3.16"
         }
    ]
 }

@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_python3-rsa"
+        },
+        {
+            "name": "oe_test_python3-rsa_3.4.2"
         }
     ]
 }
