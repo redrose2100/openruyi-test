@@ -1,0 +1,158 @@
+name: quality-gate
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - master
+  push:
+    branches:
+      - dev
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  commit-message:
+    name: commit message convention
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # 需要完整历史才能按范围取出本次推送/PR 内的 commit
+          fetch-depth: 0
+
+      - name: Resolve commit range
+        id: range
+        run: |
+          set -eu
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # PR 场景：用 base 与 head 的 merge-base 作为下界，只取本 PR 自己引入的提交；
+            # 直接用 BASE..HEAD 会把「把 base 分支合并进来」产生的提交也算进来，导致误报
+            BASE="${{ github.event.pull_request.base.sha }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+            if ! MERGE_BASE=$(git merge-base "${BASE}" "${HEAD}"); then
+              echo "::error::cannot compute merge-base of ${BASE} and ${HEAD}"
+              exit 1
+            fi
+            RANGE="${MERGE_BASE}..${HEAD}"
+            echo "commit range (pull_request): ${RANGE}"
+          else
+            # push 场景：按 before..after 取本次推送的提交
+            BEFORE="${{ github.event.before }}"
+            AFTER="${{ github.event.after }}"
+            ZERO="0000000000000000000000000000000000000000"
+            if [ "${BEFORE}" = "${ZERO}" ]; then
+              # 新分支首次推送没有 before，降级为只检查最新一个提交
+              # 用 HEAD^! 而不是 HEAD~1..HEAD：仓库只有一个提交时 HEAD~1 不存在会直接失败
+              echo "::warning::before is all zeros (new branch); falling back to HEAD^!"
+              RANGE="HEAD^!"
+            else
+              RANGE="${BEFORE}..${AFTER}"
+            fi
+            echo "commit range (push): ${RANGE}"
+          fi
+
+          echo "range=${RANGE}" >> "${GITHUB_OUTPUT}"
+
+      - name: Check commit messages
+        run: |
+          set -eu
+          python3 check_commit_msg.py --rev-range "${{ steps.range.outputs.range }}"
+
+  suite2cases:
+    name: suite2cases consistency
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # 需要完整历史才能按范围做 diff
+          fetch-depth: 0
+
+      - name: Resolve changed suite2cases json
+        id: changed
+        run: |
+          set -eu
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+            RANGE="${BASE}...${HEAD}"
+          else
+            BEFORE="${{ github.event.before }}"
+            AFTER="${{ github.event.after }}"
+            ZERO="0000000000000000000000000000000000000000"
+            if [ "${BEFORE}" = "${ZERO}" ]; then
+              # 新分支首次推送没有 before，降级为只看最新一个提交
+              # 用 HEAD^! 而不是 HEAD~1 HEAD：仓库只有一个提交时 HEAD~1 不存在会直接失败
+              RANGE="HEAD^!"
+            else
+              RANGE="${BEFORE} ${AFTER}"
+            fi
+          fi
+
+          echo "diff range: ${RANGE}"
+
+          # --diff-filter=ACMR 排除被删除的 json（删掉的文件无需校验）
+          # 用 mapfile 收集，避免 gtk+.json 这类含特殊字符的文件名被文件名展开切分
+          #
+          # 必须显式捕获 git diff 的退出码：进程替换里的失败不会中断脚本，
+          # 若被静默当成「无变动」，范围算不出来时门禁反而会通过（漏检）。
+          set +e
+          git diff --name-only --diff-filter=ACMR ${RANGE} > /tmp/all_changed.txt
+          DIFF_RC=$?
+          set -e
+          if [ ${DIFF_RC} -ne 0 ]; then
+            echo "::error::git diff failed for range '${RANGE}' (exit ${DIFF_RC})"
+            exit ${DIFF_RC}
+          fi
+
+          mapfile -t ALL_CHANGED < /tmp/all_changed.txt
+          if [ ${#ALL_CHANGED[@]} -eq 0 ]; then
+            echo "no changed file detected"
+          fi
+
+          FILES=()
+          for f in "${ALL_CHANGED[@]}"; do
+            case "$f" in
+              suite2cases/*.json)
+                # testsuite.json 为团队约定永久忽略，后续所有相关操作均遵循此规则
+                if [ "$f" = "suite2cases/testsuite.json" ]; then
+                  echo "ignore suite2cases/testsuite.json (permanent exclusion rule)"
+                  continue
+                fi
+                FILES+=("$f")
+                ;;
+            esac
+          done
+
+          echo "changed suite2cases json count: ${#FILES[@]}"
+          for f in "${FILES[@]+"${FILES[@]}"}"; do
+            echo "  $f"
+          done
+
+          if [ ${#FILES[@]} -eq 0 ]; then
+            echo "skip=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "skip=false" >> "${GITHUB_OUTPUT}"
+            printf '%s\n' "${FILES[@]}" > /tmp/changed_suites.txt
+          fi
+
+      - name: Check suite2cases json
+        if: steps.changed.outputs.skip != 'true'
+        run: |
+          set -eu
+          mapfile -t FILES < /tmp/changed_suites.txt
+          python3 check_suite_cases.py --files "${FILES[@]}"
+
+      - name: Skip notice
+        if: steps.changed.outputs.skip == 'true'
+        run: echo "no suite2cases json changed, skip"
