@@ -26,16 +26,24 @@ suitecase_path = "suite2cases"
 curr_path = os.getcwd()
 
 def check_testsuite():
-    suitecase_list = os.listdir(os.path.join(curr_path, suitecase_path))
+    # 递归收集 suite2cases 下所有 json 文件（支持分类子目录）
+    suitecase_list = []
+    for root_dir, _, files in os.walk(os.path.join(curr_path, suitecase_path)):
+        for one_file in files:
+            if one_file.lower().endswith(".json"):
+                suitecase_list.append(os.path.join(root_dir, one_file))
+
     suitecase_set = {}
     repeat_list = []
     for one_suite in suitecase_list:
-        lower_name = one_suite.lower()
+        # 只比较文件名（跨目录重名即视为冲突），与 check_suite_cases.py 的唯一性规则一致
+        one_name = os.path.basename(one_suite)
+        lower_name = one_name.lower()
         if lower_name not in suitecase_set:
             suitecase_set[lower_name] = 1
         else:
             repeat_list.append(one_suite)
-            print("%s/%s had repeat from other suitecase name ignore case"%(curr_path, one_suite))
+            print("%s had repeat from other suitecase name ignore case" % one_suite)
     return len(repeat_list)
 
 def find_case(case_name, check_path):
@@ -66,13 +74,16 @@ def check_one_suite(cases_names, case_path, suitename):
     return repeat_case
 
 def check_testcase():
-    suitecase_list = os.listdir(os.path.join(curr_path, suitecase_path))
+    # 递归收集 suite2cases 下所有 json 文件（支持分类子目录）
+    suitecase_list = []
+    for root_dir, _, files in os.walk(os.path.join(curr_path, suitecase_path)):
+        for one_file in files:
+            if one_file.lower().endswith(".json"):
+                suitecase_list.append(os.path.join(root_dir, one_file))
+
     ret = 0
     for one_suite in suitecase_list:
-        if not os.path.isfile(os.path.join(curr_path, suitecase_path, one_suite)):
-            # 处理路径是目录的情况
-            continue
-        with open(os.path.join(curr_path, suitecase_path, one_suite), "r") as f:
+        with open(one_suite, "r") as f:
             case_info = json.load(f)
             case_path = os.path.join(curr_path, "/".join(case_info["path"].split("/")[1:]))
             cases_names = case_info["cases"]

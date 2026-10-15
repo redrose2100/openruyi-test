@@ -187,6 +187,8 @@ function run_test_case() {
         exit 1
     fi
 
+    suite_json=$(find_suite_json "$test_suite") || return $?
+
     result_files=$(find "${OET_PATH}"/results/"${test_suite}" -name "$test_case" >/dev/null 2>&1)
     for result_file in $result_files; do
         test -f "$result_file" && rm -rf "$result_file"
@@ -199,7 +201,7 @@ function run_test_case() {
         return 1
     }
 
-    if ! grep -q "$test_case" suite2cases/"${test_suite}.json"; then
+    if ! grep -q "$test_case" "$suite_json"; then
         LOG_ERROR "In the suite2cases directory, Can't find the case name:${test_case} in the file of testsuite:${test_suite}."
         return 1
     fi
@@ -222,7 +224,7 @@ function run_test_case() {
         exec_case "exit 255" "$log_path" "$test_case" "$test_suite"
         return 1
     else
-        CHECK_ENV "${OET_PATH}/suite2cases/$test_suite.json" "${test_case}"
+        CHECK_ENV "$suite_json" "${test_case}"
         if [ $? -ne 0 ]; then
             echo -e "The test environment don't meet the requirements, please check your environment." >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1
             exec_case "exit 255" "$log_path" "$test_case" "$test_suite"
@@ -302,10 +304,8 @@ function run_test_case() {
 function run_test_suite() {
     local test_suite=$1
 
-    [ -z "$(find "${OET_PATH}"/suite2cases -name "${test_suite}".json)" ] && {
-        LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
-        return 1
-    }
+    local suite_json
+    suite_json=$(find_suite_json "$test_suite") || return $?
 
     local this_copy=false
     local suite_path=""
@@ -334,7 +334,7 @@ function run_test_suite() {
 }
 
 function run_all_cases() {
-    mapfile -t test_suites < <(find "${OET_PATH}"/suite2cases/ -type f -name "*.json" | awk -F '/' '{print $NF}' | sed -e 's/.json$//g')
+    mapfile -t test_suites < <(find "${OET_PATH}"/suite2cases/ -type f -name "*.json" | awk -F '/' '{print $NF}' | sed -e 's/.json$//g' | sort -u)
     test ${#test_suites[@]} -eq 0 && {
         LOG_ERROR "Can't find recording about test_suites."
         return 1
@@ -369,10 +369,8 @@ function build_one_suite() {
     ((TOTAL_MAKE_COUNT++))
     local test_suite=$1
 
-    [ -z "$(find "${OET_PATH}"/suite2cases -name "${test_suite}".json)" ] && {
-        LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
-        return 1
-    }
+    local suite_json
+    suite_json=$(find_suite_json "$test_suite") || return $?
 
     suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)
     if [ $? -ne 0 ]; then
@@ -413,7 +411,7 @@ function build_one_suite() {
 }
 
 function build_all() {
-    mapfile -t test_suites < <(find "${OET_PATH}"/suite2cases/ -type f -name "*.json" | awk -F '/' '{print $NF}' | sed -e 's/.json$//g')
+    mapfile -t test_suites < <(find "${OET_PATH}"/suite2cases/ -type f -name "*.json" | awk -F '/' '{print $NF}' | sed -e 's/.json$//g' | sort -u)
     test ${#test_suites[@]} -eq 0 && {
         LOG_ERROR "Can't find recording about test_suites."
         return 1

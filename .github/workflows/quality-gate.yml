@@ -122,16 +122,16 @@ jobs:
 
           FILES=()
           for f in "${ALL_CHANGED[@]}"; do
-            case "$f" in
-              suite2cases/*.json)
-                # testsuite.json 为团队约定永久忽略，后续所有相关操作均遵循此规则
-                if [ "$f" = "suite2cases/testsuite.json" ]; then
-                  echo "ignore suite2cases/testsuite.json (permanent exclusion rule)"
-                  continue
-                fi
-                FILES+=("$f")
-                ;;
-            esac
+            # [[ == ]] 的 * 通配符可跨目录层级，能匹配 suite2cases/<子目录>/<任意层级>.json；
+            # case 的 glob 只匹配顶层，无法覆盖分类子目录
+            if [[ "$f" == suite2cases/* && "$f" == *.json ]]; then
+              # testsuite.json 为团队约定永久忽略，后续所有相关操作均遵循此规则
+              if [ "$f" = "suite2cases/testsuite.json" ]; then
+                echo "ignore suite2cases/testsuite.json (permanent exclusion rule)"
+                continue
+              fi
+              FILES+=("$f")
+            fi
           done
 
           echo "changed suite2cases json count: ${#FILES[@]}"
@@ -156,3 +156,17 @@ jobs:
       - name: Skip notice
         if: steps.changed.outputs.skip == 'true'
         run: echo "no suite2cases json changed, skip"
+
+  suite-name-uniqueness:
+    name: suite name uniqueness
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Check suite name uniqueness
+        run: |
+          set -eu
+          python3 .github/scripts/check_suite_cases.py --all
