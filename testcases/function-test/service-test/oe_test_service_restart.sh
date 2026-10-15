@@ -19,42 +19,31 @@
 # shellcheck disable=SC1091
 # shellcheck disable=SC2034
 source "common/common_lib.sh"
-source "${OET_PATH}/testcases/cli-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     EXECUTE_T="360m"
     package_install
     search_all_services 
-    select_services
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
-    LOG_INFO "Start to run test."    
-    if [ -s ./new_service ]; then
-        while read -r service; do
-            LOG_INFO "Start testing ${service}"
-            check_new_service "${service}"
-            LOG_INFO "End testing ${service}"
-        done < ./new_service 
-    else
-        LOG_INFO "No service with unadapted cases"
-    fi
-
-    if [ -s ./adapted_service ]; then
-        test_adapted_service
-        grep "oe_test" "${OET_PATH}"/failed_case
-        CHECK_RESULT $? 1 0 "Adapted testcase execution failed"        
-    else
-        LOG_INFO "No service with adapted cases"
-    fi
+    LOG_INFO "Start to run test."
+    while read -r service; do
+        _CUR_SVC="${service}"
+        _CUR_PKG=$(awk -v s="${service}" '$1==s {print $2}' service_pkg_map 2>/dev/null | head -1)
+        LOG_INFO "Start testing ${service} (package: ${_CUR_PKG})"
+        check_new_service "${service}"
+        LOG_INFO "End testing ${service}"
+    done < ./all_services
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clean_up_env
+    print_failure_table
     LOG_INFO "End to restore the test environment."
 }
 
