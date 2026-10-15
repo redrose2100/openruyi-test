@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libsemanage",
+    "cases": [
+        {
+            "name": "oe_test_libsemanage_install"
+        },
+        {
+            "name": "oe_test_libsemanage_cli"
+        },
+        {
+            "name": "oe_test_libsemanage_api"
+        },
+        {
+            "name": "oe_test_libsemanage_python"
+        }
+    ]
+}

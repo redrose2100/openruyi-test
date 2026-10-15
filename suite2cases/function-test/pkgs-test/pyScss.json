@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/pyScss",
+    "cases": [
+        {
+            "name": "oe_test_pyScss_01"
+        },
+        {
+            "name": "oe_test_pyScss_02"
+        },
+        {
+            "name": "oe_test_pyScss_03"
+        },
+        {
+            "name": "oe_test_pyScss_04"
+        },
+        {
+            "name": "oe_test_pyScss_05"
+        },
+        {
+            "name": "oe_test_python3-scss"
+        }
+    ]
+}

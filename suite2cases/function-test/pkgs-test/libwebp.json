@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libwebp",
+    "cases": [
+        {
+            "name": "oe_test_libwebp_install"
+        },
+        {
+            "name": "oe_test_libwebp_tools_cwebp"
+        },
+        {
+            "name": "oe_test_libwebp_tools_dwebp"
+        },
+        {
+            "name": "oe_test_libwebp_tools_webpinfo"
+        },
+        {
+            "name": "oe_test_libwebp_tools_webpmux"
+        },
+        {
+            "name": "oe_test_libwebp_tools_gif2webp"
+        },
+        {
+            "name": "oe_test_libwebp_devel"
+        },
+        {
+            "name": "oe_test_libwebp_java"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/sysget",
+    "cases": [
+        {
+            "name": "oe_test_sysget_01"
+	},
+	{
+	    "name": "oe_test_sysget_02"
+        }
+    ]
+}

@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/ubs-virt",
-    "cases": [
-        {
-            "name": "oe_test_service_vas-daemon"
-        }
-    ]
-}

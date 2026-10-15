@@ -1,0 +1,15 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/nspr",
+    "cases": [
+        {
+            "name": "oe_test_nspr_001"
+        },
+        {
+            "name": "oe_test_nspr_002"
+        },
+        {
+            "name": "oe_test_nspr-devel"
+        }
+    ]
+}
+

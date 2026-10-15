@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/intel-cmt-cat",
-    "cases": [
-        {
-            "name": "oe_test_intel_cmt_cat"
-        }
-    ]
-}

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/intel-cmt-cat",
+    "cases": [
+        {
+            "name": "oe_test_intel_cmt_cat"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/hsqldb",
+    "cases": [
+        {
+            "name": "oe_test_service_hsqldb"
+        },
+        {
+            "name": "oe_test_hsqldb01"
+        }
+    ]
+}

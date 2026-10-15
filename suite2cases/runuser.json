@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/runuser",
-    "cases": [
-        {
-            "name": "oe_test_runuser"
-        }
-    ]
-}

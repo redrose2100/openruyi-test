@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/libffi",
-    "cases": [
-        {
-            "name": "oe_test_libffi"
-        }
-    ]
-}

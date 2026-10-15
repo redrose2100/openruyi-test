@@ -1,0 +1,11 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/pkgs-test/gnome-shell",
+    "cases": [
+        {
+            "name": "oe_test_gnome-shell"
+        },
+        {
+            "name": "oe_test_gnome-shell_01"
+        }
+    ]
+}

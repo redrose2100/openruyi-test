@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/quota",
+    "cases": [
+        {
+            "name": "oe_test_service_quota_nld"
+        },
+        {
+            "name": "oe_test_service_rpc-rquotad"
+        }
+    ]
+}

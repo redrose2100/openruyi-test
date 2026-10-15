@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/java-17-openjdk",
+    "cases": [
+        {
+            "name": "oe_test_keytool"
+        },
+        {
+            "name": "oe_test_openjdk17_javadoc"
+        }
+    ]
+}

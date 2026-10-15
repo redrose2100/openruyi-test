@@ -1,0 +1,11 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/pmix",
+  "cases": [
+    {
+      "name": "oe_test_pmix"
+    },
+    {
+      "name": "oe_test_pmix_01"	    
+    }
+  ]
+}

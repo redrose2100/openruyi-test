@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/shadow",
+    "cases": [
+        {
+            "name": "oe_test_newusers"
+        },
+        {
+            "name": "oe_test_grpunconv"
+        },
+        {
+            "name": "oe_test_pwck"
+        },
+        {
+            "name": "oe_test_basic_del_user_nonexistent"
+        }
+    ]
+}

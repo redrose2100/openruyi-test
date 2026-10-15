@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/nototools",
-    "cases": [
-        {
-            "name": "oe_test_nototools_0-2_notodiff"
-        }
-    ]
-}

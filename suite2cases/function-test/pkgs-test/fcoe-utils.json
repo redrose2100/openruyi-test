@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/fcoe-utils",
+    "cases": [
+        {
+            "name": "oe_test_service_fcoe"
+        },
+        {
+            "name": "oe_test_socket_fcoemon"
+        }
+    ]
+}

@@ -1,9 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/tinyxml2",
-    "cases": [
-        {
-            "name": "oe_test_tinyxml2_001"
-        }
-
-    ]
-}

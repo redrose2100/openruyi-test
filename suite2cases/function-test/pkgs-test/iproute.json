@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/iproute",
+    "cases": [
+        {
+            "name": "oe_test_iproute_tc_01"
+        },
+        {
+            "name": "oe_test_iproute_tc_02"
+        },
+        {
+            "name": "oe_test_netns"
+        }
+    ]
+}

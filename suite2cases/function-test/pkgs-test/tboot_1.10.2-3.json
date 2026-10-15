@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/tboot",
+    "cases": [
+        {
+            "name": "oe_test_tboot_1.10.2-3_lcp2_crtpol"
+        },
+        {
+            "name": "oe_test_tboot_1.10.2-3_lcp2_crtpollist"
+        },
+        {
+            "name": "oe_test_tboot_1.10.2-3_lcp2_mlehash"
+        }
+    ]
+}

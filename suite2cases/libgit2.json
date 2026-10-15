@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/libgit2",
-    "cases": [
-        {
-            "name": "oe_test_libgit2"
-        }
-    ]
-}

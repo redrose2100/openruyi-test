@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/PackageKit",
+    "cases": [
+        {
+            "name": "oe_test_service_packagekit-offline-update"
+        },
+        {
+            "name": "oe_test_service_packagekit"
+        },
+	{
+            "name":"oe_test_packagekit_pkcon"
+        }
+    ]
+}

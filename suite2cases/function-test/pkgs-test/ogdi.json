@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/ogdi",
+    "cases": [
+        {
+            "name": "oe_test_ogdi-config"
+        }
+    ]
+}

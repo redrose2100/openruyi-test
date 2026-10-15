@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/crypto-policies",
+    "cases": [
+        {
+            "name": "oe_test_crypto_policies_basic"
+        },
+        {
+            "name": "oe_test_crypto_policies_switch"
+        }
+    ]
+}

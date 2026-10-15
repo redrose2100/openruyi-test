@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libseccomp",
+    "cases": [
+        {
+            "name": "oe_test_libseccomp"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/ebtables",
+    "cases": [
+        {
+            "name": "oe_test_service_ebtables"
+        },
+        {
+            "name": "oe_test_ebtables_01"
+        },
+        {
+            "name": "oe_test_ebtables_02"
+        }
+    ]
+}

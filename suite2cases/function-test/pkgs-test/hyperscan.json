@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/hyperscan",
+    "cases": [
+        {
+            "name": "oe_test_hyperscan_simplegrep"
+        },
+        {
+            "name": "oe_test_hyperscan_simplegrep01"
+        }        
+    ]
+}

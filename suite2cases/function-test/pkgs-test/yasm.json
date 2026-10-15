@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/yasm",
+    "cases": [
+        {
+            "name": "oe_test_yasm_01"
+        }
+    ]
+}

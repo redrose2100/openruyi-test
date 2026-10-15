@@ -1,0 +1,14 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/pkgs-test/dmidecode",
+    "cases": [
+        {
+            "name": "oe_test_dmidecode"
+        },
+        {
+            "name": "oe_test_biosdecode"
+        },
+        {
+            "name": "oe_test_dmidecode_extend"
+        }
+    ]
+}

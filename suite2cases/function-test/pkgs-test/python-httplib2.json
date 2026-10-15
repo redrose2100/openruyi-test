@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-httplib2",
+    "cases": [
+        {
+            "name": "oe_test_httplib2"
+        }
+    ]
+}
+

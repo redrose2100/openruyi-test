@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-jinja2",
+    "cases": [
+        {
+            "name": "oe_test_jinja2_01"
+        },
+        {
+            "name": "oe_test_jinja2_02"
+        }
+    ]
+}

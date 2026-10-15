@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/luajit",
+    "cases": [
+        {
+            "name": "oe_test_luajit_print"
+        },
+	{
+	    "name": "oe_test_luajit_print1"
+	}
+    ]
+}

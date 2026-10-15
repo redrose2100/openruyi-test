@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libgit2",
+    "cases": [
+        {
+            "name": "oe_test_libgit2"
+        }
+    ]
+}

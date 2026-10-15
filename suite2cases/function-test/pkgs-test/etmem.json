@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/etmem",
+    "cases": [
+        {
+            "name": "oe_test_etmemd_001"
+        },
+        {
+            "name": "oe_test_etmemd_002"
+        }
+    ]
+}

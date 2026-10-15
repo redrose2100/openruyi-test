@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/kuasar",
+    "cases": [
+        {
+            "name": "oe_test_service_kuasar-vmm"
+        },
+        {
+            "name": "oe_test_service_cc-kuasar-vmm"
+        }
+    ]
+}

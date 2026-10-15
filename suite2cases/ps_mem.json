@@ -1,9 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/ps_mem",
-    "cases": [
-        {
-            "name": "oe_test_ps_mem"
-        }
-
-    ]
-}

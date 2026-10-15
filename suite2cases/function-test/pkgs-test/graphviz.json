@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/graphviz",
+    "cases": [
+        {
+            "name": "oe_test_graphviz"
+        },
+        {
+            "name": "oe_test_graphviz01"
+        },
+        {
+            "name": "oe_test_circo"
+        }
+    ]
+}

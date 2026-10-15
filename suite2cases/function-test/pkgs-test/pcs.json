@@ -1,0 +1,18 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/pcs",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_service_pcsd",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_service_pcsd-ruby",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_service_pcs_snmp_agent",
+            "machine num": 2
+        }
+    ]
+}

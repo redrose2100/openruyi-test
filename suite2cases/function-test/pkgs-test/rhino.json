@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/rhino",
+    "cases": [
+        {
+            "name": "oe_test_rhino_01"
+        },
+        {
+            "name": "oe_test_rhino_02"
+        }
+    ]
+}

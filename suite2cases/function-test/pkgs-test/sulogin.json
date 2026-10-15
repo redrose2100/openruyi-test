@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/sulogin",
+    "cases": [
+        {
+            "name": "oe_test_sulogin"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/axel",
+  "cases": [
+    {
+      "name": "oe_test_axel_01"
+    },
+    {
+      "name": "oe_test_axel_02"
+    }
+  ]
+}

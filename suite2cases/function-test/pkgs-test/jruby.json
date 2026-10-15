@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/jruby",
+    "cases": [
+        {
+            "name": "oe_test_jruby"
+        },
+        {
+            "name": "oe_test_jruby01"
+        }
+      ]
+}

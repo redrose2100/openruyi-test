@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/pylint",
+    "cases": [
+        {
+            "name": "oe_test_pylint_01"
+        },
+        {
+            "name": "oe_test_pylint_02"
+        },
+        {
+            "name": "oe_test_pylint_03"
+        },
+        {
+            "name": "oe_test_pylint_04"
+        },
+        {
+            "name": "oe_test_epylint"
+        },
+        {
+            "name": "oe_test_symilar"
+        },
+        {
+            "name": "oe_test_pyreverse_01"
+        },
+        {
+            "name": "oe_test_pyreverse_02"
+        },
+        {
+            "name": "oe_test_pyreverse_03"
+        }
+    ]
+}

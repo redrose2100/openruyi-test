@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/cri-o",
+    "cases": [
+        {
+            "name": "oe_test_service_crio-wipe"
+        },
+        {
+            "name": "oe_test_service_crio"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/oath-toolkit",
+    "cases": [
+        {
+            "name": "oe_test_oathtool"
+        }
+    ]
+}

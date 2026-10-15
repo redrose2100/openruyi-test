@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/ps_mem",
+    "cases": [
+        {
+            "name": "oe_test_ps_mem"
+        }
+
+    ]
+}

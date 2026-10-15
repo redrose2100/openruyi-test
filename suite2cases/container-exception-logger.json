@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/container-exception-logger",
-    "cases": [
-        {
-            "name": "oe_test_container-exception-logger"
-        }
-    ]
-}

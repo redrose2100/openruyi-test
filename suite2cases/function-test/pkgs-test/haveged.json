@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/haveged",
+    "cases": [
+        {
+            "name": "oe_test_service_haveged"
+        },
+        {
+            "name": "oe_test_command_haveged"
+        },
+        {
+            "name": "oe_test_haveged01"
+        }
+    ]
+}

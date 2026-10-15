@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/nvwa",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_service_nvwa"
+        },
+        {
+            "name": "oe_test_service_nvwa-pre"
+        },
+        {
+            "name": "oe_test_nvwa_redis",
+	    "machine num": 2
+        }
+    ]
+}
+

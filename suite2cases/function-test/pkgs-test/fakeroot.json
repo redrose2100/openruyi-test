@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/fakeroot",
+    "cases": [
+        {
+          "name": "oe_test_fakeroot_base"
+        },
+        {
+          "name": "oe_test_fakeroot_faked"
+        }
+    ]
+}

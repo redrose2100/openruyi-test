@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/attest-tools",
+    "cases": [
+        {
+            "name": "oe_test_service_attest_ra_server"
+        },
+        {
+            "name": "oe_test_service_attest_tls_server"
+        }
+    ]
+}

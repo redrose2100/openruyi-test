@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/indent",
+    "cases": [
+        {
+            "name": "oe_test_indent_01"
+        },
+        {
+            "name": "oe_test_indent_02"
+        }
+    ]
+}

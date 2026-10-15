@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/crontabs",
+    "cases": [
+        {
+            "name": "oe_test_crontabs"
+        },
+        {
+            "name": "oe_test_crontabs_002"
+        }
+   ]
+}

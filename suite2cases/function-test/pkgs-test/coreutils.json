@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/coreutils",
+    "cases": [
+        {
+            "name": "oe_test_numfmt"
+        },
+        {
+            "name": "oe_test_stty"
+        },
+        {
+            "name": "oe_test_nohup"
+        },
+        {
+            "name": "oe_test_pathchk"
+        }
+    ]
+}

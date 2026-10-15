@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libnftnl",
+    "cases": [
+        {
+            "name": "oe_test_libnftnl"
+        },
+        {
+            "name": "oe_test_libnftnl_table"
+        },
+        {
+            "name": "oe_test_libnftnl_filter"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/libreport/",
+  "cases": [
+    {
+      "name": "oe_test_libreport_satyr"
+    }
+  ]
+}

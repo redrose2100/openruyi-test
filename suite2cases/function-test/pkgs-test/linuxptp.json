@@ -1,0 +1,34 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/linuxptp",
+    "machine type": "physical",
+    "cases": [
+        {
+            "name": "oe_test_service_phc2sys",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_service_ptp4l",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_nsm",
+            "machine type": "kvm"
+        },
+        {
+            "name": "oe_test_pmc",
+            "machine type": "kvm"
+        },
+        {
+            "name": "oe_test_ptp4l_01",
+            "machine type": "kvm"
+        },
+        {
+            "name": "oe_test_ptp4l_02",
+            "machine type": "kvm"
+        },
+        {
+            "name": "oe_test_timemaster",
+            "machine type": "kvm"
+        }
+    ]
+}

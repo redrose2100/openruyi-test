@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/firebird",
+    "cases": [
+        {
+            "name": "oe_test_service_firebird-superserver"
+        },
+        {
+            "name": "oe_test_service_firebird"
+        }
+    ]
+}

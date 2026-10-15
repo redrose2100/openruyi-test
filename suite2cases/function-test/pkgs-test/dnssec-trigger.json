@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/dnssec-trigger",
+    "cases": [
+        {
+            "name": "oe_test_service_dnssec-triggerd-keygen"
+        },
+        {
+            "name": "oe_test_service_dnssec-triggerd"
+        },
+        {
+            "name": "oe_test_dnssec-triggerd"
+        },
+        {
+            "name": "oe_test_dnssec-trigger-control-setup"
+        },
+        {
+            "name": "oe_test_dnssec-trigger-control_01"
+        },
+        {
+            "name": "oe_test_dnssec-trigger-control_02"
+        },
+        {
+            "name": "oe_test_dnssec-trigger-control_03"
+        },
+        {
+            "name": "oe_test_dnssec-trigger-control_04"
+        }
+    ]
+}

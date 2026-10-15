@@ -1,0 +1,61 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   huangrong
+# @Contact   :   1820463064@qq.com
+# @Date      :   2020/10/23
+# @License   :   Mulan PSL v2
+# @Desc      :   Test bacula-dir.service restart
+# #############################################
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/function-test/pkgs-test/common/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if yum list | grep -q "mysql5-server"; then
+        DNF_INSTALL "bacula-client mysql5-server"
+    else
+        DNF_INSTALL "bacula-client mysql-server"
+    fi
+    systemctl restart mysqld
+    /usr/libexec/bacula/create_mysql_database
+    /usr/libexec/bacula/make_mysql_tables
+    alternatives --set libbaccats.so /usr/lib64/libbaccats-mysql.so
+    chown -R bacula:bacula /var/spool/bacula /var/log/bacula
+    chmod 750 /var/spool/bacula /var/log/bacula
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+    test_execution bacula-dir.service
+    systemctl start bacula-dir.service
+    systemctl reload bacula-dir.service 2>&1 | grep "Job type reload is not applicable"
+    CHECK_RESULT $? 0 0 "Job type reload is not applicable for unit bacula-dir.service"
+    systemctl status bacula-dir.service | grep "Active: active"
+    CHECK_RESULT $? 0 0 "bacula-dir.service reload causes the service status to change"
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    systemctl stop bacula-dir.service
+    alternatives --set libbaccats.so /usr/lib64/libbaccats-postgresql.so
+    /usr/libexec/bacula/drop_mysql_tables
+    /usr/libexec/bacula/drop_mysql_database
+    systemctl stop mysqld
+    DNF_REMOVE
+    rm -rf /var/lib/mysql/*
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"

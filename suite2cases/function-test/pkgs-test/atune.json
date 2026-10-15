@@ -1,0 +1,47 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/atune",
+    "cases": [
+        {
+            "name": "oe_test_service_atuned"
+        },
+        {
+            "name": "oe_test_service_atune-rest"
+        },
+        {
+            "name": "oe_test_service_atune-engine"
+        },
+        {
+            "name": "oe_test_service_tune-openapi"
+        },
+        {
+            "name": "oe_test_service_tune-mcpserver"
+        },
+        {
+            "name": "oe_test_atuned_01"
+        },
+        {
+            "name": "oe_test_atuned_02"
+        },
+        {
+            "name": "oe_test_atuned_03"
+        },
+        {
+            "name": "oe_test_atuned_04"
+        },
+        {
+            "name": "oe_test_atuned_05"
+        },
+        {
+            "name": "oe_test_atuned_06"
+        },
+        {
+            "name": "oe_test_atuned_07"
+        },
+        {
+            "name": "oe_test_atuned_08"
+        },
+        {
+            "name": "oe_test_atuned_09"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/cppcheck",
+    "cases": [
+        {
+            "name": "oe_test_cppcheck"
+        },
+        {
+            "name": "oe_test_cppcheck-htmlreport"
+        }
+    ]
+}

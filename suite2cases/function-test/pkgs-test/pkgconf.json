@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/pkgconf",
+    "cases": [
+        {
+            "name": "oe_test_pkgconf"
+        }
+
+    ]
+}

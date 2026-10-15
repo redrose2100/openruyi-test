@@ -1,0 +1,20 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/nginx",
+  "cases": [
+    {
+      "name": "oe_test_nginx_cli"
+    },
+    {
+      "name": "oe_test_service_nginx"
+    },
+    {
+      "name": "oe_test_nginx_concurrent"
+    },
+    {
+      "name": "oe_test_service_nginx_2"
+    },
+    {
+      "name": "oe_test_nginx_invalid_configuration"
+    }
+  ]
+}

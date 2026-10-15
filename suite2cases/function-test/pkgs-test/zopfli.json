@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/zopfli",
+    "cases": [
+        {
+            "name": "oe_test_zopfli"
+        },
+        {
+            "name": "oe_test_zopflipng"
+        }
+    ]
+}

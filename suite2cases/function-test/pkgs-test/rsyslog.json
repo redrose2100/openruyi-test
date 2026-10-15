@@ -1,0 +1,114 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/rsyslog",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_rsyslog_abnormal_config",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_abnormal_template",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_rsyslog_function_attribute",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_rsyslog_function_discard",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_function_facility",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_function_httpd",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_rsyslog_function_imfile",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_function_postgreSQL",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_function_priority",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_function_rainerscript",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_function_relp",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_rsyslog_function_shell",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_function_tcp",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_rsyslog_function_tcp_firewall",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_rsyslog_function_template",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_function_udp",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_rsyslog_function_wildcard",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_parameter01",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_parameter02",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_parameter03",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_parameter04",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_reliability_lenght",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_rsyslog_reliability_network",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_rsyslog_reliability_operation",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_reliability_restart",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rsyslog_reliability_tcp",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_service_rsyslog",
+            "machine num": 1
+        }
+    ]
+}

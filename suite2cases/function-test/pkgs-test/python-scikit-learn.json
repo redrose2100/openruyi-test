@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-scikit-learn",
+    "cases": [
+        {
+            "name": "oe_test_python3-scikit-learn"
+        }
+    ]
+}

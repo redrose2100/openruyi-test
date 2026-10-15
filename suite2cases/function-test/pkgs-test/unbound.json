@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/unbound",
+    "cases": [
+        {
+            "name": "oe_test_service_unbound-anchor"
+        },
+        {
+            "name": "oe_test_service_unbound-keygen"
+        },
+        {
+            "name": "oe_test_service_unbound"
+        },
+        {
+            "name": "oe_test_unbound-control"
+        }
+    ]
+}

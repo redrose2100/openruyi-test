@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/e2fsprogs",
+    "cases": [
+        {
+            "name": "oe_test_service_e2scrub_all"
+        },
+        {
+            "name": "oe_test_service_e2scrub_reap"
+        },
+        {
+            "name": "oe_test_e2fsck_repair"
+        },
+        {
+            "name": "oe_test_chattr"
+        },
+        {
+            "name": "oe_test_fuse2fs"
+        },
+        {
+            "name": "oe_test_debugfs"
+	},
+	{
+	    "name": "oe_test_e2image"
+        },
+	{
+	    "name": "oe_test_e2freefrag"	
+        }
+    ]
+}

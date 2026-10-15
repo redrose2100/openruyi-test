@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-mako",
+    "cases": [
+        {
+            "name": "oe_test_python3-mako"
+        }
+    ]
+}
+

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/scipy",
+    "cases": [
+        {
+            "name": "oe_test_python3-scipy"
+        }
+    ]
+}

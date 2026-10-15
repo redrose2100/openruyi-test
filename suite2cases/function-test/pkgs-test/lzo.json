@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/lzo",
+    "cases": [
+        {
+            "name": "oe_test_lzo-lzop"
+        },
+        {
+            "name": "oe_test_lzo-lzop_01"
+        }
+    ]
+}

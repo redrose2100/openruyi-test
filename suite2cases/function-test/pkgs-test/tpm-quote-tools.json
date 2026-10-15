@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/tpm-quote-tools",
+    "cases": [
+        {
+            "name": "oe_test_tpm-quote-tools"
+        }
+    ]
+}

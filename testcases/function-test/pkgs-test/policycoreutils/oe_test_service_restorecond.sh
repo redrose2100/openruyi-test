@@ -1,0 +1,38 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more detaitest -f.
+
+# #############################################
+# @Author    :   huangrong
+# @Contact   :   1820463064@qq.com
+# @Date      :   2020/10/23
+# @License   :   Mulan PSL v2
+# @Desc      :   Test restorecond.service restart
+# #############################################
+
+source "${OET_PATH}/testcases/function-test/pkgs-test/common/common_lib.sh"
+
+function run_test() {
+    LOG_INFO "Start testing..."
+    # 对selinux是否被禁用进行判断
+    setenforce 1  #如果在内核层禁用了selinux,那么这里是无法打开的
+    selinux_status=$(getenforce)
+    if [ "${selinux_status}" == "Enforcing" ] || [ "${selinux_status}" == "Permissive" ]; then
+        test_execution restorecond.service
+        test_reload restorecond.service
+    else
+        LOG_WARN "Testing cannot be performed if selinux cannot be enabled."
+        exit 255
+    fi
+    
+    LOG_INFO "Finish test!"
+}
+
+main "$@"

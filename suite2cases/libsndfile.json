@@ -1,8 +1,0 @@
-{
-  "path": "$OET_PATH/testcases/cli-test/libsndfile",
-  "cases": [
-    {
-      "name": "oe_test_libsndfile"
-    }
-  ]
-}

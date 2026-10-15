@@ -1,0 +1,62 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2021. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more detaitest -f.
+
+# #############################################
+# @Author    :   huangrong
+# @Contact   :   1820463064@qq.com
+# @Date      :   2020/10/23
+# @License   :   Mulan PSL v2
+# @Desc      :   Test exchange-bmc-os-info.service restart
+# #############################################
+# shellcheck disable=SC2119
+source "${OET_PATH}"/testcases/function-test/pkgs-test/common/common_lib.sh
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    modprobe ipmi_watchdog
+    modprobe ipmi_poweroff
+    modprobe ipmi_devintf
+    modprobe ipmi_si
+    modprobe ipmi_msghandler
+    if [[ ! -e /dev/ipmi0 && ! -e /dev/ipmi/0 && ! -e /dev/ipmidev/0 ]];then
+        LOG_WARN "Testing cannot be performed if machine don't support ipmi."
+        exit 255
+    fi
+    DNF_INSTALL "ipmitool OpenIPMI exchange-bmc-os-info"
+    if [ "$NODE1_FRAME" == "ppc64le" ]; then
+        if [ -f /etc/sysconfig/ipmi ]; then
+            sed -i 's/IPMI_SI=yes/#&/g' /etc/sysconfig/ipmi
+            systemctl restart ipmi.service
+        fi
+    fi
+    LOG_INFO "End of environmental preparation!"
+}
+
+function run_test() {
+    LOG_INFO "Start testing..."
+    test_execution exchange-bmc-os-info.service
+    test_reload exchange-bmc-os-info.service
+    LOG_INFO "Finish test!"
+}
+
+function post_test() {
+    LOG_INFO "start environment cleanup."
+    systemctl stop exchange-bmc-os-info.service
+    modprobe -r ipmi_watchdog
+    modprobe -r ipmi_poweroff
+    modprobe -r ipmi_devintf
+    modprobe -r ipmi_si
+    modprobe -r ipmi_msghandler
+    DNF_REMOVE
+    LOG_INFO "Finish environment cleanup!"
+}
+
+main "$@"

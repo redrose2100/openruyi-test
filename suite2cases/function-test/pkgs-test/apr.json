@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/apr",
+    "cases": [
+        {
+            "name": "oe_test_apr_001"
+        },
+        {
+            "name": "oe_test_apr_002"
+        },
+	{
+            "name": "oe_test_apr_003"
+        },
+	{
+            "name": "oe_test_apr_004"
+        },
+	{
+            "name": "oe_test_apr_005"
+        }
+    ]
+}

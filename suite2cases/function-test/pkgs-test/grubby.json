@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/grubby",
+    "cases": [
+        {
+            "name": "oe_test_grubby_install"
+        },
+        {
+            "name": "oe_test_grubby_cli"
+        },
+        {
+            "name": "oe_test_grubby_config"
+        }
+    ]
+}

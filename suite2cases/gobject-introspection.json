@@ -1,9 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/gobject-introspection",
-    "cases": [
-        {
-            "name": "oe_test_gobject-introspection"
-        }
-
-    ]
-}

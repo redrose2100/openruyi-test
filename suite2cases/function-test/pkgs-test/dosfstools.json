@@ -1,0 +1,11 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/dosfstools",
+  "cases": [
+      {
+          "name": "oe_test_dosfsck"
+      },
+      {
+          "name": "oe_test_dosfsck_02"
+      }
+  ]
+}

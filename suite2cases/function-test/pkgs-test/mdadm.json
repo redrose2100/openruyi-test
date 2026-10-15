@@ -1,0 +1,31 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/mdadm",
+    "add disk": [
+        10,
+        10
+    ],
+    "cases": [
+        {
+            "name": "oe_test_service_mdmonitor",
+            "add disk": [
+                10,
+                10
+            ]
+        },
+        {
+            "name": "oe_test_service_mdcheck_continue",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_service_mdcheck_start",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_service_mdmonitor-oneshot",
+            "add disk": [
+                10,
+                10
+            ]
+        }
+    ]
+}

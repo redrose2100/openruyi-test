@@ -1,0 +1,8 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/future",
+  "cases": [
+    {
+      "name": "oe_test_python_future"
+    }
+  ]
+}

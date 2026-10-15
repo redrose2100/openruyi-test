@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/texi2html",
+    "cases": [
+        {
+            "name": "oe_test_texi2html_01"
+        },
+        {
+            "name": "oe_test_texi2html_02"
+        },
+        {
+            "name": "oe_test_texi2html_03"
+        },
+        {
+            "name": "oe_test_texi2html_04"
+        },
+        {
+            "name": "oe_test_texi2html_05"
+        },
+        {
+            "name": "oe_test_texi2html_06"
+        },
+        {
+            "name": "oe_test_texi2html_07"
+        },
+        {
+            "name": "oe_test_texi2html_08"
+        }
+    ]
+}

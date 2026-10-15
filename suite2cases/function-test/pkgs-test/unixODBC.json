@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/unixODBC",
+    "cases": [
+        {
+            "name": "oe_test_unixODBC"
+        }
+
+      ]
+}
+

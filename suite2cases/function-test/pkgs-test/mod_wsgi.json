@@ -1,0 +1,8 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/mod_wsgi",
+  "cases": [
+    {
+      "name": "oe_test_mod_wsgi"
+    }
+  ]
+}

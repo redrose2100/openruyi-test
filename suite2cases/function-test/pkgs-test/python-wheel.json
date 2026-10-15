@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-wheel",
+    "cases": [
+        {
+            "name": "oe_test_python-wheel_python3-wheel_command"
+        },
+        {
+            "name": "oe_test_python3-wheel_01"
+        }
+    ]
+}
