@@ -18,6 +18,9 @@
         },
         {
             "name": "oe_test_units_cur"
+        },
+        {
+            "name": "oe_test_units_2.21"
         }
    ]
 }

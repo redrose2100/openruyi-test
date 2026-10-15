@@ -20,6 +20,12 @@
         },
         {
             "name": "oe_test_rhash_base_rhash_06"  
+        },
+        {
+            "name": "oe_test_rhash_1.4.0_rhash"
+        },
+        {
+            "name": "oe_test_rhash_1.4.2_rhash"
         }
     ]
 }

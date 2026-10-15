@@ -80,16 +80,7 @@
             "name": "oe_test_secscanner_026"
         },
         {
-            "name": "oe_test_secscanner_027"
-        },
-        {
             "name": "oe_test_secscanner_028"
-        },
-        {
-            "name": "oe_test_secscanner_029"
-        },
-        {
-            "name": "oe_test_secscanner_030"
         },
         {
             "name": "oe_test_secscanner_031"
@@ -99,9 +90,6 @@
         },
         {
             "name": "oe_test_secscanner_033"
-        },
-        {
-            "name": "oe_test_secscanner_034"
         },
         {
             "name": "oe_test_secscanner_035"
@@ -120,18 +108,6 @@
         },
         {
             "name": "oe_test_secscanner_040"
-        },
-        {
-            "name": "oe_test_secscanner_041"
-        },
-        {
-            "name": "oe_test_secscanner_042"
-        },
-        {
-            "name": "oe_test_secscanner_043"
-        },
-        {
-            "name": "oe_test_secscanner_044"
         },
         {
             "name": "oe_test_secscanner_045"
@@ -183,12 +159,6 @@
         },
         {
             "name": "oe_test_secscanner_061"
-        },
-        {
-            "name": "oe_test_secscanner_062"
-        },
-        {
-            "name": "oe_test_secscanner_063"
         },
         {
             "name": "oe_test_secscanner_064"
@@ -810,96 +780,6 @@
         },
         {
             "name": "oe_test_secscanner_270"
-        },
-        {
-            "name": "oe_test_secscanner_271"
-        },
-        {
-            "name": "oe_test_secscanner_272"
-        },
-        {
-            "name": "oe_test_secscanner_273"
-        },
-        {
-            "name": "oe_test_secscanner_274"
-        },
-        {
-            "name": "oe_test_secscanner_275"
-        },
-        {
-            "name": "oe_test_secscanner_276"
-        },
-        {
-            "name": "oe_test_secscanner_277"
-        },
-        {
-            "name": "oe_test_secscanner_278"
-        },
-        {
-            "name": "oe_test_secscanner_279"
-        },
-        {
-            "name": "oe_test_secscanner_280"
-        },
-        {
-            "name": "oe_test_secscanner_281"
-        },
-        {
-            "name": "oe_test_secscanner_282"
-        },
-        {
-            "name": "oe_test_secscanner_283"
-        },
-        {
-            "name": "oe_test_secscanner_284"
-        },
-        {
-            "name": "oe_test_secscanner_285"
-        },
-        {
-            "name": "oe_test_secscanner_286"
-        },
-        {
-            "name": "oe_test_secscanner_287"
-        },
-        {
-            "name": "oe_test_secscanner_288"
-        },
-        {
-            "name": "oe_test_secscanner_289"
-        },
-        {
-            "name": "oe_test_secscanner_290"
-        },
-        {
-            "name": "oe_test_secscanner_291"
-        },
-        {
-            "name": "oe_test_secscanner_292"
-        },
-        {
-            "name": "oe_test_secscanner_293"
-        },
-        {
-            "name": "oe_test_secscanner_294"
-        },
-        {
-            "name": "oe_test_secscanner_295"
-        },
-        {
-            "name": "oe_test_secscanner_296"
-        },
-        {
-            "name": "oe_test_secscanner_297"
-        },
-        {
-            "name": "oe_test_secscanner_298"
-        },
-        {
-            "name": "oe_test_secscanner_299"
-        },
-        {
-            "name": "oe_test_secscanner_300"
         }
     ]
 }

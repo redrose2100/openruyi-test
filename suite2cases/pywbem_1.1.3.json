@@ -1,9 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/pywbem",
-
-    "cases": [
-        {
-            "name": "oe_test_pywbem_1.1.3_mof_compiler"
-        }
-    ]
-}

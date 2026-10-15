@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/bacula",
-    "cases": [
-        {
-            "name": "oe_test_bacula_dbcheck_9.4.4_01"
-        }
-    ]
-}
