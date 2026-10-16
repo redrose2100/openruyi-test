@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/security_test",
+    "path": "$OET_PATH/testcases/security-test/security_test",
     "machine num": 2,
     "add disk": [
         10
