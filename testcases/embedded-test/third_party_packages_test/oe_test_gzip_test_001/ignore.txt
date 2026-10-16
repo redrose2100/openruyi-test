@@ -1,3 +1,0 @@
-# gzip ignore casename[#reason]
-help-version   #failed test: built_programs not specified!?!
-hufts          #invalid compressed data--format violated

@@ -1,5 +1,0 @@
-# sed ignore casename[#reason]
-misc.pl            #failed test: no perl
-debug.pl           #failed test: no perl
-panic-tests.sh     #failed test
-follow-symlinks.sh #cannot stat badfile

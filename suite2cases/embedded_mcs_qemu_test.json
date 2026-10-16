@@ -1,9 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/embedded-test/mcs_qemu_test",
-    "machine num": 1,
-    "cases": [
-        {
-            "name": "oe_mcs_qemu_test_001"
-        }
-    ]
-}
