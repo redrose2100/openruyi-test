@@ -115,7 +115,7 @@
                     "testsuite": "embedded_application_develop_tests"
                 },
                 {
-                    "testsuite": "smoke-basic-os",
+                    "testsuite": "smoke",
                     "add": "oe_test_acl_001"
                 }
             ]
@@ -137,7 +137,7 @@
                     "testsuite": "embedded_application_develop_tests"
                 },
                 {
-                    "testsuite": "smoke-basic-os",
+                    "testsuite": "smoke",
                     "add": "oe_test_acl_001"
                 }
             ]

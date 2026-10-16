@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/smoke-test",
+    "path": "$OET_PATH/testcases/smoke-test/smoke-syscare",
     "cases": [
         {
             "name": "oe_test_syscare_basic_test"

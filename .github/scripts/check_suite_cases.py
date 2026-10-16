@@ -187,6 +187,7 @@ def check_one_suite(json_path):
     name_lines = build_name_line_map(text)
     stems = collect_case_stems(abs_case_path)
 
+    seen_names = set()
     for one_case in data["cases"]:
         if not isinstance(one_case, dict) or not isinstance(one_case.get("name"), str):
             result.errors.append("%s: case entry is not an object with a string 'name'" % rel_path)
@@ -197,6 +198,19 @@ def check_one_suite(json_path):
 
         case_name = one_case["name"]
         result.case_count += 1
+
+        # 单个 json 内 case name 不允许重复（大小写不敏感，与既有约定保持一致）
+        case_key = case_name.lower()
+        if case_key in seen_names:
+            line_no = take_line(name_lines, case_name)
+            result.errors.append(
+                "%s: duplicate case name '%s' in the same suite" % (rel_path, case_name)
+            )
+            result.annotations.append(
+                (rel_path, line_no, 0, "duplicate case name", "case name '%s' appears more than once" % case_name)
+            )
+            continue
+        seen_names.add(case_key)
 
         # 不区分大小写匹配，与 check_casename.py 的既有约定保持一致
         if case_name.lower() in stems:
