@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/doc-test/app-devel-guide",
+    "path": "$OET_PATH/testcases/function-test/compile-test/compile-test",
     "machine type": "Kvm",
     "cases": [
         {
@@ -25,6 +25,9 @@
         },
         {
             "name": "oe_test_prepare_dev_env"
+        },
+        {
+            "name": "oe_test_compile"
         }
     ]
 }
