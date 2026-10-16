@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/feature-test/eagle",
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/eagle",
     "machine type": "physical",
     "cases": [
         {
