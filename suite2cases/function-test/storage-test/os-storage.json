@@ -1,0 +1,1367 @@
+{
+    "path": "$OET_PATH/testcases/function-test/storage-test/os-storage",
+    "machine num": 2,
+    "machine type": "kvm",
+    "add network interface": 2,
+    "add disk": [
+        2,
+        2,
+        2,
+        2
+    ],
+    "cases": [
+        {
+            "name": "oe_test_storage_fileCMD_file",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_Mutipath_mpathconf",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_Mutipath_dmsetup",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_lvm_add_VG",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_expand_stripeLV",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_mount_block_device",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_change_number",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileCMD_pwd",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_mount_shared",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_rename",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_DevMgmt_block_drop",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_raid_synchronization",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_create_raid0",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_rename_VG",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_ext4_resize",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_Mutipath_configure_parameter",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_view_fdisk",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileCMD_cat",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_lvm_query_lvmsnap",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileCMD_mv",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_mount_private",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_create_cache",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_DevMgmt_lsblk",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileCMD_mkfs",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_lvm_create_snapshot",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileCMD_ln",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_mount_prevent_copy",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_mount_repeat",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_parted_view",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_fdisk_settype",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_activation",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_mount_umount",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_fdisk",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_ext4_mount_write",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_mount_mobile_point",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_print_history",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_merge_VG",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_DevMgmt_disk_operation",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileCMD_tar",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fileCMD_cp",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_lvm_help_info",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_create_raid",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_Mutipath_configure_device",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_ext3_mount",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_Mutipath_view_info",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_ext4_mount",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_mount_findmnt",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileaccess_bashrc",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_ext3_create",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileCMD_rmdir",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fileCMD_chmod",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fileCMD_gzip",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fileCMD_ls",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_lvm_cling",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_view_lsblk",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_longname_list",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_longname_modify",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_mount_UUID",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileCMD_mkdir",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_ext4_create",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_separate_raid",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_print_info",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_parted_resize",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_Mutipath_various_fields",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fileCMD_df",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_lvm_replace_raid",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_parted_delete",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_pvs",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_create_raid1",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_Mutipath_initramfs",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_DevMgmt_swap",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_Mutipath_configure_section",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fileCMD_unzip",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_lvm_lvdisplay_lvscan",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_print",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileCMD_chown",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fileCMD_touch",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fileCMD_grep",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_lvm_activation_missing",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_create_raid5",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileCMD_sort",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fileCMD_dd",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fileCMD_zip",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_lvm_resize_PV",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_replace_badraid",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_ext3_resize",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_Mutipath_configure_defaults",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_fdisk_delete",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_create_thinSnapshot",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_diskpartiton_parted_create",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_ext3_mount_write",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_fileCMD_cd",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fileCMD_wc",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_Mutipath_configure_blacklist",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_mount_copy",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_nfs_repeat_restart",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_repeat_restartServer",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_configure_nfsv4",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_modify_port",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_showmount",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_mount_root",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_RPC",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_rpcinfo",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_mount_readonly",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_exportfs",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_repeat_mount",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_mount_RW",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_share_mount",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_network_latency",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_restrict_hostname",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_write_full",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_start_server",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_cmd_smbcontrol",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_repair_e2fsck",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_smb_cmd_smbpasswd",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_v3_v4",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_cmd_smbstatus",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_repair_xfs",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_smb_3.0",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_nfs_restrict_ip",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_cmd_rpcclient",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_mount",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_multi-user_mount",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_cmd_testparm",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_vfat_mount_write",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_xfs_Increase_size",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_smb_guest_share",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_POSIX_ACL",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_host_share",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_repeat_restart",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_abnormal_poweroff",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_credential_files",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_xfs_restore",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_smb_network_latency",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_automatically_mount",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_mount_umount",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_xfs_create",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_smb_share_dir",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_write_full",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_smb_cmd_smbclient",
+            "machine num": 2,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_xfs_backup",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_set_regionsize",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_snapshot_merge",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_VG_transfer",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_set_lvconvert_volume",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_snapshot_tag",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_specify_size",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_set_lvconvert_raid1",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_set_limit",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_set_label",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_set_lvconvert_raid",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_lvm_split_VG",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2,
+                2,
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_DevMgmt_fstrim",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": [
+                2
+            ]
+        },
+        {
+            "name": "oe_test_storage_btrfs_001",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_btrfs_002",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fsck-btrfs",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fsck-ext2",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fsck-ext3_01",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fsck-ext3_02",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fsck-ext4",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_storage_fsck-fat_01",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        }
+    ]
+}
