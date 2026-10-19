@@ -1,5 +1,5 @@
 {
-    "path": "${OET_PATH}/testcases/doc-test/virtualization/virtualization_user_guide",
+    "path": "$OET_PATH/testcases/function-test/virtualization-test/virtualization_user_guide",
     "machine type": "physical",
     "add network interface": 1,
     "cases": [
