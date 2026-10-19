@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/system-test/spec-test",
+    "path": "$OET_PATH/testcases/function-test/spec-test",
     "cases": [
         {
             "name": "oe_test_check_mul_so"
