@@ -1,5 +1,5 @@
 {
-    "path": "${OET_PATH}/testcases/system-test/network-test/network_virtual",
+    "path": "${OET_PATH}/testcases/function-test/network-test/network_virtual",
     "cases": [
         {
             "name": "oe_test_check_tuntap_support"

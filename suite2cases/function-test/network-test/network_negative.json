@@ -1,5 +1,5 @@
 {
-    "path": "${OET_PATH}/testcases/system-test/network-test/network_negative",
+    "path": "${OET_PATH}/testcases/function-test/network-test/network_negative",
     "add network interface": 1,
     "cases": [
         {
