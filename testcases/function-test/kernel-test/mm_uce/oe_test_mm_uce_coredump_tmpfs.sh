@@ -16,7 +16,7 @@
 # @Desc      :   内存UCE错误
 # ############################################
 
-source "${OET_PATH}/testcases/function-test/feature-test/mm_uce/common/common.sh"
+source "${OET_PATH}/testcases/function-test/kernel-test/mm_uce/common/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
@@ -29,12 +29,13 @@ function pre_test() {
     make -C ./common 
     make -C ./common install
     dmesg -c > /dev/null
-    load_mm_uce_module
     load_einj_module
+    load_mm_uce_module
     if ! do_mm_uce_check;then
         LOG_INFO "The environment does not support testing"
 	exit 1
     fi
+    load_einj_module
     enable_tracepoint
     LOG_INFO "End of environmental preparation!"
 }
@@ -43,9 +44,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     date > "${LOG}"
-    do_mm_uce_test coredump -f pipefs  >> "${LOG}"  2>&1
+    do_mm_uce_test coredump -f tmpfs  >> "${LOG}" 2>&1
     check_ghes_rec_result && check_memory_failure_recover_result
-    CHECK_RESULT $? 0 0 "mm_uce coredump pipefs failed" 1
+    CHECK_RESULT $? 0 0 "mm_uce coredump tmpfs failed" 1
     LOG_INFO "End to run test."
 }
 
@@ -68,3 +69,4 @@ function post_test() {
 }
 
 main "$@"
+

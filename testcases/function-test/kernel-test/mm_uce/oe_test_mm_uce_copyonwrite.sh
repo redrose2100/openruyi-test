@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -16,7 +16,7 @@
 # @Desc      :   内存UCE错误
 # ############################################
 
-source "${OET_PATH}/testcases/function-test/feature-test/mm_uce/common/common.sh"
+source "${OET_PATH}/testcases/function-test/kernel-test/mm_uce/common/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
@@ -43,9 +43,9 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     date > "${LOG}"
-    do_mm_uce_test coredump -f ext4 >> "${LOG}"  2>&1
-    check_ghes_rec_result && check_memory_failure_recover_result
-    CHECK_RESULT $? 0 0 "mm_uce coredump ext4 failed" 1
+    do_mm_uce_test cow -c 2 >> "${LOG}"  2>&1
+    check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
+    CHECK_RESULT $? 0 0 "mm_uce copy-on-write failed" 1
     LOG_INFO "End to run test."
 }
 

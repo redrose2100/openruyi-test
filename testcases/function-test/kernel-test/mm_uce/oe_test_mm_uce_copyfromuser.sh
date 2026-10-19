@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# Copyright (c) 2024. Huawei Technologies Co.,Ltd.ALL rights reserved.
 # This program is licensed under Mulan PSL v2.
 # You can use it according to the terms and conditions of the Mulan PSL v2.
 #          http://license.coscl.org.cn/MulanPSL2
@@ -15,8 +15,8 @@
 # @License   :   Mulan PSL v2
 # @Desc      :   内存UCE错误
 # ############################################
-
-source "${OET_PATH}/testcases/function-test/feature-test/mm_uce/common/common.sh"
+#OET_PATH=$(readlink -f "../../../")
+source "${OET_PATH}/testcases/function-test/kernel-test/mm_uce/common/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
@@ -29,6 +29,7 @@ function pre_test() {
     make -C ./common 
     make -C ./common install
     dmesg -c > /dev/null
+
     load_mm_uce_module
     load_einj_module
     if ! do_mm_uce_check;then
@@ -43,9 +44,13 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     date > "${LOG}"
-    do_mm_uce_test cow -c 2 >> "${LOG}"  2>&1
-    check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
-    CHECK_RESULT $? 0 0 "mm_uce copy-on-write failed" 1
+    do_mm_uce_test copyfromuser -c 1  >> "${LOG}" 2>&1
+    if [ "${NODE1_FRAME}" = "aarch64" ];then
+        check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
+    elif [ "${NODE1_FRAME}" = "x86_64" ];then
+        check_ghes_rec_result && check_memory_failure_recover_result
+    fi
+    CHECK_RESULT $? 0 0 "mm_uce copy_from_user failed" 1
     LOG_INFO "End to run test."
 }
 
@@ -67,5 +72,5 @@ function post_test() {
     LOG_INFO "End to clean the test environment."
 }
 
-main "$@"
 
+main "$@"

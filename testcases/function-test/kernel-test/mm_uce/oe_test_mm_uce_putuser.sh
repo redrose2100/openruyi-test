@@ -17,7 +17,7 @@
 # ############################################
 
 
-source "${OET_PATH}/testcases/function-test/feature-test/mm_uce/common/common.sh"
+source "${OET_PATH}/testcases/function-test/kernel-test/mm_uce/common/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
@@ -37,6 +37,7 @@ function pre_test() {
 	exit 1
     fi
     enable_tracepoint
+    disable_transparent_hugepage
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -44,13 +45,13 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     date > "${LOG}"
-    do_mm_uce_test getuser -c 1 >> "${LOG}"  2>&1
-    if [ "${NODE1_FRAME}" = "aarch64" ];then
-        check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
-    elif [ "${NODE1_FRAME}" = "x86_64" ];then
-        check_ghes_rec_result && check_memory_failure_recover_result
+    if [ "${NODE1_FRAME}" = "x86_64" ];then
+        do_mm_uce_test putuser -c 1  >> "${LOG}" 2>&1
+    elif [ "${NODE1_FRAME}" = "aarch64" ];then
+        do_mm_uce_test putuser -c 5  >> "${LOG}" 2>&1
     fi
-    CHECK_RESULT $? 0 0 "mm_uce get_user failed" 1
+    check_ghes_rec_result && check_memory_failure_recover_result && check_sigbus_result 
+    CHECK_RESULT $? 0 0 "mm_uce put_user failed" 1
     LOG_INFO "End to run test."
 }
 
@@ -62,6 +63,7 @@ function post_test() {
     make -C common uninstall
     do_mm_uce_cleanlog
     DNF_REMOVE "$@"
+    enable_transparent_hugepage
     if [ "${NODE1_FRAME}" = "aarch64" ];then
         #in ghes_print_estatus function Not more than 2 messages every 5 seconds
         SLEEP_WAIT 8
@@ -71,7 +73,6 @@ function post_test() {
     fi    
     LOG_INFO "End to clean the test environment."
 }
-
 
 main "$@"
 
