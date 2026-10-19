@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/function-test/feature-test/ubackup",
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/ubackup",
     "add disk": [10],
     "cases": [
         {
