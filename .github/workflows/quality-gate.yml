@@ -54,6 +54,11 @@ jobs:
               # 用 HEAD^! 而不是 HEAD~1..HEAD：仓库只有一个提交时 HEAD~1 不存在会直接失败
               echo "::warning::before is all zeros (new branch); falling back to HEAD^!"
               RANGE="HEAD^!"
+            elif ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+              # force push / amend 后 before 指向已消失的提交（bad object），
+              # 无法用 before..after 计算范围；降级为只检查最新一个提交
+              echo "::warning::before '${BEFORE}' is unreachable (force push / amend); falling back to HEAD^!"
+              RANGE="HEAD^!"
             else
               RANGE="${BEFORE}..${AFTER}"
             fi
@@ -93,6 +98,11 @@ jobs:
             if [ "${BEFORE}" = "${ZERO}" ]; then
               # 新分支首次推送没有 before，降级为只看最新一个提交
               # 用 HEAD^! 而不是 HEAD~1 HEAD：仓库只有一个提交时 HEAD~1 不存在会直接失败
+              RANGE="HEAD^!"
+            elif ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+              # force push / amend 后 before 指向已消失的提交（bad object），
+              # 无法用 before after 计算范围；降级为只看最新一个提交
+              echo "::warning::before '${BEFORE}' is unreachable (force push / amend); falling back to HEAD^!"
               RANGE="HEAD^!"
             else
               RANGE="${BEFORE} ${AFTER}"
