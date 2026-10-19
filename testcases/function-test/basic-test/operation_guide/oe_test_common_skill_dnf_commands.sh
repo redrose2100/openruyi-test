@@ -17,7 +17,7 @@
 #####################################
 # shellcheck disable=SC1090
 
-source "${OET_PATH}/testcases/doc-test/ops_guide/common/common.sh"
+source "${OET_PATH}/testcases/function-test/basic-test/operation_guide/common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."

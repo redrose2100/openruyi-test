@@ -1,5 +1,5 @@
 {
-    "path": "${OET_PATH}/testcases/doc-test/ops_guide",
+    "path": "$OET_PATH/testcases/function-test/basic-test/operation_guide",
     "cases": [
         {
             "name": "oe_test_system_resources_and_performance"
