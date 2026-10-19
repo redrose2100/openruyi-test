@@ -43,7 +43,7 @@ function check_arch_pkg_white_list() {
     local arm_html="$1"
     local x86_html="$2"
     local repo_tag="$3"
-    local whitelist="${OET_PATH}/testcases/system-test/pkgmanager-test/common/arch_diff_whitelist.pkg"
+    local whitelist="${OET_PATH}/testcases/function-test/pkgmanager-test/common/arch_diff_whitelist.pkg"
     local diff_log="/home/pkg_manager_folder/arch_diff_${repo_tag}_pkg.log"
 
     #get rpm packages

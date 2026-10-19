@@ -150,9 +150,9 @@ function check_pkg_num() {
 
 # Install packages
 install_test_pkg() {
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/install.sh "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/noproblem_list "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/escape.pkg "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/install.sh "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/noproblem_list "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/escape.pkg "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
     SSH_CMD "cd /home/pkg_manager_folder
     sh install.sh" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 43200 22
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder /home/
@@ -161,9 +161,9 @@ install_test_pkg() {
 
 # Upgrade packages
 upgrade_test_pkg() {
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/upgrade.sh "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/noproblem_list "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/escape.pkg "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/upgrade.sh "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/noproblem_list "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/escape.pkg "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
     SSH_CMD "cd /home/pkg_manager_folder 
     sh upgrade.sh" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 43200 22
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder /home/
@@ -172,9 +172,9 @@ upgrade_test_pkg() {
 
 # Downgrade packages
 downgrade_test_pkg() {
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/downgrade.sh "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/ "${NODE2_PASSWORD}" 22
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/noproblem_list "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/ "${NODE2_PASSWORD}" 22
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/escape.pkg "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/downgrade.sh "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/ "${NODE2_PASSWORD}" 22
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/noproblem_list "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/ "${NODE2_PASSWORD}" 22
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/escape.pkg "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
     SSH_CMD "cd /home/pkg_manager_folder 
     sh downgrade.sh" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 43200 22
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder /home/ "${NODE2_PASSWORD}" 22
@@ -183,9 +183,9 @@ downgrade_test_pkg() {
 
 # Remove packages
 function uninstall_pkg() {
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/remove.sh "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/ "${NODE2_PASSWORD}" 22
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/noproblem_list "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/ "${NODE2_PASSWORD}" 22
-    SSH_SCP "${OET_PATH}"/testcases/system-test/pkgmanager-test/common/escape.pkg "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/remove.sh "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/ "${NODE2_PASSWORD}" 22
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/noproblem_list "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/ "${NODE2_PASSWORD}" 22
+    SSH_SCP "${OET_PATH}"/testcases/function-test/pkgmanager-test/common/escape.pkg "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder/
     SSH_CMD "cd /home/pkg_manager_folder 
     sh remove.sh" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" 43200 22
     SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/home/pkg_manager_folder /home/ "${NODE2_PASSWORD}" 22

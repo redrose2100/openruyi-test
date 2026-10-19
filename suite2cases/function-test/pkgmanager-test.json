@@ -1,5 +1,5 @@
 {
-    "path": "${OET_PATH}/testcases/system-test/pkgmanager-test",
+    "path": "${OET_PATH}/testcases/function-test/pkgmanager-test",
     "machine num": 2,
     "cases": [
         {
@@ -12,4 +12,3 @@
         }
     ]
 }
-
