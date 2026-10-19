@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/gnome-weather",
-    "cases": [
-        {
-            "name": "gnome-weather_1"
-        }
-    ]
-}

@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/gst-editing-services",
+    "cases": [
+        {
+            "name": "oe_test_plus_clip"
+        },
+        {
+            "name": "oe_test_plus_effect"
+        },
+        {
+            "name": "oe_test_plus_test_clip"
+        },
+        {
+            "name": "oe_test_plus_title"
+        },
+        {
+            "name": "oe_test_set"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-websockify",
+    "cases": [
+        {
+            "name": "oe_test_websockify"
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/lightdm",
+    "cases": [
+        {
+            "name": "oe_test_add_local_x_seat"
+        },
+        {
+            "name": "oe_test_add_nested_seat"
+        },
+        {
+            "name": "oe_test_add_seat"
+        },
+        {
+            "name": "oe_test_list_seats"
+        },
+        {
+            "name": "oe_test_lock"
+        },
+        {
+            "name": "oe_test_switch_to_greeter"
+        },
+        {
+            "name": "oe_test_switch_to_guest"
+        },
+        {
+            "name": "oe_test_switch_to_user"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfconf",
+    "cases": [
+        {
+            "name": "oe_test_xfconf_query"
+        }
+    ]
+}

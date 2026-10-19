@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/python-jsonpath-rw",
-    "cases": [
-        {
-            "name": "jsonpath.py_1"
-        }
-    ]
-}

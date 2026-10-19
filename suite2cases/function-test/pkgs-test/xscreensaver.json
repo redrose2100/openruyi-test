@@ -1,0 +1,50 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xscreensaver",
+    "cases": [
+        {
+            "name": "oe_test_activate"
+        },
+        {
+            "name": "oe_test_cycle"
+        },
+        {
+            "name": "oe_test_deactivate"
+        },
+        {
+            "name": "oe_test_exit"
+        },
+        {
+            "name": "oe_test_lock"
+        },
+        {
+            "name": "oe_test_next"
+        },
+        {
+            "name": "oe_test_prev"
+        },
+        {
+            "name": "oe_test_restart"
+        },
+        {
+            "name": "oe_test_select"
+        },
+        {
+            "name": "oe_test_suspend"
+        },
+        {
+            "name": "oe_test_time"
+        },
+        {
+            "name": "oe_test_version"
+        },
+        {
+            "name": "oe_test_watch"
+        },
+        {
+            "name": "oe_test_xscreensaver_demo"
+        },
+        {
+            "name": "oe_test_xscreensaver_settings"
+        }
+    ]
+}

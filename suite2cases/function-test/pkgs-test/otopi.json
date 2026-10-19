@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/otopi",
+    "cases": [
+        {
+            "name": "oe_test_match"
+        },
+        {
+            "name": "oe_test_query"
+        }
+    ]
+}

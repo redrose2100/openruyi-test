@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfce4-panel-profiles",
+    "cases": [
+        {
+            "name": "oe_test_load"
+        },
+        {
+            "name": "oe_test_save"
+        }
+    ]
+}

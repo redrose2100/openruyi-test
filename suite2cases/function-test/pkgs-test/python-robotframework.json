@@ -27,6 +27,15 @@
         },
         {
             "name": "oe_test_robotframework_run"
+        },
+        {
+            "name": "oe_test_list"
+        },
+        {
+            "name": "oe_test_show"
+        },
+        {
+            "name": "oe_test_version"
         }
     ]
 }

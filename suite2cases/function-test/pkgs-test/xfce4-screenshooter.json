@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfce4-screenshooter",
+    "cases": [
+        {
+            "name": "oe_test_xfce4_screenshooter"
+        }
+    ]
+}

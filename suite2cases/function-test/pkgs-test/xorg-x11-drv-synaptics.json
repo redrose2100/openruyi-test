@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xorg-x11-drv-synaptics",
+    "cases": [
+        {
+            "name": "oe_test_synclient"
+        },
+        {
+            "name": "oe_test_syndaemon"
+        }
+    ]
+}

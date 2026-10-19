@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/im-chooser",
-    "cases": [
-        {
-            "name": "im-chooser_1"
-        }
-    ]
-}

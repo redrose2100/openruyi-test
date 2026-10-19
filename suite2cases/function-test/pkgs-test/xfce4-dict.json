@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfce4-dict",
+    "cases": [
+        {
+            "name": "oe_test_xfce4_dict"
+        }
+    ]
+}

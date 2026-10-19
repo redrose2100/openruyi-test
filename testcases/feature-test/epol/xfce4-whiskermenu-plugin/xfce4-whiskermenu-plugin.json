@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/xfce4-whiskermenu-plugin",
-    "cases": [
-        {
-            "name": "xfce4-popup-whiskermenu_1"
-        }
-    ]
-}

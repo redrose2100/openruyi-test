@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/byzanz",
+    "cases": [
+        {
+            "name": "oe_test_byzanz_playback"
+        },
+        {
+            "name": "oe_test_byzanz_record"
+        }
+    ]
+}

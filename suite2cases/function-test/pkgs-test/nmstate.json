@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/nmstate",
+    "cases": [
+        {
+            "name": "oe_test_apply"
+        },
+        {
+            "name": "oe_test_commit"
+        },
+        {
+            "name": "oe_test_edit"
+        },
+        {
+            "name": "oe_test_gc"
+        },
+        {
+            "name": "oe_test_rollback"
+        },
+        {
+            "name": "oe_test_set"
+        },
+        {
+            "name": "oe_test_show"
+        },
+        {
+            "name": "oe_test_varlink"
+        },
+        {
+            "name": "oe_test_version"
+        }
+    ]
+}

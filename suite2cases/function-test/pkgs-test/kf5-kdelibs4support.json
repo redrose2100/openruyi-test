@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/kf5-kdelibs4support",
+    "cases": [
+        {
+            "name": "oe_test_kdebugdialog5"
+        },
+        {
+            "name": "oe_test_kf5_config"
+        }
+    ]
+}

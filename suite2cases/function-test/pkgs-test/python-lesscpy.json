@@ -3,6 +3,9 @@
     "cases": [
         {
             "name": "oe_test_lesscpy"
+        },
+        {
+            "name": "oe_test_lesscpy_options"
         }
     ]
 }

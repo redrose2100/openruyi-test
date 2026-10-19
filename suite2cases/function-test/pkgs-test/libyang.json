@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libyang",
+    "cases": [
+        {
+            "name": "oe_test_yanglint"
+        },
+        {
+            "name": "oe_test_yangre"
+        }
+    ]
+}

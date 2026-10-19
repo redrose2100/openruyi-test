@@ -1,0 +1,95 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/kwin",
+    "cases": [
+        {
+            "name": "oe_test_author"
+        },
+        {
+            "name": "oe_test_crashes"
+        },
+        {
+            "name": "oe_test_desktopfile"
+        },
+        {
+            "name": "oe_test_drm"
+        },
+        {
+            "name": "oe_test_exit_with_session"
+        },
+        {
+            "name": "oe_test_height"
+        },
+        {
+            "name": "oe_test_help_all"
+        },
+        {
+            "name": "oe_test_help"
+        },
+        {
+            "name": "oe_test_inputmethod"
+        },
+        {
+            "name": "oe_test_kwin_wayland_wrapper"
+        },
+        {
+            "name": "oe_test_license"
+        },
+        {
+            "name": "oe_test_lock"
+        },
+        {
+            "name": "oe_test_lockscreen"
+        },
+        {
+            "name": "oe_test_no_global_shortcuts"
+        },
+        {
+            "name": "oe_test_no_kactivities"
+        },
+        {
+            "name": "oe_test_no_lockscreen"
+        },
+        {
+            "name": "oe_test_output_count"
+        },
+        {
+            "name": "oe_test_replace"
+        },
+        {
+            "name": "oe_test_scale"
+        },
+        {
+            "name": "oe_test_socket"
+        },
+        {
+            "name": "oe_test_version"
+        },
+        {
+            "name": "oe_test_virtual"
+        },
+        {
+            "name": "oe_test_wayland_display"
+        },
+        {
+            "name": "oe_test_wayland_fd"
+        },
+        {
+            "name": "oe_test_width"
+        },
+        {
+            "name": "oe_test_x11_display"
+        },
+        {
+            "name": "oe_test_xwayland_display"
+        },
+        {
+            "name": "oe_test_xwayland_fd"
+        },
+        {
+            "name": "oe_test_xwayland_xauthority"
+        },
+        {
+            "name": "oe_test_xwayland"
+        }
+    ]
+}

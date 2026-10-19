@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/ovirt-engine-dwh",
+    "cases": [
+        {
+            "name": "oe_test_dwh_vacuum"
+        }
+    ]
+}

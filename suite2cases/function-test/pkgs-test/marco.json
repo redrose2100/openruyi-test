@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/marco",
+    "cases": [
+        {
+            "name": "oe_test_disable_keybindings"
+        },
+        {
+            "name": "oe_test_enable_keybindings"
+        },
+        {
+            "name": "oe_test_marco"
+        },
+        {
+            "name": "oe_test_reload_theme"
+        },
+        {
+            "name": "oe_test_restart"
+        },
+        {
+            "name": "oe_test_toggle_verbose"
+        }
+    ]
+}

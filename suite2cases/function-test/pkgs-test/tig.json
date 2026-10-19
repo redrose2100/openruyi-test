@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/tig",
+    "cases": [
+        {
+            "name": "oe_test_blame"
+        },
+        {
+            "name": "oe_test_grep"
+        },
+        {
+            "name": "oe_test_log"
+        },
+        {
+            "name": "oe_test_reflog"
+        },
+        {
+            "name": "oe_test_refs"
+        },
+        {
+            "name": "oe_test_show"
+        },
+        {
+            "name": "oe_test_stash"
+        },
+        {
+            "name": "oe_test_status"
+        }
+    ]
+}

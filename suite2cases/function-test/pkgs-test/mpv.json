@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/mpv",
+    "cases": [
+        {
+            "name": "oe_test_mpv"
+        }
+    ]
+}

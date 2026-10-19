@@ -1,0 +1,200 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/botan2",
+    "cases": [
+        {
+            "name": "oe_test_asn1print"
+        },
+        {
+            "name": "oe_test_base32_dec"
+        },
+        {
+            "name": "oe_test_base32_enc"
+        },
+        {
+            "name": "oe_test_base58_dec"
+        },
+        {
+            "name": "oe_test_base58_enc"
+        },
+        {
+            "name": "oe_test_base64_dec"
+        },
+        {
+            "name": "oe_test_base64_enc"
+        },
+        {
+            "name": "oe_test_cc_decrypt"
+        },
+        {
+            "name": "oe_test_cc_encrypt"
+        },
+        {
+            "name": "oe_test_cert_info"
+        },
+        {
+            "name": "oe_test_cert_verify"
+        },
+        {
+            "name": "oe_test_check_argon2"
+        },
+        {
+            "name": "oe_test_check_bcrypt"
+        },
+        {
+            "name": "oe_test_compress"
+        },
+        {
+            "name": "oe_test_config"
+        },
+        {
+            "name": "oe_test_cpu_clock"
+        },
+        {
+            "name": "oe_test_cpuid"
+        },
+        {
+            "name": "oe_test_decompress"
+        },
+        {
+            "name": "oe_test_dl_group_info"
+        },
+        {
+            "name": "oe_test_ec_group_info"
+        },
+        {
+            "name": "oe_test_encryption"
+        },
+        {
+            "name": "oe_test_entropy"
+        },
+        {
+            "name": "oe_test_factor"
+        },
+        {
+            "name": "oe_test_fec_decode"
+        },
+        {
+            "name": "oe_test_fec_encode"
+        },
+        {
+            "name": "oe_test_fec_info"
+        },
+        {
+            "name": "oe_test_fingerprint"
+        },
+        {
+            "name": "oe_test_gen_argon2"
+        },
+        {
+            "name": "oe_test_gen_bcrypt"
+        },
+        {
+            "name": "oe_test_gen_dl_group"
+        },
+        {
+            "name": "oe_test_gen_pkcs10"
+        },
+        {
+            "name": "oe_test_gen_prime"
+        },
+        {
+            "name": "oe_test_gen_self_signed"
+        },
+        {
+            "name": "oe_test_has_command"
+        },
+        {
+            "name": "oe_test_hash"
+        },
+        {
+            "name": "oe_test_hex_dec"
+        },
+        {
+            "name": "oe_test_hex_enc"
+        },
+        {
+            "name": "oe_test_hmac"
+        },
+        {
+            "name": "oe_test_http_get"
+        },
+        {
+            "name": "oe_test_is_prime"
+        },
+        {
+            "name": "oe_test_keygen"
+        },
+        {
+            "name": "oe_test_mod_inverse"
+        },
+        {
+            "name": "oe_test_ocsp_check"
+        },
+        {
+            "name": "oe_test_pbkdf_tune"
+        },
+        {
+            "name": "oe_test_pk_decrypt"
+        },
+        {
+            "name": "oe_test_pk_encrypt"
+        },
+        {
+            "name": "oe_test_pk_workfactor"
+        },
+        {
+            "name": "oe_test_pkcs8"
+        },
+        {
+            "name": "oe_test_rng"
+        },
+        {
+            "name": "oe_test_roughtime"
+        },
+        {
+            "name": "oe_test_roughtime_check"
+        },
+        {
+            "name": "oe_test_sign"
+        },
+        {
+            "name": "oe_test_sign_cert"
+        },
+        {
+            "name": "oe_test_speed"
+        },
+        {
+            "name": "oe_test_timing_test"
+        },
+        {
+            "name": "oe_test_tls_ciphers"
+        },
+        {
+            "name": "oe_test_tls_client"
+        },
+        {
+            "name": "oe_test_tls_client_hello"
+        },
+        {
+            "name": "oe_test_tls_server"
+        },
+        {
+            "name": "oe_test_trust_roots"
+        },
+        {
+            "name": "oe_test_tss_recover"
+        },
+        {
+            "name": "oe_test_tss_split"
+        },
+        {
+            "name": "oe_test_uuid"
+        },
+        {
+            "name": "oe_test_verify"
+        },
+        {
+            "name": "oe_test_version"
+        }
+    ]
+}

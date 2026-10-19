@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-bandit",
+    "cases": [
+        {
+            "name": "oe_test_bandit_baseline"
+        },
+        {
+            "name": "oe_test_bandit_config_generator"
+        },
+        {
+            "name": "oe_test_bandit"
+        }
+    ]
+}

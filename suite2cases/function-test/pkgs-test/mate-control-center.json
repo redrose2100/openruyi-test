@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/mate-control-center",
+    "cases": [
+        {
+            "name": "oe_test_mate_appearance_properties"
+        },
+        {
+            "name": "oe_test_mate_control_center"
+        },
+        {
+            "name": "oe_test_mate_default_applications_properties"
+        },
+        {
+            "name": "oe_test_mate_font_viewer"
+        },
+        {
+            "name": "oe_test_mate_keyboard_properties"
+        },
+        {
+            "name": "oe_test_mate_mouse_properties"
+        },
+        {
+            "name": "oe_test_mate_thumbnail_font"
+        },
+        {
+            "name": "oe_test_mate_typing_monitor"
+        }
+    ]
+}

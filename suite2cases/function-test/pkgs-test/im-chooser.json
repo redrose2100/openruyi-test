@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/im-chooser",
+    "cases": [
+        {
+            "name": "oe_test_im_chooser"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-pysmi",
+    "cases": [
+        {
+            "name": "oe_test_mibcopy"
+        },
+        {
+            "name": "oe_test_mibdump"
+        }
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfce4-panel",
+    "cases": [
+        {
+            "name": "oe_test_xfce4_panel"
+        },
+        {
+            "name": "oe_test_xfce4_popup_applicationsmenu"
+        },
+        {
+            "name": "oe_test_xfce4_popup_directorymenu"
+        },
+        {
+            "name": "oe_test_xfce4_popup_windowmenu"
+        }
+    ]
+}

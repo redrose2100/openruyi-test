@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/deepin-pw-check",
-    "cases": [
-        {
-            "name": "pwd-conf-update_1"
-        }
-    ]
-}

@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/mate-media",
-    "cases": [
-        {
-            "name": "mate-volume-control_1"
-        }
-    ]
-}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-dulwich",
+    "cases": [
+        {
+            "name": "oe_test_dul_receive_pack"
+        },
+        {
+            "name": "oe_test_dul_upload_pack"
+        }
+    ]
+}

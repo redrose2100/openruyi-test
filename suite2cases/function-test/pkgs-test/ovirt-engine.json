@@ -1,0 +1,47 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/ovirt-engine",
+    "cases": [
+        {
+            "name": "oe_test_aaa"
+        },
+        {
+            "name": "oe_test_all"
+        },
+        {
+            "name": "oe_test_engine_cleanup"
+        },
+        {
+            "name": "oe_test_engine_setup"
+        },
+        {
+            "name": "oe_test_engine_upgrade_check"
+        },
+        {
+            "name": "oe_test_engine_vacuum"
+        },
+        {
+            "name": "oe_test_get"
+        },
+        {
+            "name": "oe_test_help"
+        },
+        {
+            "name": "oe_test_info"
+        },
+        {
+            "name": "oe_test_list"
+        },
+        {
+            "name": "oe_test_logger"
+        },
+        {
+            "name": "oe_test_merge"
+        },
+        {
+            "name": "oe_test_ovirt_register_sso_client_tool"
+        },
+        {
+            "name": "oe_test_set"
+        }
+    ]
+}

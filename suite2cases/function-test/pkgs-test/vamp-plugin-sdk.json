@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/vamp-plugin-sdk",
+    "cases": [
+        {
+            "name": "oe_test_list_by_category"
+        },
+        {
+            "name": "oe_test_list_full"
+        },
+        {
+            "name": "oe_test_list_ids"
+        },
+        {
+            "name": "oe_test_list_outputs"
+        },
+        {
+            "name": "oe_test_list"
+        },
+        {
+            "name": "oe_test_l"
+        },
+        {
+            "name": "oe_test_p"
+        },
+        {
+            "name": "oe_test_v"
+        },
+        {
+            "name": "oe_test_vamp_rdf_template_generator"
+        }
+    ]
+}

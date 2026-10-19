@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/gearmand",
+    "cases": [
+        {
+            "name": "oe_test_w"
+        }
+    ]
+}

@@ -3,7 +3,21 @@
     "cases": [
         {
             "name": "oe_test_service_mosquitto"
+        },
+        {
+            "name": "oe_test_help"
+        },
+        {
+            "name": "oe_test_dynsec"
+        },
+        {
+            "name": "oe_test_mosquitto_passwd"
+        },
+        {
+            "name": "oe_test_mosquitto_pub"
+        },
+        {
+            "name": "oe_test_mosquitto_sub"
         }
     ]
 }
-

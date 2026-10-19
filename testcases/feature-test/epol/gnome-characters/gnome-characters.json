@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/gnome-characters",
-    "cases": [
-        {
-            "name": "gnome-characters_1"
-        }
-    ]
-}

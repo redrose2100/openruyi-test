@@ -1,0 +1,35 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/percona-xtrabackup",
+    "cases": [
+        {
+            "name": "oe_test_apply_log"
+        },
+        {
+            "name": "oe_test_copy_back"
+        },
+        {
+            "name": "oe_test_decompress"
+        },
+        {
+            "name": "oe_test_decrypt"
+        },
+        {
+            "name": "oe_test_move_back"
+        },
+        {
+            "name": "oe_test_c"
+        },
+        {
+            "name": "oe_test_x"
+        },
+        {
+            "name": "oe_test_backup"
+        },
+        {
+            "name": "oe_test_prepare"
+        },
+        {
+            "name": "oe_test_xbcrypt"
+        }
+    ]
+}

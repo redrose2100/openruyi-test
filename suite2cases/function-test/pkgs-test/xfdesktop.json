@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfdesktop",
+    "cases": [
+        {
+            "name": "oe_test_xfdesktop_settings"
+        },
+        {
+            "name": "oe_test_xfdesktop"
+        }
+    ]
+}

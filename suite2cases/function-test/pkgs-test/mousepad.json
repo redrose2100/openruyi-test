@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/mousepad",
+    "cases": [
+        {
+            "name": "oe_test_mousepad"
+        }
+    ]
+}

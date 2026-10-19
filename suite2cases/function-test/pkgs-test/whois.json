@@ -9,6 +9,12 @@
         },
         {
             "name": "oe_test_whois_03"
+        },
+        {
+            "name": "oe_test_whois_md"
+        },
+        {
+            "name": "oe_test_whois"
         }
     ]
 }

@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/python-oslotest",
-    "cases": [
-        {
-            "name": "oslo_run_cross_tests_1"
-        }
-    ]
-}

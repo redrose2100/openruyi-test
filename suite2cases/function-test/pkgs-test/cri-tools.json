@@ -1,0 +1,98 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/cri-tools",
+    "cases": [
+        {
+            "name": "oe_test_attach"
+        },
+        {
+            "name": "oe_test_completion"
+        },
+        {
+            "name": "oe_test_config"
+        },
+        {
+            "name": "oe_test_create"
+        },
+        {
+            "name": "oe_test_exec"
+        },
+        {
+            "name": "oe_test_h"
+        },
+        {
+            "name": "oe_test_help"
+        },
+        {
+            "name": "oe_test_image"
+        },
+        {
+            "name": "oe_test_imagefsinfo"
+        },
+        {
+            "name": "oe_test_images"
+        },
+        {
+            "name": "oe_test_img"
+        },
+        {
+            "name": "oe_test_info"
+        },
+        {
+            "name": "oe_test_inspect"
+        },
+        {
+            "name": "oe_test_inspecti"
+        },
+        {
+            "name": "oe_test_inspectp"
+        },
+        {
+            "name": "oe_test_logs"
+        },
+        {
+            "name": "oe_test_pods"
+        },
+        {
+            "name": "oe_test_port_forward"
+        },
+        {
+            "name": "oe_test_ps"
+        },
+        {
+            "name": "oe_test_pull"
+        },
+        {
+            "name": "oe_test_rm"
+        },
+        {
+            "name": "oe_test_rmi"
+        },
+        {
+            "name": "oe_test_rmp"
+        },
+        {
+            "name": "oe_test_run"
+        },
+        {
+            "name": "oe_test_runp"
+        },
+        {
+            "name": "oe_test_start"
+        },
+        {
+            "name": "oe_test_stats"
+        },
+        {
+            "name": "oe_test_stop"
+        },
+        {
+            "name": "oe_test_stopp"
+        },
+        {
+            "name": "oe_test_update"
+        },
+        {
+            "name": "oe_test_version"
+        }
+    ]
+}

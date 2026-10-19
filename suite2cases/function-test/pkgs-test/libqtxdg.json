@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libqtxdg",
+    "cases": [
+        {
+            "name": "oe_test_def_email_client"
+        },
+        {
+            "name": "oe_test_def_file_manager"
+        },
+        {
+            "name": "oe_test_def_web_browser"
+        },
+        {
+            "name": "oe_test_defapp"
+        },
+        {
+            "name": "oe_test_mimetype"
+        },
+        {
+            "name": "oe_test_open"
+        }
+    ]
+}

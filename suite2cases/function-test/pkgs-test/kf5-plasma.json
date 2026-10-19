@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/kf5-plasma",
+    "cases": [
+        {
+            "name": "oe_test_appstream_metainfo_output"
+        },
+        {
+            "name": "oe_test_appstream_metainfo"
+        },
+        {
+            "name": "oe_test_generate_index"
+        },
+        {
+            "name": "oe_test_install"
+        },
+        {
+            "name": "oe_test_list"
+        },
+        {
+            "name": "oe_test_remove_index"
+        },
+        {
+            "name": "oe_test_remove"
+        },
+        {
+            "name": "oe_test_show"
+        },
+        {
+            "name": "oe_test_upgrade"
+        }
+    ]
+}

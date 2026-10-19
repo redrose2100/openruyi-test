@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/A-Ops",
-    "cases": [
-        {
-            "name": "gala-gopher_1"
-        }
-    ]
-}

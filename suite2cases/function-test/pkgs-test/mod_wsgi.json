@@ -1,8 +1,23 @@
 {
-  "path": "$OET_PATH/testcases/function-test/pkgs-test/mod_wsgi",
-  "cases": [
-    {
-      "name": "oe_test_mod_wsgi"
-    }
-  ]
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/mod_wsgi",
+    "cases": [
+        {
+            "name": "oe_test_mod_wsgi"
+        },
+        {
+            "name": "oe_test_install_module"
+        },
+        {
+            "name": "oe_test_module_config"
+        },
+        {
+            "name": "oe_test_module_location"
+        },
+        {
+            "name": "oe_test_setup_server"
+        },
+        {
+            "name": "oe_test_start_server"
+        }
+    ]
 }

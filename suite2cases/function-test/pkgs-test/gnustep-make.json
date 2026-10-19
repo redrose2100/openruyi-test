@@ -1,0 +1,35 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/gnustep-make",
+    "cases": [
+        {
+            "name": "oe_test_clean"
+        },
+        {
+            "name": "oe_test_debug"
+        },
+        {
+            "name": "oe_test_developer"
+        },
+        {
+            "name": "oe_test_documentation"
+        },
+        {
+            "name": "oe_test_failfast"
+        },
+        {
+            "name": "oe_test_find"
+        },
+        {
+            "name": "oe_test_sequential"
+        },
+        {
+            "name": "oe_test_verbose"
+        },
+        {
+            "name": "oe_test_gnustep_config"
+        },
+        {
+            "name": "oe_test_tool"
+        }
+    ]
+}
