@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/system-test/shangmi",
+    "path": "$OET_PATH/testcases/security-test/shangmi",
     "machine num": 2,
     "cases": [
         {
