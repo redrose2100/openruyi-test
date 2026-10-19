@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/system-test/ltp-test",
+    "path": "$OET_PATH/testcases/function-test/kernel-test/ltp-test",
     "cases": [
         {
             "name": "oe_test_ltp"
