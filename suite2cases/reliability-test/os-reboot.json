@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/system-test/os-reboot",
+    "path": "$OET_PATH/testcases/reliability-test/os-reboot",
     "machine type": "physical",
     "machine num": 2,
     "cases": [
