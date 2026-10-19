@@ -1,5 +1,5 @@
 {
-    "path": "$OET_PATH/testcases/function-test/feature-test/obmm",
+    "path": "$OET_PATH/testcases/function-test/kernel-test/obmm",
     "cases": [
         {
             "name": "oe_test_obmm_ko_para_003"
