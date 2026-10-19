@@ -1,8 +1,0 @@
-{
-  "path": "$OET_PATH/testcases/feature-test/sysboost",
-  "cases": [
-    {
-      "name": "oe_test_sysboost_fun"
-    }
-  ]
-}

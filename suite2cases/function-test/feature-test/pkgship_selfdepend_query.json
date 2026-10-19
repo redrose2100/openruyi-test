@@ -1,0 +1,44 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/feature-test/pkgship/pkgship_selfdepend_query",
+    "cases": [
+        {
+            "name": "oe_test_pkgship_selfdepend_binary_1"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_binary_2"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_binary_3"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_binary_4"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_binary_5"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_fail_1"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_fail_2"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_fail_3"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_source_1"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_source_2"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_source_3"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_source_4"
+        },
+        {
+            "name": "oe_test_pkgship_selfdepend_source_5"
+        }
+    ]
+}

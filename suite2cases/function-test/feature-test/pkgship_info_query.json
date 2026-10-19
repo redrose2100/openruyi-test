@@ -1,0 +1,38 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/feature-test/pkgship/pkgship_info_query",
+    "cases": [
+        {
+            "name": "oe_test_pkgship_query_list_1"
+        },
+        {
+            "name": "oe_test_pkgship_query_list_2"
+        },
+        {
+            "name": "oe_test_pkgship_query_list_3"
+        },
+        {
+            "name": "oe_test_pkgship_query_list_fail_1"
+        },
+        {
+            "name": "oe_test_pkgship_query_list_fail_2"
+        },
+        {
+            "name": "oe_test_pkgship_query_pkginfo_1"
+        },
+        {
+            "name": "oe_test_pkgship_query_pkginfo_2"
+        },
+        {
+            "name": "oe_test_pkgship_query_pkginfo_3"
+        },
+        {
+            "name": "oe_test_pkgship_query_pkginfo_fail_1"
+        },
+        {
+            "name": "oe_test_pkgship_query_pkginfo_fail_2"
+        },
+        {
+            "name": "oe_test_pkgship_query_pkginfo_fail_3"
+        }
+    ]
+}

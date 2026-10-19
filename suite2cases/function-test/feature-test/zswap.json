@@ -1,0 +1,8 @@
+{
+  "path": "$OET_PATH/testcases/function-test/feature-test/zswap/",
+  "cases": [
+    {
+      "name": "oe_test_zswap01"
+    }
+  ]
+}

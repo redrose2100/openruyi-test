@@ -1,0 +1,50 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/feature-test/pkgship/pkgship_installdep_query",
+    "cases": [
+        {
+            "name": "oe_test_pkgship_installdep_01"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_02"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_03"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_04"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_05"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_06"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_07"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_08"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_09"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_10"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_11"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_fail_1"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_fail_2"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_fail_3"
+        },
+        {
+            "name": "oe_test_pkgship_installdep_fail_4"
+        }
+    ]
+}

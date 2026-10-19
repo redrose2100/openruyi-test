@@ -1,0 +1,56 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/feature-test/pkgship/pkgship_compare",
+    "cases": [
+        {
+            "name": "oe_test_pkgship_compare_build_1"
+        },
+        {
+            "name": "oe_test_pkgship_compare_build_2"
+        },
+        {
+            "name": "oe_test_pkgship_compare_build_fail_1"
+        },
+        {
+            "name": "oe_test_pkgship_compare_build_fail_2"
+        },
+        {
+            "name": "oe_test_pkgship_compare_build_fail_3"
+        },
+        {
+            "name": "oe_test_pkgship_compare_build_fail_4"
+        },
+        {
+            "name": "oe_test_pkgship_compare_build_fail_5"
+        },
+        {
+            "name": "oe_test_pkgship_compare_fail_1"
+        },
+        {
+            "name": "oe_test_pkgship_compare_fail_2"
+        },
+        {
+            "name": "oe_test_pkgship_compare_install_1"
+        },
+        {
+            "name": "oe_test_pkgship_compare_install_2"
+        },
+        {
+            "name": "oe_test_pkgship_compare_install_fail_1"
+        },
+        {
+            "name": "oe_test_pkgship_compare_install_fail_2"
+        },
+        {
+            "name": "oe_test_pkgship_compare_install_fail_3"
+        },
+        {
+            "name": "oe_test_pkgship_compare_install_fail_4"
+        },
+        {
+            "name": "oe_test_pkgship_compare_install_fail_5"
+        },
+        {
+            "name": "oe_test_pkgship_compare_stop_redis"
+        }
+    ]
+}

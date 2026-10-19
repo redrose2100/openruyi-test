@@ -1,0 +1,95 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/feature-test/pkgship/pkgship_service_module",
+    "cases": [
+        {
+            "name": "oe_test_pkgship_concurrent_init_1"
+        },
+        {
+            "name": "oe_test_pkgship_init_large_db"
+        },
+        {
+            "name": "oe_test_pkgship_init_restart"
+        },
+        {
+            "name": "oe_test_pkgship_query_bedepend_service_1"
+        },
+        {
+            "name": "oe_test_pkgship_query_bedepend_service_2"
+        },
+        {
+            "name": "oe_test_pkgship_query_bedepend_service_3"
+        },
+        {
+            "name": "oe_test_pkgship_query_bedepend_service_4"
+        },
+        {
+            "name": "oe_test_pkgship_query_builddep_service_1"
+        },
+        {
+            "name": "oe_test_pkgship_query_builddep_service_2"
+        },
+        {
+            "name": "oe_test_pkgship_query_builddep_service_3"
+        },
+        {
+            "name": "oe_test_pkgship_query_builddep_service_4"
+        },
+        {
+            "name": "oe_test_pkgship_query_installdep_service_1"
+        },
+        {
+            "name": "oe_test_pkgship_query_installdep_service_2"
+        },
+        {
+            "name": "oe_test_pkgship_query_installdep_service_3"
+        },
+        {
+            "name": "oe_test_pkgship_query_installdep_service_4"
+        },
+        {
+            "name": "oe_test_pkgship_query_list_service_1"
+        },
+        {
+            "name": "oe_test_pkgship_query_list_service_3"
+        },
+        {
+            "name": "oe_test_pkgship_query_list_service_4"
+        },
+        {
+            "name": "oe_test_pkgship_query_pkginfo_service_1"
+        },
+        {
+            "name": "oe_test_pkgship_query_pkginfo_service_2"
+        },
+        {
+            "name": "oe_test_pkgship_query_pkginfo_service_3"
+        },
+        {
+            "name": "oe_test_pkgship_query_pkginfo_service_4"
+        },
+        {
+            "name": "oe_test_pkgship_query_selfdepend_service_1"
+        },
+        {
+            "name": "oe_test_pkgship_query_selfdepend_service_2"
+        },
+        {
+            "name": "oe_test_pkgship_query_selfdepend_service_3"
+        },
+        {
+            "name": "oe_test_pkgship_query_selfdepend_service_4"
+        },
+        {
+            "name": "oe_test_pkgship_service_down"
+        },
+        {
+            "name": "oe_test_pkgship_service_down_ES"
+        },
+        {
+            "name": "oe_test_pkgship_service_down_redis"
+        },
+        {
+            "name": "oe_test_pkgship_set_ES_security"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/feature-test/secure_conf",
+    "cases": [
+    {
+        "name": "oe_test_secureconfline_checktools"
+    }
+    ]
+}
