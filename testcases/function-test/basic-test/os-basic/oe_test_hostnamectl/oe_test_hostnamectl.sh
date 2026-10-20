@@ -20,7 +20,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test(){
     LOG_INFO "Start to pre test."
-    localhost=$(hostname)
+    localhost=$(cat /proc/sys/kernel/hostname)
     LOG_INFO "Start to pre test."
 }
 function run_test() {

@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL httpd
+    DNF_INSTALL "httpd httpd-tools"
     systemctl start httpd
     TEST_DIR="/var/www/html/ab_test"
     mkdir -p "$TEST_DIR"

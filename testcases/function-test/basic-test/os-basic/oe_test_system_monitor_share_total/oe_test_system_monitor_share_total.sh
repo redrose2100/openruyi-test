@@ -19,6 +19,12 @@
 # shellcheck disable=SC2154
 source "${OET_PATH}/testcases/function-test/basic-test/os-basic/common/disk_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "procps-ng"
+    LOG_INFO "End to prepare the test environment."
+}
+
 function config_params() {
     LOG_INFO "Start to config the test environment."
     OLD_LANG=$LANG

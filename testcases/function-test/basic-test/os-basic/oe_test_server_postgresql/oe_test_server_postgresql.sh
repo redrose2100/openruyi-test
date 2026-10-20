@@ -29,12 +29,24 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     rm -rf /var/lib/pgsql/data
-    /usr/bin/postgresql-setup --initdb
+    PG_SETUP=$(command -v postgresql-setup)
+    if [ -z "$PG_SETUP" ]; then
+        PG_SETUP=$(command -v postgresql-14-setup)
+    fi
+    if [ -z "$PG_SETUP" ]; then
+        exit 255
+    fi
+    "$PG_SETUP" --initdb
     CHECK_RESULT $?
 
-    systemctl start postgresql
+    if systemctl list-unit-files | grep -q '^postgresql-14'; then
+        PG_SVC=postgresql-14
+    else
+        PG_SVC=postgresql
+    fi
+    systemctl start $PG_SVC
     CHECK_RESULT $?
-    systemctl status postgresql | grep running
+    systemctl status $PG_SVC | grep running
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }

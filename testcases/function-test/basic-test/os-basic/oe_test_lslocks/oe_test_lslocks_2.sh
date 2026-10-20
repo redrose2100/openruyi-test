@@ -20,15 +20,15 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "start to run test."
-    lslocks -J | grep command
+    lslocks -J | grep -i command
     CHECK_RESULT $? 0 0 "use JSON output format fail"
     lslocks -n
     CHECK_RESULT $? 0 0 "do not print a header line fail"
-    lslocks --output-all | grep -A2 COMMAND
+    lslocks --output-all | grep -i command
     CHECK_RESULT $? 0 0 "output all available columns fail"
-    lslocks -r | grep -A2 COMMAND
+    lslocks -r | grep -i command
     CHECK_RESULT $? 0 0 "use the raw output format fail"
-    lslocks -u | grep -A2 COMMAND
+    lslocks -u | grep -i command
     CHECK_RESULT $? 0 0 "do not truncate text in columns fail"
     LOG_INFO "End to run test."
 }

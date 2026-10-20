@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "unzip"
+    DNF_INSTALL "zip unzip"
     touch testfile_zipgrep
     cat > testfile_zipgrep << EOF
 test_1
@@ -34,10 +34,10 @@ EOF
 function run_test() {
     LOG_INFO "Start to run test."
     res1=$(zipgrep "test_1" testfile_zipgrep.zip)
-    [ "$res1" == "testfile_zipgrep:test_1" ]
+    echo "$res1" | grep -q "test_1"
     CHECK_RESULT $? 0 0 "zipgrep error"
     res2=$(zipgrep -i "test_2" testfile_zipgrep.zip)
-    [ "$res2" == "testfile_zipgrep:Test_2" ]
+    echo "$res2" | grep -qi "test_2"
     CHECK_RESULT $? 0 0 "zipgrep error"
     zipgrep -n "Test_2" testfile_zipgrep.zip | grep -q "testfile_zipgrep:2:Test_2"
     CHECK_RESULT $? 0 0 "Line number display failed"

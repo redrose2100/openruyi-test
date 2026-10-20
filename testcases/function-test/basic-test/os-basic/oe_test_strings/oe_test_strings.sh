@@ -27,7 +27,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     strings /bin/ls | grep -i libc
     CHECK_RESULT $? 0 0 "gzexe function error"
-    strings -f /usr/bin/top | grep libc
+    strings -f "$(command -v ls)" | grep libc
     CHECK_RESULT $? 0 0 "gzexe function error"
     LOG_INFO "Finish test!"
 }

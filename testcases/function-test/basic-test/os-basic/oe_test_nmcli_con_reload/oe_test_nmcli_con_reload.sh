@@ -27,20 +27,25 @@ function config_params() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    sed -i "s/testintf/${test_eth}/g" ifcfg-test
-    cp ifcfg-test /etc/sysconfig/network-scripts/ifcfg-${test_eth} -rf
-    CHECK_RESULT $?
-    nmcli con reload
-    CHECK_RESULT $?
-    test -f /etc/sysconfig/network-scripts/ifcfg-${test_eth}
-    CHECK_RESULT $?
+    if [ -d /etc/sysconfig/network-scripts ]; then
+        sed -i "s/testintf/${test_eth}/g" ifcfg-test
+        cp ifcfg-test /etc/sysconfig/network-scripts/ifcfg-${test_eth} -rf
+        CHECK_RESULT $?
+        nmcli con reload
+        CHECK_RESULT $?
+        test -f /etc/sysconfig/network-scripts/ifcfg-${test_eth}
+        CHECK_RESULT $?
 
-    sed -i 's/dhcp/static/g' /etc/sysconfig/network-scripts/ifcfg-${test_eth}
-    {
-        echo "IPADDR=192.0.2.100"
-        echo "NETMASK=255.255.255.0"
-        echo "GATEWAY=192.0.2.1"
-    } >>/etc/sysconfig/network-scripts/ifcfg-${test_eth}
+        sed -i 's/dhcp/static/g' /etc/sysconfig/network-scripts/ifcfg-${test_eth}
+        {
+            echo "IPADDR=192.0.2.100"
+            echo "NETMASK=255.255.255.0"
+            echo "GATEWAY=192.0.2.1"
+        } >>/etc/sysconfig/network-scripts/ifcfg-${test_eth}
+    else
+        nmcli con add type ethernet ifname ${test_eth} con-name ${test_eth}
+        CHECK_RESULT $?
+    fi
     nmcli con reload
     CHECK_RESULT $?
     nmcli con up ${test_eth}

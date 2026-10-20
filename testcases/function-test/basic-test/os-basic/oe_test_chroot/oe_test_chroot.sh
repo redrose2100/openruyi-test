@@ -32,10 +32,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Error,fail to create 'bin' & 'lib' & 'lib64'"
     cp /bin/bash bin/
     CHECK_RESULT $? 0 0 "Error,fail to copy /bin/bash to bin/"
-    cp -r /lib/* lib/
-    CHECK_RESULT $? 0 0 "Error,fail to copy /lib/ to lib/"
-    cp -r /lib64/* lib64/
-    CHECK_RESULT $? 0 0 "Error,fail to copy /lib64/ to lib64/"
+    for lib in $(ldd /bin/bash | grep -oE '/[^ ]+\.so[^ ]*'); do
+        mkdir -p ".${lib%/*}"
+        cp "$lib" ".$lib"
+    done
     cd .. && chroot testroot /bin/bash -c "pwd" | grep /
     CHECK_RESULT $? 0 0 "Error,Failed to modify permissions "
     LOG_INFO "End to run test."

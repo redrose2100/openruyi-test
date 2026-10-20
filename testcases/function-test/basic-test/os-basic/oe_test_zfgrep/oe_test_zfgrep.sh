@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "zip"
     cat << EOF > /tmp/testzfgrepfile.txt
 line 1
 Line 2

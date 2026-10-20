@@ -19,6 +19,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "zip"
     cd /tmp || exit
     echo "sdfassaaasd1223123223424435rrte" > test.txt
     zip test.zip test.txt

@@ -24,7 +24,7 @@ function pre_test() {
     dnf list | grep mysql-server
     if [ $? -eq 0 ]; then
         rm -rf /var/lib/mysql/*
-        DNF_INSTALL mysql-server
+        DNF_INSTALL "mysql-server procps-ng"
         systemctl start mysqld
         servername=mysqld
     else

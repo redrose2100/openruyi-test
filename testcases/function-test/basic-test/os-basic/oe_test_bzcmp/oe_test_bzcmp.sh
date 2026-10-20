@@ -20,6 +20,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "bzip2 diffutils"
     cd /home
     echo "sdfasd1223123" > 1.txt
     bzip2 1.txt

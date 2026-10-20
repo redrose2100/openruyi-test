@@ -20,6 +20,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to pre test."
+    DNF_INSTALL "procps-ng"
     echo "#!/bin/bash
 while true
 do

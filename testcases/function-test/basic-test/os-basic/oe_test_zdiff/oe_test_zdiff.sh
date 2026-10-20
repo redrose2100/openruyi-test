@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "zip"
     echo "test1" > testfile_zdiff_1
     echo "test2" > testfile_zdiff_2
     zip testfile_zdiff_1.zip testfile_zdiff_1

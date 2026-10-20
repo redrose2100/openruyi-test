@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
 	LOG_INFO "Start environmental preparation."
-	grep Storage /etc/systemd/journald.conf | grep -E "Storage=auto|Storage=persistent" || exit 1
+	grep -qE "Storage=(auto|persistent)" /etc/systemd/journald.conf || exit 255
 	if [ -d /run/log/journal ]; then
 		journallog_path="/run/log/journal"
 	else

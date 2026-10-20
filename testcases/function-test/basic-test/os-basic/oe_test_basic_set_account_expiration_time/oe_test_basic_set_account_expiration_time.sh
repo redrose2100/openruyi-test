@@ -29,20 +29,25 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    if [ "$(id -u)" -ne 0 ]; then
+        SUDO=sudo
+    else
+        SUDO=""
+    fi
     grep "testuser" /etc/passwd
     CHECK_RESULT $?
-    sudo chage -l testuser | grep "Account expires" | grep "never"
+    $SUDO chage -l testuser | grep "Account expires" | grep "never"
     CHECK_RESULT $?
-    sudo chage -E 2023-03-01 testuser
+    $SUDO chage -E 2023-03-01 testuser
     CHECK_RESULT $?
-    sudo chage -l testuser | grep "Account expires" | grep "Mar 01, 2023"
+    $SUDO chage -l testuser | grep "Account expires" | grep "Mar 01, 2023"
     CHECK_RESULT $?
     chage -M 4 testuser
     CHECK_RESULT $?
     usermod -e 04/01/2023 testuser
     CHECK_RESULT $?
     expire_date=$(date -d"+4 day" "+%b %d, %Y")
-    sudo chage -l testuser | grep "Password expires" | grep "$expire_date"
+    $SUDO chage -l testuser | grep "Password expires" | grep "$expire_date"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

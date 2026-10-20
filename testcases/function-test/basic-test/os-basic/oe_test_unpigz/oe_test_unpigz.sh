@@ -20,7 +20,8 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    LOG_INFO "Start to prepare the test environment." 
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "pigz" 
     echo "This is a testfile for unpigz" > testfile_unpigz
     gzip testfile_unpigz
     rm -f testfile_unpigz

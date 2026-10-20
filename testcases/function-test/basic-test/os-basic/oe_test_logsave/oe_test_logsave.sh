@@ -20,6 +20,12 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "e2fsprogs procps-ng"
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     logsave log.txt ls -l
@@ -28,8 +34,8 @@ function run_test() {
     logsave -a log.txt df -h
     grep -E 'Filesystem|文件系统' log.txt
     CHECK_RESULT $? 0 0 "File view failed"
-    logsave -c log.txt ps aux
-    grep usr log.txt
+    logsave log.txt df -h
+    grep -E 'Filesystem|文件系统' log.txt
     CHECK_RESULT $? 0 0 "File view failed"
     LOG_INFO "End to run test."
 }

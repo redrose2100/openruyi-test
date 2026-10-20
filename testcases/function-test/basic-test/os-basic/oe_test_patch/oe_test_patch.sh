@@ -20,7 +20,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL patch
+    DNF_INSTALL "patch diffutils"
     LOG_INFO "End of environmental preparation!"
 
 }

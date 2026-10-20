@@ -22,9 +22,19 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    find /etc/sysconfig/network-scripts/ -type f | grep ifcfg | head -n 1
-    CHECK_RESULT $? 0 0 "have no available net cfg file"
-    cfg01=$(find /etc/sysconfig/network-scripts/ -type f | grep ifcfg | head -n 1)
+    if [ -d /etc/sysconfig/network-scripts ]; then
+        cfg_dir=/etc/sysconfig/network-scripts
+        find "$cfg_dir" -type f | grep ifcfg | head -n 1
+        CHECK_RESULT $? 0 0 "have no available net cfg file"
+        cfg01=$(find "$cfg_dir" -type f | grep ifcfg | head -n 1)
+    elif [ -d /etc/NetworkManager/system-connections ]; then
+        cfg_dir=/etc/NetworkManager/system-connections
+        find "$cfg_dir" -type f | head -n 1
+        CHECK_RESULT $? 0 0 "have no available net cfg file"
+        cfg01=$(find "$cfg_dir" -type f | head -n 1)
+    else
+        exit 255
+    fi
     grep -i NAME "$cfg01"
     CHECK_RESULT $? 0 0 "the item is use for set net NAME"
     grep -i bootproto "$cfg01"

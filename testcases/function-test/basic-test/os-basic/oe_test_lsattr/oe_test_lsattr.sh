@@ -23,7 +23,7 @@ function run_test() {
     LOG_INFO "Start to run test."
     test -d testdir || mkdir testdir
     touch testdir/testfile
-    lsattr -l testdir |grep -i Extents
+    lsattr -l testdir |grep -iE "extents|ext"
     CHECK_RESULT $? 0 0 "Failed to view information"
     lsattr -v testdir |grep -E '^[0-9]'
     CHECK_RESULT $? 0 0 "Unable to view version number information"

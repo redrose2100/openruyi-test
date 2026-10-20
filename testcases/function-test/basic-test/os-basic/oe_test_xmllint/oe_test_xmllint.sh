@@ -39,7 +39,8 @@ EOF
 function run_test() {
     LOG_INFO "Start to run test."
     xmllint xmllint_bad.xml
-    CHECK_RESULT $? 1 0 "xmllint error"
+    [ $? -ne 0 ]
+    CHECK_RESULT $? 0 0 "xmllint error"
     xmllint xmllint_good.xml
     CHECK_RESULT $? 0 0 "xmllint error"
     xmllint --format xmllint_good.xml

@@ -35,7 +35,8 @@ function run_test() {
     test -e file.txt
     CHECK_RESULT $? 0 0  "check file.txt failed"
     fallocate -o 10M -l 600M file.txt
-    du -sh file.txt | awk '{print $1}' | grep -i '611M'
+    size=$(stat -c %s file.txt)
+    [ "$size" -eq $((610*1024*1024)) ]
     CHECK_RESULT $? 0 0  "check file.txt 610M failed"
     fallocate -h | grep  -i 'help'
     CHECK_RESULT $? 0 0  "disply help failed"

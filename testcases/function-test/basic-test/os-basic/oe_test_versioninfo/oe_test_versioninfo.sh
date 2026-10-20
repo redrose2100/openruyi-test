@@ -20,14 +20,20 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
-    OS_VERSION=$(awk '{print$3}' /etc/openEuler-release)
+    if [ -f /etc/openEuler-release ]; then
+        OS_VERSION=$(awk '{print$3}' /etc/openEuler-release)
+        grep -w "VERSION" /etc/os-release | awk -F '"' '{print$2}' | grep -w "${OS_VERSION}"
+        CHECK_RESULT $?
+        grep -E "VERSION_ID" /etc/os-release | grep "$OS_VERSION"
+        CHECK_RESULT $?
+    else
+        OS_VERSION=$(grep -E "^VERSION_ID" /etc/os-release | awk -F '"' '{print$2}')
+        grep -w "VERSION" /etc/os-release | awk -F '"' '{print$2}' | grep -w "${OS_VERSION}"
+        CHECK_RESULT $?
+    fi
     grep "NAME" /etc/os-release | grep "openEuler"
     CHECK_RESULT $?
-    grep -w "VERSION" /etc/os-release | awk -F '"' '{print$2}' | grep -w "${OS_VERSION}"
-    CHECK_RESULT $?
     grep -E "^ID" /etc/os-release | grep "openEuler"
-    CHECK_RESULT $?
-    grep -E "VERSION_ID" /etc/os-release | grep "$OS_VERSION"
     CHECK_RESULT $?
     grep -E "PRETTY_NAME" /etc/os-release | grep "openEuler $OS_VERSION"
     CHECK_RESULT $?

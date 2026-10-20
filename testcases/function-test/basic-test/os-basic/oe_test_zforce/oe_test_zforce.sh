@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL tar
+    DNF_INSTALL "tar zip diffutils"
     touch testfile_zforce
     echo "This is test for zforce" > testfile_zforce
     tar -czvf testfile_zforce.tar testfile_zforce

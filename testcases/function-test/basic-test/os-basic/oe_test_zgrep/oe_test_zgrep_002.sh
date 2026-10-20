@@ -20,6 +20,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "zip"
     cd /tmp || return
     cat << EOF > /tmp/test.txt
 This is line 1.

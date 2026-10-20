@@ -31,11 +31,11 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     cd ${dir}
-    du -h | grep ./${dir}1
+    du -h | grep -F "./${dir}1"
     CHECK_RESULT $? 0 0 "Failed to view subdirectory size"
     du -sh | grep .
     CHECK_RESULT $? 0 0 "Failed to view the current size"
-    du --help| grep '用法：'
+    du --help| grep -E "用法|usage|Usage"
     CHECK_RESULT $? 0 0 "Failed to view the du command help manual"
     LOG_INFO "End to run test."
 }

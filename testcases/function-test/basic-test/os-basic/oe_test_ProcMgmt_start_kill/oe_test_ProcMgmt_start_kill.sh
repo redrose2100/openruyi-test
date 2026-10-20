@@ -20,7 +20,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL psmisc
+    DNF_INSTALL "psmisc procps-ng"
     echo "#!/bin/bash
 while true
 do

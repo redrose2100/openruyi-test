@@ -28,9 +28,11 @@ function run_test() {
     LOG_INFO "Start to run test."
     localectl list-keymaps | grep "nodeadkeys"
     CHECK_RESULT $?
-    localectl set-keymap be-oss
+    target_keymap=$(localectl list-keymaps | grep "nodeadkeys" | head -n 1)
+    [ -n "$target_keymap" ] || exit 255
+    localectl set-keymap "$target_keymap"
     CHECK_RESULT $?
-    localectl status | grep -i 'Keymap' | awk -F " " '{print$3}' | grep "be-oss"
+    localectl status | grep -i 'Keymap' | awk -F " " '{print$3}' | grep -F "$target_keymap"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

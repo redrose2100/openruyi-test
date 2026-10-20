@@ -28,9 +28,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    grep '^MANPATH' /etc/man_db.conf | head -n 3 | cat -A|grep I
+    printf 'MANPATH\t/usr/share/man\n' > /tmp/expand_test.txt
+    grep '^MANPATH' /tmp/expand_test.txt | cat -A | grep I
     CHECK_RESULT $? 0 0 "Checking whether the tab key exists fails"
-    grep '^MANPATH' /etc/man_db.conf | head -n 3 | expand -t 6  | cat -A
+    grep '^MANPATH' /tmp/expand_test.txt | expand -t 6 | cat -A
     CHECK_RESULT $? 1 1 "Check whether the tab key still exists"
     expand --help|grep expand
     CHECK_RESULT $? 0 0  "check command fail"
@@ -42,6 +43,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to clean the test environment."
     export LANG=${OLD_LANG}
+    rm -f /tmp/expand_test.txt
     LOG_INFO "End to clean the test environment."
 }
 

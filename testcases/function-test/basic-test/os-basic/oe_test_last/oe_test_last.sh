@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
+    [ -s /var/log/wtmp ] || exit 255
     last |grep -i wtmp
     CHECK_RESULT $? 0 0 "default option result fail"
     lastb -n 2

@@ -33,8 +33,10 @@ function run_test() {
     CHECK_RESULT $? 0 0  "check auditctl fail"
     auditctl -l |grep "rwxa"
     CHECK_RESULT $? 0 0  "check auditctl rule fail"
-    auditctl -D | grep "rule"
+    auditctl -D
     CHECK_RESULT $? 0 0 "check remove rule fail"
+    auditctl -l | grep -i "no rules"
+    CHECK_RESULT $? 0 0  "check auditctl rule removed fail"
     auditctl -s |grep "enabled"
     CHECK_RESULT $? 0 0  "check auditctl result fail"
     LOG_INFO "End to run test."
