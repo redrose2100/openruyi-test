@@ -1,0 +1,20 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/pkgs-test/dos2unix",
+    "cases": [
+        {
+            "name": "oe_test_dos2unix"
+        },
+        {
+            "name":"oe_test_dos2unix_basic_param"
+        },
+        {
+            "name":"oe_test_dos2unix_file_info"
+        },
+        {
+            "name":"oe_test_dos2unix_newfile_keepdate"
+        },
+        {
+            "name":"oe_test_dos2unix_recursive"
+        }
+    ]
+}

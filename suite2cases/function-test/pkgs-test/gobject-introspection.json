@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/gobject-introspection",
+    "cases": [
+        {
+            "name": "oe_test_gobject-introspection"
+        }
+
+    ]
+}

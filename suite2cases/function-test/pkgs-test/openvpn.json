@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/openvpn",
+    "machine num": 2,
+    "add network interface": 1,
+    "cases": [
+        {
+            "name": "oe_test_openvpn"
+        }
+    ]
+}

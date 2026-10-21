@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/oec-hardware",
+    "cases": [
+        {
+            "name": "oe_test_service_oech"
+        },
+        {
+            "name": "oe_test_service_oech-server"
+        },
+        {
+            "name": "oe_test_oech"
+        }
+    ]
+}

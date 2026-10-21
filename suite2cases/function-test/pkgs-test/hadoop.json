@@ -1,0 +1,46 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/hadoop",
+    "machine num": 3,
+    "cases": [
+        {
+            "name": "oe_test_service_hadoop-datanode",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_service_hadoop-journalnode",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_service_hadoop-namenode",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_service_hadoop-nodemanager",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_service_hadoop-proxyserver",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_service_hadoop-resourcemanager",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_service_hadoop-secondarynamenode",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_service_hadoop-timelineserver",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_service_hadoop-historyserver",
+            "machine num": 3
+        },
+        {
+            "name": "oe_test_service_hadoop-zkfc",
+            "machine num": 3
+        }
+    ]
+}

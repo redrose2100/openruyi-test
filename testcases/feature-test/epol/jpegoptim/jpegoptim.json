@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/jpegoptim",
-    "cases": [
-        {
-            "name": "jpegoptim_1"
-        }
-    ]
-}

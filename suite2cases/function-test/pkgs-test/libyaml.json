@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libyaml",
+    "cases": [
+        {
+            "name": "oe_test_libyaml"
+        }
+
+      ]
+}

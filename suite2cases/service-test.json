@@ -1,9 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/system-test/service-test",
-    "cases": [
-        {
-            "name": "oe_test_service_restart"
-        }
-     ]
-}
-

@@ -1,0 +1,15 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/boost/",
+  "cases": [
+    {
+      "name": "oe_test_boost_01"
+    },
+    {
+      "name": "oe_test_boost_02"
+    },
+    {
+      "name": "oe_test_boost_03"
+    }
+  ]
+}
+

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-oslotest",
+    "cases": [
+        {
+            "name": "oe_test_oslo_run_cross_tests"
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-twisted",
+    "cases": [
+        {
+            "name": "oe_test_python-twisted"
+        },
+        {
+            "name": "oe_test_ckeygen"
+        },
+        {
+            "name": "oe_test_conch"
+        },
+        {
+            "name": "oe_test_dns"
+        },
+        {
+            "name": "oe_test_ftp"
+        },
+        {
+            "name": "oe_test_inetd"
+        },
+        {
+            "name": "oe_test_mail"
+        },
+        {
+            "name": "oe_test_manhole"
+        },
+        {
+            "name": "oe_test_portforward"
+        },
+        {
+            "name": "oe_test_procmon"
+        },
+        {
+            "name": "oe_test_socks"
+        },
+        {
+            "name": "oe_test_web"
+        },
+        {
+            "name": "oe_test_words"
+        },
+        {
+            "name": "oe_test_xmpp_router"
+        }
+    ]
+}

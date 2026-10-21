@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/boom-boot",
+    "cases": [
+        {
+            "name": "oe_test_boom_boot_01"
+        },
+        {
+            "name": "oe_test_boom_boot_02"
+        },
+        {
+            "name": "oe_test_boom_boot_03"
+        },
+        {
+            "name": "oe_test_boom_boot_0.9_01"
+        },
+        {
+            "name": "oe_test_boom_boot_0.9_02"
+        },
+        {
+            "name": "oe_test_boom_boot_0.9_03"
+        }
+    ]
+}

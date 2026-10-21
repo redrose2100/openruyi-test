@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/xfce4-dev-tools",
-    "cases": [
-        {
-            "name": "xdt-csource_1"
-        }
-    ]
-}

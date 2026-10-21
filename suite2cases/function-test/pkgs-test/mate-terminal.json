@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/mate-terminal",
+    "cases": [
+        {
+            "name": "oe_test_mate_terminal_config"
+        },
+        {
+            "name": "oe_test_mate_terminal"
+        }
+    ]
+}

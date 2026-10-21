@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-pyserial",
+    "cases": [
+        {
+            "name": "oe_test_pyserial_ports"
+        }
+    ]
+}

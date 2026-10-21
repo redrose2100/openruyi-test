@@ -23,6 +23,29 @@ else
     source "$OET_PATH/libs/locallibs/common_lib_shell.sh"
 fi
 
+# 递归查找套件 json（支持 suite2cases 下任意层级分类目录），返回唯一路径。
+# 找到 0 个返回 1；找到多个（重名）返回 2 并打印冲突候选，绝不静默任选。
+function find_suite_json() {
+    local test_suite=$1
+    local suite2cases_dir="${OET_PATH}/suite2cases"
+    mapfile -t matches < <(find "${suite2cases_dir}" -type f -name "${test_suite}.json" 2>/dev/null)
+    case ${#matches[@]} in
+        0)
+            LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
+            return 1
+            ;;
+        1)
+            echo "${matches[0]}"
+            return 0
+            ;;
+        *)
+            LOG_ERROR "Duplicate suite name: ${test_suite}.json exists in multiple directories:"
+            printf '  %s\n' "${matches[@]}"
+            return 2
+            ;;
+    esac
+}
+
 function CHECK_RESULT() {
     actual_result=$1
     expect_result=${2-0}

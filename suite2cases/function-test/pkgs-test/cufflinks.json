@@ -1,0 +1,26 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/cufflinks",
+    "cases": [
+        {
+            "name": "oe_test_compress_gtf"
+        },
+        {
+            "name": "oe_test_cuffcompare"
+        },
+        {
+            "name": "oe_test_cuffdiff"
+        },
+        {
+            "name": "oe_test_cufflinks"
+        },
+        {
+            "name": "oe_test_cuffmerge"
+        },
+        {
+            "name": "oe_test_cuffquant"
+        },
+        {
+            "name": "oe_test_gtf_to_sam"
+        }
+    ]
+}

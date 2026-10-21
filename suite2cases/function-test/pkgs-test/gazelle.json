@@ -1,0 +1,18 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/gazelle",
+    "add network interface": 1,
+    "cases": [
+        {
+            "name": "oe_test_gazelle_helloworld",
+            "add network interface": 1
+        },
+        {
+            "name": "oe_test_gazelle_redis",
+            "add network interface": 1
+        },
+        {
+            "name": "oe_test_gazelle_gazellectl",
+            "add network interface": 1
+        }
+    ]
+}

@@ -1,8 +1,0 @@
-{
-  "path": "$OET_PATH/testcases/cli-test/libreport/",
-  "cases": [
-    {
-      "name": "oe_test_libreport_satyr"
-    }
-  ]
-}

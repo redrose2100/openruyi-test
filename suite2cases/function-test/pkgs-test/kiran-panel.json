@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/kiran-panel",
+    "cases": [
+        {
+            "name": "oe_test_kiran_desktop_item_edit"
+        },
+        {
+            "name": "oe_test_kiran_panel_test_applets"
+        }
+    ]
+}

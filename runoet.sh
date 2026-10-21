@@ -114,6 +114,8 @@ function run_test_case() {
 
     ((CASE_NUM++))
 
+    suite_json=$(find_suite_json "$test_suite") || return $?
+
     suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)
     test $? -ne 0 && return 1
     test -d "$suite_path" || {
@@ -121,7 +123,7 @@ function run_test_case() {
         return 1
     }
 
-    if ! grep -q "$test_case" suite2cases/"${test_suite}.json"; then
+    if ! grep -q "$test_case" "$suite_json"; then
         LOG_ERROR "In the suite2cases directory, Can't find the case name:${test_case} in the file of testsuite:${test_suite}."
         return 1
     fi
@@ -166,10 +168,8 @@ function run_test_case() {
 function run_test_suite() {
     local test_suite=$1
 
-    [ -z "$(find "$OET_PATH"/suite2cases -name "${test_suite}".json)" ] && {
-        LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
-        return 1
-    }
+    local suite_json
+    suite_json=$(find_suite_json "$test_suite") || return $?
 
     for test_case in $(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key cases-name | shuf); do
         run_test_case "$test_suite" "$test_case"
@@ -178,7 +178,7 @@ function run_test_suite() {
 
 function run_all_cases() {
     mapfile -t test_suites < <(
-        find "${OET_PATH}/suite2cases/" -type f -name "*.json" -printf '%f\n' | sed 's/\.json$//'
+        find "${OET_PATH}/suite2cases/" -type f -name "*.json" -printf '%f\n' | sed 's/\.json$//' | sort -u
     )
     test ${#test_suites[@]} -eq 0 && {
         LOG_ERROR "Can't find recording about test_suites."

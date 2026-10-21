@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/ffmpegthumbnailer",
+    "cases": [
+        {
+            "name": "oe_test_ffmpegthumbnailer"
+        }
+    ]
+}

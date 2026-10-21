@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/drbd",
+    "cases": [
+        {
+            "name": "oe_test_service_drbd-graceful-shutdown"
+        },
+        {
+            "name": "oe_test_service_drbd"
+        }
+    ]
+}

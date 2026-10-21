@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/onboard",
+    "cases": [
+        {
+            "name": "oe_test_onboard_settings"
+        },
+        {
+            "name": "oe_test_onboard"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/nss-pam-ldapd",
+    "cases": [
+        {
+            "name": "oe_test_service_nslcd"
+        }
+    ]
+}

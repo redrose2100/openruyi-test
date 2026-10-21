@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/atril",
+    "cases": [
+        {
+            "name": "oe_test_atril_previewer"
+        },
+        {
+            "name": "oe_test_atril_thumbnailer"
+        },
+        {
+            "name": "oe_test_atril"
+        }
+    ]
+}

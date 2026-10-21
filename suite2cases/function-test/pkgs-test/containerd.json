@@ -1,0 +1,11 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/containerd",
+  "cases": [
+    {
+      "name": "oe_test_containerd"
+    },
+    {
+      "name": "oe_test_service_containerd"
+    }
+  ]
+}

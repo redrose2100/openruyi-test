@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/mate-utils",
+    "cases": [
+        {
+            "name": "oe_test_mate_dictionary"
+        },
+        {
+            "name": "oe_test_mate_disk_usage_analyzer"
+        },
+        {
+            "name": "oe_test_mate_panel_screenshot"
+        },
+        {
+            "name": "oe_test_mate_screenshot"
+        },
+        {
+            "name": "oe_test_mate_search_tool"
+        },
+        {
+            "name": "oe_test_mate_system_log"
+        }
+    ]
+}

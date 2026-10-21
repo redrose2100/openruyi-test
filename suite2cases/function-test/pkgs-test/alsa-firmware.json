@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/alsa-firmware",
+    "cases": [
+        {
+            "name": "oe_test_alsa_firmware_install"
+        },
+        {
+            "name": "oe_test_alsa_firmware_files"
+        },
+        {
+            "name": "oe_test_alsa_firmware_load"
+        }
+    ]
+}

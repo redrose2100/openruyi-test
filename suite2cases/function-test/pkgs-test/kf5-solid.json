@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/kf5-solid",
+    "cases": [
+        {
+            "name": "oe_test_details"
+        },
+        {
+            "name": "oe_test_eject"
+        },
+        {
+            "name": "oe_test_list"
+        },
+        {
+            "name": "oe_test_listen"
+        },
+        {
+            "name": "oe_test_mount"
+        },
+        {
+            "name": "oe_test_nonportableinfo"
+        },
+        {
+            "name": "oe_test_query"
+        },
+        {
+            "name": "oe_test_solid_power"
+        },
+        {
+            "name": "oe_test_unmount"
+        }
+    ]
+}

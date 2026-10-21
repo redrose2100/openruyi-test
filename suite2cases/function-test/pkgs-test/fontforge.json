@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/fontforge",
+    "cases": [
+        {
+            "name": "oe_test_fontforge_fontforge"
+        },
+        {
+            "name": "oe_test_fontforge_fontimage"
+        },
+        {
+            "name": "oe_test_fontforge_fontlint"
+        }
+    ]
+}

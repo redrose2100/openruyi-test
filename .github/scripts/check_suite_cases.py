@@ -187,6 +187,7 @@ def check_one_suite(json_path):
     name_lines = build_name_line_map(text)
     stems = collect_case_stems(abs_case_path)
 
+    seen_names = set()
     for one_case in data["cases"]:
         if not isinstance(one_case, dict) or not isinstance(one_case.get("name"), str):
             result.errors.append("%s: case entry is not an object with a string 'name'" % rel_path)
@@ -197,6 +198,19 @@ def check_one_suite(json_path):
 
         case_name = one_case["name"]
         result.case_count += 1
+
+        # 单个 json 内 case name 不允许重复（大小写不敏感，与既有约定保持一致）
+        case_key = case_name.lower()
+        if case_key in seen_names:
+            line_no = take_line(name_lines, case_name)
+            result.errors.append(
+                "%s: duplicate case name '%s' in the same suite" % (rel_path, case_name)
+            )
+            result.annotations.append(
+                (rel_path, line_no, 0, "duplicate case name", "case name '%s' appears more than once" % case_name)
+            )
+            continue
+        seen_names.add(case_key)
 
         # 不区分大小写匹配，与 check_casename.py 的既有约定保持一致
         if case_name.lower() in stems:
@@ -221,25 +235,114 @@ def check_one_suite(json_path):
 
 
 def list_all_suites():
-    """列出 suite2cases 下所有 json 文件。"""
+    """列出 suite2cases 下（含子目录）所有 json 文件。"""
     suite_dir = os.path.join(REPO_ROOT, SUITE_DIR_NAME)
     if not os.path.isdir(suite_dir):
         return []
-    names = sorted(
-        one for one in os.listdir(suite_dir) if one.lower().endswith(".json")
-    )
-    return [os.path.join(suite_dir, one) for one in names]
+    names = []
+    for root_dir, _, files in os.walk(suite_dir):
+        for one in files:
+            if one.lower().endswith(".json"):
+                names.append(os.path.join(root_dir, one))
+    return sorted(names)
+
+
+def is_root_level_suite(rel_path):
+    """判断 suite2cases 下的 json 是否直接放在根目录（无分类子目录）。
+
+    检查点 1：suite2cases 根目录不允许直接放置 json 文件，
+    所有 json 必须位于子目录中。testsuite.json 为团队约定永久豁免。
+
+    Args:
+        rel_path ([str]): 相对仓库根的路径（使用 / 分隔）
+
+    Returns:
+        [bool]: True 表示该 json 违反检查点 1
+    """
+    if os.path.basename(rel_path) in IGNORE_SUITES:
+        return False
+    rest = rel_path[len(SUITE_DIR_NAME) + 1:]
+    return "/" not in rest
+
+
+def check_root_json_placement():
+    """全量扫描 suite2cases 根目录，检查是否有直接放置的 json 文件。
+
+    检查点 1：所有 json 必须位于 suite2cases 的子目录中，
+    根目录只允许 testsuite.json（永久豁免）。
+
+    Returns:
+        [list]: 错误列表，无违规时为空列表
+    """
+    suite_dir = os.path.join(REPO_ROOT, SUITE_DIR_NAME)
+    if not os.path.isdir(suite_dir):
+        return []
+
+    errors = []
+    for one in sorted(os.listdir(suite_dir)):
+        abs_path = os.path.join(suite_dir, one)
+        if not os.path.isfile(abs_path):
+            continue
+        if not one.lower().endswith(".json"):
+            continue
+        if one in IGNORE_SUITES:
+            continue
+        rel_path = os.path.relpath(abs_path, REPO_ROOT).replace(os.sep, "/")
+        errors.append(
+            "%s: json file must be placed in a subdirectory of %s, not directly under it"
+            % (rel_path, SUITE_DIR_NAME)
+        )
+    return errors
+
+
+def check_suite_name_uniqueness():
+    """全量扫描 suite2cases（含子目录），检查套件 json 文件名是否重名。
+
+    规则：
+      - 忽略固定清单中的文件（testsuite.json 等）
+      - 大小写不敏感去重（与 check_casename.py 的既有约定保持一致，
+        避免在 Linux 大小写敏感文件系统与 Windows 大小写不敏感文件系统之间漂移）
+      - 返回错误列表（每条含套件名与冲突路径），无冲突时返回空列表
+    """
+    suite_dir = os.path.join(REPO_ROOT, SUITE_DIR_NAME)
+    if not os.path.isdir(suite_dir):
+        return []
+
+    by_name = {}
+    for root_dir, _, files in os.walk(suite_dir):
+        for one_file in files:
+            if not one_file.lower().endswith(".json"):
+                continue
+            if one_file in IGNORE_SUITES:
+                continue
+            key = one_file[: -len(".json")].lower()
+            by_name.setdefault(key, []).append(
+                os.path.join(root_dir, one_file)
+            )
+
+    errors = []
+    for key, paths in sorted(by_name.items()):
+        if len(paths) < 2:
+            continue
+        rel_paths = [
+            os.path.relpath(one, REPO_ROOT).replace(os.sep, "/") for one in paths
+        ]
+        errors.append(
+            "duplicate suite name '%s' (%s): %s"
+            % (key, ".json", ", ".join(rel_paths))
+        )
+    return errors
 
 
 def resolve_input_files(raw_files):
-    """把 --files 入参规范化为绝对路径，并只保留 suite2cases 下的 json 文件。"""
+    """把 --files 入参规范化为绝对路径，并只保留 suite2cases 子树下的 json 文件。"""
     suite_dir = os.path.realpath(os.path.join(REPO_ROOT, SUITE_DIR_NAME))
     resolved = []
     for one_file in raw_files:
         abs_path = os.path.realpath(os.path.abspath(one_file))
         if not abs_path.lower().endswith(".json"):
             continue
-        if os.path.dirname(abs_path) != suite_dir:
+        if os.path.commonpath([abs_path, suite_dir]) != suite_dir:
             continue
         resolved.append(abs_path)
     return sorted(set(resolved))
@@ -341,14 +444,37 @@ def main(argv=None):
     if args.all:
         targets = list_all_suites()
         scope_desc = "all suite2cases json"
+        # 全量模式下顺带做套件名唯一性检查（重名会在运行时导致 mugen 无法定位）
+        uniqueness_errors = check_suite_name_uniqueness()
+        # 检查点 1：suite2cases 根目录不允许直接放置 json
+        root_placement_errors = check_root_json_placement()
     elif args.files:
         targets = resolve_input_files(args.files)
         scope_desc = "given files"
+        uniqueness_errors = []
+        root_placement_errors = []
     else:
         targets = list_changed_suites(args.changed_from, args.changed_to)
         scope_desc = "changed files since %s" % args.changed_from
+        uniqueness_errors = []
+        root_placement_errors = []
 
-    if not targets:
+    # 检查点 1：files / changed 模式下，命中 suite2cases 根目录的 json 直接报错，
+    # 不进入后续逐套件校验（testsuite.json 永久豁免）。
+    if not args.all:
+        filtered_targets = []
+        for one_target in targets:
+            rel_path = os.path.relpath(one_target, REPO_ROOT).replace(os.sep, "/")
+            if is_root_level_suite(rel_path):
+                root_placement_errors.append(
+                    "%s: json file must be placed in a subdirectory of %s, not directly under it"
+                    % (rel_path, SUITE_DIR_NAME)
+                )
+            else:
+                filtered_targets.append(one_target)
+        targets = filtered_targets
+
+    if not targets and not uniqueness_errors and not root_placement_errors:
         print("No suite2cases json to check (%s), skip." % scope_desc)
         return 0
 
@@ -371,15 +497,22 @@ def main(argv=None):
     for one_error in all_errors:
         print("ERROR %s" % one_error)
 
+    for one_error in uniqueness_errors:
+        print("ERROR %s" % one_error)
+
+    for one_error in root_placement_errors:
+        print("ERROR %s" % one_error)
+
     if annotations_enabled and all_annotations:
         emit_annotations(all_annotations)
 
+    total_errors = len(all_errors) + len(uniqueness_errors) + len(root_placement_errors)
     print(
         "checked %d suite(s), %d case(s); skipped %d suite(s); %d error(s)"
-        % (checked_suites, total_cases, skipped_suites, len(all_errors))
+        % (checked_suites, total_cases, skipped_suites, total_errors)
     )
 
-    return 1 if all_errors else 0
+    return 1 if total_errors else 0
 
 
 if __name__ == "__main__":

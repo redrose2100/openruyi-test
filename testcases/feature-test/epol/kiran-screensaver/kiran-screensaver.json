@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/kiran-screensaver",
-    "cases": [
-        {
-            "name": "kiran-screensaver-command_1"
-        }
-    ]
-}

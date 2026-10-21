@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/libX11",
-    "cases": [
-        {
-            "name": "oe_test_libx11"
-        }
-    ]
-}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/usbguard",
+    "cases": [
+        {
+            "name": "oe_test_service_usbguard"
+        },
+        {
+            "name": "oe_test_service_usbguard-dbus"
+        }
+    ]
+}

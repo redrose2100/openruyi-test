@@ -1,0 +1,22 @@
+{
+    "path": "$OET_PATH/testcases/function-test/virtualization-test/virtualization_user_guide",
+    "machine type": "physical",
+    "add network interface": 1,
+    "cases": [
+        {
+            "name": "oe_test_virtualization_user_guide",
+            "machine type": "physical",
+            "add network interface": 1
+        },
+        {
+            "name": "oe_test_manual_libcareplus_hot_patch",
+            "machine type": "kvm",
+            "add network interface": 0
+        },
+        {
+            "name": "oe_test_libcareplus_hot_patch_by_script",
+            "machine type": "kvm",
+            "add network interface": 0
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/NetworkManager",
+    "cases": [
+        {
+            "name": "oe_test_service_NetworkManager-dispatcher"
+        },
+        {
+            "name": "oe_test_service_NetworkManager"
+        },
+        {
+            "name": "oe_test_service_NetworkManager-wait-online"
+        },
+        {
+            "name": "oe_test_service_nm-cloud-setup"
+        },
+        {
+            "name": "oe_test_libnetfilter_conntrack"
+        },
+        {
+            "name": "oe_test_nmcli_config_invalid_static_IP"
+        }
+    ]
+}

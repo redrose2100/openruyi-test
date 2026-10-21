@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/nss_wrapper",
+    "cases": [
+        {
+            "name": "oe_test_nss_wrapper"
+        }
+    ]
+}

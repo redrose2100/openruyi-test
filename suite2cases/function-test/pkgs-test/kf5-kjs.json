@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/kf5-kjs",
+    "cases": [
+        {
+            "name": "oe_test_kjs5"
+        }
+    ]
+}

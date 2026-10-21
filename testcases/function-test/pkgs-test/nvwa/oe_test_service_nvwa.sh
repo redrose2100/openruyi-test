@@ -1,0 +1,46 @@
+#!/usr/bin/bash
+
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   zhangpanting
+# @Contact   :   1768492250@qq.com
+# @Date      :   2023/07/03
+# @License   :   Mulan PSL v2
+# @Desc      :   Test nvwa.service restart
+# #############################################
+# shellcheck disable=SC1091
+source "${OET_PATH}/testcases/function-test/pkgs-test/nvwa/common/lib.sh"
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if ! dnf list --quiet nvwa 2>/dev/null | grep -q '^nvwa\.'; then
+       LOG_ERROR "未找到 nvwa 软件包，退出码 255"
+       exit 255
+    fi
+    DNF_INSTALL nvwa
+    service=nvwa.service
+    LOG_INFO "End to prepare the test environment."
+}
+
+function run_test() {
+    LOG_INFO "Start to run test."
+    test_execution ${service}
+    test_reload ${service}
+    LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "Start to restore the test environment."
+    systemctl stop  ${service}
+    DNF_REMOVE
+    LOG_INFO "End to restore the test environment."
+}
+
+main "$@"

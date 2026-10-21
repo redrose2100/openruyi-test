@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/exo",
+    "cases": [
+        {
+            "name": "oe_test_exo_desktop_item_edit"
+        }
+    ]
+}

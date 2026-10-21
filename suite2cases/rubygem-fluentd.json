@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/rubygem-fluentd",
-    "cases": [
-        {
-            "name": "oe_test_fluent_cap_ctl"
-        }
-    ]
-}

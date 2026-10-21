@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/gnome-builder",
-    "cases": [
-        {
-            "name": "gnome-builder_1"
-        }
-    ]
-}

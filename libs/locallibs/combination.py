@@ -43,6 +43,29 @@ MUGEN_RESULT_PATH = os.path.join(OET_PATH, "results")
 TMP_DOWNLOAD_PATH = os.path.join(OET_PATH, "tmp_download")
 COMBINATION_SCRIPT_PATH = os.path.join(OET_PATH, "run_combinations.sh")
 
+
+def find_suite_json(suite_name):
+    """在 suite2cases 下递归查找 <suite_name>.json，返回唯一绝对路径。
+
+    与 libs/locallibs/suite_case.py 的 _find_suite_json 保持一致：
+    找不到返回 None；找到多个（重名）打印冲突并返回 None，绝不静默任选。
+    """
+    target = "%s.json" % suite_name
+    matches = []
+    for root_dir, _, files in os.walk(TEST_SUITE_PATH):
+        if target in files:
+            matches.append(os.path.join(root_dir, target))
+    if not matches:
+        mugen_log.logging("ERROR", "无法找到测试套的json文件:%s." % suite_name)
+        return None
+    if len(matches) > 1:
+        mugen_log.logging("ERROR", "套件名冲突:%s 在 suite2cases 下多个目录中存在:" % suite_name)
+        for one in matches:
+            mugen_log.logging("ERROR", "  %s" % one)
+        return None
+    return matches[0]
+
+
 def get_all_combinations():
     all_combinations = []
     all = os.listdir(os.path.join(OET_PATH, "combination"))
@@ -101,7 +124,7 @@ def combination_define_ok(one_com:dict):
     for one_case in one_com["testcases"]:
         if "testsuite" not in one_case:
             continue
-        if not os.path.exists(os.path.join(TEST_SUITE_PATH, one_case["testsuite"] + ".json")):
+        if find_suite_json(one_case["testsuite"]) is None:
             continue
         if "add" in one_case["testsuite"] and "del" in one_case["testsuite"]:
             continue
@@ -116,8 +139,8 @@ def generate_suite_dir(com_dir_path:os.path, com_testcases:list):
     for one_case in com_testcases:
         new_suite_path = os.path.join(com_dir_path, one_case["testsuite"] + f'_{suffix_num}.json')
         suffix_num = suffix_num + 1
-        old_suite_path = os.path.join(TEST_SUITE_PATH, one_case["testsuite"] + ".json")
-        if not os.path.exists(old_suite_path):
+        old_suite_path = find_suite_json(one_case["testsuite"])
+        if old_suite_path is None:
             continue
         if "add" in one_case and "del" in one_case:
             continue

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/mate-media",
+    "cases": [
+        {
+            "name": "oe_test_mate_volume_control"
+        }
+    ]
+}

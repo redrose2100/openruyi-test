@@ -1,0 +1,35 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/fcitx",
+    "cases": [
+        {
+            "name": "oe_test_createpymb"
+        },
+        {
+            "name": "oe_test_fcitx_remote"
+        },
+        {
+            "name": "oe_test_fcitx4_config"
+        },
+        {
+            "name": "oe_test_fcitx"
+        },
+        {
+            "name": "oe_test_mb2org"
+        },
+        {
+            "name": "oe_test_mb2txt"
+        },
+        {
+            "name": "oe_test_readpybase"
+        },
+        {
+            "name": "oe_test_readpymb"
+        },
+        {
+            "name": "oe_test_scel2org"
+        },
+        {
+            "name": "oe_test_txt2mb"
+        }
+    ]
+}

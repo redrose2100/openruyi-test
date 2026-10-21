@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfce4-power-manager",
+    "cases": [
+        {
+            "name": "oe_test_xfce4_power_manager_settings"
+        },
+        {
+            "name": "oe_test_xfce4_power_manager"
+        }
+    ]
+}

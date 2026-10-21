@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/fwupd",
+    "cases": [
+        {
+            "name": "oe_test_service_fwupd-offline-update"
+        },
+        {
+            "name": "oe_test_service_fwupd"
+        },
+        {
+            "name": "oe_test_service_fwupd-refresh"
+        }
+    ]
+}

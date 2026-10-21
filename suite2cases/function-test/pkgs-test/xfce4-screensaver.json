@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfce4-screensaver",
+    "cases": [
+        {
+            "name": "oe_test_xfce4_screensaver_command"
+        },
+        {
+            "name": "oe_test_xfce4_screensaver_configure"
+        },
+        {
+            "name": "oe_test_xfce4_screensaver_preferences"
+        },
+        {
+            "name": "oe_test_xfce4_screensaver"
+        }
+    ]
+}

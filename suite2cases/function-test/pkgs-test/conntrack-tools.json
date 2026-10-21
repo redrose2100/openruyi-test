@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/conntrack-tools",
+    "cases": [
+        {
+            "name": "oe_test_service_conntrackd"
+        },
+	{
+	    "name": "oe_test_conntrack_basic_commands"
+	},
+	{
+		"name": "oe_test_conntrack_events"
+	},
+	{
+		"name": "oe_test_conntrack_parameters"
+	}
+    ]
+}

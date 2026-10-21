@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/activemq",
+    "cases": [
+        {
+            "name": "oe_test_activemq_fun_01"
+        },
+	{
+	    "name":"oe_test_activemq_jms_connectivity"
+	}
+    ]
+}

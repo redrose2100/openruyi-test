@@ -1,0 +1,33 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/lxcfs",
+    "machine num": 1,
+    "machine type": "kvm",
+    "add network interface": 1,
+    "add disk": [],
+    "cases": [
+        {
+            "name": "oe_test_service_lxcfs",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_lxcfs_mount",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_lxcfs_virtualization",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        },
+        {
+            "name": "oe_test_lxcfs_command_args",
+            "machine num": 1,
+            "add network interface": 0,
+            "add disk": []
+        }
+    ]
+}

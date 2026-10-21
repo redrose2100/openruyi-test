@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfburn",
+    "cases": [
+        {
+            "name": "oe_test_xfburn"
+        }
+    ]
+}

@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/xfce4-taskmanager",
-    "cases": [
-        {
-            "name": "xfce4-taskmanager_1"
-        }
-    ]
-}

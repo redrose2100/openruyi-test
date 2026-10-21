@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/nototools",
+    "cases": [
+        {
+            "name": "oe_test_nototools_0.2.17_notodiff"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/lldpad",
+    "cases": [
+        {
+            "name": "oe_test_service_lldpad"
+        },
+        {
+            "name": "oe_test_socket_lldpad"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/kernel-test/ltp-test",
+    "cases": [
+        {
+            "name": "oe_test_ltp"
+        },
+        {
+            "name": "oe_test_posix"
+        }
+    ]
+}

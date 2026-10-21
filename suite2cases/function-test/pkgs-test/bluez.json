@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/bluez",
+    "cases": [
+        {
+            "name": "oe_test_service_bluetooth-mesh"
+        },
+        {
+            "name": "oe_test_service_bluetooth"
+        }
+    ]
+}

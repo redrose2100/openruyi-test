@@ -1,0 +1,189 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/lvm2",
+    "add disk": [
+        10,
+        10,
+        10
+    ],
+    "cases": [
+        {
+            "name": "oe_test_lvm2_snap_001",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_snap_002",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_snap_003",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_snap_004",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_snap_005",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_service_blk-availability",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_service_dm-event",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_service_lvm2-lvmdbusd",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_service_lvm2-lvmpolld",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_service_lvm2-monitor",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_service_lvmlockd",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_service_lvmlocks",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_socket_dm-event",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_socket_lvm2-lvmpolld",
+            "add disk": []
+        },
+        {
+            "name": "oe_test_lvm2_pvremove_001",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_pvcreate_002",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_pvresize_001",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_pvcreate_001",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_pvmove_001",
+            "add disk": [
+                10,
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_vgcreate_001",
+            "add disk": [
+                10,
+                10,
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_pvdisplay_002",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_vgdisplay_001",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_vgrename_001",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_pvdisplay_001",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_pvmove_002",
+            "add disk": [
+                10,
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_pvchange_001",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_vgchange_001",
+            "add disk": [
+                10,
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_vgextend_002",
+            "add disk": [
+                10,
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_vgextend_001",
+            "add disk": [
+                10,
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_vgexport_001",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_lvm2_vgchange_002",
+            "add disk": [
+                10
+            ]
+        },
+        {
+            "name": "oe_test_dmevent-service",
+            "add disk": []
+        }
+    ]
+}

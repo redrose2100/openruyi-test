@@ -1,0 +1,51 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/iputils",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_iputils_ping_01"
+        },
+        {
+            "name": "oe_test_iputils_ping_02"
+        },
+        {
+            "name": "oe_test_iputils_ping_03"
+        },
+        {
+            "name": "oe_test_iputils_ping_04"
+        },
+        {
+            "name": "oe_test_iputils_ping6_01"
+        },
+        {
+            "name": "oe_test_iputils_ping6_02"
+        },
+        {
+            "name": "oe_test_iputils_ping6_03"
+        },
+        {
+            "name": "oe_test_iputils_ping6_04"
+        },
+        {
+            "name": "oe_test_iputils_ifenslave_01"
+        },
+        {
+            "name": "oe_test_iputils_tracepath"
+        },
+        {
+            "name": "oe_test_iputils_tracepath6"
+        },
+        {
+            "name": "oe_test_iputils_clockdiff"
+        },
+        {
+            "name": "oe_test_iputils_arping"
+        },
+        {
+            "name": "oe_test_service_ninfod"
+        },
+        {
+            "name": "oe_test_service_rdisc"
+        }
+    ]
+}

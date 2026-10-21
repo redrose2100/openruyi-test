@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/colord",
-    "cases": [
-        {
-            "name": "oe_test_service_colord"
-        }
-    ]
-}

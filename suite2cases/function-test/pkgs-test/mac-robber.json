@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/mac-robber",
+    "cases": [
+        {
+            "name": "oe_test_mac-robber"
+        },
+        {
+            "name": "oe_test_mac-robber_01"
+        }
+    ]
+}

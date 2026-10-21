@@ -1,0 +1,11 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/pkgs-test/uuid",
+    "cases": [
+        {
+            "name": "oe_test_uuid_1"
+        },
+	{
+	    "name": "oe_test_uuid_2"
+	}
+    ]
+}

@@ -1,0 +1,14 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/python-cryptography",
+  "cases": [
+    {
+      "name": "oe_test_python3-cryptography"
+    },
+    {
+      "name": "oe_test_python-cryptography"
+    },
+    {
+      "name": "oe_test_hasher_python3-cryptography"
+    }    
+  ]
+}

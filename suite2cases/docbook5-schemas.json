@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/docbook5-schemas",
-    "cases": [
-        {
-            "name": "oe_test_docbook5_schemas"
-        }
-    ]
-}

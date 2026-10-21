@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/rubygem-ZenTest",
+    "cases": [
+        {
+            "name": "oe_test_zentest_autotest"
+        },
+        {
+            "name": "oe_test_zentest_multiruby_setup"
+        },
+        {
+            "name": "oe_test_zentest_zentest"
+        },
+        {
+            "name": "oe_test_zentest-4.12.1_autotest"
+        },
+        {
+            "name": "oe_test_zentest-4.12.1_zentest"
+        }
+    ]
+}

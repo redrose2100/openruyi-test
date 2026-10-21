@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/pcre2",
+    "cases": [
+        {
+            "name": "oe_test_pcre2grep"
+        }
+    ]
+}

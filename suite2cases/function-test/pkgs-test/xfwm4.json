@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfwm4",
+    "cases": [
+        {
+            "name": "oe_test_xfwm4_settings"
+        },
+        {
+            "name": "oe_test_xfwm4_tweaks_settings"
+        },
+        {
+            "name": "oe_test_xfwm4_workspace_settings"
+        },
+        {
+            "name": "oe_test_xfwm4"
+        }
+    ]
+}

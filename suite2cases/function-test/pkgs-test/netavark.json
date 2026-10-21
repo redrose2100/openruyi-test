@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/netavark",
+    "cases": [
+        {
+            "name": "oe_test_service_netavark-dhcp-proxy"
+        },
+        {
+            "name": "oe_test_service_netavark-firewalld-reload"
+        },
+        {
+            "name": "oe_test_socket_netavark-dhcp-proxy"
+        }
+    ]
+}

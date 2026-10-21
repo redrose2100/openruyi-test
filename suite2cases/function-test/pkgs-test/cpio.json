@@ -1,0 +1,29 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/pkgs-test/cpio",
+    "cases": [
+        {
+            "name": "oe_test_cpio"
+        },
+        {
+            "name": "oe_test_cpio_options_01"
+        },
+        {
+            "name": "oe_test_cpio_options_02"
+        },
+        {
+            "name": "oe_test_cpio_options_03"
+        },
+        {
+            "name": "oe_test_cpio_format_01"
+        },
+        {
+            "name": "oe_test_cpio_format_02"
+        },
+        {
+            "name": "oe_test_cpio_advanced_01"
+        },
+        {
+            "name": "oe_test_cpio_advanced_02"
+        }
+    ]
+}

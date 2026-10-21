@@ -1,0 +1,10 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/feature-test/kubeedge",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_kubeedge_deployment_guide",
+            "machine num": 2
+        }
+    ]
+}

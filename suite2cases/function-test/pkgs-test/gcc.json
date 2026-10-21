@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/gcc",
+    "cases": [
+        {
+            "name": "oe_test_libasan"
+        },
+        {
+            "name": "oe_test_liblsan"
+        },
+        {
+            "name": "oe_test_dejagnu"
+        },
+        {
+            "name": "oe_test_sendfile"
+        },
+        {
+            "name": "oe_test_sendfile_01"
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/leveldb",
+    "cases": [
+        {
+            "name": "oe_test_leveldb"
+        }
+
+    ]
+}

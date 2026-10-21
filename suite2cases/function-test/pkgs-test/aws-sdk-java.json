@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/aws-sdk-java",
+    "cases": [
+        {
+            "name": "oe_test_aws-sdk-java_001"
+        }
+    ]
+}

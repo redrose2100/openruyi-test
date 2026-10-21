@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/rootsh",
+    "cases": [
+        {
+            "name": "oe_test_rootsh01"
+        },
+        {
+            "name": "oe_test_rootsh02"
+        }
+    ]
+}

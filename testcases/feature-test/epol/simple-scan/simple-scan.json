@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/simple-scan",
-    "cases": [
-        {
-            "name": "simple-scan_1"
-        }
-    ]
-}

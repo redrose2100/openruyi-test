@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libnl3",
+    "cases": [
+        {
+            "name": "oe_test_nl_link_list"
+        }
+    ]
+}

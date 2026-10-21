@@ -1,0 +1,18 @@
+{
+    "path": "$OET_PATH/testcases/function-test/virtualization-test/StratoVirt_user_guide",
+    "machine type": "physical",
+    "cases": [
+        {
+            "name": "oe_test_ready_environment",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_manage_stratovirt_vm",
+            "machine type": "physical"
+        },
+        {
+            "name": "oe_test_manage_stratovirt_vm_resources",
+            "machine type": "physical"
+        }
+    ]
+}

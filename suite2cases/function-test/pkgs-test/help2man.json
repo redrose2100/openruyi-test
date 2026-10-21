@@ -1,0 +1,8 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/pkgs-test/help2man",
+    "cases": [
+        {
+            "name": "oe_test_help2man"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libvma",
+    "cases": [
+        {
+            "name": "oe_test_service_vma"
+        },
+{
+            "name": "oe_test_vma_stats_01"
+        }
+    ]
+}

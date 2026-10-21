@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/tinyxml2",
+    "cases": [
+        {
+            "name": "oe_test_tinyxml2_001"
+        }
+
+    ]
+}

@@ -1,0 +1,71 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/vdo",
+    "cases": [
+        {
+            "name": "oe_test_service_vdo"
+        },
+        {
+            "name": "oe_test_vdo_01"
+        },
+        {
+            "name": "oe_test_vdo_02"
+        },
+        {
+            "name": "oe_test_vdo_03"
+        },
+        {
+            "name": "oe_test_vdo_04"
+        },
+        {
+            "name": "oe_test_vdo_05"
+        },
+        {
+            "name": "oe_test_vdo_06"
+        },
+        {
+            "name": "oe_test_vdo_07"
+        },
+        {
+            "name": "oe_test_vdo_08"
+        },
+        {
+            "name": "oe_test_vdo_09"
+        },
+        {
+            "name": "oe_test_vdo_10"
+        },
+        {
+            "name": "oe_test_vdo_11"
+        },
+        {
+            "name": "oe_test_vdo_12"
+        },
+        {
+            "name": "oe_test_vdo_13"
+        },
+        {
+            "name": "oe_test_vdo_14"
+        },
+        {
+            "name": "oe_test_vdo_15"
+        },
+        {
+            "name": "oe_test_vdo_16"
+        },
+        {
+            "name": "oe_test_vdo_create_01"
+        },
+        {
+            "name": "oe_test_vdo_create_02"
+        },
+        {
+            "name": "oe_test_vdo_create_03"
+        },
+        {
+            "name": "oe_test_vdo_modify_01"
+        },
+        {
+            "name": "oe_test_vdo_modify_02"
+        }
+    ]
+}

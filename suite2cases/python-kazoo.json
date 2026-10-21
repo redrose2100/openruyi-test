@@ -1,9 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/python-kazoo",
-    "cases": [
-        {
-            "name": "oe_test_python-kazoo"
-        }
-
-    ]
-}

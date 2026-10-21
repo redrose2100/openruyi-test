@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/protobuf-c",
+    "cases": [
+        {
+            "name": "oe_test_protobuf-c_01"
+        }
+    ]
+}

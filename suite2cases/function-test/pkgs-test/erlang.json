@@ -1,0 +1,17 @@
+    {
+        "path": "$OET_PATH/testcases/function-test/pkgs-test/erlang",
+        "cases": [
+            {
+                "name": "oe_test_service_epmd"
+            },
+            {
+                "name": "oe_test_socket_epmd"
+            },
+            {
+                "name": "oe_test_erlang_01"
+            },
+	    { 
+                "name": "oe_test_erlang_02" 
+            }
+        ]
+    }

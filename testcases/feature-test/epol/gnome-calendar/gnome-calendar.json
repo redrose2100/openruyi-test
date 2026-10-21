@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/gnome-calendar",
-    "cases": [
-        {
-            "name": "gnome-calendar_1"
-        }
-    ]
-}

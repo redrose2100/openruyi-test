@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/gnutls",
+    "cases": [
+        {
+            "name": "oe_test_gnutls"
+        },
+        {
+            "name": "oe_test_gnutls_01"
+        }
+    ]
+}

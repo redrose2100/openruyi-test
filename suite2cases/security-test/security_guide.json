@@ -1,0 +1,202 @@
+{
+    "path": "$OET_PATH/testcases/security-test/security_guide",
+    "machine num": 3,
+    "cases": [
+        {
+            "name": "oe_test_ssh_warnings",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_set_password_validity",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_set_default_umask",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_sftp_across_updir",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_passwd_dosnot_clear",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_check_passwd_encryption_algorithm",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_use_su_Initialize_path",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_access_sudo_commands",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_disable_empty_passwd",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_use_security_tools",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_pam_auth",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_version2",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_empty_linked_files",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_set_permissions_and_owner",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_access_login_in_60s",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_set_password_complexity",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_disable_parsing_sshpath",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_ssh_disable_root",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_delete_unowned_file",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_access_at_commands",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_lock_after_login_fail",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_set_exit_time",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_add_sticky_bit_attribute",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_restrict_accounts_use_su",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_access_cron_commands",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_check_global_writable_property",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_check_home",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_allow_public_key",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_shield_system_account",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_RSA_auth",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_ssh_disable_agent_forwarding",
+            "machine num": 3
+        },
+        {
+            "name": "oe_test_ssh_system_reinforcement",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_kernel_parameter_hardening",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_strong_encryption_algorithm",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_client_reinforcement_suggestions",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_character_page_timeout_limit",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_password_complexity",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_login_failed_attempts",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_umask_default",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_su_permission_restrictions",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_server_reinforcement_suggestions",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_kernel_parameter_reinforcement_description",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_ssh_prohibit_root_login_system_through_ssh",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_password_validity",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_passwd_salt_value_unique",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_passwd_ciphertext_unique",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_check_default_dictionary_words",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_check_custom_dictionary_words",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_security_guide_check",
+            "machine num": 1
+        }
+    ]
+}

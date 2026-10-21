@@ -1,9 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/libselinux",
-    "cases": [
-        {
-            "name": "oe_test_avcstat"
-        }
-      ]
-}
-

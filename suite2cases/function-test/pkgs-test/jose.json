@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/jose",
+    "cases": [
+        {
+            "name": "oe_test_jose_01"
+        },
+        {
+            "name": "oe_test_jose_02"
+        },
+        {
+            "name": "oe_test_jose_03"
+        },
+        {
+            "name": "oe_test_jose_04"
+        }
+    ]
+}

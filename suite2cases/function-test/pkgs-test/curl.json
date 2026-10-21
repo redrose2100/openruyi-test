@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/curl",
+    "cases": [
+        {
+            "name": "oe_test_curl_curl-config_001"
+        },
+        {
+            "name": "oe_test_curl_curl-config_002"
+        },
+        {
+            "name": "oe_test_curl_curl_001"
+        },
+        {
+            "name": "oe_test_curl_curl_002"
+        },
+        {
+            "name": "oe_test_curl_curl_003"
+        },
+        {
+            "name": "oe_test_curl_curl_004"
+        },
+        {
+            "name": "oe_test_curl_curl_005"
+        },
+        {
+            "name": "oe_test_curl_curl_006"
+        },
+        {
+            "name": "oe_test_curl_curl_007"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/jsoncpp",
+    "cases": [
+        {
+            "name": "oe_test_jsoncpp_01"
+        },
+        {
+            "name": "oe_test_jsoncpp_02"
+        },
+	{
+            "name": "oe_test_jsoncpp_03"
+        }
+    ]
+}

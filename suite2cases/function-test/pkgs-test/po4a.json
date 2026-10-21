@@ -1,0 +1,47 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/po4a",
+    "cases": [
+        {
+            "name": "oe_test_po4a_01"
+        },
+        {
+            "name": "oe_test_po4a_02"
+        },
+        {
+            "name": "oe_test_po4a_03"
+        },
+        {
+            "name" : "oe_test_po4a-gettextize_01"
+        },
+        {
+            "name" : "oe_test_po4a-gettextize_02"
+        },
+        {
+            "name" : "oe_test_po4a-translate_01"
+        },
+        {
+            "name" : "oe_test_po4a-translate_02"
+        },
+        {
+            "name" : "oe_test_po4a-updatepo_01"
+        },
+        {
+            "name" : "oe_test_po4a-updatepo_02"
+        },
+        {
+            "name" : "oe_test_po4a-updatepo_03" 
+        },
+        {
+            "name" : "oe_test_po4a-normalize_01"
+        },
+        {
+            "name" : "oe_test_po4a-normalize_02"
+        },
+        {
+            "name" :"oe_test_po4aman-display-po"
+        },
+        {
+            "name" : "oe_test_po4apod-display-po"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/imsettings",
+    "cases": [
+        {
+            "name": "oe_test_imsettings_info"
+        },
+        {
+            "name": "oe_test_imsettings_reload"
+        },
+        {
+            "name": "oe_test_imsettings_switch"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libsepol",
+    "cases": [
+        {
+            "name": "oe_test_libsepol_basic"
+        },
+        {
+            "name": "oe_test_libsepol_commands"
+        },
+        {
+            "name": "oe_test_libsepol_policy"
+        }
+    ]
+}

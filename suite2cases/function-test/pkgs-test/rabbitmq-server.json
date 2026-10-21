@@ -1,0 +1,54 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/rabbitmq-server",
+    "machine num": 2,
+    "cases": [
+        {
+            "name": "oe_test_rabbitmqctl_access",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rabbitmqctl_app",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rabbitmqctl_cluster",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_rabbitmqctl_encode",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rabbitmqctl_parameter",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rabbitmqctl_policy",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rabbitmqctl_status",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rabbitmqctl_user",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rabbitmq-plugins_list",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rabbitmq-plugins",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_rabbitmq-server",
+            "machine num": 1
+        },
+        {
+            "name": "oe_test_service_rabbitmq-server",
+            "machine num": 1
+        }
+    ]
+}

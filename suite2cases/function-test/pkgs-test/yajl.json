@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/yajl",
+    "cases": [
+        {
+            "name": "oe_test_yajl"
+        },
+	{
+	    "name": "oe_test_yajl_02"
+	}
+    ]
+}

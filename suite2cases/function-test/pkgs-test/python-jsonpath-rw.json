@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-jsonpath-rw",
+    "cases": [
+        {
+            "name": "oe_test_jsonpath"
+        }
+    ]
+}

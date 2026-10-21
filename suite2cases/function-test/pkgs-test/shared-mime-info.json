@@ -1,0 +1,10 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/shared-mime-info",
+    "cases": [
+        {
+            "name": "oe_test_shared-mime-info"
+        }
+
+      ]
+}
+

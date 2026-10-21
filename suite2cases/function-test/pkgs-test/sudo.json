@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/sudo",
+    "cases": [
+        {
+            "name": "oe_test_sudo_cvtsudoers"
+        }
+    ]
+}

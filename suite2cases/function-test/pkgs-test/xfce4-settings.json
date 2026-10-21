@@ -1,0 +1,38 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfce4-settings",
+    "cases": [
+        {
+            "name": "oe_test_xfce4_accessibility_settings"
+        },
+        {
+            "name": "oe_test_xfce4_appearance_settings"
+        },
+        {
+            "name": "oe_test_xfce4_color_settings"
+        },
+        {
+            "name": "oe_test_xfce4_display_settings"
+        },
+        {
+            "name": "oe_test_xfce4_keyboard_settings"
+        },
+        {
+            "name": "oe_test_xfce4_mime_helper"
+        },
+        {
+            "name": "oe_test_xfce4_mime_settings"
+        },
+        {
+            "name": "oe_test_xfce4_mouse_settings"
+        },
+        {
+            "name": "oe_test_xfce4_settings_editor"
+        },
+        {
+            "name": "oe_test_xfce4_settings_manager"
+        },
+        {
+            "name": "oe_test_xfsettingsd"
+        }
+    ]
+}

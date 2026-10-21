@@ -1,0 +1,14 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/opengauss",
+  "cases": [
+    {
+      "name": "oe_test_service_opengauss"
+    },
+    {
+      "name": "oe_test_opengauss_gs_ctl"
+    },
+    {
+      "name": "oe_test_opengauss_backup_restore"
+    }
+  ]
+}

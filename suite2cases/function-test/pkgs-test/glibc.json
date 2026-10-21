@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/glibc",
+    "cases": [
+        {
+            "name": "oe_test_service_nscd"
+        },
+        {
+            "name": "oe_test_socket_nscd"
+        },
+        {
+            "name": "oe_test_socket_nscd_01"
+        }
+    ]
+}

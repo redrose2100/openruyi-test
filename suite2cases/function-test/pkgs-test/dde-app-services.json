@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/dde-app-services",
+    "cases": [
+        {
+            "name": "oe_test_dde_dconfig_daemon"
+        },
+        {
+            "name": "oe_test_dde_dconfig"
+        }
+    ]
+}

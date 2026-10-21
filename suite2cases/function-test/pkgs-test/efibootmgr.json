@@ -1,0 +1,14 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/efibootmgr/",
+  "cases": [
+    {
+      "name": "oe_test_efibootmgr_01"
+    },
+    {
+      "name": "oe_test_efibootmgr_02"
+    },
+    {
+      "name": "oe_test_efibootmgr_03"
+    }
+  ]
+}

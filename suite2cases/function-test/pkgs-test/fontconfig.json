@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/fontconfig",
+    "cases": [
+        {
+            "name": "oe_test_fc-list"
+        },
+        {
+            "name": "oe_test_fc-cat"
+        },
+        {
+            "name": "oe_test_fc-match"
+        },
+        {
+            "name": "oe_test_fc-conflist"
+        },
+        {
+            "name": "oe_test_fc-pattern"
+        },
+        {
+            "name": "oe_test_fc-cache"
+        }
+    ]
+}

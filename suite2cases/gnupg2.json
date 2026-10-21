@@ -1,9 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/gnupg2",
-    "cases": [
-        {
-            "name": "oe_test_gnupg2_001"
-        }
-
-    ]
-}

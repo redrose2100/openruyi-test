@@ -1,0 +1,14 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/octave",
+    "cases": [
+        {
+            "name": "oe_test_octave"
+        },
+        {
+            "name": "oe_test_octave_cli"
+        },
+        {
+            "name": "oe_test_octave_options"
+        }
+    ]
+}

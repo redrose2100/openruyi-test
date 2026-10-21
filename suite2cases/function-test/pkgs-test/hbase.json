@@ -1,0 +1,107 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/hbase",
+    "cases": [
+        {
+            "name": "oe_test_service_hbase-master"
+        },
+        {
+            "name": "oe_test_service_hbase-regionserver"
+        },
+        {
+            "name": "oe_test_service_hbase-rest"
+        },
+        {
+            "name": "oe_test_service_hbase-thrift"
+        },
+        {
+            "name": "oe_test_hbase-thrift02"
+        },
+        {
+            "name": "oe_test_service_hbase-zookeeper"
+        },
+        {
+            "name": "oe_test_hbase-master_1"
+        },
+        {
+            "name": "oe_test_classname"
+        },
+        {
+            "name": "oe_test_autorestart"
+        },
+        {
+            "name": "oe_test_autostart"
+        },
+        {
+            "name": "oe_test_canary"
+        },
+        {
+            "name": "oe_test_cellcounter"
+        },
+        {
+            "name": "oe_test_classpath"
+        },
+        {
+            "name": "oe_test_completebulkload"
+        },
+        {
+            "name": "oe_test_considerasdead"
+        },
+        {
+            "name": "oe_test_foreground_start"
+        },
+        {
+            "name": "oe_test_hbase_jruby"
+        },
+        {
+            "name": "oe_test_hbck"
+        },
+        {
+            "name": "oe_test_hbtop"
+        },
+        {
+            "name": "oe_test_jshell"
+        },
+        {
+            "name": "oe_test_ltt"
+        },
+        {
+            "name": "oe_test_mapredcp"
+        },
+        {
+            "name": "oe_test_pe"
+        },
+        {
+            "name": "oe_test_pre_upgrade"
+        },
+        {
+            "name": "oe_test_regionsplitter"
+        },
+        {
+            "name": "oe_test_restart"
+        },
+        {
+            "name": "oe_test_rowcounter"
+        },
+        {
+            "name": "oe_test_shell"
+        },
+        {
+            "name": "oe_test_snapshot"
+        },
+        {
+            "name": "oe_test_start"
+        },
+        {
+            "name": "oe_test_stop_hbase"
+        },
+        {
+            "name": "oe_test_stop"
+        },
+        {
+            "name": "oe_test_version"
+        },
+        {
+            "name": "oe_test_zookeepers"
+        }
+    ]
+}

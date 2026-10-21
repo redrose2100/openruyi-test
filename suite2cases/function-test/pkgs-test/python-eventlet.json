@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-eventlet",
+    "cases": [
+        {
+            "name": "oe_test_python-eventlet"
+        },
+        {
+            "name": "oe_test_eventlet"
+        }
+    ]
+}

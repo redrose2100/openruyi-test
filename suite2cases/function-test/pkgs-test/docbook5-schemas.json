@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/docbook5-schemas",
+    "cases": [
+        {
+            "name": "oe_test_docbook5_schemas"
+        }
+    ]
+}

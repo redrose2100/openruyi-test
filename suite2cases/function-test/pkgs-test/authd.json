@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/authd",
+    "cases": [
+        {
+            "name": "oe_test_socket_auth"
+        }
+    ]
+}

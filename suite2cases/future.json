@@ -1,8 +1,0 @@
-{
-  "path": "$OET_PATH/testcases/cli-test/future",
-  "cases": [
-    {
-      "name": "oe_test_python_future"
-    }
-  ]
-}

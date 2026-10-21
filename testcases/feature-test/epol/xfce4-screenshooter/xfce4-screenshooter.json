@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/xfce4-screenshooter",
-    "cases": [
-        {
-            "name": "xfce4-screenshooter_1"
-        }
-    ]
-}

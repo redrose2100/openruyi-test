@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/fonts-rpm-macros",
+    "cases": [
+        {
+            "name": "oe_test_fonts_rpm_macros"
+        }
+    ]
+}

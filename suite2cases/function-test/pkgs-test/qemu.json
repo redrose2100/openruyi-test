@@ -1,0 +1,23 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/qemu",
+    "cases": [
+        {
+            "name": "oe_test_service_qemu-guest-agent"
+        },
+        {
+            "name": "oe_test_service_qemu-pr-helper"
+        },
+        {
+            "name": "oe_test_socket_qemu-pr-helper"
+        },
+        {
+            "name": "oe_test_crypto_qcow2_sm4_sha256"
+        },
+        {
+            "name": "oe_test_crypto_qcow2_aes_sm3"
+        },
+        {
+            "name": "oe_test_crypto_qcow2_sm4_sm3"
+        }
+    ]
+}

@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/pki-core",
-    "cases": [
-        {
-            "name": "oe_test_pki-core"
-        }
-    ]
-}

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/slang",
+    "cases": [
+        {
+            "name": "oe_test_slang_001"
+        }
+    ]
+}

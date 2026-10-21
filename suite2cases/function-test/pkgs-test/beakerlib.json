@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/beakerlib",
+    "cases": [
+        {
+            "name": "oe_test_beakerlib_01"
+        },
+        {
+            "name": "oe_test_beakerlib_lsb_release"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/kiran-session-manager",
+    "cases": [
+        {
+            "name": "oe_test_kiran_session_manager"
+        }
+    ]
+}

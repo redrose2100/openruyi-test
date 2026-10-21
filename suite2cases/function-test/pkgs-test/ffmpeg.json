@@ -1,0 +1,20 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/ffmpeg",
+  "cases": [
+    {
+      "name": "oe_test_ffmpeg"
+    },
+    {
+      "name": "oe_test_ffmpeg_01"
+    },
+    {
+      "name": "oe_test_ffmpeg_02"
+    },
+    {
+      "name": "oe_test_ffmpeg_03"
+    },
+    {
+      "name": "oe_test_ffmpeg_04"
+    }
+  ]
+}

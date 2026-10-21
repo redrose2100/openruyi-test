@@ -28,6 +28,43 @@ sys.path.append(SCRIPT_PATH)
 import mugen_log
 
 
+def _find_suite_json(suite):
+    """在 suite2cases 目录下递归查找 <suite>.json，返回唯一绝对路径。
+
+    支持任意层级分类目录（如 suite2cases/function-test/pkgs-test/acl.json）。
+    找到 0 个报错退出；找到多个（重名）报错并列出冲突候选，绝不静默任选。
+
+    Args:
+        suite ([str]): 测试套名
+
+    Returns:
+        [str]: 测试套 json 绝对路径
+    """
+    oet_path = os.environ.get("OET_PATH")
+    if oet_path is None:
+        mugen_log.logging("error", "环境变量：OET_PATH不存在，请检查mugen框架.")
+        sys.exit(1)
+
+    suite2cases_dir = os.path.join(oet_path.rstrip("/"), "suite2cases")
+    target = "%s.json" % suite
+    matches = []
+    for root, _, files in os.walk(suite2cases_dir):
+        if target in files:
+            matches.append(os.path.join(root, target))
+
+    if not matches:
+        mugen_log.logging("error", "无法找到测试套的json文件:%s." % suite)
+        sys.exit(1)
+    if len(matches) > 1:
+        mugen_log.logging(
+            "error", "套件名冲突:%s 在 suite2cases 下多个目录中存在:" % suite
+        )
+        for one in matches:
+            mugen_log.logging("error", "  %s" % one)
+        sys.exit(1)
+    return matches[0]
+
+
 def suite_path(suite):
     """获取测试套路径
 
@@ -37,16 +74,7 @@ def suite_path(suite):
     Returns:
         [str]: 测试套路径
     """
-    oet_path = os.environ.get("OET_PATH")
-    if oet_path is None:
-        mugen_log.logging("error", "环境变量：OET_PATH不存在，请检查mugen框架.")
-        sys.exit(1)
-    suite_json = (
-        os.environ.get("OET_PATH").rstrip("/") + "/suite2cases/" + suite + ".json"
-    )
-    if not os.path.exists(suite_json):
-        mugen_log.logging("error", "无法找到测试套的json文件:%s." % suite_json)
-        sys.exit(1)
+    suite_json = _find_suite_json(suite)
 
     try:
         with open(suite_json, "r") as f:
@@ -78,16 +106,7 @@ def suite_cases(suite):
     Returns:
         [list]: 用例列表
     """
-    oet_path = os.environ.get("OET_PATH")
-    if oet_path is None:
-        mugen_log.logging("error", "环境变量：OET_PATH不存在，请检查mugen框架.")
-        sys.exit(1)
-    suite_json = (
-        os.environ.get("OET_PATH").rstrip("/") + "/suite2cases/" + suite + ".json"
-    )
-    if not os.path.exists(suite_json):
-        mugen_log.logging("error", "无法找到测试套的json文件:%s." % suite_json)
-        sys.exit(1)
+    suite_json = _find_suite_json(suite)
 
     try:
         with open(suite_json, "r") as f:

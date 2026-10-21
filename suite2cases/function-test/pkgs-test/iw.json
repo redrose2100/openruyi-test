@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/iw",
+    "cases": [
+        {
+            "name": "oe_test_iw_install"
+        },
+        {
+            "name": "oe_test_iw_01"
+        },
+        {
+            "name": "oe_test_iw_02"
+        },
+        {
+            "name": "oe_test_iw_03"
+        },
+        {
+            "name": "oe_test_iw_04"
+        }
+    ]
+}

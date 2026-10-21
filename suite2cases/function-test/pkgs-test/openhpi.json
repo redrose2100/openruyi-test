@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/openhpi",
+    "cases": [
+        {
+            "name": "oe_test_service_openhpid"
+        }
+    ]
+}

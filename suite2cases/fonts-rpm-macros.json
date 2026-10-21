@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/fonts-rpm-macros",
-    "cases": [
-        {
-            "name": "oe_test_fonts_rpm_macros"
-        }
-    ]
-}

@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/hddtemp",
-    "cases": [
-        {
-            "name": "hddtemp_1"
-        }
-    ]
-}

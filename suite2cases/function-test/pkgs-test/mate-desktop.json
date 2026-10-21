@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/mate-desktop",
+    "cases": [
+        {
+            "name": "oe_test_mate_about"
+        }
+    ]
+}

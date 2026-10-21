@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/mate-system-monitor",
+    "cases": [
+        {
+            "name": "oe_test_mate_system_monitor"
+        }
+    ]
+}

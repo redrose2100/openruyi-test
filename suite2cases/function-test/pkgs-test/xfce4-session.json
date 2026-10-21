@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/xfce4-session",
+    "cases": [
+        {
+            "name": "oe_test_startxfce4"
+        },
+        {
+            "name": "oe_test_xfce4_session_logout"
+        },
+        {
+            "name": "oe_test_xfce4_session_settings"
+        },
+        {
+            "name": "oe_test_xfce4_session"
+        }
+    ]
+}

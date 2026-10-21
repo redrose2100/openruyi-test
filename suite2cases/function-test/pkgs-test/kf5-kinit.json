@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/kf5-kinit",
+    "cases": [
+        {
+            "name": "oe_test_kdeinit5"
+        },
+        {
+            "name": "oe_test_kdeinit5_shutdown"
+        }
+    ]
+}

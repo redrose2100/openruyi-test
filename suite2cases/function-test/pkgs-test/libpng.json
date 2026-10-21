@@ -1,0 +1,23 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/libpng/",
+  "cases": [
+    {
+      "name": "oe_test_libpng"
+    },
+    {
+      "name": "oe_test_libpng_pngfix_01"
+    },
+    {
+      "name": "oe_test_libpng_pngfix_02"
+    },
+    {
+      "name": "oe_test_libpng_png_fix_itxt"
+    },
+    {
+      "name": "oe_test_libpng_config"
+    },
+    {
+      "name": "oe_test_libpng16_config"
+    }
+  ]
+}

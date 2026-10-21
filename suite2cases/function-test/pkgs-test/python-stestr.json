@@ -1,0 +1,32 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/python-stestr",
+    "cases": [
+        {
+            "name": "oe_test_complete"
+        },
+        {
+            "name": "oe_test_failing"
+        },
+        {
+            "name": "oe_test_help"
+        },
+        {
+            "name": "oe_test_init"
+        },
+        {
+            "name": "oe_test_last"
+        },
+        {
+            "name": "oe_test_list"
+        },
+        {
+            "name": "oe_test_load"
+        },
+        {
+            "name": "oe_test_run"
+        },
+        {
+            "name": "oe_test_slowest"
+        }
+    ]
+}

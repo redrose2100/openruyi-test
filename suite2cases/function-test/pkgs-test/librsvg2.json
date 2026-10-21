@@ -1,0 +1,8 @@
+{
+  "path": "$OET_PATH/testcases/function-test/pkgs-test/librsvg2",
+  "cases": [
+    {
+      "name": "oe_test_librsvg2-tools"
+    }
+  ]
+}

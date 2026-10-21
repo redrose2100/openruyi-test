@@ -1,0 +1,50 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/pkgs-test/pkgship/pkgship_bedepend_query",
+    "cases": [
+        {
+            "name": "oe_test_pkgship_bedepend_binary_1"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_binary_2"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_binary_3"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_binary_4"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_binary_5"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_binary_6"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_fail_1"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_fail_2"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_fail_3"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_source_1"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_source_2"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_source_3"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_source_4"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_source_5"
+        },
+        {
+            "name": "oe_test_pkgship_bedepend_source_6"
+        }
+    ]
+}

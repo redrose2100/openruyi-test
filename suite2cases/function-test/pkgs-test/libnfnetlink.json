@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/libnfnetlink",
+    "cases": [
+        {
+            "name": "oe_test_libnfnetlink_install"
+        },
+        {
+            "name": "oe_test_libnfnetlink_basic"
+        }
+    ]
+}

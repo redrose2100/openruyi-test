@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/ipwatchd",
+    "cases": [
+        {
+            "name": "oe_test_service_ipwatchd"
+        },
+        {
+            "name": "oe_test_ipwatchd_01"
+        }
+    ]
+}

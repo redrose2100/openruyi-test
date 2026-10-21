@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/flink",
-    "cases": [
-        {
-            "name": "oe_test_flink-local"
-        }
-    ]
-}

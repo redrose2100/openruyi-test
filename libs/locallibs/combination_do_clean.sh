@@ -32,11 +32,8 @@ function clean_one_suite() {
     ((TOTAL_CLEAN_COUNT++))
     local test_suite=$1
 
-    find_test_suite=$(find "$OET_PATH"/suite2cases -name "${test_suite}".json)
-    [ -z "$find_test_suite" ] && {
-        LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
-        return 1
-    }
+    local suite_json
+    suite_json=$(find_suite_json "$test_suite") || return $?
 
     suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)
     if ! python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path >/dev/null 2>&1; then
@@ -72,7 +69,7 @@ function clean_one_suite() {
 
 function clean_all() {
     test_suites=()
-    while IFS='' read -r line; do test_suites+=("$line"); done < <(find "${OET_PATH}"/suite2cases/ -type f -name '*.json' | awk -F '/' '{print $NF}' | sed -e 's/.json$//g')
+    while IFS='' read -r line; do test_suites+=("$line"); done < <(find "${OET_PATH}"/suite2cases/ -type f -name '*.json' | awk -F '/' '{print $NF}' | sed -e 's/.json$//g' | sort -u)
     test ${#test_suites[@]} -eq 0 && { 
         LOG_ERROR "Can't find recording about test_suites."
         return 1

@@ -1,0 +1,11 @@
+{
+    "path": "${OET_PATH}/testcases/function-test/pkgs-test/python-lesscpy",
+    "cases": [
+        {
+            "name": "oe_test_lesscpy"
+        },
+        {
+            "name": "oe_test_lesscpy_options"
+        }
+    ]
+}

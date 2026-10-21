@@ -1,0 +1,9 @@
+{
+    "path": "$OET_PATH/testcases/function-test/service-test",
+    "cases": [
+        {
+            "name": "oe_test_service_restart"
+        }
+     ]
+}
+

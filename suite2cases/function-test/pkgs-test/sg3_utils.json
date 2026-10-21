@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/function-test/pkgs-test/sg3_utils",
+    "cases": [
+        {
+            "name": "oe_test_sginfo_func"
+        }
+    ]
+}
