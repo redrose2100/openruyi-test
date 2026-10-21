@@ -61,6 +61,16 @@ NAME_LINE_RE = re.compile(r'^\s*"name"\s*:\s*"(.*)"\s*,?\s*$')
 # 用例脚本扩展名：按需求只认可 .sh
 CASE_EXT = ".sh"
 
+# 检查点 2：CRCRLF（\r\r\n）双 CR 行尾检测。
+# 2026-10-21 发现 344 个 .sh 文件以 \r\r\n 入库（git 视为二进制），
+# 导致 oe-test 平台上 bash 解析失败（$'\r\r': command not found）全部用例失败。
+# 需要扫描的文件类型：shell 脚本与 python 脚本。
+LINE_ENDING_EXTENSIONS = (".sh", ".bash", ".py")
+# CRCRLF 模式：\r\r\n
+CRCRLF_PATTERN = b"\r\r\n"
+# 单 CRLF 属于正常行尾（仓库使用 core.autocrlf），不视为问题。
+CRLF_PATTERN = b"\r\n"
+
 # 某个套件目录的用例脚本名索引缓存，避免对每个用例重复遍历目录
 STEM_CACHE = {}
 
@@ -334,6 +344,66 @@ def check_suite_name_uniqueness():
     return errors
 
 
+def check_crcrlf_line_endings(targets):
+    """检查文件是否包含 CRCRLF（\\r\\r\\n）双 CR 行尾（检查点 2）。
+
+    2026-10-21 仓库内 344 个 .sh 文件以 \\r\\r\\n 行尾入库，git 将其识别为二进制
+    （i/-text），在测试平台上 bash 解析失败导致大量用例失败。此检查确保
+    之后不会再混入此类文件。
+
+    Args:
+        targets ([list]): 绝对路径列表（.sh/.bash/.py）
+
+    Returns:
+        [list]: (rel_path, error_message, line_no) 元组列表
+    """
+    results = []
+    for one_target in targets:
+        if os.path.splitext(one_target)[1].lower() not in LINE_ENDING_EXTENSIONS:
+            continue
+        if not os.path.isfile(one_target):
+            continue
+        try:
+            with open(one_target, "rb") as handle:
+                data = handle.read()
+        except OSError:
+            continue
+        crcrlf_count = data.count(CRCRLF_PATTERN)
+        if crcrlf_count == 0:
+            continue
+        rel_path = os.path.relpath(one_target, REPO_ROOT).replace(os.sep, "/")
+        # 统计哪些行是双 CR 行尾（用于行号标注）
+        bad_lines = []
+        line_no = 0
+        pos = 0
+        while pos < len(data):
+            line_no += 1
+            nl = data.find(b"\n", pos)
+            if nl == -1:
+                nl = len(data)
+            if data[pos:nl].endswith(b"\r\r"):
+                bad_lines.append(line_no)
+            pos = nl + 1
+        first_bad = bad_lines[0] if bad_lines else 1
+        line_desc = ""
+        if bad_lines:
+            shown = bad_lines[:5]
+            line_desc = " (lines: %s%s)" % (
+                ", ".join(str(x) for x in shown),
+                "..." if len(bad_lines) > 5 else "",
+            )
+        results.append(
+            (
+                rel_path,
+                "file contains CRCRLF (double-CR) line endings: %d occurrence(s)%s; "
+                "normalize to LF (or single CRLF) before committing"
+                % (crcrlf_count, line_desc),
+                first_bad,
+            )
+        )
+    return results
+
+
 def resolve_input_files(raw_files):
     """把 --files 入参规范化为绝对路径，并只保留 suite2cases 子树下的 json 文件。"""
     suite_dir = os.path.realpath(os.path.join(REPO_ROOT, SUITE_DIR_NAME))
@@ -345,6 +415,66 @@ def resolve_input_files(raw_files):
         if os.path.commonpath([abs_path, suite_dir]) != suite_dir:
             continue
         resolved.append(abs_path)
+    return sorted(set(resolved))
+
+
+def resolve_script_files(raw_files):
+    """把 --files 入参规范化为绝对路径，并只保留脚本文件（.sh/.bash/.py）。"""
+    resolved = []
+    for one_file in raw_files:
+        abs_path = os.path.realpath(os.path.abspath(one_file))
+        if os.path.splitext(abs_path)[1].lower() not in LINE_ENDING_EXTENSIONS:
+            continue
+        resolved.append(abs_path)
+    return sorted(set(resolved))
+
+
+def list_all_scripts():
+    """列出仓库内所有脚本文件（.sh/.bash/.py），用于全量 CRCRLF 检查。"""
+    names = []
+    for root_dir, _, files in os.walk(REPO_ROOT):
+        if ".git" in root_dir:
+            continue
+        for one in files:
+            if os.path.splitext(one)[1].lower() in LINE_ENDING_EXTENSIONS:
+                names.append(os.path.join(root_dir, one))
+    return sorted(names)
+
+
+def list_changed_scripts(changed_from, changed_to):
+    """用 git diff 列出变动文件，并只保留脚本文件（.sh/.bash/.py）。"""
+    cmd = [
+        "git",
+        "-C",
+        REPO_ROOT,
+        "diff",
+        "--name-only",
+        "--diff-filter=ACMR",
+        changed_from,
+    ]
+    if changed_to:
+        cmd.append(changed_to)
+
+    try:
+        completed = subprocess.run(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False
+        )
+    except OSError as exc:
+        sys.stderr.write("ERROR: cannot run git: %s\n" % exc)
+        sys.exit(2)
+
+    if completed.returncode != 0:
+        sys.stderr.write("ERROR: git diff failed for '%s':\n%s\n"
+                         % (changed_from, completed.stderr.decode("utf-8", "replace")))
+        sys.exit(2)
+
+    changed = completed.stdout.decode("utf-8", "replace").splitlines()
+    resolved = []
+    for one_file in changed:
+        one_file = one_file.strip()
+        if os.path.splitext(one_file)[1].lower() not in LINE_ENDING_EXTENSIONS:
+            continue
+        resolved.append(os.path.join(REPO_ROOT, one_file.replace("/", os.sep)))
     return sorted(set(resolved))
 
 
@@ -441,6 +571,9 @@ def main(argv=None):
     else:
         annotations_enabled = args.annotations
 
+    # 检查点 2 的脚本目标：--files 模式下同时检查传入的脚本文件；
+    # --all 模式检查全仓脚本；--changed-from 模式检查变动的脚本。
+    script_targets = []
     if args.all:
         targets = list_all_suites()
         scope_desc = "all suite2cases json"
@@ -448,16 +581,22 @@ def main(argv=None):
         uniqueness_errors = check_suite_name_uniqueness()
         # 检查点 1：suite2cases 根目录不允许直接放置 json
         root_placement_errors = check_root_json_placement()
+        # 检查点 2：全量扫描仓库内脚本文件
+        script_targets = list_all_scripts()
     elif args.files:
         targets = resolve_input_files(args.files)
         scope_desc = "given files"
         uniqueness_errors = []
         root_placement_errors = []
+        # 检查点 2：--files 中传入的脚本文件（与 json 无关，独立校验）
+        script_targets = resolve_script_files(args.files)
     else:
         targets = list_changed_suites(args.changed_from, args.changed_to)
         scope_desc = "changed files since %s" % args.changed_from
         uniqueness_errors = []
         root_placement_errors = []
+        # 检查点 2：git diff 中变动的脚本文件
+        script_targets = list_changed_scripts(args.changed_from, args.changed_to)
 
     # 检查点 1：files / changed 模式下，命中 suite2cases 根目录的 json 直接报错，
     # 不进入后续逐套件校验（testsuite.json 永久豁免）。
@@ -474,7 +613,15 @@ def main(argv=None):
                 filtered_targets.append(one_target)
         targets = filtered_targets
 
-    if not targets and not uniqueness_errors and not root_placement_errors:
+    # 检查点 2：CRCRLF 双 CR 行尾检测
+    crcrlf_errors = check_crcrlf_line_endings(script_targets)
+
+    if (
+        not targets
+        and not uniqueness_errors
+        and not root_placement_errors
+        and not crcrlf_errors
+    ):
         print("No suite2cases json to check (%s), skip." % scope_desc)
         return 0
 
@@ -503,10 +650,27 @@ def main(argv=None):
     for one_error in root_placement_errors:
         print("ERROR %s" % one_error)
 
+    for rel_path, one_error, bad_line in crcrlf_errors:
+        print("ERROR %s" % one_error)
+        all_annotations.append(
+            (
+                rel_path,
+                bad_line,
+                0,
+                "CRCRLF line endings",
+                "double-CR line endings break bash parsing; normalize to LF",
+            )
+        )
+
     if annotations_enabled and all_annotations:
         emit_annotations(all_annotations)
 
-    total_errors = len(all_errors) + len(uniqueness_errors) + len(root_placement_errors)
+    total_errors = (
+        len(all_errors)
+        + len(uniqueness_errors)
+        + len(root_placement_errors)
+        + len(crcrlf_errors)
+    )
     print(
         "checked %d suite(s), %d case(s); skipped %d suite(s); %d error(s)"
         % (checked_suites, total_cases, skipped_suites, total_errors)
