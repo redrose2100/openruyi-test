@@ -33,6 +33,7 @@ else
 fi
 
 TIMEOUT="30m"
+IDLE_TIMEOUT="120"
 COMMAND_X="no"
 COMMAND_S="no"
 COPY_DONE="no"
@@ -157,7 +158,7 @@ function exec_case() {
     exec 7>&2
     exec >>"$log_path"/"$(date +%Y-%m-%d_%H-%M-%S)".log 2>&1
 
-    SLEEP_WAIT $TIMEOUT "$cmd"
+    SLEEP_WAIT $TIMEOUT "$cmd" 1 $IDLE_TIMEOUT
     ret_code=$?
 
     exec 1>&6 6>&-

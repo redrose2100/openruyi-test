@@ -22,6 +22,9 @@ import mugen_log
 MUGEN_PID_FILE = "/tmp/mugen_timeout_pid"
 MUGEN_REMOTE_CASE_FILE = "/tmp/mugen_remote_case_name"
 
+# idle 探测默认阈值（秒）：超过该时长无任何输出，打印当前进程树便于定位卡住的命令
+DEFAULT_IDLE_TIMEOUT = 120
+
 
 def _kill_remote_processes():
     """超时后通过SSH向目标机发kill，清理远端残留的测试进程"""
@@ -52,13 +55,92 @@ def _kill_remote_processes():
     os.remove(case_file)
 
 
-def sleep_wait(wait_time, cmd=None, mode=1):
+def _print_process_tree(p):
+    """idle 超时时打印子进程（含子孙）的进程树，便于定位卡住的命令（如 dnf/expect）"""
+    try:
+        pgid = os.getpgid(p.pid)
+    except Exception:
+        return
+    mugen_log.logging(
+        "warn",
+        "No output for a long time, current process tree (pgid=%s):" % pgid,
+    )
+    try:
+        out = subprocess.run(
+            ["ps", "-g", str(pgid), "-o", "pid,ppid,etime,args", "--forest"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=10,
+        ).stdout
+        sys.stdout.write(out)
+        sys.stdout.flush()
+    except Exception:
+        mugen_log.logging("warn", "unable to dump process tree")
+
+
+def _run_with_idle_probe(cmd, wait_time, idle_timeout):
+    """mode=1 核心：PIPE + select 轮询转发输出，idle 超时打印进程树诊断（不杀进程）
+
+    硬超时（wait_time 到）仍按原逻辑杀进程组并返回 143。
+    """
+    pid_file = MUGEN_PID_FILE
+    p = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+        shell=True,
+        start_new_session=True,
+    )
+    with open(pid_file, "w") as f:
+        f.write(str(p.pid))
+    try:
+        last_output = time.time()
+        start = time.time()
+        while True:
+            remaining = wait_time - (time.time() - start)
+            if remaining <= 0:
+                raise subprocess.TimeoutExpired(cmd, wait_time)
+            # 非阻塞读一行；无输出则 sleep 1s 后继续，兼顾 idle 判定与硬超时精度
+            line = p.stdout.readline()
+            if line:
+                sys.stdout.write(line)
+                sys.stdout.flush()
+                last_output = time.time()
+                continue
+            if p.poll() is not None:
+                break
+            if time.time() - last_output >= idle_timeout:
+                _print_process_tree(p)
+                last_output = time.time()  # 重置，继续等硬超时，不杀进程
+            else:
+                time.sleep(1)
+        exitcode = p.returncode
+        if os.path.exists(pid_file):
+            os.remove(pid_file)
+        return exitcode
+    except subprocess.TimeoutExpired as e:
+        mugen_log.logging("error", "Timeout : " + str(e))
+        try:
+            os.killpg(os.getpgid(p.pid), signal.SIGKILL)
+        except Exception:
+            p.kill()
+        if os.path.exists(pid_file):
+            os.remove(pid_file)
+        _kill_remote_processes()
+        return 143
+
+
+def sleep_wait(wait_time, cmd=None, mode=1, idle_timeout=DEFAULT_IDLE_TIMEOUT):
     """等待命令执行时长
 
     Args:
         wait_time ([str]): 待定时间
         cmd ([str], optional): 执行的命令. Defaults to None.
         mode (int, optional): 命令执行等待模式. Defaults to 1.
+        idle_timeout (int, optional): idle 探测阈值（秒）. Defaults to 120.
     """
     if list(wait_time)[-1] == "m":
         wait_time = int(wait_time.replace("m", "")) * 60
@@ -74,49 +156,7 @@ def sleep_wait(wait_time, cmd=None, mode=1):
         time.sleep(wait_time)
         sys.exit(0)
     if cmd and mode == 1:
-        pid_file = MUGEN_PID_FILE
-        try:
-            p = subprocess.Popen(
-                cmd,
-                stderr=sys.stderr,
-                close_fds=True,
-                stdout=sys.stdout,
-                text=True,
-                shell=True,
-                start_new_session=True,
-            )
-            with open(pid_file, "w") as f:
-                f.write(str(p.pid))
-            p.communicate(timeout=wait_time)
-            exitcode = p.returncode
-            if os.path.exists(pid_file):
-                os.remove(pid_file)
-        except subprocess.CalledProcessError as e:
-            mugen_log.logging("error", "CallError ：" + e.output.decode("utf-8"))
-            exitcode = e.returncode
-            if os.path.exists(pid_file):
-                os.remove(pid_file)
-        except subprocess.TimeoutExpired as e:
-            mugen_log.logging("error", "Timeout : " + str(e))
-            try:
-                os.killpg(os.getpgid(p.pid), signal.SIGKILL)
-            except Exception:
-                p.kill()
-            if os.path.exists(pid_file):
-                os.remove(pid_file)
-            _kill_remote_processes()
-            exitcode = 143
-        except KeyboardInterrupt as e:
-            mugen_log.logging("error", "KeyboardInterrupt : 使用ctrl c结束了进程.")
-            if os.path.exists(pid_file):
-                os.remove(pid_file)
-            exitcode = 1
-        except Exception as e:
-            mugen_log.logging("error", "Unknown Error : " + str(e))
-            if os.path.exists(pid_file):
-                os.remove(pid_file)
-            exitcode = 1
-
+        exitcode = _run_with_idle_probe(cmd, wait_time, idle_timeout)
         sys.exit(exitcode)
 
     if cmd and mode == 2:
@@ -138,6 +178,7 @@ if __name__ == "__main__":
     parser.add_argument("--time", type=str)
     parser.add_argument("--cmd", type=str)
     parser.add_argument("--mode", type=int, choices=[1, 2], default=1)
+    parser.add_argument("--idle-timeout", type=int, default=DEFAULT_IDLE_TIMEOUT)
     args = parser.parse_args()
 
-    sleep_wait(args.time, args.cmd, args.mode)
+    sleep_wait(args.time, args.cmd, args.mode, args.idle_timeout)

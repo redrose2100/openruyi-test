@@ -165,7 +165,8 @@ function SLEEP_WAIT() {
     wait_time=$1
     cmd=$2
     mode=${3-1}
-    python3 "${OET_PATH}"/libs/locallibs/sleep_wait.py --time "$wait_time" --cmd "$cmd" --mode "$mode"
+    idle_timeout=${4-120}
+    python3 "${OET_PATH}"/libs/locallibs/sleep_wait.py --time "$wait_time" --cmd "$cmd" --mode "$mode" --idle-timeout "$idle_timeout"
 }
 
 function CHECK_ENV() {

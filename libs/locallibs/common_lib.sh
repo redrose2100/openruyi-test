@@ -132,7 +132,19 @@ function main() {
     trap "handle_signal PKGCONFLICT" SIGRTMIN+1 || exit 247
 
     if ! rpm -qa | grep expect >/dev/null 2>&1; then
-        dnf -y install expect
+        # 带超时与重试的 expect 安装：dnf 挂起时不拖死整个用例会话，
+        # 失败仅告警（非致命），保持既有"静默继续"语义。
+        _install_expect=0
+        for _try in 1 2 3; do
+            if timeout 120 dnf -y install expect; then
+                _install_expect=1
+                break
+            fi
+            pkill -9 dnf 2>/dev/null
+            rm -f /var/cache/dnf/*.pid 2>/dev/null
+            sleep 5
+        done
+        test $_install_expect -eq 0 && LOG_WARN "expect install failed, continue anyway"
     fi
 
     if [ -n "$(type -t config_params)" ]; then

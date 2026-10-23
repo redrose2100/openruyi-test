@@ -26,6 +26,9 @@ SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
 import mugen_log
 
+# 远端命令执行超时（秒）：dnf 等命令挂起时避免无限等待拖死整个用例会话
+REMOTE_CMD_TIMEOUT = 600
+
 
 def pssh_conn(
     ip,
@@ -92,7 +95,7 @@ def pssh_cmd(conn, cmd):
         return 519, ""
     full_cmd = "export PATH=$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/root/bin; " + cmd
     try:
-        stdin, stdout, stderr = conn.exec_command(full_cmd, timeout=None)
+        stdin, stdout, stderr = conn.exec_command(full_cmd, timeout=REMOTE_CMD_TIMEOUT)
         exitcode = stdout.channel.recv_exit_status()
         out = stdout.read().decode("utf-8", errors="ignore")
         err = stderr.read().decode("utf-8", errors="ignore")
@@ -101,6 +104,20 @@ def pssh_cmd(conn, cmd):
         else:
             output = (err + out).strip("\n")
         return exitcode, output
+    except paramiko.ssh_exception.SSHException:
+        # 超时（exec_command 超时会抛 SSHException）：清理远端 dnf 锁/残留进程后快速失败，
+        # 不再进入 360x10s 重连循环，避免挂起的 dnf 拖死整个用例会话。
+        mugen_log.logging("error", "remote cmd timeout(>%ss): %s" % (REMOTE_CMD_TIMEOUT, cmd))
+        try:
+            stdin, stdout, stderr = conn.exec_command(
+                "pkill -9 dnf 2>/dev/null; rm -f /var/cache/dnf/*.pid 2>/dev/null; "
+                "pkill -9 -f mugen_re.log 2>/dev/null; echo done",
+                timeout=30,
+            )
+            stdout.channel.recv_exit_status()
+        except Exception:
+            pass
+        return 143, "remote command timeout"
     except Exception:
         pass
 

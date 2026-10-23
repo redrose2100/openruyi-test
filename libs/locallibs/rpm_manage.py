@@ -29,9 +29,12 @@ sys.path.append(SCRIPT_PATH)
 import mugen_log
 import ssh_cmd
 
+# 本地 dnf 命令超时（秒）：dnf 挂起时避免无限等待拖死整个用例会话
+DNF_TIMEOUT = 600
+
 
 def local_cmd(cmd, conn=None):
-    """本地命令执行
+    """本地命令执行，带超时保护
 
     Args:
         cmd ([str]): 需要执行的命令
@@ -40,8 +43,30 @@ def local_cmd(cmd, conn=None):
     Returns:
         [list]: 命令执行后的返回码，命令执行结果
     """
-    exitcode, output = subprocess.getstatusoutput(cmd)
-    return exitcode, output
+    try:
+        p = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            shell=True,
+            start_new_session=True,
+        )
+        out, _ = p.communicate(timeout=DNF_TIMEOUT)
+        return p.returncode, out
+    except subprocess.TimeoutExpired:
+        # 杀整个进程组（含 dnf 子进程），清 dnf 锁避免"另一个 dnf 实例运行中"假失败
+        try:
+            os.killpg(os.getpgid(p.pid), signal.SIGKILL)
+        except Exception:
+            p.kill()
+        subprocess.run(
+            "pkill -9 dnf; rm -f /var/cache/dnf/*.pid",
+            shell=True,
+            stderr=subprocess.DEVNULL,
+        )
+        mugen_log.logging("error", "local cmd timeout(>%ss): %s" % (DNF_TIMEOUT, cmd))
+        return 143, "local cmd timeout"
 
 
 def quit_parent_process(signal_name):
