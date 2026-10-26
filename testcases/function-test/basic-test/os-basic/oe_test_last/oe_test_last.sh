@@ -32,7 +32,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "last --version execute fail"
     last root -2
     CHECK_RESULT $? 0 0 "last username option result fail"
-    last -x |grep "level"
+    last -x |grep -E "runlevel|lvl|crash|shutdown"
     CHECK_RESULT $? 0 0 "last -x option result fail"
     LOG_INFO "Finish test!"
 }

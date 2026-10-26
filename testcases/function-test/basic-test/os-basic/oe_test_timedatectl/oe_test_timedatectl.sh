@@ -37,9 +37,10 @@ function run_test() {
     CHECK_RESULT $?
     timedatectl set-ntp no
     SLEEP_WAIT 5
-    timedatectl set-time '2019-08-14'
+    new_time=$(date -d "+1 day" "+%Y-%m-%d")
+    timedatectl set-time "$new_time"
     CHECK_RESULT $?
-    date +%Y-%m-%d | grep "2019-08-14"
+    date +%Y-%m-%d | grep "$new_time"
     CHECK_RESULT $?
     timedatectl set-time 15:00:00
     CHECK_RESULT $?
@@ -47,8 +48,8 @@ function run_test() {
     CHECK_RESULT $?
     ret=$(timedatectl list-timezones | grep -c Asia)
     CHECK_RESULT "$ret" 0 1
-    timedatectl set-timezone Asia/Beijing
-    timedatectl | grep "Asia\/Beijing"
+    timedatectl set-timezone Asia/Shanghai
+    timedatectl | grep "Asia\/Shanghai"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
