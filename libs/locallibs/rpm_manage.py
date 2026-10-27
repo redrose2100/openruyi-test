@@ -119,10 +119,13 @@ def rpm_install(pkgs, node=1, tmpfile=""):
 
     repoCode, repoList = func(
         conn=conn,
-        cmd="dnf repolist | awk '{print $NF}' | sed -e '1d;:a;N;$!ba;s/\\n/ /g'",
+        cmd="dnf repolist | awk 'NR>1 {print $1}'",
     )
     if repoCode != 0:
         return repoCode, repoList
+    # 清理换行/多余空白：原 sed 拼接在末尾残留 \n，注入 $(echo ...) 时破坏引号配对，导致 shell 语法错误
+    repoList = " ".join(repoList.split())
+
     upCode, upList = func(
         conn=conn,
         cmd="dnf --assumeno install "
@@ -131,25 +134,22 @@ def rpm_install(pkgs, node=1, tmpfile=""):
     )
     if upCode != 0:
         return upCode, upList
+    # 同上：xargs 输出末尾带换行，统一清理
+    upList = " ".join(upList.split())
+
+    # 在 Python 侧直接构造正则交替串，不再经过 $(echo ... | sed) 二次 shell 展开（避免换行/引号注入）
+    repo_alt = "|".join(repoList.split())
+    up_alt = "|".join(upList.split())
+
     if len(upList) == 0:
         depCode, depList = func(
             conn=conn,
-            cmd="dnf --assumeno install "
-            + pkgs
-            + ' 2>&1 | grep -wE "$(echo '
-            + repoList
-            + " | sed 's/ /|/g')\" | grep -wE \"$(uname -m)|noarch\"| awk '{print $1}'",
+            cmd='dnf --assumeno install ' + pkgs + ' 2>&1 | grep -wE "' + repo_alt + '" | grep -wE "$(uname -m)|noarch" | awk \'{print $1}\'',
         )
     else:
         depCode, depList = func(
             conn=conn,
-            cmd="dnf --assumeno install "
-            + pkgs
-            + ' 2>&1 | grep -wE "$(echo '
-            + repoList
-            + " | sed 's/ /|/g')\" | grep -wE \"$(uname -m)|noarch\"| grep -vE \"$(echo "
-            + upList
-            + " | sed 's/ /|/g')\" | awk '{print $1}'",
+            cmd='dnf --assumeno install ' + pkgs + ' 2>&1 | grep -wE "' + repo_alt + '" | grep -wE "$(uname -m)|noarch" | grep -vE "' + up_alt + '" | awk \'{print $1}\'',
         )
     if depCode != 0:
         return depCode, depList
@@ -233,7 +233,9 @@ if __name__ == "__main__":
             # === 新增逻辑2：处理软件包安装冲突
             elif output == "package installation conflict":
                 quit_parent_process(signal.SIGRTMIN+1)
-        if output is not None:
+        # 仅成功时向 stdout 输出临时文件路径；失败信息走 stderr（mugen_log），
+        # 避免 DNF_INSTALL 把错误文本当 tmpfile 捕获、后续 DNF_REMOVE 用它 open() 崩溃
+        if exitcode == 0 and output is not None:
             print(output)
         sys.exit(exitcode)
     elif sys.argv[1] == "remove":
