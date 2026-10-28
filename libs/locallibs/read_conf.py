@@ -45,6 +45,14 @@ NODE_ITEM = [
     "BMC_PASSWORD",
 ]
 
+# 可选字段：旧版 env.json 里可能没有。
+# 缺失或为空时**不导出**（而不是导出空值），否则 shell 侧
+# ${NODE<n>_SUDO_MODE-default} 这类取值会拿到空串失效。
+NODE_ITEM_OPTIONAL = [
+    "SUDO_MODE",
+    "SUDO_TTY",
+]
+
 
 def parse_json():
     """解析环境变量配置文件
@@ -97,6 +105,19 @@ def read_configure():
                 + item
                 + "="
                 + str(node[item])
+                + "\n"
+            )
+        for item in NODE_ITEM_OPTIONAL:
+            value = node.get(item, "")
+            if str(value) == "":
+                continue
+            env_var += (
+                "export NODE"
+                + str(node["ID"])
+                + "_"
+                + item
+                + "="
+                + str(value)
                 + "\n"
             )
         if "COPY_ALL" in node.keys():

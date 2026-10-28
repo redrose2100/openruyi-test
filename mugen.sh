@@ -42,6 +42,32 @@ SUCCESS_NUM=0
 FAIL_NUM=0
 SKIP_NUM=0
 
+# 远端部署根目录。root 登录沿用历史路径 /mugen_re；
+# 非 root 登录无写根权限，改用该用户 $HOME/mugen_re。
+REMOTE_BASE="/mugen_re"
+
+function resolve_remote_base() {
+    local remote_user remote_home
+
+    eval "remote_user=\${NODE1_USER-root}"
+    if [ "${remote_user}"x = "root"x ]; then
+        REMOTE_BASE="/mugen_re"
+    else
+        remote_home=$(python3 "${OET_PATH}"/libs/locallibs/ssh_cmd.py \
+            --node 1 --print-home 2>/dev/null | tr -d '\r\n')
+        # 解析失败或落到 / 时退回根目录写法，保持与 root 场景一致
+        if [ -z "${remote_home}" ] || [ "${remote_home}"x = "/"x ]; then
+            LOG_WARN "Failed to resolve remote HOME for user ${remote_user}, fallback to /mugen_re."
+            REMOTE_BASE="/mugen_re"
+        else
+            REMOTE_BASE="${remote_home%/}/mugen_re"
+        fi
+    fi
+
+    export REMOTE_BASE
+    LOG_INFO "Remote deploy base: ${REMOTE_BASE} (user: ${remote_user})"
+}
+
 function usage() {
     printf "Usage:  \n
     -c: configuration environment of test framework\n
@@ -120,7 +146,8 @@ function load_conf() {
 
     if [[ $COMMAND_S == "yes" ]]; then
         env_path="$(echo -e "$conf_file" | sed -e 's/mugen.json//')"
-        SFTP put --node 1 --remotedir /mugen_re/conf/ --localdir "$env_path" --localfile "mugen.env"
+        resolve_remote_base
+        SFTP put --node 1 --remotedir "${REMOTE_BASE}/conf/" --localdir "$env_path" --localfile "mugen.env"
     fi
 }
 
@@ -234,7 +261,7 @@ function run_test_case() {
     fi
 
     if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" ]]; then
-        remote_dir_clean=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        remote_dir_clean=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#${REMOTE_BASE}#")
         P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir_clean /tmp/mugen_oe_test_*"
 
         common_files=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key common-files)
@@ -243,7 +270,7 @@ function run_test_case() {
         for one_file in $common_files; do
             local_dir=${one_file%/*}
             local_file=${one_file##*/}
-            remote_dir=$(echo -e "${local_dir}" | sed -e "s#${OET_PATH}#/mugen_re#")
+            remote_dir=$(echo -e "${local_dir}" | sed -e "s#${OET_PATH}#${REMOTE_BASE}#")
             SFTP put --node 1 --remotedir "$remote_dir" --remotefile "$local_file" --localdir "$local_dir" --localfile "$local_file"
             if [ $? -ne 0 ]; then
                 LOG_ERROR "Copy $test_suite suite2cases to remote fail."
@@ -251,7 +278,7 @@ function run_test_case() {
             fi
         done
 
-        remote_dir=$(echo -e "${case_path%/*}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        remote_dir=$(echo -e "${case_path%/*}" | sed -e "s#${OET_PATH}#${REMOTE_BASE}#")
         SFTP put --node 1 --remotedir "$remote_dir" --localdir "${case_path[*]}"
         test $? -ne 0 && return 1
     fi
@@ -276,11 +303,11 @@ function run_test_case() {
     fi
 
     if [[ $COMMAND_S == "yes" ]]; then
-        remote_case_path=$(echo -e "${case_path[*]}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        remote_case_path=$(echo -e "${case_path[*]}" | sed -e "s#${OET_PATH}#${REMOTE_BASE}#")
         echo "$test_case" > /tmp/mugen_remote_case_name
         export MUGEN_SSH_NODE=1
-        remote_cmd="bash -c 'trap \"\" SIGHUP; . /mugen_re/conf/mugen.env &&
-                 export OET_PATH=/mugen_re &&
+        remote_cmd="bash -c 'trap \"\" SIGHUP; . ${REMOTE_BASE}/conf/mugen.env &&
+                 export OET_PATH=${REMOTE_BASE} &&
                  pushd \"$remote_case_path\" >/dev/null || exit 1 &&
                  $run_cmd > /tmp/mugen_re.log 2>&1; __mugen_ret=\$?;
                  echo \"__MUGEN_RET__=\$__mugen_ret\" >> /tmp/mugen_re.log;
@@ -295,7 +322,7 @@ function run_test_case() {
     popd >/dev/null || return 1
 
     if [[ $COMMAND_S == "yes" && $COPY_DONE == "no" ]]; then
-        remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#${REMOTE_BASE}#")
         P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir /tmp/mugen_oe_test_*"
     fi
 
@@ -314,7 +341,7 @@ function run_test_suite() {
         suite_path=$(python3 "${OET_PATH}"/libs/locallibs/suite_case.py --suite "$test_suite" --key path)
         test $? -ne 0 && return 1
 
-        remote_dir=$(echo -e "${suite_path%/*}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        remote_dir=$(echo -e "${suite_path%/*}" | sed -e "s#${OET_PATH}#${REMOTE_BASE}#")
         SFTP put --node 1 --remotedir "$remote_dir" --localdir "$suite_path"
         if [ $? -ne 0 ]; then
             LOG_ERROR "Copy $test_suite testcases to remote fail."
@@ -329,7 +356,7 @@ function run_test_suite() {
     done
 
     if $this_copy; then
-        remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#/mugen_re#")
+        remote_dir=$(echo -e "${suite_path}" | sed -e "s#${OET_PATH}#${REMOTE_BASE}#")
         P_SSH_CMD --node 1 --cmd "rm -rf $remote_dir"
     fi
 }
@@ -353,7 +380,7 @@ function run_all_cases() {
     done
 
     if $this_copy; then
-        P_SSH_CMD --node 1 --cmd "rm -rf /mugen_re/testcases"
+        P_SSH_CMD --node 1 --cmd "rm -rf ${REMOTE_BASE}/testcases"
     fi
 }
 
@@ -440,9 +467,9 @@ function copy_libs_to_node1() {
     if [[ $COMMAND_S == "no" ]]; then
         return
     fi
-    P_SSH_CMD --node 1 --cmd "ls -l /mugen_re/" | grep -q "libs"
+    P_SSH_CMD --node 1 --cmd "ls -l ${REMOTE_BASE}/" | grep -q "libs"
     if [ $? -ne 0 ]; then
-        SFTP put --node 1 --remotedir /mugen_re/ --localdir "${OET_PATH}"/libs/
+        SFTP put --node 1 --remotedir "${REMOTE_BASE}/" --localdir "${OET_PATH}"/libs/
     fi
 }
 
