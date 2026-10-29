@@ -22,6 +22,10 @@ function pilotgo_prepare_base_server() {
     LOG_INFO "Prepare pilotgo base services."
 
     DNF_INSTALL "mysql-server redis6 PilotGo-server firewalld"
+    # firewalld/selinux are only changed for the duration of this run;
+    # post_test restores the state recorded here.
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
     systemctl stop firewalld
 
     systemctl restart mysqld
@@ -51,4 +55,12 @@ function pilotgo_cleanup_base_server() {
     cp /opt/PilotGo/server/config_server.yaml.bak /opt/PilotGo/server/config_server.yaml
     rm -rf /tmp/pilotgo-data
     rm -f /opt/PilotGo/server/config_server.yaml.bak
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
 }

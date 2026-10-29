@@ -28,6 +28,9 @@ function pre_test() {
     DNF_INSTALL "curl xz socat expect libvirt qemu-img"
     systemctl start libvirtd
     SLEEP_WAIT 3
+    # firewalld is only stopped for the duration of this run;
+    # post_test restores the state recorded here.
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
     systemctl stop firewalld
     LOG_INFO "End of environmental preparation!"
 }
@@ -44,6 +47,9 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     cleanup "${enc_volume}" "${volume}"
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }

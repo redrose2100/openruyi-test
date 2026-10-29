@@ -20,8 +20,11 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function galera_pre() {
+    # firewalld/selinux are only changed for the duration of this run;
+    # galera_post restores the state recorded here.
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
     systemctl stop firewalld
-    systemctl disable firewalld
     setenforce 0
     DNF_INSTALL "galera openssl"
     mkdir galera_zl
@@ -75,4 +78,15 @@ EOF
     echo "name = node_name
     address = gcomm://0.0.0.0
     group = grabd_name" >> galera_zl/galera_cfg
+}
+
+function galera_post() {
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
 }

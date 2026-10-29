@@ -41,6 +41,10 @@ function pre_test() {
     temp_ip2=$(RANDOM_IP)
     P_SSH_CMD --node 2 --cmd "ip addr add ${temp_ip2}/24 dev ${eth_use2}"
     DNF_INSTALL "net-tools mariadb-server"
+    # firewalld/selinux are only changed for the duration of this run;
+    # post_test restores the state recorded here.
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
     rm -rf /var/lib/mysql/*
     systemctl start mariadb.service
     systemctl status mariadb.service | grep running || exit 1
@@ -81,7 +85,7 @@ function run_test() {
     CHECK_RESULT $?
     systemctl stop firewalld
     SSH_CMD "dnf -y install mariadb-server expect" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    SSH_CMD "systemctl start mariadb;systemctl stop firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "systemctl is-active firewalld 2>/dev/null > /tmp/mariadb_fw_state.node2;systemctl start mariadb;systemctl stop firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     cp ../common/mariadb_remote .
     SSH_SCP ./mariadb_remote "${NODE2_USER}"@"${NODE2_IPV4}":/opt/ "${NODE2_PASSWORD}"
     P_SSH_CMD --node 2 --cmd "NODE1_IPV4='${temp_ip1}' NODE1_PASSWORD='${NODE1_PASSWORD}' expect /opt/mariadb_remote;grep 'Query OK' /opt/testlog"
@@ -98,7 +102,15 @@ function post_test() {
         iptables-legacy -D INPUT -p tcp --dport 3306 -j ACCEPT
     fi 
     ip addr del "${temp_ip1}"/24 dev "${eth_use1}"
-    SSH_CMD "yum remove mariadb-server expect -y;rm -rf /opt/mariadb_remote /opt/testlog;ip addr del ${temp_ip2}/24 dev ${eth_use2};" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "yum remove mariadb-server expect -y;rm -rf /opt/mariadb_remote /opt/testlog;ip addr del ${temp_ip2}/24 dev ${eth_use2};if [ \"\$(cat /tmp/mariadb_fw_state.node2 2>/dev/null)\" = \"active\" ]; then systemctl start firewalld 2>/dev/null || true; fi;rm -f /tmp/mariadb_fw_state.node2" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
