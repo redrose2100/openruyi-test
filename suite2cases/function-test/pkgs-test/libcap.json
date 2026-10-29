@@ -26,7 +26,8 @@
             "name": "oe_test_acl_bind_port"
         },
         {
-            "name": "oe_test_acl_manage_net"
+            "name": "oe_test_acl_manage_net",
+            "add network interface": 1
         }
     ]
 }

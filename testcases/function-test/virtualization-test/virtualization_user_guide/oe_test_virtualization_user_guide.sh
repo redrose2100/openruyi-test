@@ -25,15 +25,16 @@ function pre_test() {
     export LANG=en_US.UTF-8
     EXECUTE_T="60m"
     source /etc/openEuler-latest
-    Network_card_num=$(ip a | grep -c "state UP")
-    if [ "$Network_card_num" -ge 2 ]; then
-        Network_card_name=$(ip a | grep "state UP" | awk -F":" '{print $2}' | tail -n 1 | tr -d ' ')
-    else
-        exit
+    # 选择业务网卡，TEST_NIC 会自动排除管理网卡 NODE1_NIC
+    Network_card_name=$(TEST_NIC 1 | awk '{print $1}')
+    if [ -z "${Network_card_name}" ]; then
+        LOG_WARN "No spare network interface for virtualization bridge test, skip."
+        exit 255
     fi
     Online_CPU_list=$(lscpu | grep "On-line CPU(s) list" | awk -F":" '{print $2}' | tr -d ' ')
     cp openEulerVM-"${NODE1_FRAME}".xml openEulerVM-"${NODE1_FRAME}".xml.bak
     mv openEulerVM-"${NODE1_FRAME}".xml openEulerVM.xml
+    PREPARE_DONE=1
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -258,6 +259,12 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    # pre_test 未完成环境准备（如无业务网卡直接 skip）时无需恢复
+    if [ "${PREPARE_DONE:-0}" != "1" ]; then
+        LOG_WARN "Test environment was not prepared, skip restore."
+        export LANG=$Default_LANG
+        return 0
+    fi
     ifconfig br0 down
     brctl delbr br0
     su - testuser -c "sed -i '$d' ~/.bashrc"

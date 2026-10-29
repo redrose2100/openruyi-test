@@ -32,7 +32,8 @@
             "name": "oe_test_sysmonitor_memory"
         },
         {
-            "name": "oe_test_sysmonitor_netcard"
+            "name": "oe_test_sysmonitor_netcard",
+            "add network interface": 1
         },
         {
             "name": "oe_test_sysmonitor_process"
