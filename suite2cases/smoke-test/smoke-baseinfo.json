@@ -17,13 +17,15 @@
             "name": "oe_test_selinux"
         },
         {
-            "name": "oe_test_system_level"
+            "name": "oe_test_system_level",
+            "machine num": 2
         },
         {
             "name": "oe_test_systemctl"
         },
         {
-            "name": "oe_test_ssh"
+            "name": "oe_test_ssh",
+            "machine num": 2
         },
         {
             "name": "oe_test_rpm_suffix_name"
