@@ -39,6 +39,13 @@ vm_passwd="openEuler12#$"
 QUOTA_STR=""
 BACKUP_DIR="/tmp/QEMU_tmp"
 MEMLINKD_CONFIG="/etc/memlinkd.conf"
+# pre_init 记录的环境原始状态，由 memlink_post 还原；未准备完成时保持为空
+ORIG_FIREWALLD_ACTIVE=""
+ORIG_NUMA_BALANCING=""
+ORIG_IP_FORWARD=""
+ORIG_SOFTLOCKUP_PANIC=""
+ORIG_SELINUX_MODE=""
+PREPARE_DONE=0
 
 function vm_clean() {
     virsh list --all --name | xargs -I {} virsh destroy {}
@@ -73,9 +80,17 @@ function pre_init() {
     cp -arvf ../config "$test_qemu_dir"
     mkdir -p "$BACKUP_DIR"
     # net pre
-    systemctl disable firewalld
+    # disable 会把开机自启永久关掉，post_test 里也不恢复，等于改坏了 NODE1 的初始状态；
+    # 这里改为只在本次运行期间 stop，并记录原始 active 状态供 post_test 还原。
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_NUMA_BALANCING=$(sysctl -n kernel.numa_balancing 2>/dev/null)
+    ORIG_IP_FORWARD=$(sysctl -n net.ipv4.ip_forward 2>/dev/null)
+    ORIG_SOFTLOCKUP_PANIC=$(sysctl -n kernel.softlockup_panic 2>/dev/null)
+    PREPARE_DONE=1
+    systemctl stop firewalld
     sysctl -w kernel.numa_balancing=0
     echo 1 > /proc/sys/net/ipv4/ip_forward
+    # 下面的 iptables 规则是追加进去的，post_test 用完全相同的参数 -D 删除，不用 iptables -F
     iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -j MASQUERADE
     iptables -A FORWARD -i QEMU_br0 -j ACCEPT
     iptables -A FORWARD -o QEMU_br0 -m state --state RELATED,ESTABLISHED -j ACCEPT
@@ -88,6 +103,7 @@ function pre_init() {
         sysctl kernel.softlockup_panic=0
         sysctl -p
     }
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
     setenforce 0
     # vm clean
     vm_clean
@@ -254,5 +270,29 @@ function memlink_post() {
     vm_clean
     set_huge_mem 0
     set_huge_mem 0 "remote"
-    setenforce 1
+    # 准备阶段没走完时这些 sysctl/iptables 根本没建立，跳过对应恢复，避免删错规则
+    if [ "${PREPARE_DONE:-0}" = "1" ]; then
+        # br0 是本用例自建的网桥，删除是正确清理动作
+        ifconfig br0 down 2>/dev/null
+        brctl delbr br0 2>/dev/null
+        # 按与 pre_init 完全相同的参数逐条删除，代替不可逆的 iptables -F
+        iptables -t nat -D POSTROUTING -s 192.168.100.0/24 -j MASQUERADE 2>/dev/null
+        iptables -D FORWARD -i QEMU_br0 -j ACCEPT 2>/dev/null
+        iptables -D FORWARD -o QEMU_br0 -m state --state RELATED,ESTABLISHED -j ACCEPT 2>/dev/null
+        # 恢复 pre_init 改过的内核参数，避免把 NODE1 留在被改过的配置上
+        [ -n "${ORIG_NUMA_BALANCING}" ] && sysctl -w kernel.numa_balancing="${ORIG_NUMA_BALANCING}" >/dev/null
+        [ -n "${ORIG_IP_FORWARD}" ] && sysctl -w net.ipv4.ip_forward="${ORIG_IP_FORWARD}" >/dev/null
+        [ -n "${ORIG_SOFTLOCKUP_PANIC}" ] && sysctl -w kernel.softlockup_panic="${ORIG_SOFTLOCKUP_PANIC}" >/dev/null
+        if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+            systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+        fi
+    else
+        LOG_WARN "Test environment was not prepared, skip network and sysctl restore."
+    fi
+    # 按原值恢复 selinux，不用无条件 setenforce 1（原环境可能就是 Permissive）
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
 }

@@ -26,6 +26,11 @@ function pre_test() {
     cp /etc/gazelle/lstack.conf /etc/gazelle/lstack.conf.bak
 
     test_nic=$(TEST_NIC 1 | awk '{print $1}')
+    # 取不到可用网卡时直接跳过，避免把空字符串交给 cat / ifconfig / dpdk-devbind
+    if [ -z "$test_nic" ]; then
+        LOG_WARN "No spare network interface outside the management NIC is available, skip this testcase."
+        exit 255
+    fi
     test_nic_mac=$(cat /sys/class/net/"$test_nic"/address)
     test_nic_drv=$(dpdk-devbind -s | grep " if=$test_nic " | awk -F 'drv=' '{print $2}' | awk '{print $1}')
     test_nic_bus=$(dpdk-devbind -s | grep " if=$test_nic " | awk '{print $1}')
@@ -77,11 +82,18 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
 
-    dpdk-devbind -b "$test_nic_drv" "$test_nic_bus"
+    # pre_test 可能在取网卡阶段就 exit 255，此时 test_nic_drv / test_nic_bus 为空，
+    # 直接把它们交给 dpdk-devbind 会报参数错误，故加空值守卫。
+    if [ -n "$test_nic_drv" ] && [ -n "$test_nic_bus" ]; then
+        dpdk-devbind -b "$test_nic_drv" "$test_nic_bus"
+    else
+        LOG_WARN "No NIC was bound to igb_uio, skip driver rebind."
+    fi
     SLEEP_WAIT 10
-    mv /etc/gazelle/lstack.conf.bak /etc/gazelle/lstack.conf
+    # 备份文件可能在 cp 之前就已失败，用 -f 判断后再还原
+    [ -f /etc/gazelle/lstack.conf.bak ] && mv /etc/gazelle/lstack.conf.bak /etc/gazelle/lstack.conf
     umount /mnt/hugepages-lstack
-    rm hello hello.c lstack.conf
+    rm -f hello hello.c lstack.conf
 
     DNF_REMOVE "$@"
 
