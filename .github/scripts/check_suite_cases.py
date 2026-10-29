@@ -74,6 +74,35 @@ CRLF_PATTERN = b"\r\n"
 # 某个套件目录的用例脚本名索引缓存，避免对每个用例重复遍历目录
 STEM_CACHE = {}
 
+# 套件目录 -> 「脚本名（小写去扩展名）-> 脚本绝对路径列表」的索引缓存，
+# 供运行时字段一致性检查读取脚本内容，避免重复遍历目录
+SCRIPT_MAP_CACHE = {}
+
+# 脚本绝对路径 -> 脚本文本的缓存，同一脚本只读一次
+SCRIPT_TEXT_CACHE = {}
+
+# 检查点 3/4：套件外层字段与 cases 内层字段的一致性规则常量。
+# 语义基准来自 libs/locallibs/check_environment.py：
+#   machine num           = case.get('machine num', suite.get('machine num', 1))
+#   machine type          = case.get('machine type', suite.get('machine type', 'kvm'))
+#   add network interface = case.get('add network interface', suite.get('add network interface', 0))
+#   add disk              = len(case.get('add disk', suite.get('add disk', [])))
+DEFAULT_MACHINE_NUM = 1
+DEFAULT_MACHINE_TYPE = "kvm"
+DEFAULT_NETWORK_INTERFACE = 0
+REQUIRED_MACHINE_TYPE = "physical"
+
+# 被检查的四个字段名，与 check_environment.py 读取的键保持一致
+FIELD_MACHINE_NUM = "machine num"
+FIELD_MACHINE_TYPE = "machine type"
+FIELD_NETWORK_INTERFACE = "add network interface"
+FIELD_ADD_DISK = "add disk"
+
+# 检查点 5/6：脚本实际依赖与声明值的一致性（运行时风险）。
+# NODE2_ / NODE3_ ... 表示用例需要多机；TEST_DISK 表示用例需要额外磁盘。
+NODE_HIGHER_RE = re.compile(r"\bNODE([2-9])_")
+TEST_DISK_RE = re.compile(r"\bTEST_DISK\b")
+
 
 class SuiteResult(object):
     """单个套件文件（或一次跳过）的校验结果"""
@@ -118,6 +147,42 @@ def collect_case_stems(dir_path):
     return stems
 
 
+def collect_case_scripts(dir_path):
+    """递归收集目录下所有 .sh 文件，返回「脚本名（小写去扩展名）-> 绝对路径列表」。
+
+    与 collect_case_stems 使用同一套命名约定，额外保留路径以便读取脚本内容。
+    同样按目录缓存，避免重复遍历。
+    """
+    if dir_path in SCRIPT_MAP_CACHE:
+        return SCRIPT_MAP_CACHE[dir_path]
+
+    script_map = {}
+    for root_dir, _, files in os.walk(dir_path):
+        for one_file in files:
+            if os.path.splitext(one_file)[1].lower() != CASE_EXT:
+                continue
+            stem = os.path.splitext(one_file)[0].lower()
+            script_map.setdefault(stem, []).append(os.path.join(root_dir, one_file))
+
+    SCRIPT_MAP_CACHE[dir_path] = script_map
+    return script_map
+
+
+def read_script_text(script_path):
+    """读取脚本内容，失败时返回空串（运行时检查属于尽力而为，不因读失败中断）。"""
+    if script_path in SCRIPT_TEXT_CACHE:
+        return SCRIPT_TEXT_CACHE[script_path]
+
+    try:
+        with open(script_path, "r", encoding="utf-8", errors="replace") as handle:
+            text = handle.read()
+    except OSError:
+        text = ""
+
+    SCRIPT_TEXT_CACHE[script_path] = text
+    return text
+
+
 def build_name_line_map(text):
     """扫描文本，建立「用例名 -> 出现行号列表」，用于生成带行号的注解。
 
@@ -137,6 +202,237 @@ def take_line(name_lines, case_name):
     if not lines:
         return 0
     return lines.pop(0)
+
+
+def peek_line(name_lines, case_name):
+    """查看某个用例名对应的行号但不消费，取不到时返回 0。
+
+    同一个用例既要用于字段一致性注解、又要用于脚本存在性注解，
+    因此在循环开头统一取一次行号，供后续所有检查复用。
+    """
+    lines = name_lines.get(case_name)
+    if not lines:
+        return 0
+    return lines[0]
+
+
+def find_field_line(text, start_line, field_name):
+    """从用例名所在行向后查找某字段真正所在的行号。
+
+    用例块的结束以右花括号或下一个左花括号为界；找不到时回退到用例名所在行。
+    """
+    if start_line <= 0:
+        return 0
+
+    field_pattern = re.compile(r'^\s*"%s"\s*:' % re.escape(field_name))
+    lines = text.splitlines()
+    index = start_line
+    while index < len(lines):
+        one_line = lines[index]
+        if field_pattern.match(one_line):
+            return index + 1
+        stripped = one_line.strip()
+        if stripped.startswith("}") or stripped.startswith("{"):
+            break
+        index += 1
+    return start_line
+
+
+def as_int(value):
+    """把字段值转成 int，非整数返回 None（bool 不算整数）。"""
+    if isinstance(value, bool) or not isinstance(value, int):
+        return None
+    return value
+
+
+def as_disk_list(value):
+    """把 add disk 字段归一化为列表，异常形态返回 None。"""
+    if isinstance(value, list):
+        return value
+    return None
+
+
+def check_field_consistency(rel_path, text, suite_data, one_case, line_no, result):
+    """检查点 3：套件外层字段必须覆盖 cases 内层字段（R1-R4）。
+
+    语义基准：case 内声明优先于套件外层，外层缺失时取默认值。
+    外层值必须 >= 内层值，否则要么是多机/网卡被低估（运行时直接退出），
+    要么是文档语义不自洽。
+    """
+    case_name = one_case["name"]
+
+    # R1：machine num 外层必须 >= 每个 case 的 machine num
+    case_num = as_int(one_case.get(FIELD_MACHINE_NUM))
+    if case_num is not None:
+        suite_num = as_int(suite_data.get(FIELD_MACHINE_NUM))
+        if suite_num is None:
+            suite_num = DEFAULT_MACHINE_NUM
+        if case_num > suite_num:
+            result.errors.append(
+                "%s: case '%s' declares machine num %d, but suite level machine num is %d"
+                % (rel_path, case_name, case_num, suite_num)
+            )
+            result.annotations.append(
+                (
+                    rel_path,
+                    find_field_line(text, line_no, FIELD_MACHINE_NUM),
+                    0,
+                    "machine num mismatch",
+                    "case declares machine num %d, suite level is %d (must be >=)"
+                    % (case_num, suite_num),
+                )
+            )
+
+    # R2：add network interface 外层必须 >= 每个 case 的值
+    case_nic = as_int(one_case.get(FIELD_NETWORK_INTERFACE))
+    if case_nic is not None:
+        suite_nic = as_int(suite_data.get(FIELD_NETWORK_INTERFACE))
+        if suite_nic is None:
+            suite_nic = DEFAULT_NETWORK_INTERFACE
+        if case_nic > suite_nic:
+            result.errors.append(
+                "%s: case '%s' declares add network interface %d, but suite level value is %d"
+                % (rel_path, case_name, case_nic, suite_nic)
+            )
+            result.annotations.append(
+                (
+                    rel_path,
+                    find_field_line(text, line_no, FIELD_NETWORK_INTERFACE),
+                    0,
+                    "add network interface mismatch",
+                    "case declares %d, suite level is %d (must be >=)" % (case_nic, suite_nic),
+                )
+            )
+
+    # R3：任一 case 需要 physical 时，外层 machine type 必须是 physical
+    case_type = one_case.get(FIELD_MACHINE_TYPE)
+    if isinstance(case_type, str) and case_type.strip().lower() == REQUIRED_MACHINE_TYPE:
+        suite_type = suite_data.get(FIELD_MACHINE_TYPE, DEFAULT_MACHINE_TYPE)
+        if not isinstance(suite_type, str):
+            suite_type = DEFAULT_MACHINE_TYPE
+        if suite_type.strip().lower() != REQUIRED_MACHINE_TYPE:
+            result.errors.append(
+                "%s: case '%s' requires machine type 'physical', but suite level machine type is '%s'"
+                % (rel_path, case_name, suite_type)
+            )
+            result.annotations.append(
+                (
+                    rel_path,
+                    find_field_line(text, line_no, FIELD_MACHINE_TYPE),
+                    0,
+                    "machine type mismatch",
+                    "case requires 'physical', suite level is '%s'" % suite_type,
+                )
+            )
+
+    # R4：case 使用的 add disk 取值必须被外层 add disk 覆盖
+    case_disk = as_disk_list(one_case.get(FIELD_ADD_DISK))
+    if case_disk is not None:
+        suite_disk = as_disk_list(suite_data.get(FIELD_ADD_DISK))
+        if suite_disk is None:
+            suite_disk = []
+        missing_values = []
+        for one_value in case_disk:
+            if one_value not in suite_disk and one_value not in missing_values:
+                missing_values.append(one_value)
+        if missing_values:
+            result.errors.append(
+                "%s: case '%s' uses add disk %s, but suite level add disk is %s"
+                % (
+                    rel_path,
+                    case_name,
+                    json.dumps(case_disk, ensure_ascii=False),
+                    json.dumps(suite_disk, ensure_ascii=False),
+                )
+            )
+            result.annotations.append(
+                (
+                    rel_path,
+                    find_field_line(text, line_no, FIELD_ADD_DISK),
+                    0,
+                    "add disk not covered",
+                    "case uses %s, suite level covers %s"
+                    % (
+                        json.dumps(missing_values, ensure_ascii=False),
+                        json.dumps(suite_disk, ensure_ascii=False),
+                    ),
+                )
+            )
+
+
+def find_pattern_line(script_text, pattern):
+    """返回脚本中第一处匹配该正则的行号，找不到返回 0。"""
+    for index, one_line in enumerate(script_text.splitlines(), 1):
+        if pattern.search(one_line):
+            return index
+    return 0
+
+
+def check_runtime_requirement(
+    rel_path, case_name, line_no, script_paths, effective_num, effective_disk, result
+):
+    """检查点 4：脚本实际需要的机器数/额外磁盘必须被声明覆盖。
+
+    - R-a：脚本引用 NODE2_ / NODE3_ ... 时，生效的 machine num 必须足够大，
+           否则 check_environment.py 会 sys.exit(1)。
+    - R-b：脚本引用 TEST_DISK 时，生效的 add disk 列表长度必须 >= 1，
+           否则用例拿不到额外磁盘。
+    """
+    max_node = 0
+    node_script = None
+    disk_script = None
+
+    for one_script in script_paths:
+        script_text = read_script_text(one_script)
+        if not script_text:
+            continue
+
+        for match in NODE_HIGHER_RE.finditer(script_text):
+            one_node = int(match.group(1))
+            if one_node > max_node:
+                max_node = one_node
+                node_script = one_script
+
+        if disk_script is None and TEST_DISK_RE.search(script_text):
+            disk_script = one_script
+
+    if node_script is not None and max_node > effective_num:
+        script_rel = os.path.relpath(node_script, REPO_ROOT).replace(os.sep, "/")
+        script_text = read_script_text(node_script)
+        script_line = find_pattern_line(script_text, NODE_HIGHER_RE)
+        result.errors.append(
+            "%s: case '%s' uses NODE%d_ in %s:%d, but effective machine num is %d"
+            % (rel_path, case_name, max_node, script_rel, script_line, effective_num)
+        )
+        result.annotations.append(
+            (
+                rel_path,
+                line_no,
+                0,
+                "machine num too small",
+                "script %s:%d uses NODE%d_, effective machine num is %d"
+                % (script_rel, script_line, max_node, effective_num),
+            )
+        )
+
+    if disk_script is not None and effective_disk < 1:
+        script_rel = os.path.relpath(disk_script, REPO_ROOT).replace(os.sep, "/")
+        script_text = read_script_text(disk_script)
+        script_line = find_pattern_line(script_text, TEST_DISK_RE)
+        result.errors.append(
+            "%s: case '%s' uses TEST_DISK in %s:%d, but effective add disk is empty"
+            % (rel_path, case_name, script_rel, script_line)
+        )
+        result.annotations.append(
+            (
+                rel_path,
+                line_no,
+                0,
+                "add disk missing",
+                "script %s:%d uses TEST_DISK, but no add disk is declared"
+                % (script_rel, script_line),
+            )
+        )
 
 
 def check_one_suite(json_path):
@@ -196,6 +492,18 @@ def check_one_suite(json_path):
 
     name_lines = build_name_line_map(text)
     stems = collect_case_stems(abs_case_path)
+    script_map = collect_case_scripts(abs_case_path)
+
+    # 套件外层字段（缺失时由 check_environment.py 的默认值兜底）
+    suite_machine_num = as_int(data.get(FIELD_MACHINE_NUM))
+    if suite_machine_num is None:
+        suite_machine_num = DEFAULT_MACHINE_NUM
+    suite_network_interface = as_int(data.get(FIELD_NETWORK_INTERFACE))
+    if suite_network_interface is None:
+        suite_network_interface = DEFAULT_NETWORK_INTERFACE
+    suite_add_disk = as_disk_list(data.get(FIELD_ADD_DISK))
+    if suite_add_disk is None:
+        suite_add_disk = []
 
     seen_names = set()
     for one_case in data["cases"]:
@@ -222,23 +530,46 @@ def check_one_suite(json_path):
             continue
         seen_names.add(case_key)
 
-        # 不区分大小写匹配，与 check_casename.py 的既有约定保持一致
-        if case_name.lower() in stems:
+        # 检查点 3：外层字段必须覆盖 case 内层字段（R1-R4），
+        # 只依赖 json 内容，与脚本是否存在无关，因此先于脚本存在性检查执行。
+        case_line_no = peek_line(name_lines, case_name)
+        check_field_consistency(
+            rel_path, text, data, one_case, case_line_no, result
+        )
+
+        if case_name.lower() not in stems:
+            line_no = take_line(name_lines, case_name)
+            result.errors.append(
+                "%s: case '%s' has no matching %s under %s"
+                % (rel_path, case_name, CASE_EXT, case_path)
+            )
+            result.annotations.append(
+                (
+                    rel_path,
+                    line_no,
+                    0,
+                    "missing case script",
+                    "case '%s' has no matching %s under %s" % (case_name, CASE_EXT, case_path),
+                )
+            )
             continue
 
-        line_no = take_line(name_lines, case_name)
-        result.errors.append(
-            "%s: case '%s' has no matching %s under %s"
-            % (rel_path, case_name, CASE_EXT, case_path)
-        )
-        result.annotations.append(
-            (
-                rel_path,
-                line_no,
-                0,
-                "missing case script",
-                "case '%s' has no matching %s under %s" % (case_name, CASE_EXT, case_path),
-            )
+        # 检查点 4：脚本实际依赖必须被声明覆盖（R-a 多机 / R-b 额外磁盘）
+        case_script_paths = script_map.get(case_name.lower(), [])
+        effective_num = as_int(one_case.get(FIELD_MACHINE_NUM))
+        if effective_num is None:
+            effective_num = suite_machine_num
+        effective_disk = as_disk_list(one_case.get(FIELD_ADD_DISK))
+        if effective_disk is None:
+            effective_disk = suite_add_disk
+        check_runtime_requirement(
+            rel_path,
+            case_name,
+            case_line_no,
+            case_script_paths,
+            effective_num,
+            len(effective_disk),
+            result,
         )
 
     return result

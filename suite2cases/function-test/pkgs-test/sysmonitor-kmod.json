@@ -1,5 +1,6 @@
 {
     "path": "${OET_PATH}/testcases/function-test/pkgs-test/sysmonitor-kmod",
+    "add network interface": 1,
     "cases": [
         {
             "name": "oe_test_service_sysmonitor"

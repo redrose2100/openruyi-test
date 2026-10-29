@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/smoke-test/smoke-baseinfo",
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_dmesg_messages_log"

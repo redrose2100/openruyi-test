@@ -2,6 +2,7 @@
     "path": "${OET_PATH}/testcases/function-test/pkgs-test/kmod-kvdo",
     "machine num": 2,
     "add disk": [
+        10,
         130
     ],
     "cases": [

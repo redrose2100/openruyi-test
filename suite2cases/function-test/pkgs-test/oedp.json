@@ -1,6 +1,7 @@
 {
     "path": "$OET_PATH/testcases/function-test/pkgs-test/oedp",
     "machine num": 3,
+    "machine type": "physical",
     "cases": [
         {
             "name": "oe_test_oedp_01",

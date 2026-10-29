@@ -1,5 +1,6 @@
 {
     "path": "${OET_PATH}/testcases/function-test/pkgs-test/libcap",
+    "add network interface": 1,
     "cases": [
         {
             "name": "oe_test_libcap"

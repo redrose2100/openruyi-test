@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/function-test/pkgs-test/cvs",
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_socket_cvs"

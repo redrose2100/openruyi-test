@@ -1,5 +1,6 @@
 {
     "path": "${OET_PATH}/testcases/function-test/pkgs-test/openscap",
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_secureconfline_checktools"
