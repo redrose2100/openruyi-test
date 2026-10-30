@@ -15,7 +15,7 @@
 | 7 | `cases` 中任一用例声明 `machine type` 为 `physical`，套件外层 `machine type` 必须为 `physical` |
 | 8 | `cases` 中每个用例使用的 `add disk` 取值，必须都被套件外层 `add disk` 列表覆盖 |
 | 9 | 用例脚本引用 `NODE2_`~`NODE9_` 时，生效的 `machine num` 必须足够大 |
-| 10 | 用例脚本引用 `TEST_DISK` 时，生效的 `add disk` 列表长度必须大于 0 |
+| 10 | 用例脚本经 disk 库取盘时，生效的 `add disk` 列表长度必须覆盖脚本实际用到的 `local_diskN` 数量 |
 
 ## 2 校验规则详解
 
@@ -94,7 +94,21 @@
 | 编号 | 触发条件 | 含义 |
 | --- | --- | --- |
 | 规则 9 | 脚本中出现 `NODE2_`~`NODE9_`，且最大编号 > 生效的 `machine num` | 脚本要操作第 N 台机器，但环境只申请了更少的机器 |
-| 规则 10 | 脚本中出现 `TEST_DISK`，且生效的 `add disk` 列表为空 | 脚本要挂载额外磁盘，但没有申请磁盘 |
+| 规则 10 | 脚本经 disk 库取盘，且生效的 `add disk` 长度 < 脚本实际需要的盘数 | 脚本要操作 N 块测试盘，但没有申请足够的磁盘 |
+
+规则 10 的判定细节：
+
+- **只有经 disk 库取盘的脚本才参与检查**，判定依据是脚本命中以下任一特征：
+  出现 `TEST_DISK`，或 `source` 了 `disk_lib.sh` / `storage_disk_lib.sh` /
+  `mdadm/common/common.sh`。有些脚本自己用 `lsblk` 算盘名，与 `add disk`
+  声明无关，不参与本规则。
+- **所需盘数由 `local_diskN` 推断**：只出现 `local_disk` 记 1 块，出现
+  `local_disk1` 记 2 块，`local_disk2` 记 3 块，`local_disk3` 记 4 块，取最大值。
+- `add disk` 为空列表时报 `add disk missing`；不为空但长度不够时报
+  `add disk too small`，并在错误信息中同时给出「需要」与「实得」。
+
+> 常见错例：脚本里写 `genfio -d /dev/${local_disk},/dev/${local_disk1},/dev/${local_disk2}`
+> 却只声明两块盘。此时 `${local_disk2}` 为空，命令退化成操作 `/dev/` 目录。
 
 > 说明：这里的「生效值」= 用例自己声明的值，未声明时取外层值（受继承规则影响）。
 

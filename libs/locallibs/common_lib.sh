@@ -120,7 +120,12 @@ function main() {
             __TRAP_EXECUTED=1
             case $__MAIN_STAGE in
                 pre | run)
-                    if [ -n "$(type -t post_test)" ]; then
+                    # 选盘阶段就已中止（disk_select_lib.sh 的 __abort_test_disk）：
+                    # 一块测试盘都没被改动过，local_disk* 全为空，此时跑 post_test
+                    # 会让 `pvremove -f /dev/${local_disk}` 退化成清理 /dev/ 目录。
+                    if [ "${__TEST_DISK_ABORT:-0}" = "1" ]; then
+                        LOG_WARN "test disk selection aborted before touching any disk, skip post_test."
+                    elif [ -n "$(type -t post_test)" ]; then
                         post_test
                     else
                         POST_TEST_DEFAULT

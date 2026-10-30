@@ -103,6 +103,43 @@ FIELD_ADD_DISK = "add disk"
 NODE_HIGHER_RE = re.compile(r"\bNODE([2-9])_")
 TEST_DISK_RE = re.compile(r"\bTEST_DISK\b")
 
+# 脚本是否经 disk 库取盘：命中 TEST_DISK，或 source 了任一 disk 库。
+# 只有这类脚本才用 local_diskN 推断所需盘数——有些脚本自己用 lsblk 算盘名，
+# 与 add disk 声明无关，按 local_diskN 判断会误报。
+# 注意：mdadm 的库是 common/common.sh，必须带路径限定，否则会把与磁盘无关的
+# 其他 common/common.sh（如 smoke-migrate）也算进来。
+DISK_HELPER_RE = re.compile(
+    r"\bTEST_DISK\b|disk_lib\.sh|storage_disk_lib\.sh|mdadm/common/common\.sh"
+)
+# local_disk1 / local_disk2 / local_disk3 表示用例用到了第 2/3/4 块盘。
+LOCAL_DISK_INDEX_RE = re.compile(r"\blocal_disk([1-3])\b")
+
+
+def required_disk_count(script_text):
+    """按脚本实际引用的 local_diskN 推断所需磁盘数（1..4）。
+
+    只引用 local_disk 需要 1 块；引用 local_disk1 需要 2 块；以此类推。
+    未走 disk 库取盘的脚本返回 0，表示不参与该规则检查。
+    """
+    if not DISK_HELPER_RE.search(script_text):
+        return 0
+    need = 1
+    for match in LOCAL_DISK_INDEX_RE.finditer(script_text):
+        need = max(need, int(match.group(1)) + 1)
+    return need
+
+
+def find_disk_line(script_text):
+    """返回脚本中第一处取盘相关代码的行号，找不到返回 0。"""
+    for index, one_line in enumerate(script_text.splitlines(), 1):
+        if DISK_HELPER_RE.search(one_line):
+            return index
+    for index, one_line in enumerate(script_text.splitlines(), 1):
+        if LOCAL_DISK_INDEX_RE.search(one_line) or "local_disk" in one_line:
+            return index
+    return 0
+
+
 
 class SuiteResult(object):
     """单个套件文件（或一次跳过）的校验结果"""
@@ -375,12 +412,14 @@ def check_runtime_requirement(
 
     - R-a：脚本引用 NODE2_ / NODE3_ ... 时，生效的 machine num 必须足够大，
            否则 check_environment.py 会 sys.exit(1)。
-    - R-b：脚本引用 TEST_DISK 时，生效的 add disk 列表长度必须 >= 1，
-           否则用例拿不到额外磁盘。
+    - R-b：脚本经 disk 库取盘时，生效的 add disk 列表长度必须 >= 脚本实际
+           引用的 local_diskN 数量（引用 local_disk1 就需要 2 块），
+           否则用例运行时拿不到足够的盘，空盘名会退化成 /dev/ 目录。
     """
     max_node = 0
     node_script = None
     disk_script = None
+    need_disk = 0
 
     for one_script in script_paths:
         script_text = read_script_text(one_script)
@@ -393,7 +432,9 @@ def check_runtime_requirement(
                 max_node = one_node
                 node_script = one_script
 
-        if disk_script is None and TEST_DISK_RE.search(script_text):
+        script_need_disk = required_disk_count(script_text)
+        if script_need_disk > need_disk:
+            need_disk = script_need_disk
             disk_script = one_script
 
     if node_script is not None and max_node > effective_num:
@@ -415,22 +456,32 @@ def check_runtime_requirement(
             )
         )
 
-    if disk_script is not None and effective_disk < 1:
+    if disk_script is not None and effective_disk < need_disk:
         script_rel = os.path.relpath(disk_script, REPO_ROOT).replace(os.sep, "/")
         script_text = read_script_text(disk_script)
-        script_line = find_pattern_line(script_text, TEST_DISK_RE)
+        script_line = find_disk_line(script_text)
+        if effective_disk < 1:
+            detail = "effective add disk is empty"
+            note = "uses TEST_DISK, but no add disk is declared"
+            key = "add disk missing"
+        else:
+            detail = "effective add disk has %d entrie(s)" % effective_disk
+            note = "uses %d test disk(s), but only %d is declared" % (
+                need_disk,
+                effective_disk,
+            )
+            key = "add disk too small"
         result.errors.append(
-            "%s: case '%s' uses TEST_DISK in %s:%d, but effective add disk is empty"
-            % (rel_path, case_name, script_rel, script_line)
+            "%s: case '%s' needs %d test disk(s) in %s:%d, but %s"
+            % (rel_path, case_name, need_disk, script_rel, script_line, detail)
         )
         result.annotations.append(
             (
                 rel_path,
                 line_no,
                 0,
-                "add disk missing",
-                "script %s:%d uses TEST_DISK, but no add disk is declared"
-                % (script_rel, script_line),
+                key,
+                "script %s:%d %s" % (script_rel, script_line, note),
             )
         )
 

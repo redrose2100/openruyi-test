@@ -16,18 +16,13 @@
 # @Desc      :   disk select
 # ############################################
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+# 选盘与防护逻辑统一收敛到 libs/locallibs/disk_select_lib.sh。
+# 本文件保留原路径、原导出变量与末尾“source 即选盘”的行为，
+# 因为 oe_test_fio_002 / oe_test_fio_003 没有显式调用 check_free_disk。
+source "${OET_PATH}/libs/locallibs/disk_select_lib.sh"
 export local_disk
 export local_disk1
 export local_disk2
 export local_disk3
-
-function check_free_disk() {
-    disks=$(TEST_DISK "$@")
-    read -r -a disk_list <<< "$(echo "$disks" | tr ' ' '\n' | grep -v '^nbd' | tr '\n' ' ')"
-    local_disk=${disk_list[0]}
-    local_disk1=${disk_list[1]}
-    local_disk2=${disk_list[2]}
-    local_disk3=${disk_list[3]}
-}
 
 check_free_disk "$@"
