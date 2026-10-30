@@ -232,7 +232,10 @@
             "name": "oe_test_storage_fileCMD_mkfs",
             "machine num": 1,
             "add network interface": 0,
-            "add disk": []
+            "add disk": [
+                2,
+                2
+            ]
         },
         {
             "name": "oe_test_storage_lvm_create_snapshot",
@@ -765,7 +768,9 @@
             "name": "oe_test_storage_fileCMD_dd",
             "machine num": 1,
             "add network interface": 0,
-            "add disk": []
+            "add disk": [
+                2
+            ]
         },
         {
             "name": "oe_test_storage_fileCMD_zip",

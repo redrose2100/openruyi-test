@@ -110,14 +110,30 @@ function POST_TEST_DEFAULT() {
 function main() {
     # 只执行一次清理
     __TRAP_EXECUTED=0
+    # 记录用例推进到哪一步：init -> config -> pre -> run。
+    # post_test 里常含 fdisk/pvremove/wipefs 等破坏性清理动作，只有在 pre_test
+    # 已经开始（磁盘环境可能已被改动）之后才允许执行；否则像 config_params 里
+    # exit 255 这种“跳过”场景也会触发清理，把本不该动的盘清掉。
+    __MAIN_STAGE=init
     handle_signal() {
         if [ $__TRAP_EXECUTED -eq 0 ]; then
             __TRAP_EXECUTED=1
-            if [ -n "$(type -t post_test)" ]; then
-                post_test
-            else
-                POST_TEST_DEFAULT
-            fi
+            case $__MAIN_STAGE in
+                pre | run)
+                    if [ -n "$(type -t post_test)" ]; then
+                        post_test
+                    else
+                        POST_TEST_DEFAULT
+                    fi
+                    ;;
+                *)
+                    if [ -z "$(type -t post_test)" ]; then
+                        POST_TEST_DEFAULT
+                    else
+                        LOG_WARN "case stopped at stage ${__MAIN_STAGE}, skip post_test to avoid touching disks."
+                    fi
+                    ;;
+            esac
         fi
         if [ $# -gt 0 ]; then
             if [ "$1" == "NOPKG" ]; then
@@ -149,13 +165,16 @@ function main() {
 
     if [ -n "$(type -t config_params)" ]; then
         config_params
+        __MAIN_STAGE=config
     fi
 
     if [ -n "$(type -t pre_test)" ]; then
+        __MAIN_STAGE=pre
         pre_test
     fi
 
     if [ -n "$(type -t run_test)" ]; then
+        __MAIN_STAGE=run
         run_test
         CASE_RESULT $?
     fi

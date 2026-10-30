@@ -119,6 +119,55 @@ def get_test_nic(node=1):
     return output
 
 
+# 磁盘枚举脚本：一次性输出可用测试盘（裸名，空格分隔）。
+#
+# 旧实现依赖 `lsblk -l | grep -e '/.*\|\[.*\]'` 反推“已被占用”的盘，只能识别
+# 在 lsblk 列表里能看到挂载点的磁盘。在 qemu -machine virt 等场景下根盘可能
+# 拿不到可见挂载点，于是系统盘被当成“空闲盘”返回，随后被 fdisk/pvcreate 写坏。
+# 这里改为“先算保护集、再取差集”：保护集覆盖所有已挂载分区与 swap 设备向上
+# 追溯到的整盘，因此系统盘永远不会出现在返回值里。
+# 解析不出根盘时一律不返回任何盘（宁可失败也不误选），由上层报错。
+_TEST_DISK_SCRIPT = r"""
+_disk_protected=$(
+    {
+        lsblk -rno NAME,MOUNTPOINT 2>/dev/null | awk '$2 != "" {print "/dev/" $1}'
+        awk 'NR > 1 && $1 ~ /^\/dev\// {print $1}' /proc/swaps 2>/dev/null
+        findmnt -no SOURCE / 2>/dev/null
+    } | while read -r _dev; do
+            [ -n "$_dev" ] || continue
+            # dm 设备在 lsblk 里显示为 openeuler-root 这类名字，真实节点在 /dev/mapper 下
+            if [ ! -b "$_dev" ] && [ -b "/dev/mapper/$(basename "$_dev")" ]; then
+                _dev="/dev/mapper/$(basename "$_dev")"
+            fi
+            [ -b "$_dev" ] || continue
+            lsblk -sno NAME,TYPE "$_dev" 2>/dev/null | awk '$2 == "disk" {print $1}'
+        done | sort -u | tr '\n' ' '
+)
+_root_dev=$(findmnt -no SOURCE / 2>/dev/null)
+if [ ! -b "$_root_dev" ] && [ -b "/dev/mapper/$(basename "$_root_dev")" ]; then
+    _root_dev="/dev/mapper/$(basename "$_root_dev")"
+fi
+_root_disk=$(lsblk -sno NAME,TYPE "$_root_dev" 2>/dev/null | awk '$2 == "disk" {print $1}' | head -n 1)
+if [ -z "$_root_disk" ]; then
+    # 无法可靠识别系统盘：拒绝输出任何测试盘，避免把系统盘交给破坏性用例
+    exit 0
+fi
+case " ${_disk_protected} " in
+    *" ${_root_disk} "*) ;;
+    *) exit 0 ;;
+esac
+lsblk -dno NAME,TYPE 2>/dev/null \
+    | awk '$2 == "disk" {print $1}' \
+    | grep -vE '^(nbd|mmcblk|mtdblock|zram|ram|sr|loop|fd)' \
+    | while read -r _d; do
+            case " ${_disk_protected} " in
+                *" ${_d} "*) ;;
+                *) echo "$_d" ;;
+            esac
+        done | tr '\n' ' '
+"""
+
+
 def get_test_disk(node=1):
     """获取可测试使用的磁盘
 
@@ -129,15 +178,12 @@ def get_test_disk(node=1):
         [str]: 磁盘名称
     """
     if os.environ.get("NODE" + str(node) + "_LOCALTION") == "local":
-        used_disk = subprocess.getoutput(
-            r"lsblk -l | grep -e '/.*\|\[.*\]' | awk '{print $1}' | tr -d '[0-9]' | uniq | sed -e ':a;N;$!ba;s/\\n/ /g'"
+        result = subprocess.run(
+            ["sh", "-c", _TEST_DISK_SCRIPT],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
         )
-
-        test_disk = subprocess.getoutput(
-            r"lsblk -n | grep 'disk' | grep -v 'mmcblk.*\|mtdblock.*\|nbd.*\|└─.*\|"
-            + used_disk.replace(" ", "\|")
-            + r"' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'"
-        )
+        test_disk = result.stdout.decode("utf-8", "replace")
     else:
         conn = ssh_cmd.pssh_conn(
             os.environ.get("NODE" + str(node) + "_IPV4"),
@@ -145,18 +191,10 @@ def get_test_disk(node=1):
             os.environ.get("NODE" + str(node) + "_SSH_PORT"),
             os.environ.get("NODE" + str(node) + "_USER"),
         )
-        used_disk = ssh_cmd.pssh_cmd(
-            conn,
-            r"lsblk -l | grep -e '/.*\|\[.*\]' | awk '{print $1}' | tr -d '[0-9]' | uniq | sed -e ':a;N;$!ba;s/\\n/ /g'",
-        )[1]
-        test_disk = ssh_cmd.pssh_cmd(
-            conn,
-            r"lsblk -n | grep 'disk' | grep -v 'mmcblk.*\|mtdblock.*\|nbd.*\|└─.*\|"
-            + used_disk.replace(" ", "\|")
-            + r"' | awk '{print $1}' | sed -e ':a;N;$!ba;s/\\n/ /g'",
-        )[1]
+        test_disk = ssh_cmd.pssh_cmd(conn, _TEST_DISK_SCRIPT)[1]
 
-    return test_disk
+    # 统一成单行空格分隔，调用方（bash 的 read -a / python 的 split）无需处理换行
+    return " ".join(test_disk.split())
 
 
 if __name__ == "__main__":
