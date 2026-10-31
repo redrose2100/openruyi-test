@@ -21,6 +21,7 @@ source ./common.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "wget"
     common_pre
     LOG_INFO "End of environmental preparation!"
 }

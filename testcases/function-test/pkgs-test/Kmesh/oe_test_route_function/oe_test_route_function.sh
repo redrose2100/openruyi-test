@@ -19,6 +19,7 @@
 source ../libs/common.sh
 
 function pre_test() {
+    DNF_INSTALL "wget"
     env_init
     KO_FILES=$(find /lib/modules /usr/lib/modules -name "*kmesh*.ko" 2>/dev/null)
     if [ -z "$KO_FILES" ]; then

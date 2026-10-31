@@ -24,7 +24,7 @@ function pre_test() {
     disks=$(TEST_DISK)
     read -ra disk_list <<<"$disks"
     local_disk=${disk_list[0]}
-    DNF_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb sysstat pciutils"
+    DNF_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb sysstat pciutils wget"
     env_pre
     LOG_INFO "End of environmental preparation!"
 }

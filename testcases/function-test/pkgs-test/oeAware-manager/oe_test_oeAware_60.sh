@@ -24,7 +24,7 @@ function pre_test() {
         LOG_INFO "The environment does not support testing"
         exit 255
     fi
-    DNF_INSTALL "oeAware-manager docker stress-ng"
+    DNF_INSTALL "oeAware-manager docker stress-ng wget"
     systemctl restart oeaware
     LANG_OLD="${LANG}"
     export LANG=en_US.utf8

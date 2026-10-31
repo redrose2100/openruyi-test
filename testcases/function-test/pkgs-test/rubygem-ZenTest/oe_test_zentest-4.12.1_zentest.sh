@@ -27,7 +27,7 @@ function pre_test() {
     # remove
     sudo dnf autoremove -y gem
     # install
-    DNF_INSTALL "${GEM_PACKAGES} ${OTHER_DEPENDENCES}"
+    DNF_INSTALL "${GEM_PACKAGES} ${OTHER_DEPENDENCES} tar"
     gem sources --add ${SOURCE_URL} --remove ${ORIGIN_SOURCE}
     bundle config mirror.${ORIGIN_SOURCE} ${SOURCE_URL}
     sudo yum groupinstall "Development Tools" -y

@@ -22,7 +22,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "docker-engine wget"
+    DNF_INSTALL "docker-engine wget tar"
     #read version from file
     . /etc/os-release
     PRETTY_NAME=$(echo "$PRETTY_NAME" | tr -d '(' | tr -d ')' | tr ' ' -)

@@ -19,7 +19,7 @@
 source "${OET_PATH}/testcases/function-test/pkgs-test/easymock/common/common_easymock.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "springframework springframework-beans springframework-context"
+    DNF_INSTALL "springframework springframework-beans springframework-context wget"
     deploy_env
     spring_version=$(rpm -q springframework | grep -oP '\d+\.\d+\.\d+' | head -n1)
     maven_version="${spring_version}.RELEASE"

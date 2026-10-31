@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "tar"
     dd if=/dev/zero of=test.tar bs=4M count=10
     LOG_INFO "End of environmental preparation!"
 }

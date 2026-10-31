@@ -24,7 +24,7 @@ function pre_test() {
     EXECUTE_T="360m"
     libguestfs_pre_test
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then
-        DNF_INSTALL "unzip"
+        DNF_INSTALL "unzip wget"
         wget https://gitlab.com/api/v4/projects/giomasce%2Fdqib/jobs/artifacts/master/download?job=convert_riscv64-virt -O debian_riscv.zip --no-check-certificate
         unzip -j debian_riscv.zip dqib_riscv64-virt/image.qcow2 -d /home/kvm/images/
         mv /home/kvm/images/image.qcow2 /home/kvm/images/debian-riscv.qcow2

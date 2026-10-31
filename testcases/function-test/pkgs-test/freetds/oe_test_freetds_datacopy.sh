@@ -20,6 +20,7 @@
 source ./common.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "wget"
     common_pre
     echo "INSERT INTO [dbo].[admin] ([id], [age]) VALUES (1,'18')" >inputFile.sql
     LOG_INFO "End of environmental preparation!"

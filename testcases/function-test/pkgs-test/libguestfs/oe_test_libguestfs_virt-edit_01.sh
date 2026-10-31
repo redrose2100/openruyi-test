@@ -20,6 +20,7 @@ source ${OET_PATH}/testcases/function-test/pkgs-test/libguestfs/common/common_li
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "wget"
     libguestfs_pre_test
     export LIBGUESTFS_BACKEND=direct
     export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1

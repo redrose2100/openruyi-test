@@ -21,6 +21,7 @@ source ./common.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "wget"
     common_pre
     echo "INSERT INTO [dbo].[test_user] ([id]) VALUES (10)" >inputFile.sql
     bsqldb -U sa -P Hw123456 -S egServer70 -D test1 -i inputFile.sql

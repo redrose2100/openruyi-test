@@ -21,6 +21,7 @@ source common/common_stratovirt.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "wget"
     pre_env
     create_stratovirt_vm &
     LOG_INFO "End to prepare the test environment."

@@ -21,6 +21,7 @@ source "${OET_PATH}"/testcases/function-test/pkgs-test/oeAware-manager/common/co
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "tar"
     pre_nginx
     tar xf common/UnixBench5.1.3.tgz -C ./
     cd UnixBench || exit 1

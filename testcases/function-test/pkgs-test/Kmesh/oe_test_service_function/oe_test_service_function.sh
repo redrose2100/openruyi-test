@@ -23,7 +23,7 @@ function pre_test() {
         LOG_ERROR "未找到 Kmesh 软件包，退出码 255"
 	exit 255
     fi
-    DNF_INSTALL Kmesh 
+    DNF_INSTALL "Kmesh wget"
 }
 
 function run_test() {

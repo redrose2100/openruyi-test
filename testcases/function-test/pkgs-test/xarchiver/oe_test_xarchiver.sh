@@ -9,7 +9,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     # 安装待测试的软件包
-    DNF_INSTALL "xarchiver"
+    DNF_INSTALL "xarchiver tar"
     # 准备测试数据等,如果要创建文件请使用"./你要创建的文件"直接把文件创建到当前目录下
     mkdir -p ./test_dir
     touch ./test_dir/test_file1.txt

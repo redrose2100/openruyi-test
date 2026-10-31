@@ -21,6 +21,7 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/libguestfs/common/common_l
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "tar wget"
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then
       OS_VERSION="24.03-LTS-SP1"
       DOM_VERSION="2403"

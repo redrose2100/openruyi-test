@@ -21,6 +21,7 @@ source "common/common_syscare.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment"
+    DNF_INSTALL "wget"
     init_env
     LOG_INFO "End to prepare the test environment"
 }

@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
+    DNF_INSTALL "tar wget"
     # /etc/openEuler-latest 在衍生发行版上不存在，交由 os_release_lib.sh 兜底。
     source "${OET_PATH}"/libs/locallibs/os_release_lib.sh
     repo_version=$(OS_RELEASE_VERSION)

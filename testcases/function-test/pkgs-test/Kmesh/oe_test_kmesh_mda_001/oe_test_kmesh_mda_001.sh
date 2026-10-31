@@ -19,7 +19,7 @@
 source ../libs/common.sh
 
 function pre_test() {
-    DNF_INSTALL Kmesh
+    DNF_INSTALL "Kmesh wget"
     KO_FILES=$(find /lib/modules /usr/lib/modules -name "*kmesh*.ko" 2>/dev/null)
     if [ -z "$KO_FILES" ]; then
             echo "未找到 Kmesh 相关 .ko 文件，退出码 255"

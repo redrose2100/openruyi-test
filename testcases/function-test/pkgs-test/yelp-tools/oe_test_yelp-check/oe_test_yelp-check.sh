@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "yelp-tools yelp"
+    DNF_INSTALL "yelp-tools yelp wget"
     wget https://gitlab.gnome.org/GNOME/yelp-tools/-/blob/master/help/C/yelp-check.page
     LOG_INFO "End to prepare the test environment."
 }

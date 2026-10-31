@@ -20,7 +20,7 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/nmon/common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "nmon"
+    DNF_INSTALL "nmon wget"
     LOG_INFO "End of environmental preparation!"
 }
 

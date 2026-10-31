@@ -27,6 +27,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "wget"
     Default_LANG=$LANG
     export LANG=en_US.UTF-8
     if [[ ${NODE1_FRAME} == "riscv64" ]]; then
