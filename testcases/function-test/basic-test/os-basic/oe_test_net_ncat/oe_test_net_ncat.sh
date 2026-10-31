@@ -21,7 +21,6 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "nmap iptables"
-    iptables -F
     SSH_CMD "
             yum install -y nmap iptables;
             iptables -F;

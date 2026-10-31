@@ -35,17 +35,34 @@ function run_test() {
     else
         exit 255
     fi
-    grep -i NAME "$cfg01"
-    CHECK_RESULT $? 0 0 "the item is use for set net NAME"
-    grep -i bootproto "$cfg01"
-    CHECK_RESULT $? 0 0 "the item is use for set net bootproto"
-    grep -i onboot "$cfg01"
-    CHECK_RESULT $? 0 0 "the item is use for set automatically connect to the network upon startup"
-    grep -i device "$cfg01"
-    CHECK_RESULT $? 0 0 "the item is use for set net name"
-    if ! grep dhcp "$cfg01" && ping -c 3 www.baidu.com; then
-        grep -i defroute "$cfg01"
-        CHECK_RESULT $? 0 0 "the item is use for set default route"
+    if grep -q "^NAME=" "$cfg01"; then
+        grep -i "^NAME=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net NAME"
+        grep -i "^BOOTPROTO=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net bootproto"
+        grep -i "^ONBOOT=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set automatically connect to the network upon startup"
+        grep -i "^DEVICE=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net name"
+        if ! grep -i "^BOOTPROTO=dhcp" "$cfg01" && ping -c 3 www.baidu.com; then
+            grep -i "^DEFROUTE=" "$cfg01"
+            CHECK_RESULT $? 0 0 "the item is use for set default route"
+        fi
+    elif grep -q "^\[connection\]" "$cfg01"; then
+        grep -i "^id=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net NAME"
+        grep -i "^interface-name=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net name"
+        grep -i "^method=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net bootproto"
+        grep -i "^autoconnect=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set automatically connect to the network upon startup"
+        if grep -qi "^method=manual" "$cfg01" && ping -c 3 www.baidu.com; then
+            grep -i "^never-default=" "$cfg01"
+            CHECK_RESULT $? 0 0 "the item is use for set default route"
+        fi
+    else
+        CHECK_RESULT 1 0 0 "unrecognized net cfg file format"
     fi
     LOG_INFO "End of testcase execution."
 }

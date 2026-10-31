@@ -21,6 +21,7 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/sysmonitor-kmod/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
+    DNF_INSTALL "diffutils"
     recover_file=$(grep "MONITOR_COMMAND=" /etc/sysmonitor/process/cron | awk -F "=" '{print $2}')
     cp -a "${recover_file}" "${recover_file}.bak"
     chmod 777 "${recover_file}"

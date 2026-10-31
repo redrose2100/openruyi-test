@@ -21,8 +21,6 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL nfs-utils
-    systemctl stop firewalld
-    iptables -F
     SSH_CMD "systemctl stop firewalld;iptables -F" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     LOG_INFO "Environmental preparation is over."
 }

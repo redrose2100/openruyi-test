@@ -32,8 +32,7 @@ function run_test() {
         CHECK_RESULT $?
         sudo firewall-cmd --remove-rich-rule='rule priority=32767 log prefix="UNEXPECTED:"'
     else
-        nft list chain inet firewalld filter_IN_public_post | grep UNEXPECTED
-        CHECK_RESULT $? 0 1
+        CHECK_RESULT 1 0 0 "firewall-cmd --add-rich-rule failed"
     fi
     LOG_INFO "Finish testcase execution."
 }

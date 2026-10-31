@@ -19,16 +19,20 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 source "${OET_PATH}/testcases/function-test/pkgs-test/sysmonitor-kmod/common.sh"
 
-# shellcheck disable=SC2010
-test_NetPort="$(ls /sys/class/net | grep -v lo | tail -1)"
-
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
+    # 选择业务网卡，TEST_NIC 会自动排除管理网卡 NODE1_NIC
+    test_NetPort=$(TEST_NIC 1 | awk '{print $1}')
+    if [ -z "${test_NetPort}" ]; then
+        LOG_WARN "No spare network interface for netcard monitor test, skip."
+        exit 255
+    fi
     cp "${sysmonitor_conf:-}" "${sysmonitor_conf}.bak"
     sed -i "/^NETCARD_MONITOR=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     cp /etc/sysmonitor/network /etc/sysmonitor/network.bak
     echo "${test_NetPort} UP" >> /etc/sysmonitor/network
     echo "${test_NetPort} DOWN" >> /etc/sysmonitor/network
+    PREPARE_DONE=1
     monitor_restart
 }
 
@@ -46,8 +50,14 @@ function run_test() {
 
 # 后置处理，恢复测试环境
 function post_test() {
-    ifconfig "${test_NetPort}" 0 up
-    ifconfig "${test_NetPort}"
+    # pre_test 未完成环境准备（如无业务网卡直接 skip）时无需恢复
+    if [ "${PREPARE_DONE:-0}" != "1" ]; then
+        LOG_WARN "Test environment was not prepared, skip restore."
+        return 0
+    fi
+    # 先清除测试时写入的地址，再拉起网卡，避免残留 192.168.1.2/16
+    ifconfig "${test_NetPort}" 0 2>/dev/null
+    ifconfig "${test_NetPort}" up 2>/dev/null
     mv "${sysmonitor_conf}.bak" "${sysmonitor_conf}"
     mv /etc/sysmonitor/network.bak /etc/sysmonitor/network
     monitor_restart

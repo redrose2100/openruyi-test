@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/function-test/pkgs-test/libfabric",
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_libfabric_fi_info_01"

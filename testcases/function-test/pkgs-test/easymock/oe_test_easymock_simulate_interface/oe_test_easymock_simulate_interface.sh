@@ -19,6 +19,7 @@
 source "../common/common_easymock.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "diffutils"
     deploy_env
     LOG_INFO "End to prepare the test environment."
 }

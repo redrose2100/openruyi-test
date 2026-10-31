@@ -71,6 +71,7 @@ if [ -f /etc/openEuler-release ]; then
 elif [ -f /etc/system-release ]; then
     cat /etc/system-release > "${test_dir}/os_release"
 else
+    # 衍生发行版没有 openEuler-release/system-release，用 os-release 拼出等价内容。
     os_name=$(grep '^NAME=' /etc/os-release | cut -d'"' -f2)
     os_version_id=$(grep '^VERSION_ID=' /etc/os-release | cut -d'"' -f2)
     echo "${os_name} release ${os_version_id}" > "${test_dir}/os_release"

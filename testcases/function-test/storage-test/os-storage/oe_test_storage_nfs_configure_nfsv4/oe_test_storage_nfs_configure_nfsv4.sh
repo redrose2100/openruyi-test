@@ -21,8 +21,6 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL nfs-utils
-    systemctl stop firewalld
-    iptables -F
     SSH_CMD "systemctl stop firewalld;iptables -F;yum install nfs-utils -y;
     mkdir /home/nfs;chmod 777 /home/nfs;mv /etc/exports /etc/exports.bak;
     echo '/home/nfs *(rw,sync,all_squash)' >/etc/exports" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}

@@ -8,6 +8,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 # 测试前函数
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "diffutils"
     # 安装待测试的软件包
     DNF_INSTALL "percona-xtrabackup"
     # 准备测试数据

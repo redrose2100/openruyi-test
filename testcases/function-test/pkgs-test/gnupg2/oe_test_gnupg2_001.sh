@@ -22,6 +22,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 # 测试前置准备
 function pre_test()
 {
+    DNF_INSTALL "diffutils"
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL gnupg2
 

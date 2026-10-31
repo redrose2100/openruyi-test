@@ -23,8 +23,6 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "nfs-utils dmidecode"
     DNF_INSTALL "nfs-utils" 2
-    systemctl stop firewalld
-    iptables -F
     SSH_CMD "systemctl disable --now firewalld;iptables -F" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "Environmental preparation is over."
 }

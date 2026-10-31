@@ -35,6 +35,7 @@ disk_resume=$((disk_usage + 2))
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
+    DNF_INSTALL "diffutils"
 
     cp "${INODE_CONFIG}" "${INODE_CONFIG}.bak"
     echo "DISK=\"${dir}\" ALARM=\"${inode_alarm}\" RESUME=\"${inode_resume}\"" >> "${INODE_CONFIG}"

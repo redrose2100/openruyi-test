@@ -77,6 +77,7 @@ function post_test() {
     LOG_INFO "Start environment cleanup."
     DNF_REMOVE
     rm -rf galera_zl
+    galera_post
     LOG_INFO "Finish environment cleanup."
 }
 

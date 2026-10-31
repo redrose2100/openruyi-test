@@ -17,11 +17,17 @@
 # #############################################
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
+# /etc/openEuler-latest 只在 openEuler 系镜像存在，衍生发行版回退到标准的 /etc/os-release。
+OS_INFO_FILE=/etc/openEuler-latest
+[ -f "${OS_INFO_FILE}" ] || OS_INFO_FILE=/etc/os-release
+# 校验传输内容的特征串，避免硬编码发行版名称。
+OS_INFO_PATTERN='openeulerversion=|^ID='
+
 function run_test() {
     LOG_INFO "Start to run test."
     expect <<EOF
         log_file /tmp/log_scp_pull
-        spawn scp -q ${NODE2_USER}@${NODE2_IPV4}:/etc/openEuler-latest /tmp/openEuler-latest
+        spawn scp -q ${NODE2_USER}@${NODE2_IPV4}:${OS_INFO_FILE} /tmp/openEuler-latest
         expect {
             "*yes/no*" {
                 send "yes\\r"
@@ -35,13 +41,13 @@ function run_test() {
         expect eof
 EOF
     CHECK_RESULT $?
-    grep "openEuler" /tmp/openEuler-latest
+    grep -qE "${OS_INFO_PATTERN}" /tmp/openEuler-latest
     CHECK_RESULT $?
     grep "100%" /tmp/log_scp_pull
     CHECK_RESULT $? 0 1
     expect <<EOF
         log_file /tmp/log_scp_push
-        spawn scp -q /etc/openEuler-latest ${NODE2_USER}@${NODE2_IPV4}:/tmp/openEuler-latest
+        spawn scp -q ${OS_INFO_FILE} ${NODE2_USER}@${NODE2_IPV4}:/tmp/openEuler-latest
         expect {
             "*yes/no*" {
                 send "yes\\r"
@@ -55,7 +61,7 @@ EOF
         expect eof
 EOF
     CHECK_RESULT $?
-    SSH_CMD "grep openEuler /tmp/openEuler-latest" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "grep -qE '${OS_INFO_PATTERN}' /tmp/openEuler-latest" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     CHECK_RESULT $?
     grep "100%" /tmp/log_scp_push
     CHECK_RESULT $? 0 1

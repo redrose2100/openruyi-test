@@ -21,6 +21,7 @@
 import os
 import sys
 import json
+import re
 
 suitecase_path = "suite2cases"
 curr_path = os.getcwd()
@@ -91,9 +92,70 @@ def check_testcase():
                 ret = 1
     return ret          
 
+def check_root_literal():
+    """提示用例中硬编码 root@ 的写法。
+
+    用例里直接写 `root@${NODE2_IPV4}` 会假定远端允许 root 登录，非 root
+    场景（需要 sudo 提权）下会直接连接失败。这里只做告警，不改变退出码，
+    以免既有用例批量变红。
+
+    只匹配“以 root 身份登录远端主机”的写法，刻意排除以下噪音：
+      * 邮件地址 / 用户名形式的 root@domain  —— 右侧是域名而非变量或 IP
+      * root@localhost、root@127.0.0.1        —— 本机，无需提权
+      * grep/regex/expect 模式里的 [root@]   —— 只是在匹配提示符
+    """
+    # root@ 后面必须是变量引用（$VAR / ${...}）或点分 IP，允许被引号包裹
+    target = re.compile(
+        r"root@[\"']?(?:\$\{?\w+\}?|\d{1,3}(?:\.\d{1,3}){3})")
+    # 落在本机地址上的 root@ 与本场景无关
+    local = re.compile(r"root@[\"']?(?:localhost|127\.0\.0\.1)")
+
+    testcase_path = os.path.join(curr_path, "testcases")
+    if not os.path.exists(testcase_path):
+        return 0
+
+    warns = []
+    for root_dir, _, files in os.walk(testcase_path):
+        for one_file in sorted(files):
+            if not one_file.lower().endswith(".sh"):
+                continue
+            one_path = os.path.join(root_dir, one_file)
+            try:
+                with open(one_path, "r", encoding="utf-8", errors="ignore") as f:
+                    for lineno, line in enumerate(f, 1):
+                        stripped = line.strip()
+                        if stripped.startswith("#"):
+                            continue
+                        hit = target.search(line)
+                        if not hit:
+                            continue
+                        if local.search(line):
+                            continue
+                        # 单引号内说明是 grep/awk 的匹配模式（如 grep '[root@]'），
+                        # 不是真正的连接目标；双引号内的 "${NODE1_IPV4}" 仍算连接。
+                        if line.count("'", 0, hit.start()) % 2 == 1:
+                            continue
+                        warns.append((one_path, lineno, stripped))
+            except OSError as exc:
+                print("skip %s: %s" % (one_path, exc))
+
+    if warns:
+        print("")
+        print("WARNING: %d place(s) hardcode 'root@', which breaks non-root "
+              "login scenarios." % len(warns))
+        print("         Prefer ${NODE<n>_USER}@${NODE<n>_IPV4} so the runner "
+              "can escalate via sudo.")
+        for one_path, lineno, text in warns:
+            rel = os.path.relpath(one_path, curr_path)
+            print("  %s:%d: %s" % (rel, lineno, text))
+    return len(warns)
+
+
 def main():
     suite_ret = check_testsuite()
     case_ret = check_testcase()
+    # 静态提示，不阻断流水线
+    check_root_literal()
 
     return suite_ret + case_ret
     

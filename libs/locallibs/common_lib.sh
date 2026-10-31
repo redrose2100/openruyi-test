@@ -110,14 +110,35 @@ function POST_TEST_DEFAULT() {
 function main() {
     # 只执行一次清理
     __TRAP_EXECUTED=0
+    # 记录用例推进到哪一步：init -> config -> pre -> run。
+    # post_test 里常含 fdisk/pvremove/wipefs 等破坏性清理动作，只有在 pre_test
+    # 已经开始（磁盘环境可能已被改动）之后才允许执行；否则像 config_params 里
+    # exit 255 这种“跳过”场景也会触发清理，把本不该动的盘清掉。
+    __MAIN_STAGE=init
     handle_signal() {
         if [ $__TRAP_EXECUTED -eq 0 ]; then
             __TRAP_EXECUTED=1
-            if [ -n "$(type -t post_test)" ]; then
-                post_test
-            else
-                POST_TEST_DEFAULT
-            fi
+            case $__MAIN_STAGE in
+                pre | run)
+                    # 选盘阶段就已中止（disk_select_lib.sh 的 __abort_test_disk）：
+                    # 一块测试盘都没被改动过，local_disk* 全为空，此时跑 post_test
+                    # 会让 `pvremove -f /dev/${local_disk}` 退化成清理 /dev/ 目录。
+                    if [ "${__TEST_DISK_ABORT:-0}" = "1" ]; then
+                        LOG_WARN "test disk selection aborted before touching any disk, skip post_test."
+                    elif [ -n "$(type -t post_test)" ]; then
+                        post_test
+                    else
+                        POST_TEST_DEFAULT
+                    fi
+                    ;;
+                *)
+                    if [ -z "$(type -t post_test)" ]; then
+                        POST_TEST_DEFAULT
+                    else
+                        LOG_WARN "case stopped at stage ${__MAIN_STAGE}, skip post_test to avoid touching disks."
+                    fi
+                    ;;
+            esac
         fi
         if [ $# -gt 0 ]; then
             if [ "$1" == "NOPKG" ]; then
@@ -132,18 +153,33 @@ function main() {
     trap "handle_signal PKGCONFLICT" SIGRTMIN+1 || exit 247
 
     if ! rpm -qa | grep expect >/dev/null 2>&1; then
-        dnf -y install expect
+        # 带超时与重试的 expect 安装：dnf 挂起时不拖死整个用例会话，
+        # 失败仅告警（非致命），保持既有"静默继续"语义。
+        _install_expect=0
+        for _try in 1 2 3; do
+            if timeout 120 dnf -y install expect; then
+                _install_expect=1
+                break
+            fi
+            pkill -9 dnf 2>/dev/null
+            rm -f /var/cache/dnf/*.pid 2>/dev/null
+            sleep 5
+        done
+        test $_install_expect -eq 0 && LOG_WARN "expect install failed, continue anyway"
     fi
 
     if [ -n "$(type -t config_params)" ]; then
         config_params
+        __MAIN_STAGE=config
     fi
 
     if [ -n "$(type -t pre_test)" ]; then
+        __MAIN_STAGE=pre
         pre_test
     fi
 
     if [ -n "$(type -t run_test)" ]; then
+        __MAIN_STAGE=run
         run_test
         CASE_RESULT $?
     fi

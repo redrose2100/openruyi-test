@@ -20,7 +20,15 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    remote_disk=$(lsblk | grep disk | sed -n 2p | awk '{print$1}')
+    # 在 node2 上取盘：后面的 mkfs.ext4 -F / mount 都是通过 SSH_CMD 在 node2 执行。
+    # 旧实现用本机（node1）的 lsblk 顺序取盘，两台机器的盘名/盘序不一定一致，
+    # 会把 node2 上不相干的盘（包括系统盘）格式化掉。
+    # TEST_DISK 2 会走远端枚举，并已把 node2 的系统盘排除在候选之外。
+    remote_disk=$(TEST_DISK 2 | awk '{print $1}')
+    if [ -z "${remote_disk}" ]; then
+        LOG_ERROR "no usable test disk found on node2, skip testcase to protect the OS."
+        exit 255
+    fi
     LOG_INFO "Loading data is complete!"
 }
 

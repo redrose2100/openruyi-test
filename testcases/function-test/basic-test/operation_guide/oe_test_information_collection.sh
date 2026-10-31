@@ -18,6 +18,8 @@
 # shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+# 发行版信息兼容层：openRuyi 等衍生发行版没有 /etc/openEuler-latest、/etc/openEuler-release。
+source "${OET_PATH}"/libs/locallibs/os_release_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
@@ -30,12 +32,24 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     # Get OS info
-    grep "openeulerversion" /etc/openEuler-latest
-    CHECK_RESULT $? 0 0 "Failed to get the OS version info-1"
+    if [ -n "${OS_RELEASE_LATEST_FILE}" ]; then
+        grep "openeulerversion" "${OS_RELEASE_LATEST_FILE}"
+        CHECK_RESULT $? 0 0 "Failed to get the OS version info-1"
+    else
+        # 衍生发行版没有 /etc/openEuler-latest，用 /etc/os-release 的版本字段等价校验。
+        grep -E "^VERSION_ID=" /etc/os-release
+        CHECK_RESULT $? 0 0 "Failed to get the OS version info-1"
+    fi
     grep "PRETTY_NAME" /etc/os-release
     CHECK_RESULT $? 0 0 "Failed to get the OS version info-2"
-    grep "openEuler release" /etc/openEuler-release
-    CHECK_RESULT $? 0 0 "Failed to get the OS version info-3"
+    if [ -n "${OS_RELEASE_RELEASE_FILE}" ]; then
+        grep "release" "${OS_RELEASE_RELEASE_FILE}"
+        CHECK_RESULT $? 0 0 "Failed to get the OS version info-3"
+    else
+        # 衍生发行版没有 /etc/openEuler-release，用相同的 PRETTY_NAME 字段等价校验。
+        grep "PRETTY_NAME" /etc/os-release
+        CHECK_RESULT $? 0 0 "Failed to get the OS version info-3"
+    fi
     if [ "$NODE1_FRAME" == "ppc64le" ]; then
         echo "need match by kernel"
     else

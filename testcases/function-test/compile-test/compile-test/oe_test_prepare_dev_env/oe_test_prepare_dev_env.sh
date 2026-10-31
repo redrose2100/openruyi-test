@@ -22,7 +22,9 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    repo_version=$(grep openeulerversion /etc/openEuler-latest | awk -F '=' '{print'"$NF"'}')
+    # /etc/openEuler-latest 在衍生发行版上不存在，交由 os_release_lib.sh 兜底。
+    source "${OET_PATH}"/libs/locallibs/os_release_lib.sh
+    repo_version=$(OS_RELEASE_VERSION)
     jdk_version=$(dnf search openjdk-devel | awk -F '-' 'NR==2{print $2}')
     jdk_name=java-"$jdk_version"-openjdk-devel.${NODE1_FRAME}
     dnf list installed | grep "$jdk_name" && DNF_REMOVE "$jdk_name"

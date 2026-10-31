@@ -21,11 +21,18 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "httpd"
+    # firewalld/iptables/selinux are only changed for the duration of this run;
+    # post_test restores the state recorded here.
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
+    IPTABLES_RULES_FILE=$(mktemp /tmp/iptables_rules.XXXXXX)
+    iptables-save >"${IPTABLES_RULES_FILE}" 2>/dev/null
     setenforce 0
     iptables -F
     systemctl stop firewalld
     systemctl restart httpd
     SSH_CMD "
+    iptables-save > /tmp/iptables_rules.node2.bak 2>/dev/null
     setenforce 0
     iptables -F
     systemctl stop firewalld
@@ -78,7 +85,21 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    SSH_CMD "rm -rf /etc/rsyslog.d/server.conf && systemctl restart rsyslog" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "iptables-restore < /tmp/iptables_rules.node2.bak 2>/dev/null && rm -f /tmp/iptables_rules.node2.bak; rm -rf /etc/rsyslog.d/server.conf && systemctl restart rsyslog" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    if [ -n "${IPTABLES_RULES_FILE}" ] && [ -s "${IPTABLES_RULES_FILE}" ]; then
+        iptables-restore <"${IPTABLES_RULES_FILE}" || LOG_WARN "Failed to restore the original iptables rules."
+        rm -f "${IPTABLES_RULES_FILE}"
+    else
+        LOG_WARN "No iptables rules backup found, skip iptables restore."
+    fi
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
     rm -rf /etc/rsyslog.d/client.conf
     systemctl restart rsyslog
     LOG_INFO "End to restore the test environment."

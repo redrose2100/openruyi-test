@@ -25,6 +25,7 @@ AUDIT_RULES_FILE="/etc/audit/rules.d/audit.rules"
 
 function pre_test()
 {
+    DNF_INSTALL "diffutils"
     LOG_INFO "Start to prepare the test environment."
     # Check if secScanner is installed
     yum search secScanner || exit 0

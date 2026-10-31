@@ -22,7 +22,12 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function common_pre() {
     DNF_INSTALL "varnish httpd"
-    systemctl stop firewalld iptables
+    # firewalld/selinux are only changed for the duration of this run;
+    # post_test restores the state recorded here.
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_IPTABLES_ACTIVE=$(systemctl is-active iptables 2>/dev/null)
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
+    systemctl stop firewalld iptables 2>/dev/null
     setenforce 0
     SLEEP_WAIT 2
     echo "VARNISH_LISTEN_PORT=80" >/etc/sysconfig/varnish
@@ -44,4 +49,15 @@ function common_post() {
     systemctl stop varnish httpd
     DNF_REMOVE "$@"
     mv /etc/hosts.bak /etc/hosts
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
+    if [ "${ORIG_IPTABLES_ACTIVE}" = "active" ]; then
+        systemctl start iptables 2>/dev/null || true
+    fi
 }

@@ -33,7 +33,9 @@ function pre_test() {
         LOG_WARN "There is no kernel.config for riscv64 in stratovirt."
         exit 255
     fi
-    source /etc/openEuler-latest
+    # /etc/openEuler-latest 在衍生发行版上不存在，交由 os_release_lib.sh 兜底。
+    source "${OET_PATH}"/libs/locallibs/os_release_lib.sh
+    OS_RELEASE_EXPORT_VERSION
     Mmio_Sign=0
     LOG_INFO "End to prepare the test environment."
 }

@@ -23,6 +23,10 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL keepalived
+    # firewalld/selinux are only changed for the duration of this run;
+    # post_test restores the state recorded here (NODE1 here, NODE2/NODE3 on their own nodes).
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
     command -v firewalld && systemctl stop firewalld
     getenforce | grep Enforcing && setenforce 0
     node1_net_cards=$(TEST_NIC 1)
@@ -36,7 +40,9 @@ function pre_test() {
     node1_net_card3=$(echo "$node1_net_cards" | awk -F ' ' '{print $2}')
     node3_net_card2=$(echo "$node3_net_cards" | awk -F ' ' '{print $1}')
     node3_net_card3=$(echo "$node3_net_cards" | awk -F ' ' '{print $2}')
-    SSH_CMD "systemctl stop firewalld
+    SSH_CMD "systemctl is-active firewalld 2>/dev/null > /tmp/keepalived_fw_state.node2
+    getenforce 2>/dev/null > /tmp/keepalived_se_state.node2
+    systemctl stop firewalld
     getenforce | grep Enforcing && setenforce 0
     ip addr add 203.0.113.1/26 dev ${node2_net_card2}
     ip addr add 203.0.113.65/26 dev ${node2_net_card3}
@@ -58,6 +64,8 @@ function pre_test() {
     ip -6 route add default nexthop via 2001:db8:1::1 nexthop via 2001:db8:2::1
 
     SSH_CMD "dnf -y install keepalived
+    systemctl is-active firewalld 2>/dev/null > /tmp/keepalived_fw_state.node3
+    getenforce 2>/dev/null > /tmp/keepalived_se_state.node3
     systemctl stop firewalld
     getenforce | grep Enforcing && setenforce 0
     ip addr add 203.0.113.140/26 dev ${node3_net_card2}
@@ -132,6 +140,36 @@ function post_test() {
     ip addr del 2001:db8:2::1/64 dev ${node2_net_card3};
     ip addr del 2001:db8:3::1/64 dev ${node2_net_card4};
     ip addr del 2001:db8:4::1/64 dev ${node2_net_card5};" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
+    SSH_CMD "
+    if [ \"\$(cat /tmp/keepalived_fw_state.node2 2>/dev/null)\" = \"active\" ]; then
+        systemctl start firewalld 2>/dev/null || true;
+    fi;
+    if [ \"\$(cat /tmp/keepalived_se_state.node2 2>/dev/null)\" = \"Enforcing\" ]; then
+        setenforce 1 2>/dev/null || true;
+    elif [ \"\$(cat /tmp/keepalived_se_state.node2 2>/dev/null)\" = \"Permissive\" ]; then
+        setenforce 0 2>/dev/null || true;
+    fi;
+    rm -f /tmp/keepalived_fw_state.node2 /tmp/keepalived_se_state.node2
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "
+    if [ \"\$(cat /tmp/keepalived_fw_state.node3 2>/dev/null)\" = \"active\" ]; then
+        systemctl start firewalld 2>/dev/null || true;
+    fi;
+    if [ \"\$(cat /tmp/keepalived_se_state.node3 2>/dev/null)\" = \"Enforcing\" ]; then
+        setenforce 1 2>/dev/null || true;
+    elif [ \"\$(cat /tmp/keepalived_se_state.node3 2>/dev/null)\" = \"Permissive\" ]; then
+        setenforce 0 2>/dev/null || true;
+    fi;
+    rm -f /tmp/keepalived_fw_state.node3 /tmp/keepalived_se_state.node3
+    " "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
 
     LOG_INFO "Finish environment cleanup!"
 }

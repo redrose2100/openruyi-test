@@ -20,6 +20,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "diffutils"
     DNF_INSTALL ocaml
     if ! rpm -ql ocaml | grep bin | grep ocaml-instr-report; then
         LOG_INFO "The command ocaml-instr-report does not exist."

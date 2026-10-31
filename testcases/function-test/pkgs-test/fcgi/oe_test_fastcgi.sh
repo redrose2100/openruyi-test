@@ -22,6 +22,10 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "fcgi fcgi-devel spawn-fcgi nginx lsof gcc-c++"
+    # firewalld/selinux are only changed for the duration of this run;
+    # post_test restores the state recorded here.
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
     setenforce 0
     LOG_INFO "End to prepare the test environment."
 }
@@ -55,6 +59,8 @@ EOF
     mkdir /usr/share/nginx/html_test
     cp fastcgi_demo /usr/share/nginx/html_test
     CHECK_RESULT $? 0 0 "Command execution failed"
+    # Stopping firewalld here is part of the behaviour under test, so it stays
+    # inside run_test; the original state was recorded in pre_test.
     systemctl stop firewalld.service
     cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
     sed -i '0,/html/s/html/html_test/' /etc/nginx/nginx.conf
@@ -74,7 +80,14 @@ function post_test() {
     rm -rf fastcgi_demo.cpp fastcgi_demo /usr/share/nginx/html_test /etc/nginx/nginx.conf
     mv /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf
     systemctl restart nginx
-    setenforce 1
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

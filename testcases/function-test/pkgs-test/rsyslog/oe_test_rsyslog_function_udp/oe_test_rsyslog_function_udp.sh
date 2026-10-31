@@ -21,7 +21,14 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "net-tools"
-    systemctl stop iptables firewalld && setenforce 0
+    # firewalld/iptables/selinux are only changed for the duration of this run;
+    # post_test restores the state recorded here.
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
+    IPTABLES_RULES_FILE=$(mktemp /tmp/iptables_rules.XXXXXX)
+    iptables-save >"${IPTABLES_RULES_FILE}" 2>/dev/null
+    systemctl stop iptables firewalld 2>/dev/null
+    setenforce 0
     SSH_CMD "systemctl stop iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     iptables -F INPUT && iptables -P INPUT ACCEPT
     LOG_INFO "End to prepare the test environment."
@@ -53,10 +60,23 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && systemctl start iptables" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    systemctl start iptables firewalld && setenforce 1
+    SSH_CMD "rm -rf /etc/rsyslog.d/client.conf && systemctl restart rsyslog && { systemctl start iptables 2>/dev/null || true; }" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    if [ -n "${IPTABLES_RULES_FILE}" ] && [ -s "${IPTABLES_RULES_FILE}" ]; then
+        iptables-restore <"${IPTABLES_RULES_FILE}" || LOG_WARN "Failed to restore the original iptables rules."
+        rm -f "${IPTABLES_RULES_FILE}"
+    else
+        LOG_WARN "No iptables rules backup found, skip iptables restore."
+    fi
+    systemctl start iptables 2>/dev/null || LOG_WARN "iptables service is not available, skip it."
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
     rm -rf /etc/rsyslog.d/server.conf
-    systemctl start iptables
     systemctl restart rsyslog
     LOG_INFO "End to restore the test environment."
 }
