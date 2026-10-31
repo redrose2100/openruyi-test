@@ -20,6 +20,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
   LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "diffutils"
   DNF_INSTALL "gawk"
   cat  > data1.txt  << EOF
 130 120 135

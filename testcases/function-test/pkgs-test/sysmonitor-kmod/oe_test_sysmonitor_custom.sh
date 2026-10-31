@@ -21,6 +21,7 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/sysmonitor-kmod/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
+    DNF_INSTALL "diffutils"
     cp "${sysmonitor_log:-}" "${sysmonitor_log}.bak"
     sed -i "/^CUSTOM_DAEMON_MONITOR=/ s/=.*/=\"on\"/" "$sysmonitor_log"
     sed -i "/^CUSTOM_PERIODIC_MONITOR=/ s/=.*/=\"on\"/" "$sysmonitor_log"

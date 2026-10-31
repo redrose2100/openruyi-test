@@ -22,7 +22,9 @@ source "$OET_PATH/testcases/function-test/pkgs-test/cmake/common/common_cmake.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    VERSION_ID=$(awk '{print$3}' /etc/openEuler-release)
+    # 发行版信息兼容层：openRuyi 等衍生发行版没有 /etc/openEuler-release。
+    source "${OET_PATH}"/libs/locallibs/os_release_lib.sh
+    VERSION_ID=$(OS_RELEASE_VERSION_ID)
     LOG_INFO "Finish preparing the test environment."
 }
 

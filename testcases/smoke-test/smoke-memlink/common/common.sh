@@ -126,6 +126,8 @@ function memlink_init() {
     command -v numactl || yum install -y numactl
     rpm -q memlinkd || yum install -y memlinkd
     systemctl is-active --quiet memlinkd || systemctl restart memlinkd
+    # change_cfgs()/restore_cfgs() 用 diff 校验配置改动，镜像里未预装 diffutils。
+    DNF_INSTALL "diffutils"
     backup_cfg "${MEMLINKD_CONFIG}"
 }
 

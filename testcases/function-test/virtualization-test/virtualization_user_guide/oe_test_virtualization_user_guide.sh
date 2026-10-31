@@ -24,7 +24,17 @@ function pre_test() {
     Default_LANG=$LANG
     export LANG=en_US.UTF-8
     EXECUTE_T="60m"
-    source /etc/openEuler-latest
+    # /etc/openEuler-latest 在衍生发行版上不存在，交由 os_release_lib.sh 兜底。
+    source "${OET_PATH}"/libs/locallibs/os_release_lib.sh
+    OS_RELEASE_EXPORT_VERSION
+    # 本用例的镜像/ISO 全部来自 repo.openeuler.org，衍生发行版无对应制品，直接跳过。
+    case "${openeulerversion}" in
+        openEuler-* | openEuler[0-9]*) ;;
+        *)
+            LOG_WARN "No openEuler artifact available for '${openeulerversion}', skip."
+            exit 255
+            ;;
+    esac
     # 选择业务网卡，TEST_NIC 会自动排除管理网卡 NODE1_NIC
     Network_card_name=$(TEST_NIC 1 | awk '{print $1}')
     if [ -z "${Network_card_name}" ]; then
@@ -105,7 +115,7 @@ function run_test() {
 
     # Manage virtual machines
     if [ "${NODE1_FRAME}"x == "riscv64"x ]; then
-        # 在 riscv64 可以正确获取 /etc/openEuler-latest 前固定版本为 openEuler-24.03-LTS-SP1
+        # riscv64 的固件只发布了 openEuler-24.03-LTS-SP1 版本
         # https://gitee.com/src-openeuler/openEuler-latest-release/issues/IC5KC3
         openeulerversion="openEuler-24.03-LTS-SP1"
         wget -c -O /mnt/openEuler-RISCV_VIRT_CODE.fd https://repo.openeuler.org/"${openeulerversion}"/virtual_machine_img/riscv64/RISCV_VIRT_CODE.fd

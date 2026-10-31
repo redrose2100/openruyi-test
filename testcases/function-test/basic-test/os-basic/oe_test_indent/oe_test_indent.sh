@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "diffutils"
     DNF_INSTALL "indent"
     cat > hello.c <<EOF
 #include <stdio.h>

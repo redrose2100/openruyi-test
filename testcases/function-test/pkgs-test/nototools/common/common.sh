@@ -19,12 +19,14 @@
 # #############################################
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+# 发行版信息兼容层：openRuyi 等衍生发行版没有 /etc/openEuler-release。
+source "${OET_PATH}/libs/locallibs/os_release_lib.sh"
 
 function notoconfig_pre() {
     TMP_SRCDIR="$(mktemp -d -t nototools.SRC.XXXXXXXXXXXX)"
     #系统无启用的source源，添加source源
     if ! dnf repolist enabled 2>/dev/null | grep -qi 'source'; then
-       oeversion=$(awk '{gsub(/\(|\)/,"",$4); print $1"-"$3"-"$4}' /etc/openEuler-release)
+       oeversion=$(OS_RELEASE_VERSION)
        REPO_FILE="/etc/yum.repos.d/openEuler-source.repo"
        cat > "$REPO_FILE" <<EOF
 [source]

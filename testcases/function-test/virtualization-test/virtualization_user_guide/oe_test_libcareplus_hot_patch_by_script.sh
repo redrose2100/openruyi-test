@@ -21,6 +21,7 @@ source common/common_libcareplus.sh
 
 function pre_test() {
 	LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "diffutils"
 	pre_env
 	DNF_INSTALL "patch make"
 	LOG_INFO "End to prepare the test environment."

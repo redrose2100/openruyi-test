@@ -19,7 +19,8 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 source "${OET_PATH}"/testcases/function-test/pkgs-test/common/common_lib.sh
-oeversion="$(grep openeulerversion /etc/openEuler-latest | awk -F '=' '{print $2}')"
+source "${OET_PATH}"/libs/locallibs/os_release_lib.sh
+oeversion="$(OS_RELEASE_VERSION)"
 dir="$(pwd)"
 
 function pre_test() {

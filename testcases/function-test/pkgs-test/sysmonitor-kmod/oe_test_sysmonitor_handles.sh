@@ -21,6 +21,7 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/sysmonitor-kmod/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
+    DNF_INSTALL "diffutils"
     cp -a "${sysmonitor_conf:-}" "${sysmonitor_conf}".bak
     sed -i "/^FDCNT_MONITOR=/ s/=.*/=\"on\"/" "${sysmonitor_conf}"
     diff --color "${sysmonitor_conf}".bak "${sysmonitor_conf}"

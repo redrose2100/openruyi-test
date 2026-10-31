@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment"
+    DNF_INSTALL "diffutils"
     DNF_INSTALL "texi2html"
     mkdir result
     touch result/warn.texi

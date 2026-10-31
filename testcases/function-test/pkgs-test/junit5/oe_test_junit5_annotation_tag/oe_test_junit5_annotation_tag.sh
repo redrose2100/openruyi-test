@@ -21,6 +21,7 @@ source "../common/lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "diffutils"
     pre_junit5
     LOG_INFO "End of environmental preparation!"
 }

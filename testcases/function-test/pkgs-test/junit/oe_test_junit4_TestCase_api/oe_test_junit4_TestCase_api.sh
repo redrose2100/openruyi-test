@@ -21,6 +21,7 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/junit/common/common_junit.
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "diffutils"
     deploy_env
     LOG_INFO "Finish preparing the test environment."
 }

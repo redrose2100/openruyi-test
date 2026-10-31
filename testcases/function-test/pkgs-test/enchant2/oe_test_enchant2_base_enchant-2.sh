@@ -38,6 +38,7 @@ Thi is a wrongg stencees." > ${TMP_DIR}/test.in
 # Preparation for installation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "diffutils"
     DNF_INSTALL "enchant2"
     LOG_INFO "End to prepare the test environment."
 }
