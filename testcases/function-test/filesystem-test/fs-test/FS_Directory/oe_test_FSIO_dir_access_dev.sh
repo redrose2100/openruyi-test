@@ -31,7 +31,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "The file autofs on /dev has some errors."
     ls -l /dev | grep "block" | grep "drwxr-xr-x"
     CHECK_RESULT $? 0 0 "The file block on /dev has some errors."
-    ls -l /dev | grep "console" | grep "crw--w----"
+    # console 权限随发行版不同：openEuler 为 crw--w----（0620），
+    # openRuyi 为 crw-------（0600），两者都是合法结果。
+    ls -l /dev | grep "console" | grep -Eq "crw(--w----|-------)"
     CHECK_RESULT $? 0 0 "The file console on /dev has some errors."
     ls -l /dev | grep "$disk" | grep "brw-rw----"
     CHECK_RESULT $? 0 0 "The disk file $disk on /dev has some errors."

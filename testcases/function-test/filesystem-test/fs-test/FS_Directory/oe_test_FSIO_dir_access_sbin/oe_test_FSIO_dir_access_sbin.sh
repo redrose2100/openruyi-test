@@ -32,14 +32,21 @@ function run_test() {
     CHECK_RESULT $? 0 0 "/sbin is not soft link of /usr/sbin "
     diff /sbin /usr/sbin
     CHECK_RESULT $? 0 0 "The /sbin doesn't same with /usr/sbin."
-    actual_access=$(find /usr/sbin -mindepth 1 -maxdepth 1 -exec stat -c '%A' {} \; | sort | uniq)
+    # /usr/sbin 在 openRuyi 上是指向 bin 的符号链接，find 默认不跟随符号链接，
+    # 会把整个目录当成空目录，因此必须加 -L；否则 actual_access 为空，
+    # 下面的 here-string 会带着空串进循环，产生一条假的权限异常。
+    actual_access=$(find -L /usr/sbin -mindepth 1 -maxdepth 1 -exec stat -c '%A' {} \; | sort | uniq)
     expect_file="./expect_access"
-    while IFS= read -r perm; do
-        if ! grep -Fxq -- "$perm" "$expect_file"; then
-            CHECK_RESULT 1 0 0 "Unexpected permission: $perm"
-            break
-        fi
-    done <<< "$actual_access"
+    if [ -z "$actual_access" ]; then
+        CHECK_RESULT 1 0 0 "No entry found under /usr/sbin."
+    else
+        while IFS= read -r perm; do
+            if ! grep -Fxq -- "$perm" "$expect_file"; then
+                CHECK_RESULT 1 0 0 "Unexpected permission: $perm"
+                break
+            fi
+        done <<< "$actual_access"
+    fi
     
     LOG_INFO "End to run test."
 }
