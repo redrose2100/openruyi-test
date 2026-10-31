@@ -18,8 +18,24 @@
 
 function CREATE_VG() {
     cur_date=$(date +%Y%m%d%H%M%S)
-    free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
-    disk_name="/dev/"$free_disk
+    # 原实现 `lsblk | grep disk | ... | tail -n 1` 取最后一整盘，
+    # 完全不排除系统盘；在单盘环境下会直接对系统盘 pvcreate。
+    # 改为走统一选盘并显式拒绝系统盘。
+    local _disk
+    _disk=$(TEST_DISK 1 2>/dev/null | awk '{print $1}')
+    if [ -z "${_disk}" ] || [ ! -b "/dev/${_disk}" ]; then
+        LOG_ERROR "no usable free test disk found (got '${_disk}'), abort to protect the OS."
+        return 1
+    fi
+    if command -v get_system_disk >/dev/null 2>&1; then
+        case " $(get_system_disk) " in
+            *" ${_disk} "*)
+                LOG_ERROR "refuse to use system disk [${_disk}] for volume group, abort to protect the OS."
+                return 1
+                ;;
+        esac
+    fi
+    disk_name="/dev/${_disk}"
     if pvcreate "$disk_name" &>/dev/null; then
         vggroup="test_vggroup""$cur_date"
         vgcreate "$vggroup" "$disk_name" >/dev/null
@@ -48,23 +64,25 @@ function CREATE_FS() {
 
 function REMOVE_VG() {
     vggroup=$1
-    [[ "$vggroup" -ne "" ]] && {
+    # 原来写成 [[ "$vggroup" -ne "" ]]，用数值比较符判断字符串，
+    # 卷组名为空时会报 "integer expression expected" 并让整个清理流程中断。
+    if [[ -n "$vggroup" ]] && command -v vgremove >/dev/null 2>&1; then
         vgremove "$vggroup" -y
-    }
+    fi
 
     mounted=$(df -T | grep "test_vggroup" | awk '{print $7}')
-    if [[ "$mounted" -ne "" ]]; then
+    if [[ -n "$mounted" ]]; then
         for m in $mounted; do
             umount "$m"
         done
         vggroup=$(df -T | grep "test_vggroup" | awk '{print $1}' | cut -d '-' -f 1 | cut -d '/' -f 4 | head -n 1)
-        vgremove "$vggroup" -yf
+        [[ -n "$vggroup" ]] && vgremove "$vggroup" -yf
     fi
 
     if lsblk | grep "test_vggroup" >/dev/null; then
         vggroup=$(lsblk | grep "test_vggroup" | awk '{print $1}' | head -n 1 | cut -d '-' -f 1)
         vggroup=${vggroup:2}
-        vgremove "$vggroup" -y
+        [[ -n "$vggroup" ]] && vgremove "$vggroup" -y
     fi
     rm -rf /mnt/point*
 }

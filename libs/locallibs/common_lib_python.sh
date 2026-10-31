@@ -254,6 +254,13 @@ function TEST_DISK() {
 function DNF_INSTALL() {
     pkgs=$1
     node=${2-1}
+    # 用例常写成 DNF_REMOVE "$@"，而 mugen 会向用例脚本传入 -x 之类的参数，
+    # 于是位置参数会被错当成 node 号。这里强制校验，非法值一律回落到节点 1，
+    # 避免 rpm_manage.py 的 --node 解析失败导致整个用例异常退出。
+    if ! echo "$node" | grep -qE '^[0-9]+$'; then
+        LOG_WARN "DNF_INSTALL: invalid node '$node', fallback to 1."
+        node=1
+    fi
     #多节点初始系统环境相同，本地和远端安装的包，在任何节点不不应该存在
     [ -z "$tmpfile" ] && tmpfile=""
 
@@ -267,6 +274,15 @@ function DNF_REMOVE() {
     node=${1-1}
     pkg_list=${2-""}
     mode=${3-0}
+
+    if ! echo "$node" | grep -qE '^[0-9]+$'; then
+        LOG_WARN "DNF_REMOVE: invalid node '$node', fallback to 1."
+        node=1
+    fi
+    if ! echo "$mode" | grep -qE '^[0-9]+$'; then
+        LOG_WARN "DNF_REMOVE: invalid mode '$mode', fallback to 0."
+        mode=0
+    fi
 
     if [[ -z "$tmpfile" && -z "$pkg_list" ]]; then
         LOG_WARN "no thing to do."
