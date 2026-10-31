@@ -82,7 +82,10 @@ function get_system_disk() {
                 _dev="/dev/mapper/$(basename "$_dev")"
             fi
             [ -b "$_dev" ] || continue
-            lsblk -sno NAME,TYPE "$_dev" 2>/dev/null | awk '$2 == "disk" {print $1}'
+            # 必须带 -r：lsblk 在树形模式下即便给了 -n 也仍会渲染 `└─` 这类连接符，
+            # 导致保护集里出现 `└─sda` 而候选列表里是 `sda`，两者永不相等，
+            # 系统盘会被当成空闲盘返回并交给 fdisk/pvcreate 写坏。
+            lsblk -rsno NAME,TYPE "$_dev" 2>/dev/null | awk '$2 == "disk" {print $1}'
         done | sort -u | tr '\n' ' '
     )
     echo "$_protected"
@@ -98,7 +101,7 @@ function get_root_disk() {
     if [ ! -b "${_root_dev}" ] && [ -b "/dev/mapper/$(basename "${_root_dev}")" ]; then
         _root_dev="/dev/mapper/$(basename "${_root_dev}")"
     fi
-    lsblk -sno NAME,TYPE "${_root_dev}" 2>/dev/null | awk '$2 == "disk" {print $1}' | head -n 1
+    lsblk -rsno NAME,TYPE "${_root_dev}" 2>/dev/null | awk '$2 == "disk" {print $1}' | head -n 1
 }
 
 # 选盘并校验，成功后设置 local_disk / local_disk1 / local_disk2 / local_disk3。

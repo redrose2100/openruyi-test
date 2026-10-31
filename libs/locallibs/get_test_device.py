@@ -140,14 +140,16 @@ _disk_protected=$(
                 _dev="/dev/mapper/$(basename "$_dev")"
             fi
             [ -b "$_dev" ] || continue
-            lsblk -sno NAME,TYPE "$_dev" 2>/dev/null | awk '$2 == "disk" {print $1}'
+            # 必须带 -r：lsblk 树形模式下即便给了 -n 也仍渲染 `└─` 连接符，
+            # 保护集会变成 `└─sda` 而永远匹配不到候选盘 `sda`。
+            lsblk -rsno NAME,TYPE "$_dev" 2>/dev/null | awk '$2 == "disk" {print $1}'
         done | sort -u | tr '\n' ' '
 )
 _root_dev=$(findmnt -no SOURCE / 2>/dev/null)
 if [ ! -b "$_root_dev" ] && [ -b "/dev/mapper/$(basename "$_root_dev")" ]; then
     _root_dev="/dev/mapper/$(basename "$_root_dev")"
 fi
-_root_disk=$(lsblk -sno NAME,TYPE "$_root_dev" 2>/dev/null | awk '$2 == "disk" {print $1}' | head -n 1)
+_root_disk=$(lsblk -rsno NAME,TYPE "$_root_dev" 2>/dev/null | awk '$2 == "disk" {print $1}' | head -n 1)
 if [ -z "$_root_disk" ]; then
     # 无法可靠识别系统盘：拒绝输出任何测试盘，避免把系统盘交给破坏性用例
     exit 0
