@@ -85,6 +85,51 @@ BREAKING_BODY_RE = re.compile(r"^BREAKING[ -]CHANGE:", re.MULTILINE)
 # 提交信息分隔：空行以上为 header
 SEPARATOR = "\n\n"
 
+# 历史提交豁免台账：已发布、不可改写（dev 禁止 force-push）的不合规提交。
+# 台账只按 SHA 匹配，不影响新提交的校验强度。
+ALLOWLIST_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "commit_lint_allowlist.txt"
+)
+
+# 台账中以 7~40 位十六进制开头的行视为条目；# 开头为注释，空行忽略
+ALLOWLIST_SHA_RE = re.compile(r"^(?P<sha>[0-9a-fA-F]{7,40})\b")
+
+
+def load_allowlist(path=ALLOWLIST_PATH):
+    """读取历史提交豁免台账，返回小写 SHA 集合。
+
+    台账缺失时返回空集合（不影响正常校验），读取失败则视为配置错误，
+    避免「文件存在但读不了」时门禁被静默放宽。
+    """
+    if not os.path.isfile(path):
+        return set()
+    allowed = set()
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            for one_line in handle:
+                one_line = one_line.strip()
+                if not one_line or one_line.startswith("#"):
+                    continue
+                match = ALLOWLIST_SHA_RE.match(one_line)
+                if match:
+                    allowed.add(match.group("sha").lower())
+    except OSError as exc:
+        sys.stderr.write("ERROR: cannot read allowlist %s: %s\n" % (path, exc))
+        sys.exit(2)
+    return allowed
+
+
+def is_allowlisted(sha, allowlist):
+    """判断提交是否在豁免台账中。
+
+    台账 SHA 可能是缩写，因此只要台账条目的 SHA 与完整 SHA 前缀相同即视为命中。
+    """
+    sha = sha.lower()
+    for one in allowlist:
+        if sha.startswith(one):
+            return True
+    return False
+
 
 def is_exempt(header):
     """Merge / Revert / fixup! 等自动提交不参与校验。"""
@@ -231,6 +276,12 @@ def build_arg_parser():
         action="store_false",
         help="disable GitHub Actions annotations",
     )
+    parser.add_argument(
+        "--allowlist",
+        metavar="FILE",
+        default=ALLOWLIST_PATH,
+        help="path to the historical commit allowlist (default: %(default)s)",
+    )
     return parser
 
 
@@ -253,11 +304,21 @@ def main(argv=None):
         print("No commit to check (%s), skip." % scope_desc)
         return 0
 
+    allowlist = load_allowlist(args.allowlist)
+
     failures = []
+    skipped = []
     for sha, message in commits:
+        # 台账命中：历史已发布提交，跳过校验但显式打印，保证仍然可审计
+        if is_allowlisted(sha, allowlist):
+            skipped.append(sha)
+            continue
         errors = check_message(message)
         if errors:
             failures.append((sha, message, errors))
+
+    for sha in skipped:
+        print("SKIP %s: allowlisted historical commit" % sha[:12])
 
     for sha, message, errors in failures:
         header = message.splitlines()[0] if message.splitlines() else ""
@@ -268,7 +329,10 @@ def main(argv=None):
     if annotations_enabled and failures:
         emit_annotations(failures)
 
-    print("checked %d commit(s) (%s); %d non-conforming" % (len(commits), scope_desc, len(failures)))
+    print(
+        "checked %d commit(s) (%s); %d non-conforming; %d allowlisted"
+        % (len(commits), scope_desc, len(failures), len(skipped))
+    )
 
     return 1 if failures else 0
 
