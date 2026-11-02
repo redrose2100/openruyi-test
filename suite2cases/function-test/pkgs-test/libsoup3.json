@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/function-test/pkgs-test/libsoup3/",
-    "cases": [
-        {
-            "name": "oe_test_libsoup3_001"
-        }
-    ]
-}

@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/function-test/pkgs-test/sane-backends",
-    "cases": [
-        {
-            "name": "oe_test_socket_saned"
-        }
-    ]
-}

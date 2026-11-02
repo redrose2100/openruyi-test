@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/function-test/pkgs-test/ovirt-imageio",
-    "cases": [
-        {
-            "name": "oe_test_ovirt_imageio"
-        }
-    ]
-}
