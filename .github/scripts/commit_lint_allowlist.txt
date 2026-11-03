@@ -23,3 +23,5 @@
 2ad8b2931ca07e56ecb5b8675fd13377006011c8  header "unify test disk selection guard into libs/locallibs/disk_select_lib.sh" has no "type:" prefix
 4d2beaa74f23e1741fda040b6642db61ad6b3edb  header "testcases: harden Group C server-side cases and re-triage Group E" uses unsupported type "testcases"
 bed7041c137148dbc2c829f932b080117433372a  header "httpd: drop cases for units not shipped by openRuyi spec" uses unsupported type "httpd"
+66a524fda1c06081f39b7e9a1febe72368a9e432  header "Move reboot test cases from os-basic to os-reboot suite" has no "type:" prefix
+5629b9edb3be99a00261d327131eceb5b47db267  header "Remove 516 pkgs-test suites without spec and NOPKG skip reason" has no "type:" prefix
