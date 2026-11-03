@@ -157,6 +157,16 @@
             "name": "oe_test_reboot_timed",
             "machine type": "physical",
             "machine num": 2
+        },
+        {
+            "name": "oe_test_system_monitor_reboot",
+            "machine type": "physical",
+            "machine num": 2
+        },
+        {
+            "name": "oe_test_reboot",
+            "machine type": "physical",
+            "machine num": 2
         }
     ]
 }
