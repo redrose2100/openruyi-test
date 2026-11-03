@@ -20,9 +20,10 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
+    DNF_INSTALL openssh-clients
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "nfs-utils dmidecode"
-    DNF_INSTALL "nfs-utils" 2
+    DNF_INSTALL "nfs-kernel-server nfs-client rpcbind dmidecode"
+    DNF_INSTALL "nfs-kernel-server nfs-client rpcbind" 2
     SSH_CMD "systemctl disable --now firewalld;iptables -F" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "Environmental preparation is over."
 }
@@ -53,7 +54,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     umount /mnt
-    SSH_CMD "rm -rf /home/nfs;yum remove -y nfs-utils;mv -f /etc/exports.bak /etc/exports" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "rm -rf /home/nfs;yum remove -y nfs-kernel-server nfs-client rpcbind;mv -f /etc/exports.bak /etc/exports" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     DNF_REMOVE "$@"
     DNF_REMOVE 2 "$@"
     LOG_INFO "Finish environment cleanup."

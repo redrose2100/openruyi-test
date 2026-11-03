@@ -33,8 +33,9 @@ function config_params() {
 }
 
 function pre_test() {
+    DNF_INSTALL openssh-clients
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL nfs-utils
+    DNF_INSTALL "nfs-kernel-server nfs-client rpcbind"
     systemctl stop firewalld
     iptables -F
     SSH_CMD "systemctl stop firewalld;iptables -F" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
@@ -43,7 +44,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    SSH_CMD "yum install nfs-utils -y;mkdir /home/nfs;mv /etc/exports /etc/exports.bak;
+    SSH_CMD "yum install nfs-kernel-server nfs-client rpcbind -y;mkdir /home/nfs;mv /etc/exports /etc/exports.bak;
 	echo '/home/nfs *(rw,sync,all_squash)' >/etc/exports; exportfs -avr" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     CHECK_RESULT $?
     SSH_CMD "systemctl restart nfs-server rpcbind;mkfs.ext4 -F /dev/${remote_disk};
@@ -70,7 +71,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     umount /home/client
     SLEEP_WAIT 2
-    SSH_CMD "umount /home/nfs;rm -rf /home/nfs;yum remove -y nfs-utils;mv -f /etc/exports.bak /etc/exports;
+    SSH_CMD "umount /home/nfs;rm -rf /home/nfs;yum remove -y nfs-kernel-server nfs-client rpcbind;mv -f /etc/exports.bak /etc/exports;
     umount /home/nfs; systemctl start firewalld" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     rmdir /home/client
     systemctl start firewalld

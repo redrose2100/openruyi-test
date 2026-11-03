@@ -19,8 +19,9 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
+    DNF_INSTALL openssh-clients
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL nfs-utils
+    DNF_INSTALL "nfs-kernel-server nfs-client rpcbind"
     systemctl stop firewalld
     iptables -F
     SSH_CMD "systemctl stop firewalld;iptables -F" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
@@ -29,7 +30,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    SSH_CMD "yum install nfs-utils -y;mkdir /home/nfs;touch /home/nfs/testnfs;chmod 777 /home/nfs;
+    SSH_CMD "yum install nfs-kernel-server nfs-client rpcbind -y;mkdir /home/nfs;touch /home/nfs/testnfs;chmod 777 /home/nfs;
     mv /etc/exports /etc/exports.bak;echo '/home/nfs *(rw,sync,all_squash)' >/etc/exports" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     SSH_CMD "exportfs -avr; systemctl restart nfs-server rpcbind" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     CHECK_RESULT $?
@@ -53,7 +54,7 @@ function post_test() {
     umount /home/client1
     umount /home/client2
     rmdir home/{client1,client2}
-    SSH_CMD "rm -rf /home/nfs;yum remove -y nfs-utils;mv -f /etc/exports.bak /etc/exports" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
+    SSH_CMD "rm -rf /home/nfs;yum remove -y nfs-kernel-server nfs-client rpcbind;mv -f /etc/exports.bak /etc/exports" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     systemctl start firewalld
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup."

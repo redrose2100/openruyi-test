@@ -156,4 +156,23 @@ function check_free_disk() {
     local_disk1=${disk_list[1]-}
     local_disk2=${disk_list[2]-}
     local_disk3=${disk_list[3]-}
+
+    # Clean leftover signatures on test disks: the platform may attach disks with
+    # leftover LVM2_member / md raid / partition signatures from a previous task,
+    # which makes mkfs/mdadm/pvcreate fail with 'Device or resource busy' or
+    # 'is apparently in use'.
+    # wipefs only clears signatures without touching data layout; if it fails
+    # (disk held by kernel), abort the testcase with a clear error to avoid a
+    # chain of failures on the same dirty disk.
+    local _clean_d
+    for _clean_d in "${disk_list[@]}"; do
+        [ -z "${_clean_d}" ] && continue
+        [ -b "/dev/${_clean_d}" ] || continue
+        if ! wipefs -a "/dev/${_clean_d}" >/dev/null 2>&1; then
+            __abort_test_disk "wipefs -a failed on test disk [${_clean_d}], disk may be in use by system, abort to protect the OS."
+        fi
+        # After wipefs, leftover LVM metadata (pv header in block 1) may remain;
+        # pvremove as a fallback. Non-zero return when no PV exists is expected.
+        pvremove -ff -y "/dev/${_clean_d}" >/dev/null 2>&1 || true
+    done
 }
