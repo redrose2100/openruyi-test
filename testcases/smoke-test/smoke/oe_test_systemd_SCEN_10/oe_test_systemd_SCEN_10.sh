@@ -46,6 +46,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "TestB.service is not failed"
     systemctl stop TestA
     CHECK_RESULT $? 0 0 "TestA.service stop failed"
+    systemctl reset-failed TestB
     systemctl start TestA
     CHECK_RESULT $? 0 0 "TestA.service start failed"
     SLEEP_WAIT 5

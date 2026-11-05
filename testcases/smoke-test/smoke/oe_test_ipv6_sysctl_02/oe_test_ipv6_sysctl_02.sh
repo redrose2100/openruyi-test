@@ -18,6 +18,12 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL procps
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     echo -e "net.ipv6.conf.all.disable_ipv6=1 \nnet.ipv6.conf.default.disable_ipv6=1" >>/etc/sysctl.conf

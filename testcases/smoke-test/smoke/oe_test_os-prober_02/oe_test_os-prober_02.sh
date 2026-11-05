@@ -26,7 +26,7 @@ function pre_test() {
         LOG_INFO "The current environment is Docker."
         exit 0
     else
-        DNF_INSTALL os-prober
+        DNF_INSTALL "os-prober util-linux"
     fi
     LOG_INFO "End to prepare the test environment."
 }
