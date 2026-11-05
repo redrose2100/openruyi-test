@@ -17,12 +17,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_storage_Mutipath_mpathconf",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_storage_Mutipath_dmsetup",
             "machine num": 1,
             "add network interface": 0,
@@ -156,12 +150,6 @@
             ]
         },
         {
-            "name": "oe_test_storage_Mutipath_configure_parameter",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_storage_diskpartiton_view_fdisk",
             "machine num": 1,
             "add network interface": 0,
@@ -177,17 +165,6 @@
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
-        },
-        {
-            "name": "oe_test_storage_lvm_query_lvmsnap",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": [
-                2,
-                2,
-                2,
-                2
-            ]
         },
         {
             "name": "oe_test_storage_fileCMD_mv",
@@ -421,12 +398,6 @@
             ]
         },
         {
-            "name": "oe_test_storage_Mutipath_configure_device",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_storage_ext3_mount",
             "machine num": 1,
             "add network interface": 0,
@@ -436,12 +407,6 @@
                 2,
                 2
             ]
-        },
-        {
-            "name": "oe_test_storage_Mutipath_view_info",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
         },
         {
             "name": "oe_test_storage_ext4_mount",
@@ -612,12 +577,6 @@
             ]
         },
         {
-            "name": "oe_test_storage_Mutipath_various_fields",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_storage_fileCMD_df",
             "machine num": 1,
             "add network interface": 0,
@@ -683,12 +642,6 @@
                 2,
                 2
             ]
-        },
-        {
-            "name": "oe_test_storage_Mutipath_configure_section",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
         },
         {
             "name": "oe_test_storage_fileCMD_unzip",
@@ -812,12 +765,6 @@
             ]
         },
         {
-            "name": "oe_test_storage_Mutipath_configure_defaults",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_storage_diskpartiton_fdisk_delete",
             "machine num": 1,
             "add network interface": 0,
@@ -869,12 +816,6 @@
         },
         {
             "name": "oe_test_storage_fileCMD_wc",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_storage_Mutipath_configure_blacklist",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
