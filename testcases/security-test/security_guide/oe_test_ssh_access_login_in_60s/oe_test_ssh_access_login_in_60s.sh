@@ -20,6 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL openssh-clients
     ls testlog && rm -rf testlog
     SSH_CMD "cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
             sed -i 's/#LoginGraceTime 2m/LoginGraceTime 1m/g' /etc/ssh/sshd_config

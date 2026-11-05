@@ -21,6 +21,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "openssh-clients procps"
     cp /etc/profile /etc/profile.bak
     echo \\'TMOUT=30\\' >/etc/profile
     source /etc/profile

@@ -9,6 +9,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL openssh-clients
     # 时钟、login.defs 与测试用户全部落在 NODE2，避免污染 NODE1 的时间与账号。
     # 先记录 NODE2 的绝对时间戳，post_test 用它做绝对回滚（不依赖 date -s '-6 day' 这类相对回退）。
     SSH_CMD "
