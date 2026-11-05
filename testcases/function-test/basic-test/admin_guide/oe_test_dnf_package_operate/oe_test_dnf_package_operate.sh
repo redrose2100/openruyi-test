@@ -28,7 +28,7 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     dnf search httpd | grep httpd
     CHECK_RESULT $?
-    dnf list all >/dev/null
+    dnf list --all >/dev/null
     CHECK_RESULT $?
     dnf info httpd | grep httpd | grep -i Name
     CHECK_RESULT $?
