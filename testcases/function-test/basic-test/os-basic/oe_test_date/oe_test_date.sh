@@ -33,13 +33,25 @@ function run_test() {
     date02=$(date | awk -F ' ' '{print $1,$2,$3}')
     test "$date01"x = "$date02"x
     CHECK_RESULT $?
+    # 注意：date -s 会改变系统时间。框架的超时检测基于系统 epoch 时间，
+    # 若修改后系统时间大幅前跳（如凌晨执行时 date -s 9:30:00），会跨过
+    # "开始时刻+超时阈值"被框架立即误判超时。因此每次修改后立即恢复真实时间。
     date -s "9:30:00" | grep "9:30:00"
     CHECK_RESULT $?
+    date -s "$time"
+    hwclock -w
     date -s "2015-02-04 9:30:00" | grep "9:30:00" | grep 2015 | grep -i feb | grep -i wed
     CHECK_RESULT $?
+    date -s "$time"
+    hwclock -w
+    # 最后一段：验证系统时间写回硬件时钟（RTC）后，RTC 保持 2015-02-04。
+    # 断言完成后再把系统时间与 RTC 恢复到真实时间，避免后续用例受影响。
+    date -s "2015-02-04 9:30:00"
     hwclock -w
     timedatectl | grep -E 'rtc time|RTC time:' | grep "2015-02-04"
     CHECK_RESULT $?
+    date -s "$time"
+    hwclock -w
     LOG_INFO "End to run test."
 }
 

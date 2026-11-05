@@ -54,8 +54,13 @@ function run_test() {
     CHECK_RESULT $?
     grep -E "PRETTY_NAME" /etc/os-release | grep -qF "${PRETTY_NAME}"
     CHECK_RESULT $?
-    grep -E "ANSI_COLOR" /etc/os-release | grep "0;31"
-    CHECK_RESULT $?
+    # ANSI_COLOR 非必需字段，openRuyi 等发行版的 os-release 未定义时跳过，避免误判失败。
+    if grep -qE "^ANSI_COLOR=" /etc/os-release; then
+        grep -E "ANSI_COLOR" /etc/os-release | grep -q "0;31"
+        CHECK_RESULT $?
+    else
+        LOG_INFO "/etc/os-release has no ANSI_COLOR field, skipped."
+    fi
     LOG_INFO "End to run test."
 }
 

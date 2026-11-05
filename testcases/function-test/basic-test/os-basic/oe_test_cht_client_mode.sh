@@ -28,9 +28,20 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    curl https://cht.sh/:cht.sh > /tmp/test/cht.sh
+    curl -sS https://cht.sh/:cht.sh > /tmp/test/cht.sh
     test -e cht.sh
     CHECK_RESULT $? 0 0 "Download failed"
+    # Check the downloaded content is the cht.sh shell script, not an HTML
+    # interception page returned by a network gateway/proxy. cht.sh is a
+    # third-party public service; when it is unreachable from the test
+    # network the download may contain a 200-returned HTML stub page, in
+    # which case executing it would fail with "syntax error near
+    # unexpected token". Skip the case instead of reporting a failure.
+    grep -q '^#!/bin/bash' /tmp/test/cht.sh
+    if [ $? -ne 0 ]; then
+        LOG_WARN "cht.sh is not reachable from the test network (downloaded content is not the cht.sh script), skipped."
+        return 0
+    fi
     chmod +x /tmp/test/cht.sh
     /tmp/test/cht.sh pwd > pwd.txt
     grep "Show the absolute path of your current working directory" pwd.txt

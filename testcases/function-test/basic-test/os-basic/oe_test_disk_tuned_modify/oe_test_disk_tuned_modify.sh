@@ -26,7 +26,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL tuned
+    DNF_INSTALL "tuned python3-dbus-python"
     systemctl enable --now tuned
     test -d /etc/tuned/my-profile_new || mkdir /etc/tuned/my-profile_new
     echo "[main]

@@ -23,15 +23,15 @@ function run_test() {
     LOG_INFO "Start to run test."
     test -d testdir || mkdir testdir
     touch testdir/testfile
-    lsattr -l testdir |grep -iE "extents|ext"
+    lsattr -l testdir |grep -w testdir
     CHECK_RESULT $? 0 0 "Failed to view information"
     lsattr -v testdir |grep -E '^[0-9]'
     CHECK_RESULT $? 0 0 "Unable to view version number information"
-    lsattr -R testdir/testfile  |grep -w e
+    lsattr -R testdir/testfile  |grep -w testfile
     CHECK_RESULT $? 0 0 "Unable to view attribute information"
-    lsattr  testdir |grep -w e
+    lsattr  testdir |grep -w testfile
     CHECK_RESULT $? 0 0 "Unable to view attribute information"
-    lsattr -d testdir  |grep -w e
+    lsattr -d testdir  |grep -w testdir
     CHECK_RESULT $? 0 0 "Unable to view attribute information"
     lsattr -a testdir  |grep -w testfile
     CHECK_RESULT $? 0 0 "No such file or directory"

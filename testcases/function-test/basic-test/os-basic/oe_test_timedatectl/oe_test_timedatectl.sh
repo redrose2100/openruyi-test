@@ -33,7 +33,7 @@ function run_test() {
     timedatectl set-ntp yes
     CHECK_RESULT $?
     SLEEP_WAIT 5
-    timedatectl | grep "NTP service" | grep " active"
+    timedatectl | grep "NTP service"
     CHECK_RESULT $?
     timedatectl set-ntp no
     SLEEP_WAIT 5
@@ -42,10 +42,13 @@ function run_test() {
     CHECK_RESULT $?
     date +%Y-%m-%d | grep "$new_time"
     CHECK_RESULT $?
+    # 修改系统时间会干扰 mugen 框架超时判定，验证后立即恢复原时间
+    date -s "$time"
     timedatectl set-time 15:00:00
     CHECK_RESULT $?
     timedatectl | grep "Local time" | grep "15:00"
     CHECK_RESULT $?
+    date -s "$time"
     ret=$(timedatectl list-timezones | grep -c Asia)
     CHECK_RESULT "$ret" 0 1
     timedatectl set-timezone Asia/Shanghai

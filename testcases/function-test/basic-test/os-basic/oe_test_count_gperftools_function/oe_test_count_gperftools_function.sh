@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "gperftools gperftools-devel gcc-c++ pprof"
+    DNF_INSTALL "gperftools gperftools-devel gcc-c++ pprof graphviz"
     LOG_INFO "End of environmental preparation!"
 
 }
@@ -63,10 +63,11 @@ EOF
     CPUPROFILE=./main.prof ./main
     test -f main.prof
     CHECK_RESULT $? 0 0 "File creation failed"
-    pprof ./main main.prof --pdf > main.pdf
+    # --pdf 依赖 graphviz 提供的 dot 命令生成 PDF，参数顺序：pprof --pdf <binary> <profile>
+    pprof --pdf ./main main.prof > main.pdf
     test -f main.pdf
     CHECK_RESULT $? 0 0 "File creation failed"
-    pprof ./main main.prof --text
+    pprof --text ./main main.prof
     CHECK_RESULT $? 0 0 "Output failed"
     LOG_INFO "End to run test."
 }

@@ -21,6 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "cronie"
+    mkdir -p "$HOME/.cache"
     current_time=$(date "+%Y-%m-%d %H:%M:%S")
     LOG_INFO "End to prepare the test environment."
 }

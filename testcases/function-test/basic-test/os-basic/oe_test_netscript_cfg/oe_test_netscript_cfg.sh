@@ -55,8 +55,12 @@ function run_test() {
         CHECK_RESULT $? 0 0 "the item is use for set net name"
         grep -i "^method=" "$cfg01"
         CHECK_RESULT $? 0 0 "the item is use for set net bootproto"
-        grep -i "^autoconnect=" "$cfg01"
-        CHECK_RESULT $? 0 0 "the item is use for set automatically connect to the network upon startup"
+        # autoconnect 为可选字段：NetworkManager 默认值为 true，未显式写入时按默认值通过
+        if grep -i "^autoconnect=" "$cfg01"; then
+            CHECK_RESULT $? 0 0 "the item is use for set automatically connect to the network upon startup"
+        else
+            LOG_INFO "autoconnect is not explicitly set, use default value true, skipped."
+        fi
         if grep -qi "^method=manual" "$cfg01" && ping -c 3 www.baidu.com; then
             grep -i "^never-default=" "$cfg01"
             CHECK_RESULT $? 0 0 "the item is use for set default route"
