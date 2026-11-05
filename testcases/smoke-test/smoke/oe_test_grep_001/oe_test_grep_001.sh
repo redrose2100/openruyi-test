@@ -40,7 +40,8 @@ function run_test() {
         CHECK_RESULT $?
     fi
 
-    pgrep auditd -a
+    # openRuyi riscv64 无 pgrep：/proc 遍历展示 auditd 进程 PID 与完整命令行（等价 pgrep auditd -a，auditd 的 comm 即 auditd）
+    for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = auditd ] && echo "${p#/proc/} $(tr '\0' ' ' < "$p/cmdline" 2>/dev/null)"; done
     CHECK_RESULT $?
 
     grep --help | grep "Usage"

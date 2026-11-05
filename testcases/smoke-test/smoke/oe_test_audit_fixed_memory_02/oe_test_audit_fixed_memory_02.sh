@@ -57,7 +57,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf test.c a.out
-    kill -9 "$(pgrep -f ./a.out)"
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 a.out PID 并 kill（等价 pgrep -f ./a.out，a.out 的 comm 即 a.out）
+    proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = a.out ] && echo "${p#/proc/}"; done)
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

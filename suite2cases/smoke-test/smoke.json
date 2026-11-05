@@ -908,9 +908,6 @@
             "name": "oe_test_echo_003"
         },
         {
-            "name": "oe_test_pidof"
-        },
-        {
             "name": "oe_test_link"
         },
         {
@@ -984,9 +981,6 @@
         },
         {
             "name": "oe_test_od_001"
-        },
-        {
-            "name": "oe_test_top"
         },
         {
             "name": "oe_test_sysstat_01"

@@ -42,7 +42,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 "$(pgrep ping)"
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 ping PID（等价 pgrep ping）
+    proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = "ping" ] && echo "${p#/proc/}"; done)
     rm -rf ./test.pcap
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

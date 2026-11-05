@@ -42,7 +42,16 @@ def _kill_remote_processes():
     user = os.environ.get("NODE" + node_num + "_USER", "root")
     if not ip or not password:
         return
-    kill_cmd = "pkill -9 -f '%s'" % case_name
+    # openRuyi riscv64 无 pkill(procps)：改用 /proc 遍历等价写法（/proc 是内核接口，
+    # 不依赖任何包）。kill 所有 cmdline 包含 case_name 的进程。
+    # 注意排除 $BASHPID（当前执行 shell），避免命令自身字面量被匹配导致误杀。
+    kill_cmd = (
+        "for p in /proc/[0-9]*; do "
+        "[ -r \"$p/cmdline\" ] || continue; "
+        "[ \"$BASHPID\" = \"${p#/proc/}\" ] && continue; "
+        "if tr '\\0' ' ' < \"$p/cmdline\" 2>/dev/null | grep -q '%s'; then "
+        "kill -9 \"${p#/proc/}\" 2>/dev/null; fi; done" % case_name
+    )
     try:
         import paramiko
         conn = paramiko.SSHClient()

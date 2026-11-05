@@ -68,7 +68,8 @@ function run_test(){
 
             echo > "${task_log_path}"/sentry_msg_monitor.log
 
-            kill -9 "$(pgrep -f /usr/bin/xalarmd)"
+            # openRuyi riscv64 无 pgrep：/proc 遍历按 cmdline 匹配 xalarmd 并 kill（等价 pgrep -f /usr/bin/xalarmd；[[ ]] 避免 grep 自匹配）
+            proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/cmdline" ] || continue; [ "$BASHPID" = "${p#/proc/}" ] && continue; if [[ "$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null)" == *'/usr/bin/xalarmd'* ]]; then echo "${p#/proc/}"; fi; done)
             sleep 10
             grep 'Xalarmd service exception, try to re-register' "${task_log_path}"/sentry_msg_monitor.log
             CHECK_RESULT $? 0 0
@@ -113,7 +114,8 @@ function run_test(){
         grep "xalarmd run dir not exists, create ${xalarm_run_dir}" "${task_log_path}"/xalarm.log
         CHECK_RESULT $? 0 0
 
-        kill -9 "$(pgrep -f /usr/bin/xalarmd)"
+        # openRuyi riscv64 无 pgrep：/proc 遍历按 cmdline 匹配 xalarmd 并 kill（等价 pgrep -f /usr/bin/xalarmd；[[ ]] 避免 grep 自匹配）
+        proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/cmdline" ] || continue; [ "$BASHPID" = "${p#/proc/}" ] && continue; if [[ "$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null)" == *'/usr/bin/xalarmd'* ]]; then echo "${p#/proc/}"; fi; done)
         check_RA_xalarmd_log
         grep "xalarm daemon init success" "${task_log_path}"/xalarm.log 
         CHECK_RESULT $? 0 0

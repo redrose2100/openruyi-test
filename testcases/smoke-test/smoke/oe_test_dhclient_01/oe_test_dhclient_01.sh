@@ -28,7 +28,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if pgrep dhclient; then
+    # openRuyi riscv64 无 pgrep：/proc 遍历检查 dhclient 进程是否存在（等价 if pgrep dhclient; then）
+    if proc_pids_by_name dhclient | grep -q .; then
         netstat -aupx | grep dhclient | awk '{print $NF}' | awk -F '/' '{print $2}' | uniq | wc -l | grep 1
         CHECK_RESULT $? 0 0 "There are multiple ports"
         echo "" >/etc/resolv.conf

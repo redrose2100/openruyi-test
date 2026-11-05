@@ -103,6 +103,39 @@ function CASE_RESULT() {
     exit "$exec_result"
 }
 
+# openRuyi riscv64 镜像不带 procps(pgrep/pkill/pidof)，且 procps-ng 与
+# coreutils 的 /usr/bin/uptime 硬冲突无法安装。以下三个函数用 /proc 提供
+# 等价的进程查找/清理能力，供用例脚本与框架层在无 procps 平台复用。
+# /proc 是内核接口，不依赖任何包；在 x86_64/openEuler 等有 procps 的
+# 平台上这些函数同样可用（语义与 pgrep/pkill 一致）。
+
+# 按进程名(comm 精确匹配)返回全部 PID，等价 pgrep <name> / pidof <name>。
+function proc_pids_by_name() {
+    local name=$1
+    local p
+    for p in /proc/[0-9]*; do
+        [ -r "$p/comm" ] || continue
+        [ "$(cat "$p/comm")" = "$name" ] && echo "${p#/proc/}"
+    done
+}
+
+# 按命令行全文(cmdline 包含 pattern)返回全部 PID，等价 pgrep -f <pattern>。
+function proc_pids_by_cmdline() {
+    local pattern=$1
+    local p
+    for p in /proc/[0-9]*; do
+        [ -r "$p/cmdline" ] || continue
+        tr '\0' ' ' < "$p/cmdline" 2>/dev/null | grep -q "$pattern" && echo "${p#/proc/}"
+    done
+}
+
+# 按 PID 列表杀进程，等价 pkill -9 <pid...> / kill -9 <pid...>。
+# 用法：proc_kill_pids $(proc_pids_by_name dnf)
+function proc_kill_pids() {
+    local pids=$*
+    [ -n "$pids" ] && kill -9 $pids 2>/dev/null
+}
+
 function POST_TEST_DEFAULT() {
     LOG_INFO "$0 post_test"
 }
@@ -161,7 +194,7 @@ function main() {
                 _install_expect=1
                 break
             fi
-            pkill -9 dnf 2>/dev/null
+            proc_kill_pids $(proc_pids_by_name dnf)
             rm -f /var/cache/dnf/*.pid 2>/dev/null
             sleep 5
         done

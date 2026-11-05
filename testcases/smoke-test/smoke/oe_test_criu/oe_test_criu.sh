@@ -41,7 +41,8 @@ function run_test() {
     sleep 1
     criu dump -D checkpoint_demo -j -t "$(cat demo_pid)"
     CHECK_RESULT $?
-    pgrep -f demo | grep -w "$(cat demo_pid)"
+    # openRuyi riscv64 无 pgrep：检查 dump 后 demo 进程是否已退出（等价 pgrep -f demo | grep -w "$(cat demo_pid)"，期望找不到）
+    [ -d "/proc/$(cat demo_pid)" ]
     CHECK_RESULT $? 1
     num1=$(tail -1 output.txt)
     criu restore -D ./checkpoint_demo -j

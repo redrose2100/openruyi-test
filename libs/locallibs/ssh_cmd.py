@@ -415,9 +415,15 @@ def pssh_cmd(conn, cmd):
         # 不再进入 360x10s 重连循环，避免挂起的 dnf 拖死整个用例会话。
         mugen_log.logging("error", "remote cmd timeout(>%ss): %s" % (REMOTE_CMD_TIMEOUT, cmd))
         try:
+            # openRuyi riscv64 无 pkill(procps)：清理命令用 /proc 遍历等价写法
+            # （/proc 是内核接口，远端 shell 里同样可用）。
+            # 排除 $BASHPID（当前执行 shell），避免命令自身字面量被匹配导致误杀。
             clean_cmd = PATH_PREFIX + wrap_cmd(
-                "pkill -9 dnf 2>/dev/null; rm -f /var/cache/dnf/*.pid 2>/dev/null; "
-                "pkill -9 -f mugen_re.log 2>/dev/null; echo done",
+                "for p in /proc/[0-9]*; do [ -r \"$p/cmdline\" ] || continue; "
+                "[ \"$BASHPID\" = \"${p#/proc/}\" ] && continue; "
+                "if tr '\\0' ' ' < \"$p/cmdline\" 2>/dev/null | grep -qE 'dnf|mugen_re\\.log'; then "
+                "kill -9 \"${p#/proc/}\" 2>/dev/null; fi; done; "
+                "rm -f /var/cache/dnf/*.pid 2>/dev/null; echo done",
                 sudo,
             )
             stdin, stdout, stderr = conn.exec_command(clean_cmd, timeout=30)

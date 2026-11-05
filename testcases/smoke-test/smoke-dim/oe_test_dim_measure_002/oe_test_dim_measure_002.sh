@@ -57,7 +57,8 @@ function run_test() {
     cat /sys/kernel/security/dim/monitor_ascii_runtime_measurements | grep tampered
     CHECK_RESULT $? 0 1 "get monitor log failed."
 
-    pkill -9 dim_proc
+    # openRuyi riscv64 无 pkill：/proc 遍历按进程名 kill（等价 pkill -9 dim_proc）
+    proc_kill_pids $(proc_pids_by_name dim_proc)
     rmmod kvdo
     mv dim_proc_new dim_proc
     ./dim_proc &
@@ -84,7 +85,8 @@ function run_test() {
 function post_test() {
     dnf config-manager --enable update
     DNF_REMOVE "$@"
-    pkill -9 dim_proc
+    # openRuyi riscv64 无 pkill：/proc 遍历按进程名 kill（等价 pkill -9 dim_proc）
+    proc_kill_pids $(proc_pids_by_name dim_proc)
     rmmod kvdo dim_monitor dim_core
     rm /usr/lib/modules/"$(uname -r)"/kernel/drivers/block/kvdo.ko
     rm -rf /etc/dim/
