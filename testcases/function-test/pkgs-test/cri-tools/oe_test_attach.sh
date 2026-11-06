@@ -4,6 +4,7 @@
 
 # 测试框架固定行
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "$(dirname "$0")/cri_lib.sh"
 
 # 测试前函数
 function pre_test() {
@@ -11,8 +12,9 @@ function pre_test() {
     # 安装待测试的软件包
     DNF_INSTALL "cri-tools"
     # 准备测试数据等,如果要创建文件请使用"./你要创建的文件"直接把文件创建到当前目录下
-    # 创建一个容器用于测试
-    crictl run --net=host --name=test_container --image=busybox:latest
+    # 创建一个容器用于测试（用 sleep 保持容器运行，供 attach 挂接）
+    cri_run_container test_container busybox:latest /bin/sh -c "sleep 3600"
+    CHECK_RESULT $? 0 0 "Failed to create test container"
     CONTAINER_ID=$(crictl ps -q)
     LOG_INFO "End of environmental preparation!"
 }

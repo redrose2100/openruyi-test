@@ -4,6 +4,7 @@
 
 # 测试框架固定行
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "$(dirname "$0")/cri_lib.sh"
 
 # 测试前函数
 function pre_test() {
@@ -12,7 +13,7 @@ function pre_test() {
     DNF_INSTALL "cri-tools"
     # 准备测试数据等,如果要创建文件请使用"./你要创建的文件"直接把文件创建到当前目录下
     # 创建一个测试容器
-    crictl run --net=host --pid=host --no-pull --name test-container --image busybox:latest --image-pull-progress-detail --image-pull-policy=never --runtime=containerd-shim --runtime-endpoint=unix:///run/containerd/containerd.sock --timeout=10s --debug
+    cri_run_container test-container busybox:latest
     CHECK_RESULT $? 0 0 "Failed to create test container"
     LOG_INFO "End of environmental preparation!"
 }
@@ -33,12 +34,12 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Container is still running after stop command"
     
     # 测试超时参数
-    crictl run --net=host --pid=host --no-pull --name test-container2 --image busybox:latest --image-pull-progress-detail --image-pull-policy=never --runtime=containerd-shim --runtime-endpoint=unix:///run/containerd/containerd.sock --timeout=10s --debug
+    cri_run_container test-container2 busybox:latest
     CHECK_RESULT $? 0 0 "Failed to create second test container"
     container_id2=$(crictl ps -q)
     CHECK_RESULT $? 0 0 "Failed to get second container ID"
     
-    crictl stop --timeout 5s $container_id2
+    crictl stop --timeout 5 $container_id2
     CHECK_RESULT $? 0 0 "Failed to stop container with timeout"
     
     # 验证容器是否已停止
