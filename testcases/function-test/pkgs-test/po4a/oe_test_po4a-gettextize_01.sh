@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "po4a"
+    DNF_INSTALL "po4a perl perl-YAML-Tiny perl-Syntax-Keyword-Try perl-TermReadKey perl-Unicode-LineBreak perl-Locale-gettext perl-Text-WrapI18N perl-Pod-Parser perl-SGMLSpm perl-Module-Build gettext diffutils man-db"
     version=$(rpm -qa po4a | awk -F "-" '{print$2}')
     mkdir tmp
     echo "hello world" >tmp/master.txt

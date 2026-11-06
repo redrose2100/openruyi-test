@@ -22,7 +22,7 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
     
-    DNF_INSTALL "po4a"
+    DNF_INSTALL "po4a perl perl-YAML-Tiny perl-Syntax-Keyword-Try perl-TermReadKey perl-Unicode-LineBreak perl-Locale-gettext perl-Text-WrapI18N perl-Pod-Parser perl-SGMLSpm perl-Module-Build gettext diffutils man-db"
     mkdir tmp
     mkdir tmp/po
     echo "hello world" > tmp/master.txt
