@@ -25,6 +25,7 @@ OS_INFO_PATTERN='openeulerversion=|^ID='
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "openssh-clients"
     SSH_CMD "
     sed -i 's/#Port 22/Port 50000/g' /etc/ssh/sshd_config
     systemctl restart sshd

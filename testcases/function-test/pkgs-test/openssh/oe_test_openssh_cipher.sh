@@ -19,6 +19,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "openssh-clients"
     # sshd 的配置与重启都落在 NODE2，避免改坏 NODE1 的 sshd 导致本机失联。
     # 不依赖 sshd_config 中原有一条逐字匹配的 Ciphers 长行（不同发行版默认值不同），
     # 同时兼容"该行存在/被注释/完全不存在"三种情况；sshd -t 校验通过后才重启。
