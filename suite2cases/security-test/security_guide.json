@@ -8,7 +8,7 @@
         },
         {
             "name": "oe_test_set_password_validity",
-            "machine num": 1
+            "machine num": 2
         },
         {
             "name": "oe_test_set_default_umask",

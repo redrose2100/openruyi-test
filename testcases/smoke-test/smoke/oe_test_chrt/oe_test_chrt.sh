@@ -23,7 +23,8 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     ping -q www.baidu.com &
     SLEEP_WAIT 3
-    test_pid=$(pgrep -f ping | tail -n 1)
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 ping PID（等价 pgrep -f ping，ping 的 comm 即为 ping）
+    test_pid=$(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = ping ] && echo "${p#/proc/}"; done | tail -n 1)
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -44,7 +45,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    pgrep "ping" |xargs kill -9
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名 kill 所有 ping 进程（等价 pgrep ping | xargs kill -9）
+    for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = ping ] && kill -9 "${p#/proc/}" 2>/dev/null; done
     LOG_INFO "End to restore the test environment."
 }
 

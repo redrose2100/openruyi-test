@@ -29,7 +29,7 @@ function run_test() {
     LOG_INFO "Start testing..."
     perf list >txt 2>/tmp/error.log
     test -s /tmp/error.log && return 1
-    timeout -k 15 1 perf record || ls perf.data
+    timeout -k 15 1 perf record >/dev/null 2>&1 || ls perf.data
     CHECK_RESULT $?
     file perf.data | grep -i data
     CHECK_RESULT $?

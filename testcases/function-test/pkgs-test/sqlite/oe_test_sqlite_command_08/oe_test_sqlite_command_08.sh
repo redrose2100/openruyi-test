@@ -19,7 +19,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function run_test() {
     LOG_INFO "Start to run test."
     expect <<-END
-    spawn sqlite3 ./test.db
+    spawn sqlite3 -list -noheader ./test.db
     send "CREATE TABLE COMPANY(
           ID INT PRIMARY KEY     NOT NULL,
           NAME           TEXT    NOT NULL,

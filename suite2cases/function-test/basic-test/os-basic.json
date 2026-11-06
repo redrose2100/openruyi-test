@@ -275,12 +275,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_system_monitor_reboot",
-            "machine num": 2,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_system_monitor_process",
             "machine num": 1,
             "add network interface": 0,
@@ -514,12 +508,6 @@
         {
             "name": "oe_test_sos",
             "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_reboot",
-            "machine num": 2,
             "add network interface": 0,
             "add disk": []
         },

@@ -30,6 +30,7 @@ function run_test() {
     LOG_INFO "Start executing testcase!"
     mdadm --create --auto=yes /dev/md0 --level=1 --raid-device=4 /dev/"${local_disk}" /dev/"${local_disk1}" /dev/"${local_disk2}" /dev/"${local_disk3}" <<EOF
 y
+y
 EOF
     CHECK_RESULT $?
     lsblk | grep -c md0 | grep 4

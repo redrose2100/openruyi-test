@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL rsyslog
+    DNF_INSTALL "rsyslog selinux-tools"
     systemctl start rsyslog
     cp -f /etc/rsyslog.conf /etc/rsyslog.conf.bak
     echo "local0.info /tmp/testlog/test.log" >>/etc/rsyslog.conf

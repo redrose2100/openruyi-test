@@ -19,7 +19,9 @@
 # shellcheck disable=SC1091,SC2181,SC2154
 
 source ./noproblem_list
-source /etc/openEuler-latest
+# /etc/openEuler-latest 在衍生发行版上不存在，交由 os_release_lib.sh 兜底。
+source "${OET_PATH}"/libs/locallibs/os_release_lib.sh
+OS_RELEASE_EXPORT_VERSION
 export LANG=en_US.UTF-8
 
 

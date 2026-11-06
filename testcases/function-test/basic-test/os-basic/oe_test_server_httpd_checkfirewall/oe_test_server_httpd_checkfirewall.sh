@@ -20,6 +20,9 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    # expat 2.7.1-2.18.or 构建 strip 了动态符号表（XML_SetAllocTrackerActivationThreshold 缺失），
+    # 导致 python3.14 的 pyexpat 加载失败、firewall-cmd 崩溃；仓库 expat 2.8.5 已修复，先升级。
+    dnf -y upgrade expat || exit 1
     DNF_INSTALL firewalld
     systemctl start firewalld
     systemctl status firewalld | grep running || exit 1

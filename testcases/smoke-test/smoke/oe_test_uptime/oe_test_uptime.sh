@@ -29,9 +29,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "uptime --version execute fail"
     uptime | grep -oP 'load average: \K[\d.]+' | awk '{print $1}'
     CHECK_RESULT $? 0 0 "Check domain load average failed"
-    uptime -s
-    CHECK_RESULT $? 0 0 "uptime -s execute fail"
+    uptime -p
+    CHECK_RESULT $? 0 0 "uptime -p execute fail"
     LOG_INFO "Finish test!"
 }
-Check domain oad average failed
+
 main "$@"

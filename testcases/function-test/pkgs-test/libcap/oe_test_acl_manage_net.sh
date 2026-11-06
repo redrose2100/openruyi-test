@@ -22,7 +22,13 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     grep "^example:" /etc/passwd && userdel -rf example
     DNF_INSTALL net-tools
-    net_card=$(ip a | grep $NODE1_IPV4 | awk -F ' ' '{printf $NF}')
+    # 选择业务网卡，TEST_NIC 会自动排除管理网卡 NODE1_NIC
+    net_card=$(TEST_NIC 1 | awk '{print $1}')
+    if [ -z "${net_card}" ]; then
+        LOG_WARN "No spare network interface for acl manage net test, skip."
+        exit 255
+    fi
+    PREPARE_DONE=1
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -46,6 +52,11 @@ EOF
 
 function post_test() {
     LOG_INFO "start environment cleanup."
+    # pre_test 未完成环境准备（如无业务网卡直接 skip）时无需恢复
+    if [ "${PREPARE_DONE:-0}" != "1" ]; then
+        LOG_WARN "Test environment was not prepared, skip restore."
+        return 0
+    fi
     ifconfig $net_card:1 down
     setcap -r /sbin/ifconfig
     userdel -rf example

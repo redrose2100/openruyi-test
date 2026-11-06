@@ -17,11 +17,6 @@
 # @Desc      :   disk select
 # ############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-function check_free_disk() {
-    disks=$(TEST_DISK)
-    disk_list=($disks)
-    local_disk=${disk_list[0]}
-    local_disk1=${disk_list[1]}
-    local_disk2=${disk_list[2]}
-    local_disk3=${disk_list[3]}
-}
+# 选盘与防护逻辑统一收敛到 libs/locallibs/disk_select_lib.sh。
+# 本文件保留原路径与原文件名，避免改动引用它的用例脚本 source 语句。
+source "${OET_PATH}/libs/locallibs/disk_select_lib.sh"

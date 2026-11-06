@@ -17,6 +17,11 @@
 # @Desc      :   User creates another cron file
 # ############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL cronie
+    LOG_INFO "Environmental preparation is over."
+}
 function run_test() {
     LOG_INFO "Start executing testcase!"
     crontab -u root -l 2>&1 | grep 'no crontab'

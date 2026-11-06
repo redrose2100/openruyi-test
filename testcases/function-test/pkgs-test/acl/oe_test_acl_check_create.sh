@@ -20,6 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "diffutils"
     local_umask=$(umask)
     umask | grep 0022 || umask 0022
     LOG_INFO "End of environmental preparation!"

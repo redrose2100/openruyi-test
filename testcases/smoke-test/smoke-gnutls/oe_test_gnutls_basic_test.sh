@@ -52,7 +52,8 @@ function run_test() {
 }
 
 function post_test() {
-    P_SSH_CMD --cmd "pkill -9 gnutls-serv"
+    # openRuyi riscv64 远端无 pkill：/proc 遍历按进程名 kill gnutls-serv（等价 pkill -9 gnutls-serv）
+    P_SSH_CMD --cmd "for p in /proc/[0-9]*; do [ -r \"\$p/comm\" ] || continue; [ \"\$(cat \"\$p/comm\")\" = gnutls-serv ] && kill -9 \"\${p#/proc/}\" 2>/dev/null; done"
     P_SSH_CMD --cmd "systemctl start firewalld"
     rm -rf "*.log" "*.pem" "*.tmpl"
     P_SSH_CMD --cmd "rm -rf *.pem *.tmpl"

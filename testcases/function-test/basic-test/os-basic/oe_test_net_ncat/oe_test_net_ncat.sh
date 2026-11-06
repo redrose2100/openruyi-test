@@ -21,11 +21,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "nmap iptables"
-    iptables -F
     SSH_CMD "
             yum install -y nmap iptables;
             iptables -F;
-            systemctl stop firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+            systemctl stop firewalld 2>/dev/null || true" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -35,7 +34,7 @@ function run_test() {
     CHECK_RESULT $?
     echo -e "123\\n456\\n004\\n" | ncat "${NODE2_IPV4}" 8080
     CHECK_RESULT $?
-    SSH_SCP "root@${NODE2_IPV4}:/root/ncat_log" . "${NODE2_PASSWORD}"
+    SSH_SCP "${NODE2_USER}@${NODE2_IPV4}:/home/${NODE2_USER}/ncat_log" . "${NODE2_PASSWORD}"
     CHECK_RESULT "$(grep -icE '123|456|004' ncat_log)" 3
     echo "End of testcase execution."
 }

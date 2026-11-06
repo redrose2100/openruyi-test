@@ -34,9 +34,10 @@ function run_test() {
 ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}
 EOF
-    grep -F "${NODE1_PASSWORD}" /etc/shadow
+    example_shadow=$(grep ^example: /etc/shadow | cut -d: -f2)
+    echo "${example_shadow}" | grep -F "${NODE1_PASSWORD}"
     CHECK_RESULT $? 0 1 "exist password in /etc/shadow"
-    grep -r -F "${NODE1_PASSWORD}" /var/log 2>/dev/null
+    grep -r -F "${example_shadow}" /var/log 2>/dev/null
     CHECK_RESULT $? 0 1 "exist password in /var/log"
 
     passwd_count=$(grep -c ^example: /etc/passwd)

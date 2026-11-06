@@ -37,8 +37,10 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    kill -9 "$(pgrep -f ping)"
-    kill -9 "$(pgrep "tcpdump -i")"
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名 kill 所有 ping 进程（等价 pgrep -f ping，ping 的 comm 即 ping）
+    proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = ping ] && echo "${p#/proc/}"; done)
+    # openRuyi riscv64 无 pgrep：/proc 遍历按 cmdline 匹配 "tcpdump -i" 并 kill（等价 pgrep "tcpdump -i"；[[ ]] 避免 grep 自匹配）
+    proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/cmdline" ] || continue; [ "$BASHPID" = "${p#/proc/}" ] && continue; if [[ "$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null)" == *'tcpdump -i'* ]]; then echo "${p#/proc/}"; fi; done)
     LOG_INFO "End to restore the test environment."
 }
 

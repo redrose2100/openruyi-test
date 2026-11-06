@@ -31,7 +31,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     echo "" >/etc/resolv.conf
-    wget www.baidu.com 2>&1 | grep "unable to resolve host address"
+    wget www.baidu.com 2>&1 | grep -E "unable to resolve|Couldn't resolve|cannot resolve|failed to resolve"
     CHECK_RESULT $? 0 0 "Wget executed successfully"
     cp -f /etc/resolv.conf.bak /etc/resolv.conf
     rm -rf /etc/resolv.conf.bak

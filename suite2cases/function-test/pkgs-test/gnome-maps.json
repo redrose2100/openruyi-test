@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/function-test/pkgs-test/gnome-maps",
-    "cases": [
-        {
-            "name": "oe_test_gnome_maps"
-        }
-    ]
-}

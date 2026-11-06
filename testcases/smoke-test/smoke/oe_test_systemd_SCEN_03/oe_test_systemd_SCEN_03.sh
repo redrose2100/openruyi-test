@@ -47,6 +47,10 @@ function run_test() {
     SLEEP_WAIT 10
     systemctl start TestB
     CHECK_RESULT $? 0 0 "TestB.service start failed"
+    for i in $(seq 1 20); do
+        systemctl is-failed TestB && break
+        sleep 0.5
+    done
     TestB_status=$(systemctl status TestB | grep failed | awk '{print $8}')
     systemctl status TestA | grep running | grep $TestB_status
     CHECK_RESULT $? 0 1 "TestA.service start success"

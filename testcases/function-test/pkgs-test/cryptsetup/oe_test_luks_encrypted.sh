@@ -20,7 +20,16 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function config_params() {
     LOG_INFO "Start loading data!"
-    TEST_DISK="/dev/$(lsblk -dn -o NAME,SIZE | awk '$2 != "0B" {print $1}' | sed -n 2p)"
+    # 通过 disk 库取盘：它会把系统盘排除在候选之外。
+    # 旧实现按 `lsblk | sed -n 2p` 的位置取盘，在 qemu -machine virt 这类
+    # 系统盘是 virtio-blk-device 的环境下会把系统盘当测试盘，
+    # 而本用例的 post_test 结尾有 `mkfs.ext4 <disk> -F`，会直接格式化整块盘。
+    # TEST_DISK 会返回全部空闲盘（空格分隔），这里只要第一块。
+    test_disk="$(TEST_DISK 1 | awk '{print $1}')"
+    if [ -z "${test_disk}" ] || [ ! -b "/dev/${test_disk}" ]; then
+        LOG_ERROR "no usable test disk found, skip testcase to protect the OS."
+        exit 255
+    fi
     UUID=$(uuidgen)
     LOG_INFO "Loading data is complete!"
 }
@@ -28,7 +37,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "tang clevis clevis-dracut cryptsetup clevis-udisks2"
-    echo -e "n\np\n\n\n+100M\nw" | fdisk "${TEST_DISK}"
+    echo -e "n\np\n\n\n+100M\nw" | fdisk "/dev/${test_disk}"
     test -d /mnt/test_encrypted && rm -rf /mnt/test_encrypted
     mkdir /mnt/test_encrypted
     test -d /etc/systemd/system/tangd.socket.d && rm -rf /etc/systemd/system/tangd.socket.d
@@ -40,15 +49,15 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    echo -e "\n\n" | cryptsetup reencrypt --type luks1 --new --reduce-device-size 8M "${TEST_DISK}"1
+    echo -e "\n\n" | cryptsetup reencrypt --type luks1 --new --reduce-device-size 8M "/dev/${test_disk}1"
     CHECK_RESULT $? 0 0 "Disk encryption failed"
-    echo -e "\n" | cryptsetup open "${TEST_DISK}"1 test_encrypted
+    echo -e "\n" | cryptsetup open "/dev/${test_disk}1" test_encrypted
     CHECK_RESULT $? 0 0 "Disk mapping failed"
     mkfs.ext4 /dev/mapper/test_encrypted -F
     CHECK_RESULT $? 0 0 "Failed to format partition"
     mount /dev/mapper/test_encrypted /mnt/test_encrypted
     CHECK_RESULT $? 0 0 "Disk mount failed"
-    cryptsetup luksHeaderBackup "${TEST_DISK}"1 --header-backup-file /tmp/header.bin
+    cryptsetup luksHeaderBackup "/dev/${test_disk}1" --header-backup-file /tmp/header.bin
     CHECK_RESULT $? 0 0 "Backup luksHeader information failed"
     SLEEP_WAIT 2
     systemctl enable tangd.socket
@@ -66,7 +75,7 @@ function run_test() {
     SLEEP_WAIT 1
     expect -c"
         set timeout 120
-        spawn luksmeta init -n -d ${TEST_DISK}1
+        spawn luksmeta init -n -d /dev/${test_disk}1
 	    expect {
 		    \"yn\" {
 			    send \"y\\r\"
@@ -82,11 +91,11 @@ function run_test() {
     "
     CHECK_RESULT $? 0 0 "Luksmeta init failed"   
     SLEEP_WAIT 2
-    echo "$luks_num" | luksmeta save -d "${TEST_DISK}"1 -s 0 -u "$UUID"
+    echo "$luks_num" | luksmeta save -d "/dev/${test_disk}1" -s 0 -u "$UUID"
     CHECK_RESULT $? 0 0 "Failed to write data"
     expect -c"
 	set timeout 120
-        spawn clevis luks bind -d ${TEST_DISK}1 tang '{\"url\":\"http://127.0.0.1:8009\"}'
+        spawn clevis luks bind -d /dev/${test_disk}1 tang '{\"url\":\"http://127.0.0.1:8009\"}'
 	    expect {
             \"ynYN\" {
                 send \"y\\r\"
@@ -116,7 +125,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     expect -c"
         set timeout 120
-        spawn clevis luks unbind -d ${TEST_DISK}1 -s 1
+        spawn clevis luks unbind -d /dev/${test_disk}1 -s 1
 	    expect {
             \"yn\" {
                 send \"y\\r\"
@@ -128,11 +137,11 @@ function post_test() {
     umount /mnt/test_encrypted
     cryptsetup close test_encrypted
     rm -rf /mnt/test_encrypted
-    mkfs.ext4 "${TEST_DISK}"1 -F
-    echo -e "d\n\nw" | fdisk "${TEST_DISK}"
+    mkfs.ext4 "/dev/${test_disk}1" -F
+    echo -e "d\n\nw" | fdisk "/dev/${test_disk}"
     DNF_REMOVE "$@"
     rm -rf secert.jwe adv.jws sec.jwe input-plain.txt /etc/systemd/system/tangd.socket.d /mnt/test_encrypted /tmp/header.bin
-    mkfs.ext4 "${TEST_DISK}" -F
+    mkfs.ext4 "/dev/${test_disk}" -F
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

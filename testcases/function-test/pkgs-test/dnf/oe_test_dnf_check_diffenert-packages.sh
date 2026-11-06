@@ -23,7 +23,7 @@ disable_list=$(dnf repolist enabled|grep -v "^OS\|everything\|EPOL"|awk '{print 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    dnf config-manager --set-disable ${disable_list}
+    # dnf5 has no config-manager command (requires dnf5-command(config-manager) plugin); skip repo disabling
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -43,22 +43,24 @@ function run_test() {
     CHECK_RESULT $?
     dnf check --obsoleted
     CHECK_RESULT $?
-    dnf check --provides
+    # dnf5 removed "dnf check --provides"; repoquery -f lists packages providing a file
+    dnf repoquery -f /usr/bin/tree | grep "^tree-"
     CHECK_RESULT $?
-    dnf -y install vim &
-    dnf -y install tree | grep "Complete!"
+    dnf -y install vim 2>&1 &
+    dnf -y install tree 2>&1 | grep "Complete!"
     CHECK_RESULT $?
     SLEEP_WAIT 3
-    rpm -q vim-enhanced | grep "vim-enhanced"
+    # openRuyi vim is a single package (no vim-enhanced subpackage)
+    rpm -q vim | grep "^vim-"
     CHECK_RESULT $?
-    rpm -q tree | grep "tree"
+    rpm -q tree | grep "^tree-"
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }
 
 function post_test() {
     LOG_INFO "Start restore the test environment."
-    dnf config-manager --set-enable ${disable_list}
+    # dnf5 has no config-manager command; nothing was disabled in pre_test
     clear_env
     DNF_REMOVE 1 "vim tree"
     LOG_INFO "End of restore the test environment."

@@ -38,7 +38,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
     rm -rf perf.check
-    pgrep -f "perf top" | xargs -r kill -9
+    # openRuyi riscv64 无 pgrep：/proc 遍历按 cmdline 匹配 "perf top" 并 kill（等价 pgrep -f "perf top" | xargs -r kill -9；[[ ]] 避免 grep 自匹配）
+    for p in /proc/[0-9]*; do [ -r "$p/cmdline" ] || continue; [ "$BASHPID" = "${p#/proc/}" ] && continue; if [[ "$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null)" == *'perf top'* ]]; then kill -9 "${p#/proc/}" 2>/dev/null; fi; done
     LOG_INFO "End to restore the test environment."
 }
 

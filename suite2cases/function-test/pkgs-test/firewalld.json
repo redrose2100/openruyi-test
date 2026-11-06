@@ -100,7 +100,7 @@
         },
         {
             "name": "oe_test_firewalld_log_denied",
-            "machine num": 1,
+            "machine num": 2,
             "add network interface": 0
         },
         {

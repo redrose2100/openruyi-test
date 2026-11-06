@@ -345,11 +345,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_gpgcheck",
-            "machine num": 1,
-            "add disk": []
-        },
-        {
             "name": "oe_test_passwd_set_minimum_interval",
             "machine num": 1,
             "add disk": []

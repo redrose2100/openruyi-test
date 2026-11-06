@@ -1,6 +1,6 @@
 {
     "path": "$OET_PATH/testcases/function-test/compile-test/compile-test",
-    "machine type": "Kvm",
+    "machine type": "kvm",
     "cases": [
         {
             "name": "oe_test_use_gcc_create_dynamic_link_library"

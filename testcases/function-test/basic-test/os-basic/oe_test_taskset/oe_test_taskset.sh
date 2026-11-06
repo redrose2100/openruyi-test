@@ -21,32 +21,33 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "procps-ng"
+    DNF_INSTALL "procps"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    nohup taskset -c 0,2 ping localhost &
+    nohup taskset -c 0,2 ping -c 3 localhost &> /dev/null &
+    ping_pid=$!
     CHECK_RESULT $? 0 0 "taskset error"
-    ping_pid=$(pgrep ping) 
     taskset -cp "$ping_pid" | grep "current affinity list: 0,2"
     CHECK_RESULT $? 0 0 "taskset error"
-    kill -9 "$ping_pid"
+    wait "$ping_pid"
     taskset 0x1 ping -c 1 localhost &> /dev/null
     CHECK_RESULT $? 0 0 "CPU mask 0x1 failed"
     nohup taskset -c 0 ping -c 3 localhost &> /dev/null &
     wait $!  # 等待进程结束
     CHECK_RESULT $? 0 0 "Bind to CPU 0 failed"
-    nohup ping localhost &> /dev/null &
+    nohup ping -c 3 localhost &> /dev/null &
     test_pid=$!
     taskset -a -cp 0 $test_pid &> /dev/null
-    CHECK_RESULT $? 0 0 "taskset -a parameter failed"    LOG_INFO "End to run test."
+    CHECK_RESULT $? 0 0 "taskset -a parameter failed"
+    wait "$test_pid"
+    LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 "$test_pid"
     rm -rf nohup.out
     LOG_INFO "End to restore the test environment."
 }

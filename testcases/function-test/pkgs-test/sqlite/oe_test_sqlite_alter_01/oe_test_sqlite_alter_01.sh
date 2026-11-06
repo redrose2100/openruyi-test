@@ -19,14 +19,14 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function run_test() {
     LOG_INFO "Start to run test."
     expect <<-END
-    spawn sqlite3 ./test.db
-    send "CREATE TABLE COMPANY１(
+    spawn sqlite3 -list -noheader ./test.db
+    send "CREATE TABLE COMPANY(
         ID INT PRIMARY KEY     NOT NULL,
         NAME           TEXT    NOT NULL,
         AGE            INT     DEFAULT 28
         );\n"
     expect "sqlite>"
-    send "ALTER TABLE COMPANY１ RENAME TO OLD_COMPANY;\n"
+    send "ALTER TABLE COMPANY RENAME TO OLD_COMPANY;\n"
     expect "sqlite>"
     send ".output ./output.txt\n"
     expect "sqlite>"

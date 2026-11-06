@@ -66,7 +66,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check getcap -v libcap_testfile failed"
     getcap -r ./ | grep -E 'libcap_testfile cap_sys_time=eip|libcap_testfile = cap_sys_time\+eip'
     CHECK_RESULT $? 0 0 "Check getcap -r ./ failed"
-    getpcaps "$(pgrep -f sshd | awk '{print $2}'|head -1)" 2>libcap_tmp | grep ': =ep'
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 sshd PID（等价 pgrep -f sshd，sshd 的 comm 即 sshd，直接输出 PID）
+    getpcaps "$(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = sshd ] && echo "${p#/proc/}"; done | head -1)" 2>libcap_tmp | grep ': =ep'
     CHECK_RESULT $? 0 0 "Check getpcaps failed"
     # setcap命令测试
     setcap -q cap_net_raw+eip libcap_testfile && getcap libcap_testfile | grep -E 'libcap_testfile cap_net_raw=eip|libcap_testfile = cap_net_raw\+eip'

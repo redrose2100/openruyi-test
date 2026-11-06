@@ -29,7 +29,7 @@ function pre_test() {
     hostName_bak=$(hostname)
     hostnamectl set-hostname cloud.kubeedge
     echo "${NODE1_IPV4}  cloud.kubeedge" >>/etc/hosts
-    DNF_INSTALL "iSulad tar ntp socat conntrack patch"
+    DNF_INSTALL "iSulad tar ntp socat conntrack patch wget"
     wget -O kubeedge-tools.zip https://gitee.com/Poorunga/kubeedge-tools/repository/archive/master.zip
     unzip kubeedge-tools.zip
     P_SSH_CMD --cmd "hostnamectl set-hostname edge.kubeedge" --node 2

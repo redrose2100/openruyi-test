@@ -20,6 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "diffutils"
     LANG_OLD="${LANG}"
     export LANG=en_US.utf8
     cat >"test-data" <<EOF

@@ -17,6 +17,11 @@
 # @Desc      :   Enable source, disable source
 # #############################################
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL dnf5-plugins
+    LOG_INFO "Environmental preparation is over."
+}
 function run_test() {
     LOG_INFO "Start executing testcase."
     reponame=$(dnf repolist | grep "repo id" -A 1 | grep -v "repo id" | awk '{print$1}')

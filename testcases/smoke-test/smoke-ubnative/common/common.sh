@@ -37,6 +37,9 @@ vm_user="root"
 vm_passwd="openEuler12#$"
 
 original_selinux_mode=""
+# ub_env_init 记录的环境原始状态，由 post_clean 还原；未准备完成时保持为空
+original_firewalld_active=""
+prepare_done=0
 is_64k_version=$(uname -a | grep -q 64k && echo "true" || echo "false")
 
 function ub_env_init() {
@@ -62,8 +65,11 @@ function ub_env_init() {
     mkdir -p "$config_dir"
     cp -arvf ../config "$test_qemu_dir"
     # net pre
-    systemctl disable firewalld
-    brctl addbr br0
+    # disable 会永久关掉开机自启且 post_clean 不恢复，等于改坏了 NODE1 的初始状态；
+    # 这里改为只在本次运行期间 stop，并记录原始 active 状态供 post_clean 还原。
+    original_firewalld_active=$(systemctl is-active firewalld 2>/dev/null)
+    systemctl stop firewalld
+    brctl addbr br0 2>/dev/null
     ifconfig br0 192.168.1.99/24 up
     ssh-keygen -R "$vm_ip"
     # ub pre
@@ -74,6 +80,7 @@ function ub_env_init() {
     if [[ "$original_selinux_mode" != "Permissive" && "$original_selinux_mode" != "permissive" ]]; then
         setenforce 0
     fi
+    prepare_done=1
     # vm clean
     virsh list --all --name | xargs -I {} virsh destroy {}
     virsh list --all --name | xargs -I {} virsh undefine {} --nvram
@@ -179,5 +186,21 @@ function ub_dev_restore() {
 function post_clean() {
     virsh list --all --name | xargs -I {} virsh destroy {}
     virsh list --all --name | xargs -I {} virsh undefine {} --nvram
-    setenforce 1
+    # 准备阶段没走完时 br0/防火墙都没改过，跳过对应恢复，避免删错东西
+    if [ "${prepare_done:-0}" = "1" ]; then
+        # br0 是本用例自建的网桥，删除是正确清理动作
+        ifconfig br0 down 2>/dev/null
+        brctl delbr br0 2>/dev/null
+        if [ "${original_firewalld_active}" = "active" ]; then
+            systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+        fi
+    else
+        LOG_WARN "Test environment was not prepared, skip network restore."
+    fi
+    # 按原值恢复 selinux，不用无条件 setenforce 1（原环境可能就是 Permissive）
+    case "${original_selinux_mode:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
 }

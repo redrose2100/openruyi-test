@@ -61,8 +61,84 @@ NAME_LINE_RE = re.compile(r'^\s*"name"\s*:\s*"(.*)"\s*,?\s*$')
 # 用例脚本扩展名：按需求只认可 .sh
 CASE_EXT = ".sh"
 
+# 检查点 2：CRCRLF（\r\r\n）双 CR 行尾检测。
+# 2026-10-21 发现 344 个 .sh 文件以 \r\r\n 入库（git 视为二进制），
+# 导致 oe-test 平台上 bash 解析失败（$'\r\r': command not found）全部用例失败。
+# 需要扫描的文件类型：shell 脚本与 python 脚本。
+LINE_ENDING_EXTENSIONS = (".sh", ".bash", ".py")
+# CRCRLF 模式：\r\r\n
+CRCRLF_PATTERN = b"\r\r\n"
+# 单 CRLF 属于正常行尾（仓库使用 core.autocrlf），不视为问题。
+CRLF_PATTERN = b"\r\n"
+
 # 某个套件目录的用例脚本名索引缓存，避免对每个用例重复遍历目录
 STEM_CACHE = {}
+
+# 套件目录 -> 「脚本名（小写去扩展名）-> 脚本绝对路径列表」的索引缓存，
+# 供运行时字段一致性检查读取脚本内容，避免重复遍历目录
+SCRIPT_MAP_CACHE = {}
+
+# 脚本绝对路径 -> 脚本文本的缓存，同一脚本只读一次
+SCRIPT_TEXT_CACHE = {}
+
+# 检查点 3/4：套件外层字段与 cases 内层字段的一致性规则常量。
+# 语义基准来自 libs/locallibs/check_environment.py：
+#   machine num           = case.get('machine num', suite.get('machine num', 1))
+#   machine type          = case.get('machine type', suite.get('machine type', 'kvm'))
+#   add network interface = case.get('add network interface', suite.get('add network interface', 0))
+#   add disk              = len(case.get('add disk', suite.get('add disk', [])))
+DEFAULT_MACHINE_NUM = 1
+DEFAULT_MACHINE_TYPE = "kvm"
+DEFAULT_NETWORK_INTERFACE = 0
+REQUIRED_MACHINE_TYPE = "physical"
+
+# 被检查的四个字段名，与 check_environment.py 读取的键保持一致
+FIELD_MACHINE_NUM = "machine num"
+FIELD_MACHINE_TYPE = "machine type"
+FIELD_NETWORK_INTERFACE = "add network interface"
+FIELD_ADD_DISK = "add disk"
+
+# 检查点 5/6：脚本实际依赖与声明值的一致性（运行时风险）。
+# NODE2_ / NODE3_ ... 表示用例需要多机；TEST_DISK 表示用例需要额外磁盘。
+NODE_HIGHER_RE = re.compile(r"\bNODE([2-9])_")
+TEST_DISK_RE = re.compile(r"\bTEST_DISK\b")
+
+# 脚本是否经 disk 库取盘：命中 TEST_DISK，或 source 了任一 disk 库。
+# 只有这类脚本才用 local_diskN 推断所需盘数——有些脚本自己用 lsblk 算盘名，
+# 与 add disk 声明无关，按 local_diskN 判断会误报。
+# 注意：mdadm 的库是 common/common.sh，必须带路径限定，否则会把与磁盘无关的
+# 其他 common/common.sh（如 smoke-migrate）也算进来。
+DISK_HELPER_RE = re.compile(
+    r"\bTEST_DISK\b|disk_lib\.sh|storage_disk_lib\.sh|mdadm/common/common\.sh"
+)
+# local_disk1 / local_disk2 / local_disk3 表示用例用到了第 2/3/4 块盘。
+LOCAL_DISK_INDEX_RE = re.compile(r"\blocal_disk([1-3])\b")
+
+
+def required_disk_count(script_text):
+    """按脚本实际引用的 local_diskN 推断所需磁盘数（1..4）。
+
+    只引用 local_disk 需要 1 块；引用 local_disk1 需要 2 块；以此类推。
+    未走 disk 库取盘的脚本返回 0，表示不参与该规则检查。
+    """
+    if not DISK_HELPER_RE.search(script_text):
+        return 0
+    need = 1
+    for match in LOCAL_DISK_INDEX_RE.finditer(script_text):
+        need = max(need, int(match.group(1)) + 1)
+    return need
+
+
+def find_disk_line(script_text):
+    """返回脚本中第一处取盘相关代码的行号，找不到返回 0。"""
+    for index, one_line in enumerate(script_text.splitlines(), 1):
+        if DISK_HELPER_RE.search(one_line):
+            return index
+    for index, one_line in enumerate(script_text.splitlines(), 1):
+        if LOCAL_DISK_INDEX_RE.search(one_line) or "local_disk" in one_line:
+            return index
+    return 0
+
 
 
 class SuiteResult(object):
@@ -108,6 +184,42 @@ def collect_case_stems(dir_path):
     return stems
 
 
+def collect_case_scripts(dir_path):
+    """递归收集目录下所有 .sh 文件，返回「脚本名（小写去扩展名）-> 绝对路径列表」。
+
+    与 collect_case_stems 使用同一套命名约定，额外保留路径以便读取脚本内容。
+    同样按目录缓存，避免重复遍历。
+    """
+    if dir_path in SCRIPT_MAP_CACHE:
+        return SCRIPT_MAP_CACHE[dir_path]
+
+    script_map = {}
+    for root_dir, _, files in os.walk(dir_path):
+        for one_file in files:
+            if os.path.splitext(one_file)[1].lower() != CASE_EXT:
+                continue
+            stem = os.path.splitext(one_file)[0].lower()
+            script_map.setdefault(stem, []).append(os.path.join(root_dir, one_file))
+
+    SCRIPT_MAP_CACHE[dir_path] = script_map
+    return script_map
+
+
+def read_script_text(script_path):
+    """读取脚本内容，失败时返回空串（运行时检查属于尽力而为，不因读失败中断）。"""
+    if script_path in SCRIPT_TEXT_CACHE:
+        return SCRIPT_TEXT_CACHE[script_path]
+
+    try:
+        with open(script_path, "r", encoding="utf-8", errors="replace") as handle:
+            text = handle.read()
+    except OSError:
+        text = ""
+
+    SCRIPT_TEXT_CACHE[script_path] = text
+    return text
+
+
 def build_name_line_map(text):
     """扫描文本，建立「用例名 -> 出现行号列表」，用于生成带行号的注解。
 
@@ -127,6 +239,251 @@ def take_line(name_lines, case_name):
     if not lines:
         return 0
     return lines.pop(0)
+
+
+def peek_line(name_lines, case_name):
+    """查看某个用例名对应的行号但不消费，取不到时返回 0。
+
+    同一个用例既要用于字段一致性注解、又要用于脚本存在性注解，
+    因此在循环开头统一取一次行号，供后续所有检查复用。
+    """
+    lines = name_lines.get(case_name)
+    if not lines:
+        return 0
+    return lines[0]
+
+
+def find_field_line(text, start_line, field_name):
+    """从用例名所在行向后查找某字段真正所在的行号。
+
+    用例块的结束以右花括号或下一个左花括号为界；找不到时回退到用例名所在行。
+    """
+    if start_line <= 0:
+        return 0
+
+    field_pattern = re.compile(r'^\s*"%s"\s*:' % re.escape(field_name))
+    lines = text.splitlines()
+    index = start_line
+    while index < len(lines):
+        one_line = lines[index]
+        if field_pattern.match(one_line):
+            return index + 1
+        stripped = one_line.strip()
+        if stripped.startswith("}") or stripped.startswith("{"):
+            break
+        index += 1
+    return start_line
+
+
+def as_int(value):
+    """把字段值转成 int，非整数返回 None（bool 不算整数）。"""
+    if isinstance(value, bool) or not isinstance(value, int):
+        return None
+    return value
+
+
+def as_disk_list(value):
+    """把 add disk 字段归一化为列表，异常形态返回 None。"""
+    if isinstance(value, list):
+        return value
+    return None
+
+
+def check_field_consistency(rel_path, text, suite_data, one_case, line_no, result):
+    """检查点 3：套件外层字段必须覆盖 cases 内层字段（R1-R4）。
+
+    语义基准：case 内声明优先于套件外层，外层缺失时取默认值。
+    外层值必须 >= 内层值，否则要么是多机/网卡被低估（运行时直接退出），
+    要么是文档语义不自洽。
+    """
+    case_name = one_case["name"]
+
+    # R1：machine num 外层必须 >= 每个 case 的 machine num
+    case_num = as_int(one_case.get(FIELD_MACHINE_NUM))
+    if case_num is not None:
+        suite_num = as_int(suite_data.get(FIELD_MACHINE_NUM))
+        if suite_num is None:
+            suite_num = DEFAULT_MACHINE_NUM
+        if case_num > suite_num:
+            result.errors.append(
+                "%s: case '%s' declares machine num %d, but suite level machine num is %d"
+                % (rel_path, case_name, case_num, suite_num)
+            )
+            result.annotations.append(
+                (
+                    rel_path,
+                    find_field_line(text, line_no, FIELD_MACHINE_NUM),
+                    0,
+                    "machine num mismatch",
+                    "case declares machine num %d, suite level is %d (must be >=)"
+                    % (case_num, suite_num),
+                )
+            )
+
+    # R2：add network interface 外层必须 >= 每个 case 的值
+    case_nic = as_int(one_case.get(FIELD_NETWORK_INTERFACE))
+    if case_nic is not None:
+        suite_nic = as_int(suite_data.get(FIELD_NETWORK_INTERFACE))
+        if suite_nic is None:
+            suite_nic = DEFAULT_NETWORK_INTERFACE
+        if case_nic > suite_nic:
+            result.errors.append(
+                "%s: case '%s' declares add network interface %d, but suite level value is %d"
+                % (rel_path, case_name, case_nic, suite_nic)
+            )
+            result.annotations.append(
+                (
+                    rel_path,
+                    find_field_line(text, line_no, FIELD_NETWORK_INTERFACE),
+                    0,
+                    "add network interface mismatch",
+                    "case declares %d, suite level is %d (must be >=)" % (case_nic, suite_nic),
+                )
+            )
+
+    # R3：任一 case 需要 physical 时，外层 machine type 必须是 physical
+    case_type = one_case.get(FIELD_MACHINE_TYPE)
+    if isinstance(case_type, str) and case_type.strip().lower() == REQUIRED_MACHINE_TYPE:
+        suite_type = suite_data.get(FIELD_MACHINE_TYPE, DEFAULT_MACHINE_TYPE)
+        if not isinstance(suite_type, str):
+            suite_type = DEFAULT_MACHINE_TYPE
+        if suite_type.strip().lower() != REQUIRED_MACHINE_TYPE:
+            result.errors.append(
+                "%s: case '%s' requires machine type 'physical', but suite level machine type is '%s'"
+                % (rel_path, case_name, suite_type)
+            )
+            result.annotations.append(
+                (
+                    rel_path,
+                    find_field_line(text, line_no, FIELD_MACHINE_TYPE),
+                    0,
+                    "machine type mismatch",
+                    "case requires 'physical', suite level is '%s'" % suite_type,
+                )
+            )
+
+    # R4：case 使用的 add disk 取值必须被外层 add disk 覆盖
+    case_disk = as_disk_list(one_case.get(FIELD_ADD_DISK))
+    if case_disk is not None:
+        suite_disk = as_disk_list(suite_data.get(FIELD_ADD_DISK))
+        if suite_disk is None:
+            suite_disk = []
+        missing_values = []
+        for one_value in case_disk:
+            if one_value not in suite_disk and one_value not in missing_values:
+                missing_values.append(one_value)
+        if missing_values:
+            result.errors.append(
+                "%s: case '%s' uses add disk %s, but suite level add disk is %s"
+                % (
+                    rel_path,
+                    case_name,
+                    json.dumps(case_disk, ensure_ascii=False),
+                    json.dumps(suite_disk, ensure_ascii=False),
+                )
+            )
+            result.annotations.append(
+                (
+                    rel_path,
+                    find_field_line(text, line_no, FIELD_ADD_DISK),
+                    0,
+                    "add disk not covered",
+                    "case uses %s, suite level covers %s"
+                    % (
+                        json.dumps(missing_values, ensure_ascii=False),
+                        json.dumps(suite_disk, ensure_ascii=False),
+                    ),
+                )
+            )
+
+
+def find_pattern_line(script_text, pattern):
+    """返回脚本中第一处匹配该正则的行号，找不到返回 0。"""
+    for index, one_line in enumerate(script_text.splitlines(), 1):
+        if pattern.search(one_line):
+            return index
+    return 0
+
+
+def check_runtime_requirement(
+    rel_path, case_name, line_no, script_paths, effective_num, effective_disk, result
+):
+    """检查点 4：脚本实际需要的机器数/额外磁盘必须被声明覆盖。
+
+    - R-a：脚本引用 NODE2_ / NODE3_ ... 时，生效的 machine num 必须足够大，
+           否则 check_environment.py 会 sys.exit(1)。
+    - R-b：脚本经 disk 库取盘时，生效的 add disk 列表长度必须 >= 脚本实际
+           引用的 local_diskN 数量（引用 local_disk1 就需要 2 块），
+           否则用例运行时拿不到足够的盘，空盘名会退化成 /dev/ 目录。
+    """
+    max_node = 0
+    node_script = None
+    disk_script = None
+    need_disk = 0
+
+    for one_script in script_paths:
+        script_text = read_script_text(one_script)
+        if not script_text:
+            continue
+
+        for match in NODE_HIGHER_RE.finditer(script_text):
+            one_node = int(match.group(1))
+            if one_node > max_node:
+                max_node = one_node
+                node_script = one_script
+
+        script_need_disk = required_disk_count(script_text)
+        if script_need_disk > need_disk:
+            need_disk = script_need_disk
+            disk_script = one_script
+
+    if node_script is not None and max_node > effective_num:
+        script_rel = os.path.relpath(node_script, REPO_ROOT).replace(os.sep, "/")
+        script_text = read_script_text(node_script)
+        script_line = find_pattern_line(script_text, NODE_HIGHER_RE)
+        result.errors.append(
+            "%s: case '%s' uses NODE%d_ in %s:%d, but effective machine num is %d"
+            % (rel_path, case_name, max_node, script_rel, script_line, effective_num)
+        )
+        result.annotations.append(
+            (
+                rel_path,
+                line_no,
+                0,
+                "machine num too small",
+                "script %s:%d uses NODE%d_, effective machine num is %d"
+                % (script_rel, script_line, max_node, effective_num),
+            )
+        )
+
+    if disk_script is not None and effective_disk < need_disk:
+        script_rel = os.path.relpath(disk_script, REPO_ROOT).replace(os.sep, "/")
+        script_text = read_script_text(disk_script)
+        script_line = find_disk_line(script_text)
+        if effective_disk < 1:
+            detail = "effective add disk is empty"
+            note = "uses TEST_DISK, but no add disk is declared"
+            key = "add disk missing"
+        else:
+            detail = "effective add disk has %d entrie(s)" % effective_disk
+            note = "uses %d test disk(s), but only %d is declared" % (
+                need_disk,
+                effective_disk,
+            )
+            key = "add disk too small"
+        result.errors.append(
+            "%s: case '%s' needs %d test disk(s) in %s:%d, but %s"
+            % (rel_path, case_name, need_disk, script_rel, script_line, detail)
+        )
+        result.annotations.append(
+            (
+                rel_path,
+                line_no,
+                0,
+                key,
+                "script %s:%d %s" % (script_rel, script_line, note),
+            )
+        )
 
 
 def check_one_suite(json_path):
@@ -186,6 +543,18 @@ def check_one_suite(json_path):
 
     name_lines = build_name_line_map(text)
     stems = collect_case_stems(abs_case_path)
+    script_map = collect_case_scripts(abs_case_path)
+
+    # 套件外层字段（缺失时由 check_environment.py 的默认值兜底）
+    suite_machine_num = as_int(data.get(FIELD_MACHINE_NUM))
+    if suite_machine_num is None:
+        suite_machine_num = DEFAULT_MACHINE_NUM
+    suite_network_interface = as_int(data.get(FIELD_NETWORK_INTERFACE))
+    if suite_network_interface is None:
+        suite_network_interface = DEFAULT_NETWORK_INTERFACE
+    suite_add_disk = as_disk_list(data.get(FIELD_ADD_DISK))
+    if suite_add_disk is None:
+        suite_add_disk = []
 
     seen_names = set()
     for one_case in data["cases"]:
@@ -212,23 +581,46 @@ def check_one_suite(json_path):
             continue
         seen_names.add(case_key)
 
-        # 不区分大小写匹配，与 check_casename.py 的既有约定保持一致
-        if case_name.lower() in stems:
+        # 检查点 3：外层字段必须覆盖 case 内层字段（R1-R4），
+        # 只依赖 json 内容，与脚本是否存在无关，因此先于脚本存在性检查执行。
+        case_line_no = peek_line(name_lines, case_name)
+        check_field_consistency(
+            rel_path, text, data, one_case, case_line_no, result
+        )
+
+        if case_name.lower() not in stems:
+            line_no = take_line(name_lines, case_name)
+            result.errors.append(
+                "%s: case '%s' has no matching %s under %s"
+                % (rel_path, case_name, CASE_EXT, case_path)
+            )
+            result.annotations.append(
+                (
+                    rel_path,
+                    line_no,
+                    0,
+                    "missing case script",
+                    "case '%s' has no matching %s under %s" % (case_name, CASE_EXT, case_path),
+                )
+            )
             continue
 
-        line_no = take_line(name_lines, case_name)
-        result.errors.append(
-            "%s: case '%s' has no matching %s under %s"
-            % (rel_path, case_name, CASE_EXT, case_path)
-        )
-        result.annotations.append(
-            (
-                rel_path,
-                line_no,
-                0,
-                "missing case script",
-                "case '%s' has no matching %s under %s" % (case_name, CASE_EXT, case_path),
-            )
+        # 检查点 4：脚本实际依赖必须被声明覆盖（R-a 多机 / R-b 额外磁盘）
+        case_script_paths = script_map.get(case_name.lower(), [])
+        effective_num = as_int(one_case.get(FIELD_MACHINE_NUM))
+        if effective_num is None:
+            effective_num = suite_machine_num
+        effective_disk = as_disk_list(one_case.get(FIELD_ADD_DISK))
+        if effective_disk is None:
+            effective_disk = suite_add_disk
+        check_runtime_requirement(
+            rel_path,
+            case_name,
+            case_line_no,
+            case_script_paths,
+            effective_num,
+            len(effective_disk),
+            result,
         )
 
     return result
@@ -334,6 +726,66 @@ def check_suite_name_uniqueness():
     return errors
 
 
+def check_crcrlf_line_endings(targets):
+    """检查文件是否包含 CRCRLF（\\r\\r\\n）双 CR 行尾（检查点 2）。
+
+    2026-10-21 仓库内 344 个 .sh 文件以 \\r\\r\\n 行尾入库，git 将其识别为二进制
+    （i/-text），在测试平台上 bash 解析失败导致大量用例失败。此检查确保
+    之后不会再混入此类文件。
+
+    Args:
+        targets ([list]): 绝对路径列表（.sh/.bash/.py）
+
+    Returns:
+        [list]: (rel_path, error_message, line_no) 元组列表
+    """
+    results = []
+    for one_target in targets:
+        if os.path.splitext(one_target)[1].lower() not in LINE_ENDING_EXTENSIONS:
+            continue
+        if not os.path.isfile(one_target):
+            continue
+        try:
+            with open(one_target, "rb") as handle:
+                data = handle.read()
+        except OSError:
+            continue
+        crcrlf_count = data.count(CRCRLF_PATTERN)
+        if crcrlf_count == 0:
+            continue
+        rel_path = os.path.relpath(one_target, REPO_ROOT).replace(os.sep, "/")
+        # 统计哪些行是双 CR 行尾（用于行号标注）
+        bad_lines = []
+        line_no = 0
+        pos = 0
+        while pos < len(data):
+            line_no += 1
+            nl = data.find(b"\n", pos)
+            if nl == -1:
+                nl = len(data)
+            if data[pos:nl].endswith(b"\r\r"):
+                bad_lines.append(line_no)
+            pos = nl + 1
+        first_bad = bad_lines[0] if bad_lines else 1
+        line_desc = ""
+        if bad_lines:
+            shown = bad_lines[:5]
+            line_desc = " (lines: %s%s)" % (
+                ", ".join(str(x) for x in shown),
+                "..." if len(bad_lines) > 5 else "",
+            )
+        results.append(
+            (
+                rel_path,
+                "file contains CRCRLF (double-CR) line endings: %d occurrence(s)%s; "
+                "normalize to LF (or single CRLF) before committing"
+                % (crcrlf_count, line_desc),
+                first_bad,
+            )
+        )
+    return results
+
+
 def resolve_input_files(raw_files):
     """把 --files 入参规范化为绝对路径，并只保留 suite2cases 子树下的 json 文件。"""
     suite_dir = os.path.realpath(os.path.join(REPO_ROOT, SUITE_DIR_NAME))
@@ -345,6 +797,66 @@ def resolve_input_files(raw_files):
         if os.path.commonpath([abs_path, suite_dir]) != suite_dir:
             continue
         resolved.append(abs_path)
+    return sorted(set(resolved))
+
+
+def resolve_script_files(raw_files):
+    """把 --files 入参规范化为绝对路径，并只保留脚本文件（.sh/.bash/.py）。"""
+    resolved = []
+    for one_file in raw_files:
+        abs_path = os.path.realpath(os.path.abspath(one_file))
+        if os.path.splitext(abs_path)[1].lower() not in LINE_ENDING_EXTENSIONS:
+            continue
+        resolved.append(abs_path)
+    return sorted(set(resolved))
+
+
+def list_all_scripts():
+    """列出仓库内所有脚本文件（.sh/.bash/.py），用于全量 CRCRLF 检查。"""
+    names = []
+    for root_dir, _, files in os.walk(REPO_ROOT):
+        if ".git" in root_dir:
+            continue
+        for one in files:
+            if os.path.splitext(one)[1].lower() in LINE_ENDING_EXTENSIONS:
+                names.append(os.path.join(root_dir, one))
+    return sorted(names)
+
+
+def list_changed_scripts(changed_from, changed_to):
+    """用 git diff 列出变动文件，并只保留脚本文件（.sh/.bash/.py）。"""
+    cmd = [
+        "git",
+        "-C",
+        REPO_ROOT,
+        "diff",
+        "--name-only",
+        "--diff-filter=ACMR",
+        changed_from,
+    ]
+    if changed_to:
+        cmd.append(changed_to)
+
+    try:
+        completed = subprocess.run(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False
+        )
+    except OSError as exc:
+        sys.stderr.write("ERROR: cannot run git: %s\n" % exc)
+        sys.exit(2)
+
+    if completed.returncode != 0:
+        sys.stderr.write("ERROR: git diff failed for '%s':\n%s\n"
+                         % (changed_from, completed.stderr.decode("utf-8", "replace")))
+        sys.exit(2)
+
+    changed = completed.stdout.decode("utf-8", "replace").splitlines()
+    resolved = []
+    for one_file in changed:
+        one_file = one_file.strip()
+        if os.path.splitext(one_file)[1].lower() not in LINE_ENDING_EXTENSIONS:
+            continue
+        resolved.append(os.path.join(REPO_ROOT, one_file.replace("/", os.sep)))
     return sorted(set(resolved))
 
 
@@ -441,6 +953,9 @@ def main(argv=None):
     else:
         annotations_enabled = args.annotations
 
+    # 检查点 2 的脚本目标：--files 模式下同时检查传入的脚本文件；
+    # --all 模式检查全仓脚本；--changed-from 模式检查变动的脚本。
+    script_targets = []
     if args.all:
         targets = list_all_suites()
         scope_desc = "all suite2cases json"
@@ -448,16 +963,22 @@ def main(argv=None):
         uniqueness_errors = check_suite_name_uniqueness()
         # 检查点 1：suite2cases 根目录不允许直接放置 json
         root_placement_errors = check_root_json_placement()
+        # 检查点 2：全量扫描仓库内脚本文件
+        script_targets = list_all_scripts()
     elif args.files:
         targets = resolve_input_files(args.files)
         scope_desc = "given files"
         uniqueness_errors = []
         root_placement_errors = []
+        # 检查点 2：--files 中传入的脚本文件（与 json 无关，独立校验）
+        script_targets = resolve_script_files(args.files)
     else:
         targets = list_changed_suites(args.changed_from, args.changed_to)
         scope_desc = "changed files since %s" % args.changed_from
         uniqueness_errors = []
         root_placement_errors = []
+        # 检查点 2：git diff 中变动的脚本文件
+        script_targets = list_changed_scripts(args.changed_from, args.changed_to)
 
     # 检查点 1：files / changed 模式下，命中 suite2cases 根目录的 json 直接报错，
     # 不进入后续逐套件校验（testsuite.json 永久豁免）。
@@ -474,7 +995,15 @@ def main(argv=None):
                 filtered_targets.append(one_target)
         targets = filtered_targets
 
-    if not targets and not uniqueness_errors and not root_placement_errors:
+    # 检查点 2：CRCRLF 双 CR 行尾检测
+    crcrlf_errors = check_crcrlf_line_endings(script_targets)
+
+    if (
+        not targets
+        and not uniqueness_errors
+        and not root_placement_errors
+        and not crcrlf_errors
+    ):
         print("No suite2cases json to check (%s), skip." % scope_desc)
         return 0
 
@@ -503,10 +1032,27 @@ def main(argv=None):
     for one_error in root_placement_errors:
         print("ERROR %s" % one_error)
 
+    for rel_path, one_error, bad_line in crcrlf_errors:
+        print("ERROR %s" % one_error)
+        all_annotations.append(
+            (
+                rel_path,
+                bad_line,
+                0,
+                "CRCRLF line endings",
+                "double-CR line endings break bash parsing; normalize to LF",
+            )
+        )
+
     if annotations_enabled and all_annotations:
         emit_annotations(all_annotations)
 
-    total_errors = len(all_errors) + len(uniqueness_errors) + len(root_placement_errors)
+    total_errors = (
+        len(all_errors)
+        + len(uniqueness_errors)
+        + len(root_placement_errors)
+        + len(crcrlf_errors)
+    )
     print(
         "checked %d suite(s), %d case(s); skipped %d suite(s); %d error(s)"
         % (checked_suites, total_cases, skipped_suites, total_errors)

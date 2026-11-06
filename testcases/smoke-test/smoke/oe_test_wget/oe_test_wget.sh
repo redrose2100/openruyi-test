@@ -49,12 +49,14 @@ function run_test() {
     wget https://repo.openeuler.org/openEuler-22.03-LTS/ISO/aarch64/openEuler-22.03-LTS-aarch64-dvd.iso --no-check-certificate &
     CHECK_RESULT $? 0 0 "Failed to execute wget on backgroud"
     SLEEP_WAIT 15
-    kill -9 "$(pgrep wget)"
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 wget PID（等价 pgrep wget）
+    proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = "wget" ] && echo "${p#/proc/}"; done)
     CHECK_RESULT $? 0 0 "Failed to kill wget"
     wget -c https://repo.openeuler.org/openEuler-22.03-LTS/ISO/aarch64/openEuler-22.03-LTS-aarch64-dvd.iso --no-check-certificate &
     CHECK_RESULT $? 0 0 "Failed to execute wget -c"
     SLEEP_WAIT 15
-    kill -9 "$(pgrep wget)"
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 wget PID（等价 pgrep wget）
+    proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = "wget" ] && echo "${p#/proc/}"; done)
     CHECK_RESULT $? 0 0 "Failed to kill -9 wget"
     find ./ -name "openEuler-22.03-LTS-aarch64-dvd.iso" | wc -l | grep 1
     CHECK_RESULT $? 0 0 "Failed to continue execute wget"

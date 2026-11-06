@@ -20,6 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "rsyslog inetutils"
     echo "local7.*  /var/log/test" >/etc/rsyslog.d/test.conf
     systemctl stop rsyslog
     LOG_INFO "End to prepare the test environment."
@@ -29,11 +30,11 @@ function run_test() {
     LOG_INFO "Start to run test."
     rsyslogd -f /etc/rsyslog.d/test.conf
     CHECK_RESULT $?
-    pgrep -f 'rsyslogd'
+    [ -n "$(proc_pids_by_cmdline rsyslogd)" ]
     CHECK_RESULT $?
     rsyslogd -i test.pid
     CHECK_RESULT $?
-    pid=$(pgrep -f "rsyslogd -i")
+    pid=$(proc_pids_by_cmdline "rsyslogd -i" | head -n 1)
     grep $pid /test.pid
     CHECK_RESULT $?
     LOG_INFO "End to run test."
@@ -41,7 +42,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    pgrep -f rsyslogd | xargs kill -9
+    proc_kill_pids $(proc_pids_by_cmdline rsyslogd)
     rm -rf /test.pid /etc/rsyslog.d/test.conf
     systemctl start rsyslog
     LOG_INFO "End to restore the test environment."

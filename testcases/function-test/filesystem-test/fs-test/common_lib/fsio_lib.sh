@@ -17,9 +17,18 @@
 # shellcheck disable=SC1090
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+# 统一选盘/系统盘防护（get_system_disk / get_root_disk / check_free_disk）。
+# 本套件原先用 `fdisk -l | ... | awk 'NR==2'` 裸选盘，既不保证选到空闲盘，
+# 也不排除系统盘，在只有一块盘的机器上会直接对系统盘做 pvcreate。
+source "${OET_PATH}/libs/locallibs/disk_select_lib.sh"
 export FS_TYPE="ext3 ext4 xfs"
 export LANG=en_US.UTF-8
-DNF_INSTALL lvm2
+# 只在 lvm 工具确实缺失时才安装。本文件在每个用例 source 时都会执行到这里，
+# 无条件 DNF_INSTALL 会把 lvm2 及其全部依赖反复写进 $tmpfile，
+# post_test 的 DNF_REMOVE 再把这些依赖整批判掉，极易误删系统基础包。
+if ! command -v vgcreate >/dev/null 2>&1; then
+    DNF_INSTALL lvm2
+fi
 
 function CREATE_LV() {
     lvname=$1
@@ -80,12 +89,37 @@ function CONCURRENCY_THREAD() {
 }
 
 function GET_CONSOLE() {
-    qemu-kvm -m 4096 -smp 4 -machine virt,accel=kvm,gic-version=3 -cpu host -bios /usr/share/edk2/aarch64/QEMU_EFI.fd -serial file:testlog -hda /data/images/XX.qcow2
+    # 原来写死了 aarch64 的 edk2 固件与 x86_64 的 kvm 加速，在 riscv64 上必然失败。
+    # 仅在明确需要控制台的场景下由用例改写；这里给出可用的默认实现：
+    # 有 qemu-system-$(uname -m) 就用当前架构，否则直接报错返回，不再让用例卡住。
+    local _qemu
+    _qemu="qemu-system-$(uname -m)"
+    if ! command -v "$_qemu" >/dev/null 2>&1; then
+        LOG_ERROR "GET_CONSOLE: $_qemu not available on $(uname -m), cannot start a console VM."
+        return 1
+    fi
+    "$_qemu" -m 4096 -smp 4 -nographic -serial file:testlog \
+        -drive file=/data/images/XX.qcow2,format=qcow2,if=virtio
 }
 
 function CREATE_VG() {
     cur_date=$(date +%Y%m%d%H%M%S)
-    disk_name=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | sort | awk 'NR==2')
+    # 原实现用 `fdisk -l | ... | awk 'NR==2'` 按位置裸选盘：既可能选中系统盘，
+    # 也可能在没有第二块盘时返回空串，让 pvcreate 退化成对空设备/目录操作。
+    # 改为走统一选盘，且明确拒绝系统盘。
+    local _disk
+    _disk=$(TEST_DISK 1 2>/dev/null | awk '{print $1}')
+    if [ -z "${_disk}" ] || [ ! -b "/dev/${_disk}" ]; then
+        __abort_test_disk "no usable free test disk found (got '${_disk}'), abort to protect the OS."
+    fi
+    local _system_disks
+    _system_disks=$(get_system_disk 2>/dev/null)
+    case " ${_system_disks} " in
+        *" ${_disk} "*)
+            __abort_test_disk "refuse to use system disk [${_disk}] for volume group, abort to protect the OS."
+            ;;
+    esac
+    disk_name="/dev/${_disk}"
     if pvcreate "$disk_name" -f &>/dev/null; then
         vggroup="test_vggroup$cur_date"
         vgcreate "$vggroup" "$disk_name" >/dev/null
@@ -118,18 +152,36 @@ function REMOVE_FS() {
     point_list=("$1")
     for i in $(seq 0 $((${#point_list[@]} - 1))); do
         tmp=${point_list[$i]}
-        lv=$(df -T | grep "$tmp" | awk '{print $1}')
-        if [[ $lv == "" ]]; then
-            continue
+        [ -n "$tmp" ] || continue
+        # 原来只用 `df -T | grep` 找设备，匹配不到就 continue 静默跳过，
+        # 于是挂载点残留、LV 残留，后续用例再挂载时出现 "target is busy" 或
+        # "already mounted"，把真实问题掩盖成随机失败。
+        # 这里补一条 /proc/mounts 兜底，并把残留情况记日志。
+        lv=$(df -T 2>/dev/null | awk -v p="$tmp" '$NF == p {print $1; exit}')
+        if [[ -z "$lv" ]]; then
+            lv=$(awk -v p="$tmp" '$2 == p {print $1; exit}' /proc/mounts 2>/dev/null)
         fi
-        umount -f "$tmp"
-        rm -rf "$tmp"
-        DELETE_LV "$lv"
+        if [[ -z "$lv" ]]; then
+            LOG_WARN "REMOVE_FS: $tmp is not mounted, skip unmount."
+        else
+            umount -f "$tmp" >/dev/null 2>&1 || umount -l "$tmp" >/dev/null 2>&1
+            [[ -n "$(findmnt -no SOURCE --target "$tmp" 2>/dev/null)" ]] && \
+                LOG_WARN "REMOVE_FS: failed to unmount $tmp (device $lv)."
+        fi
+        [ -d "$tmp" ] && rm -rf "$tmp"
+        if [[ -n "$lv" ]] && [[ "$lv" == /dev/* ]]; then
+            DELETE_LV "$lv"
+        fi
     done
 }
 
 function REMOVE_VG() {
-    DNF_INSTALL lvm2
+    # 原来这里也做了一次 DNF_INSTALL lvm2，把安装副作用带进清理阶段。
+    # 清理函数只应卸载卷组，不应再改软件包状态。
+    if ! command -v vgremove >/dev/null 2>&1; then
+        LOG_WARN "REMOVE_VG: lvm2 tools not available, skip volume group cleanup."
+        return 0
+    fi
     vggroup=$1
     [[ "$vggroup" != "" ]] && {
         vgremove "$vggroup" -y
@@ -195,7 +247,8 @@ function CHECK_BKG_MONITOR() {
     tmp_point=$1
     cpu_line=$2
     io_line=$3
-    free_disk=$(lsblk | grep disk | awk '{print $1}' | tail -n 1)
+    free_disk=$(TEST_DISK 1 2>/dev/null | awk '{print $1}')
+    [ -z "$free_disk" ] && free_disk=$(lsblk -rno NAME,TYPE 2>/dev/null | awk '$2 == "disk" {print $1}' | tail -n 1)
     top_pid=$(pgrep -f "top -d 2" | head -n 1)
     iostat_pid=$(pgrep -f "iostat -d 2" | head -n 1)
     kill -9 "$top_pid" "$iostat_pid"
@@ -226,4 +279,28 @@ function ssh_cmd_node() {
     SSH_CMD "$cmd" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
 }
 
-REMOVE_VG "$@"
+# 本文件被每个用例 source 时都会执行到这里。原先是无条件 `REMOVE_VG "$@"`，
+# 而 mugen 会给用例脚本传 -x 之类的参数，于是卷组名被当成 "-x"，
+# 清理逻辑在用例还没开始时就去动磁盘。改为：
+#   - 只有在确实残留 test_vggroup 时才清理；
+#   - 参数只接受合法卷组名，其余全部忽略。
+if command -v vgs >/dev/null 2>&1 &&
+    vgs --noheadings -o vg_name 2>/dev/null | grep -qw "test_vggroup.*"; then
+    __leftover_vg=""
+    for __a in "$@"; do
+        case "$__a" in
+            -* | "") ;;
+            test_vggroup*) __leftover_vg="$__a" ;;
+        esac
+    done
+    unset __a
+    if [ -z "${__leftover_vg}" ]; then
+        __leftover_vg=$(vgs --noheadings -o vg_name 2>/dev/null |
+            grep -o "test_vggroup[^ ]*" | head -n 1)
+    fi
+    if [ -n "${__leftover_vg}" ]; then
+        LOG_WARN "leftover test volume group [${__leftover_vg}] found, cleaning up before the case starts."
+        REMOVE_VG "$__leftover_vg"
+    fi
+    unset __leftover_vg
+fi

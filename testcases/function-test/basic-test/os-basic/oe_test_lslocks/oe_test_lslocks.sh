@@ -18,19 +18,33 @@
 # ############################################
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "start to prepare the test environment."
+    touch /tmp/lslocks_test.lock
+    (exec 9>/tmp/lslocks_test.lock; flock -x 9; sleep 30) &
+    SLEEP_WAIT 2
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "start to run test."
     lslocks -h | grep -iE "usage|用法" 
     CHECK_RESULT $? 0 0 "display help fail"
     lslocks -V | grep lslocks 
     CHECK_RESULT $? 0 0 "print version fail"
-    lslocks | grep -i command
+    lslocks | grep -i lslocks_test
     CHECK_RESULT $? 0 0 "list information about all the currently held file locks fail"
-    lslocks -b | grep -i command
+    lslocks -b | grep -i lslocks_test
     CHECK_RESULT $? 0 0 "print the sizes in bytes fail"
-    lslocks -i | grep -i command
+    lslocks -i | grep -i lslocks_test
     CHECK_RESULT $? 0 0 "ignore lock files which are inaccessible for the current user fail"
     LOG_INFO "End to run test."
+}
+
+function post_test() {
+    LOG_INFO "start to clean the test environment."
+    rm -f /tmp/lslocks_test.lock
+    LOG_INFO "End to clean the test environment."
 }
 
 main "$@"

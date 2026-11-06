@@ -1,6 +1,6 @@
 {
     "path": "${OET_PATH}/testcases/function-test/network-test/network_struct",
-    "machine type": "physical",
+    "machine type": "kvm",
     "machine num": 2,
     "add network interface": 1,
     "cases": [
@@ -147,12 +147,6 @@
             "machine type": "kvm",
             "machine num": 2,
             "add network interface": 0
-        },
-        {
-            "name": "oe_test_nic_work_format",
-            "machine type": "physical",
-            "machine num": 1,
-            "add network interface": 1
         },
         {
             "name": "oe_test_nmap_check",

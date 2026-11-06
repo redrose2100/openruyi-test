@@ -19,8 +19,11 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    # firewalld only needs to be down for the duration of this run;
+    # post_test restores the original state recorded here.
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
     systemctl stop firewalld
-    systemctl disable firewalld
 
     setenforce 0
     groupadd postgres
@@ -58,7 +61,14 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     su - postgres -c "/usr/bin/pg_ctl -D /tmp/data/ -l /tmp/data/logfile stop"
-    setenforce 1
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
     DNF_REMOVE
     rm -rf log /tmp/data
     userdel -r postgres

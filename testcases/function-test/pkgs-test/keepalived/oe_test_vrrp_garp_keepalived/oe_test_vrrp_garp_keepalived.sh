@@ -23,6 +23,10 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL keepalived
+    # firewalld/selinux are only changed for the duration of this run;
+    # post_test restores the state recorded here.
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
     command -v firewalld && systemctl stop firewalld
     getenforce | grep Enforcing && setenforce 0
     mkdir /etc/keepalived
@@ -76,6 +80,14 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     DNF_REMOVE 1
     rm -rf /etc/keepalived/ /tmp/tmp_mesg
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

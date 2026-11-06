@@ -48,7 +48,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    pid=$(pgrep -f "tail")
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 tail PID（等价 pgrep -f "tail"，tail 的 comm 即 tail）
+    pid=$(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = tail ] && echo "${p#/proc/}"; done | head -n 1)
     kill -9 "${pid}"
     rm -rf /tmp/log
     DNF_REMOVE "$@"

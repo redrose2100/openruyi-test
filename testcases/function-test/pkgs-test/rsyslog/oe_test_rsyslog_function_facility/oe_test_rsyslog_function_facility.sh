@@ -18,6 +18,12 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "rsyslog inetutils"
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     facility_list=("auth" "daemon" "security" "lpr" "mail" "syslog" "news" "user" "uucp" "local1")

@@ -18,8 +18,14 @@
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+# /etc/openEuler_security 是 openEuler 专有目录，衍生发行版上不存在。
+source "$OET_PATH/libs/locallibs/os_release_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    if ! OS_RELEASE_HAS_SECURITY_DIR; then
+        LOG_WARN "/etc/openEuler_security is not present, security-tool is not supported on this distribution."
+        exit 255
+    fi
     cp /etc/sudoers /etc/sudoers-bak
     echo 'size' >/tmp/m_test
     echo 'size ' >/tmp/sm_test
@@ -57,8 +63,13 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    mv /etc/sudoers-bak /etc/sudoers -f
-    mv /etc/openEuler_security/usr-security.conf-bak /etc/openEuler_security/usr-security.conf -f
+    if ! OS_RELEASE_HAS_SECURITY_DIR; then
+        LOG_WARN "nothing to clean up on this distribution, skipped."
+        return 0
+    fi
+    [ -f /etc/sudoers-bak ] && mv /etc/sudoers-bak /etc/sudoers -f
+    [ -f /etc/openEuler_security/usr-security.conf-bak ] &&
+        mv /etc/openEuler_security/usr-security.conf-bak /etc/openEuler_security/usr-security.conf -f
     rm -rf /tmp/M_test /tmp/m_test /tmp/sm_test /tmp/touch_test
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"

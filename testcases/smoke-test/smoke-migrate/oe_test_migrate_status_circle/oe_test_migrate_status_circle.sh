@@ -42,7 +42,8 @@ function run_test() {
     pid=$!
     for ((i=0; i<10; i++)); do
         SLEEP_WAIT 1
-        if pgrep -f "virsh migrate" > /dev/null; then
+        # openRuyi riscv64 无 pgrep：/proc 遍历按 cmdline 匹配 virsh migrate（等价 pgrep -f "virsh migrate"；[[ ]] 避免 grep 自匹配）
+        if for p in /proc/[0-9]*; do [ -r "$p/cmdline" ] || continue; if [[ "$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null)" == *'virsh migrate'* ]]; then echo "${p#/proc/}"; fi; done > /dev/null; then
             virsh domjobabort "$vm_name"
             abort_result=$?
             break

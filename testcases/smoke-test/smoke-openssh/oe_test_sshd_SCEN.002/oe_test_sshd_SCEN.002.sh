@@ -39,7 +39,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "sshd restart failed"
     systemctl status sshd
     CHECK_RESULT $? 0 0 "sshd not active after restart"
-    pid=$(pgrep -f "/usr/sbin/sshd" | head -n 1)
+    # openRuyi riscv64 无 pgrep：/proc 遍历按 cmdline 匹配 sshd 取 PID（等价 pgrep -f "/usr/sbin/sshd" | head -n 1；[[ ]] 避免 grep 自匹配）
+    pid=$(for p in /proc/[0-9]*; do [ -r "$p/cmdline" ] || continue; if [[ "$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null)" == *'/usr/sbin/sshd'* ]]; then echo "${p#/proc/}"; fi; done | head -n 1)
     echo "${pid}"
     CHECK_RESULT $? 0 0 "failed to get sshd pid"
     if test -f $sshd_pid_dir1; then

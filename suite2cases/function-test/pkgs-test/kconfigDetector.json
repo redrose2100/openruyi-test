@@ -1,8 +1,0 @@
-{
-    "path": "${OET_PATH}/testcases/function-test/pkgs-test/kconfigDetector",
-    "cases": [
-        {
-            "name": "oe_test_kconfigDetector"
-        }
-    ]
-}

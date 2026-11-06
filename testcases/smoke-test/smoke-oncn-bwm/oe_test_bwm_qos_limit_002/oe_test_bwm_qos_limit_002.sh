@@ -101,7 +101,8 @@ function run_test() {
 }
 
 function post_test() {
-    P_SSH_CMD --cmd "pkill -9 iperf3"
+    # openRuyi riscv64 远端无 pkill：/proc 遍历按进程名 kill iperf3（等价 pkill -9 iperf3）
+    P_SSH_CMD --cmd "for p in /proc/[0-9]*; do [ -r \"\$p/comm\" ] || continue; [ \"\$(cat \"\$p/comm\")\" = iperf3 ] && kill -9 \"\${p#/proc/}\" 2>/dev/null; done"
     P_SSH_CMD --cmd "systemctl start firewalld"
     rmdir /sys/fs/cgroup/net_cls/{offline,online}
     rm -rf *.log

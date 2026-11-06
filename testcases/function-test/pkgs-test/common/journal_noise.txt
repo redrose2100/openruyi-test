@@ -1,0 +1,18 @@
+# Journal lines that are known to be benign, used by check_journal_errors().
+#
+# Format:
+#   - one fixed string per line, matched with "grep -F" against the matched
+#     journal line, so no regular expression syntax is involved here;
+#   - lines starting with "#" and empty lines are ignored;
+#   - an entry is only added by review, and must carry a "# reason:" line
+#     describing why it is benign plus the date it was verified.
+#
+# This file is intentionally kept short. Do not add a broad fragment such as
+# "ignoring:" because it would hide real errors as well.
+
+# reason: /usr/lib/udev/rules.d/60-rfkill.rules references the "rfkill" group,
+# which does not exist in the base image, so systemd-udevd logs this and keeps
+# going ("ignoring"). It is an image packaging gap with cosmetic impact only,
+# the rule is skipped and no device management function is lost.
+# verified: 2026-10-27, openEuler 24.03-LTS-SP2, systemd-udevd
+60-rfkill.rules:2 Failed to resolve group 'rfkill', ignoring: Unknown group

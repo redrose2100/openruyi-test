@@ -23,6 +23,10 @@ source ./common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL keepalived
+    # firewalld/selinux are only changed for the duration of this run;
+    # post_test restores the state recorded here.
+    ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
+    ORIG_SELINUX_MODE=$(getenforce 2>/dev/null)
     systemctl stop firewalld
     setenforce 0
     net_card=${NODE1_NIC}
@@ -33,6 +37,8 @@ function pre_test() {
     sed -i "s/TEST_NETCARD/${net_card}/g" /etc/keepalived/keepalived.conf
     systemctl start keepalived
     SSH_CMD "dnf -y install keepalived;
+    systemctl is-active firewalld 2>/dev/null > /tmp/keepalived_fw_state.node2;
+    getenforce 2>/dev/null > /tmp/keepalived_se_state.node2;
     systemctl stop firewalld;
     setenforce 0;" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_SCP /etc/keepalived/keepalived.conf "${NODE2_USER}"@"${NODE2_IPV4}":/etc/keepalived/keepalived.conf "${NODE2_PASSWORD}"
@@ -121,6 +127,25 @@ function post_test() {
     dnf remove -y keepalived nginx;
     rm -rf /etc/keepalived /var/log/keepalived*  /tmp/keepalived/;
     ip addr del ${keepalived_ip}/24 dev ${net_card}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    case "${ORIG_SELINUX_MODE:-}" in
+    Enforcing) setenforce 1 ;;
+    Permissive) setenforce 0 ;;
+    *) LOG_WARN "Original selinux mode unknown, skip selinux restore." ;;
+    esac
+    if [ "${ORIG_FIREWALLD_ACTIVE}" = "active" ]; then
+        systemctl start firewalld || LOG_WARN "Failed to restart firewalld to its original state."
+    fi
+    SSH_CMD "
+    if [ \"\$(cat /tmp/keepalived_fw_state.node2 2>/dev/null)\" = \"active\" ]; then
+        systemctl start firewalld 2>/dev/null || true;
+    fi;
+    if [ \"\$(cat /tmp/keepalived_se_state.node2 2>/dev/null)\" = \"Enforcing\" ]; then
+        setenforce 1 2>/dev/null || true;
+    elif [ \"\$(cat /tmp/keepalived_se_state.node2 2>/dev/null)\" = \"Permissive\" ]; then
+        setenforce 0 2>/dev/null || true;
+    fi;
+    rm -f /tmp/keepalived_fw_state.node2 /tmp/keepalived_se_state.node2
+    " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "Finish environment cleanup!"
 }
 

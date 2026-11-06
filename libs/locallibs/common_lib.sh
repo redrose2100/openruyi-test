@@ -103,6 +103,39 @@ function CASE_RESULT() {
     exit "$exec_result"
 }
 
+# openRuyi riscv64 镜像不带 procps(pgrep/pkill/pidof)，且 procps-ng 与
+# coreutils 的 /usr/bin/uptime 硬冲突无法安装。以下三个函数用 /proc 提供
+# 等价的进程查找/清理能力，供用例脚本与框架层在无 procps 平台复用。
+# /proc 是内核接口，不依赖任何包；在 x86_64/openEuler 等有 procps 的
+# 平台上这些函数同样可用（语义与 pgrep/pkill 一致）。
+
+# 按进程名(comm 精确匹配)返回全部 PID，等价 pgrep <name> / pidof <name>。
+function proc_pids_by_name() {
+    local name=$1
+    local p
+    for p in /proc/[0-9]*; do
+        [ -r "$p/comm" ] || continue
+        [ "$(cat "$p/comm")" = "$name" ] && echo "${p#/proc/}"
+    done
+}
+
+# 按命令行全文(cmdline 包含 pattern)返回全部 PID，等价 pgrep -f <pattern>。
+function proc_pids_by_cmdline() {
+    local pattern=$1
+    local p
+    for p in /proc/[0-9]*; do
+        [ -r "$p/cmdline" ] || continue
+        tr '\0' ' ' < "$p/cmdline" 2>/dev/null | grep -q "$pattern" && echo "${p#/proc/}"
+    done
+}
+
+# 按 PID 列表杀进程，等价 pkill -9 <pid...> / kill -9 <pid...>。
+# 用法：proc_kill_pids $(proc_pids_by_name dnf)
+function proc_kill_pids() {
+    local pids=$*
+    [ -n "$pids" ] && kill -9 $pids 2>/dev/null
+}
+
 function POST_TEST_DEFAULT() {
     LOG_INFO "$0 post_test"
 }
@@ -110,14 +143,35 @@ function POST_TEST_DEFAULT() {
 function main() {
     # 只执行一次清理
     __TRAP_EXECUTED=0
+    # 记录用例推进到哪一步：init -> config -> pre -> run。
+    # post_test 里常含 fdisk/pvremove/wipefs 等破坏性清理动作，只有在 pre_test
+    # 已经开始（磁盘环境可能已被改动）之后才允许执行；否则像 config_params 里
+    # exit 255 这种“跳过”场景也会触发清理，把本不该动的盘清掉。
+    __MAIN_STAGE=init
     handle_signal() {
         if [ $__TRAP_EXECUTED -eq 0 ]; then
             __TRAP_EXECUTED=1
-            if [ -n "$(type -t post_test)" ]; then
-                post_test
-            else
-                POST_TEST_DEFAULT
-            fi
+            case $__MAIN_STAGE in
+                pre | run)
+                    # 选盘阶段就已中止（disk_select_lib.sh 的 __abort_test_disk）：
+                    # 一块测试盘都没被改动过，local_disk* 全为空，此时跑 post_test
+                    # 会让 `pvremove -f /dev/${local_disk}` 退化成清理 /dev/ 目录。
+                    if [ "${__TEST_DISK_ABORT:-0}" = "1" ]; then
+                        LOG_WARN "test disk selection aborted before touching any disk, skip post_test."
+                    elif [ -n "$(type -t post_test)" ]; then
+                        post_test
+                    else
+                        POST_TEST_DEFAULT
+                    fi
+                    ;;
+                *)
+                    if [ -z "$(type -t post_test)" ]; then
+                        POST_TEST_DEFAULT
+                    else
+                        LOG_WARN "case stopped at stage ${__MAIN_STAGE}, skip post_test to avoid touching disks."
+                    fi
+                    ;;
+            esac
         fi
         if [ $# -gt 0 ]; then
             if [ "$1" == "NOPKG" ]; then
@@ -132,18 +186,33 @@ function main() {
     trap "handle_signal PKGCONFLICT" SIGRTMIN+1 || exit 247
 
     if ! rpm -qa | grep expect >/dev/null 2>&1; then
-        dnf -y install expect
+        # 带超时与重试的 expect 安装：dnf 挂起时不拖死整个用例会话，
+        # 失败仅告警（非致命），保持既有"静默继续"语义。
+        _install_expect=0
+        for _try in 1 2 3; do
+            if timeout 120 dnf -y install expect; then
+                _install_expect=1
+                break
+            fi
+            proc_kill_pids $(proc_pids_by_name dnf)
+            rm -f /var/cache/dnf/*.pid 2>/dev/null
+            sleep 5
+        done
+        test $_install_expect -eq 0 && LOG_WARN "expect install failed, continue anyway"
     fi
 
     if [ -n "$(type -t config_params)" ]; then
         config_params
+        __MAIN_STAGE=config
     fi
 
     if [ -n "$(type -t pre_test)" ]; then
+        __MAIN_STAGE=pre
         pre_test
     fi
 
     if [ -n "$(type -t run_test)" ]; then
+        __MAIN_STAGE=run
         run_test
         CASE_RESULT $?
     fi

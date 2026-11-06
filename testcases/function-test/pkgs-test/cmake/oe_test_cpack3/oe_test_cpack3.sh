@@ -79,8 +79,8 @@ function run_test() {
     CHECK_RESULT $?
     grep -a "demo1 Installer Version: 2.2.3, Copyright (c) demo1" demo1-1.0.0-Linux.sh
     CHECK_RESULT $?
-    OPENEULER_VERSION=$(awk '{print$3}' /etc/openEuler-release)
-    if [ ${OPENEULER_VERSION} != 20.03 ]; then
+    OPENEULER_VERSION=$(OS_RELEASE_VERSION_ID)
+    if [ "${OPENEULER_VERSION}" != 20.03 ]; then
         cpack -B cpackdir3 -G "STGZ" | grep "cpackdir3/demo1-1.0.0-Linux.sh generated."
     else
         currentDir=$(

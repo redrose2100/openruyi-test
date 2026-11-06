@@ -20,7 +20,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL tuned
+    DNF_INSTALL "tuned python3-dbus-python"
     systemctl enable --now tuned
     mkdir -p /etc/tuned/my-profile
     old_profile=$(tuned-adm active | awk '{print $4}')

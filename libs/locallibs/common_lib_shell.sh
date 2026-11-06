@@ -28,6 +28,111 @@ function LOG_ERROR() {
     printf "$(date +%Y-%m-%d\ %T)  $0  [ ERROR ]  %s\n" "$@"
 }
 
+# ---------------------------------------------------------------------------
+# Non-root privilege escalation helpers (expect-only fallback layer).
+# Mirrors _mugen_* in common_lib_python.sh and ssh_cmd.py.
+# ---------------------------------------------------------------------------
+MUGEN_SUDO_TMP_PREFIX="/tmp/.mgn_"
+MUGEN_SUDO_PROMPT="MUGEN_SUDO_PWD:"
+MUGEN_PRIV_CACHE_TTL=3600
+
+function _mugen_sudo_conf() {
+    local _ip=$1
+    local _port=${2-22}
+    local _n _nip _nport _mode
+
+    for _n in 1 2 3 4 5 6 7 8 9; do
+        eval "_nip=\${NODE${_n}_IPV4-}"
+        [ "${_nip}"x = "${_ip}"x ] || continue
+        eval "_nport=\${NODE${_n}_SSH_PORT-22}"
+        [ "${_nport}"x = "${_port}"x ] || continue
+        eval "_mode=\${NODE${_n}_SUDO_MODE-}"
+        if [ -n "${_mode}" ]; then
+            printf '%s' "${_mode}"
+            return 0
+        fi
+        break
+    done
+
+    printf '%s' "${MUGEN_SUDO_MODE-auto}"
+}
+
+function _mugen_priv_cache_file() {
+    printf '%s' "${TMPDIR:-/tmp}/.mugen_priv.$1_$2_$3"
+}
+
+function _mugen_priv_cache_get() {
+    local _f _now _ts
+    _f=$(_mugen_priv_cache_file "$1" "$2" "$3")
+    [ -f "${_f}" ] || return 1
+    _now=$(date +%s)
+    _ts=$(head -n 1 "${_f}" 2>/dev/null)
+    case "${_ts}" in
+    '' | *[!0-9]*) return 1 ;;
+    esac
+    [ $((_now - _ts)) -gt "${MUGEN_PRIV_CACHE_TTL}" ] && return 1
+    sed -n '2p' "${_f}" 2>/dev/null
+}
+
+function _mugen_priv_cache_put() {
+    local _f
+    _f=$(_mugen_priv_cache_file "$1" "$2" "$3")
+    printf '%s\n%s\n' "$(date +%s)" "$4" >"${_f}" 2>/dev/null || true
+}
+
+# Prints: root | none | nopasswd | password | unavailable
+function _mugen_resolve_privilege() {
+    local _ip=$1
+    local _port=${2-22}
+    local _user=${3-root}
+    local _pwd=${4-}
+
+    if [ "${_user}"x = "root"x ]; then
+        printf '%s' "root"
+        return 0
+    fi
+
+    local _configured
+    _configured=$(_mugen_sudo_conf "${_ip}" "${_port}")
+    if [ "${_configured}"x = "none"x ]; then
+        printf '%s' "none"
+        return 0
+    fi
+    case "${_configured}" in
+    nopasswd | password | unavailable)
+        printf '%s' "${_configured}"
+        return 0
+        ;;
+    esac
+
+    local _cached
+    if _cached=$(_mugen_priv_cache_get "${_ip}" "${_port}" "${_user}"); then
+        [ -n "${_cached}" ] && {
+            printf '%s' "${_cached}"
+            return 0
+        }
+    fi
+
+    local _mode="unavailable"
+    local _uid
+    _uid=$(bash "${OET_PATH}"/libs/locallibs/sshcmd.sh -c "id -u" -i "${_ip}" \
+        -u "${_user}" -p "${_pwd}" -t 30 -o "${_port}" 2>/dev/null)
+    _uid=$(printf '%s' "${_uid}" | tr -d ' \r\n')
+    if [ "${_uid}"x = "0"x ]; then
+        _mode="root"
+    else
+        if bash "${OET_PATH}"/libs/locallibs/sshcmd.sh -c "sudo -n true" -i "${_ip}" \
+            -u "${_user}" -p "${_pwd}" -t 30 -o "${_port}" >/dev/null 2>&1; then
+            _mode="nopasswd"
+        elif [ -n "${_pwd}" ]; then
+            _mode="password"
+        fi
+    fi
+
+    _mugen_priv_cache_put "${_ip}" "${_port}" "${_user}" "${_mode}"
+    printf '%s' "${_mode}"
+}
+
 function SSH_CMD() {
     expect -v
     if [ $? -ne 0 ]; then
@@ -41,7 +146,21 @@ function SSH_CMD() {
     timeout=${5-300}
     connport=${6-22}
 
-    bash ${OET_PATH}/libs/locallibs/sshcmd.sh -c "$cmd" -i "$remoteip" -u "$remoteuser" -p "$remotepasswd" -t "$timeout" -o "$connport"
+    # root logins keep the legacy call shape untouched (zero regression)
+    if [ "${remoteuser}"x = "root"x ]; then
+        bash ${OET_PATH}/libs/locallibs/sshcmd.sh -c "$cmd" -i "$remoteip" -u "$remoteuser" -p "$remotepasswd" -t "$timeout" -o "$connport"
+        ret=$?
+        test $ret -ne 0 && LOG_ERROR "Failed in remote CMD operation:$ret"
+        return $ret
+    fi
+
+    sudo_mode=$(_mugen_resolve_privilege "$remoteip" "$connport" "$remoteuser" "$remotepasswd")
+    if [ "${sudo_mode}"x = "unavailable"x ]; then
+        LOG_ERROR "Neither root login nor passwordless sudo is available on $remoteip for user $remoteuser."
+        return 1
+    fi
+
+    bash ${OET_PATH}/libs/locallibs/sshcmd.sh -c "$cmd" -i "$remoteip" -u "$remoteuser" -p "$remotepasswd" -t "$timeout" -o "$connport" -s "$sudo_mode" -w "$remotepasswd"
     ret=$?
     test $ret -ne 0 && LOG_ERROR "Failed in remote CMD operation:$ret"
     return $ret
@@ -57,6 +176,18 @@ function SSH_SCP() {
     dest=$2
     remotepasswd=${3-openEuler12#$}
     connport=${4-22}
+    # Optional 5th arg: remote login user, used to complete "user@" when the
+    # caller leaves it out (keeps non-root call sites free of hardcoded names).
+    remoteuser=${5-}
+
+    if [ -n "${remoteuser}" ]; then
+        if printf '%s' "$src" | grep -q ':' && ! printf '%s' "$src" | grep -q '@'; then
+            src="${remoteuser}@${src}"
+        fi
+        if printf '%s' "$dest" | grep -q ':' && ! printf '%s' "$dest" | grep -q '@'; then
+            dest="${remoteuser}@${dest}"
+        fi
+    fi
 
     bash ${OET_PATH}/libs/locallibs/sshscp.sh -p "$remotepasswd" -o "$connport" -s "$src" -d "$dest"
     ret=$?
@@ -97,8 +228,8 @@ function DNF_INSTALL() {
         exit 1
     fi
 
-    location=$[ "NODE"$node"_LOCATION" ]
-    if [[ location == "local" ]]; then
+    eval "location=\${NODE${node}_LOCALTION-}"
+    if [[ ${location} == "local" ]]; then
         reponames=$(grep '^\[.*\]' /etc/yum.repos.d/*.repo | tr -d [] | sed -e ':a;N;$!ba;s/\n/ /g')
         mapfile -t __install_pkgs < <(dnf --assumeno install ${__pkg_list[*]} 2>&1 | grep -wE "${reponames// /|}" | grep -wE "$(uname -m)|noarch" | awk '{print $1}')
         dnf -y install ${__pkg_list[*]}
@@ -108,15 +239,16 @@ function DNF_INSTALL() {
             exit 1
         fi
     else
-        remoteIp=$[ "NODE"$node"_IPV4" ]
-        password=$[ "NODE"$node"_PASSWORD" ]
-        ssh_port=$[ "NODE"$node"_SSH_PORT" ]
-        remoteUser=$[ "NODE"$node"_USER" ]
+        eval "remoteIp=\${NODE${node}_IPV4-}"
+        eval "password=\${NODE${node}_PASSWORD-}"
+        eval "ssh_port=\${NODE${node}_SSH_PORT-22}"
+        eval "remoteUser=\${NODE${node}_USER-root}"
         cmd="dnf -y install ${__pkg_list[*]}"
 
-        ret=SSH_CMD "$cmd" "$remoteIp" "$password" "$remoteUser" 300 "$ssh_port"
+        SSH_CMD "$cmd" "$remoteIp" "$password" "$remoteUser" 300 "$ssh_port"
+        ret=$?
 
-        if [ ret -ne 0 ]; then
+        if [ "$ret" -ne 0 ]; then
             LOG_ERROR "pkg_list:${__pkg_list[*]} install failed."
             exit 1
         fi
@@ -152,44 +284,46 @@ function DNF_REMOVE() {
 
     if [ "$node" -eq 0 ]; then
         for node_id in $(seq 1 $node_number); do
-            location=$[ "NODE"$node_id"_LOCATION" ]
-            if [[ location == "local" ]]; then
+            eval "location=\${NODE${node_id}_LOCALTION-}"
+            if [[ ${location} == "local" ]]; then
                 if ! dnf -y remove ${__installed_pkgs[*]} ${__pkg_list[*]}; then
                     LOG_ERROR "pkg_list:${__installed_pkgs[*]} ${__pkg_list[*]} remove failed."
                     exit 1
                 fi
             else
-                remoteIp=$[ "NODE"$node_id"_IPV4" ]
-                password=$[ "NODE"$node_id"_PASSWORD" ]
-                ssh_port=$[ "NODE"$node_id"_SSH_PORT" ]
-                remoteUser=$[ "NODE"$node_id"_USER" ]
+                eval "remoteIp=\${NODE${node_id}_IPV4-}"
+                eval "password=\${NODE${node_id}_PASSWORD-}"
+                eval "ssh_port=\${NODE${node_id}_SSH_PORT-22}"
+                eval "remoteUser=\${NODE${node_id}_USER-root}"
                 cmd="dnf -y remove ${__installed_pkgs[*]} ${__pkg_list[*]}"
 
-                ret=SSH_CMD "$cmd" "$remoteIp" "$password" "$remoteUser" 300 "$ssh_port"
+                SSH_CMD "$cmd" "$remoteIp" "$password" "$remoteUser" 300 "$ssh_port"
+                ret=$?
 
-                if [ ret -ne 0 ]; then
+                if [ "$ret" -ne 0 ]; then
                     LOG_ERROR "pkg_list:${__pkg_list[*]} remove failed."
                     exit 1
                 fi
             fi
         done
     else
-        location=$[ "NODE"$node"_LOCATION" ]
-        if [[ location == "local" ]]; then
+        eval "location=\${NODE${node}_LOCALTION-}"
+        if [[ ${location} == "local" ]]; then
             if ! dnf -y remove ${__installed_pkgs[*]} ${__pkg_list[*]}; then
                 LOG_ERROR "pkg_list:${__installed_pkgs[*]} ${__pkg_list[*]} remove failed."
                 exit 1
             fi
         else
-            remoteIp=$[ "NODE"$node"_IPV4" ]
-            password=$[ "NODE"$node"_PASSWORD" ]
-            ssh_port=$[ "NODE"$node"_SSH_PORT" ]
-            remoteUser=$[ "NODE"$node"_USER" ]
+            eval "remoteIp=\${NODE${node}_IPV4-}"
+            eval "password=\${NODE${node}_PASSWORD-}"
+            eval "ssh_port=\${NODE${node}_SSH_PORT-22}"
+            eval "remoteUser=\${NODE${node}_USER-root}"
             cmd="dnf -y remove ${__installed_pkgs[*]} ${__pkg_list[*]}"
 
-            ret=SSH_CMD "$cmd" "$remoteIp" "$password" "$remoteUser" 300 "$ssh_port"
+            SSH_CMD "$cmd" "$remoteIp" "$password" "$remoteUser" 300 "$ssh_port"
+            ret=$?
 
-            if [ ret -ne 0 ]; then
+            if [ "$ret" -ne 0 ]; then
                 LOG_ERROR "pkg_list:${__pkg_list[*]} remove failed."
                 exit 1
             fi

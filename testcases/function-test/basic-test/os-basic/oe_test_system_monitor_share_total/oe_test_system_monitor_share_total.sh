@@ -21,7 +21,7 @@ source "${OET_PATH}/testcases/function-test/basic-test/os-basic/common/disk_lib.
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "procps-ng"
+    DNF_INSTALL "procps"
     LOG_INFO "End to prepare the test environment."
 }
 

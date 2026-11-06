@@ -21,6 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "cronie"
+    mkdir -p "$HOME/.cache"
     current_time=$(date "+%Y-%m-%d %H:%M:%S")
     LOG_INFO "End to prepare the test environment."
 }
@@ -29,7 +30,8 @@ function run_test() {
     LOG_INFO "Start to run test."
     crontab -l 2>&1 | grep 'no crontab' || crontab -r
     CHECK_RESULT $?
-    echo -e "i0 0 * * * echo 'hello world' >> $HOME/test.txt\\E:wq\\n" | crontab -e
+    echo -e "0 0 * * * echo 'hello world' >> $HOME/test.txt\n" > "$HOME/crontab_cmd.cron"
+    crontab "$HOME/crontab_cmd.cron"
     CHECK_RESULT $?
     ret=$(crontab -l | wc -l)
     CHECK_RESULT $ret 1
@@ -44,7 +46,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     crontab -r
-    rm -rf $HOME/test.txt
+    rm -rf $HOME/test.txt $HOME/crontab_cmd.cron
     date -s "$current_time 1 minute"
     LOG_INFO "End to restore the test environment."
 }

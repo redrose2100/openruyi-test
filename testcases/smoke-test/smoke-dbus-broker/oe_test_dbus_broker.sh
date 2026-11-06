@@ -28,7 +28,8 @@ function pre_test() {
 function run_test() {
     systemctl status dbus | grep 'Main PID' | grep dbus-daemon || exit 1
     systemctl status dbus | grep 'Loaded' | grep '/usr/lib/systemd/system/dbus.service' || exit 1
-    pgrep dbus-broker && exit 1
+    # openRuyi riscv64 无 pgrep：存在 dbus-broker 进程则退出 1（等价 pgrep dbus-broker && exit 1）
+    proc_pids_by_name dbus-broker | grep -q . && exit 1
     systemctl is-enabled dbus |& grep static || exit 1
 
     # install dbus-broker
@@ -38,7 +39,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 'dbus status is right'
     systemctl status dbus | grep 'Loaded' | grep '/usr/lib/systemd/system/dbus-broker.service'
     CHECK_RESULT $? 0 0 'dbus files is right'
-    pgrep dbus-broker && exit 1
+    # openRuyi riscv64 无 pgrep：存在 dbus-broker 进程则退出 1（等价 pgrep dbus-broker && exit 1）
+    proc_pids_by_name dbus-broker | grep -q . && exit 1
     ls /usr/lib/systemd/system/dbus.service
     CHECK_RESULT $? 0 0
     systemctl is-enabled dbus |& grep alias
@@ -56,7 +58,8 @@ function run_test() {
     CHECK_RESULT $? 0 0
     systemctl status dbus | grep 'Loaded' | grep '/usr/lib/systemd/system/dbus.service'
     CHECK_RESULT $? 0 0
-    pgrep dbus-broker
+    # openRuyi riscv64 无 pgrep：确认移除后无 dbus-broker 进程（等价 pgrep dbus-broker，期望找不到返回非 0）
+    proc_pids_by_name dbus-broker | grep -q .
     CHECK_RESULT $? 0 1
     systemctl is-enabled dbus |& grep static
     CHECK_RESULT $? 0 0

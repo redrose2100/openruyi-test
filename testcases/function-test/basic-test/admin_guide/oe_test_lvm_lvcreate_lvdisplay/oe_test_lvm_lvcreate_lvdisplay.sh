@@ -22,10 +22,6 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL lvm2
     check_free_disk
-    if [[ ${NODE1_FRAME} == "riscv64" ]]; then
-        local_disk=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '2p')
-        local_disk1=$(lsblk -dn -o NAME | grep -vE '^(loop|nbd|ram)' | sed -n '3p')
-    fi
     pvcreate -y "/dev/${local_disk}" "/dev/${local_disk1}"
     vgcreate -y openeulertest "/dev/${local_disk}" "/dev/${local_disk1}"
     LOG_INFO "Environmental preparation is over."
