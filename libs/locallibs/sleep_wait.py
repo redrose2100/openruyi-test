@@ -80,6 +80,7 @@ def _print_process_tree(p):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
+            errors="replace",
             timeout=10,
         ).stdout
         sys.stdout.write(out)
@@ -94,11 +95,15 @@ def _run_with_idle_probe(cmd, wait_time, idle_timeout):
     硬超时（wait_time 到）仍按原逻辑杀进程组并返回 143。
     """
     pid_file = MUGEN_PID_FILE
+    # errors="replace"：被测命令的 stdout 可能包含非 UTF-8 字节（例如本地化输出、
+    # 二进制片段、GBK/ISO-8859 文本），默认 text=True 会抛 UnicodeDecodeError
+    # 让整个用例以异常失败，而不是被测用例自身的结果。这里做容错解码。
     p = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
+        errors="replace",
         bufsize=1,
         shell=True,
         start_new_session=True,

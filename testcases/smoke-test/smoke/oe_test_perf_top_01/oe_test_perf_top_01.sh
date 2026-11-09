@@ -20,16 +20,26 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL perf
+    # `perf` is not a package on openRuyi; the binary ships in linux-tools.
+    DNF_INSTALL "linux-tools"
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    perf top >perf.check &
+    command -v perf
+    CHECK_RESULT $? 0 0 "perf is not installed"
+    # perf top needs a terminal normally; --stdio keeps it writing to the
+    # redirection, and -d bounds the run so the file is flushed.
+    perf top --stdio -d 5 >perf.check 2>/dev/null &
     CHECK_RESULT $? 0 0 "perf top:failed"
-    SLEEP_WAIT 5
-    grep "kernel" ./perf.check
+    SLEEP_WAIT 8
+    # Do not hardcode the "kernel" symbol name: the symbol set depends on
+    # kallsyms availability and on the sample rate actually achieved. What the
+    # case must prove is that perf top produced readable symbol output.
+    test -s ./perf.check
+    CHECK_RESULT $? 0 0 "perf top produced no output"
+    grep -E "^[[:space:]]*[0-9]+\.[0-9]+%" ./perf.check
     CHECK_RESULT $? 0 0 "Verify output readability of perf top:failed!"
     LOG_INFO "End to run test."
 }

@@ -25,7 +25,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "which not install"
     which -v | grep -E "GNU which v[0-9]\.[0-9]+"
     CHECK_RESULT $? 0 0 "check version failed"
-    which bash | grep -E "/usr/bin/bash|/bin/bash"
+    # bash may live in /bin, /usr/bin, /sbin or /usr/sbin depending on the
+    # distribution and on the PATH of the user running the case.
+    which bash | grep -E "/(usr/)?s?bin/bash$"
     CHECK_RESULT $? 0 0 "which function failed"
     LOG_INFO "Finish test!"
 }

@@ -35,8 +35,13 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed command: lscpu"
     fdisk -l | grep -iE "disk|dev"
     CHECK_RESULT $? 0 0 "Failed command: fdisk"
-    grep -iE "name|version" /etc/os-release | grep openEuler
-    CHECK_RESULT $? 0 0 "/etc/os-release file view failed"
+    # 只校验 /etc/os-release 中存在 NAME 与 VERSION 标识字段，不绑定具体发行版名称。
+    # 原实现硬编码 grep openEuler，在 openRuyi 等其它 openEuler 系发行版上必然失败
+    # （本例 NAME="openRuyi Creek" / ID="openruyi"），属脚本可移植性缺陷。
+    grep -qE "^NAME=" /etc/os-release
+    CHECK_RESULT $? 0 0 "/etc/os-release file view failed: no NAME field"
+    grep -qE "^(VERSION|VERSION_ID)=" /etc/os-release
+    CHECK_RESULT $? 0 0 "/etc/os-release file view failed: no VERSION field"
     if ! grep docker /proc/1/cgroup; then
         timedatectl set-timezone Asia/Shanghai
 	old_zone=$(timedatectl | grep "Time zone" | awk '{print $3}')
