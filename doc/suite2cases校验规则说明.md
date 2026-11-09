@@ -14,8 +14,10 @@
 | 6 | 套件外层 `add network interface` 必须大于等于 `cases` 中每个用例的值 |
 | 7 | `cases` 中任一用例声明 `machine type` 为 `physical`，套件外层 `machine type` 必须为 `physical` |
 | 8 | `cases` 中每个用例使用的 `add disk` 取值，必须都被套件外层 `add disk` 列表覆盖 |
-| 9 | 用例脚本引用 `NODE2_`~`NODE9_` 时，生效的 `machine num` 必须足够大 |
+| 9 | 用例脚本需要多台机器时（`NODE2_`~`NODE9_`、`TEST_NIC N`、`TEST_DISK N`、`--node N`、`REMOTE_REBOOT N`），生效的 `machine num` 必须足够大 |
 | 10 | 用例脚本经 disk 库取盘时，生效的 `add disk` 列表长度必须覆盖脚本实际用到的 `local_diskN` 数量 |
+| 11 | 用例脚本自己取非主网卡时（`get_free_eth N` / `ls /sys/class/net/` / `TEST_NIC` / `${NODE1_NIC[i]}`），生效的 `add network interface` 必须足够大 |
+| 12 | 用例脚本依赖物理机独占能力时（`/dev/ipmi*`、`ipmitool`、SR-IOV），生效的 `machine type` 必须是 `physical` |
 
 ## 2 校验规则详解
 
@@ -86,15 +88,30 @@
 - 规则 7 的大小写不敏感比较：`Physical` 与 `physical` 等价。
 - 判定为违规时，错误信息会给出用例名、用例值和外层值。
 
-### 3.3 运行时风险检查（规则 9~10）
+### 3.3 运行时风险检查（规则 9~12）
 
-这两条规则会读取用例脚本内容，判断「脚本实际需要」是否被「声明值」覆盖。
+这四条规则会读取用例脚本内容，判断「脚本实际需要」是否被「声明值」覆盖。
 它们才是**真正会导致用例运行失败**的检查项：
 
 | 编号 | 触发条件 | 含义 |
 | --- | --- | --- |
-| 规则 9 | 脚本中出现 `NODE2_`~`NODE9_`，且最大编号 > 生效的 `machine num` | 脚本要操作第 N 台机器，但环境只申请了更少的机器 |
+| 规则 9 | 脚本中出现多机信号，且最大编号 > 生效的 `machine num` | 脚本要操作第 N 台机器，但环境只申请了更少的机器 |
 | 规则 10 | 脚本经 disk 库取盘，且生效的 `add disk` 长度 < 脚本实际需要的盘数 | 脚本要操作 N 块测试盘，但没有申请足够的磁盘 |
+| 规则 11 | 脚本自己取非主网卡，且生效的 `add network interface` < 实际张数 | 脚本要操作额外网卡，但没有申请足够的网卡 |
+| 规则 12 | 脚本依赖物理机独占能力，但生效的 `machine type` 不是 `physical` | 脚本要的设备在 KVM 上根本不存在 |
+
+**规则 9 的多机信号清单**（四类都要算，缺一个就会漏检）：
+
+| 信号 | 说明 |
+| --- | --- |
+| `NODE2_` ~ `NODE9_` | 直接引用第 N 台节点的环境变量 |
+| `TEST_NIC N` / `TEST_DISK N` | **N 是节点号，不是网卡/磁盘张数**，见 `get_test_device.py` 的 `--node` 参数 |
+| `--node N` | `P_SSH_CMD` / `P_SFTP` 等显式指定第 N 台 |
+| `REMOTE_REBOOT N` / `REMOTE_REBOOT_WAIT N` | 重启第 N 台 |
+
+> 重点坑：`TEST_NIC 2` 的语义常被误解为「需要 2 张网卡」，实际是「需要第 2 台机器上的额外网卡」。
+> 依据：`libs/locallibs/common_lib_python.sh` 中 `TEST_NIC() { id=${1-1}; ... --node "$id"; }`，
+> 以及 `libs/locallibs/get_test_device.py` 中 `node (int): 节点号`。
 
 规则 10 的判定细节：
 
@@ -111,6 +128,47 @@
 > 却只声明两块盘。此时 `${local_disk2}` 为空，命令退化成操作 `/dev/` 目录。
 
 > 说明：这里的「生效值」= 用例自己声明的值，未声明时取外层值（受继承规则影响）。
+
+规则 11 的判定细节：
+
+- `add network interface` 的语义是「**除主网卡之外额外申请**的网卡张数」，
+  主网卡由 `NODE1_NIC` 提供，不占用这个额度。
+- 触发信号与折算方式：
+
+  | 信号 | 折算所需额外网卡数 | 依据 |
+  | --- | --- | --- |
+  | `get_free_eth N` | N | 用例自带的 `net_lib.sh` 中 `[ ${#LOCAL_ETH[@]} -ge ${num_eth} ] \|\| exit 1` |
+  | `ls /sys/class/net/` + 过滤主网卡 | 1 | 脚本用 `grep -v "${NODE1_IPV4}"` 排除主网卡后取一张 |
+  | `TEST_NIC N` | 1 | 返回该节点除主网卡外的网卡名，非空即必须有 1 张 |
+  | `${NODE1_NIC[i]}` / `${NODE1_NIC[@]}` | 1 | 取额外网卡数组 |
+
+- 多处信号取**最大值**，不做累加（同一张网卡会被不同语句重复引用）。
+- 只引用 `${NODE1_NIC}`（不带下标）视为使用主网卡，不需要额外网卡，不参与本规则。
+
+> 常见错例：脚本用
+> `test_eth1=$(ls /sys/class/net/ | grep -vE 'lo\|bond\|vlan' | grep -v "$(ip route ... ${NODE1_IPV4} ...)" | sed -n 1p)`
+> 取一张非主网卡，但 JSON 里把 `add network interface` 声明成 `0`。此时 `test_eth1` 为空，
+> 后面的 `ip addr add ... dev "${test_eth1}"` 会直接失败。
+
+规则 12 的判定细节：
+
+- 只收**在 KVM 上必然拿不到**的特征，避免把「验证包自身功能」的用例误判成需要物理机：
+
+  | 信号 | 说明 |
+  | --- | --- |
+  | `/dev/ipmi*` | IPMI 设备节点，虚拟机不提供 |
+  | `ipmitool` | 依赖前者的带外管理工具 |
+  | `sriov_numvfs` / `/sys/class/net/*/device/sriov` | SR-IOV 虚拟功能，需物理网卡支持 |
+
+- **刻意排除**以下信号，它们不能作为「需要物理机」的判据：
+
+  | 信号 | 排除原因 |
+  | --- | --- |
+  | `/dev/mem`、`dmidecode`、`lspci` | KVM 上均可正常执行，用例本身就是在验证命令可用性 |
+  | `/dev/mcelog` | 用例自带 `! -e /dev/mcelog` → `exit 255` 的优雅跳过，缺设备只会 skip 不会 fail |
+
+> 判定原则：**缺设备会导致用例 fail 才算缺陷；只导致 skip 的不算**。
+> 因此给带跳过保护的用例强制声明 `physical` 只会浪费物理机资源。
 
 ## 4 校验脚本
 
@@ -229,3 +287,41 @@ python3 .github/scripts/check_suite_cases.py --changed-from v1.0 --changed-to v1
 
 > 修改 `suite2cases` 下的 JSON 时必须保持原有文件格式（行尾、缩进），
 > 不要用工具整体重新序列化，否则会产生大量无意义的 diff。
+
+### 6.3 额外网卡与物理机要求落地时的修正
+
+引入规则 11~12、并把规则 9 的多机信号补全为四类后，重新做了一次
+「声明值 vs 脚本实际需求」的全量审计（514 个套件、4166 个带脚本的用例），
+四个维度结果如下：
+
+| 维度 | 检查项 | 不合规数 |
+| --- | --- | --- |
+| 机器数 | 规则 9（四类多机信号） | 0 |
+| 额外网卡 | 规则 11 | 7 |
+| 额外磁盘 | 规则 10 | 0 |
+| 机器类型 | 规则 12 | 0 |
+
+7 条不合规全部集中在同一个文件，已一并修正：
+
+| 文件 | 用例 | 问题 | 处理 |
+| --- | --- | --- | --- |
+| `function-test/basic-test/admin_guide.json` | `oe_test_ip_cmd_addr` | 脚本 L25 用 `ls /sys/class/net/` 排除主网卡取一张，声明为 0 | `add network interface` 由 `0` 改为 `1` |
+| 同上 | `oe_test_ip_cmd_route` | 同上 | 同上 |
+| 同上 | `oe_test_ip_cmd_rule` | 同上 | 同上 |
+| 同上 | `oe_test_ip_config_mtu` | 同上 | 同上 |
+| 同上 | `oe_test_ip_config_multiple_address` | 同上 | 同上 |
+| 同上 | `oe_test_ip_config_static_address` | 同上 | 同上 |
+| 同上 | `oe_test_ip_config_static_route` | 同上 | 同上 |
+
+修改后 `python3 .github/scripts/check_suite_cases.py --all` 返回 0 错误。
+
+> 这 7 个用例原本显式声明了 `"machine num": 1, "add network interface": 0`，
+> 属于**用例级覆盖**，会把套件外层的 `"add network interface": 2` 覆盖掉，
+> 所以只看套件外层声明是查不出问题的——必须按脚本实际需求逐用例核对。
+
+两个**经核实不属于缺陷**的候选，此处记录判定依据，避免后续重复排查：
+
+| 候选 | 被误判的原因 | 实际判定 |
+| --- | --- | --- |
+| `function-test/pkgs-test/mcelog.json` | 脚本引用 `/dev/mcelog` | 脚本自带 `! -e /dev/mcelog` → `exit 255` 优雅跳过，缺设备只会 skip，不需要 `physical` |
+| `function-test/pkgs-test/dmidecode.json` | `oe_test_biosdecode` 执行 `biosdecode -d /dev/mem` | `/dev/mem` 在 KVM 上同样存在，命令可正常执行，不需要 `physical` |

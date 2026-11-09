@@ -100,8 +100,52 @@ FIELD_ADD_DISK = "add disk"
 
 # 检查点 5/6：脚本实际依赖与声明值的一致性（运行时风险）。
 # NODE2_ / NODE3_ ... 表示用例需要多机；TEST_DISK 表示用例需要额外磁盘。
+#
+# 机器数信号（R-a）：
+#   NODE2_ ~ NODE9_             直接引用第 N 台节点的环境变量
+#   TEST_NIC N / TEST_DISK N    N 是【节点号】不是张数（见 get_test_device.py --node）
+#   P_SSH_CMD/P_SFTP --node N   显式指定第 N 台
+#   REMOTE_REBOOT[_WAIT] N      重启第 N 台
+#   SSH_CMD/SSH_SCP/SFTP "...${NODE_N_IP}" 通过 NODE_N 变量隐式落到 NODE2-9_
 NODE_HIGHER_RE = re.compile(r"\bNODE([2-9])_")
+TEST_DEVICE_NODE_RE = re.compile(r"\bTEST_(?:NIC|DISK)\s+([2-9])\b")
+PSSH_NODE_RE = re.compile(r"--node\s+([2-9])\b")
+REMOTE_REBOOT_NODE_RE = re.compile(r"\bREMOTE_REBOOT(?:_WAIT)?\s+([2-9])\b")
+MACHINE_NUM_SIGNALS = (
+    ("NODE%d_", NODE_HIGHER_RE),
+    ("TEST_NIC/TEST_DISK %d", TEST_DEVICE_NODE_RE),
+    ("--node %d", PSSH_NODE_RE),
+    ("REMOTE_REBOOT %d", REMOTE_REBOOT_NODE_RE),
+)
+
 TEST_DISK_RE = re.compile(r"\bTEST_DISK\b")
+
+# 额外网卡信号（R-c）：add network interface 表示「除主网卡外额外申请的张数」。
+#   get_free_eth N              用例自带的取空闲网卡函数，内部 `[ ${#LOCAL_ETH[@]} -ge N ] || exit 1`
+#   ls /sys/class/net/ + grep -v 主网卡   自己挑一张非主网卡
+#   ${NODE1_NIC[i]}             取第 i+1 张网卡
+#   TEST_NIC N                  返回该节点除主网卡外的网卡名，非空即需 1 张
+EXTRA_NIC_HELPER_RE = re.compile(
+    r"\bget_free_eth\s+(\d+)"
+    r"|\bls\s+/sys/class/net/"
+    r"|\$\{?NODE1_NIC\[(?:[0-9]+|@)\]"
+    r"|\bTEST_NIC\s+\d+"
+)
+GET_FREE_ETH_RE = re.compile(r"\bget_free_eth\s+(\d+)")
+SYS_CLASS_NET_RE = re.compile(r"\bls\s+/sys/class/net/")
+TEST_NIC_RE = re.compile(r"\bTEST_NIC\s+\d+")
+
+# 物理机独占信号（R-d）：KVM 上必然拿不到，必须声明 machine type=physical。
+# 只收确定性高的：/dev/ipmi*、ipmitool、SR-IOV、DMI 型号白名单判断。
+# 刻意排除：/dev/mem、lspci、dmidecode、/dev/mcelog——这些在 KVM 上可执行，
+# 或用例自带「缺设备就 exit 255 优雅跳过」，不需要占用物理机。
+PHYSICAL_ONLY_RE = re.compile(
+    r"/dev/ipmi\d"
+    r"|\bipmitool\b"
+    r"|\bsriov_numvfs\b"
+    r"|/sys/class/net/\S+/device/sriov",
+    re.IGNORECASE,
+)
 
 # 脚本是否经 disk 库取盘：命中 TEST_DISK，或 source 了任一 disk 库。
 # 只有这类脚本才用 local_diskN 推断所需盘数——有些脚本自己用 lsblk 算盘名，
@@ -136,6 +180,92 @@ def find_disk_line(script_text):
             return index
     for index, one_line in enumerate(script_text.splitlines(), 1):
         if LOCAL_DISK_INDEX_RE.search(one_line) or "local_disk" in one_line:
+            return index
+    return 0
+
+
+def required_machine_num(script_text):
+    """按脚本实际引用推断所需机器台数。
+
+    返回 (need, matched_text)。未命中任何多机信号时返回 (1, "")。
+    TEST_NIC N / TEST_DISK N 的 N 是节点号，所以同样计入机器数。
+    """
+    need = 1
+    evidence = ""
+    for one_format, one_pattern in MACHINE_NUM_SIGNALS:
+        for match in one_pattern.finditer(script_text):
+            one_node = int(match.group(1))
+            if one_node > need:
+                need = one_node
+                evidence = one_format % one_node
+    return need, evidence
+
+
+def find_machine_num_line(script_text):
+    """返回脚本中第一处多机信号的行号，找不到返回 0。"""
+    for index, one_line in enumerate(script_text.splitlines(), 1):
+        if NODE_HIGHER_RE.search(one_line):
+            return index
+    for index, one_line in enumerate(script_text.splitlines(), 1):
+        for _one_format, one_pattern in MACHINE_NUM_SIGNALS:
+            if one_pattern.search(one_line):
+                return index
+    return 0
+
+
+def required_extra_nic(script_text):
+    """按脚本实际用法推断每台节点额外需要的网卡张数。
+
+    返回 (need, matched_text)。未命中任何额外网卡信号时返回 (0, "")。
+    """
+    need = 0
+    evidence = ""
+    for match in GET_FREE_ETH_RE.finditer(script_text):
+        one_need = int(match.group(1))
+        if one_need > need:
+            need = one_need
+            evidence = "get_free_eth %d" % one_need
+    if need < 1:
+        match = SYS_CLASS_NET_RE.search(script_text)
+        if match is not None:
+            need = 1
+            evidence = "ls /sys/class/net/ picks a non-primary NIC"
+    if need < 1:
+        match = TEST_NIC_RE.search(script_text)
+        if match is not None:
+            need = 1
+            evidence = "TEST_NIC returns extra NICs of the node"
+    if need < 1:
+        match = EXTRA_NIC_HELPER_RE.search(script_text)
+        if match is not None:
+            need = 1
+            evidence = "NODE1_NIC array index"
+    return need, evidence
+
+
+def find_extra_nic_line(script_text):
+    """返回脚本中第一处额外网卡信号的行号，找不到返回 0。"""
+    for index, one_line in enumerate(script_text.splitlines(), 1):
+        if EXTRA_NIC_HELPER_RE.search(one_line):
+            return index
+    return 0
+
+
+def requires_physical(script_text):
+    """脚本是否依赖物理机独占能力。
+
+    返回 (flag, matched_text)。
+    """
+    match = PHYSICAL_ONLY_RE.search(script_text)
+    if match is None:
+        return False, ""
+    return True, match.group(0).strip()
+
+
+def find_physical_line(script_text):
+    """返回脚本中第一处物理机独占信号的行号，找不到返回 0。"""
+    for index, one_line in enumerate(script_text.splitlines(), 1):
+        if PHYSICAL_ONLY_RE.search(one_line):
             return index
     return 0
 
@@ -406,44 +536,83 @@ def find_pattern_line(script_text, pattern):
 
 
 def check_runtime_requirement(
-    rel_path, case_name, line_no, script_paths, effective_num, effective_disk, result
+    rel_path,
+    case_name,
+    line_no,
+    script_paths,
+    effective_num,
+    effective_disk,
+    result,
+    effective_nic=None,
+    effective_type=None,
 ):
-    """检查点 4：脚本实际需要的机器数/额外磁盘必须被声明覆盖。
+    """检查点 4：脚本实际需要的运行环境必须被声明覆盖。
 
     - R-a：脚本引用 NODE2_ / NODE3_ ... 时，生效的 machine num 必须足够大，
            否则 check_environment.py 会 sys.exit(1)。
     - R-b：脚本经 disk 库取盘时，生效的 add disk 列表长度必须 >= 脚本实际
            引用的 local_diskN 数量（引用 local_disk1 就需要 2 块），
            否则用例运行时拿不到足够的盘，空盘名会退化成 /dev/ 目录。
+    - R-c：脚本自己取非主网卡时（get_free_eth / ls /sys/class/net / TEST_NIC /
+           NODE1_NIC[i]），生效的 add network interface 必须 >= 实际张数，
+           否则 test_eth 为空、ip 命令落到 /dev/ 或失败。
+    - R-d：脚本依赖物理机独占能力（/dev/ipmi*、ipmitool、SR-IOV）时，
+           生效的 machine type 必须是 physical，否则设备根本不存在。
     """
     max_node = 0
     node_script = None
+    node_evidence = ""
     disk_script = None
     need_disk = 0
+    nic_script = None
+    need_nic = 0
+    nic_evidence = ""
+    phy_script = None
+    phy_evidence = ""
 
     for one_script in script_paths:
         script_text = read_script_text(one_script)
         if not script_text:
             continue
 
-        for match in NODE_HIGHER_RE.finditer(script_text):
-            one_node = int(match.group(1))
-            if one_node > max_node:
-                max_node = one_node
-                node_script = one_script
+        script_need_num, script_num_evidence = required_machine_num(script_text)
+        if script_need_num > max_node:
+            max_node = script_need_num
+            node_script = one_script
+            node_evidence = script_num_evidence
 
         script_need_disk = required_disk_count(script_text)
         if script_need_disk > need_disk:
             need_disk = script_need_disk
             disk_script = one_script
 
+        script_need_nic, script_nic_evidence = required_extra_nic(script_text)
+        if script_need_nic > need_nic:
+            need_nic = script_need_nic
+            nic_script = one_script
+            nic_evidence = script_nic_evidence
+
+        if phy_script is None:
+            script_needs_physical, script_phy_evidence = requires_physical(script_text)
+            if script_needs_physical:
+                phy_script = one_script
+                phy_evidence = script_phy_evidence
+
     if node_script is not None and max_node > effective_num:
         script_rel = os.path.relpath(node_script, REPO_ROOT).replace(os.sep, "/")
         script_text = read_script_text(node_script)
-        script_line = find_pattern_line(script_text, NODE_HIGHER_RE)
+        script_line = find_machine_num_line(script_text)
         result.errors.append(
-            "%s: case '%s' uses NODE%d_ in %s:%d, but effective machine num is %d"
-            % (rel_path, case_name, max_node, script_rel, script_line, effective_num)
+            "%s: case '%s' needs %d machine(s) (%s in %s:%d), but effective machine num is %d"
+            % (
+                rel_path,
+                case_name,
+                max_node,
+                node_evidence or "multi-node usage",
+                script_rel,
+                script_line,
+                effective_num,
+            )
         )
         result.annotations.append(
             (
@@ -451,7 +620,7 @@ def check_runtime_requirement(
                 line_no,
                 0,
                 "machine num too small",
-                "script %s:%d uses NODE%d_, effective machine num is %d"
+                "script %s:%d needs %d machine(s), effective machine num is %d"
                 % (script_rel, script_line, max_node, effective_num),
             )
         )
@@ -484,6 +653,69 @@ def check_runtime_requirement(
                 "script %s:%d %s" % (script_rel, script_line, note),
             )
         )
+
+    # R-c：脚本自己取非主网卡，却没有声明足够的 add network interface
+    if nic_script is not None and effective_nic is not None and need_nic > effective_nic:
+        script_rel = os.path.relpath(nic_script, REPO_ROOT).replace(os.sep, "/")
+        script_text = read_script_text(nic_script)
+        script_line = find_extra_nic_line(script_text)
+        if effective_nic < 1:
+            detail = "effective add network interface is 0"
+            key = "add network interface missing"
+        else:
+            detail = "effective add network interface is %d" % effective_nic
+            key = "add network interface too small"
+        result.errors.append(
+            "%s: case '%s' needs %d extra NIC(s) (%s in %s:%d), but %s"
+            % (
+                rel_path,
+                case_name,
+                need_nic,
+                nic_evidence or "extra NIC usage",
+                script_rel,
+                script_line,
+                detail,
+            )
+        )
+        result.annotations.append(
+            (
+                rel_path,
+                line_no,
+                0,
+                key,
+                "script %s:%d needs %d extra NIC(s), declared %d"
+                % (script_rel, script_line, need_nic, effective_nic),
+            )
+        )
+
+    # R-d：脚本依赖物理机独占能力，却没有声明 machine type=physical
+    if phy_script is not None and effective_type is not None:
+        if effective_type.strip().lower() != REQUIRED_MACHINE_TYPE:
+            script_rel = os.path.relpath(phy_script, REPO_ROOT).replace(os.sep, "/")
+            script_text = read_script_text(phy_script)
+            script_line = find_physical_line(script_text)
+            result.errors.append(
+                "%s: case '%s' requires physical machine (%s in %s:%d), "
+                "but effective machine type is '%s'"
+                % (
+                    rel_path,
+                    case_name,
+                    phy_evidence or "physical-only operation",
+                    script_rel,
+                    script_line,
+                    effective_type,
+                )
+            )
+            result.annotations.append(
+                (
+                    rel_path,
+                    line_no,
+                    0,
+                    "machine type should be physical",
+                    "script %s:%d depends on %s, effective machine type is '%s'"
+                    % (script_rel, script_line, phy_evidence, effective_type),
+                )
+            )
 
 
 def check_one_suite(json_path):
@@ -605,7 +837,8 @@ def check_one_suite(json_path):
             )
             continue
 
-        # 检查点 4：脚本实际依赖必须被声明覆盖（R-a 多机 / R-b 额外磁盘）
+        # 检查点 4：脚本实际依赖必须被声明覆盖（R-a 多机 / R-b 额外磁盘 /
+        # R-c 额外网卡 / R-d 物理机）
         case_script_paths = script_map.get(case_name.lower(), [])
         effective_num = as_int(one_case.get(FIELD_MACHINE_NUM))
         if effective_num is None:
@@ -613,6 +846,14 @@ def check_one_suite(json_path):
         effective_disk = as_disk_list(one_case.get(FIELD_ADD_DISK))
         if effective_disk is None:
             effective_disk = suite_add_disk
+        effective_nic = as_int(one_case.get(FIELD_NETWORK_INTERFACE))
+        if effective_nic is None:
+            effective_nic = suite_network_interface
+        effective_type = one_case.get(FIELD_MACHINE_TYPE)
+        if not isinstance(effective_type, str):
+            effective_type = data.get(FIELD_MACHINE_TYPE)
+        if not isinstance(effective_type, str):
+            effective_type = DEFAULT_MACHINE_TYPE
         check_runtime_requirement(
             rel_path,
             case_name,
@@ -621,6 +862,8 @@ def check_one_suite(json_path):
             effective_num,
             len(effective_disk),
             result,
+            effective_nic=effective_nic,
+            effective_type=effective_type,
         )
 
     return result

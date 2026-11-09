@@ -560,43 +560,43 @@
         {
             "name": "oe_test_ip_cmd_addr",
             "machine num": 1,
-            "add network interface": 0,
+            "add network interface": 1,
             "add disk": []
         },
         {
             "name": "oe_test_ip_cmd_route",
             "machine num": 1,
-            "add network interface": 0,
+            "add network interface": 1,
             "add disk": []
         },
         {
             "name": "oe_test_ip_cmd_rule",
             "machine num": 1,
-            "add network interface": 0,
+            "add network interface": 1,
             "add disk": []
         },
         {
             "name": "oe_test_ip_config_mtu",
             "machine num": 1,
-            "add network interface": 0,
+            "add network interface": 1,
             "add disk": []
         },
         {
             "name": "oe_test_ip_config_multiple_address",
             "machine num": 1,
-            "add network interface": 0,
+            "add network interface": 1,
             "add disk": []
         },
         {
             "name": "oe_test_ip_config_static_address",
             "machine num": 1,
-            "add network interface": 0,
+            "add network interface": 1,
             "add disk": []
         },
         {
             "name": "oe_test_ip_config_static_route",
             "machine num": 1,
-            "add network interface": 0,
+            "add network interface": 1,
             "add disk": []
         },
         {
