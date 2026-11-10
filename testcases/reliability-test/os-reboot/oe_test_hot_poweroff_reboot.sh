@@ -23,9 +23,8 @@ source "./common_reboot.sh"
 function run_test() {
     LOG_INFO "Start to run test."
     P_SSH_CMD --node 2 --cmd "sudo poweroff -p --reboot &"
-    SLEEP_WAIT 10
-    ping -c 3 "${NODE2_IPV4}" >/dev/null
-    CHECK_RESULT $? 0 1 "The execution of the 'poweroff -p --reboot' command failed."
+    WAIT_NODE_DOWN 2 120
+    CHECK_RESULT $? 0 0 "The execution of the 'poweroff -p --reboot' command failed."
     REMOTE_REBOOT_WAIT 2 120
     CHECK_RESULT $? 0 0 "The attempt to wait for the startup execution failed."
     LOG_INFO "End to run test."

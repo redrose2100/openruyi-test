@@ -48,4 +48,40 @@ function clean_env() {
     modprobe -r ipmi_si
     modprobe -r ipmi_msghandler
 }
+
+# Bounded poll until the given node disappears from the network (shutdown/reboot in progress).
+# Usage: WAIT_NODE_DOWN <node> [timeout_sec]
+# Returns 0 when the node became unreachable before the timeout, 1 when it is still reachable.
+#
+# Why this helper exists: for the graceful shutdown path (systemctl reboot / halt /
+# shutdown / init 6) the time between issuing the command and the NIC actually going
+# down routinely exceeds 10 seconds on a virtual machine. The previous pattern was
+# "SLEEP_WAIT <fixed> + a single ping", so a machine that had not finished going down
+# yet was reported as "the shutdown command took no effect", producing a large number
+# of false failures in the os-reboot suite (task 276346). A bounded poll only asks the
+# question that matters: was the node ever observed going down?
+function WAIT_NODE_DOWN() {
+    local node=${1-2}
+    local timeout=${2-120}
+    local ip_var="NODE${node}_IPV4"
+    local ip=${!ip_var}
+    local waited=0
+
+    if [ -z "$ip" ]; then
+        LOG_ERROR "WAIT_NODE_DOWN: NODE${node}_IPV4 is empty, cannot detect node down."
+        return 1
+    fi
+
+    while [ "$waited" -lt "$timeout" ]; do
+        if ! ping -c 1 -w 1 "$ip" >/dev/null 2>&1; then
+            LOG_INFO "Node ${node} (${ip}) became unreachable after ${waited}s, reboot is in progress."
+            return 0
+        fi
+        sleep 1
+        waited=$((waited + 1))
+    done
+
+    LOG_ERROR "Node ${node} (${ip}) is still reachable after ${timeout}s, shutdown command took no effect."
+    return 1
+}
 main "$@"
