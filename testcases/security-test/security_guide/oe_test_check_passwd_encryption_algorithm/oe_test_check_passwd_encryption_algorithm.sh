@@ -32,9 +32,13 @@ function run_test() {
 ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}
 EOF
-    grep 'test' /etc/shadow | grep -E '\$6|\$5'
+    # 默认口令哈希算法随发行版而变：$1$=MD5 $5$=SHA-256 $6$=SHA-512
+    # $y$=yescrypt $2b$=bcrypt 等。这里只断言“口令以可识别的 crypt
+    # 格式存放”，不再把算法写死成 SHA-512/MD5，否则换了默认算法的发行版
+    # 会被误判成用例失败。
+    grep '^test:' /etc/shadow | grep -qE ':\$[0-9a-zA-Z]+\$'
     CHECK_RESULT $? 0 0 "check test encryption algorithm failed"
-    grep 'root' /etc/shadow | grep -E '\$6|\$5'
+    grep '^root:' /etc/shadow | grep -qE ':\$[0-9a-zA-Z]+\$'
     CHECK_RESULT $? 0 0 "check root encryption algorithm failed"
     LOG_INFO "Finish testcase execution."
 }

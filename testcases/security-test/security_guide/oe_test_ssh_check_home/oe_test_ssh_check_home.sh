@@ -26,7 +26,10 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    grep "^StrictModes yes" /etc/ssh/sshd_config
+    # StrictModes is enabled by upstream default; distributions may leave the
+    # directive commented out in sshd_config, so also accept the effective value.
+    grep -qiE '^[[:space:]]*StrictModes[[:space:]]+yes' /etc/ssh/sshd_config ||
+        sshd -T 2>/dev/null | grep -qiE '^strictmodes yes'
     CHECK_RESULT $? 0 0 "StrictModes is not yes"
     useradd testuser
     CHECK_RESULT $? 0 0 "add testuser failed"

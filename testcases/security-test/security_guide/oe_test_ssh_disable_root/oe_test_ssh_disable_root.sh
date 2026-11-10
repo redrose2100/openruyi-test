@@ -26,29 +26,33 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-    grep "PermitRootLogin no" /etc/ssh/sshd_config
-    CHECK_RESULT $?
+    # Upstream ships "#PermitRootLogin prohibit-password", so a plain sed of
+    # "PermitRootLogin yes" never matches. Normalize the directive first.
+    sed -i -E 's/^[#[:space:]]*PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
+    grep -qE '^[[:space:]]*PermitRootLogin[[:space:]]+no' /etc/ssh/sshd_config ||
+        echo "PermitRootLogin no" >>/etc/ssh/sshd_config
+    grep -qE '^[[:space:]]*PermitRootLogin[[:space:]]+no' /etc/ssh/sshd_config
+    CHECK_RESULT $? 0 0 "PermitRootLogin is not no"
     systemctl restart sshd
+    SLEEP_WAIT 2
     expect <<EOF
         set timeout 15
         log_file testlog
-        spawn ssh ${NODE1_USER}@${NODE1_IPV4}
+        spawn ssh -o StrictHostKeyChecking=no root@${NODE1_IPV4}
         expect {
             "*yes/no*" {
                 send "yes\\r"
-            }
-        }
-        expect {
-            "password" {
-                send "${NODE1_PASSWORD}\\r";
                 exp_continue
             }
+            "password:" {
+                send "${NODE1_PASSWORD}\\r"
+                exp_continue
+            }
+            eof
         }
-        expect eof
 EOF
-    grep "Permission denied, please try again." testlog
-    CHECK_RESULT $?
+    grep -E "Permission denied|Login incorrect" testlog
+    CHECK_RESULT $? 0 0 "root login is not denied"
     LOG_INFO "Finish testcase execution."
 }
 

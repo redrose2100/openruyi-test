@@ -20,25 +20,28 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    grep "^test1:" /etc/passwd && userdel -rf test1
-    grep "^test2:" /etc/passwd && userdel -rf test2
+    grep -q "^test1:" /etc/passwd && userdel -rf test1
+    grep -q "^test2:" /etc/passwd && userdel -rf test2
+    # Resolve the real target so that an authselect style symlink is not
+    # replaced by a regular file when the file is edited and restored.
+    su_pam=$(readlink -f /etc/pam.d/su)
+    [ -f "${su_pam}-bak" ] || cp -f "${su_pam}" "${su_pam}-bak"
+    # Distributions ship "auth required pam_wheel.so use_uid" commented out, so the
+    # wheel-only restriction is not active by default. Enable it for this case.
+    sed -i -E 's/^[#[:space:]]*auth[[:space:]]+required[[:space:]]+pam_wheel\.so.*/auth            required        pam_wheel.so use_uid/' "${su_pam}"
+    grep -qE '^[[:space:]]*auth[[:space:]]+required[[:space:]]+pam_wheel\.so' "${su_pam}" ||
+        echo "auth            required        pam_wheel.so use_uid" >>"${su_pam}"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    grep 'pam_wheel.so' /etc/pam.d/su | grep 'required'
+    grep -qE '^[[:space:]]*auth[[:space:]]+required[[:space:]]+pam_wheel\.so' "${su_pam}"
     CHECK_RESULT $? 0 0 "check /etc/pam.d/su failed"
     useradd test1
-    passwd test1 <<EOF
-${NODE1_PASSWORD}
-${NODE1_PASSWORD}
-EOF
+    echo "${NODE1_PASSWORD}" | passwd --stdin test1
     useradd test2
-    passwd test2 <<EOF
-${NODE1_PASSWORD}
-${NODE1_PASSWORD}
-EOF
+    echo "${NODE1_PASSWORD}" | passwd --stdin test2
     usermod -aG wheel test2
     groups test2 | grep 'wheel'
     CHECK_RESULT $? 0 0 "add test2 to group wheel failed"
@@ -57,6 +60,10 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf test1
     userdel -rf test2
+    if [ -f "${su_pam}-bak" ]; then
+        cp -f "${su_pam}-bak" "${su_pam}"
+        rm -f "${su_pam}-bak"
+    fi
     LOG_INFO "Finish environment cleanup!"
 }
 

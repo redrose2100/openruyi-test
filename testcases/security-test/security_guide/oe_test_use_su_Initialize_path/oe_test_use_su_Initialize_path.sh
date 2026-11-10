@@ -32,16 +32,32 @@ function run_test() {
 ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}
 EOF
-    echo "echo \$PATH" >/tmp/path.sh
-    su - test -c "bash /tmp/path.sh" | grep '/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin'
-    CHECK_RESULT $? 0 0 "check PATH failed"
+    echo "echo \$PATH > /tmp/path_result.txt" >/tmp/path.sh
+    chmod 755 /tmp/path.sh
+    rm -f /tmp/path_result.txt
+    su - test -c "bash /tmp/path.sh"
+    local user_path
+    user_path=$(cat /tmp/path_result.txt 2>/dev/null)
+    LOG_INFO "PATH of test user: ${user_path}"
+    test -n "${user_path}"
+    CHECK_RESULT $? 0 0 "get PATH of test user failed"
+    # Do not depend on one exact ordering; require every standard directory.
+    local dir miss=0
+    for dir in /usr/local/bin /usr/bin /usr/local/sbin /usr/sbin; do
+        echo ":${user_path}:" | grep -q ":${dir}:"
+        if [ $? -ne 0 ]; then
+            LOG_ERROR "${dir} is missing from PATH of test user"
+            miss=1
+        fi
+    done
+    CHECK_RESULT ${miss} 0 0 "check PATH failed"
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf test
-    rm -rf testlog /tmp/path.sh
+    rm -rf testlog /tmp/path.sh /tmp/path_result.txt
     LOG_INFO "Finish environment cleanup!"
 }
 

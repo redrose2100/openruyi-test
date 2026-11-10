@@ -18,8 +18,13 @@
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+# A dedicated test password long enough to satisfy pam_pwquality.
+TEST_PASSWORD="Oetest1@Sec23"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    grep -q "^test1:" /etc/passwd && userdel -rf test1
+    grep -q "^test2:" /etc/passwd && userdel -rf test2
     useradd test1
     useradd test2
     LOG_INFO "End of environmental preparation!"
@@ -27,63 +32,62 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    grep "^PASS_MAX_DAYS" /etc/login.defs | grep '99999'
+    grep -q "^PASS_MAX_DAYS[[:space:]]\+99999" /etc/login.defs
     CHECK_RESULT $? 0 0 "The password is not valid for 99999."
-    expect -c "
-    set timeout 30
-    spawn passwd test1
-    expect {
-        \"*assword*\" {
-            send \"qqq\\r\"
+    expect <<EOF
+        set timeout 30
+        spawn passwd test2
+        expect {
+            "*assword*" {
+                send "${TEST_PASSWORD}\\r"
+                exp_continue
             }
-    }
-    expect {
-        \"*assword*\" {
-            send \"qqq\\r\"
+            eof
+        }
+EOF
+    expect <<EOF
+        set timeout 30
+        log_file testlog1
+        spawn su test2
+        expect {
+            "*assword*" {
+                send "${TEST_PASSWORD}\\r"
+                exp_continue
             }
-    }     
-    "
-    expect -c "
-    set timeout 30
-    log_file testlog1
-    spawn su test2
-    expect {
-        \"*assword*\" {
-            send \"qqq\\r\"
+            "*test2@*" {
+                send "exit\\r"
+                exp_continue
             }
-    }
-    expect {
-        \"*test2@*\" {
-            send \"exit\\r\"
-            }
-    }             
-    "
-    grep "IP address" testlog1
-    CHECK_RESULT $? 0 0 "Login failed!"
+            eof
+        }
+EOF
+    grep "test2@" testlog1
+    CHECK_RESULT $? 0 0 "login failed!"
     SLEEP_WAIT 180
-    expect -c "
-    set timeout 30
-    log_file testlog2
-    spawn su test2
-    expect {
-        \"*assword*\" {
-            send \"qqq\\r\"
+    expect <<EOF
+        set timeout 30
+        log_file testlog2
+        spawn su test2
+        expect {
+            "*assword*" {
+                send "${TEST_PASSWORD}\\r"
+                exp_continue
             }
-    }
-    expect {
-        \"*test2@*\" {
-            send \"exit\\r\"
+            "*test2@*" {
+                send "exit\\r"
+                exp_continue
             }
-    }             
-    "
-    grep "IP address" testlog2
-    CHECK_RESULT $? 0 0 "Login failed!"
+            eof
+        }
+EOF
+    grep "test2@" testlog2
+    CHECK_RESULT $? 0 0 "login failed!"
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "Start cleanning environment."
-    rm -rf testlog*
+    rm -f testlog1 testlog2
     userdel -rf test1
     userdel -rf test2
     LOG_INFO "Finish environment cleanup!"

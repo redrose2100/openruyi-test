@@ -19,8 +19,13 @@
 
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+# A dedicated test password long enough to satisfy pam_pwquality.
+TEST_PASSWORD="Oetest1@Sec23"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    grep -q "^test1:" /etc/passwd && userdel -rf test1
+    grep -q "^test2:" /etc/passwd && userdel -rf test2
     useradd test1
     useradd test2
     LOG_INFO "End of environmental preparation!"
@@ -28,97 +33,77 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    expect -c "
+    expect <<EOF
         set timeout 30
         spawn passwd test1
         expect {
-            \"*assword*\" {
-                send \"qqq\\r\"
-                }
+            "*assword*" {
+                send "${TEST_PASSWORD}\\r"
+                exp_continue
+            }
+            eof
         }
-        expect {
-            \"*assword*\" {
-                send \"qqq\\r\"
-                }
-        }     
-    "
-    expect -c "
+EOF
+    expect <<EOF
         set timeout 30
         spawn passwd test2
         expect {
-            \"*assword*\" {
-                send \"qqq\\r\"
-                }
+            "*assword*" {
+                send "${TEST_PASSWORD}\\r"
+                exp_continue
+            }
+            eof
         }
-        expect {
-            \"*assword*\" {
-                send \"qqq\\r\"
-                }
-        }     
-    "    
+EOF
     usermod -a -G wheel test1
-    expect -c "
+    expect <<EOF
         set timeout 30
         log_file testlog1
         spawn su test2
         expect {
-            \"*assword*\" {
-                send \"qqq\\r\"
-                }
+            "*assword*" {
+                send "${TEST_PASSWORD}\\r"
+                exp_continue
+            }
+            "*test2@*" {
+                send "pwd\\r"
+                exp_continue
+            }
+            eof
         }
-        expect {
-            \"*test2@*\" {
-                send \"pwd\\r\"
-                }
-        } 
-        expect {
-            \"*test2@*\" {
-                send \"exit\\r\"
-                }
-        }             
-    "    
-    grep "IP address" testlog1
-    CHECK_RESULT $? 0 0 "Login failed."
-    expect -c "
+EOF
+    grep "test2@" testlog1
+    CHECK_RESULT $? 0 0 "switch to test2 failed"
+    expect <<EOF
         set timeout 30
         log_file testlog2
         spawn su test1
         expect {
-            \"*assword*\" {
-                send \"qqq\\r\"
-                }
+            "*assword*" {
+                send "${TEST_PASSWORD}\\r"
+                exp_continue
+            }
+            "*test1@*" {
+                send "su test2\\r"
+                exp_continue
+            }
+            "*test2@*" {
+                send "exit\\r"
+                exp_continue
+            }
+            eof
         }
-        expect {
-            \"*test1@*\" {
-                send \"su test 2\\r\"
-                }
-        }   
-        expect {
-            \"*test2@*\" {
-                send \"pwd\\r\"
-                }
-        }    
-        expect {
-            \"*test2@*\" {
-                send \"exit\\r\"
-                }
-        } 
-        expect {
-            \"*test1@*\" {
-                send \"exit\\r\"
-                }
-        }                          
-    "  
-    grep "IP address" testlog2
-    CHECK_RESULT $? 0 0 "Login failed."
+EOF
+    grep "test2@" testlog2
+    CHECK_RESULT $? 0 0 "switch from test1 to test2 failed"
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "Start cleanning environment."
-    rm -rf testlog*
-    userdel -rf test*
-    LOG_INFO "Finish environment cleanup!"
+    rm -f testlog1 testlog2
+    userdel -rf test1
+    userdel -rf test2
 }
 
 main "$@"

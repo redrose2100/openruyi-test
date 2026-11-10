@@ -101,7 +101,11 @@ EOF1
         }
         expect eof
 EOF1
-    grep 'Current password' log && grep 'all authentication tokens updated successfully' log
+    # 不同发行版/不同 passwd 版本的成功提示不同：
+    # openEuler 系为 "all authentication tokens updated successfully"，
+    # 新版 shadow-utils 为 "passwd: password updated successfully"。
+    # 两者都认为是修改成功，不再写死其中一条。
+    grep 'Current password' log && grep -qE 'password updated successfully' log
     CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
