@@ -38,11 +38,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_hinic",
-            "machine type": "physical",
-            "add disk": []
-        },
-        {
             "name": "oe_test_hqlogic",
             "machine type": "kvm",
             "add disk": []
@@ -279,16 +274,6 @@
         },
         {
             "name": "oe_test_mlxfw",
-            "machine type": "kvm",
-            "add disk": []
-        },
-        {
-            "name": "oe_test_hinic3",
-            "machine type": "kvm",
-            "add disk": []
-        },
-        {
-            "name": "oe_test_rnpm",
             "machine type": "kvm",
             "add disk": []
         },
