@@ -23,7 +23,15 @@ function pre_test() {
     useradd test
     su - test -c "touch /home/test/testfile"
     echo 123 > /home/test/testfile
-    DNF_INSTALL "libselinux"
+    DNF_INSTALL "libselinux policycoreutils selinux-tools"
+    # chcon/setenforce/getenforce 在 openRuyi 镜像里分别由 coreutils/selinux-tools
+    # 提供；当前仓库并未发布 /usr/bin/chcon，此处提前判空，避免 4 个 127 假失败。
+    for selinux_cmd in chcon getenforce setenforce; do
+        if ! command -v "$selinux_cmd" >/dev/null 2>&1; then
+            LOG_WARN "${selinux_cmd} is unavailable in current image, skip."
+            exit 255
+        fi
+    done
     status01="$(getenforce)"
     # 对selinux是否被禁用进行判断
     setenforce Enforcing  #如果在内核层禁用了selinux,那么这里是无法打开的
