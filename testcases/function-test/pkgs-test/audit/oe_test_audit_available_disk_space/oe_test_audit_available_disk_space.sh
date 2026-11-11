@@ -27,14 +27,20 @@ function pre_test()
     cp -raf /var/log/ /tmp/
     sed -i 's/log_file = \/var\/log\/audit\/audit.log/log_file = \/tmp\/log\/audit\/audit.log/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = ROTATE/max_log_file_action = KEEP_LOGS/g' "/etc/audit/auditd.conf"
-    service auditd restart
+    systemctl restart auditd
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test()
 {
     LOG_INFO "Start to run test."
-    count_size=$(df -m /tmp/log/audit/ | awk 'NR==2' | awk '{print $4-74}')
+    count_size=$(df -m /tmp/log/audit/ 2>/dev/null | awk 'NR==2' | awk '{print $4-74}')
+    if [ ! -d /tmp/log/audit ] || [ -z "${count_size}" ]; then
+        LOG_ERROR "/tmp/log/audit is not available, the audit log was not created"
+        CHECK_RESULT 1 0 0 "/tmp/log/audit is not available"
+        LOG_INFO "End to run test."
+        return
+    fi
     dd if=/dev/zero of=/tmp/log/audit/audit_log bs=1M count="${count_size}"
     for ((j=0;j<10;j++));do
 	    SLEEP_WAIT 1
@@ -48,10 +54,10 @@ function run_test()
     dd if=/dev/zero of=/tmp/log/audit/audit_log bs=1M count="${count_size}"
     search_log available_disk_space
     SLEEP_WAIT 5
-    service auditd status | grep "active (running)"
+    systemctl status auditd | grep "active (running)"
     CHECK_RESULT $? 0 0 "grep active failed"
     SLEEP_WAIT 5
-    service auditd status | grep "Audit daemon is low on disk space for logging"
+    systemctl status auditd | grep "Audit daemon is low on disk space for logging"
     CHECK_RESULT $? 0 0 "grep logging second failed"
     LOG_INFO "End to run test."
 }
@@ -61,7 +67,7 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
     sed -i 's/log_file = \/tmp\/log\/audit\/audit.log/log_file = \/var\/log\/audit\/audit.log/g' "${AUDIT_PATH}"
     sed -i 's/max_log_file_action = KEEP_LOGS/max_log_file_action = ROTATE/g' "${AUDIT_PATH}"
-    service auditd restart
+    systemctl restart auditd
     rm -rf /tmp/log
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

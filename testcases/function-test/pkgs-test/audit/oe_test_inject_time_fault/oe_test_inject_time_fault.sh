@@ -25,20 +25,22 @@ function pre_test() {
 
     DNF_INSTALL "audit"
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "${AUDIT_PATH}"
-    service auditd restart
+    systemctl restart auditd
     date_add=$(date -d "+1 year" +'%m/%d/%Y %H:%M:%S')
-    clock --set --date="${date_add}"
-    clock --hctosys
+    date -s "${date_add}"
+    hwclock -w 2>/dev/null || true
 
     LOG_INFO "End to prepare the test environment."
 }
 
 function log_dump() {
-    old_size=$(du -ks /var/log/audit/ | awk '{print $1}')
+    old_size=$(du -ks /var/log/audit/ 2>/dev/null | awk '{print $1}')
+    old_size=${old_size:-0}
     old_num=$(find /var/log/audit -name "audit.log*" | wc -l)
     for ((i = 0; i < 10; i++)); do
         create_logfile
-        new_size=$(du -ks /var/log/audit/ | awk '{print $1}')
+        new_size=$(du -ks /var/log/audit/ 2>/dev/null | awk '{print $1}')
+        new_size=${new_size:-0}
         test $(("$new_size" - "$old_size")) -gt 1024 && {
             new_num=$(find /var/log/audit -name "audit.log*" | wc -l)
             if [ $(("$new_num" - "$old_num")) -ge 1 ]; then
@@ -57,8 +59,8 @@ function run_test() {
     search_log test
     log_dump
     date_less=$(date -d "-2 year " +'%m/%d/%Y %H:%M:%S')
-    clock --set --date="${date_less}"
-    clock --hctosys
+    date -s "${date_less}"
+    hwclock -w 2>/dev/null || true
     search_log test
     CHECK_RESULT $? 0 0 "search second failed"
     log_dump
@@ -70,11 +72,11 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     date_add=$(date -d "+1 year" +'%m/%d/%Y %H:%M:%S')
-    clock --set --date="${date_add}"
-    clock --hctosys
+    date -s "${date_add}"
+    hwclock -w 2>/dev/null || true
     sed -i 's/max_log_file = 1/max_log_file = 8/g' "${AUDIT_PATH}"
     rm -rf /var/log/audit/audit.log*
-    service auditd restart
+    systemctl restart auditd
     DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."

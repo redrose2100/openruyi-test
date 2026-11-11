@@ -29,6 +29,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    mkdir -p /etc/audit/rules.d
     echo "-a always,exit -F arch=b32 -S chmod,fchmod,fchmodat -F auid>=2000 -F auid!=-1 -F key=perm_mod" >> /etc/audit/rules.d/audit.rules    
     CHECK_RESULT $? 0 0 "file write failure"
     augenrules --load   
@@ -44,8 +45,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to clean the test environment."
-    sed -i '/chmod/d' /etc/audit/rules.d/audit.rules 
-    sed -i '/chmod/d' /etc/audit/audit.rules   
+    [ -f /etc/audit/rules.d/audit.rules ] && sed -i '/chmod/d' /etc/audit/rules.d/audit.rules
+    [ -f /etc/audit/audit.rules ] && sed -i '/chmod/d' /etc/audit/audit.rules
     export LANG=${OLD_LANG}
     DNF_REMOVE "$@"
     LOG_INFO "End to clean the test environment."

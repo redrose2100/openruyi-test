@@ -26,17 +26,19 @@ function pre_test(){
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "/etc/audit/auditd.conf"
     sed -i 's/num_logs = 5/num_logs = 2/g' "/etc/audit/auditd.conf"
     rm -rf /var/log/audit/audit.log*
-    service auditd restart 
+    systemctl restart auditd 
     LOG_INFO "End to prepare the environment"
 }
 function run_test()
 {
     LOG_INFO "Start to run test."
-    old_size=$(du -ks /var/log/audit/ | awk '{print $1}')
+    old_size=$(du -ks /var/log/audit/ 2>/dev/null | awk '{print $1}')
+    old_size=${old_size:-0}
     old_num=$(find /var/log/audit -name "audit.log*" | wc -l)
     for ((i=0;i<10;i++));do
         create_logfile
-        new_size=$(du -ks /var/log/audit/ | awk '{print $1}')
+        new_size=$(du -ks /var/log/audit/ 2>/dev/null | awk '{print $1}')
+        new_size=${new_size:-0}
         test $(("$new_size" - "$old_size")) -gt 1024 &&{
         new_num=$(find /var/log/audit -name "audit.log*" | wc -l)
         if [ $(("$new_num" - "$old_num")) -ge 1 ]; then
@@ -71,7 +73,7 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
     sed -i 's/max_log_file = 1/max_log_file = 8/g' "/etc/audit/auditd.conf"
     sed -i 's/num_logs = 2/num_logs = 5/g' "/etc/audit/auditd.conf"
-    service auditd restart
+    systemctl restart auditd
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

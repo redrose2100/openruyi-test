@@ -29,7 +29,7 @@ function pre_test(){
 function run_test()
 {
     LOG_INFO "Start to run test."
-    service auditd restart
+    systemctl restart auditd
     auditctl -D
     CHECK_RESULT $? 0 0 "clean failed"
     auditctl -a always,exit -S execve -F uid="${uid}" -k command
@@ -46,7 +46,7 @@ function run_test()
 }
 function post_test()
 {
-    fOG_INFO "Start to restore the test environment."
+    LOG_INFO "Start to restore the test environment."
     userdel -rf Jevons
     auditctl -D
     DNF_REMOVE "$@"

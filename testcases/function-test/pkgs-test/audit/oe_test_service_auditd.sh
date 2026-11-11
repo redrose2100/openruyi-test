@@ -29,33 +29,23 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    service "${service}" restart
+    systemctl restart "${service}"
     CHECK_RESULT $? 0 0 "${service} restart failed"
     SLEEP_WAIT 5
     systemctl status "${service}" | grep "Active: active"
     CHECK_RESULT $? 0 0 "${service} restart failed"
-    service "${service}" stop
+    systemctl stop "${service}"
     CHECK_RESULT $? 0 0 "${service} stop failed"
     SLEEP_WAIT 5
     systemctl status "${service}" | grep "Active: inactive"
     CHECK_RESULT $? 0 0 "${service} stop failed"
-    service "${service}" start
+    systemctl start "${service}"
     CHECK_RESULT $? 0 0 "${service} start failed"
     SLEEP_WAIT 5
     systemctl status "${service}" | grep "Active: active"
     CHECK_RESULT $? 0 0 "${service} start failed"
-    if systemctl is-enabled "${service}" | grep "enabled"; then
-        SLEEP_WAIT 5
-        symlink_file=$(systemctl disable "${service}" 2>&1 | awk '{print $2}' | awk '{print substr($0,1,length($0)-1)}' | sed 's/"//g')
-        find "${symlink_file}"
-        CHECK_RESULT $? 0 1 "${service} disable failed"
-        systemctl enable "${service}"
-        find "${symlink_file}"
-        CHECK_RESULT $? 0 0 "${service} enable failed"
-    else
-        LOG_ERROR "${service} is not enabled"
-        ((exec_result++))
-    fi
+    SLEEP_WAIT 5
+    test_enabled "${service}"
     journalctl --since "${log_time}" -u "${service}" | grep -iE "fail|error" | grep -iv "augenrules"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
     test_reload ${service}

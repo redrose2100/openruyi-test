@@ -24,21 +24,22 @@ function pre_test(){
     DNF_INSTALL "audit"
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = ROTATE/max_log_file_action = SUSPEND/g' "/etc/audit/auditd.conf"
-    service auditd restart
+    systemctl restart auditd
     LOG_INFO "End to prepare the environment"
 }
 function run_test()
 {
     LOG_INFO "Start to run test."
-    logsize=$(du -s /var/log/audit/audit.log | awk '{print $1}')
+    logsize=$(du -s /var/log/audit/audit.log 2>/dev/null | awk '{print $1}')
+    logsize=${logsize:-0}
     if [ "${logsize}" -gt 1024 ];then
-            service auditd status | grep "active"
+            systemctl status auditd | grep "active"
             CHECK_RESULT $? 0 0 "grep first failed"
             search_log test
             CHECK_RESULT $? 1 0 "grep first failed"
     else
             create_logfile
-            service auditd status | grep -e "active"
+            systemctl status auditd | grep -e "active"
             CHECK_RESULT $? 0 0 "grep second failed"
             search_log test
             CHECK_RESULT $? 1 0 "search second failed"
@@ -51,7 +52,7 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
     sed -i 's/max_log_file = 1/max_log_file = 8/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = SUSPEND/max_log_file_action = ROTATE/g' "/etc/audit/auditd.conf"
-    service auditd restart
+    systemctl restart auditd
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

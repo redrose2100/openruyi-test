@@ -28,14 +28,21 @@ function pre_test()
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = ROTATE/max_log_file_action = SYSLOG/g' "/etc/audit/auditd.conf"
     sed -i "s/space_left = 75/space_left = $disk_total_mb/g" "/etc/audit/auditd.conf"
-    service auditd restart
+    systemctl restart auditd
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test()
 {
     LOG_INFO "Start to run test."
-    logSize=$(du -s /var/log/audit/audit.log | awk '{print $1}')
+    logSize=$(du -s /var/log/audit/audit.log 2>/dev/null | awk '{print $1}')
+    logSize=${logSize:-0}
+    if [ ! -e /var/log/messages ]; then
+        LOG_ERROR "/var/log/messages is not available, rsyslog is not installed"
+        CHECK_RESULT 1 0 0 "/var/log/messages is not available"
+        LOG_INFO "End to run test."
+        return
+    fi
     if [ "${logSize}" -gt 1024 ];then
 	    for (( j = 0;j < 50; j++));do
 		    search_log test
@@ -65,7 +72,7 @@ function post_test()
     sed -i 's/max_log_file = 1/max_log_file = 8/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = SYSLOG/max_log_file_action = ROTATE/g' "/etc/audit/auditd.conf"
     sed -i "s/space_left = $disk_total_mb/space_left = 75/g" "/etc/audit/auditd.conf"
-    service auditd restart
+    systemctl restart auditd
     rm -f /var/log/fill_disk
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

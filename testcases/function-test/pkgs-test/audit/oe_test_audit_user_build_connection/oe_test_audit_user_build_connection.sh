@@ -26,7 +26,7 @@ function pre_test()
     DNF_INSTALL "audit audispd-plugins"
     path=$(find / -name af_unix.conf)
     sed -i 's/active = no/active = yes/g' "${path}"
-    service auditd restart
+    systemctl restart auditd
     DNF_INSTALL gcc
     gcc -o audit_socket audit_socket.c
     touch /home/test
@@ -68,7 +68,7 @@ function post_test()
     LOG_INFO "Start to restore the test environment."
     rm -rf log 1.txt audit_socket /home/test wait_poll
     sed -i 's/active = yes/active = no/g' "${path}"
-    service auditd restart
+    systemctl restart auditd
     auditctl -D
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
