@@ -5,6 +5,8 @@
 # 测试框架固定行
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
+source "${OET_PATH}/testcases/function-test/pkgs-test/kwin/common/kwin_common.sh"
+
 # 测试前函数
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -39,9 +41,11 @@ function run_test() {
 # 测试后函数
 function post_test() {
     LOG_INFO "start environment cleanup."
+    # 先清理残留合成器与 wayland socket 锁文件，避免污染后续用例
+    kwin_wayland_cleanup
     # 测试后环境恢复：
     # 卸载安装的软件包
-    DNF_REMOVE "kwin"
+    DNF_REMOVE
     # 清理测试中间产物文件
     LOG_INFO "End of environment cleanup!"
 }
