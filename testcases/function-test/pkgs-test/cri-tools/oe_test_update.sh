@@ -11,13 +11,16 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     # 安装待测试的软件包
     DNF_INSTALL "cri-tools"
+
+    # 引导 CRI 服务（containerd）：cri-tools 只提供客户端，服务端须自行拉起
+    cri_ensure_runtime || cri_abort "CRI runtime (containerd) is not available"
     # 准备测试数据等,如果要创建文件请使用"./你要创建的文件"直接把文件创建到当前目录下
     # 创建一个测试容器
     cri_run_container test-container busybox:latest
     CHECK_RESULT $? 0 0 "Failed to create test container"
     # 获取容器ID
     CONTAINER_ID=$(crictl ps -q)
-    CHECK_RESULT $? 0 0 "Failed to get container ID"
+    cri_require_id "$CONTAINER_ID" "Failed to get container ID"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -56,10 +59,13 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     # 测试后环境恢复：
-        # 卸载安装的软件包
-        DNF_REMOVE "cri-tools"
-        # 清理测试中间产物文件
-        crictl rm $CONTAINER_ID
+    # 运行中的容器需先停止再删除，且清理应先于卸载软件包
+    crictl stop "$CONTAINER_ID" >/dev/null 2>&1
+    crictl rm -f "$CONTAINER_ID" >/dev/null 2>&1
+    crictl rmp -f --all >/dev/null 2>&1
+    # 卸载安装的软件包
+    DNF_REMOVE "cri-tools"
+    # 清理测试中间产物文件
     LOG_INFO "End of environment cleanup!"
 }
 

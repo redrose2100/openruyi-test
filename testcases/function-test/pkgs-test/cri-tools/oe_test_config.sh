@@ -40,11 +40,11 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     # 测试后环境恢复：
-        # 卸载安装的软件包
-        DNF_REMOVE "cri-tools"
-        # 清理测试中间产物文件
-        # 恢复被修改的 crictl 配置，避免影响后续用例
-        crictl config --set debug=false,pull-image-on-create=false
+    # 恢复被修改的 crictl 配置，避免影响后续用例
+    # 必须在 DNF_REMOVE 之前执行，否则 crictl 二进制已不存在
+    crictl config --set debug=false,pull-image-on-create=false >/dev/null 2>&1
+    # 卸载安装的软件包
+    DNF_REMOVE "cri-tools"
     LOG_INFO "End of environment cleanup!"
 }
 
