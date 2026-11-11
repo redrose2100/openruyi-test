@@ -19,6 +19,23 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+# 判定 xfs 是否为可加载模块：modinfo 能给出 .ko 路径才是模块，
+# 编译进内核（builtin）时 modinfo 输出的是 fs/xfs/xfs 这类无扩展名路径。
+function xfs_is_module() {
+    local filename
+    filename=$(modinfo -F filename xfs 2>/dev/null)
+    [ -n "${filename}" ] && [[ "${filename}" == *.ko* ]]
+}
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    if ! xfs_is_module; then
+        LOG_WARN "xfs is built into the kernel, module load/unload test is not applicable."
+        exit 255
+    fi
+    LOG_INFO "Finish preparing the test environment."
+}
+
 function run_test() {
     modinfo xfs |grep xfs
     CHECK_RESULT $? 0 0 "Description Module information failed to be displayed"

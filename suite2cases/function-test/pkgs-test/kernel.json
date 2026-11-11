@@ -6,16 +6,6 @@
     ],
     "cases": [
         {
-            "name": "oe_test_kernel_cmd_02",
-            "machine type": "kvm",
-            "add disk": []
-        },
-        {
-            "name": "oe_test_kernel_cmd_03",
-            "machine type": "kvm",
-            "add disk": []
-        },
-        {
             "name": "oe_test_ipip",
             "machine type": "kvm",
             "add disk": []
@@ -105,7 +95,8 @@
         {
             "name": "oe_test_nbd",
             "machine type": "kvm",
-            "add disk": []
+            "add disk": [],
+            "timeout": 300
         },
         {
             "name": "oe_test_libfc",

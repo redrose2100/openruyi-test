@@ -19,6 +19,11 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+# 直接读 /proc/meminfo 取 swap 总量（单位 KB），避免依赖 procps-ng 提供的 free。
+function get_swap_total() {
+    awk '/^SwapTotal:/{print $2+0}' /proc/meminfo
+}
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     if [ ! -e /dev/openeuler/swap ];then
@@ -30,16 +35,16 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    default_swap=$(free -lh |grep -i swap |awk '{print $2}' |awk -F"G" '{print $1}')
+    default_swap=$(get_swap_total)
     swapoff /dev/dm-1
-    swap1=$(free -lh |grep -i swap |awk '{print $2}' |awk -F"B" '{print $1}')
+    swap1=$(get_swap_total)
     CHECK_RESULT "${swap1}" 0 0 "Uninstall Failed"
     lvreduce -L -1G -f /dev/openeuler*/swap
     mkswap /dev/openeuler*/swap
     CHECK_RESULT $? 0 0 "Erase failed"
     swapon /dev/openeuler*/swap
-    swap2=$(free -lh |grep -i swap |awk '{print $2}' |awk -F"G" '{print $1}')
-    [ "$(echo "${default_swap} > ${swap2}" |bc)" -eq 1 ]
+    swap2=$(get_swap_total)
+    [ "${default_swap:-0}" -gt "${swap2:-0}" ]
     CHECK_RESULT $? 0 0 "Compression failed"
     LOG_INFO "End to run test."
 }

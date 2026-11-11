@@ -20,17 +20,26 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+# 直接读 /proc/meminfo 取缓存大小（单位 KB），避免依赖 procps-ng 提供的 free。
+function get_cache_size() {
+    awk '/^(Buffers|Cached):/{sum += $2} END{if (sum == "") sum = 0; print sum}' /proc/meminfo
+}
+
 function run_test() {
     LOG_INFO "Start testing..."
-    free -h | grep -i mem | awk '{print $6}' | awk -F "M|G" '{print $1}'
+    cache_size=$(get_cache_size)
+    CHECK_RESULT $? 0 0 "Failed to view cache information"
+    test -n "${cache_size}"
     CHECK_RESULT $? 0 0 "Failed to view cache information"
     echo 3 >/proc/sys/vm/drop_caches
     CHECK_RESULT $? 0 0 "Failed to clear cache"
-    cache_size=$(free -h | grep -i mem | awk '{print $6}' | awk -F "M|G" '{print $1}')
+    cache_size=$(get_cache_size)
     dd if=/dev/zero of=/tmp/testfile count=100 bs=1M
     CHECK_RESULT $? 0 0 "fail to write to file"
-    cache_size1=$(free -h | grep -i mem | awk '{print $6}' | awk -F "M|G" '{print $1}')
-    [[ $(echo "${cache_size1} > ${cache_size}" | bc) -eq 1 ]]
+    cache_size1=$(get_cache_size)
+    test -n "${cache_size1}"
+    CHECK_RESULT $? 0 0 "Failed to view cache information"
+    [ "${cache_size1:-0}" -gt "${cache_size:-0}" ]
     CHECK_RESULT $? 0 0 "Cache utilization not increasing"
     LOG_INFO "Finish test!"
 }
