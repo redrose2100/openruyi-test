@@ -88,17 +88,24 @@ function kwin_wayland() {
 # 必须先杀进程再删锁：被杀死的合成器仍占着 /run/user/0/wayland-N.lock 时，
 # 后续调用会一直打印 "unable to lock lockfile ... maybe another compositor
 # is running" 并不断换 socket 号重试，把整条用例拖到超时。
-# 复用 common_lib.sh 的 proc_pids_by_cmdline（本镜像没有 procps，没有 pgrep/pkill）。
-# 模式写成 kwin_w[a]yland：正则等价于 kwin_wayland，但不会匹配到执行本查找的
-# grep 自己的命令行（grep 的 cmdline 里是字面的方括号）。
+#
+# 只按进程名(comm)精确匹配，不能用 proc_pids_by_cmdline：用例脚本自身路径
+#   /opt/os-autotest/testcases/function-test/pkgs-test/kwin/oe_test_kwin_wayland_wrapper.sh
+# 与 runner 的 mugen.sh 命令行里都含有 "kwin_wayland" 字样，命令行子串匹配
+# 会把本用例的 shell 及其父 shell 一起 kill 掉（脚本名含 kwin_wayland 的
+# oe_test_kwin_wayland_wrapper 必中，其它 kwin 用例不含该字样所以不中）。
+# 现场表现就是用例跑到 post_test 后日志只剩
+#   Session terminated, killing shell...,
+# 结果文件生成不出来，平台把用例记为 blocked。
+# comm 只有可执行文件名、不含参数和脚本路径，不会误伤自身。
 function kwin_wayland_cleanup() {
     local pids
 
-    pids=$(proc_pids_by_cmdline "kwin_w[a]yland" 2>/dev/null)
+    pids=$(proc_pids_by_name kwin_wayland 2>/dev/null)
     [ -n "${pids}" ] && kill -TERM ${pids} >/dev/null 2>&1
     sleep 0.5
 
-    pids=$(proc_pids_by_cmdline "kwin_w[a]yland" 2>/dev/null)
+    pids=$(proc_pids_by_name kwin_wayland 2>/dev/null)
     [ -n "${pids}" ] && kill -9 ${pids} >/dev/null 2>&1
 
     rm -f /run/user/0/wayland-*.lock
