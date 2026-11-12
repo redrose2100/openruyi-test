@@ -149,30 +149,90 @@ function CREATE_FS() {
 }
 
 function REMOVE_FS() {
-    point_list=("$1")
-    for i in $(seq 0 $((${#point_list[@]} - 1))); do
-        tmp=${point_list[$i]}
-        [ -n "$tmp" ] || continue
+    # 必须同时兼容两种调用方式，否则清理等于没做：
+    #   1) REMOVE_FS "${point_list[@]}"      —— 每个挂载点一个参数；
+    #   2) list=$(echo ${point_list[@]}); REMOVE_FS "$list"
+    #      —— CREATE_FS 的返回值（卷组名 + 多个挂载点）被 echo 成
+    #         一个空格分隔的字符串，作为单个参数传入（全仓 60+ 处这样写）。
+    # 原实现只有 point_list=("$1")，第 2 种方式下整个字符串被当成一个路径，
+    # df 和 /proc/mounts 都匹配不到，于是 umount 与 DELETE_LV 被整体跳过。
+    # 后果不是“少清一点”，而是磁盘被永久占用：残留的挂载点会让
+    # get_test_device.get_test_disk 的 _TEST_DISK_SCRIPT 把该盘归入
+    # “已挂载 → 保护集”，从可用测试盘列表里剔除；后续用例的 disk_num 变 0，
+    # 被 check_environment.py 判为“磁盘数量不满足”直接 exit 255，
+    # 表现为同一测试套里前几个用例通过、后面整片 skipped。
+    local _a _p _q _i _split
+    local _all=() _points=() _vgs=() _done_points=()
+
+    # 按空白拆分所有入参，把卷组名与挂载点分流
+    for _a in "$@"; do
+        read -r -a _split <<<"$_a"
+        _all+=("${_split[@]}")
+    done
+    for _p in "${_all[@]}"; do
+        [ -n "$_p" ] || continue
+        case "$_p" in
+            -* | /dev/*) ;;                    # 既不是挂载点也不是卷组名，忽略
+            test_vggroup*) _vgs+=("$_p") ;;
+            *) _points+=("$_p") ;;
+        esac
+    done
+
+    for _p in "${_points[@]}"; do
+        [ -n "$_p" ] || continue
+        # 去重：同一挂载点被重复传入时不做第二次 umount / lvremove
+        _i=0
+        for _q in "${_done_points[@]}"; do
+            [ "$_q" = "$_p" ] && { _i=1; break; }
+        done
+        [ "$_i" -eq 1 ] && continue
+        _done_points+=("$_p")
+
         # 原来只用 `df -T | grep` 找设备，匹配不到就 continue 静默跳过，
         # 于是挂载点残留、LV 残留，后续用例再挂载时出现 "target is busy" 或
         # "already mounted"，把真实问题掩盖成随机失败。
         # 这里补一条 /proc/mounts 兜底，并把残留情况记日志。
-        lv=$(df -T 2>/dev/null | awk -v p="$tmp" '$NF == p {print $1; exit}')
+        local lv=""
+        lv=$(df -T 2>/dev/null | awk -v p="$_p" '$NF == p {print $1; exit}')
         if [[ -z "$lv" ]]; then
-            lv=$(awk -v p="$tmp" '$2 == p {print $1; exit}' /proc/mounts 2>/dev/null)
+            lv=$(awk -v p="$_p" '$2 == p {print $1; exit}' /proc/mounts 2>/dev/null)
         fi
         if [[ -z "$lv" ]]; then
-            LOG_WARN "REMOVE_FS: $tmp is not mounted, skip unmount."
+            LOG_WARN "REMOVE_FS: $_p is not mounted, skip unmount."
         else
-            umount -f "$tmp" >/dev/null 2>&1 || umount -l "$tmp" >/dev/null 2>&1
-            [[ -n "$(findmnt -no SOURCE --target "$tmp" 2>/dev/null)" ]] && \
-                LOG_WARN "REMOVE_FS: failed to unmount $tmp (device $lv)."
+            umount -f "$_p" >/dev/null 2>&1 || umount -l "$_p" >/dev/null 2>&1
+            [[ -n "$(findmnt -no SOURCE --target "$_p" 2>/dev/null)" ]] && \
+                LOG_WARN "REMOVE_FS: failed to unmount $_p (device $lv)."
         fi
-        [ -d "$tmp" ] && rm -rf "$tmp"
+        # 先删 LV 再删目录：LV 还在时 rm -rf 挂载点会留下悬空目录，
+        # 下一轮 mkdir 又会因目录已存在而走偏。
         if [[ -n "$lv" ]] && [[ "$lv" == /dev/* ]]; then
             DELETE_LV "$lv"
         fi
+        [ -d "$_p" ] && rm -rf "$_p"
     done
+
+    # 收尾：把残留的 test_vggroup 连同其 PV 一并清掉。
+    # 只清理 test_vggroup*，不碰机器上原有的卷组；PV 也只清这些卷组用过的盘，
+    # 避免对无关磁盘做 pvremove。
+    if command -v vgs >/dev/null 2>&1; then
+        local _vg _pv _left_pvs=()
+        for _vg in $(vgs --noheadings -o vg_name 2>/dev/null | grep -o "test_vggroup[^ ]*"); do
+            _vgs+=("$_vg")
+        done
+        for _vg in "${_vgs[@]}"; do
+            for _pv in $(pvs --noheadings -o pv_name,vg_name 2>/dev/null |
+                awk -v v="$_vg" '$2 == v {print $1}'); do
+                _left_pvs+=("$_pv")
+            done
+        done
+        for _vg in "${_vgs[@]}"; do
+            vgremove "$_vg" -y >/dev/null 2>&1
+        done
+        for _pv in "${_left_pvs[@]}"; do
+            pvremove -f "$_pv" >/dev/null 2>&1
+        done
+    fi
 }
 
 function REMOVE_VG() {
@@ -182,24 +242,46 @@ function REMOVE_VG() {
         LOG_WARN "REMOVE_VG: lvm2 tools not available, skip volume group cleanup."
         return 0
     fi
-    vggroup=$1
-    [[ "$vggroup" != "" ]] && {
-        vgremove "$vggroup" -y
-    }
-    mounted=$(df -T | grep "test_vggroup" | awk '{print $7}')
-    if [[ "$mounted" != "" ]]; then
-        for m in $mounted; do
-            umount "$m"
+    # 入参可能是卷组名、mugen 传来的 -x 之类选项，或空格分隔的一串名字。
+    # 原实现直接 vggroup=$1 就 vgremove，传入 "-x" 时会去删一个叫 -x 的卷组，
+    # 真正残留的 test_vggroup* 反而没人清。这里只接受合法卷组名。
+    local _n _vg _pv _split _names=() _pvs=()
+    for _n in "$@"; do
+        read -r -a _split <<<"$_n"
+        for _vg in "${_split[@]}"; do
+            case "$_vg" in
+                test_vggroup*) _names+=("$_vg") ;;
+            esac
         done
-        vggroup=$(df -T | grep "test_vggroup" | awk '{print $1}' | cut -d '-' -f 1 | cut -d '/' -f 4 | head -n 1)
-        vgremove "$vggroup" -y
+    done
+    # 调用方没给合法名字时，兜底去扫机器上残留的测试卷组
+    if [ "${#_names[@]}" -eq 0 ]; then
+        for _vg in $(vgs --noheadings -o vg_name 2>/dev/null | grep -o "test_vggroup[^ ]*"); do
+            _names+=("$_vg")
+        done
     fi
-
-    if lsblk | grep -q "test_vggroup"; then
-        vggroup=$(lsblk | grep "test_vggroup" | awk '{print $1}' | head -n 1 | cut -d '-' -f 1)
-        vggroup=${vggroup:2}
-        vgremove "$vggroup" -y
+    for _vg in "${_names[@]}"; do
+        for _pv in $(pvs --noheadings -o pv_name,vg_name 2>/dev/null |
+            awk -v v="$_vg" '$2 == v {print $1}'); do
+            _pvs+=("$_pv")
+        done
+    done
+    # 先卸载所有仍挂在该卷组上的挂载点，否则 vgremove 会因 target is busy 失败
+    if [ "${#_names[@]}" -gt 0 ]; then
+        local _m
+        for _m in $(df -T 2>/dev/null |
+            awk -v v="$(printf '%s\n' "${_names[@]}")" 'BEGIN{n=split(v,a,"\n")} {for(i=1;i<=n;i++) if($1 ~ a[i]) {print $NF; break}}'); do
+            umount -f "$_m" >/dev/null 2>&1 || umount -l "$_m" >/dev/null 2>&1
+        done
     fi
+    for _vg in "${_names[@]}"; do
+        vgremove "$_vg" -y >/dev/null 2>&1 ||
+            LOG_WARN "REMOVE_VG: failed to remove volume group [${_vg}]."
+    done
+    # 卷组删掉后把对应 PV 标签清掉，磁盘才能真正回到 get_test_disk 的可用列表
+    for _pv in "${_pvs[@]}"; do
+        pvremove -f "$_pv" >/dev/null 2>&1
+    done
     rm -rf /tmp/point*
 }
 
