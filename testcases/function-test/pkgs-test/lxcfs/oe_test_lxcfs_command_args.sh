@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "lxcfs fuse"
+    DNF_INSTALL "lxcfs fuse3"
     killall lxcfs 2>/dev/null || true
     SLEEP_WAIT 1
     for mp in /tmp/lxcfs_fg /tmp/lxcfs_pidfile /tmp/lxcfs_pidfile2 /tmp/lxcfs_debug \

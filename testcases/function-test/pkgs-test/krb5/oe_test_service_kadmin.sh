@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL krb5-server
+    DNF_INSTALL krb5
     host_name=$(hostname)
     sed -i "s\kdc = nfs-server.example.com\kdc = nfs.server.com\g" /etc/krb5.conf
     sed -i "s\admin_server = nfs-server.example.com\admin_server = nfs.server.com\g" /etc/krb5.conf

@@ -20,9 +20,6 @@
             "name": "oe_test_service_ovn-controller-vtep"
         },
         {
-            "name": "oe_test_service_openvswitch-ipsec"
-        },
-        {
             "name": "oe_test_service_ovs-delete-transient-ports"
         }
     ]

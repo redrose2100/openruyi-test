@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
   LOG_INFO "START environment pre."
-  DNF_INSTALL "pmix pmix-devel pmix-tools gcc"
+  DNF_INSTALL "pmix pmix-devel gcc"
   LOG_INFO "END of environment pre."
 }
 

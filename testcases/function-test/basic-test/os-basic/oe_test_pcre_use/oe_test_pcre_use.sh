@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "pcre pcre-devel gcc"
+    DNF_INSTALL "pcre2 pcre2-devel gcc"
     LOG_INFO "End to prepare the test environment."
 }
 

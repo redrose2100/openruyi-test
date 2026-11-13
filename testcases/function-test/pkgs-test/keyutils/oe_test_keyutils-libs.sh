@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "keyutils keyutils-libs-devel gcc"
+    DNF_INSTALL "keyutils keyutils-devel gcc"
     mkdir /tmp/test
     Directory=/tmp/test
     LOG_INFO "End of environmental preparation!"

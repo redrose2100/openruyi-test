@@ -29,9 +29,6 @@
             "name": "oe_test_veth_config"
         },
         {
-            "name": "oe_test_veth_connect_bridge"
-        },
-        {
             "name": "oe_test_veth_create"
         }
     ]

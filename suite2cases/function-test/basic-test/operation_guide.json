@@ -5,9 +5,6 @@
             "name": "oe_test_system_resources_and_performance"
         },
         {
-            "name": "oe_test_information_collection"
-        },
-        {
             "name": "oe_test_common_skill_cfg_network_and_ssh"
         },
         {

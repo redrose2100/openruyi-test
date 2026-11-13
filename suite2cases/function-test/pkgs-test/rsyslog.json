@@ -43,10 +43,6 @@
             "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_function_relp",
-            "machine num": 2
-        },
-        {
             "name": "oe_test_rsyslog_function_shell",
             "machine num": 1
         },

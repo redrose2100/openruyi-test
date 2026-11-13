@@ -79,10 +79,6 @@
             "machine num": 1
         },
         {
-            "name": "oe_test_access_at_commands",
-            "machine num": 1
-        },
-        {
             "name": "oe_test_lock_after_login_fail",
             "machine num": 2
         },

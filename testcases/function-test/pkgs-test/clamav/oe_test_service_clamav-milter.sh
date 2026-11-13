@@ -21,7 +21,7 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL clamav-milter
+    DNF_INSTALL clamav
     echo "MilterSocket /run/clamav-milter/clamav-milter.socket
 User clamilt
 ClamdSocket tcp:${NODE1_IPV4}:7357

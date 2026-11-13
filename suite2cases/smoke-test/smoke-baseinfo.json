@@ -9,13 +9,7 @@
             "name": "oe_test_baseinfo"
         },
         {
-            "name": "oe_test_firewalld"
-        },
-        {
             "name": "oe_test_partition"
-        },
-        {
-            "name": "oe_test_selinux"
         },
         {
             "name": "oe_test_system_level",

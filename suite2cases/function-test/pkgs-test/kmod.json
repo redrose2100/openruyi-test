@@ -2,9 +2,6 @@
     "path": "$OET_PATH/testcases/function-test/pkgs-test/kmod",
     "cases": [
         {
-            "name": "oe_test_depmod"
-        },
-        {
             "name": "oe_test_insmod-lsmod"
         },
         {

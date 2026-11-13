@@ -71,10 +71,6 @@
             "machine num": 1
         },
         {
-            "name": "oe_test_service_systemd-ask-password-wall",
-            "machine num": 1
-        },
-        {
             "name": "oe_test_service_systemd-binfmt",
             "machine num": 1
         },

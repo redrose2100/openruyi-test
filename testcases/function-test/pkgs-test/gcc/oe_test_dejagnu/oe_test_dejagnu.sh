@@ -23,7 +23,7 @@ exec_dir="gcc-test"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "gcc gcc-c++ gcc-gfortran dejagnu"
+    DNF_INSTALL "gcc gcc-c++ gcc-fortran dejagnu"
     rm -rf "${exec_dir}"
     mkdir "${exec_dir}"
     LOG_INFO "End to prepare the test environment."

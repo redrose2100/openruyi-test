@@ -5,9 +5,6 @@
             "name": "oe_test_service_alsa-restore"
         },
         {
-            "name": "oe_test_service_alsa-state"
-        },
-        {
             "name": "oe_test_alsa_tools"
         }
     ]

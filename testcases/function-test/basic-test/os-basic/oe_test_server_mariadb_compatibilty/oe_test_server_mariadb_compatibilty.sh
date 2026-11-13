@@ -40,7 +40,7 @@ function pre_test() {
     ip addr add "${temp_ip1}"/24 dev "${eth_use1}"
     temp_ip2=$(RANDOM_IP)
     P_SSH_CMD --node 2 --cmd "ip addr add ${temp_ip2}/24 dev ${eth_use2}"
-    DNF_INSTALL "net-tools mariadb-server"
+    DNF_INSTALL "net-tools mariadb"
     # firewalld/selinux are only changed for the duration of this run;
     # post_test restores the state recorded here.
     ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)

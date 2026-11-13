@@ -45,7 +45,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     rm -rf /var/lib/mysql/*
-    DNF_INSTALL mariadb-server
+    DNF_INSTALL mariadb
     CHECK_RESULT $?
     systemctl start mariadb
     SLEEP_WAIT 3

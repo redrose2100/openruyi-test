@@ -22,7 +22,7 @@ source "${OET_PATH}"/testcases/function-test/pkgs-test/c-ares/common/checkenv.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     check_c_ares_version
-    DNF_INSTALL "c-ares-utils"
+    DNF_INSTALL "c-ares"
     mkdir -p /tmp/c-ares_test
     test_dir="/tmp/c-ares_test"
     LOG_INFO "End to prepare the test environment."

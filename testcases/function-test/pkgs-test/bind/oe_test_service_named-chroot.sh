@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL bind-chroot
+    DNF_INSTALL bind
     service=named-chroot.service
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"

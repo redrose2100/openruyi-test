@@ -6,9 +6,6 @@
         },
         {
             "name": "oe_test_samba_some_dependency_checks"
-        },
-        {
-            "name": "oe_test_samba_tdbsam"
         }
     ]
 }

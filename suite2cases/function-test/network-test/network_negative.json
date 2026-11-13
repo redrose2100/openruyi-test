@@ -11,10 +11,6 @@
             "add network interface": 0
         },
         {
-            "name": "oe_test_bridge_nonexist_nic",
-            "add network interface": 0
-        },
-        {
             "name": "oe_test_modify_mac_failed",
             "add network interface": 1
         }

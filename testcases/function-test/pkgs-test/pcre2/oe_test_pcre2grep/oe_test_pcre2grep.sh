@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "pcre2 pcre2-devel pcre2-help"
+    DNF_INSTALL "pcre2 pcre2-devel"
     LOG_INFO "End to prepare the test environment."
 }
 

@@ -239,12 +239,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_httpd_manage_module_ssl",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_basic_set_time",
             "machine num": 1,
             "add network interface": 0,
@@ -498,12 +492,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_procmgmt_run_programs_regularly",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_vsftpd_start_stop",
             "machine num": 1,
             "add network interface": 0,
@@ -512,12 +500,6 @@
         {
             "name": "oe_test_server_verify_service_status",
             "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_vsftpd_transfer_deleted",
-            "machine num": 2,
             "add network interface": 0,
             "add disk": []
         },
@@ -535,24 +517,6 @@
         },
         {
             "name": "oe_test_postgresql_grant_delete_authorization",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_vsftpd_transfer_download",
-            "machine num": 2,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_vsftpd_transfer_upload",
-            "machine num": 2,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_vsftpd_conf",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []

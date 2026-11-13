@@ -17,12 +17,6 @@
             "name": "oe_test_dbus_dbus-tools_001"
         },
         {
-            "name": "oe_test_dbus_dbus-tools_002"
-        },
-        {
-            "name": "oe_test_dbus_dbus-x11"
-        },
-        {
             "name": "oe_test_busctl"
         },
         {

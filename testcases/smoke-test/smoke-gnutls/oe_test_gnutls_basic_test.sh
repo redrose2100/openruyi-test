@@ -18,8 +18,8 @@
 source "${OET_PATH}"/testcases/smoke-test/smoke-gnutls/comlib.sh
 
 function pre_test() {
-    DNF_INSTALL gnutls-utils
-    DNF_INSTALL gnutls-utils 2
+    DNF_INSTALL gnutls
+    DNF_INSTALL gnutls 2
     P_SSH_CMD --cmd "systemctl stop firewalld"
     check_time
     create_ca_cert

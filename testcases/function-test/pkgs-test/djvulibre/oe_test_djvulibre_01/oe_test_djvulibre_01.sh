@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "djvulibre ImageMagick hostname wget"
+    DNF_INSTALL "djvulibre imagemagick hostname wget"
     cp ../common/test* ./
     LOG_INFO "End to prepare the test environment."
 }

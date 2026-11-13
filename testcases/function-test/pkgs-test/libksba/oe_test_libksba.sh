@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start to prepare the test environment."
-  DNF_INSTALL "libksba gnupg2 gnupg2-smime"
+  DNF_INSTALL "libksba gnupg"
   LOG_INFO "Finish preparing the test environment."
 }
 

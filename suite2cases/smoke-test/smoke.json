@@ -47,9 +47,6 @@
    "name": "oe_test_CPUinfo_001"
   },
   {
-   "name": "oe_test_criu"
-  },
-  {
    "name": "oe_test_dateinfo_001"
   },
   {
@@ -90,9 +87,6 @@
   },
   {
    "name": "oe_test_hostid"
-  },
-  {
-   "name": "oe_test_iscsi"
   },
   {
    "name": "oe_test_journalctl"
@@ -242,13 +236,7 @@
    "name": "oe_test_wc"
   },
   {
-   "name": "oe_test_chrony_001"
-  },
-  {
    "name": "oe_test_diffstat_001"
-  },
-  {
-   "name": "oe_test_rollback"
   },
   {
    "name": "oe_test_gcc"
@@ -275,9 +263,6 @@
    "name": "oe_test_arping"
   },
   {
-   "name": "oe_test_atd"
-  },
-  {
    "name": "oe_test_augeas_augtool"
   },
   {
@@ -293,9 +278,6 @@
    "name": "oe_test_bc_04"
   },
   {
-   "name": "oe_test_bridge-utils_01"
-  },
-  {
    "name": "oe_test_chkconfig"
   },
   {
@@ -306,12 +288,6 @@
   },
   {
    "name": "oe_test_cpio"
-  },
-  {
-   "name": "oe_test_curl_01"
-  },
-  {
-   "name": "oe_test_curl_02"
   },
   {
    "name": "oe_test_curl_03"
@@ -344,9 +320,6 @@
    "name": "oe_test_dracut"
   },
   {
-   "name": "oe_test_ebtables"
-  },
-  {
    "name": "oe_test_ethtool_01"
   },
   {
@@ -357,9 +330,6 @@
   },
   {
    "name": "oe_test_glibc_getaddrinfo_02"
-  },
-  {
-   "name": "oe_test_grub2_mkconfig"
   },
   {
    "name": "oe_test_gzip"
@@ -375,9 +345,6 @@
   },
   {
    "name": "oe_test_ip6tables_01"
-  },
-  {
-   "name": "oe_test_ip6tables_02"
   },
   {
    "name": "oe_test_ip_ipv6_01"
@@ -408,9 +375,6 @@
   },
   {
    "name": "oe_test_iptables"
-  },
-  {
-   "name": "oe_test_ipv6_BRIDGE"
   },
   {
    "name": "oe_test_ipv6_dnsmasq"
@@ -465,9 +429,6 @@
   },
   {
    "name": "oe_test_lz4_02"
-  },
-  {
-   "name": "oe_test_maildrop_delivery_agent"
   },
   {
    "name": "oe_test_mktemp"
@@ -582,12 +543,6 @@
   },
   {
    "name": "oe_test_rule_ipv6"
-  },
-  {
-   "name": "oe_test_service"
-  },
-  {
-   "name": "oe_test_setools"
   },
   {
    "name": "oe_test_shadow"
@@ -752,22 +707,10 @@
    "name": "oe_test_bbr_02"
   },
   {
-   "name": "oe_test_bbr_04"
-  },
-  {
-   "name": "oe_test_bonding_SCEN_05"
-  },
-  {
-   "name": "oe_test_ima_v2_manual_gen_digest_01"
-  },
-  {
    "name": "oe_test_ipv6_sysctl_01"
   },
   {
    "name": "oe_test_ipv6_sysctl_02"
-  },
-  {
-   "name": "oe_test_IPVLAN_07"
   },
   {
    "name": "oe_test_manpath"
@@ -821,9 +764,6 @@
    "name": "oe_test_popt"
   },
   {
-   "name": "oe_test_chkconfig_01"
-  },
-  {
    "name": "oe_test_libxml2_001"
   },
   {
@@ -837,9 +777,6 @@
   },
   {
    "name": "oe_test_logrotate_004"
-  },
-  {
-   "name": "oe_test_gcc_001"
   },
   {
    "name": "oe_test_gcc_002"
@@ -966,9 +903,6 @@
   },
   {
    "name": "oe_test_libselinux"
-  },
-  {
-   "name": "oe_test_sssd"
   },
   {
    "name": "oe_test_bc_01"

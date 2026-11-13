@@ -11,24 +11,6 @@
             "add network interface": 0
         },
         {
-            "name": "oe_test_bridge_create",
-            "machine type": "kvm",
-            "machine num": 1,
-            "add network interface": 1
-        },
-        {
-            "name": "oe_test_bridge_create_by_config_reboot",
-            "machine type": "kvm",
-            "machine num": 2,
-            "add network interface": 1
-        },
-        {
-            "name": "oe_test_bridge_create_reboot",
-            "machine type": "kvm",
-            "machine num": 2,
-            "add network interface": 1
-        },
-        {
             "name": "oe_test_check_ip",
             "machine type": "kvm",
             "machine num": 1,

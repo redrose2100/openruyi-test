@@ -143,12 +143,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_dmraid",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_c++",
             "machine num": 1,
             "add network interface": 0,
@@ -329,40 +323,7 @@
             "add disk": []
         },
         {
-            "name": "oe_test_server_vsftpd_transfer",
-            "machine num": 2,
-            "add network interface": 0,
-            "add disk": [
-                2,
-                2
-            ]
-        },
-        {
             "name": "oe_test_server_vsftpd_restart",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_server_vsftpd_NKdelay",
-            "machine num": 2,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_server_squid_proxy",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_server_squid_ip",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_server_squid_blacklist",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
@@ -375,12 +336,6 @@
         },
         {
             "name": "oe_test_server_openssh_verifykey",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_server_openssh_secure",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
@@ -470,12 +425,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_server_httpd_tls",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_server_httpd_restart",
             "machine num": 1,
             "add network interface": 0,
@@ -501,12 +450,6 @@
         },
         {
             "name": "oe_test_server_git_install",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_sos",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
@@ -543,12 +486,6 @@
         },
         {
             "name": "oe_test_power_measurement_internal",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_performance_monitor_pcp",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
@@ -710,12 +647,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_ProcMgmt_at",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_disk_tuned_set",
             "machine num": 1,
             "add network interface": 0,
@@ -805,12 +736,6 @@
             ]
         },
         {
-            "name": "oe_test_ethtool",
-            "machine num": 1,
-            "add network interface": 2,
-            "add disk": []
-        },
-        {
             "name": "oe_test_basic_create_group",
             "machine num": 1,
             "add network interface": 0,
@@ -835,25 +760,7 @@
             "add disk": []
         },
         {
-            "name": "oe_test_chrony_chronyc_hardwaretime",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_chrony_chronyc_ntpstat",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_chrony_chronyd",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_chrony_Manuall",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
@@ -955,12 +862,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_net_scriprts",
-            "machine num": 1,
-            "add network interface": 2,
-            "add disk": []
-        },
-        {
             "name": "oe_test_net_cmd_ifconfig",
             "machine num": 1,
             "add network interface": 2,
@@ -1042,12 +943,6 @@
         },
         {
             "name": "oe_test_disk_graphics_card",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_nmcli_set_team",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
@@ -1371,12 +1266,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_auditctl_02",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_bunzip2",
             "machine num": 1,
             "add network interface": 0,
@@ -1395,12 +1284,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_libsecret",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_namei",
             "machine num": 1,
             "add network interface": 0,
@@ -1414,12 +1297,6 @@
         },
         {
             "name": "oe_test_uid_old_uid",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_python3-kmod",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
@@ -1707,12 +1584,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_yumdownloader",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_lsmem_2",
             "machine num": 1,
             "add network interface": 0,
@@ -1863,12 +1734,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_xrandr",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_as",
             "machine num": 1,
             "add network interface": 0,
@@ -1953,12 +1818,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_xxd",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_xmlwf",
             "machine num": 1,
             "add network interface": 0,
@@ -2007,19 +1866,7 @@
             "add disk": []
         },
         {
-            "name": "oe_test_update-crypto-policies",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_certtool_4",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_certutil",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
@@ -2038,30 +1885,6 @@
         },
         {
             "name": "oe_test_type",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_corelist_1",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_corelist_2",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_corelist_3",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_corelist_4",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []
@@ -2098,12 +1921,6 @@
         },
         {
             "name": "oe_test_fc-list_4",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_certutil_2",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []

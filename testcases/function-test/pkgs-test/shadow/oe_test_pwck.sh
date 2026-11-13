@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "shadow-utils"
+    DNF_INSTALL "shadow"
     tmp_dir=$(mktemp -d)
     # Create test files
     cat > "${tmp_dir}/passwd_test" <<EOF

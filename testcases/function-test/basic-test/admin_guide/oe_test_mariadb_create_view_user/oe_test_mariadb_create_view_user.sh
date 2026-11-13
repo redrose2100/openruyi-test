@@ -35,7 +35,7 @@ function pre_test() {
     chown -R mysql:mysql /var/log/mariadb/
     cd - || exit
     rm -rf /var/lib/mysql/*
-    DNF_INSTALL mariadb-server
+    DNF_INSTALL mariadb
     systemctl start mariadb
     SLEEP_WAIT 3
     mysqladmin -uroot password "${NODE1_PASSWORD}"

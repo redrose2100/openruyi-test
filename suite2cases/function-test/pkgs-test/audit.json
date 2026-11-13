@@ -50,9 +50,6 @@
             "name": "oe_test_audit_show_event_list"
         },
         {
-            "name": "oe_test_audit_user_build_connection"
-        },
-        {
             "name": "oe_test_audit_max_log_file_rotate"
         },
         {

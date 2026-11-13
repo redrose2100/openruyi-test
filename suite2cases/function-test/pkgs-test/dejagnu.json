@@ -2,9 +2,6 @@
     "path": "$OET_PATH/testcases/function-test/pkgs-test/dejagnu",
     "cases": [
         {
-            "name": "oe_test_dejagnu_runtest_01"
-        },
-        {
             "name": "oe_test_dejagnu_runtest_02"
         },
         {

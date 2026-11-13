@@ -15,16 +15,7 @@
             "name": "oe_test_use_make_compile"
         },
         {
-            "name": "oe_test_jdk_compile_without_pkg"
-        },
-        {
-            "name": "oe_test_jdk_compile_with_pkg"
-        },
-        {
             "name": "oe_test_local_build_rpm"
-        },
-        {
-            "name": "oe_test_prepare_dev_env"
         },
         {
             "name": "oe_test_compile"

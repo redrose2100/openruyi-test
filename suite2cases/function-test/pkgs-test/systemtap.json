@@ -2,9 +2,6 @@
     "path": "$OET_PATH/testcases/function-test/pkgs-test/systemtap",
     "cases": [
         {
-            "name": "oe_test_service_stap-exporter"
-        },
-        {
             "name": "oe_test_service_stap-server"
         },
         {

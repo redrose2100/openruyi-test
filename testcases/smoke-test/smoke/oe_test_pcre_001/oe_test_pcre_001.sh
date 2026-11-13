@@ -22,9 +22,9 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     if dnf list | grep pcre-devel;then
-        DNF_INSTALL "pcre-devel pcre-help gcc"
+        DNF_INSTALL "pcre-devel gcc"
     else
-        DNF_INSTALL "pcre pcre-help gcc"
+        DNF_INSTALL "pcre2 gcc"
     fi
     LOG_INFO "End of environmental preparation!"
 }

@@ -20,7 +20,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "keyutils gcc make keyutils-libs-devel"
+    DNF_INSTALL "keyutils gcc make keyutils-devel"
     cp -arf /etc/request-key.conf /etc/request-key.conf.bak
     LOG_INFO "End of environmental preparation!"
 }
