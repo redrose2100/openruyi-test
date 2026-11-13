@@ -19,7 +19,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL libzip
+    DNF_INSTALL "libzip unzip zip"
     mkdir testdir5
     zip -r testdir5.zip testdir5/
     LOG_INFO "Finish preparing the test environment."

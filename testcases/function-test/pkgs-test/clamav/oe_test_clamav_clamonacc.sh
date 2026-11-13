@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL "clamav clamav-* clamd"
+    DNF_INSTALL "clamav clamav-* clamd procps"
 
     echo "/opt" >testlist
     mkdir testdir

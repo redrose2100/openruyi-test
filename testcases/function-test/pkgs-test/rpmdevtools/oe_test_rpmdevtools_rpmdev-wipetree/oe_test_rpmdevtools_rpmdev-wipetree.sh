@@ -22,7 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     EXECUTE_T="120m"
-    DNF_INSTALL "rpmdevtools gcc"
+    DNF_INSTALL "rpmdevtools gcc perl"
     useradd user_test
     su user_test -c "mkdir -p /home/user_test/rpmbuild/RPMS/${NODE1_FRAME}"
     pkg_name=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')

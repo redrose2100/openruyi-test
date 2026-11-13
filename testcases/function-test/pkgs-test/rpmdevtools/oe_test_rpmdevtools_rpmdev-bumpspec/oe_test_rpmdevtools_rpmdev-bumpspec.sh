@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "rpmdevtools"
+    DNF_INSTALL "rpmdevtools git-core"
     VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
     rpmdev-newspec -o test.spec
     echo "test -f." >file1

@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL gdbm
+    DNF_INSTALL "gdbm gdbm-devel"
     mkdir /tmp/test
     cd /tmp/test
     gdbmtool -n test.gdbm <<EOF

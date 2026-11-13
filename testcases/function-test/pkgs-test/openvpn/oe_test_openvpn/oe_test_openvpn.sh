@@ -50,7 +50,7 @@ function pre_test() {
     ip addr add "$random_ip"/24 dev "${eth_use}"
     random2_ip=$(RANDOM_IP)
     P_SSH_CMD --node 2 --cmd "ip addr add $random2_ip/24 dev ${eth_use_remote}"
-    DNF_INSTALL openvpn
+    DNF_INSTALL "openvpn procps"
     DNF_INSTALL openvpn 2
     LOG_INFO "Finish preparing the test environment."
 }

@@ -29,7 +29,7 @@ function conf_common() {
     )
     cert_path=/etc/kubernetes/pki
     mkdir -p ${cfssl_path} ${cert_path}
-    command -v hostname || DNF_INSTALL hostname 1
+    command -v hostname || DNF_INSTALL "hostname git-core kubernetes" 1
     host_name=$(hostname)
     name_host=k8snode1
     hostname | grep -i ${name_host} || hostnamectl set-hostname ${name_host}

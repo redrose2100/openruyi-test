@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "e2fsprogs"
+    DNF_INSTALL "e2fsprogs fuse3"
     # 创建测试目录
     TEST_DIR="/tmp/fuse2fs_test"
     MNT_DIR="/tmp/fuse2fs_mnt"

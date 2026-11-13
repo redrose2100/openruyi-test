@@ -21,7 +21,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "glibc-devel gcc"
+    DNF_INSTALL "glibc-devel gcc procps"
     ver1=$(rpm -qi glibc-devel | grep -oP 'Version\s+:\s+\K[\d.]+')
     echo "glibc-devel:$ver1"
     ver2=$(rpm -qi gcc | grep -oP 'Version\s+:\s+\K[\d.]+')

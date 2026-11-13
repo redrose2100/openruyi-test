@@ -30,7 +30,7 @@ function pre_test() {
     echo ${NODE1_PASSWORD} | passwd --stdin postgres
     test -d /tmp/data || mkdir -p /tmp/data
     chown -R postgres:postgres /tmp/data/
-    DNF_INSTALL postgresql-server
+    DNF_INSTALL "postgresql-server selinux-tools"
     su - postgres -c "/usr/bin/initdb -D /tmp/data/"
     su - postgres -c "/usr/bin/pg_ctl -D /tmp/data/ -l /tmp/data/logfile start"
     LOG_INFO "Environmental preparation is over."

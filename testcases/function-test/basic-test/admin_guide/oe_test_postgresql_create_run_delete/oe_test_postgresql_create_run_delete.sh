@@ -35,7 +35,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    DNF_INSTALL postgresql-server
+    DNF_INSTALL "postgresql-server selinux-tools"
     CHECK_RESULT $?
     rpm -qa | grep postgresql
     CHECK_RESULT $?

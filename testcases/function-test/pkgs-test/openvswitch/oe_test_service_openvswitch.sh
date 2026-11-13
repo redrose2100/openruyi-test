@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL openvswitch
+    DNF_INSTALL "openvswitch selinux-tools"
     service=openvswitch.service
     log_time=$(date '+%Y-%m-%d %T')
     flag=false

@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "libcap"
+    DNF_INSTALL "libcap libcap-progs"
     touch libcap_testfile
     useradd -m testuser
     LOG_INFO "End to prepare the test environment."

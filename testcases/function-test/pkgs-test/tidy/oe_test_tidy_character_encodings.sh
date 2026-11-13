@@ -21,7 +21,7 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL tidy
+    DNF_INSTALL "tidy perl"
     DNF_INSTALL uchardet
     LOG_INFO "End of environmental preparation!"
 }

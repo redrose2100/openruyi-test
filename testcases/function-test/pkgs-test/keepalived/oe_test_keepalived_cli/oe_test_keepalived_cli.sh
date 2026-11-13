@@ -22,7 +22,7 @@ source ./common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL keepalived
+    DNF_INSTALL "keepalived procps"
     # firewalld/selinux are only changed for the duration of this run;
     # post_test restores the state recorded here.
     ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)
