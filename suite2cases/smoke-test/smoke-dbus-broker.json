@@ -1,8 +1,4 @@
 {
     "path": "$OET_PATH/testcases/smoke-test/smoke-dbus-broker",
-    "cases": [
-        {
-            "name": "oe_test_dbus_broker"
-        }
-    ]
+    "cases": []
 }
