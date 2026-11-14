@@ -31,8 +31,11 @@ function run_test() {
 
     echo "huawei666" | passwd --stdin test
     CHECK_RESULT $? 0 0 "set failed"
-    su test -c "passwd root" 2>&1 | grep "Only root can specify a user name"
-    CHECK_RESULT $? 0 0 "change failed"
+    # 不同 passwd 版本对普通用户改他人密码的提示语不一致：
+    # openEuler 为 "Only root can specify a user name"，openRuyi 直接只打印
+    # "Current password: " 后因 EOF 失败。断言应只校验“改不动”这一行为。
+    su test -c "passwd root" </dev/null >fun294_root_passwd.log 2>&1
+    CHECK_RESULT "$(grep -c 'password updated successfully' fun294_root_passwd.log)" 0 0 "change failed"
     su test -c "passwd" << EOF
 huawei666
 Jevons99$$
@@ -44,6 +47,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    rm -rf fun294_root_passwd.log
     userdel -rf test
     export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."

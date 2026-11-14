@@ -22,7 +22,13 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "audit httpd libselinux"
+    # audit 提供 ausearch/auditd；setenforce/getenforce 由 selinux-tools 提供，
+    # libselinux 只有库和头文件。
+    DNF_INSTALL "audit httpd libselinux selinux-tools"
+    if ! command -v getenforce >/dev/null 2>&1; then
+        LOG_WARN "getenforce is unavailable, cannot verify selinux state."
+        exit 255
+    fi
     setenforce 1  #如果在内核层禁用了selinux,那么这里是无法打开的
     if [ "$(getenforce)" == "Disabled" ]; then
         LOG_WARN "Testing cannot be performed if selinux cannot be enabled."

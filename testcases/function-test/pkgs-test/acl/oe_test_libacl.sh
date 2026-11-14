@@ -70,7 +70,7 @@ int main() {
 
 EOF
 
-    DNF_INSTALL "gcc libacl libacl-devel"
+    DNF_INSTALL "gcc acl acl-devel"
     LOG_INFO "End of environmental preparation!"
 }
 

@@ -11,6 +11,7 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
+    DNF_INSTALL "openssh-clients policycoreutils"
     LOG_INFO "Start environment preparation."
     SSH_CMD "yum install -y samba policycoreutils-python-utils; sed -i '/testsamba/d' /etc/security/opasswd;useradd testsamba;
 	(echo ${NODE1_PASSWORD};echo ${NODE1_PASSWORD}) | smbpasswd -a testsamba -s" \

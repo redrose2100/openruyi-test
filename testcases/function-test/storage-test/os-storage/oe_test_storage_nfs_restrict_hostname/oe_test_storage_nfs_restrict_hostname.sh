@@ -25,11 +25,12 @@ function config_params() {
 }
 
 function pre_test() {
+    DNF_INSTALL openssh-clients
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL nfs-utils
+    DNF_INSTALL "nfs-kernel-server nfs-client rpcbind"
     systemctl stop firewalld
     iptables -F
-    SSH_CMD "systemctl stop firewalld;iptables -F;yum install nfs-utils -y;mkdir /home/nfs;chmod 777 /home/nfs;
+    SSH_CMD "systemctl stop firewalld;iptables -F;yum install nfs-kernel-server nfs-client rpcbind -y;mkdir /home/nfs;chmod 777 /home/nfs;
     mv /etc/exports /etc/exports.bak;echo \\\"${NODE1_IPV4} ${host_name}\\\" >>/etc/hosts;
     echo '/home/nfs ${host_name}(rw,sync,all_squash)' >/etc/exports" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "exportfs -avr; systemctl restart nfs-server rpcbind" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
@@ -51,7 +52,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     umount /home/client
     rmdir /home/client
-    SSH_CMD "rm -rf /home/nfs;yum remove -y nfs-utils;mv -f /etc/exports.bak /etc/exports;
+    SSH_CMD "rm -rf /home/nfs;yum remove -y nfs-kernel-server nfs-client rpcbind;mv -f /etc/exports.bak /etc/exports;
     sed -i \\\"/${NODE1_IPV4}/d\\\" /etc/hosts" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     systemctl start firewalld
     DNF_REMOVE "$@"

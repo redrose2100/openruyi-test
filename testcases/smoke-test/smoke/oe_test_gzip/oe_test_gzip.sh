@@ -33,7 +33,10 @@ function run_test() {
     CHECK_RESULT $? 1 0 "Failed to execute cmp"
     gzip test1.txt
     gzip test2.txt
-    zcmp --verbose test1.txt.gz test2.txt.gz >testlog2
+    # zcmp is a wrapper around cmp; --verbose is not a valid zcmp option and
+    # gzip >= 1.12 just prints a help banner and returns 0 in that case.
+    # Use -l so the output matches the `cmp -l` format written to testlog1.
+    zcmp -l test1.txt.gz test2.txt.gz >testlog2
     CHECK_RESULT $? 1 0 "Failed to execute zcmp"
     diff -w testlog1 testlog2
     CHECK_RESULT $? 0 0 "File is different"

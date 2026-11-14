@@ -51,7 +51,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    kill -9 "$(pgrep -f iotoptest)"
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 iotoptest PID 并 kill（等价 pgrep -f iotoptest，iotoptest 的 comm 即 iotoptest）
+    proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = iotoptest ] && echo "${p#/proc/}"; done)
     rm -rf test iotoptest
     LOG_INFO "End to restore the test environment."
 }

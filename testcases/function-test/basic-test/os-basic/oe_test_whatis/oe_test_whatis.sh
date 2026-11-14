@@ -22,6 +22,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "man-db"
+    mandb -q 2>/dev/null || makewhatis 2>/dev/null
     LOG_INFO "End to prepare the test environment."
 }
 

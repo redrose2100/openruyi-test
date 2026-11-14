@@ -94,7 +94,8 @@ def write_conf(ip, password, port=22, user="root", run_remote=False, copy_all=Tr
             if password:
                 ssh.connect(ip, port, user, password)
             else:
-                key_file = '/root/.ssh/id_rsa'
+                # 非 root 运行时要读当前用户的私钥，不能写死 /root
+                key_file = os.path.expanduser("~/.ssh/id_rsa")
                 if os.path.exists(key_file):
                     pkey = paramiko.RSAKey.from_private_key_file(key_file)
                     ssh.connect(ip, port, user, pkey=pkey)

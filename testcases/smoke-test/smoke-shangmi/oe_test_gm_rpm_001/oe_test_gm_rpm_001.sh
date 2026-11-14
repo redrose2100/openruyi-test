@@ -21,7 +21,7 @@ function pre_test() {
     LOG_INFO "Start to run test."
     cur_lang=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "libgcrypt gnupg2 rpm"
+    DNF_INSTALL "libgcrypt gnupg rpm"
     LOG_INFO "End to prepare the test environment."
 }
 

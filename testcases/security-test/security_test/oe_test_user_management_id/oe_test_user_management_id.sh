@@ -44,7 +44,10 @@ function run_test() {
     CHECK_RESULT "$(id -G -n account1)" "account1 wheel" 0 "get groups name info"
     CHECK_RESULT "$(id -g -n account1)" "account1" 0 "get group name info"
     CHECK_RESULT "$(id -u -n account1)" "account1" 0 "get user name info"
-    CHECK_RESULT "$(id -G -r account1 |awk '{print $2}')" "10" 0 "get groups real id info"
+    # wheel 组的 GID 在不同发行版镜像上并不固定（openEuler 为 10，
+    # openRuyi 为 997），不能硬编码，按实际查询值比较。
+    wheel_gid=$(getent group wheel | cut -d: -f3)
+    CHECK_RESULT "$(id -G -r account1 |awk '{print $2}')" "${wheel_gid}" 0 "get groups real id info"
     LOG_INFO "End to run test."
 }
 

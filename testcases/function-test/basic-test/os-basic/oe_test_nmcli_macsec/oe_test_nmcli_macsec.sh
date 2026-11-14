@@ -20,7 +20,7 @@
 source ../common/net_lib.sh
 function pre_test() {
     LOG_INFO "start to pre the test env"
-    DNF_INSTALL "NetworkManager-wifi"
+    DNF_INSTALL "NetworkManager-plugins"
     LOG_INFO "end to pre the test"
 }
 

@@ -24,7 +24,7 @@ function pre_test() {
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     DNF_INSTALL "audit"
-    service auditd restart
+    systemctl restart auditd
     LOG_INFO "End to prepare the test environment."
 }
 

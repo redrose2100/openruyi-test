@@ -20,7 +20,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "powertop tuned tuned-utils-systemtap"
+    DNF_INSTALL "powertop tuned tuned-utils tuned-utils-systemtap python3-dbus-python"
     old_profile=$(tuned-adm active | awk '{print $4}')
     LOG_INFO "End to prepare the test environment."
 }

@@ -23,7 +23,7 @@ se_stat="Enforcing"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "httpd curl haproxy hostname"
+    DNF_INSTALL "httpd curl haproxy hostname selinux-tools"
     se_stat=$(getenforce)
     getenforce | grep Enforcing && setenforce 0
 

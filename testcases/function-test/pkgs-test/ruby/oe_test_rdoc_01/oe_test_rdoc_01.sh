@@ -22,7 +22,7 @@ source "../common/common_ruby.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL rubygem-rdoc
+    DNF_INSTALL ruby
     VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
     if [[ $VERSION_ID != "22.03" && $VERSION_ID != "24.03" && $VERSION_ID != "25.09" ]]; then
       path_rdoc=/root/.rdoc

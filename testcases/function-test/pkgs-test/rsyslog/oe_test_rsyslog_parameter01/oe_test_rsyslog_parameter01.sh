@@ -20,6 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "rsyslog inetutils"
     systemctl stop rsyslog
     LOG_INFO "End to prepare the test environment."
 }
@@ -30,7 +31,7 @@ function run_test() {
     CHECK_RESULT $?
     [ -f file1 ] && grep "main Q" file1
     CHECK_RESULT $?
-    pgrep -f rsyslogd | xargs kill -9 && SLEEP_WAIT 3
+    proc_kill_pids $(proc_pids_by_cmdline rsyslogd) && SLEEP_WAIT 3
     CHECK_RESULT $?
     rsyslogd -v 2>&1 | grep 'rsyslogd'
     CHECK_RESULT $?
@@ -38,9 +39,9 @@ function run_test() {
     CHECK_RESULT $?
     [ -f file2 ] && grep "/etc/rsyslog.conf" file2
     CHECK_RESULT $?
-    pgrep -f rsyslogd | xargs kill -9 && SLEEP_WAIT 1
+    proc_kill_pids $(proc_pids_by_cmdline rsyslogd) && SLEEP_WAIT 1
     CHECK_RESULT $?
-    (SLEEP_WAIT 1 && pgrep -f rsyslogd | xargs kill -9) &
+    (SLEEP_WAIT 1 && proc_kill_pids $(proc_pids_by_cmdline rsyslogd)) &
     rsyslogd -n
     LOG_INFO "End to run test."
 }

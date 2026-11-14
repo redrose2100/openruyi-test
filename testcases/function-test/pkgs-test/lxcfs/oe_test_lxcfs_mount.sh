@@ -24,7 +24,7 @@ MOUNT_POINT="/tmp/lxcfs_mount_test"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "lxcfs fuse"
+    DNF_INSTALL "lxcfs fuse3"
     systemctl stop lxcfs.service 2>/dev/null || true
     fusermount -u "$MOUNT_POINT" 2>/dev/null || true
     rm -rf "$MOUNT_POINT"

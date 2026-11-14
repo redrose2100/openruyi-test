@@ -4,16 +4,22 @@
 
 # 测试框架固定行
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "$(dirname "$0")/cri_lib.sh"
 
 # 测试前函数
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     # 安装待测试的软件包
     DNF_INSTALL "cri-tools"
+
+    # 引导 CRI 服务（containerd）：cri-tools 只提供客户端，服务端须自行拉起
+    cri_ensure_runtime || cri_abort "CRI runtime (containerd) is not available"
     # 准备测试数据等,如果要创建文件请使用"./你要创建的文件"直接把文件创建到当前目录下
     # 创建一些容器用于测试
-    crictl run --net=host --name=test_container1 --image=busybox:latest
-    crictl run --net=host --name=test_container2 --image=busybox:latest
+    cri_run_container test_container1 busybox:latest
+    CHECK_RESULT $? 0 0 "Failed to create test_container1"
+    cri_run_container test_container2 busybox:latest
+    CHECK_RESULT $? 0 0 "Failed to create test_container2"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -21,23 +27,38 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     # 测试基本使用
-    crictl rm $(crictl ps -q)
+    # crictl rm 只能删除已停止的容器，先停止再删除
+    # 注意：crictl ps -q 只列运行中的容器，容器停止后必须用 -a 才能看到
+    crictl stop $(crictl ps -q)
+    CHECK_RESULT $? 0 0 "Failed to stop containers"
+    crictl rm $(crictl ps -aq)
     CHECK_RESULT $? 0 0 "crictl rm basic usage failed"
 
     # 测试 --all 参数
-    crictl run --net=host --name=test_container3 --image=busybox:latest
+    cri_run_container test_container3 busybox:latest
+    CHECK_RESULT $? 0 0 "Failed to create test_container3"
+    crictl stop $(crictl ps -q)
+    CHECK_RESULT $? 0 0 "Failed to stop container for --all test"
     crictl rm --all
     CHECK_RESULT $? 0 0 "crictl rm --all failed"
 
     # 测试 --force 参数
-    crictl run --net=host --name=test_container4 --image=busybox:latest
-    crictl start $(crictl ps -q)
-    crictl rm --force $(crictl ps -q)
+    # 注意：crictl rm --force 只能强制删除"已停止"的容器；对运行中的容器
+    # CRI 会以 "container is in running state" 拒绝，因此仍需先 stop。
+    cri_run_container test_container4 busybox:latest
+    CHECK_RESULT $? 0 0 "Failed to create test_container4"
+    crictl stop $(crictl ps -q)
+    CHECK_RESULT $? 0 0 "Failed to stop container for --force test"
+    crictl rm --force $(crictl ps -aq)
     CHECK_RESULT $? 0 0 "crictl rm --force failed"
 
     # 测试组合参数
-    crictl run --net=host --name=test_container5 --image=busybox:latest
-    crictl run --net=host --name=test_container6 --image=busybox:latest
+    cri_run_container test_container5 busybox:latest
+    CHECK_RESULT $? 0 0 "Failed to create test_container5"
+    cri_run_container test_container6 busybox:latest
+    CHECK_RESULT $? 0 0 "Failed to create test_container6"
+    crictl stop $(crictl ps -q)
+    CHECK_RESULT $? 0 0 "Failed to stop containers for combined test"
     crictl rm --all --force
     CHECK_RESULT $? 0 0 "crictl rm --all --force failed"
     LOG_INFO "End of the test."
@@ -48,6 +69,8 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     # 测试后环境恢复：
     # 卸载安装的软件包
+    crictl rm -f --all >/dev/null 2>&1
+    crictl rmp -f --all >/dev/null 2>&1
     DNF_REMOVE "cri-tools"
     # 清理测试中间产物文件
     rm -rf ./test_container*

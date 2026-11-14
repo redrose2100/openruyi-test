@@ -20,7 +20,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "curl libcurl-devel"
+    DNF_INSTALL "curl curl-devel"
     vers=$(rpm -qa | grep libcurl-devel | awk -F - '{print $3}')
     LOG_INFO "End to prepare the test environment."
 }

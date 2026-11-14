@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL net-tools
+    DNF_INSTALL inetutils
     old_mtu=$(ip a | grep ${NODE1_NIC} | grep mtu | awk '{print $5}')
     LOG_INFO "End to prepare the test environment."
 }

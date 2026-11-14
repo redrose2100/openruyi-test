@@ -57,7 +57,7 @@ function build_env() {
     P_SSH_CMD --node 2 --cmd "ip addr add $ipvs_ip2/24 dev ${eth_use2}"
     P_SSH_CMD --node 3 --cmd "ip addr add $ipvs_ip3/24 dev ${eth_use3}"
     P_SSH_CMD --node 4 --cmd "ip addr add $ipvs_ip4/24 dev ${eth_use4}"
-    DNF_INSTALL "ipvsadm httpd firewalld"
+    DNF_INSTALL "ipvsadm httpd firewalld procps"
     DNF_INSTALL "firewalld" 2
     DNF_INSTALL "firewalld" 3
     systemctl start httpd

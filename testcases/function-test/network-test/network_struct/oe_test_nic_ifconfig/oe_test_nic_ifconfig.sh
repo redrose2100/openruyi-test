@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL net-tools
+    DNF_INSTALL inetutils
     test_nic=$(TEST_NIC 1 | awk '{print $1}')
     LOG_INFO "End to prepare the test environment."
 }

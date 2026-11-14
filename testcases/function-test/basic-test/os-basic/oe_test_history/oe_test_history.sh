@@ -22,6 +22,8 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     set -o history
+    export HISTFILE=/root/.bash_history
+    [ -f "$HISTFILE" ] || touch "$HISTFILE"
     LOG_INFO "End to prepare the test environment."
 }
 

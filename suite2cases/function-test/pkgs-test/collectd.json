@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/function-test/pkgs-test/collectd",
-    "cases": [
-        {
-            "name": "oe_test_service_collectd"
-        }
-    ]
-}

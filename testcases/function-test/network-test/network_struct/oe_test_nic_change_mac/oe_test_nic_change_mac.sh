@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL net-tools
+    DNF_INSTALL inetutils
     test_nic=$(TEST_NIC 1 | awk '{print $1}')
     ori_mac=$(ip a | grep "link/ether" | tail -n 1 | awk '{print $2}')
     new_mac=$(ip a | grep "link/ether" | tail -n 1 | awk '{print $2}' | cut -d ':' -f 1-5):aa

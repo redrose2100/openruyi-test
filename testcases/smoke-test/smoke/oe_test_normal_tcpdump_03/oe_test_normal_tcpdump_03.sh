@@ -29,9 +29,13 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    tcpdump -i "${NODE1_NIC}" -c 10 -w test.pcap 2>&1 | grep "listening on ${NODE1_NIC}"
+    # `tcpdump -c 10` only exits after 10 packets have been captured. On a
+    # mostly idle NIC that never happens, the pipeline never sees EOF and no
+    # dump file is produced. Bound the capture with timeout, keep the
+    # "listening on <nic>" assertion, and verify the file is non-empty.
+    timeout 20 tcpdump -i "${NODE1_NIC}" -c 10 -w test.pcap 2>&1 | grep "listening on ${NODE1_NIC}"
     CHECK_RESULT $? 0 0 "Failed to execute tcpdump -w"
-    test -f ./test.pcap
+    test -s ./test.pcap
     CHECK_RESULT $? 0 0 "Failed to find test.pcap"
     tcpdump -r test.pcap 2>&1 | grep "reading from file test.pcap"
     CHECK_RESULT $? 0 0 "Failed to execute tcpdump -r"
@@ -42,7 +46,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 "$(pgrep ping)"
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 ping PID（等价 pgrep ping）
+    proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = "ping" ] && echo "${p#/proc/}"; done)
     rm -rf ./test.pcap
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

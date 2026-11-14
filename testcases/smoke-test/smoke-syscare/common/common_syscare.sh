@@ -18,6 +18,8 @@
 # shellcheck disable=SC2086,SC2010
 
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+# OS_RELEASE_VERSION 提供与发行版无关的版本串（如 openEuler-24.03-LTS-SP1）。
+source "${OET_PATH}/libs/locallibs/os_release_lib.sh"
 
 function init_env() {
     DNF_INSTALL "elfutils-libelf-devel openssl-devel flex python3-devel rpm-build bison cmake make gcc kpatch-runtime telnet perl-devel bind-utils syscare syscare-build"
@@ -28,7 +30,7 @@ function download_and_compile_redis() {
     pushd ./ || return
     cd /root || return
     ls | grep redis | grep 'src.rpm' || {
-        openeulerversion=$(grep openeulerversion /etc/openEuler-latest | awk -F '=' '{print $2}')
+        openeulerversion=$(OS_RELEASE_VERSION)
         wget -r -np -nd -nH --accept="redis-4.0.14*.src.rpm" https://repo.openeuler.org/${openeulerversion}/source/Packages/
         redis_src_rpm=$(ls | grep "^redis.*src.rpm")
         rpm -ivh ${redis_src_rpm}

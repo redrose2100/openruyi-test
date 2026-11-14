@@ -24,7 +24,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     cur_lang=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL gnutls-utils
+    DNF_INSTALL gnutls
     TEST_DIR="/tmp/certtool_test"
     CA_KEY="$TEST_DIR/ca.key"
     CA_CERT="$TEST_DIR/ca.crt"

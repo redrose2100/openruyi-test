@@ -18,6 +18,18 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test()
+{
+    LOG_INFO "Start to prepare the test environment."
+
+    # SSH_CMD 走 expect 包装的 ssh/scp，运行器默认未预装 openssh-clients，
+    # 节点 1 必须先本地装上才能继续向节点 2 下发命令。
+    DNF_INSTALL "openssh-clients"
+    DNF_INSTALL "openssh-clients" 2
+
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test()
 {
     LOG_INFO "Start to run test."
@@ -26,6 +38,16 @@ function run_test()
     CHECK_RESULT $? 0 0 "ssh failed"
     
     LOG_INFO "End to run test."
+}
+
+function post_test()
+{
+    LOG_INFO "Start to restore the test environment."
+
+    DNF_REMOVE 2 "$@"
+    DNF_REMOVE "$@"
+
+    LOG_INFO "End to restore the test environment."
 }
 
 main "$@"

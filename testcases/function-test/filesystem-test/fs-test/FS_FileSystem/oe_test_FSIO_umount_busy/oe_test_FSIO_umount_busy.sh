@@ -20,7 +20,7 @@ source "${OET_PATH}/testcases/function-test/filesystem-test/fs-test/common_lib/f
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL lvm2
+    DNF_INSTALL "lvm2 procps"
     IFS=' ' read -ra fs_args <<< "$FS_TYPE"
     read -ra point_list <<< "$(CREATE_FS "${fs_args[@]}")"
     LOG_INFO "Finish to prepare the database config."

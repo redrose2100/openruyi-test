@@ -20,7 +20,9 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL iptables
+    # iptables 包只提供命令，systemd 单元 iptables.service 由 iptables-services 提供，
+    # 只装 iptables 会出现 "Unit iptables.service not found"。
+    DNF_INSTALL "iptables iptables-services"
     LOG_INFO "Finish preparing the test environment."
 }
 

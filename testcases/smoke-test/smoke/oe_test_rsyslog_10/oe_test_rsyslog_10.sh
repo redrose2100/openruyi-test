@@ -27,7 +27,8 @@ function pre_test() {
     fi
     DNF_INSTALL rsyslog
     systemctl start rsyslog
-    old_id=$(pgrep rsyslog)
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 rsyslog PID（等价 pgrep rsyslog）
+    old_id=$(proc_pids_by_name rsyslog)
     old_timezone=$(timedatectl | grep "Local time" | awk '{print $6}')
     old_zone=$(timedatectl | grep "Time zone" | awk '{print $3}')
     rm -rf /etc/localtime
@@ -43,7 +44,8 @@ function run_test() {
     date | grep "$old_timezone"
     CHECK_RESULT $? 0 1 "Time zone changed"
     SLEEP_WAIT 900
-    pgrep rsyslog | grep "$old_id"
+    # openRuyi riscv64 无 pgrep：/proc 遍历确认 rsyslog PID 未变（等价 pgrep rsyslog | grep "$old_id"）
+    proc_pids_by_name rsyslog | grep "$old_id"
     CHECK_RESULT $? 0 1 "Pid not changed"
     date | grep -i NZ
     CHECK_RESULT $? 0 0 "Time zone not changed"

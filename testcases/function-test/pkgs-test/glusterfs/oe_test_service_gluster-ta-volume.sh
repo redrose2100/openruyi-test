@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL glusterfs-thin-arbiter
+    DNF_INSTALL glusterfs
     expect <<EOF
         spawn  /usr/share/glusterfs/scripts/setup-thin-arbiter.sh -s
         expect {

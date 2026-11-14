@@ -30,7 +30,7 @@ function common_config_params() {
 
 # Test environment preparation
 function common_pre() {
-    DNF_INSTALL "dblatex opensp dejavu-fonts texlive-collection-latexrecommended"
+    DNF_INSTALL "dblatex opensp fonts-dejavu texlive-latexrecommended"
     mkdir -p "$TMP_DIR" "$TMP_PATH_O1" "$TMP_PATH_O2"
     ln -s /usr/bin/python3 /usr/bin/python
     sed -i 's#string.join(self.bib_path +#":".join(self.bib_path +#g' "$(rpm -ql dblatex | grep bibtex.py)"

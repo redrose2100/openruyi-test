@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "poppler-utils"
+    DNF_INSTALL "poppler"
     LOG_INFO "Finish preparing the test environment."
 }
 

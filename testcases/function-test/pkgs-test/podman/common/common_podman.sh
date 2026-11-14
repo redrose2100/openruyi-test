@@ -18,9 +18,9 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
-    DNF_INSTALL "podman podman-docker"
+    DNF_INSTALL "podman"
     echo -e "[registries.search]
-registries = ['registry.access.redhat.com', 'registry.redhat.io', 'docker.io']
+registries = ['docker.io']
 
 [registries.insecure]
 registries = []

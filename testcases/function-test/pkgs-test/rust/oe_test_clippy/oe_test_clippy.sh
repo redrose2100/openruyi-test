@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL clippy
+    DNF_INSTALL rust
     cp ../common/test.rs test.rs
     LOG_INFO "End to prepare the test environment!"
 }

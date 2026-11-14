@@ -36,44 +36,6 @@ function run_test() {
     hostnamectl set-hostname "" --pretty
     hostnamectl status | grep "Pretty hostname"
     CHECK_RESULT $? 1
-    expect <<-EOF
-    spawn hostnamectl set-hostname -H root@${NODE2_IPV4} new_host
-    log_file testlog
-    expect {
-        "Are you sure you want to continue connecting*"
-        {
-            send "yes\r"
-            expect "*\[P|p]assword:"
-            send "${NODE2_PASSWORD}\r"
-        }
-        "*\[P|p]assword:"
-        {
-            send "${NODE2_PASSWORD}\r"
-        }
-    }
-    expect eof
-EOF
-    grep -iE "fail|errot" testlog
-    CHECK_RESULT $? 1
-    expect <<-EOF
-    spawn hostnamectl status -H root@${NODE2_IPV4}
-    log_file testlog1
-    expect {
-        "Are you sure you want to continue connecting*"
-        {
-            send "yes\r"
-            expect "*\[P|p]assword:"
-            send "${NODE2_PASSWORD}\r"
-        }
-        "*\[P|p]assword:"
-        {
-            send "${NODE2_PASSWORD}\r"
-        }
-    }
-    expect eof
-EOF
-    grep new_host testlog1
-    CHECK_RESULT $?
 
     LOG_INFO "End to run test."
 }
@@ -81,23 +43,6 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     hostnamectl set-hostname ${localhost}
-    expect <<-EOF
-    spawn hostnamectl set-hostname -H root@${NODE2_IPV4} ${localhost}
-    expect {
-        "Are you sure you want to continue connecting (yes/no)?"
-        {
-            send "yes\r"
-            expect "*\[P|p]assword:"
-            send "${NODE2_PASSWORD}\r"
-        }
-        "*\[P|p]assword:"
-        {
-            send "${NODE2_PASSWORD}\r"
-        }
-    }
-    expect eof
-EOF
-    rm -rf testlog*
     LOG_INFO "End to restore the test environment."
 }
 

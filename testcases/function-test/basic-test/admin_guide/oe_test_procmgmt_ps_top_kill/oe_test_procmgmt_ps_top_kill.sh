@@ -17,6 +17,11 @@
 # @Desc      :   Command test-who -b/-s
 # ############################################
 source ${OET_PATH}/libs/locallibs/common_lib.sh
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL procps
+    LOG_INFO "Environmental preparation is over."
+}
 function run_test() {
     LOG_INFO "Start executing testcase!"
     ps -a | grep "PID"

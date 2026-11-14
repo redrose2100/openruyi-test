@@ -18,10 +18,20 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "rsyslog inetutils"
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
-    echo "#local7.*  /var/log/test" >/etc/rsyslog.d/test.conf
-    rsyslogd -f /etc/rsyslog.d/test.conf -N1 2>&1 | grep "run failed with error"
+    # an invalid rule is expected to fail the config validation run; the
+    # failure wording differs between rsyslog versions ("run failed with
+    # error" on old builds, "could not interpret master config file" on
+    # 8.2510), so match the common "error" part instead of one exact string.
+    echo "if \$msg == then /var/log/test" >/etc/rsyslog.d/test.conf
+    rsyslogd -f /etc/rsyslog.d/test.conf -N1 2>&1 | grep -i "error"
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }

@@ -57,7 +57,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ping_info
-    pgrep -f "user*" | awk '{print $2}' | xargs kill -9
+    # openRuyi riscv64 无 pgrep：/proc 遍历按 cmdline 匹配 user 并 kill（等价 pgrep -f "user"；[[ ]] 避免 grep 自匹配）
+    for p in /proc/[0-9]*; do [ -r "$p/cmdline" ] || continue; [ "$BASHPID" = "${p#/proc/}" ] && continue; if [[ "$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null)" == *user* ]]; then kill -9 "${p#/proc/}" 2>/dev/null; fi; done
     userdel -rf "$testuser"
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."

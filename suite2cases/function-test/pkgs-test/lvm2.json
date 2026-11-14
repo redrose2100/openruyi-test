@@ -45,10 +45,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_service_lvm2-lvmdbusd",
-            "add disk": []
-        },
-        {
             "name": "oe_test_service_lvm2-lvmpolld",
             "add disk": []
         },

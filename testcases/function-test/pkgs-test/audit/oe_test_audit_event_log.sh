@@ -23,7 +23,7 @@ function pre_test() {
     DNF_INSTALL "audit"
     rm -rf /var/log/audit/audit.log*
     auditctl -D
-    service auditd restart
+    systemctl restart auditd
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -39,7 +39,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     auditctl -D
-    service auditd restart
+    systemctl restart auditd
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }

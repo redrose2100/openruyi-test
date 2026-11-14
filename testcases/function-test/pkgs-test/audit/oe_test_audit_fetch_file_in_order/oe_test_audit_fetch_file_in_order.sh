@@ -21,13 +21,13 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "audit-help audit"
+    DNF_INSTALL "audit"
     LOG_INFO "End to prepare the environment"
 }
 function run_test()
 {
     LOG_INFO "Start to run test."
-    service auditd restart
+    systemctl restart auditd
     auditctl -D
     CHECK_RESULT $? 0 0 "delete failed"
     cp -raf /usr/share/doc/audit-help/rules/30-ospp-v42.rules /etc/audit/rules.d

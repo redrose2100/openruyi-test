@@ -22,7 +22,7 @@ function mariadb_init() {
     if [ -d "/var/lib/mysql/mariadb" ]; then
 	rm -rf /var/lib/mysql/mariadb
     fi
-    DNF_INSTALL "mariadb mariadb-server"
+    DNF_INSTALL "mariadb"
     mv /etc/my.cnf /etc/my.bak
     systemctl start mariadb
     mysqladmin -u root password '123456'
@@ -38,5 +38,5 @@ EOF
 function mariadb_clear() {
     systemctl stop mariadb
     rm -rf /var/lib/mysql/*
-    DNF_REMOVE	"mariadb mariadb-server"
+    DNF_REMOVE	"mariadb"
 }

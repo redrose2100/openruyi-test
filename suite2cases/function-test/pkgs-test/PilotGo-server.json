@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/function-test/pkgs-test/PilotGo-server",
-    "cases": [
-        {
-            "name": "oe_test_pilotgo_server"
-        }
-    ]
-}

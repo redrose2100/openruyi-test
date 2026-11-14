@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL shadow-utils
+    DNF_INSTALL shadow
     cp -f /etc/group /etc/group.bak
     if [ -f /etc/gshadow ]; then
         cp -f /etc/gshadow /etc/gshadow.bak

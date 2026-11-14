@@ -25,7 +25,7 @@ function pre_test() {
         LOG_INFO "The current environment is Docker."
         exit 0
     else
-        DNF_INSTALL nfs-utils
+        DNF_INSTALL "nfs-utils nfs-kernel-server"
         cp /etc/exports /etc/exports.bak
         echo "/home/nfs *(rw,sync,all_squash)" >>/etc/exports
         mkdir /home/nfs /home/test

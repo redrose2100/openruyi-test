@@ -21,7 +21,7 @@ source "$OET_PATH"/libs/locallibs/common_lib.sh
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "glibc-devel gcc"
+    DNF_INSTALL "glibc-devel gcc procps"
     ver1=$(rpm -qi glibc-devel | grep -oP 'Version\s+:\s+\K[\d.]+')
     echo "glibc-devel:$ver1"
     ver2=$(rpm -qi gcc | grep -oP 'Version\s+:\s+\K[\d.]+')
@@ -34,8 +34,10 @@ function run_test() {
     top &
     pidwait top &
     CHECK_RESULT $? 0 0 "pidwait execute fail"
-    top_pid=$(pgrep ^top)
-    pidwait_pid=$(pgrep -f 'pidwait top')
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 top PID（等价 pgrep ^top）
+    top_pid=$(proc_pids_by_name top)
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 pidwait PID（等价 pgrep -f 'pidwait top'，pidwait 的 comm 即 pidwait）
+    pidwait_pid=$(proc_pids_by_name pidwait)
     kill -9 "$top_pid" "$pidwait_pid"
     pidwait --help | grep -E "用法|Usage"
     CHECK_RESULT $? 0 0 "pidwait --help execute fail"

@@ -69,7 +69,7 @@ int main (void)
     return 0;                                                                                    
 }
 EOF
-    DNF_INSTALL "zeromq zeromq-devel zeromq-help gcc-c++"
+    DNF_INSTALL "zeromq zeromq-devel gcc-c++"
     LOG_INFO "End of environmental preparation!"
 }
 

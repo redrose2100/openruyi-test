@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "php-cli php-devel"
+    DNF_INSTALL "php php-devel"
     LOG_INFO "Finish preparing the test environment."
 }
 

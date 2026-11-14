@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "diffutils"
     # Create test data files
     echo "This is test data for compression level testing" > test_data.txt
     dd if=/dev/urandom of=test_random.bin bs=1K count=10

@@ -27,7 +27,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL net-tools
+    DNF_INSTALL inetutils
     LOG_INFO "End to prepare the test environment."
 }
 

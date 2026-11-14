@@ -18,6 +18,13 @@
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL openssh-clients
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase."
     expect <<EOF
@@ -57,8 +64,12 @@ EOF
         }
         expect eof
 EOF
-    SSH_CMD "grep ssh-rsa /root/.ssh/authorized_keys" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    CHECK_RESULT $? 0 0 "NODE2 grep ssh-rsa /root/.ssh/authorized_keys failed"
+    # ssh-copy-id installs the key into the home directory of the login user,
+    # not necessarily /root.
+    local remote_keys
+    remote_keys="$(eval echo ~${NODE2_USER})/.ssh/authorized_keys"
+    SSH_CMD "grep ssh-rsa ${remote_keys}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    CHECK_RESULT $? 0 0 "NODE2 grep ssh-rsa ${remote_keys} failed"
     expect <<EOF
         set timeout 15
         log_file testlog
@@ -70,67 +81,19 @@ EOF
         }
         expect eof
 EOF
-    grep "System information as of time" testlog
+    grep -E "Last login:|${NODE2_USER}@" testlog
     CHECK_RESULT $? 0 0 "ssh log failed"
-    SSH_CMD "rm -rf /root/.ssh/authorized_keys" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    expect <<EOF
-        set timeout 15
-        spawn ssh-keygen -t dsa
-        expect {
-            "save the key" {
-                send "\\r"
-            }
-        }
-        expect {
-            "Enter passphrase" {
-                send "\\r"
-            }
-        }
-        expect {
-            "Enter same passphrase again" {
-                send "\\r"
-            }
-        }
-        expect eof
-EOF
-    ls -l /root/.ssh/*id_rsa*
-    CHECK_RESULT $? 0 0 "id_dsa file is not exist" 
-    expect <<EOF
-        set timeout 15
-        spawn ssh-copy-id -i /root/.ssh/id_dsa.pub ${NODE2_USER}@${NODE2_IPV4}
-        expect {
-            "*yes/no*" {
-                send "yes\\r"
-            }
-        }
-        expect {
-            "password" {
-                send "${NODE2_PASSWORD}\\r"
-            }
-        }
-        expect eof
-EOF
-    SSH_CMD "grep ssh-dss /root/.ssh/authorized_keys" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    CHECK_RESULT $? 0 0 "NODE2 grep ssh-dss /root/.ssh/authorized_keys failed"
-    expect <<EOF
-        set timeout 15
-        log_file testlog1
-        spawn ssh ${NODE2_USER}@${NODE2_IPV4}
-        expect {
-            "*yes/no*" {
-                send "yes\\r"
-            }
-        }
-        expect eof
-EOF
-    grep "password:" testlog1
-    CHECK_RESULT $? 0 0 "Need password"
+    SSH_CMD "rm -rf ${remote_keys}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    # DSA key based authentication has been removed from OpenSSH (disabled by
+    # default since 9.8, unsupported since 10.0), so the DSA half of this case
+    # cannot be executed on current platforms and is intentionally skipped.
+    LOG_INFO "DSA key authentication is no longer supported by OpenSSH, skip that part."
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "Start cleanning environment."
-    SSH_CMD "rm -rf /root/.ssh/authorized_keys" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    SSH_CMD "rm -rf $(eval echo ~${NODE2_USER})/.ssh/authorized_keys" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     rm -rf /root/.ssh/id_rsa* testlog1 testlog /root/.ssh/id_dsa*
     LOG_INFO "Finish environment cleanup!"
 }

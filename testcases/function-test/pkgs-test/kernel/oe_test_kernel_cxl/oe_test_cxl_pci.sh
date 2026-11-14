@@ -22,7 +22,15 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     mod_name="cxl_pci"
-    DNF_INSTALL "kmod"
+    # kmod 通常已装；未装时带超时安装，失败优雅 skip 而非挂起 30m
+    if ! rpm -q kmod >/dev/null 2>&1; then
+        if ! timeout 120 dnf -y install kmod; then
+            pkill -9 dnf 2>/dev/null
+            rm -f /var/cache/dnf/*.pid 2>/dev/null
+            LOG_WARN "kmod install failed, skip this case"
+            exit 255
+        fi
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 

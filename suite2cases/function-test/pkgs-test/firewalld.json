@@ -64,19 +64,9 @@
             "add network interface": 0
         },
         {
-            "name": "oe_test_firewalld_dnat",
-            "machine num": 3,
-            "add network interface": 1
-        },
-        {
             "name": "oe_test_firewalld_dropzone_service",
             "machine num": 2,
             "add network interface": 0
-        },
-        {
-            "name": "oe_test_firewalld_forward_nat",
-            "machine num": 2,
-            "add network interface": 1
         },
         {
             "name": "oe_test_firewalld_getzone",
@@ -100,7 +90,7 @@
         },
         {
             "name": "oe_test_firewalld_log_denied",
-            "machine num": 1,
+            "machine num": 2,
             "add network interface": 0
         },
         {

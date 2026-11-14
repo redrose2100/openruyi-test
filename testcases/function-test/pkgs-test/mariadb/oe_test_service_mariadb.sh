@@ -21,8 +21,8 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL mariadb-server
-    mariadb_version=$(rpm -qa mariadb-server | awk -F- '{print $3}')
+    DNF_INSTALL mariadb
+    mariadb_version=$(rpm -qa mariadb | awk -F- '{print $3}')
     if [[ "${mariadb_version}" == "10.3.39" ]]; then
         sed -i 's/plugin-load-add=auth_gssapi.so/#plugin-load-add=auth_gssapi.so/g'  /etc/my.cnf.d/auth_gssapi.cnf
     fi

@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "python3-pip dnf-plugins-core"
+    DNF_INSTALL "python3-pip dnf5-plugins"
     LOG_INFO "End to prepare the test environment."
 }
 

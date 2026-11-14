@@ -20,6 +20,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
+    DNF_INSTALL "diffutils"
     
     LOG_INFO "Start to prepare the test environment."
     echo "Test file content for zless" > test.txt

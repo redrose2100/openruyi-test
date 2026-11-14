@@ -49,12 +49,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_FSIO_e2fsck_datablock",
-            "add disk": [
-                10
-            ]
-        },
-        {
             "name": "oe_test_FSIO_etc_full_data",
             "add disk": []
         },

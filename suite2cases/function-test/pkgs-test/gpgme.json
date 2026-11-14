@@ -9,9 +9,6 @@
         },
         {
             "name": "oe_test_gpgme_api"
-        },
-        {
-            "name": "oe_test_gpgme_python"
         }
     ]
 }

@@ -20,13 +20,22 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function config_params() {
     LOG_INFO "Start loading data!"
-    remote_disk=$(lsblk | grep disk | sed -n 2p | awk '{print$1}')
+    # 在 node2 上取盘：后面的 mkfs.ext4 -F / mount 都是通过 SSH_CMD 在 node2 执行。
+    # 旧实现用本机（node1）的 lsblk 顺序取盘，两台机器的盘名/盘序不一定一致，
+    # 会把 node2 上不相干的盘（包括系统盘）格式化掉。
+    # TEST_DISK 2 会走远端枚举，并已把 node2 的系统盘排除在候选之外。
+    remote_disk=$(TEST_DISK 2 | awk '{print $1}')
+    if [ -z "${remote_disk}" ]; then
+        LOG_ERROR "no usable test disk found on node2, skip testcase to protect the OS."
+        exit 255
+    fi
     LOG_INFO "Loading data is complete!"
 }
 
 function pre_test() {
+    DNF_INSTALL openssh-clients
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL nfs-utils
+    DNF_INSTALL "nfs-kernel-server nfs-client rpcbind"
     systemctl stop firewalld
     iptables -F
     SSH_CMD "systemctl stop firewalld;iptables -F" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
@@ -35,7 +44,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    SSH_CMD "yum install nfs-utils -y;mkdir /home/nfs;mv /etc/exports /etc/exports.bak;
+    SSH_CMD "yum install nfs-kernel-server nfs-client rpcbind -y;mkdir /home/nfs;mv /etc/exports /etc/exports.bak;
 	echo '/home/nfs *(rw,sync,all_squash)' >/etc/exports; exportfs -avr" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     CHECK_RESULT $?
     SSH_CMD "systemctl restart nfs-server rpcbind;mkfs.ext4 -F /dev/${remote_disk};
@@ -62,7 +71,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     umount /home/client
     SLEEP_WAIT 2
-    SSH_CMD "umount /home/nfs;rm -rf /home/nfs;yum remove -y nfs-utils;mv -f /etc/exports.bak /etc/exports;
+    SSH_CMD "umount /home/nfs;rm -rf /home/nfs;yum remove -y nfs-kernel-server nfs-client rpcbind;mv -f /etc/exports.bak /etc/exports;
     umount /home/nfs; systemctl start firewalld" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     rmdir /home/client
     systemctl start firewalld

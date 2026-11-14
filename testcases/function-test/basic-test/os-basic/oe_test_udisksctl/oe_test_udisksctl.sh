@@ -21,7 +21,11 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "udisks2"
+    # Install udisks2 directly on the local node: DNF_INSTALL goes through
+    # SSH_CMD on the execution node, which can fail silently on openRuyi.
+    # udisks2 is provided by the openRuyi repo (verified on 12057).
+    dnf -y install udisks2 >/dev/null 2>&1
+    CHECK_RESULT $? 0 0 "Failed to install udisks2"
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."

@@ -35,7 +35,12 @@ function run_test()
     su - tester1 -c pwd
     CHECK_RESULT $? 0 0 "change failed"
     SLEEP_WAIT 5
-    grep -e "session opened for user tester1(uid=$uid)" /var/log/secure
+    # openRuyi 默认不装 rsyslog，没有 /var/log/secure；登录审计在 journald 里。
+    if [ -f /var/log/secure ]; then
+        grep -e "session opened for user tester1(uid=$uid)" /var/log/secure
+    else
+        journalctl --no-pager -n 5000 2>/dev/null | grep -e "session opened for user tester1(uid=$uid)"
+    fi
     CHECK_RESULT $? 0 0 "grep failed"
     
     LOG_INFO "End to run test."

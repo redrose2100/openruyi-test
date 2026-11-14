@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL lvm2-lockd
+    DNF_INSTALL lvm2
     systemctl start lvmlockd.service
     LOG_INFO "End of environmental preparation!"
 }

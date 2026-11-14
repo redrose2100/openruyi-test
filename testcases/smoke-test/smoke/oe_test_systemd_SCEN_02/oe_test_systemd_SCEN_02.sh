@@ -38,6 +38,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl start TestB
     CHECK_RESULT $? 0 0 "TestB.service start success"
+    for i in $(seq 1 20); do
+        systemctl is-failed TestB && break
+        sleep 0.5
+    done
     systemctl status TestB | grep failed
     CHECK_RESULT $? 0 0 "TestB.service is not failed"
     systemctl start TestA

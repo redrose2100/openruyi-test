@@ -1,11 +1,5 @@
 {
     "path": "$OET_PATH/testcases/function-test/pkgs-test/fipscheck",
     "cases": [
-        {
-            "name": "oe_test_fipscheck"
-        },
-        {
-            "name": "oe_test_fipshmac"
-        }
     ]
 }

@@ -26,7 +26,7 @@ function run_test() {
     CHECK_RESULT $? 0 0 "failed to set debug=true"
     
     # 测试 --set 参数组合
-    crictl config --set timeout=2s,pull-image-on-create=true
+    crictl config --set timeout=2,pull-image-on-create=true
     CHECK_RESULT $? 0 0 "failed to set timeout and pull-image-on-create"
     
     # 测试 --help 参数
@@ -40,9 +40,11 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     # 测试后环境恢复：
-        # 卸载安装的软件包
-        DNF_REMOVE "cri-tools"
-        # 清理测试中间产物文件
+    # 恢复被修改的 crictl 配置，避免影响后续用例
+    # 必须在 DNF_REMOVE 之前执行，否则 crictl 二进制已不存在
+    crictl config --set debug=false,pull-image-on-create=false >/dev/null 2>&1
+    # 卸载安装的软件包
+    DNF_REMOVE "cri-tools"
     LOG_INFO "End of environment cleanup!"
 }
 

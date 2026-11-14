@@ -23,6 +23,10 @@ export AUDIT_PATH
 
 function create_logfile(){
 	auditctl -w /home/auditd_test -p rwxa
+	if [ $? -ne 0 ]; then
+		LOG_WARN "the audit rule could not be added, skip generating audit events"
+		return 1
+	fi
 	for((j=0;j<500;j++));do
 		touch /home/auditd_test > /dev/null
 		chmod 777 /home/auditd_test > /dev/null

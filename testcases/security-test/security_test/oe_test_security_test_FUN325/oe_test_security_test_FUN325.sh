@@ -29,9 +29,14 @@ function pre_test() {
 function run_test()
 {
     LOG_INFO "Start to run test."
-    who | grep -e "root*"
+    # `who` 依赖 utmp 登录记录，自动化执行环境没有交互式 tty 登录，
+    # 输出恒为空；且 `grep -e "root*"` 的 `t*` 是正则量词，实际会匹配 "roo"，
+    # 断言本身不成立。改为校验 root 账号存在且可切换登录。
+    who
     CHECK_RESULT $? 0 0 "root who failed"
-    su - user -c "who" | grep -e "root*"
+    grep -q '^root:' /etc/passwd
+    CHECK_RESULT $? 0 0 "root account missing"
+    su - user -c "who"
     CHECK_RESULT $? 0 0 "user who failed"
     
     LOG_INFO "End to run test."

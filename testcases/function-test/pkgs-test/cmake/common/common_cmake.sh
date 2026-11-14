@@ -19,6 +19,8 @@
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+# 发行版信息兼容层：用于取 VERSION_ID，避免依赖 /etc/openEuler-release。
+source "$OET_PATH/libs/locallibs/os_release_lib.sh"
 function deploy_env() {
     DNF_INSTALL "cmake gcc-c++ ninja-build make"
     mkdir build && cd build

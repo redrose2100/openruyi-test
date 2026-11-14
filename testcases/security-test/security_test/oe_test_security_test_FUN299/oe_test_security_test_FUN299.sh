@@ -30,18 +30,37 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    # 原脚本连续三段 "expect \"*assword:\""：但 "BAD PASSWORD:" 本身就含有子串
+    # "ASSWORD:"，"*assword:" 会命中告警行而不是提示行，导致密码错位、必然
+    # "Sorry, passwords do not match."。这里改成按完整提示串匹配，并拆成两轮：
+    # 第一轮用短密码，只校验 pam_pwquality 给出了 BAD PASSWORD 告警；
+    # 第二轮用合规密码，校验修改成功。
     expect <<EOF1
     log_file testlog
+    set timeout 60
     spawn passwd test
-    expect "*assword:" { send "123\\r" }
-    expect "*assword:" { send "Administrator12#$\\r" }
-    expect "*assword:" { send "Administrator12#$\\r" }
+    expect "New password:"
+    send "123\\r"
+    expect {
+        "BAD PASSWORD" { exp_continue }
+        "Retype new password:" { send "123\\r" }
+    }
     expect eof
 EOF1
+    grep -e "BAD PASSWORD" testlog
+    CHECK_RESULT $? 0 0 "pam_pwquality did not reject the short password"
+    expect <<EOF2
+    log_file -a testlog
+    set timeout 60
+    spawn passwd test
+    expect "New password:"
+    send "Administrator12#$\\r"
+    expect "Retype new password:"
+    send "Administrator12#$\\r"
+    expect eof
+EOF2
     grep -e "passwd: all authentication tokens updated successfully" testlog
     CHECK_RESULT $? 0 0 "grep failed"
-    grep -e "BAD PASSWORD" testlog
-    CHECK_RESULT $? 0 0 "grep bad failed"
     LOG_INFO "End to run test."
 }
 

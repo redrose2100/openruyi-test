@@ -19,7 +19,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start executing testcase."
-    DNF_INSTALL nginx
+    DNF_INSTALL "nginx procps"
     LOG_INFO "End of testcase execution."
 }
 

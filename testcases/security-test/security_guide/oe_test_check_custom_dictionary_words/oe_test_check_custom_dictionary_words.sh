@@ -18,6 +18,27 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+# passwd --stdin returns 0 even when pam_pwquality rejects the password
+# ("BAD PASSWORD ... Authentication token manipulation error"), so the change has
+# to be verified from the command output instead of the exit status.
+function check_weak_password_rejected() {
+    local user=$1
+    local passwd=$2
+    local output
+    output=$(echo "${passwd}" | passwd "${user}" --stdin 2>&1)
+    LOG_INFO "passwd output: ${output}"
+    echo "${output}" | grep -qiE "BAD PASSWORD|Authentication token manipulation error|password unchanged"
+}
+
+function check_password_changed() {
+    local user=$1
+    local passwd=$2
+    local output
+    output=$(echo "${passwd}" | passwd "${user}" --stdin 2>&1)
+    LOG_INFO "passwd output: ${output}"
+    echo "${output}" | grep -qiE "password updated successfully|passwd: password changed"
+}
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=${LANG}
@@ -25,15 +46,25 @@ function pre_test() {
     id normal && userdel -rf normal
     useradd normal
     cp -r /usr/share/cracklib /usr/share/cracklib-bak
-    sed -i 's/pam_pwquality.so/pam_pwquality.so enforce_for_root/g' /etc/pam.d/system-auth
-    sed -i 's/pam_pwquality.so/pam_pwquality.so enforce_for_root/g' /etc/pam.d/password-auth
+    # /etc/pam.d/system-auth and password-auth are symlinks to
+    # /etc/authselect/* on an authselect based system.  Editing them with
+    # "sed -i" would replace the symlink with a regular file, so always resolve
+    # the real target first and keep the symlink itself untouched.
+    local pam_file=""
+    for pam_file in /etc/pam.d/system-auth /etc/pam.d/password-auth; do
+        [ -f "${pam_file}" ] || continue
+        local real_file
+        real_file=$(readlink -f "${pam_file}")
+        [ -f "${real_file}-bak" ] || cp -f "${real_file}" "${real_file}-bak"
+        sed -i 's/pam_pwquality.so/pam_pwquality.so enforce_for_root/g' "${real_file}"
+    done
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    CHECK_RESULT "$(echo "mugen12#$" | cracklib-check |awk '{print $NF}')" "OK" 0 "Default dictionary words check failed"
-    echo "mugen12#$" | passwd normal --stdin
+    CHECK_RESULT "$(echo "mugen12#$" | cracklib-check | awk '{print $NF}')" "OK" 0 "Default dictionary words check failed"
+    check_password_changed normal 'mugen12#$'
     CHECK_RESULT $? 0 0 "Change strong password failed"
 
     cracklib-unpacker /usr/share/cracklib/pw_dict > dictionary.txt
@@ -41,23 +72,31 @@ function run_test() {
     echo "mugen12#$" >> dictionary.txt
     create-cracklib-dict dictionary.txt
     CHECK_RESULT $? 0 0 "create new dictionary failed"
-    cracklib-unpacker /usr/share/cracklib/pw_dict |grep 'mugen12#\$'
+    cracklib-unpacker /usr/share/cracklib/pw_dict | grep 'mugen12#\$'
     CHECK_RESULT $? 0 0 "Custom dictionary words failed"
 
-    CHECK_RESULT "$(echo "mugen12#$" | cracklib-check |awk '{print $NF}')" "word" 0 "Custom dictionary words check failed"
-    echo "mugen12#$" | passwd normal --stdin
-    CHECK_RESULT $? 0 1 "Change weak password failed"
+    CHECK_RESULT "$(echo "mugen12#$" | cracklib-check | awk '{print $NF}')" "word" 0 "Custom dictionary words check failed"
+    check_weak_password_rejected normal 'mugen12#$'
+    CHECK_RESULT $? 0 0 "Change weak password succeeded"
     LOG_INFO "End to run test."
 }
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
-    rm -rf ./dictionary.txt
+    rm -f ./dictionary.txt
     rm -rf /usr/share/cracklib
-    mv /usr/share/cracklib-bak /usr/share/cracklib
-    sed -i 's/pam_pwquality.so enforce_for_root/pam_pwquality.so/g' /etc/pam.d/system-auth
-    sed -i 's/pam_pwquality.so enforce_for_root/pam_pwquality.so/g' /etc/pam.d/password-auth
+    [ -d /usr/share/cracklib-bak ] && mv /usr/share/cracklib-bak /usr/share/cracklib
+    local pam_file=""
+    for pam_file in /etc/pam.d/system-auth /etc/pam.d/password-auth; do
+        [ -f "${pam_file}" ] || continue
+        local real_file
+        real_file=$(readlink -f "${pam_file}")
+        if [ -f "${real_file}-bak" ]; then
+            cp -f "${real_file}-bak" "${real_file}"
+            rm -f "${real_file}-bak"
+        fi
+    done
     userdel -rf normal
     LOG_INFO "End to restore the test environment."
 }

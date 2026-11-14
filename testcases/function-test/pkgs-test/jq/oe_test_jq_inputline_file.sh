@@ -22,6 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "diffutils"
     DNF_INSTALL jq
     LOG_INFO "End of environmental preparation!"
 }

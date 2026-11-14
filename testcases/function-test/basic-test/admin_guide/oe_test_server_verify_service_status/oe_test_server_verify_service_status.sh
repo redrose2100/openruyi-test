@@ -19,7 +19,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
 	LOG_INFO "Start executing testcase."
-	DNF_INSTALL ntp
+	DNF_INSTALL chrony
 	LOG_INFO "End of testcase execution."
 }
 
