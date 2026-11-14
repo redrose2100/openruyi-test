@@ -53,32 +53,32 @@ function run_test() {
     rpmdev-vercmp -h | grep -A 5 "rpmdev-vercmp" | grep "Exit status"
     CHECK_RESULT $? 0 0 "Failed option: -h"
 
-    spectool -l rpmdevtools.spec | grep "Source"
+    rpmdev-spectool -l rpmdevtools.spec | grep "Source"
     CHECK_RESULT $? 0 0 "Failed option: -l"
-    spectool -g rpmdevtools.spec && test -f ./rpmdevtools-*.tar.xz 
+    rpmdev-spectool -g rpmdevtools.spec && test -f ./rpmdevtools-*.tar.xz 
     CHECK_RESULT $? 0 0 "Failed option: -g"
-    spectool -h | grep "usage: spectool"
+    rpmdev-spectool -h | grep "usage:"
     CHECK_RESULT $? 0 0 "Failed option: -h"
-    spectool -S rpmdevtools.spec | grep "Source"
+    rpmdev-spectool -S rpmdevtools.spec | grep "Source"
     CHECK_RESULT $? 0 0 "Failed option: -S"
-    spectool -P rpmdevtools.spec | grep "Patch"
+    rpmdev-spectool -P rpmdevtools.spec | grep "Patch"
     CHECK_RESULT $? 0 0 "Failed option: -P"
-    spectool -s 0 rpmdevtools.spec | grep "Source0"
+    rpmdev-spectool -s 0 rpmdevtools.spec | grep "Source0"
     CHECK_RESULT $? 0 0 "Failed option: -s"
-    spectool -p 1 rpmdevtools.spec | grep "Patch1"
+    rpmdev-spectool -p 1 rpmdevtools.spec | grep "Patch1"
     CHECK_RESULT $? 0 0 "Failed option: -p"
-    spectool -d 'test test1' rpmdevtools.spec
+    rpmdev-spectool -d 'test test1' rpmdevtools.spec
     CHECK_RESULT $? 0 0 "Failed option: -d"
-    spectool -g -C ./test_dir rpmdevtools.spec && test -f ./test_dir/*tar.xz
+    rpmdev-spectool -g -C ./test_dir rpmdevtools.spec && test -f ./test_dir/*tar.xz
     CHECK_RESULT $? 0 0 "Failed option: -C"
-    spectool -g -R rpmdevtools.spec && test -f "${HOME}/rpmbuild/SOURCES"/*tar.xz
+    rpmdev-spectool -g -R rpmdevtools.spec && test -f "${HOME}/rpmbuild/SOURCES"/*tar.xz
     CHECK_RESULT $? 0 0 "Failed option: -R"
-    test -f ./*tar.xz && spectool -g -f rpmdevtools.spec
+    test -f ./*tar.xz && rpmdev-spectool -g -f rpmdevtools.spec
     CHECK_RESULT $? 0 0 "Failed option: -f"
     rm ./*tar.xz
-    spectool -g -n rpmdevtools.spec | grep "Would have downloaded: https://releases.pagure.org/rpmdevtools/"
+    rpmdev-spectool -g -n rpmdevtools.spec | grep "Would have downloaded: https://releases.pagure.org/rpmdevtools/"
     CHECK_RESULT $? 0 0 "Failed option: -n"
-    spectool -D -g rpmdevtools.spec && test -f ./rpmdevtools-*.tar.xz
+    rpmdev-spectool -D -g rpmdevtools.spec && test -f ./rpmdevtools-*.tar.xz
     CHECK_RESULT $? 0 0 "Failed option: -D"
 
     LOG_INFO "End to run test."

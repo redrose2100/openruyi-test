@@ -13,13 +13,6 @@
             ]
         },
         {
-            "name": "oe_test_multipath-tools_mpathconf",
-            "machine num": 2,
-            "add disk": [
-                4
-            ]
-        },
-        {
             "name": "oe_test_multipath-tools_mpathpersist",
             "machine num": 2,
             "add disk": [

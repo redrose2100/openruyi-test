@@ -23,7 +23,7 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "pbzip2"
-    yumdownloader pbzip2
+    dnf download pbzip2
     LOG_INFO "End to prepare the test environment."
 }
 

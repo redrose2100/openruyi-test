@@ -23,7 +23,7 @@ function pre_test() {
     DNF_INSTALL "rpmdevtools"
     pkg_name=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
     pkg_arch=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $2}')
-    yumdownloader "${pkg_name}"
+    dnf download "${pkg_name}"
     mkdir -p /ALT/Sisyphus/files/i586/RPMS
     mkdir -p /ALT/Sisyphus/files/noarch/RPMS
     mkdir -p /ALT/Sisyphus/files/SRPMS
@@ -33,7 +33,7 @@ function pre_test() {
 
     pkg_name1=$(dnf list | head -n 4 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
     mkdir ./tmp_dir
-    yumdownloader "${pkg_name1}"
+    dnf download "${pkg_name1}"
 
     LOG_INFO "End of environmental preparation."
 }

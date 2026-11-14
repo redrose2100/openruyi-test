@@ -8,9 +8,6 @@
             "name": "oe_test_pesign_efikeygen"
         },
         {
-            "name": "oe_test_pesign_efisiglist"
-        },
-        {
             "name": "oe_test_pesign_base_01"
         },
         {

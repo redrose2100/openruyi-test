@@ -45,7 +45,7 @@ select_ltp_tag() {
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     EXECUTE_T="240m"
-    DNF_INSTALL "zlib gcc-c++ bc m4 flex byacc bison keyutils-libs-devel lksctp-tools-devel xfsprogs-devel libacl-devel openssl-devel numactl-devel libaio-devel glibc-devel libcap-devel findutils libtirpc libtirpc-devel kernel-headers glibc-headers hwloc-devel patch numactl tar make automake cmake time psmisc git"
+    DNF_INSTALL "zlib gcc-c++ bc m4 flex byacc bison keyutils-devel lksctp-tools-devel xfsprogs-devel acl-devel openssl-devel numactl-devel libaio-devel glibc-devel libcap-devel findutils libtirpc libtirpc-devel linux-headers hwloc-devel patch numactl tar make automake cmake time psmisc git"
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     current_path=$(cd "$(dirname "$0")" || exit 1

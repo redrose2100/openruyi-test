@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    adduser -G wheel -Z staff_u example
+    useradd -G wheel -Z staff_u example
     passwd example << EOF
 ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}

@@ -26,12 +26,12 @@ function pre_test() {
     useradd user_test
     su user_test -c "mkdir -p /home/user_test/rpmbuild/RPMS/${NODE1_FRAME}"
     pkg_name=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
-    yumdownloader "${pkg_name}"
+    dnf download "${pkg_name}"
     chown user_test ./*rpm
     chmod 755 ./*rpm
     mv ./*rpm /home/user_test/rpmbuild/RPMS/"${NODE1_FRAME}"
 
-    yumdownloader "${pkg_name}"
+    dnf download "${pkg_name}"
     mkdir -p /ALT/Sisyphus/files/i586/RPMS
     mkdir -p /ALT/Sisyphus/files/noarch/RPMS
     mkdir -p /ALT/Sisyphus/files/SRPMS
@@ -39,7 +39,7 @@ function pre_test() {
     cp -f ./*rpm /ALT/Sisyphus/files/i586/RPMS/
     cp -f ./*rpm /ALT/Sisyphus/files/noarch/RPMS
 
-    yumdownloader gcc
+    dnf download gcc
     pkg_name1=gcc
     mkdir ./tmp_dir
 

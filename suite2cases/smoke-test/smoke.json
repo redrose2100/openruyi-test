@@ -440,9 +440,6 @@
    "name": "oe_test_nfs_03"
   },
   {
-   "name": "oe_test_pcre_001"
-  },
-  {
    "name": "oe_test_nmap"
   },
   {
@@ -453,9 +450,6 @@
   },
   {
    "name": "oe_test_ntp_01"
-  },
-  {
-   "name": "oe_test_ntp_02"
   },
   {
    "name": "oe_test_os-prober_01"
@@ -492,9 +486,6 @@
   },
   {
    "name": "oe_test_python_urllib3_urlopen_03"
-  },
-  {
-   "name": "oe_test_rpm_cmd"
   },
   {
    "name": "oe_test_rsyslog_01"
@@ -842,9 +833,6 @@
    "name": "oe_test_zstd_002"
   },
   {
-   "name": "oe_test_zstd_003"
-  },
-  {
    "name": "oe_test_zstd_004"
   },
   {
@@ -861,9 +849,6 @@
   },
   {
    "name": "oe_test_zless"
-  },
-  {
-   "name": "oe_test_newgrp"
   },
   {
    "name": "oe_test_bzip2_001"

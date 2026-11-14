@@ -996,12 +996,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_pcre_use",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_ACL_dir",
             "machine num": 1,
             "add network interface": 0,

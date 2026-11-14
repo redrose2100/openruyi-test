@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "python-pip"
     pip3 install scapy -i https://mirrors.aliyun.com/pypi/simple
     LOG_INFO "End to prepare the test environment."
 }
@@ -52,6 +53,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environme."
     pip3 uninstall scapy -y
+    DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }
 

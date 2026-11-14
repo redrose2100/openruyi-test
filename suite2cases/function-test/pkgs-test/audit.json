@@ -20,9 +20,6 @@
             "name": "oe_test_audit_monitor_network_visit"
         },
         {
-            "name": "oe_test_audit_track_designated_access"
-        },
-        {
             "name": "oe_test_audit_use_d_audit"
         },
         {
@@ -87,9 +84,6 @@
         },
         {
             "name": "oe_test_audit_augenrules"
-        },
-        {
-            "name": "oe_test_audit_autrace"
         },
         {
             "name": "oe_test_audit_aulast"

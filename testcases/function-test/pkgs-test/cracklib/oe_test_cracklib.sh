@@ -94,7 +94,7 @@ function run_test() {
 
     ### test: packer
     LOG_INFO "Test: packer"
-    cracklib-format test-data | packer packers
+    cracklib-format test-data | cracklib-packer packers
     CHECK_RESULT $? 0 0 "packer failed..."
     test -f packers.hwm -a -f packers.pwd -a -f packers.pwi
     CHECK_RESULT $? 0 0 "packer error: data is not exist..."
@@ -136,7 +136,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    ecport LANG="${LANG_OLD}"
+    export LANG="${LANG_OLD}"
     rm -f "pw_dict.orig" "pw_dict.new" "test-data" "format-data" "unpacker-data" "format-dict"
     rm -f "output.hwm" "output.pwd" "output.pwi" "packer.hwm" "packers.pwd" "packers.pwi" "words.hwm" "words.pwd" "words.pwi"
     LOG_INFO "Finish restoring the test environment."

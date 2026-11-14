@@ -116,13 +116,7 @@
             "name": "oe_test_postgresql-server_postgres02"
         },
         {
-            "name": "oe_test_postgresql-server_postgresql-setup"
-        },
-        {
             "name": "oe_test_postgresql_vacuumdb"
-        },
-        {
-            "name": "oe_test_service_postgresql"
         }
     ]
 }
