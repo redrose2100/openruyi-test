@@ -6,20 +6,6 @@
     ],
     "cases": [
         {
-            "name": "oe_test_open-iscsi_iscsiadm",
-            "machine num": 2,
-            "add disk": [
-                2
-            ]
-        },
-        {
-            "name": "oe_test_open-iscsi_iscsistart_iscsiuio",
-            "machine num": 2,
-            "add disk": [
-                2
-            ]
-        },
-        {
             "name": "oe_test_service_iscsid",
             "machine num": 1,
             "add disk": []

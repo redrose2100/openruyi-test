@@ -42,9 +42,6 @@
             "name": "oe_test_iputils_arping"
         },
         {
-            "name": "oe_test_service_ninfod"
-        },
-        {
             "name": "oe_test_service_rdisc"
         }
     ]

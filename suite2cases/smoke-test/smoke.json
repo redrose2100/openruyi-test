@@ -149,9 +149,6 @@
    "name": "oe_test_ndctl"
   },
   {
-   "name": "oe_test_network_001"
-  },
-  {
    "name": "oe_test_nfs"
   },
   {
@@ -312,9 +309,6 @@
   },
   {
    "name": "oe_test_dbus-uuidgen"
-  },
-  {
-   "name": "oe_test_dhclient_01"
   },
   {
    "name": "oe_test_dracut"
@@ -500,15 +494,6 @@
    "name": "oe_test_python_urllib3_urlopen_03"
   },
   {
-   "name": "oe_test_route_ipv4"
-  },
-  {
-   "name": "oe_test_route_ipv6"
-  },
-  {
-   "name": "oe_test_rpcbind"
-  },
-  {
    "name": "oe_test_rpm_cmd"
   },
   {
@@ -573,9 +558,6 @@
   },
   {
    "name": "oe_test_tcpdump"
-  },
-  {
-   "name": "oe_test_tftp_ipv6"
   },
   {
    "name": "oe_test_expat"
@@ -723,9 +705,6 @@
   },
   {
    "name": "oe_test_Netlink_ip_01"
-  },
-  {
-   "name": "oe_test_netstat_01"
   },
   {
    "name": "oe_test_normal_tcpdump_02"

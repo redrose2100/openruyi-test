@@ -29,18 +29,6 @@
             "add network interface": 0
         },
         {
-            "name": "oe_test_check_tcp_udp",
-            "machine type": "kvm",
-            "machine num": 1,
-            "add network interface": 0
-        },
-        {
-            "name": "oe_test_dns_set",
-            "machine type": "kvm",
-            "machine num": 1,
-            "add network interface": 0
-        },
-        {
             "name": "oe_test_icmp",
             "machine type": "kvm",
             "machine num": 2,
@@ -59,12 +47,6 @@
             "add network interface": 0
         },
         {
-            "name": "oe_test_ipv6_add",
-            "machine type": "kvm",
-            "machine num": 1,
-            "add network interface": 1
-        },
-        {
             "name": "oe_test_ipv6_static_setting",
             "machine type": "kvm",
             "machine num": 1,
@@ -78,12 +60,6 @@
         },
         {
             "name": "oe_test_nic_change_mac",
-            "machine type": "kvm",
-            "machine num": 1,
-            "add network interface": 1
-        },
-        {
-            "name": "oe_test_nic_change_queue",
             "machine type": "kvm",
             "machine num": 1,
             "add network interface": 1

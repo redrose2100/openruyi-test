@@ -19,7 +19,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function iw_deploy_env() {
-    DNF_INSTALL "iw iproute"
+    DNF_INSTALL "iw iproute2"
     modprobe mac80211_hwsim radios=2
     SLEEP_WAIT 1
     HWSIM_DEV=""

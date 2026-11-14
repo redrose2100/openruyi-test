@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     grep "^example:" /etc/passwd && userdel -rf example
-    DNF_INSTALL net-tools
+    DNF_INSTALL inetutils
     # 选择业务网卡，TEST_NIC 会自动排除管理网卡 NODE1_NIC
     net_card=$(TEST_NIC 1 | awk '{print $1}')
     if [ -z "${net_card}" ]; then

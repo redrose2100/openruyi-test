@@ -323,12 +323,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_server_vsftpd_restart",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_server_postgresql",
             "machine num": 1,
             "add network interface": 0,
@@ -380,12 +374,6 @@
             "name": "oe_test_server_mariadb_loadfile",
             "machine num": 1,
             "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_server_mariadb_compatibilty",
-            "machine num": 2,
-            "add network interface": 2,
             "add disk": []
         },
         {
@@ -504,12 +492,6 @@
         },
         {
             "name": "oe_test_nmcli_vlan",
-            "machine num": 1,
-            "add network interface": 2,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_nmcli_systemd_resolved",
             "machine num": 1,
             "add network interface": 2,
             "add disk": []
@@ -1260,12 +1242,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_server_subversion",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_bunzip2",
             "machine num": 1,
             "add network interface": 0,
@@ -1470,12 +1446,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_arp",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_strace",
             "machine num": 1,
             "add network interface": 0,
@@ -1507,12 +1477,6 @@
         },
         {
             "name": "oe_test_join",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_genisoimage",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []

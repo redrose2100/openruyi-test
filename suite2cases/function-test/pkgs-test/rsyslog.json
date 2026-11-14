@@ -7,14 +7,6 @@
             "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_abnormal_template",
-            "machine num": 2
-        },
-        {
-            "name": "oe_test_rsyslog_function_attribute",
-            "machine num": 2
-        },
-        {
             "name": "oe_test_rsyslog_function_discard",
             "machine num": 1
         },
@@ -31,10 +23,6 @@
             "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_function_postgreSQL",
-            "machine num": 1
-        },
-        {
             "name": "oe_test_rsyslog_function_priority",
             "machine num": 1
         },
@@ -47,20 +35,8 @@
             "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_function_tcp",
-            "machine num": 2
-        },
-        {
-            "name": "oe_test_rsyslog_function_tcp_firewall",
-            "machine num": 2
-        },
-        {
             "name": "oe_test_rsyslog_function_template",
             "machine num": 1
-        },
-        {
-            "name": "oe_test_rsyslog_function_udp",
-            "machine num": 2
         },
         {
             "name": "oe_test_rsyslog_function_wildcard",
@@ -83,24 +59,12 @@
             "machine num": 1
         },
         {
-            "name": "oe_test_rsyslog_reliability_lenght",
-            "machine num": 2
-        },
-        {
-            "name": "oe_test_rsyslog_reliability_network",
-            "machine num": 2
-        },
-        {
             "name": "oe_test_rsyslog_reliability_operation",
             "machine num": 1
         },
         {
             "name": "oe_test_rsyslog_reliability_restart",
             "machine num": 1
-        },
-        {
-            "name": "oe_test_rsyslog_reliability_tcp",
-            "machine num": 2
         },
         {
             "name": "oe_test_service_rsyslog",

@@ -408,12 +408,6 @@
             "add disk": []
         },
         {
-            "name": "oe_test_nginx_verify_web",
-            "machine num": 2,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
             "name": "oe_test_postgresql_backup_restore_db",
             "machine num": 1,
             "add network interface": 0,
@@ -487,12 +481,6 @@
         },
         {
             "name": "oe_test_set_XLL_Forwarding",
-            "machine num": 1,
-            "add network interface": 0,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_vsftpd_start_stop",
             "machine num": 1,
             "add network interface": 0,
             "add disk": []

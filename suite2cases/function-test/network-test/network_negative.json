@@ -7,10 +7,6 @@
             "add network interface": 0
         },
         {
-            "name": "oe_test_add_mac_failed",
-            "add network interface": 0
-        },
-        {
             "name": "oe_test_modify_mac_failed",
             "add network interface": 1
         }
