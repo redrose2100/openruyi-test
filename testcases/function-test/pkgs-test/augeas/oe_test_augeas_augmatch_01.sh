@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "augeas augeas-libs"
+    DNF_INSTALL "augeas"
     echo -e "nameserver 8.8.8.8\nsearch example.com" > /tmp/test_resolv.conf
     echo -e "/home client1(rw)\n/var client2(ro)" > /tmp/test_exports
     echo -e "127.0.0.1 localhost" > /tmp/test_hosts

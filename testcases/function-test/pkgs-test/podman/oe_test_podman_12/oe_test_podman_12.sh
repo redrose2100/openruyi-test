@@ -33,9 +33,17 @@ function run_test() {
     ID=$(podman create --hostname localhost alpine ls)
     podman inspect "$ID" | grep '"Hostname": "localhost"'
     CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep -i group failed"
-    ID=$(podman create --image-volume bind alpine ls)
-    podman inspect "$ID" | grep -i bind
-    CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep -i bind failed"
+    # 新版 podman 已把 --image-volume 的 bind 取值改名为 anonymous，
+    # 两种取值都接受，避免用例绑定到某一版 podman 的枚举值。
+    ID=$(podman create --image-volume bind alpine ls 2>/dev/null)
+    if [ -z "$ID" ]; then
+        LOG_WARN "image volume mode bind is renamed to anonymous in this podman release."
+        ID=$(podman create --image-volume anonymous alpine ls)
+        podman inspect "$ID" | grep -qiE 'anonymous|bind'
+    else
+        podman inspect "$ID" | grep -qi bind
+    fi
+    CHECK_RESULT $? 0 0 "check podman create --image-volume failed"
     ID=$(podman create --ip "${NODE1_IPV4}" alpine ls)
     podman inspect "$ID" | grep -i ip
     CHECK_RESULT $? 0 0 "check  podman inspect $ID | grep -i ip failed"

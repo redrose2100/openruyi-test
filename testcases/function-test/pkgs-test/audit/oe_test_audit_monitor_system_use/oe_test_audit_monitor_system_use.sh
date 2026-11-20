@@ -29,7 +29,7 @@ function pre_test(){
 function run_test()
 {
     LOG_INFO "Start to run test."
-    service auditd restart
+    systemctl restart auditd
     auditctl -D
     CHECK_RESULT $? 0 0 "clean failed"
     auditctl -a always,exit -S all -F uid="${uid}" -k syscall

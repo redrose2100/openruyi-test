@@ -5,6 +5,8 @@
 # 测试框架固定行
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
+source "${OET_PATH}/testcases/function-test/pkgs-test/kwin/common/kwin_common.sh"
+
 # 测试前函数
 function pre_test() {
     LOG_INFO "Start environmental preparation."
@@ -21,8 +23,10 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
     # 测试 --exit-with-session 参数
-    kwin_wayland --exit-with-session ./test_app.sh &
-    sleep 10
+    # 注意：不能写成 `kwin_wayland ... &` 再加 sleep——那样 $? 取到的是 sleep 的
+    # 返回码，断言恒为真。套内公共库已把 kwin_wayland 包装成限时启动并自行回收，
+    # 这里直接前台调用即可拿到真实的参数解析结果。
+    kwin_wayland --exit-with-session ./test_app.sh
     CHECK_RESULT $? 0 0 "kwin_wayland --exit-with-session failed"
     LOG_INFO "End of the test."
 }
@@ -30,9 +34,11 @@ function run_test() {
 # 测试后函数
 function post_test() {
     LOG_INFO "start environment cleanup."
+    # 先清理残留合成器与 wayland socket 锁文件，避免污染后续用例
+    kwin_wayland_cleanup
     # 测试后环境恢复：
     # 卸载安装的软件包
-    DNF_REMOVE "kwin"
+    DNF_REMOVE
     # 清理测试中间产物文件
     rm -f ./test_app.sh
     LOG_INFO "End of environment cleanup!"

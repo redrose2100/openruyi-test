@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "tcpdump gcc"
+    DNF_INSTALL "tcpdump gcc procps"
     make
     modprobe tun
     head_ip=$(echo "${NODE1_IPV4}" | cut -d '.' -f 1)

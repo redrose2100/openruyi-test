@@ -18,10 +18,16 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "rsyslog inetutils"
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     cat >/etc/rsyslog.d/test.conf <<EOF
-    if \$syslogfacility-text == 'local5' and \$msg startswith 'NAME' and (\$msg contains 'error1' or \$msg contains 'error5') then /var/log/test
+    if \$syslogfacility-text == 'local5' and \$msg startswith ' NAME' and (\$msg contains 'error1' or \$msg contains 'error5') then /var/log/test
 EOF
     systemctl restart rsyslog
     CHECK_RESULT $?

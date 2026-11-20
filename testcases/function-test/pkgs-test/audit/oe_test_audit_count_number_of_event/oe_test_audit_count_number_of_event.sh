@@ -29,7 +29,7 @@ function pre_test() {
 function run_test()
 {
     LOG_INFO "Start to run test."
-    service auditd restart
+    systemctl restart auditd
     CHECK_RESULT $? 0 0 "start failed"
     aureport -e -i --summary | grep "Event Summary Report"
     CHECK_RESULT $? 0 0 "grep failed"

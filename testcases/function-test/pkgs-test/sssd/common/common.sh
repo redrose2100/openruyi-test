@@ -24,7 +24,7 @@ function openldap_server_pre() {
     cat > server.sh << !
 systemctl stop firewalld
 systemctl disable firewalld
-dnf install -y openldap-servers openldap-clients openssl expect
+dnf install -y openldap openldap-client openssl expect
 hostnamectl set-hostname ldap.huawei.com
 cp /etc/hosts /etc/hosts_bak
 echo "${NODE2_IPV4} ldap.huawei.com" >> /etc/hosts
@@ -63,7 +63,7 @@ EOF
 
 openssl x509 -req -in ldapserver.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out ldapserver.csr -days 1460 -sha256
 chown -R ldap:ldap /etc/openldap/certs
-cp /usr/share/openldap-servers/slapd.ldif /etc/openldap/
+cp /usr/share/openldap/slapd.ldif /etc/openldap/
 password=\$(slappasswd -s "${NODE2_PASSWORD}")
 sed -i '/olcRootDN/a\olcRootPW: '"\${password}" /etc/openldap/slapd.ldif
 sed -i '/dn: cn=config/a\olcTLSCACertificateFile: /etc/openldap/certs/rootCA.pem\nolcTLSCertificateFile: /etc/openldap/certs/ldapserver.csr\nolcTLSCertificateKeyFile: /etc/openldap/certs/ldapserver.key' /etc/openldap/slapd.ldif
@@ -172,11 +172,11 @@ function openldap_server_post() {
     hostnamectl set-hostname '${old_hostname}'
     mv -f /etc/hosts_bak /etc/hosts
     rm -rf /root/server.sh
-    dnf remove -y openldap-servers openldap-clients openssl expect"
+    dnf remove -y openldap openldap-client openssl expect"
 }
 
 function openldap_client_pre() {
-    DNF_INSTALL "openldap-clients sssd"
+    DNF_INSTALL "openldap-client sssd"
     old_hostname=$(hostname)
     hostnamectl set-hostname openldap.client
     cp /etc/hosts /etc/hosts_bak

@@ -21,8 +21,10 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL bind-chroot
-    service=named-chroot.service
+    # openRuyi 无 bind-chroot 子包，也不存在 named-chroot.service；
+    # 用例改测 bind 包实际提供的 named.service。
+    DNF_INSTALL bind
+    service=named.service
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
 }
@@ -33,7 +35,7 @@ function run_test() {
     test_enabled ${service}
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING" | grep -vE "Open /etc/dns_port.conf fail, return.|Unable to fetch DNSKEY set '.': failure|resolver priming query complete: failure|DNS format error from"
     CHECK_RESULT $? 0 1 "There is an error message for the log of ${service}"
-    systemctl start named-chroot.service
+    systemctl start named.service
     sed -i 's\ExecStart=/usr/sbin/named\ExecStart=/usr/sbin/named -4\g' /usr/lib/systemd/system/"${service}"
     systemctl daemon-reload
     systemctl reload "${service}"
@@ -45,10 +47,10 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    sed -i 's\ExecStart=/usr/sbin/named -4\ExecStart=/usr/sbin/named\g' /usr/lib/systemd/system/named-chroot.service
+    sed -i 's\ExecStart=/usr/sbin/named -4\ExecStart=/usr/sbin/named\g' /usr/lib/systemd/system/named.service
     systemctl daemon-reload
-    systemctl reload named-chroot.service
-    systemctl stop named-chroot.service
+    systemctl reload named.service
+    systemctl stop named.service
     DNF_REMOVE "$@"
     LOG_INFO "Finish environment cleanup!"
 }

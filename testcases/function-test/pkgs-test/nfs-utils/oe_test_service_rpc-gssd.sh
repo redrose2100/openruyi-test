@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nfs-utils
+    DNF_INSTALL "nfs-utils nfs-client"
     touch /etc/krb5.keytab    
     LOG_INFO "End of environmental preparation!"
 }

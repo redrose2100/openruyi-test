@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     USER_NAME='test_user'
     useradd $USER_NAME
-    DNF_INSTALL "cronie"
+    DNF_INSTALL "cronie cronie-anacron"
     echo "echo \"Hello World: \$(date)\" >> $(pwd)/rst.txt" > ./test.sh
     chmod 777 ./test.sh
     echo "echo \"\$(whoami): \$(date)\" >> ~/rst.txt" > /home/"$USER_NAME"/test.sh

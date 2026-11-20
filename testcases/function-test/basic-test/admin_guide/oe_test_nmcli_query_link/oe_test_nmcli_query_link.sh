@@ -47,6 +47,9 @@ function config_params() {
 
 function run_test() {
     LOG_INFO "Start executing testcase!"
+    # 只新增连接配置，不再对已被 NetworkManager 托管的网卡做 up 激活：
+    # 在同一网卡上激活第二个 Ethernet 配置会抢走已有连接并等待 DHCP，
+    # 无 DHCP 服务的环境下必然失败，且可能中断现有网络。
     nmcli con add type ethernet ifname "${test_eth}" | grep successfully
     CHECK_RESULT $?
     
@@ -58,7 +61,10 @@ function run_test() {
     CHECK_RESULT $?
     nmcli device status | grep "connected"
     CHECK_RESULT $?
-    nmcli connection up id ethernet-"${test_eth}"
+    # 校验新建连接的关键属性可用，替代会依赖 DHCP 的 up 操作
+    nmcli connection show "ethernet-${test_eth}" | grep "connection.id"
+    CHECK_RESULT $?
+    nmcli -g connection.interface-name connection show "ethernet-${test_eth}" | grep "${test_eth}"
     CHECK_RESULT $?
     if [ "$interface_num" -ne 1 ]; then
         nmcli device disconnect "${test_eth}"
@@ -69,7 +75,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    nmcli con delete "$(nmcli con show | grep ethernet- | awk -F " " '{print$1}')"
+    nmcli con delete "$(nmcli con show | grep ethernet- | awk -F " " '{print$1}')" >/dev/null 2>&1
+    true
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup."
 }

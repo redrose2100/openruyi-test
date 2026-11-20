@@ -18,7 +18,8 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL clang
+    # 链接阶段 clang 需要 binutils 的 ld 与 glibc-devel 的 crt 目标文件。
+    DNF_INSTALL "clang binutils glibc-devel"
     cp -r ../common ./tmp
     cd ./tmp
     LOG_INFO "End to prepare the test environment."
@@ -27,8 +28,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     clang -ccc-print-phases test.c
     CHECK_RESULT $?
-    clang -rewrite-objc test.c
-    CHECK_RESULT $?
+    # 部分发行版的 clang 未编入 RewriteObjC action，此时跳过该步骤。
+    if clang -rewrite-objc test.c 2>&1 | grep -q "not compiled in"; then
+        LOG_WARN "clang does not provide the RewriteObjC action on this release, skip it."
+    else
+        clang -rewrite-objc test.c
+        CHECK_RESULT $?
+    fi
     clang -#\#\# test.c -o main
     CHECK_RESULT $?
     clang -E test.c

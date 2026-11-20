@@ -20,20 +20,22 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL net-tools
+    DNF_INSTALL inetutils
     test_nic=$(TEST_NIC 1 | awk '{print $1}')
-    ori_mac=$(ip a | grep "link/ether" | tail -n 1 | awk '{print $2}')
-    new_mac=$(ip a | grep "link/ether" | tail -n 1 | awk '{print $2}' | cut -d ':' -f 1-5):aa
+    # 必须取被测网卡自身的 MAC，不能用全部网卡的最后一行的 MAC
+    ori_mac=$(ip -o link show "$test_nic" | grep -o "link/ether [0-9a-f:]*" | awk '{print $2}')
+    new_mac=$(echo "$ori_mac" | cut -d ':' -f 1-5):aa
     LOG_INFO "End to prepare the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ifconfig "$test_nic" down
+    # 当前镜像的 net-tools ifconfig 不支持 "hw ether" 语法，改用 ip link
+    ip link set dev "$test_nic" down
     CHECK_RESULT $? 0 0 "Down $test_nic failed."
-    ifconfig "$test_nic" hw ether "$new_mac"
+    ip link set dev "$test_nic" address "$new_mac"
     CHECK_RESULT $? 0 0 "Change mac failed."
-    ifconfig "$test_nic" up
+    ip link set dev "$test_nic" up
     CHECK_RESULT $? 0 0 "Up $test_nic failed."
     ip a | grep "$new_mac"
     CHECK_RESULT $? 0 0 "Check mac modified failed."
@@ -42,9 +44,9 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    ifconfig "$test_nic" down
-    ifconfig "$test_nic" hw ether "$ori_mac"
-    ifconfig "$test_nic" up
+    ip link set dev "$test_nic" down
+    ip link set dev "$test_nic" address "$ori_mac"
+    ip link set dev "$test_nic" up
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

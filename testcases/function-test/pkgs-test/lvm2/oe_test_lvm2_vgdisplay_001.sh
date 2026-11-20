@@ -40,15 +40,16 @@ function run_test() {
     CHECK_RESULT $?
     vgdisplay -s | grep "used"
     CHECK_RESULT $?
-    vgdisplay --configreport log | grep "VG Name" | grep "test"
-    CHECK_RESULT $?
+    # --configreport/--logonly/--nosuffix 是 lvm 报表命令(pvs/vgs/lvs)的选项，
+    # vgdisplay 这类 display 命令不接受（报 "Command does not accept option"）。
+    # 用例意图是覆盖这些选项，改为在报表命令 vgs 上验证。
+    vgs --configreport log --logonly >/dev/null 2>&1
+    CHECK_RESULT $? 0 0 "vgs should accept --configreport log --logonly"
     vgdisplay --foreign | grep "VG Name" | grep "test"
     CHECK_RESULT $?
     vgdisplay --ignorelockingfailure | grep "VG Name" | grep "test"
     CHECK_RESULT $?
-    vgdisplay --logonly | grep "VG Name" | grep "test"
-    CHECK_RESULT $?
-    vgdisplay --nosuffix | grep "VG Name" | grep "test"
+    vgs --nosuffix | grep "test"
     CHECK_RESULT $?
     vgdisplay --reportformat json | grep "VG Name" | grep "test"
     CHECK_RESULT $?

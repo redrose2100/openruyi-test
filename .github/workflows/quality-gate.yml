@@ -167,6 +167,84 @@ jobs:
         if: steps.changed.outputs.skip == 'true'
         run: echo "no suite2cases json changed, skip"
 
+  script-line-endings:
+    name: script line endings (CRCRLF guard)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # 需要完整历史才能按范围做 diff
+          fetch-depth: 0
+
+      - name: Resolve changed scripts
+        id: changed
+        run: |
+          set -eu
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+            RANGE="${BASE}...${HEAD}"
+          else
+            BEFORE="${{ github.event.before }}"
+            AFTER="${{ github.event.after }}"
+            ZERO="0000000000000000000000000000000000000000"
+            if [ "${BEFORE}" = "${ZERO}" ]; then
+              # 新分支首次推送没有 before，降级为只看最新一个提交
+              RANGE="HEAD^!"
+            elif ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+              # force push / amend 后 before 指向已消失的提交（bad object）
+              RANGE="HEAD^!"
+            else
+              RANGE="${BEFORE} ${AFTER}"
+            fi
+          fi
+
+          echo "diff range: ${RANGE}"
+
+          # --diff-filter=ACMR 排除被删除的脚本（删掉的文件无需校验）
+          set +e
+          git diff --name-only --diff-filter=ACMR ${RANGE} > /tmp/all_changed.txt
+          DIFF_RC=$?
+          set -e
+          if [ ${DIFF_RC} -ne 0 ]; then
+            echo "::error::git diff failed for range '${RANGE}' (exit ${DIFF_RC})"
+            exit ${DIFF_RC}
+          fi
+
+          mapfile -t ALL_CHANGED < /tmp/all_changed.txt
+
+          SCRIPTS=()
+          for f in "${ALL_CHANGED[@]}"; do
+            case "$f" in
+              *.sh|*.bash|*.py) SCRIPTS+=("$f") ;;
+            esac
+          done
+
+          echo "changed script count: ${#SCRIPTS[@]}"
+          for f in "${SCRIPTS[@]+"${SCRIPTS[@]}"}"; do
+            echo "  $f"
+          done
+
+          if [ ${#SCRIPTS[@]} -eq 0 ]; then
+            echo "skip=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "skip=false" >> "${GITHUB_OUTPUT}"
+            printf '%s\n' "${SCRIPTS[@]}" > /tmp/changed_scripts.txt
+          fi
+
+      - name: Check script line endings
+        if: steps.changed.outputs.skip != 'true'
+        run: |
+          set -eu
+          mapfile -t SCRIPTS < /tmp/changed_scripts.txt
+          python3 .github/scripts/check_suite_cases.py --files "${SCRIPTS[@]}"
+
+      - name: Skip notice
+        if: steps.changed.outputs.skip == 'true'
+        run: echo "no script file changed, skip"
+
   suite-name-uniqueness:
     name: suite name uniqueness
     runs-on: ubuntu-latest

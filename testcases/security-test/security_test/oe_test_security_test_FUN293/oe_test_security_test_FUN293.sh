@@ -32,8 +32,12 @@ function run_test()
     
     echo "huawei666" | passwd --stdin test
     CHECK_RESULT $? 0 0 "set success"
-    grep -e 'test:$6' /etc/shadow
-    CHECK_RESULT $? 0 0 "grep failed"
+    # 不能硬编码 sha512 的 $6$ 前缀：openRuyi 默认 ENCRYPT_METHOD 为 yescrypt，
+    # /etc/shadow 里是 $y$ 开头，硬编码 $6$ 会必然失败。
+    # 这里只校验密码字段已写入且不是锁定标记。
+    shadow_pwd=$(getent shadow test | awk -F: '{print $2}')
+    CHECK_RESULT "$(echo "$shadow_pwd" | grep -cE '^\$[a-zA-Z0-9]+\$')" 1 0 "grep failed"
+    echo "$shadow_pwd" | grep -qE '^(!|\*|!!)$' && CHECK_RESULT 1 0 "password is locked"
     
     LOG_INFO "End to run test."
 }

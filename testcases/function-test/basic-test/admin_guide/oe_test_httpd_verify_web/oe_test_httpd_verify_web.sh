@@ -19,7 +19,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "httpd net-tools firewalld"
+    DNF_INSTALL "httpd inetutils firewalld"
     systemctl start httpd
     systemctl start firewalld
     LOG_INFO "Environmental preparation is over."

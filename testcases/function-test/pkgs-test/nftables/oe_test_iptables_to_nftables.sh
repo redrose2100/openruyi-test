@@ -29,6 +29,8 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     iptables-translate -A INPUT -j CHECKSUM --checksum-fill | grep 'nft # -A INPUT -j CHECKSUM --checksum-fill'
     CHECK_RESULT $? 0 0 "use iptables-translate failed" 
+    # openRuyi 不预置 /etc/sysconfig/iptables，先用 iptables-save 生成再翻译
+    test -f /etc/sysconfig/iptables || iptables-save > /etc/sysconfig/iptables
     iptables-restore-translate -f /etc/sysconfig/iptables | grep 'Translated by iptables-restore-translate'
     CHECK_RESULT $? 0 0 "exec 'iptables-restore-translate -f /etc/sysconfig/iptables' failed"
     iptables-save > /tmp/iptables.dump

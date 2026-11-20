@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL nfs-utils
+    DNF_INSTALL "nfs-utils nfs-kernel-server"
     cp -f /etc/exports /etc/exports.bak
     echo "/tmp/test ${NODE1_IPV4}(fsid=0,rw,sync)" >/etc/exports
     mkdir /tmp/test

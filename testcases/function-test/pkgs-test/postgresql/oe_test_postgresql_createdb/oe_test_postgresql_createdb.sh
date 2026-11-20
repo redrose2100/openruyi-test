@@ -22,7 +22,7 @@ source ../common/lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     postgresql_install
-    DNF_INSTALL "glibc-all-langpacks"
+    DNF_INSTALL "glibc-locale"
     mkdir -p /var/lib/pgsql/dbdir
     chown -R postgres /var/lib/pgsql/dbdir
     su - postgres -c "createuser testuser"
@@ -58,7 +58,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop postgresql
-    DNF_REMOVE 1 "postgresql postgresql-server postgresql-private-devel postgresql-contrib glibc-all-langpacks"
+    DNF_REMOVE 1 "postgresql postgresql-server postgresql-contrib glibc-locale"
     rm -rf /var/lib/pgsql/*
     LOG_INFO "End to restore the test environment."
 }

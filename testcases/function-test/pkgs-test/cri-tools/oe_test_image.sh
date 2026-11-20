@@ -4,12 +4,16 @@
 
 # 测试框架固定行
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "$(dirname "$0")/cri_lib.sh"
 
 # 测试前函数
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     # 安装待测试的软件包
     DNF_INSTALL "cri-tools"
+
+    # 引导 CRI 服务（containerd）：cri-tools 只提供客户端，服务端须自行拉起
+    cri_ensure_runtime || cri_abort "CRI runtime (containerd) is not available"
     # 准备测试数据等,如果要创建文件请使用"./你要创建的文件"直接把文件创建到当前目录下
     LOG_INFO "End of environmental preparation!"
 }

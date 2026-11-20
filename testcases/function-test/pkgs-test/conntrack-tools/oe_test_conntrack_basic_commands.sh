@@ -36,7 +36,9 @@ function run_test() {
     LIST_OUTPUT=$(conntrack -L 2>&1)
     CHECK_RESULT $? 0 0 "Failed to list conntrack table"
     # Verify output format: should contain protocol names or be empty (no connections)
-    if [ -n "$LIST_OUTPUT" ]; then
+    # 连接表为空时 conntrack 只打印 "0 flow entries have been shown" 提示行，
+    # 该行非空但没有表项，需要单独排除
+    if [ -n "$LIST_OUTPUT" ] && ! echo "$LIST_OUTPUT" | grep -q "0 flow entries have been shown"; then
         echo "$LIST_OUTPUT" | grep -E "^tcp|^udp|^icmp|^UNREPLIED|^ESTABLISHED" > /dev/null
         CHECK_RESULT $? 0 0 "Conntrack list output format incorrect"
     else
@@ -66,8 +68,12 @@ function run_test() {
     LOG_INFO "Test 5: List with XML output format"
     XML_OUTPUT=$(conntrack -L -o xml | head -10)
     CHECK_RESULT $? 0 0 "Failed to list with XML output format"
-    echo "$XML_OUTPUT" | grep -E "<conntrack|<flow|<\?xml" > /dev/null
-    CHECK_RESULT $? 0 0 "XML output format incorrect"
+    if [ -n "$XML_OUTPUT" ]; then
+        echo "$XML_OUTPUT" | grep -E "<conntrack|<flow|<\?xml" > /dev/null
+        CHECK_RESULT $? 0 0 "XML output format incorrect"
+    else
+        LOG_INFO "No conntrack flows present, empty XML output is acceptable"
+    fi
     
     LOG_INFO "Finish test!"
 }

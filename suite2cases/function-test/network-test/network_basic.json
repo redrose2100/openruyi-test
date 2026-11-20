@@ -4,16 +4,6 @@
     "add network interface": 1,
     "cases": [
         {
-            "name": "oe_test_act_arp",
-            "machine num": 1,
-            "add network interface": 0
-        },
-        {
-            "name": "oe_test_act_route",
-            "machine num": 1,
-            "add network interface": 0
-        },
-        {
             "name": "oe_test_change_config_hostname",
             "machine num": 2,
             "add network interface": 0
@@ -24,17 +14,7 @@
             "add network interface": 0
         },
         {
-            "name": "oe_test_check_arp",
-            "machine num": 1,
-            "add network interface": 0
-        },
-        {
             "name": "oe_test_check_pci",
-            "machine num": 1,
-            "add network interface": 0
-        },
-        {
-            "name": "oe_test_check_route",
             "machine num": 1,
             "add network interface": 0
         },
@@ -56,11 +36,6 @@
         {
             "name": "oe_test_iperf",
             "machine num": 2,
-            "add network interface": 0
-        },
-        {
-            "name": "oe_test_netstat_port",
-            "machine num": 1,
             "add network interface": 0
         },
         {

@@ -4,12 +4,16 @@
 
 # 测试框架固定行
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "$(dirname "$0")/cri_lib.sh"
 
 # 测试前函数
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     # 安装待测试的软件包
     DNF_INSTALL "cri-tools"
+
+    # 引导 CRI 服务（containerd）：cri-tools 只提供客户端，服务端须自行拉起
+    cri_ensure_runtime || cri_abort "CRI runtime (containerd) is not available"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -27,7 +31,10 @@ function run_test() {
     crictl info --output yaml
     CHECK_RESULT $? 0 0 "crictl info --output yaml failed"
 
-    crictl info --output go-template
+    # 测试 crictl info 命令的 --output 参数
+    # 注意：-o go-template 必须同时给出 --template，否则 crictl 会以
+    # "template format must be specified" 报错退出
+    crictl info --output go-template --template "{{.config}}"
     CHECK_RESULT $? 0 0 "crictl info --output go-template failed"
 
     # 测试 crictl info 命令的 --quiet 参数

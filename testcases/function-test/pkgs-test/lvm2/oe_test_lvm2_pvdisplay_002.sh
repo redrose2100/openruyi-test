@@ -30,8 +30,11 @@ function run_test() {
     CHECK_RESULT $?
     pvs | grep "/dev/${local_disk}"
     CHECK_RESULT $?
-    pvdisplay --logonly | grep "/dev/${local_disk}"
-    CHECK_RESULT $?
+    # --configreport/--logonly/--nosuffix 是 lvm 报表命令(pvs/vgs/lvs)的选项，
+    # pvdisplay 这类 display 命令不接受（报 "Command does not accept option"）。
+    # 用例意图是覆盖这些选项，改为在报表命令 pvs 上验证。
+    pvs --configreport log --logonly >/dev/null 2>&1
+    CHECK_RESULT $? 0 0 "pvs should accept --configreport log --logonly"
     pvdisplay --reportformat basic | grep "PV Name" | grep "/dev/${local_disk}"
     CHECK_RESULT $?
     pvdisplay --reportformat json | grep "PV Name" | grep "/dev/${local_disk}"
@@ -48,7 +51,7 @@ function run_test() {
     CHECK_RESULT $?
     pvdisplay --readonly 2>&1 | grep "\"/dev/${local_disk}\" is a new physical volume"
     CHECK_RESULT $?
-    pvdisplay --nosuffix 2>&1 | grep "\"/dev/${local_disk}\" is a new physical volume"
+    pvs --nosuffix | grep "/dev/${local_disk}"
     CHECK_RESULT $?
     pvdisplay --longhelp | grep "pvdisplay"
     CHECK_RESULT $?

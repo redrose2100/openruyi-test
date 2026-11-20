@@ -21,22 +21,23 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nfs-utils
-    touch /etc/krb5.keytab  
+    # openRuyi 已无 nfs-secure.service，其功能由 rpc-gssd.service 承担。
+    DNF_INSTALL "nfs-utils nfs-kernel-server nfs-client"
+    touch /etc/krb5.keytab
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution nfs-secure.service
-    test_reload nfs-secure.service
+    test_execution rpc-gssd.service
+    test_reload rpc-gssd.service
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    systemctl stop nfs-secure.service
-    rm -rf /etc/krb5.keytab   
+    systemctl stop rpc-gssd.service
+    rm -rf /etc/krb5.keytab
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }

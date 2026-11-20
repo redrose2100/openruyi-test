@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "python-cryptography-help python-cryptography"
+  DNF_INSTALL "python-cryptography"
   LOG_INFO "End of environmental preparation!"
 }
 

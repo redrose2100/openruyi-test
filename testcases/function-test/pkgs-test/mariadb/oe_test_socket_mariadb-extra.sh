@@ -21,8 +21,8 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL mariadb-server
-    if rpm -ql mariadb-server | grep -q "mariadb-extra.socket"; then
+    DNF_INSTALL mariadb
+    if rpm -ql mariadb | grep -q "mariadb-extra.socket"; then
         LOG_INFO "mariadb-extra.socket exists"
     else
         LOG_INFO "mariadb-extra.socket is not exist"

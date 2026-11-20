@@ -22,6 +22,10 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
 
+    # 运行器默认未预装 openssh-clients，spawn ssh 会直接报
+    # couldn't execute "ssh": no such file or directory
+    DNF_INSTALL "openssh-clients"
+
     useradd test
     echo "huawei666" | passwd --stdin test
     
@@ -52,6 +56,7 @@ function post_test()
     userdel -rf test
     rm -rf testlog
     rm -rf /run/faillock/test
+    DNF_REMOVE "$@"
 
     LOG_INFO "End to restore the test environment."
 }

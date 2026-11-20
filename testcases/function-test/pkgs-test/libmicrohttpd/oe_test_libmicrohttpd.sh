@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
   LOG_INFO "Start environmental preparation."
-  DNF_INSTALL "libmicrohttpd libmicrohttpd-devel libmicrohttpd-help gcc"
+  DNF_INSTALL "libmicrohttpd libmicrohttpd-devel gcc"
   mkdir /tmp/test
   cat > /tmp/test/test.c <<EOF
 #include <microhttpd.h>

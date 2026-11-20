@@ -21,6 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "systemd"
     systemctl stop systemd-journald-audit.socket
     systemctl stop systemd-journald.socket
     systemctl stop systemd-journald-dev-log.socket

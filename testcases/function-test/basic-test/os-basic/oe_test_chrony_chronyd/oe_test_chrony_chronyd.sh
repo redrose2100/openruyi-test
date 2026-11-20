@@ -25,6 +25,9 @@ IS_ACTIVE=0
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "chrony"
+    # openRuyi 的 chrony 包用 %ghost 声明 /var/lib/chrony，若 systemd-tmpfiles
+    # 未自动创建会导致 chronyd 启动失败（status=226/NAMESPACE），此处兜底创建。
+    mkdir -p /var/lib/chrony /var/log/chrony
     LOG_INFO "End to prepare the test environment."
     systemctl is-enabled chronyd && IS_ENABLE=1
     systemctl is-active chronyd && IS_ACTIVE=1
@@ -47,7 +50,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "chronyc tracking failed"
     chronyc sourcestats | grep -i "Name/IP address"
     CHECK_RESULT $? 0 0 "chronyc sourcestats failed"
-    echo "sources" | chronyc | grep -i "MS Name/IP address"
+    # 管道方式喂给 chronyc 在交互模式下不可靠，改用 -c 参数一次性查询。
+    chronyc -c sources | grep -i "MS Name/IP address"
     CHECK_RESULT $? 0 0 "read from pipe failed"
 
     chronyc invalid_command >/dev/null 2>&1

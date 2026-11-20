@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL "clamav clamav-milter"
+    DNF_INSTALL "clamav"
     mv /etc/mail/clamav-milter.conf /etc/mail/clamav-milter.conf.bak
     echo "  MilterSocket /run/clamav-milter/clamav-milter.socket
             User clamilt

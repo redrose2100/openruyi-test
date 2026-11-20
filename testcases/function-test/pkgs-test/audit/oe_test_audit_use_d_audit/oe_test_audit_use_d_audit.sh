@@ -28,7 +28,7 @@ function pre_test() {
 function run_test()
 {
     LOG_INFO "Start to run test."
-    service auditd restart
+    systemctl restart auditd
     auditctl -D
     CHECK_RESULT $? 0 0 "delete failed"
     auditctl -a always,exit -F arch=b64 -S settimeofday -k time_change

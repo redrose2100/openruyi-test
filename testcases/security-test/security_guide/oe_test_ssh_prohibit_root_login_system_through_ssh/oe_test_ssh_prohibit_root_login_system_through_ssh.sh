@@ -20,30 +20,36 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    DNF_INSTALL openssh-clients
+    LOG_INFO "End of environmental preparation!"
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase."
-    expect -c "
+    expect <<EOF
         set timeout 30
         log_file testlog1
-        spawn ssh -o StrictHostKeyChecking=no root@$NODE2_IPV4
+        spawn ssh -o StrictHostKeyChecking=no root@${NODE2_IPV4}
         expect {
-            \"*assword*\" {
-                send \"$NODE2_PASSWORD\\r\"
+            "*yes/no*" {
+                send "yes\\r"
+                exp_continue
             }
-            \"*(yes/no)*\" {
-              send \"yes\\r\"
-              exp_continue
+            "*assword*" {
+                send "${NODE2_PASSWORD}\\r"
+                exp_continue
             }
+            eof
         }
-        expect {
-            \"*root*\" {
-                send \"exit\\r\"
-                }
-        }     
-    "
-    grep "IP address" testlog1
-    CHECK_RESULT $? 0 0 "Login failed."
-    
+EOF
+    # Root must not be allowed to log in remotely: sshd answers with
+    # "Permission denied" and never hands out a root shell.
+    grep -E "Permission denied|Login incorrect|Too many authentication failures" testlog1
+    CHECK_RESULT $? 0 0 "root login through ssh was not denied"
+    grep -E "^root@.*[#$] $" testlog1
+    CHECK_RESULT $? 0 1 "root logged in through ssh"
     LOG_INFO "Finish testcase execution."
 }
 

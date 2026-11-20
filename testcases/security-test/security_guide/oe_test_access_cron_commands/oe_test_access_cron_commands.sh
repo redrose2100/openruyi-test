@@ -21,6 +21,9 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "cronie"
+    cp -f /etc/cron.allow /etc/cron.allow-bak 2>/dev/null
+    cp -f /etc/cron.deny /etc/cron.deny-bak 2>/dev/null
     grep "^testuser1:" /etc/passwd && userdel -rf testuser1
     grep "^testuser2:" /etc/passwd && userdel -rf testuser2
     LOG_INFO "End of environmental preparation!"
@@ -39,22 +42,26 @@ function run_test() {
     CHECK_RESULT $? 0 0 "add testuser1 to /etc/cron.allow failed"
     su - testuser1 -c "id 2>&1" | grep "testuser1"
     CHECK_RESULT $? 0 0 "su testuser1 failed"
-    su - testuser1 -c "crontab -l 2>&1" | grep "no crontab for testuser1"
-    CHECK_RESULT $? 0 0 "testuser1 not allowed to use crontab"
+    su - testuser1 -c "crontab -l 2>&1" | tee testlog1 | grep -qi "not allowed"
+    CHECK_RESULT $? 0 1 "testuser1 not allowed to use crontab"
     su - testuser2 -c "id 2>&1" | grep "testuser2"
     CHECK_RESULT $? 0 0 "su testuser2 failed"
-    su - testuser2 -c "crontab -l 2>&1" | grep "You (testuser2) are not allowed to use this program (crontab)"
+    su - testuser2 -c "crontab -l 2>&1" | tee testlog2 | grep -qi "not allowed"
     CHECK_RESULT $? 0 0 "testuser2 allow to use crontab"
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "Start cleanning environment."
-    mv /etc/cron.allow-bak /etc/cron.allow -f
-    test -f /etc/cron.deny-bak && mv /etc/cron.deny-bak /etc/cron.deny -f
+    if [ -f /etc/cron.allow-bak ]; then
+        mv -f /etc/cron.allow-bak /etc/cron.allow
+    else
+        rm -f /etc/cron.allow
+    fi
+    test -f /etc/cron.deny-bak && mv -f /etc/cron.deny-bak /etc/cron.deny
     userdel -rf testuser1
     userdel -rf testuser2
-    rm -rf /run/faillock/testuser1
+    rm -rf /run/faillock/testuser1 testlog1 testlog2
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -21,13 +21,17 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "firewalld"
     sudo systemctl start firewalld
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    for line in $(sudo firewall-cmd --get-icmptypes); do
+    icmp_types=$(sudo firewall-cmd --get-icmptypes)
+    CHECK_RESULT $? 0 0 "firewall-cmd --get-icmptypes failed"
+    [ -n "$icmp_types" ] || CHECK_RESULT 1 0 0 "get icmptypes returned empty"
+    for line in $icmp_types; do
         sudo firewall-cmd --permanent --set-target=DROP | grep success
         CHECK_RESULT $?
         sudo firewall-cmd --add-icmp-block-inversion | grep success

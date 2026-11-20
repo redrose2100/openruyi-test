@@ -22,7 +22,7 @@ source "${OET_PATH}"/testcases/function-test/pkgs-test/common/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     ARCH=$(uname -m)
-    DNF_INSTALL "lxcfs lxcfs-tools runc"
+    DNF_INSTALL "lxcfs runc"
     if [[ "$ARCH" == "riscv64" || "$ARCH" == "riscv32" ]]; then
         DNF_INSTALL "runc"
     fi

@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL vala
+    DNF_INSTALL "vala gcc glibc-devel"
     LOG_INFO "End to prepare the test environment."
 }
 

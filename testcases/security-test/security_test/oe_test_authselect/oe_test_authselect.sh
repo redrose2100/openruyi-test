@@ -18,6 +18,18 @@
 # ############################################
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+# openEuler 的 authselect 默认 profile 为 minimal/nis，openRuyi 只为
+# local/openruyi-local/sssd/winbind，因此不写死 minimal，先查询实际可用的 profile。
+pick_profile() {
+    for _p in minimal local openruyi-local nis sssd winbind; do
+        if authselect list 2>/dev/null | awk '{print $2}' | grep -qx "${_p}"; then
+            echo "${_p}"
+            return 0
+        fi
+    done
+    return 1
+}
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL authselect
@@ -26,13 +38,18 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "start to run test."
-    authselect list | grep -E "minimal|nis|sssd|winbind"
+    profile=$(pick_profile)
+    if [ -z "${profile}" ]; then
+        LOG_WARN "No usable authselect profile found, skip the test."
+        return 0
+    fi
+    authselect list | grep -E "minimal|nis|sssd|winbind|local"
     CHECK_RESULT $? 0 0 "print config info fail"
-    authselect list-features minimal
+    authselect list-features ${profile}
     CHECK_RESULT $? 0 0 "print effective config info fail"
-    authselect test minimal
+    authselect test ${profile}
     CHECK_RESULT $? 0 0 "print the Changes to be written fail"
-    authselect show minimal
+    authselect show ${profile}
     CHECK_RESULT $? 0 0 "print config minimal info fail"
     LOG_INFO "End to run test."
 }

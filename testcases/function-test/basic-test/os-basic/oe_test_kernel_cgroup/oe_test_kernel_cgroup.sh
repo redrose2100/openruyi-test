@@ -20,23 +20,34 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to pre test."
-    DNF_INSTALL "procps-ng"
+    DNF_INSTALL "procps"
     echo "#!/bin/bash
 while true
 do
     sleep 1
 done" >testcgroup.sh
     sh testcgroup.sh &
-    pid=$(pgrep -f "sh testcgroup.sh")
-    mkdir /sys/fs/cgroup/memory/example
+    pid=$!
+    # cgroup v1 使用 /sys/fs/cgroup/memory；cgroup v2 使用 /sys/fs/cgroup 统一层级，
+    # 动态探测可用路径，避免在 v2 系统上 mkdir 失败。
+    if [ -d /sys/fs/cgroup/memory ]; then
+        CGROUP_DIR=/sys/fs/cgroup/memory/example
+    else
+        CGROUP_DIR=/sys/fs/cgroup/example
+    fi
+    mkdir -p "$CGROUP_DIR"
     LOG_INFO "Start to pre test."
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    echo 1000000 >/sys/fs/cgroup/memory/example/memory.limit_in_bytes
+    if [ -d /sys/fs/cgroup/memory ]; then
+        echo 1000000 >"$CGROUP_DIR"/memory.limit_in_bytes
+    else
+        echo 1000000 >"$CGROUP_DIR"/memory.max
+    fi
     CHECK_RESULT $?
-    echo ${pid} >/sys/fs/cgroup/memory/example/cgroup.procs
+    echo ${pid} >"$CGROUP_DIR"/cgroup.procs
     CHECK_RESULT $?
     ps -o cgroup ${pid} | grep devices | grep pids
     CHECK_RESULT $?
@@ -46,6 +57,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     kill -9 ${pid}
+    rmdir "$CGROUP_DIR" 2>/dev/null
     rm -rf testcgroup.sh
     LOG_INFO "Finish environment cleanup."
 }

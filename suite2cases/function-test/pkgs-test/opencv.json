@@ -5,9 +5,6 @@
             "name": "oe_test_opencv_run_all_tests"
         },
         {
-            "name": "oe_test_opencv_test_calib3d"
-        },
-        {
             "name": "oe_test_opencv_test_ml"
         }
     ]

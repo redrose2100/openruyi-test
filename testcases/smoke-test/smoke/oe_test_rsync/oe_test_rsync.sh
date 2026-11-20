@@ -25,7 +25,7 @@ se_stat="Enforcing"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "rsync hostname diffutils"
+    DNF_INSTALL "rsync hostname diffutils selinux-tools"
     cp "$conf_file" conf_bak
     mkdir -p "${src_dir}" "${des_dir}"
     se_stat="$(getenforce)"

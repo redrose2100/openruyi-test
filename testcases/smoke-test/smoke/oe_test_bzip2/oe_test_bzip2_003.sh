@@ -28,11 +28,14 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    bzip2 -h > /dev/null 2>&1
+    # openRuyi 适配：bzip2 打印完 -h/-L/-V 信息后若没有文件参数会继续读取标准输入，
+    # mugen 执行时 stdin 不是 EOF，进程会一直阻塞直到用例超时（本次报告即卡在 bzip2 -L）。
+    # 统一用 </dev/null 显式给出 EOF，并用 timeout 兜底。
+    timeout 30 bzip2 -h > /dev/null 2>&1 < /dev/null
     CHECK_RESULT $? 0 0 "test faild with option -h"
-    bzip2 -L
+    timeout 30 bzip2 -L < /dev/null
     CHECK_RESULT  $? 0 0 "test faild with option -L"
-    bzip2 -V
+    timeout 30 bzip2 -V < /dev/null
     CHECK_RESULT  $? 0 0 "test faild with option -V"
     LOG_INFO "Finish test!"
 }

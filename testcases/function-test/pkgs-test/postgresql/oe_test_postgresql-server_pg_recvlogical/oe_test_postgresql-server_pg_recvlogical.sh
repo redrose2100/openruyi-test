@@ -74,7 +74,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/lib/pgsql/*
-    DNF_REMOVE 1 "postgresql postgresql-server postgresql-private-devel postgresql-contrib"
+    DNF_REMOVE 1 "postgresql postgresql-server postgresql-contrib"
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

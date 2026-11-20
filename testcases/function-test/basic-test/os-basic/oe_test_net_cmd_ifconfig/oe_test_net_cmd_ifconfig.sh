@@ -27,7 +27,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL net-tools
+    DNF_INSTALL inetutils
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -39,8 +39,15 @@ function run_test() {
     CHECK_RESULT $? 1
     ifconfig "${eth_name}" up
     CHECK_RESULT $?
+    # 网卡 up 是异步生效的，内核置位 IFF_UP 与链路 carrier 恢复有延迟，
+    # 紧接着取标志位会偶发读到未置位的旧值。这里做有界等待再断言。
+    for _i in $(seq 1 20); do
+        ifconfig "${eth_name}" 2>/dev/null | grep -q "UP"
+        [ $? -eq 0 ] && break
+        sleep 0.5
+    done
     ifconfig "${eth_name}" | grep "${eth_name}" | grep "UP"
-    CHECK_RESULT $?
+    CHECK_RESULT $? 0 0 "ifconfig ${eth_name} should report the UP flag after 'ifconfig ${eth_name} up'"
     LOG_INFO "End to run test."
 }
 

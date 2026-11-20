@@ -19,7 +19,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "uuid vim"
+    DNF_INSTALL "uuid vim xxd"
     LOG_INFO "Finish preparing the test environment."
 }
 

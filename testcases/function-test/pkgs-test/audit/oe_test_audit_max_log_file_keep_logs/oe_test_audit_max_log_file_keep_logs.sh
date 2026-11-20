@@ -19,7 +19,7 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 # shellcheck disable=SC1091
-source "./common/common_lib.sh"
+source "$OET_PATH/testcases/function-test/pkgs-test/audit/common/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start to prepare the test environment."
@@ -27,19 +27,21 @@ function pre_test(){
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "/etc/audit/auditd.conf"
     sed -i 's/num_logs = 5/num_logs = 2/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = ROTATE/max_log_file_action = KEEP_LOGS/g' "/etc/audit/auditd.conf"
-    service auditd restart
+    systemctl restart auditd
     LOG_INFO "End to prepare the environment"
 }
 function run_test()
 {
     LOG_INFO "Start to run test."
     for ((i=0;i<10;i++));do
-        old_size=$(du -ks /var/log/audit/ | awk '{print $1}')
+        old_size=$(du -ks /var/log/audit/ 2>/dev/null | awk '{print $1}')
+        old_size=${old_size:-0}
         old_num=$(find /var/log/audit -maxdepth 1 -name "audit.log*" | wc -l)
         old=$(stat -c %i /var/log/audit/audit.log*)
         create_logfile
         new=$(stat -c %i /var/log/audit/audit.log*)
-        new_size=$(du -ks /var/log/audit/ | awk '{print $1}')
+        new_size=$(du -ks /var/log/audit/ 2>/dev/null | awk '{print $1}')
+        new_size=${new_size:-0}
         new_num=$(find /var/log/audit -maxdepth 1 -name "audit.log*" | wc -l)
         test $(("$new_size" - "$old_size")) -gt 1024 &&{
         if [[ "$old" != "$new" && "$old_size" -lt "$new_size" && "$old_num" -le "$new_num" ]]; then
@@ -60,7 +62,7 @@ function post_test()
     sed -i 's/max_log_file = 1/max_log_file = 8/g' "/etc/audit/auditd.conf"
     sed -i 's/num_logs = 2/num_logs = 5/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = KEEP_LOGS/max_log_file_action = ROTATE/g' "/etc/audit/auditd.conf"
-    service auditd restart
+    systemctl restart auditd
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

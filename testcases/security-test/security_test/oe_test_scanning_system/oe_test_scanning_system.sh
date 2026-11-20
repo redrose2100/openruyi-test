@@ -23,6 +23,13 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "scap-security-guide openscap"
     EXECUTE_T="60m"
+    # DNF_INSTALL 只关注“包不存在”，其他安装失败（依赖冲突等）不会报错，
+    # 后续 oscap 会以 127 command not found 暴雷，这里提前把真实原因说清楚。
+    if ! command -v oscap >/dev/null 2>&1; then
+        LOG_WARN "oscap is unavailable after installing scap-security-guide/openscap."
+        LOG_WARN "The runner cannot provide oscap, skip this case."
+        exit 255
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 

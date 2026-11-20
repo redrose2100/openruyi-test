@@ -21,20 +21,22 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nfs-utils
+    # openRuyi 中 NFS 服务端 unit 名为 nfs-server.service（由 nfs-kernel-server 子包提供），
+    # 不存在 nfs.service。
+    DNF_INSTALL "nfs-utils nfs-kernel-server nfs-client"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution nfs.service
-    systemctl start nfs.service
+    test_execution nfs-server.service
+    systemctl start nfs-server.service
     sed -i 's\/usr/sbin/rpc.nfsd\/usr/sbin/rpc.nfsd -d\' /usr/lib/systemd/system/nfs-server.service
     systemctl daemon-reload
-    systemctl reload nfs.service
-    CHECK_RESULT $? 0 0 "nfs.service reload failed"
-    systemctl status nfs.service | grep "Active: active"
-    CHECK_RESULT $? 0 0 "nfs.service reload causes the service status to change"
+    systemctl reload nfs-server.service
+    CHECK_RESULT $? 0 0 "nfs-server.service reload failed"
+    systemctl status nfs-server.service | grep "Active: active"
+    CHECK_RESULT $? 0 0 "nfs-server.service reload causes the service status to change"
     LOG_INFO "Finish test!"
 }
 
@@ -42,8 +44,8 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i 's\/usr/sbin/rpc.nfsd -d\/usr/sbin/rpc.nfsd\' /usr/lib/systemd/system/nfs-server.service
     systemctl daemon-reload
-    systemctl reload nfs.service
-    systemctl stop nfs.service
+    systemctl reload nfs-server.service
+    systemctl stop nfs-server.service
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }

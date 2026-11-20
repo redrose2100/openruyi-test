@@ -35,8 +35,12 @@ function run_test() {
 	fi
 	systemctl reload sshd
 	CHECK_RESULT $?
+	# 禁用密码认证后，密钥认证仍应成功（本用例验证的是密钥对代替密码认证）
 	SSH_CMD "ls" "${NODE1_IPV4}" "${NODE1_PASSWORD}" "${NODE1_USER}"
-	CHECK_RESULT $? 0 1
+	CHECK_RESULT $? 0 0
+	# 确认 sshd 生效配置中 PasswordAuthentication 已为 no
+	grep -i "^PasswordAuthentication no$" /etc/ssh/sshd_config
+	CHECK_RESULT $? 0 0
 	LOG_INFO "End to run test."
 }
 

@@ -20,6 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL openssh-clients
     cp /etc/ssh/sshd_config /etc/ssh/sshd_config-bak
     grep "^sftpgroup:" /etc/group && groupdel sftpgroup
     grep "^sftpuser:" /etc/passwd && userdel -rf sftpuser

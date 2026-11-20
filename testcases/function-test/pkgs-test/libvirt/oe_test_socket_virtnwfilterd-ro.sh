@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libvirt-daemon-driver-nwfilter
+    DNF_INSTALL libvirt-daemon-driver-others
     LOG_INFO "End of environmental preparation!"
 }
 

@@ -30,7 +30,19 @@ function pre_test()
 function run_test()
 {
     LOG_INFO "Start to run test."
-    service auditd restart
+    systemctl restart auditd
+    if ! command -v ssh > /dev/null 2>&1; then
+        LOG_ERROR "the ssh client is required to generate the login event"
+        ((exec_result++))
+        LOG_INFO "End to run test."
+        return
+    fi
+    if [ ! -f /var/log/audit/audit.log ]; then
+        LOG_ERROR "/var/log/audit/audit.log is not available"
+        ((exec_result++))
+        LOG_INFO "End to run test."
+        return
+    fi
     auditctl -D
     starttime=$(date +%T)
     expect <<EOF

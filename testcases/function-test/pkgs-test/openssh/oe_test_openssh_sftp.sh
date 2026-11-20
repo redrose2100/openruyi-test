@@ -19,6 +19,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "openssh-clients"
     echo "localhost" >/tmp/hostname
     SSH_CMD "
     echo 'localhost' >/tmp/hostname

@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL "clamav clamav-update"
+    DNF_INSTALL "clamav"
     cp /etc/clamd.conf /etc/clamd.conf.bak
 
     LOG_INFO "End to prepare the database config."

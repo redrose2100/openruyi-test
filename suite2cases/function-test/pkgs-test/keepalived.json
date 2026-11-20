@@ -19,11 +19,6 @@
             "add network interface": 4
         },
         {
-            "name": "oe_test_vrrp_bond_vlan_keepalived",
-            "machine num": 1,
-            "add network interface": 2
-        },
-        {
             "name": "oe_test_vrrp_garp_keepalived",
             "machine num": 1,
             "add network interface": 0

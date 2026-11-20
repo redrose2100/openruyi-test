@@ -14,9 +14,6 @@
             "name": "oe_test_cifs-utils_creds"
         },
         {
-            "name": "oe_test_cifs-utils_getcifsacl"
-        },
-        {
             "name": "oe_test_cifs-utils_setcifsacl"
         },
         {

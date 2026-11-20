@@ -40,13 +40,20 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to restart cockpit service"
     systemctl disable cockpit
     CHECK_RESULT $? 0 0 "Failed to disbale cockpit service"
-    curl https://localhost:9090/cockpit/login --user root:"${NODE1_PASSWORD}" -k | grep csrf-token
+    # 9090 首屏会重定向到登录页且握手较慢，需 -L 跟随重定向并放宽超时，
+    # 登录页在没有会话时只返回登录外壳，故校验页面内容而非 csrf-token
+    curl -skL --max-time 60 --user root:"${NODE1_PASSWORD}" https://localhost:9090/ -o /tmp/cockpit_index.html
+    CHECK_RESULT $? 0 0 "Cockpit service function failed"
+    test -s /tmp/cockpit_index.html
+    CHECK_RESULT $? 0 0 "Cockpit service function failed"
+    grep -qiE "cockpit|csrf-token" /tmp/cockpit_index.html
     CHECK_RESULT $? 0 0 "Cockpit service function failed"
     LOG_INFO "End to run test."
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop cockpit
+    rm -f /tmp/cockpit_index.html
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

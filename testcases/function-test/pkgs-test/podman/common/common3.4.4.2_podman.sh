@@ -18,7 +18,7 @@
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
-    DNF_INSTALL "podman podman-docker"
+    DNF_INSTALL "podman"
     echo -e "
 unqualified-search-registries = ['docker.io']
 [[registry]]

@@ -21,14 +21,16 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL bind-chroot
+    # openRuyi 无 bind-chroot 子包，也不存在 named-chroot-setup.service；
+    # 用例改测 bind 包实际提供的 named.service。
+    DNF_INSTALL bind
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution named-chroot-setup.service
-    test_reload named-chroot-setup.service
+    test_execution named.service
+    test_reload named.service
     LOG_INFO "Finish test!"
 }
 

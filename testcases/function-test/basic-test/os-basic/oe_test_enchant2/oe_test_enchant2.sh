@@ -20,7 +20,9 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL enchant2
+    # enchant 只是抽象层，-d en_US 需要实际的 hunspell 词典，
+    # 缺 hunspell-en 时 -a 管道模式没有任何输出。
+    DNF_INSTALL "enchant hunspell-en"
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."
@@ -36,8 +38,11 @@ function run_test()
     enchant-2 -h 2>&1 | grep Usage
     CHECK_RESULT $? 0 0 "check command fail"
     echo "there is a testj" > /tmp/test.txt
-    enchant-2 -d en_US -a  /tmp/test.txt | grep test
-    CHECK_RESULT $? 0 0 "check spelling failed"
+    # -a 是 ispell 兼容的管道模式，只会把拼错的单词以 "& 单词 ..." 的
+    # 形式返回，不会回显原文。断言改为输出中存在该错词。
+    enchant_out=$(enchant-2 -d en_US -a /tmp/test.txt 2>&1)
+    echo "${enchant_out}" | grep "testj"
+    CHECK_RESULT $? 0 0 "check spelling failed: ${enchant_out}"
     LOG_INFO "Finish test!"
 }
 

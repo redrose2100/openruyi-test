@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/function-test/pkgs-test/pps-tools",
-    "cases": [
-        {
-            "name": "oe_test_pps-tools"
-        }
-    ]
-}

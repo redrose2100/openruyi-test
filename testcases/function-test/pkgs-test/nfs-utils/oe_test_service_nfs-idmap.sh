@@ -21,20 +21,21 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nfs-utils
+    # openRuyi 中该 unit 的真实名称是 nfs-idmapd.service。
+    DNF_INSTALL "nfs-utils nfs-kernel-server nfs-client"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution nfs-idmap.service
-    test_reload nfs-idmap.service
+    test_execution nfs-idmapd.service
+    test_reload nfs-idmapd.service
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    systemctl stop nfs-idmap.service
+    systemctl stop nfs-idmapd.service
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }

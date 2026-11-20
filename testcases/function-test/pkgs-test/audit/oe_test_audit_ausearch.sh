@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL "audit"
-    USER1=$(< /dev/urandom sed 's/[^a-zA-Z]//g' |strings -n 6 |head -1)
+    USER1="audituser${RANDOM}"
     useradd "${USER1}"
     chmod 755 /home/"${USER1}"
     auditctl -w /home/"${USER1}"/testfile -p rwxa -k testfile_audit_"${USER1}"
@@ -33,21 +33,21 @@ function run_test() {
     LOG_INFO "start to run test."
     ausearch --format csv > test.csv
     file test.csv |grep -i  "CSV text"
-    CHECK_RESULT $? -1 1 "format check fail"
+    CHECK_RESULT $? 0 0 "format check fail"
     ausearch -m ADD_USER
-    CHECK_RESULT $? -1 1 "AVC check fail"
+    CHECK_RESULT $? 0 0 "AVC check fail"
     uid=$(id -u "${USER1}")
     ausearch -ua "$uid" 2>&1  |grep "no matches"
-    CHECK_RESULT $? -1 1 "ua check fail"
+    CHECK_RESULT $? 0 0 "ua check fail"
     su - "${USER1}" -c "touch /home/'${USER1}'/testfile"
     ausearch -f /home/"${USER1}"/testfile
-    CHECK_RESULT $? -1 1 "ausearch -f fail"
+    CHECK_RESULT $? 0 0 "ausearch -f fail"
     ausearch -k testfile_audit
-    CHECK_RESULT $? -1 1 "testfile_audit check fail"
+    CHECK_RESULT $? 0 0 "testfile_audit check fail"
     ausearch -sv yes
-    CHECK_RESULT $? -1 1 "sv yes check fail"
+    CHECK_RESULT $? 0 0 "sv yes check fail"
     ausearch -sv no
-    CHECK_RESULT $? -1 1 "sv no check fail"
+    CHECK_RESULT $? 0 0 "sv no check fail"
     LOG_INFO "End to run test."
 }
 

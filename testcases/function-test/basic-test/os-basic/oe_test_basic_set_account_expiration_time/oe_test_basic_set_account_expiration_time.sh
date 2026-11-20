@@ -44,7 +44,7 @@ function run_test() {
     CHECK_RESULT $?
     chage -M 4 testuser
     CHECK_RESULT $?
-    usermod -e 04/01/2023 testuser
+    usermod -e 2023-04-01 testuser
     CHECK_RESULT $?
     expire_date=$(date -d"+4 day" "+%b %d, %Y")
     $SUDO chage -l testuser | grep "Password expires" | grep "$expire_date"

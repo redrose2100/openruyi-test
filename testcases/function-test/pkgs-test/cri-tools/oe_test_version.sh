@@ -4,18 +4,21 @@
 
 # 测试框架固定行
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "$(dirname "$0")/cri_lib.sh"
 
 # 测试前函数
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     # 安装待测试的软件包
     DNF_INSTALL "cri-tools"
+
+    # 引导 CRI 服务（containerd）：cri-tools 只提供客户端，服务端须自行拉起
+    cri_ensure_runtime || cri_abort "CRI runtime (containerd) is not available"
     # 创建一个配置文件以避免默认端点问题
     echo "runtime-endpoint: unix:///run/containerd/containerd.sock" > ./crictl.yaml
     export CRI_CONFIG_FILE="./crictl.yaml"
     LOG_INFO "End of environmental preparation!"
 }
-
 # 测试函数
 function run_test() {
     LOG_INFO "Start to run test."

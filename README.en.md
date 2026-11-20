@@ -60,6 +60,37 @@ Simply run `bash dep_install.sh`.
 ```
 - In the testcases, use NODE${id}_${LOCALTION} to use the configured environment.
 
+#### Running as a non-root user
+
+mugen has always assumed it logs in as `root`. Logging in as a normal user is
+also supported, and the framework escalates via `sudo` automatically.
+
+**Requirements on the target machine**
+
+- `sudo` must be installed.
+- The login user must be allowed one of: passwordless sudo (`NOPASSWD`),
+  or sudo with a password. The `root` password and the sudo password are read
+  from `NODE<n>_PASSWORD`, so set it to the password the login user will type.
+- Passwords are fed through stdout on a temporary file on the remote side, never
+  as a command-line argument, so `ps -ef` will not expose them.
+
+**Optional configuration keys** (per node, safe to omit on old configs):
+
+| Key | Values | Meaning |
+| --- | --- | --- |
+| `SUDO_MODE` | `auto` (default), `none`, `nopasswd`, `password` | Whether to escalate and how to detect it |
+| `SUDO_TTY` | `true` / `false` | Force `ssh -tt`; only needed when `sudo` refuses to run without a terminal |
+
+`auto` probes the target once and caches the answer for an hour. If sudo is not
+usable at all the framework reports `unavailable` instead of failing with a
+confusing permission error.
+
+**Where files are deployed**
+
+When the login user is `root`, remote files still live in `/mugen_re` exactly as
+before. For non-root logins the framework uses `$HOME/mugen_re` of the login
+user, because a normal user cannot write to `/`.
+
 #### Run the test
 - Run all test cases
 `bash mugen.sh -a`
@@ -210,6 +241,8 @@ import xxx
   `SSH_SCP $local_path/$file $REMOTE_USER@$REMOTE_IP:$remote_path "$REMOTE_PASSWD"`
   ### local <- remote
   `SSH_SCP $REMOTE_USER@$REMOTE_IP:$remote_path/$file $local_path "$REMOTE_PASSWD"`
+  ### pass the login user as the optional 5th argument
+  `SSH_SCP $local_path/$file $REMOTE_IP:$remote_path "$REMOTE_PASSWD" "$REMOTE_USER"`
   ## func 2
   ### Transfer a directory
   SFTP get/put --localdir $localdir --remotedir $remotedir

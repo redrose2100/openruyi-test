@@ -31,10 +31,15 @@ function pre_test() {
         echo -e "t\n\nfd\nw\n" | fdisk /dev/${local_disk}
         echo -e "n\ne\n\n\n+5G\nn\nl\n\n\nw\n" | fdisk /dev/${local_disk1}
         echo -e "t\n\nfd\nw\n" | fdisk /dev/${local_disk1}
-        mdadm -Cv /dev/md0 -l5 -n2 /dev/${local_disk}5 /dev/${local_disk1}5
+        # mdadm 创建无冗余的 RAID5 时会交互式询问是否继续，这里直接用 echo y 回答，
+        # 否则用例会一直等待标准输入而超时。
+        echo y | mdadm -Cv /dev/md0 -l5 -n2 /dev/${local_disk}5 /dev/${local_disk1}5
         mdadm -D /dev/md0 | grep /dev/${local_disk}5 
         CHECK_RESULT $? 0 0 "check mdadm state failed"
     fi
+    # openRuyi 的 mdmonitor.service 带有 ConditionPathExists=/etc/mdadm.conf，
+    # 缺少该文件时单元会被直接跳过，这里先生成一份配置。
+    mdadm --detail --scan > /etc/mdadm.conf
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -56,6 +61,7 @@ function post_test() {
        echo -e "d\n1\nw\n" | fdisk "/dev/${local_disk1}"
     fi
     systemctl stop mdmonitor.service
+    rm -f /etc/mdadm.conf
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }

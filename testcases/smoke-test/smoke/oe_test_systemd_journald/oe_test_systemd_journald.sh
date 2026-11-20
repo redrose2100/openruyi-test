@@ -26,7 +26,8 @@ function run_test() {
     SLEEP_WAIT 3
     grep -E "begins at|begin at|[0-9]|entries" testlog
     CHECK_RESULT $? 0 0 "Failed to find begin"
-    kill -9 "$(pgrep journalctl)"
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 journalctl PID（等价 pgrep journalctl）
+    proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = "journalctl" ] && echo "${p#/proc/}"; done)
     journalctl --reverse --lines 10 --no-pager | grep -vcE "begins at|begin at" | grep 10
     CHECK_RESULT $? 0 0 "Failed to execute journalctl --lines"
     journalctl --show-cursor | grep cursor

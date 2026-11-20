@@ -28,7 +28,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    source --help | grep "source: source filename"
+    source --help | grep -E "source: source|source filename"
     CHECK_RESULT $? 0 0 "test fail"
     source  /etc/profile
     CHECK_RESULT $? 0 0 "source fail"

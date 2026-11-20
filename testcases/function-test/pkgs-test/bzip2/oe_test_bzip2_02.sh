@@ -24,6 +24,8 @@ function pre_test() {
     DNF_INSTALL bzip2
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
+    # 清理上次运行残留，避免 bzip2 报 "Output file ... already exists"
+    rm -f /tmp/testfile /tmp/testfile.bz2
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -47,7 +49,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to clean the test environment."
     export LANG=${OLD_LANG}
-    rm -rf /tmp/testfile.bz2
+    rm -f /tmp/testfile /tmp/testfile.bz2
     DNF_REMOVE "$@"
     LOG_INFO "End to clean the test environment."
 }

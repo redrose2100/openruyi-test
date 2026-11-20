@@ -20,6 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL openssh-clients
     ls testlog && rm -rf testlog
     SSH_CMD "cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
             sed -i 's/#LoginGraceTime 2m/LoginGraceTime 1m/g' /etc/ssh/sshd_config
@@ -51,7 +52,10 @@ function run_test() {
         }
         expect eof
 EOF1
-    grep 'Welcome to' testlog
+    # 远程登录成功后的提示因发行版而异：openEuler 系是
+    # "Authorized users only..." + "Last login: ..."，Ubuntu 系是 "Welcome to ..."。
+    # 原脚本硬拼 "Welcome to"，在非 Ubuntu 镜像上必然失败。
+    grep -E "Last login:|${NODE2_USER}@" testlog
     CHECK_RESULT $?
     rm -rf /root/.ssh/known_hosts
     rm -rf testlog

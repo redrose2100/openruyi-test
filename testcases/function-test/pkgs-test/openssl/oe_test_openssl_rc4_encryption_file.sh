@@ -21,6 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "diffutils"
     DNF_INSTALL openssl
     mkdir /tmp/test
     cd /tmp/test || exit 1

@@ -32,9 +32,19 @@ done" >iotoptest
 
 function run_test() {
     LOG_INFO "Start to run test."
-    if grep docker /proc/1/cgroup; then
+    if grep -q docker /proc/1/cgroup; then
         LOG_INFO "The current environment is Docker."
     else
+        # iotop 的 -o/--only 只列出“真正在做 I/O”的进程，这一能力依赖内核统计项
+        # task_delayacct。openRuyi 默认 task_delayacct=0，iotop 会只打印一条
+        # "Warning: task_delayacct is 0, enable by: echo 1 > ..." 而没有任何进程行，
+        # grep iotoptest 必然失败。这里先临时打开该统计项，结束后恢复默认值。
+        local delayacct_file=/proc/sys/kernel/task_delayacct
+        local old_delayacct=""
+        if [ -w "${delayacct_file}" ]; then
+            old_delayacct=$(cat "${delayacct_file}")
+            [ "${old_delayacct}" = "0" ] && echo 1 >"${delayacct_file}"
+        fi
         ./iotoptest &
         CHECK_RESULT $? 0 0 "Execute i/o process:failed"
         SLEEP_WAIT 3
@@ -44,6 +54,9 @@ function run_test() {
         all_io_total=$(iotop -b -n 1 -d 10 | wc -l)
         [ "$all_io_total" -gt "$running_io_total" ]
         CHECK_RESULT $? 0 0 "Failed to check the all i/o process!"
+        if [ "${old_delayacct}" = "0" ]; then
+            echo 0 >"${delayacct_file}"
+        fi
     fi
     LOG_INFO "End to run test."
 }
@@ -51,7 +64,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE "$@"
-    kill -9 "$(pgrep -f iotoptest)"
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 iotoptest PID 并 kill（等价 pgrep -f iotoptest，iotoptest 的 comm 即 iotoptest）
+    proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = iotoptest ] && echo "${p#/proc/}"; done)
     rm -rf test iotoptest
     LOG_INFO "End to restore the test environment."
 }

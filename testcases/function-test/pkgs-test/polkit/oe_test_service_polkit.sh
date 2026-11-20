@@ -19,6 +19,7 @@
 # shellcheck disable=SC2120
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH/testcases/function-test/pkgs-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."

@@ -29,10 +29,10 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    precat -h 2>&1 | fgrep "usage /usr/bin/precat [-dzhLV]"
+    precat -h 2>&1 | grep -qE "usage:? */usr/bin/precat"
     CHECK_RESULT $? 0 0 "Check precat -h failed"
 
-    precat --help 2>&1 | fgrep "usage /usr/bin/precat [-dzhLV]"
+    precat --help 2>&1 | grep -qE "usage:? */usr/bin/precat"
     CHECK_RESULT $? 0 0 "Check precat --help failed"
 
     precat -V | grep "prezip, a prefix delta compressor. Version [[:digit:]]"

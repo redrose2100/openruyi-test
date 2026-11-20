@@ -22,6 +22,7 @@ location=$(pwd)/"$testfile"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "libcap-ng-utils libcap-progs"
     which filecap || DNF_INSTALL "libcap libcap-ng libcap-ng-utils"
     cat /sys/kernel/tracing/buffer_size_kb
     def_val=$(awk '{print $NF}' /sys/kernel/tracing/buffer_size_kb | cut -d ')' -f 1)

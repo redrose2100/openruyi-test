@@ -23,7 +23,7 @@ function pre_test() {
     EXECUTE_T="120m"
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL "clamav clamav-server clamav-update"
+    DNF_INSTALL "clamav"
     freshclam
     mv /etc/clamd.d/scan.conf /etc/clamd.d/scan.conf.bak
     echo "LogFile /var/log/clamd.scan

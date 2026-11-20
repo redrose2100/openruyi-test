@@ -19,6 +19,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "openssh-clients"
     SSH_CMD "
     mkdir /root/.ssh 
     chmod 700 /root/.ssh 

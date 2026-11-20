@@ -26,11 +26,12 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start to run test."
-    SSH_SCP "${testfile}" "root@${NODE2_IPV4}:/tmp" "${NODE2_PASSWORD}"
+    # NODE2 使用普通用户（NODE2_USER）登录，SCP 目标路径使用其可写目录
+    SSH_SCP "${testfile}" "${NODE2_USER}@${NODE2_IPV4}:/tmp" "${NODE2_PASSWORD}"
     CHECK_RESULT $?
     SSH_CMD "test -f ${testfile}" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     CHECK_RESULT $?
-    SSH_SCP "${testdir}" "root@${NODE2_IPV4}:/tmp" "${NODE2_PASSWORD}"
+    SSH_SCP "${testdir}" "${NODE2_USER}@${NODE2_IPV4}:/tmp" "${NODE2_PASSWORD}"
     CHECK_RESULT $?
     SSH_CMD "test -d ${testdir}" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     CHECK_RESULT $?

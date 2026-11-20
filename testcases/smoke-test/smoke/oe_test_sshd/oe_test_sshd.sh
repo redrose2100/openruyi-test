@@ -27,7 +27,8 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to restart sshd"
     systemctl status sshd | grep running
     CHECK_RESULT $? 0 0 "Failed to check sshd"
-    grep $(pgrep -f "sshd -D") /var/run/sshd.pid
+    # openRuyi riscv64 无 pgrep：/proc 遍历取 sshd -D 主进程 PID（等价 pgrep -f "sshd -D"；用 bash 内建 [[ ]] 匹配避免 grep 自匹配）
+    grep "$(for p in /proc/[0-9]*; do [ -r "$p/cmdline" ] || continue; [ "$BASHPID" = "${p#/proc/}" ] && continue; if [[ "$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null)" == *'sshd -D'* ]]; then echo "${p#/proc/}"; fi; done | head -n 1)" /var/run/sshd.pid
     CHECK_RESULT $? 0 0 "Failed to find pid in /var/run/sshd.pid"
     LOG_INFO "End to run test."
 }

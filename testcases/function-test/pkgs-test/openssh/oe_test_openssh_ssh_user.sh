@@ -19,6 +19,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "openssh-clients"
     SSH_CMD "useradd sshuser -d /home/sshuser -p ${NODE2_PASSWORD}" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "End of environmental preparation!"
 }

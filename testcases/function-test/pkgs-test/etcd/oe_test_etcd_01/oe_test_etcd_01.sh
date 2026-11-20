@@ -28,9 +28,13 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl status etcd | grep "active (running)"
     CHECK_RESULT $? 0 0 "Check etcd.service start failed"
+    # etcd refuses to run on non-amd64/arm64/ppc64le/s390x unless ETCD_UNSUPPORTED_ARCH matches uname -m.
+    # etcd.service already carries this variable; the CLI needs it exported explicitly.
+    export ETCD_UNSUPPORTED_ARCH=${ETCD_UNSUPPORTED_ARCH:-$(uname -m)}
     etcd --help 2>&1 | grep -i "Usage:"
     CHECK_RESULT $? 0 0 "Check etcd --help failed."
-    test "$(etcd --version | awk '{print $3}' | head -1)" == $version
+    # etcd prints an informational log line before the version banner, so pick the banner explicitly
+    test "$(etcd --version 2>&1 | grep -oE 'etcd Version: *[0-9]+\.[0-9]+\.[0-9]+' | awk '{print $3}' | head -1)" == $version
     CHECK_RESULT $? 0 0 "Check etcd --version failed."
     test "$(etcdctl version | awk '{print $3}' | head -1)" == $version
     CHECK_RESULT $? 0 0 "Check etcdctl version failed."

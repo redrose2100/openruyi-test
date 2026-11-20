@@ -20,7 +20,7 @@ source "${OET_PATH}/testcases/function-test/filesystem-test/fs-test/common_lib/f
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "lvm2 unzip"
+    DNF_INSTALL "lvm2 unzip zip"
     read -r -a point_list <<< "$(CREATE_FS "ext3 ext4 xfs")"
     for i in $(seq 1 $((${#point_list[@]} - 1))); do
         var=${point_list[$i]}

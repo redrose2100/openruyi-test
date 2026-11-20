@@ -31,17 +31,7 @@
             "add disk": []
         },
         {
-            "name": "oe_test_selinux_http",
-            "machine num": 1,
-            "add disk": []
-        },
-        {
             "name": "oe_test_selinux_sharing_nfs_cifs_using_booleans",
-            "machine num": 1,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_selinux_sec_status_mode",
             "machine num": 1,
             "add disk": []
         },
@@ -66,22 +56,7 @@
             "add disk": []
         },
         {
-            "name": "oe_test_selinux_booleands",
-            "machine num": 2,
-            "add disk": []
-        },
-        {
             "name": "oe_test_identify_selinux_rejects",
-            "machine num": 1,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_fix_selinux_reject_messages",
-            "machine num": 1,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_selinux_semanage_httpd",
             "machine num": 1,
             "add disk": []
         },
@@ -122,11 +97,6 @@
         },
         {
             "name": "oe_test_add_new_certificate",
-            "machine num": 1,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_check_change_system",
             "machine num": 1,
             "add disk": []
         },
@@ -341,11 +311,6 @@
         },
         {
             "name": "oe_test_hdf5",
-            "machine num": 1,
-            "add disk": []
-        },
-        {
-            "name": "oe_test_gpgcheck",
             "machine num": 1,
             "add disk": []
         },

@@ -22,7 +22,13 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "libselinux"
+    # `sestatus` 由 policycoreutils 提供，setenforce/getenforce 由 selinux-tools 提供，
+    # libselinux 只有库文件。原脚本只装 libselinux，导致 sestatus/setenforce 全缺失。
+    DNF_INSTALL "libselinux policycoreutils selinux-tools"
+    if ! command -v getenforce >/dev/null 2>&1; then
+        LOG_WARN "getenforce is unavailable, cannot verify selinux state."
+        exit 255
+    fi
     # 对selinux是否被禁用进行判断
     setenforce 1  #如果在内核层禁用了selinux,那么这里是无法打开的
     if [ "$(getenforce)" == "Disabled" ]; then

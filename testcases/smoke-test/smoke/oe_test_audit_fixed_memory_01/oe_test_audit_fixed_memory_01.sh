@@ -52,7 +52,8 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf audit_shell audit_log
     kill -9 "$(jobs -l | grep audit_shell | awk '{print $2}')"
-    kill -9 "$(pgrep -f "sudo ls /root/")"
+    # openRuyi riscv64 无 pgrep：/proc 遍历按 cmdline 匹配 "sudo ls /root/" 并 kill（等价 pgrep -f "sudo ls /root/"；[[ ]] 避免 grep 自匹配）
+    proc_kill_pids $(for p in /proc/[0-9]*; do [ -r "$p/cmdline" ] || continue; [ "$BASHPID" = "${p#/proc/}" ] && continue; if [[ "$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null)" == *'sudo ls /root/'* ]]; then echo "${p#/proc/}"; fi; done)
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

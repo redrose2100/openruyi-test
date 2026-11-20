@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL xz
+    DNF_INSTALL "xz diffutils"
     echo "hello world" >testxz
     echo -e "hello world hello world" >testxz1
     LOG_INFO "End to prepare the test environment."

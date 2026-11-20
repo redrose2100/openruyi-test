@@ -21,7 +21,10 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "fontconfig"
+    # fc-list needs actual fonts to produce Pattern output / match :lang=en.
+    # openRuyi minimal install ships fontconfig but no font package, so install
+    # the DejaVu font family (provided by fonts-dejavu on openRuyi).
+    DNF_INSTALL "fontconfig fonts-dejavu"
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     TEST_DIR="/tmp/fc-list_test"

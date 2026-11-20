@@ -20,8 +20,8 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL clang
-    mkdir /tmp/test
+    DNF_INSTALL "clang binutils glibc-devel"
+    mkdir -p /tmp/test
     Directory=/tmp/test
     LOG_INFO "End to prepare the test environment."
 }

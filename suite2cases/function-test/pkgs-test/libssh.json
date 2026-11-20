@@ -1,5 +1,6 @@
 {
     "path": "$OET_PATH/testcases/function-test/pkgs-test/libssh",
+    "machine num": 2,
     "cases": [
         {
             "name": "oe_test_libssh_01",

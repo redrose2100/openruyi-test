@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL openssh-clients
     grep "testuser1:" /etc/passwd && userdel -rf testuser1
     useradd testuser1
     LOG_INFO "End of environmental preparation!"

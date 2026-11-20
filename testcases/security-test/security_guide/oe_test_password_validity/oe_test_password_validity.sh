@@ -18,8 +18,13 @@
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+# A dedicated test password long enough to satisfy pam_pwquality.
+TEST_PASSWORD="Oetest1@Sec23"
+
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    grep -q "^test1:" /etc/passwd && userdel -rf test1
+    grep -q "^test2:" /etc/passwd && userdel -rf test2
     useradd test1
     useradd test2
     LOG_INFO "End of environmental preparation!"
@@ -27,63 +32,74 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    grep "^PASS_MAX_DAYS" /etc/login.defs | grep '99999'
+    grep -q "^PASS_MAX_DAYS[[:space:]]\+99999" /etc/login.defs
     CHECK_RESULT $? 0 0 "The password is not valid for 99999."
-    expect -c "
-    set timeout 30
-    spawn passwd test1
-    expect {
-        \"*assword*\" {
-            send \"qqq\\r\"
+    # passwd 依次提示 New password / Retype new password，两次输入后退出；
+    # 原写法用 exp_continue 会连 "password updated successfully" 一起匹配，导致多输入一次
+    expect <<EOF
+        set timeout 30
+        spawn passwd test2
+        expect "assword"
+        send "${TEST_PASSWORD}\\r"
+        expect "assword"
+        send "${TEST_PASSWORD}\\r"
+        expect eof
+EOF
+    # 先只等待一次密码提示，登录成功后立即匹配 shell 提示符退出；
+    # 原写法在 "*assword*" 上 exp_continue，会把登录后的提示符反复误判，导致死循环
+    expect <<EOF
+        set timeout 30
+        log_file testlog1
+        spawn su test2
+        expect {
+            -re "(?i)password" {
+                send "${TEST_PASSWORD}\\r"
             }
-    }
-    expect {
-        \"*assword*\" {
-            send \"qqq\\r\"
+            timeout {
+                exit 1
             }
-    }     
-    "
-    expect -c "
-    set timeout 30
-    log_file testlog1
-    spawn su test2
-    expect {
-        \"*assword*\" {
-            send \"qqq\\r\"
+        }
+        expect {
+            "*test2@*" {
+                send "exit\\r"
             }
-    }
-    expect {
-        \"*test2@*\" {
-            send \"exit\\r\"
-            }
-    }             
-    "
-    grep "IP address" testlog1
-    CHECK_RESULT $? 0 0 "Login failed!"
+            eof {}
+        }
+        expect eof
+EOF
+    grep "test2@" testlog1
+    CHECK_RESULT $? 0 0 "login failed!"
     SLEEP_WAIT 180
-    expect -c "
-    set timeout 30
-    log_file testlog2
-    spawn su test2
-    expect {
-        \"*assword*\" {
-            send \"qqq\\r\"
+    # 先只等待一次密码提示，登录成功后立即匹配 shell 提示符退出；
+    # 原写法在 "*assword*" 上 exp_continue，会把登录后的提示符反复误判，导致死循环
+    expect <<EOF
+        set timeout 30
+        log_file testlog2
+        spawn su test2
+        expect {
+            -re "(?i)password" {
+                send "${TEST_PASSWORD}\\r"
             }
-    }
-    expect {
-        \"*test2@*\" {
-            send \"exit\\r\"
+            timeout {
+                exit 1
             }
-    }             
-    "
-    grep "IP address" testlog2
-    CHECK_RESULT $? 0 0 "Login failed!"
+        }
+        expect {
+            "*test2@*" {
+                send "exit\\r"
+            }
+            eof {}
+        }
+        expect eof
+EOF
+    grep "test2@" testlog2
+    CHECK_RESULT $? 0 0 "login failed!"
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "Start cleanning environment."
-    rm -rf testlog*
+    rm -f testlog1 testlog2
     userdel -rf test1
     userdel -rf test2
     LOG_INFO "Finish environment cleanup!"

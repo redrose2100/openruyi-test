@@ -21,7 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "fontconfig"
+    # openRuyi 中 DejaVu 字体系列由 fonts-dejavu 包提供（dejavu-fonts 不存在）
+    DNF_INSTALL "fontconfig fonts-dejavu"
     LOG_INFO "End to prepare the test environment."
 }
 

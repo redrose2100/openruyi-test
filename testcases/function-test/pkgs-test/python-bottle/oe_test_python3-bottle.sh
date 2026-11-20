@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "python3-bottle"
+    DNF_INSTALL "python3-bottle procps"
     LOG_INFO "Finish preparing the test environment."
 }
 

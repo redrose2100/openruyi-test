@@ -21,11 +21,15 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL rsyslog
+    # logger(1) comes from inetutils on openRuyi; rsyslog does not provide it.
+    DNF_INSTALL "rsyslog selinux-tools inetutils"
     systemctl start rsyslog
     cp -f /etc/rsyslog.conf /etc/rsyslog.conf.bak
     echo "local0.info /tmp/testlog/test.log" >>/etc/rsyslog.conf
-    getenforce | grep -i Enforcing && setenforce 0
+    mkdir -p /tmp/testlog
+    # getenforce is only available when selinux-tools installed and SELinux is
+    # enabled; tolerate its absence instead of letting pre_test abort.
+    getenforce 2>/dev/null | grep -i Enforcing && setenforce 0
     systemctl restart rsyslog
     SLEEP_WAIT 3
     LOG_INFO "End to prepare the test environment."

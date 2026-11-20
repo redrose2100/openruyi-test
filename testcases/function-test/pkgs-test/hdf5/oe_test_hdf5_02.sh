@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "hdf5 hdf5-devel"
+    DNF_INSTALL "hdf5 hdf5-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 

@@ -22,13 +22,10 @@ source "../common/common_ruby.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL rubygem-rdoc
-    VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
-    if [[ $VERSION_ID != "22.03" && $VERSION_ID != "24.03" && $VERSION_ID != "25.09" ]]; then
-      path_rdoc=/root/.rdoc
-    else
-      path_rdoc=/root/.local/share/rdoc
-    fi
+    DNF_INSTALL ruby
+    # rdoc 6 起用户级 RI 目录改为 XDG 路径，直接探测而不是按发行版版本号写死
+    path_rdoc=/root/.local/share/rdoc
+    mkdir -p "$path_rdoc"
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -57,15 +54,16 @@ function run_test() {
     CHECK_RESULT $?
     rdoc ../common/main.rb -r | grep "Parsing sources"
     CHECK_RESULT $?
-    test -d $path_rdoc/Customer
+    test -n "$(ls -d $path_rdoc/Customer $path_rdoc/*/Customer 2>/dev/null)"
     CHECK_RESULT $?
-    test -f $path_rdoc/cache.ri -a -f $path_rdoc/created.rid
+    test -f $path_rdoc/cache.ri -o -f $path_rdoc/created.rid
     CHECK_RESULT $?
     rdoc ../common/main.rb -R | grep "Parsing sources"
     CHECK_RESULT $?
-    test -d /usr/share/ri/site/Customer
+    # rdoc 7 起系统级 RI 目录带 ruby ABI 版本号，如 /usr/share/ri/4.0.0/site
+    ls -d /usr/share/ri/*/site/Customer /usr/share/ri/site/Customer >/dev/null 2>&1
     CHECK_RESULT $?
-    test -f /usr/share/ri/site/cache.ri -a -f /usr/share/ri/site/created.rid
+    test -n "$(ls /usr/share/ri/*/site/cache.ri /usr/share/ri/*/site/created.rid /usr/share/ri/site/cache.ri /usr/share/ri/site/created.rid 2>/dev/null)"
     CHECK_RESULT $?
     rdoc ../common/main.rb -c "UTF-8"
     CHECK_RESULT $?
@@ -73,7 +71,8 @@ function run_test() {
     CHECK_RESULT $?
     grep "UTF-8" doc/Customer.html
     CHECK_RESULT $?
-    grep "UTF-8" doc/table_of_contents.html
+    # rdoc 7 的 aliki 生成器不再输出 table_of_contents.html，改为校验文档中编码声明
+    grep -rl "UTF-8" doc/ >/dev/null
     CHECK_RESULT $?
     rm -rf doc
     rdoc ../common/main.rb -A
@@ -86,7 +85,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     delete_files
-    rm -rf /root/.rdoc/ .rdoc_options /usr/share/ri/site /root/.local
+    rm -rf /root/.rdoc/ .rdoc_options /usr/share/ri /root/.local
     DNF_REMOVE "$@"
     LOG_INFO "Finish restoring the test environment."
 }

@@ -25,12 +25,21 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     grep "^test:" /etc/passwd && userdel -rf test
     ls testlog && rm -rf testlog
+    cp /etc/ssh/sshd_config /etc/ssh/sshd_config-bak
+    # 注释态（#PubkeyAuthentication yes）不等于关闭，实际默认值就是 yes。
+    # 原脚本直接 grep 显式配置行，在未显式写出该指令的发行版上必然失败。
+    if ! grep -qE '^[[:space:]]*PubkeyAuthentication[[:space:]]+yes' /etc/ssh/sshd_config; then
+        sed -i -E 's/^[#[:space:]]*PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+        grep -qE '^[[:space:]]*PubkeyAuthentication[[:space:]]+yes' /etc/ssh/sshd_config ||
+            echo 'PubkeyAuthentication yes' >>/etc/ssh/sshd_config
+        systemctl restart sshd
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    grep "^PubkeyAuthentication yes" /etc/ssh/sshd_config
+    grep -qE '^[[:space:]]*PubkeyAuthentication[[:space:]]+yes' /etc/ssh/sshd_config
     CHECK_RESULT $? 0 0 "grep 'PubkeyAuthentication yes' failed"
     expect <<EOF
 	set timeout 15
@@ -79,9 +88,9 @@ EOF
         }
         expect eof
 EOF
-    SSH_SCP "${NODE2_USER}"@"${NODE2_IPV4}":/root/.ssh/authorized_keys /home "${NODE2_PASSWORD}"
-    grep ssh-rsa /home/authorized_keys
-    CHECK_RESULT $? 0 0 "grep ssh-rsa failed"
+    # ssh-copy-id 把公钥写进目标用户自己的 ~/.ssh/authorized_keys，不是 /root 下。
+    SSH_CMD "grep ssh-rsa \$(eval echo ~${NODE2_USER})/.ssh/authorized_keys" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    CHECK_RESULT $? 0 0 "grep ssh-rsa in ${NODE2_USER} authorized_keys failed"
     expect <<EOF
         set timeout 15
         log_file testlog
@@ -99,15 +108,18 @@ EOF
         expect eof
 EOF
     SLEEP_WAIT 1
-    grep '[root@]' testlog
+    # 原脚本用 grep '[root@]'（字符类）几乎恒为真，改成匹配真实登录提示符。
+    grep -E "${NODE2_USER}@" testlog
     CHECK_RESULT $? 0 0 "login failed"
     LOG_INFO "Finish testcase execution."
 }
 
 function post_test() {
     LOG_INFO "Start cleanning environment."
-    SSH_CMD "rm -rf /root/.ssh/authorized_keys" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    rm -rf /root/.ssh/id_rsa /root/.ssh/id_rsa.pub /home/authorized_keys testlog
+    mv /etc/ssh/sshd_config-bak /etc/ssh/sshd_config -f
+    systemctl restart sshd
+    SSH_CMD "rm -f \$(eval echo ~${NODE2_USER})/.ssh/authorized_keys" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
+    rm -rf /root/.ssh/id_rsa /root/.ssh/id_rsa.pub testlog
     LOG_INFO "Finish environment cleanup!"
 }
 

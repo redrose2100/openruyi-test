@@ -18,19 +18,24 @@
 # ############################################
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
-source ../common/mysql_pre.sh
+
+# openRuyi 仓库无 mysql 包，仅有 mariadb（提供 mysqld/mysql 命令与
+# mariadb.service，且 Alias=mysql.service，可直接用 systemctl 管理）。
+# 首次 systemctl start 时 mariadb.service 会通过 mysql-systemd-helper
+# 自动初始化 datadir，因此无需手工执行 mysqld --initialize。
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    dnf list | grep mysql-server
-    if [ $? -eq 0 ]; then
-        rm -rf /var/lib/mysql/*
-        DNF_INSTALL "mysql-server procps-ng"
-        systemctl start mysqld
-        servername=mysqld
+    DNF_INSTALL "mariadb mariadb-client procps"
+    CHECK_RESULT $?
+    rpm -qa | grep -iE "mariadb"
+    CHECK_RESULT $?
+    if command -v mysqld >/dev/null 2>&1; then
+        systemctl start mariadb
+        CHECK_RESULT $?
+        servername=mariadb
     else
-        flag=1
-        mysql_pre
-        servername=mysql
+        LOG_ERROR "mysqld not found after installing mariadb"
+        exit 1
     fi
     LOG_INFO "Environmental preparation is over."
 }
@@ -57,13 +62,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    test -z ${flag} || {
-        sql_pid=$(ps -ef | grep -w mysql | grep -v grep | awk '{print$2}')
-        kill -9 ${sql_pid}
-        rm -rf /data/mysql
-        userdel -r mysql
-        rm -rf /tmp/mysql.sock
-    }
+    systemctl disable mariadb 2>/dev/null || true
+    systemctl stop mariadb 2>/dev/null || true
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup."
 }

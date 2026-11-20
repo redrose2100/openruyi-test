@@ -25,13 +25,13 @@ function deploy_env() {
         echo -e '<target iqn.2013-12.com.make:ws.httpd>\nbacking-store ${remote_disk}\n</target>' >>/etc/tgt/targets.conf;
         systemctl restart tgtd;
     systemctl stop firewalld;"
-    DNF_REMOVE "iscsi-initiator-utils"
-    DNF_INSTALL "iscsi-initiator-utils multipath-tools device-mapper-event device-mapper"
+    DNF_REMOVE "open-iscsi"
+    DNF_INSTALL "open-iscsi multipath-tools device-mapper-event device-mapper"
     systemctl restart iscsid
     iscsiadm -m discovery -t sendtargets -p "${NODE2_IPV4}"
     iscsiadm -m node -T iqn.2013-12.com.make:ws.httpd -l
     mpathconf --enable --with_multipathd y
-    service multipathd start
+    systemctl start multipathd
     multipath -v2
     multipath -ll
     echo "
@@ -61,7 +61,7 @@ devices {
     }" >/etc/multipath.conf
     lsmod | grep dm_multipath || modprobe dm_multipath
     modprobe dm_multipath
-    service multipathd restart
+    systemctl restart multipathd
     chkconfig --level 345 multipathd on
 }
 

@@ -22,7 +22,8 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL iptables
+    # ip6tables.service 由 iptables 的 services 子包提供。
+    DNF_INSTALL "iptables iptables-services"
     LOG_INFO "End to prepare the test environment."
 }
 

@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "libdwarf libdwarf-devel libdwarf-help libdwarf-tools"
+    DNF_INSTALL "libdwarf libdwarf-devel libdwarf-tools"
     default_pwd=$(pwd)
     LOG_INFO "End of environmental preparation!"
 }

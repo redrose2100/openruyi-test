@@ -29,9 +29,13 @@ function pre_test() {
 function run_test()
 {
     LOG_INFO "Start to run test."
-    service auditd restart
-    aureport -u -i --summary | grep "User Summary Report"
+    systemctl restart auditd
+    aureport -u -i --summary > /tmp/count_time.out 2> /tmp/count_time.err
+    grep "User Summary Report" /tmp/count_time.out
     CHECK_RESULT $? 0 0 "grep failed"
+    grep -qE "No such file or directory|Could not open dir" /tmp/count_time.err
+    CHECK_RESULT $? 0 1 "the audit log is not available"
+    rm -f /tmp/count_time.out /tmp/count_time.err
     LOG_INFO "End to run test."
 }
 

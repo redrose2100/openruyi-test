@@ -19,16 +19,17 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
 	LOG_INFO "Start executing testcase."
-	DNF_INSTALL ntp
+	DNF_INSTALL chrony
 	LOG_INFO "End of testcase execution."
 }
 
 function run_test() {
 	LOG_INFO "Start executing testcase."
-	systemctl enable ntpd
-	systemctl start ntpd
+	# chrony 提供的 systemd 单元是 chronyd.service，openRuyi 没有 ntpd 单元
+	systemctl enable chronyd
+	systemctl start chronyd
 	CHECK_RESULT $?
-	systemctl is-active ntpd | grep -w "active"
+	systemctl is-active chronyd | grep -w "active"
 	CHECK_RESULT $?
 	LOG_INFO "End of testcase execution."
 }

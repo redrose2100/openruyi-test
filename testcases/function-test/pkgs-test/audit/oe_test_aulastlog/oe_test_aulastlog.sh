@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "audit"
+    DNF_INSTALL "audit openssh-clients"
     useradd test1
     useradd test2
     echo test1:deepin12#$ | chpasswd

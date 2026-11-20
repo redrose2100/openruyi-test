@@ -21,20 +21,21 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nfs-utils
+    # openRuyi 已无 nfs-lock.service，其功能并入 rpc-statd.service。
+    DNF_INSTALL "nfs-utils nfs-kernel-server nfs-client"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution nfs-lock.service
-    test_reload nfs-lock.service
+    test_execution rpc-statd.service
+    test_reload rpc-statd.service
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    systemctl stop nfs-lock.service
+    systemctl stop rpc-statd.service
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }

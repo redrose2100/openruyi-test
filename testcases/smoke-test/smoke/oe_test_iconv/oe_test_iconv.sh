@@ -20,6 +20,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare environment."
+    DNF_INSTALL "diffutils"
     file1="/tmp/test_file1"
     file2="/tmp/test_file2"
     file3="/tmp/test_file3"

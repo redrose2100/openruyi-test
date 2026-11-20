@@ -19,6 +19,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL openssh-clients
     useradd test26
     passwd test26 <<EOF
 ${NODE1_PASSWORD}

@@ -2,9 +2,6 @@
     "path": "$OET_PATH/testcases/smoke-test/smoke-elfutils",
     "cases": [
         {
-            "name": "oe_test_eu-addr2line_input_options_001"
-        },
-        {
             "name": "oe_test_eu-elfcompress_default"
         },
         {

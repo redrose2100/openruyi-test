@@ -26,14 +26,16 @@ function pre_test() {
     repo_path=/etc/yum.repos.d
     mkdir ${test_path} ${repo_path}/bak
     cd ${test_path}
-    yum download git git-core perl-Error perl-Git perl-TermReadKey
+    # git 依赖 /usr/bin/perl 与 git-core-doc，下载列表必须包含它们，否则本地仓库无法解析
+    yum download git git-core git-core-doc perl perl-Error perl-Git perl-TermReadKey
     mv /etc/yum.repos.d/*.repo ${repo_path}/bak
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    createrepo_c .
+    # 生成 filelists 元数据，否则 /usr/bin/perl 这类文件依赖无法被本地仓库满足
+    createrepo_c --database --filelists .
     test -e repodata
     CHECK_RESULT $? 0 0 "Generation failure"
     cat > ${repo_path}/local.repo << EOF
@@ -43,13 +45,19 @@ baseurl=file://${test_path}
 enabled=1
 gpgcheck=0
 EOF
-    yum --disablerepo="*" --enablerepo="local" list available
+    yum --disablerepo="*" --enablerepo="local" repolist
     CHECK_RESULT $? 0 0 "Repo error"
+    yum --disablerepo="*" --enablerepo="local" repolist | grep -q "local"
+    CHECK_RESULT $? 0 0 "Local repo not enabled"
     yum clean all
-    yum install git -y
+    # git 已预装，直接 install 会变成空操作（且随后的 remove 会破坏环境），
+    # 改为用 --resolve 下载做依赖闭包校验，同样能验证本地仓库元数据是否完整
+    mkdir -p resolve_check
+    yum --disablerepo="*" --enablerepo="local" download --resolve --destdir=resolve_check git
     CHECK_RESULT $? 0 0 "Package install fail"
-    yum remove git -y
-    CHECK_RESULT $? 0 0 "Package remove fail"
+    ls resolve_check | grep -q "git-core"
+    CHECK_RESULT $? 0 0 "Dependency git-core not resolved from local repo"
+    rm -rf resolve_check
     LOG_INFO "Finish test!"
 }
 

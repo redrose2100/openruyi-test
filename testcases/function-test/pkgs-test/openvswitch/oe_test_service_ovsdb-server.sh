@@ -29,32 +29,28 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    service "${service}" restart
+    systemctl restart "${service}"
     CHECK_RESULT $? 0 0 "${service} restart failed"
-    service "${service}" stop
+    systemctl stop "${service}"
     CHECK_RESULT $? 0 0 "${service} stop failed"
-    service "${service}" start
+    systemctl start "${service}"
     CHECK_RESULT $? 0 0 "${service} start failed"
-    service "${service}" status | grep "Active: active (running)"
+    systemctl status "${service}" | grep "Active: active (running)"
     CHECK_RESULT $? 0 0 "${service} start failed"
     journalctl --since "${log_time}" -u "${service}" | grep -i "fail\|error" | grep -v -i "DEBUG\|INFO\|WARNING"
     CHECK_RESULT $? 1 0 "There is an error message for the log of ${service}"
-    service "${service}" start
-    sed -i 's\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl --no-mlockall\g' /usr/lib/systemd/system/${service}
-    systemctl daemon-reload
-    service "${service}" reload
-    CHECK_RESULT $? 0 0 "${service} reload failed"
-    service "${service}" status | grep "Active: active"
-    CHECK_RESULT $? 0 0 "${service} reload causes the service status to change"
+    # openRuyi 的 ovsdb-server.service 未定义 ExecReload，改为校验 restart 后服务仍处于 active
+    systemctl restart "${service}"
+    CHECK_RESULT $? 0 0 "${service} restart failed"
+    SLEEP_WAIT 2
+    systemctl status "${service}" | grep "Active: active"
+    CHECK_RESULT $? 0 0 "${service} restart causes the service status to change"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    sed -i 's\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl --no-mlockall\ExecStart=/usr/share/openvswitch/scripts/ovs-ctl\g' /usr/lib/systemd/system/${service}
-    systemctl daemon-reload
-    service "${service}" reload
-    service "${service}" stop
+    systemctl stop "${service}"
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }

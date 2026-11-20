@@ -21,7 +21,7 @@ source "../common/common_ruby.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL rubygem-rake
+    DNF_INSTALL ruby
     LOG_INFO "Finish preparing the test environment."
 }
 

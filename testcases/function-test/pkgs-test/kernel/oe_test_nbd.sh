@@ -19,9 +19,19 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+# 卸载循环的最多尝试次数，避免 rmmod 失败时无限循环导致整个测试套超时。
+MAX_RETRY=20
+
+# 判定 nbd 是否为可加载模块：modinfo 给出 .ko 路径才是模块。
+function nbd_is_module() {
+    local filename
+    filename=$(modinfo -F filename nbd 2>/dev/null)
+    [ -n "${filename}" ] && [[ "${filename}" == *.ko* ]]
+}
+
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    if grep nbd /lib/modules/"$(uname -r)"/modules.builtin; then
+    if ! nbd_is_module; then
         LOG_WARN "nbd is builtin, skipping module load/unload steps"
         exit 255
     fi
@@ -36,21 +46,25 @@ function run_test() {
     lsmod | grep ^nbd
     CHECK_RESULT $? 0 0 "Module not loaded"
     local trr=1
-    while true; do
+    while [ ${trr} -le ${MAX_RETRY} ]; do
         rmmod -f nbd
-        lsmod | grep ^nbd
-        local rv=$?
-        [[ "$rv"x != "0x" ]] && break
-        [ $trr -ge 20 ] && CHECK_RESULT $rv 1 0 "Module not uninstalled"
+        if ! lsmod | grep ^nbd; then
+            break
+        fi
         sleep 0.1s
         ((trr++))
     done
+    # 循环结束后再做一次终态判定，不依赖循环内部变量的残留值。
+    lsmod | grep ^nbd
+    CHECK_RESULT $? 1 0 "Module not uninstalled"
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "Start to restore the tet environment."
-    rmmod -f nbd
+    if lsmod | grep ^nbd; then
+        rmmod -f nbd
+    fi
     LOG_INFO "Finish to restore the tet environment."
 }
 

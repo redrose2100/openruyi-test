@@ -38,8 +38,10 @@ function run_test() {
     ID=$(podman create --shm-size 65536k alpine ls)
     podman inspect "$ID" | grep -i "Shm.*Size"
     CHECK_RESULT $? 0 0 "check ShmSize: 65536000 failed"
+    # podman inspect 里的 StopSignal 既可能是数字 20，也可能是信号名 SIGTSTP，
+    # 且可能带引号，这里统一按信号名或数字匹配。
     ID=$(podman create --stop-signal 20 alpine ls)
-    podman inspect "$ID" | grep '"StopSignal": 20'
+    podman inspect "$ID" | grep -E '"StopSignal": "?(20|SIGTSTP)"?'
     CHECK_RESULT $? 0 0 "check StopSignal failed"
     podman create --stop-timeout 10 alpine ls
     CHECK_RESULT $? 0 0 "check podman create --stop-timeout 10 alpine ls failed"

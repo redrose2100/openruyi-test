@@ -68,11 +68,15 @@ function run_test() {
     bash cannot_set_minimum_interval.sh
     grep -q "Authentication token manipulation error" getfile
     CHECK_RESULT $? 0 0 "Change password successful"
-    after_six_days=$(date -d "+6 day" +%Y%m%d)
-    date -s "$after_six_days"
-    CHECK_RESULT $? 0 0 "Set system's time failed"
+    # 不能用 `date -s` 改系统时钟：mugen 的 SLEEP_WAIT 用 time.monotonic 之外的
+    # 绝对时间计时，时钟向前跳变 6 天后被判定为 1800s 超时，用例直接判失败。
+    # 最小间隔只看“上次修改日期”，改 chage 的最后改密日期即可，无需动系统时间。
+    chage -d "$(date -d '-6 day' +%Y-%m-%d)" set_minimum_interval10
+    CHECK_RESULT $? 0 0 "Set last password change date failed"
     bash can_set_minimum_interval.sh
-    grep -q "all authentication tokens updated successfully" can_set_getfile
+    # shadow 4.19 起 passwd 成功提示从 "all authentication tokens updated
+    # successfully" 改为 "passwd: password changed."，新旧两种都要兼容。
+    grep -qE "all authentication tokens updated successfully|password changed" can_set_getfile
     CHECK_RESULT $? 0 0 "Change password failed"
     LOG_INFO "End to run test."
 }

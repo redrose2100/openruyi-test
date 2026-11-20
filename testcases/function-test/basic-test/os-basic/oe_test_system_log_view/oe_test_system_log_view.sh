@@ -21,22 +21,29 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "procps-ng"
+    DNF_INSTALL "procps"
     LOG_INFO "End to prepare the test environment."
 }
 function run_test() {
 	LOG_INFO "Start executing testcase."
 	ls /var/log
 	CHECK_RESULT $?
-	tail -f /var/log/messages >log 2>&1 &
-	row01=$(cat log | wc -l)
-	SLEEP_WAIT 5
-	row02=$(cat log | wc -l)
-	[ $row01 -le ${row02} ]
-	CHECK_RESULT $?
+	# openRuyi 等现代发行版默认使用 systemd-journald，无 /var/log/messages 文件，
+	# 改用 journalctl 查看系统日志；若存在 rsyslog 的 messages 文件则兼容校验。
+	if [ -f /var/log/messages ]; then
+		tail -f /var/log/messages >log 2>&1 &
+		row01=$(cat log | wc -l)
+		SLEEP_WAIT 5
+		row02=$(cat log | wc -l)
+		[ $row01 -le ${row02} ]
+		CHECK_RESULT $?
 
-	cat /var/log/messages
-	CHECK_RESULT $?
+		cat /var/log/messages
+		CHECK_RESULT $?
+	else
+		journalctl --no-pager -n 10
+		CHECK_RESULT $? 0 0 "journalctl failed"
+	fi
 	LOG_INFO "End of testcase execution."
 }
 

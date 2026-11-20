@@ -22,6 +22,7 @@ test_log=tmp_test.log
 bin_dir=../usr
 
 function pre_test() {
+    DNF_INSTALL "diffutils"
     which eu-size || yum -y install elfutils
 }
 

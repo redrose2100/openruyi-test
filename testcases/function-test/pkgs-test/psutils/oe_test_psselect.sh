@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL psutils
+    DNF_INSTALL "psutils perl-IPC-Run3"
     version=$(rpm -qa psutils | awk -F "-" '{print$2}')
     LOG_INFO "End of environmental preparation!"
 }
@@ -30,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # test psselect
-    test "$(psselect --version 2>&1 | awk 'NR==1{print$2}')" == "$version"
+    test "$(psselect --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -n 1)" == "$version"
     CHECK_RESULT $? 0 0 "psselect -v execution failed."
     psselect -o ./common/a4-11.ps | grep -a -i -E "%%Page: \(\d*[13579]\)"
     CHECK_RESULT $? 0 0 "psselect -o ./common/a4-11.ps execution failed."

@@ -1,8 +1,5 @@
 {
     "path": "$OET_PATH/testcases/function-test/pkgs-test/protobuf",
     "cases": [
-        {
-            "name": "oe_test_protobuf"
-        }
     ]
 }

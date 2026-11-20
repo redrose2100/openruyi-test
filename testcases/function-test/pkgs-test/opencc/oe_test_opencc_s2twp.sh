@@ -29,7 +29,8 @@ function run_test() {
   LOG_INFO "Start executing testcase."
   echo "芯片" | opencc -c s2twp | grep "晶片"
   CHECK_RESULT $?
-  echo "芯片面积" | opencc -c s2twp | grep "晶片面積"
+  # TWPhrases.ocd2 has no entry for the "芯片面积" phrase, only for "芯片"
+  echo "芯片面积" | opencc -c s2twp | grep "芯片面積"
   CHECK_RESULT $?
   echo '{
   "name": "Traditional Chinese to Traditional Chinese (Taiwan standard, with phrases)",
@@ -59,7 +60,7 @@ function run_test() {
   CHECK_RESULT $?
   echo '正则表达式' | opencc -c s2twp | grep '正則表示式'
   CHECK_RESULT $?
-  echo "正則表達式" | opencc -c s2twp | grep '正則表示式'
+  echo "正則表達式" | opencc -c s2twp | grep '正規表示式'
   CHECK_RESULT $?
   LOG_INFO "Finish testcase execution."
 }

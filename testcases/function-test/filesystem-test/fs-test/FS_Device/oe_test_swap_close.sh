@@ -21,6 +21,7 @@ source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "openssh-clients"
     ssh_cmd_node "cp /etc/fstab /etc/fstab.bak"
     LOG_INFO "Finish to prepare the database config."
 }

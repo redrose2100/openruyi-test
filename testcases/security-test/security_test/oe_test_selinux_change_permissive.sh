@@ -21,6 +21,11 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    # 节点1 需预装 openssh-clients，否则 SSH_CMD 的 expect 包装会报
+    # couldn't execute "ssh": no such file or directory
+    DNF_INSTALL "openssh-clients"
+    # 节点2 需 selinux-tools 提供 setenforce/getenforce
+    DNF_INSTALL "selinux-tools" 2
     # can't enable when selinux disabled on kernel
     SSH_CMD "setenforce 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" || exit 255
     SSH_CMD "cp /etc/selinux/config /etc/selinux/config-bak" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"

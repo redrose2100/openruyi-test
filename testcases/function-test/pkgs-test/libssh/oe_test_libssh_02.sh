@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "libssh"
+    DNF_INSTALL "libssh openssh-clients"
     mkdir -p /tmp/libssh_test
     # Ensure sshd is running on the remote node
     SSH_CMD "systemctl restart sshd" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"

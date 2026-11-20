@@ -43,12 +43,18 @@ function run_test() {
     ID=$(podman create --cpu-quota 1001 alpine ls)
     podman inspect "$ID" | grep '"CpuQuota": 1001'
     CHECK_RESULT $? 0 0 'check "CpuQuota": 1001 test failed'
-    ID=$(podman create --cpu-rt-period 1 alpine ls)
-    podman inspect "$ID" | grep '"CpuRealtimePeriod": 1'
-    CHECK_RESULT $? 0 0 'check "CpuRealtimePeriod": 1 test failed'
-    ID=$(podman create --cpu-rt-runtime 2 alpine ls)
-    podman inspect "$ID" | grep '"CpuRealtimeRuntime": 2'
-    CHECK_RESULT $? 0 0 'check "CpuRealtimeRuntime": 2 test failed'
+    # cgroups v2 不提供实时调度配额，podman 会直接提示
+    # "Realtime period not supported on cgroups V2 systems"，此时跳过这两项。
+    if [ "$(stat -fc %T /sys/fs/cgroup 2>/dev/null)" = "cgroup2fs" ]; then
+        LOG_WARN "cgroups v2 does not support realtime CPU quota, skip the two realtime checks."
+    else
+        ID=$(podman create --cpu-rt-period 1 alpine ls)
+        podman inspect "$ID" | grep '"CpuRealtimePeriod": 1'
+        CHECK_RESULT $? 0 0 'check "CpuRealtimePeriod": 1 test failed'
+        ID=$(podman create --cpu-rt-runtime 2 alpine ls)
+        podman inspect "$ID" | grep '"CpuRealtimeRuntime": 2'
+        CHECK_RESULT $? 0 0 'check "CpuRealtimeRuntime": 2 test failed'
+    fi
     ID=$(podman create --cpu-shares 3 alpine ls)
     podman inspect "$ID" | grep '"CpuShares": 3'
     CHECK_RESULT $? 0 0 'check "CpuShares": 3 test failed'

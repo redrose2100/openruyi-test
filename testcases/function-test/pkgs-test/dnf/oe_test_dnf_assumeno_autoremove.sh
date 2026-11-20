@@ -32,21 +32,26 @@ function run_test() {
     CHECK_RESULT $?
     rpm -q tree | grep "package tree is not installed"
     CHECK_RESULT $?
-    dnf autoremove -y | grep "Removing:"
+    # dnf5: autoremove prints "Removing:" only when there are orphan packages;
+    # on openRuyi vim has no vim-common/vim-enhanced subpackages so nothing is left to autoremove
+    dnf autoremove -y 2>&1 | grep -E "Removing:|Nothing to do"
     CHECK_RESULT $?
     rpm -qa | grep "vim-common"
     CHECK_RESULT $? 1 0
-    dnf -y --nobest install httpd | grep "Complete!"
+    dnf -y --nobest install httpd 2>&1 | grep "Complete!"
     CHECK_RESULT $?
-    dnf -b -y install httpd | grep "Nothing to do"
+    # dnf5 removed -b/--best; installing httpd again is a no-op
+    dnf -y install httpd 2>&1 | grep -E "Nothing to do|already installed"
     CHECK_RESULT $?
-    dnf makecache | grep "Metadata cache created"
+    dnf makecache 2>&1 | grep "Metadata cache created"
     CHECK_RESULT $?
-    dnf -C repoquery kernel | grep "kernel"
+    # openRuyi Base repo has no kernel package; use tree for repoquery check
+    dnf repoquery tree 2>&1 | grep "^tree-"
     CHECK_RESULT $?
-    dnf clean all | grep "files removed"
+    dnf clean all 2>&1 | grep "Removed"
     CHECK_RESULT $?
-    dnf -C repoquery kernel 2>&1 | grep "Error"
+    # after clean all, cache-only repoquery reports no cache for the repo
+    dnf -C repoquery tree 2>&1 | grep "no cache"
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }

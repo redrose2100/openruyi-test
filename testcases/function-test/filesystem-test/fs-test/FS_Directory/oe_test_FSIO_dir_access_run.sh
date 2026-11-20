@@ -21,8 +21,14 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function run_test() {
     LOG_INFO "Start to run test."
-    ls -l /run | grep "initctl" | grep -q "prw-------"
-    CHECK_RESULT $? 0 0 "The initctl on /run has some errors."
+    # /run/initctl 由 systemd-sysv 兼容包提供，openRuyi 等发行版不安装该包，
+    # 文件不存在时跳过该项检查。
+    if [ -e /run/initctl ]; then
+        ls -l /run | grep "initctl" | grep -q "prw-------"
+        CHECK_RESULT $? 0 0 "The initctl on /run has some errors."
+    else
+        LOG_WARN "No /run/initctl on this system, skip the initctl access check."
+    fi
     ls -l /run | grep "utmp" | grep -q "\-rw-rw-r--"
     CHECK_RESULT $? 0 0 "The utmp on /run has some errors."
     dir=('log' 'mount' 'systemd' 'udev' 'user')

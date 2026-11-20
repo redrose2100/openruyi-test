@@ -20,8 +20,20 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL mariadb-server
-    rm -rf /var/lib/mysql/*
+    DNF_INSTALL mariadb
+    # Do not wipe /var/lib/mysql: the package pre-populates the "mysql" system
+    # database there, and removing it makes mysqldump fail with "Unknown
+    # database 'mysql'" and every later CREATE DATABASE fail with errno 2.
+    # Only initialise the datadir when the system tables are really missing.
+    if [ ! -d /var/lib/mysql/mysql ]; then
+        mkdir -p /var/lib/mysql
+        chown mysql:mysql /var/lib/mysql
+        if command -v mariadb-install-db >/dev/null 2>&1; then
+            mariadb-install-db --user=mysql --datadir=/var/lib/mysql >/dev/null 2>&1
+        elif command -v mysql_install_db >/dev/null 2>&1; then
+            mysql_install_db --user=mysql --datadir=/var/lib/mysql >/dev/null 2>&1
+        fi
+    fi
     systemctl start mariadb.service
     systemctl status mariadb.service | grep running || exit 1
     mysqladmin -uroot password ${NODE1_PASSWORD}
@@ -61,7 +73,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    rm -rf /home/mysql.sql testlog /var/lib/mysql
+    rm -rf /home/mysql.sql testlog
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."
 }

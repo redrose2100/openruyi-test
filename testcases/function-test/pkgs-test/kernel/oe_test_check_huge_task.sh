@@ -19,16 +19,42 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+# 内核配置文件在不同发行版/镜像上位置不同：优先 /boot/config-<ver>，
+# 退化为 /proc/config.gz（需 IKCONFIG_PROC）。两者都没有时无法测试，直接跳过。
+function get_kernel_config() {
+    local cfg=/boot/config-$(uname -r)
+    if [ -f "${cfg}" ]; then
+        grep -w "$1" "${cfg}"
+        return $?
+    fi
+    if [ -f /proc/config.gz ] && command -v zgrep >/dev/null 2>&1; then
+        zgrep -w "$1" /proc/config.gz
+        return $?
+    fi
+    LOG_WARN "Neither /boot/config-$(uname -r) nor /proc/config.gz is available."
+    return 2
+}
+
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    cfg=/boot/config-$(uname -r)
+    if [ ! -f "${cfg}" ] && [ ! -f /proc/config.gz ]; then
+        LOG_WARN "Kernel config file is not available, skip the case."
+        exit 255
+    fi
+    LOG_INFO "Finish preparing the test environment."
+}
+
 function run_test()
 {
     LOG_INFO "Start testing..."
-    grep -w CONFIG_DETECT_HUNG_TASK=y /boot/config-"$(uname -r)"
+    get_kernel_config CONFIG_DETECT_HUNG_TASK=y
     CHECK_RESULT $? 0 0 "DETECT_HUNG_TASK ERROR"
 
-    grep -w CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=120 /boot/config-"$(uname -r)"
+    get_kernel_config CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=120
     CHECK_RESULT $? 0 0 "DETECT_HUNG_TASK_TIMEOUT ERROR"
 
-    grep -w CONFIG_BOOTPARAM_HUNG_TASK_PANIC=y /boot/config-"$(uname -r)"
+    get_kernel_config CONFIG_BOOTPARAM_HUNG_TASK_PANIC=y
     CHECK_RESULT $? 0 1 "BOOTPARAM_HUNG_TASK_PANIC_VALUE ERROR"
     LOG_INFO "Finish test!"
 }

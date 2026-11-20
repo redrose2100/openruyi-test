@@ -18,7 +18,10 @@
 # ############################################
 # shellcheck disable=SC1091,SC2154
 
-source /etc/openEuler-latest
+# /etc/openEuler-latest 只在 openEuler 系镜像中存在，openRuyi 等衍生版没有。
+# 通过 os_release_lib.sh 兼容：文件存在时行为不变，缺失时用 /etc/os-release 推导。
+source "$(dirname "${BASH_SOURCE[0]}")/os_release_lib.sh"
+OS_RELEASE_EXPORT_VERSION
 LANG=en_US.UTF-8
 service_ip=121.36.84.172
 

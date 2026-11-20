@@ -21,7 +21,8 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL arptables
+    # openRuyi 无独立 arptables 包，arptables.service 由 iptables 的 services 子包提供。
+    DNF_INSTALL "iptables-services"
     LOG_INFO "End of environmental preparation!"
 }
 

@@ -1,0 +1,27 @@
+# Commit lint allowlist
+#
+# Commits listed here are exempt from the Conventional Commits gate.
+#
+# Rationale
+#   Every entry below is already published on a long-lived branch (`dev`) and
+#   rewriting it would require a force-push, which this repository forbids.
+#   The gate cannot be satisfied retroactively, so the offending commits are
+#   recorded here instead of silently bypassing the whole check.
+#
+# Policy
+#   * Append-only. Never remove an entry to "clean up" the file.
+#   * Only historical, already-published commits belong here. A new commit must
+#     be written in `type(scope): subject` form instead of being added here.
+#   * Keep the reason on the same line: it is what makes this file auditable.
+#   * Prefix matching is supported (7-40 hex chars), but full 40-char SHAs are
+#     preferred so an entry can never accidentally match another commit.
+#
+# Format
+#   <sha>  <reason>
+#
+
+2ad8b2931ca07e56ecb5b8675fd13377006011c8  header "unify test disk selection guard into libs/locallibs/disk_select_lib.sh" has no "type:" prefix
+4d2beaa74f23e1741fda040b6642db61ad6b3edb  header "testcases: harden Group C server-side cases and re-triage Group E" uses unsupported type "testcases"
+bed7041c137148dbc2c829f932b080117433372a  header "httpd: drop cases for units not shipped by openRuyi spec" uses unsupported type "httpd"
+66a524fda1c06081f39b7e9a1febe72368a9e432  header "Move reboot test cases from os-basic to os-reboot suite" has no "type:" prefix
+5629b9edb3be99a00261d327131eceb5b47db267  header "Remove 516 pkgs-test suites without spec and NOPKG skip reason" has no "type:" prefix

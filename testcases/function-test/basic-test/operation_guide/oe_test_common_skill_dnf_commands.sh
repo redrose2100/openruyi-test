@@ -21,6 +21,7 @@ source "${OET_PATH}/testcases/function-test/basic-test/operation_guide/common/co
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "tree"
     Default_LANG=$LANG
     export LANG=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."

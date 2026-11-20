@@ -22,7 +22,7 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/common/common_lib.sh"
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "libpng-tools libpng-devel gcc-c++"
+    DNF_INSTALL "libpng-devel gcc-c++"
     LOG_INFO "End to prepare the test environment."
 }
 

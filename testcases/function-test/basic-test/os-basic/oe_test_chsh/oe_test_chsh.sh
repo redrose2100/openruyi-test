@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "util-linux-user zsh"
+    DNF_INSTALL "util-linux zsh"
     LOG_INFO "End to prepare the test environment."
 }
 

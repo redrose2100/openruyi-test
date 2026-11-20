@@ -18,13 +18,9 @@
 # ############################################
 # shellcheck disable=SC2034,SC2086,SC2206,SC2119
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
-
-function check_free_disk() {
-    disks=$(TEST_DISK)
-    disk_list=($disks)
-    local_disk=${disk_list[0]}
-    local_disk1=${disk_list[1]}
-}
+# 选盘与防护逻辑统一收敛到 libs/locallibs/disk_select_lib.sh。
+# 本文件保留原路径与原文件名，并继续提供与磁盘无关的 version_ge()。
+source "${OET_PATH}/libs/locallibs/disk_select_lib.sh"
 
 function version_ge() { 
     test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" == "$1"

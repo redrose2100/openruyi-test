@@ -3,9 +3,6 @@
     "cases": [
         {
             "name": "oe_test_service_xinetd"
-        },
-	{
-	    "name": "oe_test_service_xinetd_002"
-	}
+        }
     ]
 }

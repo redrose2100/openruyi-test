@@ -25,7 +25,7 @@ function pre_test() {
         LOG_INFO "Package glib cannot be downloaded, skipping test."
         exit 255
     fi
-    DNF_INSTALL "meson glib json-glib-debuginfo json-glib-debugsource json-glib-devel json-glib-help glib-help ninja-build"
+    DNF_INSTALL "meson glib json-glib-debuginfo json-glib-devel ninja"
     LOG_INFO "End to prepare the test environment."
 }
 

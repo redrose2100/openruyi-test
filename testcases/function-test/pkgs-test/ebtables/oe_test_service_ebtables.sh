@@ -21,7 +21,8 @@ source "$OET_PATH/testcases/function-test/pkgs-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL ebtables
+    # openRuyi 无独立 ebtables 包，ebtables.service 由 iptables 的 services 子包提供。
+    DNF_INSTALL "iptables-services"
     LOG_INFO "End of environmental preparation!"
 }
 

@@ -19,6 +19,12 @@
 
 source ../common_lib/fsio_lib.sh
 
+function config_params() {
+    LOG_INFO "Start to config params of the case."
+    EXECUTE_T="60m"
+    LOG_INFO "End to config params of the case."
+}
+
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     point_list="($(CREATE_FS))"

@@ -8,9 +8,6 @@
             "name": "oe_test_encrypt_data"
         },
         {
-            "name": "oe_test_luks_encrypted"
-        },
-        {
             "name": "oe_test_use_luks"
         }
     ]

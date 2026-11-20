@@ -20,7 +20,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "mariadb-server mariadb-backup"
+    DNF_INSTALL "mariadb mariadb-tools"
     rm -rf /var/lib/mysql/*
     systemctl start mariadb.service
     systemctl status mariadb.service | grep running || exit 1

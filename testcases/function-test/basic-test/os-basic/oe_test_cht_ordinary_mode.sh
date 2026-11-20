@@ -28,7 +28,17 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    curl cht.sh/pwd > pwd.txt
+    # cht.sh is a third-party public service. When it is unreachable from
+    # the test network, curl returns a 200 HTML stub page (e.g. 265 bytes)
+    # instead of cheat/tldr content, which makes every grep below fail.
+    # Detect that case and skip instead of reporting a failure.
+    curl -sS cht.sh/pwd > pwd.txt
+    grep -q 'cheat:pwd' pwd.txt
+    if [ $? -ne 0 ]; then
+        LOG_WARN "cht.sh is not reachable from the test network (downloaded content is not cheat/tldr text), skipped."
+        return 0
+    fi
+    grep 'Show the absolute path of your current working directory' pwd.txt
     grep 'Show the absolute path of your current working directory' pwd.txt
     CHECK_RESULT $? 0 0 "Query pwd failed"
     curl cht.sh/~pwd > pwd2.txt
@@ -40,7 +50,7 @@ function run_test() {
     curl cht.sh/python/random+list+elements\?Q >API-Q.txt
     grep 'https://docs.python.org/library/random.htmlrandom.choice' API-Q.txt
     CHECK_RESULT $? 0 1 "Query \?Q failed"
-    curl curl cht.sh/sql+select >sql.txt
+    curl cht.sh/sql+select >sql.txt
     grep "The \`CASE\` statement is the closest to IF in SQL" sql.txt
     CHECK_RESULT $? 0 0 "Query sql failed"
     LOG_INFO "End of the test."

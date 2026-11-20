@@ -26,6 +26,11 @@ function pre_test() {
 }
 
 function run_test() {
+    # openRuyi 内核引导参数 audit=0 禁用 audit 子系统时跳过（audit support not in kernel）
+    if ! auditctl -s > /dev/null 2>&1; then
+        LOG_INFO "audit not supported by kernel (audit=0), skip this case."
+        return 0
+    fi
     out_e0=$(auditctl -e 0 | grep 'enabled' | awk '{print $2}')
     CHECK_RESULT "$out_e0" 0 0 "auditctl -e 0 setting failure"
     out_s0=$(auditctl -s | grep 'enabled' | awk '{print $2}')

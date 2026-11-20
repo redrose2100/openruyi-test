@@ -21,7 +21,7 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "elfutils-debuginfod"
+    DNF_INSTALL "debuginfod-client"
     LOG_INFO "End to prepare the test environment."
 }
 

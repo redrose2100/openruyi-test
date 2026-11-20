@@ -39,7 +39,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf testlog
-    kill -9 $(pgrep hwclock)
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 hwclock PID（等价 pgrep hwclock）
+    kill -9 $(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = "hwclock" ] && echo "${p#/proc/}"; done)
     export LANG=${OLD_LANG}
     LOG_INFO "End to restore the test environment."
 }

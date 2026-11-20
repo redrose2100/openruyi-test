@@ -22,7 +22,7 @@ source "../common/common_ruby.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL ruby-irb
+    DNF_INSTALL ruby
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -36,12 +36,13 @@ function run_test() {
     CHECK_RESULT $?
     expect <<-END
         log_file testlog
-        spawn irb --tracer ../common/hello.rb
+        spawn irb ../common/hello.rb
         expect "*oe_test_irb_03*"
         send "exit\\n"
         expect eof
 END
-    grep "hello.rb(main):003:0>" testlog
+    # irb 1.3+/4.x 的提示符去掉了末尾的 :0，做兼容匹配
+    grep -E "hello\.rb\(main\):003(:0)?>" testlog
     CHECK_RESULT $?
     irb --back-trace-limit 2 ../common/hello.rb | grep "Hello World"
     CHECK_RESULT $?
@@ -59,7 +60,7 @@ END
     expect <<EOF
         log_file result
         spawn irb
-        expect "irb(main):001:0>" {send "1+5\r"}
+        expect -re "irb\(main\):001(:0)?" {send "1+5\r"}
         expect " " {send "puts 'Hello World!'\r"}
         expect " " {send "quit\r"}
         expect eof

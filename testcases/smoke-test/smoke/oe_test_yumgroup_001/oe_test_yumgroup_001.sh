@@ -29,7 +29,16 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start testing..."
-    yum group list | grep 'Network Servers'
+    # 组信息（comps 元数据）是仓库可选项，openRuyi 的 repo 未提供 comps，
+    # 因此 yum group list 里不会有 Network Servers，后续 install/remove 全部
+    # 报 "No groups to remove"。没有组时用例场景不成立，明确跳过。
+    yum group list >yum_group_all 2>&1
+    if ! grep -qE 'Available (Environment )?Groups|Installed (Environment )?Groups' yum_group_all; then
+        LOG_WARN "The enabled repositories provide no comps groups, skip yum group test."
+        LOG_INFO "Finish test!"
+        return 0
+    fi
+    grep 'Network Servers' yum_group_all
     CHECK_RESULT $?
     yum group info 'Network Servers' | grep '   ' >yum_list
     yum group install 'Network Servers' -y
@@ -50,7 +59,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     export LANG=${OLD_LANG}
-    rm -rf yum_list
+    rm -rf yum_list yum_group_all
     LOG_INFO "Finish environment cleanup!"
 }
 

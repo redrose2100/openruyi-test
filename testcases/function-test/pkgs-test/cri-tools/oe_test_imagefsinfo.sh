@@ -4,12 +4,16 @@
 
 # 测试框架固定行
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+source "$(dirname "$0")/cri_lib.sh"
 
 # 测试前函数
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     # 安装待测试的软件包
     DNF_INSTALL "cri-tools"
+
+    # 引导 CRI 服务（containerd）：cri-tools 只提供客户端，服务端须自行拉起
+    cri_ensure_runtime || cri_abort "CRI runtime (containerd) is not available"
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -29,7 +33,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "crictl imagefsinfo --output yaml failed"
 
     # 测试 crictl imagefsinfo --output go-template
-    crictl imagefsinfo --output go-template --template "{{.ImageFilesystem}}"
+    # 原实现的模板字段 ".ImageFilesystem" 在 1.36 的响应结构里不存在，
+    # 正确字段是 .status.imageFilesystem（顶层键为 status）
+    crictl imagefsinfo --output go-template --template "{{.status.imageFilesystem}}"
     CHECK_RESULT $? 0 0 "crictl imagefsinfo --output go-template failed"
 
     # 测试 crictl imagefsinfo --output table

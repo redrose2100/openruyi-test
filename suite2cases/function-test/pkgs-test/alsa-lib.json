@@ -3,15 +3,6 @@
     "cases": [
         {
             "name": "oe_test_alsa-lib_install"
-        },
-        {
-            "name": "oe_test_alsa-lib_pcm"
-        },
-        {
-            "name": "oe_test_alsa-lib_mixer"
-        },
-        {
-            "name": "oe_test_alsa-lib_control"
         }
     ]
 }

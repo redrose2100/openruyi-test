@@ -20,6 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "rsyslog inetutils"
     echo "local7.*  /var/log/test" >/etc/rsyslog.d/test.conf
     systemctl stop rsyslog
     LOG_INFO "End to prepare the test environment."
@@ -29,11 +30,14 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl start rsyslog
     CHECK_RESULT $?
-    pgrep -f rsyslogd
+    [ -n "$(proc_pids_by_cmdline rsyslogd)" ]
     CHECK_RESULT $?
-    rsyslogd
+    # the second instance needs a dedicated pid file (-i), otherwise
+    # rsyslogd 8.2510 aborts with error -3000 because the default pid
+    # file is already held by the systemd-started instance.
+    rsyslogd -i /tmp/rsyslogd_test.pid
     CHECK_RESULT $?
-    CHECK_RESULT "$(pgrep -cf rsyslogd)" 2
+    CHECK_RESULT "$(proc_pids_by_cmdline rsyslogd | wc -l)" 2
     logger -p local7.error 'test' && sleep 1
     CHECK_RESULT "$(cat /var/log/test | wc -l)" 2
     LOG_INFO "End to run test."
@@ -41,8 +45,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    pgrep -f rsyslogd | xargs kill -9
-    rm -rf /etc/rsyslog.d/test.conf /var/log/test
+    proc_kill_pids $(proc_pids_by_cmdline rsyslogd)
+    rm -rf /etc/rsyslog.d/test.conf /var/log/test /tmp/rsyslogd_test.pid
     systemctl start rsyslog
     LOG_INFO "End to restore the test environment."
 }

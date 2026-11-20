@@ -21,6 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "cronie crontabs selinux-tools"
     touch test.sh
     chmod +x test.sh
     LOG_INFO "End of environmental preparation!"

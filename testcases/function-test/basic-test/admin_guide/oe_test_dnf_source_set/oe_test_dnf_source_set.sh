@@ -17,15 +17,28 @@
 # @Desc      :   Enable source, disable source
 # #############################################
 source "${OET_PATH}/libs/locallibs/common_lib.sh"
+function pre_test() {
+    LOG_INFO "Start environment preparation."
+    DNF_INSTALL dnf5-plugins
+    LOG_INFO "Environmental preparation is over."
+}
 function run_test() {
     LOG_INFO "Start executing testcase."
-    reponame=$(dnf repolist | grep "repo id" -A 1 | grep -v "repo id" | awk '{print$1}')
-    dnf config-manager --set-disable "${reponame}"
+    reponame=$(dnf repolist | awk 'NR>1{print $1; exit}')
+    test -n "${reponame}"
     CHECK_RESULT $?
-    CHECK_RESULT "$(grep "\[${reponame}\]" -A 6 /etc/yum.repos.d/*.repo | grep "enabled=" | awk -F '=' '{print$2}')" 0
-    dnf config-manager --set-enable "${reponame}"
+    # dnf5 的 config-manager 使用 disable / enable 子命令，--set-disable/--set-enable 已移除；
+    # 生效状态通过 repolist 的 --all 与默认视图差异判断，而不是 grep 仓库文件
+    dnf config-manager disable "${reponame}"
     CHECK_RESULT $?
-    CHECK_RESULT "$(grep "\[${reponame}\]" -A 6 /etc/yum.repos.d/*.repo | grep "enabled=" | awk -F '=' '{print$2}')" 1
+    dnf repolist --all 2>/dev/null | grep -w "${reponame}" >/dev/null
+    CHECK_RESULT $?
+    dnf repolist 2>/dev/null | grep -w "${reponame}" >/dev/null
+    CHECK_RESULT $? 1
+    dnf config-manager enable "${reponame}"
+    CHECK_RESULT $?
+    dnf repolist 2>/dev/null | grep -w "${reponame}"
+    CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }
 

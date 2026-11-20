@@ -29,6 +29,11 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    # openRuyi 内核引导参数 audit=0 禁用 audit 子系统时跳过（audit support not in kernel）
+    if ! auditctl -s > /dev/null 2>&1; then
+        LOG_INFO "audit not supported by kernel (audit=0), skip this case."
+        return 0
+    fi
     auditctl -w /etc/passwd -p rwxa
     CHECK_RESULT $? 0 0  "check auditctl fail"
     auditctl -l |grep "rwxa"

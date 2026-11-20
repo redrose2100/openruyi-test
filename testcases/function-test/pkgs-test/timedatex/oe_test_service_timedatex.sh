@@ -21,6 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "selinux-tools"
     systemctl unmask timedatex.service
     flag=false
     if [ $(getenforce | grep Enforcing) ]; then

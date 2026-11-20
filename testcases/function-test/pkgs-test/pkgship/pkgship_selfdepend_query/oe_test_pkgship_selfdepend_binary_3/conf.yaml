@@ -1,4 +1,0 @@
-- dbname: data1
-  src_db_file: file:///etc/pkgship/repo/data1/src
-  bin_db_file: file:///etc/pkgship/repo/data1/bin
-  priority: 1

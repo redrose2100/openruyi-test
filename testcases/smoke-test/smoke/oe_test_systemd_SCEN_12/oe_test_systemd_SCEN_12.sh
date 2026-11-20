@@ -49,6 +49,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "TestA.service reload success"
     systemctl restart TestA
     CHECK_RESULT $? 0 0 "TestA.service restart success"
+    for i in $(seq 1 20); do
+        systemctl is-failed TestA && break
+        sleep 0.5
+    done
     systemctl status TestA | grep failed
     CHECK_RESULT $? 0 0 "TestA.service is not failed"
     systemctl status TestB | grep running

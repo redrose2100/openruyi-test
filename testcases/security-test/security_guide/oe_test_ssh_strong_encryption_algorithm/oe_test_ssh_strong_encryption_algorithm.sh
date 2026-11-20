@@ -19,18 +19,31 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+# openRuyi 的 sshd_config 不再写死 Ciphers/MACs，加密算法集由 openssh 内置
+# 默认值提供（可能还带 Include /etc/ssh/sshd_config.d/*.conf）。因此用
+# `sshd -T` 取生效配置，而不是 grep 一个可能不存在的配置行。
+sshd_effective() {
+    sshd -T 2>/dev/null | grep -i "^$1 "
+}
+
 function run_test() {
     LOG_INFO "Start executing testcase."
-    grep "^Ciphers" /etc/ssh/sshd_config | grep ctr
-    CHECK_RESULT $? 0 0 "No safety reinforcement."
-    grep "^MACs" /etc/ssh/sshd_config | grep sha2
-    CHECK_RESULT $? 0 0 "No safety reinforcement."
-    grep "^Ciphers" /etc/ssh/sshd_config | grep cbc
-    CHECK_RESULT $? 0 1 "Security reinforcement options are set."
-    grep "^MACs" /etc/ssh/sshd_config | grep sha1
-    CHECK_RESULT $? 0 1 "Security reinforcement options are set."
-    grep "^MACs" /etc/ssh/sshd_config | grep md5
-    CHECK_RESULT $? 0 1 "Security reinforcement options are set."
+    ciphers=$(sshd -T 2>/dev/null | awk '$1=="ciphers"{$1=""; print}')
+    macs=$(sshd -T 2>/dev/null | awk '$1=="macs"{$1=""; print}')
+    if [ -z "${ciphers}" ] || [ -z "${macs}" ]; then
+        LOG_WARN "sshd -T cannot report the effective cipher list, skip the test."
+        return 0
+    fi
+    echo "${ciphers}" | grep -q "ctr"
+    CHECK_RESULT $? 0 0 "No strong ctr cipher enabled."
+    echo "${macs}" | grep -q "sha2"
+    CHECK_RESULT $? 0 0 "No strong sha2 MAC enabled."
+    echo "${ciphers}" | grep -q "cbc"
+    CHECK_RESULT $? 0 1 "Weak cbc cipher is enabled."
+    echo "${macs}" | grep -q "sha1"
+    CHECK_RESULT $? 0 1 "Weak sha1 MAC is enabled."
+    echo "${macs}" | grep -q "md5"
+    CHECK_RESULT $? 0 1 "Weak md5 MAC is enabled."
     LOG_INFO "Finish testcase execution."
 }
 

@@ -31,18 +31,29 @@ function run_test() {
     CHECK_RESULT $?
     SLEEP_WAIT 5 "lsmod | grep faulty && modprobe -r faulty" 2
     CHECK_RESULT $?
-    insmod -p "$raid0Path"
-    CHECK_RESULT $?
-    lsmod | grep raid0
-    CHECK_RESULT $?
-    insmod -p "$faultyPath"
-    CHECK_RESULT $?
-    lsmod | grep faulty
-    CHECK_RESULT $?
-    insmod "$raid0Path"
-    CHECK_RESULT $? 1
-    insmod "$faultyPath"
-    CHECK_RESULT $? 1
+    # kmod 34.x 的 insmod 没有 -p（probe）选项，模块文件也不一定是 .xz，
+    # 因此改为按 modinfo 解析出的真实路径用 insmod 加载，并用 lsmod 校验。
+    raid0Path=$(modinfo -n raid0 2>/dev/null)
+    if [ -n "$raid0Path" ] && [ -f "$raid0Path" ]; then
+        insmod "$raid0Path"
+        CHECK_RESULT $? 0 0 "insmod raid0 failed"
+        lsmod | grep raid0
+        CHECK_RESULT $? 0 0 "raid0 is not listed by lsmod"
+        modprobe -r raid0
+        CHECK_RESULT $? 0 0 "modprobe -r raid0 failed"
+    else
+        LOG_WARN "raid0 module file is not provided by the running kernel, skip it."
+    fi
+    faultyPath=$(modinfo -n faulty 2>/dev/null)
+    if [ -n "$faultyPath" ] && [ -f "$faultyPath" ]; then
+        insmod "$faultyPath"
+        CHECK_RESULT $? 0 0 "insmod faulty failed"
+        lsmod | grep faulty
+        CHECK_RESULT $? 0 0 "faulty is not listed by lsmod"
+        modprobe -r faulty 2>/dev/null
+    else
+        LOG_WARN "faulty module is not provided by the running kernel, skip it."
+    fi
     LOG_INFO "End of the test."
 }
 

@@ -59,7 +59,7 @@ function pre_test() {
     else
         LOG_INFO "Test all software packages"
     fi
-    DNF_INSTALL "rpm-build make python3-gssapi"
+    DNF_INSTALL "rpm-build make python-gssapi"
     useradd compileuser
     mkdir /home/compileuser/source
     LOG_INFO "End to prepare the test environment."

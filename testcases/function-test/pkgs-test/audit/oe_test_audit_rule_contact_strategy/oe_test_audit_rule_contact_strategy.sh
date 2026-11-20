@@ -29,8 +29,8 @@ function pre_test() {
 function run_test()
 {
     LOG_INFO "Start to run test."
-    service auditd restart
-    service auditd status | grep running
+    systemctl restart auditd
+    systemctl status auditd | grep running
     CHECK_RESULT $? 0 0 "grep failed"
     auditctl -D
     CHECK_RESULT $? 0 0 "delete failed"

@@ -21,7 +21,7 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "libtommath libtommath-devel libtommath-help gcc"
+    DNF_INSTALL "libtommath libtommath-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 

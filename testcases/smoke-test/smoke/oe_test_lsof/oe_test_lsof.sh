@@ -39,7 +39,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    kill -9 $(pgrep lsof)
+    # openRuyi riscv64 无 pgrep：/proc 遍历按进程名取 lsof PID（等价 pgrep lsof）
+    kill -9 $(for p in /proc/[0-9]*; do [ -r "$p/comm" ] || continue; [ "$(cat "$p/comm")" = "lsof" ] && echo "${p#/proc/}"; done)
     rm -rf testlog
     DNF_REMOVE
     LOG_INFO "End to restore the test environment."

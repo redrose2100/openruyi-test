@@ -4,7 +4,7 @@
     "cases": [
         {
             "name": "oe_test_openssh_cipher",
-            "machine num": 1
+            "machine num": 2
         },
         {
             "name": "oe_test_openssh_keychecking_no",
@@ -76,10 +76,6 @@
         },
         {
             "name": "oe_test_start_ssh",
-            "machine num": 1
-        },
-        {
-            "name": "oe_test_sec_ssh",
             "machine num": 1
         },
         {

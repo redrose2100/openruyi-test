@@ -26,7 +26,7 @@ function config_params() {
 }
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "tuned dmidecode"
+    DNF_INSTALL "tuned dmidecode python3-dbus-python"
     if [[ "${NODE1_MACHINE}"x == "kvm"x ]]; then
         LOG_INFO "This only applies to physical machines."
         exit 0

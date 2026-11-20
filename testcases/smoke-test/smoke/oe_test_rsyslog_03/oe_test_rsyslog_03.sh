@@ -23,15 +23,17 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL rsyslog
     systemctl start rsyslog
-    if [ -d /var/log/journal ]; then
-        cp -f /var/log/journal/*/system.journal /var/log/journal/*/system.journal.bak
-        cp -f /var/run/log/imjournal.state /var/run/log/imjournal.state.bak
-        echo "" >/var/run/log/imjournal.state
-    else
-        cp -f /run/log/journal/*/system.journal /run/log/journal/*/system.journal.bak
-        cp -f /run/log/imjournal.state /run/log/imjournal.state.bak
-        echo "" >/run/log/imjournal.state
-    fi
+    # Iterate over the journal files instead of relying on a glob that expands
+    # to several arguments, and only back up the imjournal state when the
+    # running rsyslog actually keeps one.
+    for jf in /var/log/journal/*/system.journal /run/log/journal/*/system.journal \
+        /run/log/imjournal.state /var/run/log/imjournal.state; do
+        [ -f "${jf}" ] || continue
+        cp -f "${jf}" "${jf}.bak"
+    done
+    for sf in /run/log/imjournal.state /var/run/log/imjournal.state; do
+        [ -f "${sf}" ] && echo "" >"${sf}"
+    done
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -56,13 +58,11 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    if [ -d /var/log/journal ]; then
-        mv -f /var/log/journal/*/system.journal.bak /var/log/journal/*/system.journal
-        mv -f /var/run/log/imjournal.state.bak /var/run/log/imjournal.state
-    else
-        mv -f /run/log/journal/*/system.journal.bak /run/log/journal/*/system.journal
-        mv -f /run/log/imjournal.state.bak /run/log/imjournal.state
-    fi
+    for jf in /var/log/journal/*/system.journal.bak /run/log/journal/*/system.journal.bak \
+        /run/log/imjournal.state.bak /var/run/log/imjournal.state.bak; do
+        [ -f "${jf}" ] || continue
+        mv -f "${jf}" "${jf%.bak}"
+    done
     DNF_REMOVE "$@"
     LOG_INFO "End to restore the test environment."
 }

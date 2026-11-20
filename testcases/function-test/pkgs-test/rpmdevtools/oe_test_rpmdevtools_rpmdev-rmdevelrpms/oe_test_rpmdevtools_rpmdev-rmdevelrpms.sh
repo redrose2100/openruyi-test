@@ -24,7 +24,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "rpmdevtools"
     pkg_name=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
-    yumdownloader "${pkg_name}"
+    dnf download "${pkg_name}"
     test -d "${HOME}/rpmbuild" \
 	    && mv -f "${HOME}/rpmbuild" "$_RPMBUILD_BAKUP_DIR" \
 	    && LOG_INFO "Successfully move ${HOME}/rpmbuild to ${_RPMBUILD_BAKUP_DIR}."

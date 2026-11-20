@@ -20,7 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "openscap  scap-security-guide"
+    DNF_INSTALL "openscap scap-security-guide"
     LOG_INFO "End of environmental preparation!"
 }
 

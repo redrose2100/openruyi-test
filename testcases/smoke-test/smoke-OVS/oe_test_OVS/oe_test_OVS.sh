@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     ip netns list|awk '{print $1}'|xargs ip netns delete
-    DNF_INSTALL openvswitch
+    DNF_INSTALL "openvswitch selinux-tools"
     if getenforce | grep -i Enforcing; then
         setenforce 0
         result_flag=1

@@ -38,15 +38,22 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl start TestA
     CHECK_RESULT $? 0 0 "TestA.service start success"
-    systemctl status TestA | grep failed
+    # TestA 的 ExecStart 指向不存在的 /usr/bin/slee。Type=simple 下 systemctl start
+    # 先返回 0，失败状态是异步记录的，原用例紧接着 grep "failed" 存在竞态。
+    # 改为先有界等待进入 failed，再用 is-failed 断言。
+    for _i in $(seq 1 20); do
+        systemctl is-failed TestA >/dev/null 2>&1 && break
+        sleep 0.5
+    done
+    systemctl is-failed TestA | grep failed
     CHECK_RESULT $? 0 0 "TestA.service is not failed"
     systemctl stop TestB
     CHECK_RESULT $? 0 0 "TestB.service stop failed"
-    systemctl status TestB | grep dead
+    systemctl is-active TestB | grep inactive
     CHECK_RESULT $? 0 0 "TestB.service is not dead"
     systemctl start TestB
     CHECK_RESULT $? 0 0 "TestB.service start failed"
-    systemctl status TestA | grep failed
+    systemctl is-failed TestA | grep failed
     CHECK_RESULT $? 0 0 "TestA.service is still not failed"
     LOG_INFO "End to run test."
 }

@@ -20,7 +20,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL rpcbind
+    DNF_INSTALL "nfs-kernel-server nfs-client rpcbind"
     LOG_INFO "Environmental preparation is over."
 }
 

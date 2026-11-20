@@ -22,7 +22,11 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     touch /etc/initrd-release
-    systemctl start initrd-cleanup.service
+    # openRuyi 适配：initrd-cleanup.service 在正常启动的系统中 start 会连带触发
+    # initrd-switch-root 等相关作业，systemctl 长时间不返回（本次报告即卡在这一行，
+    # 用例 1800s 超时）。这里限时启动，超时不影响后续状态校验：
+    # 条件不满足时 unit 保持 inactive (dead) + Result=success，test_oneshot 可正常通过。
+    timeout 60 systemctl start initrd-cleanup.service
     LOG_INFO "Finish environment cleanup!"
 }
 

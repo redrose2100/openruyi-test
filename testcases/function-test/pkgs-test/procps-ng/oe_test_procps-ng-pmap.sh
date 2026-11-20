@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "gcc"
+    DNF_INSTALL "gcc procps"
     cat > /home/test_procps-ng-pmap.c << EOF
 int main(void)
 {

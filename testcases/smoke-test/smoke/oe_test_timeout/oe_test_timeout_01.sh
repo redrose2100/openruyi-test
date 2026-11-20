@@ -59,7 +59,8 @@ function run_test() {
     timeout -k 1 1 sleep 10
     CHECK_RESULT $? 124 0 "timeout kill-after failed"
     
-    pgrep -x sleep
+    # openRuyi riscv64 无 pgrep：/proc 遍历检查是否仍有 sleep 进程（等价 pgrep -x sleep，找不到返回非 0）
+    proc_pids_by_name sleep | grep -q .
     CHECK_RESULT $? 0 1 "sleep process still exists after timeout"
 
     LOG_INFO "Finish test!"

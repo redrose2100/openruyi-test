@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "slang slang-slsh" 
+    DNF_INSTALL "slang" 
     mkdir /tmp/test1
     mkdir /tmp/test2
     mkdir /tmp/test1/testdir

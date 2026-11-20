@@ -22,7 +22,11 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "npm httpd"
+    # Install npm/httpd directly on the local node: DNF_INSTALL goes through
+    # SSH_CMD on the execution node, which can fail silently on openRuyi.
+    # npm/httpd are provided by the openRuyi repo (verified on 12057).
+    dnf -y install npm httpd >/dev/null 2>&1
+    CHECK_RESULT $? 0 0 "Failed to install npm/httpd"
     systemctl stop firewalld
     LOG_INFO "End to prepare the test environment."
 }

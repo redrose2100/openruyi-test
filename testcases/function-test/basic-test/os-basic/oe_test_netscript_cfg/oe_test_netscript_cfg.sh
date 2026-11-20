@@ -35,17 +35,43 @@ function run_test() {
     else
         exit 255
     fi
-    grep -i NAME "$cfg01"
-    CHECK_RESULT $? 0 0 "the item is use for set net NAME"
-    grep -i bootproto "$cfg01"
-    CHECK_RESULT $? 0 0 "the item is use for set net bootproto"
-    grep -i onboot "$cfg01"
-    CHECK_RESULT $? 0 0 "the item is use for set automatically connect to the network upon startup"
-    grep -i device "$cfg01"
-    CHECK_RESULT $? 0 0 "the item is use for set net name"
-    if ! grep dhcp "$cfg01" && ping -c 3 www.baidu.com; then
-        grep -i defroute "$cfg01"
-        CHECK_RESULT $? 0 0 "the item is use for set default route"
+    if grep -q "^NAME=" "$cfg01"; then
+        grep -i "^NAME=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net NAME"
+        grep -i "^BOOTPROTO=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net bootproto"
+        grep -i "^ONBOOT=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set automatically connect to the network upon startup"
+        grep -i "^DEVICE=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net name"
+        if ! grep -i "^BOOTPROTO=dhcp" "$cfg01" && ping -c 3 www.baidu.com; then
+            grep -i "^DEFROUTE=" "$cfg01"
+            CHECK_RESULT $? 0 0 "the item is use for set default route"
+        fi
+    elif grep -q "^\[connection\]" "$cfg01"; then
+        grep -i "^id=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net NAME"
+        grep -i "^interface-name=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net name"
+        grep -i "^method=" "$cfg01"
+        CHECK_RESULT $? 0 0 "the item is use for set net bootproto"
+        # autoconnect 为可选字段：NetworkManager 默认值为 true，未显式写入时按默认值通过
+        if grep -i "^autoconnect=" "$cfg01"; then
+            CHECK_RESULT $? 0 0 "the item is use for set automatically connect to the network upon startup"
+        else
+            LOG_INFO "autoconnect is not explicitly set, use default value true, skipped."
+        fi
+        if grep -qi "^method=manual" "$cfg01" && ping -c 3 www.baidu.com; then
+            # never-default 为可选字段：未显式写入时 NetworkManager 取默认值
+            # false，即仍然设置默认路由，此时应认为该项已正确配置。
+            if grep -i "^never-default=" "$cfg01"; then
+                CHECK_RESULT $? 0 0 "the item is use for set default route"
+            else
+                LOG_INFO "never-default is not explicitly set, use default value false, skipped."
+            fi
+        fi
+    else
+        CHECK_RESULT 1 0 0 "unrecognized net cfg file format"
     fi
     LOG_INFO "End of testcase execution."
 }

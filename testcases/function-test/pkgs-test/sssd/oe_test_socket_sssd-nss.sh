@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     openldap_server_pre
     openldap_client_pre
-    DNF_INSTALL sssd
+    DNF_INSTALL "sssd firewalld hostname openldap openssh-clients"
     service=sssd-nss.socket
     sed -i '/services/d' /etc/sssd/sssd.conf
     LOG_INFO "End of environmental preparation!"

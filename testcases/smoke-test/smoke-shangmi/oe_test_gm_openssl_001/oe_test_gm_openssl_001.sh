@@ -20,6 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
+    DNF_INSTALL "diffutils"
     DNF_INSTALL "openssl-devel gcc"
     echo "abcdefghi" > data
 }

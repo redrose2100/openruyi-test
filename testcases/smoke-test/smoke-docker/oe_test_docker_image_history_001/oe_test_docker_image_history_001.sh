@@ -21,6 +21,7 @@
 source "${OET_PATH}/testcases/smoke-test/smoke-docker/common/prepare_docker.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "docker-cli"
     pre_docker_env
     if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
         TEST_TAG=24.03

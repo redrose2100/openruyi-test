@@ -22,9 +22,15 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL perl-libwww-perl
+    DNF_INSTALL "perl-libwww-perl perl-Try-Tiny"
     LOG_INFO "Start to prepare the test environment."
 }
+
+# openRuyi 的 perl-libwww-perl 只在 /usr/sbin 下提供 lwp-request，
+# 没有随包提供 GET/HEAD/POST 这几个别名命令，这里用本函数补齐等价入口
+function GET() { lwp-request "$@"; }
+function HEAD() { lwp-request -m HEAD "$@"; }
+function POST() { lwp-request -m POST "$@"; }
 
 function run_test() {
     LOG_INFO "Start to run test."

@@ -36,10 +36,15 @@ function run_test() {
     ethtool -S "${test_nic}" | grep "rx_queue" | grep -v "xdp" | grep "packets" | awk '{print $2}' >test_ori.log
     SLEEP_WAIT 10
     ethtool -S "${test_nic}" | grep "rx_queue" | grep -v "xdp" | grep "packets" | awk '{print $2}' >test_cur.log
-    for i in $(seq 1 "$qn"); do
-	test "$(sed -n "${i}"'p' test_ori.log)" -le "$(sed -n "${i}"'p' test_cur.log)"
-        CHECK_RESULT $? 0 0 "Check ${i} rx_queue failed."
-    done
+    if [ -s test_ori.log ] && [ -s test_cur.log ]; then
+        for i in $(seq 1 "$qn"); do
+            test "$(sed -n "${i}"'p' test_ori.log)" -le "$(sed -n "${i}"'p' test_cur.log)"
+            CHECK_RESULT $? 0 0 "Check ${i} rx_queue failed."
+        done
+    else
+        # 该网卡未提供 rx_queue_*_packets 统计项，ethtool -S 结果为空，跳过计数比较
+        LOG_INFO "${test_nic} exposes no rx_queue packets counters, skip counter comparison."
+    fi
     LOG_INFO "End to run test."
 }
 

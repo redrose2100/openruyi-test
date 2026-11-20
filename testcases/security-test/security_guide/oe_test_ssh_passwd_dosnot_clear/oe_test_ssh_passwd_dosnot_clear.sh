@@ -26,13 +26,18 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
+    # Use a dedicated password that does not appear in any environment text
+    # (hostname/prompt/banner), otherwise the grep below matches the shell
+    # prompt instead of real password echo.
+    local test_passwd="Oetest1@Sec23"
     useradd testuser
     grep "^testuser" /etc/passwd
     CHECK_RESULT $?
     passwd testuser <<EOF
-${NODE1_PASSWORD}
-${NODE1_PASSWORD}
+${test_passwd}
+${test_passwd}
 EOF
+    CHECK_RESULT $? 0 0 "set testuser password failed"
     expect <<EOF
     set timeout 15    
     log_file testlog
@@ -44,14 +49,14 @@ EOF
         }
         expect {
             "password:" {
-                send "${NODE1_PASSWORD}\\r"
+                send "${test_passwd}\\r"
             }
         }
         expect eof
 EOF
     SLEEP_WAIT 10
-    grep "${NODE1_PASSWORD}" testlog
-    CHECK_RESULT $? 0 1
+    grep "${test_passwd}" testlog
+    CHECK_RESULT $? 0 1 "The login password is echoed in plain text"
     LOG_INFO "Finish testcase execution."
 }
 

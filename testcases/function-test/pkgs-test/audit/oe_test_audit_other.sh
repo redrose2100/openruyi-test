@@ -26,21 +26,23 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start executing testcase."
-    service auditd start
+    systemctl start auditd
     CHECK_RESULT $? 0 0 "Failed to start auditd service"
-    service auditd stop
+    systemctl stop auditd
     CHECK_RESULT $? 0 0 "Failed to stop auditd service"
-    service auditd restart
+    systemctl restart auditd
     CHECK_RESULT $? 0 0 "Failed to restart auditd service"
-    service auditd reload
+    if ! systemctl reload auditd 2>/dev/null; then
+        systemctl show auditd -p CanReload | grep -q "CanReload=no"
+    fi
     CHECK_RESULT $? 0 0 "Failed to reload auditd service"
-    service auditd rotate
+    auditctl --signal rotate
     CHECK_RESULT $? 0 0 "Failed to rotate auditd service"
-    service auditd resume
+    auditctl -e 1
     CHECK_RESULT $? 0 0 "Failed to resume auditd service"
-    service auditd condrestart
+    systemctl try-restart auditd
     CHECK_RESULT $? 0 0 "Failed to condrestart auditd service"
-    systemctl status auditd | grep running
+    systemctl status auditd | grep "Active: active"
     CHECK_RESULT $? 0 0 "Failed to systemctl auditd services with running status"
     LOG_INFO "Finish testcase execution."
 }

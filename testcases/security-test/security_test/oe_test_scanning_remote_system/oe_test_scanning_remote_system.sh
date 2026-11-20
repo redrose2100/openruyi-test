@@ -23,6 +23,9 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     DNF_INSTALL "expect scap-security-guide openscap"
     DNF_INSTALL "openscap scap-security-guide" 2
+    # oscap-ssh 内部会调用 ssh，运行器默认未预装 openssh-clients，
+    # 否则会报 Cannot find ssh, please install the OpenSSH client.
+    DNF_INSTALL "openssh-clients"
     EXECUTE_T="60m"
     LOG_INFO "End of environmental preparation!"
 }

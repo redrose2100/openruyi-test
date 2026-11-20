@@ -28,7 +28,7 @@ function pre_test(){
 function run_test()
 {
     LOG_INFO "Start to run test."
-    service auditd restart
+    systemctl restart auditd
     auditctl -D
     CHECK_RESULT $? 0 0 "delete rules failed"
     auditctl -w /etc/passwd -p wa -k passwd_changes
@@ -38,7 +38,7 @@ function run_test()
     useradd Jevons
     CHECK_RESULT $? 0 0 "useradd failed"
     endtime=$(date +%T)
-    for ((i=0;i,10;i++));do 
+    for ((i=0;i<10;i++));do
 	    
 	    if ! ausearch -ts "${starttime}" -te "${endtime}" -k passwd_changes;then
 		    SLEEP_WAIT 1
@@ -47,7 +47,7 @@ function run_test()
 	    fi
     done
     if [[ $i -eq 10 ]];then 
-	    CHECK_RESULT $? 0 0 "monitor file access error"
+            CHECK_RESULT 1 0 0 "monitor file access error"
     fi
     LOG_INFO "End to run test."
 }

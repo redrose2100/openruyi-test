@@ -19,7 +19,9 @@
 # shellcheck disable=SC1090,SC1091,SC2154
 
 source "${OET_PATH}"/libs/locallibs/configure_repo.sh
-source /etc/openEuler-latest
+# /etc/openEuler-latest 在衍生发行版上不存在，交由 os_release_lib.sh 兜底。
+source "${OET_PATH}"/libs/locallibs/os_release_lib.sh
+OS_RELEASE_EXPORT_VERSION
 source ./common/pkg.conf
 service_ip=121.36.84.172
 

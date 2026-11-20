@@ -85,7 +85,7 @@ key2:
   - item3
 EOF
 
-    DNF_INSTALL "libyaml libyaml-devel libyaml-help gcc"
+    DNF_INSTALL "libyaml libyaml-devel gcc"
     LOG_INFO "End of environmental preparation!"
 }
 

@@ -54,7 +54,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "check podman build -f Dockerfile.in ${HOME} | grep ${id} failed"
     podman build --no-cache --rm=false -t newimages1 . | grep "Successfully tagged localhost/newimages1:latest"
     CHECK_RESULT $? 0 0 'check podman build --no-cache --rm=false -t newimages1 . failed'
-    podman build --layers --force-rm -t testname . | grep "${id}"
+    # 带 --layers 时构建输出不再回显每层镜像 ID，改为匹配镜像 ID 或成功标记。
+    build_log=$(podman build --layers --force-rm -t testname . 2>&1)
+    echo "${build_log}" | grep -E "${id}|Successfully tagged"
     CHECK_RESULT $? 0 0 'check podman build --layers --force-rm -t testname . failed'
     podman build --no-cache -t imageert . | grep "Successfully tagged localhost/imageert:latest"
     CHECK_RESULT $? 0 0 'check podman build --no-cache -t imageert . failed'
