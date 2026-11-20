@@ -28,46 +28,51 @@ function run_test() {
     LOG_INFO "Start to run test."
     dnf makecache 2>&1 | grep "Metadata cache created"
     CHECK_RESULT $?
-    # dnf5 stores cache under ~/.cache/libdnf5/ (no /var/cache/dnf/*.solv)
-    find ~/.cache/libdnf5 -name '*.solv' | grep solv
+    # dnf5 keeps the metadata cache in /var/cache/libdnf5 when running as root
+    # and in ~/.cache/libdnf5 for unprivileged runs; pick whichever one exists
+    # instead of hardcoding the per-user location.
+    DNF_CACHE_DIR=/var/cache/libdnf5
+    [ -d "$DNF_CACHE_DIR" ] || DNF_CACHE_DIR="$HOME/.cache/libdnf5"
+    mkdir -p "$DNF_CACHE_DIR"
+    find "$DNF_CACHE_DIR" -name '*.solv' | grep solv
     CHECK_RESULT $?
     dnf clean dbcache 2>&1 | grep "Removed"
     CHECK_RESULT $?
     # clean dbcache removes solv files in dnf5
-    find ~/.cache/libdnf5 -name '*.solv' | grep solv
+    find "$DNF_CACHE_DIR" -name '*.solv' | grep solv
     CHECK_RESULT $? 1 0
     dnf makecache 2>&1 | grep "Metadata cache created"
     # dnf5 clean expire-cache does not remove cached metadata/solv
     dnf clean expire-cache 2>&1 | grep "Removed"
     CHECK_RESULT $?
-    find ~/.cache/libdnf5 -name '*.solv' | grep solv
+    find "$DNF_CACHE_DIR" -name '*.solv' | grep solv
     CHECK_RESULT $?
     dnf makecache 2>&1 | grep "Metadata cache created"
     dnf clean metadata 2>&1 | grep "Removed"
     CHECK_RESULT $?
     # clean metadata removes solv files in dnf5
-    find ~/.cache/libdnf5 -name '*.solv' | grep solv
+    find "$DNF_CACHE_DIR" -name '*.solv' | grep solv
     CHECK_RESULT $? 1 0
     # dnf5: --downloadonly must be placed after the subcommand
     dnf install -y --downloadonly tree 2>&1 | grep "Complete!"
     CHECK_RESULT $?
-    find ~/.cache/libdnf5 -name 'tree*' | grep tree
+    find "$DNF_CACHE_DIR" -name 'tree*' | grep tree
     CHECK_RESULT $?
     dnf clean packages 2>&1 | grep "Removed"
     CHECK_RESULT $?
-    find ~/.cache/libdnf5 -name 'tree*' | grep tree
+    find "$DNF_CACHE_DIR" -name 'tree*' | grep tree
     CHECK_RESULT $? 1 0
     dnf install -y --downloadonly tree 2>&1 | grep "Complete!"
-    find ~/.cache/libdnf5 -name 'tree*' | grep tree
+    find "$DNF_CACHE_DIR" -name 'tree*' | grep tree
     dnf makecache 2>&1 | grep "Metadata cache created"
-    find ~/.cache/libdnf5 -name '*.solv' | grep solv
+    find "$DNF_CACHE_DIR" -name '*.solv' | grep solv
     CHECK_RESULT $?
     dnf clean all 2>&1 | grep "Removed"
     CHECK_RESULT $?
-    find ~/.cache/libdnf5 -name 'tree*' | grep tree
+    find "$DNF_CACHE_DIR" -name 'tree*' | grep tree
     CHECK_RESULT $? 1 0
     # clean all removes solv files in dnf5
-    find ~/.cache/libdnf5 -name '*.solv' | grep solv
+    find "$DNF_CACHE_DIR" -name '*.solv' | grep solv
     CHECK_RESULT $? 1 0
     LOG_INFO "End of the test."
 }

@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "libselinux setools-console python-policycoreutils"
+    DNF_INSTALL "libselinux setools-console python-policycoreutils selinux-tools"
     local_LANG=$LANG
     export LANG=en_US.UTF-8
     # 对selinux是否被禁用进行判断

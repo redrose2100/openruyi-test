@@ -60,7 +60,9 @@ function run_test() {
         }
         expect eof
 EOF1
-    grep 'your password will expire in 1 day' testlog
+    # openssh 实际输出为 "Your password will expire in 1 day."（首字母大写、
+    # 末尾带句号），大小写敏感 grep 会漏匹配，改成不区分大小写。
+    grep -qi 'your password will expire in 1 day' testlog
     CHECK_RESULT $?
     rm -f /root/.ssh/known_hosts
     SSH_CMD "date -s '2 day'" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"

@@ -74,7 +74,9 @@ function run_test() {
     chage -d "$(date -d '-6 day' +%Y-%m-%d)" set_minimum_interval10
     CHECK_RESULT $? 0 0 "Set last password change date failed"
     bash can_set_minimum_interval.sh
-    grep -q "all authentication tokens updated successfully" can_set_getfile
+    # shadow 4.19 起 passwd 成功提示从 "all authentication tokens updated
+    # successfully" 改为 "passwd: password changed."，新旧两种都要兼容。
+    grep -qE "all authentication tokens updated successfully|password changed" can_set_getfile
     CHECK_RESULT $? 0 0 "Change password failed"
     LOG_INFO "End to run test."
 }

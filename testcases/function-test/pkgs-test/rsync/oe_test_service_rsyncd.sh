@@ -21,20 +21,22 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL rsync
+    # openRuyi 中守护进程 unit 由 rsync-daemon 子包提供（unit 名为 rsync.service），
+    # 不存在 rsyncd.service。
+    DNF_INSTALL "rsync rsync-daemon"
     LOG_INFO "End of environmental preparation!"
 }
 
 function run_test() {
     LOG_INFO "Start testing..."
-    test_execution rsyncd.service
-    test_reload rsyncd.service
+    test_execution rsync.service
+    test_reload rsync.service
     LOG_INFO "Finish test!"
 }
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    systemctl stop rsyncd.service
+    systemctl stop rsync.service
     DNF_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }

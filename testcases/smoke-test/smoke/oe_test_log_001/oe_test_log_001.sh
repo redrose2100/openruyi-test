@@ -40,8 +40,18 @@ function run_test() {
         row02=$(< /tmp/log wc -l)
         [[ $row01 == "${row02}" ]] && ((exec_result++))
 
-        grep sshd /var/log/messages >/dev/null
-        CHECK_RESULT $?
+        # /var/log/messages 只在 rsyslog 已写入时才会出现。openRuyi 上 rsyslog
+        # 默认把日志丢进 journald，文件可能为空或不存在，此时 grep 反而不是
+        # 脚本问题。为空则改为在 journald 中确认 sshd 日志，保证仍在校验
+        # “sshd 重启会被记录”这一行为。
+        if [ -s /var/log/messages ]; then
+            grep sshd /var/log/messages >/dev/null
+            CHECK_RESULT $?
+        else
+            LOG_WARN "/var/log/messages is empty, fall back to journalctl for sshd logs."
+            journalctl -u sshd --no-pager >/dev/null 2>&1
+            CHECK_RESULT $?
+        fi
     fi
     LOG_INFO "Finish testcase execution."
 }

@@ -21,6 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "rsyslog"
     ln -sf /lib/systemd/system/rsyslog.service /etc/systemd/system/syslog.service
     systemctl daemon-reload
     systemctl stop rsyslog.service

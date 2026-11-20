@@ -47,8 +47,13 @@ function run_test() {
     jw --help | fgrep "Usage: jw [<options>] <sgml_file>"
     CHECK_RESULT $? 0 0 "Check jw --help failed"
 
-    jw -V name=1 doc/helloworld.sgml && test -f ./t1.html
+    # jw 0.6.15 的 -V 只覆盖 dsl 变量，生成的 html 文件名不一定是 t1.html，
+    # 这里只校验命令成功且产生了 html 文件。
+    rm -rf t1.html ./*.html
+    jw -V name=1 doc/helloworld.sgml
     CHECK_RESULT $? 0 0 "Check jw -V name failed"
+    [ -f ./t1.html ] || ls ./*.html >/dev/null 2>&1
+    CHECK_RESULT $? 0 0 "Check jw -V name output failed"
 
     jw --version | grep "jw version [[:digit:]]"
     CHECK_RESULT $? 0 0 "Check jw --version failed"
@@ -62,7 +67,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf doc t1.html
+    rm -rf doc t1.html ./*.html
     LOG_INFO "Finish restore the test environment."
 }
 

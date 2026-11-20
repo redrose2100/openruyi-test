@@ -28,11 +28,15 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase!"
     who
-    who | grep root
+    # 登录用户由环境决定（openRuyi 默认禁止 root 直接登录），从 who 的首列取实际用户
+    login_user=$(who | awk 'NF>1{print $1; exit}')
+    test -n "${login_user}"
+    CHECK_RESULT $?
+    who | grep "${login_user}"
     CHECK_RESULT $?
     who -b | grep "system boot"
     CHECK_RESULT $?
-    who -s | grep root
+    who -s | grep "${login_user}"
     CHECK_RESULT $?
     who --help | grep "Usage"
     CHECK_RESULT $?

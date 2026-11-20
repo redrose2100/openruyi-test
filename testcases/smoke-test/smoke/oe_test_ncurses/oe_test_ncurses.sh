@@ -25,18 +25,24 @@ function pre_test() {
     DNF_INSTALL openssh-clients
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    printf '%s' "log_file testlog
-spawn ssh -o StrictHostKeyChecking=no 127.0.0.1
-expect {
-    \"password\" {send \"NODE1_PASSWORD\r\";exp_continue}
-    \"#\" {send \"\rexport TERM=vt100\r\";exp_continue}
-    \"export\" {send \"\recho \\\$TERM\r\";exp_continue}
-    \"echo\" {send \"\rexit\n\"}
-}
+    # 本用例原本 spawn "ssh 127.0.0.1" 用 root 密码登录后再验证 TERM。openRuyi
+    # 的 sshd 不开放 root 密码登录（日志里是连续三次 "Permission denied, please
+    # try again." + "Permission denied (publickey,password)."），导致 expect
+    # 拿不到登录后的 shell。用例真正要验的是 ncurses 提供的 terminfo 在
+    # 交互式终端下能正确生效，不依赖具体登录方式，所以改为直接 spawn 一个
+    # 交互式 bash（同样有 pty，同样能看到 $TERM）。
+    cat >run-term <<'EXPECT_EOF'
+#!/usr/bin/expect
+log_file -a testlog
+spawn bash --noprofile --norc
+expect "#"
+send "export TERM=vt100\r"
+expect "export TERM"
+send "echo \$TERM\r"
+expect "echo \$TERM"
+send "exit\r"
 expect eof
-" >run-term
-    sed -i '1i#!/usr/bin/expect' run-term
-    sed -i "s/NODE1_PASSWORD/${NODE1_PASSWORD}/g" run-term
+EXPECT_EOF
     chmod 777 run-term
     LOG_INFO "End to prepare the test environment."
 }

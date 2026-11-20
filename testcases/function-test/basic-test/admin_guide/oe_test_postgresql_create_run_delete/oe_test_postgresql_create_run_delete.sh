@@ -19,6 +19,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "selinux-tools"
     # firewalld only needs to be down for the duration of this run;
     # post_test restores the original state recorded here.
     ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)

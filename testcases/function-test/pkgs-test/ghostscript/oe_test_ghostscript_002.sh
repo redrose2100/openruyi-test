@@ -28,13 +28,8 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    expect <<EOF
-    set timeout 5
-    spawn gs -sDEVICE=tiffg4 -sOutputFile=/tmp/test/test.tiff -dMaxStripSize=8192 1.pdf
-    expect "continue" {send "\r";exp_continue}
-    expect "GS>" {send "quit\r"}
-    expect eof
-EOF
+    # gs 处理 15 页耗时远超交互式 expect 的超时时间，改为批量模式直接转换
+    gs -q -dNOPAUSE -dBATCH -dSAFER -sDEVICE=tiffg4 -sOutputFile=/tmp/test/test.tiff -dMaxStripSize=8192 -- 1.pdf
     test -e /tmp/test/test.tiff
     CHECK_RESULT $? 0 0 "Test failure"
     gs -q -r204x196 -g1728x2292 -dNOPAUSE -dBATCH -dSAFER -sDEVICE=tiffg4 -sOutputFile=/tmp/test/igs%d.tiff -- 1.pdf

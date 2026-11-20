@@ -28,6 +28,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "docker-cli"
     pre_docker_env
     LOG_INFO "Environmental preparation is over."
 }

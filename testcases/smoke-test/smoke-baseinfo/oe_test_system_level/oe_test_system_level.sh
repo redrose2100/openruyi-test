@@ -29,6 +29,7 @@ function remote_systemctl() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "openssh-clients"
     default_target="poweroff.target rescue.target multi-user.target graphical.target reboot.target"
     # 原值存到 NODE2 本地文件，恢复时用 \$(cat ...) 让远端自行求值，
     # 避免在 NODE1 侧解析 SSH 输出（输出里可能混有 spawn/提示等噪声）。

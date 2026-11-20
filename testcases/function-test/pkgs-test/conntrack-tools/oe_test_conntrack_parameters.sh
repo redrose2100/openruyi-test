@@ -48,6 +48,9 @@ function run_test() {
         else
             CHECK_RESULT 1 0 0 "Conntrack command failed with unexpected error"
         fi
+    elif echo "$OUTPUT" | grep -q "0 flow entries have been shown"; then
+        # 连接表为空时 conntrack 只打印提示行，属正常情况，跳过表项内容断言
+        LOG_INFO "No conntrack flows present, skip protocol content assertion"
     else
         # Output should contain connection entries with the protocol
         # Verify output format contains connection-related content
@@ -81,6 +84,9 @@ function run_test() {
         else
             CHECK_RESULT 1 0 0 "Conntrack command failed with unexpected error"
         fi
+    elif echo "$OUTPUT" | grep -q "0 flow entries have been shown"; then
+        # 连接表为空时 conntrack 只打印提示行，属正常情况，跳过表项内容断言
+        LOG_INFO "No conntrack flows present, skip IPv4 content assertion"
     else
         # Output should contain connection entries with IPv4 addresses
         # Verify output format contains connection-related content

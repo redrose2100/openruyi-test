@@ -28,6 +28,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "procps"
     fdisk "${disk_name}" <<diskEof
 n
 p

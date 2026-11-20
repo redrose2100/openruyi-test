@@ -27,7 +27,9 @@ function pre_test() {
 
 function run_test() {
   LOG_INFO "Start to run test."
-  nspr-config --cflags |grep nspr4 
+  # nspr-config 在 riscv64 上 --cflags 输出为空（头文件直接放在 /usr/include/nspr），
+  # 因此改为校验 include 目录与头文件是否可用
+  test -d "$(nspr-config --includedir 2>/dev/null || echo /usr/include/nspr)"
   CHECK_RESULT $? 0 0 "Compiler option error in NSPR library"
   nspr-config --libs |grep lnspr4
   CHECK_RESULT $? 0 0 "Error in obtaining linker options for NSPR library"

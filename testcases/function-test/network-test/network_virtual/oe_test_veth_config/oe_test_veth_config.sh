@@ -33,7 +33,10 @@ function run_test() {
     LOG_INFO "Start to run test."
     ip link set testveth01 netns testns
     CHECK_RESULT $? 0 0 "Add veth into namespace failed."
-    ip netns exec testns ifconfig testveth01 "${new_ip}"/16 up
+    # ifconfig 不接受 addr/prefix 写法，改用 ip addr add + ip link set up
+    ip netns exec testns ip addr add "${new_ip}"/16 dev testveth01
+    CHECK_RESULT $? 0 0 "Add ip failed."
+    ip netns exec testns ip link set testveth01 up
     CHECK_RESULT $? 0 0 "Add ip failed."
     ping -c 4 "${new_ip}" -I testveth02
     CHECK_RESULT $? 2 0 "The netns veth can be ping unexpectly."

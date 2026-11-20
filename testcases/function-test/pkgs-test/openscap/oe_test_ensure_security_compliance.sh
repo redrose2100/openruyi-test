@@ -22,7 +22,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     if [[ "$(uname -m)" == "riscv64" ]]; then
-        DNF_INSTALL "python3-paramiko"
+        DNF_INSTALL "python3-paramiko openscap"
     fi
     DNF_INSTALL "openscap scap-security-guide"
     LOG_INFO "End of environmental preparation!"

@@ -21,6 +21,7 @@ source "${OET_PATH}/testcases/function-test/pkgs-test/openscap/common.sh"
 
 # 测试对象、测试需要的工具等安装准备
 function pre_test() {
+    DNF_INSTALL "openscap"
     dnf install -y openscap
     dnf install -y scap-security-guide
 }

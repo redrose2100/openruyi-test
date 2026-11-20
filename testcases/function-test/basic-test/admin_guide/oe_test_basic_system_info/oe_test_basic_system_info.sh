@@ -17,25 +17,31 @@
 # @Desc      :   View system information
 # ############################################
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
+source "${OET_PATH}"/libs/locallibs/os_release_lib.sh
 function run_test() {
     LOG_INFO "Start executing testcase!"
-    grep 'NAME="openEuler"' /etc/os-release
+    # 发行版名称/版本一律从 /etc/os-release 运行时读取，不写死 openEuler
+    OS_NAME=$(OS_RELEASE_GET_FIELD NAME)
+    OS_ID=$(OS_RELEASE_GET_FIELD ID)
+    OS_VERSION_ID=$(OS_RELEASE_VERSION_ID)
+    OS_PRETTY_NAME=$(OS_RELEASE_PRETTY_NAME)
+    for f in "${OS_NAME}" "${OS_ID}" "${OS_VERSION_ID}" "${OS_PRETTY_NAME}"; do
+        test -n "$f"
+        CHECK_RESULT $?
+    done
+    grep "^NAME=\"${OS_NAME}\"" /etc/os-release
     CHECK_RESULT $?
-    OS_VERSION=$(grep -w "VERSION" /etc/os-release | awk -F '"' '{print$2}')
+    grep "^ID=\"${OS_ID}\"" /etc/os-release
     CHECK_RESULT $?
-    grep 'ID="openEuler"' /etc/os-release
+    grep "^VERSION_ID=\"${OS_VERSION_ID}\"" /etc/os-release
     CHECK_RESULT $?
-    OS_VERSION_bak=$(awk '{print $1}' <<< "${OS_VERSION}")
+    grep "^PRETTY_NAME=\"${OS_PRETTY_NAME}\"" /etc/os-release
     CHECK_RESULT $?
-    grep "VERSION_ID=\"${OS_VERSION_bak}\"" /etc/os-release
-    CHECK_RESULT $?
-    grep PRETTY_NAME="\"openEuler ${OS_VERSION}"\" /etc/os-release
-    CHECK_RESULT $?
-    #grep 'PRETTY_NAME="openEuler $OS_VERSION"' /etc/os-release
-
-    #CHECK_RESULT $?
-    grep 'ANSI_COLOR="0;31"' /etc/os-release
-    CHECK_RESULT $?
+    # ANSI_COLOR 是 openEuler 专有字段，衍生发行版可缺失，存在时才校验格式
+    if grep -q '^ANSI_COLOR=' /etc/os-release; then
+        grep -E '^ANSI_COLOR="[0-9;]+"' /etc/os-release
+        CHECK_RESULT $?
+    fi
     LOG_INFO "End of testcase execution!"
 }
 

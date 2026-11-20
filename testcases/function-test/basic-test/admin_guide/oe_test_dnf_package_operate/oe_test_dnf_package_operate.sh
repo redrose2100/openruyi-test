@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start executing testcase."
-    DNF_INSTALL httpd
+    DNF_INSTALL "httpd dnf5-plugins"
     LOG_INFO "End of testcase execution."
 }
 
@@ -28,7 +28,8 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     dnf search httpd | grep httpd
     CHECK_RESULT $?
-    dnf list --all >/dev/null
+    # dnf5 的 list 命令没有 --all 参数
+    dnf list >/dev/null
     CHECK_RESULT $?
     dnf info httpd | grep httpd | grep -i Name
     CHECK_RESULT $?

@@ -29,10 +29,10 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start to run test."
 
-    preunzip -h 2>&1 | fgrep "usage /usr/bin/preunzip [-dzhLV]"
+    preunzip -h 2>&1 | grep -qE "usage:? */usr/bin/preunzip"
     CHECK_RESULT $? 0 0 "Check preunzip -h failed"
 
-    preunzip --help 2>&1 | fgrep "usage /usr/bin/preunzip [-dzhLV]"
+    preunzip --help 2>&1 | grep -qE "usage:? */usr/bin/preunzip"
     CHECK_RESULT $? 0 0 "Check preunzip --help failed"
 
     preunzip -V | grep "prezip, a prefix delta compressor. Version [[:digit:]]"

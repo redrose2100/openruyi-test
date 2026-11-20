@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     openldap_server_pre
     openldap_client_pre
-    DNF_INSTALL sssd
+    DNF_INSTALL "sssd firewalld hostname openldap openssh-clients"
     service="sssd.service"
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End to prepare the test environment."

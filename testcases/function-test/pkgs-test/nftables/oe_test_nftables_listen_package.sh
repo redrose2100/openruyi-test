@@ -29,7 +29,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nftables
+    DNF_INSTALL "nftables openssh-clients"
     nft add table inet $table_name
     nft add chain inet $table_name $chain_name "{ type filter hook input priority 0 ; }"
     LOG_INFO "End of environmental preparation!"

@@ -20,6 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "procps"
     dd if=/dev/zero of=testFile bs=512000000 count=10 oflag=direct
     cat testFile >/dev/null
     LOG_INFO "End to prepare the database config."

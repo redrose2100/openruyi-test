@@ -21,6 +21,7 @@
 source ../common/common_podman.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
+    DNF_INSTALL "procps"
     deploy_env
     podman rm -all
     LOG_INFO "Environmental preparation is over."

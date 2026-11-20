@@ -19,6 +19,7 @@
 # shellcheck disable=SC2034,SC2119
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+source "$OET_PATH/testcases/function-test/pkgs-test/common/common_lib.sh"
 
 function pre_test() {
     EXECUTE_T="50m"

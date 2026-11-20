@@ -37,7 +37,9 @@ function run_test() {
     busctl status | grep "BusAddress"
     CHECK_RESULT $? 0 0 'busctl status failed.'
 
-    busctl tree $bus | grep -E "└─ */org"
+    # 该 well-known name 仅在总线上登记为 activatable，未激活时 busctl tree $bus 无输出，
+    # 因此改为校验总线根对象树
+    busctl tree | grep -E "└─ */org"
     CHECK_RESULT $? 0 0 'busctl tree failed.'
 
     busctl tree -q | grep -E "└─ */org"

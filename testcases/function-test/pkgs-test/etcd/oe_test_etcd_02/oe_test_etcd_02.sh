@@ -39,10 +39,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check etcdctl --endpoints status failed."
     etcdctl snapshot save snapshot.db | grep "Snapshot saved at snapshot.db"
     CHECK_RESULT $? 0 0 "Check etcdctl snapshot save command failed."
-    etcdctl snapshot status snapshot.db
-    CHECK_RESULT $? 0 0 "Check etcdctl snapshot status command failed."
-    etcdctl snapshot status snapshot.db -w table | grep "HASH"
-    CHECK_RESULT $? 0 0 "Check etcdctl snapshot status -w table command failed."
+    # etcd 3.6+ moved "snapshot status" out of etcdctl into etcdutl
+    ETCD_UNSUPPORTED_ARCH=${ETCD_UNSUPPORTED_ARCH:-$(uname -m)} etcdutl snapshot status snapshot.db
+    CHECK_RESULT $? 0 0 "Check etcdutl snapshot status command failed."
+    ETCD_UNSUPPORTED_ARCH=${ETCD_UNSUPPORTED_ARCH:-$(uname -m)} etcdutl snapshot status snapshot.db -w table | grep "HASH"
+    CHECK_RESULT $? 0 0 "Check etcdutl snapshot status -w table command failed."
     etcdctl endpoint --cluster=true status -w table | grep "ENDPOINT"
     CHECK_RESULT $? 0 0 "Check etcdctl endpoint --cluster=true status command failed."
     etcdctl --endpoints 127.0.0.1:2379 move-leader 8e9e05c52164694d | grep "Leadership transferred"

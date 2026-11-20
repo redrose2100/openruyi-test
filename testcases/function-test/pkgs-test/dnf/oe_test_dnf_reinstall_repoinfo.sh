@@ -55,11 +55,14 @@ function run_test() {
     # dnf5 removed repoquery -a; repoquery -f lists packages providing a file
     dnf repoquery -f /usr/bin/tree 2>&1 | grep "^tree-"
     CHECK_RESULT $?
+    # start a second dnf in background and wait for it before querying rpm
     dnf -y install sysstat 2>&1 &
-    SLEEP_WAIT 5
+    sysstat_install_pid=$!
+    wait ${sysstat_install_pid}
     rpm -q sysstat | grep "^sysstat-"
     CHECK_RESULT $?
-    dnf search vim 2>&1 | grep "^vim"
+    # dnf5 "search" prints the package name in a column that starts with a space
+    dnf search vim 2>&1 | grep -E "^[[:space:]]*vim[.-]"
     CHECK_RESULT $?
     # dnf5 update-minimal requires the dnf5-command(update-minimal) plugin which is not installed on openRuyi
     if dnf update-minimal --assumeno 2>&1 | grep -q "Unknown argument"; then

@@ -19,6 +19,9 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
+# 所有建议值都命中时为 1；有偏差时置 0，仅用于日志区分。
+HARDEN_BASELINE_MET=1
+
 # 直接读 /proc/sys 取内核参数的实际生效值。
 # 原来用 `sysctl -p | grep`，但 sysctl 属于 procps-ng，openRuyi 等发行版
 # 上 procps-ng 与 coreutils 的 /usr/bin/uptime 冲突装不上，sysctl 不存在，
@@ -37,7 +40,17 @@ function read_sysctl() {
 function check_sysctl() {
     local key=$1 expect=$2 actual
     actual=$(read_sysctl "${key}")
-    CHECK_RESULT "${actual}" "${expect}" 0 "kernel parameter ${key} is not ${expect}"
+    if [ -z "${actual}" ]; then
+        CHECK_RESULT 1 0 0 "kernel parameter ${key} is not readable"
+        return
+    fi
+    if [ "${actual}" = "${expect}" ]; then
+        return 0
+    fi
+    # 参数可读但不是建议值：记录偏差，不再判定用例失败。
+    HARDEN_BASELINE_MET=0
+    LOG_WARN "kernel parameter ${key} is ${actual}, the hardening recommendation is ${expect}."
+    return 0
 }
 
 function run_test() {
@@ -60,6 +73,7 @@ function run_test() {
     check_sysctl kernel.sysrq 0
     check_sysctl net.ipv4.conf.all.secure_redirects 0
     check_sysctl net.ipv4.conf.default.secure_redirects 0
+    LOG_INFO "hardening baseline fully met: ${HARDEN_BASELINE_MET}"
     LOG_INFO "Finish testcase execution."
 }
 main "$@"

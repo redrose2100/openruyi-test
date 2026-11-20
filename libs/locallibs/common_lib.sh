@@ -131,9 +131,15 @@ function proc_pids_by_cmdline() {
 
 # 按 PID 列表杀进程，等价 pkill -9 <pid...> / kill -9 <pid...>。
 # 用法：proc_kill_pids $(proc_pids_by_name dnf)
+# 注意：没有匹配到进程时 pids 为空、kill 不执行，函数必须返回 0。
+# 之前直接靠 `[ -n "$pids" ] && kill ...` 作为默认返回值，无进程时
+# 返回 1，导致用例里 `proc_kill_pids $(...); CHECK_RESULT $?` 误报失败。
 function proc_kill_pids() {
     local pids=$*
-    [ -n "$pids" ] && kill -9 $pids 2>/dev/null
+    if [ -n "$pids" ]; then
+        kill -9 $pids 2>/dev/null
+    fi
+    return 0
 }
 
 function POST_TEST_DEFAULT() {

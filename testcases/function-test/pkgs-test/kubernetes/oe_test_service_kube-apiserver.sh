@@ -21,6 +21,7 @@ source "./common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "etcd firewalld"
     conf_common
     kubernetes_install
     certificate_prepare

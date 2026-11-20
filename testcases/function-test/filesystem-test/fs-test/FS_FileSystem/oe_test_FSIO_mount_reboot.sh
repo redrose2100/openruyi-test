@@ -21,6 +21,7 @@ source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "openssh-clients"
     test_disk=$(fdisk -l | grep "Disk /dev/" | grep -vE 'loop|mapper' | awk -F ' |:|：' '{print $2}' | awk 'NR==2')
     ssh_cmd_node "fdisk $test_disk << diskEof
 n

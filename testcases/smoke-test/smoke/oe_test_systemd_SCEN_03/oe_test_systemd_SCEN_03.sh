@@ -38,22 +38,35 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl start TestB
     CHECK_RESULT $? 0 0 "TestB.service start success"
-    systemctl status TestB | grep failed
+    # TestB 的 ExecStart 指向不存在的 /usr/bin/slee。Type=simple 下 systemctl start
+    # 先返回 0，失败状态是异步记录的，原用例紧接着 grep "failed" 存在竞态。
+    # 改为先有界等待进入 failed，再用 systemctl is-failed 断言状态。
+    for _i in $(seq 1 20); do
+        systemctl is-failed TestB >/dev/null 2>&1 && break
+        sleep 0.5
+    done
+    systemctl is-failed TestB | grep failed
     CHECK_RESULT $? 0 0 "TestB.service is not failed"
     systemctl start TestA
     CHECK_RESULT $? 0 0 "TestA.service start failed"
-    systemctl status TestA | grep running
+    systemctl is-active TestA | grep active
     CHECK_RESULT $? 0 0 "TestA.service is not running"
+    TestA_before=$(systemctl show -p ActiveEnterTimestamp --timestamp=unix TestA | cut -d= -f2)
     SLEEP_WAIT 10
     systemctl start TestB
     CHECK_RESULT $? 0 0 "TestB.service start failed"
-    for i in $(seq 1 20); do
-        systemctl is-failed TestB && break
+    for _i in $(seq 1 20); do
+        systemctl is-failed TestB >/dev/null 2>&1 && break
         sleep 0.5
     done
-    TestB_status=$(systemctl status TestB | grep failed | awk '{print $8}')
-    systemctl status TestA | grep running | grep $TestB_status
-    CHECK_RESULT $? 0 1 "TestA.service start success"
+    systemctl is-failed TestB | grep failed
+    CHECK_RESULT $? 0 0 "TestB.service is not failed"
+    TestA_after=$(systemctl show -p ActiveEnterTimestamp --timestamp=unix TestA | cut -d= -f2)
+    # 用例意图：TestB 再次失败时 TestA 不应被连累重启。原实现拿
+    # `systemctl status` 输出的第 8 列做字符串匹配，列数随 systemd 版本变化，
+    # 会比较到无关字段。改为比较 TestA 的 ActiveEnterTimestamp 是否保持不变。
+    [ -n "${TestA_before}" ] && [ "${TestA_before}" = "${TestA_after}" ]
+    CHECK_RESULT $? 0 0 "TestA.service was restarted unexpectedly"
 
     LOG_INFO "End to run test."
 }

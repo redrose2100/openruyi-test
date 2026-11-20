@@ -28,11 +28,12 @@ function run_test() {
     LOG_INFO "Start to run test."
     ifconfig lo up
     CHECK_RESULT $? 0 0 "Up lo failed."
-    ifconfig | grep "lo" | grep -q "UP"
+    # ifconfig 不带参数时的输出格式随净工具版本变化，改用 ip link 判断链路状态
+    ip -o link show lo | grep -qE "state (UP|UNKNOWN)"
     CHECK_RESULT $? 0 0 "Check lo up failed."
     ifconfig lo down
     CHECK_RESULT $? 0 0 "Down lo failed."
-    ifconfig | grep "lo" | grep -q "UP"
+    ip -o link show lo | grep -qE "state (UP|UNKNOWN)"
     CHECK_RESULT $? 1 0 "Check lo down failed."
     LOG_INFO "End to run test."
 }

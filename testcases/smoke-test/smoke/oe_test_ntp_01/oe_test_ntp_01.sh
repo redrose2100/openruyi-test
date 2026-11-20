@@ -27,18 +27,19 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
-    systemctl start ntpd
+    # openRuyi 不提供 ntp/ntpd，时间同步服务由 chrony 的 chronyd.service 提供
+    systemctl start chronyd
     CHECK_RESULT $? 0 0 "Service not started"
-    systemctl status ntpd | grep running
+    systemctl status chronyd | grep running
     CHECK_RESULT $? 0 0 "Service status not running"
-    systemctl stop ntpd
+    systemctl stop chronyd
     CHECK_RESULT $? 0 0 "Service not stoped"
-    systemctl status ntpd | grep dead
+    systemctl status chronyd | grep dead
     CHECK_RESULT $? 0 0 "Service status not dead"
-    systemctl restart ntpd
+    systemctl restart chronyd
     CHECK_RESULT $? 0 0 "Service not restarted"
-    systemctl status ntpd | grep running
-    CHECK_RESULT $? 0 0 "ntpd.service status not running"
+    systemctl status chronyd | grep running
+    CHECK_RESULT $? 0 0 "chronyd.service status not running"
     LOG_INFO "End to run test."
 }
 

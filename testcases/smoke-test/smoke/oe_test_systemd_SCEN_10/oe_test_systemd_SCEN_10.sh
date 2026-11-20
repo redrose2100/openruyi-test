@@ -38,11 +38,17 @@ function run_test() {
     LOG_INFO "Start to run test."
     systemctl start TestA
     CHECK_RESULT $? 0 0 "TestA.service start failed"
-    systemctl status TestA | grep running
+    systemctl is-active TestA | grep active
     CHECK_RESULT $? 0 0 "TestA.service is not running"
     systemctl start TestB
     CHECK_RESULT $? 0 0 "TestB.service start success"
-    systemctl status TestB | grep failed
+    # TestB 的 ExecStart 是不存在的 /usr/bin/slee，失败状态异步记录，
+    # 先有界等待进入 failed 再断言，避免竞态。
+    for _i in $(seq 1 20); do
+        systemctl is-failed TestB >/dev/null 2>&1 && break
+        sleep 0.5
+    done
+    systemctl is-failed TestB | grep failed
     CHECK_RESULT $? 0 0 "TestB.service is not failed"
     systemctl stop TestA
     CHECK_RESULT $? 0 0 "TestA.service stop failed"
@@ -50,9 +56,14 @@ function run_test() {
     systemctl start TestA
     CHECK_RESULT $? 0 0 "TestA.service start failed"
     SLEEP_WAIT 5
-    TestA_status=$(systemctl status TestA | grep "running" | awk '{print $7}')
-    systemctl status TestB | grep failed | grep "$TestA_status"
-    CHECK_RESULT $? 0 0 "TestB.service restart success"
+    # 用例意图：TestA 重新拉起时 TestB（Requires）也被拉起并再次失败，时间点应
+    # 基本重合。原实现按 `systemctl status` 的第 7 列字符串比较，列数随 systemd
+    # 版本变化。改为 unix 时间戳对比并允许 5s 容差。
+    TestA_stamp=$(systemctl show -p ActiveEnterTimestamp --timestamp=unix TestA | cut -d= -f2 | tr -d '@')
+    TestB_stamp=$(systemctl show -p StateChangeTimestamp --timestamp=unix TestB | cut -d= -f2 | tr -d '@')
+    _delta=$((TestA_stamp > TestB_stamp ? TestA_stamp - TestB_stamp : TestB_stamp - TestA_stamp))
+    [ "${_delta}" -le 5 ]
+    CHECK_RESULT $? 0 0 "TestB.service was not restarted with TestA (delta=${_delta}s)"
 
     LOG_INFO "End to run test."
 }

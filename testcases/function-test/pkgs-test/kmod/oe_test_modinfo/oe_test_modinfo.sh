@@ -33,8 +33,10 @@ function run_test() {
     CHECK_RESULT $?
     lsmod | grep "[a-zA-Z0-9]"
     CHECK_RESULT $?
-    modinfo -a dm_log | grep "dm-devel@redhat.com"
-    CHECK_RESULT $?
+    # 模块的 author 字段由内核构建方填写，不同发行版的取值不同，
+    # 这里只校验 -a 能输出非空的 author 信息。
+    modinfo -a dm_log | grep -qE "[^[:space:]]"
+    CHECK_RESULT $? 0 0 "modinfo -a dm_log returns no author information"
     modinfo -d dm_log | grep "device-mapper"
     CHECK_RESULT $?
     modinfo -l dm_log | grep "GPL"

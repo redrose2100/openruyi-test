@@ -31,6 +31,7 @@ function config_params() {
 # Installation Preparation of test objects, tools required for testing, etc
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "dblatex"
     common_pre ""
     LOG_INFO "End to prepare the test environment."
 }

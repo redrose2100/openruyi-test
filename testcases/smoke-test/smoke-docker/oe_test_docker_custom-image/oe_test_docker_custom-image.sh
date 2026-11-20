@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "docker"
+    DNF_INSTALL "docker docker-cli"
     if [[ "${NODE1_FRAME}" == "riscv64" ]]; then
     cat > Dockerfile << EOF
 FROM busybox:latest

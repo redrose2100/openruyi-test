@@ -29,8 +29,14 @@ function run_test() {
     CHECK_RESULT $? 0 0 "uptime --version execute fail"
     uptime | grep -oP 'load average: \K[\d.]+' | awk '{print $1}'
     CHECK_RESULT $? 0 0 "Check domain load average failed"
-    uptime -p
-    CHECK_RESULT $? 0 0 "uptime -p execute fail"
+    # uptime 由 procps-ng 提供，而 openRuyi 的 /usr/bin/uptime 来自 coreutils，
+    # 不支持 -p。先看 --help 是否声明了 -p/--pretty，支持才断言，否则明确跳过。
+    if uptime --help 2>&1 | grep -qE '(^|[[:space:]])-p|--pretty'; then
+        uptime -p
+        CHECK_RESULT $? 0 0 "uptime -p execute fail"
+    else
+        LOG_WARN "This uptime implementation does not support -p/--pretty, skip."
+    fi
     LOG_INFO "Finish test!"
 }
 

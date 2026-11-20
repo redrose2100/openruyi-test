@@ -19,7 +19,7 @@
 
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
-    DNF_INSTALL openssh-clients
+    DNF_INSTALL "openssh-clients firewalld iptables-legacy nfs-kernel-server"
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "nfs-kernel-server nfs-client rpcbind"
     systemctl stop firewalld

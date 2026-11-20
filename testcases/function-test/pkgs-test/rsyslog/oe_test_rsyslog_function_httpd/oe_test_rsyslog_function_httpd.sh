@@ -20,7 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpd rsyslog inetutils openssh-clients"
+    DNF_INSTALL "httpd rsyslog inetutils openssh-clients firewalld iptables-legacy selinux-tools"
     # firewalld/iptables/selinux are only changed for the duration of this run;
     # post_test restores the state recorded here.
     ORIG_FIREWALLD_ACTIVE=$(systemctl is-active firewalld 2>/dev/null)

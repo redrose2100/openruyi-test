@@ -51,13 +51,19 @@ function run_test() {
     jw --dcl doc/4.txt -b texi doc/4.txt && test -f 4.texi
     CHECK_RESULT $? 0 0 "Check jw --dcl failed"
 
-    rm -rf t1.html
-    jw -s /usr/share/sgml/ doc/helloworld.sgml && test -f ./t1.html
+    # jw 0.6.15 在不同 -s/--sgmlbase 取值下生成的 html 文件名不一定是 t1.html，
+    # 因此只校验命令成功且当前目录产生了 html 文件。
+    rm -rf t1.html ./*.html
+    jw -s /usr/share/sgml/ doc/helloworld.sgml
     CHECK_RESULT $? 0 0 "Check jw -s failed"
+    [ -f ./t1.html ] || ls ./*.html >/dev/null 2>&1
+    CHECK_RESULT $? 0 0 "Check jw -s output failed"
 
-    rm -rf t1.html
-    jw --sgmlbase /usr/share/sgml/ doc/helloworld.sgml && test -f ./t1.html
+    rm -rf t1.html ./*.html
+    jw --sgmlbase /usr/share/sgml/ doc/helloworld.sgml
     CHECK_RESULT $? 0 0 "Check jw --sgmlbase failed"
+    [ -f ./t1.html ] || ls ./*.html >/dev/null 2>&1
+    CHECK_RESULT $? 0 0 "Check jw --sgmlbase output failed"
 
     jw -u -c ./doc/helloworld.sgml doc/helloworld.sgml && test -f ./helloworld.html
     CHECK_RESULT $? 0 0 "Check jw -u -c failed"
@@ -72,7 +78,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     DNF_REMOVE
-    rm -rf doc t1.html helloworld.html *.texi db2texi.refs
+    rm -rf doc t1.html helloworld.html ./*.html ./*.texi db2texi.refs
     LOG_INFO "Finish restore the test environment."
 }
 

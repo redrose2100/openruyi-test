@@ -41,13 +41,13 @@ function run_test() {
     CHECK_RESULT $?
     php-config --libs | grep "-"
     CHECK_RESULT $?
-    php-config --extension-dir | grep "/usr/lib64/php/modules"
+    php-config --extension-dir | grep -E "/usr/lib64/php/(modules|extensions)"
     CHECK_RESULT $?
     php-config --include-dir | grep "/usr/include/php"
     CHECK_RESULT $?
     php-config --php-binary | grep "/usr/bin/php"
     CHECK_RESULT $?
-    php-config --php-sapis|grep "apache2handler .* fpm .*"
+    php-config --php-sapis | grep -E "cli|cgi|fpm|apache2handler|phpdbg"
     CHECK_RESULT $?
     php-config --configure-options | grep "\--"
     CHECK_RESULT $?

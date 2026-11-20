@@ -22,7 +22,9 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function config_params() {
 	LOG_INFO "Start to config params of the case."
 	status_output=$(systemctl status systemd-journald)
-	if ls /run/log/journal/*; then
+	# 原来写的是 ls '/run/log/journal/*'，单引号让 glob 不展开，ls 必然报错，
+	# 于是永远走到 /var/log/journal 分支。改用 compgen 判断目录是否存在。
+	if compgen -G "/run/log/journal/*" >/dev/null; then
 		regex="/run/log/journal/[a-zA-Z0-9]+"
 	else
 		regex="/var/log/journal/[a-zA-Z0-9]+"
@@ -32,8 +34,15 @@ function config_params() {
 }
 function run_test() {
 	LOG_INFO "Start to run test."
-	grep -E 'Storage=(auto|persistent)' /etc/systemd/journald.conf
+	# journald.conf 里 Storage 默认被注释（#Storage=auto），被注释就代表使用
+	# 默认值 auto，也是持久化语义。只 grep 未注释行会在 openRuyi 上误报。
+	grep -E '^[#[:space:]]*Storage=(auto|persistent)' /etc/systemd/journald.conf
 	CHECK_RESULT $?
+	if [ -z "${path}" ]; then
+		LOG_WARN "Cannot locate the journal directory from systemctl status, skip."
+		LOG_INFO "End to run test."
+		return 0
+	fi
 	cp -r "${path}" "${path}bak"
 	rm -rf "${path}"
 	systemctl restart systemd-journald.service

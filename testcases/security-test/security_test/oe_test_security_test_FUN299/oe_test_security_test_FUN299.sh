@@ -59,7 +59,7 @@ EOF1
     send "Administrator12#$\\r"
     expect eof
 EOF2
-    grep -e "passwd: all authentication tokens updated successfully" testlog
+    grep -eE "passwd: all authentication tokens updated successfully|passwd: password changed" testlog
     CHECK_RESULT $? 0 0 "grep failed"
     LOG_INFO "End to run test."
 }

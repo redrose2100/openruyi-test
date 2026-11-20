@@ -30,12 +30,14 @@ function run_test() {
     [ -f /usr/sbin/sulogin ]
     CHECK_RESULT $? 0 0 "sulogin binary not found at expected path /usr/sbin/sulogin"
 
+    # sulogin 的帮助文本随 LANG/本地化变化（英文为 "display this help"），
+    # 不应对某一种语言的固定字符串做断言，这里按 usage 关键字匹配并兼容中文。
     LOG_INFO "Test short help option -h"
-    sulogin -h | grep "显示此帮助" > /tmp/sulogin-help.out
+    sulogin -h 2>&1 | grep -qiE "usage|display this help|显示此帮助" > /tmp/sulogin-help.out
     CHECK_RESULT $? 0 0 "sulogin -h help option test failed"
 
     LOG_INFO "Test long help option --help"
-    sulogin --help | grep "显示此帮助" >> /tmp/sulogin-help.out
+    sulogin --help 2>&1 | grep -qiE "usage|display this help|显示此帮助" >> /tmp/sulogin-help.out
     CHECK_RESULT $? 0 0 "sulogin --help option test failed"
 
     LOG_INFO "Test short version option -V"

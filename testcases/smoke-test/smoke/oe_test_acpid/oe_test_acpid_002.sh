@@ -36,8 +36,17 @@ EOF
     SLEEP_WAIT 3
     systemctl status acpid | grep running  
     CHECK_RESULT $? 0 0 "Start Service failure"
-    grep acpid /var/log/messages | grep "loaded"
-    CHECK_RESULT $? 0 0 "load Service failure"
+    # 当初的断言依赖 rsyslog 把 acpid 日志写进 /var/log/messages。openRuyi
+    # 默认只有 journald，/var/log/messages 可能不存在，于是断言永远失败。
+    # 改成先用文件（若存在），否则用 journalctl 确认 acpid 已完成加载。
+    if [ -s /var/log/messages ]; then
+        grep acpid /var/log/messages | grep -i "load"
+        CHECK_RESULT $? 0 0 "load Service failure"
+    else
+        LOG_WARN "/var/log/messages is empty, fall back to journalctl for acpid logs."
+        journalctl -u acpid --no-pager 2>/dev/null | grep -i "load"
+        CHECK_RESULT $? 0 0 "load Service failure"
+    fi
     LOG_INFO "End to run test."
 }
 

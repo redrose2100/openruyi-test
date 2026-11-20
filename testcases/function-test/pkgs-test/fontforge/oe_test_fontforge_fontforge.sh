@@ -30,7 +30,10 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check fontforge -help failed"
     fontforge -version 2>&1 | grep -E "Version:.[0-9]{1,}"
     CHECK_RESULT $? 0 0 "Check fontforge -version failed"
-    fontforge -docs 2>&1 | grep "fontforge \[options\]"
+    # openRuyi 适配：fontforge -docs/-help 会尝试拉起外部文档查看器（浏览器/helpviewer），
+    # 测试机上没有可用 GUI 时会一直阻塞，导致用例 1800s 超时。用 timeout 限时并
+    # 关闭标准输入，命中首行即退出。
+    timeout 60 fontforge -docs 2>&1 < /dev/null | grep -m1 "fontforge \[options\]"
     CHECK_RESULT $? 0 0 "Check fontforge -docs failed"
     fontforge -script common/test.sh common/Duera-CondBlac-PERSONAL.ttf 2>&1 | grep 'License GPLv3+'
     CHECK_RESULT $? 0 0 "Check fontforge -script failed"

@@ -26,6 +26,7 @@ path=/usr/bin/ping
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "libcap-ng-utils"
     filecap || DNF_INSTALL "libcap-ng libcap-ng-utils"
     useradd "$testuser"
     grep "$testuser" /etc/shadow

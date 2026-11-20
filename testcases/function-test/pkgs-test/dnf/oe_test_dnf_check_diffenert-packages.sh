@@ -46,10 +46,12 @@ function run_test() {
     # dnf5 removed "dnf check --provides"; repoquery -f lists packages providing a file
     dnf repoquery -f /usr/bin/tree | grep "^tree-"
     CHECK_RESULT $?
+    # run two dnf transactions concurrently, but wait for both before querying rpm
     dnf -y install vim 2>&1 &
+    vim_install_pid=$!
     dnf -y install tree 2>&1 | grep "Complete!"
     CHECK_RESULT $?
-    SLEEP_WAIT 3
+    wait ${vim_install_pid}
     # openRuyi vim is a single package (no vim-enhanced subpackage)
     rpm -q vim | grep "^vim-"
     CHECK_RESULT $?

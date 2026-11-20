@@ -40,7 +40,11 @@ function run_test() {
     CHECK_RESULT $? 0 0 "fio-genzipf -i zipf theta -o 2 -c failed "
     fio-genzipf -g 2 | grep "2 GiB size and 4096 block_size"
     CHECK_RESULT $? 0 0 "fio-genzipf -g option failed"
-    fio-genzipf -p 2 | grep "Total"
+    # openRuyi 适配：fio-genzipf -p 会按块粒度逐行输出百分比分布表，数据量极大
+    # （本用例历史上已产生 33 万行输出且 1800s 内未结束），直接管道给 grep 会一直
+    # 阻塞到框架超时并 SIGKILL 整个用例进程组。这里用 timeout 限时 + grep -m1
+    # 命中首行即退出，既保留“-p 输出含 Total”的断言，又不会挂住。
+    timeout 300 fio-genzipf -p 2 2>&1 | grep -m1 "Total"
     CHECK_RESULT $? 0 0 "fio-genzipf -p option failed"
     fio-genzipf -b 40000 | grep "Generating Zipf distribution"
     CHECK_RESULT $? 0 0 "fio-genzipf -b option failed"

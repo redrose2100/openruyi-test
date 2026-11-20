@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL ldirectord
+    DNF_INSTALL "ldirectord resource-agents-ldirectord"
     cp /usr/share/doc/ldirectord/ldirectord.cf /etc/ha.d/
     LOG_INFO "End of environmental preparation!"
 }

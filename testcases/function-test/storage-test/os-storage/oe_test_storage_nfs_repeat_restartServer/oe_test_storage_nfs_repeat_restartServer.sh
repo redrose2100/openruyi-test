@@ -20,7 +20,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
-    DNF_INSTALL openssh-clients
+    DNF_INSTALL "openssh-clients iptables-legacy nfs-kernel-server rpcbind"
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "nfs-kernel-server nfs-client rpcbind dmidecode"
     DNF_INSTALL "nfs-kernel-server nfs-client rpcbind" 2

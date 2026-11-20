@@ -30,15 +30,16 @@ function run_test() {
     LOG_INFO "Start to run test."
     rpm -q tree | grep tree
     CHECK_RESULT $?
-    dnf --nobest -y install tree | grep "already installed"
+    # dnf5 prints the "already installed" notice and the transaction progress on stderr
+    dnf --nobest -y install tree 2>&1 | grep "already installed"
     CHECK_RESULT $?
     dnf -y remove tree
-    dnf --nodocs -y install tree | grep "Complete!"
+    dnf --nodocs -y install tree 2>&1 | grep "Complete!"
     CHECK_RESULT $?
     test -f /usr/share/doc/tree
     CHECK_RESULT $? 1 0
     dnf -y remove tree
-    dnf --nogpgcheck -y install tree | grep "Complete!"
+    dnf --nogpgcheck -y install tree 2>&1 | grep "Complete!"
     CHECK_RESULT $?
     rpm -q tree | grep tree
     CHECK_RESULT $?

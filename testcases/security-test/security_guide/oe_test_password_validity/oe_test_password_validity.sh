@@ -34,51 +34,63 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     grep -q "^PASS_MAX_DAYS[[:space:]]\+99999" /etc/login.defs
     CHECK_RESULT $? 0 0 "The password is not valid for 99999."
+    # passwd 依次提示 New password / Retype new password，两次输入后退出；
+    # 原写法用 exp_continue 会连 "password updated successfully" 一起匹配，导致多输入一次
     expect <<EOF
         set timeout 30
         spawn passwd test2
-        expect {
-            "*assword*" {
-                send "${TEST_PASSWORD}\\r"
-                exp_continue
-            }
-            eof
-        }
+        expect "assword"
+        send "${TEST_PASSWORD}\\r"
+        expect "assword"
+        send "${TEST_PASSWORD}\\r"
+        expect eof
 EOF
+    # 先只等待一次密码提示，登录成功后立即匹配 shell 提示符退出；
+    # 原写法在 "*assword*" 上 exp_continue，会把登录后的提示符反复误判，导致死循环
     expect <<EOF
         set timeout 30
         log_file testlog1
         spawn su test2
         expect {
-            "*assword*" {
+            -re "(?i)password" {
                 send "${TEST_PASSWORD}\\r"
-                exp_continue
             }
+            timeout {
+                exit 1
+            }
+        }
+        expect {
             "*test2@*" {
                 send "exit\\r"
-                exp_continue
             }
-            eof
+            eof {}
         }
+        expect eof
 EOF
     grep "test2@" testlog1
     CHECK_RESULT $? 0 0 "login failed!"
     SLEEP_WAIT 180
+    # 先只等待一次密码提示，登录成功后立即匹配 shell 提示符退出；
+    # 原写法在 "*assword*" 上 exp_continue，会把登录后的提示符反复误判，导致死循环
     expect <<EOF
         set timeout 30
         log_file testlog2
         spawn su test2
         expect {
-            "*assword*" {
+            -re "(?i)password" {
                 send "${TEST_PASSWORD}\\r"
-                exp_continue
             }
+            timeout {
+                exit 1
+            }
+        }
+        expect {
             "*test2@*" {
                 send "exit\\r"
-                exp_continue
             }
-            eof
+            eof {}
         }
+        expect eof
 EOF
     grep "test2@" testlog2
     CHECK_RESULT $? 0 0 "login failed!"

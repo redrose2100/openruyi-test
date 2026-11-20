@@ -24,13 +24,16 @@ function pre_test() {
 }
 function run_test() {
     LOG_INFO "Start executing testcase."
-    dnf config-manager --dump
+    # dnf5 的 config-manager 已删除 --dump，配置信息改由 repoinfo / --help 展示
+    dnf config-manager --help | grep -iE "addrepo|setopt"
     CHECK_RESULT $?
-    num_id=$(dnf repolist | grep "repo id" -A 5 | wc -l)
+    num_id=$(dnf repolist | wc -l)
     test "${num_id}" -gt 1
     CHECK_RESULT $?
-    repoid=$(dnf repolist | grep "repo id" -A 1 | grep -v "repo id" | awk -F ' ' '{print$1}')
-    dnf config-manager --dump "${repoid}"
+    repoid=$(dnf repolist | awk 'NR>1{print $1; exit}')
+    test -n "${repoid}"
+    CHECK_RESULT $?
+    dnf repoinfo "${repoid}" | grep -i "repo-id"
     CHECK_RESULT $?
     LOG_INFO "End of testcase execution."
 }

@@ -62,8 +62,13 @@ function run_test() {
             LOG_INFO "autoconnect is not explicitly set, use default value true, skipped."
         fi
         if grep -qi "^method=manual" "$cfg01" && ping -c 3 www.baidu.com; then
-            grep -i "^never-default=" "$cfg01"
-            CHECK_RESULT $? 0 0 "the item is use for set default route"
+            # never-default 为可选字段：未显式写入时 NetworkManager 取默认值
+            # false，即仍然设置默认路由，此时应认为该项已正确配置。
+            if grep -i "^never-default=" "$cfg01"; then
+                CHECK_RESULT $? 0 0 "the item is use for set default route"
+            else
+                LOG_INFO "never-default is not explicitly set, use default value false, skipped."
+            fi
         fi
     else
         CHECK_RESULT 1 0 0 "unrecognized net cfg file format"

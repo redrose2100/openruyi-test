@@ -31,7 +31,7 @@ function deploy_env() {
     iscsiadm -m discovery -t sendtargets -p "${NODE2_IPV4}"
     iscsiadm -m node -T iqn.2013-12.com.make:ws.httpd -l
     mpathconf --enable --with_multipathd y
-    service multipathd start
+    systemctl start multipathd
     multipath -v2
     multipath -ll
     echo "
@@ -61,7 +61,7 @@ devices {
     }" >/etc/multipath.conf
     lsmod | grep dm_multipath || modprobe dm_multipath
     modprobe dm_multipath
-    service multipathd restart
+    systemctl restart multipathd
     chkconfig --level 345 multipathd on
 }
 

@@ -20,6 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
+    DNF_INSTALL "procps"
     pid=$(ps -ef | grep systemd | awk '{print $2}' | head -n 1)
     LOG_INFO "End to prepare the database config."
 }

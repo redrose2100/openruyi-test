@@ -18,6 +18,12 @@
 
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "openssh-clients"
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     SSH_SCP ../common/SAVE_RESROER.sh "${NODE2_USER}"@"${NODE2_IPV4}":/tmp/SAVE_RESROER.sh "${NODE2_PASSWORD}"

@@ -21,7 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL psutils
+    DNF_INSTALL "psutils perl-IPC-Run3"
     version=$(rpm -qa psutils | awk -F "-" '{print$2}')
     LOG_INFO "End of environmental preparation!"
 }
@@ -30,7 +30,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # test psbook
-    test "$(psbook --version 2>&1 | awk 'NR==1{print$2}')" == "$version"
+    test "$(psbook --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -n 1)" == "$version"
     CHECK_RESULT $? 0 0 "psbook -v execution failed."
     psbook -s4 ./common/a4-1.ps 2>&1 | grep -i -a "wrote .* pages"
     CHECK_RESULT $? 0 0 "psbook -s4 ./common/a4-1.ps execution failed."

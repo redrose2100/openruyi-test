@@ -28,10 +28,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start to run test."
+    # 非法 MAC 地址必须被拒绝，但不同实现的退出码不一样（net-tools 返回 1，
+    # inetutils 返回 255），这里只要求返回值非 0。
     ifconfig "$test_nic" hw ether "52uurrr:5555gggg:eeee:eee"
-    CHECK_RESULT $? 1 0 "Change mac unexpectly to 52uurrr:5555gggg:eeee:eee"
+    CHECK_RESULT $? 0 1 "Change mac unexpectly to 52uurrr:5555gggg:eeee:eee"
     ifconfig "$test_nic" hw ether "www.baidu.com"
-    CHECK_RESULT $? 1 0 "Change mac unexpectly to www.baidu.com."
+    CHECK_RESULT $? 0 1 "Change mac unexpectly to www.baidu.com."
     LOG_INFO "End to run test."
 }
 

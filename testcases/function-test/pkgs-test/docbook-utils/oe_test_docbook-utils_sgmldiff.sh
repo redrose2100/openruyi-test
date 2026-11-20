@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL docbook-utils
+    DNF_INSTALL "docbook-utils diffutils"
     cp -r ./common doc
     LOG_INFO "End of environmental preparation!"
 }

@@ -22,7 +22,11 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     DNF_INSTALL php
-    sed -i 's/;phar.readonly = On/phar.readonly = Off/g' /etc/php.ini || exit 1
+    # openRuyi 的 php.ini 位于 /etc/php/php.ini，需运行时解析而非写死 /etc/php.ini
+    PHP_INI=$(php --ini 2>/dev/null | awk -F': *' '/Loaded Configuration File/{print $2}')
+    [ -z "${PHP_INI}" ] && PHP_INI=/etc/php/php.ini
+    test -f "${PHP_INI}" || exit 1
+    sed -i 's/^[;[:space:]]*phar\.readonly[[:space:]]*=.*/phar.readonly = Off/' "${PHP_INI}" || exit 1
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -158,7 +162,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    sed -i 's/phar.readonly = Off/;phar.readonly = On/g' /etc/php.ini
+    test -n "${PHP_INI}" -a -f "${PHP_INI}" && sed -i 's/^[[:space:]]*phar\.readonly[[:space:]]*=.*/;phar.readonly = On/' "${PHP_INI}"
+    true
     rm -rf $(ls | grep -v ".sh")
     DNF_REMOVE
     LOG_INFO "Finish restoring the test environment."

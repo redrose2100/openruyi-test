@@ -24,6 +24,11 @@ function pre_test() {
     LOG_INFO "End to prepare the test environment."
 }
 
+# swig 4.x 起部分语言模块（如 mzscheme）被移除，先探测该选项是否存在再执行。
+swig_supports() {
+    swig -help 2>&1 | grep -qE "^[[:space:]]*$1([[:space:]]|$)"
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     swig -csharp -v example.i | grep "csharp"
@@ -54,10 +59,14 @@ function run_test() {
     CHECK_RESULT $?
     test -f example_wrap.c && rm -rf example_wrap.c
     CHECK_RESULT $?
-    swig -mzscheme -v example.i | grep "mzscheme"
-    CHECK_RESULT $?
-    test -f example_wrap.c && rm -rf example_wrap.c
-    CHECK_RESULT $?
+    if swig_supports -mzscheme; then
+        swig -mzscheme -v example.i | grep "mzscheme"
+        CHECK_RESULT $?
+        test -f example_wrap.c && rm -rf example_wrap.c
+        CHECK_RESULT $?
+    else
+        LOG_WARN "The mzscheme language module is not provided by this swig release, skip it."
+    fi
     swig -ocaml -v example.i | grep "ocaml"
     CHECK_RESULT $?
     test -f example.ml -a -f example.mli -a -f example_wrap.c && rm -rf example.ml example.mli example_wrap.c

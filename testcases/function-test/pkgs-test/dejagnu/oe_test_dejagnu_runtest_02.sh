@@ -34,6 +34,8 @@ function pre_test() {
         LOG_ERROR "Unsupported architecture: $ARCH"
         exit 1
     fi
+    # 仓库中携带的 calc_* 脚本未保留可执行权限，需显式补上
+    chmod +x "$CALC"
     LOG_INFO "End to prepare the test environment!"
 }
 

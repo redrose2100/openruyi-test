@@ -22,7 +22,7 @@ source "./common/test_epsffit.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL psutils
+    DNF_INSTALL "psutils perl-IPC-Run3"
     box_llx=0
     box_lly=0
     box_urx=200
@@ -35,7 +35,7 @@ function run_test() {
     LOG_INFO "Start to run test."
 
     # test epsffit -v
-    test "$(epsffit --version 2>&1 | awk 'NR==1{print$2}')" == "$version"
+    test "$(epsffit --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -n 1)" == "$version"
     CHECK_RESULT $? 0 0 "epsffit -v execution failed."
 
     # test espffit llx lly urx ury

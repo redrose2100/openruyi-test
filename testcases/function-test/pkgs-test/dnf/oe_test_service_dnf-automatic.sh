@@ -25,7 +25,7 @@ function pre_test() {
         flag=true
         DNF_REMOVE 1 "cyrus-sasl"
     fi
-    DNF_INSTALL "dnf-automatic"
+    DNF_INSTALL "dnf-automatic dnf5"
     service=dnf-automatic.service
     log_time=$(date '+%Y-%m-%d %T')
     status='inactive (dead)'

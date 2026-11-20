@@ -1,6 +1,11 @@
 #!/bin/bash
 source "${OET_PATH}/testcases/function-test/pkgs-test/common/common_lib.sh"
-img_url="https://repo.openeuler.org/openEuler-22.03-LTS-SP3/virtual_machine_img/$(arch)/openEuler-22.03-LTS-SP3-$(arch).qcow2.xz"
+# Resolve the running system release and CPU architecture at runtime instead of
+# hard coding an openEuler release that does not exist in every distribution.
+. /etc/os-release
+oe_version=$(printf '%s' "${VERSION_ID:-${VERSION}}" | tr -cs '[:alnum:].-' '-' | sed 's/-$//')
+oe_arch=$(uname -m)
+img_url="https://repo.openeuler.org/openEuler-${oe_version}/virtual_machine_img/${oe_arch}/openEuler-${oe_version}-${oe_arch}.qcow2.xz"
 filename=$(basename "${img_url}")
 volume=${filename%.xz}
 

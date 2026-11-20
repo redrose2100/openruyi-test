@@ -25,6 +25,7 @@ remote_home3=""
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "openssh-clients"
     remote_home2=$(eval echo "~${NODE2_USER}")
     remote_home3=$(eval echo "~${NODE3_USER}")
     LOG_INFO "Home directory of ${NODE2_USER}: ${remote_home2}, of ${NODE3_USER}: ${remote_home3}"

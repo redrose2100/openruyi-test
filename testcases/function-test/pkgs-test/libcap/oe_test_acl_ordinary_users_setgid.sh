@@ -25,6 +25,7 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "libcap-progs"
     grep "^example:" /etc/passwd && userdel -rf example
     LOG_INFO "End of environmental preparation!"
 }

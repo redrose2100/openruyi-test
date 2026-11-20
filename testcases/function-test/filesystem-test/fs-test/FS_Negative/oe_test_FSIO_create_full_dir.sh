@@ -21,7 +21,7 @@ source ../common_lib/fsio_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
     point_list=($(CREATE_FS))
-    DNF_INSTALL sysstat
+    DNF_INSTALL "sysstat procps"
     pwd=$(pwd)
     LOG_INFO "End to prepare the database config."
 }

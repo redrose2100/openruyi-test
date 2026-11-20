@@ -33,10 +33,16 @@ function check_weak_password_rejected() {
 function check_password_changed() {
     local user=$1
     local passwd=$2
-    local output
+    local output rc
     output=$(echo "${passwd}" | passwd "${user}" --stdin 2>&1)
-    LOG_INFO "passwd output: ${output}"
-    echo "${output}" | grep -qiE "password updated successfully|passwd: password changed"
+    rc=$?
+    LOG_INFO "passwd output: ${output} (exit ${rc})"
+    # 新版 shadow(4.19) 的 `passwd --stdin` 成功时完全不输出任何内容，
+    # 只有旧版本才会打印 "password updated successfully"，因此不能用提示语判定，
+    # 改为“退出码为 0 且不含失败关键字”。
+    [ ${rc} -eq 0 ] || return 1
+    echo "${output}" | grep -qiE "BAD PASSWORD|Authentication token manipulation error|password unchanged" && return 1
+    return 0
 }
 
 function pre_test() {

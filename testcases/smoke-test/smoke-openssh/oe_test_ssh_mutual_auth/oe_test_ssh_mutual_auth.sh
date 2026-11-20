@@ -19,6 +19,7 @@
 source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
+    DNF_INSTALL "openssh-clients"
     rm -rf /root/.ssh
     ssh-keygen -t rsa -f /root/.ssh/id_rsa -P ''
     SSH_CMD "rm -rf /root/.ssh;rm -rf /libs;ssh-keygen -t rsa -f /root/.ssh/id_rsa -P ''" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"

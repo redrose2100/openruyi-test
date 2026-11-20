@@ -34,13 +34,20 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Failed to add mtu 1279"
     ip a | grep 1279
     CHECK_RESULT $? 0 0 "Failed to check mtu 1279"
-    ifconfig ${NODE1_NIC} add 2001::1/64 2>&1 | grep "SIOCSIFADDR:"
-    CHECK_RESULT $? 0 0 "Successfully add ipv6"
+    # 旧版 net-tools 在 add 地址时会打印 "SIOCSIFADDR: ..." 错误串，老用例靠 grep
+    # 这段报错来判定；新版 net-tools 已修好 add，成功时静默返回 0，grep 必然失败。
+    # 这里改成语义断言：add 返回 0，并用 ip 确认地址真的存在。
+    ifconfig ${NODE1_NIC} add 2001::1/64
+    CHECK_RESULT $? 0 0 "Failed to add ipv6 2001::1/64"
+    ip a show dev ${NODE1_NIC} | grep "2001::1"
+    CHECK_RESULT $? 0 0 "Failed to check ipv6 2001::1"
     ifconfig ${NODE1_NIC} mtu 1280
     CHECK_RESULT $? 0 0 "Failed to add mtu 1280"
     ip a | grep 1280
     CHECK_RESULT $? 0 0 "Failed to check mtu 1280"
-    ifconfig ${NODE1_NIC} add 2002::1/64
+    # 新版 net-tools 的 ifconfig 每个接口只允许一个 `add` 的地址
+    # （报 "only one address allowed for interface"），多地址场景改用 ip。
+    ip addr add 2002::1/64 dev ${NODE1_NIC}
     CHECK_RESULT $? 0 0 "Failed to add ipv6"
     ip a | grep "2002::1/64"
     CHECK_RESULT $? 0 0 "Failed to check ipv6"
@@ -49,6 +56,8 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
+    ip addr del 2001::1/64 dev ${NODE1_NIC} 2>/dev/null
+    ip addr del 2002::1/64 dev ${NODE1_NIC} 2>/dev/null
     ifconfig ${NODE1_NIC} mtu $old_mtu
     systemctl restart NetworkManager
     ifup ${NODE1_NIC}

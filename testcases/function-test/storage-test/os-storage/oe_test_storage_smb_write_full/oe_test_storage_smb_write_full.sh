@@ -33,7 +33,7 @@ function config_params() {
 }
 
 function pre_test() {
-    DNF_INSTALL openssh-clients
+    DNF_INSTALL "openssh-clients firewalld policycoreutils procps selinux-tools"
     LOG_INFO "Start environment preparation."
     SSH_CMD "setenforce 1" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     SSH_CMD "getenforce | grep Disabled" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}" && exit 255

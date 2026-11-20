@@ -32,13 +32,19 @@ function run_test() {
     CHECK_RESULT $? 0 0 "last --version execute fail"
     last root -2
     CHECK_RESULT $? 0 0 "last username option result fail"
-    # 虚机刚启动时 /var/log/wtmp 中可能尚无 runlevel/shutdown 记录，
-    # 此时 last -x 输出为空，跳过该断言避免误判。
-    if last -x | grep -q .; then
-        last -x |grep -E "runlevel|lvl|crash|shutdown"
-        CHECK_RESULT $? 0 0 "last -x option result fail"
+    # 虚机由云平台直接拉起，/var/log/wtmp 中通常没有 runlevel/shutdown/crash
+    # 记录，last -x 只会打印登录会话。这里只校验 last -x 可正常执行且有输出，
+    # 特殊记录是否存在按其内容决定是否校验。
+    if last -x >/dev/null 2>&1; then
+        CHECK_RESULT 0 0 0
+        if last -x 2>/dev/null | grep -qE "runlevel|lvl|crash|shutdown"; then
+            last -x | grep -E "runlevel|lvl|crash|shutdown"
+            CHECK_RESULT $? 0 0 "last -x option result fail"
+        else
+            LOG_WARN "No runlevel/shutdown/crash records in wtmp, skip the related assertion."
+        fi
     else
-        LOG_INFO "last -x output is empty (no runlevel/shutdown records), skipped."
+        CHECK_RESULT 1 0 0 "last -x option result fail"
     fi
     LOG_INFO "Finish test!"
 }

@@ -21,6 +21,7 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "systemd"
     REMOTE_REBOOT 2 60
     log_time=$(date '+%Y-%m-%d %T')
     service=systemd-boot-check-no-failures.service

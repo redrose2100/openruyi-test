@@ -24,6 +24,11 @@ function pre_test() {
     LOG_INFO "End to prepare the test environment."
 }
 
+# swig 4.x 起部分选项被移除，先探测该选项是否存在再执行。
+swig_supports() {
+    swig -help 2>&1 | grep -qE "^[[:space:]]*$1([[:space:]]|$)"
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     swig -java -fvirtual example.i
@@ -42,10 +47,12 @@ function run_test() {
     CHECK_RESULT $?
     test -f swig.java -a -f swigJNI.java -a -f _wrap.c
     CHECK_RESULT $?
-    swig -java -ignoremissing example.i
-    CHECK_RESULT $?
-    grep -i "miss" example_wrap.c
-    CHECK_RESULT $? 1
+    # -ignoremissing 的语义是“缺少声明时不再报错”，生成文件的注释里本来就可能
+    # 出现 missing 字样，因此改为校验命令输出中没有缺少声明的告警。
+    ignoremissing_log=$(swig -java -ignoremissing example.i 2>&1)
+    CHECK_RESULT $? 0 0 "-ignoremissing failed"
+    echo "${ignoremissing_log}" | grep -qiE "unable to find|warning.*missing"
+    CHECK_RESULT $? 0 1 "ignoremissing still warns about missing declarations"
     swig -java -importall example.i
     CHECK_RESULT $?
     grep -i "#include" example_wrap.c
@@ -62,10 +69,14 @@ function run_test() {
     CHECK_RESULT $?
     grep -i "macro" example_wrap.c
     CHECK_RESULT $?
-    swig -java -makedefault example.i
-    CHECK_RESULT $?
-    grep -i "default" example_wrap.c
-    CHECK_RESULT $?
+    if swig_supports -makedefault; then
+        swig -java -makedefault example.i
+        CHECK_RESULT $?
+        grep -i "default" example_wrap.c
+        CHECK_RESULT $?
+    else
+        LOG_WARN "The -makedefault option is not provided by this swig release, skip it."
+    fi
     LOG_INFO "End to run test."
 }
 

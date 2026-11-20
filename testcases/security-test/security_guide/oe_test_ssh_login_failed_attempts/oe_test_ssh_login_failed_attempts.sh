@@ -165,7 +165,9 @@ EOF
             eof
         }
 EOF
-    if ! grep -qE "^${LOGIN_USER}@.*[#$] $" testlog3; then
+    # expect 的 log_file 会把提示符和后续回显写在同一行（提示符后没有换行），
+    # 所以不能要求 "$ " 出现在行尾，只要出现 "user@host...$/#'" 就认为登录成功。
+    if ! grep -qE "${LOGIN_USER}@[^[:space:]]*[#$]" testlog3; then
         LOG_WARN "The lockout was not released automatically, clear the failure tally and retry."
         clean_faillock
         expect <<EOF
@@ -185,7 +187,7 @@ EOF
             }
 EOF
     fi
-    grep -E "^${LOGIN_USER}@.*[#$] $" testlog3
+    grep -E "${LOGIN_USER}@[^[:space:]]*[#$]" testlog3
     CHECK_RESULT $? 0 0 "Login failed."
     LOG_INFO "Finish testcase execution."
 }

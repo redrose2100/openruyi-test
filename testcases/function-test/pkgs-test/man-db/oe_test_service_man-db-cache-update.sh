@@ -21,7 +21,8 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 source "$OET_PATH/testcases/function-test/pkgs-test/common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    systemctl start man-db-cache-update.service   
+    # openRuyi 的 man-db 提供 man-db.service 与 man-db.timer（非 man-db-cache-update.service）
+    systemctl start man-db.timer
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -29,20 +30,23 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start testing..."
 
-    test_oneshot man-db-cache-update.service 'inactive (dead)'
+    test_oneshot man-db.service 'inactive (dead)'
     LOG_INFO "Checking service execution result..."
-    journalctl -u man-db-cache-update.service --no-pager | grep -q "成功完成\|success"
-    CHECK_RESULT $? 0 0 "Service should show success indication in logs"
+    # 原断言依赖中文/英文日志文案，改为校验 unit 执行结果
+    _check_unit_result man-db.service
+    CHECK_RESULT $? 0 0 "Service should report success result"
 
     LOG_INFO "Checking manual page cache update..."
+    systemctl start man-db.service
+    SLEEP_WAIT 2
     cache_file="/var/cache/man/index.db"
     test -f "$cache_file"
     CHECK_RESULT $? 0 0 "Cache file existence check failed"
 
     original_mtime=$(stat -c %Y "$cache_file")
     mv /usr/share/man/man1/vi.1.gz /usr/share/man/man1/vi.1.gz.bak
-    systemctl restart man-db-cache-update.service
-    sleep 2
+    systemctl restart man-db.service
+    SLEEP_WAIT 2
     new_mtime=$(stat -c %Y "$cache_file")
     [ "$new_mtime" -gt "$original_mtime" ]
     CHECK_RESULT $? 0 0 "Cache update verification failed (original:$original_mtime, new:$new_mtime)"
@@ -52,8 +56,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to clean the test environment."
-    mv /usr/share/man/man1/vi.1.gz.bak /usr/share/man/man1/vi.1.gz  
+    mv /usr/share/man/man1/vi.1.gz.bak /usr/share/man/man1/vi.1.gz
     LOG_INFO "End to clean the test environment."
 }
 main "$@"
-~

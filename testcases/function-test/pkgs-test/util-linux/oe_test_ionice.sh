@@ -21,6 +21,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "procps"
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     nohup sleep 60 &

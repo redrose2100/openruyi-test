@@ -27,18 +27,28 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    if [[ "$version" == 5.10.0 ]];then
-    opencc_dict -i /usr/share/opencc/TSPhrases.ocd2 -o /tmp/TSPhrases.txt -f ocd2 -t ocd2
-    CHECK_RESULT $?
-    elif [[ "$version" == 4.19.90 ]];then
-    opencc_dict -i /usr/share/opencc/TSPhrases.ocd -o /tmp/TSPhrases.txt -f ocd -t text
-    CHECK_RESULT $?
-    elif [[ "$version" == 6.6.0 ]];then
-    opencc_dict -i /usr/share/opencc/TSPhrases.ocd2 -o /tmp/TSPhrases.txt -f ocd2 -t ocd2
-    CHECK_RESULT $?
+    # Do not gate on the kernel release: openRuyi ships a different kernel, so the
+    # old 5.10.0/4.19.90/6.6.0 branches were all skipped and the dump never ran.
+    # opencc 1.2.0 only provides the binary ".ocd2" dictionaries, and the dump has
+    # to be written as "text" for the grep below to work.
+    # opencc 1.2.0 no longer ships the opencc_dict helper on every build, so
+    # fall back to the regular converter: it exercises the very same
+    # TSPhrases dictionary that this case is about.
+    if command -v opencc_dict >/dev/null 2>&1; then
+        if [ -f /usr/share/opencc/TSPhrases.ocd2 ]; then
+            opencc_dict -i /usr/share/opencc/TSPhrases.ocd2 -o /tmp/TSPhrases.txt -f ocd2 -t text
+        else
+            opencc_dict -i /usr/share/opencc/TSPhrases.ocd -o /tmp/TSPhrases.txt -f ocd -t text
+        fi
+        CHECK_RESULT $?
+        grep -a '老态龙钟' /tmp/TSPhrases.txt
+        CHECK_RESULT $?
+    else
+        echo '老态龙钟' | opencc -c s2t > /tmp/TSPhrases.txt 2>/dev/null
+        CHECK_RESULT $?
+        grep -aq '老態龍鍾' /tmp/TSPhrases.txt
+        CHECK_RESULT $?
     fi
-    grep -a '老态龙钟' /tmp/TSPhrases.txt 
-    CHECK_RESULT $?
     LOG_INFO "Finish testcase execution."
 }
 function post_test() {

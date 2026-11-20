@@ -29,8 +29,15 @@ function pre_test() {
     # Distributions ship "auth required pam_wheel.so use_uid" commented out, so the
     # wheel-only restriction is not active by default. Enable it for this case.
     sed -i -E 's/^[#[:space:]]*auth[[:space:]]+required[[:space:]]+pam_wheel\.so.*/auth            required        pam_wheel.so use_uid/' "${su_pam}"
-    grep -qE '^[[:space:]]*auth[[:space:]]+required[[:space:]]+pam_wheel\.so' "${su_pam}" ||
-        echo "auth            required        pam_wheel.so use_uid" >>"${su_pam}"
+    if ! grep -qE '^[[:space:]]*auth[[:space:]]+required[[:space:]]+pam_wheel\.so' "${su_pam}"; then
+        # pam_wheel 必须出现在 pam_unix/pam_deny 之前。openRuyi 的 /etc/pam.d/su
+        # 是自包含栈（auth sufficient pam_unix.so 在中间），把 pam_wheel 追加到
+        # 文件末尾会被前面的 sufficient 先放行，限制形同虚设。
+        local insert_line
+        insert_line=$(grep -nE '^[[:space:]]*auth[[:space:]]+(sufficient|required)[[:space:]]+pam_(unix|deny)\.so' "${su_pam}" | head -n 1 | cut -d: -f1)
+        [ -z "${insert_line}" ] && insert_line=1
+        sed -i "${insert_line}i auth            required        pam_wheel.so use_uid" "${su_pam}"
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 

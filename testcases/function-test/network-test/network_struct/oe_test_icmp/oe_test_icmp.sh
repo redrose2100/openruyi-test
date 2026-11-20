@@ -20,6 +20,7 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "iputils"
     ori_value=$(cat /proc/sys/net/ipv4/icmp_echo_ignore_all)
     LOG_INFO "End to prepare the test environment."
 }

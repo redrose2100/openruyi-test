@@ -64,6 +64,12 @@ EOF1
     return ${retcode}
 }
 
+function pre_test() {
+    LOG_INFO "Start to prepare the test environment."
+    DNF_INSTALL "openssh-clients"
+    LOG_INFO "End to prepare the test environment."
+}
+
 function run_test() {
     LOG_INFO "Start to run test."
     # sshd 的重启动作必须落在 NODE2：若仍在 NODE1 本地重启 sshd，一旦配置被改坏导致

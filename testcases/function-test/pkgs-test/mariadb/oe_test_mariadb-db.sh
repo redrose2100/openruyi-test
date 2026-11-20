@@ -21,6 +21,7 @@ source "./common/lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    DNF_INSTALL "mariadb"
     mariadb_init
     test -d /tmp/mariadb || mkdir /tmp/mariadb
     LOG_INFO "End of environmental preparation!"

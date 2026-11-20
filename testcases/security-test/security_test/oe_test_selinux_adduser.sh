@@ -31,7 +31,7 @@ EOF
 ${NODE1_PASSWORD}
 ${NODE1_PASSWORD}
 EOF
-    DNF_INSTALL "libselinux python-policycoreutils"
+    DNF_INSTALL "libselinux python-policycoreutils openssh-clients selinux-tools"
     # 对selinux是否被禁用进行判断
     setenforce 1  #如果在内核层禁用了selinux,那么这里是无法打开的
     if [ "$(getenforce)" == "Disabled" ]; then

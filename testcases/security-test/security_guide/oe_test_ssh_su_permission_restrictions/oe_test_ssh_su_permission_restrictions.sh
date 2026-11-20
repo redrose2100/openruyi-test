@@ -56,21 +56,21 @@ EOF
         }
 EOF
     usermod -a -G wheel test1
+    # openRuyi 适配：原写法在 "*test2@*" 分支里 exp_continue，shell 提示符本身
+    # （[test2@host dir]$）每次都会再次匹配该模式，于是无限 send pwd，用例直到
+    # 1800s 超时（本次报告日志里产生了近 200 万行 pwd 输出）。
+    # 改为顺序式交互：等密码提示 -> 等登录后提示符 -> 执行 pwd -> exit -> eof。
     expect <<EOF
         set timeout 30
         log_file testlog1
         spawn su test2
-        expect {
-            "*assword*" {
-                send "${TEST_PASSWORD}\\r"
-                exp_continue
-            }
-            "*test2@*" {
-                send "pwd\\r"
-                exp_continue
-            }
-            eof
-        }
+        expect "*assword*"
+        send "${TEST_PASSWORD}\\r"
+        expect "*test2@*"
+        send "pwd\\r"
+        expect "*test2@*"
+        send "exit\\r"
+        expect eof
 EOF
     grep "test2@" testlog1
     CHECK_RESULT $? 0 0 "switch to test2 failed"
@@ -78,21 +78,15 @@ EOF
         set timeout 30
         log_file testlog2
         spawn su test1
-        expect {
-            "*assword*" {
-                send "${TEST_PASSWORD}\\r"
-                exp_continue
-            }
-            "*test1@*" {
-                send "su test2\\r"
-                exp_continue
-            }
-            "*test2@*" {
-                send "exit\\r"
-                exp_continue
-            }
-            eof
-        }
+        expect "*assword*"
+        send "${TEST_PASSWORD}\\r"
+        expect "*test1@*"
+        send "su test2\\r"
+        expect "*test2@*"
+        send "exit\\r"
+        expect "*test1@*"
+        send "exit\\r"
+        expect eof
 EOF
     grep "test2@" testlog2
     CHECK_RESULT $? 0 0 "switch from test1 to test2 failed"

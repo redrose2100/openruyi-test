@@ -22,7 +22,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     DNF_INSTALL "java-17-openjdk*"
-    cp ../java-11-openjdk/common/* .
+    common_dir=$(dirname "$(realpath "${BASH_SOURCE[0]}")")/common
+    cp "${common_dir}"/* .
     LOG_INFO "End of environmental preparation!"
 }
 
